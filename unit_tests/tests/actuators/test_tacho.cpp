@@ -22,7 +22,7 @@ TEST(Actuators, Tachometer) {
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
     engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-    setCamOperationMode(engineConfiguration);
+    setCamOperationMode();
 	eth.applyTriggerWaveform();
 
     // get the engine running - 6 revolutions

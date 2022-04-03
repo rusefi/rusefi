@@ -102,7 +102,7 @@ void m73engine() {
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 	// todo: that's not right, should be 60/2 without VW
 	engineConfiguration->trigger.type = TT_60_2_VW;
 

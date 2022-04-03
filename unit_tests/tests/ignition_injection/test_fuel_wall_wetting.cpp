@@ -64,7 +64,7 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_ONE);

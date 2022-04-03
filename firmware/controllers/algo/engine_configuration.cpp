@@ -1174,16 +1174,17 @@ void prepareShapes() {
 
 #endif
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
-	engineConfiguration->ambiguousOperationMode = mode;
+void setTwoStrokeOperationMode() {
+	engineConfiguration->ambiguousOperationMode = TWO_STROKE;
+	engineConfiguration->twoStroke = true;
 }
 
-void setCamOperationMode(engine_configuration_s *engineConfiguration) {
+void setCamOperationMode() {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->skippedWheelOnCam = true;
 }
 
-void setCrankOperationMode(engine_configuration_s *engineConfiguration) {
+void setCrankOperationMode() {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CRANK_SENSOR;
 	engineConfiguration->skippedWheelOnCam = false;
 }

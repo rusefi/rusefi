@@ -20,7 +20,7 @@ TEST(HPFP, IntegratedSchedule) {
 	engineConfiguration->trigger.customTotalToothCount = 16;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-    setCamOperationMode(engineConfiguration);
+    setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 

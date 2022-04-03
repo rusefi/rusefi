@@ -160,7 +160,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->etbFunctions[1] = ETB_Wastegate;
 
 	// Some sensible defaults for other options
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

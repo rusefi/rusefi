@@ -58,7 +58,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 
 	engineConfiguration->trigger.type = tt;
-    setCamOperationMode(engineConfiguration);
+    setCamOperationMode();
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
