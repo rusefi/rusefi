@@ -1028,10 +1028,10 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseCrankPullUp,"Hall","VR"
 	bit boardUseCamPullDown,"With Pull Down","With Pull Up"
 	bit boardUseCamVrPullUp,"Hall","VR"
-	bit unusedBitWasHere3
-	bit unusedBitWasHere4
-	bit unusedBitWasHere5
-bit unusedBitHere1
+	bit boardUseD2PullDown,"With Pull Down","With Pull Up"
+	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
+	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
+	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit unusedBitHere2
