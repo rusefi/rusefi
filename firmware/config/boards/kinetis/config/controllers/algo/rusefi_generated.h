@@ -1923,7 +1923,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1860638686
+#define SIGNATURE_HASH 2828940261
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2164,6 +2164,7 @@
 #define trailingSparkAngle_offset 528
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
+#define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 23 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71
 #define trigger_customSkippedToothCount_offset 544
 #define trigger_customTotalToothCount_offset 540
 #define trigger_event_e_SHAFT_3RD_FALLING 4
@@ -2260,6 +2261,8 @@
 #define trigger_type_e_TT_VVT_NISSAN_VQ35 59
 #define trigger_type_e_TT_VVT_TOYOTA_4_1 73
 #define trigger_type_offset 532
+#define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 12 || trigger_type == 13 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 38 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
+#define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
 #define trigger_unusedBit_4_10_offset 536
 #define trigger_unusedBit_4_11_offset 536
 #define trigger_unusedBit_4_12_offset 536
@@ -2465,7 +2468,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.03.kin.1860638686"
+#define TS_SIGNATURE "rusEFI 2022.04.03.kin.2828940261"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
