@@ -1178,8 +1178,14 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 	engineConfiguration->ambiguousOperationMode = mode;
 }
 
+void setCamOperationMode(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+	engineConfiguration->skippedWheelOnCam = true;
+}
+
 void setCrankOperationMode(engine_configuration_s *engineConfiguration) {
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CRANK_SENSOR;
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {

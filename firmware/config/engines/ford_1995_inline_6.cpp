@@ -23,7 +23,7 @@ void setFordInline6() {
 
 	engineConfiguration->specs.cylindersCount = 6;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode(engineConfiguration);
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
