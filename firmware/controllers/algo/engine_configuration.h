@@ -23,6 +23,7 @@
 
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 void setCrankOperationMode(engine_configuration_s *engineConfiguration);
+void setCamOperationMode(engine_configuration_s *engineConfiguration);
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm);

@@ -202,11 +202,6 @@ static void setSensorChartMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setOperationMode(int value) {
-	engineConfiguration->ambiguousOperationMode = (operation_mode_e)value;
-	doPrintConfiguration();
-}
-
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
 	auto raw = Sensor::getRaw(sensor);
@@ -1068,7 +1063,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_pin_mode", setIdlePinMode},
 		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
-		{"operation_mode", setOperationMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},

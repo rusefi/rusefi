@@ -70,7 +70,7 @@ static void common2jz() {
 void setToyota_jzs147EngineConfiguration() {
 	common2jz();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode(engineConfiguration);
 	engineConfiguration->trigger.type = TT_2JZ_1_12;
 
 //// temporary while I am fixing trigger bug

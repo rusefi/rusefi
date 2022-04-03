@@ -17,7 +17,7 @@ static bool is469 = false;
 
 
 static void setPrometheusDefaults() {
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR/*FOUR_STROKE_CAM_SENSOR*/);
+	setCrankOperationMode(engineConfiguration);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
