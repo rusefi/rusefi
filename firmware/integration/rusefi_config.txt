@@ -1035,7 +1035,7 @@ bit unusedBitHere1
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit unusedBitHere2
-bit unusedBitHere3
+bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
 
 	adc_channel_e hipOutputChannel;
