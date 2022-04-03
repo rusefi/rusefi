@@ -873,6 +873,8 @@ void onConfigurationChangeTriggerCallback() {
 
 	changed |= isConfigurationChanged(trigger.type);
 	changed |= isConfigurationChanged(ambiguousOperationMode);
+	changed |= isConfigurationChanged(skippedWheelOnCam);
+	changed |= isConfigurationChanged(twoStroke);
 	changed |= isConfigurationChanged(useOnlyRisingEdgeForTrigger);
 	changed |= isConfigurationChanged(globalTriggerAngleOffset);
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
