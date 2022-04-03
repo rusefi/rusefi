@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TriggerImage 27" type="Application" factoryName="Application" folderName="Trigger Renderer">
-    <option name="MAIN_CLASS_NAME" value="com.rusefi.TriggerImage" />
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.trigger.TriggerImage" />
     <module name="ui" />
     <option name="PROGRAM_PARAMETERS" value="../unit_tests 27 10" />
     <extension name="coverage">
