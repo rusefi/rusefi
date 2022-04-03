@@ -701,7 +701,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vssToothCount = 21;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
-	engineConfiguration->mapErrorDetectionTooHigh = 250;
+	// todo: default limits should be hard-coded for each sensor type
+	// https://github.com/rusefi/rusefi/issues/4030
+	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
 	engineConfiguration->useLcdScreen = true;
 
