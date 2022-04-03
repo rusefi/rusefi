@@ -13,9 +13,6 @@
 void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->invertPrimaryTriggerSignal = true;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
