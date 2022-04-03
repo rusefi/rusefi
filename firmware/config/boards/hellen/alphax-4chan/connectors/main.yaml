@@ -288,7 +288,7 @@ pins:
     class: switch_inputs
     function: Digital Input 3
     type: hall
-    ts_name: D3 - Digital In 3
+    ts_name: E3 - Digital In 3
     color: green
 
   - pin: E4
@@ -297,7 +297,7 @@ pins:
     class: switch_inputs
     function: Digital Input 4
     type: hall
-    ts_name: D3 - Digital In 4
+    ts_name: E4 - Digital In 4
     color: green
 
   - pin: E5
@@ -310,7 +310,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Cam Sensor VR+ as Hall
     type: hall
-    ts_name: C3 - Cam+ (hall)
+    ts_name: E6 - Cam+ (hall)
     color: gray
 
   - pin: E5E6
