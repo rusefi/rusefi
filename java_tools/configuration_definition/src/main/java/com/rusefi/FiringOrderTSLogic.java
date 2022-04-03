@@ -21,6 +21,7 @@ public class FiringOrderTSLogic {
     private static final String FIRING_ORDER_PREFIX = "FO_";
 
     public static void main(String[] args) throws IOException {
+        // sandbox code
         invoke("../firmware/controllers/algo/firing_order.h");
     }
 

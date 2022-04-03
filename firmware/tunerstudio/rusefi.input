@@ -1907,15 +1907,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "What kind of engine",                  twoStroke
-		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 }
-		field = "#Please use '4 stroke with cam' only if primary trigger sensor is actually on cam"
-		field = "#Separate cam input not part of Trigger Pattern does not count here"
+		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 && (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Advance",         		globalTriggerAngleOffset
-	    field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
 		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
@@ -1955,11 +1952,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
-		field = "Cam Sensor (Primary channel)", 		triggerInputPins1, 1, { ambiguousOperationMode == @@operation_mode_e_FOUR_STROKE_CAM_SENSOR@@ }
-		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { ambiguousOperationMode != @@operation_mode_e_FOUR_STROKE_CAM_SENSOR@@ }
+		; cam if
+		; two-stroke, or
+		; trigger without known location and cam selected, or
+		; ! trigger is crank based
+		field = "Cam Sensor (Primary channel)", 		triggerInputPins1, 1, {   twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED)  }
+		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { !(twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED)) }
+
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
-		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL)) }
+		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL)) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
 		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
@@ -1971,8 +1973,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 
 	dialog = triggerConfiguration
-		panel = triggerConfiguration_settings,	North, { consumeObdSensors == 0 }
-		panel = triggerInputs,		South, { consumeObdSensors == 0 }
+		panel = triggerConfiguration_settings,	{1}, { consumeObdSensors == 0 }
+		panel = triggerInputs,		            {1}, { consumeObdSensors == 0 }
+	    field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis

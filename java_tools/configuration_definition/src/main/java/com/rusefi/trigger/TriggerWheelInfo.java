@@ -1,9 +1,9 @@
 package com.rusefi.trigger;
 
+import com.rusefi.config.generated.Fields;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,23 +13,34 @@ import static com.rusefi.config.generated.Fields.TRIGGER_HAS_SECOND_CHANNEL;
 import static com.rusefi.config.generated.Fields.TRIGGER_HARDCODED_OPERATION_MODE;
 
 public class TriggerWheelInfo {
+    private static final String TRIGGERTYPE = "TRIGGERTYPE";
+    static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
+
     private final int id;
     private final boolean isSecondWheelCam;
     private final double tdcPosition;
     private final String triggerName;
     private final List<TriggerSignal> signals;
     private final boolean isCrankBased;
+    private final boolean hasSecondChannel;
+    private final boolean hardcodedOperationMode;
 
-    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals, boolean isCrankBased, boolean isSecondWheelCam) {
+    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
+                            boolean isCrankBased,
+                            boolean isSecondWheelCam,
+                            boolean hasSecondChannel,
+                            boolean hardcodedOperationMode) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
         this.triggerName = triggerName;
         this.signals = signals;
         this.isCrankBased = isCrankBased;
+        this.hasSecondChannel = hasSecondChannel;
+        this.hardcodedOperationMode = hardcodedOperationMode;
     }
 
-    public static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
+    private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
         String[] tokens = line.split(" ");
         String idStr = tokens[1];
         int eventCount = Integer.parseInt(tokens[2]);
@@ -44,6 +55,8 @@ public class TriggerWheelInfo {
 
         boolean isCrankBased = false;
         boolean isSecondWheelCam = false;
+        boolean hasSecondChannel = false;
+        boolean hardcodedOperationMode = false;
         while (true) {
             line = reader.readLine();
             if (line == null || line.trim().startsWith("#"))
@@ -59,9 +72,10 @@ public class TriggerWheelInfo {
                     isSecondWheelCam = Boolean.parseBoolean(keyValue[1]);
                     break;
                 case TRIGGER_HAS_SECOND_CHANNEL:
-                    Boolean.parseBoolean(keyValue[1]);
+                    hasSecondChannel = Boolean.parseBoolean(keyValue[1]);
                     break;
                 case TRIGGER_HARDCODED_OPERATION_MODE:
+                    hardcodedOperationMode = Boolean.parseBoolean(keyValue[1]);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
@@ -70,7 +84,38 @@ public class TriggerWheelInfo {
 
         List<TriggerSignal> signals = TriggerSignalReader.readSignals(reader, eventCount);
 
-        return new TriggerWheelInfo(id, tdcPosition, triggerName, signals, isCrankBased, isSecondWheelCam);
+        return new TriggerWheelInfo(id, tdcPosition, triggerName,
+                signals,
+                isCrankBased,
+                isSecondWheelCam,
+                hasSecondChannel,
+                hardcodedOperationMode
+        );
+    }
+
+    static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
+        String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(new FileReader(fileName));
+
+            System.out.println("Reading " + fileName);
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().startsWith("#")) {
+                    // skipping a comment
+                    continue;
+                }
+
+                if (line.startsWith(TRIGGERTYPE)) {
+                    TriggerWheelInfo triggerWheelInfo = readTriggerWheelInfo(line, br);
+
+                    consumer.onWheel(triggerWheelInfo);
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @NotNull
@@ -136,6 +181,18 @@ public class TriggerWheelInfo {
 
     public List<TriggerSignal> getSignals() {
         return signals;
+    }
+
+    public boolean isCrankBased() {
+        return isCrankBased;
+    }
+
+    public boolean isHasSecondChannel() {
+        return hasSecondChannel;
+    }
+
+    public boolean isHardcodedOperationMode() {
+        return hardcodedOperationMode;
     }
 
     public interface TriggerWheelInfoConsumer {
