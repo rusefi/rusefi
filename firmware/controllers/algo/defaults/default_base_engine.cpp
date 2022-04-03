@@ -34,7 +34,9 @@ void setDefaultBaseEngine() {
 
 	// Trigger
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	// huh WAT? our default is skipped on CAM?! and *many* our tests are relying on that?!
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	engineConfiguration->skippedWheelOnCam = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
