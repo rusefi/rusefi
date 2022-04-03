@@ -814,6 +814,8 @@ void setRotary() {
 
 	engineConfiguration->trigger.type = TT_36_2_2_2;
 	setOperationMode(engineConfiguration, TWO_STROKE);
+	// todo: fix UI to make this possible via TS
+	engineConfiguration->twoStroke = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "13B");

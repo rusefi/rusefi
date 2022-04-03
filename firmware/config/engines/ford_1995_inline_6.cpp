@@ -33,13 +33,14 @@ void setFordInline6() {
 
 
 	/**
-	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
+	 * 0.5ms dwell time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
 	setConstantDwell(0.5);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
+	engineConfiguration->skippedWheelOnCam = true;
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
