@@ -1148,8 +1148,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
-		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
 		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
