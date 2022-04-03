@@ -39,7 +39,7 @@ TEST(fuelControl, transitionIssue1592) {
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-    setCamOperationMode(engineConfiguration);
+    setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	setTable(config->injectionPhase, 0.0f);

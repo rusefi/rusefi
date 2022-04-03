@@ -281,7 +281,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->tachPulsePerRev = 2;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);

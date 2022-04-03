@@ -42,7 +42,7 @@ TEST(fuel, testTpsAccelEnrichmentMath) {
 TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;

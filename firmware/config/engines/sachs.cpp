@@ -18,8 +18,7 @@ void setSachs() {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 
-	engineConfiguration->twoStroke = true;
-	setOperationMode(engineConfiguration, TWO_STROKE);
+	setTwoStrokeOperationMode();
 	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 

@@ -11,7 +11,7 @@
 #include "trigger_input.h"
 
 void setBoardDefaultConfiguration() {
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

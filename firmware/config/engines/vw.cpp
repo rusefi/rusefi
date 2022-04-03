@@ -25,7 +25,7 @@ void setVwAba() {
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
 
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 

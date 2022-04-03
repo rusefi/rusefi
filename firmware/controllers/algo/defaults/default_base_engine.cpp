@@ -35,7 +35,7 @@ void setDefaultBaseEngine() {
 	// Trigger
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	// huh WAT? our default is skipped on CAM?! and *many* our tests are relying on that?!
-	setCamOperationMode(engineConfiguration);
+	setCamOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;

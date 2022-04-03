@@ -139,7 +139,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

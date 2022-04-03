@@ -192,7 +192,7 @@ void setBoardDefaultConfiguration() {
 	setupDefaultSensorInputs();
 
 	// Some sensible defaults for other options
-	setCrankOperationMode(engineConfiguration);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
