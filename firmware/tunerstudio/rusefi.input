@@ -1956,12 +1956,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; two-stroke, or
 		; trigger without known location and cam selected, or
 		; ! trigger is crank based
-		field = "Cam Sensor (Primary channel)", 		triggerInputPins1, 1, {   twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED)  }
-		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { !(twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED)) }
+		field = "Cam Sensor (Primary channel)", 		triggerInputPins1, 1, {   twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED@@)  }
+		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { !(twoStroke == 1 || ((@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || ! (@@TRIGGER_CRANK_BASED@@)) }
 
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL)) }
-		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL)) }
+		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@)) }
+		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@)) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
 		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
