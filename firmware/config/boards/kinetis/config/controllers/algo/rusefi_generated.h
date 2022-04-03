@@ -1921,7 +1921,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1304379447
+#define SIGNATURE_HASH 2151964749
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2463,7 +2463,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.03.kin.1304379447"
+#define TS_SIGNATURE "rusEFI 2022.04.03.kin.2151964749"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2485,6 +2485,7 @@
 #define tunerStudioSerialSpeed_offset 732
 #define turboSpeedSensorInputPin_offset 1527
 #define turboSpeedSensorMultiplier_offset 1280
+#define twoStroke_offset 1260
 #define twoWireBatchIgnition_offset 1272
 #define twoWireBatchInjection_offset 1272
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
@@ -2545,7 +2546,6 @@
 #define unusedBit_507_9_offset 1740
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
-#define unusedBitHere3_offset 1260
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260

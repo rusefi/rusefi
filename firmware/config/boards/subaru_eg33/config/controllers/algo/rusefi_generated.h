@@ -1915,7 +1915,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3914861302
+#define SIGNATURE_HASH 614673036
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2457,7 +2457,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.3914861302"
+#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.614673036"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2479,6 +2479,7 @@
 #define tunerStudioSerialSpeed_offset 732
 #define turboSpeedSensorInputPin_offset 1527
 #define turboSpeedSensorMultiplier_offset 1280
+#define twoStroke_offset 1260
 #define twoWireBatchIgnition_offset 1272
 #define twoWireBatchInjection_offset 1272
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
@@ -2539,7 +2540,6 @@
 #define unusedBit_507_9_offset 1740
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
-#define unusedBitHere3_offset 1260
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260

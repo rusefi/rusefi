@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 01:07:00 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 02:30:27 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2407,7 +2407,7 @@ struct engine_configuration_s {
 	bool unusedBitHere2 : 1 {};
 	/**
 	offset 1260 bit 30 */
-	bool unusedBitHere3 : 1 {};
+	bool twoStroke : 1 {};
 	/**
 	 * Where is your primary skipped wheel located?
 	offset 1260 bit 31 */
@@ -4558,4 +4558,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 01:07:00 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 02:30:27 UTC 2022
