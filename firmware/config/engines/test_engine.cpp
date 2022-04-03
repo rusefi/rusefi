@@ -18,10 +18,8 @@
 void setTestCamEngineConfiguration() {
 	setDefaultFrankensoConfiguration();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 //	triggerConfig->customTotalToothCount = 60;
