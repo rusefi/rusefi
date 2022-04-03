@@ -93,7 +93,6 @@
 #define alternatorOffAboveTps_offset 1676
 #define alternatorPwmFrequency_offset 1876
 #define alwaysInstantRpm_offset 1272
-#define ambiguousOperationMode_offset 500
 #define analogInputDividerCoefficient_offset 472
 #define antiLagActivatePin_offset 910
 #define antiLagActivationMode_e_ALWAYS_ON_ANTILAG 1
@@ -1753,7 +1752,6 @@
 #define oilPressure_value1_offset 2296
 #define oilPressure_value2_offset 2304
 #define onOffAlternatorLogic_offset 748
-#define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
 #define operation_mode_e_Force_4_bytes_size_operation_mode_e ENUM_32_BITS
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
@@ -1936,7 +1934,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2145496241
+#define SIGNATURE_HASH 73421035
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2478,7 +2476,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.03.hellen_cypress.2145496241"
+#define TS_SIGNATURE "rusEFI 2022.04.03.hellen_cypress.73421035"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2687,6 +2685,7 @@
 #define wastegatePositionMin_offset 724
 #define wastegatePositionSensor_offset 1751
 #define wboHeaterPin_offset 681
+#define weHaveUnusedHere_offset 500
 #define wheelDiameter_offset 722
 #define WWAE_TABLE_SIZE 8
 #define wwaeBeta_offset 1568

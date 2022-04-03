@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 02:30:31 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 08:26:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -91,7 +91,6 @@ public class Fields {
 	public static final int alternatorOffAboveTps_offset = 1676;
 	public static final int alternatorPwmFrequency_offset = 1876;
 	public static final int alwaysInstantRpm_offset = 1272;
-	public static final int ambiguousOperationMode_offset = 500;
 	public static final int analogInputDividerCoefficient_offset = 472;
 	public static final int antiLagActivatePin_offset = 910;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
@@ -1864,7 +1863,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1158957837;
+	public static final int SIGNATURE_HASH = 1049999191;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2349,7 +2348,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.03.all.1158957837";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.03.all.1049999191";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2550,6 +2549,7 @@ public class Fields {
 	public static final int wastegatePositionMin_offset = 724;
 	public static final int wastegatePositionSensor_offset = 1751;
 	public static final int wboHeaterPin_offset = 681;
+	public static final int weHaveUnusedHere_offset = 500;
 	public static final int wheelDiameter_offset = 722;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final int wwaeBeta_offset = 1568;
@@ -2677,7 +2677,7 @@ public class Fields {
 	public static final Field DRIVEWHEELREVPERKM = Field.create("DRIVEWHEELREVPERKM", 488, FieldType.FLOAT);
 	public static final Field CANNBCTYPE = Field.create("CANNBCTYPE", 492, FieldType.INT);
 	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 496, FieldType.INT);
-	public static final Field AMBIGUOUSOPERATIONMODE = Field.create("AMBIGUOUSOPERATIONMODE", 500, FieldType.INT);
+	public static final Field WEHAVEUNUSEDHERE = Field.create("WEHAVEUNUSEDHERE", 500, FieldType.INT);
 	public static final Field DISPLAYMODE = Field.create("DISPLAYMODE", 504, FieldType.INT);
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 508, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 512, FieldType.INT);
@@ -4007,7 +4007,7 @@ public class Fields {
 	DRIVEWHEELREVPERKM,
 	CANNBCTYPE,
 	CANSLEEPPERIODMS,
-	AMBIGUOUSOPERATIONMODE,
+	WEHAVEUNUSEDHERE,
 	DISPLAYMODE,
 	BYFIRMWAREVERSION,
 	HD44780WIDTH,

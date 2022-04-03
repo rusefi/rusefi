@@ -172,6 +172,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->driveWheelRevPerKm;
 	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
 		return engineConfiguration->canSleepPeriodMs;
+	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
+		return engineConfiguration->weHaveUnusedHere;
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
 		return engineConfiguration->byFirmwareVersion;
 	if (strEqualCaseInsensitive(name, "HD44780width"))
@@ -1375,6 +1377,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
 	{
 		engineConfiguration->canSleepPeriodMs = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
+	{
+		engineConfiguration->weHaveUnusedHere = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
