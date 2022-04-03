@@ -185,6 +185,8 @@ public:
 	 */
 	int triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
 	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
+	// see also 'doesTriggerImplyOperationMode'
+	bool knownOperationMode = true;
 #endif
 
 	/**

@@ -14,6 +14,11 @@
 void initialize36_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
+#if EFI_UNIT_TEST
+	// placed on 'cam' on '2-stroke' rotary
+	s->knownOperationMode = false;
+#endif // EFI_UNIT_TEST
+
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
