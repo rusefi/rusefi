@@ -100,7 +100,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 }
 
 static operation_mode_e lookupOperationMode() {
-	return engineConfiguration->ambiguousOperationMode;
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
 }
 
 static void initVvtShape(int camIndex, TriggerState &initState) {
