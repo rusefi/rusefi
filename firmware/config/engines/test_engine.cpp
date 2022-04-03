@@ -55,6 +55,8 @@ void setTestCrankEngineConfiguration() {
 	engineConfiguration->trigger.type = TT_ONE;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void setTestVVTEngineConfiguration() {

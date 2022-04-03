@@ -28,6 +28,8 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	engineConfiguration->specs.displacement = 0.072; // 72cc
 	engineConfiguration->specs.cylindersCount = 1;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
+	engineConfiguration->skippedWheelOnCam = false;
 
 	engineConfiguration->specs.firingOrder = FO_1;
 
