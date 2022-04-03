@@ -77,7 +77,6 @@ void setFordAspireEngineConfiguration() {
 
 	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
