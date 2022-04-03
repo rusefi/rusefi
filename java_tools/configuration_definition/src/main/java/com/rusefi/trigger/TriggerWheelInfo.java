@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import static com.rusefi.config.generated.Fields.TRIGGER_IS_CRANK_KEY;
 import static com.rusefi.config.generated.Fields.TRIGGER_IS_SECOND_WHEEL_CAM;
 import static com.rusefi.config.generated.Fields.TRIGGER_HAS_SECOND_CHANNEL;
+import static com.rusefi.config.generated.Fields.TRIGGER_HARDCODED_OPERATION_MODE;
 
 public class TriggerWheelInfo {
     private final int id;
@@ -59,6 +60,8 @@ public class TriggerWheelInfo {
                     break;
                 case TRIGGER_HAS_SECOND_CHANNEL:
                     Boolean.parseBoolean(keyValue[1]);
+                    break;
+                case TRIGGER_HARDCODED_OPERATION_MODE:
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);

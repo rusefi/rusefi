@@ -85,7 +85,8 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 #if EFI_UNIT_TEST
 	memset(&triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
 	memset(&triggerSignalStates, 0, sizeof(triggerSignalStates));
-#endif
+	knownOperationMode = true;
+#endif // EFI_UNIT_TEST
 }
 
 size_t TriggerWaveform::getSize() const {

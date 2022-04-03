@@ -605,6 +605,7 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+// this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	return type != TT_TOOTHED_WHEEL
 			&& type != TT_ONE
