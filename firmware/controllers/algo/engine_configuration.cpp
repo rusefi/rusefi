@@ -1178,6 +1178,10 @@ void setOperationMode(engine_configuration_s *engineConfiguration, operation_mod
 	engineConfiguration->ambiguousOperationMode = mode;
 }
 
+void setCrankOperationMode(engine_configuration_s *engineConfiguration) {
+	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CRANK_SENSOR;
+}
+
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 	/**
 	 * VBatt
