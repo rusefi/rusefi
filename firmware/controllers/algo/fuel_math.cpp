@@ -74,7 +74,7 @@ float getCrankingFuel3(
 		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
 
 		if (e85Mult <= 0.1f) {
-			warning(CUSTOM_ERR_ZERO_E100_MULT, "zero e85 multiplier");
+			warning(CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
 			alreadyWarned = true;
 		}
 
