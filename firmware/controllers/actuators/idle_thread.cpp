@@ -87,7 +87,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 	return engineConfiguration->crankingIACposition * mult;
 }
 
-percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
+percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 	float running =
 		engineConfiguration->manIdlePosition		// Base idle position (slider)
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
@@ -99,10 +99,12 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) const 
 
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
-	running += interpolateClamped(
+	iacByTpsTaper = interpolateClamped(
 		0, 0,
 		engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsTaper,
 		tps.value_or(0));
+
+	running += iacByTpsTaper;
 
 	return clampF(0, running, 100);
 }

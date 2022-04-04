@@ -211,7 +211,7 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 
 struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
-	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (override));
 };
 
 TEST(idle_v2, testOpenLoopCranking) {
