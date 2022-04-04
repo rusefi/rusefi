@@ -69,14 +69,21 @@ float getCrankingFuel3(
 	}
 
 	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		auto e100 = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
+		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
 
-		if (e100 <= 0.1f) {
-			warning(CUSTOM_ERR_ZERO_E100_MULT, "zero e100 multiplier");
+		if (e85Mult <= 0.1f) {
+			warning(CUSTOM_ERR_ZERO_E100_MULT, "zero e85 multiplier");
 		}
 
-		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50) / 100;
-		engine->engineState.cranking.coolantTemperatureCoefficient = priv::linterp(e0Mult, e100, flex);
+		// If failed flex sensor, default to 50% E
+		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
+
+		engine->engineState.cranking.coolantTemperatureCoefficient =
+			interpolateClamped(
+				0, e0Mult,
+				85, e85Mult,
+				flex
+			);
 	} else {
 		engine->engineState.cranking.coolantTemperatureCoefficient = e0Mult;
 	}
