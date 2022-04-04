@@ -64,11 +64,29 @@ float getCrankingFuel3(
 	auto clt = Sensor::get(SensorType::Clt).value_or(20);
 	auto e0Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
 
-	if (Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		auto e100 = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
+	bool alreadyWarned = false;
+	if (e0Mult <= 0.1f) {
+		warning(CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
+		alreadyWarned = true;
+	}
 
-		auto flex = Sensor::get(SensorType::FuelEthanolPercent);
-		engine->engineState.cranking.coolantTemperatureCoefficient = priv::linterp(e0Mult, e100, flex.value_or(50));
+	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
+
+		if (e85Mult <= 0.1f) {
+			warning(CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
+			alreadyWarned = true;
+		}
+
+		// If failed flex sensor, default to 50% E
+		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
+
+		engine->engineState.cranking.coolantTemperatureCoefficient =
+			interpolateClamped(
+				0, e0Mult,
+				85, e85Mult,
+				flex
+			);
 	} else {
 		engine->engineState.cranking.coolantTemperatureCoefficient = e0Mult;
 	}
@@ -86,7 +104,8 @@ float getCrankingFuel3(
 
 	engine->engineState.cranking.fuel = crankingFuel * 1000;
 
-	if (crankingFuel <= 0) {
+	// don't re-warn for zero fuel when we already warned for a more specific problem
+	if (!alreadyWarned && crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
 	}
 	return crankingFuel;
