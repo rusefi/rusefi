@@ -490,7 +490,7 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
 
-	curve = crankingCltCurveE100, "Cranking Coolant Temperature Multiplier (Flex Fuel E100)"
+	curve = crankingCltCurveE100, "Cranking Coolant Temperature Multiplier (Flex Fuel E85)"
       columnLabel = "Coolant", "Multiplier"
       xAxis       =  -40, 120, 9
       yAxis       =  0,  3, 10
@@ -1437,7 +1437,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
-		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E100)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
+		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E85)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ && flexCranking }
 		subMenu = crankingDurationCurve,	"Fuel duration multiplier"
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
@@ -3299,6 +3299,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enable flood clear",				isCylinderCleanupEnabled
 		field = "Enable faster engine spin-up",			isFasterEngineSpinUpEnabled
 		field = "Use Advance Corrections for cranking",	useAdvanceCorrectionsForCranking
+		field = "Use Flex Fuel cranking table",			flexCranking
 
 ;			Cranking->Cranking Settings
 	dialog = crankingDialog, "Cranking Settings"
