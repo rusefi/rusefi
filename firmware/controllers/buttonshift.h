@@ -22,4 +22,3 @@ private:
     ButtonDebounce debounceDown;
 };
 
-void initButtonShift();

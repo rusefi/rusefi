@@ -513,7 +513,7 @@ void commonInitEngineController() {
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */
 
-	initButtonShift();
+	initGearController();
 
 	initButtonDebounce();
 	initStartStopButton();

@@ -19,5 +19,7 @@ protected:
 
 private:
     void postState();
-    SimpleTransmissionController transmissionController;
+    TransmissionControllerBase *transmissionController;
 };
+
+void initGearController();

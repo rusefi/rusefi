@@ -81,8 +81,3 @@ void ButtonShiftController::update() {
 	GearControllerBase::update();
 }
 
-
-void initButtonShift() {
-    buttonShiftController.init();
-    engine->gearController = &buttonShiftController;
-}
