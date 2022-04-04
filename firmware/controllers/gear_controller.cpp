@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "gear_controller.h"
+#include "simple_tcu.h"
 
 void GearControllerBase::init() {
 	initTransmissionController();
