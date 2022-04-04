@@ -22,3 +22,4 @@ private:
     ButtonDebounce debounceDown;
 };
 
+ButtonShiftController* getButtonShiftController();

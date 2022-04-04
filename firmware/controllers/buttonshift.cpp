@@ -12,7 +12,6 @@
 
 ButtonShiftController buttonShiftController;
 
-
 ButtonShiftController::ButtonShiftController() :
 		debounceUp("gear_up"),
 		debounceDown("gear_down")
@@ -81,3 +80,6 @@ void ButtonShiftController::update() {
 	GearControllerBase::update();
 }
 
+ButtonShiftController* getButtonShiftController() {
+	return &buttonShiftController;
+}
