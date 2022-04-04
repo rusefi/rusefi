@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 13:35:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 04 21:46:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2513,8 +2513,9 @@ struct engine_configuration_s {
 	offset 1272 bit 18 */
 	bool useAdvanceCorrectionsForCranking : 1 {};
 	/**
+	 * Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
 	offset 1272 bit 19 */
-	bool unused1476b19 : 1 {};
+	bool flexCranking : 1 {};
 	/**
 	offset 1272 bit 20 */
 	bool unused1476b20 : 1 {};
@@ -4556,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 13:35:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 04 21:46:51 UTC 2022

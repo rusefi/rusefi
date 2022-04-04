@@ -986,6 +986,7 @@
 #define fixedModeTiming_offset 464
 #define fixedTiming_offset 1824
 #define FLASH_DATA_VERSION 10009
+#define flexCranking_offset 1272
 #define flexSensorPin_offset 806
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
@@ -1923,7 +1924,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3480483591
+#define SIGNATURE_HASH 1854403454
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2468,7 +2469,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.04.kin.3480483591"
+#define TS_SIGNATURE "rusEFI 2022.04.04.kin.1854403454"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2506,7 +2507,6 @@
 #define unused1128_offset 1740
 #define unused1129_offset 1740
 #define unused1130_offset 1740
-#define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
 #define unused16962_offset 1699
