@@ -564,6 +564,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useSeparateAdvanceForCranking;
 	if (strEqualCaseInsensitive(name, "useAdvanceCorrectionsForCranking"))
 		return engineConfiguration->useAdvanceCorrectionsForCranking;
+	if (strEqualCaseInsensitive(name, "flexCranking"))
+		return engineConfiguration->flexCranking;
 	if (strEqualCaseInsensitive(name, "useIacPidMultTable"))
 		return engineConfiguration->useIacPidMultTable;
 	if (strEqualCaseInsensitive(name, "isBoostControlEnabled"))
@@ -2365,6 +2367,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useAdvanceCorrectionsForCranking"))
 	{
 		engineConfiguration->useAdvanceCorrectionsForCranking = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "flexCranking"))
+	{
+		engineConfiguration->flexCranking = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useIacPidMultTable"))
