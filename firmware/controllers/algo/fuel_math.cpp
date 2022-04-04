@@ -64,8 +64,10 @@ float getCrankingFuel3(
 	auto clt = Sensor::get(SensorType::Clt).value_or(20);
 	auto e0Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
 
+	bool alreadyWarned = false;
 	if (e0Mult <= 0.1f) {
 		warning(CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
+		alreadyWarned = true;
 	}
 
 	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
@@ -73,6 +75,7 @@ float getCrankingFuel3(
 
 		if (e85Mult <= 0.1f) {
 			warning(CUSTOM_ERR_ZERO_E100_MULT, "zero e85 multiplier");
+			alreadyWarned = true;
 		}
 
 		// If failed flex sensor, default to 50% E
@@ -101,7 +104,8 @@ float getCrankingFuel3(
 
 	engine->engineState.cranking.fuel = crankingFuel * 1000;
 
-	if (crankingFuel <= 0) {
+	// don't re-warn for zero fuel when we already warned for a more specific problem
+	if (!alreadyWarned && crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
 	}
 	return crankingFuel;
