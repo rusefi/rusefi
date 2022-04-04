@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "gear_controller.h"
-#include "simple_tcu.h"
 
 void GearControllerBase::init() {
 	initTransmissionController();
@@ -51,6 +50,7 @@ void GearControllerBase::postState() {
 }
 
 void initGearController() {
+
 	switch (engineConfiguration->gearControllerMode) {
 	case GearControllerMode::ButtonShift :
 		engine->gearController = getButtonShiftController();
