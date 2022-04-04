@@ -1437,7 +1437,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
-		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E85)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
+		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E85)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ && flexCranking }
 		subMenu = crankingDurationCurve,	"Fuel duration multiplier"
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
