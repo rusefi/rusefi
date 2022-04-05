@@ -3,7 +3,7 @@
 #include "gear_controller.h"
 
 void GearControllerBase::init() {
-	switch (engineConfiguration->transmissionController) {
+	switch (engineConfiguration->transmissionControllerMode) {
 	case TransmissionControllerMode::SimpleTransmissionController :
 		transmissionController = getSimpleTransmissionController();
 		break;
@@ -40,7 +40,7 @@ void GearControllerBase::postState() {
 }
 
 void initGearController() {
-	switch (engineConfiguration->gearController) {
+	switch (engineConfiguration->gearControllerMode) {
 	case GearControllerMode::ButtonShift :
 		engine->gearController = getButtonShiftController();
 		break;
