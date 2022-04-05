@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 04 21:46:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 05 00:33:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2888,7 +2888,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1698
 	 */
-	uint8_t unused1696;
+	uint8_t totalGearsCount;
 	/**
 	 * offset 1699
 	 */
@@ -4557,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 04 21:46:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 05 00:33:54 UTC 2022

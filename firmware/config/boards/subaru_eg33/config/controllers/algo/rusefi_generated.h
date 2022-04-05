@@ -1918,7 +1918,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3395336639
+#define SIGNATURE_HASH 3439355328
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2119,6 +2119,7 @@
 #define torqueRpmBins_offset 4726
 #define torqueTable_offset 4690
 #define TOTAL_CONFIG_SIZE 21012
+#define totalGearsCount_offset 1698
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
 #define tps1SecondaryMax_offset 830
@@ -2463,7 +2464,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.04.subaru_eg33_f7.3395336639"
+#define TS_SIGNATURE "rusEFI 2022.04.05.subaru_eg33_f7.3439355328"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2504,7 +2505,6 @@
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
 #define unused16962_offset 1699
-#define unused1696_offset 1698
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740

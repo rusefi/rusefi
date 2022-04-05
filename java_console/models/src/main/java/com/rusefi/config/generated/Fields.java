@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 04 21:46:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 05 00:33:57 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2058,6 +2058,7 @@ public class Fields {
 	public static final int torqueRpmBins_offset = 4726;
 	public static final int torqueTable_offset = 4690;
 	public static final int TOTAL_CONFIG_SIZE = 21012;
+	public static final int totalGearsCount_offset = 1698;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
 	public static final int tps1SecondaryMax_offset = 830;
@@ -2352,7 +2353,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.04.all.2883049534";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.05.all.2897675329";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2390,7 +2391,6 @@ public class Fields {
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
 	public static final int unused16962_offset = 1699;
-	public static final int unused1696_offset = 1698;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
@@ -3272,7 +3272,7 @@ public class Fields {
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1692, FieldType.FLOAT);
 	public static final Field AUXSPEEDSENSORINPUTPIN1 = Field.create("AUXSPEEDSENSORINPUTPIN1", 1696, FieldType.INT8, brain_input_pin_e);
 	public static final Field AUXSPEEDSENSORINPUTPIN2 = Field.create("AUXSPEEDSENSORINPUTPIN2", 1697, FieldType.INT8, brain_input_pin_e);
-	public static final Field UNUSED1696 = Field.create("UNUSED1696", 1698, FieldType.INT8);
+	public static final Field TOTALGEARSCOUNT = Field.create("TOTALGEARSCOUNT", 1698, FieldType.INT8);
 	public static final Field UNUSED16962 = Field.create("UNUSED16962", 1699, FieldType.INT8);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1704, FieldType.FLOAT);
@@ -4590,7 +4590,7 @@ public class Fields {
 	TPSACCELENRICHMENTTHRESHOLD,
 	AUXSPEEDSENSORINPUTPIN1,
 	AUXSPEEDSENSORINPUTPIN2,
-	UNUSED1696,
+	TOTALGEARSCOUNT,
 	UNUSED16962,
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,

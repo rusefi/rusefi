@@ -1939,7 +1939,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2883049534
+#define SIGNATURE_HASH 2897675329
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2140,6 +2140,7 @@
 #define torqueRpmBins_offset 4726
 #define torqueTable_offset 4690
 #define TOTAL_CONFIG_SIZE 21012
+#define totalGearsCount_offset 1698
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
 #define tps1SecondaryMax_offset 830
@@ -2484,7 +2485,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.04.all.2883049534"
+#define TS_SIGNATURE "rusEFI 2022.04.05.all.2897675329"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2525,7 +2526,6 @@
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
 #define unused16962_offset 1699
-#define unused1696_offset 1698
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
