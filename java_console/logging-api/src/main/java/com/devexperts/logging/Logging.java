@@ -217,7 +217,7 @@ public class Logging {
 				// failed to configure log4j2
 				impl = null;
 				if (!(t instanceof LinkageError) && !(t.getCause() instanceof LinkageError)) {
-					errors.put("log4j2 link", new IllegalStateException(t));
+					//errors.put("log4j2 link", new IllegalStateException(t));
 				}
 			}
 		}
