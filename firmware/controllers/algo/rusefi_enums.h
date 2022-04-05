@@ -594,17 +594,6 @@ typedef enum {
 	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
-typedef enum {
-	GC_NONE = 0,
-	GC_BUTTON_SHIFT = 1,
-} gear_controller_e;
-
-typedef enum {
-	TC_NONE = 0,
-	TC_SIMPLE_TRANSMISSION_CONTROLLER = 1,
-	TC_GM_4L6X = 2,
-} transmission_controller_e;
-
 typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Tps = 0,
 	GPPWM_Map = 1,

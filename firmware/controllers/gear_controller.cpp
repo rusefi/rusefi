@@ -3,11 +3,15 @@
 #include "gear_controller.h"
 
 void GearControllerBase::init() {
+<<<<<<< HEAD
 	initTransmissionController();
 }
 
 void GearControllerBase::initTransmissionController() {
 	switch (engineConfiguration->transmissionControllerMode) {
+=======
+	switch (engineConfiguration->transmissionController) {
+>>>>>>> de8849fd38 (try enum class)
 	case TransmissionControllerMode::SimpleTransmissionController :
 		transmissionController = getSimpleTransmissionController();
 		break;
@@ -50,7 +54,6 @@ void GearControllerBase::postState() {
 }
 
 void initGearController() {
-
 	switch (engineConfiguration->gearControllerMode) {
 	case GearControllerMode::ButtonShift :
 		engine->gearController = getButtonShiftController();
