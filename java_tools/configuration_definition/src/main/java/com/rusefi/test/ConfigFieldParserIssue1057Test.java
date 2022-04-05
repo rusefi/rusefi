@@ -57,7 +57,7 @@ public class ConfigFieldParserIssue1057Test {
                         "\tpublic static final Field UNUSEDBIT_1_29 = Field.create(\"UNUSEDBIT_1_29\", 0, FieldType.BIT, 29);\n" +
                         "\tpublic static final Field UNUSEDBIT_1_30 = Field.create(\"UNUSEDBIT_1_30\", 0, FieldType.BIT, 30);\n" +
                         "\tpublic static final Field UNUSEDBIT_1_31 = Field.create(\"UNUSEDBIT_1_31\", 0, FieldType.BIT, 31);\n" +
-                        "\tpublic static final Field FIELDNAME = Field.create(\"FIELDNAME\", 4, FieldType.INT);\n",
+                        "\tpublic static final Field FIELDNAME = Field.create(\"FIELDNAME\", 4, FieldType.INT).setScale(1.0);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
     }
 }
