@@ -544,8 +544,8 @@ void setMazdaMiata2003EngineConfigurationBoardTest() {
 }
 
 static void setMiataNB2_MRE_common() {
-#if (BOARD_TLE8888_COUNT > 0)
 	setMazdaMiataEngineNB2Defaults();
+#if (BOARD_TLE8888_COUNT > 0)
 
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
 	//
