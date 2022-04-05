@@ -44,5 +44,5 @@ void initGearController() {
 	default :
 		return;
 	}
-	engine->gearController.init();
+	engine->gearController->init();
 }

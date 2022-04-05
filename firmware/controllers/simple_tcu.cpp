@@ -2,7 +2,7 @@
 
 #include "simple_tcu.h"
 
-SimpleTransmissionController simpleTransmissionController
+SimpleTransmissionController simpleTransmissionController;
 
 void SimpleTransmissionController::init() {
     for (size_t i = 0; i < efi::size(engineConfiguration->tcu_solenoid); i++) {
