@@ -190,7 +190,7 @@ public class Logging {
 				// failed to configure with passed class name
 				impl = null;
 				if (!(t instanceof LinkageError) && !(t.getCause() instanceof LinkageError)) {
-					errors.put(className + " link", new IllegalStateException(t));
+//					errors.put(className + " link", new IllegalStateException(t));
 				}
 			}
 		}
