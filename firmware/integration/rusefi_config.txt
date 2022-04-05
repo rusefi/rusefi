@@ -1540,22 +1540,12 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
         uint16_t[TORQUE_CURVE_SIZE] torqueLoadBins;;"Load", 1, 0, 0, 65000, 0
 
 #define gear_controller_e_enum "None", "Button Shift"
-<<<<<<< HEAD
-
 		custom GearControllerMode 1 bits, U08, @OFFSET@, [0:1], @@gear_controller_e_enum@@
 		GearControllerMode gearControllerMode
 
 #define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
 		custom TransmissionControllerMode 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
 		TransmissionControllerMode transmissionControllerMode
-=======
-		custom gear_controller_e 1 bits, U08, @OFFSET@, [0:1], @@gear_controller_e_enum@@
-		gear_controller_e gearController
-
-#define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
-		custom transmission_controller_e 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
-		transmission_controller_e transmissionController
->>>>>>> ce9cdc586e (save changes)
 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
