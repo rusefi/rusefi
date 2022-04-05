@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Oct 17 03:59:15 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Apr 05 01:49:39 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -46,7 +46,7 @@ public class EngineState {
 	public static final Field TARGETAFR = Field.create("TARGETAFR", 24, FieldType.FLOAT);
 	public static final Field ENGINECYCLEDURATIONMS = Field.create("ENGINECYCLEDURATIONMS", 28, FieldType.FLOAT);
 	public static final Field MINRPMKCURRENTTPS = Field.create("MINRPMKCURRENTTPS", 32, FieldType.FLOAT);
-	public static final Field CURRENTTPSADC = Field.create("CURRENTTPSADC", 36, FieldType.INT);
+	public static final Field CURRENTTPSADC = Field.create("CURRENTTPSADC", 36, FieldType.INT).setScale(1.0);
 	public static final Field TPSVOLTAGEMCU = Field.create("TPSVOLTAGEMCU", 40, FieldType.FLOAT);
 	public static final Field TPSVOLTAGEBOARD = Field.create("TPSVOLTAGEBOARD", 44, FieldType.FLOAT);
 	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 48, FieldType.FLOAT);
