@@ -247,6 +247,15 @@ void setMazdaNB2VVTSettings() {
 	engineConfiguration->auxPid[0].maxValue = 44;
 }
 
+static void set4EC_AT() {
+	engineConfiguration->totalGearsCount = 4;
+	// http://www.new-cars.com/2003/mazda/mazda-miata-specs.html
+	engineConfiguration->gearRatio[0] = 2.45;
+	engineConfiguration->gearRatio[1] = 1.45;
+	engineConfiguration->gearRatio[2] = 1.0;
+	engineConfiguration->gearRatio[3] = 0.73;
+}
+
 /**
  * stuff common between NA1 and NB2
  */
@@ -317,6 +326,7 @@ static void setCommonMazdaNB() {
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
 	miataNA_setIacCoastingBins();
+	set4EC_AT();
 }
 
 static void setMazdaMiataEngineNB1Defaults() {
