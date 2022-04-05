@@ -27,7 +27,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return javaFieldsWriter.toString();
     }
 
-    private void writeJavaFieldName(String nameWithPrefix, int tsPosition) throws IOException {
+    private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) throws IOException {
         javaFieldsWriter.write("\tpublic static final Field ");
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
         javaFieldsWriter.write(nameWithPrefix.toUpperCase());
@@ -64,14 +64,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         String nameWithPrefix = prefix + configField.getName();
 
         if (configField.isBit()) {
-            writeJavaFieldName(nameWithPrefix, tsPosition);
+            writeJavaFieldName(nameWithPrefix, tsPosition, 1);
             javaFieldsWriter.append("FieldType.BIT, " + bitIndex + ");" + EOL);
             tsPosition += configField.getSize(next);
             return tsPosition;
         }
 
         if (TypesHelper.isFloat(configField.getType())) {
-            writeJavaFieldName(nameWithPrefix, tsPosition);
+            writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
             String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
@@ -82,7 +82,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             }
 
 
-            writeJavaFieldName(nameWithPrefix, tsPosition);
+            writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
             if (isStringField(configField)) {
                 String custom = state.tsCustomLine.get(configField.getType());
                 String[] tokens = custom.split(",");
@@ -98,7 +98,8 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             if (enumOptions != null) {
                 javaFieldsWriter.write(", " + configField.getType());
             }
-            javaFieldsWriter.write(");" + EOL);
+            javaFieldsWriter.write(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
+                    ";" + EOL);
         }
 
         tsPosition += configField.getSize(next);

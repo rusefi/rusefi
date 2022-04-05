@@ -64,9 +64,9 @@ public class TSProjectConsumerTest {
                 "periodMs = scalar, S16, 18, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "; total TS size = 20\n", new String(writer.toCharArray()));
 
-        assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT16);\n" +
-                        "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 2, FieldType.INT);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 18, FieldType.INT16);\n",
+        assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT16).setScale(1.0);\n" +
+                        "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 2, FieldType.INT).setScale(1.0);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 18, FieldType.INT16).setScale(1.0);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
 
 

@@ -1,13 +1,17 @@
 package com.rusefi.test;
 
-import com.rusefi.*;
-import com.rusefi.output.*;
+import com.rusefi.ConfigField;
+import com.rusefi.ReaderState;
+import com.rusefi.TypesHelper;
+import com.rusefi.VariableRegistry;
+import com.rusefi.output.BaseCHeaderConsumer;
+import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.JavaFieldsConsumer;
+import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -184,9 +188,9 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
-        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
-                     "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n" +
-                     "\tpublic static final Field ALIGNMENTFILL_AT_122 = Field.create(\"ALIGNMENTFILL_AT_122\", 122, FieldType.INT8);\n",
+        assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING).setScale(1.0);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16).setScale(1.0);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_122 = Field.create(\"ALIGNMENTFILL_AT_122\", 122, FieldType.INT8).setScale(1.0);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
     }
 
@@ -252,22 +256,22 @@ public class ConfigFieldParserTest {
             state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
 
-            assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
-                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16);\n" +
-                         "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16);\n" +
-                         "\tpublic static final Field ALIGNMENTFILL_AT_6 = Field.create(\"ALIGNMENTFILL_AT_6\", 6, FieldType.INT8);\n" +
-                         "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16);\n" +
-                         "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16);\n" +
-                         "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16);\n" +
-                         "\tpublic static final Field ALTERNATORCONTROL_ALIGNMENTFILL_AT_6 = Field.create(\"ALTERNATORCONTROL_ALIGNMENTFILL_AT_6\", 6, FieldType.INT8);\n" +
-                         "\tpublic static final Field ETB1_OFFSET = Field.create(\"ETB1_OFFSET\", 8, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB1_PERIODMS = Field.create(\"ETB1_PERIODMS\", 10, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB1_MINVALUE = Field.create(\"ETB1_MINVALUE\", 12, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB1_ALIGNMENTFILL_AT_6 = Field.create(\"ETB1_ALIGNMENTFILL_AT_6\", 14, FieldType.INT8);\n" +
-                         "\tpublic static final Field ETB2_OFFSET = Field.create(\"ETB2_OFFSET\", 16, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16);\n" +
-                         "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8);\n",
+            assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ALIGNMENTFILL_AT_6 = Field.create(\"ALIGNMENTFILL_AT_6\", 6, FieldType.INT8).setScale(1.0);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ALTERNATORCONTROL_ALIGNMENTFILL_AT_6 = Field.create(\"ALTERNATORCONTROL_ALIGNMENTFILL_AT_6\", 6, FieldType.INT8).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB1_OFFSET = Field.create(\"ETB1_OFFSET\", 8, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB1_PERIODMS = Field.create(\"ETB1_PERIODMS\", 10, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB1_MINVALUE = Field.create(\"ETB1_MINVALUE\", 12, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB1_ALIGNMENTFILL_AT_6 = Field.create(\"ETB1_ALIGNMENTFILL_AT_6\", 14, FieldType.INT8).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB2_OFFSET = Field.create(\"ETB2_OFFSET\", 16, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16).setScale(1.0);\n" +
+                            "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8).setScale(1.0);\n",
                     javaFieldsConsumer.getJavaFieldsWriter());
         }
     }
@@ -276,17 +280,22 @@ public class ConfigFieldParserTest {
     public void testArrayOfOne() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 1\n" +
-                "int[ERROR_BUFFER_SIZE iterate] field\n" +
+                "int[ERROR_BUFFER_SIZE iterate] autoscale field;;\"ratio\", 0.01, 0, 0, 650, 0\n" +
                 "end_struct\n" +
                 "";
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
-        new ReaderState().readBufferedReader(test, Collections.singletonList(consumer));
+        ReaderState state = new ReaderState();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, Arrays.asList(consumer, javaFieldsConsumer));
+        assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01);\n",
+                javaFieldsConsumer.getJavaFieldsWriter());
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
                 "\t/**\n" +
+                "\tratio\n" +
                 "\t * offset 0\n" +
                 "\t */\n" +
-                "\tint field[ERROR_BUFFER_SIZE];\n" +
+                "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
                 "\t/** total size 4*/\n" +
                 "};\n" +
                 "\n", consumer.getContent().toString());

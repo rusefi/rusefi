@@ -1,8 +1,8 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.Pair;
 import com.rusefi.output.JavaFieldsConsumer;
-import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
 
 import java.util.Arrays;
@@ -248,6 +248,10 @@ public class ConfigField {
         return isIterate;
     }
 
+    public boolean isHasAutoscale() {
+        return hasAutoscale;
+    }
+
     public ReaderState getState() {
         return state;
     }
@@ -261,6 +265,20 @@ public class ConfigField {
     }
 
     public String autoscaleSpec() {
+        Pair<Integer, Integer> pair = autoscaleSpecPair();
+        if (pair == null)
+            return null;
+        return pair.first + ", " + pair.second;
+    }
+
+    public double autoscaleSpecNumber() {
+        Pair<Integer, Integer> pair = autoscaleSpecPair();
+        if (pair == null)
+            return 1;
+        return 1.0 * pair.second / pair.first;
+    }
+
+    public Pair<Integer, Integer> autoscaleSpecPair() {
         if (!hasAutoscale) {
             return null;
         }
@@ -295,10 +313,10 @@ public class ConfigField {
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
-            return "$*@#$* Cannot accurately represent autoscale for " + tokens[1];
+            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for " + tokens[1]);
         }
 
-        return mul + ", " + div;
+        return new Pair<>(mul, div);
     }
 
     private String[] getTokens() {
