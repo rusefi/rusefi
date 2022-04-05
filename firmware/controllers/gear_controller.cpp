@@ -7,6 +7,9 @@ void GearControllerBase::init() {
 	case TC_SIMPLE_TRANSMISSION_CONTROLLER :
 		transmissionController = getSimpleTransmissionController();
 		break;
+	case TC_GM_4L6X :
+		transmissionController = getGm4l6xTransmissionController();
+		break;
 	default :
 		return;
 	}
