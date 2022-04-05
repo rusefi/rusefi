@@ -9,3 +9,5 @@ public:
     void update(gear_e);
     void init();
 };
+
+SimpleTransmissionController* getSimpleTransmissionController();

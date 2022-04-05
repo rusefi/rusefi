@@ -29,3 +29,7 @@ void SimpleTransmissionController::update(gear_e gear) {
     }
 #endif
 }
+
+SimpleTransmissionController* getSimpleTransmissionController() {
+	return &simpleTransmissionController;
+}

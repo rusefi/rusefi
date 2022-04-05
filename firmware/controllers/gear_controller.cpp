@@ -5,7 +5,7 @@
 void GearControllerBase::init() {
 	switch (engineConfiguration->transmissionController) {
 	case TC_SIMPLE_TRANSMISSION_CONTROLLER :
-		transmissionController = &simpleTransmissionController;
+		transmissionController = getSimpleTransmissionController();
 		break;
 	default :
 		return;

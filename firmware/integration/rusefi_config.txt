@@ -1178,6 +1178,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
     brain_input_pin_e[2 iterate] auxSpeedSensorInputPin;
 
+
 	uint8_t totalGearsCount;;"", 1, 0, 0, 1, 0
 	uint8_t unused16962;;"", 1, 0, 0, 1, 0
 		
@@ -1522,10 +1523,11 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 
 #define gear_controller_e_enum "None", "Button Shift"
 		custom gear_controller_e 1 bits, U08, @OFFSET@, [0:1], @@gear_controller_e_enum@@
+		gear_controller_e gearController
 
 #define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
 		custom transmission_controller_e 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
-		
+		transmission_controller_e transmissionController
 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
