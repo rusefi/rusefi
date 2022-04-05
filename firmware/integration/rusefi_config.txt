@@ -1177,11 +1177,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
 
     brain_input_pin_e[2 iterate] auxSpeedSensorInputPin;
-
-
 	uint8_t totalGearsCount;;"", 1, 0, 0, 1, 0
 	uint8_t unused16962;;"", 1, 0, 0, 1, 0
-		
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
