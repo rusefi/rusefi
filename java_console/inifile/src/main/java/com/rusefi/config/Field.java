@@ -226,8 +226,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
-        Field field = new Field(name, offset, type, options);
-        return field;
+        return new Field(name, offset, type, options);
     }
 
     public static Field create(String name, int offset, int stringSize, FieldType type) {
