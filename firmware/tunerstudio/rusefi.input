@@ -3105,25 +3105,27 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",					vehicleSpeedSensorInputPin
-		field = "Filter Reciprocal",					vssFilterReciprocal
-		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
+		field = "Filter Reciprocal",				vssFilterReciprocal, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
+
 ;
 ; We prefer quantities that users can actually measure or inspect without math, so we have
 ; two separate natural settings here without one 'sensor tooth to wheel revolution' ratio
 ;
-		field = "Speed sensor gear ratio",				vssGearRatio
-		field = "Speed sensor tooth count",				vssToothCount
+		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
+		field = "Speed sensor gear ratio",	vssGearRatio, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
+		field = "Speed sensor tooth count",	vssToothCount, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
 
 	dialog = speedSensorCan, "CAN Vehicle Speed"
 		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
 
 	dialog = speedSensorLeft, "", yAxis
-		panel = speedSensorCan
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
+		panel = speedSensorCan
 		panel = vssFilter
 
 	dialog = gearDetection, "Gear Detection"
+		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
 		field = "Final drive ratio",       finalGearRatio
 
 	dialog = speedSensor, "Speed sensor", xAxis
