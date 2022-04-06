@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 03:02:04 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1868,6 +1868,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 213193612;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2353,7 +2354,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.06.all.2897675329";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.06.all.213193612";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2396,6 +2397,7 @@ public class Fields {
 	public static final int unused1740b2_offset = 1740;
 	public static final int unused184_offset = 184;
 	public static final int unused4750_offset = 4750;
+	public static final int unused722_offset = 722;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -2549,7 +2551,6 @@ public class Fields {
 	public static final int wastegatePositionSensor_offset = 1751;
 	public static final int wboHeaterPin_offset = 681;
 	public static final int weHaveUnusedHere_offset = 500;
-	public static final int wheelDiameter_offset = 722;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final int wwaeBeta_offset = 1568;
 	public static final int wwaeTau_offset = 1480;
@@ -2846,8 +2847,8 @@ public class Fields {
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 717, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 718, FieldType.INT8, pin_input_mode_e).setScale(1.0);
 	public static final Field ACIDLEEXTRAOFFSET = Field.create("ACIDLEEXTRAOFFSET", 719, FieldType.INT8).setScale(1.0);
-	public static final Field FINALGEARRATIO = Field.create("FINALGEARRATIO", 720, FieldType.INT16).setScale(0.1);
-	public static final Field WHEELDIAMETER = Field.create("WHEELDIAMETER", 722, FieldType.INT16).setScale(0.001);
+	public static final Field FINALGEARRATIO = Field.create("FINALGEARRATIO", 720, FieldType.INT16).setScale(0.01);
+	public static final Field UNUSED722 = Field.create("UNUSED722", 722, FieldType.INT16).setScale(1.0);
 	public static final Field WASTEGATEPOSITIONMIN = Field.create("WASTEGATEPOSITIONMIN", 724, FieldType.INT16).setScale(1.0);
 	public static final Field WASTEGATEPOSITIONMAX = Field.create("WASTEGATEPOSITIONMAX", 726, FieldType.INT16).setScale(1.0);
 	public static final Field IDLEPOSITIONMIN = Field.create("IDLEPOSITIONMIN", 728, FieldType.INT16).setScale(1.0);
@@ -4169,7 +4170,7 @@ public class Fields {
 	THROTTLEPEDALUPPINMODE,
 	ACIDLEEXTRAOFFSET,
 	FINALGEARRATIO,
-	WHEELDIAMETER,
+	UNUSED722,
 	WASTEGATEPOSITIONMIN,
 	WASTEGATEPOSITIONMAX,
 	IDLEPOSITIONMIN,

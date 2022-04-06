@@ -1939,7 +1939,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2520966141
+#define SIGNATURE_HASH 910226480
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2485,7 +2485,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.06.hellen_cypress.2520966141"
+#define TS_SIGNATURE "rusEFI 2022.04.06.hellen_cypress.910226480"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2531,6 +2531,7 @@
 #define unused1740b2_offset 1740
 #define unused184_offset 184
 #define unused4750_offset 4750
+#define unused722_offset 722
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
@@ -2689,7 +2690,6 @@
 #define wastegatePositionSensor_offset 1751
 #define wboHeaterPin_offset 681
 #define weHaveUnusedHere_offset 500
-#define wheelDiameter_offset 722
 #define WWAE_TABLE_SIZE 8
 #define wwaeBeta_offset 1568
 #define wwaeTau_offset 1480

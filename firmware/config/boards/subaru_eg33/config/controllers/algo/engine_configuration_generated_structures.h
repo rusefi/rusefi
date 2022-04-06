@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 05 00:33:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:42 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1529,15 +1529,15 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
+	 * Ratio between the wheels and your transmission output.
 	ratio
 	 * offset 720
 	 */
-	scaled_channel<uint16_t, 10, 1> finalGearRatio;
+	scaled_channel<uint16_t, 100, 1> finalGearRatio;
 	/**
-	m
 	 * offset 722
 	 */
-	scaled_channel<uint16_t, 1000, 1> wheelDiameter;
+	scaled_channel<uint16_t, 1, 1> unused722;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -4557,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 05 00:33:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:42 UTC 2022
