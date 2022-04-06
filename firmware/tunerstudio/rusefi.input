@@ -1463,6 +1463,7 @@ menuDialog = main
 
 	menu = "&Advanced"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
+		subMenu = gearDetection,			"Gear detection", 0
 
 		subMenu = std_separator
 		subMenu = boostDialog,          "Boost Control"
@@ -3102,30 +3103,41 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = alternator
 		panel = startStopDialog
 
-	dialog = speedSensorAnalog
+	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",					vehicleSpeedSensorInputPin
-		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
+		field = "Filter Reciprocal",				vssFilterReciprocal, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
+
 ;
 ; We prefer quantities that users can actually measure or inspect without math, so we have
 ; two separate natural settings here without one 'sensor tooth to wheel revolution' ratio
 ;
-		field = "Speed sensor gear ratio",				vssGearRatio
-		field = "Speed sensor tooth count",				vssToothCount
+		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
+		field = "Speed sensor gear ratio",	vssGearRatio, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
+		field = "Speed sensor tooth count",	vssToothCount, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
 
-	dialog = speedSensorCan
-		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
+	dialog = speedSensorCan, "CAN Vehicle Speed"
+		field = "Enable CAN VSS",			enableCanVss, { canReadEnabled }
+		field = "VSS CAN message type",						canVssNbcType, { enableCanVss }
 
-	dialog = vssFilter
-		field = "Filter Reciprocal",                      vssFilterReciprocal
-
-	dialog = speedSensorLeft, "Speed sensor config", yAxis
-		panel = speedSensorCan, { enableCanVss }
+	dialog = speedSensorLeft, "", yAxis
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
-		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
+		panel = speedSensorCan
 		panel = vssFilter
-		field = "finalGearRatio",       finalGearRatio
-        field = "wheelDiameter",            wheelDiameter
 
+	dialog = gearDetection, "Gear Detection"
+		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
+		field = "Final drive ratio",       finalGearRatio
+		field = ""
+		field = "Forward gear count", totalGearsCount
+		field = ""
+		field = "1st gear", gearRatio1, { totalGearsCount >= 1 }
+		field = "2nd gear", gearRatio2, { totalGearsCount >= 2 }
+		field = "3rd gear", gearRatio3, { totalGearsCount >= 3 }
+		field = "4th gear", gearRatio4, { totalGearsCount >= 4 }
+		field = "5th gear", gearRatio5, { totalGearsCount >= 5 }
+		field = "6th gear", gearRatio6, { totalGearsCount >= 6 }
+		field = "7th gear", gearRatio6, { totalGearsCount >= 7 }
+		field = "8th gear", gearRatio6, { totalGearsCount >= 8 }
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft

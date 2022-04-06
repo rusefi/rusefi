@@ -37,6 +37,7 @@
 #include "ignition_controller.h"
 #include "alternator_controller.h"
 #include "dfco.h"
+#include "gear_detector.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -185,6 +186,9 @@ public:
 		PrimeController,
 		DfcoController,
 		Mockable<WallFuelController>,
+#if EFI_VEHICLE_SPEED
+		GearDetector,
+#endif // EFI_VEHICLE_SPEED
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

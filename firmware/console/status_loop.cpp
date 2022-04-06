@@ -548,11 +548,8 @@ static void updateVvtSensors() {
 
 static void updateVehicleSpeed(int rpm) {
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
-	float wheelRPM = vehicleSpeedKph * 1000 / 60 / (2 * CONST_PI * engineConfiguration->wheelDiameter);
-	float driveshaftRpm = wheelRPM * engineConfiguration->finalGearRatio;
-	engine->outputChannels.vehicleSpeedKph = vehicleSpeedKph;
-	engine->outputChannels.speedToRpmRatio = rpm / driveshaftRpm;
+	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
 #endif /* EFI_VEHICLE_SPEED */
 }
 
