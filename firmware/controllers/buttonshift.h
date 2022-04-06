@@ -15,11 +15,12 @@ class ButtonShiftController: public GearControllerBase {
 public:
 	ButtonShiftController();
 
-    void update() override;
-    void init() override;
+	void update() override;
+	void init() override;
+	GearControllerMode mode = GearControllerMode::ButtonShift;
 private:
-    ButtonDebounce debounceUp;
-    ButtonDebounce debounceDown;
+	ButtonDebounce debounceUp;
+	ButtonDebounce debounceDown;
 };
 
 ButtonShiftController* getButtonShiftController();

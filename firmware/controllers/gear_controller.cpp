@@ -3,6 +3,10 @@
 #include "gear_controller.h"
 
 void GearControllerBase::init() {
+	initTransmissionController();
+}
+
+void GearControllerBase::initTransmissionController() {
 	switch (engineConfiguration->transmissionControllerMode) {
 	case TransmissionControllerMode::SimpleTransmissionController :
 		transmissionController = getSimpleTransmissionController();
@@ -11,17 +15,23 @@ void GearControllerBase::init() {
 		transmissionController = getGm4l6xTransmissionController();
 		break;
 	default :
+		transmissionController = NULL;
 		return;
 	}
 	transmissionController->init();
 }
 
 void GearControllerBase::update() {
-    // We are responsible for telling the transmission controller
-    //  what gear we want.
-    transmissionController->update(getDesiredGear());
-    // Post state to TS
-    postState();
+	if (transmissionController == NULL) {
+		initTransmissionController();
+	} else if (transmissionController->mode != engineConfiguration->transmissionControllerMode) {
+		initTransmissionController();
+	}
+	// We are responsible for telling the transmission controller
+	//  what gear we want.
+	transmissionController->update(getDesiredGear());
+	// Post state to TS
+	postState();
 }
 
 gear_e GearControllerBase::getDesiredGear() const {
@@ -45,6 +55,7 @@ void initGearController() {
 		engine->gearController = getButtonShiftController();
 		break;
 	default :
+		engine->gearController = NULL;
 		return;
 	}
 	engine->gearController->init();

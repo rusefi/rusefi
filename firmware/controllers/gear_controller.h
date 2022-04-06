@@ -10,17 +10,19 @@
 
 class GearControllerBase {
 public:
-    virtual void update();
-    gear_e getDesiredGear() const;
-    virtual void init();
+	virtual void update();
+	gear_e getDesiredGear() const;
+	virtual void init();
+	GearControllerMode mode = GearControllerMode::None;
 private:
-    gear_e desiredGear = NEUTRAL;
+	gear_e desiredGear = NEUTRAL;
 protected:
-    gear_e setDesiredGear(gear_e);
+	gear_e setDesiredGear(gear_e);
+	void initTransmissionController();
 
 private:
-    void postState();
-    TransmissionControllerBase *transmissionController;
+	void postState();
+	TransmissionControllerBase *transmissionController;
 };
 
 void initGearController();
