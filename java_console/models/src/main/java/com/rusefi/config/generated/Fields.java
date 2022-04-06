@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:45 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 21:41:58 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1155,6 +1155,9 @@ public class Fields {
 	public static final int gear_e_GEAR_4 = 4;
 	public static final int gear_e_NEUTRAL = 0;
 	public static final int gear_e_REVERSE = -1;
+	public static final int GearControllerMode_ButtonShift = 1;
+	public static final int GearControllerMode_None = 0;
+	public static final int gearControllerMode_offset = 4750;
 	public static final int gearRatio1_offset = 4622;
 	public static final int gearRatio2_offset = 4624;
 	public static final int gearRatio3_offset = 4626;
@@ -1868,7 +1871,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 213193612;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2098,6 +2100,10 @@ public class Fields {
 	public static final int trailingCoilPins8_offset = 1963;
 	public static final int trailingCoilPins9_offset = 1964;
 	public static final int trailingSparkAngle_offset = 528;
+	public static final int TransmissionControllerMode_Gm4l6x = 2;
+	public static final int TransmissionControllerMode_None = 0;
+	public static final int transmissionControllerMode_offset = 4751;
+	public static final int TransmissionControllerMode_SimpleTransmissionController = 1;
 	public static final String TRIGGER_COMMENT = "#";
 	public static final int trigger_config_s_size = 16;
 	public static final int trigger_customSkippedToothCount_offset = 544;
@@ -2354,7 +2360,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.06.all.213193612";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.06.all.2608207070";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2396,7 +2402,6 @@ public class Fields {
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
 	public static final int unused184_offset = 184;
-	public static final int unused4750_offset = 4750;
 	public static final int unused722_offset = 722;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
@@ -3775,7 +3780,8 @@ public class Fields {
 	public static final Field TORQUETABLE = Field.create("TORQUETABLE", 4690, FieldType.INT8).setScale(10.0);
 	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4726, FieldType.INT16).setScale(1.0);
 	public static final Field TORQUELOADBINS = Field.create("TORQUELOADBINS", 4738, FieldType.INT16).setScale(1.0);
-	public static final Field UNUSED4750 = Field.create("UNUSED4750", 4750, FieldType.INT8).setScale(1.0);
+	public static final Field GEARCONTROLLERMODE = Field.create("GEARCONTROLLERMODE", 4750, FieldType.INT8).setScale(1.0);
+	public static final Field TRANSMISSIONCONTROLLERMODE = Field.create("TRANSMISSIONCONTROLLERMODE", 4751, FieldType.INT8).setScale(1.0);
 	public static final Field AUXLINEAR1_HWCHANNEL = Field.create("AUXLINEAR1_HWCHANNEL", 4752, FieldType.INT8, adc_channel_e).setScale(1.0);
 	public static final Field AUXLINEAR1_ALIGNMENTFILL = Field.create("AUXLINEAR1_ALIGNMENTFILL", 4753, FieldType.INT8).setScale(1.0);
 	public static final Field AUXLINEAR1_V1 = Field.create("AUXLINEAR1_V1", 4756, FieldType.FLOAT);
@@ -5083,7 +5089,8 @@ public class Fields {
 	TORQUETABLE,
 	TORQUERPMBINS,
 	TORQUELOADBINS,
-	UNUSED4750,
+	GEARCONTROLLERMODE,
+	TRANSMISSIONCONTROLLERMODE,
 	AUXLINEAR1_HWCHANNEL,
 	AUXLINEAR1_ALIGNMENTFILL,
 	AUXLINEAR1_V1,

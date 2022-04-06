@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:42 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 21:41:56 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4120,7 +4120,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 4750
 	 */
-	uint8_t unused4750[2];
+	GearControllerMode gearControllerMode;
+	/**
+	 * offset 4751
+	 */
+	TransmissionControllerMode transmissionControllerMode;
 	/**
 	 * offset 4752
 	 */
@@ -4557,4 +4561,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 20:20:42 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 21:41:56 UTC 2022
