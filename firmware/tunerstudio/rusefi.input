@@ -1463,6 +1463,7 @@ menuDialog = main
 
 	menu = "&Advanced"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
+		subMenu = gearDetection,			"Gear detection", 0
 
 		subMenu = std_separator
 		subMenu = boostDialog,          "Boost Control"
@@ -3102,8 +3103,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = alternator
 		panel = startStopDialog
 
-	dialog = speedSensorAnalog
+	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",					vehicleSpeedSensorInputPin
+		field = "Filter Reciprocal",					vssFilterReciprocal
 		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
 ;
 ; We prefer quantities that users can actually measure or inspect without math, so we have
@@ -3112,20 +3114,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Speed sensor gear ratio",				vssGearRatio
 		field = "Speed sensor tooth count",				vssToothCount
 
-	dialog = speedSensorCan
+	dialog = speedSensorCan, "CAN Vehicle Speed"
+		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
 
-	dialog = vssFilter
-		field = "Filter Reciprocal",                      vssFilterReciprocal
-
-	dialog = speedSensorLeft, "Speed sensor config", yAxis
-		panel = speedSensorCan, { enableCanVss }
+	dialog = speedSensorLeft, "", yAxis
+		panel = speedSensorCan
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
-		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 		panel = vssFilter
-		field = "finalGearRatio",       finalGearRatio
-        field = "wheelDiameter",            wheelDiameter
 
+	dialog = gearDetection, "Gear Detection"
+		field = "Final drive ratio",       finalGearRatio
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
