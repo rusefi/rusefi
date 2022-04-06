@@ -3116,8 +3116,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Speed sensor tooth count",	vssToothCount, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
 
 	dialog = speedSensorCan, "CAN Vehicle Speed"
-		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
-		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
+		field = "Enable CAN VSS",			enableCanVss, { canReadEnabled }
+		field = "VSS CAN message type",						canVssNbcType, { enableCanVss }
 
 	dialog = speedSensorLeft, "", yAxis
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
