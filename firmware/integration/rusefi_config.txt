@@ -1177,7 +1177,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
 
     brain_input_pin_e[2 iterate] auxSpeedSensorInputPin;
-	uint8_t totalGearsCount;;"", 1, 0, 0, 1, 0
+	uint8_t totalGearsCount;;"", 1, 0, 1, @@GEARS_COUNT@@, 0
 	uint8_t unused16962;;"", 1, 0, 0, 1, 0
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
@@ -1500,7 +1500,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
-    uint16_t[GEARS_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 650, 0
+    uint16_t[GEARS_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 10, 2
 
 uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
 uint16_t unusedShort;;"RPM", 1, 0, 0, 65000, 0

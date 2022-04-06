@@ -3127,6 +3127,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = gearDetection, "Gear Detection"
 		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
 		field = "Final drive ratio",       finalGearRatio
+		field = ""
+		field = "Forward gear count", totalGearsCount
+		field = ""
+		field = "1st gear", gearRatio1, { totalGearsCount >= 1 }
+		field = "2nd gear", gearRatio2, { totalGearsCount >= 2 }
+		field = "3rd gear", gearRatio3, { totalGearsCount >= 3 }
+		field = "4th gear", gearRatio4, { totalGearsCount >= 4 }
+		field = "5th gear", gearRatio5, { totalGearsCount >= 5 }
+		field = "6th gear", gearRatio6, { totalGearsCount >= 6 }
+		field = "7th gear", gearRatio6, { totalGearsCount >= 7 }
+		field = "8th gear", gearRatio6, { totalGearsCount >= 8 }
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
