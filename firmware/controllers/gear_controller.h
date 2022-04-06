@@ -6,18 +6,23 @@
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
 #include "simple_tcu.h"
+#include "tc_4l6x.h"
 
 class GearControllerBase {
 public:
-    virtual void update();
-    gear_e getDesiredGear() const;
-    virtual void init();
+	virtual void update();
+	gear_e getDesiredGear() const;
+	virtual void init();
+	GearControllerMode mode = GearControllerMode::None;
 private:
-    gear_e desiredGear = NEUTRAL;
+	gear_e desiredGear = NEUTRAL;
 protected:
-    gear_e setDesiredGear(gear_e);
+	gear_e setDesiredGear(gear_e);
+	void initTransmissionController();
 
 private:
-    void postState();
-    SimpleTransmissionController transmissionController;
+	void postState();
+	TransmissionControllerBase *transmissionController;
 };
+
+void initGearController();
