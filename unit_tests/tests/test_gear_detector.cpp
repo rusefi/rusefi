@@ -27,6 +27,7 @@ TEST(GearDetector, ComputeGearRatio) {
 	EXPECT_EQ(0, GetGearRatioFor(507, 4.1, 0, 800));
 }
 
+
 TEST(GearDetector, DetermineGearSingleSpeed) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GearDetector dut;

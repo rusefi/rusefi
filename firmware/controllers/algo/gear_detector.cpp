@@ -24,8 +24,6 @@ void GearDetector::onSlowCallback() {
 	m_gearboxRatio = ratio;
 
 	m_currentGear = determineGearFromRatio(ratio);
-
-	// TODO: solve for which gear this is
 }
 
 size_t GearDetector::determineGearFromRatio(float ratio) const {

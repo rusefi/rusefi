@@ -1159,12 +1159,17 @@
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
+#define gear_controller_e_enum "None", "Button Shift"
 #define gear_e_GEAR_1 1
 #define gear_e_GEAR_2 2
 #define gear_e_GEAR_3 3
 #define gear_e_GEAR_4 4
 #define gear_e_NEUTRAL 0
 #define gear_e_REVERSE -1
+#define GearControllerMode_auto_enum "None", "ButtonShift"
+#define GearControllerMode_ButtonShift 1
+#define GearControllerMode_None 0
+#define gearControllerMode_offset 4750
 #define gearRatio1_offset 4622
 #define gearRatio2_offset 4624
 #define gearRatio3_offset 4626
@@ -1918,7 +1923,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3439355328
+#define SIGNATURE_HASH 4206982495
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2158,6 +2163,12 @@
 #define trailingCoilPins8_offset 1963
 #define trailingCoilPins9_offset 1964
 #define trailingSparkAngle_offset 528
+#define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
+#define TransmissionControllerMode_auto_enum "None", "SimpleTransmissionController", "Gm4l6x"
+#define TransmissionControllerMode_Gm4l6x 2
+#define TransmissionControllerMode_None 0
+#define transmissionControllerMode_offset 4751
+#define TransmissionControllerMode_SimpleTransmissionController 1
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
 #define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71
@@ -2464,7 +2475,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.06.subaru_eg33_f7.3439355328"
+#define TS_SIGNATURE "rusEFI 2022.04.07.subaru_eg33_f7.4206982495"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2509,7 +2520,7 @@
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
 #define unused184_offset 184
-#define unused4750_offset 4750
+#define unused722_offset 722
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
@@ -2668,7 +2679,6 @@
 #define wastegatePositionSensor_offset 1751
 #define wboHeaterPin_offset 681
 #define weHaveUnusedHere_offset 500
-#define wheelDiameter_offset 722
 #define WWAE_TABLE_SIZE 8
 #define wwaeBeta_offset 1568
 #define wwaeTau_offset 1480

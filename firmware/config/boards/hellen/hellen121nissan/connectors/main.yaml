@@ -312,8 +312,10 @@ pins:
 
 info:
   title: Hellen 121 Nissan
+  name: Hellen 121 Nissan
+  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-121-Nissan
   image:
-    file: main.jpg
+    file: 121pin.jpg
   pins:
     - pin: 1a
       x: 286

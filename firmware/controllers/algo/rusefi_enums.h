@@ -675,7 +675,6 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
 
-
 #if __cplusplus
 #include <cstdint>
 
@@ -695,4 +694,16 @@ enum class TsCalMode : uint8_t {
 	PedalMin = 12,
 	PedalMax = 13,
 };
+
+enum class GearControllerMode : uint8_t {
+	None = 0,
+	ButtonShift = 1,
+};
+
+enum class TransmissionControllerMode : uint8_t {
+	None = 0,
+	SimpleTransmissionController = 1,
+	Gm4l6x = 2,
+};
+
 #endif // __cplusplus
