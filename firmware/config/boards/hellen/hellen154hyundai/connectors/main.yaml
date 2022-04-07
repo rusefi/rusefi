@@ -83,7 +83,11 @@ pins:
     ts_name: Crank - K17
 
   - pin: K21
-    ts_name: Ambient Temperature
+    # H144_IN_O2S
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: K21 Ambient Temperature
+    function: Ambient Temperature
 
   - pin: K22
     ts_name: BK2 Wastegate Position - 22
@@ -193,8 +197,9 @@ pins:
 
   - pin: K58
 # IN_O2S2 AIN12 PA1 EFI_ADC_1
+    id: EFI_ADC_1
     class: analog_inputs
-    ts_name: Oil Temp
+    ts_name: K58 Oil Temp
     function: Oil Temperature
 
   - pin: K59
