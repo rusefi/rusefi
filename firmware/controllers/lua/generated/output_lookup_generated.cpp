@@ -406,6 +406,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.fallbackMap;
 	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
 		return engine->outputChannels.boostControllerClosedLoopPart;
+	if (strEqualCaseInsensitive(name, "detectedGear"))
+		return engine->outputChannels.detectedGear;
 	if (strEqualCaseInsensitive(name, "timingCltCorrection"))
 		return engine->outputChannels.timingCltCorrection;
 	if (strEqualCaseInsensitive(name, "timingIatCorrection"))
