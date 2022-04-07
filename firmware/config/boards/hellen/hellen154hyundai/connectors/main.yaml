@@ -45,7 +45,11 @@ pins:
     function: 12v perm
 
   - pin: K10
-    function: presure sensor
+    function: K10 presure sensor
+    # IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: K10 Sensor
 
   - pin: K11
     function: Analog Ground
