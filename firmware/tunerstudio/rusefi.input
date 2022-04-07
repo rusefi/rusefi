@@ -652,6 +652,22 @@ enable2ndByteCanID = false
 		yBins = tchargeValues
 		gauge = tChargeGauge
 
+	curve = tccLockCurve, "TCC Lock Curve"
+		columnLabel = "TPS", "Lockup Speed"
+		xAxis = 0, 100, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_tccTpsBins, TPSValue
+		yBins = tcu_tccLockSpeed
+		gauge = TPSGauge
+
+	curve = tccUnlockCurve, "TCC Unlock Curve"
+		columnLabel = "TPS", "Unlock Speed"
+		xAxis = 0, 100, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_tccTpsBins, TPSValue
+		yBins = tcu_tccUnlockSpeed
+		gauge = TPSGauge
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1509,6 +1525,7 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
 		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
+		subMenu = tccCurves, "TCC Lock/Unlock Speed"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -3441,6 +3458,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = transmissionPanel
 		panel = solenoidPanel
 		panel = buttonShiftInputPanel
+
+	dialog = tccCurves, "TCC Lock/Unlock Speed"
+		panel = tccLockCurve
+		panel = tccUnlockCurve
 
 ;Boost Open Loop
 
