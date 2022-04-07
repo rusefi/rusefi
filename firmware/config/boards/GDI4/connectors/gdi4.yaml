@@ -1,5 +1,7 @@
-- pin: 6a
-  function: Aux Analog #0
+pins:
+  - pin: 6a
+    function: Aux Analog #0
+    color: orange
 
 
 info:
