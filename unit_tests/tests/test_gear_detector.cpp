@@ -27,7 +27,6 @@ TEST(GearDetector, ComputeGearRatio) {
 	EXPECT_EQ(0, GetGearRatioFor(507, 4.1, 0, 800));
 }
 
-
 TEST(GearDetector, DetermineGearSingleSpeed) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GearDetector dut;
@@ -96,7 +95,6 @@ TEST(GearDetector, DetermineGear5Speed) {
 	EXPECT_EQ(0, dut.determineGearFromRatio(0.1));
 }
 
-
 TEST(GearDetector, DetermineGear8Speed) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GearDetector dut;
@@ -111,7 +109,6 @@ TEST(GearDetector, DetermineGear8Speed) {
 	engineConfiguration->gearRatio[5] = 1;
 	engineConfiguration->gearRatio[6] = 0.84;
 	engineConfiguration->gearRatio[7] = 0.67;
-
 
 	dut.onConfigurationChange(nullptr);
 
