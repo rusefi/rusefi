@@ -1467,10 +1467,10 @@ menuDialog = main
 		subMenu = gearDetection,			"Gear detection", 0
 
 		subMenu = std_separator
-		subMenu = boostDialog,          "Boost Control"
-		subMenu = boostOpenLoopDialog,	"Boost Control Open Loop",          { isBoostControlEnabled && boostType == 0 }
-		subMenu = boostPidDialog,       "Boost Control Closed Loop PID",    { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostTargetDialog,	"Boost Control Closed Loop Target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostDialog,          "Boost control"
+		subMenu = boostOpenLoopDialog,	"Boost control open loop",          { isBoostControlEnabled }
+		subMenu = boostPidDialog,       "Boost control closed loop PID",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,	"Boost control closed loop Target", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
 		subMenu = std_separator
@@ -3123,7 +3123,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = speedSensorLeft, "", yAxis
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
 		panel = speedSensorCan
-		panel = vssFilter
 
 	dialog = gearDetection, "Gear Detection"
 		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
