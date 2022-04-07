@@ -77,3 +77,7 @@ float GearDetector::computeGearboxRatio() const {
 float GearDetector::getGearboxRatio() const {
 	return m_gearboxRatio;
 }
+
+size_t GearDetector::getCurrentGear() const {
+	return m_currentGear;
+}
