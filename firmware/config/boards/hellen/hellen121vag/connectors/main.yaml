@@ -400,8 +400,10 @@ pins:
     
 info:
   title: Hellen 121 VAG
+  name: Hellen 121 VAG
+  board_url: https://github.com/rusefi/rusefi/wiki/Hellen121VAG
   image:
-    file: main.jpg
+    file: 121pin.jpg
   pins:
     - pin: 1a
       x: 286
