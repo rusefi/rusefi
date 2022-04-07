@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 03 22:03:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 07 13:26:35 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1239,9 +1239,10 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int8_t, 2, 1> boostControllerClosedLoopPart = (int8_t)0;
 	/**
+	 * @@GAUGE_NAME_DETECTED_GEAR@@
 	 * offset 443
 	 */
-	uint8_t unused503 = (uint8_t)0;
+	uint8_t detectedGear = (uint8_t)0;
 	/**
 	deg
 	 * offset 444
@@ -1390,4 +1391,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 03 22:03:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 07 13:26:35 UTC 2022
