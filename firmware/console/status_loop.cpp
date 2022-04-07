@@ -550,6 +550,7 @@ static void updateVehicleSpeed(int rpm) {
 #if EFI_VEHICLE_SPEED
 	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
+	engine->outputChannels.detectedGear = engine->module<GearDetector>()->getDetectedGear();
 #endif /* EFI_VEHICLE_SPEED */
 }
 
