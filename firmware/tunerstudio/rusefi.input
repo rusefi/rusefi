@@ -1469,8 +1469,8 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = boostDialog,          "Boost control"
 		subMenu = boostOpenLoopDialog,	"Boost control open loop",          { isBoostControlEnabled }
-		subMenu = boostPidDialog,       "Boost control closed loop PID",    { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostTargetDialog,	"Boost control closed loop Target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostPidDialog,       "Boost control PID",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,	"Boost control target", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
 		subMenu = std_separator
