@@ -9,7 +9,7 @@ info:
   name: GDI4
   board_url: https://rusefi.com/s/gdi4
   image:
-    file: ../../hellen/hellen121vag/connectors/121pin.jpg
+    file: 121pin.jpg
 #copy-paste of firmware/config/boards/hellen/hellen121vag/connectors/ yaml file
   pins:
     - pin: 1a
