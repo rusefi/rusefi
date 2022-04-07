@@ -546,10 +546,11 @@ static void updateVvtSensors() {
 #endif
 }
 
-static void updateVehicleSpeed(int rpm) {
+static void updateVehicleSpeed() {
 #if EFI_VEHICLE_SPEED
 	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
+	engine->outputChannels.detectedGear = engine->module<GearDetector>()->getCurrentGear();
 #endif /* EFI_VEHICLE_SPEED */
 }
 
@@ -594,14 +595,14 @@ static void updateMiscSensors() {
 	engine->outputChannels.tCharge = engine->engineState.sd.tCharge;
 }
 
-static void updateSensors(int rpm) {
+static void updateSensors() {
 	updateTempSensors();
 	updateThrottles();
 	updateRawSensors();
 	updateLambda();
 	updateFuelSensors();
 	updateVvtSensors();
-	updateVehicleSpeed(rpm);
+	updateVehicleSpeed();
 	updatePressures();
 	updateMiscSensors();
 }
@@ -724,7 +725,7 @@ void updateTunerStudioState() {
 	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 	tsOutputChannels->instantRpm = instantRpm;
 
-	updateSensors(rpm);
+	updateSensors();
 	updateFuelInfo();
 	updateIgnition(rpm);
 	updateFlags();
