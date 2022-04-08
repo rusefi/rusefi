@@ -7,6 +7,7 @@ bit engineTooHot
 bit tpsTooHigh
 
 bit acButtonState
+bit isDisabledByLua
 
 int latest_usage_ac_control;
 
