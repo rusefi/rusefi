@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Fri Apr 08 16:18:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Apr 09 01:34:15 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -24,6 +24,7 @@ struct ac_control_s {
 	offset 0 bit 5 */
 	bool acButtonState : 1 {};
 	/**
+	 * For setAcDisabled Lua method
 	offset 0 bit 6 */
 	bool isDisabledByLua : 1 {};
 	/**
@@ -105,8 +106,12 @@ struct ac_control_s {
 	 * offset 4
 	 */
 	int latest_usage_ac_control = (int)0;
-	/** total size 8*/
+	/**
+	 * offset 8
+	 */
+	int acSwitchLastChangeTimeMs = (int)0;
+	/** total size 12*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Fri Apr 08 16:18:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Apr 09 01:34:15 UTC 2022
