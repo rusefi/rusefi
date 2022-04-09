@@ -401,7 +401,7 @@ extern int totalLoggedBytes;
 
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
-				// this special behaviour helps to notice that something is not right, also
+				// this special behavior helps to notice that something is not right, also
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
