@@ -588,6 +588,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "setAcDisabled", [](lua_State* l) {
+		auto value = lua_toboolean(l, 1);
+		engine->module<AcController>().unmock().isDisabledByLua = value;
+		return 0;
+	});
+
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
 		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
 		return 0;
