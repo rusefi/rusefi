@@ -133,3 +133,34 @@ TEST(GearDetector, DetermineGear8Speed) {
 	// Extremely low ratio suggests stopped engine at speed?
 	EXPECT_EQ(0, dut.determineGearFromRatio(0.1));
 }
+
+TEST(GearDetector, ParameterValidation) {
+	EngineTestHelper eth(TEST_ENGINE);
+	GearDetector dut;
+
+	// Defaults should work
+	EXPECT_NO_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+
+	// Invalid gear count
+	engineConfiguration->totalGearsCount = 25;
+	EXPECT_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+
+	// Valid gears
+	engineConfiguration->totalGearsCount = 2;
+	engineConfiguration->gearRatio[0] = 3;
+	engineConfiguration->gearRatio[1] = 2;
+	EXPECT_NO_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+
+	// Invalid gear ratio
+	engineConfiguration->gearRatio[1] = 0;
+	EXPECT_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+
+	// Out of order gear ratios
+	engineConfiguration->gearRatio[0] = 2;
+	engineConfiguration->gearRatio[1] = 3;
+	EXPECT_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+
+	// No gears at all is a valid configuration
+	engineConfiguration->totalGearsCount = 0;
+	EXPECT_NO_FATAL_ERROR(dut.onConfigurationChange(nullptr));
+}

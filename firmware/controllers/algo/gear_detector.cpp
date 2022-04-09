@@ -33,7 +33,7 @@ void GearDetector::onConfigurationChange(engine_configuration_s const * /*previo
 		float gearIplusOne = engineConfiguration->gearRatio[i + 1];
 
 		if (gearI <= gearIplusOne) {
-			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ordering near gear #%d", i);
+			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ordering near gear #%d", i + 1);
 		}
 
 		m_gearThresholds[i] = geometricMean(gearI, gearIplusOne);
