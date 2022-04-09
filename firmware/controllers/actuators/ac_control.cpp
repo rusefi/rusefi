@@ -45,6 +45,9 @@ bool AcController::getAcState() {
 	if (tpsTooHigh) {
 			return false;
 	}
+	if (isDisabledByLua) {
+		return false;
+	}
 
 	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
