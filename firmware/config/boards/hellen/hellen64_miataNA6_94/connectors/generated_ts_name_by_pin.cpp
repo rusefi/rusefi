@@ -18,6 +18,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOE_5: return "1H - Ignition 2 & 3";
 		case GPIOF_11: return "1M - VSS";
 		case GPIOF_12: return "2J - Boost Control";
+		case GPIOF_14: return "2I - VVT";
 		case GPIOF_3: return "2L - Flex Fuel";
 		case GPIOG_2: return "Fuel Pump Relay";
 		case GPIOG_7: return "3U - Injector 1";
