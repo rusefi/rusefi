@@ -7,15 +7,36 @@ static constexpr float geometricMean(float x, float y) {
 void GearDetector::onConfigurationChange(engine_configuration_s const * /*previousConfig*/) {
 	// Compute gear thresholds between gears
 
-	for (size_t i = 0; i < efi::size(m_gearThresholds); i++) {
+	uint8_t gearCount = engineConfiguration->totalGearsCount;
+
+	if (gearCount == 0) {
+		// No gears, nothing to do here.
+		return;
+	}
+
+	if (gearCount > GEARS_COUNT) {
+		firmwareError(OBD_PCM_Processor_Fault, "too many gears");
+		return;
+	}
+
+	// validate gears
+	for (size_t i = 0; i < gearCount; i++) {
+		if (engineConfiguration->gearRatio[i] <= 0) {
+			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ratio for #%d", i + 1);
+			return;
+		}
+	}
+
+	for (int i = 0; i < gearCount - 1; i++) {
 		// Threshold i is the threshold between gears i and i+1
+		float gearI        = engineConfiguration->gearRatio[i];
+		float gearIplusOne = engineConfiguration->gearRatio[i + 1];
 
-		m_gearThresholds[i] = geometricMean(
-			engineConfiguration->gearRatio[i],
-			engineConfiguration->gearRatio[i + 1]
-		);
+		if (gearI <= gearIplusOne) {
+			firmwareError(OBD_PCM_Processor_Fault, "Invalid gear ordering near gear #%d", i + 1);
+		}
 
-		// TODO: validate gears are in correct order
+		m_gearThresholds[i] = geometricMean(gearI, gearIplusOne);
 	}
 }
 
@@ -27,12 +48,16 @@ void GearDetector::onSlowCallback() {
 }
 
 size_t GearDetector::determineGearFromRatio(float ratio) const {
+	auto gearCount = engineConfiguration->totalGearsCount;
+	if (gearCount == 0) {
+		// No gears, we only have neutral.
+		return 0;
+	}
+
 	// 1.5x first gear is neutral or clutch slip or something
 	if (ratio > engineConfiguration->gearRatio[0] * 1.5f) {
 		return 0;
 	}
-
-	auto gearCount = engineConfiguration->totalGearsCount;
 
 	// 0.66x top gear is coasting with engine off or something
 	if (ratio < engineConfiguration->gearRatio[gearCount - 1] * 0.66f) {
