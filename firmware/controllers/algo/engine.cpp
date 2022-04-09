@@ -321,7 +321,7 @@ void Engine::updateSwitchInputs() {
 		bool result = getAcToggle();
 		if (engine->acSwitchState != result) {
 			engine->acSwitchState = result;
-			engine->acSwitchLastChangeTime = getTimeNowUs();
+			engine->module<AcController>().unmock().acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 		engine->acSwitchState = result;
 	}
