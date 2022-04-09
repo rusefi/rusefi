@@ -226,6 +226,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardReapplyRate;
 	if (strEqualCaseInsensitive(name, "knockRetardMaximum"))
 		return engineConfiguration->knockRetardMaximum;
+	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
+		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
 		return engineConfiguration->vssGearRatio;
 	if (strEqualCaseInsensitive(name, "vssToothCount"))
@@ -954,8 +956,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->auxLinear2.v2;
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 		return engineConfiguration->auxLinear2.value2;
-	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
-		return config->vssFilterReciprocal;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -1522,6 +1522,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "knockRetardMaximum"))
 	{
 		engineConfiguration->knockRetardMaximum = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
+	{
+		engineConfiguration->vssFilterReciprocal = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -3342,11 +3347,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 	{
 		engineConfiguration->auxLinear2.value2 = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
-	{
-		config->vssFilterReciprocal = value;
 		return;
 	}
 }

@@ -1930,7 +1930,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 4118886503
+#define SIGNATURE_HASH 3877735422
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2482,7 +2482,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.09.kin.4118886503"
+#define TS_SIGNATURE "rusEFI 2022.04.09.kin.3877735422"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2526,6 +2526,7 @@
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
+#define unused17440_offset 17412
 #define unused184_offset 184
 #define unused722_offset 722
 #define unused_1484_bit_24_offset 1272
@@ -2562,7 +2563,6 @@
 #define unusedBit_507_8_offset 1740
 #define unusedBit_507_9_offset 1740
 #define unusedBitHere2_offset 1260
-#define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747
 #define unusedMapAccelTaperBins_offset 1792
@@ -2636,7 +2636,7 @@
 #define vrThreshold2_pin_offset 1176
 #define vrThreshold2_rpmBins_offset 1180
 #define vrThreshold2_values_offset 1186
-#define vssFilterReciprocal_offset 17412
+#define vssFilterReciprocal_offset 623
 #define vssGearRatio_offset 624
 #define vssToothCount_offset 626
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MITSUBISHI_3A92", "VVT_MAP_V_TWIN_ANOTHER", "VVT_MITSUBISHI_6G75"

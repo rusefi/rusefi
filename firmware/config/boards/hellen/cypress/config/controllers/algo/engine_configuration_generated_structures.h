@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 21:41:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 13:30:22 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1288,9 +1288,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t knockRetardMaximum;
 	/**
+	 * Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
 	 * offset 623
 	 */
-	uint8_t unusedDtectionThreshold;
+	uint8_t vssFilterReciprocal;
 	/**
 	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
 	ratio
@@ -4357,11 +4358,9 @@ struct persistent_config_s {
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
-	 * Good example: number of tooth on wheel, For Can 10 is a good number.
-	Hz
 	 * offset 17440
 	 */
-	float vssFilterReciprocal;
+	float unused17440;
 	/**
 	kPa
 	 * offset 17444
@@ -4561,4 +4560,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 06 21:41:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 13:30:22 UTC 2022

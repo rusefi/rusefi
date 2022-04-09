@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 01:35:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 13:30:26 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1872,7 +1872,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 819008295;
+	public static final int SIGNATURE_HASH = 577872062;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2362,7 +2362,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.09.all.819008295";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.09.all.577872062";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2403,6 +2403,7 @@ public class Fields {
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
+	public static final int unused17440_offset = 17440;
 	public static final int unused184_offset = 184;
 	public static final int unused722_offset = 722;
 	public static final int unused_1484_bit_24_offset = 1272;
@@ -2439,7 +2440,6 @@ public class Fields {
 	public static final int unusedBit_507_8_offset = 1740;
 	public static final int unusedBit_507_9_offset = 1740;
 	public static final int unusedBitHere2_offset = 1260;
-	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
@@ -2510,7 +2510,7 @@ public class Fields {
 	public static final int vrThreshold2_pin_offset = 1176;
 	public static final int vrThreshold2_rpmBins_offset = 1180;
 	public static final int vrThreshold2_values_offset = 1186;
-	public static final int vssFilterReciprocal_offset = 17440;
+	public static final int vssFilterReciprocal_offset = 623;
 	public static final int vssGearRatio_offset = 624;
 	public static final int vssToothCount_offset = 626;
 	public static final int vvt_mode_e_VVT_2JZ = 2;
@@ -2772,7 +2772,7 @@ public class Fields {
 	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 620, FieldType.INT8).setScale(1.0);
 	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 621, FieldType.INT8).setScale(1.0);
 	public static final Field KNOCKRETARDMAXIMUM = Field.create("KNOCKRETARDMAXIMUM", 622, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDDTECTIONTHRESHOLD = Field.create("UNUSEDDTECTIONTHRESHOLD", 623, FieldType.INT8).setScale(1.0);
+	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 623, FieldType.INT8).setScale(1.0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 624, FieldType.INT16).setScale(0.001);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 626, FieldType.INT8).setScale(1.0);
 	public static final Field L9779_CS = Field.create("L9779_CS", 627, FieldType.INT8, brain_pin_e).setScale(1.0);
@@ -3836,7 +3836,7 @@ public class Fields {
 	public static final Field INJPHASELOADBINS = Field.create("INJPHASELOADBINS", 17316, FieldType.INT16).setScale(1.0);
 	public static final Field INJPHASERPMBINS = Field.create("INJPHASERPMBINS", 17348, FieldType.INT16).setScale(1.0);
 	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 17380, FieldType.INT8).setScale(1.0);
-	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 17440, FieldType.FLOAT);
+	public static final Field UNUSED17440 = Field.create("UNUSED17440", 17440, FieldType.FLOAT);
 	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 17444, FieldType.INT16).setScale(1.0);
 	public static final Field MAPESTIMATETPSBINS = Field.create("MAPESTIMATETPSBINS", 17956, FieldType.INT16).setScale(0.01);
 	public static final Field MAPESTIMATERPMBINS = Field.create("MAPESTIMATERPMBINS", 17988, FieldType.INT16).setScale(1.0);
@@ -4097,7 +4097,7 @@ public class Fields {
 	KNOCKRETARDAGGRESSION,
 	KNOCKRETARDREAPPLYRATE,
 	KNOCKRETARDMAXIMUM,
-	UNUSEDDTECTIONTHRESHOLD,
+	VSSFILTERRECIPROCAL,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
 	L9779_CS,
@@ -5145,7 +5145,7 @@ public class Fields {
 	INJPHASELOADBINS,
 	INJPHASERPMBINS,
 	TCUSOLENOIDTABLE,
-	VSSFILTERRECIPROCAL,
+	UNUSED17440,
 	MAPESTIMATETABLE,
 	MAPESTIMATETPSBINS,
 	MAPESTIMATERPMBINS,
