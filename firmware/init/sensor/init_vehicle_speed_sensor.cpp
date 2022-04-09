@@ -9,7 +9,7 @@ static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;
 
 void initVehicleSpeedSensor() {
-	int parameter = config->vssFilterReciprocal;
+	int parameter = engineConfiguration->vssFilterReciprocal;
 
 	if (parameter <= 0 || parameter > 200) {
 		parameter = 2;
