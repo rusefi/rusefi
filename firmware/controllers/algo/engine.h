@@ -353,7 +353,6 @@ public:
 
 	// todo: extract some helper which would contain boolean state and most recent toggle time?
 	bool acSwitchState = false;
-	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
 
