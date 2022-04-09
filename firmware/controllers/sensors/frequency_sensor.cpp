@@ -13,16 +13,20 @@ static void freqSensorExtiCallback(void* arg, efitick_t nowNt) {
 	reinterpret_cast<FrequencySensor*>(arg)->onEdge(nowNt);
 }
 
-void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter) {
+void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, float filterParameter) {
 	if (!isBrainPinValid(pin)) {
 		return;
 	}
-	setFunction(converter);
-	init(pin);
-	Register();
-}
 
-void FrequencySensor::init(brain_pin_e pin) {
+	// Filter parameter less than 0.5 impossible, must always average over at least two events
+	if (filterParameter < 0.5f) {
+		filterParameter = 0.5f;
+	}
+
+	m_filter.configureLowpass(1, filterParameter);
+
+	setFunction(converter);
+
 	m_pin = pin;
 
 #if EFI_PROD_CODE
@@ -31,6 +35,8 @@ void FrequencySensor::init(brain_pin_e pin) {
 		PAL_EVENT_MODE_FALLING_EDGE,
 		freqSensorExtiCallback, reinterpret_cast<void*>(this));
 #endif // EFI_PROD_CODE
+
+	Register();
 }
 
 void FrequencySensor::deInit() {
