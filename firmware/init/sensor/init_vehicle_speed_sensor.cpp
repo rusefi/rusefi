@@ -5,11 +5,13 @@
 #include "vehicle_speed_converter.h"
 
 // 0.05 filter parameter means averaging over ~20 sensor teeth
-static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500), 0.05f);
+static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;
 
 void initVehicleSpeedSensor() {
-	vehicleSpeedSensor.initIfValid(engineConfiguration->vehicleSpeedSensorInputPin, vehicleSpeedConverter);
+	float filterParameter = 1 / config->vssFilterReciprocal;
+
+	vehicleSpeedSensor.initIfValid(engineConfiguration->vehicleSpeedSensorInputPin, vehicleSpeedConverter, filterParameter);
 }
 
 void deInitVehicleSpeedSensor() {
