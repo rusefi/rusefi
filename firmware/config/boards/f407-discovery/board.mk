@@ -4,9 +4,8 @@ BOARDCPPSRC = $(PROJECT_DIR)/config/boards/f407-discovery/board_extra.cpp
 # MCU defines
 DDEFS += -DSTM32F407xx
 
-# 'DEFAULT_ENGINE_TYPE' env variable is used to define DEFAULT_ENGINE_TYPE macro, confusing name reuse!
-ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=DEFAULT_FRANKENSO
+ifeq ($(VAR_DEF_ENGINE_TYPE),)
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=DEFAULT_FRANKENSO
 endif
 
 # here we use different names for env variable and macro name in order to reduce confusion. overall this is about Frankenso builds defining FIRMWARE_ID
