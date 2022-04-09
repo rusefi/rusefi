@@ -120,7 +120,11 @@ pins:
     function: WBO Vs  
   
   - pin: 2I
+    id: GPIOF_14
+    class: outputs
+    ts_name: 2I - VVT
     function: VVT Output
+    type: ls
     
   - pin: 2J
     id: GPIOF_12
