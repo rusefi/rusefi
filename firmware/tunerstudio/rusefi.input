@@ -3105,8 +3105,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = startStopDialog
 
 	dialog = speedSensorAnalog, "Speed sensor"
-		field = "Input pin",					vehicleSpeedSensorInputPin
-		field = "Filter Reciprocal",				vssFilterReciprocal, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
+		field = "Input pin",			vehicleSpeedSensorInputPin
+		field = "Filter parameter",		vssFilterReciprocal, { vehicleSpeedSensorInputPin != @@ADC_CHANNEL_NONE@@ }
 
 ;
 ; We prefer quantities that users can actually measure or inspect without math, so we have

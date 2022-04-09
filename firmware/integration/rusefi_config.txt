@@ -651,7 +651,8 @@ uint8_t knockRetardAggression;+Ignition timing to remove when a knock event occu
 uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
 uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
 
-	uint8_t unusedDtectionThreshold;;"", 1, 0, 0, 240, 0
+	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, 2, 200, 0
+
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 	brain_pin_e l9779_cs;
@@ -1595,7 +1596,7 @@ uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
-float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz", 1, 0, 2, 20, 2
+float unused17440;;"", 1, 0, 0, 0, 0
 
 uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] mapEstimateTable;;"kPa", {1/@@PACK_MULT_MAP_ESTIMATE@@}, 0, 0, 100, 2
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
