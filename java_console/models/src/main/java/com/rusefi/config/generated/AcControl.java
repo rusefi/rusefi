@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Fri Apr 08 16:18:08 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Apr 09 01:34:15 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -39,6 +39,7 @@ public class AcControl {
 	public static final Field UNUSEDBIT_7_30 = Field.create("UNUSEDBIT_7_30", 0, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_7_31 = Field.create("UNUSEDBIT_7_31", 0, FieldType.BIT, 31);
 	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0);
+	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETOOSLOW,
 	ENGINETOOFAST,
@@ -73,5 +74,6 @@ public class AcControl {
 	UNUSEDBIT_7_30,
 	UNUSEDBIT_7_31,
 	LATEST_USAGE_AC_CONTROL,
+	ACSWITCHLASTCHANGETIMEMS,
 	};
 }
