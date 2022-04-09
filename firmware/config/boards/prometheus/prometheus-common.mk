@@ -23,6 +23,5 @@ endif
 ifeq ($(PROMETHEUS_BOARD),405)
 	DDEFS += -DFIRMWARE_ID=\"prometeus405\"
 else
-	# Override DEFAULT_ENGINE_TYPE
 	DDEFS += -DFIRMWARE_ID=\"prometeus469\"
 endif
