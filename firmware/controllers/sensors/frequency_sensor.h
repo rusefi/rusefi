@@ -4,14 +4,11 @@
 
 class FrequencySensor : public FunctionalSensor {
 public:
-	FrequencySensor(SensorType type, efitick_t timeoutPeriod, float filterParameter)
+	FrequencySensor(SensorType type, efitick_t timeoutPeriod)
 		: FunctionalSensor(type, timeoutPeriod)
-	{
-		m_filter.configureLowpass(1, filterParameter);
-	}
+	{ }
 
-	void init(brain_pin_e pin);
-	void initIfValid(brain_pin_e pin, SensorConverter &converter);
+	void initIfValid(brain_pin_e pin, SensorConverter &converter, float filterParameter);
 	void deInit();
 
 	void onEdge(efitick_t nowNt);
