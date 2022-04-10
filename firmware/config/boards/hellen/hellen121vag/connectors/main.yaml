@@ -147,6 +147,7 @@ pins:
     function: Sensor +5V
     
   - pin: 54a
+    # H144_IN_VSS
     id: GPIOF_11
     class: event_inputs
     ts_name: 54 - VSS

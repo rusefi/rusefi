@@ -114,6 +114,7 @@ pins:
     function: Front O2 Sensor Signal
     
   - pin: 2D
+    # H144_IN_VSS
     id: GPIOF_11
     class: event_inputs
     ts_name: 2D - VSS
