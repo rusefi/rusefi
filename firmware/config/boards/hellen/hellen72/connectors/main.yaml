@@ -314,8 +314,9 @@ pins:
     function: Neutral Switch
 
   - pin: 4I
-    id: [ GPIOF_8 ]
-    class: [ switch_inputs ]
+  # H144_IN_RES3
+    id: GPIOF_8
+    class: switch_inputs
     ts_name: 4I - Clutch (A8)
     function: Clutch Switch
 

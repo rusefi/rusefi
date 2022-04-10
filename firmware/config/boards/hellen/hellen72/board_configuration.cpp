@@ -131,6 +131,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->acSwitchMode = PI_PULLUP;
 
 	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
+	engineConfiguration->clutchDownPin = H144_IN_RES3;
+	engineConfiguration->clutchDownPinInverted = true;
 
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5

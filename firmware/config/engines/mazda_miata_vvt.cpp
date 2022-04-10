@@ -269,7 +269,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
 
 	engineConfiguration->cranking.rpm = 400;
-	engineConfiguration->idle.solenoidFrequency = 300;
+	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->rpmHardLimit = 7200;
 	engineConfiguration->useInstantRpmForIdle = true;
 	engineConfiguration->enableFan1WithAc = true;
@@ -315,8 +315,10 @@ static void setCommonMazdaNB() {
 	// set tps_max 540
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
-	// set idle_position 35
-	engineConfiguration->manIdlePosition = 35;
+	// set idle_position 20
+	engineConfiguration->manIdlePosition = 20;
+	engineConfiguration->iacByTpsTaper = 6;
+	engineConfiguration->acIdleExtraOffset = 15;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
