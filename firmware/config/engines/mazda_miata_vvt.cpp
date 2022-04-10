@@ -265,6 +265,9 @@ static void setCommonMazdaNB() {
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
 	engineConfiguration->idle.solenoidFrequency = 300;
+	engineConfiguration->rpmHardLimit = 7200;
+	engineConfiguration->useInstantRpmForIdle = true;
+	engineConfiguration->enableFan1WithAc = true;
 
 	engineConfiguration->isAlternatorControlEnabled = true;
 	// enable altdebug

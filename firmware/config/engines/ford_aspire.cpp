@@ -70,8 +70,6 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	setDefaultAspireMaps();
-	// set_cranking_rpm 550
-	engineConfiguration->cranking.rpm = 550;
 	// set cranking_timing_angle 37
 	engineConfiguration->crankingTimingAngle = -37;
 
