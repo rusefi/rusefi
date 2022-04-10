@@ -300,7 +300,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 }
 
-float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
+float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 

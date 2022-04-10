@@ -33,6 +33,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Mitsubishi 3A92 VVT trigger
  - Toyota 4-1 VVT trigger
  - use extra RAM for lua if your microRusEFI unit has stm32f42x microcontroller 
+ - VVT activation delay #3443
 
 ## March 2022 Release - "Day 22"
 

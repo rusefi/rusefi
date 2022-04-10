@@ -90,10 +90,11 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 void VvtController::setOutput(expected<percent_t> outputValue) {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	// todo: make this configurable?
-	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
+	bool enabled = rpm > engineConfiguration->cranking.rpm /* todo: make this configurable? */
+			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
+			 ;
 
-	if (outputValue && enabledAtCurrentRpm) {
+	if (outputValue && enabled) {
 		m_pwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		m_pwm.setSimplePwmDutyCycle(0);

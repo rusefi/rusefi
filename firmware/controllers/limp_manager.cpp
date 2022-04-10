@@ -40,7 +40,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		// Only check if the setting is enabled
 		if (minOilPressure > 0) {
 			// Has it been long enough we should have pressure?
-			bool isTimedOut = engine->rpmCalculator.getTimeSinceEngineStart(nowNt) > 5.0f;
+			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
 
 			// Only check before timed out
 			if (!isTimedOut) {
