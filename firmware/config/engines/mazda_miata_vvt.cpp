@@ -264,6 +264,11 @@ static void setCommonMazdaNB() {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
+	engineConfiguration->ignitionDwellForCrankingMs = 4;
+	// set cranking_fuel 27.5
+	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
+
+	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->rpmHardLimit = 7200;
 	engineConfiguration->useInstantRpmForIdle = true;
@@ -320,10 +325,18 @@ static void setCommonMazdaNB() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	//set idle_offset 30
-	engineConfiguration->idleRpmPid.offset = 30;
-	engineConfiguration->idleRpmPid.pFactor = 0.07;
-	engineConfiguration->idleRpmPid.iFactor = 01;
-	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.pFactor = 0.0065;
+	engineConfiguration->idleRpmPid.iFactor = 0.3;
+	engineConfiguration->idle_derivativeFilterLoss = 0.08;
+	engineConfiguration->idle_antiwindupFreq = 0.03;
+	engineConfiguration->idleRpmPid.dFactor = 0.002;
+	engineConfiguration->idleRpmPid.offset = 9;
+	engineConfiguration->idleRpmPid.minValue = -8;
+	engineConfiguration->idleRpmPid.minValue = 76;
+	engineConfiguration->idlerpmpid_iTermMin = -15;
+	engineConfiguration->idlerpmpid_iTermMax =  30;
+
+	// is this used?
 	engineConfiguration->idleRpmPid.periodMs = 10;
 
 	miataNA_setCltIdleCorrBins();
@@ -405,8 +418,6 @@ void setMazdaMiata2003EngineConfiguration() {
 
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
-	// set cranking_fuel 4
-	engineConfiguration->cranking.baseFuel = 27; // this value for return-less NB miata fuel system, higher pressure
 
 /**
  * Saab attempt
@@ -495,11 +506,6 @@ void setMazdaMiata2003EngineConfiguration() {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
 */
 
-	engineConfiguration->idleRpmPid.offset = 0;
-	engineConfiguration->idleRpmPid.pFactor = 0.2;
-	engineConfiguration->idleRpmPid.iFactor = 01;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
@@ -627,12 +633,6 @@ void setMiataNB2_MRE_ETB() {
 
 	engineConfiguration->useETBforIdleControl = true;
 
-	//set idle_offset 0
-	engineConfiguration->idleRpmPid.offset = 0;
-	engineConfiguration->idleRpmPid.pFactor = 0.2;
-	engineConfiguration->idleRpmPid.iFactor = 01;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
 
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->throttlePedalUpVoltage = 1;
