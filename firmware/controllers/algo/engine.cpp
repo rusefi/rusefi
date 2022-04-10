@@ -264,11 +264,12 @@ void Engine::periodicSlowCallback() {
 			isHappyTest = true;
 		}
 	}
-	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3, 0.75, 1.25);
-	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2, 0.75, 1.25);
-	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8, 0.75, 1.25);
-	// huh? why such a wide gap? smaller resistor delta causes large temperature delta on the left side of the curve?
-	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2, 0.75, 2);
+	float l = 1 - 0.2;
+	float h = 1 + 0.2;
+	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3, l, h);
+	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2, l, h);
+	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8, l, h);
+	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 9.274291, l, h);
 #endif // ANALOG_HW_CHECK_MODE
 }
 
