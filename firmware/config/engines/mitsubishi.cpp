@@ -28,8 +28,6 @@ void setMitsubishiConfiguration() {
 	// set global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;
 
-	// set_cranking_rpm 550
-	engineConfiguration->cranking.rpm = 550;
 	// set cranking_timing_angle 715
 	engineConfiguration->crankingTimingAngle = -715;
 

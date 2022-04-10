@@ -30,7 +30,6 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->rpmHardLimit = 5000;
-	engineConfiguration->cranking.rpm = 600;
 
 //	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
