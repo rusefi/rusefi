@@ -241,10 +241,10 @@ void setMazdaNB2VVTSettings() {
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
-	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].dFactor = 0.002;
 	engineConfiguration->auxPid[0].offset = 33;
-	engineConfiguration->auxPid[0].minValue = 24;
-	engineConfiguration->auxPid[0].maxValue = 44;
+	engineConfiguration->auxPid[0].minValue = 20;
+	engineConfiguration->auxPid[0].maxValue = 90;
 }
 
 static void set4EC_AT() {
@@ -277,10 +277,10 @@ static void setCommonMazdaNB() {
 	engineConfiguration->isAlternatorControlEnabled = true;
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
-	engineConfiguration->alternatorControl.offset = 40;
-	engineConfiguration->alternatorControl.pFactor = 14;
-	engineConfiguration->alternatorControl.iFactor = 0.1;
-	engineConfiguration->alternatorControl.dFactor = 0;
+	engineConfiguration->alternatorControl.offset = 20;
+	engineConfiguration->alternatorControl.pFactor = 16;
+	engineConfiguration->alternatorControl.iFactor = 8;
+	engineConfiguration->alternatorControl.dFactor = 0.1;
 	engineConfiguration->alternatorControl.periodMs = 10;
 
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
@@ -320,6 +320,17 @@ static void setCommonMazdaNB() {
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->acIdleExtraOffset = 15;
 
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->idlePidRpmUpperLimit = 350;
+	engineConfiguration->idlePidRpmDeadZone = 100;
+
+	engineConfiguration->crankingIACposition = 36;
+	engineConfiguration->afterCrankingIACtaperDuration = 189;
+
+	engineConfiguration->wwaeTau = 0.1;
+	engineConfiguration->targetVBatt = 14.2;
+
+	engineConfiguration->vehicleWeight = 1070;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
