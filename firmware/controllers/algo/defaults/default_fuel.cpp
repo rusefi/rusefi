@@ -103,7 +103,7 @@ static void setDefaultFuelCutParameters() {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutMap = 30;
-	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutClt = 60;
 }
 
 static void setDefaultStftSettings() {

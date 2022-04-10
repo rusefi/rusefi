@@ -520,10 +520,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	engineConfiguration->mapMinBufferLength = 1;
+	engineConfiguration->vvtActivationDelayMs = 6000;
 	
 	engineConfiguration->startCrankingDuration = 3;
-
-	engineConfiguration->idlePidRpmDeadZone = 50;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -534,7 +533,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
-	engineConfiguration->alternatorControl.minValue = 10;
+	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
 	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);

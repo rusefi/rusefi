@@ -179,7 +179,7 @@ void startIdleBench(void) {
 
 
 void setDefaultIdleParameters() {
-	engineConfiguration->idleRpmPid.pFactor = 0.1f;
+	engineConfiguration->idleRpmPid.pFactor = 0.01f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 
@@ -193,10 +193,12 @@ void setDefaultIdleParameters() {
 
 	// Allow +- 10 degrees adjustment
 	engineConfiguration->idleTimingPid.minValue = -10;
-	engineConfiguration->idleTimingPid.minValue = 10;
+	engineConfiguration->idleTimingPid.maxValue = 10;
 
 	// Idle region is target + 100 RPM
 	engineConfiguration->idlePidRpmUpperLimit = 100;
+
+	engineConfiguration->idlePidRpmDeadZone = 50;
 }
 
 /**
