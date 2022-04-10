@@ -358,8 +358,8 @@ void setMiataNA6_MAP_MRE() {
 
 	engineConfiguration->idleRpmPid.pFactor = 0.01;
 	engineConfiguration->idleRpmPid.iFactor = 0.02;
-	engineConfiguration->idle_antiwindupFreq = 0.1;
 	engineConfiguration->idle_derivativeFilterLoss = 0.1;
+	engineConfiguration->idle_antiwindupFreq = 0.1;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
 	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->acIdleExtraOffset = 14;
