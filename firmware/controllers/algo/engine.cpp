@@ -192,8 +192,8 @@ void Engine::updateTriggerWaveform() {
 }
 
 #if ANALOG_HW_CHECK_MODE
-static void assertCloseTo(const char * msg, float actual, float expected, float lowRatio, float highRatio) {
-	if (actual < lowRatio * expected || actual > highRatio * expected) {
+static void assertCloseTo(const char* msg, float actual, float expected) {
+	if (actual < 0.95f * expected || actual > 1.05f * expected) {
 		firmwareError(OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
 	}
 }
@@ -255,7 +255,7 @@ void Engine::periodicSlowCallback() {
 #endif
 
 	if (secondsNow > 2 && secondsNow < 180) {
-		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM, 0.9, 1.1);
+		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
 		static bool isHappyTest = false;
 		if (!isHappyTest) {
@@ -264,12 +264,11 @@ void Engine::periodicSlowCallback() {
 			isHappyTest = true;
 		}
 	}
-	float l = 1 - 0.2;
-	float h = 1 + 0.2;
-	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3, l, h);
-	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2, l, h);
-	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8, l, h);
-	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 9.274291, l, h);
+
+	assertCloseTo("clt", Sensor::getRaw(SensorType::Clt), 1.351f);
+	assertCloseTo("iat", Sensor::getRaw(SensorType::Iat), 2.245f);
+	assertCloseTo("aut1", Sensor::getRaw(SensorType::AuxTemp1), 2.750f);
+	assertCloseTo("aut2", Sensor::getRaw(SensorType::AuxTemp2), 3.176f);
 #endif // ANALOG_HW_CHECK_MODE
 }
 
