@@ -365,6 +365,7 @@ pins:
 
   - pin: 59
     function: Vehicle Speed Sensor (VSS) digital input
+    # H144_IN_VSS
     id: GPIOF_11
     class: event_inputs
     ts_name: 59 - IN_VSS

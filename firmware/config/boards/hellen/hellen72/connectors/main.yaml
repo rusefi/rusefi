@@ -238,6 +238,7 @@ pins:
     function: Immobilizer comm.
 
   - pin: 3T
+# H144_IN_VSS
     id: GPIOF_11
     class: event_inputs
     ts_name: 3T - VSS (D5)

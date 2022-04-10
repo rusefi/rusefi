@@ -52,6 +52,7 @@ pins:
     function: Clutch Switch
     
   - pin: 1M
+    # H144_IN_VSS
     id: GPIOF_11
     class: event_inputs
     ts_name: 1M - VSS
