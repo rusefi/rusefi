@@ -15,7 +15,7 @@ Current binaries are always available on our [build server](http://rusefi.com/bu
 
 [![paypal](https://img.shields.io/badge/%E2%99%A5%EF%B8%8Fdonate-orange)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=6YSSN35GWYS3A)
 
-[![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/)
+[![Tindie](http://rusefi.com/wiki/images/1/1c/Tindie-smalls.png)](https://www.tindie.com/stores/russian/) [shop.rusEFI.com](https://www.shop.rusefi.com/)
 
 # Cloning the repository
 
