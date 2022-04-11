@@ -19,8 +19,9 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
  -DSystemOut.name=logs/gen_config_hellen_cypress \
- $COMMON_GEN_CONFIG \
+ $COMMON_GEN_CONFIG_PREFIX \
  -tool hellen_cypress_gen_config.bat \
+ $COMMON_GEN_CONFIG \
  -ts_output_name generated/rusefi_hellen_cypress.ini \
  -c_defines config/boards/hellen/cypress/config/controllers/algo/rusefi_generated.h \
  -c_destination config/boards/hellen/cypress/config/controllers/algo/engine_configuration_generated_structures.h \
