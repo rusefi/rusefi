@@ -1,8 +1,10 @@
 pins:
   - pin: 1
+    # H144_OUT_PWM7
+    id: GPIOD_15
     class: outputs
-    function: Oil Cooling Fan
-    ts_name: 1 Oil Cooling
+    function: Right Oil Cooling Fan
+    ts_name: 1 Right Oil Cooling
 
   - pin: 2
     type: gnd
@@ -13,9 +15,11 @@ pins:
     function: Power Ground
 
   - pin: 4
+    # H144_OUT_PWM6
+    id: GPIOD_14
     class: outputs
-    function: Left Cooling Fan
-    ts_name: 4 Left Fan
+    function: Left Oil Cooling Fan
+    ts_name: 4 Left Oil Fan
 
   - pin: 5
     id: EFI_ADC_5
@@ -189,11 +193,17 @@ pins:
     function: Engine Temperature
 
   - pin: 61
+# low6 huh?
+    # H144_OUT_IO3
+    id: GPIOG_14
     class: outputs
     ts_name: 61 Reverse Gear
     function: Reverse Gear
 
   - pin: 63
+    # low7 huh?
+    # H144_OUT_IO4
+    id: GPIOG_5
     class: outputs
     ts_name: 63 Cooling Pump
     function: Cooling Pump
