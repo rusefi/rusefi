@@ -87,10 +87,8 @@
  * @section tunerstudio Getting Data To and From Tunerstudio
  *
  * Contains the enum with values to be output to Tunerstudio.
- * console/binary/tunerstudio_outputs.h
- * Tunerstudio output channels are handled completely manually, as opposed to settings where offsets are managed automatically by the gen_config scripts.
- * Adding channels to tunerstudio_outputs.h induces offsets which are kept track of in comments next to each channel.
- * In the OutputChannels section of rusefi.input, these values are 3rd token in the configuration string.
+ * console/binary/output_channels.txt
+ *
  * [Changing gauge limits](http://www.tunerstudio.com/index.php/manuals/63-changing-gauge-limits)
  *
  * Definition of the Tunerstudio configuration interface, gauges, and indicators
