@@ -170,7 +170,7 @@ enable2ndByteCanID = false
 ;
 ; in order to add new TunerStudio gauge you need to chagne two places
 ; 1) add a line here in '[OutputChannels]'
-; 2) in rusEFI firmware make a change to tunerstudio_outputs.h
+; 2) in rusEFI firmware make a change to output_channels.txt
 ;
 [OutputChannels]
 

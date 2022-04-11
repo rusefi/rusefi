@@ -1,31 +1,49 @@
-! TL,DR https://wiki.rusefi.com/Dev/Dev-Tips/
-!
-! this file defines the format of rusEfi persistent configuration structure
-! this file is processed by ../java_tools/config_definition.jar tool
-! comments start with '!'
+! This file defines the format of rusEfi persistent configuration structure
+! This file is processed by ../java_tools/config_definition.jar tool
+! Comments start with '!'
 !
 ! The format is unique to rusEFI but there is a guide to the format available in java_tools/config_definition/RusefiConfigGrammar.g4
 !
-! This file is used in combination with rusefi.input to generate the .ini files used by turner TunerStudio.
+! This file is used in combination with tunerstudio/rusefi.input to generate the .ini files used by turner TunerStudio.
 ! The easiest way to find a specific variable within this config is to search within rusefi.input for the on screen text from tuner studio
 ! this should provide the actual variable name, for example searching for "Number of Cylinders" will provide the variable "cylindersCount".
+! Then you can search for "cylindersCount" in this file to find the definition.
 !
-! rusEfi configuration consists of two parts:
-! First part is engine_configuration_s area, followed by a few tuning tables
+! This file consists of two parts:
+! The first part is engine_configuration_s area, followed by a few tuning tables.
 !
-! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
-! be modified without burning changes
+! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables can
+! be modified without burning changes.
 !
-! See also ../tunerstudio/readme.md
+! See also tunerstudio/readme.md
 !
-! Q: How to add new fields?
-! A: Find an 'unused' bit or unused int (usually the huge unusedEnd[] array at the end
-!    rename the bit or substitute unused integer with any new fields of the same size
-!    invoke gen_config.bat to apply the tools which would generate .h and .ini files
+! # Adding new fields
+! The most important thing to note when adding fields is that if you change the offset
+! of any other fields, users will have their configs scrambled when they update their firmware.
+! As a result, this file is an organism that must be handled carefully. You may notice that
+! there isn't much organization to this file with fields in amongst unrelated fields.
+! That's OK, it's just a result of things being removed and new things being put in their
+! places, and new things only being able to be added at the end of the structure or where
+! other things were removed previously.
+! Find a "padding" field (usually the huge mainUnusedEnd[] array at the end of the structure)
+! The standard practice is to name these "unusedSomething", so you can find them easily
+! by searching for "unused" within this file.
+! Rename or substitute the field with any new fields that total to the same size.
+! If you're adding a field to the end of the file, add it just before mainUnusedEnd[],
+! and subtract the size of the field you added from mainUnusedEnd[].
+! For example, if you added a uint8_t field, and mainUnusedEnd was `uint8_t[100]`,
+! it should now be `uint8_t[99]`
+! At this point it's a good idea to save your changes in version control, i.e. with `git commit`,
+!	so that you can roll back to the current state after you generate the config files.
+! This is important because we do not include the generated files in pull requests.
+! We have a Github Actions workflow that generates all the files automatically after
+! the pull request has been merged.
+! Invoke gen_config.sh to generate .h and .ini files.
+! Now check the `git diff` to make sure you haven't accidentally changed the offsets of
+! any other fields.
+! If you did, reset your version control state to your commit, i.e. with `git stash`,
+! and fix the fields you created to make sure that they total the same size.
 !
-! Q: Which files to include into Pull Requests?
-! A: Please only include source files (.txt and .input) into a PR, we have amazing GitHub Actions which would do the rest really
-!    really nicely!  
 !
 ! each field is declared as
 ! type name;comment

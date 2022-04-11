@@ -84,16 +84,26 @@
  * 2.777ms, so we schedule spark firing at '2.777ms after the 690 position sensor event', thus combining trigger events
  * with time-based offset.
  *
- * @section config Persistent Configuration
- * engine_configuration_s structure is kept in the internal flash memory, it has all the settings. Currently rusefi.ini has a direct mapping of this structure.
+ * @section tunerstudio Getting Data To and From Tunerstudio
  *
+ * Contains the enum with values to be output to Tunerstudio.
+ * console/binary/output_channels.txt
+ *
+ * [Changing gauge limits](http://www.tunerstudio.com/index.php/manuals/63-changing-gauge-limits)
+ *
+ * Definition of the Tunerstudio configuration interface, gauges, and indicators
+ * tunerstudio/rusefi.input
+ *
+ * @section config Persistent Configuration
+ *
+ * Definition of configuration data structure:  
+ * integration/rusefi_config.txt  
+ * This file has a lot of information and instructions in its comment header.
+ * in order to use CONFIG macro you need EXTERN_CONFIG and include engine_configuration.h
  * Please note that due to TunerStudio protocol it's important to have the total structure size in synch between the firmware and TS .ini file -
  * just to make sure that this is not forgotten the size of the structure is hard-coded as PAGE_0_SIZE constant. There is always some 'unused' fields added in advance so that
  * one can add some fields without the pain of increasing the total configuration page size.
  * <br>See flash_main.cpp
- *
- *
- * todo: merge https://github.com/rusefi/rusefi/wiki/Dev-Tips into here
  *
  * @section sec_fuel_injection Fuel Injection
  *
