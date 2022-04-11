@@ -1,3 +1,5 @@
+! TL,DR https://wiki.rusefi.com/Dev/Dev-Tips/
+!
 ! this file defines the format of rusEfi persistent configuration structure
 ! this file is processed by ../java_tools/config_definition.jar tool
 ! comments start with '!'
