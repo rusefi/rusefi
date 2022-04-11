@@ -41,10 +41,11 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
+# in rare cases order of arguments is important - '-tool' should be specified before '-definition'
 java -DSystemOut.name=logs/gen_config_board \
+	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
   -romraider integration \
-	-tool gen_config.sh \
   -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
