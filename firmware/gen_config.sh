@@ -53,6 +53,7 @@ bash gen_config_default.sh
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
 
+# todo: we have a bit of code duplication with build-firmware.yaml here :(
 cd config/boards/kinetis/config
 bash gen_kinetis_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
