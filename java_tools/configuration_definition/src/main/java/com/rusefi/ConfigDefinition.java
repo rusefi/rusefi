@@ -92,9 +92,11 @@ public class ConfigDefinition {
             String key = args[i];
             switch (key) {
                 case "-tool":
+                    // lame: order of command line arguments is important
                     ToolUtil.TOOL = args[i + 1];
                     break;
                 case KEY_DEFINITION:
+                    // lame: order of command line arguments is important, this arguments should be AFTER '-tool' argument
                     definitionInputFile = args[i + 1];
                     state.headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
                     inputFiles.add(definitionInputFile);
