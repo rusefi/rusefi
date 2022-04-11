@@ -25,21 +25,30 @@ pins:
     type: 12v
 
   - pin: 6
+    # H144_LS_1
+    id: GPIOG_7
     class: outputs
     function: Front Injector
     ts_name: 6 Front Injector
 
   - pin: 7
+    # H144_LS_2
+    id: GPIOG_8
     class: outputs
     function: Rear Injector
     ts_name: 6 Rear Injector
 
   - pin: 8
+    # H144_OUT_IO6
+    id: GPIOG_11
     class: outputs
     function: Rear ACR
     ts_name: 8 Rear ACR
 
   - pin: 11
+# H144_IN_SENS4
+    id: GPIOF_6
+    class: event_inputs
     function: Crank Sensor VR- Negative Input
     ts_name: 11 Crank VR-
 
@@ -54,17 +63,23 @@ pins:
     function: +ETB_OUT
 
   - pin: 24
+    # H144_IGN_1
+    id: GPIOC_13
     class: outputs
     ts_name: 24 Front Coil
     function: Front Coil
     type: ign
 
   - pin: 25
+# H144_OUT_IO5
+    id: GPIOD_2
     class: outputs
     ts_name: 25 Front ACR
     function: Front ACR
 
   - pin: 27
+# H144_IN_O2S2
+    id: EFI_ADC_1
     class: analog_inputs
     ts_name: 27 - TPS 2
     function: TPS 2 sensor input
@@ -78,11 +93,15 @@ pins:
     ts_name: 30 Crank VR+
 
   - pin: 32
+#  H144_IN_AUX2
+    id: EFI_ADC_14
     class: analog_inputs
     ts_name: 32 Oil Pressure
     function: Oil Pressure input
 
   - pin: 34
+# H144_IN_AUX3
+    id: EFI_ADC_15
     class: analog_inputs
     ts_name: 34 Kickstand Position Sensor
     function: Kickstand Position Sensor
@@ -104,6 +123,8 @@ pins:
     type: can
 
   - pin: 41
+# H144_IN_AUX1
+    id: EFI_ADC_8
     class: analog_inputs
     ts_name: 41 - PPS 1
     function: PPS 1 sensor input
@@ -114,6 +135,8 @@ pins:
     function: PPS 2 sensor input
 
   - pin: 43
+    # H144_IGN_2
+    id: GPIOE_5
     class: outputs
     ts_name: 43 Rear Coil
     function: Rear Coil
@@ -133,21 +156,29 @@ pins:
     function: Rear Knock sense neg
 
   - pin: 49
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
     class: analog_inputs
     ts_name: 49 CLT
     function: CLT sensor
 
   - pin: 51
+    # H144_IN_VSS
+    id: GPIOF_11
     class: event_inputs
     ts_name: 51 - VSS
     function: VSS in
 
   - pin: 52
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
     class: analog_inputs
     ts_name: 52 - TPS 1
     function: TPS 1 sensor input
 
   - pin: 53
+# H144_IN_MAP1
+    id: EFI_ADC_10
     class: analog_inputs
     ts_name: 53 - MAP
     function: Map
@@ -178,6 +209,12 @@ pins:
   - pin: 70
     function: Sensor +5V
 
+  - pin: 72
+    # H144_IN_IAT
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 72 IAT
+    function: Intake Air Temperature
 
   - pin: 74
     type: gnd
