@@ -5,6 +5,7 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOC_13: return "24 Front Coil";
+		case GPIOC_7: return "auxWastegate";
 		case GPIOD_14: return "4 Left Oil Fan";
 		case GPIOD_15: return "1 Right Oil Cooling";
 		case GPIOD_2: return "25 Front ACR";
@@ -13,6 +14,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOF_6: return "11 Crank VR-";
 		case GPIOG_11: return "8 Rear ACR";
 		case GPIOG_14: return "61 Reverse Gear";
+		case GPIOG_3: return "auxMain";
 		case GPIOG_5: return "63 Cooling Pump";
 		case GPIOG_7: return "6 Front Injector";
 		case GPIOG_8: return "6 Rear Injector";
