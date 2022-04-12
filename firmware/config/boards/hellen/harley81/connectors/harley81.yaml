@@ -1,4 +1,16 @@
 pins:
+  - pin: auxMain
+  #H144_OUT_IO7
+    id: GPIOG_3
+    class: outputs
+    ts_name: auxMain
+
+  - pin: auxWastegate
+    #H176_OUT_PWM3
+    id: GPIOC_7
+    class: outputs
+    ts_name: auxWastegate
+
   - pin: 1
     # H144_OUT_PWM7
     id: GPIOD_15
