@@ -1656,7 +1656,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4764
+#define mainUnusedEnd_offset 4768
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1930,7 +1930,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3220629867
+#define SIGNATURE_HASH 205452349
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2075,6 +2075,13 @@
 #define tcu_solenoid_mode4_offset 3960
 #define tcu_solenoid_mode5_offset 3961
 #define tcu_solenoid_mode6_offset 3962
+#define tcu_tcc_onoff_solenoid_mode_offset 4765
+#define tcu_tcc_onoff_solenoid_offset 4764
+#define tcu_tcc_pwm_solenoid_mode_offset 4767
+#define tcu_tcc_pwm_solenoid_offset 4766
+#define tcu_tccLockSpeed_offset 4574
+#define tcu_tccTpsBins_offset 4566
+#define tcu_tccUnlockSpeed_offset 4582
 #define tcuDownshiftButtonPin_offset 1579
 #define tcuDownshiftButtonPinMode_offset 3955
 #define tcuEnabled_offset 896
@@ -2482,7 +2489,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.12.kin.3220629867"
+#define TS_SIGNATURE "rusEFI 2022.04.13.kin.205452349"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2566,9 +2573,7 @@
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747
 #define unusedMapAccelTaperBins_offset 1792
-#define unusedRpmBins_offset 4574
 #define unusedShort_offset 4612
-#define unusedSSValues_offset 4566
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useEeprom_offset 164

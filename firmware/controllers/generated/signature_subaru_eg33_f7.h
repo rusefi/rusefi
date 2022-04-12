@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh null
 //
 
-#define SIGNATURE_HASH 454140842
-#define TS_SIGNATURE "rusEFI 2022.04.12.subaru_eg33_f7.454140842"
+#define SIGNATURE_HASH 2832842492
+#define TS_SIGNATURE "rusEFI 2022.04.13.subaru_eg33_f7.2832842492"

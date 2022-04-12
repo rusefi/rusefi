@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 12 00:26:44 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 12 23:19:35 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1613,7 +1613,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4792;
+	public static final int mainUnusedEnd_offset = 4796;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1872,7 +1872,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 2057749035;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2010,6 +2009,13 @@ public class Fields {
 	public static final int tcu_solenoid_mode4_offset = 3988;
 	public static final int tcu_solenoid_mode5_offset = 3989;
 	public static final int tcu_solenoid_mode6_offset = 3990;
+	public static final int tcu_tcc_onoff_solenoid_mode_offset = 4793;
+	public static final int tcu_tcc_onoff_solenoid_offset = 4792;
+	public static final int tcu_tcc_pwm_solenoid_mode_offset = 4795;
+	public static final int tcu_tcc_pwm_solenoid_offset = 4794;
+	public static final int tcu_tccLockSpeed_offset = 4602;
+	public static final int tcu_tccTpsBins_offset = 4594;
+	public static final int tcu_tccUnlockSpeed_offset = 4610;
 	public static final int tcuDownshiftButtonPin_offset = 1579;
 	public static final int tcuDownshiftButtonPinMode_offset = 3983;
 	public static final int tcuEnabled_offset = 896;
@@ -2362,7 +2368,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.12.all.2057749035";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.13.all.3379486589";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2443,9 +2449,7 @@ public class Fields {
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
-	public static final int unusedRpmBins_offset = 4602;
 	public static final int unusedShort_offset = 4640;
-	public static final int unusedSSValues_offset = 4594;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
 	public static final int useEeprom_offset = 164;
@@ -3757,8 +3761,9 @@ public class Fields {
 	public static final Field HPFPCOMPENSATION = Field.create("HPFPCOMPENSATION", 4464, FieldType.INT8).setScale(1.0);
 	public static final Field HPFPCOMPENSATIONLOADBINS = Field.create("HPFPCOMPENSATIONLOADBINS", 4564, FieldType.INT16).setScale(0.001);
 	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 4584, FieldType.INT8).setScale(50.0);
-	public static final Field UNUSEDSSVALUES = Field.create("UNUSEDSSVALUES", 4594, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDRPMBINS = Field.create("UNUSEDRPMBINS", 4602, FieldType.INT16).setScale(1.0);
+	public static final Field TCU_TCCTPSBINS = Field.create("TCU_TCCTPSBINS", 4594, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCCLOCKSPEED = Field.create("TCU_TCCLOCKSPEED", 4602, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCCUNLOCKSPEED = Field.create("TCU_TCCUNLOCKSPEED", 4610, FieldType.INT8).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT1 = Field.create("STEPPER_RAW_OUTPUT1", 4618, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT2 = Field.create("STEPPER_RAW_OUTPUT2", 4619, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT3 = Field.create("STEPPER_RAW_OUTPUT3", 4620, FieldType.INT8, output_pin_e).setScale(1.0);
@@ -3796,7 +3801,11 @@ public class Fields {
 	public static final Field AUXLINEAR2_VALUE1 = Field.create("AUXLINEAR2_VALUE1", 4780, FieldType.FLOAT);
 	public static final Field AUXLINEAR2_V2 = Field.create("AUXLINEAR2_V2", 4784, FieldType.FLOAT);
 	public static final Field AUXLINEAR2_VALUE2 = Field.create("AUXLINEAR2_VALUE2", 4788, FieldType.FLOAT);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4792, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCC_ONOFF_SOLENOID = Field.create("TCU_TCC_ONOFF_SOLENOID", 4792, FieldType.INT8, output_pin_e).setScale(1.0);
+	public static final Field TCU_TCC_ONOFF_SOLENOID_MODE = Field.create("TCU_TCC_ONOFF_SOLENOID_MODE", 4793, FieldType.INT8, pin_output_mode_e).setScale(1.0);
+	public static final Field TCU_TCC_PWM_SOLENOID = Field.create("TCU_TCC_PWM_SOLENOID", 4794, FieldType.INT8, output_pin_e).setScale(1.0);
+	public static final Field TCU_TCC_PWM_SOLENOID_MODE = Field.create("TCU_TCC_PWM_SOLENOID_MODE", 4795, FieldType.INT8, pin_output_mode_e).setScale(1.0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4796, FieldType.INT8).setScale(1.0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING).setScale(1.0);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -5066,8 +5075,9 @@ public class Fields {
 	HPFPCOMPENSATION,
 	HPFPCOMPENSATIONLOADBINS,
 	HPFPCOMPENSATIONRPMBINS,
-	UNUSEDSSVALUES,
-	UNUSEDRPMBINS,
+	TCU_TCCTPSBINS,
+	TCU_TCCLOCKSPEED,
+	TCU_TCCUNLOCKSPEED,
 	STEPPER_RAW_OUTPUT1,
 	STEPPER_RAW_OUTPUT2,
 	STEPPER_RAW_OUTPUT3,
@@ -5105,6 +5115,10 @@ public class Fields {
 	AUXLINEAR2_VALUE1,
 	AUXLINEAR2_V2,
 	AUXLINEAR2_VALUE2,
+	TCU_TCC_ONOFF_SOLENOID,
+	TCU_TCC_ONOFF_SOLENOID_MODE,
+	TCU_TCC_PWM_SOLENOID,
+	TCU_TCC_PWM_SOLENOID_MODE,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,

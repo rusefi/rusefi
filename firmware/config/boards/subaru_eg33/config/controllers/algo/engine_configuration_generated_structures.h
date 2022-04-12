@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 13:30:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 12 23:19:32 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4048,15 +4048,20 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
 	/**
-	Nm
+	TPS
 	 * offset 4594
 	 */
-	uint8_t unusedSSValues[8];
+	uint8_t tcu_tccTpsBins[8];
 	/**
-	RPM
+	MPH
 	 * offset 4602
 	 */
-	uint16_t unusedRpmBins[8];
+	uint8_t tcu_tccLockSpeed[8];
+	/**
+	MPH
+	 * offset 4610
+	 */
+	uint8_t tcu_tccUnlockSpeed[8];
 	/**
 	 * offset 4618
 	 */
@@ -4135,10 +4140,26 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s auxLinear2;
 	/**
-	units
 	 * offset 4792
 	 */
-	uint8_t mainUnusedEnd[228];
+	output_pin_e tcu_tcc_onoff_solenoid;
+	/**
+	 * offset 4793
+	 */
+	pin_output_mode_e tcu_tcc_onoff_solenoid_mode;
+	/**
+	 * offset 4794
+	 */
+	output_pin_e tcu_tcc_pwm_solenoid;
+	/**
+	 * offset 4795
+	 */
+	pin_output_mode_e tcu_tcc_pwm_solenoid_mode;
+	/**
+	units
+	 * offset 4796
+	 */
+	uint8_t mainUnusedEnd[224];
 	/** total size 5020*/
 };
 
@@ -4560,4 +4581,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 09 13:30:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 12 23:19:32 UTC 2022
