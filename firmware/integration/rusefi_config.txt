@@ -1515,8 +1515,9 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12500, 0
 
-        uint8_t[8] unusedSSValues;;"Nm", 10, 0, 0, 255, 0
-        uint16_t[8] unusedRpmBins;;"RPM", 1, 0, 0, 65000, 0
+        uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
+        uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
+        uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
@@ -1550,7 +1551,12 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
 
-uint8_t[228] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+output_pin_e tcu_tcc_onoff_solenoid
+pin_output_mode_e tcu_tcc_onoff_solenoid_mode
+output_pin_e tcu_tcc_pwm_solenoid
+pin_output_mode_e tcu_tcc_pwm_solenoid_mode
+
+uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

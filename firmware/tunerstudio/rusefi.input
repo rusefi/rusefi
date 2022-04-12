@@ -652,6 +652,22 @@ enable2ndByteCanID = false
 		yBins = tchargeValues
 		gauge = tChargeGauge
 
+	curve = tccLockCurve, "TCC Lock Curve"
+		columnLabel = "TPS", "Lockup Speed"
+		xAxis = 0, 100, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_tccTpsBins, TPSValue
+		yBins = tcu_tccLockSpeed
+		gauge = TPSGauge
+
+	curve = tccUnlockCurve, "TCC Unlock Curve"
+		columnLabel = "TPS", "Unlock Speed"
+		xAxis = 0, 100, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_tccTpsBins, TPSValue
+		yBins = tcu_tccUnlockSpeed
+		gauge = TPSGauge
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1509,6 +1525,7 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
 		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
+		subMenu = tccCurves, "TCC Lock/Unlock Speed"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -3404,22 +3421,32 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled
-		field = "Gear Controller" gearControllerMode
-		field = "Transmission Controller" transmissionControllerMode
+		field = "Gear Controller" gearControllerMode, { tcuEnabled }
+		field = "Transmission Controller" transmissionControllerMode, {tcuEnabled}
 
 	dialog = solenoidPanel, "Shift Solenoids"
 		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled }
-		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
-		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
-		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
-		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
-		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
 		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled }
+		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
 		field = "Solenoid 2 Pin Mode"	tcu_solenoid_mode2,	{ tcuEnabled }
+		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
 		field = "Solenoid 3 Pin Mode"	tcu_solenoid_mode3,	{ tcuEnabled }
+		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
 		field = "Solenoid 4 Pin Mode"	tcu_solenoid_mode4,	{ tcuEnabled }
+		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
 		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled }
+		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
 		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled }
+		field = "TCC On/Off Solenoid Pin" tcu_tcc_onoff_solenoid, { tcuEnabled }
+		field = "TCC On/Off Solenoid Pin Mode" tcu_tcc_onoff_solenoid_mode, { tcuEnabled }
+		field = "TCC PWM Solenoid Pin" tcu_tcc_pwm_solenoid, { tcuEnabled }
+		field = "TCC PWM Solenoid Pin Mode" tcu_tcc_pwm_solenoid_mode, { tcuEnabled }
+
+	dialog = buttonShiftInputPanel, "Switch/Button Shift"
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
@@ -3431,6 +3458,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = transmissionPanel
 		panel = solenoidPanel
 		panel = buttonShiftInputPanel
+
+	dialog = tccCurves, "TCC Lock/Unlock Speed"
+		panel = tccLockCurve
+		panel = tccUnlockCurve
 
 ;Boost Open Loop
 
