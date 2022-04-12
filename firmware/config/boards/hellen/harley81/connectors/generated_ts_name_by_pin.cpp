@@ -17,7 +17,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOG_3: return "auxMain";
 		case GPIOG_5: return "63 Cooling Pump";
 		case GPIOG_7: return "6 Front Injector";
-		case GPIOG_8: return "6 Rear Injector";
+		case GPIOG_8: return "7 Rear Injector";
 		default: return nullptr;
 	}
 	return nullptr;
