@@ -213,6 +213,8 @@ public:
 	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+	OutputPin tcuTccOnoffSolenoid;
+	OutputPin tcuTccPwmSolenoid;
 
 private:
 	void startInjectionPins();
