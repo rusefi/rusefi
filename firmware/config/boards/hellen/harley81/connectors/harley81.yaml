@@ -52,7 +52,7 @@ pins:
     id: GPIOG_8
     class: outputs
     function: Rear Injector
-    ts_name: 6 Rear Injector
+    ts_name: 7 Rear Injector
 
   - pin: 8
     # H144_OUT_IO6

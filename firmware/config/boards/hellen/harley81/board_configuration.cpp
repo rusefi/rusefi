@@ -53,6 +53,26 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
+static void setupEtb() {
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM1;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO1;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
+}
+
 static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -140,7 +160,7 @@ void setSerialConfigurationOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
-
+	setupEtb();
 	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
 	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
 	engineConfiguration->fanPin = H144_OUT_PWM4;
