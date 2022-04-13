@@ -37,6 +37,14 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	}
 }
 
+template<typename TValue, int TSize>
+void ensureArrayIsAscendingOrDefault(const char* msg, const TValue (&values)[TSize]) {
+	if (values[1] == 0) {
+		return; // looks like default empty array, do not check
+	}
+	ensureArrayIsAscending(msg, values);
+}
+
 namespace priv {
 struct BinResult
 {
