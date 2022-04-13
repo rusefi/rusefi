@@ -1,10 +1,10 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\ignition_state.txt Wed Apr 13 15:35:05 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\ignition_state.txt Wed Apr 13 15:46:00 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
 #include "rusefi_types.h"
-// start of ignition_state
-struct ignition_state {
+// start of ignition_state_s
+struct ignition_state_s {
 	/**
 	 * offset 0
 	 */
@@ -17,4 +17,4 @@ struct ignition_state {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\ignition_state.txt Wed Apr 13 15:35:05 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\ignition_state.txt Wed Apr 13 15:46:00 EDT 2022
