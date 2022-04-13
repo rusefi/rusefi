@@ -38,6 +38,7 @@
 #include "alternator_controller.h"
 #include "dfco.h"
 #include "gear_detector.h"
+#include "advance_map.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -211,6 +212,8 @@ public:
 #if EFI_BOOST_CONTROL
 	BoostController boostController;
 #endif // EFI_BOOST_CONTROL
+
+	IgnitionState ignitionState;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;

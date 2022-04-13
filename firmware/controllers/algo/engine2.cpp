@@ -101,7 +101,7 @@ void EngineState::periodicFastCallback() {
 	recalculateAuxValveTiming();
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	sparkDwell = getSparkDwell(rpm);
+	sparkDwell = engine->ignitionState.getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here

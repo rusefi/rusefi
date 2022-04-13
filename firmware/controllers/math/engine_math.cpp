@@ -73,7 +73,7 @@ void setSingleCoilDwell() {
 /**
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
-floatms_t getSparkDwell(int rpm) {
+floatms_t IgnitionState::getSparkDwell(int rpm) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
 	if (engine->rpmCalculator.isCranking()) {
@@ -81,19 +81,19 @@ floatms_t getSparkDwell(int rpm) {
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		auto base = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
-		auto voltageMult = 0.02f * 
+		baseDwell = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		dwellVoltageCorrection = 0.02f *
 			interpolate2d(
 				10 * Sensor::getOrZero(SensorType::BatteryVoltage),
 				engineConfiguration->dwellVoltageCorrVoltBins,
 				engineConfiguration->dwellVoltageCorrValues);
 
 		// for compat (table full of zeroes)
-		if (voltageMult < 0.1f) {
-			voltageMult = 1;
+		if (dwellVoltageCorrection < 0.1f) {
+			dwellVoltageCorrection = 1;
 		}
 
-		dwellMs = base * voltageMult;
+		dwellMs = baseDwell * dwellVoltageCorrection;
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
