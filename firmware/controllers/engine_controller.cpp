@@ -604,7 +604,6 @@ bool validateConfig() {
 	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 
 	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
-	ensureArrayIsAscendingOrDefault("Dwell Correction Values", engineConfiguration->dwellVoltageCorrValues);
 
 	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
 
