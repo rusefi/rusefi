@@ -3433,6 +3433,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TCC On/Off Solenoid Pin Mode" tcu_tcc_onoff_solenoid_mode, { tcuEnabled }
 		field = "TCC PWM Solenoid Pin" tcu_tcc_pwm_solenoid, { tcuEnabled }
 		field = "TCC PWM Solenoid Pin Mode" tcu_tcc_pwm_solenoid_mode, { tcuEnabled }
+		field = "TCC PWM Solenoid Frequency" tcu_tcc_pwm_solenoid_freq, { tcuEnabled }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }

@@ -1561,6 +1561,7 @@ output_pin_e tcu_tcc_onoff_solenoid
 pin_output_mode_e tcu_tcc_onoff_solenoid_mode
 output_pin_e tcu_tcc_pwm_solenoid
 pin_output_mode_e tcu_tcc_pwm_solenoid_mode
+pwm_freq_t tcu_tcc_pwm_solenoid_freq
 
 uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
