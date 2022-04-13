@@ -600,13 +600,11 @@ bool validateConfig() {
 		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
 	}
 
-	if (config->mapEstimateTpsBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
-	}
+	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
+	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 
-	if (config->mapEstimateRpmBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
-	}
+	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
+	ensureArrayIsAscendingOrDefault("Dwell Correction Values", engineConfiguration->dwellVoltageCorrValues);
 
 	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
 
@@ -618,18 +616,10 @@ bool validateConfig() {
 	// Idle tables
 	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
-	}
-	if (config->idleVeRpmBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE RPM", config->idleVeRpmBins);
-	}
-	if (config->idleVeLoadBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE Load", config->idleVeLoadBins);
-	}
-	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
-	}
+	ensureArrayIsAscendingOrDefault("Idle coasting position", engineConfiguration->iacCoastingBins);
+	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
+	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
+	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);
 
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
