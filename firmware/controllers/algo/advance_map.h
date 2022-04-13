@@ -14,3 +14,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax);
 void buildTimingMap(float advanceMax);
 angle_t getAdvanceCorrections(int rpm);
 size_t getMultiSparkCount(int rpm);
+
+class IgnitonState : public ignition_state_state {
+public:
+}

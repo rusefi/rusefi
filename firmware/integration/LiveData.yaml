@@ -15,3 +15,4 @@ Usages:
   trigger_state: [ "TriggerState.java", "controllers/trigger" ]
   wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
   idle_state: [ "IdleState.java", "controllers/actuators" ]
+  ignition_state: [ "IgnitionState.java", "controllers/algo" ]
