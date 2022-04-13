@@ -1,3 +1,7 @@
+#
+# here we have LiveData configuration file
+# see gen_live_documentation.sh
+#
 Usages:
   high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
   injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
