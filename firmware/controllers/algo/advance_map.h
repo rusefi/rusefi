@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "ignition_state_generated.h"
+
 #pragma once
 
 angle_t getAdvance(int rpm, float engineLoad);
@@ -15,6 +17,6 @@ void buildTimingMap(float advanceMax);
 angle_t getAdvanceCorrections(int rpm);
 size_t getMultiSparkCount(int rpm);
 
-class IgnitonState : public ignition_state_state {
-public:
-}
+class IgnitionState : public ignition_state_s {
+//public:
+};
