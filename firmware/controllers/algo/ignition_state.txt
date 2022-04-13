@@ -1,0 +1,8 @@
+struct_no_prefix ignition_state
+
+float baseDwell
+float voltageCorrection
+
+! ignition_state
+end_struct
+
