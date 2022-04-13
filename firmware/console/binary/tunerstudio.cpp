@@ -172,18 +172,41 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
+#if EFI_HPFP
+	case LDS_high_pressure_fuel_pump:
+		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
+#endif // EFI_HPFP
+	case LDS_launch_control_state:
+		return static_cast<launch_control_state_s*>(&engine->launchController);
+	case LDS_injector_model:
+		return static_cast<injector_model_s*>(&engine->module<InjectorModel>().unmock());
+#if EFI_BOOST_CONTROL
+	case LDS_boost_control:
+		return static_cast<boost_control_s*>(&engine->boostController);
+#endif // EFI_BOOST_CONTROL
+	case LDS_ac_control:
+		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
+	case LDS_fan_control:
+		return static_cast<fan_control_s*>(&engine->fan1);
+	case LDS_fuel_pump:
+		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
+	case LDS_main_relay:
+		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 	case LDS_engine_state:
 		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_wall_fuel_state:
-		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
+	case LDS_tps_accel_state:
+		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
 	case LDS_trigger_central:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	case LDS_trigger_state:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-	case LDS_ac_control:
-		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_fuel_pump:
-		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
+	case LDS_wall_fuel_state:
+		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
+	case LDS_idle_state:
+		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
+	case LDS_ignition_state:
+		return static_cast<ignition_state_s*>(&engine->ignitionState);
+
 //#if EFI_ELECTRONIC_THROTTLE_BODY
 //	case LDS_ETB_PID:
 //		return engine->etbControllers[0]->getPidState();
@@ -193,21 +216,8 @@ static const void * getStructAddr(live_data_e structId) {
 //	case LDS_IDLE_PID:
 //		return static_cast<pid_state_s*>(getIdlePid());
 //#endif /* EFI_IDLE_CONTROL */
-	case LDS_idle_state:
-		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
-	case LDS_tps_accel_state:
-		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-#if EFI_HPFP
-	case LDS_high_pressure_fuel_pump:
-		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
-#endif // EFI_HPFP
-	case LDS_main_relay:
-		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
-#if EFI_BOOST_CONTROL
-	case LDS_boost_control:
-		return static_cast<boost_control_s*>(&engine->boostController);
-#endif // EFI_BOOST_CONTROL
 	default:
+		firmwareError(OBD_PCM_Processor_Fault, "getStructAddr not implemented for %d", (int)structId);
 		return nullptr;
 	}
 }

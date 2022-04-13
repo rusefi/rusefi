@@ -39,6 +39,7 @@
 #include "dfco.h"
 #include "gear_detector.h"
 #include "advance_map.h"
+#include "fan_control.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -214,6 +215,10 @@ public:
 #endif // EFI_BOOST_CONTROL
 
 	IgnitionState ignitionState;
+
+	FanControl1 fan1;
+	FanControl2 fan2;
+
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
