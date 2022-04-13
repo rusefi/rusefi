@@ -7,6 +7,7 @@ static uint8_t buffer5[] = {11, 12, 13, 14, 15};
 static FragmentEntry fragments[] = {
 		FragmentEntry(buffer10, sizeof(buffer10)),
 		FragmentEntry(buffer5, sizeof(buffer5)),
+		FragmentEntry(nullptr, sizeof(5)),
 };
 
 TEST(outputs, fragments) {
@@ -20,6 +21,12 @@ TEST(outputs, fragments) {
 	{
 		uint8_t expected[] = {13, 14, 15};
 		copyRange(buffer, fragments, 12, 3);
+		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
+	}
+
+	{
+		uint8_t expected[] = {15, 0, 0};
+		copyRange(buffer, fragments, 14, 3);
 		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
 	}
 }
