@@ -23,6 +23,9 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 12/19/18
  */
 public class ReaderState {
+    // used to update other files
+    public List<String> inputFiles = new ArrayList<>();
+
     private static final Logging log = getLogging(ReaderState.class);
 
     public static final String BIT = "bit";

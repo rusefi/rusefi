@@ -82,8 +82,6 @@ public class ConfigDefinition {
         String tsOutputsDestination = null;
         String definitionInputFile = null;
 
-        // used to update other files
-        List<String> inputFiles = new ArrayList<>();
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
@@ -99,7 +97,7 @@ public class ConfigDefinition {
                     // lame: order of command line arguments is important, this arguments should be AFTER '-tool' argument
                     definitionInputFile = args[i + 1];
                     state.headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
-                    inputFiles.add(definitionInputFile);
+                    state.inputFiles.add(definitionInputFile);
                     break;
                 case KEY_TS_DESTINATION:
                     tsInputFileFolder = args[i + 1];
@@ -133,10 +131,10 @@ public class ConfigDefinition {
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
                     state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
-                    inputFiles.add(fileName);
+                    state.inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
-                    inputFiles.add(firingEnumFileName);
+                    state.inputFiles.add(firingEnumFileName);
                     break;
                 case "-triggerFolder":
                     triggersFolder = args[i + 1];
@@ -146,7 +144,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_PREPEND:
                     prependFiles.add(args[i + 1]);
-                    inputFiles.add(args[i + 1]);
+                    state.inputFiles.add(args[i + 1]);
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
@@ -165,20 +163,20 @@ public class ConfigDefinition {
                 case KEY_ROMRAIDER_INPUT:
                     String inputFilePath = args[i + 1];
                     romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
-                    inputFiles.add(romRaiderInputFile);
+                    state.inputFiles.add(romRaiderInputFile);
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
                     pinoutLogic = PinoutLogic.create(boardName);
                     if (pinoutLogic != null)
-                        inputFiles.addAll(pinoutLogic.getInputFiles());
+                        state.inputFiles.addAll(pinoutLogic.getInputFiles());
                     break;
             }
         }
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
-            inputFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
+            state.inputFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
         if (!enumInputFiles.isEmpty()) {
@@ -191,7 +189,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
+        long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, state.inputFiles);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
