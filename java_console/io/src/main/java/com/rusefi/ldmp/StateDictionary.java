@@ -30,7 +30,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_fan_control, FuelPump.VALUES, "fan_control");
         register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
         register(live_data_e.LDS_idle_state, IdleState.VALUES, "idle_thread");
-        register(live_data_e.LDS_fuel_pump, FuelPump.VALUES, "fuel_pump");
+        register(live_data_e.LDS_fuel_pump_control, FuelPump.VALUES, "fuel_pump");
         register(live_data_e.LDS_wall_fuel_state, WallFuelState.VALUES, "wall_fuel");
         register(live_data_e.LDS_tps_accel_state, TpsAccelState.VALUES, "accel_enrichment");
         register(live_data_e.LDS_main_relay, MainRelay.VALUES, "main_relay");
