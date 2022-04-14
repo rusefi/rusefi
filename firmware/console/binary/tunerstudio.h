@@ -36,18 +36,8 @@ const void * getStructAddr(live_data_e structId);
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-/**
- * handle non CRC wrapped command
- */
-bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
-
-/**
- * this command is part of protocol initialization
- */
-void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
-
 void updateTunerStudioState();
-void printTsStats(void);
+
 void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
@@ -87,6 +77,3 @@ public:
 #endif
 
 #endif /* EFI_TUNER_STUDIO */
-
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content);
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
