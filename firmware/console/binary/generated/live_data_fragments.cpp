@@ -19,4 +19,4 @@ static FragmentEntry fragments[] = {
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_wall_fuel_state), sizeof(wall_fuel_state_s)),
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_idle_state), sizeof(idle_state_s)),
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_ignition_state), sizeof(ignition_state_s)),
-}
+};
