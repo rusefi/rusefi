@@ -160,7 +160,7 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
 	::sendErrorCode(tsChannel, code);
 }
 
-static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
+void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsState.pageCommandCounter++;
 
 	sendOkResponse(tsChannel, mode);
@@ -278,7 +278,7 @@ bool rebootForPresetPending = false;
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
@@ -455,7 +455,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
  * Query with CRC takes place while re-establishing connection
  * Query without CRC takes place on TunerStudio startup
  */
-static void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+void TunerStudio::handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	tsState.queryCommandCounter++;
 #if EFI_TUNER_STUDIO_VERBOSE
 	efiPrintf("got S/H (queryCommand) mode=%d", mode);
@@ -470,7 +470,7 @@ static void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mo
  *
  * @return true if legacy command was processed, false otherwise
  */
-static bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
+bool TunerStudio::handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
 	if (command == 0) {
 		return false;
@@ -529,7 +529,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		return -1;
 	}
 
-	if (handlePlainCommand(tsChannel, firstByte)) {
+	if (tsInstance.handlePlainCommand(tsChannel, firstByte)) {
 		return -1;
 	}
 
@@ -663,7 +663,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 }
 #endif // EFI_TEXT_LOGGING
 
-static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
@@ -676,7 +676,7 @@ static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incom
 
 static int transmitted = 0;
 
-int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
