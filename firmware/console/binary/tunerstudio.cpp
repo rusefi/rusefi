@@ -102,15 +102,13 @@ static void printErrorCounters() {
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
 
-extern persistent_config_container_s persistentState;
-
 static efitimems_t previousWriteReportMs = 0;
 
 static void resetTs() {
 	memset(&tsState, 0, sizeof(tsState));
 }
 
-void printTsStats(void) {
+static void printTsStats(void) {
 #if EFI_PROD_CODE
 #ifdef EFI_CONSOLE_RX_BRAIN_PIN
 	efiPrintf("Primary UART RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
@@ -280,7 +278,7 @@ bool rebootForPresetPending = false;
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 
@@ -387,7 +385,7 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
@@ -419,6 +417,88 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
 			|| command == TS_GET_CONFIG_ERROR;
+}
+
+/**
+ * rusEfi own test command
+ */
+static void handleTestCommand(TsChannelBase* tsChannel) {
+	tsState.testCommandCounter++;
+	char testOutputBuffer[64];
+	/**
+	 * this is NOT a standard TunerStudio command, this is my own
+	 * extension of the protocol to simplify troubleshooting
+	 */
+	tunerStudioDebug(tsChannel, "got T (Test)");
+	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	if (hasFirmwareError()) {
+		const char* error = getFirmwareError();
+		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
+		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+	}
+	tsChannel->flush();
+}
+
+/**
+ * this command is part of protocol initialization
+ *
+ * Query with CRC takes place while re-establishing connection
+ * Query without CRC takes place on TunerStudio startup
+ */
+static void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+	tsState.queryCommandCounter++;
+#if EFI_TUNER_STUDIO_VERBOSE
+	efiPrintf("got S/H (queryCommand) mode=%d", mode);
+	printTsStats();
+#endif
+	const char *signature = getTsSignature();
+	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
+}
+
+/**
+ * handle non CRC wrapped command
+ *
+ * @return true if legacy command was processed, false otherwise
+ */
+static bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
+	// Bail fast if guaranteed not to be a plain command
+	if (command == 0) {
+		return false;
+	} else if (command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND) {
+		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
+		efiPrintf("Got naked Query command");
+		handleQueryCommand(tsChannel, TS_PLAIN);
+		return true;
+	} else if (command == TS_TEST_COMMAND || command == 'T') {
+		handleTestCommand(tsChannel);
+		return true;
+	} else if (command == TS_COMMAND_F) {
+		/**
+		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
+		 * Response from TS support: This is an optional command		 *
+		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
+		 * If you are able to just make your firmware ignore the command that would work.
+		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
+		 */
+
+		tunerStudioDebug(tsChannel, "not ignoring F");
+		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->flush();
+		return true;
+	} else {
+		// This wasn't a valid command
+		return false;
+	}
 }
 
 TunerStudio tsInstance;
@@ -555,49 +635,6 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-/**
- * Query with CRC takes place while re-establishing connection
- * Query without CRC takes place on TunerStudio startup
- */
-void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
-	tsState.queryCommandCounter++;
-#if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("got S/H (queryCommand) mode=%d", mode);
-	printTsStats();
-#endif
-	const char *signature = getTsSignature();
-	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
-}
-
-/**
- * rusEfi own test command
- */
-static void handleTestCommand(TsChannelBase* tsChannel) {
-	tsState.testCommandCounter++;
-	char testOutputBuffer[64];
-	/**
-	 * this is NOT a standard TunerStudio command, this is my own
-	 * extension of the protocol to simplify troubleshooting
-	 */
-	tunerStudioDebug(tsChannel, "got T (Test)");
-	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	if (hasFirmwareError()) {
-		const char* error = getFirmwareError();
-		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
-		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-	}
-	tsChannel->flush();
-}
 
 extern CommandHandler console_line_callback;
 
@@ -635,40 +672,6 @@ static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incom
 	(console_line_callback)(trimmed);
 
 	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, nullptr, 0);
-}
-
-/**
- * @return true if legacy command was processed, false otherwise
- */
-bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
-	// Bail fast if guaranteed not to be a plain command
-	if (command == 0) {
-		return false;
-	} else if (command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND) {
-		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
-		efiPrintf("Got naked Query command");
-		handleQueryCommand(tsChannel, TS_PLAIN);
-		return true;
-	} else if (command == TS_TEST_COMMAND || command == 'T') {
-		handleTestCommand(tsChannel);
-		return true;
-	} else if (command == TS_COMMAND_F) {
-		/**
-		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
-		 * Response from TS support: This is an optional command		 *
-		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
-		 * If you are able to just make your firmware ignore the command that would work.
-		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
-		 */
-
-		tunerStudioDebug(tsChannel, "not ignoring F");
-		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
-		tsChannel->flush();
-		return true;
-	} else {
-		// This wasn't a valid command
-		return false;
-	}
 }
 
 static int transmitted = 0;
