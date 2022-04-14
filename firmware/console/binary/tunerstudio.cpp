@@ -144,15 +144,11 @@ uint8_t* getWorkingPageAddr() {
 	return (uint8_t*)engineConfiguration;
 }
 
-static constexpr size_t getTunerStudioPageSize() {
-	return TOTAL_CONFIG_SIZE;
-}
-
 void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsChannel->sendResponse(mode, NULL, 0);
 }
 
-static void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
+void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
 	tsChannel->writeCrcPacket(code, nullptr, 0);
 }
 
@@ -256,23 +252,9 @@ static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int s
 
 #endif // EFI_TUNER_STUDIO
 
-// Validate whether the specified offset and count would cause an overrun in the tune.
-// Returns true if an overrun would occur.
-static bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
-	if (offset + count > getTunerStudioPageSize()) {
-		efiPrintf("TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
-		tunerStudioError(tsChannel, "ERROR: out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return true;
-	}
+bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
-	return false;
-}
-
-// This is used to prevent TS from reading/writing when we have just applied a preset, to prevent TS getting confused.
-// At the same time an ECU reboot is forced by triggering a fatal error, informing the user to please restart
-// the ECU.  Forcing a reboot will force TS to re-read the tune CRC, 
-bool rebootForPresetPending = false;
+extern bool rebootForPresetPending;
 
 /**
  * This command is needed to make the whole transfer a bit faster
@@ -299,7 +281,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_
 
 #if EFI_TUNER_STUDIO
 
-static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -317,7 +299,7 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
+void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
 
@@ -341,7 +323,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	}
 }
 
-static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
 	if (rebootForPresetPending) {
