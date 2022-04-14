@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\engine_state.txt Wed Apr 13 20:37:15 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -196,8 +196,8 @@ struct running_fuel_s {
 	/** total size 28*/
 };
 
-// start of engine_state2_s
-struct engine_state2_s {
+// start of engine_state_s
+struct engine_state_s {
 	/**
 	 * offset 0
 	 */
@@ -275,4 +275,4 @@ struct engine_state2_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\engine_state.txt Wed Apr 13 20:37:15 EDT 2022

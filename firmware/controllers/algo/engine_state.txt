@@ -1,6 +1,6 @@
 
 
-struct_no_prefix engine_state2_s
+struct_no_prefix engine_state_s
 
 struct_no_prefix speed_density_s
 

@@ -170,7 +170,7 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 #if EFI_TUNER_STUDIO
 
-static const void * getStructAddr(live_data_e structId) {
+const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
 #if EFI_HPFP
 	case LDS_high_pressure_fuel_pump:
@@ -188,12 +188,12 @@ static const void * getStructAddr(live_data_e structId) {
 		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
 	case LDS_fan_control:
 		return static_cast<fan_control_s*>(&engine->fan1);
-	case LDS_fuel_pump:
+	case LDS_fuel_pump_control:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
 	case LDS_main_relay:
 		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 	case LDS_engine_state:
-		return static_cast<engine_state2_s*>(&engine->engineState);
+		return static_cast<engine_state_s*>(&engine->engineState);
 	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
 	case LDS_trigger_central:
@@ -201,7 +201,7 @@ static const void * getStructAddr(live_data_e structId) {
 	case LDS_trigger_state:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 	case LDS_wall_fuel_state:
-		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
+		return static_cast<wall_fuel_state_s*>(&engine->injectionEvents.elements[0].wallFuel);
 	case LDS_idle_state:
 		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
 	case LDS_ignition_state:
