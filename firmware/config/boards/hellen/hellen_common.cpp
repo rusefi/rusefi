@@ -75,7 +75,9 @@ void detectHellenMcuType() {
 	}
 }
 
+int hellenBoardId = 0;
+
 void detectHellenBoardType() {
 	detectHellenMcuType();
-	detectHellenBoardId();
+	hellenBoardId = detectHellenBoardId();
 }
