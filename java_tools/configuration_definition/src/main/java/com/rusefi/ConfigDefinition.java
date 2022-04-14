@@ -25,11 +25,11 @@ public class ConfigDefinition {
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     public static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
-    private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
+    public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     public static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
-    private static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SIGNATURE = "-signature";
     private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
