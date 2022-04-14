@@ -9,12 +9,19 @@
 
 struct FragmentEntry {
 	FragmentEntry(const uint8_t *data, size_t size) {
+		init(data, size);
+	}
+
+	FragmentEntry() {
+	}
+
+	const uint8_t *data = nullptr;
+	size_t size = 0;
+
+	void init(const uint8_t *data, size_t size) {
 		this->data = data;
 		this->size = size;
 	}
-
-	const uint8_t *data;
-	size_t size;
 };
 
 void copyRange(uint8_t *destination, FragmentEntry *fragments, size_t dataOffset, size_t dataLength);
