@@ -12,11 +12,11 @@
 void MultiChannelStateSequence::checkSwitchTimes(const float scale) const {
 	efiAssertVoid(CUSTOM_ERR_WAVE_1, phaseCount > 0, "StateSequence cannot be empty");
 	if (getSwitchTime(phaseCount - 1) != 1) {
-#if EFI_UNIT_TESTS
+#if EFI_UNIT_TEST
 		for (int index = 0;index < phaseCount;index ++) {
 			printf("switch time index=%d angle=%f\n", index, getSwitchTime(index));
 		}
-#endif // EFI_UNIT_TESTS
+#endif // EFI_UNIT_TEST
 
 		firmwareError(CUSTOM_ERR_WAVE_1, "[count=%d] last switch time has to be 1/%f not %.2f/%f",
 				phaseCount,
