@@ -172,17 +172,21 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
-#if EFI_HPFP
 	case LDS_high_pressure_fuel_pump:
+#if EFI_HPFP
 		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
+#else
+		return nullptr; // explicit null to confirm that this struct is handled
 #endif // EFI_HPFP
 	case LDS_launch_control_state:
 		return static_cast<launch_control_state_s*>(&engine->launchController);
 	case LDS_injector_model:
 		return static_cast<injector_model_s*>(&engine->module<InjectorModel>().unmock());
-#if EFI_BOOST_CONTROL
 	case LDS_boost_control:
+#if EFI_BOOST_CONTROL
 		return static_cast<boost_control_s*>(&engine->boostController);
+#else
+		return nullptr; // explicit null to confirm that this struct is handled
 #endif // EFI_BOOST_CONTROL
 	case LDS_ac_control:
 		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
