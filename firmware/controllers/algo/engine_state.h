@@ -23,7 +23,7 @@ struct LuaAdjustments {
 	bool brakePedalState = false;
 };
 
-class EngineState : public engine_state2_s {
+class EngineState : public engine_state_s {
 public:
 	EngineState();
 	void periodicFastCallback();
