@@ -3,6 +3,7 @@
 #include "FragmentEntry.h"
 
 #include "tunerstudio.h"
+/*
 static FragmentEntry fragments[] = {
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_high_pressure_fuel_pump), sizeof(high_pressure_fuel_pump_s)),
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_injector_model), sizeof(injector_model_s)),
@@ -20,3 +21,4 @@ static FragmentEntry fragments[] = {
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_idle_state), sizeof(idle_state_s)),
 	FragmentEntry((const uint8_t *)getStructAddr(LDS_ignition_state), sizeof(ignition_state_s)),
 };
+*/

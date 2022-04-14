@@ -33,6 +33,7 @@ public class UsagesReader {
                         "#include \"pch.h\"\n" +
                         "#include \"FragmentEntry.h\"\n\n" +
                         "#include \"tunerstudio.h\"\n" +
+                        "/*\n" +
                         "static FragmentEntry fragments[] = {\n");
 
 
@@ -77,6 +78,8 @@ public class UsagesReader {
         }
 
         fragmentsContent.append("};\n");
+
+        fragmentsContent.append("*/\n");
 
         try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.cpp")) {
             fw.write(fragmentsContent.toString());
