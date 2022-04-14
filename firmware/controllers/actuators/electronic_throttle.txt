@@ -1,0 +1,9 @@
+struct_no_prefix electronic_throttle_s
+
+float idlePosition
+float trim
+float luaAdjustment
+
+
+
+end_struct
