@@ -11,22 +11,30 @@ static FragmentEntry fragments[] = {
 };
 
 TEST(outputs, fragments) {
+	ASSERT_EQ(3, efi::size(fragments));
+
 	uint8_t buffer[120];
 	{
 		uint8_t expected[] = {9, 10, 11, 12, 13};
-		copyRange(buffer, fragments, 8, 5);
+		copyRange(buffer, fragments, efi::size(fragments), 8, 5);
 		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
 	}
 
 	{
 		uint8_t expected[] = {13, 14, 15};
-		copyRange(buffer, fragments, 12, 3);
+		copyRange(buffer, fragments, efi::size(fragments), 12, 3);
 		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
 	}
 
 	{
 		uint8_t expected[] = {15, 0, 0};
-		copyRange(buffer, fragments, 14, 3);
+		copyRange(buffer, fragments, efi::size(fragments), 14, 3);
+		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
+	}
+
+	{
+		uint8_t expected[] = {0, 0, 0};
+		copyRange(buffer, fragments, efi::size(fragments), 114, 3);
 		EXPECT_TRUE( 0 == std::memcmp(buffer, expected, sizeof(expected)));
 	}
 }
