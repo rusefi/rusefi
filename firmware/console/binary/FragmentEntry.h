@@ -24,4 +24,6 @@ struct FragmentEntry {
 	}
 };
 
-void copyRange(uint8_t *destination, FragmentEntry *fragments, size_t dataOffset, size_t dataLength);
+void copyRange(uint8_t *destination,
+		FragmentEntry *fragments, int fragmentsCount,
+		size_t dataOffset, size_t dataLength);
