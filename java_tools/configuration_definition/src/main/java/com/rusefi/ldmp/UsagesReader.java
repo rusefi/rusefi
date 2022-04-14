@@ -28,16 +28,18 @@ public class UsagesReader {
                 "\n" +
                 "typedef enum {\n");
 
+        LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
+
         StringBuilder fragmentsContent = new StringBuilder(
                 header +
                         "#include \"pch.h\"\n" +
                         "#include \"FragmentEntry.h\"\n\n" +
                         "#include \"tunerstudio.h\"\n" +
-                        "/*\n" +
-                        "static FragmentEntry fragments[] = {\n");
+                        "static FragmentEntry fragments[" + liveDocs.size() + "];\n\n" +
+                        "void initFragments() {\n");
 
+        int index = 0;
 
-        LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
         for (Map.Entry entry : liveDocs.entrySet()) {
             String name = (String) entry.getKey();
             System.out.println(" " + name);
@@ -65,11 +67,14 @@ public class UsagesReader {
             enumContent.append(enumName + ",\n");
 
             fragmentsContent
-                    .append("\tFragmentEntry((const uint8_t *)getStructAddr(")
+                    .append("\tfragments[")
+                    .append(index++)
+                    .append("].init(")
+                    .append("(const uint8_t *)getStructAddr(")
                     .append(enumName)
                     .append("), sizeof(")
                     .append(type)
-                    .append(")),\n");
+                    .append("));\n");
         }
         enumContent.append("} live_data_e;\n");
 
@@ -78,8 +83,6 @@ public class UsagesReader {
         }
 
         fragmentsContent.append("};\n");
-
-        fragmentsContent.append("*/\n");
 
         try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.cpp")) {
             fw.write(fragmentsContent.toString());
