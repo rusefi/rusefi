@@ -8,6 +8,7 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
+#include "electronic_throttle_generated.h"
 
 typedef struct {
 	int queryCommandCounter;

@@ -19,4 +19,5 @@ public enum live_data_e {
 	LDS_wall_fuel_state,
 	LDS_idle_state,
 	LDS_ignition_state,
+	LDS_electronic_throttle,
 }

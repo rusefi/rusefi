@@ -17,4 +17,5 @@ LDS_trigger_state,
 LDS_wall_fuel_state,
 LDS_idle_state,
 LDS_ignition_state,
+LDS_electronic_throttle,
 } live_data_e;
