@@ -95,6 +95,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
+extern int hellenBoardId;
+
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
@@ -102,6 +104,18 @@ void setBoardConfigOverrides() {
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
+
+	if (hellenBoardId == 0) {
+		// first revision of did not have Hellen Board ID
+		// https://github.com/rusefi/hellen154hyundai/issues/55
+		engineConfiguration->etbIo[1].directionPin1 = GPIO_UNASSIGNED;
+		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+		engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
+
+		efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
+		efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
+		efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
+	}
 }
 
 void setSerialConfigurationOverrides() {
