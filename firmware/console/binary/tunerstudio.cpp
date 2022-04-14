@@ -171,6 +171,12 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 #if EFI_TUNER_STUDIO
 
 const void * getStructAddr(live_data_e structId) {
+	if (engine == nullptr) {
+#if ! EFI_UNIT_TEST
+		firmwareError(OBD_PCM_Processor_Fault, "getStructAddr: No engine reference");
+#endif
+		return nullptr;
+	}
 	switch (structId) {
 	case LDS_high_pressure_fuel_pump:
 #if EFI_HPFP
