@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 14 01:15:43 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 14 20:17:09 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1292,6 +1292,7 @@ public class Fields {
 	public static final int hpfpTargetRpmBins_offset = 4454;
 	public static final int hpfpValvePin_offset = 1754;
 	public static final int hpfpValvePinMode_offset = 1755;
+	public static final int HW_EVENT_TYPES = 6;
 	public static final int HW_MAX_ADC_INDEX = 17;
 	public static final int IAC_PID_MULT_SIZE = 8;
 	public static final int iacByTpsTaper_offset = 1682;
@@ -2368,7 +2369,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.14.all.3379486589";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.14.all.3652672123";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
