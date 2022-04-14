@@ -47,8 +47,9 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 
 	tsState.outputChannelsCommandCounter++;
 	updateTunerStudioState();
+	tsChannel->assertPacketSize(count, false);
 	// this method is invoked too often to print any debug information
-	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(&engine->outputChannels) + offset, count);
+	tsChannel->writeCrcPacketSmall(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(&engine->outputChannels) + offset, count);
 }
 
 #endif // EFI_TUNER_STUDIO

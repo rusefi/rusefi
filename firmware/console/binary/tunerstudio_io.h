@@ -58,8 +58,10 @@ public:
 	char scratchBuffer[BLOCKING_FACTOR + 30];
 	const char *name;
 
-private:
+	void assertPacketSize(size_t size, bool allowLongPackets);
 	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
+
+private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
