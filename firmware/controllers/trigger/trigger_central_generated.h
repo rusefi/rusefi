@@ -1,9 +1,8 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger\trigger_central.txt Thu Apr 14 15:43:13 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
 #include "rusefi_types.h"
-#define HW_EVENT_TYPES 6
 // start of trigger_central_s
 struct trigger_central_s {
 	/**
@@ -19,4 +18,4 @@ struct trigger_central_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger\trigger_central.txt Thu Apr 14 15:43:13 EDT 2022

@@ -54,6 +54,11 @@ public class UsagesReader {
             ConfigDefinition.main(new String[]{
                     ConfigDefinition.KEY_DEFINITION,
                     folder + File.separator + name + ".txt",
+                    ConfigDefinition.KEY_WITH_C_DEFINES,
+                    "false",
+
+                    ConfigDefinition.KEY_PREPEND,
+                    "integration/rusefi_config.txt",
 
                     ConfigDefinition.KEY_JAVA_DESTINATION,
                     "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName,
