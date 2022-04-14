@@ -79,6 +79,14 @@ TsChannelBase::TsChannelBase(const char *name) {
 	this->name = name;
 }
 
+#define isBigPacket(size) ((size) > BLOCKING_FACTOR + 7)
+
+void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
+	if (isBigPacket(size) && !allowLongPackets) {
+		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+	}
+}
+
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
@@ -88,13 +96,9 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		size = 0;
 	}
 
-	bool isBigPacket = size > BLOCKING_FACTOR + 7;
+	assertPacketSize(size, allowLongPackets);
 
-	if (isBigPacket && !allowLongPackets) {
-		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
-	}
-
-	if (isBigPacket) {
+	if (isBigPacket(size)) {
 		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending
 		writeCrcPacketLarge(responseCode, buf, size);
 	} else {
