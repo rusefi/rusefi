@@ -221,7 +221,7 @@ const void * getStructAddr(live_data_e structId) {
 //		return static_cast<pid_state_s*>(getIdlePid());
 //#endif /* EFI_IDLE_CONTROL */
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "getStructAddr not implemented for %d", (int)structId);
+// huh?		firmwareError(OBD_PCM_Processor_Fault, "getStructAddr not implemented for %d", (int)structId);
 		return nullptr;
 	}
 }
