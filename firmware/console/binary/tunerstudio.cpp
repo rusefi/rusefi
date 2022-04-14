@@ -218,6 +218,9 @@ const void * getStructAddr(live_data_e structId) {
 		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
 	case LDS_ignition_state:
 		return static_cast<ignition_state_s*>(&engine->ignitionState);
+	case LDS_electronic_throttle:
+		// todo: figure out how to handle two units?
+		return nullptr;
 
 //#if EFI_ELECTRONIC_THROTTLE_BODY
 //	case LDS_ETB_PID:
