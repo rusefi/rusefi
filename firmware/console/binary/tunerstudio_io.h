@@ -8,6 +8,7 @@
 
 #pragma once
 #include "global.h"
+#include "tunerstudio_impl.h"
 
 #if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
 	#define HAS_PRIMARY true
@@ -28,11 +29,6 @@
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif
-
-typedef enum {
-	TS_PLAIN = 0,
-	TS_CRC = 1
-} ts_response_format_e;
 
 class TsChannelBase {
 public:
