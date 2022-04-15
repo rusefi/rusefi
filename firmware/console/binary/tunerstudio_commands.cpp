@@ -49,7 +49,15 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	updateTunerStudioState();
 	tsChannel->assertPacketSize(count, false);
 	// this method is invoked too often to print any debug information
-	tsChannel->writeCrcPacketSmall(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(&engine->outputChannels) + offset, count);
+	uint8_t * scratchBuffer = (uint8_t *)tsChannel->scratchBuffer;
+	/**
+	 * collect data from all models
+	 */
+	copyRange(scratchBuffer + 3,
+			getFragments(), getFragmentsCount(),
+			offset, count);
+
+	tsChannel->crcAndWriteBuffer(TS_RESPONSE_OK, count);
 }
 
 #endif // EFI_TUNER_STUDIO

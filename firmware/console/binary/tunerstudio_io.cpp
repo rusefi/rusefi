@@ -19,11 +19,11 @@ size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 }
 #endif
 
-void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = this->scratchBuffer;
 
 	// don't transmit too large a buffer
-	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "writeCrcPacketSmall tried to transmit too large a packet")
+	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "copyAndWriteSmallCrcPacket tried to transmit too large a packet")
 
 	// If transmitting data, copy it in to place in the scratch buffer
 	// We want to prevent the data changing itself (higher priority threads could write
@@ -33,6 +33,11 @@ void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf
 		memcpy(scratchBuffer + 3, buf, size);
 	}
 
+	crcAndWriteBuffer(responseCode, size);
+}
+
+void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
+	auto scratchBuffer = this->scratchBuffer;
 	// Index 0/1 = packet size (big endian)
 	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
 	// Index 2 = response code
@@ -103,7 +108,7 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		writeCrcPacketLarge(responseCode, buf, size);
 	} else {
 		// for small packets we use a buffer for CRC calculation
-		writeCrcPacketSmall(responseCode, buf, size);
+		copyAndWriteSmallCrcPacket(responseCode, buf, size);
 	}
 }
 
