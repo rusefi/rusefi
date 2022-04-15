@@ -33,10 +33,19 @@ public class UsagesReader {
         StringBuilder fragmentsContent = new StringBuilder(
                 header +
                         "#include \"pch.h\"\n" +
-                        "#include \"FragmentEntry.h\"\n\n" +
                         "#include \"tunerstudio.h\"\n" +
-                        "static FragmentEntry fragments[" + liveDocs.size() + "];\n\n" +
-                        "void initFragments() {\n");
+                        "static FragmentEntry fragments[" + liveDocs.size() + "];\n\n")
+                ;
+
+        fragmentsContent.append("int getFragmentsCount() {\n" +
+                "\treturn " + liveDocs.size() + ";\n" +
+                "}\n" +
+                "\n" +
+                "FragmentEntry *getFragments() {\n" +
+                "\treturn fragments;\n" +
+                "}\n\n" +
+                "void initFragments() {\n");
+
 
         int index = 0;
 

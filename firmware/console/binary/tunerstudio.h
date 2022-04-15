@@ -9,6 +9,7 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 #include "electronic_throttle_generated.h"
+#include "FragmentEntry.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -36,6 +37,10 @@ const void * getStructAddr(live_data_e structId);
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"
 #include "thread_priority.h"
+
+void initFragments();
+int getFragmentsCount();
+FragmentEntry *getFragments();
 
 void updateTunerStudioState();
 
