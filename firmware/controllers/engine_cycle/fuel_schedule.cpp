@@ -28,22 +28,22 @@ void FuelSchedule::resetOverlapping() {
 
 // Determines how much to adjust injection opening angle based on the injection's duration and the current phasing mode
 static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
+	auto mode = engineConfiguration->injectionTimingMode;
+	if (mode == InjectionTimingMode::Start) {
+		// Start of injection gets no correction for duration
+		return 0;
+	}
+
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
 
 	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
 	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
 
-	// Adjust by the current injection mode
-	switch(engineConfiguration->injectionTimingMode) {
-		case InjectionTimingMode::Soi:
-			// Start of injection gets no correction for duration
-			return 0;
-		case InjectionTimingMode::Coi:
-			// Center of injection is half-corrected for duration
-			return injectionDurationAngle * 0.5f;
-		case InjectionTimingMode::Eoi:
-		default:
+	if (mode == InjectionTimingMode::Center) {
+		// Center of injection is half-corrected for duration
+		return injectionDurationAngle * 0.5f;
+	} else {
 			// End of injection gets "full correction" so we advance opening by the full duration
 			return injectionDurationAngle;
 	}
