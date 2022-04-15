@@ -31,7 +31,7 @@ public class BitParsingTest {
             }
         };
         state.headerMessage = "test";
-        state.readBufferedReader(inputString, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(inputString, javaFieldsConsumer);
 
         System.out.printf("start[" + sw + "]end");
 

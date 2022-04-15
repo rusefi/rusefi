@@ -23,7 +23,7 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
 
 
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
@@ -75,7 +75,7 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, (tsProjectConsumer));
     }
 
     @Test
@@ -97,7 +97,7 @@ public class OutputsTest {
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
+        state.readBufferedReader(test, (dataLogConsumer));
         assertEquals(
                 "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
                         "entry = knock1, \"knock1\", int,    \"%d\"\n" +
@@ -122,7 +122,7 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
-        state.readBufferedReader(test, Collections.singletonList(outputValueConsumer));
+        state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
                 "#include \"pch.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
@@ -148,7 +148,7 @@ public class OutputsTest {
                 "\tdc_io[2 iterate] etbIn\n" +
                 "end_struct\n";
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+        state.readBufferedReader(test, (getConfigValueConsumer));
 
         assertEquals("#include \"pch.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
@@ -171,7 +171,7 @@ public class OutputsTest {
                 "ThermistorConf iat;\n" +
                 "end_struct\n";
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+        state.readBufferedReader(test, (getConfigValueConsumer));
 
         assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
                 "\t{\n" +
@@ -247,7 +247,7 @@ public class OutputsTest {
 
 
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+        state.readBufferedReader(test, (getConfigValueConsumer));
 
         assertEquals("#include \"pch.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
@@ -298,7 +298,7 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
-        state.readBufferedReader(test, Arrays.asList(dataLogConsumer, gaugeConsumer));
+        state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
