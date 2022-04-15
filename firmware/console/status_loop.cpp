@@ -578,6 +578,9 @@ static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
 	engine->outputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
+
+	engine->outputChannels.auxLinear1 = Sensor::get(SensorType::AuxLinear1).Value;
+	engine->outputChannels.auxLinear2 = Sensor::get(SensorType::AuxLinear2).Value;
 }
 
 static void updateMiscSensors() {
