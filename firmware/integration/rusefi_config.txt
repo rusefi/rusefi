@@ -1565,8 +1565,11 @@ pwm_freq_t tcu_tcc_pwm_solenoid_freq
 output_pin_e tcu_pc_solenoid_pin
 pin_output_mode_e tcu_pc_solenoid_pin_mode
 pwm_freq_t tcu_pc_solenoid_freq
+output_pin_e tcu_32_solenoid_pin
+pin_output_mode_e tcu_32_solenoid_pin_mode
 
-uint8_t[216] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+
+uint8_t[214] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
