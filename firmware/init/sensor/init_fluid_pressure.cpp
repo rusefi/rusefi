@@ -71,6 +71,4 @@ void deinitOilPressure() {
 	AdcSubscription::UnsubscribeSensor(oilpSensor);
 	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow);
 	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
-	AdcSubscription::UnsubscribeSensor(auxLinear1Sensor);
-	AdcSubscription::UnsubscribeSensor(auxLinear2Sensor);
 }
