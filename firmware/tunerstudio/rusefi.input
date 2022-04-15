@@ -649,10 +649,10 @@ enable2ndByteCanID = false
 		gauge = TPSGauge
 
 	curve = pcPerGearCurve, "Transmission Line Pressure Control"
-		columnLabel = "TPS", ""
+		columnLabel = "Airmass", ""
 		xAxis = 0, 100, 10
 		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
+		xBins = tcu_pcAirmassBins, chargeAirMass
 		yBins = tcu_pcBinsR
 		yBins = tcu_pcBinsN
 		yBins = tcu_pcBins1
