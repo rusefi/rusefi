@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Apr 06 21:41:12 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Apr 15 14:31:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -11,6 +11,17 @@ case GearControllerMode::ButtonShift:
   return "ButtonShift";
 case GearControllerMode::None:
   return "None";
+  }
+ return NULL;
+}
+const char *getInjectionTimingMode(InjectionTimingMode value){
+switch(value) {
+case InjectionTimingMode::Center:
+  return "Center";
+case InjectionTimingMode::End:
+  return "End";
+case InjectionTimingMode::Start:
+  return "Start";
   }
  return NULL;
 }
