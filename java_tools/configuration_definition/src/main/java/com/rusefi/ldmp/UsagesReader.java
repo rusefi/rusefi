@@ -48,6 +48,22 @@ public class UsagesReader {
 
             String javaName = (String) elements.get(0);
             String folder = (String) elements.get(1);
+
+
+            String withCDefines = "false";
+            String prepend = "";
+            for (int i = 2; i < elements.size(); i++) {
+                String keyValue = (String) elements.get(i);
+                String[] pair = keyValue.trim().split("=");
+                String key = pair[0];
+                String value = pair[1];
+                if (key.equals(ConfigDefinition.KEY_WITH_C_DEFINES)) {
+                    withCDefines  = value;
+                } else if (key.equals(ConfigDefinition.KEY_PREPEND)) {
+                    prepend = value;
+                }
+            }
+
 //            String macroName = elements.size() > 2 ? ((String)elements.get(2)).trim() : "";
 
 
@@ -55,10 +71,10 @@ public class UsagesReader {
                     ConfigDefinition.KEY_DEFINITION,
                     folder + File.separator + name + ".txt",
                     ConfigDefinition.KEY_WITH_C_DEFINES,
-                    "false",
+                    withCDefines,
 
                     ConfigDefinition.KEY_PREPEND,
-                    "integration/rusefi_config.txt",
+                    prepend,
 
                     ConfigDefinition.KEY_JAVA_DESTINATION,
                     "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName,

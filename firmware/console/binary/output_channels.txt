@@ -1,6 +1,6 @@
 ! units,scale,offset,min,max,digits
 
-struct_no_prefix ts_outputs_s
+struct_no_prefix output_channels_s
 
 bit sd_present
 bit isIgnitionEnabledIndicator;

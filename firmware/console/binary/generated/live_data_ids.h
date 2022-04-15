@@ -2,6 +2,7 @@
 #pragma once
 
 typedef enum {
+LDS_output_channels,
 LDS_high_pressure_fuel_pump,
 LDS_injector_model,
 LDS_launch_control_state,

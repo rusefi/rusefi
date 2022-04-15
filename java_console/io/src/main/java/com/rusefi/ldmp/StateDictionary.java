@@ -1,5 +1,6 @@
 package com.rusefi.ldmp;
 
+import com.rusefi.OutputChannel;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
@@ -23,10 +24,11 @@ public enum StateDictionary {
         // LDS_CJ125_PID
         //register(live_data_e.LDS_IDLE, IdleState.VALUES);
         // todo: code generate this!
-        register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine"); // 3
+        register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "output_channels");
+        register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine");
         register(live_data_e.LDS_trigger_central, TriggerCentral.VALUES, "trigger_central");
-        register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder"); // 11
-        register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control"); // 12
+        register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder");
+        register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control");
         register(live_data_e.LDS_fan_control, FuelPump.VALUES, "fan_control");
         register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
         register(live_data_e.LDS_idle_state, IdleState.VALUES, "idle_thread");
