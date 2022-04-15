@@ -3440,16 +3440,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
-
-	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
 
 	dialog = tcuControls, "Transmission Settings"
 		panel = transmissionPanel
