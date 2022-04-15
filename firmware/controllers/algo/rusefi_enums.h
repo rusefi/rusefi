@@ -706,4 +706,10 @@ enum class TransmissionControllerMode : uint8_t {
 	Gm4l6x = 2,
 };
 
+enum class InjectionTimingMode : uint8_t {
+	Eoi = 0,
+	Soi = 1,
+	Coi = 2,
+};
+
 #endif // __cplusplus

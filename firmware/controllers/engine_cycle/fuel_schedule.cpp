@@ -26,6 +26,29 @@ void FuelSchedule::resetOverlapping() {
 	}
 }
 
+// Determines how much to adjust injection opening angle based on the injection's duration and the current phasing mode
+static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
+
+	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
+	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
+
+	// Adjust by the current injection mode
+	switch(engineConfiguration->injectionTimingMode) {
+		case InjectionTimingMode::Soi:
+			// Start of injection gets no correction for duration
+			return 0;
+		case InjectionTimingMode::Coi:
+			// Center of injection is half-corrected for duration
+			return injectionDurationAngle * 0.5f;
+		case InjectionTimingMode::Eoi:
+		default:
+			// End of injection gets "full correction" so we advance opening by the full duration
+			return injectionDurationAngle;
+	}
+}
+
 /**
  * @returns false in case of error, true if success
  */
@@ -37,26 +60,19 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 		return false;
 	}
 
-	/**
-	 * injection phase is scheduled by injection end, so we need to step the angle back
-	 * for the duration of the injection
-	 *
-	 * todo: since this method is not invoked within trigger event handler and
-	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
-	 */
-	floatms_t fuelMs = engine->injectionDuration;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
-	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
-	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
+	// injection phase may be scheduled by injection end, so we need to step the angle back
+	// for the duration of the injection
+	angle_t injectionDurationAngle = getInjectionAngleCorrection(engine->injectionDuration, oneDegreeUs);
+
+	// User configured offset - degrees after TDC combustion
 	floatus_t injectionOffset = engine->engineState.injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return false;
 	}
-	angle_t baseAngle = injectionOffset - injectionDurationAngle;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
-	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
+
+	angle_t openingAngle = injectionOffset - injectionDurationAngle;
+	assertAngleRange(openingAngle, "openingAngle_r", CUSTOM_ERR_6554);
 
 	injection_mode_e mode = engine->getCurrentInjectionMode();
 
@@ -114,18 +130,19 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	float angle = baseAngle + getCylinderAngle(i, ev->cylinderNumber);
+	// Convert from cylinder-relative to cylinder-1-relative
+	openingAngle += getCylinderAngle(i, ev->cylinderNumber);
 
 	if (TRIGGER_WAVEFORM(getSize()) < 1) {
 		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");
 		return false;
 	}
 
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
-	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	ev->injectionStart.setAngle(angle);
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
+	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
+	ev->injectionStart.setAngle(openingAngle);
 #if EFI_UNIT_TEST
-	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
+	printf("registerInjectionEvent openingAngle=%.2f trgIndex=%d inj %d\r\n", openingAngle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif
 	return true;
 }
