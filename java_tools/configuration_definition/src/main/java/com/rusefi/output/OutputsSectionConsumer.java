@@ -7,7 +7,7 @@ import java.io.*;
 /**
  * [OutputChannels]
  */
-public class OutputsSectionConsumer extends AbstractConfigurationConsumer {
+public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
     private final ReaderState state;

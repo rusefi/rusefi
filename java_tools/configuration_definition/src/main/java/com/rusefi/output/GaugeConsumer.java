@@ -10,7 +10,7 @@ import java.io.IOException;
 import static com.rusefi.output.DataLogConsumer.getComment;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class GaugeConsumer extends AbstractConfigurationConsumer {
+public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
     private final ReaderState state;
     private final CharArrayWriter charArrayWriter = new CharArrayWriter();

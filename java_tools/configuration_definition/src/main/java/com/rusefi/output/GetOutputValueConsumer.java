@@ -12,7 +12,7 @@ import static com.rusefi.output.GetConfigValueConsumer.FILE_HEADER;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-public class GetOutputValueConsumer extends AbstractConfigurationConsumer {
+public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final StringBuilder getterBody = new StringBuilder();
     private final String fileName;
 
