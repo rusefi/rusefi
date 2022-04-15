@@ -1330,7 +1330,6 @@
 #define hpfpTargetRpmBins_offset 4454
 #define hpfpValvePin_offset 1754
 #define hpfpValvePinMode_offset 1755
-#define HW_EVENT_TYPES 6
 #define HW_MAX_ADC_INDEX 17
 #define IAC_PID_MULT_SIZE 8
 #define iacByTpsTaper_offset 1682
@@ -1946,7 +1945,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3812801991
+#define SIGNATURE_HASH 4087036097
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2505,7 +2504,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.14.hellen_cypress.3812801991"
+#define TS_SIGNATURE "rusEFI 2022.04.15.hellen_cypress.4087036097"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
