@@ -11,8 +11,7 @@
 
 FuelSchedule::FuelSchedule() {
 	for (int cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
-		InjectionEvent *ev = &elements[cylinderIndex];
-		ev->ownIndex = cylinderIndex;
+		elements[cylinderIndex].ownIndex = cylinderIndex;
 	}
 }
 
@@ -118,7 +117,6 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 
 	InjectionEvent *ev = &elements[i];
 
-	ev->ownIndex = i;
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
 	ev->isSimultanious = isSimultanious;
@@ -149,9 +147,8 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 
 void FuelSchedule::addFuelEvents() {
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
-		InjectionEvent *ev = &elements[cylinderIndex];
-		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
 		bool result = addFuelEventsForCylinder(cylinderIndex);
+
 		if (!result) {
 			invalidate();
 			return;
