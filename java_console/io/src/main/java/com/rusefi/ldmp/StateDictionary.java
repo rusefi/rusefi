@@ -24,7 +24,7 @@ public enum StateDictionary {
         // LDS_CJ125_PID
         //register(live_data_e.LDS_IDLE, IdleState.VALUES);
         // todo: code generate this!
-        register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "output_channels");
+        register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "status_loop");
         register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine");
         register(live_data_e.LDS_trigger_central, TriggerCentral.VALUES, "trigger_central");
         register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder");
