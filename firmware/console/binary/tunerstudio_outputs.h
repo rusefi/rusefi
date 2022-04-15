@@ -12,7 +12,7 @@
 
 #include "rusefi_types.h"
 #include "scaled_channel.h"
-#include "ts_outputs_generated.h"
+#include "output_channels_generated.h"
 
 #ifndef WITH_TS_STATE
 // do we ever see a case of compiling without TSOutputChannels? Shall we wipe out all '#if EFI_TUNER_STUDIO' or replace with '#if WITH_TS_STATE'
@@ -30,4 +30,4 @@
  * see also [OutputChannels] in rusefi.input
  * see also TS_OUTPUT_SIZE in rusefi_config.txt
  */
-struct TunerStudioOutputChannels : ts_outputs_s { };
+struct TunerStudioOutputChannels : output_channels_s { };

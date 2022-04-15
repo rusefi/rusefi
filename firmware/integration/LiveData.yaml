@@ -3,6 +3,7 @@
 # see gen_live_documentation.sh
 #
 Usages:
+  output_channels: ["TsOutputs.java", "console/binary", "-prepend=integration/rusefi_config.txt" ]
   high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
   injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
   launch_control_state: [ "LaunchControl.java", "controllers/algo" ]
@@ -15,7 +16,7 @@ Usages:
   #pid_state: [ "PidState.java", "util/math" ]
   engine_state: [ "EngineState.java", "controllers/algo" ]
   tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
-  trigger_central: [ "TriggerCentral.java", "controllers/trigger" ]
+  trigger_central: [ "TriggerCentral.java", "controllers/trigger", "-with_c_defines=true" ]
   trigger_state: [ "TriggerState.java", "controllers/trigger" ]
   wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
   idle_state: [ "IdleState.java", "controllers/actuators" ]

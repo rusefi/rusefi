@@ -143,8 +143,14 @@ public class ConfigDefinition {
                     romRaiderDestination = args[i + 1];
                     break;
                 case KEY_PREPEND:
-                    prependFiles.add(args[i + 1]);
-                    state.inputFiles.add(args[i + 1]);
+                    {
+                        String value = args[i + 1];
+                        // see UsagesReader use-case with dynamic prepend usage
+                        if (!value.trim().isEmpty()) {
+                            prependFiles.add(value);
+                            state.inputFiles.add(value);
+                        }
+                    }
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
