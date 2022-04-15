@@ -171,6 +171,8 @@ const void * getStructAddr(live_data_e structId) {
 	}
 #endif
 	switch (structId) {
+	case LDS_output_channels:
+		return reinterpret_cast<const uint8_t*>(&engine->outputChannels);
 
 	case LDS_high_pressure_fuel_pump:
 #if EFI_HPFP
@@ -837,6 +839,7 @@ void startTunerStudioConnectivity(void) {
 //	char (*__kaboom)[sizeof(persistent_config_s)] = 1;
 
 	memset(&tsState, 0, sizeof(tsState));
+	initFragments();
 
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);
