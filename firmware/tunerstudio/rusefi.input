@@ -1881,6 +1881,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Individually wired Batch Fuel",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == @@injection_mode_e_IM_BATCH@@ }
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
 		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
+		field = "Injection phase control mode",				injectionTimingMode, { isInjectionEnabled }
 
 	dialog = ignitionOutputs, "Ignition Outputs"
 		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
