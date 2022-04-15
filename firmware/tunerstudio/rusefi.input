@@ -640,18 +640,11 @@ enable2ndByteCanID = false
 		gauge = tChargeGauge
 
 	curve = tccLockCurve, "TCC Lock Curve"
-		columnLabel = "TPS", "Lockup Speed"
+		columnLabel = "TPS", "Lock Speed", "Unlock Speed"
 		xAxis = 0, 100, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_tccTpsBins, TPSValue
 		yBins = tcu_tccLockSpeed
-		gauge = TPSGauge
-
-	curve = tccUnlockCurve, "TCC Unlock Curve"
-		columnLabel = "TPS", "Unlock Speed"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_tccTpsBins, TPSValue
 		yBins = tcu_tccUnlockSpeed
 		gauge = TPSGauge
 
@@ -3496,7 +3489,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = tccCurves, "TCC Lock/Unlock Speed"
 		panel = tccLockCurve
-		panel = tccUnlockCurve
 
 	dialog = pcPerGearCurves, "Line Pressure Per Gear Steady State"
 		panel = pcR
