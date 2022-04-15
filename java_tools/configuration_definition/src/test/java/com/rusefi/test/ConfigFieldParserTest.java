@@ -60,7 +60,7 @@ public class ConfigFieldParserTest {
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "; total TS size = 8\n", new String(writer.toCharArray()));
@@ -76,7 +76,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
-        state.readBufferedReader(test, Collections.singletonList(consumer));
+        state.readBufferedReader(test, (consumer));
     }
 
     @Test
@@ -91,7 +91,7 @@ public class ConfigFieldParserTest {
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
@@ -108,7 +108,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, (javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
@@ -123,7 +123,7 @@ public class ConfigFieldParserTest {
                 "#define ERROR_BUFFER_SIZE \"***\"\n" +
                 "end_struct\n" +
                 "";
-        new ReaderState().readBufferedReader(test, Collections.emptyList());
+        new ReaderState().readBufferedReader(test);
     }
 
     @Test(expected = IllegalStateException.class)
@@ -132,7 +132,7 @@ public class ConfigFieldParserTest {
                 VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
                 "end_struct\n" +
                 "";
-        new ReaderState().readBufferedReader(test, Collections.emptyList());
+        new ReaderState().readBufferedReader(test);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class ConfigFieldParserTest {
                 "";
 
         ReaderState state = new ReaderState();
-        state.readBufferedReader(test, Collections.emptyList());
+        state.readBufferedReader(test);
 
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -166,7 +166,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
 
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, (tsProjectConsumer));
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -186,7 +186,7 @@ public class ConfigFieldParserTest {
                 "";
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, javaFieldsConsumer);
 
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING).setScale(1.0);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16).setScale(1.0);\n" +
@@ -202,7 +202,7 @@ public class ConfigFieldParserTest {
                         "";
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, javaFieldsConsumer);
 
         assertEquals("\tpublic static final char SD_r = 'r';\n" +
                         "",
@@ -218,7 +218,7 @@ public class ConfigFieldParserTest {
                 "";
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, (javaFieldsConsumer));
 
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
                         "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
@@ -253,7 +253,7 @@ public class ConfigFieldParserTest {
 
             JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
-            state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
+            state.readBufferedReader(test, (javaFieldsConsumer));
 
 
             assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16).setScale(1.0);\n" +
@@ -286,7 +286,7 @@ public class ConfigFieldParserTest {
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         ReaderState state = new ReaderState();
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(test, Arrays.asList(consumer, javaFieldsConsumer));
+        state.readBufferedReader(test, consumer, javaFieldsConsumer);
         assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
         assertEquals("// start of pid_s\n" +
@@ -378,7 +378,7 @@ public class ConfigFieldParserTest {
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +

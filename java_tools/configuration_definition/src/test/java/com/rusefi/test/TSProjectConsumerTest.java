@@ -49,7 +49,7 @@ public class TSProjectConsumerTest {
 
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
 
-        state.readBufferedReader(test, Arrays.asList(javaFieldsConsumer, consumer, tsProjectConsumer));
+        state.readBufferedReader(test, javaFieldsConsumer, consumer, tsProjectConsumer);
 
         assertEquals("#if LAMBDA\n" +
                 "periodMs2 = scalar, S16, 0, \"ms\", 1, 0, 0, 3000, 0\n" +

@@ -23,7 +23,7 @@ public class ConfigFieldParserIssue1057Test {
                 "end_struct\n";
 
 
-        state.readBufferedReader(inputString, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(inputString, javaFieldsConsumer);
 
         assertEquals("\tpublic static final Field ACTIVATEAUXPID1 = Field.create(\"ACTIVATEAUXPID1\", 0, FieldType.BIT, 0);\n" +
                         "\tpublic static final Field UNUSEDBIT_1_1 = Field.create(\"UNUSEDBIT_1_1\", 0, FieldType.BIT, 1);\n" +
