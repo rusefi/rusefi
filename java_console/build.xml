@@ -140,6 +140,7 @@
     <target name="copy_c_sources">
         <copy todir="build/classes/c_sources" flatten="true">
             <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+            <fileset dir="../firmware/console" includes="**/*.cpp"/>
         </copy>
     </target>
 
