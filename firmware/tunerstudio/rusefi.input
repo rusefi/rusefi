@@ -648,47 +648,23 @@ enable2ndByteCanID = false
 		yBins = tcu_tccUnlockSpeed
 		gauge = TPSGauge
 
-	curve = pcR, "Transmission Line Pressure Control, Reverse"
-		columnLabel = "TPS", "%"
+	curve = pcPerGearCurve, "Transmission Line Pressure Control"
+		columnLabel = "TPS", ""
 		xAxis = 0, 100, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBinsR
-
-	curve = pcN, "Transmission Line Pressure Control, Park/Neutral"
-		columnLabel = "TPS", "%"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBinsN
-
-	curve = pcGear1, "Transmission Line Pressure Control, 1st Gear"
-		columnLabel = "TPS", "%"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBins1
-
-	curve = pcGear2, "Transmission Line Pressure Control, 2nd Gear"
-		columnLabel = "TPS", "%"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBins2
-
-	curve = pcGear3, "Transmission Line Pressure Control, 3rd Gear"
-		columnLabel = "TPS", "%"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBins3
-
-	curve = pcGear4, "Transmission Line Pressure Control, 4th Gear"
-		columnLabel = "TPS", "%"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_pcTpsBins, TPSValue
 		yBins = tcu_pcBins4
+		lineLabel = "R%"
+		lineLabel = "N%"
+		lineLabel = "1%"
+		lineLabel = "2%"
+		lineLabel = "3%"
+		lineLabel = "4%"
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
@@ -3491,12 +3467,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tccLockCurve
 
 	dialog = pcPerGearCurves, "Line Pressure Per Gear Steady State"
-		panel = pcR
-		panel = pcN
-		panel = pcGear1
-		panel = pcGear2
-		panel = pcGear3
-		panel = pcGear4
+		panel = pcPerGearCurve
 
 ;Boost Open Loop
 
