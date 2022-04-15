@@ -88,12 +88,8 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String[] tokens = custom.split(",");
                 String stringSize = tokens[3].trim();
                 javaFieldsWriter.write(stringSize + ", FieldType.STRING");
-            } else  if (configField.getElementSize() == 1) {
-                javaFieldsWriter.write("FieldType.INT8");
-            } else if (configField.getElementSize() == 2) {
-                javaFieldsWriter.write("FieldType.INT16");
             } else {
-                javaFieldsWriter.write("FieldType.INT");
+                javaFieldsWriter.write(getJavaType(configField.getElementSize()));
             }
             if (enumOptions != null) {
                 javaFieldsWriter.write(", " + configField.getType());
@@ -105,6 +101,16 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         tsPosition += configField.getSize(next);
 
         return tsPosition;
+    }
+
+    public static String getJavaType(int elementSize) {
+        if (elementSize == 1) {
+            return ("FieldType.INT8");
+        } else if (elementSize == 2) {
+            return "FieldType.INT16";
+        } else {
+            return "FieldType.INT";
+        }
     }
 
     private boolean isStringField(ConfigField configField) {
