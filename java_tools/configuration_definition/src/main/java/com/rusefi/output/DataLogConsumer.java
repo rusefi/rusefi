@@ -15,7 +15,7 @@ import java.util.TreeSet;
 import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class DataLogConsumer extends AbstractConfigurationConsumer {
+public class DataLogConsumer implements ConfigurationConsumer {
     public static final String UNUSED = "unused";
     private final String fileName;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
