@@ -27,7 +27,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }

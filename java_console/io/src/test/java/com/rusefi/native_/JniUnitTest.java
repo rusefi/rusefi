@@ -35,7 +35,7 @@ public class JniUnitTest {
 
         engineLogic.setSensor(SensorType.Rpm.name(), 4000);
         engineLogic.invokePeriodicCallback();
-        assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPM));
+        assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPMValue));
 
         assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
 
