@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Apr 15 01:07:42 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Apr 15 14:32:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1460,6 +1460,10 @@ public class Fields {
 	public static final int injectionPins7_offset = 638;
 	public static final int injectionPins8_offset = 639;
 	public static final int injectionPins9_offset = 640;
+	public static final int InjectionTimingMode_Center = 2;
+	public static final int InjectionTimingMode_End = 0;
+	public static final int injectionTimingMode_offset = 1699;
+	public static final int InjectionTimingMode_Start = 1;
 	public static final int injector_battLagCorr_offset = 132;
 	public static final int injector_battLagCorrBins_offset = 100;
 	public static final int injector_compensation_mode_e_ICM_FixedRailPressure = 1;
@@ -1872,6 +1876,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 2084454936;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2368,7 +2373,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.15.all.3379486589";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.15.all.2084454936";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2405,7 +2410,6 @@ public class Fields {
 	public static final int unused1130_offset = 1740;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
-	public static final int unused16962_offset = 1699;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
@@ -3285,7 +3289,7 @@ public class Fields {
 	public static final Field AUXSPEEDSENSORINPUTPIN1 = Field.create("AUXSPEEDSENSORINPUTPIN1", 1696, FieldType.INT8, brain_input_pin_e).setScale(1.0);
 	public static final Field AUXSPEEDSENSORINPUTPIN2 = Field.create("AUXSPEEDSENSORINPUTPIN2", 1697, FieldType.INT8, brain_input_pin_e).setScale(1.0);
 	public static final Field TOTALGEARSCOUNT = Field.create("TOTALGEARSCOUNT", 1698, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSED16962 = Field.create("UNUSED16962", 1699, FieldType.INT8).setScale(1.0);
+	public static final Field INJECTIONTIMINGMODE = Field.create("INJECTIONTIMINGMODE", 1699, FieldType.INT8).setScale(1.0);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT).setScale(1.0);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1704, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1708, FieldType.FLOAT);
@@ -4609,7 +4613,7 @@ public class Fields {
 	AUXSPEEDSENSORINPUTPIN1,
 	AUXSPEEDSENSORINPUTPIN2,
 	TOTALGEARSCOUNT,
-	UNUSED16962,
+	INJECTIONTIMINGMODE,
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,

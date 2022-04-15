@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Apr 06 21:41:12 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Apr 15 14:31:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -7,6 +7,9 @@
 #pragma once
 #if __cplusplus
 const char *getGearControllerMode(GearControllerMode value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getInjectionTimingMode(InjectionTimingMode value);
 #endif //__cplusplus
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 12 23:19:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Apr 15 14:32:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2891,9 +2891,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t totalGearsCount;
 	/**
+	 * Sets what part of injection's is controlled by the injection phase table.
 	 * offset 1699
 	 */
-	uint8_t unused16962;
+	InjectionTimingMode injectionTimingMode;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -4581,4 +4582,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 12 23:19:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Apr 15 14:32:29 UTC 2022

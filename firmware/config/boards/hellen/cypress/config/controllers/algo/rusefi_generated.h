@@ -1506,6 +1506,11 @@
 #define injectionPins7_offset 638
 #define injectionPins8_offset 639
 #define injectionPins9_offset 640
+#define InjectionTimingMode_auto_enum "End", "Start", "Center"
+#define InjectionTimingMode_Center 2
+#define InjectionTimingMode_End 0
+#define injectionTimingMode_offset 1699
+#define InjectionTimingMode_Start 1
 #define injector_battLagCorr_offset 132
 #define injector_battLagCorrBins_offset 100
 #define injector_compensation_mode_e_auto_enum "ICM_None", "ICM_FixedRailPressure", "ICM_SensedRailPressure"
@@ -1945,7 +1950,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 4087036097
+#define SIGNATURE_HASH 1187751332
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2504,7 +2509,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.15.hellen_cypress.4087036097"
+#define TS_SIGNATURE "rusEFI 2022.04.15.hellen_cypress.1187751332"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2544,7 +2549,6 @@
 #define unused1130_offset 1740
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
-#define unused16962_offset 1699
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
