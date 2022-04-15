@@ -3,7 +3,6 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.Pair;
 import com.rusefi.output.JavaFieldsConsumer;
-import com.rusefi.test.ConfigFieldParserTest;
 
 import java.util.Arrays;
 import java.util.Objects;
