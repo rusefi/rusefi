@@ -202,10 +202,12 @@ jobs:
 
           - build-target: f429-discovery
             folder: f429-discovery
+            skip-rate: 90
 
           - build-target: core8
             folder: core8
             ini-file: rusefi_core8.ini
+            skip-rate: 90
 
           - build-target: atlas
             folder: atlas
