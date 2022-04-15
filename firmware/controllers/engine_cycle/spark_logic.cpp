@@ -81,8 +81,6 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Pull any extra timing for knock retard
 		+ engine->knockController.getKnockRetard();
 
-	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
-
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	const int index = engine->ignitionPin[event->cylinderIndex];
 	const int coilIndex = ID2INDEX(getCylinderId(index));
