@@ -1,6 +1,7 @@
 package com.rusefi.ldmp;
 
 import com.rusefi.ConfigDefinition;
+import com.rusefi.ReaderState;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -35,11 +36,11 @@ public class UsagesReader {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, List elements) {
+            public void onEntry(String name, List elements) throws IOException {
                 String javaName = (String) elements.get(0);
                 String folder = (String) elements.get(1);
 
-                String withCDefines = "false";
+                boolean withCDefines = false;
                 String prepend = "";
                 for (int i = 2; i < elements.size(); i++) {
                     String keyValue = (String) elements.get(i);
@@ -47,7 +48,7 @@ public class UsagesReader {
                     String key = pair[0];
                     String value = pair[1];
                     if (key.equals(ConfigDefinition.KEY_WITH_C_DEFINES)) {
-                        withCDefines = value;
+                        withCDefines = Boolean.valueOf(value);
                     } else if (key.equals(ConfigDefinition.KEY_PREPEND)) {
                         prepend = value;
                     }
@@ -56,12 +57,11 @@ public class UsagesReader {
 //            String macroName = elements.size() > 2 ? ((String)elements.get(2)).trim() : "";
 
 
-                ConfigDefinition.main(new String[]{
-                        ConfigDefinition.KEY_DEFINITION,
-                        folder + File.separator + name + ".txt",
-                        ConfigDefinition.KEY_WITH_C_DEFINES,
-                        withCDefines,
+                ReaderState state = new ReaderState();
+                state.setDefinitionInputFile(folder + File.separator + name + ".txt");
+                state.withC_Defines = withCDefines;
 
+                ConfigDefinition.doJob(new String[]{
                         ConfigDefinition.KEY_PREPEND,
                         prepend,
 
@@ -70,7 +70,7 @@ public class UsagesReader {
 
                         ConfigDefinition.KEY_C_DESTINATION,
                         folder + File.separator + name + "_generated.h"
-                });
+                }, state);
             }
         };
 
@@ -80,7 +80,7 @@ public class UsagesReader {
     }
 
     interface EntryHandler {
-        void onEntry(String name, List elements);
+        void onEntry(String name, List elements) throws IOException;
     }
 
     private void handleYaml(Map<String, Object> data, EntryHandler handler) throws IOException {

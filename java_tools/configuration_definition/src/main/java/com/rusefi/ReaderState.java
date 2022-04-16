@@ -38,6 +38,9 @@ public class ReaderState {
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
     public String headerMessage;
+    String definitionInputFile = null;
+    public boolean withC_Defines = true;
+    List<String> prependFiles = new ArrayList<>();
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -291,5 +294,11 @@ public class ReaderState {
         if (headerMessage == null)
             throw new NullPointerException("No header message yet");
         return headerMessage;
+    }
+
+    public void setDefinitionInputFile(String definitionInputFile) {
+        this.definitionInputFile = definitionInputFile;
+        headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
+        inputFiles.add(definitionInputFile);
     }
 }
