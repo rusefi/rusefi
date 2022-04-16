@@ -49,8 +49,8 @@ void Gm4l6xTransmissionController::setTccState() {
 		return;
 	}
 	if (getCurrentGear() == GEAR_4) {
-		int lockSpeed = interpolate2d(tps.Value, engineConfiguration->tcu_tccTpsBins, engineConfiguration->tcu_tccLockSpeed);
-		int unlockSpeed = interpolate2d(tps.Value, engineConfiguration->tcu_tccTpsBins, engineConfiguration->tcu_tccUnlockSpeed);
+		int lockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccLockSpeed);
+		int unlockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccUnlockSpeed);
 		if (vss.Value > lockSpeed) {
 			enginePins.tcuTccOnoffSolenoid.setValue(1);
 		} else if (vss.Value < lockSpeed) {

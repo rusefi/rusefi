@@ -1521,9 +1521,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12500, 0
 
-        uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
-        uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
-        uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
+        uint8_t[24] unusedTpsBins;;"TPS", 1, 0, 0, 255, 0
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
@@ -1721,6 +1719,10 @@ uint8_t[8] tcu_pcBins34;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins21;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins32;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins43;;"%", 1, 0, 0, 255, 0
+
+uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
+uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
+uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
 
 end_struct
 
