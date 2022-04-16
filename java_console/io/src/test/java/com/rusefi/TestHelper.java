@@ -10,6 +10,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -59,7 +60,7 @@ public class TestHelper {
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setController(ci);
-        state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
+        state.setCurrentOutputs(new byte[1 + GetOutputsCommand.OUTPUT_SIZE]);
 
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
