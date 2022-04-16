@@ -5,11 +5,12 @@ static FragmentEntry fragments[17];
 
 int getFragmentsCount() {
 	return 17;
- }
+}
 
 FragmentEntry *getFragments() {
 	return fragments;
 }
+
 void initFragments() {
 	fragments[0].init((const uint8_t *)getStructAddr(LDS_output_channels), sizeof(output_channels_s));
 	fragments[1].init((const uint8_t *)getStructAddr(LDS_high_pressure_fuel_pump), sizeof(high_pressure_fuel_pump_s));
