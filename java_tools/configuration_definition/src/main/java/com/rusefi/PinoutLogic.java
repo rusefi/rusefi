@@ -85,7 +85,7 @@ public class PinoutLogic {
     }
 
     @SuppressWarnings("unchecked")
-    private void processYamlFile(File yamlFile) throws IOException {
+    private void readMetaInfo(File yamlFile) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
         if (yamlData == null) {
@@ -149,9 +149,9 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void processYamls(VariableRegistry registry, ReaderState state) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state) throws IOException {
         for (File yamlFile : boardYamlFiles) {
-            processYamlFile(yamlFile);
+            readMetaInfo(yamlFile);
         }
         registerPins(globalList, registry, state);
 
