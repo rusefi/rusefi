@@ -185,13 +185,6 @@ public class ConfigDefinition {
 
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
-
-        for (String prependFile : state.prependFiles)
-            state.variableRegistry.readPrependValues(prependFile);
-
-        if (pinoutLogic != null) {
-            pinoutLogic.processYamls(state.variableRegistry, state);
-        }
 /*
 
         // Parse the input files
@@ -244,6 +237,10 @@ public class ConfigDefinition {
             throw new IllegalArgumentException("No destinations specified");
 
         state.doJob();
+
+        if (pinoutLogic != null) {
+            pinoutLogic.processYamls(state.variableRegistry, state);
+        }
 
         if (destCDefinesFileName != null) {
             ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);
