@@ -2,6 +2,7 @@ package com.rusefi.ldmp;
 
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.output.JavaSensorsConsumer;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -34,7 +35,11 @@ public class UsagesReader {
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(yamlFileName));
 
+        StringBuilder totalSensors = new StringBuilder();
+
         EntryHandler handler = new EntryHandler() {
+            int sensorTsPosition = 0;
+
             @Override
             public void onEntry(String name, List elements) throws IOException {
                 String javaName = (String) elements.get(0);
@@ -61,16 +66,26 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
+                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(state, sensorTsPosition);
+                state.addDestination(javaSensorsConsumer);
+
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
                 state.doJob();
+
+                sensorTsPosition = javaSensorsConsumer.sensorTsPosition;
+                totalSensors.append(javaSensorsConsumer.getContent());
             }
         };
 
         UsagesReader usagesReader = new UsagesReader();
         usagesReader.handleYaml(data, handler);
         usagesReader.writeFiles();
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
+            fw.write(totalSensors.toString());
+        }
     }
 
     interface EntryHandler {

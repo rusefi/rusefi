@@ -24,13 +24,12 @@ public enum Sensor {
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
 
-    // RPM, vss
-    RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, 0, 8000, "RPM"),
-    speedToRpmRatio("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, 0, 5, "RPM/kph"),
-    vehicleSpeedKph(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 10, 1, 0, 150, "kph"),
+    RPMValue("RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4, 1.0, 0.0, 8000.0, "RPM"),
+    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
+    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
+    vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, 0.0, 0.0, "kph"),
+    internalMcuTemperature("CPU Temperature", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 11, 1.0, 0.0, 0.0, "deg C"),
 
-    // Temperatures
-    internalMcuTemperature(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 11, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
@@ -158,6 +157,20 @@ public enum Sensor {
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
+
+    cranking("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 780, 1.0, -1.0, -1.0, ""),
+    running("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 800, 1.0, -1.0, -1.0, ""),
+    etbFeedForward("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 828, 1.0, -1.0, -1.0, ""),
+    targetFromTable("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 832, 1.0, -1.0, -1.0, ""),
+    sparkDwell("ignition dwell duration in ms\nSee also dwellAngle", SensorCategory.SENSOR_INPUTS, FieldType.INT, 836, 1.0, -1.0, -1.0, ""),
+    dwellAngle("ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 840, 1.0, -1.0, -1.0, ""),
+
+    baseDwell("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
+    dwellVoltageCorrection("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 976, 1.0, -1.0, -1.0, ""),
+    etb_idlePosition("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
+    trim("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
+    luaAdjustment("", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
+
     ;
 
     private final String name;
