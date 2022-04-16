@@ -22,7 +22,12 @@ bool hasFirmwareErrorFlag = false;
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-const char* getCriticalErrorMessage(void) {
+/**
+ * position at which we would be dynamically appending uptime
+ */
+int firmwareErrorUptimePosition = -1;
+
+char* getCriticalErrorMessage(void) {
 	return criticalErrorMessageBuffer;
 }
 
@@ -220,10 +225,17 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 
 	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
 	static char versionBuffer[32];
-	chsnprintf(versionBuffer, sizeof(versionBuffer), " %d@%s", getRusEfiVersion(), FIRMWARE_ID);
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "\n%d@%s\nup=",
+			getRusEfiVersion(),
+			FIRMWARE_ID);
 
-	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
+#define MAX_UPTIME_LEN 9
+	int versionBufferLength = strlen(versionBuffer);
+	if (errorMessageSize + versionBufferLength + MAX_UPTIME_LEN < sizeof(criticalErrorMessageBuffer)) {
 		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
+		firmwareErrorUptimePosition = errorMessageSize + versionBufferLength;
+	} else {
+		firmwareErrorUptimePosition = -1;
 	}
 
 #else

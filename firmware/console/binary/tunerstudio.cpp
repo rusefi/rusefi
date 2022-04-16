@@ -433,7 +433,11 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {
-		const char* error = getCriticalErrorMessage();
+		char* error = getCriticalErrorMessage();
+		extern int firmwareErrorUptimePosition;
+		if (firmwareErrorUptimePosition > 0) {
+			itoa10(error + firmwareErrorUptimePosition, getTimeNowSeconds());
+		}
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
