@@ -109,7 +109,7 @@ public:
 
 #if EFI_SHAFT_POSITION_INPUT
 	TriggerStateWithRunningStatistics triggerState;
-``#endif //EFI_SHAFT_POSITION_INPUT
+#endif //EFI_SHAFT_POSITION_INPUT
 
 	TriggerWaveform triggerShape;
 
