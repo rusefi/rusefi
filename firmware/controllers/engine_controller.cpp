@@ -341,10 +341,6 @@ static void getByte(int offset) {
 	efiPrintf("byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
-static void onConfigurationChanged() {
-	incrementGlobalConfigurationVersion();
-}
-
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
@@ -370,7 +366,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of rusEfi console API
 	 */
 	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setShort(const int offset, const int value) {
@@ -379,7 +375,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setByte(const int offset, const int value) {
@@ -388,7 +384,7 @@ static void setByte(const int offset, const int value) {
 	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint8_t) value;
 	getByte(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getBit(int offset, int bit) {
@@ -419,7 +415,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getFloat(int offset) {
@@ -449,7 +445,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getFloat(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void initConfigActions() {
