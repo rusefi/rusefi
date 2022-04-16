@@ -10,7 +10,7 @@ import static com.rusefi.binaryprotocol.IoHelper.putShort;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 public class GetOutputsCommand {
-    public static int OUTPUT_SIZE = Fields.TS_OUTPUT_SIZE;
+    public static int OUTPUT_SIZE = Fields.TS_TOTAL_OUTPUT_SIZE;
 
     public static byte[] createRequest() {
         return createRequest(0, GetOutputsCommand.OUTPUT_SIZE);
