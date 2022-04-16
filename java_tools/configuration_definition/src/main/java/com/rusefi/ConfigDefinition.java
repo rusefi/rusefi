@@ -43,7 +43,7 @@ public class ConfigDefinition {
 
     public static void main(String[] args) {
         try {
-            doJob(args);
+            doJob(args, new ReaderState());
         } catch (Throwable e) {
             SystemOut.println(e);
             e.printStackTrace();
@@ -53,7 +53,7 @@ public class ConfigDefinition {
         SystemOut.close();
     }
 
-    private static void doJob(String[] args) throws IOException {
+    public static void doJob(String[] args, ReaderState state) throws IOException {
         if (args.length < 2) {
             SystemOut.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"
@@ -70,21 +70,17 @@ public class ConfigDefinition {
         String destCDefinesFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
-        List<String> prependFiles = new ArrayList<>();
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
         String triggersFolder = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
-        boolean withC_Defines = true;
         PinoutLogic pinoutLogic = null;
         String tsOutputsDestination = null;
-        String definitionInputFile = null;
 
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        ReaderState state = new ReaderState();
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -95,9 +91,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_DEFINITION:
                     // lame: order of command line arguments is important, these arguments should be AFTER '-tool' argument
-                    definitionInputFile = args[i + 1];
-                    state.headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
-                    state.inputFiles.add(definitionInputFile);
+                    state.setDefinitionInputFile(args[i + 1]);
                     break;
                 case KEY_TS_DESTINATION:
                     tsInputFileFolder = args[i + 1];
@@ -106,13 +100,13 @@ public class ConfigDefinition {
                     tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destinations.add(new CHeaderConsumer(state, args[i + 1], withC_Defines));
+                    destinations.add(new CHeaderConsumer(state, args[i + 1], state.withC_Defines));
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_WITH_C_DEFINES:
-                    withC_Defines = Boolean.parseBoolean(args[i + 1]);
+                    state.withC_Defines = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_C_DEFINES:
                     destCDefinesFileName = args[i + 1];
@@ -147,14 +141,14 @@ public class ConfigDefinition {
                         String value = args[i + 1];
                         // see UsagesReader use-case with dynamic prepend usage
                         if (!value.trim().isEmpty()) {
-                            prependFiles.add(value);
+                            state.prependFiles.add(value);
                             state.inputFiles.add(value);
                         }
                     }
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
-                    prependFiles.add(args[i + 1]);
+                    state.prependFiles.add(args[i + 1]);
                     // don't add this file to the 'inputFiles'
                     break;
                 case KEY_SIGNATURE_DESTINATION:
@@ -202,7 +196,7 @@ public class ConfigDefinition {
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
 
-        for (String prependFile : prependFiles)
+        for (String prependFile : state.prependFiles)
             state.variableRegistry.readPrependValues(prependFile);
 
         if (pinoutLogic != null) {
@@ -217,7 +211,7 @@ public class ConfigDefinition {
                 // Ignore duplicates of definitions made during prepend phase
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
-                for (String prependFile : prependFiles) {
+                for (String prependFile : state.prependFiles) {
                     RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
                 }
             }
@@ -226,7 +220,7 @@ public class ConfigDefinition {
             {
                 // don't allow duplicates in the main file
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
+                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.definitionInputFile);
             }
 
             // Write C structs
@@ -260,12 +254,12 @@ public class ConfigDefinition {
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
-        SystemOut.println("Reading definition from " + definitionInputFile);
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
+        SystemOut.println("Reading definition from " + state.definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(state.definitionInputFile), IoUtils.CHARSET.name()));
         state.readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, definitionInputFile);
+            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);
         }
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {
