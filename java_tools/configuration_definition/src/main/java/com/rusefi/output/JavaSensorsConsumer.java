@@ -56,7 +56,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
         String string = state.variableRegistry.applyVariables(configField.getComment());
         if (string == null) {
-            string = "\"\"";
+            string = quote(configField.getName());
         } else if (string.isEmpty() || string.charAt(0) != '"') {
             // huh? weird conditional quoting?
             string = quote(string);

@@ -3,6 +3,7 @@ package com.rusefi.ldmp;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
 import com.rusefi.output.JavaSensorsConsumer;
+import com.rusefi.util.SystemOut;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -26,6 +27,8 @@ public class UsagesReader {
                     "#include \"pch.h\"\n" +
                     "#include \"tunerstudio.h\"\n");
 
+    int sensorTsPosition = 0;
+
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("One parameter expected: name of live data yaml input file");
@@ -37,8 +40,9 @@ public class UsagesReader {
 
         StringBuilder totalSensors = new StringBuilder();
 
+        UsagesReader usagesReader = new UsagesReader();
+
         EntryHandler handler = new EntryHandler() {
-            int sensorTsPosition = 0;
 
             @Override
             public void onEntry(String name, List elements) throws IOException {
@@ -66,7 +70,7 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(state, sensorTsPosition);
+                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(state, usagesReader.sensorTsPosition);
                 state.addDestination(javaSensorsConsumer);
 
                 state.addPrepend(prepend);
@@ -74,14 +78,21 @@ public class UsagesReader {
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
                 state.doJob();
 
-                sensorTsPosition = javaSensorsConsumer.sensorTsPosition;
+                usagesReader.sensorTsPosition = javaSensorsConsumer.sensorTsPosition;
                 totalSensors.append(javaSensorsConsumer.getContent());
+
+                SystemOut.println("TS_TOTAL_OUTPUT_SIZE=" + usagesReader.sensorTsPosition);
             }
         };
 
-        UsagesReader usagesReader = new UsagesReader();
         usagesReader.handleYaml(data, handler);
         usagesReader.writeFiles();
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
+            fw.write(header);
+            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + usagesReader.sensorTsPosition);
+        }
+
 
         try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
             fw.write(totalSensors.toString());
