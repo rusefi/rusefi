@@ -1574,8 +1574,14 @@ uint8_t[8] tcu_pcBins1;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins2;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins3;;"%", 1, 0, 0, 255, 0
 uint8_t[8] tcu_pcBins4;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins12;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins23;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins34;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins21;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins32;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcBins43;;"%", 1, 0, 0, 255, 0
 
-uint8_t[158] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[110] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

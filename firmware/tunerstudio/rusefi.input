@@ -671,18 +671,18 @@ curve = pcPerShiftCurve, "Transmission Line Pressure Control - Shift"
 		xAxis = 0, 5, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_pcAirmassBins, chargeAirMass
-		yBins = tcu_pcBinsR
-		yBins = tcu_pcBinsN
-		yBins = tcu_pcBins1
-		yBins = tcu_pcBins2
-		yBins = tcu_pcBins3
-		yBins = tcu_pcBins4
-		lineLabel = "R%"
-		lineLabel = "N%"
-		lineLabel = "1%"
-		lineLabel = "2%"
-		lineLabel = "3%"
-		lineLabel = "4%"
+		yBins = tcu_pcBins12
+		yBins = tcu_pcBins23
+		yBins = tcu_pcBins34
+		yBins = tcu_pcBins21
+		yBins = tcu_pcBins32
+		yBins = tcu_pcBins43
+		lineLabel = "1->2%"
+		lineLabel = "2->3%"
+		lineLabel = "3->4%"
+		lineLabel = "2->1%"
+		lineLabel = "3->2%"
+		lineLabel = "4->3%"
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
