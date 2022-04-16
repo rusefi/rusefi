@@ -26,7 +26,7 @@ public enum Sensor {
 
     // RPM, vss
     RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, 0, 8000, "RPM"),
-    SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, 0, 5, "RPM/kph"),
+    speedToRpmRatio("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, 0, 5, "RPM/kph"),
     VSS(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 10, 1, 0, 150, "kph"),
 
     // Temperatures

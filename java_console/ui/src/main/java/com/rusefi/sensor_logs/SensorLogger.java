@@ -71,7 +71,7 @@ public class SensorLogger {
             Sensor.vvtTargetB2E,
 
             Sensor.VSS,
-            Sensor.SPEED2RPM,
+            Sensor.speedToRpmRatio,
             Sensor.turboSpeed,
 
             Sensor.accelerationX,
