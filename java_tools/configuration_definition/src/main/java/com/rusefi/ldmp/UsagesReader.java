@@ -96,18 +96,7 @@ public class UsagesReader {
 
         LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
 
-        fragmentsContent.append("static FragmentEntry fragments[" + liveDocs.size() + "];\n\n");
-
-        fragmentsContent.append("int getFragmentsCount() {\n" +
-                "\treturn " + liveDocs.size() + ";\n" +
-                "}\n" +
-                "\n" +
-                "FragmentEntry *getFragments() {\n" +
-                "\treturn fragments;\n" +
-                "}\n\n" +
-                "void initFragments() {\n");
-
-        int index = 0;
+        fragmentsContent.append("static const FragmentEntry fragments[] = {\n");
 
         for (Map.Entry entry : liveDocs.entrySet()) {
             String name = (String) entry.getKey();
@@ -122,17 +111,18 @@ public class UsagesReader {
             enumContent.append(enumName + ",\n");
 
             fragmentsContent
-                    .append("\tfragments[")
-                    .append(index++)
-                    .append("].init(")
-                    .append("(const uint8_t *)getStructAddr(")
-                    .append(enumName)
-                    .append("), sizeof(")
+                    .append("\treinterpret_cast<const ")
                     .append(type)
-                    .append("));\n");
+                    .append("*>(getStructAddr(")
+                    .append(enumName)
+                    .append(")),\n");
         }
         enumContent.append("} live_data_e;\n");
-        fragmentsContent.append("};\n");
+
+        fragmentsContent
+            .append("};\n\n")
+            .append("FragmentList getFragments() {\n\treturn { fragments, efi::size(fragments) };\n}\n");
+
     }
 
     private void writeFiles() throws IOException {
