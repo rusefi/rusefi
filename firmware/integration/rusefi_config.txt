@@ -49,6 +49,13 @@
 ! type name;comment
 !
 !
+!
+! Q: what's the difference between 'engineConfiguration' and rest of the 'persistent_config_s'?
+! A: 'engineConfiguration' portion has 'activeConfiguration' copy so that we can detect changes
+! todo: move all curves and tables out of engineConfiguration that would make 'activeConfiguration' smaller and we might save a couple of K of ram
+!
+!
+!
 ! Q: What is "@OFFSET@"?
 ! A: That's a template placeholder for field offset within the resulting data structure.
 !
