@@ -562,6 +562,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+#if EFI_SHAFT_POSITION_INPUT
 	lua_register(l, "getEngineState", [](lua_State* l) {
 		spinning_state_e state = engine->rpmCalculator.getState();
 		int luaStateCode;
@@ -576,6 +577,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		lua_pushnumber(l, luaStateCode);
 		return 1;
 	});
+#endif //EFI_SHAFT_POSITION_INPUT
 
 	lua_register(l, "setCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);

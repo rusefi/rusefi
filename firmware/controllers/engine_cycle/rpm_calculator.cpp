@@ -381,7 +381,9 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 }
 
 #else
-RpmCalculator::RpmCalculator() {
+RpmCalculator::RpmCalculator() :
+		StoredValueSensor(SensorType::Rpm, 0)
+{
 
 }
 
