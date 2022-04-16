@@ -16,7 +16,7 @@ import java.util.List;
 public class SensorLogger {
     protected static Sensor[] SENSORS = {Sensor.RPMValue,
             Sensor.TIME_SECONDS,
-            Sensor.INT_TEMP,
+            Sensor.internalMcuTemperature,
 
             Sensor.engineMode,
             Sensor.CLT,
@@ -70,8 +70,8 @@ public class SensorLogger {
             Sensor.vvtTargetB2I,
             Sensor.vvtTargetB2E,
 
-            Sensor.VSS,
-            Sensor.SPEED2RPM,
+            Sensor.vehicleSpeedKph,
+            Sensor.speedToRpmRatio,
             Sensor.turboSpeed,
 
             Sensor.accelerationX,

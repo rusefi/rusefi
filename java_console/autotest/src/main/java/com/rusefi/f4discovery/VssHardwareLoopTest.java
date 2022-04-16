@@ -3,14 +3,12 @@ package com.rusefi.f4discovery;
 import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
-import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.*;
 
@@ -39,14 +37,14 @@ public class VssHardwareLoopTest extends RusefiTestBase {
         ecu.sendCommand(CMD_IDLE_PIN + " PD2");
         ecu.sendCommand("set idle_solenoid_freq 1000");
 
-        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // attaching VSS to idle output since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
 
         sleep(2 * Timeouts.SECOND);
 
-        EcuTestHelper.assertSomewhatClose("VSS with input", 92, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 92, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)
