@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Thu Apr 14 20:48:21 EDT 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 16 18:02:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -383,6 +383,7 @@ public class TsOutputs {
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
+	public static final int TS_TOTAL_OUTPUT_SIZE = 992;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VM_VVT_INACTIVE = 0;

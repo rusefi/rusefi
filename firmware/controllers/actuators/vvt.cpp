@@ -46,7 +46,11 @@ void VvtController::PeriodicTask() {
 }
 
 expected<angle_t> VvtController::observePlant() const {
+#if EFI_SHAFT_POSITION_INPUT
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
+#else
+	return unexpected;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 expected<angle_t> VvtController::getSetpoint() {
@@ -89,7 +93,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-
+#if EFI_SHAFT_POSITION_INPUT
 	bool enabled = rpm > engineConfiguration->cranking.rpm /* todo: make this configurable? */
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
@@ -102,6 +106,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 		// we need to avoid accumulating iTerm while engine is not running
 		m_pid.reset();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 #if EFI_AUX_PID

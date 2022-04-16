@@ -33,7 +33,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
-
+#if EFI_SHAFT_POSITION_INPUT
 	if (engine->rpmCalculator.isRunning()) {
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
@@ -93,6 +93,8 @@ todo AndreiKA this change breaks 22 unit tests?
 */
 	}
 	
+#endif // EFI_SHAFT_POSITION_INPUT
+
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged
 	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {

@@ -302,7 +302,9 @@ void applyNewHardwareSettings() {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	stopTriggerDebugPins();
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.unregisterPins();
 
@@ -464,9 +466,12 @@ void startHardware() {
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
+#if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
 
 	startTriggerDebugPins();
+
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	startPedalPins();
 

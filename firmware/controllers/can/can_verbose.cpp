@@ -112,7 +112,9 @@ struct Sensors2 {
 static void populateFrame(Sensors2& msg) {
 	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
+#if EFI_SHAFT_POSITION_INPUT
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 

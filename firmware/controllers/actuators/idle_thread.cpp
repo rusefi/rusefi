@@ -33,6 +33,7 @@ int IdleController::getTargetRpm(float clt) {
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
+#if EFI_SHAFT_POSITION_INPUT
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
@@ -67,6 +68,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	if (looksLikeCrankToIdle) {
 		return Phase::CrankToIdleTaper;
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// No other conditions met, we are idling!
 	return Phase::Idling;
@@ -147,10 +149,11 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		m_timingPid.reset();
 		return 0;
 	}
-
+#if EFI_SHAFT_POSITION_INPUT
 	if (engineConfiguration->useInstantRpmForIdle) {
 		rpm = engine->triggerCentral.triggerState.getInstantRpm();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// If inside the deadzone, do nothing
 	if (absI(rpm - targetRpm) < engineConfiguration->idleTimingPidDeadZone) {
@@ -271,6 +274,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 }
 
 float IdleController::getIdlePosition() {
+#if EFI_SHAFT_POSITION_INPUT
+
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
@@ -356,8 +361,11 @@ float IdleController::getIdlePosition() {
 #endif /* EFI_TUNER_STUDIO */
 
 		currentIdlePosition = iacPosition;
-
 		return iacPosition;
+#else
+		return 0;
+#endif // EFI_SHAFT_POSITION_INPUT
+
 }
 
 void IdleController::onSlowCallback() {

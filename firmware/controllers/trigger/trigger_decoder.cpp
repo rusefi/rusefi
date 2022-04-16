@@ -99,13 +99,13 @@ void TriggerState::resetCurrentCycleState() {
 	currentCycle.current_index = 0;
 }
 
+#if EFI_SHAFT_POSITION_INPUT
+
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		//https://en.cppreference.com/w/cpp/language/zero_initialization
 		timeOfLastEvent(), instantRpmValue()
 		{
 }
-
-#if EFI_SHAFT_POSITION_INPUT
 
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;

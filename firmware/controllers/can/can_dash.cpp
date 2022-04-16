@@ -699,6 +699,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[7] = 0x00;
 		}
 
+#if EFI_SHAFT_POSITION_INPUT
 		/* 0x369 - 20Hz rate */
 		{ 
 			CanTxMessage msg(0x369, 8);
@@ -717,6 +718,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[6] = 0x00;			
 			msg[7] = 0x00;
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 		/* 0x36A - 20Hz rate */
 		/* todo: one day we should split this */
