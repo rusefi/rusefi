@@ -53,9 +53,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	/**
 	 * collect data from all models
 	 */
-	copyRange(scratchBuffer + 3,
-			getFragments(), getFragmentsCount(),
-			offset, count);
+	copyRange(scratchBuffer + 3, getFragments(), offset, count);
 
 	tsChannel->crcAndWriteBuffer(TS_RESPONSE_OK, count);
 }
