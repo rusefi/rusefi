@@ -4,10 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.output.CHeaderConsumer;
-import com.rusefi.output.ConfigStructure;
-import com.rusefi.output.ConfigurationConsumer;
-import com.rusefi.output.FileJavaFieldsConsumer;
+import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
 
@@ -333,5 +330,9 @@ public class ReaderState {
         }
         prependFiles.add(fileName);
         inputFiles.add(fileName);
+    }
+
+    public void addDestination(ConfigurationConsumer consumer) {
+        destinations.add(consumer);
     }
 }
