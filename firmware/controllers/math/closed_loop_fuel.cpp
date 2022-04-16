@@ -46,6 +46,7 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 }
 
 static bool shouldCorrect() {
+#if EFI_SHAFT_POSITION_INPUT
 	const auto& cfg = engineConfiguration->stft;
 
 	// User disable bit
@@ -71,6 +72,9 @@ static bool shouldCorrect() {
 
 	// If all was well, then we're enabled!
 	return true;
+#else
+	return false;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {

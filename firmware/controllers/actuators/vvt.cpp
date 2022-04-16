@@ -46,7 +46,11 @@ void VvtController::PeriodicTask() {
 }
 
 expected<angle_t> VvtController::observePlant() const {
+#if EFI_SHAFT_POSITION_INPUT
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
+#else
+	return unexpected;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 expected<angle_t> VvtController::getSetpoint() {
