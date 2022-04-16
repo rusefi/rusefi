@@ -85,7 +85,7 @@
 ! this is here so that rusEFI console can access it, too
 !
 #define TS_OUTPUT_SIZE 640
-#define TS_TOTAL_OUTPUT_SIZE 992
+#define TS_TOTAL_OUTPUT_SIZE 1000
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
