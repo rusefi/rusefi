@@ -10,6 +10,7 @@ public:
 private:
 	gear_e setCurrentGear(gear_e gear);
 	void setTccState();
+	void setPcState(gear_e gear);
 };
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController();

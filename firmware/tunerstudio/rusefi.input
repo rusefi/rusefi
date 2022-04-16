@@ -653,12 +653,12 @@ enable2ndByteCanID = false
 		xAxis = 0, 5, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_pcAirmassBins, chargeAirMass
-		yBins = tcu_pcBinsR
-		yBins = tcu_pcBinsN
-		yBins = tcu_pcBins1
-		yBins = tcu_pcBins2
-		yBins = tcu_pcBins3
-		yBins = tcu_pcBins4
+		yBins = tcu_pcValsR
+		yBins = tcu_pcValsN
+		yBins = tcu_pcVals1
+		yBins = tcu_pcVals2
+		yBins = tcu_pcVals3
+		yBins = tcu_pcVals4
 		lineLabel = "R%"
 		lineLabel = "N%"
 		lineLabel = "1%"
@@ -671,12 +671,12 @@ curve = pcPerShiftCurve, "Transmission Line Pressure Control - Shift"
 		xAxis = 0, 5, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_pcAirmassBins, chargeAirMass
-		yBins = tcu_pcBins12
-		yBins = tcu_pcBins23
-		yBins = tcu_pcBins34
-		yBins = tcu_pcBins21
-		yBins = tcu_pcBins32
-		yBins = tcu_pcBins43
+		yBins = tcu_pcVals12
+		yBins = tcu_pcVals23
+		yBins = tcu_pcVals34
+		yBins = tcu_pcVals21
+		yBins = tcu_pcVals32
+		yBins = tcu_pcVals43
 		lineLabel = "1->2%"
 		lineLabel = "2->3%"
 		lineLabel = "3->4%"
@@ -3470,6 +3470,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pressure Control Solenoid Frequency" tcu_pc_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "3-2 Solenoid Pin" tcu_32_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "3-2 Solenoid Pin mode" tcu_32_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Frequency" tcu_32_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
