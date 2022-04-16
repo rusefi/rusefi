@@ -43,7 +43,7 @@ public class GaugesPanel {
             Sensor.lastErrorCode,
             Sensor.Lambda,
             Sensor.VBATT,
-            Sensor.vehicleSpeedKph,
+            Sensor.VSS,
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";
