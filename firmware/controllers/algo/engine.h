@@ -329,7 +329,9 @@ public:
 
 	TpsAccelEnrichment tpsAccelEnrichment;
 
+#if EFI_SHAFT_POSITION_INPUT
 	TriggerCentral triggerCentral;
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	/**
 	 * Each individual fuel injection duration for current engine cycle, without wall wetting
