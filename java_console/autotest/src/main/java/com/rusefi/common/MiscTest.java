@@ -23,7 +23,7 @@ public class MiscTest extends RusefiTestBase {
         long start = System.currentTimeMillis();
         while (Double.isNaN(mcuTemp) && (System.currentTimeMillis() - start) < 5 * SECOND) {
             Thread.sleep(100);
-            mcuTemp = SensorCentral.getInstance().getValue(Sensor.internalMcuTemperature);
+            mcuTemp = SensorCentral.getInstance().getValue(Sensor.INT_TEMP);
         }
 
         System.out.println("MCU temperature is " + mcuTemp + " deg C");

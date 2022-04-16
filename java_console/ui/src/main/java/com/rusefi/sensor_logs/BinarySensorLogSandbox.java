@@ -20,7 +20,7 @@ public class BinarySensorLogSandbox {
         BinarySensorLog l = new BinarySensorLog(valueProvider,
                 Sensor.TIME_SECONDS,
                 Sensor.RPMValue,
-                Sensor.vehicleSpeedKph,
+                Sensor.VSS,
                 Sensor.TPS,
                 Sensor.tpsAccelFuel,
                 Sensor.PPS,
@@ -35,7 +35,7 @@ public class BinarySensorLogSandbox {
 
         values.put(Sensor.TIME_SECONDS, 1.0);
         values.put(Sensor.RPMValue, 0.0);
-        values.put(Sensor.vehicleSpeedKph, 60.0);
+        values.put(Sensor.VSS, 60.0);
         values.put(Sensor.FIRMWARE_VERSION, 20200101.0);
         values.put(Sensor.CLT, 29.0);
 
