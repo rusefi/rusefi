@@ -10,6 +10,8 @@ void Gm4l6xTransmissionController::init() {
     }
 		enginePins.tcuTccOnoffSolenoid.initPin("TCC On/Off Solenoid", engineConfiguration->tcu_tcc_onoff_solenoid, &engineConfiguration->tcu_tcc_onoff_solenoid_mode);
 		enginePins.tcuTccPwmSolenoid.initPin("TCC PWM Solenoid", engineConfiguration->tcu_tcc_pwm_solenoid, &engineConfiguration->tcu_tcc_pwm_solenoid_mode);
+		enginePins.tcuPcSolenoid.initPin("Pressure Control Solenoid", engineConfiguration->tcu_pc_solenoid_pin, &engineConfiguration->tcu_pc_solenoid_pin_mode);
+		enginePins.tcu32Solenoid.initPin("3-2 Shift Solenoid", engineConfiguration->tcu_32_solenoid_pin, &engineConfiguration->tcu_32_solenoid_pin_mode);
 }
 
 void Gm4l6xTransmissionController::update(gear_e gear) {
