@@ -38,6 +38,8 @@ WaveChart waveChart;
 static scheduling_s debugToggleScheduling;
 #define DEBUG_PIN_DELAY US2NT(60)
 
+#if EFI_SHAFT_POSITION_INPUT
+
 TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
@@ -58,7 +60,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 	return hwEventCounters[index];
 }
 
-#if EFI_SHAFT_POSITION_INPUT
 
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {

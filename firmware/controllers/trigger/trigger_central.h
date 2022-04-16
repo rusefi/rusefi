@@ -107,7 +107,10 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
+#if EFI_SHAFT_POSITION_INPUT
 	TriggerStateWithRunningStatistics triggerState;
+``#endif //EFI_SHAFT_POSITION_INPUT
+
 	TriggerWaveform triggerShape;
 
 	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
