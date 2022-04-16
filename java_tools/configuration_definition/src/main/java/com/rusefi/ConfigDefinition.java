@@ -236,11 +236,11 @@ public class ConfigDefinition {
         if (state.destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
 
-        state.doJob();
-
         if (pinoutLogic != null) {
-            pinoutLogic.processYamls(state.variableRegistry, state);
+            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state);
         }
+
+        state.doJob();
 
         if (destCDefinesFileName != null) {
             ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);
