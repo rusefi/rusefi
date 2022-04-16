@@ -261,7 +261,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		efiPrintf("%s error: %s", CRITICAL_PREFIX, getFirmwareError());
+		efiPrintf("%s error: %s", CRITICAL_PREFIX, getCriticalErrorMessage());
 		warningEnabled = false;
 		return;
 	}
@@ -723,6 +723,8 @@ void updateTunerStudioState() {
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
+#if EFI_SHAFT_POSITION_INPUT
+
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
 	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
@@ -747,6 +749,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+#endif // EFI_SHAFT_POSITION_INPUT
+
+
 	// 68
 	// 140
 #if EFI_ENGINE_CONTROL
@@ -820,6 +825,7 @@ void updateTunerStudioState() {
 		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
+#if EFI_SHAFT_POSITION_INPUT
 	tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 
@@ -828,6 +834,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
+#endif // EFI_SHAFT_POSITION_INPUT
 
 
 	switch (engineConfiguration->debugMode)	{
@@ -847,8 +854,10 @@ void updateTunerStudioState() {
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
+#if EFI_SHAFT_POSITION_INPUT
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
+#endif // EFI_SHAFT_POSITION_INPUT
 
 		// debugFloatField6 used
 		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
@@ -879,7 +888,9 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
+#if EFI_SHAFT_POSITION_INPUT
 			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
+#endif // EFI_SHAFT_POSITION_INPUT
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
 			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;
