@@ -4,6 +4,8 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
+#include "live_data.h"
+
 #include "status_loop.h"
 
 #if EFI_TUNER_STUDIO
