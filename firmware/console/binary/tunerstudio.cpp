@@ -433,11 +433,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {
-		char* error = getCriticalErrorMessage();
-		extern int firmwareErrorUptimePosition;
-		if (firmwareErrorUptimePosition > 0) {
-			itoa10(error + firmwareErrorUptimePosition, getTimeNowSeconds());
-		}
+		const char* error = getCriticalErrorMessage();
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
@@ -818,11 +814,17 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = getCriticalErrorMessage();
+		char* configError = getCriticalErrorMessage();
 #if HW_CHECK_MODE
 		// analog input errors are returned as firmware error in QC mode
 		if (!hasFirmwareError()) {
-			strcpy((char*)configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
+			// not nice: we are writing into a buffer defined somewhere else
+			strcpy(configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
+		}
+#else
+		extern int firmwareErrorUptimePosition;
+		if (firmwareErrorUptimePosition > 0) {
+			itoa10(configError + firmwareErrorUptimePosition, getTimeNowSeconds());
 		}
 #endif // HW_CHECK_MODE
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
