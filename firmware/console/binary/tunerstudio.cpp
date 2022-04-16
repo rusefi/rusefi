@@ -213,7 +213,11 @@ const void * getStructAddr(live_data_e structId) {
 	case LDS_trigger_central:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
 	case LDS_trigger_state:
+#if EFI_SHAFT_POSITION_INPUT
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
+#else
+		return nullptr;
+#endif // EFI_SHAFT_POSITION_INPUT
 	case LDS_wall_fuel_state:
 		return static_cast<wall_fuel_state_s*>(&engine->injectionEvents.elements[0].wallFuel);
 	case LDS_idle_state:
@@ -429,7 +433,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {
-		const char* error = getFirmwareError();
+		const char* error = getCriticalErrorMessage();
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
@@ -810,7 +814,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = getFirmwareError();
+		const char* configError = getCriticalErrorMessage();
 #if HW_CHECK_MODE
 		// analog input errors are returned as firmware error in QC mode
 		if (!hasFirmwareError()) {
