@@ -1,10 +1,8 @@
 package com.rusefi;
 
 import com.rusefi.newparse.ParseState;
-import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.trigger.TriggerWheelTSLogic;
-import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
@@ -20,13 +18,13 @@ public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
-    public static final String KEY_DEFINITION = "-definition";
+    private static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
-    public static final String KEY_C_DESTINATION = "-c_destination";
+    private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
-    public static final String KEY_JAVA_DESTINATION = "-java_destination";
+    private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
@@ -80,7 +78,6 @@ public class ConfigDefinition {
         String tsOutputsDestination = null;
 
 
-        List<ConfigurationConsumer> destinations = new ArrayList<>();
 
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];
@@ -100,7 +97,7 @@ public class ConfigDefinition {
                     tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destinations.add(new CHeaderConsumer(state, args[i + 1], state.withC_Defines));
+                    state.addCHeaderDestination(args[i + 1]);
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -112,13 +109,13 @@ public class ConfigDefinition {
                     destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
-                    destinations.add(new FileJavaFieldsConsumer(state, args[i + 1]));
+                    state.addJavaDestination(args[i + 1]);
                     break;
                 case "-field_lookup_file":
-                    destinations.add(new GetConfigValueConsumer(args[i + 1]));
+                    state.destinations.add(new GetConfigValueConsumer(args[i + 1]));
                     break;
                 case "-output_lookup_file":
-                    destinations.add(new GetOutputValueConsumer(args[i + 1]));
+                    state.destinations.add(new GetOutputValueConsumer(args[i + 1]));
                     break;
                 case "-readfile":
                     String keyName = args[i + 1];
@@ -137,14 +134,7 @@ public class ConfigDefinition {
                     romRaiderDestination = args[i + 1];
                     break;
                 case KEY_PREPEND:
-                    {
-                        String value = args[i + 1];
-                        // see UsagesReader use-case with dynamic prepend usage
-                        if (!value.trim().isEmpty()) {
-                            state.prependFiles.add(value);
-                            state.inputFiles.add(value);
-                        }
-                    }
+                    state.addPrepend(args[i + 1].trim());
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
@@ -202,6 +192,7 @@ public class ConfigDefinition {
         if (pinoutLogic != null) {
             pinoutLogic.processYamls(state.variableRegistry, state);
         }
+/*
 
         // Parse the input files
         {
@@ -231,32 +222,28 @@ public class ConfigDefinition {
             // TsWriter writer = new TsWriter();
             // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
+*/
 
         if (tsOutputsDestination != null) {
-            destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
-            destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
-            destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
+            state.destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
+            state.destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
+            state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
-            destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
+            state.destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
             tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
             tmpRegistry.readPrependValues(signaturePrependFile);
-            destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
+            state.destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (destinations.isEmpty())
+        if (state.destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
-        /*
-         * this is the most important invocation - here we read the primary input file and generated code into all
-         * the destinations/writers
-         */
-        SystemOut.println("Reading definition from " + state.definitionInputFile);
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(state.definitionInputFile), IoUtils.CHARSET.name()));
-        state.readBufferedReader(definitionReader, destinations);
+
+        state.doJob();
 
         if (destCDefinesFileName != null) {
             ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);

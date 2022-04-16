@@ -4,13 +4,14 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.output.CHeaderConsumer;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.FileJavaFieldsConsumer;
+import com.rusefi.util.IoUtils;
+import com.rusefi.util.SystemOut;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -38,9 +39,11 @@ public class ReaderState {
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
     public String headerMessage;
+    // well, technically those should be a builder for state, not this state class itself
     String definitionInputFile = null;
     public boolean withC_Defines = true;
     List<String> prependFiles = new ArrayList<>();
+    List<ConfigurationConsumer> destinations = new ArrayList<>();
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -68,6 +71,16 @@ public class ReaderState {
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
         structure.addBitField(bitField);
+    }
+
+    public void doJob() throws IOException {
+        /*
+         * this is the most important invocation - here we read the primary input file and generated code into all
+         * the destinations/writers
+         */
+        SystemOut.println("Reading definition from " + this.definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.definitionInputFile), IoUtils.CHARSET.name()));
+        readBufferedReader(definitionReader, this.destinations);
     }
 
     public void read(Reader reader) throws IOException {
@@ -300,5 +313,22 @@ public class ReaderState {
         this.definitionInputFile = definitionInputFile;
         headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
         inputFiles.add(definitionInputFile);
+    }
+
+    public void addCHeaderDestination(String cHeader) {
+        destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
+    }
+
+    public void addJavaDestination(String fileName) {
+        destinations.add(new FileJavaFieldsConsumer(this, fileName));
+    }
+
+    public void addPrepend(String fileName) {
+        if (fileName.isEmpty()) {
+            // see UsagesReader use-case with dynamic prepend usage
+            return;
+        }
+        prependFiles.add(fileName);
+        inputFiles.add(fileName);
     }
 }

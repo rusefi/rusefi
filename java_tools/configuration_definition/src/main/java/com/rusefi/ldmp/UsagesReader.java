@@ -48,7 +48,7 @@ public class UsagesReader {
                     String key = pair[0];
                     String value = pair[1];
                     if (key.equals(ConfigDefinition.KEY_WITH_C_DEFINES)) {
-                        withCDefines = Boolean.valueOf(value);
+                        withCDefines = Boolean.parseBoolean(value);
                     } else if (key.equals(ConfigDefinition.KEY_PREPEND)) {
                         prepend = value;
                     }
@@ -61,16 +61,10 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                ConfigDefinition.doJob(new String[]{
-                        ConfigDefinition.KEY_PREPEND,
-                        prepend,
-
-                        ConfigDefinition.KEY_JAVA_DESTINATION,
-                        "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName,
-
-                        ConfigDefinition.KEY_C_DESTINATION,
-                        folder + File.separator + name + "_generated.h"
-                }, state);
+                state.addPrepend(prepend);
+                state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
+                state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
+                state.doJob();
             }
         };
 
