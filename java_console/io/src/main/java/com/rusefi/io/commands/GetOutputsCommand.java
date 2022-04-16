@@ -10,8 +10,10 @@ import static com.rusefi.binaryprotocol.IoHelper.putShort;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 public class GetOutputsCommand {
+    public static int OUTPUT_SIZE = Fields.TS_OUTPUT_SIZE;
+
     public static byte[] createRequest() {
-        return createRequest(0, Fields.TS_OUTPUT_SIZE);
+        return createRequest(0, GetOutputsCommand.OUTPUT_SIZE);
     }
 
     public static byte[] createRequest(int offset, int size) {
@@ -22,7 +24,7 @@ public class GetOutputsCommand {
     }
 
     public static void sendOutput(IoStream stream) throws IOException {
-        byte[] response = new byte[1 + Fields.TS_OUTPUT_SIZE];
+        byte[] response = new byte[1 + GetOutputsCommand.OUTPUT_SIZE];
         response[0] = (byte) BinaryProtocolServer.TS_OK.charAt(0);
         stream.sendPacket(response);
     }

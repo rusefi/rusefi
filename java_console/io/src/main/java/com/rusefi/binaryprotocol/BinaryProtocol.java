@@ -546,11 +546,11 @@ public class BinaryProtocol {
 
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
-        byte[] reassemblyBuffer = new byte[Fields.TS_OUTPUT_SIZE + 1];
+        byte[] reassemblyBuffer = new byte[GetOutputsCommand.OUTPUT_SIZE + 1];
         reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
 
         int reassemblyIdx = 0;
-        int remaining = Fields.TS_OUTPUT_SIZE;
+        int remaining = GetOutputsCommand.OUTPUT_SIZE;
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
