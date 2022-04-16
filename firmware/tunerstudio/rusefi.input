@@ -666,6 +666,24 @@ enable2ndByteCanID = false
 		lineLabel = "3%"
 		lineLabel = "4%"
 
+curve = pcPerShiftCurve, "Transmission Line Pressure Control - Shift"
+		columnLabel = "Airmass", ""
+		xAxis = 0, 5, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_pcAirmassBins, chargeAirMass
+		yBins = tcu_pcBinsR
+		yBins = tcu_pcBinsN
+		yBins = tcu_pcBins1
+		yBins = tcu_pcBins2
+		yBins = tcu_pcBins3
+		yBins = tcu_pcBins4
+		lineLabel = "R%"
+		lineLabel = "N%"
+		lineLabel = "1%"
+		lineLabel = "2%"
+		lineLabel = "3%"
+		lineLabel = "4%"
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1526,7 +1544,8 @@ menuDialog = main
 		subMenu = tcuControls,			"Transmission Settings"
 		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
 		subMenu = tccCurves, "TCC Lock/Unlock Speed"
-		subMenu = pcPerGearCurves, "Line Pressure Per Gear Steady State"
+		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
+		subMenu = pcPerShiftDialog, "Line Pressure Per Shift"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -3466,8 +3485,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = tccCurves, "TCC Lock/Unlock Speed"
 		panel = tccLockCurve
 
-	dialog = pcPerGearCurves, "Line Pressure Per Gear Steady State"
+	dialog = pcPerGearDialog, "Line Pressure Per Gear Steady State"
 		panel = pcPerGearCurve
+
+	dialog = pcPerShiftDialog, "Line Pressure Per Shift"
+		panel = pcPerShiftCurve
 
 ;Boost Open Loop
 
