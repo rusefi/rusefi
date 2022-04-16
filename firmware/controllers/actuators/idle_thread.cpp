@@ -33,6 +33,7 @@ int IdleController::getTargetRpm(float clt) {
 }
 
 IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
+#if EFI_SHAFT_POSITION_INPUT
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
@@ -67,6 +68,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	if (looksLikeCrankToIdle) {
 		return Phase::CrankToIdleTaper;
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// No other conditions met, we are idling!
 	return Phase::Idling;
