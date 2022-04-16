@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 16 18:03:11 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 16 23:31:42 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1876,7 +1876,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1417143739;
+	public static final int SIGNATURE_HASH = 601175394;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2373,10 +2373,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.16.all.1417143739";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.17.all.601175394";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 992;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
