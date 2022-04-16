@@ -21,10 +21,7 @@ public class UsagesReader {
             "\n" +
             "typedef enum {\n");
 
-    private final StringBuilder fragmentsContent = new StringBuilder(
-            header +
-                    "#include \"pch.h\"\n" +
-                    "#include \"tunerstudio.h\"\n");
+    private final StringBuilder fragmentsContent = new StringBuilder(header);
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -96,8 +93,6 @@ public class UsagesReader {
 
         LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
 
-        fragmentsContent.append("static const FragmentEntry fragments[] = {\n");
-
         for (Map.Entry entry : liveDocs.entrySet()) {
             String name = (String) entry.getKey();
             System.out.println(" " + name);
@@ -111,18 +106,11 @@ public class UsagesReader {
             enumContent.append(enumName + ",\n");
 
             fragmentsContent
-                    .append("\treinterpret_cast<const ")
+                    .append("getLiveDataAddr<")
                     .append(type)
-                    .append("*>(getStructAddr(")
-                    .append(enumName)
-                    .append(")),\n");
+                    .append(">(),\n");
         }
         enumContent.append("} live_data_e;\n");
-
-        fragmentsContent
-            .append("};\n\n")
-            .append("FragmentList getFragments() {\n\treturn { fragments, efi::size(fragments) };\n}\n");
-
     }
 
     private void writeFiles() throws IOException {
@@ -130,7 +118,7 @@ public class UsagesReader {
             fw.write(enumContent.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.cpp")) {
+        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
             fw.write(fragmentsContent.toString());
         }
     }

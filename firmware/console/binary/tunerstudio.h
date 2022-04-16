@@ -38,7 +38,7 @@ const void * getStructAddr(live_data_e structId);
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-FragmentList getFragments();
+#include "live_data.h"
 
 void updateTunerStudioState();
 
