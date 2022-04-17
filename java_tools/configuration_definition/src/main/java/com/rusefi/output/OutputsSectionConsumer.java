@@ -26,9 +26,9 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
-        if (state.stack.isEmpty()) {
-            tsOutput.writeFields(structure, "", 0);
+        tsOutput.run(readerState, structure, 0);
 
+        if (state.stack.isEmpty()) {
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
                 fos.write(tsOutput.getContent());
