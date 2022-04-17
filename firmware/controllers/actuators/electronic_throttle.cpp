@@ -669,7 +669,7 @@ static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
 
 static_assert(ETB_COUNT == 2);
-static EtbController* etbControllers[] = { &etb1, &etb2 };
+EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
