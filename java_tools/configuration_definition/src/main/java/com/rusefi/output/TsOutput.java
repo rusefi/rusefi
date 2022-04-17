@@ -74,7 +74,7 @@ public class TsOutput {
                 if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
                     String bits = configField.getState().tsCustomLine.get(configField.getType());
                     if (!bits.startsWith("bits")) {
-                        bits = handleTsInfo(bits, 5);
+                        bits = handleTsInfo(configField, bits, 5);
                     }
 
                     bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
@@ -86,7 +86,7 @@ public class TsOutput {
                     tsHeader.append(nameWithPrefix + " = scalar, ");
                     tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
                     tsHeader.append(" " + tsPosition + ",");
-                    tsHeader.append(" " + handleTsInfo(configField.getTsInfo(), 1));
+                    tsHeader.append(" " + handleTsInfo(configField, configField.getTsInfo(), 1));
                     if (!configField.getName().equals(next.getName()))
                         tsPosition += configField.getSize(next);
                 } else if (configField.getSize(next) == 0) {
@@ -106,7 +106,7 @@ public class TsOutput {
                         }
                         tsHeader.append(size);
                     }
-                    tsHeader.append("], " + handleTsInfo(configField.getTsInfo(), 1));
+                    tsHeader.append("], " + handleTsInfo(configField, configField.getTsInfo(), 1));
 
                     if (!configField.getName().equals(next.getName()))
                         tsPosition += configField.getSize(next);
@@ -123,8 +123,8 @@ public class TsOutput {
         return sensorTsPosition;
     }
 
-    private String handleTsInfo(String tsInfo, int multiplierIndex) {
-        if (tsInfo == null) {
+    private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
+        if (tsInfo == null || tsInfo.trim().isEmpty()) {
             if (isConstantsSection) {
                 throw new IllegalStateException("todo: implement default tsInfo for long form");
             }
@@ -162,7 +162,7 @@ public class TsOutput {
             }
             return sb.toString();
         } catch (Throwable e) {
-            throw new IllegalStateException("While parsing " + tsInfo, e);
+            throw new IllegalStateException("While parsing [" + tsInfo + "] of " + configField, e);
         }
     }
 }
