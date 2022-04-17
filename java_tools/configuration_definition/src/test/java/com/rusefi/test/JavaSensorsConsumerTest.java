@@ -24,6 +24,7 @@ public class JavaSensorsConsumerTest {
                 "uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;\"RPM\",1, 0, 0, 8000, 0\n" +
                 "uint16_t rpmAcceleration;dRPM;\"RPM/s\",1, 0, 0, 5, 0\n" +
                 "\tuint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
+                "    float luaTimingMult;\n" +
                 "\tuint8_t vehicleSpeedKph\n" +
                 "\tint8_t autoscale internalMcuTemperature;mcu;\"deg C\",1, 0, 0, 0, 0\n" +
                 "end_struct\n";
@@ -33,8 +34,11 @@ public class JavaSensorsConsumerTest {
         assertEquals("RPMValue(\"hello\", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4, 1.0, 0.0, 8000.0, \"RPM\"),\n" +
                         "rpmAcceleration(\"dRPM\", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, \"RPM/s\"),\n" +
                         "speedToRpmRatio(\"ra\", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, \"value\"),\n" +
-                        "vehicleSpeedKph(\"vehicleSpeedKph\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, -1.0, -1.0, \"\"),\n" +
-                        "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 11, 1.0, 0.0, 0.0, \"deg C\"),\n",
+                        "alignmentFill_at_10(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, -20.0, 100.0, \"units\"),\n" +
+                        "luaTimingMult(\"luaTimingMult\", SensorCategory.SENSOR_INPUTS, FieldType.INT, 12, 1.0, -1.0, -1.0, \"\"),\n" +
+                        "vehicleSpeedKph(\"vehicleSpeedKph\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 16, 1.0, -1.0, -1.0, \"\"),\n" +
+                        "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 17, 1.0, 0.0, 0.0, \"deg C\"),\n" +
+                        "alignmentFill_at_18(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 18, 1.0, -20.0, 100.0, \"units\"),\n",
                 javaSensorsConsumer.getContent());
 
 
