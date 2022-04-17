@@ -31,7 +31,7 @@ public class TsOutput {
         return settingContextHelp;
     }
 
-    public void run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) throws IOException {
@@ -121,6 +121,7 @@ public class TsOutput {
         if (state.stack.isEmpty()) {
             tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
         }
+        return sensorTsPosition;
     }
 
     private String handleTsInfo(String tsInfo, int multiplierIndex) {
