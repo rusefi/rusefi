@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 17 17:52:00 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 17 20:28:00 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -971,23 +971,6 @@ public class Fields {
 	public static final int FLASH_DATA_VERSION = 10009;
 	public static final int flexCranking_offset = 1272;
 	public static final int flexSensorPin_offset = 806;
-	public static final int FRAGMENT_AC_CONTROL_SIZE = 12;
-	public static final int FRAGMENT_BOOST_CONTROL_SIZE = 12;
-	public static final int FRAGMENT_ELECTRONIC_THROTTLE_SIZE = 12;
-	public static final int FRAGMENT_ENGINE_STATE_SIZE = 128;
-	public static final int FRAGMENT_FAN_CONTROL_SIZE = 0;
-	public static final int FRAGMENT_FUEL_PUMP_CONTROL_SIZE = 0;
-	public static final int FRAGMENT_HIGH_PRESSURE_FUEL_PUMP_SIZE = 24;
-	public static final int FRAGMENT_IDLE_STATE_SIZE = 32;
-	public static final int FRAGMENT_IGNITION_STATE_SIZE = 16;
-	public static final int FRAGMENT_INJECTOR_MODEL_SIZE = 12;
-	public static final int FRAGMENT_LAUNCH_CONTROL_STATE_SIZE = 4;
-	public static final int FRAGMENT_MAIN_RELAY_SIZE = 0;
-	public static final int FRAGMENT_OUTPUT_CHANNELS_SIZE = 640;
-	public static final int FRAGMENT_TPS_ACCEL_STATE_SIZE = 48;
-	public static final int FRAGMENT_TRIGGER_CENTRAL_SIZE = 28;
-	public static final int FRAGMENT_TRIGGER_STATE_SIZE = 8;
-	public static final int FRAGMENT_WALL_FUEL_STATE_SIZE = 8;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1893,7 +1876,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 66981215;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2389,7 +2371,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.17.all.66981215";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.17.all.4092865010";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 984;

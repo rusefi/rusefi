@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Apr 15 14:32:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 17 20:28:00 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -21,8 +21,8 @@ struct stft_cell_cfg_s {
 	 * offset 2
 	 */
 	uint16_t timeConstant;
-	/** total size 4*/
 };
+static_assert(sizeof(stft_cell_cfg_s) == 4);
 
 // start of stft_s
 struct stft_s {
@@ -78,8 +78,8 @@ struct stft_s {
 	 * offset 8
 	 */
 	stft_cell_cfg_s cellCfgs[STFT_CELL_COUNT];
-	/** total size 24*/
 };
+static_assert(sizeof(stft_s) == 24);
 
 // start of pid_s
 struct pid_s {
@@ -116,8 +116,8 @@ struct pid_s {
 	 * offset 18
 	 */
 	int16_t maxValue;
-	/** total size 20*/
 };
+static_assert(sizeof(pid_s) == 20);
 
 // start of cranking_parameters_s
 struct cranking_parameters_s {
@@ -142,8 +142,8 @@ struct cranking_parameters_s {
 	 * offset 6
 	 */
 	uint8_t alignmentFill_at_6[2];
-	/** total size 8*/
 };
+static_assert(sizeof(cranking_parameters_s) == 8);
 
 // start of spi_pins
 struct spi_pins {
@@ -165,8 +165,8 @@ struct spi_pins {
 	 * offset 3
 	 */
 	uint8_t alignmentFill_at_3[1];
-	/** total size 4*/
 };
+static_assert(sizeof(spi_pins) == 4);
 
 // start of gppwm_channel
 struct gppwm_channel {
@@ -226,8 +226,8 @@ struct gppwm_channel {
 	 * offset 24
 	 */
 	uint8_t table[GPPWM_RPM_COUNT][GPPWM_LOAD_COUNT];
-	/** total size 88*/
 };
+static_assert(sizeof(gppwm_channel) == 88);
 
 // start of air_pressure_sensor_config_s
 struct air_pressure_sensor_config_s {
@@ -256,8 +256,8 @@ struct air_pressure_sensor_config_s {
 	 * offset 13
 	 */
 	uint8_t alignmentFill[3];
-	/** total size 16*/
 };
+static_assert(sizeof(air_pressure_sensor_config_s) == 16);
 
 /**
  * @brief MAP averaging configuration
@@ -289,8 +289,8 @@ struct MAP_sensor_config_s {
 	 * offset 128
 	 */
 	air_pressure_sensor_config_s sensor;
-	/** total size 144*/
 };
+static_assert(sizeof(MAP_sensor_config_s) == 144);
 
 /**
  * @brief Thermistor known values
@@ -335,8 +335,8 @@ struct thermistor_conf_s {
 	 * offset 24
 	 */
 	float bias_resistor;
-	/** total size 28*/
 };
+static_assert(sizeof(thermistor_conf_s) == 28);
 
 /**
  * @brief Linear sensor interpolation
@@ -373,8 +373,8 @@ struct linear_sensor_s {
 	 * offset 16
 	 */
 	float value2;
-	/** total size 20*/
 };
+static_assert(sizeof(linear_sensor_s) == 20);
 
 /**
  * @brief Thermistor curve parameters
@@ -396,8 +396,8 @@ struct ThermistorConf {
 	 * offset 29
 	 */
 	uint8_t alignmentFill_at_29[3];
-	/** total size 32*/
 };
+static_assert(sizeof(ThermistorConf) == 32);
 
 // start of injector_s
 struct injector_s {
@@ -423,8 +423,8 @@ struct injector_s {
 	 * offset 36
 	 */
 	float battLagCorr[VBAT_INJECTOR_CURVE_SIZE];
-	/** total size 68*/
 };
+static_assert(sizeof(injector_s) == 68);
 
 // start of specs_s
 struct specs_s {
@@ -444,8 +444,8 @@ struct specs_s {
 	 * offset 8
 	 */
 	firing_order_e firingOrder;
-	/** total size 12*/
 };
+static_assert(sizeof(specs_s) == 12);
 
 /**
  * @brief Trigger wheel(s) configuration
@@ -566,8 +566,8 @@ struct trigger_config_s {
 	 * offset 12
 	 */
 	int customSkippedToothCount;
-	/** total size 16*/
 };
+static_assert(sizeof(trigger_config_s) == 16);
 
 // start of afr_sensor_s
 struct afr_sensor_s {
@@ -600,8 +600,8 @@ struct afr_sensor_s {
 	 * offset 16
 	 */
 	float value2;
-	/** total size 20*/
 };
+static_assert(sizeof(afr_sensor_s) == 20);
 
 // start of idle_hardware_s
 struct idle_hardware_s {
@@ -626,8 +626,8 @@ struct idle_hardware_s {
 	 * offset 7
 	 */
 	pin_output_mode_e solenoidPinMode;
-	/** total size 8*/
 };
+static_assert(sizeof(idle_hardware_s) == 8);
 
 // start of dc_io
 struct dc_io {
@@ -648,8 +648,8 @@ struct dc_io {
 	 * offset 3
 	 */
 	brain_pin_e disablePin;
-	/** total size 4*/
 };
+static_assert(sizeof(dc_io) == 4);
 
 // start of vr_threshold_s
 struct vr_threshold_s {
@@ -671,8 +671,8 @@ struct vr_threshold_s {
 	 * offset 10
 	 */
 	scaled_channel<uint8_t, 100, 1> values[6];
-	/** total size 16*/
 };
+static_assert(sizeof(vr_threshold_s) == 16);
 
 // start of engine_configuration_s
 struct engine_configuration_s {
@@ -4161,8 +4161,8 @@ struct engine_configuration_s {
 	 * offset 4796
 	 */
 	uint8_t mainUnusedEnd[224];
-	/** total size 5020*/
 };
+static_assert(sizeof(engine_configuration_s) == 5020);
 
 // start of cyl_trim_s
 struct cyl_trim_s {
@@ -4170,8 +4170,8 @@ struct cyl_trim_s {
 	 * offset 0
 	 */
 	scaled_channel<int8_t, 5, 1> table[TRIM_SIZE][TRIM_SIZE];
-	/** total size 16*/
 };
+static_assert(sizeof(cyl_trim_s) == 16);
 
 // start of persistent_config_s
 struct persistent_config_s {
@@ -4578,8 +4578,8 @@ struct persistent_config_s {
 	 * offset 20996
 	 */
 	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
-	/** total size 21012*/
 };
+static_assert(sizeof(persistent_config_s) == 21012);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Apr 15 14:32:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Apr 17 20:28:00 UTC 2022

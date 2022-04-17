@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Thu Apr 14 20:51:56 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -25,8 +25,8 @@ struct pid_status_s {
 	 * offset 8
 	 */
 	uint32_t resetCounter = (uint32_t)0;
-	/** total size 12*/
 };
+static_assert(sizeof(pid_status_s) == 12);
 
 // start of output_channels_s
 struct output_channels_s {
@@ -1387,8 +1387,8 @@ struct output_channels_s {
 	 * offset 568
 	 */
 	uint8_t unusedAtTheEnd[72];
-	/** total size 640*/
 };
+static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Thu Apr 14 20:51:56 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 17 20:27:25 UTC 2022

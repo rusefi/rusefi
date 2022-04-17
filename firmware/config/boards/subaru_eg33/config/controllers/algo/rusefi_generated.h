@@ -981,23 +981,6 @@
 #define FLASH_DATA_VERSION 10009
 #define flexCranking_offset 1272
 #define flexSensorPin_offset 806
-#define FRAGMENT_AC_CONTROL_SIZE 12
-#define FRAGMENT_BOOST_CONTROL_SIZE 12
-#define FRAGMENT_ELECTRONIC_THROTTLE_SIZE 12
-#define FRAGMENT_ENGINE_STATE_SIZE 128
-#define FRAGMENT_FAN_CONTROL_SIZE 0
-#define FRAGMENT_FUEL_PUMP_CONTROL_SIZE 0
-#define FRAGMENT_HIGH_PRESSURE_FUEL_PUMP_SIZE 24
-#define FRAGMENT_IDLE_STATE_SIZE 32
-#define FRAGMENT_IGNITION_STATE_SIZE 16
-#define FRAGMENT_INJECTOR_MODEL_SIZE 12
-#define FRAGMENT_LAUNCH_CONTROL_STATE_SIZE 4
-#define FRAGMENT_MAIN_RELAY_SIZE 0
-#define FRAGMENT_OUTPUT_CHANNELS_SIZE 640
-#define FRAGMENT_TPS_ACCEL_STATE_SIZE 48
-#define FRAGMENT_TRIGGER_CENTRAL_SIZE 28
-#define FRAGMENT_TRIGGER_STATE_SIZE 8
-#define FRAGMENT_WALL_FUEL_STATE_SIZE 8
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1946,7 +1929,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1648979166
+#define SIGNATURE_HASH 2453882995
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2504,7 +2487,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.17.subaru_eg33_f7.1648979166"
+#define TS_SIGNATURE "rusEFI 2022.04.17.subaru_eg33_f7.2453882995"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
