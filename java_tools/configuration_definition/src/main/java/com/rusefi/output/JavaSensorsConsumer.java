@@ -58,10 +58,13 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
 
                 tsPosition += configField.getSize(next);
+                // this value would be consumed by UsagesReader
+                sensorTsPosition  = tsPosition;
+
                 return tsPosition;
             }
         };
-        fieldsStrategy.run(readerState, structure);
+        fieldsStrategy.run(readerState, structure, sensorTsPosition);
     }
 
     public static String quote(String string) {

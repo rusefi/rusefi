@@ -52,7 +52,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                 return 0;
             }
         };
-        fieldsStrategy.run(readerState, structure);
+        fieldsStrategy.run(readerState, structure, 0);
 
     }
 

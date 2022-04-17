@@ -6,7 +6,6 @@ import com.rusefi.*;
 import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.rusefi.ToolUtil.EOL;
@@ -107,6 +106,6 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 return tsPosition;
             }
         };
-        fieldsStrategy.run(state, structure);
+        fieldsStrategy.run(state, structure, 0);
     }
 }
