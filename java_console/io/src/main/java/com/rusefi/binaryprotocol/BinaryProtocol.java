@@ -56,6 +56,7 @@ public class BinaryProtocol {
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
     public String signature;
+    public boolean isGoodOutputChannels;
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
@@ -193,7 +194,8 @@ public class BinaryProtocol {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
-                                if (requestOutputChannels())
+                                isGoodOutputChannels = requestOutputChannels();
+                                if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
                                 if (linkManager.isNeedPullText()) {
