@@ -315,9 +315,6 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
-	// Apply any adjustment from Lua
-	luaAdjustment = engine->engineState.luaAdjustments.etbTargetPositionAdd;
-
 	percent_t targetPosition = idlePosition + luaAdjustment;
 
 	// Apply any adjustment that this throttle alone needs
@@ -672,7 +669,7 @@ static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
 
 static_assert(ETB_COUNT == 2);
-static EtbController* etbControllers[] = { &etb1, &etb2 };
+EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
