@@ -148,7 +148,7 @@ public class ConfigDefinition {
                     enumInputFiles.add(args[i + 1]);
                     break;
                 case "-ts_output_name":
-                    TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
+                    state.tsFileOutputName = args[i + 1];
                     break;
                 case KEY_ROMRAIDER_INPUT:
                     String inputFilePath = args[i + 1];
