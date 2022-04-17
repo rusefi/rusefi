@@ -27,7 +27,7 @@ public class TsOutput {
         return settingContextHelp;
     }
 
-    private int writeTunerStudio(FieldIterator it, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
+    private int writeOneField(FieldIterator it, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
         ConfigField configField = it.cf;
         ConfigField next = it.next;
         int bitIndex = it.bitState.get();
@@ -47,7 +47,7 @@ public class TsOutput {
 
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return writeTunerStudio(cs, prefix + extraPrefix, tsHeader, tsPosition);
+            return writeFields(cs, prefix + extraPrefix, tsHeader, tsPosition);
         }
 
         if (configField.isBit()) {
@@ -109,12 +109,12 @@ public class TsOutput {
         return tsPosition;
     }
 
-    protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
+    protected int writeFields(ConfigStructure configStructure, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
         FieldIterator iterator = new FieldIterator(configStructure.tsFields);
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             iterator.start(i);
 
-            tsPosition = writeTunerStudio(iterator, prefix, tsHeader, tsPosition);
+            tsPosition = writeOneField(iterator, prefix, tsHeader, tsPosition);
 
             iterator.end();
         }

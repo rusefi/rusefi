@@ -149,7 +149,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
-            totalTsSize = tsOutput.writeTunerStudio(structure, "", tsWriter, 0);
+            totalTsSize = tsOutput.writeFields(structure, "", tsWriter, 0);
             tsWriter.write("; total TS size = " + totalTsSize + EOL);
             state.variableRegistry.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }

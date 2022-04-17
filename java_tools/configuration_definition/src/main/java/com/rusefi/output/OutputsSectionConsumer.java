@@ -28,7 +28,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         System.out.println("handleEndStruct");
 
         if (state.stack.isEmpty()) {
-            tsOutput.writeTunerStudio(structure, "", tsWriter, 0);
+            tsOutput.writeFields(structure, "", tsWriter, 0);
 
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
