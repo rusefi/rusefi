@@ -10,6 +10,7 @@ import java.io.*;
 public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
+    public int sensorTsPosition;
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
@@ -24,7 +25,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
-        tsOutput.run(readerState, structure, 0);
+        sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition);
 
         if (readerState.stack.isEmpty()) {
             if (tsOutputsSectionFileName != null) {
