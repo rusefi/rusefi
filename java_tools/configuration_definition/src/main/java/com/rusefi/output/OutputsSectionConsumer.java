@@ -11,7 +11,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
     private final ReaderState state;
-    private final CharArrayWriter tsWriter = new CharArrayWriter();
+    private final StringBuilder tsWriter = new StringBuilder();
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName, ReaderState state) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
@@ -19,8 +19,8 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
-    public CharArrayWriter getTsWriter() {
-        return tsWriter;
+    public String getContent() {
+        return tsWriter.toString();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
-                fos.write(tsWriter.toCharArray());
+                fos.write(tsWriter.toString());
                 fos.close();
             }
         }

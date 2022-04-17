@@ -6,7 +6,6 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
 import java.io.IOException;
-import java.io.Writer;
 
 import static com.rusefi.ToolUtil.EOL;
 
@@ -28,15 +27,15 @@ public class TsOutput {
         return settingContextHelp;
     }
 
-    private int writeTunerStudio(FieldIterator it, String prefix, Writer tsHeader, int tsPosition) throws IOException {
+    private int writeTunerStudio(FieldIterator it, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
         ConfigField configField = it.cf;
         ConfigField next = it.next;
         int bitIndex = it.bitState.get();
         String nameWithPrefix = prefix + configField.getName();
 
         if (configField.isDirective() && configField.getComment() != null) {
-            tsHeader.write(configField.getComment());
-            tsHeader.write(EOL);
+            tsHeader.append(configField.getComment());
+            tsHeader.append(EOL);
             return tsPosition;
         }
 
@@ -52,13 +51,13 @@ public class TsOutput {
         }
 
         if (configField.isBit()) {
-            tsHeader.write(nameWithPrefix + " = bits, U32,");
-            tsHeader.write(" " + tsPosition + ", [");
-            tsHeader.write(bitIndex + ":" + bitIndex);
-            tsHeader.write("]");
+            tsHeader.append(nameWithPrefix + " = bits, U32,");
+            tsHeader.append(" " + tsPosition + ", [");
+            tsHeader.append(bitIndex + ":" + bitIndex);
+            tsHeader.append("]");
             if (isConstantsSection)
-                tsHeader.write(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
-            tsHeader.write(EOL);
+                tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
+            tsHeader.append(EOL);
 
             tsPosition += configField.getSize(next);
             return tsPosition;
@@ -71,46 +70,46 @@ public class TsOutput {
             }
 
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
-            tsHeader.write(nameWithPrefix + " = " + bits);
+            tsHeader.append(nameWithPrefix + " = " + bits);
 
             if (!configField.getName().equals(next.getName()))
                 tsPosition += configField.getState().tsCustomSize.get(configField.getType());
         } else if (configField.getTsInfo() == null) {
             throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at " + prefix);
         } else if (configField.getArraySizes().length == 0) {
-            tsHeader.write(nameWithPrefix + " = scalar, ");
-            tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
-            tsHeader.write(" " + tsPosition + ",");
-            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
+            tsHeader.append(nameWithPrefix + " = scalar, ");
+            tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
+            tsHeader.append(" " + tsPosition + ",");
+            tsHeader.append(" " + handleTsInfo(configField.getTsInfo(), 1));
             if (!configField.getName().equals(next.getName()))
                 tsPosition += configField.getSize(next);
         } else if (configField.getSize(next) == 0) {
             // write nothing for empty array
             // TS does not like those
         } else {
-            tsHeader.write(nameWithPrefix + " = array, ");
-            tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
-            tsHeader.write(" " + tsPosition + ",");
-            tsHeader.write(" [");
+            tsHeader.append(nameWithPrefix + " = array, ");
+            tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
+            tsHeader.append(" " + tsPosition + ",");
+            tsHeader.append(" [");
             boolean first = true;
             for (int size : configField.getArraySizes()) {
                 if (first) {
                     first = false;
                 } else {
-                    tsHeader.write("x");
+                    tsHeader.append("x");
                 }
-                tsHeader.write(Integer.toString(size));
+                tsHeader.append(Integer.toString(size));
             }
-            tsHeader.write("], " + handleTsInfo(configField.getTsInfo(), 1));
+            tsHeader.append("], " + handleTsInfo(configField.getTsInfo(), 1));
 
             if (!configField.getName().equals(next.getName()))
                 tsPosition += configField.getSize(next);
         }
-        tsHeader.write(EOL);
+        tsHeader.append(EOL);
         return tsPosition;
     }
 
-    protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
+    protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
         FieldIterator iterator = new FieldIterator(configStructure.tsFields);
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             iterator.start(i);
