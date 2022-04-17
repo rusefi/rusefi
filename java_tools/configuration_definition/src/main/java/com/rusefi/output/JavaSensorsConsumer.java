@@ -10,10 +10,6 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
     private final StringBuilder sb = new StringBuilder();
 
-    public JavaSensorsConsumer(int sensorTsPosition) {
-        this.sensorTsPosition = sensorTsPosition;
-    }
-
     @Override
     public void startFile() {
     }

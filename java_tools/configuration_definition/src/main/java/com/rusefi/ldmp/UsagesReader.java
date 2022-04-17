@@ -68,7 +68,7 @@ public class UsagesReader {
     }
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
-        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(0);
+        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
 
         EntryHandler handler = new EntryHandler() {
 

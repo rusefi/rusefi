@@ -28,7 +28,7 @@ public class JavaSensorsConsumerTest {
                 "\tuint8_t vehicleSpeedKph\n" +
                 "\tint8_t autoscale internalMcuTemperature;mcu;\"deg C\",1, 0, 0, 0, 0\n" +
                 "end_struct\n";
-        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(0);
+        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         state.readBufferedReader(outputChannels, javaSensorsConsumer);
 
         assertEquals("RPMValue(\"hello\", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4, 1.0, 0.0, 8000.0, \"RPM\"),\n" +
