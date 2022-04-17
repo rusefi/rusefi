@@ -11,7 +11,6 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
     private final ReaderState state;
-    private final StringBuilder tsWriter = new StringBuilder();
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName, ReaderState state) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
@@ -20,7 +19,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     }
 
     public String getContent() {
-        return tsWriter.toString();
+        return tsOutput.getContent();
     }
 
     @Override
@@ -28,11 +27,11 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         System.out.println("handleEndStruct");
 
         if (state.stack.isEmpty()) {
-            tsOutput.writeFields(structure, "", tsWriter, 0);
+            tsOutput.writeFields(structure, "", 0);
 
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
-                fos.write(tsWriter.toString());
+                fos.write(tsOutput.getContent());
                 fos.close();
             }
         }

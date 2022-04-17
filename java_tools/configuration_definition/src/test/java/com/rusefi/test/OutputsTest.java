@@ -58,7 +58,8 @@ public class OutputsTest {
                 "unusedBit_4_29 = bits, U32, 5, [29:29]\n" +
                 "unusedBit_4_30 = bits, U32, 5, [30:30]\n" +
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
-                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getContent()));
+                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n" +
+                "; total TS size = 12\n", tsProjectConsumer.getContent());
 
     }
 
