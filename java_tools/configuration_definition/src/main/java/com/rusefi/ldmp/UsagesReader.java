@@ -25,12 +25,14 @@ public class UsagesReader {
             "\n" +
             "typedef enum {\n");
 
+    private StringBuilder totalSensors = new StringBuilder();
+
+    private StringBuilder fancyNewStuff = new StringBuilder();
+
     private final StringBuilder fragmentsContent = new StringBuilder(
             header +
                     "#include \"pch.h\"\n" +
                     "#include \"tunerstudio.h\"\n");
-
-    int sensorTsPosition = 0;
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -41,11 +43,32 @@ public class UsagesReader {
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(new FileReader(yamlFileName));
 
-        StringBuilder totalSensors = new StringBuilder();
-
-        StringBuilder fancyNewStuff = new StringBuilder();
-
         UsagesReader usagesReader = new UsagesReader();
+
+        int sensorTsPosition = usagesReader.handleYaml(data, null);
+        usagesReader.writeFiles();
+
+        log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
+        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
+            fw.write(header);
+            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
+        }
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
+            fw.write(usagesReader.totalSensors.toString());
+        }
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/wip.ini")) {
+            fw.write(usagesReader.fancyNewStuff.toString());
+        }
+    }
+
+    interface EntryHandler {
+        void onEntry(String name, List elements) throws IOException;
+    }
+
+    private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
+        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(0);
 
         EntryHandler handler = new EntryHandler() {
 
@@ -54,7 +77,7 @@ public class UsagesReader {
                 String javaName = (String) elements.get(0);
                 String folder = (String) elements.get(1);
 
-                int startingPosition = usagesReader.sensorTsPosition;
+                int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition);
 
                 boolean withCDefines = false;
@@ -78,7 +101,6 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(usagesReader.sensorTsPosition);
                 state.addDestination(javaSensorsConsumer);
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
@@ -88,40 +110,11 @@ public class UsagesReader {
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
                 state.doJob();
 
-                usagesReader.sensorTsPosition = javaSensorsConsumer.sensorTsPosition;
-                totalSensors.append(javaSensorsConsumer.getContent());
-
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
 
-                int size = usagesReader.sensorTsPosition - startingPosition;
-
-                log.info("Done with " + name + " at " + usagesReader.sensorTsPosition);
+                log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
             }
         };
-
-        usagesReader.handleYaml(data, handler);
-        usagesReader.writeFiles();
-
-        log.info("TS_TOTAL_OUTPUT_SIZE=" + usagesReader.sensorTsPosition);
-        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
-            fw.write(header);
-            fw.write("#define TS_TOTAL_OUTPUT_SIZE " + usagesReader.sensorTsPosition);
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
-            fw.write(totalSensors.toString());
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/wip.ini")) {
-            fw.write(fancyNewStuff.toString());
-        }
-    }
-
-    interface EntryHandler {
-        void onEntry(String name, List elements) throws IOException;
-    }
-
-    private void handleYaml(Map<String, Object> data, EntryHandler handler) throws IOException {
 
         LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
 
@@ -148,9 +141,13 @@ public class UsagesReader {
         }
         enumContent.append("} live_data_e;\n");
 
+        totalSensors.append(javaSensorsConsumer.getContent());
+
         fragmentsContent
             .append("};\n\n")
             .append("FragmentList getFragments() {\n\treturn { fragments, efi::size(fragments) };\n}\n");
+
+        return javaSensorsConsumer.sensorTsPosition;
 
     }
 
