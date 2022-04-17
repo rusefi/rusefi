@@ -6,6 +6,7 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.rusefi.ToolUtil.EOL;
 
@@ -53,7 +54,7 @@ public class TsOutput {
 
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return writeFields(cs, prefix + extraPrefix, tsPosition);
+            return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
         }
 
         if (configField.isBit()) {
@@ -115,9 +116,15 @@ public class TsOutput {
         return tsPosition;
     }
 
-    protected int writeFields(ConfigStructure configStructure, String prefix, int tsPosition) throws IOException {
-        FieldIterator iterator = new FieldIterator(configStructure.tsFields);
-        for (int i = 0; i < configStructure.tsFields.size(); i++) {
+    public void run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+        if (state.stack.isEmpty()) {
+            writeFields(structure.tsFields, "", sensorTsPosition);
+        }
+    }
+
+    protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
+        FieldIterator iterator = new FieldIterator(tsFields);
+        for (int i = 0; i < tsFields.size(); i++) {
             iterator.start(i);
 
             tsPosition = writeOneField(iterator, prefix, tsPosition);
