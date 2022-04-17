@@ -12,4 +12,5 @@ COMMON_GEN_CONFIG="
  -with_c_defines false \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \
+ -prepend console/binary/generated/fragments_meta.h \
  -definition integration/rusefi_config.txt"
