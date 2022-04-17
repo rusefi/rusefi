@@ -70,7 +70,7 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(state, usagesReader.sensorTsPosition);
+                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(usagesReader.sensorTsPosition);
                 state.addDestination(javaSensorsConsumer);
 
                 state.addPrepend(prepend);
