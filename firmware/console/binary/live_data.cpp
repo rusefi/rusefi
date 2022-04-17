@@ -17,7 +17,11 @@ const high_pressure_fuel_pump_s* getLiveDataAddr() {
 
 template<>
 const launch_control_state_s* getLiveDataAddr() {
+#if EFI_LAUNCH_CONTROL
 	return &engine->launchController;
+#else
+	return nullptr;
+#endif
 }
 
 template<>
@@ -71,7 +75,11 @@ const trigger_central_s* getLiveDataAddr() {
 
 template<>
 const trigger_state_s* getLiveDataAddr() {
+#if EFI_SHAFT_POSITION_INPUT
 	return &engine->triggerCentral.triggerState;
+#else
+	return nullptr;
+#endif
 }
 
 template<>
