@@ -243,6 +243,18 @@ jobs:
         sudo apt-get install zip
         sudo apt-get install dosfstools
 
+    - name: Generate Live Documentation
+      if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
+      # live_data_ids.h is generated above so order of operations is important here!
+    - name: Generate Enum Strings
+      if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
+      # depends on gen_live_documentation.sh for instance TS_TOTAL_OUTPUT_SIZE
     - name: Generate Default config
       if: ${{ env.skip != 'true' }}
       # todo: why do we even need this 'gen_config_default.sh' here?!
@@ -268,17 +280,6 @@ jobs:
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
-
-    - name: Generate Live Documentation
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
-
-    # live_data_ids.h is generated above so order of operations is important here!
-    - name: Generate Enum Strings
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC

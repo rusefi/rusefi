@@ -11,4 +11,5 @@ COMMON_GEN_CONFIG="
  -triggerFolder ../unit_tests \
  -with_c_defines false \
  -initialize_to_zero false \
+ -prepend console/binary/generated/total_live_data_generated.h \
  -definition integration/rusefi_config.txt"
