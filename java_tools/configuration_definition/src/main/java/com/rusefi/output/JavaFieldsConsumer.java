@@ -51,7 +51,8 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            protected int writeOneField(FieldIterator iterator, ConfigField _configField, String prefix, int tsPosition, ConfigField _next, int _bitIndex, ConfigField prev) throws IOException {
+            protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) throws IOException {
+                ConfigField prev = iterator.getPrev();
                 ConfigField configField = iterator.cf;
                 ConfigField next = iterator.next;
                 int bitIndex = iterator.bitState.get();
