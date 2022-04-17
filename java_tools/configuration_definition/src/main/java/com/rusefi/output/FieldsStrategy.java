@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class FieldsStrategy {
-    public void run(ReaderState state, ConfigStructure structure) throws IOException {
+    public void run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
         if (state.stack.isEmpty()) {
-            writeJavaFields(structure.tsFields, "", 0);
+            writeJavaFields(structure.tsFields, "", sensorTsPosition);
         }
     }
 

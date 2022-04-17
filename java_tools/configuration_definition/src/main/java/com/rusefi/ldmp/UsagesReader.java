@@ -106,7 +106,7 @@ public class UsagesReader {
         }
 
         try (FileWriter fw = new FileWriter("console/binary/generated/wip.ini")) {
-            fw.write(totalSensors.toString());
+            fw.write(fancyNewStuff.toString());
         }
     }
 
