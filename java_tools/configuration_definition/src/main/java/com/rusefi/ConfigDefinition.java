@@ -228,8 +228,7 @@ public class ConfigDefinition {
             state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null) {
-            CharArrayWriter tsWriter = new CharArrayWriter();
-            state.destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
+            state.destinations.add(new TSProjectConsumer(tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable

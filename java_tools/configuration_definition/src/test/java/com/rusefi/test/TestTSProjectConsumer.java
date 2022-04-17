@@ -6,8 +6,8 @@ import com.rusefi.output.TSProjectConsumer;
 import java.io.CharArrayWriter;
 
 public class TestTSProjectConsumer extends TSProjectConsumer {
-    public TestTSProjectConsumer(CharArrayWriter writer, String tsPath, ReaderState state) {
-        super(writer, tsPath, state);
+    public TestTSProjectConsumer(String tsPath, ReaderState state) {
+        super(tsPath, state);
     }
 
     @Override

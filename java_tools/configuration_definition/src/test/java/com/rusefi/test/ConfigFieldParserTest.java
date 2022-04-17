@@ -10,10 +10,7 @@ import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.*;
 
@@ -58,12 +55,11 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        CharArrayWriter writer = new CharArrayWriter();
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "; total TS size = 8\n", new String(writer.toCharArray()));
+                "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -89,11 +85,10 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        CharArrayWriter writer = new CharArrayWriter();
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "; total TS size = 4\n", new String(writer.toCharArray()));
+                "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
 
     @Test
@@ -162,16 +157,15 @@ public class ConfigFieldParserTest {
                 "end_struct\n" +
                 "";
 
-        CharArrayWriter writer = new CharArrayWriter();
         ReaderState state = new ReaderState();
-        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
 
         state.readBufferedReader(test, (tsProjectConsumer));
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
-                "; total TS size = 20\n", new String(writer.toCharArray()));
+                "; total TS size = 20\n", tsProjectConsumer.getContent());
     }
 
     @Test
@@ -376,8 +370,7 @@ public class ConfigFieldParserTest {
         "end_struct\n";
         ReaderState state = new ReaderState();
 
-        CharArrayWriter writer = new CharArrayWriter();
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -413,7 +406,7 @@ public class ConfigFieldParserTest {
                 "pid_unusedBit_4_29 = bits, U32, 8, [29:29], \"false\", \"true\"\n" +
                 "pid_unusedBit_4_30 = bits, U32, 8, [30:30], \"false\", \"true\"\n" +
                 "pid_unusedBit_4_31 = bits, U32, 8, [31:31], \"false\", \"true\"\n" +
-                "; total TS size = 12\n", new String(writer.toCharArray()));
+                "; total TS size = 12\n", tsProjectConsumer.getContent());
         assertEquals(
                 "\tpid_afr_type = \"PID dTime\"\n" +
                 "\tpid_afr_typet = \"PID dTime\"\n" +

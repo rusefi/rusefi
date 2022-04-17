@@ -13,21 +13,27 @@ import static com.rusefi.ToolUtil.EOL;
  * Same code is used to generate [Constants] and [OutputChannels] bodies, with just one flag controlling the minor
  * difference in behaviours
  */
+@SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final ReaderState state;
     private final boolean isConstantsSection;
+    private final StringBuilder tsHeader = new StringBuilder();
 
     public TsOutput(ReaderState state, boolean longForm) {
         this.state = state;
         this.isConstantsSection = longForm;
     }
 
+    public String getContent() {
+        return tsHeader.toString();
+    }
+
     public StringBuilder getSettingContextHelp() {
         return settingContextHelp;
     }
 
-    private int writeOneField(FieldIterator it, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
+    private int writeOneField(FieldIterator it, String prefix, int tsPosition) throws IOException {
         ConfigField configField = it.cf;
         ConfigField next = it.next;
         int bitIndex = it.bitState.get();
@@ -47,7 +53,7 @@ public class TsOutput {
 
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return writeFields(cs, prefix + extraPrefix, tsHeader, tsPosition);
+            return writeFields(cs, prefix + extraPrefix, tsPosition);
         }
 
         if (configField.isBit()) {
@@ -98,7 +104,7 @@ public class TsOutput {
                 } else {
                     tsHeader.append("x");
                 }
-                tsHeader.append(Integer.toString(size));
+                tsHeader.append(size);
             }
             tsHeader.append("], " + handleTsInfo(configField.getTsInfo(), 1));
 
@@ -109,14 +115,18 @@ public class TsOutput {
         return tsPosition;
     }
 
-    protected int writeFields(ConfigStructure configStructure, String prefix, Appendable tsHeader, int tsPosition) throws IOException {
+    protected int writeFields(ConfigStructure configStructure, String prefix, int tsPosition) throws IOException {
         FieldIterator iterator = new FieldIterator(configStructure.tsFields);
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             iterator.start(i);
 
-            tsPosition = writeOneField(iterator, prefix, tsHeader, tsPosition);
+            tsPosition = writeOneField(iterator, prefix, tsPosition);
 
             iterator.end();
+        }
+        if (prefix.isEmpty()) {
+            // empty prefix means top level
+            tsHeader.append("; total TS size = " + tsPosition + EOL);
         }
         return tsPosition;
     }

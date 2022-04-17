@@ -21,14 +21,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
 
-    private final CharArrayWriter tsWriter;
     private final String tsPath;
     private final ReaderState state;
     private int totalTsSize;
     private final TsOutput tsOutput;
 
-    public TSProjectConsumer(CharArrayWriter tsWriter, String tsPath, ReaderState state) {
-        this.tsWriter = tsWriter;
+    public TSProjectConsumer(String tsPath, ReaderState state) {
         this.tsPath = tsPath;
         tsOutput = new TsOutput(state, true);
         this.state = state;
@@ -142,16 +140,19 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        writeTunerStudioFile(tsPath, tsWriter.toString());
+        writeTunerStudioFile(tsPath, getContent());
     }
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
-            totalTsSize = tsOutput.writeFields(structure, "", tsWriter, 0);
-            tsWriter.write("; total TS size = " + totalTsSize + EOL);
+            totalTsSize = tsOutput.writeFields(structure, "", 0);
             state.variableRegistry.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
+    }
+
+    public String getContent() {
+        return tsOutput.getContent();
     }
 }

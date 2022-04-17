@@ -8,7 +8,6 @@ import org.junit.Test;
 
 import java.io.CharArrayWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
@@ -41,9 +40,8 @@ public class TSProjectConsumerTest {
                 "end_struct\n" +
                 "";
 
-        CharArrayWriter writer = new CharArrayWriter();
         ReaderState state = new ReaderState();
-        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
 
@@ -62,7 +60,7 @@ public class TSProjectConsumerTest {
                 "afrTable = array, U08, 2, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "#endif\n" +
                 "periodMs = scalar, S16, 18, \"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "; total TS size = 20\n", new String(writer.toCharArray()));
+                "; total TS size = 20\n", tsProjectConsumer.getContent());
 
         assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT16).setScale(1.0);\n" +
                         "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 2, FieldType.INT).setScale(1.0);\n" +
