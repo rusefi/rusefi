@@ -24,7 +24,7 @@
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
-class EtbController : public IEtbController, electronic_throttle_s {
+class EtbController : public IEtbController, public electronic_throttle_s {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
 	void setIdlePosition(percent_t pos) override;

@@ -40,6 +40,7 @@
 #include "gear_detector.h"
 #include "advance_map.h"
 #include "fan_control.h"
+#include "electronic_throttle_impl.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -166,7 +167,7 @@ public:
 
 	PinRepository pinRepository;
 
-	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	EtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 
 	type_list<
