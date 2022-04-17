@@ -2,6 +2,7 @@ package com.rusefi.ldmp;
 
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.output.FragmentDialogConsumer;
 import com.rusefi.output.JavaSensorsConsumer;
 import com.rusefi.util.SystemOut;
 import org.yaml.snakeyaml.Yaml;
@@ -40,6 +41,8 @@ public class UsagesReader {
 
         StringBuilder totalSensors = new StringBuilder();
 
+        StringBuilder fancyNewStuff = new StringBuilder();
+
         UsagesReader usagesReader = new UsagesReader();
 
         EntryHandler handler = new EntryHandler() {
@@ -72,6 +75,8 @@ public class UsagesReader {
 
                 JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(usagesReader.sensorTsPosition);
                 state.addDestination(javaSensorsConsumer);
+                FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
+                state.addDestination(fragmentDialogConsumer);
 
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
@@ -80,6 +85,8 @@ public class UsagesReader {
 
                 usagesReader.sensorTsPosition = javaSensorsConsumer.sensorTsPosition;
                 totalSensors.append(javaSensorsConsumer.getContent());
+
+                fancyNewStuff.append(fragmentDialogConsumer.getContent());
 
                 SystemOut.println("TS_TOTAL_OUTPUT_SIZE=" + usagesReader.sensorTsPosition);
             }
@@ -95,6 +102,10 @@ public class UsagesReader {
 
 
         try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
+            fw.write(totalSensors.toString());
+        }
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/wip.ini")) {
             fw.write(totalSensors.toString());
         }
     }
