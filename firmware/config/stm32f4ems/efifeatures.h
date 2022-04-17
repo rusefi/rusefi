@@ -84,7 +84,9 @@
 /**
  * TunerStudio support.
  */
+#ifndef EFI_TUNER_STUDIO
 #define EFI_TUNER_STUDIO TRUE
+#endif
 
 /**
  * Bluetooth UART setup support.
@@ -103,11 +105,15 @@
 /**
  * Dev console support.
  */
+#ifndef EFI_CLI_SUPPORT
 #define EFI_CLI_SUPPORT TRUE
+#endif
 
 #define EFI_RTC TRUE
 
+#ifndef EFI_ALTERNATOR_CONTROL
 #define EFI_ALTERNATOR_CONTROL TRUE
+#endif
 
 #define EFI_AUX_PID TRUE
 
