@@ -33,9 +33,26 @@ public class FragmentDialogConsumerTest {
         state.readBufferedReader(outputChannels, fragmentDialogConsumer);
 
         assertEquals("indicatorPanel = ac_stateIndicatorPanel, 2\n" +
-                        "indicator = {sd_present}, \"No\", \"Yes\"\n" +
-                        "indicator = {sd_present2}, \"No\", \"Yes\"\n" +
-                        "indicator = {sd_present3}, \"No\", \"Yes\"\n",
+                        "\tindicator = {sd_present}, \"No\", \"Yes\"\n" +
+                        "\tindicator = {sd_present2}, \"No\", \"Yes\"\n" +
+                        "\tindicator = {sd_present3}, \"No\", \"Yes\"\n" +
+                        "\n" +
+                        "liveGraph = ac_stateGraph, \"Graph\", South\n" +
+                        "\tgraphLine = sd_present\n" +
+                        "\tgraphLine = sd_present2\n" +
+                        "\tgraphLine = sd_present3\n" +
+                        "\tgraphLine = RPMValue\n" +
+                        "\tgraphLine = rpmAcceleration\n" +
+                        "\tgraphLine = speedToRpmRatio\n" +
+                        "\tgraphLine = alignmentFill_at_10\n" +
+                        "\tgraphLine = luaTimingMult\n" +
+                        "\tgraphLine = vehicleSpeedKph\n" +
+                        "\tgraphLine = internalMcuTemperature\n" +
+                        "\tgraphLine = alignmentFill_at_18\n" +
+                        "\n" +
+                        "dialog = ac_stateDialog, \"ac_state\"\n" +
+                        "\tpanel = ac_stateIndicatorPanel\n" +
+                        "\tpanel = ac_stateGraph\n",
                 fragmentDialogConsumer.getContent());
 
     }

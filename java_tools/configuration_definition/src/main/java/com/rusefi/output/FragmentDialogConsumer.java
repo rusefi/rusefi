@@ -2,11 +2,14 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
+import static com.rusefi.output.JavaSensorsConsumer.quote;
+
 public class FragmentDialogConsumer implements ConfigurationConsumer {
-    private final StringBuilder sb = new StringBuilder();
+    private final StringBuilder graphLines = new StringBuilder();
 
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
@@ -37,13 +40,13 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
                     if (!hasIndicators) {
                         hasIndicators = true;
-                        indicatorPanel.append("indicatorPanel = " +
-                                fragmentName +
-                                "IndicatorPanel, 2\n");
+                        indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
-                    indicatorPanel.append("indicator = {" + configField.getName() + "}, \"No\", \"Yes\"\n");
+                    indicatorPanel.append("\tindicator = {" + configField.getName() + "}, \"No\", \"Yes\"\n");
 
                 }
+
+                graphLines.append("\tgraphLine = " + configField.getName() + "\n");
 
 
                 return 0;
@@ -53,7 +56,32 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
     }
 
+    @NotNull
+    private String getPanelName() {
+        return fragmentName + "IndicatorPanel";
+    }
+
     public String getContent() {
-        return indicatorPanel + sb.toString();
+
+        String dialogDeclaration = "dialog = " + fragmentName + "Dialog, " + quote(fragmentName) + "\n";
+
+        String indicatorPanelUsageLine = (indicatorPanel.length() > 0) ? "\tpanel = " + getPanelName() + "\n" : "";
+
+
+        String liveGraphControlDeclaration = "liveGraph = " + getGraphControlName() +
+                ", " + quote("Graph") + ", South\n";
+
+        return indicatorPanel + "\n" +
+                liveGraphControlDeclaration +
+                graphLines + "\n" +
+                dialogDeclaration +
+                indicatorPanelUsageLine +
+                "\tpanel = " + getGraphControlName() + "\n"
+                ;
+    }
+
+    @NotNull
+    private String getGraphControlName() {
+        return fragmentName + "Graph";
     }
 }

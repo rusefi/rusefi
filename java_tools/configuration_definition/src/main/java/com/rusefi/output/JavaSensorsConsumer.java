@@ -64,8 +64,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
         fieldsStrategy.run(readerState, structure);
     }
 
-
-    private static String quote(String string) {
+    public static String quote(String string) {
         return "\"" + string + "\"";
     }
 
