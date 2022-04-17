@@ -85,8 +85,8 @@ public class TSProjectConsumerTest {
                 "\t * offset 18\n" +
                 "\t */\n" +
                 "\tint16_t periodMs = (int16_t)0;\n" +
-                "\t/** total size 20*/\n" +
                 "};\n" +
+                "static_assert(sizeof(pid_s) == 20);\n" +
                 "\n", consumer.getContent().toString());
     }
 }

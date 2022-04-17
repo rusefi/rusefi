@@ -78,8 +78,9 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             iterator.end();
         }
 
-        content.append("\t/** total size " + iterator.currentOffset + "*/" + EOL);
-        content.append("};" + EOL + EOL);
+        content.append("};" + EOL);
+        content.append("static_assert(sizeof(" + structure.name + ") == " + iterator.currentOffset + ");\n");
+        content.append(EOL);
     }
 
     public StringBuilder getContent() {

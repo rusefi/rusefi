@@ -290,8 +290,8 @@ public class ConfigFieldParserTest {
                 "\t * offset 0\n" +
                 "\t */\n" +
                 "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
-                "\t/** total size 4*/\n" +
                 "};\n" +
+                "static_assert(sizeof(pid_s) == 4);\n" +
                 "\n", consumer.getContent().toString());
     }
 
