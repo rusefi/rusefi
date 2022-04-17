@@ -6,8 +6,6 @@ import com.rusefi.output.*;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -60,7 +58,7 @@ public class OutputsTest {
                 "unusedBit_4_29 = bits, U32, 5, [29:29]\n" +
                 "unusedBit_4_30 = bits, U32, 5, [30:30]\n" +
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
-                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getTsWriter().toCharArray()));
+                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getContent()));
 
     }
 
