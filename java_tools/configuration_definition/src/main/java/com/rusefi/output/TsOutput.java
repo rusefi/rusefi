@@ -8,6 +8,7 @@ import com.rusefi.TypesHelper;
 import java.io.IOException;
 
 import static com.rusefi.ToolUtil.EOL;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * Same code is used to generate [Constants] and [OutputChannels] bodies, with just one flag controlling the minor
@@ -81,8 +82,6 @@ public class TsOutput {
 
                     if (!configField.getName().equals(next.getName()))
                         tsPosition += configField.getState().tsCustomSize.get(configField.getType());
-                } else if (configField.getTsInfo() == null) {
-                    throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at " + prefix);
                 } else if (configField.getArraySizes().length == 0) {
                     tsHeader.append(nameWithPrefix + " = scalar, ");
                     tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -125,6 +124,13 @@ public class TsOutput {
     }
 
     private String handleTsInfo(String tsInfo, int multiplierIndex) {
+        if (tsInfo == null) {
+            if (isConstantsSection) {
+                throw new IllegalStateException("todo: implement default tsInfo for long form");
+            }
+            // default units and scale
+            return quote("") + ", 1, 0";
+        }
         try {
             String[] fields = tsInfo.split(",");
             if (fields.length > multiplierIndex) {
