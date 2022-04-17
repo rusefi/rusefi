@@ -189,38 +189,6 @@ public class ConfigDefinition {
 
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
-/*
-
-        // Parse the input files
-        {
-
-            // Load prepend files
-            {
-                // Ignore duplicates of definitions made during prepend phase
-                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
-
-                for (String prependFile : state.prependFiles) {
-                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
-                }
-            }
-
-            // Now load the main config file
-            {
-                // don't allow duplicates in the main file
-                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), state.definitionInputFile);
-            }
-
-            // Write C structs
-            // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
-
-            // Write tunerstudio layout
-            // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
-        }
-*/
-
         if (tsOutputsDestination != null) {
             /**
              * we have one JVM instance produce output section based on model fragments, and then
