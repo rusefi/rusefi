@@ -20,7 +20,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_CONDITION = "@@if_";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
-    public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
 
     private final CharArrayWriter tsWriter;
     private final String tsPath;
@@ -133,8 +132,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return token;
     }
 
-    public static String getTsFileOutputName(String tsPath) {
-        return tsPath + File.separator + TS_FILE_OUTPUT_NAME;
+    private String getTsFileOutputName(String tsPath) {
+        return tsPath + File.separator + state.tsFileOutputName;
     }
 
     public static String getTsFileInputName(String tsPath) {

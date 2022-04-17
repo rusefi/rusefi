@@ -37,6 +37,7 @@ public class ReaderState {
     public final Map<String, ConfigStructure> structures = new HashMap<>();
     public String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
+    public String tsFileOutputName = "rusefi.ini";
     String definitionInputFile = null;
     public boolean withC_Defines = true;
     List<String> prependFiles = new ArrayList<>();
