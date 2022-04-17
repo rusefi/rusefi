@@ -17,6 +17,7 @@ public class OutputsTest {
                 "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "angle_t m_requested_pump;Computed requested pump duration in degrees (not including deadtime)\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
@@ -59,7 +60,8 @@ public class OutputsTest {
                 "unusedBit_4_30 = bits, U32, 5, [30:30]\n" +
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
                 "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n" +
-                "; total TS size = 12\n", tsProjectConsumer.getContent());
+                "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
+                "; total TS size = 16\n", tsProjectConsumer.getContent());
 
     }
 
