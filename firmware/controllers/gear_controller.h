@@ -13,7 +13,9 @@ public:
 	virtual void update();
 	gear_e getDesiredGear() const;
 	virtual void init();
-	GearControllerMode mode = GearControllerMode::None;
+	GearControllerMode getMode() {
+		return GearControllerMode::ButtonShift;
+	}
 private:
 	gear_e desiredGear = NEUTRAL;
 protected:

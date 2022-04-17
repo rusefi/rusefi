@@ -16,8 +16,10 @@ public:
 	ButtonShiftController();
 
 	void update() override;
-	void init() override;
-	GearControllerMode mode = GearControllerMode::ButtonShift;
+  void init() override;
+	GearControllerMode getMode() {
+		return GearControllerMode::ButtonShift;
+	}
 private:
 	ButtonDebounce debounceUp;
 	ButtonDebounce debounceDown;

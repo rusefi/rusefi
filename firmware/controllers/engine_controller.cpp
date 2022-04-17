@@ -227,7 +227,7 @@ static void doPeriodicSlowCallback() {
 	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
 		if (engine->gearController == NULL) {
 			initGearController();
-		} else if (engine->gearController->mode != engineConfiguration->gearControllerMode) {
+		} else if (engine->gearController->getMode() != engineConfiguration->gearControllerMode) {
 			initGearController();
 		}
 		engine->gearController->update();
