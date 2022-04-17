@@ -51,7 +51,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            protected int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex, ConfigField prev) throws IOException {
+            protected int writeOneField(FieldIterator iterator, ConfigField _configField, String prefix, int tsPosition, ConfigField _next, int _bitIndex, ConfigField prev) throws IOException {
+                ConfigField configField = iterator.cf;
+                ConfigField next = iterator.next;
+                int bitIndex = iterator.bitState.get();
+
                 if (configField.isDirective())
                     return tsPosition;
                 // skip duplicate names which happens in case of conditional compilation
@@ -61,7 +65,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 ConfigStructure cs = configField.getState().structures.get(configField.getType());
                 if (cs != null) {
                     String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-                    return writeJavaFields(cs.tsFields, prefix + extraPrefix, tsPosition);
+                    return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
                 }
 
                 String nameWithPrefix = prefix + configField.getName();

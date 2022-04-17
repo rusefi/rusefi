@@ -25,7 +25,10 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            public int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int i, ConfigField prev) {
+            public int writeOneField(FieldIterator iterator, ConfigField _configField, String prefix, int tsPosition, ConfigField _next, int i, ConfigField prev) {
+                ConfigField configField = iterator.cf;
+                ConfigField next = iterator.next;
+
                 if (configField.isBit()) {
                     // do not support bits for now but need to account for size
                     tsPosition += configField.getSize(next);

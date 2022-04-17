@@ -32,7 +32,11 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             @Override
-            int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex, ConfigField prev) throws IOException {
+            int writeOneField(FieldIterator iterator, ConfigField _configField, String prefix, int tsPosition, ConfigField _next, int _bitIndex, ConfigField prev) {
+                ConfigField configField = iterator.cf;
+                ConfigField next = iterator.next;
+                int bitIndex = iterator.bitState.get();
+
                 if (configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX))
                     return 0;
 
