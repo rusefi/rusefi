@@ -44,7 +44,6 @@ public class UsagesReader {
         StringBuilder totalSensors = new StringBuilder();
 
         StringBuilder fancyNewStuff = new StringBuilder();
-        StringBuilder fragmentsMeta = new StringBuilder(header);
 
         UsagesReader usagesReader = new UsagesReader();
 
@@ -95,7 +94,6 @@ public class UsagesReader {
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
 
                 int size = usagesReader.sensorTsPosition - startingPosition;
-                fragmentsMeta.append("#define FRAGMENT_" + name.toUpperCase() + "_SIZE " + size + "\n");
 
                 log.info("Done with " + name + " at " + usagesReader.sensorTsPosition);
             }
@@ -108,10 +106,6 @@ public class UsagesReader {
         try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
             fw.write(header);
             fw.write("#define TS_TOTAL_OUTPUT_SIZE " + usagesReader.sensorTsPosition);
-        }
-
-        try (FileWriter fw = new FileWriter("console/binary/generated/fragments_meta.h")) {
-            fw.write(fragmentsMeta.toString());
         }
 
         try (FileWriter fw = new FileWriter("console/binary/generated/sensors.java")) {
