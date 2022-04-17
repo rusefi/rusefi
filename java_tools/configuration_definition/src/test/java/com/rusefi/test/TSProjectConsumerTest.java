@@ -6,7 +6,6 @@ import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
@@ -65,7 +64,7 @@ public class TSProjectConsumerTest {
         assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT16).setScale(1.0);\n" +
                         "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 2, FieldType.INT).setScale(1.0);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 18, FieldType.INT16).setScale(1.0);\n",
-                javaFieldsConsumer.getJavaFieldsWriter());
+                javaFieldsConsumer.getContent());
 
 
         assertEquals("// start of pid_s\n" +

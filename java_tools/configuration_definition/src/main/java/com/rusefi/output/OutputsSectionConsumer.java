@@ -10,12 +10,10 @@ import java.io.*;
 public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
-    private final ReaderState state;
 
-    public OutputsSectionConsumer(String tsOutputsSectionFileName, ReaderState state) {
+    public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
-        tsOutput = new TsOutput(state, false);
-        this.state = state;
+        tsOutput = new TsOutput(false);
     }
 
     public String getContent() {
@@ -28,7 +26,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
         tsOutput.run(readerState, structure, 0);
 
-        if (state.stack.isEmpty()) {
+        if (readerState.stack.isEmpty()) {
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
                 fos.write(tsOutput.getContent());

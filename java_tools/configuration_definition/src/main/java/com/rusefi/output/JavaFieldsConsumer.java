@@ -3,7 +3,6 @@ package com.rusefi.output;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +13,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     // todo: why is this field 'static'?
     protected static final Set<String> javaEnums = new HashSet<>();
 
-    private final CharArrayWriter javaFieldsWriter = new CharArrayWriter();
+    private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
     protected final ReaderState state;
 
@@ -22,15 +21,15 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
-    public String getJavaFieldsWriter() {
-        return javaFieldsWriter.toString();
+    public String getContent() {
+        return content.toString();
     }
 
     private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) throws IOException {
-        javaFieldsWriter.write("\tpublic static final Field ");
+        content.append("\tpublic static final Field ");
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
-        javaFieldsWriter.write(nameWithPrefix.toUpperCase());
-        javaFieldsWriter.write(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
+        content.append(nameWithPrefix.toUpperCase());
+        content.append(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
                 + tsPosition + ", ");
     }
 
@@ -73,20 +72,20 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
                 if (configField.isBit()) {
                     writeJavaFieldName(nameWithPrefix, tsPosition, 1);
-                    javaFieldsWriter.append("FieldType.BIT, " + bitIndex + ");" + EOL);
+                    content.append("FieldType.BIT, " + bitIndex + ");" + EOL);
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
 
                 if (TypesHelper.isFloat(configField.getType())) {
                     writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
-                    javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
+                    content.append("FieldType.FLOAT);" + EOL);
                 } else {
                     String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
 
                     if (enumOptions != null && !javaEnums.contains(configField.getType())) {
                         javaEnums.add(configField.getType());
-                        javaFieldsWriter.write("\tpublic static final String[] " + configField.getType() + " = {" + enumOptions + "};" + EOL);
+                        content.append("\tpublic static final String[] " + configField.getType() + " = {" + enumOptions + "};" + EOL);
                     }
 
 
@@ -95,14 +94,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                         String custom = state.tsCustomLine.get(configField.getType());
                         String[] tokens = custom.split(",");
                         String stringSize = tokens[3].trim();
-                        javaFieldsWriter.write(stringSize + ", FieldType.STRING");
+                        content.append(stringSize + ", FieldType.STRING");
                     } else {
-                        javaFieldsWriter.write(getJavaType(configField.getElementSize()));
+                        content.append(getJavaType(configField.getElementSize()));
                     }
                     if (enumOptions != null) {
-                        javaFieldsWriter.write(", " + configField.getType());
+                        content.append(", " + configField.getType());
                     }
-                    javaFieldsWriter.write(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
+                    content.append(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
                             ";" + EOL);
                 }
 

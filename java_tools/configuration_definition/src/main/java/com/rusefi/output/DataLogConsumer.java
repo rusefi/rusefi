@@ -7,7 +7,6 @@ import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.TreeSet;
@@ -18,7 +17,7 @@ import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quo
 public class DataLogConsumer implements ConfigurationConsumer {
     public static final String UNUSED = "unused";
     private final String fileName;
-    private final CharArrayWriter tsWriter = new CharArrayWriter();
+    private final StringBuilder tsWriter = new StringBuilder();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public DataLogConsumer(String fileName) {
@@ -38,10 +37,10 @@ public class DataLogConsumer implements ConfigurationConsumer {
         writeStringToFile(fileName, tsWriter);
     }
 
-    private void writeStringToFile(@Nullable String fileName, CharArrayWriter writer) throws IOException {
+    private void writeStringToFile(@Nullable String fileName, StringBuilder writer) throws IOException {
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
-            fw.write(writer.toCharArray());
+            fw.write(writer.toString());
             fw.close();
         }
     }
@@ -87,7 +86,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         return comment;
     }
 
-    public CharArrayWriter getTsWriter() {
-        return tsWriter;
+    public String getContent() {
+        return tsWriter.toString();
     }
 }
