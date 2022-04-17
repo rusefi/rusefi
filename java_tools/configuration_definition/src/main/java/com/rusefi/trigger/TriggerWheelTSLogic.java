@@ -18,7 +18,7 @@ public class TriggerWheelTSLogic {
 
     public void execute(String folder, VariableRegistry variableRegistry) {
         if (folder == null) {
-            System.out.println("Folder not specified");
+            System.out.println(getClass() + ": Folder not specified");
             return;
         }
         StringBuilder triggerTypesWithoutKnownLocation = new StringBuilder();
