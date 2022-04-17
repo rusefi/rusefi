@@ -7,10 +7,11 @@ import java.io.IOException;
 import java.util.List;
 
 public abstract class FieldsStrategy {
-    public void run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
         if (state.stack.isEmpty()) {
-            writeFields(structure.tsFields, "", sensorTsPosition);
+            return writeFields(structure.tsFields, "", sensorTsPosition);
         }
+        return sensorTsPosition;
     }
 
     protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
