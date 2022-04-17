@@ -333,7 +333,7 @@ public class ReaderState {
         inputFiles.add(fileName);
     }
 
-    public void addDestination(ConfigurationConsumer consumer) {
-        destinations.add(consumer);
+    public void addDestination(ConfigurationConsumer... consumers) {
+        destinations.addAll(Arrays.asList(consumers));
     }
 }
