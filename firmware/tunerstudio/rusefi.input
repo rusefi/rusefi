@@ -177,7 +177,7 @@ enable2ndByteCanID = false
    ochGetCommand    = "O%2o%2c"
 
 ; see TS_OUTPUT_SIZE in console source code
-   ochBlockSize     = @@TS_TOTAL_OUTPUT_SIZE@@
+   ochBlockSize     = @@TS_OUTPUT_SIZE@@
 
 ;
 ; see TunerStudioOutputChannels struct
