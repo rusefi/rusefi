@@ -53,6 +53,6 @@ public class JavaSensorsConsumerTest {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         state.readBufferedReader(outputChannels, javaSensorsConsumer);
 
-        assertEquals(0, javaSensorsConsumer.sensorTsPosition);
+        assertEquals(4, javaSensorsConsumer.sensorTsPosition);
     }
 }
