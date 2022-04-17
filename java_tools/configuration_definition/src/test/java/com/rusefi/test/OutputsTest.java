@@ -18,6 +18,7 @@ public class OutputsTest {
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "angle_t m_requested_pump;Computed requested pump duration in degrees (not including deadtime)\n" +
+                "float tCharge;speed density\\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
@@ -61,7 +62,8 @@ public class OutputsTest {
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
                 "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n" +
                 "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
-                "; total TS size = 16\n", tsProjectConsumer.getContent());
+                "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
+                "; total TS size = 20\n", tsProjectConsumer.getContent());
 
     }
 
