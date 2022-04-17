@@ -23,6 +23,10 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
+#if EFI_PROD_CODE
+#include "electronic_throttle_impl.h"
+#endif
+
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
@@ -533,13 +537,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+#if EFI_PROD_CODE
 	lua_register(l, "setEtbAdd", [](lua_State* l) {
 		auto luaAdjustment = luaL_checknumber(l, 1);
 		for (int i = 0 ; i < ETB_COUNT; i++) {
-			engine->etbControllers[i]->luaAdjustment = luaAdjustment;
+			extern EtbController* etbControllers[];
+			etbControllers[i]->luaAdjustment = luaAdjustment;
 		}
 		return 0;
 	});
+#endif // EFI_PROD_CODE
 
 	lua_register(l, "setClutchUpState", [](lua_State* l) {
 		engine->engineState.luaAdjustments.clutchUpState = lua_toboolean(l, 1);
