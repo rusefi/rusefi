@@ -17,15 +17,13 @@ public abstract class FieldsStrategy {
         FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
             iterator.start(i);
-            tsPosition = writeOneField(iterator, iterator.cf, prefix, tsPosition, iterator.next,
-                    iterator.bitState.get(),
-                    iterator.getPrev());
+            tsPosition = writeOneField(iterator, prefix, tsPosition);
 
             iterator.end();
         }
         return tsPosition;
     }
 
-    abstract int writeOneField(FieldIterator iterator, ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex, ConfigField prev) throws IOException;
+    abstract int writeOneField(FieldIterator iterator, String prefix, int tsPosition) throws IOException;
 
 }

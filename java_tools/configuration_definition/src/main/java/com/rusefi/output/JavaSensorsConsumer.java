@@ -25,7 +25,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            public int writeOneField(FieldIterator iterator, ConfigField _configField, String prefix, int tsPosition, ConfigField _next, int i, ConfigField prev) {
+            public int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField configField = iterator.cf;
                 ConfigField next = iterator.next;
 
