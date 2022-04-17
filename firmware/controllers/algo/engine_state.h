@@ -14,11 +14,9 @@
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {
-	float ignitionTimingAdd = 0;
-	float ignitionTimingMult = 1;
 	float fuelAdd = 0;
 	float fuelMult = 1;
-	float etbTargetPositionAdd = 0;
+
 	bool clutchUpState = false;
 	bool brakePedalState = false;
 };

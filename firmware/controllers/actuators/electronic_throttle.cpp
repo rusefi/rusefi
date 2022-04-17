@@ -315,9 +315,6 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
-	// Apply any adjustment from Lua
-	luaAdjustment = engine->engineState.luaAdjustments.etbTargetPositionAdd;
-
 	percent_t targetPosition = idlePosition + luaAdjustment;
 
 	// Apply any adjustment that this throttle alone needs

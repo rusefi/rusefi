@@ -522,7 +522,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 
 	lua_register(l, "setTimingMult", [](lua_State* l) {
-		engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+		engine->ignitionState.luaTimingMult = luaL_checknumber(l, 1);
 		return 0;
 	});
 	lua_register(l, "setFuelAdd", [](lua_State* l) {
@@ -534,7 +534,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 	lua_register(l, "setEtbAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.etbTargetPositionAdd = luaL_checknumber(l, 1);
+		auto luaAdjustment = luaL_checknumber(l, 1);
+		for (int i = 0 ; i < ETB_COUNT; i++) {
+			engine->etbControllers[i]->luaAdjustment = luaAdjustment;
+		}
 		return 0;
 	});
 
@@ -602,7 +605,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
 
