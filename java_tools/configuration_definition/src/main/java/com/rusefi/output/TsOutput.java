@@ -6,7 +6,6 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.rusefi.ToolUtil.EOL;
 
@@ -17,12 +16,10 @@ import static com.rusefi.ToolUtil.EOL;
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
-    private final ReaderState state;
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
 
-    public TsOutput(ReaderState state, boolean longForm) {
-        this.state = state;
+    public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
     }
 
@@ -128,7 +125,7 @@ public class TsOutput {
 
     private String handleTsInfo(String tsInfo, int multiplierIndex) {
         try {
-            String[] fields = tsInfo.split("\\,");
+            String[] fields = tsInfo.split(",");
             if (fields.length > multiplierIndex) {
                 /**
                  * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers

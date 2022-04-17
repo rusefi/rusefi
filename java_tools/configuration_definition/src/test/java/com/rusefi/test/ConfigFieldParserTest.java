@@ -185,7 +185,7 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING).setScale(1.0);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16).setScale(1.0);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_122 = Field.create(\"ALIGNMENTFILL_AT_122\", 122, FieldType.INT8).setScale(1.0);\n",
-                javaFieldsConsumer.getJavaFieldsWriter());
+                javaFieldsConsumer.getContent());
     }
 
     @Test
@@ -266,7 +266,7 @@ public class ConfigFieldParserTest {
                             "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16).setScale(1.0);\n" +
                             "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16).setScale(1.0);\n" +
                             "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8).setScale(1.0);\n",
-                    javaFieldsConsumer.getJavaFieldsWriter());
+                    javaFieldsConsumer.getContent());
         }
     }
 
@@ -282,7 +282,7 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(test, consumer, javaFieldsConsumer);
         assertEquals("\tpublic static final Field FIELD1 = Field.create(\"FIELD1\", 0, FieldType.INT).setScale(0.01);\n",
-                javaFieldsConsumer.getJavaFieldsWriter());
+                javaFieldsConsumer.getContent());
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
                 "\t/**\n" +

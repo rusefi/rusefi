@@ -20,7 +20,7 @@ public class OutputsTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, tsProjectConsumer);
 
 
@@ -73,7 +73,7 @@ public class OutputsTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, (tsProjectConsumer));
     }
 
@@ -107,7 +107,7 @@ public class OutputsTest {
                         "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
-                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
 
     }
 
@@ -280,7 +280,6 @@ public class OutputsTest {
                 "\t\treturn config->enableFan1WithAc;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getGetterForUnitTest());
-
     }
 
     @Test
@@ -296,20 +295,20 @@ public class OutputsTest {
 
         ReaderState state = new ReaderState();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_iTerm, \"idleStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
-                new String(dataLogConsumer.getTsWriter().toCharArray()));
+                dataLogConsumer.getContent());
 
         assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
-                new String(gaugeConsumer.getTsWriter().toCharArray()));
+                gaugeConsumer.getContent());
 
     }
 }

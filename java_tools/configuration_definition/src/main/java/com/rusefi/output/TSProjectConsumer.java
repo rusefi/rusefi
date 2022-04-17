@@ -7,7 +7,6 @@ import com.rusefi.util.SystemOut;
 
 import java.io.*;
 
-import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.util.IoUtils.CHARSET;
 
 /**
@@ -28,7 +27,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     public TSProjectConsumer(String tsPath, ReaderState state) {
         this.tsPath = tsPath;
-        tsOutput = new TsOutput(state, true);
+        tsOutput = new TsOutput(true);
         this.state = state;
     }
 
