@@ -55,9 +55,9 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
         sb.append(configField.getName()).append("(");
 
         String string = state.variableRegistry.applyVariables(configField.getComment());
-        if (string == null) {
+        if (string == null || string.isEmpty()) {
             string = quote(configField.getName());
-        } else if (string.isEmpty() || string.charAt(0) != '"') {
+        } else if (string.charAt(0) != '"') {
             // huh? weird conditional quoting?
             string = quote(string);
         }
