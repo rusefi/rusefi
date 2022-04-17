@@ -307,20 +307,11 @@ enable2ndByteCanID = false
 ;	xAxis       =  leftValue, rightValue, step
 ;	yAxis       =  bottomValue, topValue, step
 
-
 	curve = knockThresholdCurve, "Engine knock threshold RPM based"
       columnLabel = "RPM", "Threshold"
       xAxis       =  0, 8000, 9
       yAxis       =  0,  8, 10
       xBins       = knockNoiseRpmBins, RPMValue
-      yBins       = knockNoise
-      gauge       = RPMGauge
-
-	curve = swKnockThresholdCurve, "Engine knock threshold RPM based"
-      columnLabel = "RPM", "Threshold dB"
-      xAxis       =  0, 8000, 9
-      yAxis       =  -30,  0, 10
-      xBins       = ignitionRpmBins,  RPMValue
       yBins       = knockBaseNoise
       gauge       = RPMGauge
 
@@ -1046,8 +1037,6 @@ gaugeCategory = Sensors - Extra 2
    egt7Gauge         = egt7, "EGT#7", "C", 0, 2000
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
-   knockLevelGauge   = knockLevel,"Knock level",           "V",        0,      7,      10,     10,     100,   100,   1,   2
-   knockCountGauge   = knockCount, "Knock count",          "count",        0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
@@ -1211,7 +1200,9 @@ gaugeCategory = Knock
    knock10Gauge = knock10, "Knock Cyl 10", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock11Gauge = knock11, "Knock Cyl 11", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock12Gauge = knock12, "Knock Cyl 12", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
-   knockRetardGauge = knockRetard, "Knock Retard", "deg", 0, 10, 0, 0, 10, 10, 0, 1, 0
+   knockLevelGauge = knockLevel,"Knock level", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knockRetardGauge = knockRetard, "Knock retard", "deg", 0, 10, 0, 0, 10, 10, 1, 1
+   knockCountGauge = knockCount, "Knock count", "count", 0, 10000, 0, 0, 10000, 10000, 0, 0
 
 gaugeCategory = DynoView
 	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
@@ -2951,7 +2942,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = softwareKnock, "Software Knock", border
 		panel = softwareKnockCfg, West
-		panel = swKnockThresholdCurve, Center
+		panel = knockThresholdCurve, Center
 
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"

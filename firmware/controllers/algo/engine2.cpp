@@ -125,8 +125,7 @@ void EngineState::periodicFastCallback() {
 
 	cltTimingCorrection = getCltTimingCorrection();
 
-	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
-					engineConfiguration->knockNoise);
+	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins, engineConfiguration->knockBaseNoise);
 
 	baroCorrection = getBaroCorrection();
 
