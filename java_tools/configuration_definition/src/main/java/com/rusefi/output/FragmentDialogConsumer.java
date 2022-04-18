@@ -57,10 +57,8 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
                 if (linesInCurrentGraph == 4) {
                     linesInCurrentGraph = 0;
-                    currentGraphIndex++;
                     startNewGraph();
                 }
-
 
                 graphLines.append("\tgraphLine = " + configField.getName() + "\n");
                 linesInCurrentGraph++;

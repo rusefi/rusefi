@@ -41,7 +41,7 @@ public class FragmentDialogConsumerTest {
                         "\tgraphLine = rpmAcceleration\n" +
                         "\tgraphLine = speedToRpmRatio\n" +
                         "\tgraphLine = alignmentFill_at_10\n" +
-                        "liveGraph = ac_state_3_Graph, \"Graph\", South\n" +
+                        "liveGraph = ac_state_2_Graph, \"Graph\", South\n" +
                         "\tgraphLine = luaTimingMult\n" +
                         "\tgraphLine = vehicleSpeedKph\n" +
                         "\tgraphLine = internalMcuTemperature\n" +
@@ -50,7 +50,7 @@ public class FragmentDialogConsumerTest {
                         "dialog = ac_stateDialog, \"ac_state\"\n" +
                         "\tpanel = ac_stateIndicatorPanel\n" +
                         "\tpanel = ac_state_1_Graph\n" +
-                        "\tpanel = ac_state_3_Graph\n" +
+                        "\tpanel = ac_state_2_Graph\n" +
                         "\n",
                 fragmentDialogConsumer.getContent());
 
