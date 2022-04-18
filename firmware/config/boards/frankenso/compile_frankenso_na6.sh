@@ -5,5 +5,4 @@ FW_ID_ENV=frankensoNA6
 
 export EXTRA_PARAMS="-DDUMMY -DSHORT_BOARD_NAME=frankenso_na6"
 
-bash ../common_make.sh
-
+bash ../common_make.sh f407-discovery ARCH_STM32F4
