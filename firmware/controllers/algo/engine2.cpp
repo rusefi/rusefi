@@ -125,8 +125,6 @@ void EngineState::periodicFastCallback() {
 
 	cltTimingCorrection = getCltTimingCorrection();
 
-	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins, engineConfiguration->knockBaseNoise);
-
 	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
