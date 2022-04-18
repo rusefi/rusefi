@@ -38,7 +38,7 @@ bool rebootForPresetPending = false;
  * Gauges refresh
  */
 void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
-	if (offset + count > sizeof(TunerStudioOutputChannels)) {
+	if (offset + count > TS_TOTAL_OUTPUT_SIZE) {
 		efiPrintf("TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
