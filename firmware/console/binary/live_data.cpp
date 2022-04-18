@@ -12,7 +12,11 @@ const output_channels_s* getLiveDataAddr() {
 
 template<>
 const high_pressure_fuel_pump_s* getLiveDataAddr() {
+#if EFI_HPFP
 	return &engine->module<HpfpController>().unmock();
+#else
+		return nullptr; // explicit null to confirm that this struct is handled
+#endif // EFI_HPFP
 }
 
 template<>
