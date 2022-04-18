@@ -79,7 +79,7 @@ jobs:
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            #skip-rate: 60
+            skip-rate: 60
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
@@ -100,17 +100,17 @@ jobs:
           - build-target: hellen121vag
             folder: hellen/hellen121vag
             ini-file: rusefi_hellen121vag.ini
-            #skip-rate: 60
+            skip-rate: 60
 
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
-            #skip-rate: 60
+            skip-rate: 60
 
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
-            #skip-rate: 60
+            skip-rate: 60
 
           - build-target: cypress
             folder: hellen
@@ -131,12 +131,12 @@ jobs:
           - build-target: mre_f4_debug
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: mre_f4_recovery
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: mre_f4_hardware_QC_special_build
             folder: microrusefi
@@ -146,7 +146,7 @@ jobs:
             folder: microrusefi
             ini-file: rusefi_mre_f7.ini
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: prometheus_405
             folder: prometheus
@@ -155,7 +155,7 @@ jobs:
           - build-target: prometheus_469
             folder: prometheus
             ini-file: rusefi_prometheus_469.ini
-            #skip-rate: 50
+            skip-rate: 50
 
           - build-target: proteus_f4
             folder: proteus
@@ -164,7 +164,7 @@ jobs:
           - build-target: proteus_f4_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f4.ini
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: proteus_f7
             folder: proteus
@@ -181,20 +181,20 @@ jobs:
           - build-target: proteus_legacy
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-            #skip-rate: 50
+            skip-rate: 50
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            #skip-rate: 50
+            skip-rate: 50
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-           # skip-rate: 50
+            skip-rate: 50
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
@@ -202,22 +202,22 @@ jobs:
 
           - build-target: f429-discovery
             folder: f429-discovery
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: core8
             folder: core8
             ini-file: rusefi_core8.ini
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: atlas
             folder: atlas
             ini-file: rusefi_atlas.ini
-            #skip-rate: 90
+            skip-rate: 90
 
           - build-target: tdg-pdm8
             folder: tdg-pdm8
             ini-file: rusefi_tdg-pdm8.ini
-            #skip-rate: 90
+            skip-rate: 90
 
     steps:
     - name: Execution throttle early exit
