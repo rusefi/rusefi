@@ -125,7 +125,6 @@ void LaunchControlBase::update() {
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.clutchDownState = engine->clutchDownState;
-	engine->outputChannels.dup_launchActivatePinState = launchActivatePinState;
 	engine->outputChannels.launchIsLaunchCondition = isLaunchCondition;
 	engine->outputChannels.launchCombinedConditions = combinedConditions;
 #endif /* EFI_TUNER_STUDIO */
