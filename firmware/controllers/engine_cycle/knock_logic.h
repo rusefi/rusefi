@@ -36,6 +36,4 @@ private:
 	using PD = PeakDetect<float, MS2NT(100)>;
 	PD peakDetectors[12];
 	PD allCylinderPeakDetector;
-
-
 };
