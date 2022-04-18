@@ -22,6 +22,8 @@ public:
 	float getKnockRetard() const;
 	uint32_t getKnockCount() const;
 
+	virtual float getKnockThreshold() const;
+
 private:
 	float m_knockThreshold = -1e5;
 

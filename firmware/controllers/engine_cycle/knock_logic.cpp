@@ -93,11 +93,7 @@ uint32_t KnockController::getKnockCount() const {
 }
 
 void KnockController::onFastCallback() {
-	m_knockThreshold = interpolate2d(
-		Sensor::getOrZero(SensorType::Rpm),
-		engineConfiguration->knockNoiseRpmBins,
-		engineConfiguration->knockBaseNoise
-	);
+	m_knockThreshold = getKnockThreshold();
 
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
@@ -114,6 +110,14 @@ void KnockController::onFastCallback() {
 		// don't allow retard to go negative
 		m_knockRetard = maxF(0, newRetard);
 	}
+}
+
+float KnockController::getKnockThreshold() const {
+	return interpolate2d(
+		Sensor::getOrZero(SensorType::Rpm),
+		engineConfiguration->knockNoiseRpmBins,
+		engineConfiguration->knockBaseNoise
+	);
 }
 
 // This callback is to be implemented by the knock sense driver
