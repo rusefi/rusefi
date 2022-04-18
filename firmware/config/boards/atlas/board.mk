@@ -19,3 +19,5 @@ DDEFS += -DHW_ATLAS=1
 # Atlas needs networking library
 LWIP = yes
 DDEFS += -DEFI_ETHERNET=TRUE
+
+DDEFS += -DSHORT_BOARD_NAME=atlas
