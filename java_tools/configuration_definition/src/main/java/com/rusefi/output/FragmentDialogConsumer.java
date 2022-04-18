@@ -9,7 +9,6 @@ import java.io.IOException;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 public class FragmentDialogConsumer implements ConfigurationConsumer {
-    private final StringBuilder graphLines = new StringBuilder();
     private final StringBuilder graphList = new StringBuilder();
 
     private final StringBuilder indicatorPanel = new StringBuilder();
@@ -39,6 +38,15 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
             int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField configField = iterator.cf;
 
+                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
+                    return 0;
+
+                ConfigStructure cs = configField.getStructureType();
+                if (cs != null) {
+                    String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
+                    return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
+                }
+
                 if (configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX))
                     return 0;
 
@@ -60,7 +68,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     startNewGraph();
                 }
 
-                graphLines.append("\tgraphLine = " + configField.getName() + "\n");
+                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + "\n");
                 linesInCurrentGraph++;
 
 
@@ -73,10 +81,8 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
     private void startNewGraph() {
         currentGraphIndex++;
-        graphLines.append("liveGraph = " + getGraphControlName() +
+        graphList.append("\tliveGraph = " + getGraphControlName() +
                 ", " + quote("Graph") + ", South\n");
-
-        graphList.append("\tpanel = " + getGraphControlName() + "\n");
 
     }
 
@@ -103,7 +109,6 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
 
         return indicatorPanel + "\n" +
-                graphLines + "\n" +
                 dialogDeclaration +
                 indicatorPanelUsageLine +
                 graphList +
