@@ -299,7 +299,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	bit launchActivateSwitchCondition
 	bit launchIsLaunchCondition;
 	bit launchCombinedConditions
-	bit launchActivatePinState
+	bit dup_launchActivatePinState
 	bit dfcoActive
 	bit tpsAccelActive
 
@@ -353,13 +353,13 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
     uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
     uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
 
-    int idleState;;"", 1, 0, -10000, 10000, 3
+    int dup_idleState;;"", 1, 0, -10000, 10000, 3
 
     float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
     float injectorFlowPressureDelta;;"kPa", 1, 0, -10000, 10000, 1
 
 
-    float etbFeedForward;;"%", 1, 0, -10000, 10000, 3
+    float dup_etbFeedForward;;"%", 1, 0, -10000, 10000, 3
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
     float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
