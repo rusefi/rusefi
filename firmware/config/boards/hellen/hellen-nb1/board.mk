@@ -20,3 +20,5 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 # Enable serial pins on expansion header
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
+
+DDEFS += -DSHORT_BOARD_NAME=hellen-nb1
