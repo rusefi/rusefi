@@ -17,12 +17,12 @@ class TransmissionControllerBase {
 public:
 	virtual void update(gear_e);
 	virtual void init();
-	gear_e getCurrentGear() const;
-	TransmissionControllerMode getMode() {
+	virtual gear_e getCurrentGear() const;
+	virtual TransmissionControllerMode getMode() {
 		return TransmissionControllerMode::None;
 	}
 protected:
 	gear_e currentGear = NEUTRAL;
-	gear_e setCurrentGear(gear_e);
+	virtual gear_e setCurrentGear(gear_e);
 	void postState();
 };
