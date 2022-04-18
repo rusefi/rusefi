@@ -20,7 +20,7 @@ void Gm4l6xTransmissionController::init() {
 									 engineConfiguration->tcu_tcc_pwm_solenoid_freq,
 									 0);
 		enginePins.tcuPcSolenoid.initPin("Pressure Control Solenoid", engineConfiguration->tcu_pc_solenoid_pin, &engineConfiguration->tcu_pc_solenoid_pin_mode);
-		startSimplePwm(&tccPwm,
+		startSimplePwm(&pcPwm,
 									 "Line Pressure",
 									 &engine->executor,
 									 &enginePins.tcuPcSolenoid,
@@ -110,7 +110,7 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		break;
 	}
 	int pct = interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
-	pcPwm.setSimplePwmDutyCycle(pct);
+	pcPwm.setSimplePwmDutyCycle(pct*0.01);
 }
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController() {
