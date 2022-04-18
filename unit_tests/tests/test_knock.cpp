@@ -18,6 +18,7 @@ TEST(Knock, Retards) {
 	engineConfiguration->knockRetardMaximum = 8;
 
 	MockKnockController dut;
+	dut.onFastCallback();
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
@@ -47,6 +48,7 @@ TEST(Knock, Reapply) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	MockKnockController dut;
+	dut.onFastCallback();
 
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 100;
