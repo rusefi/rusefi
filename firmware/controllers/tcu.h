@@ -18,7 +18,7 @@ public:
 	virtual void update(gear_e);
 	virtual void init();
 	virtual gear_e getCurrentGear() const;
-	virtual TransmissionControllerMode getMode() {
+	virtual TransmissionControllerMode getMode() const {
 		return TransmissionControllerMode::None;
 	}
 protected:

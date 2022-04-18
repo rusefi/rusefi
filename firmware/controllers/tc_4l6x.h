@@ -6,7 +6,7 @@ class Gm4l6xTransmissionController: public TransmissionControllerBase  {
 public:
 	void update(gear_e);
 	void init();
-	TransmissionControllerMode getMode() {
+	TransmissionControllerMode getMode() const {
 		return TransmissionControllerMode::Gm4l6x;
 	}
 private:

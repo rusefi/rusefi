@@ -13,7 +13,7 @@ public:
 	virtual void update();
 	virtual gear_e getDesiredGear() const;
 	virtual void init();
-	virtual GearControllerMode getMode() {
+	virtual GearControllerMode getMode() const {
 		return GearControllerMode::ButtonShift;
 	}
 protected:

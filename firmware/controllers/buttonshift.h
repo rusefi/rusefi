@@ -17,7 +17,7 @@ public:
 
 	void update() override;
   void init() override;
-	GearControllerMode getMode() {
+	GearControllerMode getMode() const {
 		return GearControllerMode::ButtonShift;
 	}
 private:

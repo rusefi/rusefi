@@ -8,7 +8,7 @@ class SimpleTransmissionController: public TransmissionControllerBase  {
 public:
   void update(gear_e);
 	void init();
-	TransmissionControllerMode getMode() {
+	TransmissionControllerMode getMode() const {
 		return TransmissionControllerMode::SimpleTransmissionController;
 	}
 };
