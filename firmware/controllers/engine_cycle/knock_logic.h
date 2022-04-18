@@ -25,7 +25,8 @@ public:
 	virtual float getKnockThreshold() const;
 
 private:
-	float m_knockThreshold = -1e5;
+	// start with threshold higher than any possible knock to avoid recording spurious knocks
+	float m_knockThreshold = 100;
 
 	// Degrees retarded: larger number = more retard
 	float m_knockRetard = 0;
