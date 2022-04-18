@@ -2,8 +2,6 @@
 
 # STM32F767 version of the firmware for F767ZI chip NOT on Nucleo board, with a real oscilattor
 
-export PROJECT_BOARD=nucleo_f767
-export PROJECT_CPU=ARCH_STM32F7
 export EXTRA_PARAMS="-DDUMMY -DSTM32F767xx \
  -DEFI_INJECTOR_PIN3=GPIO_UNASSIGNED \
  -DFIRMWARE_ID=\\\"board767\\\" \
@@ -16,5 +14,5 @@ export EXTRA_PARAMS="-DDUMMY -DSTM32F767xx \
 # Do not forget to comment out following line if looking to debug!
 export DEBUG_LEVEL_OPT="-O2"
 
-bash ../common_make.sh
+bash ../common_make.sh nucleo_f767 ARCH_STM32F7
 
