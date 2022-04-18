@@ -84,7 +84,9 @@
 /**
  * TunerStudio support.
  */
+#ifndef EFI_TUNER_STUDIO
 #define EFI_TUNER_STUDIO TRUE
+#endif
 
 /**
  * Bluetooth UART setup support.
@@ -103,13 +105,19 @@
 /**
  * Dev console support.
  */
+#ifndef EFI_CLI_SUPPORT
 #define EFI_CLI_SUPPORT TRUE
+#endif
 
 #define EFI_RTC TRUE
 
+#ifndef EFI_ALTERNATOR_CONTROL
 #define EFI_ALTERNATOR_CONTROL TRUE
+#endif
 
+#ifndef EFI_AUX_PID
 #define EFI_AUX_PID TRUE
+#endif
 
 #define EFI_SIGNAL_EXECUTOR_SLEEP FALSE
 #define EFI_SIGNAL_EXECUTOR_ONE_TIMER TRUE
@@ -313,10 +321,14 @@
 /**
  * Do we need Malfunction Indicator blinking logic?
  */
+#ifndef EFI_MALFUNCTION_INDICATOR
 #define EFI_MALFUNCTION_INDICATOR TRUE
 //#define EFI_MALFUNCTION_INDICATOR FALSE
+#endif
 
+#ifndef CONSOLE_MAX_ACTIONS
 #define CONSOLE_MAX_ACTIONS 180
+#endif
 
 #define EFI_MAP_AVERAGING TRUE
 //#define EFI_MAP_AVERAGING FALSE

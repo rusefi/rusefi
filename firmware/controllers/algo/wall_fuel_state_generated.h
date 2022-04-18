@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\wall_fuel_state.txt Wed Apr 13 20:40:04 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -15,8 +15,8 @@ struct wall_fuel_state_s {
 	 * offset 4
 	 */
 	floatms_t wallFuel = (floatms_t)0;
-	/** total size 8*/
 };
+static_assert(sizeof(wall_fuel_state_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\wall_fuel_state.txt Wed Apr 13 20:40:04 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Sun Apr 17 20:27:25 UTC 2022

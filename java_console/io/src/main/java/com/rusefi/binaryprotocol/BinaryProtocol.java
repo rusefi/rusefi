@@ -56,6 +56,7 @@ public class BinaryProtocol {
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
     public String signature;
+    public boolean isGoodOutputChannels;
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
@@ -193,7 +194,8 @@ public class BinaryProtocol {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
-                                if (requestOutputChannels())
+                                isGoodOutputChannels = requestOutputChannels();
+                                if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
                                 if (linkManager.isNeedPullText()) {
@@ -546,11 +548,11 @@ public class BinaryProtocol {
 
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
-        byte[] reassemblyBuffer = new byte[GetOutputsCommand.OUTPUT_SIZE + 1];
+        byte[] reassemblyBuffer = new byte[TS_TOTAL_OUTPUT_SIZE + 1];
         reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
 
         int reassemblyIdx = 0;
-        int remaining = GetOutputsCommand.OUTPUT_SIZE;
+        int remaining = TS_TOTAL_OUTPUT_SIZE;
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read

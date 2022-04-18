@@ -148,7 +148,7 @@ public class ConfigDefinition {
                     enumInputFiles.add(args[i + 1]);
                     break;
                 case "-ts_output_name":
-                    TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
+                    state.tsFileOutputName = args[i + 1];
                     break;
                 case KEY_ROMRAIDER_INPUT:
                     String inputFilePath = args[i + 1];
@@ -218,13 +218,16 @@ public class ConfigDefinition {
 */
 
         if (tsOutputsDestination != null) {
-            state.destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
+            /**
+             * we have one JVM instance produce output section based on model fragments, and then
+             * we have '-readfile OUTPUTS_SECTION' in one of .sh files in order to template rusefi.input
+             * Same with '-readfile DATALOG_SECTION'
+             */
             state.destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
-            state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
+            state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
         }
         if (tsInputFileFolder != null) {
-            CharArrayWriter tsWriter = new CharArrayWriter();
-            state.destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
+            state.destinations.add(new TSProjectConsumer(tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable

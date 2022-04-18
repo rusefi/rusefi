@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators\electronic_throttle.txt Thu Apr 14 14:39:06 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -17,8 +17,8 @@ struct electronic_throttle_s {
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
-	/** total size 12*/
 };
+static_assert(sizeof(electronic_throttle_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators\electronic_throttle.txt Thu Apr 14 14:39:06 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Apr 17 20:27:25 UTC 2022

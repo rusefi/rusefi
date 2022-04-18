@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators\fuel_pump_control.txt Wed Apr 13 20:37:15 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/fuel_pump_control.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -101,8 +101,8 @@ struct fuel_pump_control_s {
 	/**
 	offset 0 bit 31 */
 	bool unusedBit_4_31 : 1 {};
-	/** total size 4*/
 };
+static_assert(sizeof(fuel_pump_control_s) == 4);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators\fuel_pump_control.txt Wed Apr 13 20:37:15 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/fuel_pump_control.txt Sun Apr 17 20:27:25 UTC 2022

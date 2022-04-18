@@ -28,7 +28,7 @@ public class JavaSensorsConsumerTest {
                 "\tuint8_t vehicleSpeedKph\n" +
                 "\tint8_t autoscale internalMcuTemperature;mcu;\"deg C\",1, 0, 0, 0, 0\n" +
                 "end_struct\n";
-        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(state, 0);
+        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         state.readBufferedReader(outputChannels, javaSensorsConsumer);
 
         assertEquals("RPMValue(\"hello\", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4, 1.0, 0.0, 8000.0, \"RPM\"),\n" +
@@ -40,7 +40,19 @@ public class JavaSensorsConsumerTest {
                         "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 17, 1.0, 0.0, 0.0, \"deg C\"),\n" +
                         "alignmentFill_at_18(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 18, 1.0, -20.0, 100.0, \"units\"),\n",
                 javaSensorsConsumer.getContent());
+        assertEquals(20, javaSensorsConsumer.sensorTsPosition);
+    }
 
+    @Test
+    public void bitAtTheEndBug() throws IOException {
+        ReaderState state = new ReaderState();
+        String outputChannels =
+                "struct_no_prefix output_channels_s\n" +
+                        "bit sd_present\n" +
+                        "end_struct\n";
+        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
+        state.readBufferedReader(outputChannels, javaSensorsConsumer);
 
+        assertEquals(4, javaSensorsConsumer.sensorTsPosition);
     }
 }

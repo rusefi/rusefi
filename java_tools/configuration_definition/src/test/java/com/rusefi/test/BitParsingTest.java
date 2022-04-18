@@ -24,7 +24,7 @@ public class BitParsingTest {
 
         StringWriter sw = new StringWriter();
 
-        TSProjectConsumer javaFieldsConsumer = new TSProjectConsumer(new CharArrayWriter(), "", state) {
+        TSProjectConsumer javaFieldsConsumer = new TSProjectConsumer("", state) {
             @Override
             protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
                 writeContent(fieldsSection, new TsFileContent("", ""), createOutput(sw));

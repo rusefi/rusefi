@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Apr 09 01:34:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -110,8 +110,8 @@ struct ac_control_s {
 	 * offset 8
 	 */
 	int acSwitchLastChangeTimeMs = (int)0;
-	/** total size 12*/
 };
+static_assert(sizeof(ac_control_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Apr 09 01:34:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Apr 17 20:27:25 UTC 2022

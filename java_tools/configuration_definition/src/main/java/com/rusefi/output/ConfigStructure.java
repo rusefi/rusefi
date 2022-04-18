@@ -20,6 +20,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ConfigStructure {
     public static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
+    public static final String UNUSED_BIT_PREFIX = "unusedBit_";
 
     public final String name;
     public final String comment;
@@ -114,7 +115,7 @@ public class ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
+            ConfigField bitField = new ConfigField(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();

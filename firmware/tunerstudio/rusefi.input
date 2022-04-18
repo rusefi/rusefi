@@ -177,17 +177,13 @@ enable2ndByteCanID = false
    ochGetCommand    = "O%2o%2c"
 
 ; see TS_OUTPUT_SIZE in console source code
-   ochBlockSize     = @@TS_OUTPUT_SIZE@@
+   ochBlockSize     = @@TS_TOTAL_OUTPUT_SIZE@@
 
 ;
 ; see TunerStudioOutputChannels struct
 ;
 
 @@OUTPUTS_SECTION@@
-
-; todo: generate this section programmatically
-	LM_SPEED_DENSITY = {3},
-	LM_REAL_MAF = {4}
 
       time            = { timeNow }
 
@@ -1195,7 +1191,6 @@ gaugeCategory = Sensors - Raw
    rawMapGauge          = rawMap        , "Raw MAP",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawAfrGauge          = rawAfr        , "Raw EGO",           "V", 0, 5, 0, 0, 5, 5, 3, 0
 
-
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, @@GAUGE_NAME_DESIRED_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
    currentGearGauge = tcuCurrentGear, @@GAUGE_NAME_CURRENT_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
@@ -1389,7 +1384,7 @@ menuDialog = main
 		# Air mass model
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
 		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
-		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == LM_SPEED_DENSITY}
+		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == @@engine_load_mode_e_LM_SPEED_DENSITY@@}
 		subMenu = mapEstimateTableTbl,		"MAP estimate table", 0, { enableMapEstimationTableFallback }
 		subMenu = std_separator
 
@@ -1477,6 +1472,9 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = idleVeTableTbl,              "Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
+
+  menu = "&View"
+@@LIVE_DATA_MENU_FROM_FILE@@
 
 	menu = "&Advanced"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
@@ -3142,6 +3140,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
 		panel = speedSensorCan
 
+@@LIVE_DATA_PANELS_FROM_FILE@@
+
 	dialog = gearDetection, "Gear Detection"
 		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
 		field = "Final drive ratio",       finalGearRatio
@@ -3582,7 +3582,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
 		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
 
-
 		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
 		field = "Debug mode",							debugMode
 
@@ -3965,4 +3964,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
-

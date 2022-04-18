@@ -6,8 +6,6 @@ import com.rusefi.output.*;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
@@ -19,10 +17,12 @@ public class OutputsTest {
                 "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "angle_t m_requested_pump;Computed requested pump duration in degrees (not including deadtime)\n" +
+                "float tCharge;speed density\\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, tsProjectConsumer);
 
 
@@ -60,7 +60,10 @@ public class OutputsTest {
                 "unusedBit_4_29 = bits, U32, 5, [29:29]\n" +
                 "unusedBit_4_30 = bits, U32, 5, [30:30]\n" +
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
-                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getTsWriter().toCharArray()));
+                "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n" +
+                "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
+                "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
+                "; total TS size = 20\n", tsProjectConsumer.getContent());
 
     }
 
@@ -74,7 +77,7 @@ public class OutputsTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, (tsProjectConsumer));
     }
 
@@ -108,7 +111,7 @@ public class OutputsTest {
                         "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
-                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
 
     }
 
@@ -281,7 +284,6 @@ public class OutputsTest {
                 "\t\treturn config->enableFan1WithAc;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getGetterForUnitTest());
-
     }
 
     @Test
@@ -297,20 +299,20 @@ public class OutputsTest {
 
         ReaderState state = new ReaderState();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_iTerm, \"idleStatus_iTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
-                new String(dataLogConsumer.getTsWriter().toCharArray()));
+                dataLogConsumer.getContent());
 
         assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
-                new String(gaugeConsumer.getTsWriter().toCharArray()));
+                gaugeConsumer.getContent());
 
     }
 }
