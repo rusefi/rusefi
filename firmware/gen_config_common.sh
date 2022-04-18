@@ -4,8 +4,8 @@ COMMON_GEN_CONFIG_PREFIX="-jar ../java_tools/ConfigDefinition.jar"
 COMMON_GEN_CONFIG="
  -enumInputFile controllers/algo/engine_types.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
- -readfile OUTPUTS_SECTION console/binary/generated/output_channels.ini \
- -readfile DATALOG_SECTION console/binary/generated/data_logs.ini \
+ -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
+ -readfile DATALOG_SECTION_FROM_FILE console/binary/generated/data_logs.ini \
  -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
  -ts_destination tunerstudio \
