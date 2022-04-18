@@ -37,5 +37,5 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSHORT_BOARD_NAME=mre_f4
 else
-$(error Unsupported PROJECT_CPU for Proteus: [$(PROJECT_CPU)])
+$(error Unsupported PROJECT_CPU for microRusEFI: [$(PROJECT_CPU)])
 endif
