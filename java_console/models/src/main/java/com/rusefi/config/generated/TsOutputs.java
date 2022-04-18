@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 17 21:36:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 12:07:23 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -98,7 +98,7 @@ public class TsOutputs {
 	public static final String ENGINE_MAKE_SUBARU = "Subaru";
 	public static final String ENGINE_MAKE_TOYOTA = "Toyota";
 	public static final String ENGINE_MAKE_VAG = "VAG";
-	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
+	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int ENUM_16_BITS = 60000;
 	public static final int ENUM_32_BITS = 2000000000;

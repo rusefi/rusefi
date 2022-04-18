@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Apr 17 20:27:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Apr 18 12:07:57 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -732,16 +732,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t maxAcClt;
 	/**
-	 * Knock sensor output knock detection threshold depending on current RPM
-	v
+	RPM
 	 * offset 12
 	 */
-	float knockNoise[ENGINE_NOISE_CURVE_SIZE];
-	/**
-	RPM
-	 * offset 44
-	 */
 	scaled_channel<uint8_t, 1, 50> knockNoiseRpmBins[ENGINE_NOISE_CURVE_SIZE];
+	/**
+	 * offset 28
+	 */
+	uint8_t unused28[24];
 	/**
 	 * This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 	deg
@@ -3920,10 +3918,11 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
+	 * Knock sensor output knock detection threshold depending on current RPM.
 	dB
 	 * offset 3991
 	 */
-	int8_t knockBaseNoise[IGN_RPM_COUNT];
+	scaled_channel<int8_t, 2, 1> knockBaseNoise[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * need 4 byte alignment
 	units
@@ -4582,4 +4581,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21012);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Apr 17 20:27:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Apr 18 12:07:57 UTC 2022
