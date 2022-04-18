@@ -18,7 +18,9 @@ public:
 	void update(gear_e);
 	void init();
 	gear_e getCurrentGear() const;
-	TransmissionControllerMode mode = TransmissionControllerMode::None;
+	TransmissionControllerMode getMode() {
+		return TransmissionControllerMode::None;
+	}
 protected:
 	gear_e currentGear = NEUTRAL;
 	gear_e setCurrentGear(gear_e);
