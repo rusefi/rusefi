@@ -14,6 +14,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
     private boolean hasIndicators;
+    private int graphLinesCounter;
 
     public FragmentDialogConsumer(String fragmentName) {
         this.fragmentName = fragmentName;
@@ -39,7 +40,6 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     return 0;
 
                 if (configField.isBit()) {
-
                     if (!hasIndicators) {
                         hasIndicators = true;
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
@@ -48,6 +48,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
                 }
 
+                graphLinesCounter++;
                 graphLines.append("\tgraphLine = " + configField.getName() + "\n");
 
 
@@ -63,9 +64,19 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
         return fragmentName + "IndicatorPanel";
     }
 
-    public String getContent() {
+    public String menuLine() {
+        if (getContent().isEmpty())
+            return "";
+        return "\t\t\tsubMenu = " + getDialogName() + ", " + quote(fragmentName) + "\n";
+    }
 
-        String dialogDeclaration = "dialog = " + fragmentName + "Dialog, " + quote(fragmentName) + "\n";
+    public String getContent() {
+        if (graphLinesCounter > 40) {
+            // too many lines - really looks like that huge first legacy model, not having fancy stuff for it
+            return "";
+        }
+
+        String dialogDeclaration = "dialog = " + getDialogName() +", " + quote(fragmentName) + "\n";
 
         String indicatorPanelUsageLine = (indicatorPanel.length() > 0) ? "\tpanel = " + getPanelName() + "\n" : "";
 
@@ -78,8 +89,13 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                 graphLines + "\n" +
                 dialogDeclaration +
                 indicatorPanelUsageLine +
-                "\tpanel = " + getGraphControlName() + "\n"
+                "\tpanel = " + getGraphControlName() + "\n\n"
                 ;
+    }
+
+    @NotNull
+    private String getDialogName() {
+        return fragmentName + "Dialog";
     }
 
     @NotNull
