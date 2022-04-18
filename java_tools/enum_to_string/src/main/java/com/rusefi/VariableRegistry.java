@@ -150,10 +150,14 @@ public class VariableRegistry  {
     }
 
     public void register(String var, String param) {
-        String value = doRegister(var, param);
-        if (value == null)
-            return;
-        tryToRegisterAsInteger(var, value);
+        try {
+            String value = doRegister(var, param);
+            if (value == null)
+                return;
+            tryToRegisterAsInteger(var, value);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While [" + var + "][" + param + "]", e);
+        }
     }
 
     @Nullable
@@ -165,7 +169,7 @@ public class VariableRegistry  {
         }
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
-        if (!isQuoted(value, '"') && multPosition != -1) {
+        if (!value.contains("\n") && !isQuoted(value, '"') && multPosition != -1) {
             Integer first = Integer.valueOf(value.substring(0, multPosition).trim());
             Integer second = Integer.valueOf(value.substring(multPosition + 1).trim());
             value = String.valueOf(first * second);

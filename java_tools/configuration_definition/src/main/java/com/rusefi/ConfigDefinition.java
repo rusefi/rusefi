@@ -121,7 +121,11 @@ public class ConfigDefinition {
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
-                    state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
+                    try {
+                        state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
+                    } catch (RuntimeException e) {
+                        throw new IllegalStateException("While processing " + fileName, e);
+                    }
                     state.inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
