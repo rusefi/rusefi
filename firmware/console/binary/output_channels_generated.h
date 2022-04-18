@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 15:40:27 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1094,7 +1094,7 @@ struct output_channels_s {
 	bool launchCombinedConditions : 1 {};
 	/**
 	offset 408 bit 6 */
-	bool launchActivatePinState : 1 {};
+	bool dup_launchActivatePinState : 1 {};
 	/**
 	offset 408 bit 7 */
 	bool dfcoActive : 1 {};
@@ -1331,7 +1331,7 @@ struct output_channels_s {
 	/**
 	 * offset 492
 	 */
-	int idleState = (int)0;
+	int dup_idleState = (int)0;
 	/**
 	 * offset 496
 	 */
@@ -1345,7 +1345,7 @@ struct output_channels_s {
 	%
 	 * offset 504
 	 */
-	float etbFeedForward = (float)0;
+	float dup_etbFeedForward = (float)0;
 	/**
 	 * offset 508
 	 */
@@ -1391,4 +1391,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 15:40:27 UTC 2022
