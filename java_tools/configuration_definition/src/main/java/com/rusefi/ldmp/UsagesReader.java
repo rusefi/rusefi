@@ -5,6 +5,7 @@ import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
 import com.rusefi.output.FragmentDialogConsumer;
 import com.rusefi.output.JavaSensorsConsumer;
+import com.rusefi.output.OutputsSectionConsumer;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -69,6 +70,9 @@ public class UsagesReader {
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
+        String tsOutputsDestination = "console/binary/";
+
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         EntryHandler handler = new EntryHandler() {
 
@@ -101,7 +105,7 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                state.addDestination(javaSensorsConsumer);
+                state.addDestination(javaSensorsConsumer, outputsSections);
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
