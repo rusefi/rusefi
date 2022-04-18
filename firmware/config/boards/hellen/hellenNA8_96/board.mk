@@ -17,6 +17,8 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DHAL_TRIGGER_USE_PAL=TRUE
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
+DDEFS += -DSHORT_BOARD_NAME=hellenNA8_96
+
 # Enable serial pins on expansion header
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
