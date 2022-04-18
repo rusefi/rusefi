@@ -19,6 +19,7 @@ public class FragmentDialogConsumerTest {
                 "struct speed_density_s\n" +
                 "\n" +
                 "float Tcharge_coff\n" +
+                "bit bit_of_sd\n" +
                 "\n" +
                 "! speed_density_s\n" +
                 "end_struct\n" +
@@ -40,6 +41,7 @@ public class FragmentDialogConsumerTest {
         state.readBufferedReader(outputChannels, fragmentDialogConsumer);
 
         assertEquals("indicatorPanel = ac_stateIndicatorPanel, 2\n" +
+                        "\tindicator = {sd_bit_of_sd}, \"No\", \"Yes\"\n" +
                         "\tindicator = {sd_present}, \"No\", \"Yes\"\n" +
                         "\tindicator = {sd_present2}, \"No\", \"Yes\"\n" +
                         "\tindicator = {sd_present3}, \"No\", \"Yes\"\n" +

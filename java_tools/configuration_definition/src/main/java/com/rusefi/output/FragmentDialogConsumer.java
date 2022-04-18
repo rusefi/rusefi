@@ -55,7 +55,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                         hasIndicators = true;
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
-                    indicatorPanel.append("\tindicator = {" + configField.getName() + "}, \"No\", \"Yes\"\n");
+                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + "}, \"No\", \"Yes\"\n");
                     return 0;
                 }
 
