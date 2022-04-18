@@ -5,6 +5,7 @@ import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
 import com.rusefi.output.FragmentDialogConsumer;
 import com.rusefi.output.JavaSensorsConsumer;
+import com.rusefi.output.OutputsSectionConsumer;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -25,9 +26,11 @@ public class UsagesReader {
             "\n" +
             "typedef enum {\n");
 
-    private StringBuilder totalSensors = new StringBuilder();
+    private final StringBuilder totalSensors = new StringBuilder();
 
-    private StringBuilder fancyNewStuff = new StringBuilder();
+    private final StringBuilder fancyNewStuff = new StringBuilder();
+
+    private final StringBuilder fancyNewMenu = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(
             header +
@@ -58,8 +61,12 @@ public class UsagesReader {
             fw.write(usagesReader.totalSensors.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/wip.ini")) {
+        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_content.ini")) {
             fw.write(usagesReader.fancyNewStuff.toString());
+        }
+
+        try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
+            fw.write(usagesReader.fancyNewMenu.toString());
         }
     }
 
@@ -69,6 +76,9 @@ public class UsagesReader {
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
+        String tsOutputsDestination = "console/binary/";
+
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         EntryHandler handler = new EntryHandler() {
 
@@ -101,7 +111,7 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                state.addDestination(javaSensorsConsumer);
+                state.addDestination(javaSensorsConsumer, outputsSections);
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
@@ -111,6 +121,8 @@ public class UsagesReader {
                 state.doJob();
 
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
+
+                fancyNewMenu.append(fragmentDialogConsumer.menuLine());
 
                 log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
             }

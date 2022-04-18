@@ -3,18 +3,17 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 
-import java.io.IOException;
 import java.util.List;
 
 public abstract class FieldsStrategy {
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
         if (state.stack.isEmpty()) {
             return writeFields(structure.tsFields, "", sensorTsPosition);
         }
         return sensorTsPosition;
     }
 
-    protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
+    protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) {
         FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
             iterator.start(i);
@@ -25,6 +24,6 @@ public abstract class FieldsStrategy {
         return tsPosition;
     }
 
-    abstract int writeOneField(FieldIterator iterator, String prefix, int tsPosition) throws IOException;
+    abstract int writeOneField(FieldIterator iterator, String prefix, int tsPosition);
 
 }

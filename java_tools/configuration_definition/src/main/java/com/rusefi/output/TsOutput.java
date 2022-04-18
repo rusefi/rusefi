@@ -18,10 +18,12 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
+    private final boolean registerOffsets;
     private final StringBuilder tsHeader = new StringBuilder();
 
-    public TsOutput(boolean longForm) {
+    public TsOutput(boolean longForm, boolean registerOffsets) {
         this.isConstantsSection = longForm;
+        this.registerOffsets = registerOffsets;
     }
 
     public String getContent() {
@@ -35,7 +37,7 @@ public class TsOutput {
     public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
-            public int writeOneField(FieldIterator it, String prefix, int tsPosition) throws IOException {
+            public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
                 ConfigField configField = it.cf;
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
@@ -47,11 +49,13 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                ConfigStructure cs = configField.getState().structures.get(configField.getType());
+                ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
                 }
-                state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
+                if (registerOffsets) {
+                    state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
+                }
 
                 if (cs != null) {
                     String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
@@ -125,9 +129,6 @@ public class TsOutput {
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
-            if (isConstantsSection) {
-                throw new IllegalStateException("todo: implement default tsInfo for long form");
-            }
             // default units and scale
             return quote("") + ", 1, 0";
         }
