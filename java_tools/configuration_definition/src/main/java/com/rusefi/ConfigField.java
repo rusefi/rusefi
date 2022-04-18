@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.Pair;
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
 
 import java.util.Arrays;
@@ -93,6 +94,10 @@ public class ConfigField {
             return variableRegistry.intValues.get(s);
         }
         return Integer.parseInt(s);
+    }
+
+    public ConfigStructure getStructureType() {
+        return getState().structures.get(getType());
     }
 
     public boolean isArray() {

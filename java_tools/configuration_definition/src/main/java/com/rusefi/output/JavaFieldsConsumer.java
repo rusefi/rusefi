@@ -25,7 +25,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return content.toString();
     }
 
-    private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) throws IOException {
+    private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) {
         content.append("\tpublic static final Field ");
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
         content.append(nameWithPrefix.toUpperCase());
@@ -50,7 +50,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) throws IOException {
+            protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField prev = iterator.getPrev();
                 ConfigField configField = iterator.cf;
                 ConfigField next = iterator.next;
@@ -62,7 +62,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 if (configField.getName().equals(prev.getName())) {
                     return tsPosition;
                 }
-                ConfigStructure cs = configField.getState().structures.get(configField.getType());
+                ConfigStructure cs = configField.getStructureType();
                 if (cs != null) {
                     String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
                     return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
