@@ -2,17 +2,22 @@
 
 #include "knock_logic.h"
 
+struct MockKnockController : public KnockController {
+	float getKnockThreshold() const override {
+		// Knock threshold of 20dBv
+		return 20;
+	}
+};
+
 TEST(Knock, Retards) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	// Knock threshold of 20dBv
-	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
 	engineConfiguration->knockRetardMaximum = 8;
 
-	KnockController dut;
+	MockKnockController dut;
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
@@ -41,10 +46,8 @@ TEST(Knock, Retards) {
 TEST(Knock, Reapply) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	KnockController dut;
+	MockKnockController dut;
 
-	// Knock threshold of 20dBv
-	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
@@ -61,18 +64,18 @@ TEST(Knock, Reapply) {
 	constexpr auto fastPeriodSec = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
 	// call the fast callback, should reapply 1 degree * callback period
-	dut.periodicFastCallback();
+	dut.onFastCallback();
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2 - 1.0f * fastPeriodSec);
 
 	// 10 updates total
 	for (size_t i = 0; i < 9; i++) {
-		dut.periodicFastCallback();
+		dut.onFastCallback();
 	}
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2 - 10 * 1.0f * fastPeriodSec);
 
 	// Spend a long time without knock
 	for (size_t i = 0; i < 1000; i++) {
-		dut.periodicFastCallback();
+		dut.onFastCallback();
 	}
 
 	// Should have no knock retard
