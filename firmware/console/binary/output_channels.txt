@@ -299,7 +299,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	bit launchActivateSwitchCondition
 	bit launchIsLaunchCondition;
 	bit launchCombinedConditions
-	bit launchActivatePinState
 	bit dfcoActive
 	bit tpsAccelActive
 
@@ -353,13 +352,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
     uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
     uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
 
-    int idleState;;"", 1, 0, -10000, 10000, 3
 
     float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
     float injectorFlowPressureDelta;;"kPa", 1, 0, -10000, 10000, 1
 
-
-    float etbFeedForward;;"%", 1, 0, -10000, 10000, 3
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
     float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
@@ -370,5 +366,5 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	uint16_t auxSpeed1;"aux speed 1";"s",1, 0, 0, 0, 0
 	uint16_t auxSpeed2;"aux speed 2";"s",1, 0, 0, 0, 0
 
-	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[80 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

@@ -121,7 +121,11 @@ public class ConfigDefinition {
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
-                    state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
+                    try {
+                        state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
+                    } catch (RuntimeException e) {
+                        throw new IllegalStateException("While processing " + fileName, e);
+                    }
                     state.inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
@@ -223,7 +227,6 @@ public class ConfigDefinition {
              * we have '-readfile OUTPUTS_SECTION' in one of .sh files in order to template rusefi.input
              * Same with '-readfile DATALOG_SECTION'
              */
-            state.destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
             state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
         }
         if (tsInputFileFolder != null) {

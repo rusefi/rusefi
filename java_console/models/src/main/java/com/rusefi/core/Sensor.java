@@ -160,11 +160,11 @@ public enum Sensor {
     targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 968, 1.0, -1.0, -1.0, ""),
 //    baseDwell("baseDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
 //    dwellVoltageCorrection("dwellVoltageCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 976, 1.0, -1.0, -1.0, ""),
-//    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
-//    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
-//    etb_idlePosition("idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
-//    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
-//    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
+    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
+    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
+    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
+    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
+    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),

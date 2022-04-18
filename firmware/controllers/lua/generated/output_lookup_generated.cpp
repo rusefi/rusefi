@@ -370,8 +370,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.launchIsLaunchCondition;
 	if (strEqualCaseInsensitive(name, "launchCombinedConditions"))
 		return engine->outputChannels.launchCombinedConditions;
-	if (strEqualCaseInsensitive(name, "launchActivatePinState"))
-		return engine->outputChannels.launchActivatePinState;
 	if (strEqualCaseInsensitive(name, "dfcoActive"))
 		return engine->outputChannels.dfcoActive;
 	if (strEqualCaseInsensitive(name, "tpsAccelActive"))
@@ -448,14 +446,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.starterRelayDisable;
 	if (strEqualCaseInsensitive(name, "multiSparkCounter"))
 		return engine->outputChannels.multiSparkCounter;
-	if (strEqualCaseInsensitive(name, "idleState"))
-		return engine->outputChannels.idleState;
 	if (strEqualCaseInsensitive(name, "injectorFlowPressureRatio"))
 		return engine->outputChannels.injectorFlowPressureRatio;
 	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
 		return engine->outputChannels.injectorFlowPressureDelta;
-	if (strEqualCaseInsensitive(name, "etbFeedForward"))
-		return engine->outputChannels.etbFeedForward;
 	if (strEqualCaseInsensitive(name, "etbIntegralError"))
 		return engine->outputChannels.etbIntegralError;
 	if (strEqualCaseInsensitive(name, "etbCurrentTarget"))

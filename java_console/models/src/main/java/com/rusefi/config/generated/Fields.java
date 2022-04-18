@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 18 06:07:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 18 15:41:08 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -791,7 +791,7 @@ public class Fields {
 	public static final String ENGINE_MAKE_SUBARU = "Subaru";
 	public static final String ENGINE_MAKE_TOYOTA = "Toyota";
 	public static final String ENGINE_MAKE_VAG = "VAG";
-	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
+	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engine_type_e_BMW_M73_M = 24;
 	public static final int engine_type_e_BMW_M73_MRE = 50;
@@ -1538,8 +1538,7 @@ public class Fields {
 	public static final int knockBaseNoise_offset = 3991;
 	public static final int knockDetectionWindowEnd_offset = 1296;
 	public static final int knockDetectionWindowStart_offset = 1292;
-	public static final int knockNoise_offset = 12;
-	public static final int knockNoiseRpmBins_offset = 44;
+	public static final int knockNoiseRpmBins_offset = 12;
 	public static final int knockRetardAggression_offset = 620;
 	public static final int knockRetardMaximum_offset = 622;
 	public static final int knockRetardReapplyRate_offset = 621;
@@ -1876,6 +1875,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 1984793654;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2371,7 +2371,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.18.all.3454356198";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.18.all.1984793654";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
@@ -2414,6 +2414,7 @@ public class Fields {
 	public static final int unused1740b2_offset = 1740;
 	public static final int unused17440_offset = 17440;
 	public static final int unused184_offset = 184;
+	public static final int unused28_offset = 28;
 	public static final int unused722_offset = 722;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
@@ -2583,8 +2584,8 @@ public class Fields {
 	public static final Field MAXACRPM = Field.create("MAXACRPM", 9, FieldType.INT8).setScale(50.0);
 	public static final Field MAXACTPS = Field.create("MAXACTPS", 10, FieldType.INT8).setScale(1.0);
 	public static final Field MAXACCLT = Field.create("MAXACCLT", 11, FieldType.INT8).setScale(1.0);
-	public static final Field KNOCKNOISE = Field.create("KNOCKNOISE", 12, FieldType.FLOAT);
-	public static final Field KNOCKNOISERPMBINS = Field.create("KNOCKNOISERPMBINS", 44, FieldType.INT8).setScale(50.0);
+	public static final Field KNOCKNOISERPMBINS = Field.create("KNOCKNOISERPMBINS", 12, FieldType.INT8).setScale(50.0);
+	public static final Field UNUSED28 = Field.create("UNUSED28", 28, FieldType.INT8).setScale(1.0);
 	public static final Field MULTISPARKMAXSPARKINGANGLE = Field.create("MULTISPARKMAXSPARKINGANGLE", 52, FieldType.INT8).setScale(1.0);
 	public static final Field MULTISPARKMAXEXTRASPARKCOUNT = Field.create("MULTISPARKMAXEXTRASPARKCOUNT", 53, FieldType.INT8).setScale(1.0);
 	public static final Field SPARKDWELLRPMBINS = Field.create("SPARKDWELLRPMBINS", 54, FieldType.INT8).setScale(50.0);
@@ -3693,7 +3694,7 @@ public class Fields {
 	public static final Field TCU_SOLENOID_MODE4 = Field.create("TCU_SOLENOID_MODE4", 3988, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field TCU_SOLENOID_MODE5 = Field.create("TCU_SOLENOID_MODE5", 3989, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field TCU_SOLENOID_MODE6 = Field.create("TCU_SOLENOID_MODE6", 3990, FieldType.INT8, pin_output_mode_e).setScale(1.0);
-	public static final Field KNOCKBASENOISE = Field.create("KNOCKBASENOISE", 3991, FieldType.INT8).setScale(1.0);
+	public static final Field KNOCKBASENOISE = Field.create("KNOCKBASENOISE", 3991, FieldType.INT8).setScale(0.5);
 	public static final Field ALIGNMENTFILL_AT_4007 = Field.create("ALIGNMENTFILL_AT_4007", 4007, FieldType.INT8).setScale(1.0);
 	public static final Field TRIGGERGAPOVERRIDEFROM1 = Field.create("TRIGGERGAPOVERRIDEFROM1", 4008, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM2 = Field.create("TRIGGERGAPOVERRIDEFROM2", 4012, FieldType.FLOAT);
@@ -3921,8 +3922,8 @@ public class Fields {
 	MAXACRPM,
 	MAXACTPS,
 	MAXACCLT,
-	KNOCKNOISE,
 	KNOCKNOISERPMBINS,
+	UNUSED28,
 	MULTISPARKMAXSPARKINGANGLE,
 	MULTISPARKMAXEXTRASPARKCOUNT,
 	SPARKDWELLRPMBINS,

@@ -41,10 +41,10 @@ public class FragmentDialogConsumerTest {
         state.readBufferedReader(outputChannels, fragmentDialogConsumer);
 
         assertEquals("indicatorPanel = ac_stateIndicatorPanel, 2\n" +
-                        "\tindicator = {sd_bit_of_sd}, \"No\", \"Yes\"\n" +
-                        "\tindicator = {sd_present}, \"No\", \"Yes\"\n" +
-                        "\tindicator = {sd_present2}, \"No\", \"Yes\"\n" +
-                        "\tindicator = {sd_present3}, \"No\", \"Yes\"\n" +
+                        "\tindicator = {sd_bit_of_sd}, \"bit_of_sd No\", \"bit_of_sd Yes\"\n" +
+                        "\tindicator = {sd_present}, \"sd_present No\", \"sd_present Yes\"\n" +
+                        "\tindicator = {sd_present2}, \"sd_present2 No\", \"sd_present2 Yes\"\n" +
+                        "\tindicator = {sd_present3}, \"sd_present3 No\", \"sd_present3 Yes\"\n" +
                         "\n" +
                         "dialog = ac_stateDialog, \"ac_state\"\n" +
                         "\tpanel = ac_stateIndicatorPanel\n" +
