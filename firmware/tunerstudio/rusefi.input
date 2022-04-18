@@ -183,7 +183,7 @@ enable2ndByteCanID = false
 ; see TunerStudioOutputChannels struct
 ;
 
-@@OUTPUTS_SECTION@@
+@@OUTPUTS_SECTION_FROM_FILE@@
 
       time            = { timeNow }
 
@@ -1319,7 +1319,7 @@ gaugeCategory = DynoView
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
-@@DATALOG_SECTION@@
+@@DATALOG_SECTION_FROM_FILE@@
 
 [Menu]
 
