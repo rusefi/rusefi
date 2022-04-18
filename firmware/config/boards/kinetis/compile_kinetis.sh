@@ -13,8 +13,6 @@ export "EXTRA_PARAMS=-DDUMMY -DCPU_MKE16F512VLH16 -DCPU_MKE16F512VLH16_cm4 -D__U
  "
 # set BUILDDIR=build_kinetis
 export BUILDDIR=build
-export PROJECT_BOARD=kinetis
-export PROJECT_CPU=kinetis
 export DEBUG_LEVEL_OPT="-O2"
 export USE_FATFS=no
 export USE_BOOTLOADER=no
@@ -24,4 +22,4 @@ export USE_BOOTLOADER=no
 
 # make -r -j4
 
-bash ../common_make.sh
+bash ../common_make.sh kinetis kinetis
