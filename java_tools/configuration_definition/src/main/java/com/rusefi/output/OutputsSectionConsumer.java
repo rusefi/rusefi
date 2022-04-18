@@ -14,7 +14,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
-        tsOutput = new TsOutput(false);
+        tsOutput = new TsOutput(false, false);
     }
 
     public String getContent() {

@@ -18,10 +18,12 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
+    private final boolean registerOffsets;
     private final StringBuilder tsHeader = new StringBuilder();
 
-    public TsOutput(boolean longForm) {
+    public TsOutput(boolean longForm, boolean registerOffsets) {
         this.isConstantsSection = longForm;
+        this.registerOffsets = registerOffsets;
     }
 
     public String getContent() {
@@ -51,7 +53,9 @@ public class TsOutput {
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
                 }
-                state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
+                if (registerOffsets) {
+                    state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
+                }
 
                 if (cs != null) {
                     String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
