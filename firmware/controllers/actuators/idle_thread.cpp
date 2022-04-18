@@ -352,7 +352,6 @@ float IdleController::getIdlePosition() {
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
 				getIdlePid()->postState(engine->outputChannels.idleStatus);
-				engine->outputChannels.dup_idleState = idleState;
 			} else {
 				engine->outputChannels.idleCurrentPosition = iacPosition;
 				extern StepperMotor iacMotor;
