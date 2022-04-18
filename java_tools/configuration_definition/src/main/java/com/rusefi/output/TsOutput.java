@@ -125,9 +125,6 @@ public class TsOutput {
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
-            if (isConstantsSection) {
-                throw new IllegalStateException("todo: implement default tsInfo for long form");
-            }
             // default units and scale
             return quote("") + ", 1, 0";
         }
