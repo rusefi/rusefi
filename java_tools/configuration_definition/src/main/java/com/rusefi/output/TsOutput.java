@@ -37,7 +37,7 @@ public class TsOutput {
     public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
-            public int writeOneField(FieldIterator it, String prefix, int tsPosition) throws IOException {
+            public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
                 ConfigField configField = it.cf;
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
@@ -49,7 +49,7 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                ConfigStructure cs = configField.getState().structures.get(configField.getType());
+                ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
                 }
