@@ -7,12 +7,15 @@ import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
+import static com.rusefi.ConfigField.unquote;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * We keep state here as we read configuration definition
@@ -292,7 +295,7 @@ public class ReaderState {
         if (cf.isIterate()) {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
-                ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
+                ConfigField element = new ConfigField(state, cf.getName() + i, getCommentWithIndex(cf, i), null,
                         cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
                 element.isFromIterate(true);
                 structure.addTs(element);
@@ -302,6 +305,12 @@ public class ReaderState {
         } else {
             structure.addBoth(cf);
         }
+    }
+
+    @NotNull
+    private static String getCommentWithIndex(ConfigField cf, int i) {
+        String unquoted = unquote(cf.getCommentOrName());
+        return quote(unquoted + " " + i);
     }
 
     public String getHeader() {

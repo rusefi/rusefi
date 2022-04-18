@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * This is an immutable model of an individual field
@@ -372,6 +373,13 @@ public class ConfigField {
 
     public boolean isFromIterate() {
         return isFromIterate;
+    }
+
+    // todo: find more usages for this method?
+    public String getCommentOrName() {
+        if (comment == null || comment.trim().isEmpty())
+            return quote(name);
+        return comment;
     }
 }
 
