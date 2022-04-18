@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 12:07:23 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 15:40:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -656,7 +656,7 @@ public class TsOutputs {
 	public static final Field LAUNCHACTIVATESWITCHCONDITION = Field.create("LAUNCHACTIVATESWITCHCONDITION", 408, FieldType.BIT, 3);
 	public static final Field LAUNCHISLAUNCHCONDITION = Field.create("LAUNCHISLAUNCHCONDITION", 408, FieldType.BIT, 4);
 	public static final Field LAUNCHCOMBINEDCONDITIONS = Field.create("LAUNCHCOMBINEDCONDITIONS", 408, FieldType.BIT, 5);
-	public static final Field LAUNCHACTIVATEPINSTATE = Field.create("LAUNCHACTIVATEPINSTATE", 408, FieldType.BIT, 6);
+	public static final Field DUP_LAUNCHACTIVATEPINSTATE = Field.create("DUP_LAUNCHACTIVATEPINSTATE", 408, FieldType.BIT, 6);
 	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 408, FieldType.BIT, 7);
 	public static final Field TPSACCELACTIVE = Field.create("TPSACCELACTIVE", 408, FieldType.BIT, 8);
 	public static final Field UNUSEDBIT_227_9 = Field.create("UNUSEDBIT_227_9", 408, FieldType.BIT, 9);
@@ -718,10 +718,10 @@ public class TsOutputs {
 	public static final Field STARTERSTATE = Field.create("STARTERSTATE", 489, FieldType.INT8).setScale(1.0);
 	public static final Field STARTERRELAYDISABLE = Field.create("STARTERRELAYDISABLE", 490, FieldType.INT8).setScale(1.0);
 	public static final Field MULTISPARKCOUNTER = Field.create("MULTISPARKCOUNTER", 491, FieldType.INT8).setScale(1.0);
-	public static final Field IDLESTATE = Field.create("IDLESTATE", 492, FieldType.INT).setScale(1.0);
+	public static final Field DUP_IDLESTATE = Field.create("DUP_IDLESTATE", 492, FieldType.INT).setScale(1.0);
 	public static final Field INJECTORFLOWPRESSURERATIO = Field.create("INJECTORFLOWPRESSURERATIO", 496, FieldType.FLOAT);
 	public static final Field INJECTORFLOWPRESSUREDELTA = Field.create("INJECTORFLOWPRESSUREDELTA", 500, FieldType.FLOAT);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 504, FieldType.FLOAT);
+	public static final Field DUP_ETBFEEDFORWARD = Field.create("DUP_ETBFEEDFORWARD", 504, FieldType.FLOAT);
 	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 508, FieldType.FLOAT);
 	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 512, FieldType.FLOAT);
 	public static final Field ALTERNATORSTATUS_ITERM = Field.create("ALTERNATORSTATUS_ITERM", 516, FieldType.INT16).setScale(0.01);
@@ -1088,7 +1088,7 @@ public class TsOutputs {
 	LAUNCHACTIVATESWITCHCONDITION,
 	LAUNCHISLAUNCHCONDITION,
 	LAUNCHCOMBINEDCONDITIONS,
-	LAUNCHACTIVATEPINSTATE,
+	DUP_LAUNCHACTIVATEPINSTATE,
 	DFCOACTIVE,
 	TPSACCELACTIVE,
 	UNUSEDBIT_227_9,
@@ -1150,10 +1150,10 @@ public class TsOutputs {
 	STARTERSTATE,
 	STARTERRELAYDISABLE,
 	MULTISPARKCOUNTER,
-	IDLESTATE,
+	DUP_IDLESTATE,
 	INJECTORFLOWPRESSURERATIO,
 	INJECTORFLOWPRESSUREDELTA,
-	ETBFEEDFORWARD,
+	DUP_ETBFEEDFORWARD,
 	ETBINTEGRALERROR,
 	ETBCURRENTTARGET,
 	ALTERNATORSTATUS_ITERM,
