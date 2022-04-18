@@ -2,7 +2,6 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderState;
 import com.rusefi.output.FragmentDialogConsumer;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -52,7 +51,8 @@ public class FragmentDialogConsumerTest {
                         "\n" +
                         "dialog = ac_stateDialog, \"ac_state\"\n" +
                         "\tpanel = ac_stateIndicatorPanel\n" +
-                        "\tpanel = ac_stateGraph\n",
+                        "\tpanel = ac_stateGraph\n" +
+                "\n",
                 fragmentDialogConsumer.getContent());
 
     }

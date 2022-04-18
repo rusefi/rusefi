@@ -1474,6 +1474,9 @@ menuDialog = main
 		subMenu = idleVeTableTbl,              "Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
+  menu = "&View"
+@@LIVE_DATA_MENU_FROM_FILE@@
+
 	menu = "&Advanced"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
 		subMenu = gearDetection,			"Gear detection", 0
@@ -3137,6 +3140,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = speedSensorLeft, "", yAxis
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
 		panel = speedSensorCan
+
+@@LIVE_DATA_PANELS_FROM_FILE@@
 
 	dialog = gearDetection, "Gear Detection"
 		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
