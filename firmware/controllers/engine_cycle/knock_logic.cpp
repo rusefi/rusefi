@@ -46,7 +46,7 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 }
 
 bool KnockController::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
-	bool isKnock = dbv > engine->engineState.knockThreshold;
+	bool isKnock = dbv > m_knockThreshold;
 
 #if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
@@ -58,7 +58,7 @@ bool KnockController::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, e
 
 	// If this was a knock, count it!
 	if (isKnock) {
-		engine->outputChannels.knockCount++;
+		m_knockCount++;
 	}
 #endif // EFI_TUNER_STUDIO
 
@@ -88,7 +88,13 @@ float KnockController::getKnockRetard() const {
 	return m_knockRetard;
 }
 
-void KnockController::periodicFastCallback() {
+uint32_t KnockController::getKnockCount() const {
+	return m_knockCount;
+}
+
+void KnockController::onFastCallback() {
+	m_knockThreshold = getKnockThreshold();
+
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
 	// stored in units of 0.1 deg/sec
@@ -104,6 +110,14 @@ void KnockController::periodicFastCallback() {
 		// don't allow retard to go negative
 		m_knockRetard = maxF(0, newRetard);
 	}
+}
+
+float KnockController::getKnockThreshold() const {
+	return interpolate2d(
+		Sensor::getOrZero(SensorType::Rpm),
+		engineConfiguration->knockNoiseRpmBins,
+		engineConfiguration->knockBaseNoise
+	);
 }
 
 // This callback is to be implemented by the knock sense driver

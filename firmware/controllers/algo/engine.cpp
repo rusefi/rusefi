@@ -642,8 +642,6 @@ void Engine::periodicFastCallback() {
 
 	engineState.periodicFastCallback();
 
-	knockController.periodicFastCallback();
-
 	tachSignalCallback();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
