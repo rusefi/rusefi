@@ -26,7 +26,8 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ### Fixed
- - An attempt to make 'Trigger' dialog a bit less confusing #4021 
+ - An attempt to make 'Trigger' dialog a bit less confusing #4021
+ - Fixed knock threshold table, improved knock sensing status gauges
 
 ### Added
  - Mitsubishi 36-2-1-1 trigger wheel
