@@ -15,8 +15,8 @@
 
 class TransmissionControllerBase {
 public:
-	void update(gear_e);
-	void init();
+	virtual void update(gear_e);
+	virtual void init();
 	gear_e getCurrentGear() const;
 	TransmissionControllerMode getMode() {
 		return TransmissionControllerMode::None;
