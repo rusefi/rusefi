@@ -10,11 +10,14 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 public class FragmentDialogConsumer implements ConfigurationConsumer {
     private final StringBuilder graphLines = new StringBuilder();
+    private final StringBuilder graphList = new StringBuilder();
 
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
     private boolean hasIndicators;
     private int graphLinesCounter;
+    private int linesInCurrentGraph;
+    private int currentGraphIndex;
 
     public FragmentDialogConsumer(String fragmentName) {
         this.fragmentName = fragmentName;
@@ -45,17 +48,37 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
                     indicatorPanel.append("\tindicator = {" + configField.getName() + "}, \"No\", \"Yes\"\n");
-
+                    return 0;
                 }
 
+                if (graphLinesCounter == 0)
+                    startNewGraph();
                 graphLinesCounter++;
+
+                if (linesInCurrentGraph == 4) {
+                    linesInCurrentGraph = 0;
+                    currentGraphIndex++;
+                    startNewGraph();
+                }
+
+
                 graphLines.append("\tgraphLine = " + configField.getName() + "\n");
+                linesInCurrentGraph++;
 
 
                 return 0;
             }
         };
         fieldsStrategy.run(readerState, structure, 0);
+
+    }
+
+    private void startNewGraph() {
+        currentGraphIndex++;
+        graphLines.append("liveGraph = " + getGraphControlName() +
+                ", " + quote("Graph") + ", South\n");
+
+        graphList.append("\tpanel = " + getGraphControlName() + "\n");
 
     }
 
@@ -76,20 +99,17 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
             return "";
         }
 
-        String dialogDeclaration = "dialog = " + getDialogName() +", " + quote(fragmentName) + "\n";
+        String dialogDeclaration = "dialog = " + getDialogName() + ", " + quote(fragmentName) + "\n";
 
         String indicatorPanelUsageLine = (indicatorPanel.length() > 0) ? "\tpanel = " + getPanelName() + "\n" : "";
 
 
-        String liveGraphControlDeclaration = "liveGraph = " + getGraphControlName() +
-                ", " + quote("Graph") + ", South\n";
-
         return indicatorPanel + "\n" +
-                liveGraphControlDeclaration +
                 graphLines + "\n" +
                 dialogDeclaration +
                 indicatorPanelUsageLine +
-                "\tpanel = " + getGraphControlName() + "\n\n"
+                graphList +
+                "\n"
                 ;
     }
 
@@ -100,6 +120,6 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
     @NotNull
     private String getGraphControlName() {
-        return fragmentName + "Graph";
+        return fragmentName + "_" + currentGraphIndex + "_Graph";
     }
 }
