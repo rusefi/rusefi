@@ -32,3 +32,10 @@ DDEFS += $(VAR_DEF_ENGINE_TYPE)
 # We are running on microRusEFI hardware!
 DDEFS += -DHW_MICRO_RUSEFI=1
 
+ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+	DDEFS += -DSHORT_BOARD_NAME=mre_f7
+else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
+	DDEFS += -DSHORT_BOARD_NAME=mre_f4
+else
+$(error Unsupported PROJECT_CPU for Proteus: [$(PROJECT_CPU)])
+endif
