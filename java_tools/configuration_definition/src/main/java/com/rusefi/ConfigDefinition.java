@@ -223,7 +223,6 @@ public class ConfigDefinition {
              * we have '-readfile OUTPUTS_SECTION' in one of .sh files in order to template rusefi.input
              * Same with '-readfile DATALOG_SECTION'
              */
-            state.destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
             state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
         }
         if (tsInputFileFolder != null) {
