@@ -1542,7 +1542,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
-		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
+		subMenu = tcuSolenoidTableTbl,		"Shift Solenoids"
 		subMenu = tccCurves, "TCC Lock/Unlock Speed"
 		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
 		subMenu = pcPerShiftDialog, "Line Pressure Per Shift"
