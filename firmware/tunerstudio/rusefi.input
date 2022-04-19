@@ -3778,10 +3778,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
-	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
-	    field = "Switch Input inverted",                launchActivatePinMode,  {launchActivationMode == 1 && launchControlEnabled == 1}
-		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
-		field = "Clutch Input inverted",				clutchDownPinMode,  {launchActivationMode == 1 && launchControlEnabled == 1}
+	    field = "Switch Input",                     	launchActivatePin,      {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+	    field = "Switch Input inverted",                launchActivatePinMode,  {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+		field = "Clutch Input", 						clutchDownPin,          {launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+		field = "Clutch Input inverted",				clutchDownPinMode,      {launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 		field = ""
 ; dead code		field = "Rpm Threshold",                         launchRpmThreshold,  {launchControlEnabled == 1}
 		field = "Speed Threshold",                       launchSpeedThreshold,  {launchControlEnabled == 1}
