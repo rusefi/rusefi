@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Apr 19 19:08:30 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -7,7 +7,7 @@
 // start of trigger_central_s
 struct trigger_central_s {
 	/**
-	 * Counter of hardware events since ECU start
+	 * Hardware events since boot
 	 * offset 0
 	 */
 	int hwEventCounters[HW_EVENT_TYPES];
@@ -19,4 +19,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 28);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Apr 19 19:08:30 UTC 2022
