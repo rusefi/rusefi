@@ -113,6 +113,7 @@ void startPedalPins() {
 	startInputPinIfValid("throttle pedal up switch", engineConfiguration->throttlePedalUpPin, engineConfiguration->throttlePedalUpPinMode);
 
 	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
+	startInputPinIfValid("launch switch", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -121,6 +122,7 @@ void stopPedalPins() {
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
+	brain_pin_markUnused(activeConfiguration.launchActivatePin);
 }
 
 #if ! EFI_UNIT_TEST
