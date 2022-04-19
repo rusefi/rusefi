@@ -3780,6 +3780,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Activation Mode",                      launchActivationMode
 
 	    field = "Launch Button",                        launchActivatePin,      {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+	    field = "Launch Button inverted",				launchActivateInverted
 	    field = "Launch Button mode",                   launchActivatePinMode,  {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 
         field = "Clutch Down",					        clutchDownPin,          {launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
