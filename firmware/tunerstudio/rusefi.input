@@ -640,20 +640,49 @@ enable2ndByteCanID = false
 		gauge = tChargeGauge
 
 	curve = tccLockCurve, "TCC Lock Curve"
-		columnLabel = "TPS", "Lockup Speed"
+		columnLabel = "TPS", "Lock Speed", "Unlock Speed"
 		xAxis = 0, 100, 10
 		yAxis = 0, 100, 10
 		xBins = tcu_tccTpsBins, TPSValue
 		yBins = tcu_tccLockSpeed
-		gauge = TPSGauge
-
-	curve = tccUnlockCurve, "TCC Unlock Curve"
-		columnLabel = "TPS", "Unlock Speed"
-		xAxis = 0, 100, 10
-		yAxis = 0, 100, 10
-		xBins = tcu_tccTpsBins, TPSValue
 		yBins = tcu_tccUnlockSpeed
 		gauge = TPSGauge
+
+	curve = pcPerGearCurve, "Transmission Line Pressure Control"
+		columnLabel = "Airmass", ""
+		xAxis = 0, 5, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_pcAirmassBins, chargeAirMass
+		yBins = tcu_pcValsR
+		yBins = tcu_pcValsN
+		yBins = tcu_pcVals1
+		yBins = tcu_pcVals2
+		yBins = tcu_pcVals3
+		yBins = tcu_pcVals4
+		lineLabel = "R%"
+		lineLabel = "N%"
+		lineLabel = "1%"
+		lineLabel = "2%"
+		lineLabel = "3%"
+		lineLabel = "4%"
+
+curve = pcPerShiftCurve, "Transmission Line Pressure Control - Shift"
+		columnLabel = "Airmass", ""
+		xAxis = 0, 5, 10
+		yAxis = 0, 100, 10
+		xBins = tcu_pcAirmassBins, chargeAirMass
+		yBins = tcu_pcVals12
+		yBins = tcu_pcVals23
+		yBins = tcu_pcVals34
+		yBins = tcu_pcVals21
+		yBins = tcu_pcVals32
+		yBins = tcu_pcVals43
+		lineLabel = "1->2%"
+		lineLabel = "2->3%"
+		lineLabel = "3->4%"
+		lineLabel = "2->1%"
+		lineLabel = "3->2%"
+		lineLabel = "4->3%"
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
@@ -1515,6 +1544,8 @@ menuDialog = main
 		subMenu = tcuControls,			"Transmission Settings"
 		subMenu = tcuSolenoidTableTbl,		"TCU Solenoids"
 		subMenu = tccCurves, "TCC Lock/Unlock Speed"
+		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
+		subMenu = pcPerShiftDialog, "Line Pressure Per Shift"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -3414,37 +3445,38 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled
 		field = "Gear Controller" gearControllerMode, { tcuEnabled }
-		field = "Transmission Controller" transmissionControllerMode, {tcuEnabled}
+		field = "Transmission Controller" transmissionControllerMode, { tcuEnabled }
 
 	dialog = solenoidPanel, "Shift Solenoids"
-		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled }
-		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled }
-		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled }
-		field = "Solenoid 2 Pin Mode"	tcu_solenoid_mode2,	{ tcuEnabled }
-		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled }
-		field = "Solenoid 3 Pin Mode"	tcu_solenoid_mode3,	{ tcuEnabled }
-		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled }
-		field = "Solenoid 4 Pin Mode"	tcu_solenoid_mode4,	{ tcuEnabled }
-		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled }
-		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled }
-		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled }
-		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled }
-		field = "TCC On/Off Solenoid Pin" tcu_tcc_onoff_solenoid, { tcuEnabled }
-		field = "TCC On/Off Solenoid Pin Mode" tcu_tcc_onoff_solenoid_mode, { tcuEnabled }
-		field = "TCC PWM Solenoid Pin" tcu_tcc_pwm_solenoid, { tcuEnabled }
-		field = "TCC PWM Solenoid Pin Mode" tcu_tcc_pwm_solenoid_mode, { tcuEnabled }
+		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 2 Pin Mode"	tcu_solenoid_mode2,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 3 Pin"	tcu_solenoid3,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 3 Pin Mode"	tcu_solenoid_mode3,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 4 Pin"	tcu_solenoid4,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 4 Pin Mode"	tcu_solenoid_mode4,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 5 Pin"	tcu_solenoid5,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "TCC On/Off Solenoid Pin" tcu_tcc_onoff_solenoid, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "TCC On/Off Solenoid Pin Mode" tcu_tcc_onoff_solenoid_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "TCC PWM Solenoid Pin" tcu_tcc_pwm_solenoid, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "TCC PWM Solenoid Pin Mode" tcu_tcc_pwm_solenoid_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "TCC PWM Solenoid Frequency" tcu_tcc_pwm_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Pressure Control Solenoid Pin" tcu_pc_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Pressure Control Solenoid Pin Mode" tcu_pc_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Pressure Control Solenoid Frequency" tcu_pc_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Pin" tcu_32_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Pin mode" tcu_32_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Frequency" tcu_32_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
-
-	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled }
+		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
 
 	dialog = tcuControls, "Transmission Settings"
 		panel = transmissionPanel
@@ -3453,7 +3485,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = tccCurves, "TCC Lock/Unlock Speed"
 		panel = tccLockCurve
-		panel = tccUnlockCurve
+
+	dialog = pcPerGearDialog, "Line Pressure Per Gear Steady State"
+		panel = pcPerGearCurve
+
+	dialog = pcPerShiftDialog, "Line Pressure Per Shift"
+		panel = pcPerShiftCurve
 
 ;Boost Open Loop
 
