@@ -749,7 +749,10 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
     uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
-	uint16_t autoscale unused722;;"", 1, 0, 0, 0, 0
+
+	brain_input_pin_e tcuInputSpeedSensorPin
+	uint8_t tcuInputSpeedSensorTeeth
+
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t wastegatePositionMax;+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMin;+Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
