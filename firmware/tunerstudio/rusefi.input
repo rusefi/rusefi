@@ -3447,7 +3447,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Gear Controller" gearControllerMode, { tcuEnabled }
 		field = "Transmission Controller" transmissionControllerMode, { tcuEnabled }
 
-	dialog = solenoidPanel, "Shift Solenoids"
+	dialog = shiftSolenoidPanel, "Shift Solenoids"
 		field = "Solenoid 1 Pin"	tcu_solenoid1,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Solenoid 1 Pin Mode"	tcu_solenoid_mode1,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Solenoid 2 Pin"	tcu_solenoid2,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
@@ -3460,6 +3460,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Solenoid 5 Pin Mode"	tcu_solenoid_mode5,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Solenoid 6 Pin"	tcu_solenoid6,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Solenoid 6 Pin Mode"	tcu_solenoid_mode6,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Pin" tcu_32_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Pin mode" tcu_32_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "3-2 Solenoid Frequency" tcu_32_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+
+	dialog = otherSolenoidPanel, "Other Solenoids"
 		field = "TCC On/Off Solenoid Pin" tcu_tcc_onoff_solenoid, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "TCC On/Off Solenoid Pin Mode" tcu_tcc_onoff_solenoid_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "TCC PWM Solenoid Pin" tcu_tcc_pwm_solenoid, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
@@ -3468,9 +3473,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pressure Control Solenoid Pin" tcu_pc_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Pressure Control Solenoid Pin Mode" tcu_pc_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "Pressure Control Solenoid Frequency" tcu_pc_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "3-2 Solenoid Pin" tcu_32_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "3-2 Solenoid Pin mode" tcu_32_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "3-2 Solenoid Frequency" tcu_32_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
 		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
@@ -3480,7 +3482,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = tcuControls, "Transmission Settings"
 		panel = transmissionPanel
-		panel = solenoidPanel
+		panel = shiftSolenoidPanel
+		panel = otherSolenoidPanel
 		panel = buttonShiftInputPanel
 
 	dialog = tccCurves, "TCC Lock/Unlock Speed"
