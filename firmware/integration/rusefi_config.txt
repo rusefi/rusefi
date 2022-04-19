@@ -968,7 +968,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     boostType_e boostType;
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
-	#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"
+	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)", "INVALID"
     custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:1], @@launchActivationMode_e_enum@@
     launchActivationMode_e launchActivationMode;
 
