@@ -90,13 +90,15 @@ void setManualIdleValvePosition(int positionPercent) {
 	engineConfiguration->manIdlePosition = positionPercent;
 }
 
+#endif /* EFI_UNIT_TEST */
+
+#if EFI_PROD_CODE
 static void startInputPinIfValid(const char *msg, brain_pin_e pin, pin_input_mode_e mode) {
 	if (isBrainPinValid(pin)) {
 		efiSetPadMode(msg, pin, getInputMode(mode));
 	}
 }
-
-#endif /* EFI_UNIT_TEST */
+#endif // EFI_PROD_CODE
 
 percent_t getIdlePosition() {
 	return engine->module<IdleController>().unmock().currentIdlePosition;
