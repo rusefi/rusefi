@@ -215,6 +215,8 @@ public:
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 	OutputPin tcuTccOnoffSolenoid;
 	OutputPin tcuTccPwmSolenoid;
+	OutputPin tcuPcSolenoid;
+	OutputPin tcu32Solenoid;
 
 private:
 	void startInjectionPins();
