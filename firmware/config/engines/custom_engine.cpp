@@ -999,7 +999,7 @@ end
 }
 
 void detectBoardType() {
-#if HW_HELLEN
+#if HW_HELLEN && !defined(HW_HELLEN_SKIP_BOARD_TYPE)
 #if !EFI_UNIT_TEST
 	detectHellenBoardType();
 #endif /* EFI_UNIT_TEST */
