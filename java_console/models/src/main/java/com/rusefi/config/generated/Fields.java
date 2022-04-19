@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 18 23:11:26 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 00:13:52 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -53,10 +53,10 @@ public class Fields {
 	public static final int AFTERSTART_DECAY_CURVE_SIZE = 8;
 	public static final int AFTERSTART_ENRICH_CURVE_SIZE = 8;
 	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
-	public static final int afterstartCoolantBins_offset = 5140;
-	public static final int afterstartDecayTime_offset = 5236;
-	public static final int afterstartEnrich_offset = 5204;
-	public static final int afterstartHoldTime_offset = 5172;
+	public static final int afterstartCoolantBins_offset = 5148;
+	public static final int afterstartDecayTime_offset = 5244;
+	public static final int afterstartEnrich_offset = 5212;
+	public static final int afterstartHoldTime_offset = 5180;
 	public static final int air_pressure_sensor_config_s_size = 16;
 	public static final int air_pressure_sensor_type_e_MT_BOSCH_2_5 = 10;
 	public static final int air_pressure_sensor_type_e_MT_CUSTOM = 0;
@@ -227,10 +227,10 @@ public class Fields {
 	public static final int boostPid_periodMs_offset = 926;
 	public static final int boostPid_pFactor_offset = 912;
 	public static final int boostPwmFrequency_offset = 936;
-	public static final int boostRpmBins_offset = 5332;
-	public static final int boostTableClosedLoop_offset = 5340;
-	public static final int boostTableOpenLoop_offset = 5268;
-	public static final int boostTpsBins_offset = 5404;
+	public static final int boostRpmBins_offset = 5340;
+	public static final int boostTableClosedLoop_offset = 5348;
+	public static final int boostTableOpenLoop_offset = 5276;
+	public static final int boostTpsBins_offset = 5412;
 	public static final int boostType_e_CLOSED_LOOP = 1;
 	public static final int boostType_e_OPEN_LOOP = 0;
 	public static final int boostType_offset = 932;
@@ -551,12 +551,12 @@ public class Fields {
 	public static final int clt_tempC_2_offset = 344;
 	public static final int clt_tempC_3_offset = 348;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
-	public static final int cltCrankingCorr_offset = 5524;
-	public static final int cltCrankingCorrBins_offset = 5492;
-	public static final int cltFuelCorr_offset = 13700;
-	public static final int cltFuelCorrBins_offset = 13636;
-	public static final int cltIdleCorr_offset = 14084;
-	public static final int cltIdleCorrBins_offset = 14020;
+	public static final int cltCrankingCorr_offset = 5532;
+	public static final int cltCrankingCorrBins_offset = 5500;
+	public static final int cltFuelCorr_offset = 13708;
+	public static final int cltFuelCorrBins_offset = 13644;
+	public static final int cltIdleCorr_offset = 14092;
+	public static final int cltIdleCorrBins_offset = 14028;
 	public static final int cltIdleRpm_offset = 1656;
 	public static final int cltIdleRpmBins_offset = 1592;
 	public static final int cltRevLimitRpm_offset = 2924;
@@ -644,11 +644,11 @@ public class Fields {
 	public static final int cranking_rpm_offset = 180;
 	public static final int crankingAdvance_offset = 2716;
 	public static final int crankingAdvanceBins_offset = 2700;
-	public static final int crankingCycleBins_offset = 13988;
-	public static final int crankingCycleCoef_offset = 13956;
-	public static final int crankingFuelBins_offset = 13924;
-	public static final int crankingFuelCoef_offset = 13892;
-	public static final int crankingFuelCoefE100_offset = 20996;
+	public static final int crankingCycleBins_offset = 13996;
+	public static final int crankingCycleCoef_offset = 13964;
+	public static final int crankingFuelBins_offset = 13932;
+	public static final int crankingFuelCoef_offset = 13900;
+	public static final int crankingFuelCoefE100_offset = 21004;
 	public static final int crankingIACposition_offset = 1848;
 	public static final int crankingInjectionMode_offset = 436;
 	public static final int crankingTimingAngle_offset = 448;
@@ -774,7 +774,7 @@ public class Fields {
 	public static final int enableSoftwareKnock_offset = 896;
 	public static final int enableTrailingSparks_offset = 164;
 	public static final int enableVerboseCanTx_offset = 748;
-	public static final int engine_configuration_s_size = 5020;
+	public static final int engine_configuration_s_size = 5028;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 5;
 	public static final int engine_load_mode_e_LM_LUA = 6;
 	public static final int engine_load_mode_e_LM_MOCK = 100;
@@ -994,32 +994,32 @@ public class Fields {
 	public static final int fuelTrim7_offset = 4086;
 	public static final int fuelTrim8_offset = 4087;
 	public static final int fuelTrim9_offset = 4088;
-	public static final int fuelTrimLoadBins_offset = 20788;
-	public static final int fuelTrimRpmBins_offset = 20796;
-	public static final int fuelTrims10_offset = 20948;
-	public static final int fuelTrims10_table_offset = 20948;
-	public static final int fuelTrims11_offset = 20964;
-	public static final int fuelTrims11_table_offset = 20964;
-	public static final int fuelTrims12_offset = 20980;
-	public static final int fuelTrims12_table_offset = 20980;
-	public static final int fuelTrims1_offset = 20804;
-	public static final int fuelTrims1_table_offset = 20804;
-	public static final int fuelTrims2_offset = 20820;
-	public static final int fuelTrims2_table_offset = 20820;
-	public static final int fuelTrims3_offset = 20836;
-	public static final int fuelTrims3_table_offset = 20836;
-	public static final int fuelTrims4_offset = 20852;
-	public static final int fuelTrims4_table_offset = 20852;
-	public static final int fuelTrims5_offset = 20868;
-	public static final int fuelTrims5_table_offset = 20868;
-	public static final int fuelTrims6_offset = 20884;
-	public static final int fuelTrims6_table_offset = 20884;
-	public static final int fuelTrims7_offset = 20900;
-	public static final int fuelTrims7_table_offset = 20900;
-	public static final int fuelTrims8_offset = 20916;
-	public static final int fuelTrims8_table_offset = 20916;
-	public static final int fuelTrims9_offset = 20932;
-	public static final int fuelTrims9_table_offset = 20932;
+	public static final int fuelTrimLoadBins_offset = 20796;
+	public static final int fuelTrimRpmBins_offset = 20804;
+	public static final int fuelTrims10_offset = 20956;
+	public static final int fuelTrims10_table_offset = 20956;
+	public static final int fuelTrims11_offset = 20972;
+	public static final int fuelTrims11_table_offset = 20972;
+	public static final int fuelTrims12_offset = 20988;
+	public static final int fuelTrims12_table_offset = 20988;
+	public static final int fuelTrims1_offset = 20812;
+	public static final int fuelTrims1_table_offset = 20812;
+	public static final int fuelTrims2_offset = 20828;
+	public static final int fuelTrims2_table_offset = 20828;
+	public static final int fuelTrims3_offset = 20844;
+	public static final int fuelTrims3_table_offset = 20844;
+	public static final int fuelTrims4_offset = 20860;
+	public static final int fuelTrims4_table_offset = 20860;
+	public static final int fuelTrims5_offset = 20876;
+	public static final int fuelTrims5_table_offset = 20876;
+	public static final int fuelTrims6_offset = 20892;
+	public static final int fuelTrims6_table_offset = 20892;
+	public static final int fuelTrims7_offset = 20908;
+	public static final int fuelTrims7_table_offset = 20908;
+	public static final int fuelTrims8_offset = 20924;
+	public static final int fuelTrims8_table_offset = 20924;
+	public static final int fuelTrims9_offset = 20940;
+	public static final int fuelTrims9_table_offset = 20940;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final int gapTrackingLengthOverride_offset = 456;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
@@ -1312,8 +1312,8 @@ public class Fields {
 	public static final int iat_tempC_1_offset = 372;
 	public static final int iat_tempC_2_offset = 376;
 	public static final int iat_tempC_3_offset = 380;
-	public static final int iatFuelCorr_offset = 13828;
-	public static final int iatFuelCorrBins_offset = 13764;
+	public static final int iatFuelCorr_offset = 13836;
+	public static final int iatFuelCorrBins_offset = 13772;
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
 	public static final int idle_antiwindupFreq_offset = 704;
 	public static final int idle_derivativeFilterLoss_offset = 524;
@@ -1333,8 +1333,8 @@ public class Fields {
 	public static final int idle_stepperDirectionPin_offset = 613;
 	public static final int idle_stepperStepPin_offset = 614;
 	public static final int IDLE_VE_SIZE = 4;
-	public static final int idleAdvance_offset = 5564;
-	public static final int idleAdvanceBins_offset = 5556;
+	public static final int idleAdvance_offset = 5572;
+	public static final int idleAdvanceBins_offset = 5564;
 	public static final int idleIncrementalPidCic_offset = 748;
 	public static final int idleMode_offset = 1268;
 	public static final int idlePidActivationTime_offset = 2188;
@@ -1373,9 +1373,9 @@ public class Fields {
 	public static final int idleTimingPid_periodMs_offset = 3458;
 	public static final int idleTimingPid_pFactor_offset = 3444;
 	public static final int idleTimingPidDeadZone_offset = 3464;
-	public static final int idleVeLoadBins_offset = 5600;
-	public static final int idleVeRpmBins_offset = 5596;
-	public static final int idleVeTable_offset = 5604;
+	public static final int idleVeLoadBins_offset = 5608;
+	public static final int idleVeRpmBins_offset = 5604;
+	public static final int idleVeTable_offset = 5612;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
@@ -1383,10 +1383,10 @@ public class Fields {
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
 	public static final int ignition_mode_e_IM_WASTED_SPARK = 2;
 	public static final int ignitionDwellForCrankingMs_offset = 188;
-	public static final int ignitionIatCorrLoadBins_offset = 16708;
-	public static final int ignitionIatCorrRpmBins_offset = 16772;
-	public static final int ignitionIatCorrTable_offset = 16196;
-	public static final int ignitionLoadBins_offset = 18724;
+	public static final int ignitionIatCorrLoadBins_offset = 16716;
+	public static final int ignitionIatCorrRpmBins_offset = 16780;
+	public static final int ignitionIatCorrTable_offset = 16204;
+	public static final int ignitionLoadBins_offset = 18732;
 	public static final int ignitionMode_offset = 452;
 	public static final int ignitionPinMode_offset = 657;
 	public static final int ignitionPins10_offset = 653;
@@ -1401,35 +1401,35 @@ public class Fields {
 	public static final int ignitionPins7_offset = 650;
 	public static final int ignitionPins8_offset = 651;
 	public static final int ignitionPins9_offset = 652;
-	public static final int ignitionRpmBins_offset = 18756;
-	public static final int ignitionTable_offset = 18212;
+	public static final int ignitionRpmBins_offset = 18764;
+	public static final int ignitionTable_offset = 18220;
 	public static final int ignOverrideMode_offset = 1752;
-	public static final int ignTrimLoadBins_offset = 20580;
-	public static final int ignTrimRpmBins_offset = 20588;
-	public static final int ignTrims10_offset = 20740;
-	public static final int ignTrims10_table_offset = 20740;
-	public static final int ignTrims11_offset = 20756;
-	public static final int ignTrims11_table_offset = 20756;
-	public static final int ignTrims12_offset = 20772;
-	public static final int ignTrims12_table_offset = 20772;
-	public static final int ignTrims1_offset = 20596;
-	public static final int ignTrims1_table_offset = 20596;
-	public static final int ignTrims2_offset = 20612;
-	public static final int ignTrims2_table_offset = 20612;
-	public static final int ignTrims3_offset = 20628;
-	public static final int ignTrims3_table_offset = 20628;
-	public static final int ignTrims4_offset = 20644;
-	public static final int ignTrims4_table_offset = 20644;
-	public static final int ignTrims5_offset = 20660;
-	public static final int ignTrims5_table_offset = 20660;
-	public static final int ignTrims6_offset = 20676;
-	public static final int ignTrims6_table_offset = 20676;
-	public static final int ignTrims7_offset = 20692;
-	public static final int ignTrims7_table_offset = 20692;
-	public static final int ignTrims8_offset = 20708;
-	public static final int ignTrims8_table_offset = 20708;
-	public static final int ignTrims9_offset = 20724;
-	public static final int ignTrims9_table_offset = 20724;
+	public static final int ignTrimLoadBins_offset = 20588;
+	public static final int ignTrimRpmBins_offset = 20596;
+	public static final int ignTrims10_offset = 20748;
+	public static final int ignTrims10_table_offset = 20748;
+	public static final int ignTrims11_offset = 20764;
+	public static final int ignTrims11_table_offset = 20764;
+	public static final int ignTrims12_offset = 20780;
+	public static final int ignTrims12_table_offset = 20780;
+	public static final int ignTrims1_offset = 20604;
+	public static final int ignTrims1_table_offset = 20604;
+	public static final int ignTrims2_offset = 20620;
+	public static final int ignTrims2_table_offset = 20620;
+	public static final int ignTrims3_offset = 20636;
+	public static final int ignTrims3_table_offset = 20636;
+	public static final int ignTrims4_offset = 20652;
+	public static final int ignTrims4_table_offset = 20652;
+	public static final int ignTrims5_offset = 20668;
+	public static final int ignTrims5_table_offset = 20668;
+	public static final int ignTrims6_offset = 20684;
+	public static final int ignTrims6_table_offset = 20684;
+	public static final int ignTrims7_offset = 20700;
+	public static final int ignTrims7_table_offset = 20700;
+	public static final int ignTrims8_offset = 20716;
+	public static final int ignTrims8_table_offset = 20716;
+	public static final int ignTrims9_offset = 20732;
+	public static final int ignTrims9_table_offset = 20732;
 	public static final int imu_type_e_IMU_MM5_10 = 2;
 	public static final int imu_type_e_IMU_NONE = 0;
 	public static final int imu_type_e_IMU_TYPE_3 = 3;
@@ -1446,7 +1446,7 @@ public class Fields {
 	public static final int injection_mode_e_IM_SIMULTANEOUS = 0;
 	public static final int injection_mode_e_IM_SINGLE_POINT = 3;
 	public static final int injectionMode_offset = 440;
-	public static final int injectionPhase_offset = 16804;
+	public static final int injectionPhase_offset = 16812;
 	public static final int injectionPinMode_offset = 656;
 	public static final int injectionPins10_offset = 641;
 	public static final int injectionPins11_offset = 642;
@@ -1487,8 +1487,8 @@ public class Fields {
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final int injectorNonlinearMode_offset = 796;
 	public static final int injectorPressureType_offset = 1753;
-	public static final int injPhaseLoadBins_offset = 17316;
-	public static final int injPhaseRpmBins_offset = 17348;
+	public static final int injPhaseLoadBins_offset = 17324;
+	public static final int injPhaseRpmBins_offset = 17356;
 	public static final int invertCamVVTSignal_offset = 896;
 	public static final int invertPrimaryTriggerSignal_offset = 1260;
 	public static final int invertSecondaryTriggerSignal_offset = 1260;
@@ -1545,9 +1545,9 @@ public class Fields {
 	public static final int knockSamplingDuration_offset = 2112;
 	public static final int l9779_cs_offset = 627;
 	public static final int l9779spiDevice_offset = 768;
-	public static final int lambdaLoadBins_offset = 19620;
-	public static final int lambdaRpmBins_offset = 19652;
-	public static final int lambdaTable_offset = 19364;
+	public static final int lambdaLoadBins_offset = 19628;
+	public static final int lambdaRpmBins_offset = 19660;
+	public static final int lambdaTable_offset = 19372;
 	public static final int launchActivateDelay_offset = 976;
 	public static final int launchActivatePin_offset = 911;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
@@ -1603,20 +1603,20 @@ public class Fields {
 	public static final int luaOutputPins6_offset = 1141;
 	public static final int luaOutputPins7_offset = 1142;
 	public static final int luaOutputPins8_offset = 1143;
-	public static final int luaScript_offset = 5636;
+	public static final int luaScript_offset = 5644;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int maf_sensor_type_e_Bosch0280218004 = 2;
 	public static final int maf_sensor_type_e_Bosch0280218037 = 1;
 	public static final int maf_sensor_type_e_CUSTOM = 0;
 	public static final int maf_sensor_type_e_DensoTODO = 3;
 	public static final int mafAdcChannel_offset = 551;
-	public static final int mafDecoding_offset = 14148;
-	public static final int mafDecodingBins_offset = 15172;
+	public static final int mafDecoding_offset = 14156;
+	public static final int mafDecodingBins_offset = 15180;
 	public static final int mafSensorType_offset = 892;
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4796;
+	public static final int mainUnusedEnd_offset = 4806;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1638,9 +1638,9 @@ public class Fields {
 	public static final int mapCamDetectionAnglePosition_offset = 560;
 	public static final int mapErrorDetectionTooHigh_offset = 1540;
 	public static final int mapErrorDetectionTooLow_offset = 1536;
-	public static final int mapEstimateRpmBins_offset = 17988;
-	public static final int mapEstimateTable_offset = 17444;
-	public static final int mapEstimateTpsBins_offset = 17956;
+	public static final int mapEstimateRpmBins_offset = 17996;
+	public static final int mapEstimateTable_offset = 17452;
+	public static final int mapEstimateTpsBins_offset = 17964;
 	public static final int mapHighValueVoltage_offset = 1832;
 	public static final int mapLowValueVoltage_offset = 1828;
 	public static final int mapMinBufferLength_offset = 820;
@@ -1734,10 +1734,10 @@ public class Fields {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int pauseEtbControl_offset = 748;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int pedalToTpsPedalBins_offset = 5476;
-	public static final int pedalToTpsRpmBins_offset = 5484;
-	public static final int pedalToTpsTable_offset = 5412;
-	public static final int persistent_config_s_size = 21012;
+	public static final int pedalToTpsPedalBins_offset = 5484;
+	public static final int pedalToTpsRpmBins_offset = 5492;
+	public static final int pedalToTpsTable_offset = 5420;
+	public static final int persistent_config_s_size = 21148;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1837,18 +1837,18 @@ public class Fields {
 	public static final int scriptSettingName6_offset = 3300;
 	public static final int scriptSettingName7_offset = 3316;
 	public static final int scriptSettingName8_offset = 3332;
-	public static final int scriptTable1_offset = 20004;
-	public static final int scriptTable1LoadBins_offset = 20260;
-	public static final int scriptTable1RpmBins_offset = 20276;
-	public static final int scriptTable2_offset = 20292;
-	public static final int scriptTable2LoadBins_offset = 20356;
-	public static final int scriptTable2RpmBins_offset = 20372;
-	public static final int scriptTable3_offset = 20388;
-	public static final int scriptTable3LoadBins_offset = 20452;
-	public static final int scriptTable3RpmBins_offset = 20468;
-	public static final int scriptTable4_offset = 20484;
-	public static final int scriptTable4LoadBins_offset = 20548;
-	public static final int scriptTable4RpmBins_offset = 20564;
+	public static final int scriptTable1_offset = 20012;
+	public static final int scriptTable1LoadBins_offset = 20268;
+	public static final int scriptTable1RpmBins_offset = 20284;
+	public static final int scriptTable2_offset = 20300;
+	public static final int scriptTable2LoadBins_offset = 20364;
+	public static final int scriptTable2RpmBins_offset = 20380;
+	public static final int scriptTable3_offset = 20396;
+	public static final int scriptTable3LoadBins_offset = 20460;
+	public static final int scriptTable3RpmBins_offset = 20476;
+	public static final int scriptTable4_offset = 20492;
+	public static final int scriptTable4LoadBins_offset = 20556;
+	public static final int scriptTable4RpmBins_offset = 20572;
 	public static final int scriptTableName1_offset = 3156;
 	public static final int scriptTableName2_offset = 3172;
 	public static final int scriptTableName3_offset = 3188;
@@ -1875,7 +1875,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1984793654;
+	public static final int SIGNATURE_HASH = 1138652261;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -1999,7 +1999,26 @@ public class Fields {
 	public static final int tChargeMode_e_TCHARGE_MODE_RPM_TPS = 0;
 	public static final int tChargeMode_offset = 3368;
 	public static final int tchargeValues_offset = 1776;
+	public static final int tcu_32_solenoid_freq_offset = 4804;
+	public static final int tcu_32_solenoid_pin_mode_offset = 4803;
+	public static final int tcu_32_solenoid_pin_offset = 4802;
 	public static final int TCU_GEAR_COUNT = 10;
+	public static final int tcu_pc_solenoid_freq_offset = 4800;
+	public static final int tcu_pc_solenoid_pin_mode_offset = 4799;
+	public static final int tcu_pc_solenoid_pin_offset = 4798;
+	public static final int tcu_pcAirmassBins_offset = 21020;
+	public static final int tcu_pcVals12_offset = 21076;
+	public static final int tcu_pcVals1_offset = 21044;
+	public static final int tcu_pcVals21_offset = 21100;
+	public static final int tcu_pcVals23_offset = 21084;
+	public static final int tcu_pcVals2_offset = 21052;
+	public static final int tcu_pcVals32_offset = 21108;
+	public static final int tcu_pcVals34_offset = 21092;
+	public static final int tcu_pcVals3_offset = 21060;
+	public static final int tcu_pcVals43_offset = 21116;
+	public static final int tcu_pcVals4_offset = 21068;
+	public static final int tcu_pcValsN_offset = 21036;
+	public static final int tcu_pcValsR_offset = 21028;
 	public static final int tcu_solenoid1_offset = 1108;
 	public static final int tcu_solenoid2_offset = 1109;
 	public static final int tcu_solenoid3_offset = 1110;
@@ -2015,15 +2034,16 @@ public class Fields {
 	public static final int tcu_solenoid_mode6_offset = 3990;
 	public static final int tcu_tcc_onoff_solenoid_mode_offset = 4793;
 	public static final int tcu_tcc_onoff_solenoid_offset = 4792;
+	public static final int tcu_tcc_pwm_solenoid_freq_offset = 4796;
 	public static final int tcu_tcc_pwm_solenoid_mode_offset = 4795;
 	public static final int tcu_tcc_pwm_solenoid_offset = 4794;
-	public static final int tcu_tccLockSpeed_offset = 4602;
-	public static final int tcu_tccTpsBins_offset = 4594;
-	public static final int tcu_tccUnlockSpeed_offset = 4610;
+	public static final int tcu_tccLockSpeed_offset = 21132;
+	public static final int tcu_tccTpsBins_offset = 21124;
+	public static final int tcu_tccUnlockSpeed_offset = 21140;
 	public static final int tcuDownshiftButtonPin_offset = 1579;
 	public static final int tcuDownshiftButtonPinMode_offset = 3983;
 	public static final int tcuEnabled_offset = 896;
-	public static final int tcuSolenoidTable_offset = 17380;
+	public static final int tcuSolenoidTable_offset = 17388;
 	public static final int tcuUpshiftButtonPin_offset = 1578;
 	public static final int tcuUpshiftButtonPinMode_offset = 3982;
 	public static final int tempBooleanForVerySpecialCases_offset = 896;
@@ -2072,7 +2092,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 4738;
 	public static final int torqueRpmBins_offset = 4726;
 	public static final int torqueTable_offset = 4690;
-	public static final int TOTAL_CONFIG_SIZE = 21012;
+	public static final int TOTAL_CONFIG_SIZE = 21148;
 	public static final int totalGearsCount_offset = 1698;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
@@ -2096,9 +2116,9 @@ public class Fields {
 	public static final int tpsErrorDetectionTooLow_offset = 172;
 	public static final int tpsMax_offset = 170;
 	public static final int tpsMin_offset = 168;
-	public static final int tpsTpsAccelFromRpmBins_offset = 19940;
-	public static final int tpsTpsAccelTable_offset = 19684;
-	public static final int tpsTpsAccelToRpmBins_offset = 19972;
+	public static final int tpsTpsAccelFromRpmBins_offset = 19948;
+	public static final int tpsTpsAccelTable_offset = 19692;
+	public static final int tpsTpsAccelToRpmBins_offset = 19980;
 	public static final int trailingCoilPins10_offset = 1965;
 	public static final int trailingCoilPins11_offset = 1966;
 	public static final int trailingCoilPins12_offset = 1967;
@@ -2371,7 +2391,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.19.all.1984793654";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.19.all.1138652261";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
@@ -2412,7 +2432,7 @@ public class Fields {
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
-	public static final int unused17440_offset = 17440;
+	public static final int unused17440_offset = 17448;
 	public static final int unused184_offset = 184;
 	public static final int unused28_offset = 28;
 	public static final int unused722_offset = 722;
@@ -2454,6 +2474,7 @@ public class Fields {
 	public static final int unusedHere2_offset = 1747;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
 	public static final int unusedShort_offset = 4640;
+	public static final int unusedTpsBins_offset = 4594;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
 	public static final int useEeprom_offset = 164;
@@ -2494,7 +2515,7 @@ public class Fields {
 	public static final int vehicleName_offset = 1076;
 	public static final int vehicleSpeedSensorInputPin_offset = 794;
 	public static final int vehicleWeight_offset = 786;
-	public static final int veLoadBins_offset = 19300;
+	public static final int veLoadBins_offset = 19308;
 	public static final int veOverrideMode_offset = 1733;
 	public static final int verboseCan2_offset = 896;
 	public static final int verboseCan_offset = 164;
@@ -2502,8 +2523,8 @@ public class Fields {
 	public static final int verboseTLE8888_offset = 748;
 	public static final int verboseTriggerSynchDetails_offset = 1272;
 	public static final int verboseVVTDecoding_offset = 896;
-	public static final int veRpmBins_offset = 19332;
-	public static final int veTable_offset = 18788;
+	public static final int veRpmBins_offset = 19340;
+	public static final int veTable_offset = 18796;
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
@@ -2552,13 +2573,13 @@ public class Fields {
 	public static final int vvtPins2_offset = 1841;
 	public static final int vvtPins3_offset = 1842;
 	public static final int vvtPins4_offset = 1843;
-	public static final int vvtTable1_offset = 18020;
-	public static final int vvtTable1LoadBins_offset = 18084;
-	public static final int vvtTable1RpmBins_offset = 18100;
-	public static final int vvtTable2_offset = 18116;
-	public static final int vvtTable2LoadBins_offset = 18180;
-	public static final int vvtTable2RpmBins_offset = 18196;
-	public static final int warning_message_offset = 5020;
+	public static final int vvtTable1_offset = 18028;
+	public static final int vvtTable1LoadBins_offset = 18092;
+	public static final int vvtTable1RpmBins_offset = 18108;
+	public static final int vvtTable2_offset = 18124;
+	public static final int vvtTable2LoadBins_offset = 18188;
+	public static final int vvtTable2RpmBins_offset = 18204;
+	public static final int warning_message_offset = 5028;
 	public static final int warningLedPin_offset = 1685;
 	public static final int warningPeriod_offset = 1290;
 	public static final int wastegatePositionMax_offset = 726;
@@ -3765,9 +3786,7 @@ public class Fields {
 	public static final Field HPFPCOMPENSATION = Field.create("HPFPCOMPENSATION", 4464, FieldType.INT8).setScale(1.0);
 	public static final Field HPFPCOMPENSATIONLOADBINS = Field.create("HPFPCOMPENSATIONLOADBINS", 4564, FieldType.INT16).setScale(0.001);
 	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 4584, FieldType.INT8).setScale(50.0);
-	public static final Field TCU_TCCTPSBINS = Field.create("TCU_TCCTPSBINS", 4594, FieldType.INT8).setScale(1.0);
-	public static final Field TCU_TCCLOCKSPEED = Field.create("TCU_TCCLOCKSPEED", 4602, FieldType.INT8).setScale(1.0);
-	public static final Field TCU_TCCUNLOCKSPEED = Field.create("TCU_TCCUNLOCKSPEED", 4610, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDTPSBINS = Field.create("UNUSEDTPSBINS", 4594, FieldType.INT8).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT1 = Field.create("STEPPER_RAW_OUTPUT1", 4618, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT2 = Field.create("STEPPER_RAW_OUTPUT2", 4619, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field STEPPER_RAW_OUTPUT3 = Field.create("STEPPER_RAW_OUTPUT3", 4620, FieldType.INT8, output_pin_e).setScale(1.0);
@@ -3809,109 +3828,132 @@ public class Fields {
 	public static final Field TCU_TCC_ONOFF_SOLENOID_MODE = Field.create("TCU_TCC_ONOFF_SOLENOID_MODE", 4793, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field TCU_TCC_PWM_SOLENOID = Field.create("TCU_TCC_PWM_SOLENOID", 4794, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field TCU_TCC_PWM_SOLENOID_MODE = Field.create("TCU_TCC_PWM_SOLENOID_MODE", 4795, FieldType.INT8, pin_output_mode_e).setScale(1.0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4796, FieldType.INT8).setScale(1.0);
-	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING).setScale(1.0);
-	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
-	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
-	public static final Field AFTERSTARTENRICH = Field.create("AFTERSTARTENRICH", 5204, FieldType.FLOAT);
-	public static final Field AFTERSTARTDECAYTIME = Field.create("AFTERSTARTDECAYTIME", 5236, FieldType.FLOAT);
-	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5268, FieldType.INT8).setScale(0.5);
-	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5332, FieldType.INT8).setScale(50.0);
-	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5340, FieldType.INT8).setScale(2.0);
-	public static final Field BOOSTTPSBINS = Field.create("BOOSTTPSBINS", 5404, FieldType.INT8).setScale(1.0);
-	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 5412, FieldType.INT8).setScale(1.0);
-	public static final Field PEDALTOTPSPEDALBINS = Field.create("PEDALTOTPSPEDALBINS", 5476, FieldType.INT8).setScale(1.0);
-	public static final Field PEDALTOTPSRPMBINS = Field.create("PEDALTOTPSRPMBINS", 5484, FieldType.INT8).setScale(50.0);
-	public static final Field CLTCRANKINGCORRBINS = Field.create("CLTCRANKINGCORRBINS", 5492, FieldType.FLOAT);
-	public static final Field CLTCRANKINGCORR = Field.create("CLTCRANKINGCORR", 5524, FieldType.FLOAT);
-	public static final Field IDLEADVANCEBINS = Field.create("IDLEADVANCEBINS", 5556, FieldType.INT8).setScale(50.0);
-	public static final Field IDLEADVANCE = Field.create("IDLEADVANCE", 5564, FieldType.FLOAT);
-	public static final Field IDLEVERPMBINS = Field.create("IDLEVERPMBINS", 5596, FieldType.INT8).setScale(10.0);
-	public static final Field IDLEVELOADBINS = Field.create("IDLEVELOADBINS", 5600, FieldType.INT8).setScale(1.0);
-	public static final Field IDLEVETABLE = Field.create("IDLEVETABLE", 5604, FieldType.INT16).setScale(0.1);
-	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 5636, 8000, FieldType.STRING).setScale(1.0);
-	public static final Field CLTFUELCORRBINS = Field.create("CLTFUELCORRBINS", 13636, FieldType.FLOAT);
-	public static final Field CLTFUELCORR = Field.create("CLTFUELCORR", 13700, FieldType.FLOAT);
-	public static final Field IATFUELCORRBINS = Field.create("IATFUELCORRBINS", 13764, FieldType.FLOAT);
-	public static final Field IATFUELCORR = Field.create("IATFUELCORR", 13828, FieldType.FLOAT);
-	public static final Field CRANKINGFUELCOEF = Field.create("CRANKINGFUELCOEF", 13892, FieldType.FLOAT);
-	public static final Field CRANKINGFUELBINS = Field.create("CRANKINGFUELBINS", 13924, FieldType.FLOAT);
-	public static final Field CRANKINGCYCLECOEF = Field.create("CRANKINGCYCLECOEF", 13956, FieldType.FLOAT);
-	public static final Field CRANKINGCYCLEBINS = Field.create("CRANKINGCYCLEBINS", 13988, FieldType.FLOAT);
-	public static final Field CLTIDLECORRBINS = Field.create("CLTIDLECORRBINS", 14020, FieldType.FLOAT);
-	public static final Field CLTIDLECORR = Field.create("CLTIDLECORR", 14084, FieldType.FLOAT);
-	public static final Field MAFDECODING = Field.create("MAFDECODING", 14148, FieldType.FLOAT);
-	public static final Field MAFDECODINGBINS = Field.create("MAFDECODINGBINS", 15172, FieldType.FLOAT);
-	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 16196, FieldType.INT16).setScale(0.1);
-	public static final Field IGNITIONIATCORRLOADBINS = Field.create("IGNITIONIATCORRLOADBINS", 16708, FieldType.FLOAT);
-	public static final Field IGNITIONIATCORRRPMBINS = Field.create("IGNITIONIATCORRRPMBINS", 16772, FieldType.INT16).setScale(1.0);
-	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 16804, FieldType.INT16).setScale(1.0);
-	public static final Field INJPHASELOADBINS = Field.create("INJPHASELOADBINS", 17316, FieldType.INT16).setScale(1.0);
-	public static final Field INJPHASERPMBINS = Field.create("INJPHASERPMBINS", 17348, FieldType.INT16).setScale(1.0);
-	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 17380, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSED17440 = Field.create("UNUSED17440", 17440, FieldType.FLOAT);
-	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 17444, FieldType.INT16).setScale(1.0);
-	public static final Field MAPESTIMATETPSBINS = Field.create("MAPESTIMATETPSBINS", 17956, FieldType.INT16).setScale(0.01);
-	public static final Field MAPESTIMATERPMBINS = Field.create("MAPESTIMATERPMBINS", 17988, FieldType.INT16).setScale(1.0);
-	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 18020, FieldType.INT8).setScale(1.0);
-	public static final Field VVTTABLE1LOADBINS = Field.create("VVTTABLE1LOADBINS", 18084, FieldType.INT16).setScale(1.0);
-	public static final Field VVTTABLE1RPMBINS = Field.create("VVTTABLE1RPMBINS", 18100, FieldType.INT16).setScale(1.0);
-	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 18116, FieldType.INT8).setScale(1.0);
-	public static final Field VVTTABLE2LOADBINS = Field.create("VVTTABLE2LOADBINS", 18180, FieldType.INT16).setScale(1.0);
-	public static final Field VVTTABLE2RPMBINS = Field.create("VVTTABLE2RPMBINS", 18196, FieldType.INT16).setScale(1.0);
-	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 18212, FieldType.INT16).setScale(0.1);
-	public static final Field IGNITIONLOADBINS = Field.create("IGNITIONLOADBINS", 18724, FieldType.INT16).setScale(1.0);
-	public static final Field IGNITIONRPMBINS = Field.create("IGNITIONRPMBINS", 18756, FieldType.INT16).setScale(1.0);
-	public static final Field VETABLE = Field.create("VETABLE", 18788, FieldType.INT16).setScale(0.1);
-	public static final Field VELOADBINS = Field.create("VELOADBINS", 19300, FieldType.INT16).setScale(1.0);
-	public static final Field VERPMBINS = Field.create("VERPMBINS", 19332, FieldType.INT16).setScale(1.0);
-	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 19364, FieldType.INT8).setScale(0.006802721088435374);
-	public static final Field LAMBDALOADBINS = Field.create("LAMBDALOADBINS", 19620, FieldType.INT16).setScale(1.0);
-	public static final Field LAMBDARPMBINS = Field.create("LAMBDARPMBINS", 19652, FieldType.INT16).setScale(1.0);
-	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 19684, FieldType.FLOAT);
-	public static final Field TPSTPSACCELFROMRPMBINS = Field.create("TPSTPSACCELFROMRPMBINS", 19940, FieldType.FLOAT);
-	public static final Field TPSTPSACCELTORPMBINS = Field.create("TPSTPSACCELTORPMBINS", 19972, FieldType.FLOAT);
-	public static final Field SCRIPTTABLE1 = Field.create("SCRIPTTABLE1", 20004, FieldType.FLOAT);
-	public static final Field SCRIPTTABLE1LOADBINS = Field.create("SCRIPTTABLE1LOADBINS", 20260, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE1RPMBINS = Field.create("SCRIPTTABLE1RPMBINS", 20276, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE2 = Field.create("SCRIPTTABLE2", 20292, FieldType.INT8).setScale(1.0);
-	public static final Field SCRIPTTABLE2LOADBINS = Field.create("SCRIPTTABLE2LOADBINS", 20356, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE2RPMBINS = Field.create("SCRIPTTABLE2RPMBINS", 20372, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE3 = Field.create("SCRIPTTABLE3", 20388, FieldType.INT8).setScale(1.0);
-	public static final Field SCRIPTTABLE3LOADBINS = Field.create("SCRIPTTABLE3LOADBINS", 20452, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE3RPMBINS = Field.create("SCRIPTTABLE3RPMBINS", 20468, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE4 = Field.create("SCRIPTTABLE4", 20484, FieldType.INT8).setScale(1.0);
-	public static final Field SCRIPTTABLE4LOADBINS = Field.create("SCRIPTTABLE4LOADBINS", 20548, FieldType.INT16).setScale(1.0);
-	public static final Field SCRIPTTABLE4RPMBINS = Field.create("SCRIPTTABLE4RPMBINS", 20564, FieldType.INT16).setScale(1.0);
-	public static final Field IGNTRIMLOADBINS = Field.create("IGNTRIMLOADBINS", 20580, FieldType.INT16).setScale(1.0);
-	public static final Field IGNTRIMRPMBINS = Field.create("IGNTRIMRPMBINS", 20588, FieldType.INT16).setScale(1.0);
-	public static final Field IGNTRIMS1_TABLE = Field.create("IGNTRIMS1_TABLE", 20596, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS2_TABLE = Field.create("IGNTRIMS2_TABLE", 20612, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS3_TABLE = Field.create("IGNTRIMS3_TABLE", 20628, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS4_TABLE = Field.create("IGNTRIMS4_TABLE", 20644, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS5_TABLE = Field.create("IGNTRIMS5_TABLE", 20660, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS6_TABLE = Field.create("IGNTRIMS6_TABLE", 20676, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS7_TABLE = Field.create("IGNTRIMS7_TABLE", 20692, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS8_TABLE = Field.create("IGNTRIMS8_TABLE", 20708, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS9_TABLE = Field.create("IGNTRIMS9_TABLE", 20724, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS10_TABLE = Field.create("IGNTRIMS10_TABLE", 20740, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS11_TABLE = Field.create("IGNTRIMS11_TABLE", 20756, FieldType.INT8).setScale(0.2);
-	public static final Field IGNTRIMS12_TABLE = Field.create("IGNTRIMS12_TABLE", 20772, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMLOADBINS = Field.create("FUELTRIMLOADBINS", 20788, FieldType.INT16).setScale(1.0);
-	public static final Field FUELTRIMRPMBINS = Field.create("FUELTRIMRPMBINS", 20796, FieldType.INT16).setScale(1.0);
-	public static final Field FUELTRIMS1_TABLE = Field.create("FUELTRIMS1_TABLE", 20804, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS2_TABLE = Field.create("FUELTRIMS2_TABLE", 20820, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS3_TABLE = Field.create("FUELTRIMS3_TABLE", 20836, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS4_TABLE = Field.create("FUELTRIMS4_TABLE", 20852, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS5_TABLE = Field.create("FUELTRIMS5_TABLE", 20868, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS6_TABLE = Field.create("FUELTRIMS6_TABLE", 20884, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS7_TABLE = Field.create("FUELTRIMS7_TABLE", 20900, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS8_TABLE = Field.create("FUELTRIMS8_TABLE", 20916, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS9_TABLE = Field.create("FUELTRIMS9_TABLE", 20932, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20948, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20964, FieldType.INT8).setScale(0.2);
-	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20980, FieldType.INT8).setScale(0.2);
-	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 20996, FieldType.INT16).setScale(1.0);
+	public static final Field TCU_TCC_PWM_SOLENOID_FREQ = Field.create("TCU_TCC_PWM_SOLENOID_FREQ", 4796, FieldType.INT16).setScale(1.0);
+	public static final Field TCU_PC_SOLENOID_PIN = Field.create("TCU_PC_SOLENOID_PIN", 4798, FieldType.INT8, output_pin_e).setScale(1.0);
+	public static final Field TCU_PC_SOLENOID_PIN_MODE = Field.create("TCU_PC_SOLENOID_PIN_MODE", 4799, FieldType.INT8, pin_output_mode_e).setScale(1.0);
+	public static final Field TCU_PC_SOLENOID_FREQ = Field.create("TCU_PC_SOLENOID_FREQ", 4800, FieldType.INT16).setScale(1.0);
+	public static final Field TCU_32_SOLENOID_PIN = Field.create("TCU_32_SOLENOID_PIN", 4802, FieldType.INT8, output_pin_e).setScale(1.0);
+	public static final Field TCU_32_SOLENOID_PIN_MODE = Field.create("TCU_32_SOLENOID_PIN_MODE", 4803, FieldType.INT8, pin_output_mode_e).setScale(1.0);
+	public static final Field TCU_32_SOLENOID_FREQ = Field.create("TCU_32_SOLENOID_FREQ", 4804, FieldType.INT16).setScale(1.0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4806, FieldType.INT8).setScale(1.0);
+	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5028, 120, FieldType.STRING).setScale(1.0);
+	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5148, FieldType.FLOAT);
+	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5180, FieldType.FLOAT);
+	public static final Field AFTERSTARTENRICH = Field.create("AFTERSTARTENRICH", 5212, FieldType.FLOAT);
+	public static final Field AFTERSTARTDECAYTIME = Field.create("AFTERSTARTDECAYTIME", 5244, FieldType.FLOAT);
+	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5276, FieldType.INT8).setScale(0.5);
+	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5340, FieldType.INT8).setScale(50.0);
+	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5348, FieldType.INT8).setScale(2.0);
+	public static final Field BOOSTTPSBINS = Field.create("BOOSTTPSBINS", 5412, FieldType.INT8).setScale(1.0);
+	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 5420, FieldType.INT8).setScale(1.0);
+	public static final Field PEDALTOTPSPEDALBINS = Field.create("PEDALTOTPSPEDALBINS", 5484, FieldType.INT8).setScale(1.0);
+	public static final Field PEDALTOTPSRPMBINS = Field.create("PEDALTOTPSRPMBINS", 5492, FieldType.INT8).setScale(50.0);
+	public static final Field CLTCRANKINGCORRBINS = Field.create("CLTCRANKINGCORRBINS", 5500, FieldType.FLOAT);
+	public static final Field CLTCRANKINGCORR = Field.create("CLTCRANKINGCORR", 5532, FieldType.FLOAT);
+	public static final Field IDLEADVANCEBINS = Field.create("IDLEADVANCEBINS", 5564, FieldType.INT8).setScale(50.0);
+	public static final Field IDLEADVANCE = Field.create("IDLEADVANCE", 5572, FieldType.FLOAT);
+	public static final Field IDLEVERPMBINS = Field.create("IDLEVERPMBINS", 5604, FieldType.INT8).setScale(10.0);
+	public static final Field IDLEVELOADBINS = Field.create("IDLEVELOADBINS", 5608, FieldType.INT8).setScale(1.0);
+	public static final Field IDLEVETABLE = Field.create("IDLEVETABLE", 5612, FieldType.INT16).setScale(0.1);
+	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 5644, 8000, FieldType.STRING).setScale(1.0);
+	public static final Field CLTFUELCORRBINS = Field.create("CLTFUELCORRBINS", 13644, FieldType.FLOAT);
+	public static final Field CLTFUELCORR = Field.create("CLTFUELCORR", 13708, FieldType.FLOAT);
+	public static final Field IATFUELCORRBINS = Field.create("IATFUELCORRBINS", 13772, FieldType.FLOAT);
+	public static final Field IATFUELCORR = Field.create("IATFUELCORR", 13836, FieldType.FLOAT);
+	public static final Field CRANKINGFUELCOEF = Field.create("CRANKINGFUELCOEF", 13900, FieldType.FLOAT);
+	public static final Field CRANKINGFUELBINS = Field.create("CRANKINGFUELBINS", 13932, FieldType.FLOAT);
+	public static final Field CRANKINGCYCLECOEF = Field.create("CRANKINGCYCLECOEF", 13964, FieldType.FLOAT);
+	public static final Field CRANKINGCYCLEBINS = Field.create("CRANKINGCYCLEBINS", 13996, FieldType.FLOAT);
+	public static final Field CLTIDLECORRBINS = Field.create("CLTIDLECORRBINS", 14028, FieldType.FLOAT);
+	public static final Field CLTIDLECORR = Field.create("CLTIDLECORR", 14092, FieldType.FLOAT);
+	public static final Field MAFDECODING = Field.create("MAFDECODING", 14156, FieldType.FLOAT);
+	public static final Field MAFDECODINGBINS = Field.create("MAFDECODINGBINS", 15180, FieldType.FLOAT);
+	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 16204, FieldType.INT16).setScale(0.1);
+	public static final Field IGNITIONIATCORRLOADBINS = Field.create("IGNITIONIATCORRLOADBINS", 16716, FieldType.FLOAT);
+	public static final Field IGNITIONIATCORRRPMBINS = Field.create("IGNITIONIATCORRRPMBINS", 16780, FieldType.INT16).setScale(1.0);
+	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 16812, FieldType.INT16).setScale(1.0);
+	public static final Field INJPHASELOADBINS = Field.create("INJPHASELOADBINS", 17324, FieldType.INT16).setScale(1.0);
+	public static final Field INJPHASERPMBINS = Field.create("INJPHASERPMBINS", 17356, FieldType.INT16).setScale(1.0);
+	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 17388, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSED17440 = Field.create("UNUSED17440", 17448, FieldType.FLOAT);
+	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 17452, FieldType.INT16).setScale(1.0);
+	public static final Field MAPESTIMATETPSBINS = Field.create("MAPESTIMATETPSBINS", 17964, FieldType.INT16).setScale(0.01);
+	public static final Field MAPESTIMATERPMBINS = Field.create("MAPESTIMATERPMBINS", 17996, FieldType.INT16).setScale(1.0);
+	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 18028, FieldType.INT8).setScale(1.0);
+	public static final Field VVTTABLE1LOADBINS = Field.create("VVTTABLE1LOADBINS", 18092, FieldType.INT16).setScale(1.0);
+	public static final Field VVTTABLE1RPMBINS = Field.create("VVTTABLE1RPMBINS", 18108, FieldType.INT16).setScale(1.0);
+	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 18124, FieldType.INT8).setScale(1.0);
+	public static final Field VVTTABLE2LOADBINS = Field.create("VVTTABLE2LOADBINS", 18188, FieldType.INT16).setScale(1.0);
+	public static final Field VVTTABLE2RPMBINS = Field.create("VVTTABLE2RPMBINS", 18204, FieldType.INT16).setScale(1.0);
+	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 18220, FieldType.INT16).setScale(0.1);
+	public static final Field IGNITIONLOADBINS = Field.create("IGNITIONLOADBINS", 18732, FieldType.INT16).setScale(1.0);
+	public static final Field IGNITIONRPMBINS = Field.create("IGNITIONRPMBINS", 18764, FieldType.INT16).setScale(1.0);
+	public static final Field VETABLE = Field.create("VETABLE", 18796, FieldType.INT16).setScale(0.1);
+	public static final Field VELOADBINS = Field.create("VELOADBINS", 19308, FieldType.INT16).setScale(1.0);
+	public static final Field VERPMBINS = Field.create("VERPMBINS", 19340, FieldType.INT16).setScale(1.0);
+	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 19372, FieldType.INT8).setScale(0.006802721088435374);
+	public static final Field LAMBDALOADBINS = Field.create("LAMBDALOADBINS", 19628, FieldType.INT16).setScale(1.0);
+	public static final Field LAMBDARPMBINS = Field.create("LAMBDARPMBINS", 19660, FieldType.INT16).setScale(1.0);
+	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 19692, FieldType.FLOAT);
+	public static final Field TPSTPSACCELFROMRPMBINS = Field.create("TPSTPSACCELFROMRPMBINS", 19948, FieldType.FLOAT);
+	public static final Field TPSTPSACCELTORPMBINS = Field.create("TPSTPSACCELTORPMBINS", 19980, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE1 = Field.create("SCRIPTTABLE1", 20012, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE1LOADBINS = Field.create("SCRIPTTABLE1LOADBINS", 20268, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE1RPMBINS = Field.create("SCRIPTTABLE1RPMBINS", 20284, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE2 = Field.create("SCRIPTTABLE2", 20300, FieldType.INT8).setScale(1.0);
+	public static final Field SCRIPTTABLE2LOADBINS = Field.create("SCRIPTTABLE2LOADBINS", 20364, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE2RPMBINS = Field.create("SCRIPTTABLE2RPMBINS", 20380, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE3 = Field.create("SCRIPTTABLE3", 20396, FieldType.INT8).setScale(1.0);
+	public static final Field SCRIPTTABLE3LOADBINS = Field.create("SCRIPTTABLE3LOADBINS", 20460, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE3RPMBINS = Field.create("SCRIPTTABLE3RPMBINS", 20476, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE4 = Field.create("SCRIPTTABLE4", 20492, FieldType.INT8).setScale(1.0);
+	public static final Field SCRIPTTABLE4LOADBINS = Field.create("SCRIPTTABLE4LOADBINS", 20556, FieldType.INT16).setScale(1.0);
+	public static final Field SCRIPTTABLE4RPMBINS = Field.create("SCRIPTTABLE4RPMBINS", 20572, FieldType.INT16).setScale(1.0);
+	public static final Field IGNTRIMLOADBINS = Field.create("IGNTRIMLOADBINS", 20588, FieldType.INT16).setScale(1.0);
+	public static final Field IGNTRIMRPMBINS = Field.create("IGNTRIMRPMBINS", 20596, FieldType.INT16).setScale(1.0);
+	public static final Field IGNTRIMS1_TABLE = Field.create("IGNTRIMS1_TABLE", 20604, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS2_TABLE = Field.create("IGNTRIMS2_TABLE", 20620, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS3_TABLE = Field.create("IGNTRIMS3_TABLE", 20636, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS4_TABLE = Field.create("IGNTRIMS4_TABLE", 20652, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS5_TABLE = Field.create("IGNTRIMS5_TABLE", 20668, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS6_TABLE = Field.create("IGNTRIMS6_TABLE", 20684, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS7_TABLE = Field.create("IGNTRIMS7_TABLE", 20700, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS8_TABLE = Field.create("IGNTRIMS8_TABLE", 20716, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS9_TABLE = Field.create("IGNTRIMS9_TABLE", 20732, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS10_TABLE = Field.create("IGNTRIMS10_TABLE", 20748, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS11_TABLE = Field.create("IGNTRIMS11_TABLE", 20764, FieldType.INT8).setScale(0.2);
+	public static final Field IGNTRIMS12_TABLE = Field.create("IGNTRIMS12_TABLE", 20780, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMLOADBINS = Field.create("FUELTRIMLOADBINS", 20796, FieldType.INT16).setScale(1.0);
+	public static final Field FUELTRIMRPMBINS = Field.create("FUELTRIMRPMBINS", 20804, FieldType.INT16).setScale(1.0);
+	public static final Field FUELTRIMS1_TABLE = Field.create("FUELTRIMS1_TABLE", 20812, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS2_TABLE = Field.create("FUELTRIMS2_TABLE", 20828, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS3_TABLE = Field.create("FUELTRIMS3_TABLE", 20844, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS4_TABLE = Field.create("FUELTRIMS4_TABLE", 20860, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS5_TABLE = Field.create("FUELTRIMS5_TABLE", 20876, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS6_TABLE = Field.create("FUELTRIMS6_TABLE", 20892, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS7_TABLE = Field.create("FUELTRIMS7_TABLE", 20908, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS8_TABLE = Field.create("FUELTRIMS8_TABLE", 20924, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS9_TABLE = Field.create("FUELTRIMS9_TABLE", 20940, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20956, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20972, FieldType.INT8).setScale(0.2);
+	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20988, FieldType.INT8).setScale(0.2);
+	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 21004, FieldType.INT16).setScale(1.0);
+	public static final Field TCU_PCAIRMASSBINS = Field.create("TCU_PCAIRMASSBINS", 21020, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALSR = Field.create("TCU_PCVALSR", 21028, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALSN = Field.create("TCU_PCVALSN", 21036, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS1 = Field.create("TCU_PCVALS1", 21044, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS2 = Field.create("TCU_PCVALS2", 21052, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS3 = Field.create("TCU_PCVALS3", 21060, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS4 = Field.create("TCU_PCVALS4", 21068, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS12 = Field.create("TCU_PCVALS12", 21076, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS23 = Field.create("TCU_PCVALS23", 21084, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS34 = Field.create("TCU_PCVALS34", 21092, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS21 = Field.create("TCU_PCVALS21", 21100, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS32 = Field.create("TCU_PCVALS32", 21108, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_PCVALS43 = Field.create("TCU_PCVALS43", 21116, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCCTPSBINS = Field.create("TCU_TCCTPSBINS", 21124, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCCLOCKSPEED = Field.create("TCU_TCCLOCKSPEED", 21132, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_TCCUNLOCKSPEED = Field.create("TCU_TCCUNLOCKSPEED", 21140, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5079,9 +5121,7 @@ public class Fields {
 	HPFPCOMPENSATION,
 	HPFPCOMPENSATIONLOADBINS,
 	HPFPCOMPENSATIONRPMBINS,
-	TCU_TCCTPSBINS,
-	TCU_TCCLOCKSPEED,
-	TCU_TCCUNLOCKSPEED,
+	UNUSEDTPSBINS,
 	STEPPER_RAW_OUTPUT1,
 	STEPPER_RAW_OUTPUT2,
 	STEPPER_RAW_OUTPUT3,
@@ -5123,6 +5163,13 @@ public class Fields {
 	TCU_TCC_ONOFF_SOLENOID_MODE,
 	TCU_TCC_PWM_SOLENOID,
 	TCU_TCC_PWM_SOLENOID_MODE,
+	TCU_TCC_PWM_SOLENOID_FREQ,
+	TCU_PC_SOLENOID_PIN,
+	TCU_PC_SOLENOID_PIN_MODE,
+	TCU_PC_SOLENOID_FREQ,
+	TCU_32_SOLENOID_PIN,
+	TCU_32_SOLENOID_PIN_MODE,
+	TCU_32_SOLENOID_FREQ,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,
@@ -5226,5 +5273,21 @@ public class Fields {
 	FUELTRIMS11_TABLE,
 	FUELTRIMS12_TABLE,
 	CRANKINGFUELCOEFE100,
+	TCU_PCAIRMASSBINS,
+	TCU_PCVALSR,
+	TCU_PCVALSN,
+	TCU_PCVALS1,
+	TCU_PCVALS2,
+	TCU_PCVALS3,
+	TCU_PCVALS4,
+	TCU_PCVALS12,
+	TCU_PCVALS23,
+	TCU_PCVALS34,
+	TCU_PCVALS21,
+	TCU_PCVALS32,
+	TCU_PCVALS43,
+	TCU_TCCTPSBINS,
+	TCU_TCCLOCKSPEED,
+	TCU_TCCUNLOCKSPEED,
 	};
 }
