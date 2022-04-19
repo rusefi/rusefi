@@ -115,7 +115,7 @@ void startPedalPins() {
 	startInputPinIfValid("throttle pedal up switch", engineConfiguration->throttlePedalUpPin, engineConfiguration->throttlePedalUpPinMode);
 
 	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
-	startInputPinIfValid("launch switch", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
+	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 #endif /* EFI_PROD_CODE */
 }
 
