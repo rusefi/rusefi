@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 19 00:13:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 19 14:54:59 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3096,10 +3096,9 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> benchTestOnTime;
 	/**
-	A
 	 * offset 1747
 	 */
-	uint8_t unusedHere2;
+	pin_input_mode_e launchActivatePinMode;
 	/**
 	 * set_can2_tx_pin X
 	 * offset 1748
@@ -4679,4 +4678,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21148);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 19 00:13:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Apr 19 14:54:59 UTC 2022

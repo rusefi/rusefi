@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 12:04:01 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 14:55:01 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1550,6 +1550,7 @@ public class Fields {
 	public static final int lambdaTable_offset = 19372;
 	public static final int launchActivateDelay_offset = 976;
 	public static final int launchActivatePin_offset = 911;
+	public static final int launchActivatePinMode_offset = 1747;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
 	public static final int launchActivationMode_e_SWITCH_INPUT_LAUNCH = 0;
@@ -1875,7 +1876,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1506821946;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2391,7 +2391,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.19.all.1506821946";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.19.all.2763130276";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
@@ -2471,7 +2471,6 @@ public class Fields {
 	public static final int unusedBit_507_9_offset = 1740;
 	public static final int unusedBitHere2_offset = 1260;
 	public static final int unusedFiller_4703_offset = 4171;
-	public static final int unusedHere2_offset = 1747;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
 	public static final int unusedShort_offset = 4640;
 	public static final int unusedTpsBins_offset = 4594;
@@ -3366,7 +3365,7 @@ public class Fields {
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 1744, FieldType.INT8).setScale(5.0);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1745, FieldType.INT8).setScale(1.0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1746, FieldType.INT8).setScale(5.0);
-	public static final Field UNUSEDHERE2 = Field.create("UNUSEDHERE2", 1747, FieldType.INT8).setScale(1.0);
+	public static final Field LAUNCHACTIVATEPINMODE = Field.create("LAUNCHACTIVATEPINMODE", 1747, FieldType.INT8, pin_input_mode_e).setScale(1.0);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 1748, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 1749, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field STARTERCONTROLPINMODE = Field.create("STARTERCONTROLPINMODE", 1750, FieldType.INT8, pin_output_mode_e).setScale(1.0);
@@ -4707,7 +4706,7 @@ public class Fields {
 	BENCHTESTOFFTIME,
 	BENCHTESTCOUNT,
 	BENCHTESTONTIME,
-	UNUSEDHERE2,
+	LAUNCHACTIVATEPINMODE,
 	CAN2TXPIN,
 	CAN2RXPIN,
 	STARTERCONTROLPINMODE,
