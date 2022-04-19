@@ -1542,6 +1542,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
+		subMenu = gearControls,			"Gear Selection Settings"
 		subMenu = tcuSolenoidTableTbl,		"Shift Solenoids"
 		subMenu = tccCurves, "TCC Lock/Unlock Speed"
 		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
@@ -3484,6 +3485,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = transmissionPanel
 		panel = shiftSolenoidPanel
 		panel = otherSolenoidPanel
+
+	dialog = gearControls, "Gear Selection Settings"
 		panel = buttonShiftInputPanel
 
 	dialog = tccCurves, "TCC Lock/Unlock Speed"
