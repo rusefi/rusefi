@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 16:27:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 19 00:13:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -657,7 +657,7 @@ struct output_channels_s {
 	gear
 	 * offset 247
 	 */
-	scaled_channel<uint8_t, 1, 1> tcuCurrentGear = (uint8_t)0;
+	scaled_channel<int8_t, 1, 1> tcuCurrentGear = (int8_t)0;
 	/**
 	V
 	 * offset 248
@@ -673,7 +673,7 @@ struct output_channels_s {
 	gear
 	 * offset 262
 	 */
-	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
+	scaled_channel<int8_t, 1, 1> tcuDesiredGear = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_FLEX@@
 	%
@@ -1382,4 +1382,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 16:27:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 19 00:13:17 UTC 2022
