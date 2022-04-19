@@ -92,7 +92,7 @@ void setManualIdleValvePosition(int positionPercent) {
 
 static void startInputPinIfValid(const char *msg, brain_pin_e pin, pin_input_mode_e mode) {
 	if (isBrainPinValid(pin)) {
-		efiSetPadMode(msg, engineConfiguration->clutchDownPin, getInputMode(mode));
+		efiSetPadMode(msg, pin, getInputMode(mode));
 	}
 }
 
