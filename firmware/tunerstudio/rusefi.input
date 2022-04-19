@@ -3484,6 +3484,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = inputSpeedSensorPanel, "Input Speed Sensor"
 		field = "Input Pin", tcuInputSpeedSensorPin
+		field = "Filter parameter",		issFilterReciprocal, { tcuInputSpeedSensorPin != @@ADC_CHANNEL_NONE@@ }
 		field = "Tooth Count", tcuInputSpeedSensorTeeth
 
 dialog = tcuControls, "Transmission Settings"
