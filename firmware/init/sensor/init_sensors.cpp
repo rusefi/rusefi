@@ -62,6 +62,7 @@ void initNewSensors() {
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
 	initAuxSpeedSensors();
+	initInputShaftSpeedSensor();
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel();
@@ -97,6 +98,7 @@ void reconfigureSensors() {
 	initFlexSensor();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
+	initInputShaftSpeedSensor();
 
 	initOldAnalogInputs();
 }
