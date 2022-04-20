@@ -1577,12 +1577,13 @@
 #define lambdaRpmBins_offset 19660
 #define lambdaTable_offset 19372
 #define launchActivateDelay_offset 976
+#define launchActivateInverted_offset 1260
 #define launchActivatePin_offset 911
 #define launchActivatePinMode_offset 1747
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum "SWITCH_INPUT_LAUNCH", "CLUTCH_INPUT_LAUNCH", "ALWAYS_ACTIVE_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
-#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"
+#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)", "INVALID"
 #define launchActivationMode_e_Force_4bytes_size_launchActivationMode_e ENUM_32_BITS
 #define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
 #define launchActivationMode_offset 940
@@ -1929,7 +1930,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2217848941
+#define SIGNATURE_HASH 1238541337
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2507,7 +2508,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.19.subaru_eg33_f7.2217848941"
+#define TS_SIGNATURE "rusEFI 2022.04.20.subaru_eg33_f7.1238541337"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2588,7 +2589,6 @@
 #define unusedBit_507_31_offset 1740
 #define unusedBit_507_8_offset 1740
 #define unusedBit_507_9_offset 1740
-#define unusedBitHere2_offset 1260
 #define unusedFiller_4703_offset 4171
 #define unusedMapAccelTaperBins_offset 1792
 #define unusedShort_offset 4640

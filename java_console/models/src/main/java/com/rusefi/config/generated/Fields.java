@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 18:38:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Apr 20 00:07:35 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1549,6 +1549,7 @@ public class Fields {
 	public static final int lambdaRpmBins_offset = 19660;
 	public static final int lambdaTable_offset = 19372;
 	public static final int launchActivateDelay_offset = 976;
+	public static final int launchActivateInverted_offset = 1260;
 	public static final int launchActivatePin_offset = 911;
 	public static final int launchActivatePinMode_offset = 1747;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
@@ -1876,6 +1877,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 1471966254;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2391,7 +2393,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.19.all.2589947994";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.20.all.1471966254";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
@@ -2469,7 +2471,6 @@ public class Fields {
 	public static final int unusedBit_507_31_offset = 1740;
 	public static final int unusedBit_507_8_offset = 1740;
 	public static final int unusedBit_507_9_offset = 1740;
-	public static final int unusedBitHere2_offset = 1260;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
 	public static final int unusedShort_offset = 4640;
@@ -3069,7 +3070,7 @@ public class Fields {
 	public static final Field BOOSTPID_MAXVALUE = Field.create("BOOSTPID_MAXVALUE", 930, FieldType.INT16).setScale(1.0);
 	public static final Field BOOSTTYPE = Field.create("BOOSTTYPE", 932, FieldType.INT).setScale(1.0);
 	public static final Field BOOSTPWMFREQUENCY = Field.create("BOOSTPWMFREQUENCY", 936, FieldType.INT).setScale(1.0);
-	public static final String[] launchActivationMode_e = {"Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"};
+	public static final String[] launchActivationMode_e = {"Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)", "INVALID"};
 	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 940, FieldType.INT, launchActivationMode_e).setScale(1.0);
 	public static final String[] antiLagActivationMode_e = {"Always Active", "Switch Input"};
 	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 944, FieldType.INT, antiLagActivationMode_e).setScale(1.0);
@@ -3181,7 +3182,7 @@ public class Fields {
 	public static final Field BOARDUSED5PULLDOWN = Field.create("BOARDUSED5PULLDOWN", 1260, FieldType.BIT, 26);
 	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1260, FieldType.BIT, 27);
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1260, FieldType.BIT, 28);
-	public static final Field UNUSEDBITHERE2 = Field.create("UNUSEDBITHERE2", 1260, FieldType.BIT, 29);
+	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1260, FieldType.BIT, 29);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1260, FieldType.BIT, 30);
 	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1260, FieldType.BIT, 31);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1264, FieldType.INT8, adc_channel_e).setScale(1.0);
@@ -4526,7 +4527,7 @@ public class Fields {
 	BOARDUSED5PULLDOWN,
 	USEFSIO5FORCRITICALISSUEENGINESTOP,
 	USEFSIO4FORSERIOUSENGINEWARNING,
-	UNUSEDBITHERE2,
+	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
 	SKIPPEDWHEELONCAM,
 	HIPOUTPUTCHANNEL,

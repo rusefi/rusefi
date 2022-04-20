@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 14:55:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Apr 20 00:07:35 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2401,7 +2401,7 @@ struct engine_configuration_s {
 	bool useFSIO4ForSeriousEngineWarning : 1 {};
 	/**
 	offset 1260 bit 29 */
-	bool unusedBitHere2 : 1 {};
+	bool launchActivateInverted : 1 {};
 	/**
 	offset 1260 bit 30 */
 	bool twoStroke : 1 {};
@@ -4678,4 +4678,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21148);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 19 14:55:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Apr 20 00:07:35 UTC 2022
