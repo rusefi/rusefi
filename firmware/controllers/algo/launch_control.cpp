@@ -28,8 +28,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
-			//todo: we should take into consideration if this sw is pulled high or low!
-			launchActivatePinState = efiReadPin(engineConfiguration->launchActivatePin);
+			launchActivatePinState = engineConfiguration->launchActivateInverted ^ efiReadPin(engineConfiguration->launchActivatePin);
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
