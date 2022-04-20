@@ -186,6 +186,13 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return -1;
 	}
 
+#if USE_ADC3_VBATT_HACK
+	if (hwChannel == EFI_ADC_7) {
+		extern adcsample_t vbattSampleProteus;
+		return vbattSampleProteus;
+	}
+#endif // USE_ADC3_VBATT_HACK
+
 #if EFI_USE_FAST_ADC
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
