@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Apr 20 00:07:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 21 13:12:24 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1536,7 +1536,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 722
 	 */
-	scaled_channel<uint16_t, 1, 1> unused722;
+	brain_input_pin_e tcuInputSpeedSensorPin;
+	/**
+	 * offset 723
+	 */
+	uint8_t tcuInputSpeedSensorTeeth;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -3010,76 +3014,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_507_8 : 1 {};
+	bool unusedBit_508_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_507_9 : 1 {};
+	bool unusedBit_508_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_507_10 : 1 {};
+	bool unusedBit_508_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_507_11 : 1 {};
+	bool unusedBit_508_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_507_12 : 1 {};
+	bool unusedBit_508_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_507_13 : 1 {};
+	bool unusedBit_508_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_507_14 : 1 {};
+	bool unusedBit_508_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_507_15 : 1 {};
+	bool unusedBit_508_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_507_16 : 1 {};
+	bool unusedBit_508_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_507_17 : 1 {};
+	bool unusedBit_508_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_507_18 : 1 {};
+	bool unusedBit_508_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_507_19 : 1 {};
+	bool unusedBit_508_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_507_20 : 1 {};
+	bool unusedBit_508_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_507_21 : 1 {};
+	bool unusedBit_508_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_507_22 : 1 {};
+	bool unusedBit_508_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_507_23 : 1 {};
+	bool unusedBit_508_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_507_24 : 1 {};
+	bool unusedBit_508_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_507_25 : 1 {};
+	bool unusedBit_508_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_507_26 : 1 {};
+	bool unusedBit_508_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_507_27 : 1 {};
+	bool unusedBit_508_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_507_28 : 1 {};
+	bool unusedBit_508_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_507_29 : 1 {};
+	bool unusedBit_508_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_507_30 : 1 {};
+	bool unusedBit_508_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_507_31 : 1 {};
+	bool unusedBit_508_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -3979,7 +3983,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 4171
 	 */
-	uint8_t unusedFiller_4703;
+	uint8_t issFilterReciprocal;
 	/**
 	%/kPa
 	 * offset 4172
@@ -4678,4 +4682,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21148);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Apr 20 00:07:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 21 13:12:24 UTC 2022

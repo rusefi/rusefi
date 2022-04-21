@@ -1115,6 +1115,7 @@
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
 #define GAUGE_NAME_IGNITION_LOAD "ign: load"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
+#define GAUGE_NAME_ISS "Input Shaft Speed"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
 #define GAUGE_NAME_KNOCK_10 "knock 10"
 #define GAUGE_NAME_KNOCK_11 "knock 11"
@@ -1547,6 +1548,7 @@
 #define isManualSpinningMode_offset 1272
 #define isMapAveragingEnabled_offset 1272
 #define isSdCardEnabled_offset 748
+#define issFilterReciprocal_offset 4143
 #define issue_294_31_offset 164
 #define isVerboseAlternator_offset 748
 #define isVerboseAuxPid1_offset 164
@@ -1936,7 +1938,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1349252206
+#define SIGNATURE_HASH 2327713320
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2111,6 +2113,8 @@
 #define tcuDownshiftButtonPin_offset 1579
 #define tcuDownshiftButtonPinMode_offset 3955
 #define tcuEnabled_offset 896
+#define tcuInputSpeedSensorPin_offset 722
+#define tcuInputSpeedSensorTeeth_offset 723
 #define tcuSolenoidTable_offset 17360
 #define tcuUpshiftButtonPin_offset 1578
 #define tcuUpshiftButtonPinMode_offset 3954
@@ -2514,7 +2518,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.21.kin.1349252206"
+#define TS_SIGNATURE "rusEFI 2022.04.21.kin.2327713320"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2561,7 +2565,6 @@
 #define unused17440_offset 17420
 #define unused184_offset 184
 #define unused28_offset 28
-#define unused722_offset 722
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
@@ -2571,31 +2574,30 @@
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
 #define unusedBit_48_31_offset 164
-#define unusedBit_507_10_offset 1740
-#define unusedBit_507_11_offset 1740
-#define unusedBit_507_12_offset 1740
-#define unusedBit_507_13_offset 1740
-#define unusedBit_507_14_offset 1740
-#define unusedBit_507_15_offset 1740
-#define unusedBit_507_16_offset 1740
-#define unusedBit_507_17_offset 1740
-#define unusedBit_507_18_offset 1740
-#define unusedBit_507_19_offset 1740
-#define unusedBit_507_20_offset 1740
-#define unusedBit_507_21_offset 1740
-#define unusedBit_507_22_offset 1740
-#define unusedBit_507_23_offset 1740
-#define unusedBit_507_24_offset 1740
-#define unusedBit_507_25_offset 1740
-#define unusedBit_507_26_offset 1740
-#define unusedBit_507_27_offset 1740
-#define unusedBit_507_28_offset 1740
-#define unusedBit_507_29_offset 1740
-#define unusedBit_507_30_offset 1740
-#define unusedBit_507_31_offset 1740
-#define unusedBit_507_8_offset 1740
-#define unusedBit_507_9_offset 1740
-#define unusedFiller_4703_offset 4143
+#define unusedBit_508_10_offset 1740
+#define unusedBit_508_11_offset 1740
+#define unusedBit_508_12_offset 1740
+#define unusedBit_508_13_offset 1740
+#define unusedBit_508_14_offset 1740
+#define unusedBit_508_15_offset 1740
+#define unusedBit_508_16_offset 1740
+#define unusedBit_508_17_offset 1740
+#define unusedBit_508_18_offset 1740
+#define unusedBit_508_19_offset 1740
+#define unusedBit_508_20_offset 1740
+#define unusedBit_508_21_offset 1740
+#define unusedBit_508_22_offset 1740
+#define unusedBit_508_23_offset 1740
+#define unusedBit_508_24_offset 1740
+#define unusedBit_508_25_offset 1740
+#define unusedBit_508_26_offset 1740
+#define unusedBit_508_27_offset 1740
+#define unusedBit_508_28_offset 1740
+#define unusedBit_508_29_offset 1740
+#define unusedBit_508_30_offset 1740
+#define unusedBit_508_31_offset 1740
+#define unusedBit_508_8_offset 1740
+#define unusedBit_508_9_offset 1740
 #define unusedMapAccelTaperBins_offset 1792
 #define unusedShort_offset 4612
 #define unusedTpsBins_offset 4566
