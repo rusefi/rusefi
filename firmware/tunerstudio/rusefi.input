@@ -1828,6 +1828,8 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
+@@LIVE_DATA_PANELS_FROM_FILE@@
+
 	dialog = scriptTable1TblSettings, "", yAxis
 	    field = "Name", scriptTableName1
 		panel = scriptTable1Tbl
@@ -2909,7 +2911,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		indicator = { isFanOn },   "fan 1 off", "fan 1 on", white, black, green, black
 		indicator = { isFan2On }, "fan 2 off", "fan 2 on", white, black, green, black
 
-	dialog = acSettings, "A/C Settings"
+	dialog = acSettingsWest, "A/C Settings"
 		field = "A/C switch",						acSwitch
 		field = "A/C switch mode",					acSwitchMode
 		field = "A/C Relay",						acRelayPin
@@ -2917,6 +2919,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Max RPM",						maxAcRpm
 		field = "Max CLT",						maxAcClt
 		field = "Max TPS",						maxAcTps
+
+	dialog = acSettings, "A/C Settings", border
+		panel = acSettingsWest, West
+		panel = ac_controlIndicatorPanel, East
 
 	dialog = fanSetting, "Fan Settings"
 		panel = fan1Settings
@@ -3161,8 +3167,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = speedSensorLeft, "", yAxis
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
 		panel = speedSensorCan
-
-@@LIVE_DATA_PANELS_FROM_FILE@@
 
 	dialog = gearDetection, "Gear Detection"
 		field = "Wheel revolutions per kilometer",	driveWheelRevPerKm
@@ -3775,7 +3779,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
+	dialog = smLaunchControlWest, "Launch Control Settings EXPERIMENTAL"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 
@@ -3804,6 +3808,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
 
 
+	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL", border
+		panel = smLaunchControlWest, West
+		panel = launch_control_stateDialog, East
 
 
 					;			Racing Features->Rolling Launch
