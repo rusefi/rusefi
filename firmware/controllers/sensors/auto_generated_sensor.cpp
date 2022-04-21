@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Tue Mar 29 06:12:06 UTC 2022
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Thu Apr 21 13:11:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -63,6 +63,8 @@ case SensorType::Iat:
   return "Iat";
 case SensorType::IdlePosition:
   return "IdlePosition";
+case SensorType::InputShaftSpeed:
+  return "InputShaftSpeed";
 case SensorType::Invalid:
   return "Invalid";
 case SensorType::Lambda1:

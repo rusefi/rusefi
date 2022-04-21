@@ -240,6 +240,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->acIdleExtraOffset;
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
 		return engineConfiguration->finalGearRatio;
+	if (strEqualCaseInsensitive(name, "tcuInputSpeedSensorTeeth"))
+		return engineConfiguration->tcuInputSpeedSensorTeeth;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
 		return engineConfiguration->wastegatePositionMin;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMax"))
@@ -934,6 +936,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpPumpVolume;
 	if (strEqualCaseInsensitive(name, "hpfpActivationAngle"))
 		return engineConfiguration->hpfpActivationAngle;
+	if (strEqualCaseInsensitive(name, "issFilterReciprocal"))
+		return engineConfiguration->issFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "hpfpPidP"))
 		return engineConfiguration->hpfpPidP;
 	if (strEqualCaseInsensitive(name, "hpfpPidI"))
@@ -1559,6 +1563,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
 	{
 		engineConfiguration->finalGearRatio = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tcuInputSpeedSensorTeeth"))
+	{
+		engineConfiguration->tcuInputSpeedSensorTeeth = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
@@ -3294,6 +3303,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "hpfpActivationAngle"))
 	{
 		engineConfiguration->hpfpActivationAngle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "issFilterReciprocal"))
+	{
+		engineConfiguration->issFilterReciprocal = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpPidP"))

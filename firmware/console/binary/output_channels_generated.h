@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 19 00:13:17 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 21 13:11:43 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1375,11 +1375,17 @@ struct output_channels_s {
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ISS@@
+	RPM
 	 * offset 560
 	 */
-	uint8_t unusedAtTheEnd[80];
+	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
+	/**
+	 * offset 562
+	 */
+	uint8_t unusedAtTheEnd[78];
 };
 static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 19 00:13:17 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 21 13:11:43 UTC 2022
