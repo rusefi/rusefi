@@ -94,6 +94,9 @@ enum class SensorType : unsigned char {
 	AuxSpeed1,
 	AuxSpeed2,
 
+
+	InputShaftSpeed,
+
 	// Leave me at the end!
 	PlaceholderLast,
 };
