@@ -87,6 +87,7 @@ void stopSensors() {
 	deinitTurbochargerSpeedSensor();
 	deinitAuxSpeedSensors();
 	deinitMap();
+	deinitInputShaftSpeedSensor();
 }
 
 void reconfigureSensors() {
