@@ -85,7 +85,12 @@ float GearDetector::computeGearboxRatio() const {
 		return 0;
 	}
 
-	auto engineRpm = Sensor::getOrZero(SensorType::Rpm);
+	float engineRpm;
+	if (Sensor::hasSensor(SensorType::InputShaftSpeed)) {
+		engineRpm = Sensor::getOrZero(SensorType::InputShaftSpeed);
+	} else {
+		engineRpm = Sensor::getOrZero(SensorType::Rpm);
+	}
 
 	// Convert to wheel RPM
 	//                 km                        rev                        1 hr

@@ -1752,6 +1752,7 @@ end_struct
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
 #define GAUGE_NAME_ISS "Input Shaft Speed"
+#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
