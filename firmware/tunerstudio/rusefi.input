@@ -2920,7 +2920,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Max CLT",						maxAcClt
 		field = "Max TPS",						maxAcTps
 
-	dialog = acSettings, "A/C Settings", border
+	dialog = acSettings, "", border
 		panel = acSettingsWest, West
 		panel = ac_controlIndicatorPanel, East
 
@@ -3808,7 +3808,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
 
 
-	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL", border
+	dialog = smLaunchControl, "", border
 		panel = smLaunchControlWest, West
 		panel = launch_control_stateDialog, East
 
