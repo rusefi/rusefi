@@ -4,6 +4,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import com.rusefi.VariableRegistry;
 
 import java.io.IOException;
 
@@ -16,6 +17,8 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  */
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
+    // https://github.com/rusefi/web_backend/issues/166
+    private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final boolean registerOffsets;
@@ -51,7 +54,16 @@ public class TsOutput {
 
                 ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
+                    String commentContent = configField.getCommentContent();
+                    commentContent = state.variableRegistry.applyVariables(commentContent);
+                    int newLineIndex = commentContent.indexOf("\\n");
+                    if (newLineIndex != -1) {
+                        // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
+                        commentContent = commentContent.substring(0, newLineIndex);
+                    }
+//                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
+//                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
+                    settingContextHelp.append("\t" + nameWithPrefix + " = \"" + commentContent + "\"" + EOL);
                 }
                 if (registerOffsets) {
                     state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);

@@ -12,15 +12,16 @@ import static org.junit.Assert.assertEquals;
 public class OutputsTest {
     @Test
     public void generateSomething() throws IOException {
+        ReaderState state = new ReaderState();
+        state.variableRegistry.register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
-                "angle_t m_requested_pump;Computed requested pump duration in degrees (not including deadtime)\n" +
-                "float tCharge;speed density\\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;\n" +
+                "angle_t m_requested_pump;Computed requested pump \n" +
+                "float tCharge;speed density\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, tsProjectConsumer);

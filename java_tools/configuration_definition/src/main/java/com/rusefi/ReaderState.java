@@ -24,8 +24,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  * 12/19/18
  */
 public class ReaderState {
-    // https://github.com/rusefi/web_backend/issues/166
-    private static final int MSQ_LENGTH_LIMIT = 34;
     // used to update other files
     public List<String> inputFiles = new ArrayList<>();
 
@@ -313,8 +311,6 @@ public class ReaderState {
     private static String getCommentWithIndex(ConfigField cf, int i) {
         String unquoted = unquote(cf.getCommentOrName());
         String string = unquoted + " " + i;
-        if (string.length() > MSQ_LENGTH_LIMIT)
-            throw new IllegalStateException("[" + string + "] is too long for rusEFI online");
         return quote(string);
     }
 
