@@ -56,7 +56,7 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 	float time = isShiftCompleted();
 	if (time != 0) {
 		engine->outputChannels.lastShiftTime = time;
-		// TODO set pressure control back to normal
+		isShifting = false;
 	}
 }
 
@@ -95,10 +95,11 @@ void Gm4l6xTransmissionController::setTccState() {
 }
 
 void Gm4l6xTransmissionController::setPcState(gear_e gear) {
-	if (gear != getCurrentGear()) {
-		// TODO set special pressure for shift
-	}
 	uint8_t (*pcts)[sizeof(config->tcu_pcAirmassBins)/sizeof(config->tcu_pcAirmassBins[0])];
+	if (gear != getCurrentGear()) {
+		shiftingFrom = getCurrentGear();
+		isShifting = true;
+	}
 	switch (getCurrentGear()) {
 	case REVERSE:
 		pcts = &config->tcu_pcValsR;
@@ -107,16 +108,32 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		pcts = &config->tcu_pcValsN;
 		break;
 	case GEAR_1:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_2) {
+			pcts = &config->tcu_pcVals21;
+		} else {
+			pcts = &config->tcu_pcVals1;
+		}
 		break;
 	case GEAR_2:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_1) {
+			pcts = &config->tcu_pcVals12;
+		} else if (isShifting && shiftingFrom == GEAR_3) {
+			pcts = &config->tcu_pcVals32;
+		} else {
+			pcts = &config->tcu_pcVals2;
+		}
 		break;
 	case GEAR_3:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_2) {
+			pcts = &config->tcu_pcVals23;
+		} else if (isShifting && shiftingFrom == GEAR_4) {
+			pcts = &config->tcu_pcVals43;
+		} else {
+			pcts = &config->tcu_pcVals3;
+		}
 		break;
 	case GEAR_4:
-		pcts = &config->tcu_pcValsR;
+		pcts = &config->tcu_pcVals4;
 		break;
 	}
 	int pct = interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);

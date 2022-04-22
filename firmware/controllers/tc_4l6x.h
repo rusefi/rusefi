@@ -14,6 +14,8 @@ private:
 	gear_e setCurrentGear(gear_e gear);
 	void setTccState();
 	void setPcState(gear_e gear);
+	bool isShifting = false;
+	gear_e shiftingFrom;
 };
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController();
