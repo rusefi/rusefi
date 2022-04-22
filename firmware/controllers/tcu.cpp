@@ -9,6 +9,7 @@
 #include "pch.h"
 
 #include "tcu.h"
+#include "engine.h"
 
 void TransmissionControllerBase::init() {
 }
