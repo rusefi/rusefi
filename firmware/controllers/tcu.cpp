@@ -9,9 +9,9 @@
 #include "pch.h"
 
 #include "tcu.h"
-#include "gear_detector.h"
 #include "engine.h"
 
+#if EFI_TCU
 void TransmissionControllerBase::init() {
 }
 
@@ -48,3 +48,4 @@ float TransmissionControllerBase::isShiftCompleted() {
 		return 0;
 	}
 }
+#endif // EFI_TCU

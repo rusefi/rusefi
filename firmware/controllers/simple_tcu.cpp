@@ -2,6 +2,7 @@
 
 #include "simple_tcu.h"
 
+#if EFI_TCU
 SimpleTransmissionController simpleTransmissionController;
 
 void SimpleTransmissionController::init() {
@@ -34,3 +35,4 @@ void SimpleTransmissionController::update(gear_e gear) {
 SimpleTransmissionController* getSimpleTransmissionController() {
 	return &simpleTransmissionController;
 }
+#endif // EFI_TCU

@@ -10,6 +10,7 @@
 
 #include "buttonshift.h"
 
+#if EFI_TCU
 ButtonShiftController buttonShiftController;
 
 ButtonShiftController::ButtonShiftController() :
@@ -83,3 +84,4 @@ void ButtonShiftController::update() {
 ButtonShiftController* getButtonShiftController() {
 	return &buttonShiftController;
 }
+#endif // EFI_TCU

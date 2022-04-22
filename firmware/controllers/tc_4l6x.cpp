@@ -2,6 +2,7 @@
 
 #include "tc_4l6x.h"
 
+#if EFI_TCU
 Gm4l6xTransmissionController gm4l6xTransmissionController;
 static SimplePwm tccPwm("TCC Control"); 
 static SimplePwm pcPwm("Pressure Control"); 
@@ -125,3 +126,4 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 Gm4l6xTransmissionController* getGm4l6xTransmissionController() {
 	return &gm4l6xTransmissionController;
 }
+#endif // EFI_TCU

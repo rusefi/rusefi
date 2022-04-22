@@ -2,6 +2,7 @@
 
 #include "tcu.h"
 
+#if EFI_TCU
 class Gm4l6xTransmissionController: public TransmissionControllerBase  {
 public:
 	void update(gear_e);
@@ -16,3 +17,4 @@ private:
 };
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController();
+#endif // EFI_TCU

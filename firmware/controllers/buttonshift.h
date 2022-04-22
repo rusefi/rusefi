@@ -11,6 +11,7 @@
 #include "globalaccess.h"
 #include "debounce.h"
 
+#if EFI_TCU
 class ButtonShiftController: public GearControllerBase {
 public:
 	ButtonShiftController();
@@ -26,3 +27,4 @@ private:
 };
 
 ButtonShiftController* getButtonShiftController();
+#endif // EFI_TCU

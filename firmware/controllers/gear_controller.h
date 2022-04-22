@@ -8,6 +8,7 @@
 #include "simple_tcu.h"
 #include "tc_4l6x.h"
 
+#if EFI_TCU
 class GearControllerBase {
 public:
 	virtual void update();
@@ -26,3 +27,4 @@ private:
 };
 
 void initGearController();
+#endif // EFI_TCU

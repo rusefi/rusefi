@@ -14,6 +14,7 @@
 #include "globalaccess.h"
 #include "timer.h"
 
+#if EFI_TCU
 class TransmissionControllerBase {
 private:
 	Timer m_shiftTimer;
@@ -33,3 +34,4 @@ protected:
 	void measureShiftTime(gear_e);
 	float isShiftCompleted();
 };
+#endif // EFI_TCU
