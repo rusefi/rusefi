@@ -684,6 +684,13 @@ curve = pcPerShiftCurve, "Transmission Line Pressure Control - Shift"
 		lineLabel = "3->2%"
 		lineLabel = "4->3%"
 
+curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
+		columnLabel = "Speed", "%"
+		xAxis = 0, 200, 20
+		yAxis = 0, 100, 10
+		xBins = tcu_32SpeedBins, vehicleSpeedKph
+		yBins = tcu_32Vals
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1551,6 +1558,7 @@ menuDialog = main
 		subMenu = tccCurves, "TCC Lock/Unlock Speed"
 		subMenu = pcPerGearDialog, "Line Pressure Per Gear"
 		subMenu = pcPerShiftDialog, "Line Pressure Per Shift"
+		subMenu = 32Dialog, "3-2 Shift Solenoid Percent by Speed"
 
 	menu = "&Sensors"
 		# Base analog input settings
@@ -3513,6 +3521,9 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = pcPerShiftDialog, "Line Pressure Per Shift"
 		panel = pcPerShiftCurve
+
+	dialog = 32Dialog, "3-2 Shift Solenoid Percent by Speed"
+		panel = 32Curve
 
 ;Boost Open Loop
 
