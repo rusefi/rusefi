@@ -290,9 +290,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 uint8_t unusedWat
 
 	uint16_t autoscale tcRatio;@@GAUGE_NAME_TC_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	float lastShiftTime;"mS"
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[12 iterate] unusedInTheMiddle;;"",1, 0, 0, 0, 0
+	uint8_t[8 iterate] unusedInTheMiddle;;"",1, 0, 0, 0, 0
 
 	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 0
 	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 0

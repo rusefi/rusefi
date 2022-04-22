@@ -1216,6 +1216,7 @@ gaugeCategory = Transmission
    speedToRpmRatioGauge = speedToRpmRatio, @@GAUGE_NAME_GEAR_RATIO@@, "",     0,   100,     0,    0,    100,  100,   4,   4
    ISSGauge = ISSValue, @@GAUGE_NAME_ISS@@, "RPM", 0, {rpmHardLimit + 2000}, 200, {cranking_rpm}, {rpmHardLimit - 500}, {rpmHardLimit}, 0, 0
    tcRatioGauge = tcRatio, @@GAUGE_NAME_TC_RATIO@@, "",     0,   100,     0,    0,    100,  100,   4,   4
+	 shiftTimeGauge = lastShiftTime, "Last Shift Time", "mS", 0, 2000, 0, 0, 2000, 2000, 0, 0 
 
 gaugeCategory = Knock
    knock1Gauge = knock1, "Knock Cyl 1", "dBv", -60, 10, -60, -60, 10, 10, 0, 0

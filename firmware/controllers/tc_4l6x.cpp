@@ -54,7 +54,8 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 
 	float time = isShiftCompleted();
 	if (time != 0) {
-		efiPrintf("shifted in %f", time);
+		engine->outputChannels.lastShiftTime = time;
+		// TODO set pressure control back to normal
 	}
 }
 
@@ -94,6 +95,7 @@ void Gm4l6xTransmissionController::setTccState() {
 
 void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 	if (gear != getCurrentGear()) {
+		// TODO set special pressure for shift
 	}
 	uint8_t (*pcts)[sizeof(config->tcu_pcAirmassBins)/sizeof(config->tcu_pcAirmassBins[0])];
 	switch (getCurrentGear()) {
