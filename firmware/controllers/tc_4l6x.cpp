@@ -40,6 +40,7 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 	setCurrentGear(gear);
 	setTccState();
 	setPcState(gear);
+	set32State(gear);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TCU) {
@@ -138,6 +139,20 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 	}
 	int pct = interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
 	pcPwm.setSimplePwmDutyCycle(pct*0.01);
+}
+
+void Gm4l6xTransmissionController::set32State(gear_e gear) {
+	if (isShifting && shiftingFrom == GEAR_3 && gear == GEAR_2) {
+		auto vss = Sensor::get(SensorType::VehicleSpeed);
+		if (!vss.Valid) {
+			return;
+		}
+		uint8_t (*pcts)[sizeof(config->tcu_32SpeedBins)/sizeof(config->tcu_32SpeedBins[0])];
+		int pct = interpolate2d(vss.Value, config->tcu_32SpeedBins, &config->tcu_32Vals);
+		shift32Pwm.setSimplePwmDutyCycle(pct*0.01);
+	} else {
+		shift32Pwm.setSimplePwmDutyCycle(0);		
+	}
 }
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController() {

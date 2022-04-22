@@ -14,6 +14,7 @@ private:
 	gear_e setCurrentGear(gear_e gear);
 	void setTccState();
 	void setPcState(gear_e gear);
+	void set32State(gear_e gear);
 	bool isShifting = false;
 	gear_e shiftingFrom;
 };
