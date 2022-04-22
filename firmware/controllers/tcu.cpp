@@ -41,7 +41,7 @@ void TransmissionControllerBase::measureShiftTime(gear_e gear) {
 float TransmissionControllerBase::isShiftCompleted() {
 	if (m_shiftTime &&  m_shiftTimeGear == engine->module<GearDetector>()->getCurrentGear()) {
 		m_shiftTime = false;
-		return MS2NT(getTimeNowNt() - m_shiftTimeStart);
+		return US2MS(NT2US((getTimeNowNt() - m_shiftTimeStart));
 	} else {
 		return 0;
 	}
