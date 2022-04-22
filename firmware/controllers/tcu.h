@@ -12,11 +12,12 @@
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
 #include "globalaccess.h"
+#include "timer.h"
 
 class TransmissionControllerBase {
 private:
+	Timer m_shiftTimer;
 	bool m_shiftTime;
-	float m_shiftTimeStart;
 	gear_e m_shiftTimeGear;
 public:
 	virtual void update(gear_e);

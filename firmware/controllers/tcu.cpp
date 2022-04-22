@@ -34,14 +34,14 @@ void TransmissionControllerBase::postState() {
 
 void TransmissionControllerBase::measureShiftTime(gear_e gear) {
 	m_shiftTime = true;
-	m_shiftTimeStart = getTimeNowNt();
+	m_shiftTimer.reset();
 	m_shiftTimeGear = gear;
 }
 
 float TransmissionControllerBase::isShiftCompleted() {
 	if (m_shiftTime &&  m_shiftTimeGear == engine->module<GearDetector>()->getCurrentGear()) {
 		m_shiftTime = false;
-		return US2MS(NT2US((getTimeNowNt() - m_shiftTimeStart));
+		return m_shiftTimer.getElapsedSeconds();
 	} else {
 		return 0;
 	}
