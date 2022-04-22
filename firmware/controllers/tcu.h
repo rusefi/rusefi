@@ -14,6 +14,10 @@
 #include "globalaccess.h"
 
 class TransmissionControllerBase {
+private:
+	bool m_shiftTime;
+	float m_shiftTimeStart;
+	gear_e m_shiftTimeGear;
 public:
 	virtual void update(gear_e);
 	virtual void init();
@@ -25,4 +29,6 @@ protected:
 	gear_e currentGear = NEUTRAL;
 	virtual gear_e setCurrentGear(gear_e);
 	void postState();
+	void measureShiftTime(gear_e);
+	float isShiftCompleted();
 };

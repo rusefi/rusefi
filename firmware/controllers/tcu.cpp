@@ -14,8 +14,7 @@ void TransmissionControllerBase::init() {
 }
 
 void TransmissionControllerBase::update(gear_e gear) {
-    setCurrentGear(gear);
-    postState();
+	postState();
 }
 
 gear_e TransmissionControllerBase::setCurrentGear(gear_e gear) {
@@ -31,4 +30,19 @@ void TransmissionControllerBase::postState() {
 #if EFI_TUNER_STUDIO
     engine->outputChannels.tcuCurrentGear = getCurrentGear();
 #endif
+}
+
+void TransmissionControllerBase::measureShiftTime(gear_e gear) {
+	m_shiftTime = true;
+	m_shiftTimeStart = getTimeNowNt();
+	m_shiftTimeGear = gear;
+}
+
+float TransmissionControllerBase::isShiftCompleted() {
+	if (m_shiftTime &&  m_shiftTimeGear == engine->module<GearDetector>()->getCurrentGear()) {
+		m_shiftTime = false;
+		return MS2NT(getTimeNowNt() - m_shiftTimeStart);
+	} else {
+		return 0;
+	}
 }

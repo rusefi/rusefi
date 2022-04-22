@@ -39,7 +39,6 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 	setCurrentGear(gear);
 	setTccState();
 	setPcState(gear);
-	postState();
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TCU) {
@@ -50,6 +49,13 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 		engine->outputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
 	}
 #endif
+
+	TransmissionControllerBase::update(gear);
+
+	float time = isShiftCompleted();
+	if (time != 0) {
+		efiPrintf("shifted in %f", time);
+	}
 }
 
 gear_e Gm4l6xTransmissionController::setCurrentGear(gear_e gear) {
@@ -63,6 +69,7 @@ gear_e Gm4l6xTransmissionController::setCurrentGear(gear_e gear) {
 		enginePins.tcuSolenoids[i].setValue(config->tcuSolenoidTable[static_cast<int>(gear) + 1][i]);
 #endif
 	}
+	measureShiftTime(gear);
 	return getCurrentGear();
 }
 
