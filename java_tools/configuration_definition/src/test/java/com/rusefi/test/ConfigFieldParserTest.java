@@ -362,7 +362,7 @@ public class ConfigFieldParserTest {
         String test = "struct total\n" +
                 "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "percent_t afr_typet\n" +
 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n" +
@@ -373,7 +373,7 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
+                "pid_afr_typet = scalar, F32, 4, \"\", 1, 0, 0, 100, 0\n" +
                 "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +
                 "pid_enableFan1WithAc = bits, U32, 8, [1:1], \"false\", \"true\"\n" +
                 "pid_unusedBit_4_2 = bits, U32, 8, [2:2], \"false\", \"true\"\n" +
@@ -409,7 +409,6 @@ public class ConfigFieldParserTest {
                 "; total TS size = 12\n", tsProjectConsumer.getContent());
         assertEquals(
                 "\tpid_afr_type = \"PID dTime\"\n" +
-                "\tpid_afr_typet = \"PID dTime\"\n" +
                 "\tpid_isForcedInduction = \"Does the vehicle have a turbo or supercharger?\"\n" +
                         "\tpid_enableFan1WithAc = \"Turn on this fan when AC is on.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }

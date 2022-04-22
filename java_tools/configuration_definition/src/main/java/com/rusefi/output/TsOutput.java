@@ -130,6 +130,8 @@ public class TsOutput {
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
+            if (isConstantsSection)
+                return quote("") + ", 1, 0, 0, 100, 0";
             return quote("") + ", 1, 0";
         }
         try {
