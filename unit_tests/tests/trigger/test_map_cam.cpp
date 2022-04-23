@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "trigger_central.h"
+#include "spark_logic.h"
 
 TEST(trigger, map_cam_by_magic_point) {
 
@@ -32,5 +33,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(10, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
 
 	// We have "VVT" sync, things should be scheduled!
-	ASSERT_NE(0, engine->executor.size());
+	ASSERT_EQ(2, engine->executor.size());
+	eth.assertEvent5("spark down#0", 0, (void*)turnSparkPinHigh, 185333);
+	eth.assertEvent5("spark down#1", 1, (void*)fireSparkAndPrepareNextSchedule, 188333);
 }
