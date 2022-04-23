@@ -28,9 +28,10 @@ TEST(realCrankingNB2, normalCranking) {
 
 	ASSERT_EQ(942, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(0));
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(1));
+	ASSERT_EQ(3, eth.recentWarnings()->getCount());
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0));
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(1));
+	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(2));
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {
@@ -49,7 +50,8 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 
 	ASSERT_EQ(668, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(0));
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(1));
+	ASSERT_EQ(3, eth.recentWarnings()->getCount());
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0));
+	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(1));
+	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(2));
 }

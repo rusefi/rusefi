@@ -1,8 +1,8 @@
 #include "pch.h"
 
 #include "limp_manager.h"
-
 #include "fuel_math.h"
+#include "main_trigger_callback.h"
 
 #define CLEANUP_MODE_TPS 90
 
@@ -20,6 +20,16 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		if (engineConfiguration->cutSparkOnHardLimit) {
 			allowSpark.clear(ClearReason::HardLimit);
 		}
+	}
+
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
+			&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
+		allowFuel.clear(ClearReason::EnginePhase);
+		allowSpark.clear(ClearReason::EnginePhase);
 	}
 
 	// Force fuel limiting on the fault rev limit
