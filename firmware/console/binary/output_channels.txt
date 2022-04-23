@@ -307,13 +307,13 @@ uint8_t unusedWat
 	bit dfcoActive
 	bit tpsAccelActive
 
-    uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
-    uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
+    uint8_t unused_8_1
+    uint8_t unused_8_2
 	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.5, 0, 0, 100, 1
 	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 0.5, 0, 0, 100, 1
 
-    float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
-    float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
+    float unused_32_1
+    float unused_32_2
 
     float autoscale     vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
     float autoscale vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
