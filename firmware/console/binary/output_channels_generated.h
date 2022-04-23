@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 23 11:38:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Sat Apr 23 19:49:37 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1188,11 +1188,11 @@ struct output_channels_s {
 	/**
 	 * offset 412
 	 */
-	uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT = (uint8_t)0;
+	uint8_t unused_8_1 = (uint8_t)0;
 	/**
 	 * offset 413
 	 */
-	uint8_t TEMPLOG_map_peak = (uint8_t)0;
+	uint8_t unused_8_2 = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_OUTPUT@@
 	%
@@ -1208,11 +1208,11 @@ struct output_channels_s {
 	/**
 	 * offset 416
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_SPECIAL_POINT = (float)0;
+	float unused_32_1 = (float)0;
 	/**
 	 * offset 420
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_DIFF = (float)0;
+	float unused_32_2 = (float)0;
 	/**
 	 * offset 424
 	 */
@@ -1403,4 +1403,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 23 11:38:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Sat Apr 23 19:49:37 EDT 2022
