@@ -519,9 +519,6 @@ void setMazdaMiata2003EngineConfiguration() {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
 */
 
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-
 	//set etb_p 12
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
 	engineConfiguration->etb.iFactor = 	0;
@@ -615,8 +612,6 @@ static void setMiataNB2_MRE_common() {
 
 	// todo: AC fan
 	// TLE8888_PIN_24: "43 - GP Out 4"
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
@@ -783,8 +778,6 @@ void setMiataNB2_ProteusEngineConfiguration() {
     engineConfiguration->mafAdcChannel = EFI_ADC_13; // PA6 W46 <> W46
 
     engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
-
-    engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
     engineConfiguration->clt.adcChannel =  PROTEUS_IN_ANALOG_TEMP_1;
     engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;

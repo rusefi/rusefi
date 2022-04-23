@@ -8,6 +8,7 @@
 TEST(trigger, testQuadCam) {
 	// setting some weird engine
 	EngineTestHelper eth(FORD_ESCORT_GT);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	setCrankOperationMode();
 

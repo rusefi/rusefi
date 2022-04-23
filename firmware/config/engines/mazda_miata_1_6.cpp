@@ -189,9 +189,6 @@ static void miataNAcommonEngineSettings() {
 	engineConfiguration->idle.solenoidFrequency = 160;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-
-
 	setMapVeTable();
 
 	engineConfiguration->idleMode = IM_AUTO;
