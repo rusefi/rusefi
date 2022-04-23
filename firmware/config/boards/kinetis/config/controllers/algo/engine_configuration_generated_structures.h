@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Apr 21 13:12:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 23 11:39:12 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4672,8 +4672,18 @@ struct persistent_config_s {
 	 * offset 21112
 	 */
 	uint8_t tcu_tccUnlockSpeed[8];
+	/**
+	KPH
+	 * offset 21120
+	 */
+	uint8_t tcu_32SpeedBins[8];
+	/**
+	%
+	 * offset 21128
+	 */
+	uint8_t tcu_32Vals[8];
 };
-static_assert(sizeof(persistent_config_s) == 21120);
+static_assert(sizeof(persistent_config_s) == 21136);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Apr 21 13:12:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 23 11:39:12 UTC 2022

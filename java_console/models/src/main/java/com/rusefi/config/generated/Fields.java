@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 23 03:02:26 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 23 11:39:16 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1125,6 +1125,7 @@ public class Fields {
 	public static final String GAUGE_NAME_RPM = "RPM";
 	public static final String GAUGE_NAME_TARGET_AFR = "fuel: target AFR";
 	public static final String GAUGE_NAME_TARGET_LAMBDA = "fuel: target lambda";
+	public static final String GAUGE_NAME_TC_RATIO = "Torque Converter Ratio";
 	public static final String GAUGE_NAME_TCHARGE = "fuel: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
@@ -1741,7 +1742,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5484;
 	public static final int pedalToTpsRpmBins_offset = 5492;
 	public static final int pedalToTpsTable_offset = 5420;
-	public static final int persistent_config_s_size = 21148;
+	public static final int persistent_config_s_size = 21164;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1879,7 +1880,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 808948958;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2006,6 +2006,8 @@ public class Fields {
 	public static final int tcu_32_solenoid_freq_offset = 4804;
 	public static final int tcu_32_solenoid_pin_mode_offset = 4803;
 	public static final int tcu_32_solenoid_pin_offset = 4802;
+	public static final int tcu_32SpeedBins_offset = 21148;
+	public static final int tcu_32Vals_offset = 21156;
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int tcu_pc_solenoid_freq_offset = 4800;
 	public static final int tcu_pc_solenoid_pin_mode_offset = 4799;
@@ -2098,7 +2100,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 4738;
 	public static final int torqueRpmBins_offset = 4726;
 	public static final int torqueTable_offset = 4690;
-	public static final int TOTAL_CONFIG_SIZE = 21148;
+	public static final int TOTAL_CONFIG_SIZE = 21164;
 	public static final int totalGearsCount_offset = 1698;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
@@ -2397,7 +2399,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.23.all.808948958";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.23.all.3481960469";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1000;
@@ -3957,6 +3959,8 @@ public class Fields {
 	public static final Field TCU_TCCTPSBINS = Field.create("TCU_TCCTPSBINS", 21124, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_TCCLOCKSPEED = Field.create("TCU_TCCLOCKSPEED", 21132, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_TCCUNLOCKSPEED = Field.create("TCU_TCCUNLOCKSPEED", 21140, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_32SPEEDBINS = Field.create("TCU_32SPEEDBINS", 21148, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_32VALS = Field.create("TCU_32VALS", 21156, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5293,5 +5297,7 @@ public class Fields {
 	TCU_TCCTPSBINS,
 	TCU_TCCLOCKSPEED,
 	TCU_TCCUNLOCKSPEED,
+	TCU_32SPEEDBINS,
+	TCU_32VALS,
 	};
 }

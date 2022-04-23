@@ -1157,6 +1157,7 @@
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_TARGET_AFR "fuel: target AFR"
 #define GAUGE_NAME_TARGET_LAMBDA "fuel: target lambda"
+#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
 #define GAUGE_NAME_TCHARGE "fuel: SD tCharge"
 #define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
 #define GAUGE_NAME_TIME "Time"
@@ -1804,7 +1805,7 @@
 #define pedalToTpsRpmBins_offset 5492
 #define pedalToTpsTable_offset 5420
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 21148
+#define persistent_config_s_size 21164
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1953,7 +1954,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1964759764
+#define SIGNATURE_HASH 2326187551
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2087,6 +2088,8 @@
 #define tcu_32_solenoid_freq_offset 4804
 #define tcu_32_solenoid_pin_mode_offset 4803
 #define tcu_32_solenoid_pin_offset 4802
+#define tcu_32SpeedBins_offset 21148
+#define tcu_32Vals_offset 21156
 #define TCU_GEAR_COUNT 10
 #define tcu_pc_solenoid_freq_offset 4800
 #define tcu_pc_solenoid_pin_mode_offset 4799
@@ -2182,7 +2185,7 @@
 #define torqueLoadBins_offset 4738
 #define torqueRpmBins_offset 4726
 #define torqueTable_offset 4690
-#define TOTAL_CONFIG_SIZE 21148
+#define TOTAL_CONFIG_SIZE 21164
 #define totalGearsCount_offset 1698
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
@@ -2533,7 +2536,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.23.hellen_cypress.1964759764"
+#define TS_SIGNATURE "rusEFI 2022.04.23.hellen_cypress.2326187551"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
