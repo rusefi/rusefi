@@ -1687,22 +1687,14 @@ cmd_test_spk10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY
 cmd_test_spk11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0b"
 cmd_test_spk12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0c"
 
-cmd_test_fsio1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x01"
-cmd_test_fsio2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x02"
-cmd_test_fsio3  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x03"
-cmd_test_fsio4  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x04"
-cmd_test_fsio5  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x05"
-cmd_test_fsio6  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x06"
-cmd_test_fsio7  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x07"
-cmd_test_fsio8  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x08"
-cmd_test_fsio9  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x09"
-cmd_test_fsio10 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0a"
-cmd_test_fsio11 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0b"
-cmd_test_fsio12 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0c"
-cmd_test_fsio13 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0d"
-cmd_test_fsio14 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0e"
-cmd_test_fsio15 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0f"
-cmd_test_fsio16 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x10"
+cmd_test_lua1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUT_CATEGORY_16_hex@@\x00\x01"
+cmd_test_lua2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x02"
+cmd_test_lua3  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x03"
+cmd_test_lua4  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x04"
+cmd_test_lua5  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x05"
+cmd_test_lua6  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x06"
+cmd_test_lua7  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x07"
+cmd_test_lua8  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x08"
 
 cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
 
@@ -2102,23 +2094,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Small pulse correction mode",		injectorNonlinearMode
 		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode != 0 }
 
-	dialog = testFsio, "FSIO Test"
-		commandButton = "FSIO#1",	cmd_test_fsio1
-		commandButton = "FSIO#2",	cmd_test_fsio2
-		commandButton = "FSIO#3",	cmd_test_fsio3
-		commandButton = "FSIO#4",	cmd_test_fsio4
-		commandButton = "FSIO#5",	cmd_test_fsio5
-		commandButton = "FSIO#6",	cmd_test_fsio6
-		commandButton = "FSIO#7",	cmd_test_fsio7
-		commandButton = "FSIO#8",	cmd_test_fsio8
-		commandButton = "FSIO#9",	cmd_test_fsio9
-		commandButton = "FSIO#10",	cmd_test_fsio10
-		commandButton = "FSIO#11",	cmd_test_fsio11
-		commandButton = "FSIO#12",	cmd_test_fsio12
-		commandButton = "FSIO#13",	cmd_test_fsio13
-		commandButton = "FSIO#14",	cmd_test_fsio14
-		commandButton = "FSIO#15",	cmd_test_fsio15
-		commandButton = "FSIO#16",	cmd_test_fsio16
+	dialog = testLuaOut, "Lua Out Test"
+		commandButton = "Lua Out #1",	cmd_test_lua1
+		commandButton = "Lua Out #2",	cmd_test_lua2
+		commandButton = "Lua Out #3",	cmd_test_lua3
+		commandButton = "Lua Out #4",	cmd_test_lua4
+		commandButton = "Lua Out #5",	cmd_test_lua5
+		commandButton = "Lua Out #6",	cmd_test_lua6
+		commandButton = "Lua Out #7",	cmd_test_lua7
+		commandButton = "Lua Out #8",	cmd_test_lua8
 
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
@@ -3698,7 +3682,7 @@ dialog = tcuControls, "Transmission Settings"
 		panel = testSpark
 		panel = testInjectors
 		panel = testSolenoids
-		panel = testFsio
+		panel = testLuaOut
 		panel = testMisc
 
 	; Injectors test

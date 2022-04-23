@@ -170,7 +170,7 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doRunBenchTestFsio(size_t /* humanIndex */, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
+static void doRunBenchTestLuaOutput(size_t /* humanIndex */, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
 //	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
 //		efiPrintf("Invalid index: %d", humanIndex);
 //		return;
@@ -472,9 +472,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-	case CMD_TS_FSIO_CATEGORY:
+	case CMD_TS_LUA_OUT_CATEGORY:
 		if (!running) {
-			doRunBenchTestFsio(index, 300.0, 4.0,
+			doRunBenchTestLuaOutput(index, 300.0, 4.0,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
