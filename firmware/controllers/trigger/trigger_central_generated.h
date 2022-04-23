@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Apr 19 19:08:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Apr 23 22:00:05 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -15,8 +15,30 @@ struct trigger_central_s {
 	 * offset 24
 	 */
 	int vvtCamCounter = (int)0;
+	/**
+	 * offset 28
+	 */
+	scaled_channel<float, 1, 1> mapVvt_MAP_AT_SPECIAL_POINT = (float)0;
+	/**
+	 * offset 32
+	 */
+	scaled_channel<float, 1, 1> mapVvt_MAP_AT_DIFF = (float)0;
+	/**
+	 * offset 36
+	 */
+	uint8_t mapVvt_MAP_AT_CYCLE_COUNT = (uint8_t)0;
+	/**
+	 * offset 37
+	 */
+	uint8_t mapVvt_map_peak = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 38
+	 */
+	uint8_t alignmentFill_at_38[2];
 };
-static_assert(sizeof(trigger_central_s) == 28);
+static_assert(sizeof(trigger_central_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Apr 19 19:08:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Apr 23 22:00:05 UTC 2022
