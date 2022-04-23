@@ -707,6 +707,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
 					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+#if EFI_UNIT_TEST
+					// hack? feature? existing unit test relies on VVT phase available right away
+					// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
+					int rpm = Sensor::getOrZero(SensorType::Rpm);
+					efitick_t nowNt = getTimeNowNt();
+					engine->limpManager.updateState(rpm, nowNt);
+#endif // EFI_UNIT_TEST
 				}
 
 				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
