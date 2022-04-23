@@ -2,6 +2,7 @@
 
 #include "simple_tcu.h"
 
+#if EFI_TCU
 SimpleTransmissionController simpleTransmissionController;
 
 void SimpleTransmissionController::init() {
@@ -17,7 +18,6 @@ void SimpleTransmissionController::update(gear_e gear) {
 #endif
     }
     setCurrentGear(gear);
-    postState();
 
 #if EFI_TUNER_STUDIO
     if (engineConfiguration->debugMode == DBG_TCU) {
@@ -28,8 +28,11 @@ void SimpleTransmissionController::update(gear_e gear) {
         engine->outputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
     }
 #endif
+
+		TransmissionControllerBase::update(gear);
 }
 
 SimpleTransmissionController* getSimpleTransmissionController() {
 	return &simpleTransmissionController;
 }
+#endif // EFI_TCU

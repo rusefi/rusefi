@@ -2,6 +2,7 @@
 
 #include "tc_4l6x.h"
 
+#if EFI_TCU
 Gm4l6xTransmissionController gm4l6xTransmissionController;
 static SimplePwm tccPwm("TCC Control"); 
 static SimplePwm pcPwm("Pressure Control"); 
@@ -39,7 +40,7 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 	setCurrentGear(gear);
 	setTccState();
 	setPcState(gear);
-	postState();
+	set32State(gear);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TCU) {
@@ -50,6 +51,14 @@ void Gm4l6xTransmissionController::update(gear_e gear) {
 		engine->outputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
 	}
 #endif
+
+	TransmissionControllerBase::update(gear);
+
+	float time = isShiftCompleted();
+	if (time != 0) {
+		engine->outputChannels.lastShiftTime = time;
+		isShifting = false;
+	}
 }
 
 gear_e Gm4l6xTransmissionController::setCurrentGear(gear_e gear) {
@@ -63,6 +72,7 @@ gear_e Gm4l6xTransmissionController::setCurrentGear(gear_e gear) {
 		enginePins.tcuSolenoids[i].setValue(config->tcuSolenoidTable[static_cast<int>(gear) + 1][i]);
 #endif
 	}
+	measureShiftTime(gear);
 	return getCurrentGear();
 }
 
@@ -86,9 +96,11 @@ void Gm4l6xTransmissionController::setTccState() {
 }
 
 void Gm4l6xTransmissionController::setPcState(gear_e gear) {
-	if (gear != getCurrentGear()) {
-	}
 	uint8_t (*pcts)[sizeof(config->tcu_pcAirmassBins)/sizeof(config->tcu_pcAirmassBins[0])];
+	if (gear != getCurrentGear()) {
+		shiftingFrom = getCurrentGear();
+		isShifting = true;
+	}
 	switch (getCurrentGear()) {
 	case REVERSE:
 		pcts = &config->tcu_pcValsR;
@@ -97,22 +109,53 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		pcts = &config->tcu_pcValsN;
 		break;
 	case GEAR_1:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_2) {
+			pcts = &config->tcu_pcVals21;
+		} else {
+			pcts = &config->tcu_pcVals1;
+		}
 		break;
 	case GEAR_2:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_1) {
+			pcts = &config->tcu_pcVals12;
+		} else if (isShifting && shiftingFrom == GEAR_3) {
+			pcts = &config->tcu_pcVals32;
+		} else {
+			pcts = &config->tcu_pcVals2;
+		}
 		break;
 	case GEAR_3:
-		pcts = &config->tcu_pcValsR;
+		if (isShifting && shiftingFrom == GEAR_2) {
+			pcts = &config->tcu_pcVals23;
+		} else if (isShifting && shiftingFrom == GEAR_4) {
+			pcts = &config->tcu_pcVals43;
+		} else {
+			pcts = &config->tcu_pcVals3;
+		}
 		break;
 	case GEAR_4:
-		pcts = &config->tcu_pcValsR;
+		pcts = &config->tcu_pcVals4;
 		break;
 	}
 	int pct = interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
 	pcPwm.setSimplePwmDutyCycle(pct*0.01);
 }
 
+void Gm4l6xTransmissionController::set32State(gear_e gear) {
+	if (isShifting && shiftingFrom == GEAR_3 && gear == GEAR_2) {
+		auto vss = Sensor::get(SensorType::VehicleSpeed);
+		if (!vss.Valid) {
+			return;
+		}
+		uint8_t (*pcts)[sizeof(config->tcu_32SpeedBins)/sizeof(config->tcu_32SpeedBins[0])];
+		int pct = interpolate2d(vss.Value, config->tcu_32SpeedBins, config->tcu_32Vals);
+		shift32Pwm.setSimplePwmDutyCycle(pct*0.01);
+	} else {
+		shift32Pwm.setSimplePwmDutyCycle(0);		
+	}
+}
+
 Gm4l6xTransmissionController* getGm4l6xTransmissionController() {
 	return &gm4l6xTransmissionController;
 }
+#endif // EFI_TCU

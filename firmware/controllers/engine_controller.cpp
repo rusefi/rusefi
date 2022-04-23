@@ -224,6 +224,7 @@ static void doPeriodicSlowCallback() {
 	engine->periodicSlowCallback();
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
+#if EFI_TCU
 	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
 		if (engine->gearController == NULL) {
 			initGearController();
@@ -232,6 +233,8 @@ static void doPeriodicSlowCallback() {
 		}
 		engine->gearController->update();
 	}
+#endif
+
 }
 
 void initPeriodicEvents() {
@@ -514,7 +517,9 @@ void commonInitEngineController() {
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */
 
+#if EFI_TCU
 	initGearController();
+#endif
 
 	initButtonDebounce();
 	initStartStopButton();

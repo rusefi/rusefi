@@ -2,6 +2,7 @@
 
 #include "gear_controller.h"
 
+#if EFI_TCU
 void GearControllerBase::init() {
 	initTransmissionController();
 }
@@ -60,3 +61,4 @@ void initGearController() {
 	}
 	engine->gearController->init();
 }
+#endif // EFI_TCU
