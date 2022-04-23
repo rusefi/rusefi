@@ -1,5 +1,10 @@
 #
+# Here we facilitate monitoring by exposing model/transfer object of each individual controller. While some entries are only
+# useful for monitoring the big idea is to bring calculation and monitoring as close to each other as possible by exposing
+# many calculation fields directly
+#
 # here we have LiveData configuration file
+# entry format, where 'key' is a unique ID:
 # key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
 # Naming convention: top level struct in .txt file should be called key_s
 # todo: double-check if manual git add is requited or if (both) generated files are auto-added into git
