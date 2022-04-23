@@ -17,6 +17,7 @@ enum class ClearReason : uint8_t {
 	LaunchCut, // 9
 	InjectorDutyCycle, // 10
 	FloodClear, // 11
+	EnginePhase, // 12
 };
 
 // Only allows clearing the value, but never resetting it.
