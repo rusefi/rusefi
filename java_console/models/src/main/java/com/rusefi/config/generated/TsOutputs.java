@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 23 11:38:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 23 21:24:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -68,7 +68,7 @@ public class TsOutputs {
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_FSIO_CATEGORY = 33;
+	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
