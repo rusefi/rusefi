@@ -1728,6 +1728,9 @@ uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
 uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
 uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
 
+uint8_t[8] tcu_32SpeedBins;;"KPH", 1, 0, 0, 255, 0
+uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
+	
 end_struct
 
 ! Pedal Position Sensor
@@ -1752,6 +1755,7 @@ end_struct
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
 #define GAUGE_NAME_ISS "Input Shaft Speed"
+#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"

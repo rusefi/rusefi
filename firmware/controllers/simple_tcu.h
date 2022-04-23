@@ -4,6 +4,7 @@
 
 #include "tcu.h"
 
+#if EFI_TCU
 class SimpleTransmissionController: public TransmissionControllerBase  {
 public:
   void update(gear_e);
@@ -14,3 +15,4 @@ public:
 };
 
 SimpleTransmissionController* getSimpleTransmissionController();
+#endif // EFI_TCU
