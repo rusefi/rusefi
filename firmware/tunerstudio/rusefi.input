@@ -1687,7 +1687,7 @@ cmd_test_spk10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY
 cmd_test_spk11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0b"
 cmd_test_spk12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0c"
 
-cmd_test_lua1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUT_CATEGORY_16_hex@@\x00\x01"
+cmd_test_lua1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x01"
 cmd_test_lua2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x02"
 cmd_test_lua3  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x03"
 cmd_test_lua4  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x04"
