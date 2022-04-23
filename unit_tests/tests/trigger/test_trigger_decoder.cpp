@@ -149,6 +149,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -645,6 +646,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
@@ -946,6 +948,7 @@ TEST(big, testSequential) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
@@ -1063,6 +1066,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
