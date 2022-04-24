@@ -87,6 +87,6 @@ public class TSProjectConsumerTest {
                 "\tint16_t periodMs = (int16_t)0;\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 20);\n" +
-                "\n", consumer.getContent().toString());
+                "\n", consumer.getContent());
     }
 }
