@@ -72,16 +72,16 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
-	    int[] fillSizeArray;
-	    if (fillSize != 1) {
-		fillSizeArray = new int[1];
-		fillSizeArray[0] = fillSize;
-	    } else {
-		fillSizeArray = new int[0];
-	    }
+            int[] fillSizeArray;
+            if (fillSize != 1) {
+                fillSizeArray = new int[1];
+                fillSizeArray[0] = fillSize;
+            } else {
+                fillSizeArray = new int[0];
+            }
             ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-		    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
+                    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
