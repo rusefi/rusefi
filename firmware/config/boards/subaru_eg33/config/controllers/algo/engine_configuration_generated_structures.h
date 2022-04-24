@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Apr 23 11:39:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Apr 24 01:01:09 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1584,7 +1584,7 @@ struct engine_configuration_s {
 	 */
 	float compressionRatio;
 	/**
-	 * Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.
+	 * Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
 	 * See also directSelfStimulation which is different.
 	 * offset 740
 	 */
@@ -2013,7 +2013,7 @@ struct engine_configuration_s {
 	 */
 	uart_device_e consoleUartDevice;
 	/**
-	 * rusEfi console Sensor Sniffer mode
+	 * rusEFI console Sensor Sniffer mode
 	 * offset 888
 	 */
 	sensor_chart_e sensorChartMode;
@@ -2310,7 +2310,7 @@ struct engine_configuration_s {
 	offset 1260 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
-	 * Print details into rusEfi console
+	 * Print details into rusEFI console
 	 * enable verbose_idle
 	offset 1260 bit 2 */
 	bool isVerboseIAC : 1 {};
@@ -4692,4 +4692,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21164);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Apr 23 11:39:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Apr 24 01:01:09 UTC 2022
