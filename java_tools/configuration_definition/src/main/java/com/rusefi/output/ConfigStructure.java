@@ -54,7 +54,7 @@ public class ConfigStructure {
         return name;
     }
 
-    public void addAlignmentFill(ReaderState state) {
+    public void addAlignmentFill(ReaderState state, int alignment) {
         /**
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
@@ -69,7 +69,7 @@ public class ConfigStructure {
         iterator.loop();
 
         totalSize = iterator.currentOffset;
-        int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
+        int fillSize = totalSize % alignment == 0 ? 0 : alignment - (totalSize % alignment);
 
         if (fillSize != 0) {
             int[] fillSizeArray;
