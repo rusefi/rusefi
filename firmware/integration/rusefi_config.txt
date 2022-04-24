@@ -1,4 +1,4 @@
-! This file defines the format of rusEfi persistent configuration structure
+! This file defines the format of rusEFI persistent configuration structure
 ! This file is processed by ../java_tools/config_definition.jar tool
 ! Comments start with '!'
 !
@@ -386,7 +386,7 @@ end_struct
 custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "GM 3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
 
 !
-! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
+! lower 16 values are used on stm32 rusEFI, values above 16 are related to Kinetis work in progress
 ! 
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], @@adc_channel_e_enum@@
@@ -764,7 +764,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
-	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
+	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	output_pin_e o2heaterPin;+Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
@@ -903,7 +903,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 #define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
-sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode;
+sensor_chart_e sensorChartMode;+rusEFI console Sensor Sniffer mode;
 
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1031,7 +1031,7 @@ end_struct
 
 	bit disablePrimaryUart
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
-	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
+	bit isVerboseIAC;+Print details into rusEFI console\nenable verbose_idle
 	bit boardUseTachPullUp,"12v","5v"
 	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
@@ -2000,7 +2000,7 @@ end_struct
 
 
 #define TS_PROTOCOL "001"
-! These commands are used by TunerStudio and the rusEfi console
+! These commands are used by TunerStudio and the rusEFI console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
 ! 0x53 queryCommand
@@ -2056,7 +2056,7 @@ end_struct
 ! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
 
-! These commands are used exclusively by the rusEfi console
+! These commands are used exclusively by the rusEFI console
 ! 0x74
 #define TS_TEST_COMMAND 't'
 
