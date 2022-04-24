@@ -66,7 +66,7 @@ public class ReaderState {
 
         if (log.debugEnabled())
             log.debug("Need to align before bit " + bitName);
-        state.stack.peek().addAlignmentFill(state);
+        state.stack.peek().addAlignmentFill(state, 4);
 
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
@@ -183,7 +183,7 @@ public class ReaderState {
         ConfigStructure structure = stack.pop();
         if (log.debugEnabled())
             log.debug("Ending structure " + structure.getName());
-        structure.addAlignmentFill(this);
+        structure.addAlignmentFill(this, 4);
 
         structures.put(structure.getName(), structure);
 
@@ -287,10 +287,10 @@ public class ReaderState {
         ConfigStructure structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
-        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
+        if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
-            structure.addAlignmentFill(state);
+            structure.addAlignmentFill(state, getPrimitiveSize);
         } else {
             // adding a structure instance - had to be aligned
             // todo?           structure.addAlignmentFill(state);

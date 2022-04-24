@@ -286,8 +286,8 @@ public class ConfigFieldParserTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
         state.readBufferedReader(test, consumer, javaFieldsConsumer);
         assertEquals("\tpublic static final Field BYTE1 = Field.create(\"BYTE1\", 0, FieldType.INT8).setScale(1.0);\n" +
-                        "\tpublic static final Field SHORT = Field.create(\"SHORT\", 1, FieldType.INT16).setScale(1.0);\n" +
-                        "\tpublic static final Field ALIGNMENTFILL_AT_3 = Field.create(\"ALIGNMENTFILL_AT_3\", 3, FieldType.INT8).setScale(1.0);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_1 = Field.create(\"ALIGNMENTFILL_AT_1\", 1, FieldType.INT8).setScale(1.0);\n" +
+                        "\tpublic static final Field SHORT = Field.create(\"SHORT\", 2, FieldType.INT16).setScale(1.0);\n" +
                         "\tpublic static final Field INT2 = Field.create(\"INT2\", 4, FieldType.INT).setScale(1.0);\n" +
                         "\tpublic static final Field BYTE2 = Field.create(\"BYTE2\", 8, FieldType.INT8).setScale(1.0);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_9 = Field.create(\"ALIGNMENTFILL_AT_9\", 9, FieldType.INT8).setScale(1.0);\n" +
@@ -331,15 +331,15 @@ public class ConfigFieldParserTest {
                 "\t */\n" +
                 "\tint8_t byte1 = (int8_t)0;\n" +
                 "\t/**\n" +
-                "\t * offset 1\n" +
-                "\t */\n" +
-                "\tint16_t short = (int16_t)0;\n" +
-                "\t/**\n" +
                 "\t * need 4 byte alignment\n" +
                 "\tunits\n" +
-                "\t * offset 3\n" +
+                "\t * offset 1\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_3[1];\n" +
+                "\tuint8_t alignmentFill_at_1[1];\n" +
+                "\t/**\n" +
+                "\t * offset 2\n" +
+                "\t */\n" +
+                "\tint16_t short = (int16_t)0;\n" +
                 "\t/**\n" +
                 "\t * offset 4\n" +
                 "\t */\n" +
