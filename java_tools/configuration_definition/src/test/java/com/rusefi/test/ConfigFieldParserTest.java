@@ -271,6 +271,191 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void test2byteOffset() throws IOException {
+        String test = "struct_no_prefix pid_s\n" +
+                "\tint8_t byte1\n" +
+                "\tint16_t short\n" +
+                "\tint int2\n" +
+                "\tint8_t byte2\n" +
+                "\tbit periodMs\n" +
+                "end_struct\n" +
+
+                "";
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+        ReaderState state = new ReaderState();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, consumer, javaFieldsConsumer);
+        assertEquals("\tpublic static final Field BYTE1 = Field.create(\"BYTE1\", 0, FieldType.INT8).setScale(1.0);\n" +
+                        "\tpublic static final Field SHORT = Field.create(\"SHORT\", 1, FieldType.INT16).setScale(1.0);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_3 = Field.create(\"ALIGNMENTFILL_AT_3\", 3, FieldType.INT8).setScale(1.0);\n" +
+                        "\tpublic static final Field INT2 = Field.create(\"INT2\", 4, FieldType.INT).setScale(1.0);\n" +
+                        "\tpublic static final Field BYTE2 = Field.create(\"BYTE2\", 8, FieldType.INT8).setScale(1.0);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 9, FieldType.BIT, 0);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_1 = Field.create(\"UNUSEDBIT_6_1\", 9, FieldType.BIT, 1);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_2 = Field.create(\"UNUSEDBIT_6_2\", 9, FieldType.BIT, 2);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_3 = Field.create(\"UNUSEDBIT_6_3\", 9, FieldType.BIT, 3);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_4 = Field.create(\"UNUSEDBIT_6_4\", 9, FieldType.BIT, 4);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_5 = Field.create(\"UNUSEDBIT_6_5\", 9, FieldType.BIT, 5);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_6 = Field.create(\"UNUSEDBIT_6_6\", 9, FieldType.BIT, 6);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_7 = Field.create(\"UNUSEDBIT_6_7\", 9, FieldType.BIT, 7);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_8 = Field.create(\"UNUSEDBIT_6_8\", 9, FieldType.BIT, 8);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_9 = Field.create(\"UNUSEDBIT_6_9\", 9, FieldType.BIT, 9);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_10 = Field.create(\"UNUSEDBIT_6_10\", 9, FieldType.BIT, 10);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_11 = Field.create(\"UNUSEDBIT_6_11\", 9, FieldType.BIT, 11);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_12 = Field.create(\"UNUSEDBIT_6_12\", 9, FieldType.BIT, 12);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_13 = Field.create(\"UNUSEDBIT_6_13\", 9, FieldType.BIT, 13);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_14 = Field.create(\"UNUSEDBIT_6_14\", 9, FieldType.BIT, 14);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_15 = Field.create(\"UNUSEDBIT_6_15\", 9, FieldType.BIT, 15);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_16 = Field.create(\"UNUSEDBIT_6_16\", 9, FieldType.BIT, 16);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_17 = Field.create(\"UNUSEDBIT_6_17\", 9, FieldType.BIT, 17);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_18 = Field.create(\"UNUSEDBIT_6_18\", 9, FieldType.BIT, 18);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_19 = Field.create(\"UNUSEDBIT_6_19\", 9, FieldType.BIT, 19);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_20 = Field.create(\"UNUSEDBIT_6_20\", 9, FieldType.BIT, 20);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_21 = Field.create(\"UNUSEDBIT_6_21\", 9, FieldType.BIT, 21);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_22 = Field.create(\"UNUSEDBIT_6_22\", 9, FieldType.BIT, 22);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_23 = Field.create(\"UNUSEDBIT_6_23\", 9, FieldType.BIT, 23);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_24 = Field.create(\"UNUSEDBIT_6_24\", 9, FieldType.BIT, 24);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_25 = Field.create(\"UNUSEDBIT_6_25\", 9, FieldType.BIT, 25);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_26 = Field.create(\"UNUSEDBIT_6_26\", 9, FieldType.BIT, 26);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_27 = Field.create(\"UNUSEDBIT_6_27\", 9, FieldType.BIT, 27);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_28 = Field.create(\"UNUSEDBIT_6_28\", 9, FieldType.BIT, 28);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_29 = Field.create(\"UNUSEDBIT_6_29\", 9, FieldType.BIT, 29);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_30 = Field.create(\"UNUSEDBIT_6_30\", 9, FieldType.BIT, 30);\n" +
+                        "\tpublic static final Field UNUSEDBIT_6_31 = Field.create(\"UNUSEDBIT_6_31\", 9, FieldType.BIT, 31);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_13 = Field.create(\"ALIGNMENTFILL_AT_13\", 13, FieldType.INT8).setScale(1.0);\n",
+                javaFieldsConsumer.getContent());
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint8_t byte1 = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\t * offset 1\n" +
+                "\t */\n" +
+                "\tint16_t short = (int16_t)0;\n" +
+                "\t/**\n" +
+                "\t * need 4 byte alignment\n" +
+                "\tunits\n" +
+                "\t * offset 3\n" +
+                "\t */\n" +
+                "\tuint8_t alignmentFill_at_3[1];\n" +
+                "\t/**\n" +
+                "\t * offset 4\n" +
+                "\t */\n" +
+                "\tint int2 = (int)0;\n" +
+                "\t/**\n" +
+                "\t * offset 8\n" +
+                "\t */\n" +
+                "\tint8_t byte2 = (int8_t)0;\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 0 */\n" +
+                "\tbool periodMs : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 1 */\n" +
+                "\tbool unusedBit_6_1 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 2 */\n" +
+                "\tbool unusedBit_6_2 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 3 */\n" +
+                "\tbool unusedBit_6_3 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 4 */\n" +
+                "\tbool unusedBit_6_4 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 5 */\n" +
+                "\tbool unusedBit_6_5 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 6 */\n" +
+                "\tbool unusedBit_6_6 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 7 */\n" +
+                "\tbool unusedBit_6_7 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 8 */\n" +
+                "\tbool unusedBit_6_8 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 9 */\n" +
+                "\tbool unusedBit_6_9 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 10 */\n" +
+                "\tbool unusedBit_6_10 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 11 */\n" +
+                "\tbool unusedBit_6_11 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 12 */\n" +
+                "\tbool unusedBit_6_12 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 13 */\n" +
+                "\tbool unusedBit_6_13 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 14 */\n" +
+                "\tbool unusedBit_6_14 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 15 */\n" +
+                "\tbool unusedBit_6_15 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 16 */\n" +
+                "\tbool unusedBit_6_16 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 17 */\n" +
+                "\tbool unusedBit_6_17 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 18 */\n" +
+                "\tbool unusedBit_6_18 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 19 */\n" +
+                "\tbool unusedBit_6_19 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 20 */\n" +
+                "\tbool unusedBit_6_20 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 21 */\n" +
+                "\tbool unusedBit_6_21 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 22 */\n" +
+                "\tbool unusedBit_6_22 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 23 */\n" +
+                "\tbool unusedBit_6_23 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 24 */\n" +
+                "\tbool unusedBit_6_24 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 25 */\n" +
+                "\tbool unusedBit_6_25 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 26 */\n" +
+                "\tbool unusedBit_6_26 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 27 */\n" +
+                "\tbool unusedBit_6_27 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 28 */\n" +
+                "\tbool unusedBit_6_28 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 29 */\n" +
+                "\tbool unusedBit_6_29 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 30 */\n" +
+                "\tbool unusedBit_6_30 : 1 {};\n" +
+                "\t/**\n" +
+                "\toffset 9 bit 31 */\n" +
+                "\tbool unusedBit_6_31 : 1 {};\n" +
+                "\t/**\n" +
+                "\t * need 4 byte alignment\n" +
+                "\tunits\n" +
+                "\t * offset 13\n" +
+                "\t */\n" +
+                "\tuint8_t alignmentFill_at_13[3];\n" +
+                "};\n" +
+                "static_assert(sizeof(pid_s) == 16);\n" +
+                "\n", consumer.getContent());
+    }
+
+    @Test
     public void testArrayOfOne() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 1\n" +
@@ -292,7 +477,7 @@ public class ConfigFieldParserTest {
                 "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 4);\n" +
-                "\n", consumer.getContent().toString());
+                "\n", consumer.getContent());
     }
 
     @Test

@@ -83,7 +83,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         content.append(EOL);
     }
 
-    public StringBuilder getContent() {
-        return content;
+    public String getContent() {
+        return content.toString();
     }
 }
