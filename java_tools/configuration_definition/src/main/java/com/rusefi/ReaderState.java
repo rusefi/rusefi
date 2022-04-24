@@ -64,6 +64,10 @@ public class ReaderState {
         }
         String[] bitNameParts = bitName.split(",");
 
+        if (log.debugEnabled())
+            log.debug("Need to align before bit " + bitName);
+        state.stack.peek().addAlignmentFill(state);
+
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
