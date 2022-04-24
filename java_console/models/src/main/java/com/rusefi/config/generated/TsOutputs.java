@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Apr 23 21:24:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 24 00:03:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -680,12 +680,12 @@ public class TsOutputs {
 	public static final Field UNUSEDBIT_229_29 = Field.create("UNUSEDBIT_229_29", 408, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_229_30 = Field.create("UNUSEDBIT_229_30", 408, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_229_31 = Field.create("UNUSEDBIT_229_31", 408, FieldType.BIT, 31);
-	public static final Field TEMPLOG_MAP_AT_CYCLE_COUNT = Field.create("TEMPLOG_MAP_AT_CYCLE_COUNT", 412, FieldType.INT8).setScale(1.0);
-	public static final Field TEMPLOG_MAP_PEAK = Field.create("TEMPLOG_MAP_PEAK", 413, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSED_8_1 = Field.create("UNUSED_8_1", 412, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSED_8_2 = Field.create("UNUSED_8_2", 413, FieldType.INT8).setScale(1.0);
 	public static final Field BOOSTCONTROLLEROUTPUT = Field.create("BOOSTCONTROLLEROUTPUT", 414, FieldType.INT8).setScale(0.5);
 	public static final Field BOOSTCONTROLLEROPENLOOPPART = Field.create("BOOSTCONTROLLEROPENLOOPPART", 415, FieldType.INT8).setScale(0.5);
-	public static final Field TEMPLOG_MAP_AT_SPECIAL_POINT = Field.create("TEMPLOG_MAP_AT_SPECIAL_POINT", 416, FieldType.FLOAT);
-	public static final Field TEMPLOG_MAP_AT_DIFF = Field.create("TEMPLOG_MAP_AT_DIFF", 420, FieldType.FLOAT);
+	public static final Field UNUSED_32_1 = Field.create("UNUSED_32_1", 416, FieldType.FLOAT);
+	public static final Field UNUSED_32_2 = Field.create("UNUSED_32_2", 420, FieldType.FLOAT);
 	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 424, FieldType.FLOAT);
 	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 428, FieldType.FLOAT);
 	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 432, FieldType.FLOAT);
@@ -1113,12 +1113,12 @@ public class TsOutputs {
 	UNUSEDBIT_229_29,
 	UNUSEDBIT_229_30,
 	UNUSEDBIT_229_31,
-	TEMPLOG_MAP_AT_CYCLE_COUNT,
-	TEMPLOG_MAP_PEAK,
+	UNUSED_8_1,
+	UNUSED_8_2,
 	BOOSTCONTROLLEROUTPUT,
 	BOOSTCONTROLLEROPENLOOPPART,
-	TEMPLOG_MAP_AT_SPECIAL_POINT,
-	TEMPLOG_MAP_AT_DIFF,
+	UNUSED_32_1,
+	UNUSED_32_2,
 	VVTSYNCGAPRATIO,
 	VVTCURRENTPOSITION,
 	TRIGGERSYNCGAPRATIO,
