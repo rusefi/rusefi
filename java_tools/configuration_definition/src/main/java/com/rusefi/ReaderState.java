@@ -292,8 +292,7 @@ public class ReaderState {
                 log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state, getPrimitiveSize);
         } else {
-            // adding a structure instance - had to be aligned
-            // todo?           structure.addAlignmentFill(state);
+            structure.addAlignmentFill(state, 4);
         }
 
         if (cf.isIterate()) {
