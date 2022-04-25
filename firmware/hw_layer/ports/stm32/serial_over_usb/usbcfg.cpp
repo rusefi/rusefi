@@ -20,6 +20,8 @@
 
 #if HAL_USE_SERIAL_USB
 
+#include "usbcfg.h"
+
 /* Virtual serial port over USB.*/
 SerialUSBDriver SDU1;
 
@@ -420,8 +422,6 @@ static void sof_handler(USBDriver *usbp) {
   sduSOFHookI(&SDU1);
   osalSysUnlockFromISR();
 }
-
-bool msd_request_hook_new(USBDriver *usbp);
 
 // We need a custom hook to handle both MSD and CDC at the same time
 static bool hybridRequestHook(USBDriver *usbp) {
