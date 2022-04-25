@@ -1,5 +1,5 @@
 /**
- * @file    os_util.c
+ * @file    os_util.cpp
  * @brief   Utility methods related to operating system usage
  *
  * @date Nov 15, 2012

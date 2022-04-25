@@ -1,5 +1,5 @@
 /*
- * @file    mcp3208.c
+ * @file    mcp3208.cpp
  * @brief   MCP3208 external ADC chip implementation. Not really used right now.
  *
  * @date Aug 12, 2013

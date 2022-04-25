@@ -17,7 +17,7 @@ UTILSRC_CPP = \
 	$(PROJECT_DIR)/util/cli_registry.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/util/timer.cpp \
-	$(UTIL_DIR)/os_util.c \
+	$(UTIL_DIR)/os_util.cpp \
 	
 	
 UTIL_INC = \
