@@ -13,7 +13,6 @@
 void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
 	engineConfiguration->isEngineChartEnabled = false;

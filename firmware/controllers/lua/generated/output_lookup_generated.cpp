@@ -354,6 +354,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.luaLastCycleDuration;
 	if (strEqualCaseInsensitive(name, "testBenchIter"))
 		return engine->outputChannels.testBenchIter;
+	if (strEqualCaseInsensitive(name, "tcRatio"))
+		return engine->outputChannels.tcRatio;
+	if (strEqualCaseInsensitive(name, "lastShiftTime"))
+		return engine->outputChannels.lastShiftTime;
 	if (strEqualCaseInsensitive(name, "auxLinear1"))
 		return engine->outputChannels.auxLinear1;
 	if (strEqualCaseInsensitive(name, "auxLinear2"))
@@ -374,18 +378,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.dfcoActive;
 	if (strEqualCaseInsensitive(name, "tpsAccelActive"))
 		return engine->outputChannels.tpsAccelActive;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_map_peak"))
-		return engine->outputChannels.TEMPLOG_map_peak;
 	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
 		return engine->outputChannels.boostControllerOutput;
 	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
 		return engine->outputChannels.boostControllerOpenLoopPart;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_DIFF"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_DIFF;
 	if (strEqualCaseInsensitive(name, "vvtSyncGapRatio"))
 		return engine->outputChannels.vvtSyncGapRatio;
 	if (strEqualCaseInsensitive(name, "vvtCurrentPosition"))
@@ -498,5 +494,7 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.auxSpeed1;
 	if (strEqualCaseInsensitive(name, "auxSpeed2"))
 		return engine->outputChannels.auxSpeed2;
+	if (strEqualCaseInsensitive(name, "ISSValue"))
+		return engine->outputChannels.ISSValue;
 	return EFI_ERROR_CODE;
 }

@@ -700,17 +700,24 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 				mapCamPrevCycleValue = map;
 
 				if (diff > 0) {
-					engine->outputChannels.TEMPLOG_map_peak++;
+					mapVvt_map_peak++;
 					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
-					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+					mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 					prevChangeAtCycle = revolutionCounter;
 
 					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
 					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+#if EFI_UNIT_TEST
+					// hack? feature? existing unit test relies on VVT phase available right away
+					// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
+					int rpm = Sensor::getOrZero(SensorType::Rpm);
+					efitick_t nowNt = getTimeNowNt();
+					engine->limpManager.updateState(rpm, nowNt);
+#endif // EFI_UNIT_TEST
 				}
 
-				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
-				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = diff;
+				mapVvt_MAP_AT_SPECIAL_POINT = map;
+				mapVvt_MAP_AT_DIFF = diff;
 			}
 
 			mapCamPrevToothAngle = toothAngle360;

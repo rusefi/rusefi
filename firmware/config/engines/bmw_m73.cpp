@@ -95,7 +95,6 @@ void m73engine() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 	strcpy(engineConfiguration->engineCode, "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 

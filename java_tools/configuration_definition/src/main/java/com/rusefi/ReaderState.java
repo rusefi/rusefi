@@ -64,6 +64,10 @@ public class ReaderState {
         }
         String[] bitNameParts = bitName.split(",");
 
+        if (log.debugEnabled())
+            log.debug("Need to align before bit " + bitName);
+        state.stack.peek().addAlignmentFill(state, 4);
+
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
@@ -179,7 +183,7 @@ public class ReaderState {
         ConfigStructure structure = stack.pop();
         if (log.debugEnabled())
             log.debug("Ending structure " + structure.getName());
-        structure.addAlignmentFill(this);
+        structure.addAlignmentFill(this, 4);
 
         structures.put(structure.getName(), structure);
 
@@ -283,13 +287,16 @@ public class ReaderState {
         ConfigStructure structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
-        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
+        Integer customTypeSize = state.tsCustomSize.get(cf.getType());
+        if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
-            structure.addAlignmentFill(state);
-        } else {
-            // adding a structure instance - had to be aligned
-            // todo?           structure.addAlignmentFill(state);
+            structure.addAlignmentFill(state, getPrimitiveSize);
+        } else if (state.structures.containsKey(cf.getType())) {
+            // we are here for struct members
+            structure.addAlignmentFill(state, 4);
+        } else if (customTypeSize != null) {
+            structure.addAlignmentFill(state, customTypeSize % 8);
         }
 
         if (cf.isIterate()) {
@@ -310,7 +317,8 @@ public class ReaderState {
     @NotNull
     private static String getCommentWithIndex(ConfigField cf, int i) {
         String unquoted = unquote(cf.getCommentOrName());
-        return quote(unquoted + " " + i);
+        String string = unquoted + " " + i;
+        return quote(string);
     }
 
     public String getHeader() {

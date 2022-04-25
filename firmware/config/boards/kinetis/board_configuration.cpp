@@ -15,7 +15,6 @@ int __debugEnabled = 0;
 #endif
 
 void setBoardOverrides() {
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
 	setAlgorithm(LM_SPEED_DENSITY);

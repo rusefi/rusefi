@@ -15,10 +15,8 @@ export EXTRA_PARAMS="-DDUMMY -D__USE_CMSIS\
 TRIGGER_USE_ADC = yes
 
 export BUILDDIR="build"
-export PROJECT_BOARD="hellen/cypress"
-export PROJECT_CPU="cypress"
 export USE_FATFS="no"
 export USE_BOOTLOADER="no"
 export DEBUG_LEVEL_OPT="-O2"
 
-bash ../common_make.sh
+bash ../common_make.sh hellen/cypress cypress

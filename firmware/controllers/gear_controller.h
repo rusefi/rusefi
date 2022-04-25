@@ -8,21 +8,23 @@
 #include "simple_tcu.h"
 #include "tc_4l6x.h"
 
+#if EFI_TCU
 class GearControllerBase {
 public:
 	virtual void update();
-	gear_e getDesiredGear() const;
+	virtual gear_e getDesiredGear() const;
 	virtual void init();
-	GearControllerMode mode = GearControllerMode::None;
+	virtual GearControllerMode getMode() const {
+		return GearControllerMode::ButtonShift;
+	}
+protected:
+	virtual gear_e setDesiredGear(gear_e);
+	void initTransmissionController();
+	TransmissionControllerBase *transmissionController;
 private:
 	gear_e desiredGear = NEUTRAL;
-protected:
-	gear_e setDesiredGear(gear_e);
-	void initTransmissionController();
-
-private:
 	void postState();
-	TransmissionControllerBase *transmissionController;
 };
 
 void initGearController();
+#endif // EFI_TCU

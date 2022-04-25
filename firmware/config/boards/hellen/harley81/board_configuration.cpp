@@ -41,8 +41,8 @@ static void setInjectorPins() {
 
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = H144_IGN_2;
+	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
 	// disable remainder
@@ -88,20 +88,26 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = H144_IN_CAM;
+	engineConfiguration->triggerInputPins[0] = H144_IN_SENS4;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
+	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
+
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
+	engineConfiguration->tps1_2AdcChannel = H144_IN_O2S2;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+
+	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX1;
 
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
 	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_1;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
@@ -115,10 +121,10 @@ void boardInitHardware() {
 	alphaEn.initPin("a-EN", H144_OUT_IO3);
 	alphaEn.setValue(1);
 
-	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
-	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
-	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
-	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+//	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
+//	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
+//	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
+//	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -170,8 +176,8 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->specs.cylindersCount = 2;
+	engineConfiguration->specs.firingOrder = FO_1_2;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

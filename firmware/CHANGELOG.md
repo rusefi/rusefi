@@ -23,6 +23,11 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+### Added
+ - FasterEngineSpinUp should be enabled by default #4094
+
+## April 20202 Release - "Day 58"
+
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ### Fixed

@@ -97,6 +97,8 @@ static void setupDefaultSensorInputs() {
 
 extern int hellenBoardId;
 
+static bool isFirstInvocation = true;
+
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
@@ -112,9 +114,12 @@ void setBoardConfigOverrides() {
 		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
 		engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
 
-		efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
-		efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
-		efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
+		if (isFirstInvocation) {
+			isFirstInvocation = false;
+			efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
+		}
 	}
 }
 

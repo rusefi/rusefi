@@ -146,7 +146,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
+//	setAlgorithm(LM_SPEED_DENSITY);
+    // at least this starts
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 
 	// Bosch VQ40 VR56 VK56 0280158007

@@ -1,4 +1,4 @@
-! This file defines the format of rusEfi persistent configuration structure
+! This file defines the format of rusEFI persistent configuration structure
 ! This file is processed by ../java_tools/config_definition.jar tool
 ! Comments start with '!'
 !
@@ -386,7 +386,7 @@ end_struct
 custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "GM 3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
 
 !
-! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
+! lower 16 values are used on stm32 rusEFI, values above 16 are related to Kinetis work in progress
 ! 
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
 custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], @@adc_channel_e_enum@@
@@ -749,7 +749,10 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
     uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
-	uint16_t autoscale unused722;;"", 1, 0, 0, 0, 0
+
+	brain_input_pin_e tcuInputSpeedSensorPin
+	uint8_t tcuInputSpeedSensorTeeth
+
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t wastegatePositionMax;+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMin;+Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
@@ -761,7 +764,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 
 	float compressionRatio;+Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
-	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEfi piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEfi board.\nSee also directSelfStimulation which is different.
+	brain_pin_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	output_pin_e o2heaterPin;+Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
@@ -900,7 +903,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 
 #define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
-sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode;
+sensor_chart_e sensorChartMode;+rusEFI console Sensor Sniffer mode;
 
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -968,7 +971,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     boostType_e boostType;
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
-	#define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"
+	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)", "INVALID"
     custom launchActivationMode_e  4 bits, S32, @OFFSET@, [0:1], @@launchActivationMode_e_enum@@
     launchActivationMode_e launchActivationMode;
 
@@ -1011,10 +1014,9 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     float[CAM_INPUTS_COUNT_padding] vvtOffsetsPadding;;
 
 struct vr_threshold_s
-	brain_pin_e pin;
-	uint8_t[3] pad;;"",1,0,0,0,0
 	uint8_t[6] autoscale rpmBins;;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 	uint8_t[6] autoscale values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
+	brain_pin_e pin;
 end_struct
 
 ! todo: should be '3' since we are dreaming of Honda triple-channel distributor
@@ -1028,7 +1030,7 @@ end_struct
 
 	bit disablePrimaryUart
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
-	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
+	bit isVerboseIAC;+Print details into rusEFI console\nenable verbose_idle
 	bit boardUseTachPullUp,"12v","5v"
 	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
@@ -1056,7 +1058,7 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit unusedBitHere2
+bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
 
@@ -1247,7 +1249,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale benchTestOffTime;;"ms", 5, 0, 0, 2000, 1
 	uint8_t benchTestCount;;"count", 1, 0, 0, 250, 1
 	uint8_t autoscale benchTestOnTime;;"ms", 5, 0, 0, 2000, 1
-	uint8_t unusedHere2;;"A", 0.1, 0, 0, 25, 1
+	pin_input_mode_e launchActivatePinMode;
 	brain_pin_e can2TxPin;set_can2_tx_pin X
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
@@ -1506,7 +1508,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint8_t hpfpMinAngle;+If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPumpVolume;+Size of the pump chamber in cc.  Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
         uint8_t hpfpActivationAngle;+How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own);"deg", 1, 0, 0, 255, 0
-        uint8_t unusedFiller_4703;;"", 1, 0, 0, 255, 0
+				uint8_t issFilterReciprocal
         uint16_t autoscale hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
         uint16_t autoscale hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
         uint16_t hpfpTargetDecay;+The fastest rate the target pressure can be reduced by.  This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
@@ -1521,9 +1523,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12500, 0
 
-        uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
-        uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
-        uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
+        uint8_t[24] unusedTpsBins;;"TPS", 1, 0, 0, 255, 0
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
@@ -1561,8 +1561,15 @@ output_pin_e tcu_tcc_onoff_solenoid
 pin_output_mode_e tcu_tcc_onoff_solenoid_mode
 output_pin_e tcu_tcc_pwm_solenoid
 pin_output_mode_e tcu_tcc_pwm_solenoid_mode
+pwm_freq_t tcu_tcc_pwm_solenoid_freq
+output_pin_e tcu_pc_solenoid_pin
+pin_output_mode_e tcu_pc_solenoid_pin_mode
+pwm_freq_t tcu_pc_solenoid_freq
+output_pin_e tcu_32_solenoid_pin
+pin_output_mode_e tcu_32_solenoid_pin_mode
+pwm_freq_t tcu_32_solenoid_freq
 
-uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[222] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1701,6 +1708,28 @@ uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] fuelTrims
 
 uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
+
+uint8_t[8] tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
+uint8_t[8] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcValsN;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals2;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals3;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals4;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals12;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals23;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals34;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals21;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals32;;"%", 1, 0, 0, 255, 0
+uint8_t[8] tcu_pcVals43;;"%", 1, 0, 0, 255, 0
+
+uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
+uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
+uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
+
+uint8_t[8] tcu_32SpeedBins;;"KPH", 1, 0, 0, 255, 0
+uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
+	
 end_struct
 
 ! Pedal Position Sensor
@@ -1724,6 +1753,8 @@ end_struct
 
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
+#define GAUGE_NAME_ISS "Input Shaft Speed"
+#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
@@ -1906,7 +1937,7 @@ end_struct
 #define CMD_TS_X14 20
 ! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
-#define CMD_TS_FSIO_CATEGORY 33
+#define CMD_TS_LUA_OUTPUT_CATEGORY 33
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
 
@@ -1968,7 +1999,7 @@ end_struct
 
 
 #define TS_PROTOCOL "001"
-! These commands are used by TunerStudio and the rusEfi console
+! These commands are used by TunerStudio and the rusEFI console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
 ! 0x53 queryCommand
@@ -2024,7 +2055,7 @@ end_struct
 ! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
 
-! These commands are used exclusively by the rusEfi console
+! These commands are used exclusively by the rusEFI console
 ! 0x74
 #define TS_TEST_COMMAND 't'
 

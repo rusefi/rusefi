@@ -243,6 +243,10 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
+#ifndef EFI_TCU
+#define EFI_TCU TRUE
+#endif
+
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
 #endif

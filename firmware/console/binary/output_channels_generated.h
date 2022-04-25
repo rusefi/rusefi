@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 16:27:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 25 03:58:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -657,7 +657,7 @@ struct output_channels_s {
 	gear
 	 * offset 247
 	 */
-	scaled_channel<uint8_t, 1, 1> tcuCurrentGear = (uint8_t)0;
+	scaled_channel<int8_t, 1, 1> tcuCurrentGear = (int8_t)0;
 	/**
 	V
 	 * offset 248
@@ -673,7 +673,7 @@ struct output_channels_s {
 	gear
 	 * offset 262
 	 */
-	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
+	scaled_channel<int8_t, 1, 1> tcuDesiredGear = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_FLEX@@
 	%
@@ -1063,7 +1063,22 @@ struct output_channels_s {
 	/**
 	 * offset 389
 	 */
-	uint8_t unusedInTheMiddle[15];
+	uint8_t unusedWat = (uint8_t)0;
+	/**
+	 * @@GAUGE_NAME_TC_RATIO@@
+	value
+	 * offset 390
+	 */
+	scaled_channel<uint16_t, 100, 1> tcRatio = (uint16_t)0;
+	/**
+	 * "S"
+	 * offset 392
+	 */
+	float lastShiftTime = (float)0;
+	/**
+	 * offset 396
+	 */
+	uint8_t unusedInTheMiddle[8];
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_1@@
 	 * offset 404
@@ -1100,84 +1115,84 @@ struct output_channels_s {
 	bool tpsAccelActive : 1 {};
 	/**
 	offset 408 bit 8 */
-	bool unusedBit_226_8 : 1 {};
+	bool unusedBit_229_8 : 1 {};
 	/**
 	offset 408 bit 9 */
-	bool unusedBit_226_9 : 1 {};
+	bool unusedBit_229_9 : 1 {};
 	/**
 	offset 408 bit 10 */
-	bool unusedBit_226_10 : 1 {};
+	bool unusedBit_229_10 : 1 {};
 	/**
 	offset 408 bit 11 */
-	bool unusedBit_226_11 : 1 {};
+	bool unusedBit_229_11 : 1 {};
 	/**
 	offset 408 bit 12 */
-	bool unusedBit_226_12 : 1 {};
+	bool unusedBit_229_12 : 1 {};
 	/**
 	offset 408 bit 13 */
-	bool unusedBit_226_13 : 1 {};
+	bool unusedBit_229_13 : 1 {};
 	/**
 	offset 408 bit 14 */
-	bool unusedBit_226_14 : 1 {};
+	bool unusedBit_229_14 : 1 {};
 	/**
 	offset 408 bit 15 */
-	bool unusedBit_226_15 : 1 {};
+	bool unusedBit_229_15 : 1 {};
 	/**
 	offset 408 bit 16 */
-	bool unusedBit_226_16 : 1 {};
+	bool unusedBit_229_16 : 1 {};
 	/**
 	offset 408 bit 17 */
-	bool unusedBit_226_17 : 1 {};
+	bool unusedBit_229_17 : 1 {};
 	/**
 	offset 408 bit 18 */
-	bool unusedBit_226_18 : 1 {};
+	bool unusedBit_229_18 : 1 {};
 	/**
 	offset 408 bit 19 */
-	bool unusedBit_226_19 : 1 {};
+	bool unusedBit_229_19 : 1 {};
 	/**
 	offset 408 bit 20 */
-	bool unusedBit_226_20 : 1 {};
+	bool unusedBit_229_20 : 1 {};
 	/**
 	offset 408 bit 21 */
-	bool unusedBit_226_21 : 1 {};
+	bool unusedBit_229_21 : 1 {};
 	/**
 	offset 408 bit 22 */
-	bool unusedBit_226_22 : 1 {};
+	bool unusedBit_229_22 : 1 {};
 	/**
 	offset 408 bit 23 */
-	bool unusedBit_226_23 : 1 {};
+	bool unusedBit_229_23 : 1 {};
 	/**
 	offset 408 bit 24 */
-	bool unusedBit_226_24 : 1 {};
+	bool unusedBit_229_24 : 1 {};
 	/**
 	offset 408 bit 25 */
-	bool unusedBit_226_25 : 1 {};
+	bool unusedBit_229_25 : 1 {};
 	/**
 	offset 408 bit 26 */
-	bool unusedBit_226_26 : 1 {};
+	bool unusedBit_229_26 : 1 {};
 	/**
 	offset 408 bit 27 */
-	bool unusedBit_226_27 : 1 {};
+	bool unusedBit_229_27 : 1 {};
 	/**
 	offset 408 bit 28 */
-	bool unusedBit_226_28 : 1 {};
+	bool unusedBit_229_28 : 1 {};
 	/**
 	offset 408 bit 29 */
-	bool unusedBit_226_29 : 1 {};
+	bool unusedBit_229_29 : 1 {};
 	/**
 	offset 408 bit 30 */
-	bool unusedBit_226_30 : 1 {};
+	bool unusedBit_229_30 : 1 {};
 	/**
 	offset 408 bit 31 */
-	bool unusedBit_226_31 : 1 {};
+	bool unusedBit_229_31 : 1 {};
 	/**
 	 * offset 412
 	 */
-	uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT = (uint8_t)0;
+	uint8_t unused_8_1 = (uint8_t)0;
 	/**
 	 * offset 413
 	 */
-	uint8_t TEMPLOG_map_peak = (uint8_t)0;
+	uint8_t unused_8_2 = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_OUTPUT@@
 	%
@@ -1193,11 +1208,11 @@ struct output_channels_s {
 	/**
 	 * offset 416
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_SPECIAL_POINT = (float)0;
+	float unused_32_1 = (float)0;
 	/**
 	 * offset 420
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_DIFF = (float)0;
+	float unused_32_2 = (float)0;
 	/**
 	 * offset 424
 	 */
@@ -1375,11 +1390,17 @@ struct output_channels_s {
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ISS@@
+	RPM
 	 * offset 560
 	 */
-	uint8_t unusedAtTheEnd[80];
+	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
+	/**
+	 * offset 562
+	 */
+	uint8_t unusedAtTheEnd[78];
 };
 static_assert(sizeof(output_channels_s) == 640);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 18 16:27:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 25 03:58:25 UTC 2022

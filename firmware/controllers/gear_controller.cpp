@@ -2,6 +2,7 @@
 
 #include "gear_controller.h"
 
+#if EFI_TCU
 void GearControllerBase::init() {
 	initTransmissionController();
 }
@@ -24,7 +25,7 @@ void GearControllerBase::initTransmissionController() {
 void GearControllerBase::update() {
 	if (transmissionController == NULL) {
 		initTransmissionController();
-	} else if (transmissionController->mode != engineConfiguration->transmissionControllerMode) {
+	} else if (transmissionController->getMode() != engineConfiguration->transmissionControllerMode) {
 		initTransmissionController();
 	}
 	// We are responsible for telling the transmission controller
@@ -60,3 +61,4 @@ void initGearController() {
 	}
 	engine->gearController->init();
 }
+#endif // EFI_TCU
