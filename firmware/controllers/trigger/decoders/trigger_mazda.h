@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s);
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s);

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 // TT_RENIX_44_2_2
 void initializeRenix44_2_2(TriggerWaveform *s);

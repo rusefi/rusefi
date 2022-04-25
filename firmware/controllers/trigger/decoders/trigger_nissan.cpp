@@ -7,6 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
 
