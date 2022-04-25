@@ -686,11 +686,10 @@ void setMiataNB2_Proteus_TCU() {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 
-	// "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	engineConfiguration->triggerInputPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->tcuInputSpeedSensorPin = PROTEUS_VR_1;
 
-	// "VR 2"
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
+	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_VR_2;
 
 	engineConfiguration->driveWheelRevPerKm = 544;	// 205/50R15
 	engineConfiguration->vssGearRatio = 4.3;
