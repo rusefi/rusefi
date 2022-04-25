@@ -80,17 +80,20 @@ public class ConfigFieldParserTest {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "custom ego_sensor_e 1 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
-                "ego_sensor_e afr_type;\n" +
+                "ego_sensor_e afr_type1;\n" +
+                "ego_sensor_e afr_type2;\n" +
                 "int8_t int\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, (tsProjectConsumer));
-        assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "int = scalar, S08, 1, \"\", 1, 0, 0, 100, 0\n" +
-                "alignmentFill_at_2 = array, U08, 2, [2], \"units\", 1, 0, -20, 100, 0\n" +
-                "; total TS size = 4\n", tsProjectConsumer.getContent());
+        assertEquals("afr_type1 = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "alignmentFill_at_1 = array, U08, 1, [3], \"units\", 1, 0, -20, 100, 0\n" +
+                "afr_type2 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "int = scalar, S08, 5, \"\", 1, 0, 0, 100, 0\n" +
+                "alignmentFill_at_6 = array, U08, 6, [2], \"units\", 1, 0, -20, 100, 0\n" +
+                "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
     @Test
