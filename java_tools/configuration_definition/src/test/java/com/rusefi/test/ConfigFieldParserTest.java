@@ -8,6 +8,7 @@ import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -519,6 +520,45 @@ public class ConfigFieldParserTest {
                         "\t * offset 4\n" +
                         "\t */\n" +
                         "\tstruct_s struct;\n" +
+                        "};\n" +
+                        "static_assert(sizeof(pid_s) == 8);\n" +
+                        "\n",
+                consumer.getContent());
+    }
+
+    @Test
+    public void justTwoBytes() throws IOException {
+        String test =
+                "struct_no_prefix pid_s\n" +
+                "\tint8_t byte1\n" +
+                "\tint8_t byte2\n" +
+                "end_struct\n" +
+                "";
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+        ReaderState state = new ReaderState();
+        state.readBufferedReader(test, consumer);
+        assertEquals("// start of pid_s\n" +
+                        "struct pid_s {\n" +
+                        "\t/**\n" +
+                        "\t * offset 0\n" +
+                        "\t */\n" +
+                        "\tint8_t byte1 = (int8_t)0;\n" +
+                        "\t/**\n" +
+                        "\t * need 4 byte alignment\n" +
+                        "\tunits\n" +
+                        "\t * offset 1\n" +
+                        "\t */\n" +
+                        "\tuint8_t alignmentFill_at_1[3];\n" +
+                        "\t/**\n" +
+                        "\t * offset 4\n" +
+                        "\t */\n" +
+                        "\tint8_t byte2 = (int8_t)0;\n" +
+                        "\t/**\n" +
+                        "\t * need 4 byte alignment\n" +
+                        "\tunits\n" +
+                        "\t * offset 5\n" +
+                        "\t */\n" +
+                        "\tuint8_t alignmentFill_at_5[3];\n" +
                         "};\n" +
                         "static_assert(sizeof(pid_s) == 8);\n" +
                         "\n",
