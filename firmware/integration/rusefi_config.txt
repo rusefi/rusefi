@@ -1014,10 +1014,9 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     float[CAM_INPUTS_COUNT_padding] vvtOffsetsPadding;;
 
 struct vr_threshold_s
-	brain_pin_e pin;
-	uint8_t[3] pad;;"",1,0,0,0,0
 	uint8_t[6] autoscale rpmBins;;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 	uint8_t[6] autoscale values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
+	brain_pin_e pin;
 end_struct
 
 ! todo: should be '3' since we are dreaming of Honda triple-channel distributor
