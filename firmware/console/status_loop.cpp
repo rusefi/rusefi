@@ -45,7 +45,6 @@
 #include "main_trigger_callback.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "os_util.h"
 #include "svnversion.h"
 #include "lcd_controller.h"
 #include "can_hw.h"

@@ -14,7 +14,6 @@
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
-#include "os_util.h"
 #include "bench_test.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"

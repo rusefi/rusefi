@@ -12,7 +12,6 @@
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "os_util.h"
 
 void baseMCUInit(void) {
 }
