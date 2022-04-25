@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 25 06:18:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 25 22:19:11 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -74,10 +74,6 @@ public class Fields {
 	public static final int air_pressure_sensor_type_e_MT_SUBY_DENSO = 5;
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
 	public static final int alignEngineSnifferAtTDC_offset = 748;
-	public static final int alignmentFill_at_1847_offset = 1847;
-	public static final int alignmentFill_at_1873_offset = 1873;
-	public static final int alignmentFill_at_4007_offset = 4007;
-	public static final int alignmentFill_at_62_offset = 62;
 	public static final int alternatorControl_dFactor_offset = 1492;
 	public static final int alternatorControl_iFactor_offset = 1488;
 	public static final int alternatorControl_maxValue_offset = 1502;
@@ -147,7 +143,6 @@ public class Fields {
 	public static final int auxSpeedSensorInputPin1_offset = 1696;
 	public static final int auxSpeedSensorInputPin2_offset = 1697;
 	public static final int auxTempSensor1_adcChannel_offset = 2076;
-	public static final int auxTempSensor1_alignmentFill_at_29_offset = 2077;
 	public static final int auxTempSensor1_bias_resistor_offset = 2072;
 	public static final int auxTempSensor1_config_offset = 2048;
 	public static final int auxTempSensor1_offset = 2048;
@@ -158,7 +153,6 @@ public class Fields {
 	public static final int auxTempSensor1_tempC_2_offset = 2052;
 	public static final int auxTempSensor1_tempC_3_offset = 2056;
 	public static final int auxTempSensor2_adcChannel_offset = 2108;
-	public static final int auxTempSensor2_alignmentFill_at_29_offset = 2109;
 	public static final int auxTempSensor2_bias_resistor_offset = 2104;
 	public static final int auxTempSensor2_config_offset = 2080;
 	public static final int auxTempSensor2_offset = 2080;
@@ -537,7 +531,6 @@ public class Fields {
 	public static final int cj125ua_offset = 2205;
 	public static final int cj125ur_offset = 2206;
 	public static final int clt_adcChannel_offset = 368;
-	public static final int clt_alignmentFill_at_29_offset = 369;
 	public static final int clt_bias_resistor_offset = 364;
 	public static final int clt_config_offset = 340;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
@@ -633,7 +626,6 @@ public class Fields {
 	public static final int consoleUartDevice_offset = 887;
 	public static final int consumeObdSensors_offset = 896;
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
-	public static final int cranking_alignmentFill_at_6_offset = 182;
 	public static final int cranking_baseFuel_offset = 176;
 	public static final int CRANKING_CLT_IDLE_CURVE_SIZE = 8;
 	public static final int CRANKING_CURVE_SIZE = 8;
@@ -1303,7 +1295,6 @@ public class Fields {
 	public static final int iacPidMultRpmBins_offset = 3600;
 	public static final int iacPidMultTable_offset = 3528;
 	public static final int iat_adcChannel_offset = 400;
-	public static final int iat_alignmentFill_at_29_offset = 401;
 	public static final int iat_bias_resistor_offset = 396;
 	public static final int iat_config_offset = 372;
 	public static final int IAT_CURVE_SIZE = 16;
@@ -2534,12 +2525,10 @@ public class Fields {
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
 	public static final int vRefAdcChannel_offset = 1266;
-	public static final int vrThreshold1_alignmentFill_at_13_offset = 1173;
 	public static final int vrThreshold1_offset = 1160;
 	public static final int vrThreshold1_pin_offset = 1172;
 	public static final int vrThreshold1_rpmBins_offset = 1160;
 	public static final int vrThreshold1_values_offset = 1166;
-	public static final int vrThreshold2_alignmentFill_at_13_offset = 1189;
 	public static final int vrThreshold2_offset = 1176;
 	public static final int vrThreshold2_pin_offset = 1188;
 	public static final int vrThreshold2_rpmBins_offset = 1176;

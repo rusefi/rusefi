@@ -76,9 +76,6 @@
 #define air_pressure_sensor_type_e_MT_SUBY_DENSO 5
 #define air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 8
 #define alignEngineSnifferAtTDC_offset 748
-#define alignmentFill_at_1867_offset 1867
-#define alignmentFill_at_3979_offset 3979
-#define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
 #define alternatorControl_maxValue_offset 1502
@@ -143,7 +140,6 @@
 #define auxSpeedSensorInputPin1_offset 1696
 #define auxSpeedSensorInputPin2_offset 1697
 #define auxTempSensor1_adcChannel_offset 2068
-#define auxTempSensor1_alignmentFill_at_29_offset 2069
 #define auxTempSensor1_bias_resistor_offset 2064
 #define auxTempSensor1_config_offset 2040
 #define auxTempSensor1_offset 2040
@@ -154,7 +150,6 @@
 #define auxTempSensor1_tempC_2_offset 2044
 #define auxTempSensor1_tempC_3_offset 2048
 #define auxTempSensor2_adcChannel_offset 2100
-#define auxTempSensor2_alignmentFill_at_29_offset 2101
 #define auxTempSensor2_bias_resistor_offset 2096
 #define auxTempSensor2_config_offset 2072
 #define auxTempSensor2_offset 2072
@@ -539,7 +534,6 @@
 #define cj125ua_offset 2197
 #define cj125ur_offset 2198
 #define clt_adcChannel_offset 368
-#define clt_alignmentFill_at_29_offset 369
 #define clt_bias_resistor_offset 364
 #define clt_config_offset 340
 #define CLT_CRANKING_CURVE_SIZE 8
@@ -635,7 +629,6 @@
 #define consoleUartDevice_offset 887
 #define consumeObdSensors_offset 896
 #define CRANKING_ADVANCE_CURVE_SIZE 4
-#define cranking_alignmentFill_at_6_offset 182
 #define cranking_baseFuel_offset 176
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
@@ -1326,7 +1319,6 @@
 #define iacPidMultRpmBins_offset 3572
 #define iacPidMultTable_offset 3500
 #define iat_adcChannel_offset 400
-#define iat_alignmentFill_at_29_offset 401
 #define iat_bias_resistor_offset 396
 #define iat_config_offset 372
 #define IAT_CURVE_SIZE 16
@@ -2661,12 +2653,10 @@
 #define VR_THRESHOLD_COUNT 2
 #define vr_threshold_s_size 16
 #define vRefAdcChannel_offset 1266
-#define vrThreshold1_alignmentFill_at_13_offset 1173
 #define vrThreshold1_offset 1160
 #define vrThreshold1_pin_offset 1172
 #define vrThreshold1_rpmBins_offset 1160
 #define vrThreshold1_values_offset 1166
-#define vrThreshold2_alignmentFill_at_13_offset 1189
 #define vrThreshold2_offset 1176
 #define vrThreshold2_pin_offset 1188
 #define vrThreshold2_rpmBins_offset 1176
