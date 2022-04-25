@@ -87,11 +87,10 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "int = scalar, S08, 2, \"\", 1, 0, 0, 100, 0\n" +
-                "alignmentFill_at_3 = scalar, U08, 3, \"units\", 1, 0, -20, 100, 0\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
 
@@ -107,12 +106,10 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "alignmentFill_at_1 = scalar, U08, 1, \"units\", 1, 0, -20, 100, 0\n" +
                 "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "alignmentFill_at_6 = array, U08, 6, [2], \"units\", 1, 0, -20, 100, 0\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
@@ -127,9 +124,8 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int2 = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "alignmentFill_at_1 = array, U08, 1, [3], \"units\", 1, 0, -20, 100, 0\n" +
                 "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
@@ -223,7 +219,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
 
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -697,7 +693,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"\", 1, 0, 0, 100, 0\n" +
                 "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +

@@ -29,7 +29,6 @@ public class OutputsTest {
 
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
                 "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
-                "alignmentFill_at_5 = array, U08, 5, [3], \"units\", 1, 0\n" +
                 "isForcedInduction = bits, U32, 8, [0:0]\n" +
                 "enableFan1WithAc = bits, U32, 8, [1:1]\n" +
                 "unusedBit_5_2 = bits, U32, 8, [2:2]\n" +
@@ -79,7 +78,7 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
-        state.readBufferedReader(test, (tsProjectConsumer));
+        state.readBufferedReader(test, tsProjectConsumer);
     }
 
     @Test
@@ -229,7 +228,7 @@ public class OutputsTest {
                 "end_struct\n" +
                 "\n" +
                 "injector_s injector\n" +
-         "\tint[12 iterate] ignitionPins;\n" +
+                "\tint[12 iterate] ignitionPins;\n" +
                 "\tfloat bias_resistor;+Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "end_struct\n" +
                 "struct ThermistorConf @brief Thermistor curve parameters\n" +
@@ -318,5 +317,19 @@ public class OutputsTest {
                         "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
                 gaugeConsumer.getContent());
 
+    }
+
+    @Test
+    public void testLongIterate() throws IOException {
+        ReaderState state = new ReaderState();
+        String test = "struct total\n" +
+"\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
+                "end_struct\n";
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        assertEquals(
+                "\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
+                        "\ttriggerSimulatorPins2 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
+                        "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
 }

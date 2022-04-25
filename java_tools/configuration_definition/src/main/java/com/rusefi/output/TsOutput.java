@@ -4,9 +4,6 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
-import com.rusefi.VariableRegistry;
-
-import java.io.IOException;
 
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
@@ -37,7 +34,7 @@ public class TsOutput {
         return settingContextHelp;
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
@@ -45,6 +42,11 @@ public class TsOutput {
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
+
+                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
+                    tsPosition += configField.getSize(next);
+                    return tsPosition;
+                }
 
                 if (configField.isDirective() && configField.getComment() != null) {
                     tsHeader.append(configField.getComment());
@@ -56,6 +58,7 @@ public class TsOutput {
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentContent();
                     commentContent = state.variableRegistry.applyVariables(commentContent);
+                    commentContent = ConfigField.unquote(commentContent);
                     int newLineIndex = commentContent.indexOf("\\n");
                     if (newLineIndex != -1) {
                         // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
@@ -63,7 +66,7 @@ public class TsOutput {
                     }
 //                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
 //                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
-                    settingContextHelp.append("\t" + nameWithPrefix + " = \"" + commentContent + "\"" + EOL);
+                    settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
                 if (registerOffsets) {
                     state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);

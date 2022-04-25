@@ -59,7 +59,6 @@ public class TSProjectConsumerTest {
                 "afrTable = array, U08, 4, [4x4],\"deg\", 0.1, 0, 0, 25.0, 1\n" +
                 "#endif\n" +
                 "periodMs = scalar, S16, 20, \"ms\", 0.1, 0, 0, 3000, 0\n" +
-                "alignmentFill_at_22 = array, U08, 22, [2], \"units\", 1, 0, -20, 100, 0\n" +
                 "; total TS size = 24\n", tsProjectConsumer.getContent());
 
         assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT).setScale(1.0);\n" +
