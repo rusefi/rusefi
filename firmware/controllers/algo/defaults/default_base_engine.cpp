@@ -68,6 +68,7 @@ void setDefaultBaseEngine() {
 
 
 	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
+	engineConfiguration->issFilterReciprocal = 2;
 
 	// Check engine light
 #if EFI_PROD_CODE
