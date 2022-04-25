@@ -257,11 +257,10 @@ void setEngineBMW_M73_Proteus() {
 	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
 	// set_trigger_input_pin 0 PE7
-	// GPIOE_7:  "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 
 	// GPIOE_11: "Digital 2"
-	engineConfiguration->camInputs[0] = GPIOE_11;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 
 	// set vbatt_divider 8.16
 	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
