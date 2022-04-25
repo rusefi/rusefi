@@ -510,15 +510,15 @@ public class ConfigFieldParserTest {
                         "\t */\n" +
                         "\tint8_t byte1 = (int8_t)0;\n" +
                         "\t/**\n" +
-                        "\t * offset 1\n" +
-                        "\t */\n" +
-                        "\tstruct_s struct;\n" +
-                        "\t/**\n" +
                         "\t * need 4 byte alignment\n" +
                         "\tunits\n" +
-                        "\t * offset 5\n" +
+                        "\t * offset 1\n" +
                         "\t */\n" +
-                        "\tuint8_t alignmentFill_at_5[3];\n" +
+                        "\tuint8_t alignmentFill_at_1[3];\n" +
+                        "\t/**\n" +
+                        "\t * offset 4\n" +
+                        "\t */\n" +
+                        "\tstruct_s struct;\n" +
                         "};\n" +
                         "static_assert(sizeof(pid_s) == 8);\n" +
                         "\n",
