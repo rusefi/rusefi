@@ -23,16 +23,8 @@
 
 #define assertIsrContext(code) efiAssertVoid(code, isIsrContext(), "NOT_ISR")
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par);
 
-#ifdef __cplusplus
-}
 void printHistogram(Logging *logging, histogram_s *histogram);
-#endif /* __cplusplus */
 
 #endif /* EFI_UNIT_TEST */
