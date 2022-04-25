@@ -287,13 +287,16 @@ public class ReaderState {
         ConfigStructure structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
+        Integer customTypeSize = state.tsCustomSize.get(cf.getType());
         if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state, getPrimitiveSize);
-        } else if (getPrimitiveSize == null) {
+        } else if (state.structures.containsKey(cf.getType())) {
             // we are here for struct members
             structure.addAlignmentFill(state, 4);
+        } else if (customTypeSize != null) {
+            structure.addAlignmentFill(state, customTypeSize % 8);
         }
 
         if (cf.isIterate()) {
