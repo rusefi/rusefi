@@ -4,6 +4,6 @@
 class InputShaftSpeedConverter : public SensorConverter {
 public:
 	SensorResult convert(float frequency) const override {
-		return frequency * 60 / engineConfiguration->vssToothCount;
+		return frequency * 60 / engineConfiguration->tcuInputSpeedSensorTeeth;
 	}
 };
