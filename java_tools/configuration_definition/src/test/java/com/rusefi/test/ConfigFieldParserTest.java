@@ -156,6 +156,26 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void alignArray6() throws IOException {
+        // we expect padding before each 4 byte field
+        String test = "struct vr_threshold_s\n" +
+                "\tuint8_t pin;\n" +
+                "\tuint8_t[3] pad;;\"\",1,0,0,0,0\n" +
+                "\tuint8_t[6] autoscale rpmBins;;\"rpm\", 1, 0, 0, 12000, 0\n" +
+                "\tuint8_t[6] autoscale values;;\"volts\", 1, 0, 0, 2.5, 2\n" +
+                "end_struct\n\n";
+        ReaderState state = new ReaderState();
+
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+        state.readBufferedReader(test, (javaFieldsConsumer));
+
+        assertEquals("\tpublic static final Field PIN = Field.create(\"PIN\", 0, FieldType.INT8).setScale(1.0);\n" +
+                "\tpublic static final Field PAD = Field.create(\"PAD\", 1, FieldType.INT8).setScale(1.0);\n" +
+                "\tpublic static final Field RPMBINS = Field.create(\"RPMBINS\", 4, FieldType.INT8).setScale(1.0);\n" +
+                "\tpublic static final Field VALUES = Field.create(\"VALUES\", 10, FieldType.INT8).setScale(1.0);\n", javaFieldsConsumer.getContent());
+    }
+
+    @Test
     public void manyStartAreNotMultiplication() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE \"***\"\n" +
