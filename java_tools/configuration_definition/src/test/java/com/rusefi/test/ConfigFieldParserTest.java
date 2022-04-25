@@ -481,6 +481,51 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testStructAfterByte() throws IOException {
+        String test = "struct struct_s\n" +
+                "\tint int2\n" +
+                "end_struct\n" +
+
+                "struct_no_prefix pid_s\n" +
+                "\tint8_t byte1\n" +
+                "\tstruct_s struct\n" +
+                "end_struct\n" +
+                "";
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
+        ReaderState state = new ReaderState();
+        state.readBufferedReader(test, consumer);
+        assertEquals("// start of struct_s\n" +
+                        "struct struct_s {\n" +
+                        "\t/**\n" +
+                        "\t * offset 0\n" +
+                        "\t */\n" +
+                        "\tint int2 = (int)0;\n" +
+                        "};\n" +
+                        "static_assert(sizeof(struct_s) == 4);\n" +
+                        "\n" +
+                        "// start of pid_s\n" +
+                        "struct pid_s {\n" +
+                        "\t/**\n" +
+                        "\t * offset 0\n" +
+                        "\t */\n" +
+                        "\tint8_t byte1 = (int8_t)0;\n" +
+                        "\t/**\n" +
+                        "\t * offset 1\n" +
+                        "\t */\n" +
+                        "\tstruct_s struct;\n" +
+                        "\t/**\n" +
+                        "\t * need 4 byte alignment\n" +
+                        "\tunits\n" +
+                        "\t * offset 5\n" +
+                        "\t */\n" +
+                        "\tuint8_t alignmentFill_at_5[3];\n" +
+                        "};\n" +
+                        "static_assert(sizeof(pid_s) == 8);\n" +
+                        "\n",
+                consumer.getContent());
+    }
+
+    @Test
     public void testParseLine() {
         ReaderState state = new ReaderState();
         assertNull(ConfigField.parse(state, "int"));
