@@ -8,14 +8,6 @@
 
 #pragma once
 
-#if EFI_PROD_CODE
-#include "hal.h"
-#endif
-
-#include "rusefi_hw_enums.h"
-#include <cstdint>
-#include <cstddef>
-
 class BitbangI2c {
 public:
 	// Initialize the I2C driver
