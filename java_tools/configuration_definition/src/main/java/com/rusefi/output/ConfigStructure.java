@@ -55,6 +55,8 @@ public class ConfigStructure {
     }
 
     public void addAlignmentFill(ReaderState state, int alignment) {
+        if (alignment == 0)
+            return;
         /**
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
@@ -70,6 +72,8 @@ public class ConfigStructure {
 
         totalSize = iterator.currentOffset;
         int fillSize = totalSize % alignment == 0 ? 0 : alignment - (totalSize % alignment);
+        if (fillSize > 3)
+            throw new IllegalStateException("Fill size does not look right: " + fillSize);
 
         if (fillSize != 0) {
             int[] fillSizeArray;
