@@ -104,15 +104,15 @@ typedef char gppwm_note_t[GPPWM_NOTE_SIZE];
 
 typedef char le_formula_t[LE_COMMAND_LENGTH];
 
-typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
-
+//typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
+using egt_cs_array_t = brain_pin_e[EGT_CHANNEL_COUNT];
 
 typedef int16_t pwm_freq_t;
 
 typedef float script_setting_t;
 
-typedef brain_pin_e brain_input_pin_e;
-typedef brain_pin_e switch_input_pin_e;
+using brain_input_pin_e = brain_pin_e;
+using switch_input_pin_e = brain_pin_e;
 
 typedef void (*VoidPtr)(void*);
 

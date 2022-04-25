@@ -3,7 +3,6 @@ UTIL_DIR=$(PROJECT_DIR)/util
 UTILSRC = \
 	$(UTIL_DIR)/math/crc.c \
 	$(UTIL_DIR)/tinymt32.c \
-	$(UTIL_DIR)/os_util.c \
 
 UTILSRC_CPP = \
 	$(UTIL_DIR)/histogram.cpp \
@@ -18,6 +17,7 @@ UTILSRC_CPP = \
 	$(PROJECT_DIR)/util/cli_registry.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/util/timer.cpp \
+	$(UTIL_DIR)/os_util.c \
 	
 	
 UTIL_INC = \

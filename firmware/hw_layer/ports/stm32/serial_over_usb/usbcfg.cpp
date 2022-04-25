@@ -15,8 +15,7 @@
     limitations under the License.
 */
 
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
 #include "mmc_card.h"
 
 #if HAL_USE_SERIAL_USB

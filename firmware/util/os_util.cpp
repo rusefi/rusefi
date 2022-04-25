@@ -20,9 +20,7 @@
  */
 
 #if !EFI_UNIT_TEST
-#include "global.h"
-#include "os_access.h"
-#include "os_util.h"
+#include "pch.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
 	syssts_t sts = chSysGetStatusAndLockX();
