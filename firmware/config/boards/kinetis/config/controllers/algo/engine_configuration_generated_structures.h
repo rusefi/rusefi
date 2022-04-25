@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 25 04:24:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 25 06:18:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -654,23 +654,25 @@ static_assert(sizeof(dc_io) == 4);
 // start of vr_threshold_s
 struct vr_threshold_s {
 	/**
-	 * offset 0
-	 */
-	brain_pin_e pin;
-	/**
-	 * offset 1
-	 */
-	uint8_t pad[3];
-	/**
 	rpm
-	 * offset 4
+	 * offset 0
 	 */
 	scaled_channel<uint8_t, 1, 50> rpmBins[6];
 	/**
 	volts
-	 * offset 10
+	 * offset 6
 	 */
 	scaled_channel<uint8_t, 100, 1> values[6];
+	/**
+	 * offset 12
+	 */
+	brain_pin_e pin;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 13
+	 */
+	uint8_t alignmentFill_at_13[3];
 };
 static_assert(sizeof(vr_threshold_s) == 16);
 
@@ -4686,4 +4688,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21136);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 25 04:24:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Apr 25 06:18:29 UTC 2022

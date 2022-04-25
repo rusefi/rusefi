@@ -1954,7 +1954,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1411932294
+#define SIGNATURE_HASH 36074707
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2536,7 +2536,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.25.all.1411932294"
+#define TS_SIGNATURE "rusEFI 2022.04.25.all.36074707"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2676,16 +2676,16 @@
 #define VR_THRESHOLD_COUNT 2
 #define vr_threshold_s_size 16
 #define vRefAdcChannel_offset 1266
+#define vrThreshold1_alignmentFill_at_13_offset 1173
 #define vrThreshold1_offset 1160
-#define vrThreshold1_pad_offset 1161
-#define vrThreshold1_pin_offset 1160
-#define vrThreshold1_rpmBins_offset 1164
-#define vrThreshold1_values_offset 1170
+#define vrThreshold1_pin_offset 1172
+#define vrThreshold1_rpmBins_offset 1160
+#define vrThreshold1_values_offset 1166
+#define vrThreshold2_alignmentFill_at_13_offset 1189
 #define vrThreshold2_offset 1176
-#define vrThreshold2_pad_offset 1177
-#define vrThreshold2_pin_offset 1176
-#define vrThreshold2_rpmBins_offset 1180
-#define vrThreshold2_values_offset 1186
+#define vrThreshold2_pin_offset 1188
+#define vrThreshold2_rpmBins_offset 1176
+#define vrThreshold2_values_offset 1182
 #define vssFilterReciprocal_offset 623
 #define vssGearRatio_offset 624
 #define vssToothCount_offset 626

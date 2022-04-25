@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 25 04:24:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 25 06:18:34 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1880,7 +1880,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1411932294;
+	public static final int SIGNATURE_HASH = 36074707;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2400,7 +2400,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.25.all.1411932294";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.25.all.36074707";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1012;
@@ -2534,16 +2534,16 @@ public class Fields {
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
 	public static final int vRefAdcChannel_offset = 1266;
+	public static final int vrThreshold1_alignmentFill_at_13_offset = 1173;
 	public static final int vrThreshold1_offset = 1160;
-	public static final int vrThreshold1_pad_offset = 1161;
-	public static final int vrThreshold1_pin_offset = 1160;
-	public static final int vrThreshold1_rpmBins_offset = 1164;
-	public static final int vrThreshold1_values_offset = 1170;
+	public static final int vrThreshold1_pin_offset = 1172;
+	public static final int vrThreshold1_rpmBins_offset = 1160;
+	public static final int vrThreshold1_values_offset = 1166;
+	public static final int vrThreshold2_alignmentFill_at_13_offset = 1189;
 	public static final int vrThreshold2_offset = 1176;
-	public static final int vrThreshold2_pad_offset = 1177;
-	public static final int vrThreshold2_pin_offset = 1176;
-	public static final int vrThreshold2_rpmBins_offset = 1180;
-	public static final int vrThreshold2_values_offset = 1186;
+	public static final int vrThreshold2_pin_offset = 1188;
+	public static final int vrThreshold2_rpmBins_offset = 1176;
+	public static final int vrThreshold2_values_offset = 1182;
 	public static final int vssFilterReciprocal_offset = 623;
 	public static final int vssGearRatio_offset = 624;
 	public static final int vssToothCount_offset = 626;
@@ -3145,14 +3145,14 @@ public class Fields {
 	public static final Field VVTOFFSETS3 = Field.create("VVTOFFSETS3", 1152, FieldType.FLOAT);
 	public static final Field VVTOFFSETS4 = Field.create("VVTOFFSETS4", 1156, FieldType.FLOAT);
 	public static final Field VVTOFFSETSPADDING = Field.create("VVTOFFSETSPADDING", 1160, FieldType.FLOAT);
-	public static final Field VRTHRESHOLD1_PIN = Field.create("VRTHRESHOLD1_PIN", 1160, FieldType.INT8, brain_pin_e).setScale(1.0);
-	public static final Field VRTHRESHOLD1_PAD = Field.create("VRTHRESHOLD1_PAD", 1161, FieldType.INT8).setScale(1.0);
-	public static final Field VRTHRESHOLD1_RPMBINS = Field.create("VRTHRESHOLD1_RPMBINS", 1164, FieldType.INT8).setScale(50.0);
-	public static final Field VRTHRESHOLD1_VALUES = Field.create("VRTHRESHOLD1_VALUES", 1170, FieldType.INT8).setScale(0.01);
-	public static final Field VRTHRESHOLD2_PIN = Field.create("VRTHRESHOLD2_PIN", 1176, FieldType.INT8, brain_pin_e).setScale(1.0);
-	public static final Field VRTHRESHOLD2_PAD = Field.create("VRTHRESHOLD2_PAD", 1177, FieldType.INT8).setScale(1.0);
-	public static final Field VRTHRESHOLD2_RPMBINS = Field.create("VRTHRESHOLD2_RPMBINS", 1180, FieldType.INT8).setScale(50.0);
-	public static final Field VRTHRESHOLD2_VALUES = Field.create("VRTHRESHOLD2_VALUES", 1186, FieldType.INT8).setScale(0.01);
+	public static final Field VRTHRESHOLD1_RPMBINS = Field.create("VRTHRESHOLD1_RPMBINS", 1160, FieldType.INT8).setScale(50.0);
+	public static final Field VRTHRESHOLD1_VALUES = Field.create("VRTHRESHOLD1_VALUES", 1166, FieldType.INT8).setScale(0.01);
+	public static final Field VRTHRESHOLD1_PIN = Field.create("VRTHRESHOLD1_PIN", 1172, FieldType.INT8, brain_pin_e).setScale(1.0);
+	public static final Field VRTHRESHOLD1_ALIGNMENTFILL_AT_13 = Field.create("VRTHRESHOLD1_ALIGNMENTFILL_AT_13", 1173, FieldType.INT8).setScale(1.0);
+	public static final Field VRTHRESHOLD2_RPMBINS = Field.create("VRTHRESHOLD2_RPMBINS", 1176, FieldType.INT8).setScale(50.0);
+	public static final Field VRTHRESHOLD2_VALUES = Field.create("VRTHRESHOLD2_VALUES", 1182, FieldType.INT8).setScale(0.01);
+	public static final Field VRTHRESHOLD2_PIN = Field.create("VRTHRESHOLD2_PIN", 1188, FieldType.INT8, brain_pin_e).setScale(1.0);
+	public static final Field VRTHRESHOLD2_ALIGNMENTFILL_AT_13 = Field.create("VRTHRESHOLD2_ALIGNMENTFILL_AT_13", 1189, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWMNOTE1 = Field.create("GPPWMNOTE1", 1192, 16, FieldType.STRING).setScale(1.0);
 	public static final Field GPPWMNOTE2 = Field.create("GPPWMNOTE2", 1208, 16, FieldType.STRING).setScale(1.0);
 	public static final Field GPPWMNOTE3 = Field.create("GPPWMNOTE3", 1224, 16, FieldType.STRING).setScale(1.0);
@@ -4493,14 +4493,14 @@ public class Fields {
 	VVTOFFSETS3,
 	VVTOFFSETS4,
 	VVTOFFSETSPADDING,
-	VRTHRESHOLD1_PIN,
-	VRTHRESHOLD1_PAD,
 	VRTHRESHOLD1_RPMBINS,
 	VRTHRESHOLD1_VALUES,
-	VRTHRESHOLD2_PIN,
-	VRTHRESHOLD2_PAD,
+	VRTHRESHOLD1_PIN,
+	VRTHRESHOLD1_ALIGNMENTFILL_AT_13,
 	VRTHRESHOLD2_RPMBINS,
 	VRTHRESHOLD2_VALUES,
+	VRTHRESHOLD2_PIN,
+	VRTHRESHOLD2_ALIGNMENTFILL_AT_13,
 	GPPWMNOTE1,
 	GPPWMNOTE2,
 	GPPWMNOTE3,
