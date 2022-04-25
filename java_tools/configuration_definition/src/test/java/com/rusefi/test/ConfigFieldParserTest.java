@@ -8,7 +8,6 @@ import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -79,16 +78,18 @@ public class ConfigFieldParserTest {
     @Test
     public void testCustomEnum() throws IOException {
         String test = "struct pid_s\n" +
-                "#define ego_sensor_e_size 4\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
-                "custom ego_sensor_e @@ego_sensor_e_size@@ bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "custom ego_sensor_e 1 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
                 "ego_sensor_e afr_type;\n" +
+                "int8_t int\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, (tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "int = scalar, S08, 1, \"\", 1, 0, 0, 100, 0\n" +
+                "alignmentFill_at_2 = array, U08, 2, [2], \"units\", 1, 0, -20, 100, 0\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
 
@@ -544,23 +545,17 @@ public class ConfigFieldParserTest {
                         "\t */\n" +
                         "\tint8_t byte1 = (int8_t)0;\n" +
                         "\t/**\n" +
-                        "\t * need 4 byte alignment\n" +
-                        "\tunits\n" +
                         "\t * offset 1\n" +
-                        "\t */\n" +
-                        "\tuint8_t alignmentFill_at_1[3];\n" +
-                        "\t/**\n" +
-                        "\t * offset 4\n" +
                         "\t */\n" +
                         "\tint8_t byte2 = (int8_t)0;\n" +
                         "\t/**\n" +
                         "\t * need 4 byte alignment\n" +
                         "\tunits\n" +
-                        "\t * offset 5\n" +
+                        "\t * offset 2\n" +
                         "\t */\n" +
-                        "\tuint8_t alignmentFill_at_5[3];\n" +
+                        "\tuint8_t alignmentFill_at_2[2];\n" +
                         "};\n" +
-                        "static_assert(sizeof(pid_s) == 8);\n" +
+                        "static_assert(sizeof(pid_s) == 4);\n" +
                         "\n",
                 consumer.getContent());
     }

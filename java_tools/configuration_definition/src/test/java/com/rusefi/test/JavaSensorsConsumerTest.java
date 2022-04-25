@@ -37,11 +37,10 @@ public class JavaSensorsConsumerTest {
                         "alignmentFill_at_10(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, -20.0, 100.0, \"units\"),\n" +
                         "luaTimingMult(\"luaTimingMult\", SensorCategory.SENSOR_INPUTS, FieldType.INT, 12, 1.0, -1.0, -1.0, \"\"),\n" +
                         "vehicleSpeedKph(\"vehicleSpeedKph\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 16, 1.0, -1.0, -1.0, \"\"),\n" +
-                        "alignmentFill_at_17(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 17, 1.0, -20.0, 100.0, \"units\"),\n" +
-                        "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 20, 1.0, 0.0, 0.0, \"deg C\"),\n" +
-                        "alignmentFill_at_21(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 21, 1.0, -20.0, 100.0, \"units\"),\n",
+                        "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 17, 1.0, 0.0, 0.0, \"deg C\"),\n" +
+                        "alignmentFill_at_18(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 18, 1.0, -20.0, 100.0, \"units\"),\n",
                 javaSensorsConsumer.getContent());
-        assertEquals(24, javaSensorsConsumer.sensorTsPosition);
+        assertEquals(20, javaSensorsConsumer.sensorTsPosition);
     }
 
     @Test

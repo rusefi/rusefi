@@ -291,7 +291,8 @@ public class ReaderState {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state, getPrimitiveSize);
-        } else {
+        } else if (getPrimitiveSize == null) {
+            // we are here for struct members
             structure.addAlignmentFill(state, 4);
         }
 
