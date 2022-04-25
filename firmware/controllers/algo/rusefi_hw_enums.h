@@ -7,6 +7,8 @@
 
 #pragma once
 
+enum class TestCppStyleEnum : uint8_t { };
+
 // todo: migrate/unify with pin_output_mode_e? rename? something is messy here
 // this enum is currently only used for SPI pins
 typedef enum __attribute__ ((__packed__)) {
