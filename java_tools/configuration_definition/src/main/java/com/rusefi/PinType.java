@@ -1,10 +1,10 @@
 package com.rusefi;
 
 public enum PinType {
-    OUTPUTS("output_pin_e_enum", "Gpio", "Gpio::Unassigned"),
+    OUTPUTS("output_pin_e_enum", "Gpio", "Unassigned"),
     ANALOG_INPUTS("adc_channel_e_enum", "adc_channel_e", "EFI_ADC_NONE"),
-    EVENT_INPUTS("brain_input_pin_e_enum", "Gpio", "Gpio::Unassigned"),
-    SWITCH_INPUTS("switch_input_pin_e_enum", "Gpio", "Gpio::Unassigned");
+    EVENT_INPUTS("brain_input_pin_e_enum", "Gpio", "Unassigned"),
+    SWITCH_INPUTS("switch_input_pin_e_enum", "Gpio", "Unassigned");
 
 
     private final String outputEnumName;
