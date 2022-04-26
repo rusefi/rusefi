@@ -119,8 +119,8 @@ static void setDefaultStftSettings() {
 	cfg.startupDelay = 60;
 
 	// Only correct in [12.0, 17.0]
-	cfg.minAfr = 120;
-	cfg.maxAfr = 170;
+	cfg.minAfr = 12;
+	cfg.maxAfr = 17;
 
 	// Above 60 deg C
 	cfg.minClt = 60;
