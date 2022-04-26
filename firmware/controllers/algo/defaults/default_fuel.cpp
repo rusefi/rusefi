@@ -136,7 +136,7 @@ static void setDefaultStftSettings() {
 	// Sensible cell defaults
 	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
 		// 30 second time constant - nice and slow
-		cfg.cellCfgs[i].timeConstant = 30 * 10;
+		cfg.cellCfgs[i].timeConstant = 30;
 
 		/// Allow +-5%
 		cfg.cellCfgs[i].maxAdd = 5;
