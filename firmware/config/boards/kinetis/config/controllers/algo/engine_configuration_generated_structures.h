@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Apr 26 23:06:16 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4596,7 +4596,7 @@ struct persistent_config_s {
 	ratio
 	 * offset 20976
 	 */
-	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	scaled_channel<uint16_t, 100, 1> crankingFuelCoefE100[CRANKING_CURVE_SIZE];
 	/**
 	Airmass
 	 * offset 20992
@@ -4691,4 +4691,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21136);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Apr 26 23:06:16 UTC 2022

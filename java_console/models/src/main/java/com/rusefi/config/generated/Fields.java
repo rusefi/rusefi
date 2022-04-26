@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 15:12:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 23:06:23 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1863,6 +1863,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 1737517429;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2382,7 +2383,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.26.all.3017609278";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.27.all.1737517429";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1012;
@@ -3923,7 +3924,7 @@ public class Fields {
 	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20956, FieldType.INT8).setScale(0.2);
 	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20972, FieldType.INT8).setScale(0.2);
 	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20988, FieldType.INT8).setScale(0.2);
-	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 21004, FieldType.INT16).setScale(1.0);
+	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 21004, FieldType.INT16).setScale(0.01);
 	public static final Field TCU_PCAIRMASSBINS = Field.create("TCU_PCAIRMASSBINS", 21020, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_PCVALSR = Field.create("TCU_PCVALSR", 21028, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_PCVALSN = Field.create("TCU_PCVALSN", 21036, FieldType.INT8).setScale(1.0);
