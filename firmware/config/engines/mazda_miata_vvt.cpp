@@ -681,6 +681,10 @@ void setMiataNB2_MRE_MAF() {
 void setMiataNB2_Proteus_TCU() {
 	engineConfiguration->tcuEnabled = true;
 
+	strcpy(engineConfiguration->engineCode, "NB2");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->vehicleName, "TCU test");
+
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 10;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
