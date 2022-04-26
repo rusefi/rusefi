@@ -15,7 +15,7 @@ public:
 
 private:
 	Timer m_edgeTimer;
-	brain_pin_e m_pin = GPIO_UNASSIGNED;
+	brain_pin_e m_pin = Gpio::Unassigned;
 
 	Biquad m_filter;
 };

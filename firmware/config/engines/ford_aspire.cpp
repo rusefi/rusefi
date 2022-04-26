@@ -78,10 +78,10 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
-	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
+	engineConfiguration->triggerInputDebugPins[0] = Gpio::C15;
 
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;

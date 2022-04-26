@@ -29,10 +29,10 @@ void setDodgeNeon1995EngineConfiguration() {
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
 
-	//	engineConfiguration->spi2mosiPin = GPIOB_15;
-	//	engineConfiguration->spi2misoPin = GPIOB_14;
-	//	engineConfiguration->spi2sckPin = GPIOB_13;
-	engineConfiguration->cj125CsPin = GPIOB_0; // rev 0.4
+	//	engineConfiguration->spi2mosiPin = Gpio::B15;
+	//	engineConfiguration->spi2misoPin = Gpio::B14;
+	//	engineConfiguration->spi2sckPin = Gpio::B13;
+	engineConfiguration->cj125CsPin = Gpio::B0; // rev 0.4
 	engineConfiguration->isCJ125Enabled = true;
 	engineConfiguration->is_enabled_spi_2 = true;
 
@@ -86,12 +86,12 @@ void setDodgeNeon1995EngineConfiguration() {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	engineConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
-	engineConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
+	engineConfiguration->injectionPins[0] = Gpio::B9; // Frankenstein: low side - out #12
+	engineConfiguration->injectionPins[1] = Gpio::B8; // Frankenstein: low side - out #11
+	engineConfiguration->injectionPins[2] = Gpio::E3; // Frankenstein: low side - out #8
+	engineConfiguration->injectionPins[3] = Gpio::E5; // Frankenstein: low side - out #6
 
-	engineConfiguration->fuelPumpPin = GPIOC_13; // Frankenstein: low side - out #4
+	engineConfiguration->fuelPumpPin = Gpio::C13; // Frankenstein: low side - out #4
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	engineConfiguration->mapErrorDetectionTooHigh = 120;
@@ -102,9 +102,9 @@ void setDodgeNeon1995EngineConfiguration() {
 	// Frankenstein: high side #1: PE8
 	// Frankenstein: high side #2: PE10
 
-	engineConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: high side #1
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
+	engineConfiguration->ignitionPins[0] = Gpio::E8; // Frankenstein: high side #1
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
 
 	// set ignition_pin_mode 0
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -156,7 +156,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 
 	setFuelTablesLoadBin(20, 120);
 
-	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
 
 	/**
 	 * PA4 Wideband O2 Sensor
@@ -182,29 +182,29 @@ void setDodgeNeonNGCEngineConfiguration() {
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
 
-	engineConfiguration->fanPin = GPIOD_7;
+	engineConfiguration->fanPin = Gpio::D7;
 
-	engineConfiguration->injectionPins[0] = GPIOB_8;
-	engineConfiguration->injectionPins[1] = GPIOB_9;
-	engineConfiguration->injectionPins[2] = GPIOE_2;
-	engineConfiguration->injectionPins[3] = GPIOB_7;
+	engineConfiguration->injectionPins[0] = Gpio::B8;
+	engineConfiguration->injectionPins[1] = Gpio::B9;
+	engineConfiguration->injectionPins[2] = Gpio::E2;
+	engineConfiguration->injectionPins[3] = Gpio::B7;
 
-	engineConfiguration->ignitionPins[0] = GPIOC_9;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOE_8;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::C9;
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::E8;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->mainRelayPin = GPIOE_6;
+	engineConfiguration->mainRelayPin = Gpio::E6;
 
-	engineConfiguration->idle.solenoidPin = GPIOC_13;
+	engineConfiguration->idle.solenoidPin = Gpio::C13;
 	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->manIdlePosition = 36;
 
-	engineConfiguration->fuelPumpPin = GPIOE_3;
+	engineConfiguration->fuelPumpPin = Gpio::E3;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
@@ -258,12 +258,12 @@ void setDodgeNeonNGCEngineConfiguration() {
 
 	engineConfiguration->cylinderBore = 87.5;
 
-	engineConfiguration->clutchDownPin = GPIOC_12;
+	engineConfiguration->clutchDownPin = Gpio::C12;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
-//	engineConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
+//	engineConfiguration->clutchUpPin = Gpio::A14; // note SWCLK - conflict with SWD
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
-//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::A8;
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;
@@ -274,7 +274,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-//temp	engineConfiguration->alternatorControlPin = GPIOD_5;
+//temp	engineConfiguration->alternatorControlPin = Gpio::D5;
 	engineConfiguration->targetVBatt = 14.0;
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 20;

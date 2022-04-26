@@ -250,11 +250,6 @@
 
 #define EFI_SPI3_AF PAL_MODE_ALTERNATIVE_SPI
 
-#define EFI_I2C_SCL_BRAIN_PIN Gpio::B6
-
-#define EFI_I2C_SDA_BRAIN_PIN Gpio::B7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
