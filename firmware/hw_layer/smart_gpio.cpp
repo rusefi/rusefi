@@ -273,7 +273,7 @@ void initSmartGpio() {
 		drv8860.spi_config.ssport = getHwPort("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_config.sspad = getHwPin("drv8860 CS", engineConfiguration->drv8860_cs);
 		drv8860.spi_bus = getSpiDevice(engineConfiguration->drv8860spiDevice);
-		int ret = drv8860_add(DRV8860_PIN_1, 0, &drv8860);
+		int ret = drv8860_add(Gpio::DRV8860_PIN_1, 0, &drv8860);
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == (int)Gpio::DRV8860_PIN_1, "drv8860");
 	}

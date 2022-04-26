@@ -273,9 +273,9 @@ enum class Gpio : uint8_t {
 
 /* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::I15
-#define BRAIN_PIN_ONCHIP_PINS	((size_t)BRAIN_PIN_ONCHIP_LAST - (size_t)Gpio::A0 + 1)
+#define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
 #define BRAIN_PIN_LAST 			Gpio::L9779_PIN_KEY
-#define BRAIN_PIN_TOTAL_PINS	((size_t)BRAIN_PIN_LAST - (size_t)Gpio::A0 + 1)
+#define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
 
 /**
  * Frankenso analog #1 PC2 ADC12
