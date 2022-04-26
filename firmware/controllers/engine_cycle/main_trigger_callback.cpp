@@ -39,7 +39,6 @@
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
 #include "tooth_logger.h"
-#include "os_util.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"

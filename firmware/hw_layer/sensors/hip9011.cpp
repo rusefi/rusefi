@@ -42,7 +42,6 @@
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "os_util.h"
 #endif
 
 #if EFI_HIP_9011

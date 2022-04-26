@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void initializeMitsubishi4g18(TriggerWaveform *s);
 void configureFordAspireTriggerWaveform(TriggerWaveform * s);

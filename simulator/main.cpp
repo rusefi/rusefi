@@ -14,7 +14,7 @@
  limitations under the License.
  */
 
-#include "global.h"
+#include "pch.h"
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
 
@@ -150,7 +150,7 @@ int main(int argc, char** argv) {
 		printf("Running rusEFI simulator for %d seconds, then exiting.\n\n", timeoutSeconds);
 
 		chSysLock();
-		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), &exit, 0);
+		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), [](void*) { exit(0); }, 0);
 		chSysUnlock();
 	}
 

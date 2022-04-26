@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void initializeNissanSR20VE_4(TriggerWaveform *s);
 void initializeNissanSR20VE_4_360(TriggerWaveform *s);

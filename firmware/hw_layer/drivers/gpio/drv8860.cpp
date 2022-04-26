@@ -16,7 +16,6 @@
 
 #include "gpio/gpio_ext.h"
 #include "gpio/drv8860.h"
-#include "os_util.h"
 
 #if (BOARD_DRV8860_COUNT > 0)
 

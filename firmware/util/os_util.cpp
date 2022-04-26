@@ -1,5 +1,5 @@
 /**
- * @file    os_util.c
+ * @file    os_util.cpp
  * @brief   Utility methods related to operating system usage
  *
  * @date Nov 15, 2012
@@ -20,8 +20,8 @@
  */
 
 #if !EFI_UNIT_TEST
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
+
 #include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {

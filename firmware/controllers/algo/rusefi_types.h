@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #else
 // IAR
-typedef unsigned int time_t;
+using time_t = uint32_t;
 #endif
 
 #include "rusefi_generated.h"
@@ -39,7 +39,7 @@ typedef unsigned int time_t;
 
 
 // time in seconds
-typedef time_t efitimesec_t;
+using efitimesec_t = time_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
@@ -47,7 +47,7 @@ typedef time_t efitimesec_t;
  * Please restart your ECU every 46 days? :)
  * See getTimeNowUs()
  */
-typedef uint32_t efitimems_t;
+using efitimems_t = uint32_t;
 
 /**
  * We use a signed type here so that subtraction result is a proper negative value.
@@ -58,61 +58,60 @@ typedef uint32_t efitimems_t;
  * See US2NT
  * See MS2US
  */
-typedef int64_t efitime_t;
+using efitime_t = int64_t;
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot
  */
-typedef efitime_t efitimeus_t;
+using efitimeus_t = efitime_t;
 
 /**
  * 64 bit time in milliseconds (1/1_000 of a second), since boot
  */
-typedef efitime_t efitimems64_t;
+using efitimems64_t = efitime_t;
 
 
 /**
  * platform-dependent tick since boot
  * in case of stm32f4 that's a CPU tick
  */
-typedef efitime_t efitick_t;
+using efitick_t = efitime_t;
 
-typedef float angle_t;
+using angle_t = float;
 
 // mass in grams
-typedef float mass_t;
+using mass_t = float;
 
 // temperature, in Celsius
-typedef float temperature_t;
-typedef float floatms_t;
-typedef float floatus_t;
+using temperature_t = float;
+using floatms_t = float;
+using floatus_t = float;
 
 /**
  * numeric value from 0 to 100
  */
-typedef float percent_t;
+using percent_t = float;
 
 typedef void (*Void)(void);
 
-typedef char lua_script_t[LUA_SCRIPT_SIZE];
+using lua_script_t = char[LUA_SCRIPT_SIZE];
 
-typedef char error_message_t[ERROR_BUFFER_SIZE];
+using error_message_t = char[ERROR_BUFFER_SIZE];
 
-typedef char vehicle_info_t[VEHICLE_INFO_SIZE];
+using vehicle_info_t = char[VEHICLE_INFO_SIZE];
 
-typedef char gppwm_note_t[GPPWM_NOTE_SIZE];
+using gppwm_note_t = char[GPPWM_NOTE_SIZE];
 
-typedef char le_formula_t[LE_COMMAND_LENGTH];
+using le_formula_t = char[LE_COMMAND_LENGTH];
 
-typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
+using egt_cs_array_t = brain_pin_e[EGT_CHANNEL_COUNT];
 
+using pwm_freq_t = int16_t;
 
-typedef int16_t pwm_freq_t;
+using script_setting_t = float;
 
-typedef float script_setting_t;
-
-typedef brain_pin_e brain_input_pin_e;
-typedef brain_pin_e switch_input_pin_e;
+using brain_input_pin_e = brain_pin_e;
+using switch_input_pin_e = brain_pin_e;
 
 typedef void (*VoidPtr)(void*);
 
