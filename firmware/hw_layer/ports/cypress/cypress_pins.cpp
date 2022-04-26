@@ -28,7 +28,7 @@ static ioportid_t ports[] = {
 };
 
 static brain_pin_e portMap[16] = { 
-	Gpio::A0, Gpio::B0, Gpio::C0, Gpio::D0, Gpio::E0, Gpio::F0, Gpio::Invalid, Gpio::G0, Gpio::Invalid, Gpio::Invalid, Gpio::H0, Gpio::I0, GPIOJ_0, Gpio::Invalid, Gpio::Invalid, GPIOK_0
+	Gpio::A0, Gpio::B0, Gpio::C0, Gpio::D0, Gpio::E0, Gpio::F0, Gpio::Invalid, Gpio::G0, Gpio::Invalid, Gpio::Invalid, Gpio::H0, Gpio::I0, Gpio::J0, Gpio::Invalid, Gpio::Invalid, Gpio::K0
 };
 
 #include "pin_repository.h"
