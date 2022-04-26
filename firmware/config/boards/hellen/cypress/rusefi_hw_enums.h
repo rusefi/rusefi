@@ -21,7 +21,7 @@ typedef enum __attribute__ ((__packed__)) {
 /**
  * Hardware pin. This enum is platform-specific.
  */
-typedef enum __attribute__ ((__packed__)) {
+enum class Gpio : uint8_t {
 	Unassigned = 0,
 	Invalid = 1,
 
@@ -228,7 +228,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DRV8860_PIN_14 = 191,
 	DRV8860_PIN_15 = 192,
 	DRV8860_PIN_16 = 193,
-} Gpio;
+};
 
 /* Plase keep updating this defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::K15
