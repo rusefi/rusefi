@@ -181,6 +181,10 @@ static constexpr size_t operator-(Gpio a, Gpio b) {
 	return (size_t)a - (size_t)b;
 }
 
+static constexpr Gpio operator-(Gpio a, int b) {
+	return (Gpio)((int)a - b);
+}
+
 static constexpr Gpio operator+(Gpio a, size_t b) {
 	return (Gpio)((size_t)a + b);
 }
