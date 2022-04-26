@@ -72,33 +72,33 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	/* Injectors */
-	engineConfiguration->injectionPins[1 - 1] = MC33810_0_OUT_0;
-	engineConfiguration->injectionPins[2 - 1] = MC33810_1_OUT_0;
-	engineConfiguration->injectionPins[3 - 1] = MC33810_0_OUT_1;
-	engineConfiguration->injectionPins[4 - 1] = MC33810_1_OUT_1;
-	engineConfiguration->injectionPins[5 - 1] = MC33810_0_OUT_2;
-	engineConfiguration->injectionPins[6 - 1] = MC33810_1_OUT_2;
+	engineConfiguration->injectionPins[1 - 1] = Gpio::MC33810_0_OUT_0;
+	engineConfiguration->injectionPins[2 - 1] = Gpio::MC33810_1_OUT_0;
+	engineConfiguration->injectionPins[3 - 1] = Gpio::MC33810_0_OUT_1;
+	engineConfiguration->injectionPins[4 - 1] = Gpio::MC33810_1_OUT_1;
+	engineConfiguration->injectionPins[5 - 1] = Gpio::MC33810_0_OUT_2;
+	engineConfiguration->injectionPins[6 - 1] = Gpio::MC33810_1_OUT_2;
 	/* Additional, not used for EG33 */
-	engineConfiguration->injectionPins[7 - 1] = MC33810_0_OUT_3;
-	engineConfiguration->injectionPins[8 - 1] = MC33810_1_OUT_3;
+	engineConfiguration->injectionPins[7 - 1] = Gpio::MC33810_0_OUT_3;
+	engineConfiguration->injectionPins[8 - 1] = Gpio::MC33810_1_OUT_3;
 
 	/* Ignition */
-	engineConfiguration->ignitionPins[1 - 1] = MC33810_1_GD_3;
-	engineConfiguration->ignitionPins[2 - 1] = MC33810_1_GD_2;
-	engineConfiguration->ignitionPins[3 - 1] = MC33810_0_GD_1;
-	engineConfiguration->ignitionPins[4 - 1] = MC33810_0_GD_0;
-	engineConfiguration->ignitionPins[5 - 1] = MC33810_0_GD_3;
-	engineConfiguration->ignitionPins[6 - 1] = MC33810_1_GD_1;
+	engineConfiguration->ignitionPins[1 - 1] = Gpio::MC33810_1_GD_3;
+	engineConfiguration->ignitionPins[2 - 1] = Gpio::MC33810_1_GD_2;
+	engineConfiguration->ignitionPins[3 - 1] = Gpio::MC33810_0_GD_1;
+	engineConfiguration->ignitionPins[4 - 1] = Gpio::MC33810_0_GD_0;
+	engineConfiguration->ignitionPins[5 - 1] = Gpio::MC33810_0_GD_3;
+	engineConfiguration->ignitionPins[6 - 1] = Gpio::MC33810_1_GD_1;
 	/* Additional, not used for EG33 */
-	engineConfiguration->ignitionPins[7 - 1] = MC33810_0_GD_2;
-	engineConfiguration->ignitionPins[8 - 1] = MC33810_1_GD_0;
+	engineConfiguration->ignitionPins[7 - 1] = Gpio::MC33810_0_GD_2;
+	engineConfiguration->ignitionPins[8 - 1] = Gpio::MC33810_1_GD_0;
 	//engineConfiguration->ignitionPinMode = OM_INVERTED;
 
 	// Idle configuration
 	engineConfiguration->useStepperIdle = false;
 	engineConfiguration->isDoubleSolenoidIdle = true;
-	engineConfiguration->idle.solenoidPin = Gpio::TLE6240_11;
-	engineConfiguration->secondSolenoidPin = Gpio::TLE6240_12;
+	engineConfiguration->idle.solenoidPin = Gpio::TLE6240_PIN_11;
+	engineConfiguration->secondSolenoidPin = Gpio::TLE6240_PIN_12;
 
 	engineConfiguration->communicationLedPin = Gpio::G6;	/* LD1 - green */
 	engineConfiguration->runningLedPin = Gpio::G8; /* LD3 - yellow */
@@ -123,11 +123,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mc33972_csPinMode = OM_DEFAULT;
 
 	/* TLE6240 - OUT3, also PG2 through 3.3V-> 5.0V level translator - not installed */
-	engineConfiguration->tachOutputPin = Gpio::TLE6240_2;
+	engineConfiguration->tachOutputPin = Gpio::TLE6240_PIN_2;
 	engineConfiguration->tachOutputPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT5 */
-	engineConfiguration->fuelPumpPin = Gpio::TLE6240_5;
+	engineConfiguration->fuelPumpPin = Gpio::TLE6240_PIN_5;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	/* Self shutdown ouput:
@@ -141,13 +141,13 @@ void setBoardDefaultConfiguration() {
 	//engineConfiguration->mainRelayPinMode = OM_DEFAULT;
 
 	/* spi driven - TLE6240 - OUT1, OUT2 */
-	engineConfiguration->fanPin = Gpio::TLE6240_1;
+	engineConfiguration->fanPin = Gpio::TLE6240_PIN_1;
 	engineConfiguration->fanPinMode = OM_DEFAULT;
 	/* TODO: second fan */
 	//engineConfiguration->fanPin[1] = Gpio::TLE6240_2;
 	//engineConfiguration->fanPinMode[1] = OM_DEFAULT;
 	/* spi driven - TLE6240 - OUT8 */
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE6240_7;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE6240_PIN_7;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	/* not used */
@@ -220,11 +220,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->cylinderBankSelect[6 - 1] = 1;
 
 	/* Misc settings */
-	engineConfiguration->acSwitch = MC33972_PIN_22;
+	engineConfiguration->acSwitch = Gpio::MC33972_PIN_22;
 	engineConfiguration->acSwitchMode = PI_DEFAULT;
 
 	/* This board also has AC clutch output: */
-	engineConfiguration->acRelayPin = Gpio::TLE6240_15;
+	engineConfiguration->acRelayPin = Gpio::TLE6240_PIN_15;
 	engineConfiguration->maxAcRpm = 3000;
 	engineConfiguration->acIdleRpmBump = 200;
 
@@ -330,11 +330,11 @@ static void board_init_ext_gpios()
 {
 	int ret;
 
-	ret = mc33810_add(MC33810_0_OUT_0, 0, &mc33810_odd);
+	ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810_odd);
 	if (ret < 0) {
 		/* error */
 	}
-	ret = mc33810_add(MC33810_1_OUT_0, 1, &mc33810_even);
+	ret = mc33810_add(Gpio::MC33810_1_OUT_0, 1, &mc33810_even);
 	if (ret < 0) {
 		/* error */
 	}
