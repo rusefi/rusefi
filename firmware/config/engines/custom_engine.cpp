@@ -414,7 +414,7 @@ void setTle8888TestConfiguration() {
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_20;
+	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_20;
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1 // just any non-empty value for now
@@ -540,47 +540,47 @@ static void mreBoardOldTest() {
 	engineConfiguration->fanPin = Gpio::Unassigned;
 
 	// fuel pump is useful to test power on/off scenario
-//	engineConfiguration->fuelPumpPin = Gpio::TLE8888_22;
+//	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_22;
 
 
 	// LED #1
-	// Gpio::TLE8888_22: "34 - GP Out 2"
-	engineConfiguration->injectionPins[1 - 1] = Gpio::TLE8888_22;
+	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
+	engineConfiguration->injectionPins[1 - 1] = Gpio::TLE8888_PIN_22;
 
 	// LED #2
-	// Gpio::TLE8888_23: "33 - GP Out 3"
-	engineConfiguration->injectionPins[10 - 1] = Gpio::TLE8888_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->injectionPins[10 - 1] = Gpio::TLE8888_PIN_23;
 
-	// Gpio::TLE8888_1: LED #3 - INJ#2
-	engineConfiguration->injectionPins[9 - 1] = Gpio::TLE8888_1;
+	// Gpio::TLE8888_PIN_1: LED #3 - INJ#2
+	engineConfiguration->injectionPins[9 - 1] = Gpio::TLE8888_PIN_1;
 
-	// Gpio::TLE8888_2: LED #4 - INJ#1
-	engineConfiguration->injectionPins[4 - 1] = Gpio::TLE8888_2;
+	// Gpio::TLE8888_PIN_2: LED #4 - INJ#1
+	engineConfiguration->injectionPins[4 - 1] = Gpio::TLE8888_PIN_2;
 
-	// Gpio::TLE8888_3: LED #5 - INJ#3
-	engineConfiguration->injectionPins[3 - 1] = Gpio::TLE8888_3;
+	// Gpio::TLE8888_PIN_3: LED #5 - INJ#3
+	engineConfiguration->injectionPins[3 - 1] = Gpio::TLE8888_PIN_3;
 
-	// Gpio::TLE8888_4: LED #6 - INJ#4
-	engineConfiguration->injectionPins[6 - 1] = Gpio::TLE8888_4;
+	// Gpio::TLE8888_PIN_4: LED #6 - INJ#4
+	engineConfiguration->injectionPins[6 - 1] = Gpio::TLE8888_PIN_4;
 
 	// LED #7
-	// Gpio::TLE8888_24: "43 - GP Out 4"
-	engineConfiguration->injectionPins[5 - 1] = Gpio::TLE8888_24;
+	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
+	engineConfiguration->injectionPins[5 - 1] = Gpio::TLE8888_PIN_24;
 
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
-	// Gpio::TLE8888_21: "35 - GP Out 1"
-	engineConfiguration->injectionPins[8 - 1] = Gpio::TLE8888_21;
+	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->injectionPins[8 - 1] = Gpio::TLE8888_PIN_21;
 
 	// LED #9
 	// TLE8888 high current low side: IN10
-	// Gpio::TLE8888_6: "7 - Lowside 1"
-	engineConfiguration->injectionPins[7 - 1] = Gpio::TLE8888_6;
+	// Gpio::TLE8888_PIN_6: "7 - Lowside 1"
+	engineConfiguration->injectionPins[7 - 1] = Gpio::TLE8888_PIN_6;
 
 	// LED #10
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// Gpio::TLE8888_5: "3 - Lowside 2"
-	engineConfiguration->injectionPins[2 - 1] = Gpio::TLE8888_5;
+	// Gpio::TLE8888_PIN_5: "3 - Lowside 2"
+	engineConfiguration->injectionPins[2 - 1] = Gpio::TLE8888_PIN_5;
 #endif /* BOARD_TLE8888_COUNT */
 }
 
@@ -710,45 +710,45 @@ void mreBoardNewTest() {
 	engineConfiguration->ignitionPins[5 - 1] = Gpio::D3;
 	engineConfiguration->ignitionPins[6 - 1] = Gpio::D4;
 
-	engineConfiguration->ignitionPins[7 - 1] = Gpio::TLE8888_11;
-	engineConfiguration->ignitionPins[8 - 1] = Gpio::TLE8888_12;
+	engineConfiguration->ignitionPins[7 - 1] = Gpio::TLE8888_PIN_11;
+	engineConfiguration->ignitionPins[8 - 1] = Gpio::TLE8888_PIN_12;
 
 	// LED #8
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  IN12
-	// Gpio::TLE8888_21: "35 - GP Out 1"
-	engineConfiguration->ignitionPins[9 - 1] = Gpio::TLE8888_21;
+	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->ignitionPins[9 - 1] = Gpio::TLE8888_PIN_21;
 
 	// LED #1
-	// Gpio::TLE8888_22: "34 - GP Out 2"
-	engineConfiguration->ignitionPins[10- 1] = Gpio::TLE8888_22;
+	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
+	engineConfiguration->ignitionPins[10- 1] = Gpio::TLE8888_PIN_22;
 
 	// LED #2
-	// Gpio::TLE8888_23: "33 - GP Out 3"
-	engineConfiguration->ignitionPins[11 - 1] = Gpio::TLE8888_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->ignitionPins[11 - 1] = Gpio::TLE8888_PIN_23;
 
 	// LED #7
-	// Gpio::TLE8888_24: "43 - GP Out 4"
-	engineConfiguration->ignitionPins[12 - 1] = Gpio::TLE8888_24;
+	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
+	engineConfiguration->ignitionPins[12 - 1] = Gpio::TLE8888_PIN_24;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_6;
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	// TLE8888 high current low side: IN10
-	// Gpio::TLE8888_6:  "7 - Lowside 1"
-	engineConfiguration->injectionPins[1 - 1] = Gpio::TLE8888_6;
+	// Gpio::TLE8888_PIN_6:  "7 - Lowside 1"
+	engineConfiguration->injectionPins[1 - 1] = Gpio::TLE8888_PIN_6;
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// Gpio::TLE8888_5: "3 - Lowside 2"
-	engineConfiguration->injectionPins[2 - 1] = Gpio::TLE8888_5;
+	// Gpio::TLE8888_PIN_5: "3 - Lowside 2"
+	engineConfiguration->injectionPins[2 - 1] = Gpio::TLE8888_PIN_5;
 
-	// Gpio::TLE8888_4: INJ#4
-	engineConfiguration->injectionPins[3 - 1] = Gpio::TLE8888_4;
-	// Gpio::TLE8888_3: INJ#3
-	engineConfiguration->injectionPins[4 - 1] = Gpio::TLE8888_3;
-	// Gpio::TLE8888_2: INJ#2
-	engineConfiguration->injectionPins[5 - 1] = Gpio::TLE8888_2;
-	// Gpio::TLE8888_1: LED #3 - INJ#1
-	engineConfiguration->injectionPins[6 - 1] = Gpio::TLE8888_1;
+	// Gpio::TLE8888_PIN_4: INJ#4
+	engineConfiguration->injectionPins[3 - 1] = Gpio::TLE8888_PIN_4;
+	// Gpio::TLE8888_PIN_3: INJ#3
+	engineConfiguration->injectionPins[4 - 1] = Gpio::TLE8888_PIN_3;
+	// Gpio::TLE8888_PIN_2: INJ#2
+	engineConfiguration->injectionPins[5 - 1] = Gpio::TLE8888_PIN_2;
+	// Gpio::TLE8888_PIN_1: LED #3 - INJ#1
+	engineConfiguration->injectionPins[6 - 1] = Gpio::TLE8888_PIN_1;
 
 
 	engineConfiguration->injectionPins[7 - 1] = Gpio::A4; // AV10
@@ -756,9 +756,9 @@ void mreBoardNewTest() {
 	engineConfiguration->injectionPins[9  - 1] = Gpio::B0; // AV8
 	engineConfiguration->injectionPins[10 - 1] = Gpio::C4; // AV6
 
-	engineConfiguration->injectionPins[11- 1] = Gpio::TLE8888_13;
+	engineConfiguration->injectionPins[11- 1] = Gpio::TLE8888_PIN_13;
 
-	engineConfiguration->injectionPins[12- 1] = Gpio::TLE8888_10;
+	engineConfiguration->injectionPins[12- 1] = Gpio::TLE8888_PIN_10;
 #endif /* BOARD_TLE8888_COUNT */
 
 }

@@ -399,8 +399,8 @@ void setMiataNA6_MAP_MRE() {
 	engineConfiguration->fanPin = Gpio::Unassigned;
 
 
-	// Gpio::TLE8888_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
 
 #endif /* BOARD_TLE8888_COUNT */
 }
@@ -410,7 +410,7 @@ void setMiata94_MAP_MRE() {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_21;
+	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

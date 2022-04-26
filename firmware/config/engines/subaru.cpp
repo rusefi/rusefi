@@ -52,8 +52,8 @@ void setSubaruEJ18_MRE() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 #if (BOARD_TLE8888_COUNT > 0)
-	// Gpio::TLE8888_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
 #endif /* BOARD_TLE8888_COUNT */
 
 	// this car has high-side main relay WOW so we have to hard wire it to ignition switch

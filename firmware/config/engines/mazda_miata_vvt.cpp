@@ -600,18 +600,18 @@ static void setMiataNB2_MRE_common() {
 
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
-	// Gpio::TLE8888_6:  "7 - Lowside 1"
-	engineConfiguration->vvtPins[0] = Gpio::TLE8888_6; // VVT solenoid control
+	// Gpio::TLE8888_PIN_6:  "7 - Lowside 1"
+	engineConfiguration->vvtPins[0] = Gpio::TLE8888_PIN_6; // VVT solenoid control
 
-	// Gpio::TLE8888_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
 
 
 	// todo: alternator warn
 	// ?
 
 	// todo: AC fan
-	// Gpio::TLE8888_24: "43 - GP Out 4"
+	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7

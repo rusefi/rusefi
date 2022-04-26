@@ -22,10 +22,10 @@
 #include "mre_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::TLE8888_1;
-	engineConfiguration->injectionPins[1] = Gpio::TLE8888_2;
-	engineConfiguration->injectionPins[2] = Gpio::TLE8888_3;
-	engineConfiguration->injectionPins[3] = Gpio::TLE8888_4;
+	engineConfiguration->injectionPins[0] = Gpio::TLE8888_PIN_1;
+	engineConfiguration->injectionPins[1] = Gpio::TLE8888_PIN_2;
+	engineConfiguration->injectionPins[2] = Gpio::TLE8888_PIN_3;
+	engineConfiguration->injectionPins[3] = Gpio::TLE8888_PIN_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -198,18 +198,18 @@ void setBoardDefaultConfiguration() {
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
 	// todo: maybe even set EFI_MAIN_RELAY_CONTROL to FALSE for MRE configuration
 	// TLE8888 half bridges (pushpull, lowside, or high-low)  TLE8888_IN11 / TLE8888_OUT21
-	// Gpio::TLE8888_21: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = Gpio::TLE8888_21;
+	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
 
 //	engineConfiguration->isSdCardEnabled = true;
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// Gpio::E10: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = Gpio::TLE8888_5;
+	engineConfiguration->idle.solenoidPin = Gpio::TLE8888_PIN_5;
 
 
-	// Gpio::TLE8888_22: "34 - GP Out 2"
-	engineConfiguration->fanPin = Gpio::TLE8888_22;
+	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
+	engineConfiguration->fanPin = Gpio::TLE8888_PIN_22;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

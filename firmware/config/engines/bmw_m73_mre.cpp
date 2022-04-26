@@ -88,7 +88,7 @@ void setEngineBMW_M73_microRusEfi() {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// "43 - GP Out 4"
-	engineConfiguration->starterControlPin = Gpio::TLE8888_24;
+	engineConfiguration->starterControlPin = Gpio::TLE8888_PIN_24;
 #endif /* BOARD_TLE8888_COUNT */
 
 

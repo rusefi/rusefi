@@ -115,7 +115,7 @@ void setVwPassatB6() {
 	lowPressureFuelPumpControl->dutyIfError = 50;
 	setTable(lowPressureFuelPumpControl->table, (uint8_t)50);
 	// "42 - Injector 4", somehow GP4 did not work? not enough current? not happy with diode?
-	lowPressureFuelPumpControl->pin = Gpio::TLE8888_4;
+	lowPressureFuelPumpControl->pin = Gpio::TLE8888_PIN_4;
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
@@ -137,7 +137,7 @@ void setVwPassatB6() {
 		}
 	}
 */
-	coolantControl->pin = Gpio::TLE8888_5; // "3 - Lowside 2"
+	coolantControl->pin = Gpio::TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
 	//engineConfiguration->hpfpValvePin = MRE_LS_1;
 	engineConfiguration->disablePrimaryUart = true;
