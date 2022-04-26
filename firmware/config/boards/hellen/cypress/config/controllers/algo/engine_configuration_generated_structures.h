@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:06 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 23:06:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4602,7 +4602,7 @@ struct persistent_config_s {
 	ratio
 	 * offset 21004
 	 */
-	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	scaled_channel<uint16_t, 100, 1> crankingFuelCoefE100[CRANKING_CURVE_SIZE];
 	/**
 	Airmass
 	 * offset 21020
@@ -4697,4 +4697,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21164);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:06 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 23:06:17 UTC 2022
