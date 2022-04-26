@@ -136,10 +136,10 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
 
 	hw.start(
 		true, /* useTwoWires */
-		GPIO_UNASSIGNED, /* pinEnable */
+		Gpio::Unassigned, /* pinEnable */
 		coil_p,
 		coil_m,
-		GPIO_UNASSIGNED, /* pinDisable */
+		Gpio::Unassigned, /* pinDisable */
 		engineConfiguration->stepperDcInvertedPins,
 		&engine->executor,
 		engineConfiguration->etbFreq /* same in case of stepper? */

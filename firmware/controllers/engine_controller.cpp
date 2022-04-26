@@ -623,7 +623,7 @@ bool validateConfig() {
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
@@ -648,13 +648,13 @@ bool validateConfig() {
 	}
 
 	// VVT
-	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[1] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}

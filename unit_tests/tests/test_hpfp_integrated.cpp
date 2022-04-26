@@ -9,7 +9,7 @@
 
 TEST(HPFP, IntegratedSchedule) {
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->hpfpValvePin = GPIOA_2; // arbitrary
+		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
 	engineConfiguration->specs.cylindersCount = 4;

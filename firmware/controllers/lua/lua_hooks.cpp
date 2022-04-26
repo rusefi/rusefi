@@ -31,7 +31,7 @@ static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
 	brain_pin_e pin = parseBrainPin(msg);
-	if (pin == GPIO_INVALID) {
+	if (!isBrainPinValid(pin)) {
 		lua_pushnil(l);
 	} else {
 		int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));

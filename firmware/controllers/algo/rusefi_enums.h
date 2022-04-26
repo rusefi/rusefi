@@ -395,8 +395,6 @@ typedef enum {
 	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
-typedef brain_pin_e output_pin_e;
-
 typedef enum {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,

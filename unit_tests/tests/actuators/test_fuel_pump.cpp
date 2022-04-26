@@ -17,7 +17,7 @@ TEST(Actuators, FuelPump) {
 	FuelPumpController dut;
 
 	// Mock a fuel pump pin
-	engineConfiguration->fuelPumpPin = GPIOA_0;
+	engineConfiguration->fuelPumpPin = Gpio::A0;
 	// Re-init so it picks up the new config
 	enginePins.fuelPumpRelay.init();
 
@@ -26,14 +26,14 @@ TEST(Actuators, FuelPump) {
 	dut.onIgnitionStateChanged(true);
 	dut.onSlowCallback();
 	// Pump should be on!
-	EXPECT_TRUE(efiReadPin(GPIOA_0));
+	EXPECT_TRUE(efiReadPin(Gpio::A0));
 
 	// Long time since ecu start, haven't seen trigger yet
 	dut.onIgnitionStateChanged(true);
 	timeNowUs += 10e6;
 	dut.onSlowCallback();
 	// Pump should be off!
-	EXPECT_FALSE(efiReadPin(GPIOA_0));
+	EXPECT_FALSE(efiReadPin(Gpio::A0));
 
 	// Long time since ecu start, just saw a trigger!
 	dut.onIgnitionStateChanged(true);
@@ -41,12 +41,12 @@ TEST(Actuators, FuelPump) {
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	dut.onSlowCallback();
 	// Pump should be on!
-	EXPECT_TRUE(efiReadPin(GPIOA_0));
+	EXPECT_TRUE(efiReadPin(Gpio::A0));
 
 	// ECU just started, and we just saw a trigger!
 	dut.onIgnitionStateChanged(true);
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	dut.onSlowCallback();
 	// Pump should be on!
-	EXPECT_TRUE(efiReadPin(GPIOA_0));
+	EXPECT_TRUE(efiReadPin(Gpio::A0));
 }
