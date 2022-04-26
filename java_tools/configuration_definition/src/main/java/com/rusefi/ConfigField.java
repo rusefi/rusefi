@@ -88,6 +88,16 @@ public class ConfigField {
         this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
         this.isIterate = isIterate;
+        if (tsInfo != null) {
+            String[] tokens = getTokens();
+            if (tokens.length > 1) {
+                String scale = tokens[1].trim();
+                if (!hasAutoscale && !scale.trim().equals("1")) {
+                    System.out.println("GRRRRRRRRRRRRRRRR " + "Unexpected scale of " + scale + " without autoscale on " + this);
+//                throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
+                }
+            }
+        }
     }
 
     private static int getSize(VariableRegistry variableRegistry, String s) {
@@ -289,7 +299,7 @@ public class ConfigField {
         }
         if (tsInfo == null)
             throw new IllegalArgumentException("tsInfo expected with autoscale");
-        String[] tokens = tsInfo.split(",");
+        String[] tokens = getTokens();
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
 
