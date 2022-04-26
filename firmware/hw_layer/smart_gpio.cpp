@@ -232,7 +232,7 @@ void initSmartGpio() {
 		mc33972.spi_config.sspad = getHwPin("mc33972 CS", engineConfiguration->mc33972_cs);
 		mc33972.spi_bus = getSpiDevice(engineConfiguration->mc33972spiDevice);
 		// todo: propogate 'basePinOffset' parameter
-		int ret = mc33972_add(MC33972_PIN_1, 0, &mc33972);
+		int ret = mc33972_add(Gpio::MC33972_PIN_1, 0, &mc33972);
 
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == (int)Gpio::MC33972_PIN_1, "mc33972");
 	}
