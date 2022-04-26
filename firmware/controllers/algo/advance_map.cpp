@@ -186,12 +186,12 @@ size_t getMultiSparkCount(int rpm) {
 			return 0;
 		}
 
-		floatus_t multiDelay = engineConfiguration->multisparkSparkDuration;
-		floatus_t multiDwell = engineConfiguration->multisparkDwell;
+		floatms_t multiDelay = engineConfiguration->multisparkSparkDuration;
+		floatms_t multiDwell = engineConfiguration->multisparkDwell;
 
-        // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
-		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
-		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
+		// dwell times are below 10 seconds here so we use 32 bit type for performance reasons
+		engine->engineState.multispark.delay = (uint32_t)MSF2NT(multiDelay);
+		engine->engineState.multispark.dwell = (uint32_t)MSF2NT(multiDwell);
 
 		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
 		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;

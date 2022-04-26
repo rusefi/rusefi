@@ -5,8 +5,8 @@
 
 static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
-	engineConfiguration->multisparkSparkDuration = 1000;
-	engineConfiguration->multisparkDwell = 2000;
+	engineConfiguration->multisparkSparkDuration = 1;
+	engineConfiguration->multisparkDwell = 2;
 
 	// Conservative defaults - probably won't blow up coils
 	engineConfiguration->multisparkMaxRpm = 1500;
