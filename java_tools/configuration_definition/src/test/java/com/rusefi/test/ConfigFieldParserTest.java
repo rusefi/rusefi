@@ -209,7 +209,7 @@ public class ConfigFieldParserTest {
     @Test
     public void expressionInMultiplier() throws IOException {
         String test = "struct pid_s\n" +
-                "\tint16_t periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
+                "\tint16_t autoscale periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
                 "\tint16_t periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "custom afr_table_t 4x4 array,   U08,   @OFFSET@, [4x4],\"deg\",\t   {1/10},     0,        0,  25.0,     1 \n" +
                 "afr_table_t afrTable;\t\t\n" +
@@ -632,11 +632,11 @@ public class ConfigFieldParserTest {
             assertEquals(cf.getName(), "fie4_ld");
         }
         {
-            ConfigField cf = ConfigField.parse(state, "int_8 fi_eld;comm_;ts");
+            ConfigField cf = ConfigField.parse(state, "int_8 fi_eld;comm_;ts,1,1");
             assertEquals(cf.getType(), "int_8");
             assertEquals(cf.getName(), "fi_eld");
             assertEquals("Comment", cf.getComment(), "comm_");
-            assertEquals(cf.getTsInfo(), "ts");
+            assertEquals(cf.getTsInfo(), "ts,1,1");
         }
         {
             ConfigField cf = ConfigField.parse(state, "int[3 iterate] field");
