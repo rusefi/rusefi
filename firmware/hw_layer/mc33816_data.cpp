@@ -8,7 +8,9 @@
  * see mc33816/rusefi/readme.md
  */
 
-#include "global.h"
+#include "pch.h"
+
+#include "mc33816_data.h"
 
 #if EFI_MC33816
 

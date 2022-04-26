@@ -7,8 +7,7 @@
  * @brief	Lower-level code related to internal flash memory
  */
 
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
 
 #if EFI_INTERNAL_FLASH
 

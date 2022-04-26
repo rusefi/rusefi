@@ -16,7 +16,6 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "os_util.h"
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"

@@ -36,7 +36,6 @@
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
-#include "os_util.h"
 /*
  * TODO list:
  *  - just write code

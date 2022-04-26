@@ -15,7 +15,6 @@
 #include "os_access.h"
 #include "event_queue.h"
 #include "efitime.h"
-#include "os_util.h"
 
 #if EFI_UNIT_TEST
 extern int timeNowUs;

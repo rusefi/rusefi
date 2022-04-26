@@ -20,7 +20,6 @@
 #include "tooth_logger.h"
 
 #if EFI_PROD_CODE
-#include "os_util.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SENSOR_CHART

@@ -31,7 +31,6 @@
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"
-#include "os_util.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
