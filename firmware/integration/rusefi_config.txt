@@ -1707,7 +1707,7 @@ uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 400, 0
 uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] fuelTrims
 
-uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
+uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 
 uint8_t[8] tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
 uint8_t[8] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
