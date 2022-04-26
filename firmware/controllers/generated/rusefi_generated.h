@@ -39,7 +39,6 @@
 #define adc_channel_mode_e_Force_4_bytes_size_adc_channel_mode ENUM_32_BITS
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 556
-#define afr_alignmentFill_afr_offset 569
 #define afr_hwChannel_offset 568
 #define afr_offset 568
 #define afr_sensor_s_size 20
@@ -112,14 +111,12 @@
 #define auxAnalogInputs7_offset 1954
 #define auxAnalogInputs8_offset 1955
 #define auxFastSensor1_adcChannel_offset 688
-#define auxLinear1_alignmentFill_offset 4753
 #define auxLinear1_hwChannel_offset 4752
 #define auxLinear1_offset 4752
 #define auxLinear1_v1_offset 4756
 #define auxLinear1_v2_offset 4764
 #define auxLinear1_value1_offset 4760
 #define auxLinear1_value2_offset 4768
-#define auxLinear2_alignmentFill_offset 4773
 #define auxLinear2_hwChannel_offset 4772
 #define auxLinear2_offset 4772
 #define auxLinear2_v1_offset 4776
@@ -174,7 +171,6 @@
 #define baroCorrPressureBins_offset 1316
 #define baroCorrRpmBins_offset 1332
 #define baroCorrTable_offset 1348
-#define baroSensor_alignmentFill_offset 605
 #define baroSensor_highValue_offset 596
 #define baroSensor_hwChannel_offset 604
 #define baroSensor_lowValue_offset 592
@@ -1277,7 +1273,6 @@
 #define HD44780_rs_offset 658
 #define HD44780height_offset 516
 #define HD44780width_offset 512
-#define highPressureFuel_alignmentFill_offset 2881
 #define highPressureFuel_hwChannel_offset 2880
 #define highPressureFuel_offset 2880
 #define highPressureFuel_v1_offset 2884
@@ -1635,7 +1630,6 @@
 #define logicAnalyzerPins2_offset 753
 #define logicAnalyzerPins3_offset 754
 #define logicAnalyzerPins4_offset 755
-#define lowPressureFuel_alignmentFill_offset 2901
 #define lowPressureFuel_hwChannel_offset 2900
 #define lowPressureFuel_offset 2900
 #define lowPressureFuel_v1_offset 2904
@@ -1681,7 +1675,6 @@
 #define map_samplingAngleBins_offset 196
 #define map_samplingWindow_offset 292
 #define map_samplingWindowBins_offset 260
-#define map_sensor_alignmentFill_offset 337
 #define MAP_sensor_config_s_size 144
 #define map_sensor_highValue_offset 328
 #define map_sensor_hwChannel_offset 336
@@ -1755,7 +1748,6 @@
 #define noFuelTrimAfterDfcoTime_offset 1691
 #define o2heaterPin_offset 746
 #define o2heaterPinModeTodO_offset 747
-#define oilPressure_alignmentFill_offset 2289
 #define oilPressure_hwChannel_offset 2288
 #define oilPressure_offset 2288
 #define oilPressure_v1_offset 2292
@@ -1945,7 +1937,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 36074707
+#define SIGNATURE_HASH 3390316582
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2527,7 +2519,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.25.all.36074707"
+#define TS_SIGNATURE "rusEFI 2022.04.26.all.3390316582"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

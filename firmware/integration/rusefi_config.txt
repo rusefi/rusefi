@@ -396,7 +396,6 @@ float lowValue;kPa value at low volts;"kpa", 1, 0, -400, 800, 2
 float highValue;kPa value at high volts;"kpa", 1, 0, -400, 800, 2
 air_pressure_sensor_type_e type;
 adc_channel_e hwChannel;
-uint8_t[3] alignmentFill;;"unit", 1, 0, 0, 100, 0
 
 end_struct
 
@@ -421,7 +420,6 @@ end_struct
 
 struct linear_sensor_s @brief Linear sensor interpolation
 	adc_channel_e hwChannel;
-	uint8_t[3] alignmentFill;;"unit", 1, 0, 0, 100, 0
 	float v1;;"volts", 1, 0, 0, 10, 2
 	float value1;;"kPa", 1, 0, 0, 1000000, 2
 	float v2;;"volts", 1, 0, 0, 10, 2
@@ -632,7 +630,6 @@ float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 	
 struct afr_sensor_s
 	adc_channel_e hwChannel;
-uint8_t[3] alignmentFill_afr;;"unit", 1, 0, 0, 100, 0
 	float v1;;"volts", 1, 0, 0, 10, 2
 	float value1;;"AFR", 1, 0, 0, 1000, 2
 	float v2;;"volts", 1, 0, 0, 10, 2

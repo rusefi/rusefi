@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Apr 25 06:18:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:06 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -252,10 +252,11 @@ struct air_pressure_sensor_config_s {
 	 */
 	adc_channel_e hwChannel;
 	/**
-	unit
+	 * need 4 byte alignment
+	units
 	 * offset 13
 	 */
-	uint8_t alignmentFill[3];
+	uint8_t alignmentFill_at_13[3];
 };
 static_assert(sizeof(air_pressure_sensor_config_s) == 16);
 
@@ -349,10 +350,11 @@ struct linear_sensor_s {
 	 */
 	adc_channel_e hwChannel;
 	/**
-	unit
+	 * need 4 byte alignment
+	units
 	 * offset 1
 	 */
-	uint8_t alignmentFill[3];
+	uint8_t alignmentFill_at_1[3];
 	/**
 	volts
 	 * offset 4
@@ -576,10 +578,11 @@ struct afr_sensor_s {
 	 */
 	adc_channel_e hwChannel;
 	/**
-	unit
+	 * need 4 byte alignment
+	units
 	 * offset 1
 	 */
-	uint8_t alignmentFill_afr[3];
+	uint8_t alignmentFill_at_1[3];
 	/**
 	volts
 	 * offset 4
@@ -4694,4 +4697,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21164);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Apr 25 06:18:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Apr 26 01:40:06 UTC 2022

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Apr 25 22:19:11 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 01:40:09 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -39,7 +39,6 @@ public class Fields {
 	public static final int adc_channel_mode_e_ADC_SLOW = 1;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 556;
-	public static final int afr_alignmentFill_afr_offset = 569;
 	public static final int afr_hwChannel_offset = 568;
 	public static final int afr_offset = 568;
 	public static final int afr_sensor_s_size = 20;
@@ -107,14 +106,12 @@ public class Fields {
 	public static final int auxAnalogInputs7_offset = 1954;
 	public static final int auxAnalogInputs8_offset = 1955;
 	public static final int auxFastSensor1_adcChannel_offset = 688;
-	public static final int auxLinear1_alignmentFill_offset = 4753;
 	public static final int auxLinear1_hwChannel_offset = 4752;
 	public static final int auxLinear1_offset = 4752;
 	public static final int auxLinear1_v1_offset = 4756;
 	public static final int auxLinear1_v2_offset = 4764;
 	public static final int auxLinear1_value1_offset = 4760;
 	public static final int auxLinear1_value2_offset = 4768;
-	public static final int auxLinear2_alignmentFill_offset = 4773;
 	public static final int auxLinear2_hwChannel_offset = 4772;
 	public static final int auxLinear2_offset = 4772;
 	public static final int auxLinear2_v1_offset = 4776;
@@ -169,7 +166,6 @@ public class Fields {
 	public static final int baroCorrPressureBins_offset = 1316;
 	public static final int baroCorrRpmBins_offset = 1332;
 	public static final int baroCorrTable_offset = 1348;
-	public static final int baroSensor_alignmentFill_offset = 605;
 	public static final int baroSensor_highValue_offset = 596;
 	public static final int baroSensor_hwChannel_offset = 604;
 	public static final int baroSensor_lowValue_offset = 592;
@@ -1241,7 +1237,6 @@ public class Fields {
 	public static final int HD44780_rs_offset = 658;
 	public static final int HD44780height_offset = 516;
 	public static final int HD44780width_offset = 512;
-	public static final int highPressureFuel_alignmentFill_offset = 2881;
 	public static final int highPressureFuel_hwChannel_offset = 2880;
 	public static final int highPressureFuel_offset = 2880;
 	public static final int highPressureFuel_v1_offset = 2884;
@@ -1579,7 +1574,6 @@ public class Fields {
 	public static final int logicAnalyzerPins2_offset = 753;
 	public static final int logicAnalyzerPins3_offset = 754;
 	public static final int logicAnalyzerPins4_offset = 755;
-	public static final int lowPressureFuel_alignmentFill_offset = 2901;
 	public static final int lowPressureFuel_hwChannel_offset = 2900;
 	public static final int lowPressureFuel_offset = 2900;
 	public static final int lowPressureFuel_v1_offset = 2904;
@@ -1622,7 +1616,6 @@ public class Fields {
 	public static final int map_samplingAngleBins_offset = 196;
 	public static final int map_samplingWindow_offset = 292;
 	public static final int map_samplingWindowBins_offset = 260;
-	public static final int map_sensor_alignmentFill_offset = 337;
 	public static final int MAP_sensor_config_s_size = 144;
 	public static final int map_sensor_highValue_offset = 328;
 	public static final int map_sensor_hwChannel_offset = 336;
@@ -1696,7 +1689,6 @@ public class Fields {
 	public static final int noFuelTrimAfterDfcoTime_offset = 1691;
 	public static final int o2heaterPin_offset = 746;
 	public static final int o2heaterPinModeTodO_offset = 747;
-	public static final int oilPressure_alignmentFill_offset = 2289;
 	public static final int oilPressure_hwChannel_offset = 2288;
 	public static final int oilPressure_offset = 2288;
 	public static final int oilPressure_v1_offset = 2292;
@@ -1871,7 +1863,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 36074707;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2391,7 +2382,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.25.all.36074707";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.26.all.3390316582";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1012;
@@ -2661,7 +2652,7 @@ public class Fields {
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 332, FieldType.INT).setScale(1.0);
 	public static final String[] adc_channel_e = {"Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 336, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field MAP_SENSOR_ALIGNMENTFILL = Field.create("MAP_SENSOR_ALIGNMENTFILL", 337, FieldType.INT8).setScale(1.0);
+	public static final Field MAP_SENSOR_ALIGNMENTFILL_AT_13 = Field.create("MAP_SENSOR_ALIGNMENTFILL_AT_13", 337, FieldType.INT8).setScale(1.0);
 	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 340, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 344, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_3 = Field.create("CLT_TEMPC_3", 348, FieldType.FLOAT);
@@ -2768,7 +2759,7 @@ public class Fields {
 	public static final Field CAMINPUTS4 = Field.create("CAMINPUTS4", 567, FieldType.INT8, brain_input_pin_e).setScale(1.0);
 	public static final Field CAMINPUTSPADDING = Field.create("CAMINPUTSPADDING", 568, FieldType.INT8).setScale(1.0);
 	public static final Field AFR_HWCHANNEL = Field.create("AFR_HWCHANNEL", 568, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field AFR_ALIGNMENTFILL_AFR = Field.create("AFR_ALIGNMENTFILL_AFR", 569, FieldType.INT8).setScale(1.0);
+	public static final Field AFR_ALIGNMENTFILL_AT_1 = Field.create("AFR_ALIGNMENTFILL_AT_1", 569, FieldType.INT8).setScale(1.0);
 	public static final Field AFR_V1 = Field.create("AFR_V1", 572, FieldType.FLOAT);
 	public static final Field AFR_VALUE1 = Field.create("AFR_VALUE1", 576, FieldType.FLOAT);
 	public static final Field AFR_V2 = Field.create("AFR_V2", 580, FieldType.FLOAT);
@@ -2784,7 +2775,7 @@ public class Fields {
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 596, FieldType.FLOAT);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 600, FieldType.INT).setScale(1.0);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 604, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field BAROSENSOR_ALIGNMENTFILL = Field.create("BAROSENSOR_ALIGNMENTFILL", 605, FieldType.INT8).setScale(1.0);
+	public static final Field BAROSENSOR_ALIGNMENTFILL_AT_13 = Field.create("BAROSENSOR_ALIGNMENTFILL_AT_13", 605, FieldType.INT8).setScale(1.0);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 608, FieldType.INT).setScale(1.0);
 	public static final String[] output_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 612, FieldType.INT8, output_pin_e).setScale(1.0);
@@ -3519,7 +3510,7 @@ public class Fields {
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL8 = Field.create("INJECTORCORRECTIONPOLYNOMIAL8", 2276, FieldType.FLOAT);
 	public static final Field PRIMEBINS = Field.create("PRIMEBINS", 2280, FieldType.INT8).setScale(1.0);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2288, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field OILPRESSURE_ALIGNMENTFILL = Field.create("OILPRESSURE_ALIGNMENTFILL", 2289, FieldType.INT8).setScale(1.0);
+	public static final Field OILPRESSURE_ALIGNMENTFILL_AT_1 = Field.create("OILPRESSURE_ALIGNMENTFILL_AT_1", 2289, FieldType.INT8).setScale(1.0);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2292, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE1 = Field.create("OILPRESSURE_VALUE1", 2296, FieldType.FLOAT);
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2300, FieldType.FLOAT);
@@ -3559,13 +3550,13 @@ public class Fields {
 	public static final Field IACCOASTINGBINS = Field.create("IACCOASTINGBINS", 2752, FieldType.FLOAT);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 2816, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_HWCHANNEL = Field.create("HIGHPRESSUREFUEL_HWCHANNEL", 2880, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field HIGHPRESSUREFUEL_ALIGNMENTFILL = Field.create("HIGHPRESSUREFUEL_ALIGNMENTFILL", 2881, FieldType.INT8).setScale(1.0);
+	public static final Field HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1 = Field.create("HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1", 2881, FieldType.INT8).setScale(1.0);
 	public static final Field HIGHPRESSUREFUEL_V1 = Field.create("HIGHPRESSUREFUEL_V1", 2884, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_VALUE1 = Field.create("HIGHPRESSUREFUEL_VALUE1", 2888, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_V2 = Field.create("HIGHPRESSUREFUEL_V2", 2892, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_VALUE2 = Field.create("HIGHPRESSUREFUEL_VALUE2", 2896, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_HWCHANNEL = Field.create("LOWPRESSUREFUEL_HWCHANNEL", 2900, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field LOWPRESSUREFUEL_ALIGNMENTFILL = Field.create("LOWPRESSUREFUEL_ALIGNMENTFILL", 2901, FieldType.INT8).setScale(1.0);
+	public static final Field LOWPRESSUREFUEL_ALIGNMENTFILL_AT_1 = Field.create("LOWPRESSUREFUEL_ALIGNMENTFILL_AT_1", 2901, FieldType.INT8).setScale(1.0);
 	public static final Field LOWPRESSUREFUEL_V1 = Field.create("LOWPRESSUREFUEL_V1", 2904, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_VALUE1 = Field.create("LOWPRESSUREFUEL_VALUE1", 2908, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_V2 = Field.create("LOWPRESSUREFUEL_V2", 2912, FieldType.FLOAT);
@@ -3808,13 +3799,13 @@ public class Fields {
 	public static final Field GEARCONTROLLERMODE = Field.create("GEARCONTROLLERMODE", 4750, FieldType.INT8).setScale(1.0);
 	public static final Field TRANSMISSIONCONTROLLERMODE = Field.create("TRANSMISSIONCONTROLLERMODE", 4751, FieldType.INT8).setScale(1.0);
 	public static final Field AUXLINEAR1_HWCHANNEL = Field.create("AUXLINEAR1_HWCHANNEL", 4752, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field AUXLINEAR1_ALIGNMENTFILL = Field.create("AUXLINEAR1_ALIGNMENTFILL", 4753, FieldType.INT8).setScale(1.0);
+	public static final Field AUXLINEAR1_ALIGNMENTFILL_AT_1 = Field.create("AUXLINEAR1_ALIGNMENTFILL_AT_1", 4753, FieldType.INT8).setScale(1.0);
 	public static final Field AUXLINEAR1_V1 = Field.create("AUXLINEAR1_V1", 4756, FieldType.FLOAT);
 	public static final Field AUXLINEAR1_VALUE1 = Field.create("AUXLINEAR1_VALUE1", 4760, FieldType.FLOAT);
 	public static final Field AUXLINEAR1_V2 = Field.create("AUXLINEAR1_V2", 4764, FieldType.FLOAT);
 	public static final Field AUXLINEAR1_VALUE2 = Field.create("AUXLINEAR1_VALUE2", 4768, FieldType.FLOAT);
 	public static final Field AUXLINEAR2_HWCHANNEL = Field.create("AUXLINEAR2_HWCHANNEL", 4772, FieldType.INT8, adc_channel_e).setScale(1.0);
-	public static final Field AUXLINEAR2_ALIGNMENTFILL = Field.create("AUXLINEAR2_ALIGNMENTFILL", 4773, FieldType.INT8).setScale(1.0);
+	public static final Field AUXLINEAR2_ALIGNMENTFILL_AT_1 = Field.create("AUXLINEAR2_ALIGNMENTFILL_AT_1", 4773, FieldType.INT8).setScale(1.0);
 	public static final Field AUXLINEAR2_V1 = Field.create("AUXLINEAR2_V1", 4776, FieldType.FLOAT);
 	public static final Field AUXLINEAR2_VALUE1 = Field.create("AUXLINEAR2_VALUE1", 4780, FieldType.FLOAT);
 	public static final Field AUXLINEAR2_V2 = Field.create("AUXLINEAR2_V2", 4784, FieldType.FLOAT);
@@ -4022,7 +4013,7 @@ public class Fields {
 	MAP_SENSOR_HIGHVALUE,
 	MAP_SENSOR_TYPE,
 	MAP_SENSOR_HWCHANNEL,
-	MAP_SENSOR_ALIGNMENTFILL,
+	MAP_SENSOR_ALIGNMENTFILL_AT_13,
 	CLT_TEMPC_1,
 	CLT_TEMPC_2,
 	CLT_TEMPC_3,
@@ -4126,7 +4117,7 @@ public class Fields {
 	CAMINPUTS4,
 	CAMINPUTSPADDING,
 	AFR_HWCHANNEL,
-	AFR_ALIGNMENTFILL_AFR,
+	AFR_ALIGNMENTFILL_AT_1,
 	AFR_V1,
 	AFR_VALUE1,
 	AFR_V2,
@@ -4139,7 +4130,7 @@ public class Fields {
 	BAROSENSOR_HIGHVALUE,
 	BAROSENSOR_TYPE,
 	BAROSENSOR_HWCHANNEL,
-	BAROSENSOR_ALIGNMENTFILL,
+	BAROSENSOR_ALIGNMENTFILL_AT_13,
 	IDLE_SOLENOIDFREQUENCY,
 	IDLE_SOLENOIDPIN,
 	IDLE_STEPPERDIRECTIONPIN,
@@ -4860,7 +4851,7 @@ public class Fields {
 	INJECTORCORRECTIONPOLYNOMIAL8,
 	PRIMEBINS,
 	OILPRESSURE_HWCHANNEL,
-	OILPRESSURE_ALIGNMENTFILL,
+	OILPRESSURE_ALIGNMENTFILL_AT_1,
 	OILPRESSURE_V1,
 	OILPRESSURE_VALUE1,
 	OILPRESSURE_V2,
@@ -4900,13 +4891,13 @@ public class Fields {
 	IACCOASTINGBINS,
 	IACCOASTING,
 	HIGHPRESSUREFUEL_HWCHANNEL,
-	HIGHPRESSUREFUEL_ALIGNMENTFILL,
+	HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1,
 	HIGHPRESSUREFUEL_V1,
 	HIGHPRESSUREFUEL_VALUE1,
 	HIGHPRESSUREFUEL_V2,
 	HIGHPRESSUREFUEL_VALUE2,
 	LOWPRESSUREFUEL_HWCHANNEL,
-	LOWPRESSUREFUEL_ALIGNMENTFILL,
+	LOWPRESSUREFUEL_ALIGNMENTFILL_AT_1,
 	LOWPRESSUREFUEL_V1,
 	LOWPRESSUREFUEL_VALUE1,
 	LOWPRESSUREFUEL_V2,
@@ -5146,13 +5137,13 @@ public class Fields {
 	GEARCONTROLLERMODE,
 	TRANSMISSIONCONTROLLERMODE,
 	AUXLINEAR1_HWCHANNEL,
-	AUXLINEAR1_ALIGNMENTFILL,
+	AUXLINEAR1_ALIGNMENTFILL_AT_1,
 	AUXLINEAR1_V1,
 	AUXLINEAR1_VALUE1,
 	AUXLINEAR1_V2,
 	AUXLINEAR1_VALUE2,
 	AUXLINEAR2_HWCHANNEL,
-	AUXLINEAR2_ALIGNMENTFILL,
+	AUXLINEAR2_ALIGNMENTFILL_AT_1,
 	AUXLINEAR2_V1,
 	AUXLINEAR2_VALUE1,
 	AUXLINEAR2_V2,
