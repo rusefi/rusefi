@@ -16,7 +16,7 @@ pins:
   
   - pin: A3
     # H144_OUT_PWM2
-    id: GPIOC_6
+    id: C6
     class: outputs
     function: Fuel Pump Relay Output (low)
     type: ls
@@ -25,7 +25,7 @@ pins:
 
   - pin: A4
     # H144_OUT_PWM3
-    id: GPIOC_7
+    id: C7
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
@@ -38,7 +38,7 @@ pins:
 
   - pin: A6
     # H144_IGN_1
-    id: GPIOC_13
+    id: C13
     class: outputs
     function: Smart Ignition A Output
     type: ign
@@ -47,7 +47,7 @@ pins:
 
   - pin: A7
     # H144_IGN_2
-    id: GPIOE_5
+    id: E5
     class: outputs
     function: Smart Ignition B Output
     type: ign
@@ -56,7 +56,7 @@ pins:
 
   - pin: A8
     # H144_LS_1
-    id: GPIOG_7
+    id: G7
     function: Injector A Output
     class: outputs
     type: inj
@@ -123,7 +123,7 @@ pins:
 
   - pin: B8
     # H144_LS_2
-    id: GPIOG_8
+    id: G8
     function: Injector B Output
     class: outputs
     type: inj
@@ -132,7 +132,7 @@ pins:
 
   - pin: C1
     # H144_OUT_PWM4
-    id: GPIOC_8
+    id: C8
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls
@@ -141,7 +141,7 @@ pins:
 
   - pin: C2
     # H144_IN_D_3
-    id: [GPIOE_14, GPIOE_14]
+    id: [E14, E14]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor -
     type: hall
@@ -150,7 +150,7 @@ pins:
 
   - pin: C3
     # H144_IN_D_1
-    id: [GPIOE_12, GPIOE_12]
+    id: [E12, E12]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor +
     type: hall
@@ -159,7 +159,7 @@ pins:
 
   - pin: C2C3
     # H144_IN_CRANK
-    id: GPIOB_1
+    id: B1
     class: event_inputs
     function: Crank Sensor (VR)
     type: hall
@@ -168,7 +168,7 @@ pins:
 
   - pin: C4
     # H144_IN_VSS
-    id: GPIOF_11
+    id: F11
     class: switch_inputs
     function: 2Step Digital Input
     type: hall
@@ -187,7 +187,7 @@ pins:
 
   - pin: C7
     # H144_IN_CAM
-    id: [GPIOA_6, GPIOA_6, EFI_ADC_6]
+    id: [A6, A6, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall
@@ -196,7 +196,7 @@ pins:
 
   - pin: C8
     # H144_OUT_PWM1
-    id: GPIOD_13
+    id: D13
     class: outputs
     function: Idle Output (low)
     type: ls

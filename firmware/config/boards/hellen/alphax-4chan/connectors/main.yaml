@@ -13,7 +13,7 @@ pins:
 
   - pin: A3
     # H144_OUT_IO12
-    id: GPIOA_8
+    id: A8
     class: outputs
     function: Fuel Pump Relay Output (low)
     type: ls
@@ -22,7 +22,7 @@ pins:
 
   - pin: A4
     # H144_OUT_IO13
-    id: GPIOG_6
+    id: G6
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
@@ -35,7 +35,7 @@ pins:
 
   - pin: A6
     # H144_IGN_1
-    id: GPIOC_13
+    id: C13
     class: outputs
     function: Smart Ignition 1
     type: ign
@@ -44,7 +44,7 @@ pins:
 
   - pin: A7
     # H144_IGN_2
-    id: GPIOE_5
+    id: E5
     class: outputs
     function: Smart Ignition 2 Output
     type: ign
@@ -53,7 +53,7 @@ pins:
 
   - pin: A8
     # H144_LS_1
-    id: GPIOG_7
+    id: G7
     function: Injector 1 Output
     class: outputs
     type: inj
@@ -120,7 +120,7 @@ pins:
 
   - pin: B8
     # H144_LS_2
-    id: GPIOG_8
+    id: G8
     function: Injector 2 Output
     class: outputs
     type: inj
@@ -129,7 +129,7 @@ pins:
 
   - pin: C1
     # H144_OUT_PWM4
-    id: GPIOC_8
+    id: C8
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls
@@ -138,7 +138,7 @@ pins:
 
   - pin: C2
     # H144_IN_D_3
-    id: [GPIOE_14, GPIOE_14]
+    id: [E14, E14]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor -
     type: hall
@@ -147,7 +147,7 @@ pins:
 
   - pin: C3
     # H144_IN_D_1
-    id: [GPIOE_12, GPIOE_12]
+    id: [E12, E12]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor +
     type: hall
@@ -156,7 +156,7 @@ pins:
 
   - pin: C2C3
     # H144_IN_CRANK
-    id: GPIOB_1
+    id: B1
     class: event_inputs
     function: Crank Sensor (VR)
     type: hall
@@ -165,7 +165,7 @@ pins:
 
   - pin: C4
     # H144_IN_VSS
-    id: GPIOF_11
+    id: F11
     class: switch_inputs
     function: 2Step Digital Input
     type: hall
@@ -184,7 +184,7 @@ pins:
 
   - pin: C7
     # H144_IN_CAM
-    id: [GPIOA_6, GPIOA_6, EFI_ADC_6]
+    id: [A6, A6, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall
@@ -193,7 +193,7 @@ pins:
 
   - pin: C8
     # H144_OUT_PWM1
-    id: GPIOD_13
+    id: D13
     class: outputs
     function: Idle Output (low)
     type: ls
@@ -202,7 +202,7 @@ pins:
 
   - pin: D1
     # H144_LS_3
-    id: GPIOD_11
+    id: D11
     function: Injector 3
     class: outputs
     type: inj
@@ -211,7 +211,7 @@ pins:
 
   - pin: D2
     # H144_OUT_PWM3
-    id: GPIOC_7
+    id: C7
     function: Out Boost
     class: outputs
     ts_name: D2 - Out Boost
@@ -219,7 +219,7 @@ pins:
 
   - pin: D3
     # H144_IN_SENS1
-    id: GPIOF_3
+    id: F3
     class: switch_inputs
     function: Digital Input 2
     type: hall
@@ -244,7 +244,7 @@ pins:
 
   - pin: D6
     # H144_IGN_3
-    id: GPIOE_4
+    id: E4
     class: outputs
     function: Smart Ignition 3 Output
     type: ign
@@ -253,7 +253,7 @@ pins:
 
   - pin: D7
     # H144_IGN_4
-    id: GPIOE_3
+    id: E3
     class: outputs
     function: Smart Ignition 4 Output
     type: ign
@@ -267,7 +267,7 @@ pins:
 
   - pin: E1
     # H144_LS_4
-    id: GPIOD_10
+    id: D10
     function: Injector 4
     class: outputs
     type: inj
@@ -276,7 +276,7 @@ pins:
 
   - pin: E2
     # H144_OUT_IO6
-    id: GPIOG_11
+    id: G11
     function: Out NOS
     class: outputs
     ts_name: E2 - Out NOS
@@ -284,7 +284,7 @@ pins:
 
   - pin: E3
     # H144_IN_SENS2
-    id: GPIOF_4
+    id: F4
     class: switch_inputs
     function: Digital Input 3
     type: hall
@@ -293,7 +293,7 @@ pins:
 
   - pin: E4
     # H144_IN_SENS3
-    id: GPIOF_5
+    id: F5
     class: switch_inputs
     function: Digital Input 4
     type: hall
@@ -306,7 +306,7 @@ pins:
 
   - pin: E6
     # H144_IN_D_4
-    id: [GPIOE_15, GPIOE_15]
+    id: [E15, E15]
     class: [event_inputs, switch_inputs]
     function: Cam Sensor VR+ as Hall
     type: hall
@@ -315,7 +315,7 @@ pins:
 
   - pin: E5E6
     # H144_IN_RES1
-    id: GPIOF_9
+    id: F9
     class: event_inputs
     function: Cam Sensor (VR)
     type: vr
@@ -324,7 +324,7 @@ pins:
 
   - pin: E7
     # H144_IN_D_AUX4
-    id: GPIOA_7
+    id: A7
     class: event_inputs
     ts_name: E7 - Flex
     function: Digital Input / Flex fuel sensor
@@ -337,7 +337,7 @@ pins:
 
   - pin: F1
     # H144_OUT_PWM5
-    id: GPIOC_9
+    id: C9
     class: outputs
     function: Idle2 Output (low)
     type: ls
@@ -346,7 +346,7 @@ pins:
 
   - pin: F2
     # H144_OUT_PWM7
-    id: GPIOD_15
+    id: D15
     function: VVT#1
     class: outputs
     type: ls
@@ -356,7 +356,7 @@ pins:
   # also used as knock input (is hard-coded at the moment)
   - pin: F3
     # H144_IN_SENS4
-    id: GPIOF_6
+    id: F6
     class: switch_inputs
     function: Digital Input 5 / Knock Input
     type: hall
@@ -365,7 +365,7 @@ pins:
 
   - pin: F4
     # H144_OUT_PWM8
-    id: GPIOD_12
+    id: D12
     function: VVT#2
     class: outputs
     type: ls
@@ -374,7 +374,7 @@ pins:
 
   - pin: F5
     # H144_OUT_IO10
-    id: GPIOG_12
+    id: G12
     class: outputs
     ts_name: F5 - MAIN
     function: Main relay control
