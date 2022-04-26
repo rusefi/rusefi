@@ -93,7 +93,7 @@ extern engine_configuration_s & activeConfiguration;
 // so we need to tell the firmware that it's "void" (i.e. zeroed, invalid) by setting a special flag variable,
 // and then we consider 'x' as changed if it's just non-zero.
 extern bool isActiveConfigurationVoid;
-#define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && engineConfiguration->x != 0))
+#define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && (int)(engineConfiguration->x) != 0))
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
