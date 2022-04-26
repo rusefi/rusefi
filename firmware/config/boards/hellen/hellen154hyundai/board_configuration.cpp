@@ -23,21 +23,21 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOC_13;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
+	engineConfiguration->ignitionPins[0] = Gpio::C13;
+	engineConfiguration->ignitionPins[1] = Gpio::E5;
+	engineConfiguration->ignitionPins[2] = Gpio::E4;
+	engineConfiguration->ignitionPins[3] = Gpio::E3;
 	
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -60,8 +60,8 @@ static void setupVbatt() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
@@ -110,9 +110,9 @@ void setBoardConfigOverrides() {
 	if (hellenBoardId == 0) {
 		// first revision of did not have Hellen Board ID
 		// https://github.com/rusefi/hellen154hyundai/issues/55
-		engineConfiguration->etbIo[1].directionPin1 = GPIO_UNASSIGNED;
-		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
-		engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
+		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
+		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
+		engineConfiguration->etbIo[1].controlPin = Gpio::Unassigned;
 
 		if (isFirstInvocation) {
 			isFirstInvocation = false;
@@ -153,9 +153,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
 	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
-//	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-//	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+//	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
 
 	engineConfiguration->brakePedalPin = H144_IN_RES3;

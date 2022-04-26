@@ -63,19 +63,19 @@ void setBoardOverrides() {
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_14;
 
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::E7;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_1;
-	engineConfiguration->tle6240_cs = GPIOB_0;
+	engineConfiguration->tle6240_cs = Gpio::B0;
 	
 	// todo:
 	int i;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
@@ -88,10 +88,10 @@ void setBoardOverrides() {
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOC_7;
-	engineConfiguration->binarySerialRxPin = GPIOC_6;
-//	engineConfiguration->consoleSerialTxPin = GPIOA_10;
-//	engineConfiguration->consoleSerialRxPin = GPIOA_11;
+	engineConfiguration->binarySerialTxPin = Gpio::C7;
+	engineConfiguration->binarySerialRxPin = Gpio::C6;
+//	engineConfiguration->consoleSerialTxPin = Gpio::A10;
+//	engineConfiguration->consoleSerialRxPin = Gpio::A11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }

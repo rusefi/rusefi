@@ -24,23 +24,23 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOC_13;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
-	engineConfiguration->ignitionPins[4] = GPIOE_2;
-	engineConfiguration->ignitionPins[5] = GPIOB_8;
+	engineConfiguration->ignitionPins[0] = Gpio::C13;
+	engineConfiguration->ignitionPins[1] = Gpio::E5;
+	engineConfiguration->ignitionPins[2] = Gpio::E4;
+	engineConfiguration->ignitionPins[3] = Gpio::E3;
+	engineConfiguration->ignitionPins[4] = Gpio::E2;
+	engineConfiguration->ignitionPins[5] = Gpio::B8;
 	
 	// disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -63,8 +63,8 @@ static void setupVbatt() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 
@@ -121,21 +121,21 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 
-	engineConfiguration->fuelPumpPin = GPIOD_12;	// OUT_IO9 // 113 Fuel Pump Relay
+	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
 	engineConfiguration->idle.solenoidPin = H144_OUT_PWM5;
-//	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
 	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::D15; // out_pwm7
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::D14; // out_pwm6
+	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
 	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
@@ -155,7 +155,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
 	engineConfiguration->throttlePedalUpVoltage = 0.75;
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
@@ -178,14 +178,14 @@ void setBoardDefaultConfiguration() {
 void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->sdCardCsPin = Gpio::A15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
+//	engineConfiguration->spi2mosiPin = Gpio::B15;
+//	engineConfiguration->spi2misoPin = Gpio::B14;
+//	engineConfiguration->spi2sckPin = Gpio::B13;
+//	engineConfiguration->sdCardCsPin = Gpio::B12;
 	engineConfiguration->is_enabled_spi_3 = true;
 }
