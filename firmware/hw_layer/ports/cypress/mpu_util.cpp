@@ -88,7 +88,7 @@ brain_pin_e getMisoPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getMosiPin(spi_device_e device) {
@@ -102,7 +102,7 @@ brain_pin_e getMosiPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getSckPin(spi_device_e device) {
@@ -116,7 +116,7 @@ brain_pin_e getSckPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 void turnOnSpi(spi_device_e device) {
