@@ -62,7 +62,7 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	EngineTestHelper eth(TEST_ENGINE);
 	InjectorModel dut;
 
-	engineConfiguration->applyNonlinearBelowPulse = MS2US(10);
+	engineConfiguration->applyNonlinearBelowPulse = 10;
 
 	for (int i = 0; i < 8; i++) {
 		engineConfiguration->injectorCorrectionPolynomial[i] = i + 1;
