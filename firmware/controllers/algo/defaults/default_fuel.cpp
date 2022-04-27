@@ -126,7 +126,7 @@ static void setDefaultStftSettings() {
 	cfg.minClt = 60;
 
 	// 0.5% deadband
-	cfg.deadband = 5;
+	cfg.deadband = 0.5f;
 
 	// Sensible region defaults
 	cfg.maxIdleRegionRpm = 1000;
