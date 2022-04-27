@@ -264,15 +264,6 @@ struct_no_prefix engine_configuration_s
 #define AFTERSTART_DECAY_CURVE_SIZE 8
 #define AFTERSTART_ENRICH_CURVE_SIZE 8
 
-#define PACK_MULT_MAP_ESTIMATE 100
-
-
-
-
-
-
-
-
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define GPPWM_CHANNELS 4
@@ -1634,7 +1625,7 @@ uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0,
 
 float unused17440;;"", 1, 0, 0, 0, 0
 
-uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] mapEstimateTable;;"kPa", {1/@@PACK_MULT_MAP_ESTIMATE@@}, 0, 0, 100, 2
+uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, 600, 2
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
