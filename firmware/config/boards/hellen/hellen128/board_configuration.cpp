@@ -91,7 +91,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setHellen128ETBConfig() {
+static void setHellen128ETBConfig() {
 	BitbangI2c m_i2c;
 	uint8_t variant[2]={0xff,0xff};
 
