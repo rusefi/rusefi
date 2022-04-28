@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 28 12:31:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 28 22:04:14 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -150,15 +150,15 @@ struct spi_pins {
 	/**
 	 * offset 0
 	 */
-	brain_pin_e mosiPin;
+	Gpio mosiPin;
 	/**
 	 * offset 1
 	 */
-	brain_pin_e misoPin;
+	Gpio misoPin;
 	/**
 	 * offset 2
 	 */
-	brain_pin_e sckPin;
+	Gpio sckPin;
 	/**
 	 * need 4 byte alignment
 	units
@@ -620,11 +620,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	brain_pin_e stepperDirectionPin;
+	Gpio stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	brain_pin_e stepperStepPin;
+	Gpio stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -637,20 +637,20 @@ struct dc_io {
 	/**
 	 * offset 0
 	 */
-	brain_pin_e directionPin1;
+	Gpio directionPin1;
 	/**
 	 * offset 1
 	 */
-	brain_pin_e directionPin2;
+	Gpio directionPin2;
 	/**
 	 * Acts as EN pin in two-wire mode
 	 * offset 2
 	 */
-	brain_pin_e controlPin;
+	Gpio controlPin;
 	/**
 	 * offset 3
 	 */
-	brain_pin_e disablePin;
+	Gpio disablePin;
 };
 static_assert(sizeof(dc_io) == 4);
 
@@ -669,7 +669,7 @@ struct vr_threshold_s {
 	/**
 	 * offset 12
 	 */
-	brain_pin_e pin;
+	Gpio pin;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1247,7 +1247,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 589
 	 */
-	brain_pin_e tle6240_cs;
+	Gpio tle6240_cs;
 	/**
 	 * offset 590
 	 */
@@ -1310,7 +1310,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 627
 	 */
-	brain_pin_e l9779_cs;
+	Gpio l9779_cs;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1339,35 +1339,35 @@ struct engine_configuration_s {
 	/**
 	 * offset 658
 	 */
-	brain_pin_e HD44780_rs;
+	Gpio HD44780_rs;
 	/**
 	 * offset 659
 	 */
-	brain_pin_e HD44780_e;
+	Gpio HD44780_e;
 	/**
 	 * offset 660
 	 */
-	brain_pin_e HD44780_db4;
+	Gpio HD44780_db4;
 	/**
 	 * offset 661
 	 */
-	brain_pin_e HD44780_db5;
+	Gpio HD44780_db5;
 	/**
 	 * offset 662
 	 */
-	brain_pin_e HD44780_db6;
+	Gpio HD44780_db6;
 	/**
 	 * offset 663
 	 */
-	brain_pin_e HD44780_db7;
+	Gpio HD44780_db7;
 	/**
 	 * offset 664
 	 */
-	brain_pin_e gps_rx_pin;
+	Gpio gps_rx_pin;
 	/**
 	 * offset 665
 	 */
-	brain_pin_e gps_tx_pin;
+	Gpio gps_tx_pin;
 	/**
 	 * offset 666
 	 */
@@ -1413,7 +1413,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 676
 	 */
-	brain_pin_e digitalPotentiometerChipSelect[DIGIPOT_COUNT];
+	Gpio digitalPotentiometerChipSelect[DIGIPOT_COUNT];
 	/**
 	 * offset 680
 	 */
@@ -1422,12 +1422,12 @@ struct engine_configuration_s {
 	 * set_cj125_heater_pin XXX
 	 * offset 681
 	 */
-	brain_pin_e wboHeaterPin;
+	Gpio wboHeaterPin;
 	/**
 	 * set_cj125_cs_pin XXX
 	 * offset 682
 	 */
-	brain_pin_e cj125CsPin;
+	Gpio cj125CsPin;
 	/**
 	 * offset 683
 	 */
@@ -1435,7 +1435,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 684
 	 */
-	brain_pin_e debugTriggerSync;
+	Gpio debugTriggerSync;
 	/**
 	 * Digital Potentiometer is used by stock ECU stimulation code
 	 * offset 685
@@ -1444,7 +1444,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 686
 	 */
-	brain_pin_e mc33972_cs;
+	Gpio mc33972_cs;
 	/**
 	 * offset 687
 	 */
@@ -1511,17 +1511,17 @@ struct engine_configuration_s {
 	/**
 	 * offset 715
 	 */
-	brain_pin_e sdCardCsPin;
+	Gpio sdCardCsPin;
 	/**
 	 * set_can_tx_pin X
 	 * offset 716
 	 */
-	brain_pin_e canTxPin;
+	Gpio canTxPin;
 	/**
 	 * set_can_rx_pin X
 	 * offset 717
 	 */
-	brain_pin_e canRxPin;
+	Gpio canRxPin;
 	/**
 	 * offset 718
 	 */
@@ -1593,7 +1593,7 @@ struct engine_configuration_s {
 	 * See also directSelfStimulation which is different.
 	 * offset 740
 	 */
-	brain_pin_e triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
+	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
 	 * offset 743
 	 */
@@ -1732,11 +1732,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 757
 	 */
-	brain_pin_e hip9011CsPin;
+	Gpio hip9011CsPin;
 	/**
 	 * offset 758
 	 */
-	brain_pin_e hip9011IntHoldPin;
+	Gpio hip9011IntHoldPin;
 	/**
 	 * offset 759
 	 */
@@ -1804,11 +1804,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 792
 	 */
-	brain_pin_e lps25BaroSensorScl;
+	Gpio lps25BaroSensorScl;
 	/**
 	 * offset 793
 	 */
-	brain_pin_e lps25BaroSensorSda;
+	Gpio lps25BaroSensorSda;
 	/**
 	 * offset 794
 	 */
@@ -1829,7 +1829,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 798
 	 */
-	brain_pin_e max31855_cs[EGT_CHANNEL_COUNT];
+	Gpio max31855_cs[EGT_CHANNEL_COUNT];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 806
@@ -1838,7 +1838,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 807
 	 */
-	brain_pin_e test557pin;
+	Gpio test557pin;
 	/**
 	 * offset 808
 	 */
@@ -1872,7 +1872,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 815
 	 */
-	brain_pin_e debugMapAveraging;
+	Gpio debugMapAveraging;
 	/**
 	 * offset 816
 	 */
@@ -1934,7 +1934,7 @@ struct engine_configuration_s {
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
 	 * offset 836
 	 */
-	brain_pin_e triggerErrorPin;
+	Gpio triggerErrorPin;
 	/**
 	 * offset 837
 	 */
@@ -1954,65 +1954,65 @@ struct engine_configuration_s {
 	/**
 	 * offset 872
 	 */
-	brain_pin_e spi1mosiPin;
+	Gpio spi1mosiPin;
 	/**
 	 * offset 873
 	 */
-	brain_pin_e spi1misoPin;
+	Gpio spi1misoPin;
 	/**
 	 * offset 874
 	 */
-	brain_pin_e spi1sckPin;
+	Gpio spi1sckPin;
 	/**
 	 * offset 875
 	 */
-	brain_pin_e spi2mosiPin;
+	Gpio spi2mosiPin;
 	/**
 	 * offset 876
 	 */
-	brain_pin_e spi2misoPin;
+	Gpio spi2misoPin;
 	/**
 	 * offset 877
 	 */
-	brain_pin_e spi2sckPin;
+	Gpio spi2sckPin;
 	/**
 	 * offset 878
 	 */
-	brain_pin_e spi3mosiPin;
+	Gpio spi3mosiPin;
 	/**
 	 * offset 879
 	 */
-	brain_pin_e spi3misoPin;
+	Gpio spi3misoPin;
 	/**
 	 * offset 880
 	 */
-	brain_pin_e spi3sckPin;
+	Gpio spi3sckPin;
 	/**
 	 * Saab Combustion Detection Module knock signal input pin
 	 * also known as Saab Ion Sensing Module
 	 * offset 881
 	 */
-	brain_pin_e cdmInputPin;
+	Gpio cdmInputPin;
 	/**
 	 * offset 882
 	 */
-	brain_pin_e joystickCenterPin;
+	Gpio joystickCenterPin;
 	/**
 	 * offset 883
 	 */
-	brain_pin_e joystickAPin;
+	Gpio joystickAPin;
 	/**
 	 * offset 884
 	 */
-	brain_pin_e joystickBPin;
+	Gpio joystickBPin;
 	/**
 	 * offset 885
 	 */
-	brain_pin_e joystickCPin;
+	Gpio joystickCPin;
 	/**
 	 * offset 886
 	 */
-	brain_pin_e joystickDPin;
+	Gpio joystickDPin;
 	/**
 	 * offset 887
 	 */
@@ -2260,7 +2260,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1117
 	 */
-	brain_pin_e drv8860_cs;
+	Gpio drv8860_cs;
 	/**
 	 * offset 1118
 	 */
@@ -2268,7 +2268,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1119
 	 */
-	brain_pin_e drv8860_miso;
+	Gpio drv8860_miso;
 	/**
 	volt
 	 * offset 1120
@@ -2575,7 +2575,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1284
 	 */
-	brain_pin_e camInputsDebug[CAM_INPUTS_COUNT];
+	Gpio camInputsDebug[CAM_INPUTS_COUNT];
 	/**
 	 * offset 1288
 	 */
@@ -2672,7 +2672,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1524
 	 */
-	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
+	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
 	 * offset 1527
 	 */
@@ -2705,7 +2705,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1534
 	 */
-	brain_pin_e mc33816_flag0;
+	Gpio mc33816_flag0;
 	/**
 	Pulse
 	 * offset 1535
@@ -2752,26 +2752,26 @@ struct engine_configuration_s {
 	 * If USB communication cable is connected Blue LED starts to blink faster.
 	 * offset 1572
 	 */
-	brain_pin_e communicationLedPin;
+	Gpio communicationLedPin;
 	/**
 	 * Green LED on many rusEFI boards.
 	 * Off if engine is stopped, blinks if engine is cranking, solid if engine is running.
 	 * offset 1573
 	 */
-	brain_pin_e runningLedPin;
+	Gpio runningLedPin;
 	/**
 	 * See also EFI_CONSOLE_RX_BRAIN_PIN
 	 * offset 1574
 	 */
-	brain_pin_e binarySerialTxPin;
+	Gpio binarySerialTxPin;
 	/**
 	 * offset 1575
 	 */
-	brain_pin_e binarySerialRxPin;
+	Gpio binarySerialRxPin;
 	/**
 	 * offset 1576
 	 */
-	brain_pin_e auxValves[AUX_DIGITAL_VALVE_COUNT];
+	Gpio auxValves[AUX_DIGITAL_VALVE_COUNT];
 	/**
 	 * offset 1578
 	 */
@@ -2844,21 +2844,21 @@ struct engine_configuration_s {
 	 * set_aux_tx_pin X
 	 * offset 1684
 	 */
-	brain_pin_e auxSerialTxPin;
+	Gpio auxSerialTxPin;
 	/**
 	 * offset 1685
 	 */
-	brain_pin_e warningLedPin;
+	Gpio warningLedPin;
 	/**
 	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * set_aux_rx_pin X
 	 * offset 1686
 	 */
-	brain_pin_e auxSerialRxPin;
+	Gpio auxSerialRxPin;
 	/**
 	 * offset 1687
 	 */
-	brain_pin_e LIS302DLCsPin;
+	Gpio LIS302DLCsPin;
 	/**
 	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
 	sec
@@ -3112,12 +3112,12 @@ struct engine_configuration_s {
 	 * set_can2_tx_pin X
 	 * offset 1748
 	 */
-	brain_pin_e can2TxPin;
+	Gpio can2TxPin;
 	/**
 	 * set_can2_rx_pin X
 	 * offset 1749
 	 */
-	brain_pin_e can2RxPin;
+	Gpio can2RxPin;
 	/**
 	 * offset 1750
 	 */
@@ -3444,11 +3444,11 @@ struct engine_configuration_s {
 	 * ResetB
 	 * offset 2202
 	 */
-	brain_pin_e mc33816_rstb;
+	Gpio mc33816_rstb;
 	/**
 	 * offset 2203
 	 */
-	brain_pin_e mc33816_driven;
+	Gpio mc33816_driven;
 	/**
 	 * Brake pedal switch
 	 * offset 2204
@@ -3548,11 +3548,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2696
 	 */
-	brain_pin_e stepperEnablePin;
+	Gpio stepperEnablePin;
 	/**
 	 * offset 2697
 	 */
-	brain_pin_e tle8888_cs;
+	Gpio tle8888_cs;
 	/**
 	 * offset 2698
 	 */
@@ -3560,7 +3560,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2699
 	 */
-	brain_pin_e mc33816_cs;
+	Gpio mc33816_cs;
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	RPM
@@ -3577,7 +3577,7 @@ struct engine_configuration_s {
 	 * todo: more comments
 	 * offset 2732
 	 */
-	brain_pin_e servoOutputPins[SERVO_COUNT];
+	Gpio servoOutputPins[SERVO_COUNT];
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
@@ -4696,4 +4696,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21164);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 28 12:31:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Apr 28 22:04:14 UTC 2022
