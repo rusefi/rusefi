@@ -988,18 +988,6 @@
 #define fuelPumpPin_offset 666
 #define fuelPumpPinMode_offset 667
 #define fuelReferencePressure_offset 2028
-#define fuelTrim10_offset 4061
-#define fuelTrim11_offset 4062
-#define fuelTrim12_offset 4063
-#define fuelTrim1_offset 4052
-#define fuelTrim2_offset 4053
-#define fuelTrim3_offset 4054
-#define fuelTrim4_offset 4055
-#define fuelTrim5_offset 4056
-#define fuelTrim6_offset 4057
-#define fuelTrim7_offset 4058
-#define fuelTrim8_offset 4059
-#define fuelTrim9_offset 4060
 #define fuelTrimLoadBins_offset 20768
 #define fuelTrimRpmBins_offset 20776
 #define fuelTrims10_offset 20928
@@ -1760,7 +1748,6 @@
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_LAMBDA_CFG 147
-#define PACK_MULT_MAP_ESTIMATE 100
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1923,7 +1910,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3709463427
+#define SIGNATURE_HASH 3882574852
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2505,7 +2492,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.28.kin.3709463427"
+#define TS_SIGNATURE "rusEFI 2022.04.28.kin.3882574852"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2552,6 +2539,7 @@
 #define unused17440_offset 17420
 #define unused184_offset 184
 #define unused28_offset 28
+#define unused4080_offset 4052
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272

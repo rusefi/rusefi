@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 23:06:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 28 12:31:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -20,7 +20,7 @@ struct stft_cell_cfg_s {
 	sec
 	 * offset 2
 	 */
-	uint16_t timeConstant;
+	scaled_channel<uint16_t, 10, 1> timeConstant;
 };
 static_assert(sizeof(stft_cell_cfg_s) == 4);
 
@@ -49,7 +49,7 @@ struct stft_s {
 	%
 	 * offset 3
 	 */
-	uint8_t deadband;
+	scaled_channel<uint8_t, 10, 1> deadband;
 	/**
 	 * Below this temperature, correction is disabled.
 	C
@@ -61,13 +61,13 @@ struct stft_s {
 	afr
 	 * offset 5
 	 */
-	uint8_t minAfr;
+	scaled_channel<uint8_t, 10, 1> minAfr;
 	/**
 	 * Above this AFR, correction is paused
 	afr
 	 * offset 6
 	 */
-	uint8_t maxAfr;
+	scaled_channel<uint8_t, 10, 1> maxAfr;
 	/**
 	 * Delay after starting the engine before beginning closed loop correction.
 	seconds
@@ -1277,13 +1277,13 @@ struct engine_configuration_s {
 	%
 	 * offset 620
 	 */
-	uint8_t knockRetardAggression;
+	scaled_channel<uint8_t, 10, 1> knockRetardAggression;
 	/**
 	 * After a knock event, reapply timing at this rate.
 	deg/s
 	 * offset 621
 	 */
-	uint8_t knockRetardReapplyRate;
+	scaled_channel<uint8_t, 10, 1> knockRetardReapplyRate;
 	/**
 	 * Maximum amount of knock retard.
 	deg
@@ -1773,7 +1773,7 @@ struct engine_configuration_s {
 	volts
 	 * offset 769
 	 */
-	uint8_t dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE];
+	scaled_channel<uint8_t, 10, 1> dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE];
 	/**
 	 * offset 777
 	 */
@@ -1782,7 +1782,7 @@ struct engine_configuration_s {
 	multiplier
 	 * offset 778
 	 */
-	uint8_t dwellVoltageCorrValues[DWELL_CURVE_SIZE];
+	scaled_channel<uint8_t, 50, 1> dwellVoltageCorrValues[DWELL_CURVE_SIZE];
 	/**
 	kg
 	 * offset 786
@@ -1800,7 +1800,7 @@ struct engine_configuration_s {
 	ms
 	 * offset 790
 	 */
-	uint16_t applyNonlinearBelowPulse;
+	scaled_channel<uint16_t, 1000, 1> applyNonlinearBelowPulse;
 	/**
 	 * offset 792
 	 */
@@ -2728,13 +2728,13 @@ struct engine_configuration_s {
 	ms
 	 * offset 1544
 	 */
-	uint16_t multisparkSparkDuration;
+	scaled_channel<uint16_t, 1000, 1> multisparkSparkDuration;
 	/**
 	 * This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.
 	ms
 	 * offset 1546
 	 */
-	uint16_t multisparkDwell;
+	scaled_channel<uint16_t, 1000, 1> multisparkDwell;
 	/**
 	 * See cltIdleRpmBins
 	 * offset 1548
@@ -3156,12 +3156,12 @@ struct engine_configuration_s {
 	kg/h
 	 * offset 1760
 	 */
-	uint8_t tchargeBins[16];
+	scaled_channel<uint8_t, 1, 5> tchargeBins[16];
 	/**
 	ratio
 	 * offset 1776
 	 */
-	uint8_t tchargeValues[16];
+	scaled_channel<uint8_t, 100, 1> tchargeValues[16];
 	/**
 	counter
 	 * offset 1792
@@ -3943,10 +3943,9 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
-	Percent
 	 * offset 4080
 	 */
-	int8_t fuelTrim[MAX_CYLINDER_COUNT];
+	int8_t unused4080[12];
 	/**
 	to
 	 * offset 4092
@@ -4412,7 +4411,7 @@ struct persistent_config_s {
 	kPa
 	 * offset 17452
 	 */
-	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
 	 * offset 17964
@@ -4697,4 +4696,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21164);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 23:06:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 28 12:31:55 UTC 2022
