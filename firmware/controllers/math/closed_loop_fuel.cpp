@@ -83,7 +83,7 @@ bool shouldUpdateCorrection(SensorType sensor) {
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
 	auto afr = Sensor::get(sensor).value_or(0) * STOICH_RATIO;
-	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
+	if (!afr || afr < cfg.minAfr || afr > cfg.maxAfr) {
 		return false;
 	}
 
@@ -118,7 +118,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		cell.configure(&engineConfiguration->stft.cellCfgs[binIdx], sensor);
 
 		if (shouldUpdateCorrection(sensor)) {
-			cell.update(engineConfiguration->stft.deadband * 0.001f, engineConfiguration->stftIgnoreErrorMagnitude);
+			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
 		}
 
 		result.banks[i] = cell.getAdjustment();
