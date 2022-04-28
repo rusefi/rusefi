@@ -76,6 +76,10 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	EXPECT_NEAR(dut.correctInjectionPolynomial(1),   1 +     36, EPS4D);
 	EXPECT_NEAR(dut.correctInjectionPolynomial(2),   2 +   1793, EPS4D);
 	EXPECT_NEAR(dut.correctInjectionPolynomial(3),   3 +  24604, EPS4D);
+
+	// Check that the disable threshold works
+	EXPECT_NE(dut.correctInjectionPolynomial(9.9f), 9.9f);
+	EXPECT_EQ(dut.correctInjectionPolynomial(10.1f), 10.1f);
 }
 
 TEST(InjectorModel, Deadtime) {
