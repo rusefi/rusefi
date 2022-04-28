@@ -2,6 +2,7 @@
 #include "fuel_math.h"
 #include "alphan_airmass.h"
 #include "maf_airmass.h"
+#include "speed_density_airmass.h"
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
@@ -130,6 +131,36 @@ TEST(AirmassModes, VeOverride) {
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
 	dut.getAirmass(0);
 	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 30.0f);
+}
+
+TEST(AirmassModes, FallbackMap) {
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	// Failed map -> use 75
+	EXPECT_CALL(mapFallback, getValue(5678, 20)).WillOnce(Return(75));
+
+	EngineTestHelper eth(TEST_ENGINE);
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	// TPS at 20%
+	Sensor::setMockValue(SensorType::Tps1, 20);
+
+	// Working MAP sensor at 40 kPa
+	Sensor::setMockValue(SensorType::Map, 40);
+	EXPECT_FLOAT_EQ(dut.getMap(1234), 40);
+
+	// Failed MAP sensor, should use fixed value
+	Sensor::resetMockValue(SensorType::Map);
+	engineConfiguration->enableMapEstimationTableFallback = false;
+	engineConfiguration->failedMapFallback = 33;
+	EXPECT_FLOAT_EQ(dut.getMap(2345), 33);
+
+	// Failed MAP sensor, should use table
+	Sensor::resetMockValue(SensorType::Map);
+	engineConfiguration->enableMapEstimationTableFallback = true;
+	EXPECT_FLOAT_EQ(dut.getMap(5678), 75);
 }
 
 void setInjectionMode(int value);

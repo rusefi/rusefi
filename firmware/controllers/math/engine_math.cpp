@@ -82,11 +82,11 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
 		baseDwell = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
-		dwellVoltageCorrection = 0.02f *
-			interpolate2d(
-				10 * Sensor::getOrZero(SensorType::BatteryVoltage),
+		dwellVoltageCorrection = interpolate2d(
+				Sensor::getOrZero(SensorType::BatteryVoltage),
 				engineConfiguration->dwellVoltageCorrVoltBins,
-				engineConfiguration->dwellVoltageCorrValues);
+				engineConfiguration->dwellVoltageCorrValues
+		);
 
 		// for compat (table full of zeroes)
 		if (dwellVoltageCorrection < 0.1f) {

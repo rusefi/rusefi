@@ -13,7 +13,7 @@ TEST(Knock, Retards) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Aggression of 10%
-	engineConfiguration->knockRetardAggression = 100;
+	engineConfiguration->knockRetardAggression = 10;
 	// Maximum 8 degrees retarded
 	engineConfiguration->knockRetardMaximum = 8;
 
@@ -51,11 +51,11 @@ TEST(Knock, Reapply) {
 	dut.onFastCallback();
 
 	// Aggression of 10%
-	engineConfiguration->knockRetardAggression = 100;
+	engineConfiguration->knockRetardAggression = 10;
 	// Maximum 8 degrees retarded
 	engineConfiguration->knockRetardMaximum = 8;
 	// Apply 1 degree/second
-	engineConfiguration->knockRetardReapplyRate = 10;
+	engineConfiguration->knockRetardReapplyRate = 1;
 
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);

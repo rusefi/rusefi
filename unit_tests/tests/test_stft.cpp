@@ -79,8 +79,8 @@ TEST(ClosedLoopFuel, CellSelection) {
 TEST(ClosedLoopFuel, afrLimits) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	engineConfiguration->stft.minAfr = 100;  // 10.0 AFR
-	engineConfiguration->stft.maxAfr = 180;  // 18.0 AFR
+	engineConfiguration->stft.minAfr = 10;  // 10.0 AFR
+	engineConfiguration->stft.maxAfr = 18;  // 18.0 AFR
 
 	Sensor::setMockValue(SensorType::Lambda1, 0.1f);
 	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
