@@ -220,10 +220,10 @@ jobs:
             skip-rate: 90
 
     steps:
-    # - name: Execution throttle early exit
-    #   # Don't skip any jobs if this workflow was run manually.
-    #   if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
-    #   run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
+    - name: Execution throttle early exit
+      # Don't skip any jobs if this workflow was run manually.
+      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
+      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - uses: actions/checkout@v1
       if: ${{ env.skip != 'true' }}
