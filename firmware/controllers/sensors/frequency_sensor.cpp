@@ -18,7 +18,8 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, f
 		return;
 	}
 
-	// Filter parameter greater than 0.4 impossible as it causes filter instability
+	// Filter parameter greater than or equal to 0.5 impossible as it causes filter instability, clamp
+	// far under that value.
 	if (filterParameter > 0.35f) {
 		filterParameter = 0.35f;
 	}
