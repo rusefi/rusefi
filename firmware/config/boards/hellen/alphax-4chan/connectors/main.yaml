@@ -128,8 +128,8 @@ pins:
     color: blue
 
   - pin: C1
-    # H144_OUT_PWM4
-    id: C8
+    # H144_OUT_IO11
+    id: G2
     class: outputs
     function: Fan Relay or 5A Power Output (low)
     type: ls

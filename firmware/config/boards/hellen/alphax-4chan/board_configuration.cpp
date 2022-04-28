@@ -185,9 +185,10 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
-	engineConfiguration->fanPin = H144_OUT_PWM4;
-	engineConfiguration->mainRelayPin = Gpio::Unassigned;
-    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
+	engineConfiguration->fanPin = H144_OUT_IO11;
+	engineConfiguration->mainRelayPin = H144_OUT_IO10;
+    engineConfiguration->tachOutputPin = H144_OUT_IO13;
+    engineConfiguration->boostControlPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -205,6 +206,7 @@ void setBoardDefaultConfiguration() {
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
+	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
 }
 
 /**
