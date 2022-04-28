@@ -10,7 +10,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOB_1: return "C2/C3 Crank Sensor VR";
 		case GPIOC_13: return "A6 - Ignition 1";
 		case GPIOC_7: return "D2 - Out Boost";
-		case GPIOC_8: return "C1 - Fan Relay";
 		case GPIOC_9: return "F1 - Idle2";
 		case GPIOD_10: return "E1 - Injector 4";
 		case GPIOD_11: return "D1 - Injector 3";
@@ -31,6 +30,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOF_9: return "E5/E6 Cam Sensor VR";
 		case GPIOG_11: return "E2 - Out NOS";
 		case GPIOG_12: return "F5 - MAIN";
+		case GPIOG_2: return "C1 - Fan Relay";
 		case GPIOG_6: return "A4 - Tachometer";
 		case GPIOG_7: return "A8 - Injector 1";
 		case GPIOG_8: return "B8 - Injector 2";
