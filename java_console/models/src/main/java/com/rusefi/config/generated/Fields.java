@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Apr 26 15:12:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Apr 28 12:31:55 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -970,18 +970,6 @@ public class Fields {
 	public static final int fuelPumpPin_offset = 666;
 	public static final int fuelPumpPinMode_offset = 667;
 	public static final int fuelReferencePressure_offset = 2036;
-	public static final int fuelTrim10_offset = 4089;
-	public static final int fuelTrim11_offset = 4090;
-	public static final int fuelTrim12_offset = 4091;
-	public static final int fuelTrim1_offset = 4080;
-	public static final int fuelTrim2_offset = 4081;
-	public static final int fuelTrim3_offset = 4082;
-	public static final int fuelTrim4_offset = 4083;
-	public static final int fuelTrim5_offset = 4084;
-	public static final int fuelTrim6_offset = 4085;
-	public static final int fuelTrim7_offset = 4086;
-	public static final int fuelTrim8_offset = 4087;
-	public static final int fuelTrim9_offset = 4088;
 	public static final int fuelTrimLoadBins_offset = 20796;
 	public static final int fuelTrimRpmBins_offset = 20804;
 	public static final int fuelTrims10_offset = 20956;
@@ -1713,7 +1701,6 @@ public class Fields {
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
 	public static final int PACK_MULT_LAMBDA = 10000;
 	public static final int PACK_MULT_LAMBDA_CFG = 147;
-	public static final int PACK_MULT_MAP_ESTIMATE = 100;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
@@ -1863,6 +1850,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 1575151346;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
@@ -2382,7 +2370,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.26.all.3017609278";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.28.all.1575151346";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1012;
@@ -2426,6 +2414,7 @@ public class Fields {
 	public static final int unused17440_offset = 17448;
 	public static final int unused184_offset = 184;
 	public static final int unused28_offset = 28;
+	public static final int unused4080_offset = 4080;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -2783,8 +2772,8 @@ public class Fields {
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 614, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 615, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 616, FieldType.FLOAT);
-	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 620, FieldType.INT8).setScale(1.0);
-	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 621, FieldType.INT8).setScale(1.0);
+	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 620, FieldType.INT8).setScale(0.1);
+	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 621, FieldType.INT8).setScale(0.1);
 	public static final Field KNOCKRETARDMAXIMUM = Field.create("KNOCKRETARDMAXIMUM", 622, FieldType.INT8).setScale(1.0);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 623, FieldType.INT8).setScale(1.0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 624, FieldType.INT16).setScale(0.001);
@@ -2931,12 +2920,12 @@ public class Fields {
 	public static final Field ACFANPIN = Field.create("ACFANPIN", 766, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field ACFANPINMODE = Field.create("ACFANPINMODE", 767, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field L9779SPIDEVICE = Field.create("L9779SPIDEVICE", 768, FieldType.INT8).setScale(1.0);
-	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 769, FieldType.INT8).setScale(1.0);
+	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 769, FieldType.INT8).setScale(0.1);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 777, FieldType.INT8).setScale(1.0);
-	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 778, FieldType.INT8).setScale(1.0);
+	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 778, FieldType.INT8).setScale(0.02);
 	public static final Field VEHICLEWEIGHT = Field.create("VEHICLEWEIGHT", 786, FieldType.INT16).setScale(1.0);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 788, FieldType.INT16).setScale(1.0);
-	public static final Field APPLYNONLINEARBELOWPULSE = Field.create("APPLYNONLINEARBELOWPULSE", 790, FieldType.INT16).setScale(1.0);
+	public static final Field APPLYNONLINEARBELOWPULSE = Field.create("APPLYNONLINEARBELOWPULSE", 790, FieldType.INT16).setScale(0.001);
 	public static final Field LPS25BAROSENSORSCL = Field.create("LPS25BAROSENSORSCL", 792, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field LPS25BAROSENSORSDA = Field.create("LPS25BAROSENSORSDA", 793, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = Field.create("VEHICLESPEEDSENSORINPUTPIN", 794, FieldType.INT8, brain_input_pin_e).setScale(1.0);
@@ -3071,23 +3060,23 @@ public class Fields {
 	public static final Field STFT_MAXIDLEREGIONRPM = Field.create("STFT_MAXIDLEREGIONRPM", 980, FieldType.INT8).setScale(50.0);
 	public static final Field STFT_MAXOVERRUNLOAD = Field.create("STFT_MAXOVERRUNLOAD", 981, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_MINPOWERLOAD = Field.create("STFT_MINPOWERLOAD", 982, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_DEADBAND = Field.create("STFT_DEADBAND", 983, FieldType.INT8).setScale(1.0);
+	public static final Field STFT_DEADBAND = Field.create("STFT_DEADBAND", 983, FieldType.INT8).setScale(0.1);
 	public static final Field STFT_MINCLT = Field.create("STFT_MINCLT", 984, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_MINAFR = Field.create("STFT_MINAFR", 985, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_MAXAFR = Field.create("STFT_MAXAFR", 986, FieldType.INT8).setScale(1.0);
+	public static final Field STFT_MINAFR = Field.create("STFT_MINAFR", 985, FieldType.INT8).setScale(0.1);
+	public static final Field STFT_MAXAFR = Field.create("STFT_MAXAFR", 986, FieldType.INT8).setScale(0.1);
 	public static final Field STFT_STARTUPDELAY = Field.create("STFT_STARTUPDELAY", 987, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_CELLCFGS1_MAXADD = Field.create("STFT_CELLCFGS1_MAXADD", 988, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_CELLCFGS1_MAXREMOVE = Field.create("STFT_CELLCFGS1_MAXREMOVE", 989, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_CELLCFGS1_TIMECONSTANT = Field.create("STFT_CELLCFGS1_TIMECONSTANT", 990, FieldType.INT16).setScale(1.0);
+	public static final Field STFT_CELLCFGS1_TIMECONSTANT = Field.create("STFT_CELLCFGS1_TIMECONSTANT", 990, FieldType.INT16).setScale(0.1);
 	public static final Field STFT_CELLCFGS2_MAXADD = Field.create("STFT_CELLCFGS2_MAXADD", 992, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_CELLCFGS2_MAXREMOVE = Field.create("STFT_CELLCFGS2_MAXREMOVE", 993, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_CELLCFGS2_TIMECONSTANT = Field.create("STFT_CELLCFGS2_TIMECONSTANT", 994, FieldType.INT16).setScale(1.0);
+	public static final Field STFT_CELLCFGS2_TIMECONSTANT = Field.create("STFT_CELLCFGS2_TIMECONSTANT", 994, FieldType.INT16).setScale(0.1);
 	public static final Field STFT_CELLCFGS3_MAXADD = Field.create("STFT_CELLCFGS3_MAXADD", 996, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_CELLCFGS3_MAXREMOVE = Field.create("STFT_CELLCFGS3_MAXREMOVE", 997, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_CELLCFGS3_TIMECONSTANT = Field.create("STFT_CELLCFGS3_TIMECONSTANT", 998, FieldType.INT16).setScale(1.0);
+	public static final Field STFT_CELLCFGS3_TIMECONSTANT = Field.create("STFT_CELLCFGS3_TIMECONSTANT", 998, FieldType.INT16).setScale(0.1);
 	public static final Field STFT_CELLCFGS4_MAXADD = Field.create("STFT_CELLCFGS4_MAXADD", 1000, FieldType.INT8).setScale(1.0);
 	public static final Field STFT_CELLCFGS4_MAXREMOVE = Field.create("STFT_CELLCFGS4_MAXREMOVE", 1001, FieldType.INT8).setScale(1.0);
-	public static final Field STFT_CELLCFGS4_TIMECONSTANT = Field.create("STFT_CELLCFGS4_TIMECONSTANT", 1002, FieldType.INT16).setScale(1.0);
+	public static final Field STFT_CELLCFGS4_TIMECONSTANT = Field.create("STFT_CELLCFGS4_TIMECONSTANT", 1002, FieldType.INT16).setScale(0.1);
 	public static final Field STEPPERDCIO1_DIRECTIONPIN1 = Field.create("STEPPERDCIO1_DIRECTIONPIN1", 1004, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field STEPPERDCIO1_DIRECTIONPIN2 = Field.create("STEPPERDCIO1_DIRECTIONPIN2", 1005, FieldType.INT8, brain_pin_e).setScale(1.0);
 	public static final Field STEPPERDCIO1_CONTROLPIN = Field.create("STEPPERDCIO1_CONTROLPIN", 1006, FieldType.INT8, brain_pin_e).setScale(1.0);
@@ -3256,8 +3245,8 @@ public class Fields {
 	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1535, FieldType.INT8).setScale(1.0);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1536, FieldType.FLOAT);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1540, FieldType.FLOAT);
-	public static final Field MULTISPARKSPARKDURATION = Field.create("MULTISPARKSPARKDURATION", 1544, FieldType.INT16).setScale(1.0);
-	public static final Field MULTISPARKDWELL = Field.create("MULTISPARKDWELL", 1546, FieldType.INT16).setScale(1.0);
+	public static final Field MULTISPARKSPARKDURATION = Field.create("MULTISPARKSPARKDURATION", 1544, FieldType.INT16).setScale(0.001);
+	public static final Field MULTISPARKDWELL = Field.create("MULTISPARKDWELL", 1546, FieldType.INT16).setScale(0.001);
 	public static final Field IDLERPMPID_PFACTOR = Field.create("IDLERPMPID_PFACTOR", 1548, FieldType.FLOAT);
 	public static final Field IDLERPMPID_IFACTOR = Field.create("IDLERPMPID_IFACTOR", 1552, FieldType.FLOAT);
 	public static final Field IDLERPMPID_DFACTOR = Field.create("IDLERPMPID_DFACTOR", 1556, FieldType.FLOAT);
@@ -3362,8 +3351,8 @@ public class Fields {
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 1754, FieldType.INT8, output_pin_e).setScale(1.0);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 1755, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 1756, FieldType.FLOAT);
-	public static final Field TCHARGEBINS = Field.create("TCHARGEBINS", 1760, FieldType.INT8).setScale(1.0);
-	public static final Field TCHARGEVALUES = Field.create("TCHARGEVALUES", 1776, FieldType.INT8).setScale(1.0);
+	public static final Field TCHARGEBINS = Field.create("TCHARGEBINS", 1760, FieldType.INT8).setScale(5.0);
+	public static final Field TCHARGEVALUES = Field.create("TCHARGEVALUES", 1776, FieldType.INT8).setScale(0.01);
 	public static final Field UNUSEDMAPACCELTAPERBINS = Field.create("UNUSEDMAPACCELTAPERBINS", 1792, FieldType.FLOAT);
 	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 1824, FieldType.FLOAT);
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 1828, FieldType.FLOAT);
@@ -3721,18 +3710,7 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDEFROM16 = Field.create("TRIGGERGAPOVERRIDEFROM16", 4068, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM17 = Field.create("TRIGGERGAPOVERRIDEFROM17", 4072, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM18 = Field.create("TRIGGERGAPOVERRIDEFROM18", 4076, FieldType.FLOAT);
-	public static final Field FUELTRIM1 = Field.create("FUELTRIM1", 4080, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM2 = Field.create("FUELTRIM2", 4081, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM3 = Field.create("FUELTRIM3", 4082, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM4 = Field.create("FUELTRIM4", 4083, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM5 = Field.create("FUELTRIM5", 4084, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM6 = Field.create("FUELTRIM6", 4085, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM7 = Field.create("FUELTRIM7", 4086, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM8 = Field.create("FUELTRIM8", 4087, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM9 = Field.create("FUELTRIM9", 4088, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM10 = Field.create("FUELTRIM10", 4089, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM11 = Field.create("FUELTRIM11", 4090, FieldType.INT8).setScale(1.0);
-	public static final Field FUELTRIM12 = Field.create("FUELTRIM12", 4091, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 4080, FieldType.INT8).setScale(1.0);
 	public static final Field TRIGGERGAPOVERRIDETO1 = Field.create("TRIGGERGAPOVERRIDETO1", 4092, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO2 = Field.create("TRIGGERGAPOVERRIDETO2", 4096, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO3 = Field.create("TRIGGERGAPOVERRIDETO3", 4100, FieldType.FLOAT);
@@ -3862,7 +3840,7 @@ public class Fields {
 	public static final Field INJPHASERPMBINS = Field.create("INJPHASERPMBINS", 17356, FieldType.INT16).setScale(1.0);
 	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 17388, FieldType.INT8).setScale(1.0);
 	public static final Field UNUSED17440 = Field.create("UNUSED17440", 17448, FieldType.FLOAT);
-	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 17452, FieldType.INT16).setScale(1.0);
+	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 17452, FieldType.INT16).setScale(0.01);
 	public static final Field MAPESTIMATETPSBINS = Field.create("MAPESTIMATETPSBINS", 17964, FieldType.INT16).setScale(0.01);
 	public static final Field MAPESTIMATERPMBINS = Field.create("MAPESTIMATERPMBINS", 17996, FieldType.INT16).setScale(1.0);
 	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 18028, FieldType.INT8).setScale(1.0);
@@ -3923,7 +3901,7 @@ public class Fields {
 	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20956, FieldType.INT8).setScale(0.2);
 	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20972, FieldType.INT8).setScale(0.2);
 	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20988, FieldType.INT8).setScale(0.2);
-	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 21004, FieldType.INT16).setScale(1.0);
+	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 21004, FieldType.INT16).setScale(0.01);
 	public static final Field TCU_PCAIRMASSBINS = Field.create("TCU_PCAIRMASSBINS", 21020, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_PCVALSR = Field.create("TCU_PCVALSR", 21028, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_PCVALSN = Field.create("TCU_PCVALSN", 21036, FieldType.INT8).setScale(1.0);
@@ -5060,18 +5038,7 @@ public class Fields {
 	TRIGGERGAPOVERRIDEFROM16,
 	TRIGGERGAPOVERRIDEFROM17,
 	TRIGGERGAPOVERRIDEFROM18,
-	FUELTRIM1,
-	FUELTRIM2,
-	FUELTRIM3,
-	FUELTRIM4,
-	FUELTRIM5,
-	FUELTRIM6,
-	FUELTRIM7,
-	FUELTRIM8,
-	FUELTRIM9,
-	FUELTRIM10,
-	FUELTRIM11,
-	FUELTRIM12,
+	UNUSED4080,
 	TRIGGERGAPOVERRIDETO1,
 	TRIGGERGAPOVERRIDETO2,
 	TRIGGERGAPOVERRIDETO3,

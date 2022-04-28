@@ -22,7 +22,7 @@ public:
 	void SetUp() override {
 		// If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
 		// At least we must init FlexSensor somehow
-		dut.initIfValid(Gpio::A0, identityFunc, 0.5f);
+		dut.initIfValid(Gpio::A0, identityFunc, 0.1f);
 	}
 
 	/*

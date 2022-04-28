@@ -35,7 +35,7 @@ public class TSProjectConsumerTest {
                 "#else\n" +
                 "afr_table_t afrTable;\t\t\n" +
                 "#endif\n" +
-                "\tint16_t periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
+                "\tint16_t autoscale periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
 
@@ -63,7 +63,7 @@ public class TSProjectConsumerTest {
 
         assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT).setScale(1.0);\n" +
                         "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 4, FieldType.INT).setScale(1.0);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(1.0);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(0.1);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_22 = Field.create(\"ALIGNMENTFILL_AT_22\", 22, FieldType.INT8).setScale(1.0);\n",
                 javaFieldsConsumer.getContent());
 
@@ -85,7 +85,7 @@ public class TSProjectConsumerTest {
                 "\tms\n" +
                 "\t * offset 20\n" +
                 "\t */\n" +
-                "\tint16_t periodMs = (int16_t)0;\n" +
+                "\tscaled_channel<int16_t, 10, 1> periodMs = (int16_t)0;\n" +
                 "\t/**\n" +
                 "\t * need 4 byte alignment\n" +
                 "\tunits\n" +

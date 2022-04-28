@@ -1002,18 +1002,6 @@
 #define fuelPumpPin_offset 666
 #define fuelPumpPinMode_offset 667
 #define fuelReferencePressure_offset 2036
-#define fuelTrim10_offset 4089
-#define fuelTrim11_offset 4090
-#define fuelTrim12_offset 4091
-#define fuelTrim1_offset 4080
-#define fuelTrim2_offset 4081
-#define fuelTrim3_offset 4082
-#define fuelTrim4_offset 4083
-#define fuelTrim5_offset 4084
-#define fuelTrim6_offset 4085
-#define fuelTrim7_offset 4086
-#define fuelTrim8_offset 4087
-#define fuelTrim9_offset 4088
 #define fuelTrimLoadBins_offset 20796
 #define fuelTrimRpmBins_offset 20804
 #define fuelTrims10_offset 20956
@@ -1774,7 +1762,6 @@
 #define PACK_MULT_HIGH_PRESSURE 10
 #define PACK_MULT_LAMBDA 10000
 #define PACK_MULT_LAMBDA_CFG 147
-#define PACK_MULT_MAP_ESTIMATE 100
 #define PACK_MULT_MASS_FLOW 10
 #define PACK_MULT_MS 300
 #define PACK_MULT_PERCENT 100
@@ -1937,7 +1924,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 4143013428
+#define SIGNATURE_HASH 416196856
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2519,7 +2506,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.26.hellen_cypress.4143013428"
+#define TS_SIGNATURE "rusEFI 2022.04.28.hellen_cypress.416196856"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2566,6 +2553,7 @@
 #define unused17440_offset 17448
 #define unused184_offset 184
 #define unused28_offset 28
+#define unused4080_offset 4080
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
