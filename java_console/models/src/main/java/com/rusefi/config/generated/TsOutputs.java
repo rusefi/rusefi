@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 25 03:58:25 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Apr 28 12:31:16 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -286,7 +286,6 @@ public class TsOutputs {
 	public static final int PACK_MULT_HIGH_PRESSURE = 10;
 	public static final int PACK_MULT_LAMBDA = 10000;
 	public static final int PACK_MULT_LAMBDA_CFG = 147;
-	public static final int PACK_MULT_MAP_ESTIMATE = 100;
 	public static final int PACK_MULT_MASS_FLOW = 10;
 	public static final int PACK_MULT_MS = 300;
 	public static final int PACK_MULT_PERCENT = 100;
