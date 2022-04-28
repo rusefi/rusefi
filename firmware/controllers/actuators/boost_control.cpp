@@ -173,7 +173,6 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostPid.iFactor = 0.3;
 	engineConfiguration->boostPid.maxValue = 20;
 	engineConfiguration->boostPid.minValue = -20;
-	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setLinearCurve(config->boostRpmBins, 0, 8000, 1);

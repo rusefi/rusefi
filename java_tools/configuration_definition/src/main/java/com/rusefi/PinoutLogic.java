@@ -162,9 +162,9 @@ public class PinoutLogic {
             getTsNameByIdFile.append("\tswitch(brainPin) {\n");
 
             for (Map.Entry</*id*/String, /*tsName*/String> e : tsNameById.entrySet()) {
-                if (!e.getKey().startsWith("GPIO")) // we only support GPIO pins at the moment no support for ADC
+                if (e.getKey().contains("ADC")) // we only support GPIO pins at the moment no support for ADC
                     continue;
-                getTsNameByIdFile.append("\t\tcase " + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
+                getTsNameByIdFile.append("\t\tcase Gpio::" + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
             }
 
             getTsNameByIdFile.append("\t\tdefault: return nullptr;\n");

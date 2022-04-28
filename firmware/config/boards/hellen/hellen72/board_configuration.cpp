@@ -15,38 +15,38 @@
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
+	engineConfiguration->injectionPins[0] = Gpio::G7;
+	engineConfiguration->injectionPins[1] = Gpio::G8;
+	engineConfiguration->injectionPins[2] = Gpio::D11;
+	engineConfiguration->injectionPins[3] = Gpio::D10;
 
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
+	//engineConfiguration->injectionPins[4] = Gpio::D9;
+	//engineConfiguration->injectionPins[5] = Gpio::F12;
+	//engineConfiguration->injectionPins[6] = Gpio::F13;
+	//engineConfiguration->injectionPins[7] = Gpio::F14;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
-	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
+	engineConfiguration->ignitionPins[0] = Gpio::I8; // 3F - IGN_1 (1&4)
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned ; // Gpio::E4
+	engineConfiguration->ignitionPins[2] = Gpio::E5; // 3I - IGN_2 (2&3)
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned; // Gpio::E3
 
-	//engineConfiguration->ignitionPins[4] = GPIOE_2;
-	//engineConfiguration->ignitionPins[5] = GPIOI_5;
-	//engineConfiguration->ignitionPins[6] = GPIOI_6;
-	//engineConfiguration->ignitionPins[7] = GPIOI_7;
+	//engineConfiguration->ignitionPins[4] = Gpio::E2;
+	//engineConfiguration->ignitionPins[5] = Gpio::I5;
+	//engineConfiguration->ignitionPins[6] = Gpio::I6;
+	//engineConfiguration->ignitionPins[7] = Gpio::I7;
 	
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -68,11 +68,11 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-	engineConfiguration->triggerInputPins[0] = GPIOB_1;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::B1;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[0] = Gpio::A6;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -98,8 +98,8 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 }
 
 void setSerialConfigurationOverrides() {
@@ -126,24 +126,24 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->acRelayPin = GPIOH_15;
-	engineConfiguration->acSwitch = GPIOB_0;
+	engineConfiguration->acRelayPin = Gpio::H15;
+	engineConfiguration->acSwitch = Gpio::B0;
 	engineConfiguration->acSwitchMode = PI_PULLUP;
 
 	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 	engineConfiguration->clutchDownPin = H144_IN_RES3;
 	engineConfiguration->clutchDownPinInverted = true;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->fan2Pin = GPIOD_9;
+	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
+	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->fan2Pin = Gpio::D9;
 	engineConfiguration->enableFan2WithAc = true;
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-	engineConfiguration->vvtPins[0] = GPIOI_0;    // 4R - VVT (O5)
+	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
+	engineConfiguration->vvtPins[0] = Gpio::I0;    // 4R - VVT (O5)
 
-    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
-    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
+    engineConfiguration->tachOutputPin = Gpio::D13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = Gpio::D15; // 3M - ALTERN (PWM6)
 
 
 	// "required" hardware is done - set some reasonable defaults
@@ -166,14 +166,14 @@ void setBoardDefaultConfiguration() {
 void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->sdCardCsPin = Gpio::A15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
+//	engineConfiguration->spi2mosiPin = Gpio::B15;
+//	engineConfiguration->spi2misoPin = Gpio::B14;
+//	engineConfiguration->spi2sckPin = Gpio::B13;
+//	engineConfiguration->sdCardCsPin = Gpio::B12;
 	engineConfiguration->is_enabled_spi_3 = true;
 }

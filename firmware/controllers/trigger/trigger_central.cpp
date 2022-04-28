@@ -124,12 +124,12 @@ static void turnOffAllDebugFields(void *arg) {
 	(void)arg;
 #if EFI_PROD_CODE
 	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
-		if (engineConfiguration->triggerInputDebugPins[index] != GPIO_UNASSIGNED) {
+		if (engineConfiguration->triggerInputDebugPins[index] != Gpio::Unassigned) {
 			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
 		}
 	}
 	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
-		if (engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
+		if (engineConfiguration->camInputsDebug[index] != Gpio::Unassigned) {
 			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
 		}
 	}
@@ -190,7 +190,7 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
 
-	if (isImportantFront && engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
+	if (isImportantFront && engineConfiguration->camInputsDebug[index] != Gpio::Unassigned) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
@@ -462,7 +462,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		}
 	}
 
-	if (engineConfiguration->triggerInputDebugPins[signalIndex] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->triggerInputDebugPins[signalIndex] != Gpio::Unassigned) {
 #if EFI_PROD_CODE
 		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
 #endif /* EFI_PROD_CODE */
@@ -917,15 +917,15 @@ bool TriggerCentral::isTriggerConfigChanged() {
 }
 
 void validateTriggerInputs() {
-	if (engineConfiguration->triggerInputPins[0] == GPIO_UNASSIGNED && engineConfiguration->triggerInputPins[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->triggerInputPins[0] == Gpio::Unassigned && engineConfiguration->triggerInputPins[1] != Gpio::Unassigned) {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
-	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == Gpio::Unassigned && engineConfiguration->camInputs[1] != Gpio::Unassigned) {
 		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
 	}
 
-	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[2] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == Gpio::Unassigned && engineConfiguration->camInputs[2] != Gpio::Unassigned) {
 		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
 }

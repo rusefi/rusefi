@@ -352,11 +352,6 @@
 
 #define EFI_SPI3_AF 6
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
@@ -395,11 +390,11 @@
 
 // todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
 #endif
 // todo: start using consoleSerialRxPin? Not sure
 #ifndef EFI_CONSOLE_RX_BRAIN_PIN
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 #endif
 // todo: this should be detected automatically based on pin selection
 // https://github.com/rusefi/rusefi/issues/3536
@@ -414,7 +409,7 @@
 #endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
 #ifndef LED_ERROR_BRAIN_PIN_MODE
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT

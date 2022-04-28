@@ -49,7 +49,7 @@ void FrequencySensor::deInit() {
 	efiExtiDisablePin(m_pin);
 #endif
 
-	m_pin = GPIO_UNASSIGNED;
+	m_pin = Gpio::Unassigned;
 }
 
 void FrequencySensor::onEdge(efitick_t nowNt) {
