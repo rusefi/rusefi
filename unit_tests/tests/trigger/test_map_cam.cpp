@@ -9,7 +9,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	EngineTestHelper eth(TEST_CRANK_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	engineConfiguration->camInputs[0] = GPIOA_0;
+	engineConfiguration->camInputs[0] = Gpio::A0;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
 	eth.engine.periodicFastCallback(); // trigger limp mode
 	ASSERT_FALSE(eth.engine.limpManager.allowIgnition());

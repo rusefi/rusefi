@@ -245,12 +245,12 @@ static void miataNAcommonEngineSettings() {
 
 static void miataNAcommon() {
 
-	engineConfiguration->idle.solenoidPin = GPIOB_9; // this W61 <> W61 jumper, pin 3W
+	engineConfiguration->idle.solenoidPin = Gpio::B9; // this W61 <> W61 jumper, pin 3W
 
-	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOC_7; // Frankenso high side - pin 1H
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 }
 
 /**
@@ -276,28 +276,28 @@ void setMiataNA6_MAP_Frankenso() {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-	engineConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
-	engineConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = Gpio::D3; // #1&3 pin 3U
+	engineConfiguration->injectionPins[1] = Gpio::E2; // #2&4 pin 3V
+	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
 	// white wire from 1E - TOP of W4 to BOTTOM W62
-	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::D5;
 
 	// yellow wire from 1V/W22 to bottom of W48
-	engineConfiguration->clutchDownPin = GPIOA_3;
+	engineConfiguration->clutchDownPin = Gpio::A3;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 
 
 	// 110mm red wire from 1N/W14 to bottom of W45
-	engineConfiguration->throttlePedalUpPin = GPIOA_7;
+	engineConfiguration->throttlePedalUpPin = Gpio::A7;
 
 	// green wire from 1Q/W17 to bottom of W46
-	engineConfiguration->acSwitch = GPIOA_6;
+	engineConfiguration->acSwitch = Gpio::A6;
 
 #if ! EFI_UNIT_TEST
 	// W57 PE3 A/C compressor relay out
-	engineConfiguration->acRelayPin = GPIOE_3;
+	engineConfiguration->acRelayPin = Gpio::E3;
 	// W58 PE4 A/C fan relay out
 #endif /* EFI_UNIT_TEST */
 
@@ -339,11 +339,11 @@ void setMiataNA6_VAF_MRE() {
 void setMiataNA6_MAP_MRE() {
 	miataNAcommonEngineSettings();
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::C6;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
-	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
 
 	engineConfiguration->twoWireBatchInjection = true;
@@ -378,7 +378,7 @@ void setMiataNA6_MAP_MRE() {
 	engineConfiguration->idleTimingPidDeadZone = 10;
 
 	// EFI_ADC_3: "22 - AN temp 4"
-	engineConfiguration->acSwitch = GPIOA_3;
+	engineConfiguration->acSwitch = Gpio::A3;
 
 #if HW_MICRO_RUSEFI
 	// todo: ask Stefan to clarify this
@@ -393,14 +393,14 @@ void setMiataNA6_MAP_MRE() {
 
 
 #if (BOARD_TLE8888_COUNT > 0)
-	// GPIOG_1: "Clutch Switch"
-	engineConfiguration->clutchDownPin = GPIOG_1;
+	// Gpio::G1: "Clutch Switch"
+	engineConfiguration->clutchDownPin = Gpio::G1;
 
-	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = Gpio::Unassigned;
 
 
-	// TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
 
 #endif /* BOARD_TLE8888_COUNT */
 }
@@ -410,7 +410,7 @@ void setMiata94_MAP_MRE() {
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
+	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -440,7 +440,7 @@ void setHellenNA94() {
 	engineConfiguration->fan2OnTemperature = 95;
 	engineConfiguration->fan2OffTemperature = 91;
 
-	engineConfiguration->fan2Pin = GPIOD_9; // 3S - A/C Fan 94-95
+	engineConfiguration->fan2Pin = Gpio::D9; // 3S - A/C Fan 94-95
 }
 
 void setHellenNA6() {

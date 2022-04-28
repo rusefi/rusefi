@@ -425,7 +425,7 @@ static void setPotSpi(int spi) {
 
 static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		efiPrintf("invalid pin name [%s]", pinName);
 	}
 	return pin;
@@ -442,7 +442,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -453,7 +453,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 // this method is useful for desperate time debugging
 void readPin(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
@@ -464,7 +464,7 @@ void readPin(const char *pinName) {
 // this method is useful for desperate time debugging or hardware validation
 static void benchSetPinValue(const char *pinName, int bit) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
@@ -482,7 +482,7 @@ static void benchSetPin(const char *pinName) {
 
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting %s pin to %s please save&restart", name, hwPortname(pin));
@@ -553,7 +553,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -572,7 +572,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -597,7 +597,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -610,7 +610,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -623,7 +623,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 // set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	adc_channel_e channel = getAdcChannel(pin);
@@ -663,7 +663,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -673,7 +673,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 
 static void showPinFunction(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));

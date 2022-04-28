@@ -104,6 +104,8 @@ using gppwm_note_t = char[GPPWM_NOTE_SIZE];
 
 using le_formula_t = char[LE_COMMAND_LENGTH];
 
+using brain_pin_e = Gpio;
+
 using egt_cs_array_t = brain_pin_e[EGT_CHANNEL_COUNT];
 
 using pwm_freq_t = int16_t;
@@ -112,6 +114,7 @@ using script_setting_t = float;
 
 using brain_input_pin_e = brain_pin_e;
 using switch_input_pin_e = brain_pin_e;
+using output_pin_e = brain_pin_e;
 
 typedef void (*VoidPtr)(void*);
 

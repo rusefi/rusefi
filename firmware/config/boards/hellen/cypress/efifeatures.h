@@ -250,11 +250,6 @@
 
 #define EFI_SPI3_AF PAL_MODE_ALTERNATIVE_SPI
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
@@ -310,11 +305,11 @@
 // LED1 = GPIOJ_15
 // LED2 = GPIOJ_0
 // LED3 = GPIOJ_12
-// LED4 = GPIOA_0
+// LED4 = Gpio::A0
 
-#define LED_WARNING_BRAIN_PIN GPIOA_0
+#define LED_WARNING_BRAIN_PIN Gpio::A0
 
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOJ_15
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::J15
 #define LED_ERROR_BRAIN_PIN_MODE INVERTED_OUTPUT
 
 #define EFI_WARNING_LED FALSE

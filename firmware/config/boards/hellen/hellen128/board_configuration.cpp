@@ -28,25 +28,25 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
-	engineConfiguration->ignitionPins[4] = GPIOE_2;
-	engineConfiguration->ignitionPins[5] = GPIOI_5;
-	engineConfiguration->ignitionPins[6] = GPIOI_6;
-	engineConfiguration->ignitionPins[7] = GPIOI_7;
+	engineConfiguration->ignitionPins[0] = Gpio::I8;
+	engineConfiguration->ignitionPins[1] = Gpio::E5;
+	engineConfiguration->ignitionPins[2] = Gpio::E4;
+	engineConfiguration->ignitionPins[3] = Gpio::E3;
+	engineConfiguration->ignitionPins[4] = Gpio::E2;
+	engineConfiguration->ignitionPins[5] = Gpio::I5;
+	engineConfiguration->ignitionPins[6] = Gpio::I6;
+	engineConfiguration->ignitionPins[7] = Gpio::I7;
 	
 	// disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -68,11 +68,11 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-	engineConfiguration->triggerInputPins[0] = GPIOB_1;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::B1;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = GPIOA_6;
+	engineConfiguration->camInputs[0] = Gpio::A6;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
@@ -96,7 +96,7 @@ static void setHellen128ETBConfig() {
 	uint8_t variant[2]={0xff,0xff};
 
 	//same pins as for LPS25
-	m_i2c.init(GPIOB_10, GPIOB_11);
+	m_i2c.init(Gpio::B10, Gpio::B11);
 	m_i2c.read(0x20, variant, sizeof(variant));
 
 	efiPrintf ("BoardID [%02x%02x] ", variant[0],variant[1] );
@@ -117,17 +117,17 @@ static void setHellen128ETBConfig() {
 		// Disable pin
 		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
 		// Unused
-		engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+		engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 		//ETB2
 		// PWM pin
-		engineConfiguration->etbIo[1].controlPin = GPIOI_2;
+		engineConfiguration->etbIo[1].controlPin = Gpio::I2;
 		// DIR pin
-		engineConfiguration->etbIo[1].directionPin1 = GPIOH_13;
+		engineConfiguration->etbIo[1].directionPin1 = Gpio::H13;
 		// Disable pin
-		engineConfiguration->etbIo[1].disablePin = GPIOB_7;
+		engineConfiguration->etbIo[1].disablePin = Gpio::B7;
 		// Unused
-		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 		// we only have pwm/dir, no dira/dirb
 		engineConfiguration->etb_use_two_wires = false;
@@ -179,10 +179,10 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->fuelPumpPin = GPIOD_15;
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = Gpio::D15;
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 
 	engineConfiguration->starterControlPin = H176_OUT_IO10;
 	engineConfiguration->startStopButtonPin = H176_IN_A16;
@@ -216,7 +216,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
 
 	setHellenDefaultVrThresholds();
-	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
+	engineConfiguration->vrThreshold[0].pin = Gpio::D14;
 	hellenWbo();
 }
 

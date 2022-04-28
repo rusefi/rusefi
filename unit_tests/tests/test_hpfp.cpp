@@ -268,7 +268,7 @@ TEST(HPFP, Schedule) {
 	// This will call the fast callback routine
 	engine->rpmCalculator.setRpmValue(1000);
 	engine->injectionMass[0] = 0.05 /* cc/cyl */ * fuelDensity;
-	engineConfiguration->hpfpValvePin = GPIOA_2; // arbitrary
+	engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 
 	hpfp.onFastCallback();
 	// First event was scheduled by setRpmValue with 0 injection mass.  So, it's off.

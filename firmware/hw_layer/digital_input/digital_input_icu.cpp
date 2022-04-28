@@ -126,21 +126,21 @@ static uint32_t getAlternateFunctions(ICUDriver *driver) {
 
 icuchannel_t getInputCaptureChannel(brain_pin_e hwPin) {
 	switch (hwPin) {
-	case GPIOA_5: // TIM2 stm32f4discovery/Frankenso default
-	case GPIOA_6: // TIM3
-	case GPIOA_8: // TIM1
-	case GPIOA_15: // TIM2
-	case GPIOC_6: // TIM3 stm32f4discovery/Frankenso default
-	case GPIOE_9: // TIM1
+	case Gpio::A5: // TIM2 stm32f4discovery/Frankenso default
+	case Gpio::A6: // TIM3
+	case Gpio::A8: // TIM1
+	case Gpio::A15: // TIM2
+	case Gpio::C6: // TIM3 stm32f4discovery/Frankenso default
+	case Gpio::E9: // TIM1
 		return ICU_CHANNEL_1;
 
-	case GPIOA_1: // TIM2
-	case GPIOA_7: // TIM3
-	case GPIOA_9: // TIM1
-	case GPIOB_3: // TIM2
-	case GPIOB_5: // TIM2
-	case GPIOC_7: // TIM3
-	case GPIOE_11: // TIM1
+	case Gpio::A1: // TIM2
+	case Gpio::A7: // TIM3
+	case Gpio::A9: // TIM1
+	case Gpio::B3: // TIM2
+	case Gpio::B5: // TIM2
+	case Gpio::C7: // TIM3
+	case Gpio::E11: // TIM1
 		return ICU_CHANNEL_2;
 	default:
 		firmwareError(CUSTOM_ERR_ICU_PIN, "Unexpected hw pin in getInputCaptureChannel %s", hwPortname(hwPin));
@@ -163,42 +163,42 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 		return NULL;
 	}
 #if STM32_ICU_USE_TIM1
-	if (hwPin == GPIOA_8 ||
-	    hwPin == GPIOA_9 ||
-		hwPin == GPIOE_9 ||
-		hwPin == GPIOE_11) {
+	if (hwPin == Gpio::A8 ||
+	    hwPin == Gpio::A9 ||
+		hwPin == Gpio::E9 ||
+		hwPin == Gpio::E11) {
 		return &ICUD1;
 	}
 #endif
 #if STM32_ICU_USE_TIM2
-	if (hwPin == GPIOA_1 ||
-		hwPin == GPIOA_5 ||
-		hwPin == GPIOA_15 ||
-		hwPin == GPIOB_3) {
+	if (hwPin == Gpio::A1 ||
+		hwPin == Gpio::A5 ||
+		hwPin == Gpio::A15 ||
+		hwPin == Gpio::B3) {
 		return &ICUD2;
 	}
 #endif
 #if STM32_ICU_USE_TIM3
-	if (hwPin == GPIOA_6 ||
-		hwPin == GPIOA_7 ||
-		hwPin == GPIOB_4 ||
-		hwPin == GPIOB_5 ||
-		hwPin == GPIOC_6 ||
-		hwPin == GPIOC_7) {
+	if (hwPin == Gpio::A6 ||
+		hwPin == Gpio::A7 ||
+		hwPin == Gpio::B4 ||
+		hwPin == Gpio::B5 ||
+		hwPin == Gpio::C6 ||
+		hwPin == Gpio::C7) {
 		return &ICUD3;
 	}
 #endif
 #if STM32_ICU_USE_TIM8
-	if (hwPin == GPIOC_6 ||
-		hwPin == GPIOC_7) {
+	if (hwPin == Gpio::C6 ||
+		hwPin == Gpio::C7) {
 		return &ICUD8;
 	}
 #endif
 #if STM32_ICU_USE_TIM9
-	if (hwPin == GPIOA_2 ||
-		hwPin == GPIOA_3 ||
-		hwPin == GPIOE_5 ||
-		hwPin == GPIOE_6) {
+	if (hwPin == Gpio::A2 ||
+		hwPin == Gpio::A3 ||
+		hwPin == Gpio::E5 ||
+		hwPin == Gpio::E6) {
 		return &ICUD9;
 	}
 #endif
