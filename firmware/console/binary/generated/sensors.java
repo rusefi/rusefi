@@ -318,7 +318,7 @@ unusedAtTheEnd75("unusedAtTheEnd 75", SensorCategory.SENSOR_INPUTS, FieldType.IN
 unusedAtTheEnd76("unusedAtTheEnd 76", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 637, 1.0, 0.0, 0.0, ""),
 unusedAtTheEnd77("unusedAtTheEnd 77", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 638, 1.0, 0.0, 0.0, ""),
 unusedAtTheEnd78("unusedAtTheEnd 78", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 639, 1.0, 0.0, 0.0, ""),
-m_requested_pump("Degrees retarded: larger number = more retard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 640, 1.0, -1.0, -1.0, ""),
+m_knockRetard("Degrees retarded: larger number = more retard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 640, 1.0, -1.0, -1.0, ""),
 m_requested_pump("Computed requested pump duration in degrees (not including deadtime)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 644, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent("fuel_requested_percent", SensorCategory.SENSOR_INPUTS, FieldType.INT, 648, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent_pi("fuel_requested_percent_pi", SensorCategory.SENSOR_INPUTS, FieldType.INT, 652, 1.0, -1.0, -1.0, ""),
