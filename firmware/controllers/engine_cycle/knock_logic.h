@@ -14,6 +14,10 @@ int getCylinderKnockBank(uint8_t cylinderNumber);
 
 class KnockController : public EngineModule, public knock_controller_s {
 public:
+    KnockController() {
+	    // start with threshold higher than any possible knock to avoid recording spurious knocks
+	    m_knockThreshold = 100;
+    }
 	// EngineModule implementation
 	void onFastCallback() override;
 
@@ -26,11 +30,6 @@ public:
 	virtual float getKnockThreshold() const;
 
 private:
-	// start with threshold higher than any possible knock to avoid recording spurious knocks
-	float m_knockThreshold = 100;
-
-	uint32_t m_knockCount = 0;
-
 	using PD = PeakDetect<float, MS2NT(100)>;
 	PD peakDetectors[12];
 	PD allCylinderPeakDetector;
