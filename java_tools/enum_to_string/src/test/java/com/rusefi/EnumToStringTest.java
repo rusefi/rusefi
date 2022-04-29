@@ -36,31 +36,31 @@ public class EnumToStringTest {
     public void parseEnum() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
-                        "\tGpio::Unassigned = 0,\n" +
-                        "\tGpio::Invalid = 1,\n" +
+                        "\tGPIO_UNASSIGNED = 0,\n" +
+                        "\tGPIO_INVALID = 1,\n" +
                         "\tGPIO_HEX = 0xA1,\n" +
-                        "}Gpio; // hello");
+                        "}brain_pin_e; // hello");
         EnumsReader enumsReader = new EnumsReader().read(reader);
         EnumToString enumToString = process(enumsReader);
 
-        List<Value> values = new ArrayList<>(enumsReader.getEnums().get("Gpio").values.values());
+        List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values.values());
         assertEquals(3, values.size());
         Value first = values.get(0);
         assertEquals("GPIO_HEX", first.getName());
         assertEquals("0xA1", first.getValue());
 
         Value second = values.get(1);
-        assertEquals("Gpio::Invalid", second.getName());
+        assertEquals("GPIO_INVALID", second.getName());
         assertEquals("1", second.getValue());
 
-        assertEquals("const char *getGpio(Gpio value){\n" +
+        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
                 "switch(value) {\n" +
                 "case GPIO_HEX:\n" +
                 "  return \"GPIO_HEX\";\n" +
-                "case Gpio::Invalid:\n" +
-                "  return \"Gpio::Invalid\";\n" +
-                "case Gpio::Unassigned:\n" +
-                "  return \"Gpio::Unassigned\";\n" +
+                "case GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
                 "  }\n" +
                 " return NULL;\n" +
                 "}\n", enumToString.getCppFileContent());
@@ -70,17 +70,17 @@ public class EnumToStringTest {
     public void parsePackedEnum() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum __attribute__ ((__packed__)) {\n" +
-                        "\tGpio::Unassigned = 0,\n" +
-                        "\tGpio::Invalid = 1,\n" +
-                        "} Gpio ;");
+                        "\tGPIO_UNASSIGNED = 0,\n" +
+                        "\tGPIO_INVALID = 1,\n" +
+                        "} brain_pin_e ;");
         EnumsReader enumsReader = new EnumsReader().read(reader);
         EnumToString enumToString = process(enumsReader);
-        assertEquals("const char *getGpio(Gpio value){\n" +
+        assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
                 "switch(value) {\n" +
-                "case Gpio::Invalid:\n" +
-                "  return \"Gpio::Invalid\";\n" +
-                "case Gpio::Unassigned:\n" +
-                "  return \"Gpio::Unassigned\";\n" +
+                "case GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
                 "  }\n" +
                 " return NULL;\n" +
                 "}\n", enumToString.getCppFileContent());
@@ -90,17 +90,17 @@ public class EnumToStringTest {
     public void parsePackedFancyEnum() throws IOException {
         final StringReader reader = new StringReader(
                 "enum class myEnum : uint8_t {\n" +
-                        "\tGpio::Unassigned = 0,\n" +
-                        "\tGpio::Invalid = 1,\n" +
-                        "} Gpio ;");
+                        "\tGPIO_UNASSIGNED = 0,\n" +
+                        "\tGPIO_INVALID = 1,\n" +
+                        "} brain_pin_e ;");
         EnumsReader enumsReader = new EnumsReader().read(reader);
         EnumToString enumToString = process(enumsReader);
         assertEquals("const char *getMyEnum(myEnum value){\n" +
                 "switch(value) {\n" +
-                "case myEnum::Gpio::Invalid:\n" +
-                "  return \"Gpio::Invalid\";\n" +
-                "case myEnum::Gpio::Unassigned:\n" +
-                "  return \"Gpio::Unassigned\";\n" +
+                "case myEnum::GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case myEnum::GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
                 "  }\n" +
                 " return NULL;\n" +
                 "}\n", enumToString.getCppFileContent());
@@ -110,16 +110,16 @@ public class EnumToStringTest {
     public void parseEnumWithoutExplicitValues() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
-                        "\tGpio::Unassigned,\n" +
-                        "\tGpio::Invalid,\n" +
+                        "\tGPIO_UNASSIGNED,\n" +
+                        "\tGPIO_INVALID,\n" +
                         "\tGPIO_HEX,\n" +
-                        "}Gpio; // hello");
+                        "}brain_pin_e; // hello");
         EnumsReader enumsReader = new EnumsReader().read(reader);
-        EnumsReader.EnumState Gpio = enumsReader.getEnums().get("Gpio");
-        assertEquals(2, Gpio.values.get("GPIO_HEX").getIntValue());
+        EnumsReader.EnumState brain_pin_e = enumsReader.getEnums().get("brain_pin_e");
+        assertEquals(2, brain_pin_e.values.get("GPIO_HEX").getIntValue());
 
         VariableRegistry registry = new VariableRegistry();
-        List<Value> listByOrdinal = EnumsReader.getSortedByOrder(registry, Gpio.values);
+        List<Value> listByOrdinal = EnumsReader.getSortedByOrder(registry, brain_pin_e.values);
         assertEquals(0, listByOrdinal.get(0).getIntValue());
 
         for (Map.Entry<String /*enum name*/, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
@@ -131,9 +131,9 @@ public class EnumToStringTest {
                     "\n" +
                     "\n" +
                     "\n" +
-                    "public enum Gpio {\n" +
-                    "\tGpio::Unassigned,\n" +
-                    "\tGpio::Invalid,\n" +
+                    "public enum brain_pin_e {\n" +
+                    "\tGPIO_UNASSIGNED,\n" +
+                    "\tGPIO_INVALID,\n" +
                     "\tGPIO_HEX,\n" +
                     "}\n", a);
         }
@@ -184,8 +184,8 @@ public class EnumToStringTest {
     public void testWithInput() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
-                        "\tGpio::Unassigned = XXXX,\n" +
-                        "}Gpio; // hello");
+                        "\tGPIO_UNASSIGNED = XXXX,\n" +
+                        "}brain_pin_e; // hello");
 
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define XXXX 0"));
@@ -198,8 +198,8 @@ public class EnumToStringTest {
                     "\n" +
                     "\n" +
                     "\n" +
-                    "public enum Gpio {\n" +
-                    "\tGpio::Unassigned,\n" +
+                    "public enum brain_pin_e {\n" +
+                    "\tGPIO_UNASSIGNED,\n" +
                     "}\n", java);
         }
     }
@@ -208,8 +208,8 @@ public class EnumToStringTest {
     public void testWithInputOutOfOrder() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
-                        "\tGpio::Unassigned = XXXX,\n" +
-                        "}Gpio; // hello");
+                        "\tGPIO_UNASSIGNED = XXXX,\n" +
+                        "}brain_pin_e; // hello");
 
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define XXXX 12"));
@@ -222,8 +222,8 @@ public class EnumToStringTest {
                     "\n" +
                     "\n" +
                     "\n" +
-                    "public enum Gpio {\n" +
-                    "\tGpio::Unassigned,\n" +
+                    "public enum brain_pin_e {\n" +
+                    "\tGPIO_UNASSIGNED,\n" +
                     "}\n", java);
         }
     }
@@ -233,10 +233,10 @@ public class EnumToStringTest {
     public void parseCommentedOutEnumWithoutExplicitValues() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
-                        "\t//Gpio::Unassigned,\n" +
-                        "\tGpio::Invalid,\n" +
+                        "\t//GPIO_UNASSIGNED,\n" +
+                        "\tGPIO_INVALID,\n" +
                         "\tGPIO_HEX,\n" +
-                        "}Gpio; // hello");
+                        "}brain_pin_e; // hello");
         EnumsReader enumsReader = new EnumsReader().read(reader);
 
         VariableRegistry registry = new VariableRegistry();
@@ -250,8 +250,8 @@ public class EnumToStringTest {
                     "\n" +
                     "\n" +
                     "\n" +
-                    "public enum Gpio {\n" +
-                    "\tGpio::Invalid,\n" +
+                    "public enum brain_pin_e {\n" +
+                    "\tGPIO_INVALID,\n" +
                     "\tGPIO_HEX,\n" +
                     "}\n", a);
         }
