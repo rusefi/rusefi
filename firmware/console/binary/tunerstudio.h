@@ -9,6 +9,7 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 #include "electronic_throttle_generated.h"
+#include "knock_controller_generated.h"
 #include "FragmentEntry.h"
 
 typedef struct {

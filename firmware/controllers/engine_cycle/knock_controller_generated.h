@@ -9,7 +9,7 @@ struct knock_controller_s {
 	 * Degrees retarded: larger number = more retard
 	 * offset 0
 	 */
-	angle_t m_requested_pump = (angle_t)0;
+	angle_t m_knockRetard = (angle_t)0;
 };
 static_assert(sizeof(knock_controller_s) == 4);
 

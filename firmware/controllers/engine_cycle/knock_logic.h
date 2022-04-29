@@ -8,10 +8,11 @@
 #pragma once
 
 #include "peak_detect.h"
+#include "knock_controller_generated.h"
 
 int getCylinderKnockBank(uint8_t cylinderNumber);
 
-class KnockController : public EngineModule {
+class KnockController : public EngineModule, public knock_controller_s {
 public:
 	// EngineModule implementation
 	void onFastCallback() override;
@@ -27,9 +28,6 @@ public:
 private:
 	// start with threshold higher than any possible knock to avoid recording spurious knocks
 	float m_knockThreshold = 100;
-
-	// Degrees retarded: larger number = more retard
-	float m_knockRetard = 0;
 
 	uint32_t m_knockCount = 0;
 
