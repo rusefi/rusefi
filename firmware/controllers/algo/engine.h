@@ -37,6 +37,9 @@
 #include "ignition_controller.h"
 #include "alternator_controller.h"
 #include "dfco.h"
+#include "gear_detector.h"
+#include "advance_map.h"
+#include "fan_control.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -185,6 +188,10 @@ public:
 		PrimeController,
 		DfcoController,
 		Mockable<WallFuelController>,
+#if EFI_VEHICLE_SPEED
+		GearDetector,
+#endif // EFI_VEHICLE_SPEED
+		KnockController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -198,7 +205,10 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
+#if EFI_TCU
 	GearControllerBase *gearController;
+#endif
+	
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
@@ -207,6 +217,12 @@ public:
 #if EFI_BOOST_CONTROL
 	BoostController boostController;
 #endif // EFI_BOOST_CONTROL
+
+	IgnitionState ignitionState;
+
+	FanControl1 fan1;
+	FanControl2 fan2;
+
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
@@ -317,7 +333,9 @@ public:
 
 	TpsAccelEnrichment tpsAccelEnrichment;
 
+#if EFI_SHAFT_POSITION_INPUT
 	TriggerCentral triggerCentral;
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	/**
 	 * Each individual fuel injection duration for current engine cycle, without wall wetting
@@ -341,7 +359,7 @@ public:
 	void periodicSlowCallback();
 	void updateSlowSensors();
 	void updateSwitchInputs();
-	void initializeTriggerWaveform();
+	void updateTriggerWaveform();
 
 	bool clutchUpState = false;
 	bool clutchDownState = false;
@@ -349,7 +367,6 @@ public:
 
 	// todo: extract some helper which would contain boolean state and most recent toggle time?
 	bool acSwitchState = false;
-	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
 
@@ -428,8 +445,6 @@ public:
 	float getTimeIgnitionSeconds(void) const;
 
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
-
-	KnockController knockController;
 
 	AirmassModelBase* mockAirmassModel = nullptr;
 

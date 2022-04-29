@@ -699,6 +699,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[7] = 0x00;
 		}
 
+#if EFI_SHAFT_POSITION_INPUT
 		/* 0x369 - 20Hz rate */
 		{ 
 			CanTxMessage msg(0x369, 8);
@@ -717,6 +718,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[6] = 0x00;			
 			msg[7] = 0x00;
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 		/* 0x36A - 20Hz rate */
 		/* todo: one day we should split this */
@@ -1045,8 +1047,9 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Air Temperature */
-			msg[2] = 0x00;
-			msg[3] = 0x00;
+			tmp = ((Sensor::getOrZero(SensorType::Iat) + 273.15) * 10);
+			msg[2] = (tmp >> 8);
+			msg[3] = (tmp & 0x00ff);
 			/* Fuel Temperature */
 			msg[4] = 0x00;
 			msg[5] = 0x00;
@@ -1073,8 +1076,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x3E2, 2);
 			/* Fuel Level in Liters */
-			msg[0] = 0x00;
-			msg[1] = 0xff;
+			tmp = (Sensor::getOrZero(SensorType::FuelLevel)* 10);
+			msg[0] = (tmp >> 8);
+			msg[1] = (tmp & 0x00ff);
 		}
 
 		/* 0x3E3 = 5Hz rate */

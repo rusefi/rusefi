@@ -73,6 +73,7 @@ TEST(nissan, vq_vvt) {
 	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
 
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 

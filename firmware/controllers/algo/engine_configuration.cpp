@@ -259,19 +259,19 @@ void setDefaultBasePins() {
 #ifdef EFI_WARNING_PIN
 	engineConfiguration->warningLedPin = EFI_WARNING_PIN;
 #else
-	engineConfiguration->warningLedPin = GPIOD_13; // orange LED on discovery
+	engineConfiguration->warningLedPin = Gpio::D13; // orange LED on discovery
 #endif
 
 
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
-	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
+	engineConfiguration->communicationLedPin = Gpio::D15; // blue LED on discovery
 #endif
 #ifdef EFI_RUNNING_PIN
 	engineConfiguration->runningLedPin = EFI_RUNNING_PIN;
 #else
-	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
+	engineConfiguration->runningLedPin = Gpio::D12; // green LED on discovery
 #endif
 
 #if EFI_PROD_CODE
@@ -283,8 +283,8 @@ void setDefaultBasePins() {
 	// set UART pads configuration based on the board
 // needed also by bootloader code
 	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOC_10;
-	engineConfiguration->binarySerialRxPin = GPIOC_11;
+	engineConfiguration->binarySerialTxPin = Gpio::C10;
+	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
 
@@ -299,7 +299,7 @@ void setDefaultBasePins() {
 void setDefaultSdCardParameters() {
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOD_4;
+	engineConfiguration->sdCardCsPin = Gpio::D4;
 	engineConfiguration->isSdCardEnabled = true;
 
 #if EFI_PROD_CODE
@@ -351,16 +351,16 @@ static void setDefaultIdleSpeedTarget() {
 }
 
 static void setDefaultFrankensoStepperIdleParameters() {
-	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
-	engineConfiguration->idle.stepperStepPin = GPIOE_12;
-	engineConfiguration->stepperEnablePin = GPIOE_14;
+	engineConfiguration->idle.stepperDirectionPin = Gpio::E10;
+	engineConfiguration->idle.stepperStepPin = Gpio::E12;
+	engineConfiguration->stepperEnablePin = Gpio::E14;
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
 static void setCanFrankensoDefaults() {
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canTxPin = Gpio::B6;
+	engineConfiguration->canRxPin = Gpio::B12;
 }
 
 /**
@@ -376,7 +376,7 @@ void setDefaultGppwmParameters() {
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
 
-		cfg.pin = GPIO_UNASSIGNED;
+		cfg.pin = Gpio::Unassigned;
 		cfg.dutyIfError = 0;
 		cfg.onAboveDuty = 60;
 		cfg.offBelowDuty = 50;
@@ -404,21 +404,14 @@ static void setDefaultEngineNoiseTable() {
 
 	engineConfiguration->knockSamplingDuration = 45;
 
-	engineConfiguration->knockNoise[0] = 2; // 800
-	engineConfiguration->knockNoise[1] = 2; // 1700
-	engineConfiguration->knockNoise[2] = 2; // 2600
-	engineConfiguration->knockNoise[3] = 2; // 3400
-	engineConfiguration->knockNoise[4] = 2; // 4300
-	engineConfiguration->knockNoise[5] = 2; // 5200
-	engineConfiguration->knockNoise[6] = 2; // 6100
-	engineConfiguration->knockNoise[7] = 2; // 7000
+	setArrayValues(engineConfiguration->knockBaseNoise, -20);
 }
 
 static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
 	 */
-	//	engineConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
+	//	engineConfiguration->hip9011CsPin = Gpio::D0; // rev 0.1
 
 	engineConfiguration->isHip9011Enabled = true;
 	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
@@ -428,11 +421,11 @@ static void setHip9011FrankensoPinout() {
 #ifdef EFI_HIP_CS_PIN
 	engineConfiguration->hip9011CsPin = EFI_HIP_CS_PIN;
 #else
-	engineConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
+	engineConfiguration->hip9011CsPin = Gpio::B0; // rev 0.4
 #endif
 	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
 
-	engineConfiguration->hip9011IntHoldPin = GPIOB_11;
+	engineConfiguration->hip9011IntHoldPin = Gpio::B11;
 	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 
 	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
@@ -520,10 +513,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	engineConfiguration->mapMinBufferLength = 1;
+	engineConfiguration->vvtActivationDelayMs = 6000;
 	
 	engineConfiguration->startCrankingDuration = 3;
-
-	engineConfiguration->idlePidRpmDeadZone = 50;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -534,7 +526,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
-	engineConfiguration->alternatorControl.minValue = 10;
+	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
 	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);
@@ -701,7 +693,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vssToothCount = 21;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
-	engineConfiguration->mapErrorDetectionTooHigh = 250;
+	// todo: default limits should be hard-coded for each sensor type
+	// https://github.com/rusefi/rusefi/issues/4030
+	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
 	engineConfiguration->useLcdScreen = true;
 
@@ -728,33 +722,33 @@ void setDefaultFrankensoConfiguration() {
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
-//	engineConfiguration->gps_rx_pin = GPIOB_7;
-//	engineConfiguration->gps_tx_pin = GPIOB_6;
+//	engineConfiguration->gps_rx_pin = Gpio::B7;
+//	engineConfiguration->gps_tx_pin = Gpio::B6;
 
-	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
 
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->triggerInputPins[0] = Gpio::C6;
+	engineConfiguration->triggerInputPins[1] = Gpio::A5;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
-	engineConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
-	engineConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
-	engineConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
+	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::D7;
+	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
+	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::D5;
+	engineConfiguration->digitalPotentiometerChipSelect[3] = Gpio::Unassigned;
 
-	engineConfiguration->spi1mosiPin = GPIOB_5;
-	engineConfiguration->spi1misoPin = GPIOB_4;
-	engineConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+	engineConfiguration->spi1mosiPin = Gpio::B5;
+	engineConfiguration->spi1misoPin = Gpio::B4;
+	engineConfiguration->spi1sckPin = Gpio::B3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
-	engineConfiguration->spi2mosiPin = GPIOB_15;
-	engineConfiguration->spi2misoPin = GPIOB_14;
-	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->spi2mosiPin = Gpio::B15;
+	engineConfiguration->spi2misoPin = Gpio::B14;
+	engineConfiguration->spi2sckPin = Gpio::B13;
 
-	engineConfiguration->spi3mosiPin = GPIOB_5;
-	engineConfiguration->spi3misoPin = GPIOB_4;
-	engineConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->spi3mosiPin = Gpio::B5;
+	engineConfiguration->spi3misoPin = Gpio::B4;
+	engineConfiguration->spi3sckPin = Gpio::B3;
 	
 	// set optional subsystem configs
 #if EFI_MEMS
@@ -1160,7 +1154,7 @@ void applyNonPersistentConfiguration() {
 #endif
 
 #if EFI_ENGINE_CONTROL
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
 
@@ -1174,8 +1168,16 @@ void prepareShapes() {
 
 #endif
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
-	engineConfiguration->ambiguousOperationMode = mode;
+void setTwoStrokeOperationMode() {
+	engineConfiguration->twoStroke = true;
+}
+
+void setCamOperationMode() {
+	engineConfiguration->skippedWheelOnCam = true;
+}
+
+void setCrankOperationMode() {
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
@@ -1187,11 +1189,11 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	
-	engineConfiguration->joystickCenterPin = GPIOC_8;
-	engineConfiguration->joystickAPin = GPIOD_10;
-	engineConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	engineConfiguration->joystickCPin = GPIO_UNASSIGNED;
-	engineConfiguration->joystickDPin = GPIOD_11;
+	engineConfiguration->joystickCenterPin = Gpio::C8;
+	engineConfiguration->joystickAPin = Gpio::D10;
+	engineConfiguration->joystickBPin = Gpio::Unassigned;
+	engineConfiguration->joystickCPin = Gpio::Unassigned;
+	engineConfiguration->joystickDPin = Gpio::D11;
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them

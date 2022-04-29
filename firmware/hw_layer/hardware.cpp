@@ -14,7 +14,6 @@
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
-#include "os_util.h"
 #include "bench_test.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
@@ -302,7 +301,9 @@ void applyNewHardwareSettings() {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	stopTriggerDebugPins();
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.unregisterPins();
 
@@ -464,9 +465,12 @@ void startHardware() {
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
+#if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
 
 	startTriggerDebugPins();
+
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	startPedalPins();
 

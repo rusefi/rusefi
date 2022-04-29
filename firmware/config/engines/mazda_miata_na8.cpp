@@ -41,10 +41,10 @@ void setMazdaMiataNA8Configuration() {
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 
-	engineConfiguration->injectionPins[0] = GPIOD_3; // #1 pin 3U
-	engineConfiguration->injectionPins[1] = GPIOE_2; // #2 pin 3V
-	engineConfiguration->injectionPins[2] = GPIOB_8; // #3 pin 3Y
-	engineConfiguration->injectionPins[3] = GPIOB_7; // #4 pin 3Z
+	engineConfiguration->injectionPins[0] = Gpio::D3; // #1 pin 3U
+	engineConfiguration->injectionPins[1] = Gpio::E2; // #2 pin 3V
+	engineConfiguration->injectionPins[2] = Gpio::B8; // #3 pin 3Y
+	engineConfiguration->injectionPins[3] = Gpio::B7; // #4 pin 3Z
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 }

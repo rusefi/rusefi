@@ -8,13 +8,21 @@
 #pragma once
 
 struct FragmentEntry {
-	FragmentEntry(const uint8_t *data, size_t size) {
-		this->data = data;
-		this->size = size;
+	template <typename TData>
+	FragmentEntry(const TData* data)
+		: data(reinterpret_cast<const uint8_t*>(data))
+		, size(sizeof(TData))
+	{
 	}
 
-	const uint8_t *data;
-	size_t size;
+	const uint8_t* const data;
+	const size_t size;
 };
 
-void copyRange(uint8_t *destination, FragmentEntry *fragments, size_t dataOffset, size_t dataLength);
+struct FragmentList {
+	const FragmentEntry* fragments;
+	const size_t count;
+};
+
+// copy `size` of fragmented outputs in to destination, skipping the first `skip` bytes
+void copyRange(uint8_t* destination, FragmentList src, size_t skip, size_t size);

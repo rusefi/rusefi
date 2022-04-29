@@ -170,6 +170,10 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
+#ifndef EFI_TCU
+#define EFI_TCU TRUE
+#endif
+
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
 #endif
@@ -235,11 +239,6 @@
 
 #define EFI_SPI3_AF 6
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
@@ -290,7 +289,7 @@
 #endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
 #ifndef LED_ERROR_BRAIN_PIN_MODE
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
@@ -335,8 +334,8 @@
 // todo: start using consoleSerial{Tx,Rx}Pin
 #define EFI_CONSOLE_AF 7
 #define TS_SERIAL_AF 7
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 
 // todo: document the limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE

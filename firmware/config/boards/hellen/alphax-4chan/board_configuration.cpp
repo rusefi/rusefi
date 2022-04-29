@@ -19,35 +19,62 @@ static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
 static OutputPin alphaCrankNPullUp;
+static OutputPin alpha2stepPullDown;
+static OutputPin alphaCamPullDown;
+static OutputPin alphaCamVrPullUp;
+static OutputPin alphaD2PullDown;
+static OutputPin alphaD3PullDown;
+static OutputPin alphaD4PullDown;
+static OutputPin alphaD5PullDown;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->clutchDownPin = GPIO_UNASSIGNED;
+	engineConfiguration->clutchDownPin = Gpio::Unassigned;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
+}
+
+static void setupEtb() {
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = H144_GP2;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
 }
 
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = H144_IGN_2;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = H144_IGN_4;
 
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -70,11 +97,15 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
 	engineConfiguration->triggerInputPins[1] = H144_IN_CAM;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+
+	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
@@ -99,6 +130,13 @@ void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
 	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
+	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
+	alphaCamVrPullUp.initPin("a-cam-vr", H144_OUT_IO9);
+	alphaD2PullDown.initPin("a-d2", H144_LS_5);
+	alphaD3PullDown.initPin("a-d3", H144_LS_6);
+	alphaD4PullDown.initPin("a-d4", H144_LS_7);
+	alphaD5PullDown.initPin("a-d5", H144_LS_8);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -107,6 +145,14 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
+	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
+	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
+	alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
+
+	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
+	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
+	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
+	alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
 void setBoardConfigOverrides() {
@@ -117,8 +163,8 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 }
 
 /**
@@ -131,23 +177,21 @@ void setBoardConfigOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+	setupEtb();
+	engineConfiguration->vvtPins[0] = H144_OUT_PWM7;
+	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
 
-	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
-	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
-	engineConfiguration->fanPin = H144_OUT_PWM4;
-	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
+	engineConfiguration->acSwitch = Gpio::Unassigned;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
+	engineConfiguration->fanPin = H144_OUT_IO11;
+	engineConfiguration->mainRelayPin = H144_OUT_IO10;
+    engineConfiguration->tachOutputPin = H144_OUT_IO13;
+    engineConfiguration->boostControlPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -159,9 +203,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPin = H144_IN_D_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-// ?	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
+// ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
+	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
 }
 
 /**

@@ -41,6 +41,14 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration
 
 /*
  * Class:     com_rusefi_native__EngineLogic
+ * Method:    setEngineType
+ * Signature: (I)V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setEngineType
+  (JNIEnv *, jobject, jint);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
  * Method:    invokePeriodicCallback
  * Signature: ()V
  */

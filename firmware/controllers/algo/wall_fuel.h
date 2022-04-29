@@ -9,7 +9,7 @@
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
  */
-class WallFuel : public wall_fuel_state {
+class WallFuel : public wall_fuel_state_s {
 public:
 	/**
 	 * @param desiredMassGrams desired fuel quantity, in grams

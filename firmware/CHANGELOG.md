@@ -23,13 +23,25 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+### Added
+ - FasterEngineSpinUp should be enabled by default #4094
+
+## April 20202 Release - "Day 58"
+
 All notable user-facing or behavior-altering changes will be documented in this file.
+
+### Fixed
+ - An attempt to make 'Trigger' dialog a bit less confusing #4021
+ - Fixed knock threshold table, improved knock sensing status gauges
 
 ### Added
  - Mitsubishi 36-2-1-1 trigger wheel
  - Mitsubishi 3A92 VVT trigger
  - Toyota 4-1 VVT trigger
  - use extra RAM for lua if your microRusEFI unit has stm32f42x microcontroller 
+ - VVT activation delay #3443
+ - Allow setting injection phase by start or center of injection #4068
+ - New 'View' menu in TunerStudio showing a lot of live data points #3614
 
 ## March 2022 Release - "Day 22"
 

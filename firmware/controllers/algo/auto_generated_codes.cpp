@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Wed Feb 02 07:16:30 UTC 2022
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Fri Apr 15 14:31:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -289,6 +289,8 @@ case CUSTOM_ERR_6685:
   return "CUSTOM_ERR_6685";
 case CUSTOM_ERR_6686:
   return "CUSTOM_ERR_6686";
+case CUSTOM_ERR_6689:
+  return "CUSTOM_ERR_6689";
 case CUSTOM_ERR_6709:
   return "CUSTOM_ERR_6709";
 case CUSTOM_ERR_6728:
@@ -475,6 +477,10 @@ case CUSTOM_ERR_WAVE_2:
   return "CUSTOM_ERR_WAVE_2";
 case CUSTOM_ERR_ZERO_CRANKING_FUEL:
   return "CUSTOM_ERR_ZERO_CRANKING_FUEL";
+case CUSTOM_ERR_ZERO_E0_MULT:
+  return "CUSTOM_ERR_ZERO_E0_MULT";
+case CUSTOM_ERR_ZERO_E85_MULT:
+  return "CUSTOM_ERR_ZERO_E85_MULT";
 case CUSTOM_EVENT_6626:
   return "CUSTOM_EVENT_6626";
 case CUSTOM_FIRING_LENGTH:
@@ -695,8 +701,6 @@ case CUSTOM_SLOW_NOT_INVOKED:
   return "CUSTOM_SLOW_NOT_INVOKED";
 case CUSTOM_SPARK_ANGLE_1:
   return "CUSTOM_SPARK_ANGLE_1";
-case CUSTOM_SPARK_ANGLE_9:
-  return "CUSTOM_SPARK_ANGLE_9";
 case CUSTOM_STACK_6627:
   return "CUSTOM_STACK_6627";
 case CUSTOM_STACK_6629:

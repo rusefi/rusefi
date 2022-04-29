@@ -63,7 +63,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//active by switch
 	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
-	engineConfiguration->launchActivatePin = GPIOG_1;
+	engineConfiguration->launchActivatePin = Gpio::G1;
 	setMockState(engineConfiguration->launchActivatePin, true);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
@@ -72,7 +72,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//by clutch
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->clutchDownPin = GPIOG_2;
+	engineConfiguration->clutchDownPin = Gpio::G2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
 	engine->updateSwitchInputs();

@@ -395,8 +395,6 @@ typedef enum {
 	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
-typedef brain_pin_e output_pin_e;
-
 typedef enum {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
@@ -675,7 +673,6 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
 
-
 #if __cplusplus
 #include <cstdint>
 
@@ -695,4 +692,22 @@ enum class TsCalMode : uint8_t {
 	PedalMin = 12,
 	PedalMax = 13,
 };
+
+enum class GearControllerMode : uint8_t {
+	None = 0,
+	ButtonShift = 1,
+};
+
+enum class TransmissionControllerMode : uint8_t {
+	None = 0,
+	SimpleTransmissionController = 1,
+	Gm4l6x = 2,
+};
+
+enum class InjectionTimingMode : uint8_t {
+	End = 0,
+	Start = 1,
+	Center = 2,
+};
+
 #endif // __cplusplus

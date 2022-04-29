@@ -38,6 +38,7 @@ for BOARD in \
    "proteus proteus_h7" \
    "f429-discovery f429-discovery" \
    "atlas atlas"\
+   "tdg-pdm8 tdg-pdm8"\
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
@@ -52,18 +53,19 @@ bash gen_config_default.sh
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
 
+# todo: we have a bit of code duplication with build-firmware.yaml here :(
 cd config/boards/kinetis/config
-bash gen_config.sh
+bash gen_kinetis_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
 
 
 cd ../../../..
 cd config/boards/hellen/cypress/config
-bash gen_config.sh
+bash gen_cypress_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
 cd ../../../../..
 
-bash config/boards/subaru_eg33/config/gen_config.sh
+bash config/boards/subaru_eg33/config/gen_subaru_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
 
 exit 0

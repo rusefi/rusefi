@@ -177,6 +177,23 @@ bool isInRange(T min, T val, T max) {
 	return val >= min && val <= max;
 }
 
+static constexpr size_t operator-(Gpio a, Gpio b) {
+	return (size_t)a - (size_t)b;
+}
+
+static constexpr Gpio operator-(Gpio a, size_t b) {
+	return (Gpio)((size_t)a - b);
+}
+
+static constexpr Gpio operator+(Gpio a, size_t b) {
+	return (Gpio)((size_t)a + b);
+}
+
+static constexpr Gpio operator+(size_t a, Gpio b) {
+	// addition is commutative, just use the other operator
+	return b + a;
+}
+
 #endif /* __cplusplus */
 
 #if defined(__cplusplus) && defined(__OPTIMIZE__)

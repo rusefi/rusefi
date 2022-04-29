@@ -10,8 +10,6 @@
 
 #include "i2c_bb.h"
 
-#include "expected.h"
-
 class Lps25 {
 public:
 	// Returns true if the sensor was initialized successfully.

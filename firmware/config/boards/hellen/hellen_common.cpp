@@ -26,10 +26,10 @@ void setHellen176LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
-	engineConfiguration->communicationLedPin = GPIOH_10;
+	engineConfiguration->communicationLedPin = Gpio::H10;
 #endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
+	engineConfiguration->runningLedPin = Gpio::H9;  // green
+	engineConfiguration->warningLedPin = Gpio::H11; // yellow
 }
 
 // this should be called before setHellenXXXLedPins()
@@ -75,7 +75,9 @@ void detectHellenMcuType() {
 	}
 }
 
+int hellenBoardId = 0;
+
 void detectHellenBoardType() {
 	detectHellenMcuType();
-	detectHellenBoardId();
+	hellenBoardId = detectHellenBoardId();
 }

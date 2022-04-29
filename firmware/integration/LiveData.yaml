@@ -1,17 +1,36 @@
+#
+# Here we facilitate monitoring by exposing model/transfer object of each individual controller. While some entries are only
+# useful for monitoring the big idea is to bring calculation and monitoring as close to each other as possible by exposing
+# many calculation fields directly
+#
+# here we have LiveData configuration file
+# entry format, where 'key' is a unique ID:
+# key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
+# Naming convention: top level struct in .txt file should be called key_s
+# todo: double-check if manual git add is requited or if (both) generated files are auto-added into git
+# at the moment new line would need to be added into StateDictionary.java manually todo: Add code generation of StateDictionary.java
+#
+# see gen_live_documentation.sh which is the main generation script
+# todo: what is sequence of events in terms of 'live_data_e' code generation?
+#
 Usages:
+  output_channels: ["TsOutputs.java", "console/binary", "-prepend=integration/rusefi_config.txt" ]
   high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
   injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
   launch_control_state: [ "LaunchControl.java", "controllers/algo" ]
   boost_control: [ "BoostControl.java", "controllers/actuators" ]
   ac_control: [ "AcControl.java", "controllers/actuators" ]
   fan_control: [ "FanControl.java", "controllers/actuators" ]
-  fuel_pump: [ "FuelPump.java", "controllers/actuators" ]
+  fuel_pump_control: [ "FuelPump.java", "controllers/actuators" ]
   main_relay: [ "MainRelay.java", "controllers/actuators" ]
   #todo: handle ETB pid and Idle pid which point at same pid_state.txt
   #pid_state: [ "PidState.java", "util/math" ]
   engine_state: [ "EngineState.java", "controllers/algo" ]
   tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
-  trigger_central: [ "TriggerCentral.java", "controllers/trigger" ]
+  trigger_central: [ "TriggerCentral.java", "controllers/trigger", "-with_c_defines=true" ]
   trigger_state: [ "TriggerState.java", "controllers/trigger" ]
   wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
   idle_state: [ "IdleState.java", "controllers/actuators" ]
+  ignition_state: [ "IgnitionState.java", "controllers/algo" ]
+  electronic_throttle: [ "ElectronicThrottle.java", "controllers/actuators" ]
+

@@ -156,7 +156,6 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -170,7 +169,8 @@ CPPSRC = $(ALLCPPSRC) \
 	simulator/rusEfiFunctionalTest.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
-	$(TEST_SRC_CPP)
+	$(TEST_SRC_CPP) \
+	main.cpp
 
 
 # List ASM source files here

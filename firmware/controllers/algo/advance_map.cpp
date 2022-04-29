@@ -186,10 +186,10 @@ size_t getMultiSparkCount(int rpm) {
 			return 0;
 		}
 
-		floatus_t multiDelay = engineConfiguration->multisparkSparkDuration;
-		floatus_t multiDwell = engineConfiguration->multisparkDwell;
+		floatus_t multiDelay = 1000.0f * engineConfiguration->multisparkSparkDuration;
+		floatus_t multiDwell = 1000.0f * engineConfiguration->multisparkDwell;
 
-        // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
+		// dwell times are below 10 seconds here so we use 32 bit type for performance reasons
 		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
 		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
 

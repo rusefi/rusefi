@@ -14,6 +14,7 @@ TEST(realCrankingVQ40, normalCranking) {
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	bool hasSeenFirstVvt = false;
 

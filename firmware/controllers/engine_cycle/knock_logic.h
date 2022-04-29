@@ -11,21 +11,29 @@
 
 int getCylinderKnockBank(uint8_t cylinderNumber);
 
-class KnockController {
+class KnockController : public EngineModule {
 public:
+	// EngineModule implementation
+	void onFastCallback() override;
+
 	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
 	bool onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime);
-	void periodicFastCallback();
 
 	float getKnockRetard() const;
+	uint32_t getKnockCount() const;
+
+	virtual float getKnockThreshold() const;
 
 private:
+	// start with threshold higher than any possible knock to avoid recording spurious knocks
+	float m_knockThreshold = 100;
+
 	// Degrees retarded: larger number = more retard
 	float m_knockRetard = 0;
+
+	uint32_t m_knockCount = 0;
 
 	using PD = PeakDetect<float, MS2NT(100)>;
 	PD peakDetectors[12];
 	PD allCylinderPeakDetector;
-
-
 };

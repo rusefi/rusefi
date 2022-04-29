@@ -170,14 +170,14 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doRunBenchTestFsio(size_t /* humanIndex */, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
-//	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
-//		efiPrintf("Invalid index: %d", humanIndex);
-//		return;
-//	}
+static void doRunBenchTestLuaOutput(size_t humanIndex, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
+	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
+		efiPrintf("Invalid index: %d", humanIndex);
+		return;
+	}
 // todo: convert in lua bench test
 //	pinbench(delay, onTime, offTime, count,
-//		&enginePins.fsioOutputs[humanIndex - 1], engineConfiguration->fsioOutputPins[humanIndex - 1]);
+//		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
 }
 
 /**
@@ -222,8 +222,8 @@ static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float 
  * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
  * fsiobench2 100 1 5 1000 3
  */
-static void fsioBench2(float delay, float humanIndex, float onTime, float offTime, float count) {
-	doRunBenchTestFsio((int)humanIndex, delay, onTime, offTime, (int)count);
+static void luaOutBench2(float delay, float humanIndex, float onTime, float offTime, float count) {
+	doRunBenchTestLuaOutput((int)humanIndex, delay, onTime, offTime, (int)count);
 }
 
 static void fanBenchExt(float onTime) {
@@ -472,9 +472,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-	case CMD_TS_FSIO_CATEGORY:
+	case CMD_TS_LUA_OUTPUT_CATEGORY:
 		if (!running) {
-			doRunBenchTestFsio(index, 300.0, 4.0,
+			doRunBenchTestLuaOutput(index, 300.0, 4.0,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
@@ -482,11 +482,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_X14:
 		handleCommandX14(index);
 		break;
-#ifdef EFI_WIDEBAND_FIRMWARE_UPDATE
+#if defined(EFI_WIDEBAND_FIRMWARE_UPDATE) && EFI_CAN_SUPPORT
 	case 0x15:
 		setWidebandOffset(index);
 		break;
-#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 	case CMD_TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
@@ -561,16 +561,16 @@ void initBenchTest() {
 
 	addConsoleAction("mainrelaybench", mainRelayBench);
 
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
+#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
 	addConsoleActionI("set_wideband_index", [](int index) { setWidebandOffset(index); });
-#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionFFFFF("fsiobench2", fsioBench2);
+	addConsoleActionFFFFF("luabench2", luaOutBench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
 	onConfigurationChangeBenchTest();

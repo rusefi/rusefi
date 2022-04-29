@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void configureGm60_2_2_2(TriggerWaveform *s);
 void configureGmTriggerWaveform(TriggerWaveform *s);

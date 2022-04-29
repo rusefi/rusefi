@@ -20,7 +20,6 @@
 #include "tooth_logger.h"
 
 #if EFI_PROD_CODE
-#include "os_util.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SENSOR_CHART
@@ -300,7 +299,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 }
 
-float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
+float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
@@ -381,7 +380,9 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 }
 
 #else
-RpmCalculator::RpmCalculator() {
+RpmCalculator::RpmCalculator() :
+		StoredValueSensor(SensorType::Rpm, 0)
+{
 
 }
 

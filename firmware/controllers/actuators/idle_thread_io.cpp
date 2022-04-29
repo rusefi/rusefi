@@ -92,6 +92,14 @@ void setManualIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
+#if EFI_PROD_CODE
+static void startInputPinIfValid(const char *msg, brain_pin_e pin, pin_input_mode_e mode) {
+	if (isBrainPinValid(pin)) {
+		efiSetPadMode(msg, pin, getInputMode(mode));
+	}
+}
+#endif // EFI_PROD_CODE
+
 percent_t getIdlePosition() {
 	return engine->module<IdleController>().unmock().currentIdlePosition;
 }
@@ -100,25 +108,14 @@ void startPedalPins() {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
-	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		efiSetPadMode("clutch down switch", engineConfiguration->clutchDownPin,
-				getInputMode(engineConfiguration->clutchDownPinMode));
-	}
+	startInputPinIfValid("clutch down switch", engineConfiguration->clutchDownPin, engineConfiguration->clutchDownPinMode);
 
-	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		efiSetPadMode("clutch up switch", engineConfiguration->clutchUpPin,
-				getInputMode(engineConfiguration->clutchUpPinMode));
-	}
+	startInputPinIfValid("clutch up switch", engineConfiguration->clutchUpPin, engineConfiguration->clutchUpPinMode);
 
-	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		efiSetPadMode("throttle pedal up switch", engineConfiguration->throttlePedalUpPin,
-				getInputMode(engineConfiguration->throttlePedalUpPinMode));
-	}
+	startInputPinIfValid("throttle pedal up switch", engineConfiguration->throttlePedalUpPin, engineConfiguration->throttlePedalUpPinMode);
 
-	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
-				getInputMode(engineConfiguration->brakePedalPinMode));
-	}
+	startInputPinIfValid("brake pedal switch", engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
+	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -127,6 +124,7 @@ void stopPedalPins() {
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);
 	brain_pin_markUnused(activeConfiguration.brakePedalPin);
+	brain_pin_markUnused(activeConfiguration.launchActivatePin);
 }
 
 #if ! EFI_UNIT_TEST
@@ -179,7 +177,7 @@ void startIdleBench(void) {
 
 
 void setDefaultIdleParameters() {
-	engineConfiguration->idleRpmPid.pFactor = 0.1f;
+	engineConfiguration->idleRpmPid.pFactor = 0.01f;
 	engineConfiguration->idleRpmPid.iFactor = 0.05f;
 	engineConfiguration->idleRpmPid.dFactor = 0.0f;
 
@@ -193,10 +191,12 @@ void setDefaultIdleParameters() {
 
 	// Allow +- 10 degrees adjustment
 	engineConfiguration->idleTimingPid.minValue = -10;
-	engineConfiguration->idleTimingPid.minValue = 10;
+	engineConfiguration->idleTimingPid.maxValue = 10;
 
 	// Idle region is target + 100 RPM
 	engineConfiguration->idlePidRpmUpperLimit = 100;
+
+	engineConfiguration->idlePidRpmDeadZone = 50;
 }
 
 /**

@@ -5,13 +5,11 @@
 SCRIPT_NAME="compile_nucleo_h743.sh"
 echo "Entering $SCRIPT_NAME"
 
-export PROJECT_BOARD=nucleo_h743
-export PROJECT_CPU=ARCH_STM32H7
 export EXTRA_PARAMS="-DDUMMY \
- -DEFI_INJECTOR_PIN3=GPIO_UNASSIGNED \
+ -DEFI_INJECTOR_PIN3=Gpio::Unassigned \
  -DFIRMWARE_ID=\\\"nucleoH743\\\" \
- -DEFI_COMMUNICATION_PIN=GPIOB_7 \
- -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOB_14"
+ -DEFI_COMMUNICATION_PIN=Gpio::B7 \
+ -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14"
 export DEBUG_LEVEL_OPT="-O2"
 
-bash ../common_make.sh
+bash ../common_make.sh nucleo_h743 ARCH_STM32H7

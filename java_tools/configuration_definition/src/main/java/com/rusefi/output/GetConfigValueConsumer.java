@@ -13,7 +13,7 @@ import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
-public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
+public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
     static final String FILE_HEADER = "#include \"pch.h\"\n";

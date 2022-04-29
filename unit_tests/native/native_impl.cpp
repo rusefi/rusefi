@@ -30,7 +30,14 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv
 }
 
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfiguration(JNIEnv *env, jobject instance) {
-	return nullptr;
+	jbyteArray retVal = env->NewByteArray(sizeof(engine_configuration_s));
+	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
+	EngineTestHelper* eth = getEth();
+
+	memcpy(buf, (const void*)&eth->persistentConfig.engineConfiguration, sizeof(engine_configuration_s));
+	env->ReleaseByteArrayElements(retVal, buf, 0);
+
+	return retVal;
 }
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration(JNIEnv *env, jobject instance,
@@ -51,6 +58,12 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
 	Sensor::setMockValue(type, sensorValue);
 
 	env->ReleaseStringUTFChars(sensorName, sensorNameNative);
+}
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setEngineType
+  (JNIEnv *, jobject, jint engineType) {
+    EngineTestHelper* eth = getEth();
+    resetConfigurationExt((engine_type_e)engineType);
 }
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback

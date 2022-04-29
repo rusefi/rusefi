@@ -275,7 +275,7 @@ expected<percent_t> EtbController::getSetpointWastegate() const {
 	return clampF(0, m_wastegatePosition, 100);
 }
 
-expected<percent_t> EtbController::getSetpointEtb() const {
+expected<percent_t> EtbController::getSetpointEtb() {
 	// Autotune runs with 50% target position
 	if (m_isAutotune) {
 		return 50.0f;
@@ -313,14 +313,14 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	// [0, 100] -> [idle, 100]
 	// 0% target from table -> idle position as target
 	// 100% target from table -> 100% target position
-	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
+	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
-	// Apply any adjustment from Lua
-	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
+	percent_t targetPosition = idlePosition + luaAdjustment;
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
-	targetPosition += clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
+	trim = clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
+	targetPosition += trim;
 
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
@@ -334,6 +334,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	float maxPosition = engineConfiguration->etbMaximumPosition;
 
 	if (maxPosition < 70) {
+		// compatibility with legacy tunes, todo: remove in Aug of 2022
 		maxPosition = 100;
 	} else {
 		// Don't allow max position over 100
@@ -544,7 +545,6 @@ void EtbController::update() {
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
 		m_pid.postState(engine->outputChannels.etbStatus);
-		engine->outputChannels.etbFeedForward = engine->engineState.etbFeedForward;
 		engine->outputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
@@ -668,7 +668,7 @@ static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
 
 static_assert(ETB_COUNT == 2);
-static EtbController* etbControllers[] = { &etb1, &etb2 };
+EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}

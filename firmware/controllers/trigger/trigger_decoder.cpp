@@ -99,13 +99,13 @@ void TriggerState::resetCurrentCycleState() {
 	currentCycle.current_index = 0;
 }
 
+#if EFI_SHAFT_POSITION_INPUT
+
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		//https://en.cppreference.com/w/cpp/language/zero_initialization
 		timeOfLastEvent(), instantRpmValue()
 		{
 }
-
-#if EFI_SHAFT_POSITION_INPUT
 
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
@@ -390,7 +390,7 @@ void TriggerCentral::validateCamVvtCounters() {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
 		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
-		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "no CAM signals");
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
 	}
 }
 

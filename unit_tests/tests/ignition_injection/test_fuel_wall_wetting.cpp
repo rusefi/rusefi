@@ -63,8 +63,9 @@ TEST(fuel, testWallWettingEnrichmentMath) {
 TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 	EngineTestHelper eth(FORD_ASPIRE_1996);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_ONE);

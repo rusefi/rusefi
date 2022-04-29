@@ -3,7 +3,7 @@ BOARDCPPSRC =  $(PROJECT_DIR)/config/boards/atlas/board_configuration.cpp
 
 BOARDINC = $(PROJECT_DIR)/config/boards/atlas
 
-#DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOE_3
+#DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 DDEFS += -DFIRMWARE_ID=\"atlas\"
 
 # This stuff doesn't work on H7 yet
@@ -19,3 +19,5 @@ DDEFS += -DHW_ATLAS=1
 # Atlas needs networking library
 LWIP = yes
 DDEFS += -DEFI_ETHERNET=TRUE
+
+DDEFS += -DSHORT_BOARD_NAME=atlas

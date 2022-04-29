@@ -8,7 +8,6 @@
 #include "hal.h"
 #include "stm32_gpio.h"
 #include "efilib.h"
-#include "rusefi_hw_enums.h"
 
 #include "board_io.h"
 
