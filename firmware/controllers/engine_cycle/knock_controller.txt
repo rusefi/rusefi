@@ -1,5 +1,5 @@
 struct_no_prefix knock_controller_s
 
-angle_t m_requested_pump;Degrees retarded: larger number = more retard
+angle_t m_knockRetard;Degrees retarded: larger number = more retard
 
 end_struct
