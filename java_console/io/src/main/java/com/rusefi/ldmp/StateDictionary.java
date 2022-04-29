@@ -41,6 +41,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump");
         register(live_data_e.LDS_ignition_state, IgnitionState.VALUES, "advance_map");
         register(live_data_e.LDS_electronic_throttle, ElectronicThrottle.VALUES, "electronic_throttle");
+        register(live_data_e.LDS_knock_controller, KnockController.VALUES, "knock_controller");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
