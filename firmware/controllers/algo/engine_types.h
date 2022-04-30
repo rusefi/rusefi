@@ -237,7 +237,7 @@ typedef enum {
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
 	DBG_GPPWM = 2,
