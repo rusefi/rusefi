@@ -26,11 +26,12 @@
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSecondWheelCam = true;
 
 	// nominal gap is 0.325
 	s->setTriggerSynchronizationGap2(0.1, 0.5);
 	// nominal gap is ~1.52
-	s->setSecondTriggerSynchronizationGap2(0.6, 2.3);
+	s->setSecondTriggerSynchronizationGap2(0.5, 2.3);
 
 	s->useRiseEdge = false;
 
@@ -120,10 +121,6 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
-void initializeMazdaMiataNb1Shape(TriggerWaveform *s) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, 0);
-}
-
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 	initializeMazdaMiataNb1ShapeWithOffset(s, -22);
 }
@@ -158,6 +155,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSecondWheelCam = true;
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */

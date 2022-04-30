@@ -15,7 +15,9 @@ void canDashboardVAG(CanCycle cycle);
 
 
 // https://wiki.openstreetmap.org/wiki/VW-CAN
+// 1056
 #define CAN_VAG_CLT_V2   0x420 /* _10ms cycle */
+// 976
 #define CAN_VAG_IMMO     0x3D0 /* _10ms cycle */
 
 // 0x280, 10ms period
@@ -24,6 +26,11 @@ void canDashboardVAG(CanCycle cycle);
 #define CAN_VAG_Motor_Brake 644
 // 0x288, 10ms period
 #define CAN_VAG_Motor_2 648
+// 0x362 see 4666@17
+#define CAN_VAG_ACC1 866
+// 0x380 10ms cycle
+// see 4732@17
+#define CAN_VAG_Motor_3 896
 // 0x480
 #define CAN_VAG_Motor_5 1152
 // 0x488

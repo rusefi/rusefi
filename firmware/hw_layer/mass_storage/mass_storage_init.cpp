@@ -10,19 +10,23 @@
 	#ifdef EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
 		#include "ramdisk_image_compressed.h"
-
-		static CompressedBlockDevice cbd;
 	#else
 		#include "ramdisk.h"
 		#include "ramdisk_image.h"
-
-		static RamDisk ramdisk;
 	#endif
 
 	// If the ramdisk image told us not to use it, don't use it.
 	#ifdef RAMDISK_INVALID
 		#undef EFI_EMBED_INI_MSD
 		#define EFI_EMBED_INI_MSD FALSE
+	#endif
+#endif
+
+#if EFI_EMBED_INI_MSD
+	#ifdef EFI_USE_COMPRESSED_INI_MSD
+		static CompressedBlockDevice cbd;
+	#else
+		static RamDisk ramdisk;
 	#endif
 #endif
 

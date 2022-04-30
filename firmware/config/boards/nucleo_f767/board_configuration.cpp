@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // Warning! This is a test config!
 
@@ -16,10 +15,10 @@
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOD_8;
-	engineConfiguration->binarySerialRxPin = GPIOD_9;
-//	engineConfiguration->consoleSerialTxPin = GPIOD_8;
-//	engineConfiguration->consoleSerialRxPin = GPIOD_9;
+	engineConfiguration->binarySerialTxPin = Gpio::D8;
+	engineConfiguration->binarySerialRxPin = Gpio::D9;
+//	engineConfiguration->consoleSerialTxPin = Gpio::D8;
+//	engineConfiguration->consoleSerialRxPin = Gpio::D9;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
@@ -34,8 +33,8 @@ void setSdCardConfigurationOverrides() {
 void setBoardDefaultConfiguration() {
 	setSerialConfigurationOverrides();
 
-	engineConfiguration->runningLedPin = GPIOB_0; //green LED
-	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
+	engineConfiguration->runningLedPin = Gpio::B0; //green LED
+	engineConfiguration->warningLedPin = Gpio::Unassigned;
 #if 0
 	engineConfiguration->vbattAdcChannel = EFI_ADC_13;
 	engineConfiguration->adcVcc = ADC_VCC;
@@ -45,13 +44,13 @@ void setBoardDefaultConfiguration() {
 
 	// not used
 	for (int i = 0; i < DIGIPOT_COUNT ; i++) {
-		engineConfiguration->digitalPotentiometerChipSelect[i] = GPIO_UNASSIGNED;
+		engineConfiguration->digitalPotentiometerChipSelect[i] = Gpio::Unassigned;
 	}
-	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
+	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 
 	/////////////////////////////////////////////////////////
 	engineConfiguration->is_enabled_spi_1 = false;

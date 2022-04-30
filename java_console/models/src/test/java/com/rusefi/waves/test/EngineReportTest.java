@@ -20,6 +20,6 @@ public class EngineReportTest {
         assertEquals(14679, wr.getTimeAxisTranslator().getMinTime());
         assertEquals(43849, wr.getTimeAxisTranslator().getMaxTime());
 
-        assertEquals(59, wr.getTimeAxisTranslator().timeToScreen(18134, 500));
+        assertEquals(191, wr.getTimeAxisTranslator().timeToScreen(18134, 500));
     }
 }

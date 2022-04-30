@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_gm.h"
 
 static float addTooth(float offset, TriggerWaveform *s) {
@@ -22,6 +24,7 @@ static float addTooth(float offset, TriggerWaveform *s) {
 void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = false;
+	s->isSecondWheelCam = true;
 
 	float m = CRANK_MODE_MULTIPLIER;
 	int offset = 1 * m;

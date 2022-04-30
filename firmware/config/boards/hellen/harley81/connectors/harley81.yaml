@@ -1,8 +1,22 @@
 pins:
-  - pin: 1
+  - pin: auxMain
+  #H144_OUT_IO7
+    id: G3
     class: outputs
-    function: Oil Cooling Fan
-    ts_name: 1 Oil Cooling
+    ts_name: auxMain
+
+  - pin: auxWastegate
+    #H176_OUT_PWM3
+    id: C7
+    class: outputs
+    ts_name: auxWastegate
+
+  - pin: 1
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    function: Right Oil Cooling Fan
+    ts_name: 1 Right Oil Cooling
 
   - pin: 2
     type: gnd
@@ -13,9 +27,11 @@ pins:
     function: Power Ground
 
   - pin: 4
+    # H144_OUT_PWM6
+    id: D14
     class: outputs
-    function: Left Cooling Fan
-    ts_name: 4 Left Fan
+    function: Left Oil Cooling Fan
+    ts_name: 4 Left Oil Fan
 
   - pin: 5
     id: EFI_ADC_5
@@ -25,21 +41,30 @@ pins:
     type: 12v
 
   - pin: 6
+    # H144_LS_1
+    id: G7
     class: outputs
     function: Front Injector
     ts_name: 6 Front Injector
 
   - pin: 7
+    # H144_LS_2
+    id: G8
     class: outputs
     function: Rear Injector
-    ts_name: 6 Rear Injector
+    ts_name: 7 Rear Injector
 
   - pin: 8
+    # H144_OUT_IO6
+    id: G11
     class: outputs
     function: Rear ACR
     ts_name: 8 Rear ACR
 
   - pin: 11
+# H144_IN_SENS4
+    id: F6
+    class: event_inputs
     function: Crank Sensor VR- Negative Input
     ts_name: 11 Crank VR-
 
@@ -54,17 +79,23 @@ pins:
     function: +ETB_OUT
 
   - pin: 24
+    # H144_IGN_1
+    id: C13
     class: outputs
     ts_name: 24 Front Coil
     function: Front Coil
     type: ign
 
   - pin: 25
+# H144_OUT_IO5
+    id: D2
     class: outputs
     ts_name: 25 Front ACR
     function: Front ACR
 
   - pin: 27
+# H144_IN_O2S2
+    id: EFI_ADC_1
     class: analog_inputs
     ts_name: 27 - TPS 2
     function: TPS 2 sensor input
@@ -76,6 +107,20 @@ pins:
   - pin: 30
     function: Crank Sensor VR+ Negative Input
     ts_name: 30 Crank VR+
+
+  - pin: 32
+#  H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 32 Oil Pressure
+    function: Oil Pressure input
+
+  - pin: 34
+# H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: 34 Kickstand Position Sensor
+    function: Kickstand Position Sensor
 
   - pin: 36
     ts_name: Front Knock +
@@ -94,6 +139,8 @@ pins:
     type: can
 
   - pin: 41
+# H144_IN_AUX1
+    id: EFI_ADC_8
     class: analog_inputs
     ts_name: 41 - PPS 1
     function: PPS 1 sensor input
@@ -104,6 +151,8 @@ pins:
     function: PPS 2 sensor input
 
   - pin: 43
+    # H144_IGN_2
+    id: E5
     class: outputs
     ts_name: 43 Rear Coil
     function: Rear Coil
@@ -123,21 +172,29 @@ pins:
     function: Rear Knock sense neg
 
   - pin: 49
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
     class: analog_inputs
     ts_name: 49 CLT
     function: CLT sensor
 
   - pin: 51
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: 51 - VSS
     function: VSS in
 
   - pin: 52
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
     class: analog_inputs
     ts_name: 52 - TPS 1
     function: TPS 1 sensor input
 
   - pin: 53
+# H144_IN_MAP1
+    id: EFI_ADC_10
     class: analog_inputs
     ts_name: 53 - MAP
     function: Map
@@ -146,6 +203,22 @@ pins:
     class: analog_inputs
     ts_name: 55 Engine Temperature
     function: Engine Temperature
+
+  - pin: 61
+# low6 huh?
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: 61 Reverse Gear
+    function: Reverse Gear
+
+  - pin: 63
+    # low7 huh?
+    # H144_OUT_IO4
+    id: G5
+    class: outputs
+    ts_name: 63 Cooling Pump
+    function: Cooling Pump
 
   - pin: 66
     function: Sensor +5V
@@ -158,11 +231,26 @@ pins:
   - pin: 70
     function: Sensor +5V
 
+  - pin: 72
+    # H144_IN_IAT
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 72 IAT
+    function: Intake Air Temperature
 
   - pin: 74
     type: gnd
     function: Sensor Ground
 
+  - pin: 78
+    class: analog_inputs
+    ts_name: 78 Gear Position
+    function: Gear Position
+
+  - pin: 79
+    class: switch_inputs
+    function: Rider Cooling Switch
+    ts_name: 79 Rider Cooling Switch
 
 info:
   title: Hellen Harley 81

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 #define CHRYSLER_NGC4_GAP 1
 #define CHRYSLER_NGC6_GAP 1.5

@@ -15,9 +15,16 @@
             <option value="$PROJECT_DIR$/../java_console/autoupdate" />
             <option value="$PROJECT_DIR$/../java_console/inifile" />
             <option value="$PROJECT_DIR$/../java_console/io" />
+            <option value="$PROJECT_DIR$/../java_console/logging" />
             <option value="$PROJECT_DIR$/../java_console/logging-api" />
             <option value="$PROJECT_DIR$/../java_console/models" />
             <option value="$PROJECT_DIR$/../java_console/shared_io" />
+            <option value="$PROJECT_DIR$/../java_tools/bin2header" />
+            <option value="$PROJECT_DIR$/../java_tools/enum_to_string" />
+            <option value="$PROJECT_DIR$/../java_tools/gcc_map_reader" />
+            <option value="$PROJECT_DIR$/../java_tools/logicdata2c" />
+            <option value="$PROJECT_DIR$/../java_tools/ts_plugin_launcher" />
+            <option value="$PROJECT_DIR$/../java_tools/version2header" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

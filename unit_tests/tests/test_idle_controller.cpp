@@ -8,8 +8,7 @@
 #include "pch.h"
 
 #include "advance_map.h"
-#include "pid.h"
-#include "fsio_impl.h"
+#include "efi_pid.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
 
@@ -212,7 +211,7 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 
 struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
-	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (override));
 };
 
 TEST(idle_v2, testOpenLoopCranking) {

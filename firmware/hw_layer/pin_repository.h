@@ -58,6 +58,8 @@ int getBrainPinIndex(brain_pin_e brainPin);
 int brainPin_to_index(brain_pin_e brainPin);
 unsigned int getBrainPinOnchipNum(void);
 unsigned int getBrainPinTotalNum(void);
+const char *hwPortname(brain_pin_e brainPin);
+const char * getBoardSpecificPinName(brain_pin_e brainPin);
 
 #ifdef __cplusplus
 const char* & getBrainUsedPin(unsigned int idx);

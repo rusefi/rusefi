@@ -410,8 +410,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.sendCommand("set_fuel_map 2000 4 15.66");
         ecu.sendCommand("set_fuel_map 2200 4.2 15.66");
         ecu.sendCommand("set_fuel_map 2000 4.2 15.66");
-        // mock 2 means 4 on the gauge because of the divider. should we simplify this?
-        ecu.sendCommand("set " + MOCK_MAF_COMMAND + " 2");
         sendComplexCommand("set global_trigger_offset_angle 175");
         chart = nextChart();
         assertWaveNotNull(msg + " fuel", chart, EngineChart.INJECTOR_1);
@@ -438,7 +436,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(chart, EngineChart.SPARK_2);
 
         // switching to Speed Density
-        ecu.sendCommand("set mock_maf_voltage 2");
         sendComplexCommand("set algorithm 3");
         ecu.changeRpm(2400);
         ecu.changeRpm(2000);

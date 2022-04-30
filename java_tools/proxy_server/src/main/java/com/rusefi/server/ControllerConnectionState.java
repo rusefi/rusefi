@@ -128,15 +128,19 @@ public class ControllerConnectionState {
     }
 
     public void getOutputs() throws IOException {
-        byte[] commandPacket = GetOutputsCommand.createRequest();
+        // TODO: why is this logic duplicated from BinaryProtocol?
+        byte[] commandPacket = new byte[5];
+        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
         long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 
-        byte[] packet = incomingData.getPacket("msg", true);
+        byte[] packet = incomingData.getPacket("msg");
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
-        if (packet.length != 1 + Fields.TS_OUTPUT_SIZE)
+        if (packet.length != 1 + Fields.TS_TOTAL_OUTPUT_SIZE)
             throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }

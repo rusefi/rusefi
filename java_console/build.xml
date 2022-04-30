@@ -75,7 +75,6 @@
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
-            <src path="romraider/src/main/java"/>
             <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src/main/java"/>
@@ -88,14 +87,19 @@
         </javac>
     </target>
 
+    <target name="native_header">
+        <javah classpath="io/src/main/java" destdir="../unit_tests/native" class="com.rusefi.native_.EngineLogic"/>
+    </target>
+
     <target name="test" depends="compile, copy_c_sources">
-        <junit fork="no"
+        <junit fork="yes"
                maxmemory="512m"
                printsummary="yes"
                haltonfailure="yes">
 
             <jvmarg value="-ea"/>
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <sysproperty key="java.library.path" value="../unit_tests/build"/>
             <formatter type="brief"/>
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
@@ -107,7 +111,6 @@
                 <fileset dir="inifile/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
-                <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
@@ -137,10 +140,11 @@
     <target name="copy_c_sources">
         <copy todir="build/classes/c_sources" flatten="true">
             <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+            <fileset dir="../firmware/console" includes="**/*.cpp"/>
         </copy>
     </target>
 
-    <target name="jar" depends="compile, copy_c_sources, autoupdate_jar">
+    <target name="jar" depends="compile, native_header, copy_c_sources, autoupdate_jar">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>
@@ -149,7 +153,6 @@
             <fileset dir="ui/resources" includes="**/*.gif"/>
             <fileset dir="ui/resources" includes="**/*.png"/>
             <fileset dir="ui/resources" includes="**/*.jpg"/>
-            <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
         <tstamp>

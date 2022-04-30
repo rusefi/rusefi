@@ -46,12 +46,12 @@ public class IoUtil2 {
         return c.getValue();
     }
 
-    static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
+    static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputFileNames) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
-        for (String iFile : inputAllFiles) {
-            long c = getCrc32(iFile) & 0xffffffffL;
-            SystemOut.println("CRC32 from " + iFile + " = " + c);
+        for (String fileName : inputFileNames) {
+            long c = getCrc32(fileName) & 0xffffffffL;
+            SystemOut.println("CRC32 from " + fileName + " = " + c);
             crc32 ^= c;
         }
         SystemOut.println("CRC32 from all input files = " + crc32);

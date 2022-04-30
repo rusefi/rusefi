@@ -87,7 +87,7 @@ static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType) {
 }
 
 void configureMapFunction(LinearFunc& converter, air_pressure_sensor_type_e sensorType) {
-	auto cfg = getMapCfg(engineConfiguration->map.sensor.type);
+	auto cfg = getMapCfg(sensorType);
 
 	converter.configure(
 		cfg.v1,

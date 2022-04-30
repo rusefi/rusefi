@@ -32,14 +32,14 @@ TEST(fuelControl, transitionIssue1592) {
 	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(500))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(500))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// This is easiest to trip on a wheel that requires sync
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+    setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	setTable(config->injectionPhase, 0.0f);

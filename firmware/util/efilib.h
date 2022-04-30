@@ -133,9 +133,9 @@ constexpr void clear(T& obj) {
 }
 } // namespace efi
 
-#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg)
+#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 
-#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg, failedResult)
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
 
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.
@@ -175,6 +175,23 @@ constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[N
 template <typename T>
 bool isInRange(T min, T val, T max) {
 	return val >= min && val <= max;
+}
+
+static constexpr size_t operator-(Gpio a, Gpio b) {
+	return (size_t)a - (size_t)b;
+}
+
+static constexpr Gpio operator-(Gpio a, size_t b) {
+	return (Gpio)((size_t)a - b);
+}
+
+static constexpr Gpio operator+(Gpio a, size_t b) {
+	return (Gpio)((size_t)a + b);
+}
+
+static constexpr Gpio operator+(size_t a, Gpio b) {
+	// addition is commutative, just use the other operator
+	return b + a;
 }
 
 #endif /* __cplusplus */

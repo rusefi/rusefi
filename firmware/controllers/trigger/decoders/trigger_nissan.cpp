@@ -7,6 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
 
@@ -138,7 +140,7 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 	auto toothCount = patternTeeth - missing;
 	
 	float currentAngle = missing * toothAngle;
-	for (int i = 0; i < toothCount; i++) {
+	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
@@ -183,6 +185,8 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 	s->addEvent360(angle, T_PRIMARY, TV_FALL);
 }
 
+// yes, this is CAM shaft shape NOT crank shaft shape!
+// we will add crank shape once Pavel makes progress
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 

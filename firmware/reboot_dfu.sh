@@ -1,0 +1,1 @@
+java -jar ../java_console_binary/rusefi_console.jar reboot_dfu

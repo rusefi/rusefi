@@ -92,7 +92,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 }
 
 #if HAL_USE_ADC
-static int fastMapCounter = 0;
 
 /**
  * This method is invoked from ADC callback.

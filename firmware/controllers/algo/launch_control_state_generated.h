@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue Jan 25 02:02:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -105,8 +105,8 @@ struct launch_control_state_s {
 	/**
 	offset 4 bit 31 */
 	bool unusedBit_11_31 : 1 {};
-	/** total size 8*/
 };
+static_assert(sizeof(launch_control_state_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue Jan 25 02:02:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Sun Apr 17 20:27:25 UTC 2022

@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.rusefi.FileLog;
+import com.devexperts.logging.Logging;
 import com.rusefi.RusEfiSignature;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.Autoupdate;
@@ -11,10 +11,12 @@ import com.rusefi.ui.StatusConsumer;
 import javax.swing.*;
 import java.io.IOException;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class DfuHelper {
+    private static final Logging log = getLogging(DfuHelper.class);
     private static final String PREFIX = "rusefi_bundle";
 
     public static void sendDfuRebootCommand(IoStream stream, StatusConsumer messages) {
@@ -41,7 +43,7 @@ public class DfuHelper {
 
             if (!bundleName.equalsIgnoreCase(signatureWithPrefix)) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
-                FileLog.MAIN.logLine(message);
+                log.info(message);
 
                 SwingUtilities.invokeLater(() -> {
                     JOptionPane.showMessageDialog(parent, message);

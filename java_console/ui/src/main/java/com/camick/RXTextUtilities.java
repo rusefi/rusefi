@@ -98,8 +98,7 @@ public class RXTextUtilities
         Element root = component.getDocument().getDefaultRootElement();
         line = Math.max(line, 1);
         line = Math.min(line, root.getElementCount());
-        int startOfLineOffset = root.getElement( line - 1 ).getStartOffset();
-        return startOfLineOffset;
+        return root.getElement( line - 1 ).getStartOffset();
     }
 
     /*

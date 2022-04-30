@@ -18,6 +18,8 @@ void setDefaultCranking() {
 	engineConfiguration->crankingIACposition = 50;
 	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+
 	// After start enrichment
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test
@@ -43,7 +45,8 @@ void setDefaultCranking() {
 		1.0,
 		1.0
 	};
-	copyArray(config->crankingFuelCoef, crankingCoef);
+	copyArray(config->crankingFuelCoef,     crankingCoef);
+	copyArray(config->crankingFuelCoefE100, crankingCoef);
 
 	// Deg C
 	static const float crankingBins[] = {

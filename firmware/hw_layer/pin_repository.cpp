@@ -22,9 +22,8 @@ const char* & getBrainUsedPin(unsigned int idx) {
 }
 
 /* Common for firmware and unit tests */
-bool isBrainPinValid(brain_pin_e brainPin)
-{
-	if ((brainPin == GPIO_UNASSIGNED) || (brainPin == GPIO_INVALID))
+bool isBrainPinValid(brain_pin_e brainPin) {
+	if ((brainPin == Gpio::Unassigned) || (brainPin == Gpio::Invalid))
 		return false;
 
 	if (brainPin > BRAIN_PIN_LAST)
@@ -37,10 +36,10 @@ bool isBrainPinValid(brain_pin_e brainPin)
 int brainPin_to_index(brain_pin_e brainPin) {
 	unsigned int i;
 
-	if (brainPin < GPIOA_0)
+	if (brainPin < Gpio::A0)
 		return -1;
 
-	i = brainPin - GPIOA_0;
+	i = brainPin - Gpio::A0;
 
 	if (i >= getBrainPinTotalNum())
 		return -1;
@@ -132,9 +131,9 @@ void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
-		return (brain_pin_e)((int)GPIOA_0 + i);;
+		return Gpio::A0 + i;
 
-	return GPIO_INVALID;
+	return Gpio::Invalid;
 }
 
 static void reportPins() {
@@ -189,13 +188,22 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 #endif // HAL_USE_SPI
 }
 
+__attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPin*/) {
+	return nullptr;
+}
+
 const char *hwPortname(brain_pin_e brainPin) {
-	if (brainPin == GPIO_INVALID) {
+	if (brainPin == Gpio::Invalid) {
 		return "INVALID";
 	}
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (brainPin == Gpio::Unassigned) {
 		return "NONE";
 	}
+	const char * boardSpecificPinName = getBoardSpecificPinName(brainPin);
+	if (boardSpecificPinName != nullptr) {
+		return boardSpecificPinName;
+	}
+
 	portNameStream.eos = 0; // reset
 	if (brain_pin_is_onchip(brainPin)) {
 
@@ -240,7 +248,7 @@ void initPinRepository(void) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
+	if ((brainPin < Gpio::A0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
 		return false;
 
 	return true;

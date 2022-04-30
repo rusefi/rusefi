@@ -40,7 +40,7 @@ public class Elm327IoStream extends AbstractIoStream {
     private Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
         this.con = con;
         this.disconnectListener = disconnectListener;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
+        dataBuffer = createDataBuffer(loggingPrefix);
 
 //        ByteBuffer inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
         outBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);

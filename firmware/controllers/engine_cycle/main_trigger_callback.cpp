@@ -39,7 +39,6 @@
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
 #include "tooth_logger.h"
-#include "os_util.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"
@@ -292,16 +291,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	if (limitedFuel) {
 		return;
 	}
-	if (engine->isCylinderCleanupMode) {
-		return;
-	}
-
-	// If duty cycle is high, impose a fuel cut rev limiter.
-	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
-	if (getInjectorDutyCycle(rpm) > 96.0f) {
-		warning(CUSTOM_OBD_63, "Injector Duty cycle cut");
-		return;
-	}
 
 	/**
 	 * Injection events are defined by addFuelEvents() according to selected
@@ -328,7 +317,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = engine->getOperationMode();
 
 	// V-Twin MAP phase sense needs to always wait for sync
@@ -348,15 +337,6 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
  */
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
-
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
-		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
-		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
-		// examples:
-		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
-		return;
-	}
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
@@ -404,15 +384,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	LimpState limitedFuelState = engine->limpManager.allowInjection();
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
-
-#if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
-		/* in case we are not already on a limited conditions, check launch as well */
-
-		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
-		limitedFuel &= engine->launchController.isLaunchFuelRpmRetardCondition();
-	}
-#endif
+	
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -422,7 +394,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
-			// see initializeTriggerWaveform() -> prepareOutputSignals()
+			// see updateTriggerWaveform() -> prepareOutputSignals()
 
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback();

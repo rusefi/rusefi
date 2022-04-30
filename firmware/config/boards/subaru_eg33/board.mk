@@ -14,13 +14,19 @@ ifeq ($(USE_BOOTLOADER),yes)
 endif
 
 #LED
-DDEFS +=  -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOG_7
+DDEFS +=  -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::G7
 
 # We are running on Subaru EG33 hardware!
 DDEFS += -DHW_SUBARU_EG33=1
+DDEFS += -DFIRMWARE_ID=\"EG33\"
+
+DDEFS += -DSHORT_BOARD_NAME=subaru_eg33_f7
 
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DDEFAULT_ENGINE_TYPE=SUBARUEG33_DEFAULTS
+
+# HW options
+DDEFS += -DBOARD_L9779_COUNT=0
 
 #Some options override
 #ICU vs PAL/EXTI
@@ -30,6 +36,12 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
 DDEFS += -DHAL_USE_UART=FALSE
 DDEFS += -DUART_USE_WAIT=FALSE
+
+#Mass Storage
+DDEFS += -DEFI_EMBED_INI_MSD=TRUE
+
+#Linker options, flash size
+USE_OPT += -Wl,--defsym=FLASH_SIZE=1m
 
 # Shared variables
 ALLINC    += $(BOARDINC)

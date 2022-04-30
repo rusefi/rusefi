@@ -46,7 +46,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 			engineConfiguration->trigger);
 }
 
-TEST(misc, testSkipped2_0) {
+TEST(trigger, testSkipped2_0) {
 	EngineTestHelper eth(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
@@ -109,7 +109,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
 }
 
-TEST(misc, testSomethingWeird) {
+TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	TriggerState state_;
@@ -120,35 +120,36 @@ TEST(misc, testSomethingWeird) {
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent(engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
-TEST(misc, test1995FordInline6TriggerDecoder) {
+TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -191,7 +192,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_NEAR(7.9579, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
-	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000)) << "running dwell";
+	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
@@ -199,7 +200,7 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
+	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
 
 	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm), 0.0001);
 }
@@ -217,10 +218,10 @@ TEST(misc, testFordAspire) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
+	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000);
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000));
+	assertEqualsM("higher rpm dwell", 3.25, engine->ignitionState.getSparkDwell(6000));
 
 }
 
@@ -246,42 +247,6 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 	assertEqualsM2("actual gap ratio", expectedGap, actualSynchGap, 0.001);
 }
 
-TEST(misc, testStartupFuelPumping) {
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-
-	StartupFuelPumping sf;
-
-	Sensor::setMockValue(SensorType::Rpm, 0);
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
-
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#3";
-
-	Sensor::setMockValue(SensorType::Rpm, 10);
-	sf.update();
-	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	Sensor::setMockValue(SensorType::Rpm,  0);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	sf.update();
-	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
-}
-
 static void assertREquals(void *expected, void *actual) {
 	ASSERT_EQ((float)(uint64_t)expected, (float)(uint64_t)actual);
 }
@@ -300,7 +265,7 @@ TEST(misc, testRpmCalculator) {
 	// These tests were written when the default target AFR was 14.0, so replicate that
 	engineConfiguration->stoichRatioPrimary = 14;
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	IgnitionEventList *ilist = &engine->ignitionEvents;
@@ -450,11 +415,11 @@ TEST(misc, testRpmCalculator) {
 	engine->executor.clear();
 }
 
-TEST(misc, testAnotherTriggerDecoder) {
+TEST(trigger, testAnotherTriggerDecoder) {
 	testTriggerDecoder2("Miata 2003", FRANKENSO_MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
 }
 
-TEST(misc, testTriggerDecoder) {
+TEST(trigger, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder\r\n");
 
 	{
@@ -556,7 +521,7 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
-	EXPECT_CALL(eth->mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth->mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
 	Engine *engine = &eth->engine;
@@ -681,6 +646,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
@@ -928,7 +894,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 TEST(big, testTwoWireBatch) {
 	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->injectionMode = IM_BATCH;
@@ -955,7 +921,7 @@ TEST(big, testTwoWireBatch) {
 
 TEST(big, testSequential) {
 	EngineTestHelper eth(TEST_ENGINE);
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -982,6 +948,7 @@ TEST(big, testSequential) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
@@ -1099,6 +1066,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;

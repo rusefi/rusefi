@@ -297,10 +297,6 @@ INCDIR = \
 # Compiler settings
 #
 
-ifeq ($(MCU),)
-	MCU = cortex-m4
-endif
-
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-
 else

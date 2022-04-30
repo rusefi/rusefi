@@ -85,9 +85,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_2JZ = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
-	 * @see TT_VVT_MIATA_NB2
+	 * @see TT_VVT_MIATA_NB
 	 */
-	VVT_MIATA_NB2 = 3,
+	VVT_MIATA_NB = 3,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
@@ -101,7 +101,6 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 * 4 minus one
-	 * looks abandoned and unfinished?
 	 */
 	VVT_TOYOTA_4_1 = 6,
 
@@ -118,9 +117,11 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_NISSAN_MR = 11,
 
-	VVT_12 = 12,
+	VVT_MITSUBISHI_3A92 = 12,
 
 	VVT_MAP_V_TWIN_ANOTHER = 13,
+
+	VVT_MITSUBISHI_6G75 = 14,
 
 } vvt_mode_e;
 
@@ -362,6 +363,11 @@ typedef enum  __attribute__ ((__packed__)) {
 	IMU_MM5_10 = 2,
 	IMU_TYPE_3 = 3,
 	IMU_TYPE_4 = 4,
+	/**
+	 * Mercedes pn: A 006 542 26 18
+	 * Almost the same as BOSCH above, but XY only and different CAN IDs
+	 */
+	IMU_TYPE_MB_A0065422618 = 5,
 } imu_type_e;
 
 typedef enum {
@@ -388,8 +394,6 @@ typedef enum {
 
 	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
-
-typedef brain_pin_e output_pin_e;
 
 typedef enum {
 	MT_CUSTOM = 0,
@@ -669,7 +673,6 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
 
-
 #if __cplusplus
 #include <cstdint>
 
@@ -689,4 +692,22 @@ enum class TsCalMode : uint8_t {
 	PedalMin = 12,
 	PedalMax = 13,
 };
+
+enum class GearControllerMode : uint8_t {
+	None = 0,
+	ButtonShift = 1,
+};
+
+enum class TransmissionControllerMode : uint8_t {
+	None = 0,
+	SimpleTransmissionController = 1,
+	Gm4l6x = 2,
+};
+
+enum class InjectionTimingMode : uint8_t {
+	End = 0,
+	Start = 1,
+	Center = 2,
+};
+
 #endif // __cplusplus

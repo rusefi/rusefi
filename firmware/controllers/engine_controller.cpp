@@ -25,14 +25,12 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"
-#include "os_util.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -225,9 +223,17 @@ static void doPeriodicSlowCallback() {
 	engine->periodicSlowCallback();
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
-	if (engineConfiguration->tcuEnabled) {
+#if EFI_TCU
+	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
+		if (engine->gearController == NULL) {
+			initGearController();
+		} else if (engine->gearController->getMode() != engineConfiguration->gearControllerMode) {
+			initGearController();
+		}
 		engine->gearController->update();
 	}
+#endif
+
 }
 
 void initPeriodicEvents() {
@@ -337,10 +343,6 @@ static void getByte(int offset) {
 	efiPrintf("byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
-static void onConfigurationChanged() {
-	incrementGlobalConfigurationVersion();
-}
-
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
@@ -366,7 +368,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of rusEfi console API
 	 */
 	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setShort(const int offset, const int value) {
@@ -375,7 +377,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setByte(const int offset, const int value) {
@@ -384,7 +386,7 @@ static void setByte(const int offset, const int value) {
 	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint8_t) value;
 	getByte(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getBit(int offset, int bit) {
@@ -415,7 +417,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getFloat(int offset) {
@@ -445,7 +447,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getFloat(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void initConfigActions() {
@@ -505,9 +507,8 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-#if EFI_FSIO
+	// TODO: rename
 	initFsioImpl();
-#endif /* EFI_FSIO */
 
 	initGpPwm();
 
@@ -515,7 +516,9 @@ void commonInitEngineController() {
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */
 
-	initButtonShift();
+#if EFI_TCU
+	initGearController();
+#endif
 
 	initButtonDebounce();
 	initStartStopButton();
@@ -597,13 +600,10 @@ bool validateConfig() {
 		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
 	}
 
-	if (config->mapEstimateTpsBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
-	}
+	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
+	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 
-	if (config->mapEstimateRpmBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
-	}
+// todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
 	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
 
@@ -615,31 +615,25 @@ bool validateConfig() {
 	// Idle tables
 	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
-	}
-	if (config->idleVeRpmBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE RPM", config->idleVeRpmBins);
-	}
-	if (config->idleVeLoadBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE Load", config->idleVeLoadBins);
-	}
-	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
-	}
+	ensureArrayIsAscendingOrDefault("Idle coasting position", engineConfiguration->iacCoastingBins);
+	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
+	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
+	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);
 
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
 	}
 
+#if EFI_BOOST_CONTROL
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+#endif // EFI_BOOST_CONTROL
 
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
@@ -654,13 +648,13 @@ bool validateConfig() {
 	}
 
 	// VVT
-	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[1] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}

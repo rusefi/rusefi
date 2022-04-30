@@ -43,6 +43,9 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
 	s->initialize(operationMode);
+#if EFI_UNIT_TEST
+	s->knownOperationMode = false;
+#endif // EFI_UNIT_TEST
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
 	s->shapeWithoutTdc = (totalTeethCount > 1) && (skippedCount == 0);

@@ -37,7 +37,6 @@
 #include "chmtx.h"
 #include "memstreams.h"
 #include "console_io.h"
-#include "os_util.h"
 #endif // EFI_UNIT_TEST
 
 /**

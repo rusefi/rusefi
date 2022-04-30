@@ -37,17 +37,12 @@ extern bool hasFirmwareErrorFlag;
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
-// todo: rename to getCriticalErrorMessage
-const char* getFirmwareError(void);
+const char* getCriticalErrorMessage(void);
 const char* getWarningMessage(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);
 
-/**
- * @deprecated Global panic is inconvenient because it's hard to deliver the error message while whole instance
- * is stopped. Please use firmwareWarning() instead
- */
 #if EFI_ENABLE_ASSERTS
   #define efiAssert(code, condition, message, result) { if (!(condition)) { firmwareError(code, message); return result; } }
   #define efiAssertVoid(code, condition, message) { if (!(condition)) { firmwareError(code, message); return; } }

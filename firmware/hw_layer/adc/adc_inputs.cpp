@@ -185,11 +185,13 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
-#if EFI_ENABLE_MOCK_ADC
-	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
-		return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
 
-#endif /* EFI_ENABLE_MOCK_ADC */
+#if USE_ADC3_VBATT_HACK
+	if (hwChannel == EFI_ADC_7) {
+		extern adcsample_t vbattSampleProteus;
+		return vbattSampleProteus;
+	}
+#endif // USE_ADC3_VBATT_HACK
 
 #if EFI_USE_FAST_ADC
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {

@@ -20,8 +20,6 @@ import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
 
 public class TcpCommunicationIntegrationTest {
-    private static final Logger LOGGER = Logger.CONSOLE;
-
     // todo: implement & test TCP connector restart!
     @Test
     public void testConnectionFailed() throws InterruptedException {

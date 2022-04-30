@@ -1,9 +1,9 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.core.Pair;
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
-import com.rusefi.util.SystemOut;
-import com.rusefi.test.ConfigFieldParserTest;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * This is an immutable model of an individual field
@@ -87,6 +88,16 @@ public class ConfigField {
         this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
         this.isIterate = isIterate;
+        if (tsInfo != null) {
+            String[] tokens = getTokens();
+            if (tokens.length > 1) {
+                String scale = tokens[1].trim();
+                if (!hasAutoscale && !scale.trim().equals("1")) {
+                    System.out.println("GRRRRRRRRRRRRRRRR " + "Unexpected scale of " + scale + " without autoscale on " + this);
+//                throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
+                }
+            }
+        }
     }
 
     private static int getSize(VariableRegistry variableRegistry, String s) {
@@ -94,6 +105,10 @@ public class ConfigField {
             return variableRegistry.intValues.get(s);
         }
         return Integer.parseInt(s);
+    }
+
+    public ConfigStructure getStructureType() {
+        return getState().structures.get(getType());
     }
 
     public boolean isArray() {
@@ -248,6 +263,10 @@ public class ConfigField {
         return isIterate;
     }
 
+    public boolean isHasAutoscale() {
+        return hasAutoscale;
+    }
+
     public ReaderState getState() {
         return state;
     }
@@ -261,12 +280,26 @@ public class ConfigField {
     }
 
     public String autoscaleSpec() {
+        Pair<Integer, Integer> pair = autoscaleSpecPair();
+        if (pair == null)
+            return null;
+        return pair.first + ", " + pair.second;
+    }
+
+    public double autoscaleSpecNumber() {
+        Pair<Integer, Integer> pair = autoscaleSpecPair();
+        if (pair == null)
+            return 1;
+        return 1.0 * pair.second / pair.first;
+    }
+
+    public Pair<Integer, Integer> autoscaleSpecPair() {
         if (!hasAutoscale) {
             return null;
         }
         if (tsInfo == null)
             throw new IllegalArgumentException("tsInfo expected with autoscale");
-        String[] tokens = tsInfo.split(",");
+        String[] tokens = getTokens();
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
 
@@ -295,10 +328,10 @@ public class ConfigField {
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
-            return "$*@#$* Cannot accurately represent autoscale for " + tokens[1];
+            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for " + tokens[1]);
         }
 
-        return mul + ", " + div;
+        return new Pair<>(mul, div);
     }
 
     private String[] getTokens() {
@@ -350,6 +383,13 @@ public class ConfigField {
 
     public boolean isFromIterate() {
         return isFromIterate;
+    }
+
+    // todo: find more usages for this method?
+    public String getCommentOrName() {
+        if (comment == null || comment.trim().isEmpty())
+            return quote(name);
+        return comment;
     }
 }
 

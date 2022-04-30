@@ -2,7 +2,7 @@
 
 pins:
   - pin: 1
-    id: GPIOH_10
+    id: H10
     class: event_inputs
     function: Crank 1 VR+
     ts_name: A08 - Crank 1 VR+

@@ -1,10 +1,30 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jan 30 13:58:45 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Apr 15 14:31:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
 
+const char *getGearControllerMode(GearControllerMode value){
+switch(value) {
+case GearControllerMode::ButtonShift:
+  return "ButtonShift";
+case GearControllerMode::None:
+  return "None";
+  }
+ return NULL;
+}
+const char *getInjectionTimingMode(InjectionTimingMode value){
+switch(value) {
+case InjectionTimingMode::Center:
+  return "Center";
+case InjectionTimingMode::End:
+  return "End";
+case InjectionTimingMode::Start:
+  return "Start";
+  }
+ return NULL;
+}
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value){
 switch(value) {
 case INJ_None:
@@ -41,6 +61,17 @@ case MINIMUM:
   return "MINIMUM";
 case NOT_A_PEAK:
   return "NOT_A_PEAK";
+  }
+ return NULL;
+}
+const char *getTransmissionControllerMode(TransmissionControllerMode value){
+switch(value) {
+case TransmissionControllerMode::Gm4l6x:
+  return "Gm4l6x";
+case TransmissionControllerMode::None:
+  return "None";
+case TransmissionControllerMode::SimpleTransmissionController:
+  return "SimpleTransmissionController";
   }
  return NULL;
 }
@@ -440,6 +471,8 @@ case IMU_TYPE_3:
   return "IMU_TYPE_3";
 case IMU_TYPE_4:
   return "IMU_TYPE_4";
+case IMU_TYPE_MB_A0065422618:
+  return "IMU_TYPE_MB_A0065422618";
 case IMU_VAG:
   return "IMU_VAG";
   }
@@ -739,8 +772,6 @@ case VE_TPS:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
-case VVT_12:
-  return "VVT_12";
 case VVT_2JZ:
   return "VVT_2JZ";
 case VVT_BARRA_3_PLUS_1:
@@ -757,8 +788,12 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
-case VVT_MIATA_NB2:
-  return "VVT_MIATA_NB2";
+case VVT_MIATA_NB:
+  return "VVT_MIATA_NB";
+case VVT_MITSUBISHI_3A92:
+  return "VVT_MITSUBISHI_3A92";
+case VVT_MITSUBISHI_6G75:
+  return "VVT_MITSUBISHI_6G75";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:

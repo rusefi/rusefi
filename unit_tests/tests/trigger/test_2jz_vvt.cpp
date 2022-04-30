@@ -10,6 +10,7 @@
 TEST(sensors, test2jz) {
 
 	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 
 	// this crank trigger would be easier to test, crank shape is less important for this test

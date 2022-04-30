@@ -69,13 +69,13 @@ public class TuneReadWriteTest {
         assertEquals("2", flow.getDigits());
 
         Constant nonEmptyFormula = tuneFromBinary.findPage().findParameter("fsioFormulas1");
-        assertNotNull(nonEmptyFormula);;
+        assertNotNull(nonEmptyFormula);
 
         /**
          * Empty strings values should be omitted from the tune
          */
         Constant emptyFormula = tuneFromBinary.findPage().findParameter("fsioFormulas2");
-        assertNull(emptyFormula);;
+        assertNull(emptyFormula);
 
         Constant enumField = tuneFromBinary.findPage().findParameter("acRelayPin");
         // quotes are expected

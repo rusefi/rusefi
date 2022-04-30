@@ -19,6 +19,7 @@ typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
 #define DL_OUTPUT_BUFFER 200
+#define FIRMWARE_ID "UNIT_TEST"
 
 // just a stub implementation for unit tests
 #define EXPECTED_REMAINING_STACK 1

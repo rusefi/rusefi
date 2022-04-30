@@ -8,15 +8,16 @@
 TEST(trigger, testQuadCam) {
 	// setting some weird engine
 	EngineTestHelper eth(FORD_ESCORT_GT);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
 
-	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
+	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
 	eth.setTriggerType(TT_ONE);

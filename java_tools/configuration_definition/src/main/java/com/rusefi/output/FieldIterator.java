@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * custom iterator with references to previous and next elements
+ * @see PerFieldWithStructuresIterator is there a duplication?
  */
 public class FieldIterator {
     private final List<ConfigField> fields;

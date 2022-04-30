@@ -27,7 +27,7 @@ public interface ByteReader {
         threadExecutor.execute(() -> {
             log.info(loggingPrefix + "Running TCP connection loop");
 
-            byte inputBuffer[] = new byte[Fields.BLOCKING_FACTOR * 2];
+            byte[] inputBuffer = new byte[Fields.BLOCKING_FACTOR * 2];
             while (!ioStream.isClosed()) {
                 try {
                     int result = reader.read(inputBuffer);

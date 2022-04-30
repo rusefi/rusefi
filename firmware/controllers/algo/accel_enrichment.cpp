@@ -33,6 +33,9 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 		// If disabled, return 0.
 		return 0;
 	}
+	if (!engine->rpmCalculator.isRunning()) {
+		return 0;
+	}
 
 	if (isAboveAccelThreshold) {
 		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);

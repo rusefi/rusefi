@@ -18,7 +18,6 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
-#include "fsio_impl.h"
 
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];
@@ -95,7 +94,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail() {
 	copyArray(config->lambdaRpmBins, mazda_miata_nb2_targetLambdaRpmBins);
 	copyArray(config->lambdaLoadBins, mazda_miata_nb2_targetLambdaLoadBins);
 
-	engineConfiguration->ignitionPins[2] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = Gpio::C7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3

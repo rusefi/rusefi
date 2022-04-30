@@ -10,20 +10,18 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {
-	float ignitionTimingAdd = 0;
-	float ignitionTimingMult = 1;
 	float fuelAdd = 0;
 	float fuelMult = 1;
-	float etbTargetPositionAdd = 0;
+
 	bool clutchUpState = false;
 	bool brakePedalState = false;
 };
 
-class EngineState : public engine_state2_s {
+class EngineState : public engine_state_s {
 public:
 	EngineState();
 	void periodicFastCallback();
@@ -39,8 +37,6 @@ public:
 
 	// Estimated airflow based on whatever airmass model is active
 	float airflowEstimate = 0;
-
-	float knockThreshold = 0;
 
 	float auxValveStart = 0;
 	float auxValveEnd = 0;
@@ -79,10 +75,6 @@ public:
 	floatms_t tpsAccelEnrich = 0;
 
 	angle_t injectionOffset = 0;
-
-#if EFI_ENABLE_MOCK_ADC
-	MockAdcState mockAdcState;
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 	multispark_state multispark;
 

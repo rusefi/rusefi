@@ -54,10 +54,7 @@ public class EngineSnifferStatusPanel {
         }
     };
 
-    private ZoomProvider zoomProvider;
-
-    public EngineSnifferStatusPanel(ZoomProvider zoomProvider) {
-        this.zoomProvider = zoomProvider;
+    public EngineSnifferStatusPanel() {
         infoPanel.add(new JLabel("X: "));
         infoPanel.add(xLabel);
         infoPanel.add(new JLabel(" time: "));
@@ -73,7 +70,7 @@ public class EngineSnifferStatusPanel {
         green.setForeground(UpDownImage.ENGINE_CYCLE_COLOR);
         infoPanel.add(green);
 
-        JLabel red = new JLabel("  Red line is time scale");
+        JLabel red = new JLabel("  Red line is every 20ms");
         red.setForeground(UpDownImage.TIME_SCALE_COLOR);
         infoPanel.add(red);
     }

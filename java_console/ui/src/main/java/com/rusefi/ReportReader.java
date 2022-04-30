@@ -134,10 +134,10 @@ public class ReportReader {
 //        System.out.println(line);
         Matcher m = LINE_PATTERN.matcher(line);
         if (m.matches()) {
-            int time = Integer.valueOf(m.group(1));
+            int time = Integer.parseInt(m.group(1));
             MafValue maf = MafValue.valueOf(m.group(2));
             RpmValue rpm = RpmValue.valueOf(m.group(3));
-            int wave = Integer.valueOf(m.group(4));
+            int wave = Integer.parseInt(m.group(4));
 
             if (prevMaf == maf.getValue() && prevRpm == rpm.getValue() && prevWave == wave) {
 //                System.out.println("All the same...");

@@ -1,5 +1,6 @@
 package com.rusefi.ldmp;
 
+import com.rusefi.OutputChannel;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
@@ -23,20 +24,24 @@ public enum StateDictionary {
         // LDS_CJ125_PID
         //register(live_data_e.LDS_IDLE, IdleState.VALUES);
         // todo: code generate this!
-        register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine"); // 3
+        register(live_data_e.LDS_output_channels, TsOutputs.VALUES, "status_loop");
+        register(live_data_e.LDS_engine_state, EngineState.VALUES, "engine");
         register(live_data_e.LDS_trigger_central, TriggerCentral.VALUES, "trigger_central");
-        register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder"); // 11
-        register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control"); // 12
+        register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder");
+        register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control");
         register(live_data_e.LDS_fan_control, FuelPump.VALUES, "fan_control");
         register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
         register(live_data_e.LDS_idle_state, IdleState.VALUES, "idle_thread");
-        register(live_data_e.LDS_fuel_pump, FuelPump.VALUES, "fuel_pump");
+        register(live_data_e.LDS_fuel_pump_control, FuelPump.VALUES, "fuel_pump");
         register(live_data_e.LDS_wall_fuel_state, WallFuelState.VALUES, "wall_fuel");
         register(live_data_e.LDS_tps_accel_state, TpsAccelState.VALUES, "accel_enrichment");
         register(live_data_e.LDS_main_relay, MainRelay.VALUES, "main_relay");
         register(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control");
         register(live_data_e.LDS_launch_control_state, LaunchControl.VALUES, "launch_control");
         register(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump");
+        register(live_data_e.LDS_ignition_state, IgnitionState.VALUES, "advance_map");
+        register(live_data_e.LDS_electronic_throttle, ElectronicThrottle.VALUES, "electronic_throttle");
+        register(live_data_e.LDS_knock_controller, KnockController.VALUES, "knock_controller");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());

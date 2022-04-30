@@ -2,7 +2,7 @@ package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
+import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -69,7 +68,6 @@ public class CommandQueue {
      * this method keeps retrying till a confirmation is received
      */
     private void sendCommand(final IMethodInvocation commandRequest) throws InterruptedException {
-        int counter = 0;
         String command = commandRequest.getCommand();
 
         CountDownLatch cl = new CountDownLatch(1);
@@ -112,8 +110,7 @@ public class CommandQueue {
                     try {
                         sendPendingCommand();
                     } catch (Throwable e) {
-                        log.error("CommandQueue error" + e);
-                        System.exit(-2);
+                        IoUtils.exit("CommandQueue error" + e, -2);
                     }
                 }
             }

@@ -16,7 +16,7 @@ struct digital_input_s {
 #endif /* HAL_USE_ICU */
 
 	volatile bool started = false;
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
+	brain_pin_e brainPin = Gpio::Unassigned;
 	IntListenerArray<1> widthListeners;
 	IntListenerArray<1> periodListeners;
 

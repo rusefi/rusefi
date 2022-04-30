@@ -20,7 +20,6 @@
 #include "tooth_logger.h"
 
 #if EFI_PROD_CODE
-#include "os_util.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SENSOR_CHART
@@ -88,6 +87,10 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
+	if (engine->limpManager.isEngineStop(nowNt)) {
+		return false;
+	}
+
 	// Anything below 60 rpm is not running
 	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
 
@@ -296,7 +299,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 }
 
-float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
+float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
@@ -377,7 +380,9 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 }
 
 #else
-RpmCalculator::RpmCalculator() {
+RpmCalculator::RpmCalculator() :
+		StoredValueSensor(SensorType::Rpm, 0)
+{
 
 }
 

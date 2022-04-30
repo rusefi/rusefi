@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +35,7 @@ public class DfuFlasher {
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
+            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
             return;
         }
         String port = selectedItem.toString();
@@ -111,9 +112,13 @@ public class DfuFlasher {
 
     public static void runDfuErase() {
         StatusWindow wnd = createStatusWindow();
-        submitAction(() -> ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuEraseCommand(),
-                DFU_BINARY, wnd, new StringBuffer()));
+        submitAction(() -> {
+            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuEraseCommand(),
+                    DFU_BINARY, wnd, new StringBuffer());
+            // it's a lengthy operation let's signal end
+            Toolkit.getDefaultToolkit().beep();
+        });
     }
 
     public static void runDfuProgramming() {
@@ -178,9 +183,14 @@ public class DfuFlasher {
         String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
         if (hexFileName == null)
             throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
-        String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
+        // we need quotes in case if absolute path contains spaces
+        String hexAbsolutePath = quote(new File(hexFileName).getAbsolutePath());
 
         return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+    }
+
+    private static String quote(String absolutePath) {
+        return "\"" + absolutePath + "\"";
     }
 
     private static String getDfuEraseCommand() {

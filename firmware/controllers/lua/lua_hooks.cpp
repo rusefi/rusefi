@@ -23,11 +23,15 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
+#if EFI_PROD_CODE
+#include "electronic_throttle_impl.h"
+#endif
+
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
 	brain_pin_e pin = parseBrainPin(msg);
-	if (pin == GPIO_INVALID) {
+	if (!isBrainPinValid(pin)) {
 		lua_pushnil(l);
 	} else {
 		int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
@@ -497,11 +501,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 			return 1;
 	});
 
+#if EFI_LAUNCH_CONTROL
 	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
 		return 1;
 	});
+#endif // EFI_LAUNCH_CONTROL
 
 	lua_register(l, "enableCanTx", [](lua_State* l) {
 		engine->allowCanTx = lua_toboolean(l, 1);
@@ -520,7 +526,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 
 	lua_register(l, "setTimingMult", [](lua_State* l) {
-		engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+		engine->ignitionState.luaTimingMult = luaL_checknumber(l, 1);
 		return 0;
 	});
 	lua_register(l, "setFuelAdd", [](lua_State* l) {
@@ -531,10 +537,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+#if EFI_PROD_CODE
 	lua_register(l, "setEtbAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.etbTargetPositionAdd = luaL_checknumber(l, 1);
+		auto luaAdjustment = luaL_checknumber(l, 1);
+		for (int i = 0 ; i < ETB_COUNT; i++) {
+			extern EtbController* etbControllers[];
+			etbControllers[i]->luaAdjustment = luaAdjustment;
+		}
 		return 0;
 	});
+#endif // EFI_PROD_CODE
 
 	lua_register(l, "setClutchUpState", [](lua_State* l) {
 		engine->engineState.luaAdjustments.clutchUpState = lua_toboolean(l, 1);
@@ -560,6 +572,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+#if EFI_SHAFT_POSITION_INPUT
 	lua_register(l, "getEngineState", [](lua_State* l) {
 		spinning_state_e state = engine->rpmCalculator.getState();
 		int luaStateCode;
@@ -574,6 +587,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		lua_pushnumber(l, luaStateCode);
 		return 1;
 	});
+#endif //EFI_SHAFT_POSITION_INPUT
 
 	lua_register(l, "setCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
@@ -586,8 +600,19 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "setAcDisabled", [](lua_State* l) {
+		auto value = lua_toboolean(l, 1);
+		engine->module<AcController>().unmock().isDisabledByLua = value;
+		return 0;
+	});
+	lua_register(l, "getTimeSinceAcToggleMs", [](lua_State* l) {
+		int result = US2MS(getTimeNowUs()) - engine->module<AcController>().unmock().acSwitchLastChangeTimeMs;
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
 
@@ -602,7 +627,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
 
-	lua_register(l, "stopEngine", [](lua_State* l) {
+	lua_register(l, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();
 		return 0;
 	});

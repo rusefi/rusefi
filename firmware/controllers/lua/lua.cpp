@@ -27,7 +27,7 @@ public:
 	memory_heap_t m_heap;
 
 	size_t m_memoryUsed = 0;
-	const size_t m_size;
+	size_t m_size;
 
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
@@ -43,6 +43,12 @@ public:
 		: m_size(TSize)
 	{
 		chHeapObjectInit(&m_heap, buffer, TSize);
+	}
+
+	void reinit(char *buffer, size_t m_size) {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
+		chHeapObjectInit(&m_heap, buffer, m_size);
+		this->m_size = m_size;
 	}
 
 	void* realloc(void* ptr, size_t osize, size_t nsize) {
@@ -108,15 +114,16 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-static int luaTickPeriodMs;
+static int luaTickPeriodUs;
 
 static int lua_setTickRate(lua_State* l) {
 	float freq = luaL_checknumber(l, 1);
 
-	// Limit to 1..100 hz
-	freq = clampF(1, freq, 100);
+	// For instance BMW does 100 CAN messages per second on some IDs, let's allow at least twice that speed
+	// Limit to 1..200 hz
+	freq = clampF(1, freq, 200);
 
-	luaTickPeriodMs = 1000.0f / freq;
+	luaTickPeriodUs = 1000000.0f / freq;
 	return 0;
 }
 
@@ -239,6 +246,17 @@ struct LuaThread : ThreadController<4096> {
 	void ThreadTask() override;
 };
 
+static void resetLua() {
+	engine->module<AcController>().unmock().isDisabledByLua = false;
+#if EFI_CAN_SUPPORT
+	resetLuaCanRx();
+#endif // EFI_CAN_SUPPORT
+
+	// De-init pins, they will reinit next start of the script.
+	luaDeInitPins();
+}
+
+
 static bool needsReset = false;
 
 // Each invocation of runOneLua will:
@@ -259,13 +277,14 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	// Reset default tick rate
-	luaTickPeriodMs = 100;
+	luaTickPeriodUs = MS2US(100);
 
 	if (!loadScript(ls, script)) {
 		return false;
 	}
 
 	while (!needsReset && !chThdShouldTerminateX()) {
+		efitick_t beforeNt = getTimeNowNt();
 #if EFI_CAN_SUPPORT
 		// First, process any pending can RX messages
 		doLuaCanRx(ls);
@@ -276,15 +295,12 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 
 		invokeTick(ls);
 
-		chThdSleepMilliseconds(luaTickPeriodMs);
+		chThdSleep(TIME_US2I(luaTickPeriodUs));
+		engine->outputChannels.luaLastCycleDuration = (getTimeNowNt() - beforeNt);
+		engine->outputChannels.luaInvocationCounter++;
 	}
 
-#if EFI_CAN_SUPPORT
-	resetLuaCanRx();
-#endif // EFI_CAN_SUPPORT
-
-	// De-init pins, they will reinit next start of the script.
-	luaDeInitPins();
+	resetLua();
 
 	return true;
 }
@@ -311,6 +327,14 @@ static LuaThread luaThread;
 #endif
 
 void startLua() {
+#if HW_MICRO_RUSEFI && defined(STM32F4)
+	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
+	if (isStm32F42x()) {
+		char *buffer = (char *)0x20020000;
+		heaps[0].reinit(buffer, 60000);
+	}
+#endif
+
 #if LUA_USER_HEAP > 1
 #if EFI_CAN_SUPPORT
 	initLuaCanRx();

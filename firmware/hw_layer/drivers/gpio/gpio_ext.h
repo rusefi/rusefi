@@ -37,7 +37,6 @@ const char *gpiochips_getPinName(brain_pin_e pin);
 
 /* register/unregister GPIO chip */
 int gpiochip_register(brain_pin_e base, const char *name, GpioChip& chip, size_t size);
-int gpiochip_unregister(brain_pin_e base);
 
 /* Set individual names for pins */
 int gpiochips_setPinNames(brain_pin_e base, const char **names);

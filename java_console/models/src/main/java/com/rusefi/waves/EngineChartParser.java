@@ -15,7 +15,7 @@ public class EngineChartParser {
     /**
      * This method unpacks a mixed-key message into a Map of messages by key
      */
-    public static EngineChart unpackToMap(String value, Logger logger) {
+    public static EngineChart unpackToMap(String value) {
         if (value == null)
             throw new NullPointerException("value");
 

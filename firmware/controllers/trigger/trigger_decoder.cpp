@@ -99,13 +99,13 @@ void TriggerState::resetCurrentCycleState() {
 	currentCycle.current_index = 0;
 }
 
+#if EFI_SHAFT_POSITION_INPUT
+
 TriggerStateWithRunningStatistics::TriggerStateWithRunningStatistics() :
 		//https://en.cppreference.com/w/cpp/language/zero_initialization
 		timeOfLastEvent(), instantRpmValue()
 		{
 }
-
-#if EFI_SHAFT_POSITION_INPUT
 
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
@@ -163,17 +163,17 @@ void prepareEventAngles(TriggerWaveform *shape,
 
 	int riseOnlyIndex = 0;
 
-	int length = shape->getLength();
+	size_t length = shape->getLength();
 
 	memset(details->eventAngles, 0, sizeof(details->eventAngles));
 
 	// this may be <length for some triggers like symmetrical crank Miata NB
-	int triggerShapeLength = shape->getSize();
+	size_t triggerShapeLength = shape->getSize();
 
 	assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
 	efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
 
-	for (int eventIndex = 0; eventIndex < length; eventIndex++) {
+	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
 			details->eventAngles[0] = 0;
@@ -259,7 +259,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(
 	/**
 	 * todo: Martin has this fatal error while feeding external RPM and changing trigger mode from 4 stoke cam to 4 stroke symmetrical
 	 */
-	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
+	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
 	// Record the time of this event so we can calculate RPM from it later
 	timeOfLastEvent[current_index] = nowNt;
@@ -294,7 +294,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(
 		return prevInstantRpmValue;
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
-	assertIsInBoundsWithResult((int)current_index, instantRpmValue, "instantRpmValue", 0);
+	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
 	instantRpmValue[current_index] = instantRpm;
 
 	// This fixes early RPM instability based on incomplete data
@@ -390,7 +390,7 @@ void TriggerCentral::validateCamVvtCounters() {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
 		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
-		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "no CAM signals");
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
 	}
 }
 
@@ -477,6 +477,7 @@ void TriggerState::onShaftSynchronization(
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(
+		const char *msg,
 		const TriggerWaveform& triggerShape,
 		const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener* triggerStateListener,
@@ -513,7 +514,7 @@ void TriggerState::decodeTriggerEvent(
 	currentCycle.eventCount[triggerWheel]++;
 
 	if (toothed_previous_time > nowNt) {
-		firmwareError(CUSTOM_OBD_93, "toothed_previous_time after nowNt %d %d", toothed_previous_time, nowNt);
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
 	}
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;

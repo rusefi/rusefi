@@ -30,8 +30,8 @@ public class IoUtil {
      *
      * @throws IllegalStateException if command was not confirmed
      */
-    static void sendCommand(String command, CommandQueue commandQueue) {
-        sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, commandQueue);
+    static void sendBlockingCommand(String command, CommandQueue commandQueue) {
+        sendBlockingCommand(command, CommandQueue.DEFAULT_TIMEOUT, commandQueue);
     }
 
     public static String getSetCommand(String settingName) {
@@ -47,9 +47,9 @@ public class IoUtil {
     }
 
     /**
-     * blocking method which would for confirmation from rusEfi
+     * blocking method which would for confirmation from rusEFI
      */
-    public static void sendCommand(String command, int timeoutMs, CommandQueue commandQueue) {
+    public static void sendBlockingCommand(String command, int timeoutMs, CommandQueue commandQueue) {
         final CountDownLatch responseLatch = new CountDownLatch(1);
         long time = System.currentTimeMillis();
         log.info("Sending command [" + command + "]");
@@ -74,12 +74,12 @@ public class IoUtil {
 
     public static void changeRpm(CommandQueue commandQueue, final int rpm) {
         log.info("AUTOTEST rpm EN " + rpm);
-        sendCommand(CMD_RPM + " " + rpm, commandQueue);
+        sendBlockingCommand(CMD_RPM + " " + rpm, commandQueue);
         long time = System.currentTimeMillis();
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
 
-        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPM, actualRpm -> {
+        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPMValue, actualRpm -> {
             if (isCloseEnough(rpm, actualRpm))
                 rpmLatch.countDown();
         });
@@ -91,10 +91,10 @@ public class IoUtil {
             throw new IllegalStateException(e);
         }
 
-        // We don't need to listen to RPM any more
+        // We don't need to listen to RPM anymore
         listenerToken.remove();
 
-        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
@@ -107,7 +107,7 @@ public class IoUtil {
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPM, value -> startup.countDown());
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> startup.countDown());
         startup.await(5, TimeUnit.SECONDS);
         listener.remove();
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));
@@ -160,8 +160,10 @@ public class IoUtil {
         linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
-        final CountDownLatch connected = linkManager.connect(port);
-        if (connected.getCount() > 0)
+        try {
+            linkManager.connect(port).await(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
+        }
     }
 }

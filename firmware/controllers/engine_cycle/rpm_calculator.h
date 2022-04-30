@@ -103,8 +103,8 @@ public:
 	 */
 	float getRpmAcceleration() const;
 
-	// Get elapsed time (seconds) since the engine transitioned to the running state.
-	float getTimeSinceEngineStart(efitick_t nowNt) const;
+	// Get elapsed time since the engine transitioned to the running state.
+	float getSecondsSinceEngineStart(efitick_t nowNt) const;
 
 	/**
 	 * this is RPM on previous engine cycle.

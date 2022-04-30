@@ -13,7 +13,11 @@ enum class ClearReason : uint8_t {
 	BoostCut, // 5
 	OilPressure,
 	StopRequested, // 7
-	EtbProblem,
+	EtbProblem, // 8
+	LaunchCut, // 9
+	InjectorDutyCycle, // 10
+	FloodClear, // 11
+	EnginePhase, // 12
 };
 
 // Only allows clearing the value, but never resetting it.
@@ -66,6 +70,10 @@ public:
 	// Other subsystems call these APIs to indicate a problem has occured
 	void etbProblem();
 	void fatalError();
+	void stopEngine();
+
+	bool isEngineStop(efitick_t nowNt) const;
+	float getTimeSinceEngineStop(efitick_t nowNt) const;
 
 private:
 	void setFaultRevLimit(int limit);
@@ -82,4 +90,6 @@ private:
 	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
+
+	Timer m_engineStopTimer;
 };

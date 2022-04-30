@@ -8,6 +8,9 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
+#include "electronic_throttle_generated.h"
+#include "knock_controller_generated.h"
+#include "FragmentEntry.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -30,26 +33,16 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
 uint8_t* getWorkingPageAddr();
+const void * getStructAddr(live_data_e structId);
 
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-
-#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
-
-/**
- * handle non CRC wrapped command
- */
-bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
-
-/**
- * this command is part of protocol initialization
- */
-void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
+FragmentList getFragments();
 
 void updateTunerStudioState();
-void printTsStats(void);
+
 void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
@@ -70,6 +63,9 @@ post_packed {
 	short int count;
 } TunerStudioWriteChunkRequest;
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
+
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
 	TunerstudioThread(const char* name)
@@ -81,9 +77,8 @@ public:
 	virtual TsChannelBase* setupChannel() = 0;
 
 	void ThreadTask() override;
+
 };
+#endif
 
 #endif /* EFI_TUNER_STUDIO */
-
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content);
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode);

@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import ZoeloeSoft.projects.JFontChooser.JFontChooser;
 import com.rusefi.ConsoleUI;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.storage.Node;
@@ -57,7 +56,7 @@ public class MessagesPane {
 
         content.add(statsPanel, BorderLayout.SOUTH);
 
-        fontButton.addActionListener(new ActionListener() {
+        /*fontButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFontChooser fc = new JFontChooser(ConsoleUI.getFrame());
@@ -66,7 +65,7 @@ public class MessagesPane {
                     upperPanel.setFont(fc.getFont(), config);
                 }
             }
-        });
+        });*/
     }
 
     public JComponent getContent() {

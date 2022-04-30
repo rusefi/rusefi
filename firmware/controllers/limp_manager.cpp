@@ -1,6 +1,10 @@
 #include "pch.h"
 
 #include "limp_manager.h"
+#include "fuel_math.h"
+#include "main_trigger_callback.h"
+
+#define CLEANUP_MODE_TPS 90
 
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
@@ -18,6 +22,16 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
+			&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
+		allowFuel.clear(ClearReason::EnginePhase);
+		allowSpark.clear(ClearReason::EnginePhase);
+	}
+
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
 		allowFuel.clear(ClearReason::FaultRevLimit);
@@ -29,14 +43,14 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
-
+#if EFI_SHAFT_POSITION_INPUT
 	if (engine->rpmCalculator.isRunning()) {
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
 		// Only check if the setting is enabled
 		if (minOilPressure > 0) {
 			// Has it been long enough we should have pressure?
-			bool isTimedOut = engine->rpmCalculator.getTimeSinceEngineStart(nowNt) > 5.0f;
+			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
 
 			// Only check before timed out
 			if (!isTimedOut) {
@@ -60,11 +74,25 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		m_hadOilPressureAfterStart = false;
 	}
 
-	if (engine->needToStopEngine(nowNt)) {
+	// If we're in engine stop mode, inhibit fuel
+	if (isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
 		allowFuel.clear(ClearReason::StopRequested);
+	}
+
+	// If duty cycle is high, impose a fuel cut rev limiter.
+	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
+	if (getInjectorDutyCycle(rpm) > 96.0f) {
+		allowFuel.clear(ClearReason::InjectorDutyCycle);
+	}
+
+	// If the pedal is pushed while not running, cut fuel to clear a flood condition.
+	if (!engine->rpmCalculator.isRunning() &&
+		engineConfiguration->isCylinderCleanupEnabled &&
+		Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS) {
+		allowFuel.clear(ClearReason::FloodClear);
 	}
 
 	if (!engine->isMainRelayEnabled()) {
@@ -74,6 +102,21 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowSpark.clear();
 */
 	}
+	
+#endif // EFI_SHAFT_POSITION_INPUT
+
+#if EFI_LAUNCH_CONTROL
+	// Fuel cut if launch control engaged
+	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
+		allowFuel.clear(ClearReason::LaunchCut);
+	}
+
+	
+	// Spark cut if launch control engaged
+	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
+		allowSpark.clear(ClearReason::LaunchCut);
+	}
+#endif // EFI_LAUNCH_CONTROL
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
@@ -91,6 +134,21 @@ void LimpManager::fatalError() {
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
 	setFaultRevLimit(0);
+}
+
+void LimpManager::stopEngine() {
+	m_engineStopTimer.reset();
+}
+
+bool LimpManager::isEngineStop(efitick_t nowNt) const {
+	float timeSinceStop = getTimeSinceEngineStop(nowNt);
+
+	// If there was stop requested in the past 5 seconds, we're in stop mode
+	return timeSinceStop < 5;
+}
+
+float LimpManager::getTimeSinceEngineStop(efitick_t nowNt) const {
+	return m_engineStopTimer.getElapsedSeconds(nowNt);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {
