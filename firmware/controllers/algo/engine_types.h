@@ -305,7 +305,6 @@ typedef enum {
 	DBG_VVT_3_PID = 50,
 	DBG_VVT_4_PID = 51,
 
-	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
 
 /**
