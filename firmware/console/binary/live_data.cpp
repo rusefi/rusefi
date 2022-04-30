@@ -11,6 +11,11 @@ const output_channels_s* getLiveDataAddr() {
 }
 
 template<>
+const knock_controller_s* getLiveDataAddr() {
+	return &engine->module<KnockController>().unmock();
+}
+
+template<>
 const high_pressure_fuel_pump_s* getLiveDataAddr() {
 #if EFI_HPFP
 	return &engine->module<HpfpController>().unmock();
