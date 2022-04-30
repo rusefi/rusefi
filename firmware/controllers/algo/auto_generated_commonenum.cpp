@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Apr 15 14:31:41 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Apr 30 18:27:05 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -255,19 +255,6 @@ case Force_4_bytes_size_can_vss_nbc_e:
   return "Force_4_bytes_size_can_vss_nbc_e";
 case W202:
   return "W202";
-  }
- return NULL;
-}
-const char *getChamber_style_e(chamber_style_e value){
-switch(value) {
-case CS_CLOSED:
-  return "CS_CLOSED";
-case CS_OPEN:
-  return "CS_OPEN";
-case CS_SWIRL_TUMBLE:
-  return "CS_SWIRL_TUMBLE";
-case Internal_ForceMyEnumIntSize_chamber_stype:
-  return "Internal_ForceMyEnumIntSize_chamber_stype";
   }
  return NULL;
 }
