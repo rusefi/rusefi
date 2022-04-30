@@ -260,7 +260,4 @@
 
 #endif //(USB_USE_PDL == 0) && (USB_USE_L3 == 0)
 
-void UsbConfig_UsbInit(void);
-void UsbConfig_SwitchMode(void);
-
 #endif

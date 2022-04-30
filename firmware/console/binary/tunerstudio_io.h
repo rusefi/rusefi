@@ -8,6 +8,7 @@
 
 #pragma once
 #include "global.h"
+#include "tunerstudio_impl.h"
 
 #if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
 	#define HAS_PRIMARY true
@@ -28,11 +29,6 @@
 #if EFI_PROD_CODE
 #include "pin_repository.h"
 #endif
-
-typedef enum {
-	TS_PLAIN = 0,
-	TS_CRC = 1
-} ts_response_format_e;
 
 class TsChannelBase {
 public:
@@ -62,8 +58,11 @@ public:
 	char scratchBuffer[BLOCKING_FACTOR + 30];
 	const char *name;
 
+	void assertPacketSize(size_t size, bool allowLongPackets);
+	void crcAndWriteBuffer(uint8_t responseCode, size_t size);
+	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+
 private:
-	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 

@@ -101,7 +101,7 @@ void EngineState::periodicFastCallback() {
 	recalculateAuxValveTiming();
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	sparkDwell = getSparkDwell(rpm);
+	sparkDwell = engine->ignitionState.getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
@@ -125,9 +125,6 @@ void EngineState::periodicFastCallback() {
 
 	cltTimingCorrection = getCltTimingCorrection();
 
-	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
-					engineConfiguration->knockNoise);
-
 	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
@@ -143,7 +140,7 @@ void EngineState::periodicFastCallback() {
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
-	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float advance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {

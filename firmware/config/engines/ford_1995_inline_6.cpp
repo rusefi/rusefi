@@ -23,7 +23,7 @@ void setFordInline6() {
 
 	engineConfiguration->specs.cylindersCount = 6;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode();
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
@@ -33,13 +33,14 @@ void setFordInline6() {
 
 
 	/**
-	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
+	 * 0.5ms dwell time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
 	setConstantDwell(0.5);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
+	engineConfiguration->skippedWheelOnCam = true;
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
@@ -78,13 +79,13 @@ void setFordInline6() {
 	// output 5 is PC13
 	// output 6 is PC15
 
-	engineConfiguration->fuelPumpPin = GPIOC_13;
-	engineConfiguration->injectionPins[0] = GPIOB_9;
-	engineConfiguration->injectionPins[1] = GPIOE_3;
-	engineConfiguration->ignitionPins[0] = GPIOC_15;
+	engineConfiguration->fuelPumpPin = Gpio::C13;
+	engineConfiguration->injectionPins[0] = Gpio::B9;
+	engineConfiguration->injectionPins[1] = Gpio::E3;
+	engineConfiguration->ignitionPins[0] = Gpio::C15;
 
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
+	engineConfiguration->fanPin = Gpio::Unassigned;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
@@ -92,6 +93,6 @@ void setFordInline6() {
 	//	engineConfiguration->vbattAdcChannel = 0; //
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_8;
-	engineConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->triggerInputPins[0] = Gpio::A8;
+	engineConfiguration->triggerInputPins[1] = Gpio::A5;
 }

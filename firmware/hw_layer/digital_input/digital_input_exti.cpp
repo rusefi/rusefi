@@ -27,6 +27,8 @@ struct ExtiChannel
 {
 	ExtiCallback Callback = nullptr;
 	void* CallbackData;
+
+	// Name is also used as an enable bit
 	const char* Name = nullptr;
 };
 
@@ -34,11 +36,13 @@ static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiCallback cb, void *cb_data) {
-	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of Gpio::Unassigned getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, msg, "efiExtiEnablePin msg must not be null");
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL) {
@@ -65,9 +69,9 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 		return;
 	}
 
-	channel.Name = msg;
 	channel.Callback = cb;
 	channel.CallbackData = cb_data;
+	channel.Name = msg;
 
 	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
@@ -75,7 +79,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 
 void efiExtiDisablePin(brain_pin_e brainPin)
 {
-	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of Gpio::Unassigned getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin))
 		return;
@@ -170,16 +174,14 @@ static ExtiQueue<ExtiQueueEntry, 32> queue;
 CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
 
-	auto now = getTimeNowNt();
-
 	while (true) {
-		// get the entry out under lock
+		// get the timestamp out under lock
 		// todo: lock freeeeee!
 		__disable_irq();
 		auto result = queue.pop();
 		__enable_irq();
 
-		// queue empty, we're done here.
+		// Queue empty, we're done here.
 		if (!result) {
 			break;
 		}
@@ -188,13 +190,11 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 		auto& timestamp = entry.Timestamp;
 
 		if (timestamp != 0) {
-			if (now - timestamp > MS2NT(10)) {
-				efiPrintf("EXTI skipped late event ch %d", entry.Channel);
-				continue;
-			}
-
 			auto& channel = channels[entry.Channel];
-			channel.Callback(channel.CallbackData, timestamp);
+
+			if (channel.Name) {
+				channel.Callback(channel.CallbackData, timestamp);
+			}
 		}
 	}
 

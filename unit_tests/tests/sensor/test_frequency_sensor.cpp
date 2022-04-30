@@ -15,15 +15,14 @@ static IdentityFunction identityFunc;
 class FrequencySensorTest : public ::testing::Test {
 public:
 	FrequencySensorTest()
-		: dut(SensorType::FuelEthanolPercent, MS2NT(50), 0.5f)
+		: dut(SensorType::FuelEthanolPercent, MS2NT(50))
 	{
 	}
 
 	void SetUp() override {
 		// If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
 		// At least we must init FlexSensor somehow
-		dut.init(GPIO_INVALID);
-		dut.setFunction(identityFunc);
+		dut.initIfValid(Gpio::A0, identityFunc, 0.1f);
 	}
 
 	/*

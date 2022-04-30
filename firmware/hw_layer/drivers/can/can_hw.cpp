@@ -200,8 +200,8 @@ void postCanState() {
 #endif /* EFI_TUNER_STUDIO */
 
 void enableFrankensoCan() {
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canTxPin = Gpio::B6;
+	engineConfiguration->canRxPin = Gpio::B12;
 	engineConfiguration->canReadEnabled = false;
 }
 
@@ -221,7 +221,7 @@ void startCanPins() {
 
 	// Validate pins
 	if (!isValidCanTxPin(engineConfiguration->canTxPin)) {
-		if (engineConfiguration->canTxPin == GPIO_UNASSIGNED) {
+		if (engineConfiguration->canTxPin == Gpio::Unassigned) {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}
@@ -230,7 +230,7 @@ void startCanPins() {
 	}
 
 	if (!isValidCanRxPin(engineConfiguration->canRxPin)) {
-		if (engineConfiguration->canRxPin == GPIO_UNASSIGNED) {
+		if (engineConfiguration->canRxPin == Gpio::Unassigned) {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}

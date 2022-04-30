@@ -133,7 +133,7 @@ public class Wizard {
 
         @Override
         public Component getContent() {
-            double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
             if (rpm == 0) {
                 return Wizard.this.getContent(nextStep);
             }

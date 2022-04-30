@@ -22,7 +22,7 @@ bool hasFirmwareErrorFlag = false;
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-const char* getFirmwareError(void) {
+const char* getCriticalErrorMessage(void) {
 	return criticalErrorMessageBuffer;
 }
 
@@ -218,12 +218,12 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		va_end(ap);
 	}
 
-	int size = strlen((char*)criticalErrorMessageBuffer);
+	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), " %d@%s", getRusEfiVersion(), FIRMWARE_ID);
 
-	if (size + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
-		strcpy((char*)(criticalErrorMessageBuffer) + size, versionBuffer);
+	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
+		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
 
 #else

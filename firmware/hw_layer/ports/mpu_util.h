@@ -11,6 +11,11 @@ void baseMCUInit(void);
 void jump_to_bootloader();
 bool allowFlashWhileRunning();
 
+bool ramReadProbe(volatile const char *read_address);
+#if defined(STM32F4)
+bool isStm32F42x();
+#endif // STM32F4
+
 // ADC
 #if HAL_USE_ADC
 void portInitAdc();

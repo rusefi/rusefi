@@ -13,6 +13,7 @@
 #include "sensor.h"
 #include "efi_pid.h"
 #include "error_accumulator.h"
+#include "electronic_throttle_generated.h"
 
 /**
  * Hard code ETB update speed.
@@ -23,7 +24,7 @@
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
-class EtbController : public IEtbController {
+class EtbController : public IEtbController, public electronic_throttle_s {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
 	void setIdlePosition(percent_t pos) override;
@@ -44,7 +45,7 @@ public:
 	expected<percent_t> observePlant() const override;
 
 	expected<percent_t> getSetpoint() override;
-	expected<percent_t> getSetpointEtb() const;
+	expected<percent_t> getSetpointEtb();
 	expected<percent_t> getSetpointWastegate() const;
 	expected<percent_t> getSetpointIdleValve() const;
 

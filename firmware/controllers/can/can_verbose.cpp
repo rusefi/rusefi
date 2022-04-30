@@ -112,7 +112,9 @@ struct Sensors2 {
 static void populateFrame(Sensors2& msg) {
 	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
+#if EFI_SHAFT_POSITION_INPUT
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
@@ -120,13 +122,14 @@ struct Fueling {
 	scaled_channel<uint16_t, 1000> cylAirmass;
 	scaled_channel<uint16_t, 100> estAirflow;
 	scaled_ms fuel_pulse;
-	uint16_t pad;
+	uint16_t knockCount;
 };
 
 static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
+	msg.knockCount = engine->module<KnockController>()->getKnockCount();
 }
 
 struct Fueling2 {

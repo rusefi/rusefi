@@ -20,7 +20,7 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	/**
 	 * Base engine setting
 	 */
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 114;
 	engineConfiguration->specs.cylindersCount = 4;
@@ -30,7 +30,6 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->rpmHardLimit = 5000;
-	engineConfiguration->cranking.rpm = 600;
 
 //	memcpy(config->ve2RpmBins, rpmSteps, sizeof(rpmSteps));
 
@@ -57,35 +56,35 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	// Frankenstein lo-side output #11: PB8	Main relay
 	// Frankenstein lo-side output #12: PB9	Fuel pump
 
-	engineConfiguration->ignitionPins[0] = GPIOC_14;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOC_15;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::C14;
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::C15;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
 	engineConfiguration->injector.flow = 137; //SIEMENS DEKA VAZ20734
-	engineConfiguration->injectionPins[0] = GPIOE_6;
-	engineConfiguration->injectionPins[1] = GPIOC_13;
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = Gpio::E6;
+	engineConfiguration->injectionPins[1] = Gpio::C13;
+	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->fanPin = GPIOE_0;
+	engineConfiguration->fanPin = Gpio::E0;
 	engineConfiguration->fanPinMode = OM_DEFAULT;
 	engineConfiguration->fanOffTemperature = 95;
 	engineConfiguration->fanOnTemperature = 99;
 
-	engineConfiguration->malfunctionIndicatorPin = GPIOE_1;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::E1;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	engineConfiguration->mainRelayPin = GPIOB_8;
+	engineConfiguration->mainRelayPin = Gpio::B8;
 
-	engineConfiguration->fuelPumpPin = GPIOB_9;
+	engineConfiguration->fuelPumpPin = Gpio::B9;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
 
 	setFrankenso_01_LCD(engineConfiguration);
 
 
-//	engineConfiguration->o2heaterPin = GPIOC_13;
-//	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->o2heaterPin = Gpio::C13;
+//	engineConfiguration->logicAnalyzerPins[1] = Gpio::Unassigned;
 
 	/**
 	 * Inputs

@@ -40,9 +40,9 @@
  * USB settings
  */
 #define EFI_USB_AF                  12U
-//#define EFI_USB_SERIAL_ID         GPIOA_10
-#define EFI_USB_SERIAL_DM           GPIOB_14
-#define EFI_USB_SERIAL_DP           GPIOB_15
+//#define EFI_USB_SERIAL_ID         Gpio::A10
+#define EFI_USB_SERIAL_DM           Gpio::B14
+#define EFI_USB_SERIAL_DP           Gpio::B15
 
 /*
  * Board oscillators-related settings.

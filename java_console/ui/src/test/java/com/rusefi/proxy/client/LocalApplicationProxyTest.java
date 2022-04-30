@@ -98,7 +98,7 @@ public class LocalApplicationProxyTest {
 
                 applicationConnection.sendPacket(commandPacket);
                 BinaryProtocolServer.Packet response = applicationConnection.readPacket();
-                assertEquals(Fields.TS_OUTPUT_SIZE + 1, response.getPacket().length);
+                assertEquals(Fields.TS_TOTAL_OUTPUT_SIZE + 1, response.getPacket().length);
             }
         }
     }

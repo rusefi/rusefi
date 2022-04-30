@@ -79,7 +79,7 @@ public class IoUtil {
 
         final CountDownLatch rpmLatch = new CountDownLatch(1);
 
-        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPM, actualRpm -> {
+        SensorCentral.ListenerToken listenerToken = SensorCentral.getInstance().addListener(Sensor.RPMValue, actualRpm -> {
             if (isCloseEnough(rpm, actualRpm))
                 rpmLatch.countDown();
         });
@@ -94,7 +94,7 @@ public class IoUtil {
         // We don't need to listen to RPM anymore
         listenerToken.remove();
 
-        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+        double actualRpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
@@ -107,7 +107,7 @@ public class IoUtil {
         final CountDownLatch startup = new CountDownLatch(1);
         long waitStart = System.currentTimeMillis();
 
-        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPM, value -> startup.countDown());
+        ISensorCentral.ListenerToken listener = SensorCentral.getInstance().addListener(Sensor.RPMValue, value -> startup.countDown());
         startup.await(5, TimeUnit.SECONDS);
         listener.remove();
         FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart));

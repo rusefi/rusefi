@@ -6,8 +6,8 @@ BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen128/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen128
 
 # Set this if you want a default engine type other than normal hellen128
-ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_128_MERCEDES_4_CYL
+ifeq ($(VAR_DEF_ENGINE_TYPE),)
+  VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_128_MERCEDES_4_CYL
 endif
 
 
@@ -17,8 +17,10 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 DDEFS += -DTS_NO_PRIMARY=1
 
 # Add them all together
-DDEFS += -DFIRMWARE_ID=\"hellen128\" $(DEFAULT_ENGINE_TYPE)
+DDEFS += -DFIRMWARE_ID=\"hellen128\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
+
+DDEFS += -DSHORT_BOARD_NAME=hellen128
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
 

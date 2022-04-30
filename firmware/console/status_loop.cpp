@@ -45,7 +45,6 @@
 #include "main_trigger_callback.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "os_util.h"
 #include "svnversion.h"
 #include "lcd_controller.h"
 #include "can_hw.h"
@@ -165,7 +164,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)
 // and the physical MCU pin backing that function (for example, PE3)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+	if (hwPin == Gpio::Unassigned || hwPin == Gpio::Invalid) {
 		return;
 	}
 	const char *hwPinName;
@@ -261,7 +260,7 @@ void updateDevConsoleState(void) {
 #if EFI_PROD_CODE
 	// todo: unify with simulator!
 	if (hasFirmwareError()) {
-		efiPrintf("%s error: %s", CRITICAL_PREFIX, getFirmwareError());
+		efiPrintf("%s error: %s", CRITICAL_PREFIX, getCriticalErrorMessage());
 		warningEnabled = false;
 		return;
 	}
@@ -401,7 +400,7 @@ extern int totalLoggedBytes;
 
 			if (hasFirmwareError()) {
 				// special behavior in case of critical error - not equal on/off time
-				// this special behaviour helps to notice that something is not right, also
+				// this special behavior helps to notice that something is not right, also
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
@@ -546,13 +545,11 @@ static void updateVvtSensors() {
 #endif
 }
 
-static void updateVehicleSpeed(int rpm) {
+static void updateVehicleSpeed() {
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
-	float wheelRPM = vehicleSpeedKph * 1000 / 60 / (2 * CONST_PI * engineConfiguration->wheelDiameter);
-	float driveshaftRpm = wheelRPM * engineConfiguration->finalGearRatio;
-	engine->outputChannels.vehicleSpeedKph = vehicleSpeedKph;
-	engine->outputChannels.speedToRpmRatio = rpm / driveshaftRpm;
+	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
+	engine->outputChannels.detectedGear = engine->module<GearDetector>()->getCurrentGear();
 #endif /* EFI_VEHICLE_SPEED */
 }
 
@@ -574,12 +571,15 @@ static void updateRawSensors() {
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
 	// TODO: transition AFR to new sensor model
-	engine->outputChannels.rawAfr = getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
+	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
 	engine->outputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
+
+	engine->outputChannels.auxLinear1 = Sensor::get(SensorType::AuxLinear1).Value;
+	engine->outputChannels.auxLinear2 = Sensor::get(SensorType::AuxLinear2).Value;
 }
 
 static void updateMiscSensors() {
@@ -589,6 +589,8 @@ static void updateMiscSensors() {
 
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
+	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
+
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
 #endif /* HAL_USE_ADC */
@@ -597,14 +599,14 @@ static void updateMiscSensors() {
 	engine->outputChannels.tCharge = engine->engineState.sd.tCharge;
 }
 
-static void updateSensors(int rpm) {
+static void updateSensors() {
 	updateTempSensors();
 	updateThrottles();
 	updateRawSensors();
 	updateLambda();
 	updateFuelSensors();
 	updateVvtSensors();
-	updateVehicleSpeed(rpm);
+	updateVehicleSpeed();
 	updatePressures();
 	updateMiscSensors();
 }
@@ -665,7 +667,8 @@ static void updateIgnition(int rpm) {
 
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
-	engine->outputChannels.knockRetard = engine->knockController.getKnockRetard();
+	engine->outputChannels.knockCount = engine->module<KnockController>()->getKnockCount();
+	engine->outputChannels.knockRetard = engine->module<KnockController>()->getKnockRetard();
 }
 
 static void updateFlags() {
@@ -722,12 +725,14 @@ void updateTunerStudioState() {
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
+#if EFI_SHAFT_POSITION_INPUT
+
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
 	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 	tsOutputChannels->instantRpm = instantRpm;
 
-	updateSensors(rpm);
+	updateSensors();
 	updateFuelInfo();
 	updateIgnition(rpm);
 	updateFlags();
@@ -746,6 +751,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
+#endif // EFI_SHAFT_POSITION_INPUT
+
+
 	// 68
 	// 140
 #if EFI_ENGINE_CONTROL
@@ -819,6 +827,7 @@ void updateTunerStudioState() {
 		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
+#if EFI_SHAFT_POSITION_INPUT
 	tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 
@@ -827,6 +836,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
+#endif // EFI_SHAFT_POSITION_INPUT
 
 
 	switch (engineConfiguration->debugMode)	{
@@ -846,8 +856,10 @@ void updateTunerStudioState() {
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
+#if EFI_SHAFT_POSITION_INPUT
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
+#endif // EFI_SHAFT_POSITION_INPUT
 
 		// debugFloatField6 used
 		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
@@ -878,7 +890,9 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
+#if EFI_SHAFT_POSITION_INPUT
 			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
+#endif // EFI_SHAFT_POSITION_INPUT
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
 			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;

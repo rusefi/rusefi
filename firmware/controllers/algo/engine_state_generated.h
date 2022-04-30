@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -124,8 +124,8 @@ struct speed_density_s {
 	 * offset 20
 	 */
 	floatms_t airFlow = (floatms_t)0;
-	/** total size 24*/
 };
+static_assert(sizeof(speed_density_s) == 24);
 
 // start of cranking_fuel_s
 struct cranking_fuel_s {
@@ -153,8 +153,8 @@ struct cranking_fuel_s {
 	 * offset 16
 	 */
 	floatms_t fuel = (floatms_t)0;
-	/** total size 20*/
 };
+static_assert(sizeof(cranking_fuel_s) == 20);
 
 // start of running_fuel_s
 struct running_fuel_s {
@@ -193,11 +193,11 @@ struct running_fuel_s {
 	 * offset 24
 	 */
 	floatms_t fuel = (floatms_t)0;
-	/** total size 28*/
 };
+static_assert(sizeof(running_fuel_s) == 28);
 
-// start of engine_state2_s
-struct engine_state2_s {
+// start of engine_state_s
+struct engine_state_s {
 	/**
 	 * offset 0
 	 */
@@ -271,8 +271,8 @@ struct engine_state2_s {
 	 * offset 124
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
-	/** total size 128*/
 };
+static_assert(sizeof(engine_state_s) == 128);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022

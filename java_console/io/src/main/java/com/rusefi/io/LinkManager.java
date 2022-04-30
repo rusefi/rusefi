@@ -12,6 +12,7 @@ import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.stream.PCanIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -93,8 +94,7 @@ public class LinkManager implements Closeable {
         startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
-                System.out.println("CONNECTION FAILED, did you specify the right port name?");
-                System.exit(-1);
+                IoUtils.exit("CONNECTION FAILED, did you specify the right port name?", -1);
             }
 
             @Override

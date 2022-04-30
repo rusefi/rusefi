@@ -26,6 +26,7 @@ int icuFallingCallbackCounter = 0;
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	int index = (int)arg;
 
@@ -41,6 +42,7 @@ static void vvtRisingCallback(void *arg) {
 static void vvtFallingCallback(void * arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	int index = (int)arg;
 #if EFI_TOOTH_LOGGER
@@ -58,6 +60,7 @@ static void shaftRisingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	icuRisingCallbackCounter++;
 
@@ -70,6 +73,7 @@ static void shaftFallingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	icuFallingCallbackCounter++;
 

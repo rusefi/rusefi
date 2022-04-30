@@ -85,7 +85,7 @@ public class PinoutLogic {
     }
 
     @SuppressWarnings("unchecked")
-    private void processYamlFile(File yamlFile) throws IOException {
+    private void readMetaInfo(File yamlFile) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
         if (yamlData == null) {
@@ -149,9 +149,9 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void processYamls(VariableRegistry registry, ReaderState state) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state) throws IOException {
         for (File yamlFile : boardYamlFiles) {
-            processYamlFile(yamlFile);
+            readMetaInfo(yamlFile);
         }
         registerPins(globalList, registry, state);
 
@@ -162,9 +162,9 @@ public class PinoutLogic {
             getTsNameByIdFile.append("\tswitch(brainPin) {\n");
 
             for (Map.Entry</*id*/String, /*tsName*/String> e : tsNameById.entrySet()) {
-                if (!e.getKey().startsWith("GPIO")) // we only support GPIO pins at the moment no support for ADC
+                if (e.getKey().contains("ADC")) // we only support GPIO pins at the moment no support for ADC
                     continue;
-                getTsNameByIdFile.append("\t\tcase " + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
+                getTsNameByIdFile.append("\t\tcase Gpio::" + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
             }
 
             getTsNameByIdFile.append("\t\tdefault: return nullptr;\n");

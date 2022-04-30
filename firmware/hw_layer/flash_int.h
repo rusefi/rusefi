@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "global.h"
-
 /* Error codes */
 
 /** @brief Flash operation successful */
@@ -35,10 +33,6 @@
 
 /** @brief Flash operation error because of bad flash, corrupted memory */
 #define FLASH_RETURN_BAD_FLASH -11
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 /**
  * @brief Maximum program/erase parallelism
@@ -172,8 +166,3 @@ int intFlashRead(flashaddr_t address, char* buffer, size_t size);
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-

@@ -22,16 +22,16 @@
  *
  * The math proof:
  * - Charging formula #1:
- *	  Vt = Vññ * (1 - exp(-Tc1 / RC))
+ *	  Vt = Vï¿½ï¿½ * (1 - exp(-Tc1 / RC))
  * - Discharging formula:
  *	  Vl = Vt * exp(-Td / RC)
  * - Charging formula #2:
- *	  Vl = Vññ * (1 - exp(-Tl / (RC)))
+ *	  Vl = Vï¿½ï¿½ * (1 - exp(-Tl / (RC)))
  * - Where Tl is a charging time from 0 to Vl:
  *	  Tl = Tc1 - Tc2
  * - Solve the equations:
- *    Vl = Vññ * (1 - exp(-Tl / RC)) = Vt * exp(-Td / RC)
- *    Vññ * (1 - exp(-Tl / RC)) = Vññ * (1 - exp(-Tc1 / RC)) * exp(-Td / RC)
+ *    Vl = Vï¿½ï¿½ * (1 - exp(-Tl / RC)) = Vt * exp(-Td / RC)
+ *    Vï¿½ï¿½ * (1 - exp(-Tl / RC)) = Vï¿½ï¿½ * (1 - exp(-Tc1 / RC)) * exp(-Td / RC)
  *    (1 - exp(-Tl / RC)) = (1 - exp(-Tc1 / RC)) * exp(-Td / RC)
  * - Simplify the equation:
  *    X = exp(-1/(RC))
@@ -312,9 +312,9 @@ int detectHellenBoardId() {
 	efiPrintf("Starting Hellen Board ID detection...");
 	efitick_t beginNt = getTimeNowNt();
 	
-	// Hellen boards use GPIOF_0 and GPIOF_1.
+	// Hellen boards use Gpio::F0 and Gpio::F1.
 	const int numPins = 2;
-	brain_pin_e rPins[numPins] = { GPIOF_0, GPIOF_1 };
+	Gpio rPins[numPins] = { Gpio::F0, Gpio::F1 };
 	
 	// We start from the estimated capacitance, but the real one can be +-10%
 	float C = HELLEN_BOARD_ID_CAPACITOR;

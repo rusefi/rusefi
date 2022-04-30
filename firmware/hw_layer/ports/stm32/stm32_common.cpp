@@ -51,78 +51,78 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:
-		return GPIOA_0;
+		return Gpio::A0;
 	case EFI_ADC_1:
-		return GPIOA_1;
+		return Gpio::A1;
 	case EFI_ADC_2:
-		return GPIOA_2;
+		return Gpio::A2;
 	case EFI_ADC_3:
-		return GPIOA_3;
+		return Gpio::A3;
 	case EFI_ADC_4:
-		return GPIOA_4;
+		return Gpio::A4;
 	case EFI_ADC_5:
-		return GPIOA_5;
+		return Gpio::A5;
 	case EFI_ADC_6:
-		return GPIOA_6;
+		return Gpio::A6;
 	case EFI_ADC_7:
-		return GPIOA_7;
+		return Gpio::A7;
 	case EFI_ADC_8:
-		return GPIOB_0;
+		return Gpio::B0;
 	case EFI_ADC_9:
-		return GPIOB_1;
+		return Gpio::B1;
 	case EFI_ADC_10:
-		return GPIOC_0;
+		return Gpio::C0;
 	case EFI_ADC_11:
-		return GPIOC_1;
+		return Gpio::C1;
 	case EFI_ADC_12:
-		return GPIOC_2;
+		return Gpio::C2;
 	case EFI_ADC_13:
-		return GPIOC_3;
+		return Gpio::C3;
 	case EFI_ADC_14:
-		return GPIOC_4;
+		return Gpio::C4;
 	case EFI_ADC_15:
-		return GPIOC_5;
+		return Gpio::C5;
 	default:
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
 	switch (pin) {
-	case GPIOA_0:
+	case Gpio::A0:
 		return EFI_ADC_0;
-	case GPIOA_1:
+	case Gpio::A1:
 		return EFI_ADC_1;
-	case GPIOA_2:
+	case Gpio::A2:
 		return EFI_ADC_2;
-	case GPIOA_3:
+	case Gpio::A3:
 		return EFI_ADC_3;
-	case GPIOA_4:
+	case Gpio::A4:
 		return EFI_ADC_4;
-	case GPIOA_5:
+	case Gpio::A5:
 		return EFI_ADC_5;
-	case GPIOA_6:
+	case Gpio::A6:
 		return EFI_ADC_6;
-	case GPIOA_7:
+	case Gpio::A7:
 		return EFI_ADC_7;
-	case GPIOB_0:
+	case Gpio::B0:
 		return EFI_ADC_8;
-	case GPIOB_1:
+	case Gpio::B1:
 		return EFI_ADC_9;
-	case GPIOC_0:
+	case Gpio::C0:
 		return EFI_ADC_10;
-	case GPIOC_1:
+	case Gpio::C1:
 		return EFI_ADC_11;
-	case GPIOC_2:
+	case Gpio::C2:
 		return EFI_ADC_12;
-	case GPIOC_3:
+	case Gpio::C3:
 		return EFI_ADC_13;
-	case GPIOC_4:
+	case Gpio::C4:
 		return EFI_ADC_14;
-	case GPIOC_5:
+	case Gpio::C5:
 		return EFI_ADC_15;
-	case GPIO_UNASSIGNED:
+	case Gpio::Unassigned:
 		return EFI_ADC_NONE;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
@@ -226,48 +226,48 @@ private:
 static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	switch (pin) {
 #if STM32_PWM_USE_TIM1
-	case GPIOA_8: return stm32_pwm_config{&PWMD1, 0, 1};
-	case GPIOA_9: return stm32_pwm_config{&PWMD1, 1, 1};
-	case GPIOA_10: return stm32_pwm_config{&PWMD1, 2, 1};
-	case GPIOA_11: return stm32_pwm_config{&PWMD1, 3, 1};
+	case Gpio::A8:  return stm32_pwm_config{&PWMD1, 0, 1};
+	case Gpio::A9:  return stm32_pwm_config{&PWMD1, 1, 1};
+	case Gpio::A10: return stm32_pwm_config{&PWMD1, 2, 1};
+	case Gpio::A11: return stm32_pwm_config{&PWMD1, 3, 1};
 
-	case GPIOE_9: return stm32_pwm_config{&PWMD1, 0, 1};
-	case GPIOE_11: return stm32_pwm_config{&PWMD1, 1, 1};
-	case GPIOE_13: return stm32_pwm_config{&PWMD1, 2, 1};
-	case GPIOE_14: return stm32_pwm_config{&PWMD1, 3, 1};
+	case Gpio::E9:  return stm32_pwm_config{&PWMD1, 0, 1};
+	case Gpio::E11: return stm32_pwm_config{&PWMD1, 1, 1};
+	case Gpio::E13: return stm32_pwm_config{&PWMD1, 2, 1};
+	case Gpio::E14: return stm32_pwm_config{&PWMD1, 3, 1};
 #endif
 #if STM32_PWM_USE_TIM2
-	case GPIOA_15: return stm32_pwm_config{&PWMD2, 0, 1};
-	case GPIOB_3: return stm32_pwm_config{&PWMD2, 1, 1};
-	case GPIOB_10: return stm32_pwm_config{&PWMD2, 2, 1};
-	case GPIOB_11: return stm32_pwm_config{&PWMD2, 3, 1};
+	case Gpio::A15: return stm32_pwm_config{&PWMD2, 0, 1};
+	case Gpio::B3:  return stm32_pwm_config{&PWMD2, 1, 1};
+	case Gpio::B10: return stm32_pwm_config{&PWMD2, 2, 1};
+	case Gpio::B11: return stm32_pwm_config{&PWMD2, 3, 1};
 #endif
 #if STM32_PWM_USE_TIM3
-	case GPIOB_4: return stm32_pwm_config{&PWMD3, 0, 2};
-	case GPIOB_5: return stm32_pwm_config{&PWMD3, 1, 2};
+	case Gpio::B4:  return stm32_pwm_config{&PWMD3, 0, 2};
+	case Gpio::B5:  return stm32_pwm_config{&PWMD3, 1, 2};
 #endif
 #if STM32_PWM_USE_TIM4
-	case GPIOB_6: return stm32_pwm_config{&PWMD4, 0, 2};
-	case GPIOB_7: return stm32_pwm_config{&PWMD4, 1, 2};
-	case GPIOB_8: return stm32_pwm_config{&PWMD4, 2, 2};
-	case GPIOB_9: return stm32_pwm_config{&PWMD4, 3, 2};
+	case Gpio::B6:  return stm32_pwm_config{&PWMD4, 0, 2};
+	case Gpio::B7:  return stm32_pwm_config{&PWMD4, 1, 2};
+	case Gpio::B8:  return stm32_pwm_config{&PWMD4, 2, 2};
+	case Gpio::B9:  return stm32_pwm_config{&PWMD4, 3, 2};
 
-	case GPIOD_12: return stm32_pwm_config{&PWMD4, 0, 2};
-	case GPIOD_13: return stm32_pwm_config{&PWMD4, 1, 2};
-	case GPIOD_14: return stm32_pwm_config{&PWMD4, 2, 2};
-	case GPIOD_15: return stm32_pwm_config{&PWMD4, 3, 2};
+	case Gpio::D12: return stm32_pwm_config{&PWMD4, 0, 2};
+	case Gpio::D13: return stm32_pwm_config{&PWMD4, 1, 2};
+	case Gpio::D14: return stm32_pwm_config{&PWMD4, 2, 2};
+	case Gpio::D15: return stm32_pwm_config{&PWMD4, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM5
-	case GPIOA_0: return stm32_pwm_config{&PWMD5, 0, 2};
-	case GPIOA_1: return stm32_pwm_config{&PWMD5, 1, 2};
-	case GPIOA_2: return stm32_pwm_config{&PWMD5, 2, 2};
-	case GPIOA_3: return stm32_pwm_config{&PWMD5, 3, 2};
+	case Gpio::A0:  return stm32_pwm_config{&PWMD5, 0, 2};
+	case Gpio::A1:  return stm32_pwm_config{&PWMD5, 1, 2};
+	case Gpio::A2:  return stm32_pwm_config{&PWMD5, 2, 2};
+	case Gpio::A3:  return stm32_pwm_config{&PWMD5, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM8
-	case GPIOC_6: return stm32_pwm_config{&PWMD8, 0, 3};
-	case GPIOC_7: return stm32_pwm_config{&PWMD8, 1, 3};
-	case GPIOC_8: return stm32_pwm_config{&PWMD8, 2, 3};
-	case GPIOC_9: return stm32_pwm_config{&PWMD8, 3, 3};
+	case Gpio::C6:  return stm32_pwm_config{&PWMD8, 0, 3};
+	case Gpio::C7:  return stm32_pwm_config{&PWMD8, 1, 3};
+	case Gpio::C8:  return stm32_pwm_config{&PWMD8, 2, 3};
+	case Gpio::C9:  return stm32_pwm_config{&PWMD8, 3, 3};
 #endif
 	default: return unexpected;
 	}
@@ -330,11 +330,11 @@ void jump_to_bootloader() {
 #if EFI_AUX_SERIAL
 
 static bool isValidUART6TxPin(brain_pin_e pin) {
-	return pin == GPIOC_6 || pin == GPIOG_14;
+	return pin == Gpio::C6 || pin == Gpio::G14;
 }
 
 static bool isValidUART6RxPin(brain_pin_e pin) {
-	return pin == GPIOC_7 || pin == GPIOG_9;
+	return pin == Gpio::C7 || pin == Gpio::G9;
 }
 
 bool isValidSerialTxPin(brain_pin_e pin) {
@@ -588,7 +588,7 @@ brain_pin_e getMisoPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getMosiPin(spi_device_e device) {
@@ -602,7 +602,7 @@ brain_pin_e getMosiPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getSckPin(spi_device_e device) {
@@ -616,7 +616,7 @@ brain_pin_e getSckPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 void turnOnSpi(spi_device_e device) {
@@ -755,19 +755,19 @@ SPIConfig mmc_ls_spicfg = {
 #if EFI_CAN_SUPPORT
 
 static bool isValidCan1RxPin(brain_pin_e pin) {
-	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+	return pin == Gpio::A11 || pin == Gpio::B8 || pin == Gpio::D0;
 }
 
 static bool isValidCan1TxPin(brain_pin_e pin) {
-	return pin == GPIOA_12 || pin == GPIOB_9 || pin == GPIOD_1;
+	return pin == Gpio::A12 || pin == Gpio::B9 || pin == Gpio::D1;
 }
 
 static bool isValidCan2RxPin(brain_pin_e pin) {
-	return pin == GPIOB_5 || pin == GPIOB_12;
+	return pin == Gpio::B5 || pin == Gpio::B12;
 }
 
 static bool isValidCan2TxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOB_13;
+	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
 bool isValidCanTxPin(brain_pin_e pin) {
@@ -779,7 +779,7 @@ bool isValidCanRxPin(brain_pin_e pin) {
 }
 
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
-	if (pinRx == GPIO_UNASSIGNED && pinTx == GPIO_UNASSIGNED) {
+	if (pinRx == Gpio::Unassigned && pinTx == Gpio::Unassigned) {
 		return nullptr;
 	}
 #if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
@@ -795,6 +795,60 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+
+#define HWREG(x)                                                              \
+        (*((volatile unsigned long *)(x)))
+
+#define NVIC_FAULT_STAT         0xE000ED28  // Configurable Fault Status
+#define NVIC_FAULT_STAT_BFARV   0x00008000  // Bus Fault Address Register Valid
+#define NVIC_CFG_CTRL_BFHFNMIGN 0x00000100  // Ignore Bus Fault in NMI and
+                                            // Fault
+#define NVIC_CFG_CTRL           0xE000ED14  // Configuration and Control
+
+
+/**
+ * @brief Probe an address to see if can be read without generating a bus fault
+ * @details This function must be called with the processor in privileged mode.
+ *          It:
+ *          - Clear any previous indication of a bus fault in the BFARV bit
+ *          - Temporarily sets the processor to Ignore Bus Faults with all interrupts and fault handlers disabled
+ *          - Attempt to read from read_address, ignoring the result
+ *          - Checks to see if the read caused a bus fault, by checking the BFARV bit is set
+ *          - Re-enables Bus Faults and all interrupts and fault handlers
+ * @param[in] read_address The address to try reading a byte from
+ * @return Returns true if no bus fault occurred reading from read_address, or false if a bus fault occurred.
+ */
+bool ramReadProbe(volatile const char *read_address) {
+    bool address_readable = true;
+
+    /* Clear any existing indication of a bus fault - BFARV is write one to clear */
+    HWREG (NVIC_FAULT_STAT) |= NVIC_FAULT_STAT_BFARV;
+
+    HWREG (NVIC_CFG_CTRL) |= NVIC_CFG_CTRL_BFHFNMIGN;
+    asm volatile ("  CPSID f;");
+    *read_address;
+    if ((HWREG (NVIC_FAULT_STAT) & NVIC_FAULT_STAT_BFARV) != 0)
+    {
+        address_readable = false;
+    }
+    asm volatile ("  CPSIE f;");
+    HWREG (NVIC_CFG_CTRL) &= ~NVIC_CFG_CTRL_BFHFNMIGN;
+
+    return address_readable;
+}
+
+#endif
+
+#if defined(STM32F4)
+bool isStm32F42x() {
+	// really it's enough to just check 0x20020010
+	return ramReadProbe((const char *)0x20000010) && ramReadProbe((const char *)0x20020010) && !ramReadProbe((const char *)0x20070010);
+}
+
+#endif
+
 
 // Stubs for per-board low power helpers
 __attribute__((weak)) void boardPrepareForStop() {

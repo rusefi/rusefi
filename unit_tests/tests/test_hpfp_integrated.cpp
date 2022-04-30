@@ -9,7 +9,7 @@
 
 TEST(HPFP, IntegratedSchedule) {
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
-		engineConfiguration->hpfpValvePin = GPIOA_2; // arbitrary
+		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 	});
 
 	engineConfiguration->specs.cylindersCount = 4;
@@ -20,7 +20,7 @@ TEST(HPFP, IntegratedSchedule) {
 	engineConfiguration->trigger.customTotalToothCount = 16;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+    setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 

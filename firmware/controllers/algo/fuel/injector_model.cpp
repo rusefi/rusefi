@@ -126,7 +126,7 @@ float InjectorModel::correctShortPulse(float baseDuration) const {
 }
 
 float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
-	if (baseDuration > USF2MS(engineConfiguration->applyNonlinearBelowPulse)) {
+	if (baseDuration > engineConfiguration->applyNonlinearBelowPulse) {
 		// Large pulse, skip correction.
 		return baseDuration;
 	}

@@ -16,7 +16,6 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "os_util.h"
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
@@ -76,7 +75,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_HONDA_K:
-	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
@@ -87,6 +85,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
+	case VVT_TOYOTA_4_1:
+		return TT_VVT_TOYOTA_4_1;
 	case VVT_MITSUBISHI_3A92:
 		return TT_VVT_MITSUBISHI_3A92;
 	case VVT_MITSUBISHI_6G75:
@@ -95,6 +95,14 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
+	}
+}
+
+static operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
 	}
 }
 
@@ -108,7 +116,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 
 		auto& shape = engine->triggerCentral.vvtShape[camIndex];
 		shape.initializeTriggerWaveform(
-				engineConfiguration->ambiguousOperationMode,
+				lookupOperationMode(),
 				engineConfiguration->vvtCamSensorUseRise, &config);
 
 		shape.initializeSyncPoint(initState,
@@ -117,7 +125,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 	}
 }
 
-void Engine::initializeTriggerWaveform() {
+void Engine::updateTriggerWaveform() {
 	static TriggerState initState;
 
 	// Re-read config in case it's changed
@@ -131,7 +139,7 @@ void Engine::initializeTriggerWaveform() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			engineConfiguration->ambiguousOperationMode,
+			lookupOperationMode(),
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
 	/**
@@ -183,9 +191,9 @@ void Engine::initializeTriggerWaveform() {
 }
 
 #if ANALOG_HW_CHECK_MODE
-static void assertCloseTo(const char * msg, float actual, float expected) {
-	if (actual < 0.75 * expected || actual > 1.25 * expected) {
-		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
+static void assertCloseTo(const char* msg, float actual, float expected) {
+	if (actual < 0.95f * expected || actual > 1.05f * expected) {
+		firmwareError(OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
 	}
 }
 #endif // ANALOG_HW_CHECK_MODE
@@ -240,6 +248,11 @@ void Engine::periodicSlowCallback() {
 #if ANALOG_HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
+
+#if ! HW_CHECK_ALWAYS_STIMULATE
+	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
+#endif
+
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
@@ -250,10 +263,11 @@ void Engine::periodicSlowCallback() {
 			isHappyTest = true;
 		}
 	}
-	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
-	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
-	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
-	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
+
+	assertCloseTo("clt", Sensor::getRaw(SensorType::Clt), 1.351f);
+	assertCloseTo("iat", Sensor::getRaw(SensorType::Iat), 2.245f);
+	assertCloseTo("aut1", Sensor::getRaw(SensorType::AuxTemp1), 2.750f);
+	assertCloseTo("aut2", Sensor::getRaw(SensorType::AuxTemp2), 3.176f);
 #endif // ANALOG_HW_CHECK_MODE
 }
 
@@ -312,7 +326,7 @@ void Engine::updateSwitchInputs() {
 		bool result = getAcToggle();
 		if (engine->acSwitchState != result) {
 			engine->acSwitchState = result;
-			engine->acSwitchLastChangeTime = getTimeNowUs();
+			engine->module<AcController>().unmock().acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 		engine->acSwitchState = result;
 	}
@@ -596,10 +610,10 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+// this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	return type != TT_TOOTHED_WHEEL
 			&& type != TT_ONE
-			&& type != TT_ONE_PLUS_ONE
 			&& type != TT_3_1_CAM
 			&& type != TT_36_2_2_2
 			&& type != TT_TOOTHED_WHEEL_60_2
@@ -611,7 +625,7 @@ operation_mode_e Engine::getOperationMode() {
 	 * here we ignore user-provided setting for well known triggers.
 	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
 	 */
-	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
+	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : lookupOperationMode();
 }
 
 /**
@@ -626,8 +640,6 @@ void Engine::periodicFastCallback() {
 #endif
 
 	engineState.periodicFastCallback();
-
-	knockController.periodicFastCallback();
 
 	tachSignalCallback();
 

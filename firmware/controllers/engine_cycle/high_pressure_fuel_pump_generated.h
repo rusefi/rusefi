@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 20:53:30 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Sun Apr 17 20:27:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -122,8 +122,8 @@ struct high_pressure_fuel_pump_s {
 	 * offset 20
 	 */
 	angle_t nextStart = (angle_t)0;
-	/** total size 24*/
 };
+static_assert(sizeof(high_pressure_fuel_pump_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 20:53:30 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Sun Apr 17 20:27:25 UTC 2022

@@ -70,21 +70,18 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	setDefaultAspireMaps();
-	// set_cranking_rpm 550
-	engineConfiguration->cranking.rpm = 550;
 	// set cranking_timing_angle 37
 	engineConfiguration->crankingTimingAngle = -37;
 
 	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
-	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
+	engineConfiguration->triggerInputDebugPins[0] = Gpio::C15;
 
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;

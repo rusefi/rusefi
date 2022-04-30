@@ -27,6 +27,7 @@ static ioline_t camLines[CAM_INPUTS_COUNT];
 static void shaft_callback(void *arg, efitick_t stamp) {
 	// do the time sensitive things as early as possible!
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	int index = (int)arg;
 	ioline_t pal_line = shaftLines[index];
@@ -40,6 +41,7 @@ static void shaft_callback(void *arg, efitick_t stamp) {
 
 static void cam_callback(void *arg, efitick_t stamp) {
 	TRIGGER_BAIL_IF_DISABLED
+	TRIGGER_BAIL_IF_SELF_STIM
 
 	int index = (int)arg;
 	ioline_t pal_line = camLines[index];

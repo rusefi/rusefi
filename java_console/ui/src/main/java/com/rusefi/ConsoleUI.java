@@ -8,13 +8,11 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
-import com.rusefi.ui.config.BaseConfigField;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -28,7 +26,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -212,7 +209,7 @@ public class ConsoleUI {
             public void onSensorUpdate(double value) {
                 // todo: we need to migrate to TS_SIGNATURE validation!!!
                 if (value != Fields.TS_FILE_VERSION) {
-                    String message = "This copy of rusEfi console is not compatible with this version of firmware\r\n" +
+                    String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
                             "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +
                             (int) value;
                     JOptionPane.showMessageDialog(getFrame(), message);

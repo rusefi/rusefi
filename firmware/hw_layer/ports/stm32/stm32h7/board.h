@@ -32,8 +32,8 @@
 #define BOARD_NAME                  "H7 rusEFI"
 
 #define EFI_USB_AF 10U
-#define EFI_USB_SERIAL_DM GPIOA_11
-#define EFI_USB_SERIAL_DP GPIOA_12
+#define EFI_USB_SERIAL_DM Gpio::A11
+#define EFI_USB_SERIAL_DP Gpio::A12
 
 /*
  * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.

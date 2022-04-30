@@ -103,4 +103,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.fuelCutReason, "Fuel Cut Code", "", 0},
 	{engine->outputChannels.auxLinear1, GAUGE_NAME_AUX_LINEAR_1, "", 2},
 	{engine->outputChannels.auxLinear2, GAUGE_NAME_AUX_LINEAR_2, "", 2},
+	{engine->outputChannels.boostControllerOutput, GAUGE_NAME_BOOST_OUTPUT, "%", 1},
+	{engine->outputChannels.boostControllerClosedLoopPart, GAUGE_NAME_BOOST_CLOSED_LOOP, "%", 1},
+	{engine->outputChannels.boostControllerOpenLoopPart, GAUGE_NAME_BOOST_OPEN_LOOP, "%", 1},
+	{engine->outputChannels.boostControlTarget, GAUGE_NAME_BOOST_TARGET, "kPa", 1},
 };

@@ -1,6 +1,5 @@
 package com.rusefi.trigger;
 
-import com.rusefi.TriggerImage;
 import com.rusefi.waves.EngineReport;
 
 import java.util.ArrayList;
@@ -16,6 +15,10 @@ public class WaveState {
 
     public List<EngineReport.UpDown> list = new ArrayList<>();
 
+    private static int angleToTime(double prevUp) {
+        return (int) (prevUp);
+    }
+
     public enum trigger_value_e {
         TV_LOW,
         TV_HIGH
@@ -28,7 +31,7 @@ public class WaveState {
                 // we have down before up, we would need to use it later
                 unusedDown = angle;
             } else {
-                EngineReport.UpDown ud = new EngineReport.UpDown(TriggerImage.angleToTime(prevUp), 0, TriggerImage.angleToTime(angle), 0);
+                EngineReport.UpDown ud = new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(angle), 0);
                 list.add(ud);
             }
             prevUp = Double.NaN;
@@ -40,7 +43,7 @@ public class WaveState {
 
     public void wrap() {
         if (!Double.isNaN(unusedDown)) {
-            list.add(0, new EngineReport.UpDown(TriggerImage.angleToTime(prevUp), 0, TriggerImage.angleToTime(unusedDown + 720 * (3 + TriggerImage.EXTRA_COUNT)), 0));
+            list.add(0, new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(unusedDown + 720 * (3 + TriggerImage.EXTRA_COUNT)), 0));
         }
     }
 }

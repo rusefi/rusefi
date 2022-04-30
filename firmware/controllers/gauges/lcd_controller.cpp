@@ -281,7 +281,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarningMessage();
+	const char * message = hasFirmwareErrorFlag ? getCriticalErrorMessage() : getWarningMessage();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
@@ -309,7 +309,7 @@ void updateHD44780lcd(void) {
 //	lcd_HD44780_print_string(buffer);
 //
 //	if (hasFirmwareError()) {
-//		memcpy(buffer, getFirmwareError(), LCD_WIDTH);
+//		memcpy(buffer, getCriticalErrorMessage(), LCD_WIDTH);
 //		buffer[LCD_WIDTH] = 0;
 //		lcd_HD44780_set_position(1, 0);
 //		lcd_HD44780_print_string(buffer);

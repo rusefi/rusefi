@@ -105,11 +105,11 @@ public class BinaryProtocolLogger {
     }
 
     public void start() {
-        SensorCentral.getInstance().addListener(Sensor.RPM, rpmListener);
+        SensorCentral.getInstance().addListener(Sensor.RPMValue, rpmListener);
     }
 
     public void close() {
-        SensorCentral.getInstance().removeListener(Sensor.RPM, rpmListener);
+        SensorCentral.getInstance().removeListener(Sensor.RPMValue, rpmListener);
         closeComposites();
         Runtime.getRuntime().removeShutdownHook(hook);
     }
