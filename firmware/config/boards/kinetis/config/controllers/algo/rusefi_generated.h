@@ -285,10 +285,6 @@
 #define canVssNbcType_offset 3768
 #define canWriteEnabled_offset 1408
 #define cdmInputPin_offset 982
-#define chamber_style_e_CS_CLOSED 1
-#define chamber_style_e_CS_OPEN 0
-#define chamber_style_e_CS_SWIRL_TUMBLE 2
-#define chamber_style_e_Internal_ForceMyEnumIntSize_chamber_stype ENUM_32_BITS
 #define cj125CsPin_offset 710
 #define cj125CsPinMode_offset 1995
 #define cj125isLsu49_offset 140

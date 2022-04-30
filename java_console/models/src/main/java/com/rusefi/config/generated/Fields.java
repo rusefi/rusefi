@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 30 17:04:57 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 30 18:27:42 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -285,9 +285,6 @@ public class Fields {
 	public static final int canVssNbcType_offset = 3796;
 	public static final int canWriteEnabled_offset = 1408;
 	public static final int cdmInputPin_offset = 982;
-	public static final int chamber_style_e_CS_CLOSED = 1;
-	public static final int chamber_style_e_CS_OPEN = 0;
-	public static final int chamber_style_e_CS_SWIRL_TUMBLE = 2;
 	public static final int cj125CsPin_offset = 710;
 	public static final int cj125CsPinMode_offset = 2001;
 	public static final int cj125isLsu49_offset = 140;
