@@ -138,6 +138,10 @@ enum class Gpio : uint16_t {
 	TLE6240_PIN_15 = 144,
 	TLE6240_PIN_16 = 145,
 
+	CAN0 = 250,
+	CAN1 = 251,
+	CAN2 = 252,
+	CAN3 = 253,
 };
 
 /* Plase keep updating these defines */

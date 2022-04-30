@@ -228,6 +228,11 @@ enum class Gpio : uint16_t {
 	DRV8860_PIN_14 = 191,
 	DRV8860_PIN_15 = 192,
 	DRV8860_PIN_16 = 193,
+
+	CAN0 = 250,
+	CAN1 = 251,
+	CAN2 = 252,
+	CAN3 = 253,
 };
 
 /* Plase keep updating this defines */
