@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void initializeSuzukiG13B(TriggerWaveform *s);

@@ -10,7 +10,7 @@ import java.io.*;
 public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
-    public int sensorTsPosition;
+    private int sensorTsPosition;
 
     public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;

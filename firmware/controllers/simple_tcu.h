@@ -4,11 +4,15 @@
 
 #include "tcu.h"
 
+#if EFI_TCU
 class SimpleTransmissionController: public TransmissionControllerBase  {
 public:
   void update(gear_e);
 	void init();
-	TransmissionControllerMode mode = TransmissionControllerMode::SimpleTransmissionController;
+	TransmissionControllerMode getMode() const {
+		return TransmissionControllerMode::SimpleTransmissionController;
+	}
 };
 
 SimpleTransmissionController* getSimpleTransmissionController();
+#endif // EFI_TCU

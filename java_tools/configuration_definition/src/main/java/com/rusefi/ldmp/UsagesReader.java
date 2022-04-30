@@ -3,9 +3,7 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
-import com.rusefi.output.FragmentDialogConsumer;
-import com.rusefi.output.JavaSensorsConsumer;
-import com.rusefi.output.OutputsSectionConsumer;
+import com.rusefi.output.*;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -75,7 +73,9 @@ public class UsagesReader {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        ConfigurationConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+
+        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
         EntryHandler handler = new EntryHandler() {
 
@@ -108,7 +108,10 @@ public class UsagesReader {
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
                 state.withC_Defines = withCDefines;
 
-                state.addDestination(javaSensorsConsumer, outputsSections);
+                state.addDestination(javaSensorsConsumer,
+                        outputsSections,
+                        dataLogConsumer
+                );
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 

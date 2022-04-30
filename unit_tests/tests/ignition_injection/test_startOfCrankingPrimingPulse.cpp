@@ -9,7 +9,7 @@
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	EngineTestHelper eth(TEST_ENGINE);
-
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	engineConfiguration->cranking.baseFuel = 12;
 

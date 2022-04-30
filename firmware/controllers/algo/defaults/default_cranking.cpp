@@ -18,6 +18,8 @@ void setDefaultCranking() {
 	engineConfiguration->crankingIACposition = 50;
 	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+
 	// After start enrichment
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test

@@ -105,12 +105,12 @@ jobs:
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
-            skip-rate: 60
+           # skip-rate: 60
 
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
-            skip-rate: 60
+          #  skip-rate: 60
 
           - build-target: cypress
             folder: hellen

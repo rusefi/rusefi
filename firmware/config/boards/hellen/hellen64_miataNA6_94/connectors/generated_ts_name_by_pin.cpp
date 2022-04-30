@@ -4,29 +4,29 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case GPIOA_1: return "2N - Temperature Sensor";
-		case GPIOA_6: return "3G - CAM";
-		case GPIOB_1: return "3E - CRANK";
-		case GPIOC_1: return "2M - Pressure Sensor";
-		case GPIOC_4: return "1V - Clutch Switch";
-		case GPIOC_5: return "1Q AC Switch";
-		case GPIOD_10: return "3Z - Injector 4";
-		case GPIOD_11: return "3Y - Injector 3";
-		case GPIOD_12: return "Radiator Fan";
-		case GPIOD_14: return "3W - IDLE";
-		case GPIOD_9: return "3S - A/C Fan 94-95";
-		case GPIOE_5: return "1H - Ignition 2 & 3";
-		case GPIOF_11: return "1M - VSS";
-		case GPIOF_12: return "2J - Boost Control";
-		case GPIOF_14: return "2I - VVT";
-		case GPIOF_3: return "2L - Flex Fuel";
-		case GPIOG_2: return "Fuel Pump Relay";
-		case GPIOG_7: return "3U - Injector 1";
-		case GPIOG_8: return "3V - Injector 2";
-		case GPIOG_9: return "1E - Check Engine Light";
-		case GPIOH_15: return "1J - AC Relay";
-		case GPIOI_0: return "Tachometer";
-		case GPIOI_8: return "1G - Ignition 1 & 4";
+		case Gpio::A1: return "2N - Temperature Sensor";
+		case Gpio::A6: return "3G - CAM";
+		case Gpio::B1: return "3E - CRANK";
+		case Gpio::C1: return "2M - Pressure Sensor";
+		case Gpio::C4: return "1V - Clutch Switch";
+		case Gpio::C5: return "1Q AC Switch";
+		case Gpio::D10: return "3Z - Injector 4";
+		case Gpio::D11: return "3Y - Injector 3";
+		case Gpio::D12: return "Radiator Fan";
+		case Gpio::D14: return "3W - IDLE";
+		case Gpio::D9: return "3S - A/C Fan 94-95";
+		case Gpio::E5: return "1H - Ignition 2 & 3";
+		case Gpio::F11: return "1M - VSS";
+		case Gpio::F12: return "2J - Boost Control";
+		case Gpio::F14: return "2I - VVT";
+		case Gpio::F3: return "2L - Flex Fuel";
+		case Gpio::G2: return "Fuel Pump Relay";
+		case Gpio::G7: return "3U - Injector 1";
+		case Gpio::G8: return "3V - Injector 2";
+		case Gpio::G9: return "1E - Check Engine Light";
+		case Gpio::H15: return "1J - AC Relay";
+		case Gpio::I0: return "Tachometer";
+		case Gpio::I8: return "1G - Ignition 1 & 4";
 		default: return nullptr;
 	}
 	return nullptr;

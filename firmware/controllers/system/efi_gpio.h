@@ -69,7 +69,7 @@ public:
 	int unitTestTurnedOnCounter = 0;
 #endif
 
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
+	brain_pin_e brainPin = Gpio::Unassigned;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
@@ -215,6 +215,8 @@ public:
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
 	OutputPin tcuTccOnoffSolenoid;
 	OutputPin tcuTccPwmSolenoid;
+	OutputPin tcuPcSolenoid;
+	OutputPin tcu32Solenoid;
 
 private:
 	void startInjectionPins();

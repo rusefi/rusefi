@@ -39,6 +39,7 @@ TEST(ignition, twoCoils) {
 
 TEST(ignition, trailingSpark) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)

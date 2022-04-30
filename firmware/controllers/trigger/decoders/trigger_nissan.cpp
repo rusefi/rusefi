@@ -7,6 +7,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
 
@@ -183,6 +185,8 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 	s->addEvent360(angle, T_PRIMARY, TV_FALL);
 }
 
+// yes, this is CAM shaft shape NOT crank shaft shape!
+// we will add crank shape once Pavel makes progress
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 

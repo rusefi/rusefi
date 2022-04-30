@@ -191,6 +191,7 @@ public:
 #if EFI_VEHICLE_SPEED
 		GearDetector,
 #endif // EFI_VEHICLE_SPEED
+		KnockController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -204,7 +205,10 @@ public:
 
 	cyclic_buffer<int> triggerErrorDetection;
 
+#if EFI_TCU
 	GearControllerBase *gearController;
+#endif
+	
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
@@ -441,8 +445,6 @@ public:
 	float getTimeIgnitionSeconds(void) const;
 
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
-
-	KnockController knockController;
 
 	AirmassModelBase* mockAirmassModel = nullptr;
 

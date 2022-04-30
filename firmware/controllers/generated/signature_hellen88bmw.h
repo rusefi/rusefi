@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh null
 //
 
-#define SIGNATURE_HASH 3317212091
-#define TS_SIGNATURE "rusEFI 2022.04.18.hellen88bmw.3317212091"
+#define SIGNATURE_HASH 3713745525
+#define TS_SIGNATURE "rusEFI 2022.04.30.hellen88bmw.3713745525"

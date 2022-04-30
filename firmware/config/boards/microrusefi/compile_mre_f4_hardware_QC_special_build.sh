@@ -1,7 +1,5 @@
 #!/bin/bash
 
-export PROJECT_BOARD=microrusefi
-export PROJECT_CPU=ARCH_STM32F4
 export EXTRA_PARAMS="-DDUMMY \
  -DHW_CHECK_MODE=TRUE \
  -DANALOG_HW_CHECK_MODE=TRUE \
@@ -15,9 +13,9 @@ export EXTRA_PARAMS="-DDUMMY \
  -DEFI_AUX_PID=FALSE \
  -DEFI_MAX_31855=FALSE \
  -DEFI_ENGINE_SNIFFER=FALSE \
+ -DEFI_STORAGE_INT_FLASH=FALSE \
  -DEFI_LAUNCH_CONTROL=FALSE \
  -DHW_CHECK_ALWAYS_STIMULATE=TRUE \
- -DSHORT_BOARD_NAME=mre_f4 \
  -DRAMDISK_INVALID"
 
 export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=MRE_BOARD_NEW_TEST
@@ -25,6 +23,4 @@ export VAR_DEF_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=MRE_BOARD_NEW_TEST
 # this QC configuration is used to assert our status with debug info
 export DEBUG_LEVEL_OPT="-O0 -ggdb -g"
 
-bash ../common_make.sh
-
-
+bash ../common_make.sh microrusefi ARCH_STM32F4

@@ -40,8 +40,8 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
-	engineConfiguration->injectionPins[0] = GPIOC_9;
-	engineConfiguration->ignitionPins[0] = GPIOC_8;
+	engineConfiguration->injectionPins[0] = Gpio::C9;
+	engineConfiguration->ignitionPins[0] = Gpio::C8;
 
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

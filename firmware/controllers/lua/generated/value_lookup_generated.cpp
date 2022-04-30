@@ -172,8 +172,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->driveWheelRevPerKm;
 	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
 		return engineConfiguration->canSleepPeriodMs;
-	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
-		return engineConfiguration->weHaveUnusedHere;
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
 		return engineConfiguration->byFirmwareVersion;
 	if (strEqualCaseInsensitive(name, "HD44780width"))
@@ -240,6 +238,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->acIdleExtraOffset;
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
 		return engineConfiguration->finalGearRatio;
+	if (strEqualCaseInsensitive(name, "tcuInputSpeedSensorTeeth"))
+		return engineConfiguration->tcuInputSpeedSensorTeeth;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
 		return engineConfiguration->wastegatePositionMin;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMax"))
@@ -522,6 +522,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
 		return engineConfiguration->useFSIO4ForSeriousEngineWarning;
+	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
+		return engineConfiguration->launchActivateInverted;
 	if (strEqualCaseInsensitive(name, "twoStroke"))
 		return engineConfiguration->twoStroke;
 	if (strEqualCaseInsensitive(name, "skippedWheelOnCam"))
@@ -932,6 +934,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpPumpVolume;
 	if (strEqualCaseInsensitive(name, "hpfpActivationAngle"))
 		return engineConfiguration->hpfpActivationAngle;
+	if (strEqualCaseInsensitive(name, "issFilterReciprocal"))
+		return engineConfiguration->issFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "hpfpPidP"))
 		return engineConfiguration->hpfpPidP;
 	if (strEqualCaseInsensitive(name, "hpfpPidI"))
@@ -1389,11 +1393,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->canSleepPeriodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
-	{
-		engineConfiguration->weHaveUnusedHere = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
 	{
 		engineConfiguration->byFirmwareVersion = (int)value;
@@ -1557,6 +1556,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
 	{
 		engineConfiguration->finalGearRatio = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tcuInputSpeedSensorTeeth"))
+	{
+		engineConfiguration->tcuInputSpeedSensorTeeth = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
@@ -2262,6 +2266,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
 	{
 		engineConfiguration->useFSIO4ForSeriousEngineWarning = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
+	{
+		engineConfiguration->launchActivateInverted = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "twoStroke"))
@@ -3287,6 +3296,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "hpfpActivationAngle"))
 	{
 		engineConfiguration->hpfpActivationAngle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "issFilterReciprocal"))
+	{
+		engineConfiguration->issFilterReciprocal = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpPidP"))

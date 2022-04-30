@@ -31,7 +31,6 @@
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"
-#include "os_util.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -224,14 +223,17 @@ static void doPeriodicSlowCallback() {
 	engine->periodicSlowCallback();
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
+#if EFI_TCU
 	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
 		if (engine->gearController == NULL) {
 			initGearController();
-		} else if (engine->gearController->mode != engineConfiguration->gearControllerMode) {
+		} else if (engine->gearController->getMode() != engineConfiguration->gearControllerMode) {
 			initGearController();
 		}
 		engine->gearController->update();
 	}
+#endif
+
 }
 
 void initPeriodicEvents() {
@@ -514,7 +516,9 @@ void commonInitEngineController() {
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */
 
+#if EFI_TCU
 	initGearController();
+#endif
 
 	initButtonDebounce();
 	initStartStopButton();
@@ -619,7 +623,7 @@ bool validateConfig() {
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
@@ -644,13 +648,13 @@ bool validateConfig() {
 	}
 
 	// VVT
-	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[1] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}

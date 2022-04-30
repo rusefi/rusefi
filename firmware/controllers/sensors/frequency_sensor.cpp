@@ -18,9 +18,10 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter, f
 		return;
 	}
 
-	// Filter parameter less than 0.5 impossible, must always average over at least two events
-	if (filterParameter < 0.5f) {
-		filterParameter = 0.5f;
+	// Filter parameter greater than or equal to 0.5 impossible as it causes filter instability, clamp
+	// far under that value.
+	if (filterParameter > 0.35f) {
+		filterParameter = 0.35f;
 	}
 
 	m_filter.configureLowpass(1, filterParameter);
@@ -48,7 +49,7 @@ void FrequencySensor::deInit() {
 	efiExtiDisablePin(m_pin);
 #endif
 
-	m_pin = GPIO_UNASSIGNED;
+	m_pin = Gpio::Unassigned;
 }
 
 void FrequencySensor::onEdge(efitick_t nowNt) {

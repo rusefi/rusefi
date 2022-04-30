@@ -67,7 +67,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         String comment = getComment(prefix, configField, state.variableRegistry);
 
         if (comments.contains(comment))
-            throw new IllegalStateException(comment + " already present in the outputs!");
+            throw new IllegalStateException(comment + " already present in the outputs! " + configField);
         comments.add(comment);
         return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }

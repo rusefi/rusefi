@@ -1,56 +1,56 @@
 pins:
   # Grey A line
   - pin: Grey A1
-    id: GPIOF_13
+    id: F13
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A1 - Injector 1
     
   - pin: Grey A2
-    id: GPIOF_14
+    id: F14
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A2 - Injector 2
 
   - pin: Grey A3
-    id: GPIOD_8
+    id: D8
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A3 - Injector 3
     
   - pin: Grey A4
-    id: GPIOD_9
+    id: D9
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A4 - Injector 4
     
   - pin: Grey A5
-    id: GPIOD_10
+    id: D10
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A5 - Injector 5
     
   - pin: Grey A6
-    id: GPIOD_11
+    id: D11
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A6 - Injector 6
     
   - pin: Grey A7
-    id: GPIOD_12
+    id: D12
     class: outputs
     function: Low Side Output
     type: inj
     ts_name: Grey A7 - Injector 7
     
   - pin: Grey A8
-    id: GPIOD_13
+    id: D13
     class: outputs
     function: Low Side Output
     type: inj
@@ -59,56 +59,56 @@ pins:
   # Grey B line
   
   - pin: Grey B1
-    id: GPIOE_15
+    id: E15
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B1 - Ignition 1
     
   - pin: Grey B2
-    id: GPIOE_14
+    id: E14
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B2 - Ignition 2
     
   - pin: Grey B3
-    id: GPIOE_13
+    id: E13
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B3 - Ignition 3
     
   - pin: Grey B4
-    id: GPIOE_12
+    id: E12
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B4 - Ignition 4
     
   - pin: Grey B5
-    id: GPIOE_11
+    id: E11
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B5 - Ignition 5
     
   - pin: Grey B6
-    id: GPIOF_15
+    id: F15
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B6 - Ignition 6
     
   - pin: Grey B7
-    id: GPIOG_0
+    id: G0
     class: outputs
     function: High Side Output
     type: ign
     ts_name: Grey B7 - Ignition 7
     
   - pin: Grey B8
-    id: GPIOG_1
+    id: G1
     class: outputs
     function: High Side Output
     type: ign
@@ -159,7 +159,7 @@ pins:
     ts_name: Grey C7 - Analog Sensor Input
 
   - pin: Grey C8
-    id: GPIOD_14
+    id: D14
     class: outputs
     function: Low Side Output
     type: ls
@@ -168,49 +168,49 @@ pins:
   # Black A line
   
   - pin: Black A1
-    id: GPIOG_3
+    id: G3
     class: outputs
     function: Low Side Output
     type: ls
     ts_name: Black A1 - Low Side Output
 
   - pin: Black A2
-    id: GPIOG_4
+    id: G4
     class: outputs
     function: Low Side Output
     type: ls
     ts_name: Black A2 - Low Side Output
     
   - pin: Black A3
-    id: GPIOG_5
+    id: G5
     class: outputs
     function: Low Side Output
     type: ls
     ts_name: Black A3 - Low Side Output
     
   - pin: Black A4
-    id: GPIOG_6
+    id: G6
     class: outputs
     function: Low Side Output / DBW_OUT+
     type: ls
     ts_name: Black A4 - Low Side Output / DBW_OUT+
     
   - pin: Black A5
-    id: GPIOG_7
+    id: G7
     class: outputs
     function: Low Side Output / DBW_OUT-
     type: ls
     ts_name: Black A5 - Low Side Output / DBW_OUT-
     
   - pin: Black A6
-    id: GPIOC_13
+    id: C13
     class: switch_inputs
     function: LSU1_IA / Digital Input
     type: hall
     ts_name: Black A6 - LSU4.9 PIN 5 / Digital Input 8
     
   - pin: Black A7
-    id: GPIOF_1
+    id: F1
     class: switch_inputs
     function: LSU1_VGND / Digital Input
     type: hall
@@ -224,28 +224,28 @@ pins:
  # Black B line
   
   - pin: Black B1
-    id: GPIOG_2
+    id: G2
     class: outputs
     function: Low Side Output
     type: ls
     ts_name: Black B1 - Low Side Output
     
   - pin: Black B2
-    id: GPIOF_5
+    id: F5
     class: switch_inputs
     function: Digital Input
     type: hall
     ts_name: Black B2 - Digital Input 1
 
   - pin: Black B3
-    id: GPIOF_4
+    id: F4
     class: switch_inputs
     function: Digital Input
     type: hall
     ts_name: Black B3 - Digital Input 2
 
   - pin: Black B4
-    id: GPIOF_3
+    id: F3
     class: switch_inputs
     function: Digital Input
     type: hall
@@ -258,14 +258,14 @@ pins:
     ts_name: Black B5 - Analog Sensor Input / Knock 2
 
   - pin: Black B6
-    id: GPIOE_6
+    id: E6
     class: switch_inputs
     function: LSU1_NERMEST / Digital Input
     type: hall
     ts_name: Black B6 - LSU4.9 PIN 6 / Digital Input 7
     
   - pin: Black B7
-    id: GPIOF_0
+    id: F0
     class: switch_inputs
     function: LSU1_IP / Digital Input
     type: hall
@@ -278,14 +278,14 @@ pins:
   # Black C line
   
   - pin: Black C1
-    id: GPIOD_15
+    id: D15
     class: outputs
     function: Low Side Output
     type: ls
     ts_name: Black C1 - Low Side Output
 
   - pin: Black C2
-    id: [GPIOE_2, GPIOE_2]
+    id: [E2, E2]
     class: [event_inputs, switch_inputs]
     function: Camshaft Sensor (VR+/Hall)
     type: hall
@@ -304,7 +304,7 @@ pins:
     ts_name: Crank Sensor VR-
     
   - pin: Black C5
-    id: [GPIOE_3, GPIOE_3]
+    id: [E3, E3]
     class: [event_inputs, switch_inputs]
     function: Crank Sensor (VR+/Hall)
     type: hall

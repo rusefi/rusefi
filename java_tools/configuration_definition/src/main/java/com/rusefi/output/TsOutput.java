@@ -5,8 +5,6 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
-import java.io.IOException;
-
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -16,6 +14,8 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  */
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
+    // https://github.com/rusefi/web_backend/issues/166
+    private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final boolean registerOffsets;
@@ -34,7 +34,7 @@ public class TsOutput {
         return settingContextHelp;
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) throws IOException {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
@@ -42,6 +42,11 @@ public class TsOutput {
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
+
+                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
+                    tsPosition += configField.getSize(next);
+                    return tsPosition;
+                }
 
                 if (configField.isDirective() && configField.getComment() != null) {
                     tsHeader.append(configField.getComment());
@@ -51,7 +56,17 @@ public class TsOutput {
 
                 ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
+                    String commentContent = configField.getCommentContent();
+                    commentContent = state.variableRegistry.applyVariables(commentContent);
+                    commentContent = ConfigField.unquote(commentContent);
+                    int newLineIndex = commentContent.indexOf("\\n");
+                    if (newLineIndex != -1) {
+                        // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
+                        commentContent = commentContent.substring(0, newLineIndex);
+                    }
+//                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
+//                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
+                    settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
                 if (registerOffsets) {
                     state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
@@ -130,6 +145,8 @@ public class TsOutput {
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
+            if (isConstantsSection)
+                return quote("") + ", 1, 0, 0, 100, 0";
             return quote("") + ", 1, 0";
         }
         try {

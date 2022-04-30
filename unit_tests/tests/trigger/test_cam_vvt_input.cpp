@@ -89,7 +89,7 @@ TEST(trigger, testCamInput) {
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE);
-	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
+	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 

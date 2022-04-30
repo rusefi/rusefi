@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_gm.h"
 
 static float addTooth(float offset, TriggerWaveform *s) {

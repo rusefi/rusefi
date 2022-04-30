@@ -8,7 +8,7 @@ static SimplePwm pwms[VR_THRESHOLD_COUNT];
 static void updateVrPwm(int rpm, size_t index) {
 	auto& cfg = engineConfiguration->vrThreshold[index];
 
-	if (cfg.pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(cfg.pin)) {
 		return;
 	}
 
@@ -33,7 +33,7 @@ void initVrPwm() {
 	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
 		auto& cfg = engineConfiguration->vrThreshold[i];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(cfg.pin)) {
 			continue;
 		}
 

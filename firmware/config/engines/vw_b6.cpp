@@ -80,32 +80,32 @@ void setVwPassatB6() {
 
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
 	// RED
-	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
 	// YELLOW
-	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3misoPin = Gpio::C11;
 	// BROWN
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->sdCardCsPin = Gpio::Unassigned;
 	engineConfiguration->is_enabled_spi_3 = true;
 
 
 	// J8 orange
-	engineConfiguration->mc33816_cs = GPIOB_8;
+	engineConfiguration->mc33816_cs = Gpio::B8;
 	// J8 Grey
-	engineConfiguration->mc33816_rstb = GPIOA_15;
+	engineConfiguration->mc33816_rstb = Gpio::A15;
 	// J8 Dark BLUE
-	engineConfiguration->mc33816_driven = GPIOB_9;
+	engineConfiguration->mc33816_driven = Gpio::B9;
 	// J9 violet
-	engineConfiguration->mc33816_flag0 = GPIOC_13;
+	engineConfiguration->mc33816_flag0 = Gpio::C13;
 
 	// J10 Dark BLUE
-	engineConfiguration->injectionPins[0] = GPIOE_6;
+	engineConfiguration->injectionPins[0] = Gpio::E6;
 	// J11 green
-	engineConfiguration->injectionPins[1] = GPIOE_5;
+	engineConfiguration->injectionPins[1] = Gpio::E5;
 	// J18 grey
-	engineConfiguration->injectionPins[2] = GPIOB_7;
+	engineConfiguration->injectionPins[2] = Gpio::B7;
 	// J6 white
-	engineConfiguration->injectionPins[3] = GPIOE_0;
+	engineConfiguration->injectionPins[3] = Gpio::E0;
 
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
@@ -115,7 +115,7 @@ void setVwPassatB6() {
 	lowPressureFuelPumpControl->dutyIfError = 50;
 	setTable(lowPressureFuelPumpControl->table, (uint8_t)50);
 	// "42 - Injector 4", somehow GP4 did not work? not enough current? not happy with diode?
-	lowPressureFuelPumpControl->pin = TLE8888_PIN_4;
+	lowPressureFuelPumpControl->pin = Gpio::TLE8888_PIN_4;
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
@@ -124,7 +124,7 @@ void setVwPassatB6() {
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
 	// Volkswage wants 10% for fan to be OFF, between pull-up and low side control we need to invert that value
-	// todo system lua for duty driven by CLT? (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
+	// todo system lua for duty driven by CLT? (3, Gpio::E0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 	int value = 100 - 10;
 	coolantControl->dutyIfError = value;
 	setTable(coolantControl->table, (uint8_t)value);
@@ -137,11 +137,11 @@ void setVwPassatB6() {
 		}
 	}
 */
-	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
+	coolantControl->pin = Gpio::TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
 	//engineConfiguration->hpfpValvePin = MRE_LS_1;
 	engineConfiguration->disablePrimaryUart = true;
-	engineConfiguration->hpfpValvePin = GPIOB_10; // AUX J13
+	engineConfiguration->hpfpValvePin = Gpio::B10; // AUX J13
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
@@ -163,8 +163,8 @@ void setVwPassatB6() {
 	// https://rusefi.com/forum/viewtopic.php?p=38235#p38235
 	engineConfiguration->injector.flow = 1200;
 
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+	engineConfiguration->fanPin = Gpio::Unassigned;
 
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

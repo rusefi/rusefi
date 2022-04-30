@@ -66,6 +66,10 @@ void setDefaultBaseEngine() {
 	engineConfiguration->tachPulseDuractionMs = 0.5;
 	engineConfiguration->tachPulsePerRev = 1;
 
+
+	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
+	engineConfiguration->issFilterReciprocal = 2;
+
 	// Check engine light
 #if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;

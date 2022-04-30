@@ -1,19 +1,19 @@
 pins:
   - pin: auxMain
   #H144_OUT_IO7
-    id: GPIOG_3
+    id: G3
     class: outputs
     ts_name: auxMain
 
   - pin: auxWastegate
     #H176_OUT_PWM3
-    id: GPIOC_7
+    id: C7
     class: outputs
     ts_name: auxWastegate
 
   - pin: 1
     # H144_OUT_PWM7
-    id: GPIOD_15
+    id: D15
     class: outputs
     function: Right Oil Cooling Fan
     ts_name: 1 Right Oil Cooling
@@ -28,7 +28,7 @@ pins:
 
   - pin: 4
     # H144_OUT_PWM6
-    id: GPIOD_14
+    id: D14
     class: outputs
     function: Left Oil Cooling Fan
     ts_name: 4 Left Oil Fan
@@ -42,28 +42,28 @@ pins:
 
   - pin: 6
     # H144_LS_1
-    id: GPIOG_7
+    id: G7
     class: outputs
     function: Front Injector
     ts_name: 6 Front Injector
 
   - pin: 7
     # H144_LS_2
-    id: GPIOG_8
+    id: G8
     class: outputs
     function: Rear Injector
     ts_name: 7 Rear Injector
 
   - pin: 8
     # H144_OUT_IO6
-    id: GPIOG_11
+    id: G11
     class: outputs
     function: Rear ACR
     ts_name: 8 Rear ACR
 
   - pin: 11
 # H144_IN_SENS4
-    id: GPIOF_6
+    id: F6
     class: event_inputs
     function: Crank Sensor VR- Negative Input
     ts_name: 11 Crank VR-
@@ -80,7 +80,7 @@ pins:
 
   - pin: 24
     # H144_IGN_1
-    id: GPIOC_13
+    id: C13
     class: outputs
     ts_name: 24 Front Coil
     function: Front Coil
@@ -88,7 +88,7 @@ pins:
 
   - pin: 25
 # H144_OUT_IO5
-    id: GPIOD_2
+    id: D2
     class: outputs
     ts_name: 25 Front ACR
     function: Front ACR
@@ -152,7 +152,7 @@ pins:
 
   - pin: 43
     # H144_IGN_2
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 43 Rear Coil
     function: Rear Coil
@@ -180,7 +180,7 @@ pins:
 
   - pin: 51
     # H144_IN_VSS
-    id: GPIOF_11
+    id: F11
     class: event_inputs
     ts_name: 51 - VSS
     function: VSS in
@@ -207,7 +207,7 @@ pins:
   - pin: 61
 # low6 huh?
     # H144_OUT_IO3
-    id: GPIOG_14
+    id: G14
     class: outputs
     ts_name: 61 Reverse Gear
     function: Reverse Gear
@@ -215,7 +215,7 @@ pins:
   - pin: 63
     # low7 huh?
     # H144_OUT_IO4
-    id: GPIOG_5
+    id: G5
     class: outputs
     ts_name: 63 Cooling Pump
     function: Cooling Pump

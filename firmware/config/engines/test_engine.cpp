@@ -39,14 +39,14 @@ void setTestCamEngineConfiguration() {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setConstantDwell(3); // 50% duty cycle @ 5000 rpm
 
-	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
 
-	engineConfiguration->ignitionPins[0] = GPIOC_7; // #1
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED; // #2
-	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED; // #3
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
-	engineConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
-	engineConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
+	engineConfiguration->ignitionPins[0] = Gpio::C7; // #1
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned; // #2
+	engineConfiguration->ignitionPins[2] = Gpio::Unassigned; // #3
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned; // #4
+	engineConfiguration->ignitionPins[4] = Gpio::Unassigned; // #5
+	engineConfiguration->ignitionPins[5] = Gpio::Unassigned; // #6
 }
 
 
@@ -71,8 +71,8 @@ void setTestVVTEngineConfiguration() {
 	// set algorithm 3
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->camInputs[0] = Gpio::A5;
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
@@ -107,12 +107,12 @@ void setProteusAnalogPwmTest() {
 	engineConfiguration->trigger.type = TT_ONE;
 
 	// Disable trigger stim
-	engineConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
-	engineConfiguration->idle.solenoidPin = GPIOG_4;
+	engineConfiguration->idle.solenoidPin = Gpio::G4;
 
 	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
 	engineConfiguration->idle.solenoidFrequency = 5893;

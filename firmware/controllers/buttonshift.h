@@ -11,16 +11,20 @@
 #include "globalaccess.h"
 #include "debounce.h"
 
+#if EFI_TCU
 class ButtonShiftController: public GearControllerBase {
 public:
 	ButtonShiftController();
 
 	void update() override;
-	void init() override;
-	GearControllerMode mode = GearControllerMode::ButtonShift;
+  void init() override;
+	GearControllerMode getMode() const {
+		return GearControllerMode::ButtonShift;
+	}
 private:
 	ButtonDebounce debounceUp;
 	ButtonDebounce debounceDown;
 };
 
 ButtonShiftController* getButtonShiftController();
+#endif // EFI_TCU

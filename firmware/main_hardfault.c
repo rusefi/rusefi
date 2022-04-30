@@ -6,7 +6,9 @@
  * http://www.chibios.com/forum/viewtopic.php?t=2506
  */
 
-#include "global.h"
+#include "hal.h"
+
+#include <string.h>
 
 /**
  * Executes the BKPT instruction that causes the debugger to stop.

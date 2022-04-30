@@ -1,4 +1,3 @@
 #!/bin/bash
-export PROJECT_BOARD=tdg-pdm8
 
-bash ../common_make.sh
+bash ../common_make.sh tdg-pdm8 ARCH_STM32F4

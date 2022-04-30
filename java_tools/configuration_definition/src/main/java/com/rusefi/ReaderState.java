@@ -7,12 +7,15 @@ import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
+import static com.rusefi.ConfigField.unquote;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * We keep state here as we read configuration definition
@@ -60,6 +63,10 @@ public class ReaderState {
             comment = line.substring(index + 1);
         }
         String[] bitNameParts = bitName.split(",");
+
+        if (log.debugEnabled())
+            log.debug("Need to align before bit " + bitName);
+        state.stack.peek().addAlignmentFill(state, 4);
 
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
@@ -176,7 +183,7 @@ public class ReaderState {
         ConfigStructure structure = stack.pop();
         if (log.debugEnabled())
             log.debug("Ending structure " + structure.getName());
-        structure.addAlignmentFill(this);
+        structure.addAlignmentFill(this, 4);
 
         structures.put(structure.getName(), structure);
 
@@ -280,19 +287,23 @@ public class ReaderState {
         ConfigStructure structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
-        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
+        Integer customTypeSize = state.tsCustomSize.get(cf.getType());
+        if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
-            structure.addAlignmentFill(state);
-        } else {
-            // adding a structure instance - had to be aligned
-            // todo?           structure.addAlignmentFill(state);
+            structure.addAlignmentFill(state, getPrimitiveSize);
+        } else if (state.structures.containsKey(cf.getType())) {
+            // we are here for struct members
+            structure.addAlignmentFill(state, 4);
+        } else if (customTypeSize != null) {
+            structure.addAlignmentFill(state, customTypeSize % 8);
         }
 
         if (cf.isIterate()) {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
-                ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
+                String commentWithIndex = getCommentWithIndex(cf, i);
+                ConfigField element = new ConfigField(state, cf.getName() + i, commentWithIndex, null,
                         cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
                 element.isFromIterate(true);
                 structure.addTs(element);
@@ -302,6 +313,13 @@ public class ReaderState {
         } else {
             structure.addBoth(cf);
         }
+    }
+
+    @NotNull
+    private static String getCommentWithIndex(ConfigField cf, int i) {
+        String unquoted = unquote(cf.getCommentOrName());
+        String string = unquoted + " " + i;
+        return quote(string);
     }
 
     public String getHeader() {

@@ -1,5 +1,4 @@
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
 
 #if EFI_USB_SERIAL
 

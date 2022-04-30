@@ -84,11 +84,11 @@ void setEngineBMW_M73_microRusEfi() {
 	engineConfiguration->etb.iFactor = 0.35;
 
 	// 22 - AN Temp 4, orange wire
-	engineConfiguration->startStopButtonPin = GPIOA_3;
+	engineConfiguration->startStopButtonPin = Gpio::A3;
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// "43 - GP Out 4"
-	engineConfiguration->starterControlPin = TLE8888_PIN_24;
+	engineConfiguration->starterControlPin = Gpio::TLE8888_PIN_24;
 #endif /* BOARD_TLE8888_COUNT */
 
 

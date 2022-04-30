@@ -39,7 +39,6 @@
 #include "fuel_math.h"
 #include "cdm_ion_sense.h"
 #include "tooth_logger.h"
-#include "os_util.h"
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"
@@ -318,7 +317,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = engine->getOperationMode();
 
 	// V-Twin MAP phase sense needs to always wait for sync
@@ -338,15 +337,6 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
  */
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
-
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
-		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
-		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
-		// examples:
-		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
-		return;
-	}
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {

@@ -45,7 +45,6 @@
 #include "main_trigger_callback.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "os_util.h"
 #include "svnversion.h"
 #include "lcd_controller.h"
 #include "can_hw.h"
@@ -165,7 +164,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)
 // and the physical MCU pin backing that function (for example, PE3)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+	if (hwPin == Gpio::Unassigned || hwPin == Gpio::Invalid) {
 		return;
 	}
 	const char *hwPinName;
@@ -590,6 +589,8 @@ static void updateMiscSensors() {
 
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
+	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
+
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
 #endif /* HAL_USE_ADC */
@@ -666,7 +667,8 @@ static void updateIgnition(int rpm) {
 
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
-	engine->outputChannels.knockRetard = engine->knockController.getKnockRetard();
+	engine->outputChannels.knockCount = engine->module<KnockController>()->getKnockCount();
+	engine->outputChannels.knockRetard = engine->module<KnockController>()->getKnockRetard();
 }
 
 static void updateFlags() {

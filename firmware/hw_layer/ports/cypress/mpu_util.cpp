@@ -12,7 +12,6 @@
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "os_util.h"
 
 extern "C" {
 	void _unhandled_exception(void);
@@ -89,7 +88,7 @@ brain_pin_e getMisoPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getMosiPin(spi_device_e device) {
@@ -103,7 +102,7 @@ brain_pin_e getMosiPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getSckPin(spi_device_e device) {
@@ -117,7 +116,7 @@ brain_pin_e getSckPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 void turnOnSpi(spi_device_e device) {
@@ -201,19 +200,19 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
 static bool isValidCan1RxPin(brain_pin_e pin) {
-	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+	return pin == Gpio::A11 || pin == Gpio::B8 || pin == Gpio::D0;
 }
 
 static bool isValidCan1TxPin(brain_pin_e pin) {
-	return pin == GPIOA_12 || pin == GPIOB_9 || pin == GPIOD_1;
+	return pin == Gpio::A12 || pin == Gpio::B9 || pin == Gpio::D1;
 }
 
 static bool isValidCan2RxPin(brain_pin_e pin) {
-	return pin == GPIOB_5 || pin == GPIOB_12;
+	return pin == Gpio::B5 || pin == Gpio::B12;
 }
 
 static bool isValidCan2TxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOB_13;
+	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
 bool isValidCanTxPin(brain_pin_e pin) {

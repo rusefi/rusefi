@@ -25,7 +25,7 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -41,7 +41,7 @@ static void setIgnitionPins() {
 	
 	// disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -64,8 +64,8 @@ static void setupVbatt() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	// todo: remove from default since 4 cylinder does not use it
@@ -125,20 +125,20 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 
-	engineConfiguration->fuelPumpPin = GPIOD_12;	// OUT_IO9 // 113 Fuel Pump Relay
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-//	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::D15; // out_pwm7
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::D14; // out_pwm6
+	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
 	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
@@ -146,7 +146,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
+//	setAlgorithm(LM_SPEED_DENSITY);
+    // at least this starts
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 
 	// Bosch VQ40 VR56 VK56 0280158007
@@ -158,7 +160,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
 	engineConfiguration->throttlePedalUpVoltage = 0.75;
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
@@ -181,14 +183,14 @@ void setBoardDefaultConfiguration() {
 void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->sdCardCsPin = Gpio::A15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
+//	engineConfiguration->spi2mosiPin = Gpio::B15;
+//	engineConfiguration->spi2misoPin = Gpio::B14;
+//	engineConfiguration->spi2sckPin = Gpio::B13;
+//	engineConfiguration->sdCardCsPin = Gpio::B12;
 	engineConfiguration->is_enabled_spi_3 = true;
 }

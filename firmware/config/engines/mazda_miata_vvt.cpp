@@ -6,16 +6,16 @@
  * Frankenso MAZDA_MIATA_2003
  * set engine_type 47
  *
- * coil1/4          (p1 +5 VP)    GPIOE_14
- * coil2/2          (p1 +5 VP)    GPIOC_9
- * tachometer +5 VP (p3 +12 VP)   GPIOE_8
- * alternator +5 VP (p3 +12 VP)   GPIOE_10
- * ETB PWM                        GPIOE_6 inverted low-side with pull-up
- * ETB dir1                       GPIOE_12
- * ETB dir2                       GPIOC_7
+ * coil1/4          (p1 +5 VP)    Gpio::E14
+ * coil2/2          (p1 +5 VP)    Gpio::C9
+ * tachometer +5 VP (p3 +12 VP)   Gpio::E8
+ * alternator +5 VP (p3 +12 VP)   Gpio::E10
+ * ETB PWM                        Gpio::E6 inverted low-side with pull-up
+ * ETB dir1                       Gpio::E12
+ * ETB dir2                       Gpio::C7
  *
- * COP ion #1                     GPIOD_8
- * COP ion #3                     GPIOD_9
+ * COP ion #1                     Gpio::D8
+ * COP ion #3                     Gpio::D9
  *
  * @date Oct 4, 2016
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -33,14 +33,14 @@
  * Cam     vvt input              PC6 (3G in Miata board)       blue
  * Wideband input                 PA3 (3J in Miata board)
  *
- * coil1/4          (p1 +5 VP)    GPIOE_14
- * coil2/2          (p1 +5 VP)    GPIOC_7
+ * coil1/4          (p1 +5 VP)    Gpio::E14
+ * coil2/2          (p1 +5 VP)    Gpio::C7
  *
- * tachometer +5 VP (p3 +12 VP)   GPIOE_8
- * alternator +5 VP (p3 +12 VP)   GPIOE_10
+ * tachometer +5 VP (p3 +12 VP)   Gpio::E8
+ * alternator +5 VP (p3 +12 VP)   Gpio::E10
  *
- * VVT solenoid on aux PID#1      GPIOE_3
- * warning light                  GPIOE_6
+ * VVT solenoid on aux PID#1      Gpio::E3
+ * warning light                  Gpio::E6
  *
  *
  * idle solenoid                  PC13 on middle harness plug. diodes seem to be in the harness
@@ -404,24 +404,24 @@ void setMazdaMiata2003EngineConfiguration() {
 
 	setMazdaMiataEngineNB2Defaults();
 
-//	engineConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
-	engineConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIOC_6;
+//	engineConfiguration->triggerInputPins[0] = Gpio::A8; // custom Frankenso wiring in order to use SPI1 for accelerometer
+	engineConfiguration->triggerInputPins[0] = Gpio::A5; // board still not modified
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->camInputs[0] = Gpio::C6;
 
 //	engineConfiguration->is_enabled_spi_1 = true;
 
 	engineConfiguration->twoWireBatchInjection = true; // this is needed for #492 testing
 
-	engineConfiguration->alternatorControlPin = GPIOE_10;
+	engineConfiguration->alternatorControlPin = Gpio::E10;
 	engineConfiguration->alternatorControlPinMode = OM_OPENDRAIN;
 
-//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::A8;
 
-	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
 
 	// high-side driver with +12v VP jumper
-	engineConfiguration->tachOutputPin = GPIOE_8; // tachometer
+	engineConfiguration->tachOutputPin = Gpio::E8; // tachometer
 
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
@@ -440,17 +440,17 @@ void setMazdaMiata2003EngineConfiguration() {
  * Miata coil on #4 PE14 - white ECU wire "1&4"
  */
 
-	engineConfiguration->ignitionPins[0] = GPIOE_14;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOC_9;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E14;
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::C9;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
 
 
-	engineConfiguration->malfunctionIndicatorPin = GPIOD_5;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::D5;
 
 
-//	engineConfiguration->malfunctionIndicatorPin = GPIOD_9;
+//	engineConfiguration->malfunctionIndicatorPin = Gpio::D9;
 //	engineConfiguration->malfunctionIndicatorPinMode = OM_INVERTED;
 
 	// todo: blue jumper wire - what is it?!
@@ -504,12 +504,12 @@ void setMazdaMiata2003EngineConfiguration() {
 	// PWM
 	engineConfiguration->etb_use_two_wires = true;
 
-	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin = Gpio::Unassigned;
 
 	//
-	engineConfiguration->etbIo[0].directionPin1 = GPIOE_12; // orange
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::E12; // orange
 	//
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // white/blue
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::C7; // white/blue
 
 	// set_analog_input_pin tps PC3
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13; // PC3 blue
@@ -518,9 +518,6 @@ void setMazdaMiata2003EngineConfiguration() {
 /* a step back - Frankenso does not use ETB
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
 */
-
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	//set etb_p 12
 	engineConfiguration->etb.pFactor = 12; // a bit lower p-factor seems to work better on TLE9201? MRE?
@@ -557,7 +554,7 @@ void setMazdaMiata2003EngineConfiguration() {
 void setMazdaMiata2003EngineConfigurationBoardTest() {
 	setMazdaMiata2003EngineConfiguration();
 
-	engineConfiguration->ignitionPins[2] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = Gpio::C7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM. Make sure 500K pull-down on Frankenso
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3
@@ -579,20 +576,20 @@ static void setMiataNB2_MRE_common() {
 	// tps1_1AdcChannel input is inherited from boards/microrusefi/board_configuration.cpp
 	// afr.hwChannel input is inherited from boards/microrusefi/board_configuration.cpp
 
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
-	engineConfiguration->camInputs[0] = GPIOA_5;
+	engineConfiguration->camInputs[0] = Gpio::A5;
 	/**
 	 * By default "auto detection mode for VR sensor signals" is used
 	 * We know that for short & strange Hall (?) signals like Miata NB2 crank sensor this does not work well above certain RPM.
 	 */
 	engineConfiguration->tle8888mode = TL_MANUAL;
 
-	// GPIOD_6: "13 - GP Out 6" - selected to +12v
-	engineConfiguration->alternatorControlPin = GPIOD_6;
-	// GPIOD_7: "14 - GP Out 5" - selected to +12v
-	engineConfiguration->tachOutputPin = GPIOD_7; // tachometer
+	// Gpio::D6: "13 - GP Out 6" - selected to +12v
+	engineConfiguration->alternatorControlPin = Gpio::D6;
+	// Gpio::D7: "14 - GP Out 5" - selected to +12v
+	engineConfiguration->tachOutputPin = Gpio::D7; // tachometer
 	engineConfiguration->tachPulsePerRev = 2;
 
 	engineConfiguration->isSdCardEnabled = true;
@@ -603,20 +600,18 @@ static void setMiataNB2_MRE_common() {
 
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
-	// TLE8888_PIN_6:  "7 - Lowside 1"
-	engineConfiguration->vvtPins[0] = TLE8888_PIN_6; // VVT solenoid control
+	// Gpio::TLE8888_PIN_6:  "7 - Lowside 1"
+	engineConfiguration->vvtPins[0] = Gpio::TLE8888_PIN_6; // VVT solenoid control
 
-	// TLE8888_PIN_23: "33 - GP Out 3"
-	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
+	// Gpio::TLE8888_PIN_23: "33 - GP Out 3"
+	engineConfiguration->malfunctionIndicatorPin = Gpio::TLE8888_PIN_23;
 
 
 	// todo: alternator warn
 	// ?
 
 	// todo: AC fan
-	// TLE8888_PIN_24: "43 - GP Out 4"
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	// Gpio::TLE8888_PIN_24: "43 - GP Out 4"
 
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
@@ -686,31 +681,34 @@ void setMiataNB2_MRE_MAF() {
 void setMiataNB2_Proteus_TCU() {
 	engineConfiguration->tcuEnabled = true;
 
+	strcpy(engineConfiguration->engineCode, "NB2");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->vehicleName, "TCU test");
+
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 10;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 
-	// "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
+	engineConfiguration->triggerInputPins[0] = Gpio::Unassigned;
+	engineConfiguration->tcuInputSpeedSensorPin = PROTEUS_VR_1;
 
-	// "VR 2"
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
+	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_VR_2;
 
 	engineConfiguration->driveWheelRevPerKm = 544;	// 205/50R15
 	engineConfiguration->vssGearRatio = 4.3;
 	engineConfiguration->vssToothCount = 22;
 
 	// "Highside 2"
-	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
+	engineConfiguration->tcu_solenoid[0] = Gpio::A8;
 	// "Highside 1"
-	engineConfiguration->tcu_solenoid[1] = GPIOA_9;
+	engineConfiguration->tcu_solenoid[1] = Gpio::A9;
 
 	// "Digital 1" green
-	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
+	engineConfiguration->tcuUpshiftButtonPin = Gpio::C6;
 	engineConfiguration->tcuUpshiftButtonPinMode = PI_PULLUP;
 	// "Digital 6" white
-	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
+	engineConfiguration->tcuDownshiftButtonPin = Gpio::E15;
 	engineConfiguration->tcuDownshiftButtonPinMode = PI_PULLUP;
 
 	// R
@@ -740,25 +738,25 @@ void setMiataNB2_Proteus_TCU() {
 void setMiataNB2_ProteusEngineConfiguration() {
     setMazdaMiataEngineNB2Defaults();
 
-    engineConfiguration->triggerInputPins[0] = GPIOC_6;                     // pin 10/black23
-    engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->camInputs[0] = GPIOE_11;                           // pin  1/black23
+    engineConfiguration->triggerInputPins[0] = Gpio::C6;                     // pin 10/black23
+    engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+    engineConfiguration->camInputs[0] = Gpio::E11;                           // pin  1/black23
 
-    engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
+    engineConfiguration->alternatorControlPin = Gpio::A8;  // "Highside 2"    # pin 1/black35
 
-    engineConfiguration->vvtPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
+    engineConfiguration->vvtPins[0] = Gpio::B5; // VVT solenoid control # pin 8/black35
 
     // high-side driver with +12v VP jumper
-    engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
+    engineConfiguration->tachOutputPin = Gpio::A9; // tachometer
     engineConfiguration->tachPulsePerRev = 2;
 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     #if EFI_PROD_CODE
     engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
-    engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+    engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
     engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
-    engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+    engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -784,8 +782,6 @@ void setMiataNB2_ProteusEngineConfiguration() {
 
     engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
 
-    engineConfiguration->isFasterEngineSpinUpEnabled = true;
-
     engineConfiguration->clt.adcChannel =  PROTEUS_IN_ANALOG_TEMP_1;
     engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;
 
@@ -794,9 +790,9 @@ void setMiataNB2_ProteusEngineConfiguration() {
     engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
 
 
-    engineConfiguration->fanPin = GPIOB_7;
+    engineConfiguration->fanPin = Gpio::B7;
 
-	engineConfiguration->mainRelayPin = GPIOG_12;
+	engineConfiguration->mainRelayPin = Gpio::G12;
 #endif // EFI_PROD_CODE
 
 
