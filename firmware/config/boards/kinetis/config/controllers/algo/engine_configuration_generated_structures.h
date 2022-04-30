@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Apr 29 23:46:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 30 17:04:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3149,6 +3149,12 @@ struct engine_configuration_s {
 	 */
 	debug_mode_e debugMode;
 	/**
+	 * need 4 byte alignment
+	units
+	 * offset 1897
+	 */
+	uint8_t alignmentFill_at_1897[3];
+	/**
 	BPs
 	 * offset 1900
 	 */
@@ -3234,76 +3240,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1920 bit 8 */
-	bool unusedBit_540_8 : 1 {};
+	bool unusedBit_541_8 : 1 {};
 	/**
 	offset 1920 bit 9 */
-	bool unusedBit_540_9 : 1 {};
+	bool unusedBit_541_9 : 1 {};
 	/**
 	offset 1920 bit 10 */
-	bool unusedBit_540_10 : 1 {};
+	bool unusedBit_541_10 : 1 {};
 	/**
 	offset 1920 bit 11 */
-	bool unusedBit_540_11 : 1 {};
+	bool unusedBit_541_11 : 1 {};
 	/**
 	offset 1920 bit 12 */
-	bool unusedBit_540_12 : 1 {};
+	bool unusedBit_541_12 : 1 {};
 	/**
 	offset 1920 bit 13 */
-	bool unusedBit_540_13 : 1 {};
+	bool unusedBit_541_13 : 1 {};
 	/**
 	offset 1920 bit 14 */
-	bool unusedBit_540_14 : 1 {};
+	bool unusedBit_541_14 : 1 {};
 	/**
 	offset 1920 bit 15 */
-	bool unusedBit_540_15 : 1 {};
+	bool unusedBit_541_15 : 1 {};
 	/**
 	offset 1920 bit 16 */
-	bool unusedBit_540_16 : 1 {};
+	bool unusedBit_541_16 : 1 {};
 	/**
 	offset 1920 bit 17 */
-	bool unusedBit_540_17 : 1 {};
+	bool unusedBit_541_17 : 1 {};
 	/**
 	offset 1920 bit 18 */
-	bool unusedBit_540_18 : 1 {};
+	bool unusedBit_541_18 : 1 {};
 	/**
 	offset 1920 bit 19 */
-	bool unusedBit_540_19 : 1 {};
+	bool unusedBit_541_19 : 1 {};
 	/**
 	offset 1920 bit 20 */
-	bool unusedBit_540_20 : 1 {};
+	bool unusedBit_541_20 : 1 {};
 	/**
 	offset 1920 bit 21 */
-	bool unusedBit_540_21 : 1 {};
+	bool unusedBit_541_21 : 1 {};
 	/**
 	offset 1920 bit 22 */
-	bool unusedBit_540_22 : 1 {};
+	bool unusedBit_541_22 : 1 {};
 	/**
 	offset 1920 bit 23 */
-	bool unusedBit_540_23 : 1 {};
+	bool unusedBit_541_23 : 1 {};
 	/**
 	offset 1920 bit 24 */
-	bool unusedBit_540_24 : 1 {};
+	bool unusedBit_541_24 : 1 {};
 	/**
 	offset 1920 bit 25 */
-	bool unusedBit_540_25 : 1 {};
+	bool unusedBit_541_25 : 1 {};
 	/**
 	offset 1920 bit 26 */
-	bool unusedBit_540_26 : 1 {};
+	bool unusedBit_541_26 : 1 {};
 	/**
 	offset 1920 bit 27 */
-	bool unusedBit_540_27 : 1 {};
+	bool unusedBit_541_27 : 1 {};
 	/**
 	offset 1920 bit 28 */
-	bool unusedBit_540_28 : 1 {};
+	bool unusedBit_541_28 : 1 {};
 	/**
 	offset 1920 bit 29 */
-	bool unusedBit_540_29 : 1 {};
+	bool unusedBit_541_29 : 1 {};
 	/**
 	offset 1920 bit 30 */
-	bool unusedBit_540_30 : 1 {};
+	bool unusedBit_541_30 : 1 {};
 	/**
 	offset 1920 bit 31 */
-	bool unusedBit_540_31 : 1 {};
+	bool unusedBit_541_31 : 1 {};
 	/**
 	ms
 	 * offset 1924
@@ -4952,4 +4958,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Apr 29 23:46:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Apr 30 17:04:53 UTC 2022
