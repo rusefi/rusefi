@@ -191,7 +191,7 @@ typedef enum {
 	 * which could be adjusted according to current CLT
 	 */
 	IM_MANUAL = 1,
-	Force_4_bytes_size_idle_mode = ENUM_32_BITS,
+
 } idle_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -251,7 +251,6 @@ typedef enum {
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
-	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
 
 /**
@@ -392,7 +391,6 @@ typedef enum {
 
 	ES_AEM = 6,
 
-	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
 typedef enum {
@@ -457,7 +455,7 @@ typedef enum {
 	 */
 	MT_MPXH6400 = 14,
 
-	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
+
 } air_pressure_sensor_type_e;
 
 typedef enum {
@@ -471,7 +469,6 @@ typedef enum {
 	SC_DETAILED_RPM = 4,
 	SC_AUX_FAST1 = 5,
 
-	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;
 
 typedef enum {
@@ -489,7 +486,7 @@ typedef enum {
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
 	DensoTODO = 3,
-	Internal_ForceMyEnumIntSize_maf_sensor = ENUM_32_BITS,
+
 } maf_sensor_type_e;
 
 typedef enum {
@@ -503,9 +500,7 @@ typedef enum {
 	 */
 	TM_FIXED = 1,
 
-	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
 } timing_mode_e;
-
 
 /**
  * Net Body Computer types
@@ -525,14 +520,13 @@ typedef enum {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 
-	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
 typedef enum {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
 	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
+
 } tChargeMode_e;
 
 // peak type
