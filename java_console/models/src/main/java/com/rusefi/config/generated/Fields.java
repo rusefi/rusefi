@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 30 00:34:18 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Apr 30 02:30:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -966,10 +966,14 @@ public class Fields {
 	public static final int Gpio_C7 = 41;
 	public static final int Gpio_C8 = 42;
 	public static final int Gpio_C9 = 43;
-	public static final int Gpio_CAN0 = 250;
-	public static final int Gpio_CAN1 = 251;
-	public static final int Gpio_CAN2 = 252;
-	public static final int Gpio_CAN3 = 253;
+	public static final int Gpio_CAN_PIN_0 = 250;
+	public static final int Gpio_CAN_PIN_1 = 251;
+	public static final int Gpio_CAN_PIN_2 = 252;
+	public static final int Gpio_CAN_PIN_3 = 253;
+	public static final int Gpio_CAN_PIN_4 = 254;
+	public static final int Gpio_CAN_PIN_5 = 255;
+	public static final int Gpio_CAN_PIN_6 = 256;
+	public static final int Gpio_CAN_PIN_7 = 257;
 	public static final int Gpio_D0 = 50;
 	public static final int Gpio_D1 = 51;
 	public static final int Gpio_D10 = 60;
