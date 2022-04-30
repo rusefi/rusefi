@@ -923,7 +923,7 @@ bool TriggerCentral::isTriggerConfigChanged() {
 
 void validateTriggerInputs() {
 	if (engineConfiguration->triggerInputPins[0] == Gpio::Unassigned && engineConfiguration->triggerInputPins[1] != Gpio::Unassigned) {
-		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
+		// firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
 	if (engineConfiguration->camInputs[0] == Gpio::Unassigned && engineConfiguration->camInputs[1] != Gpio::Unassigned) {
