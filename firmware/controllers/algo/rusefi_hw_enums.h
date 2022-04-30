@@ -270,10 +270,14 @@ enum class Gpio : uint16_t {
 	L9779_OUT_MRD = 247,
 	L9779_PIN_KEY = 248,
 
-	CAN0 = 250,
-	CAN1 = 251,
-	CAN2 = 252,
-	CAN3 = 253,
+	CAN_PIN_0 = 250,
+	CAN_PIN_1 = 251,
+	CAN_PIN_2 = 252,
+	CAN_PIN_3 = 253,
+	CAN_PIN_4 = 254,
+	CAN_PIN_5 = 255,
+	CAN_PIN_6 = 256,
+	CAN_PIN_7 = 257,
 };
 
 /* Please keep updating these defines */

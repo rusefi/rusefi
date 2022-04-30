@@ -235,10 +235,14 @@ enum class Gpio : uint16_t {
 	MC33810_1_GD_2  = 198,
 	MC33810_1_GD_3  = 199,
 
-	CAN0 = 250,
-	CAN1 = 251,
-	CAN2 = 252,
-	CAN3 = 253,
+	CAN_PIN_0 = 250,
+	CAN_PIN_1 = 251,
+	CAN_PIN_2 = 252,
+	CAN_PIN_3 = 253,
+	CAN_PIN_4 = 254,
+	CAN_PIN_5 = 255,
+	CAN_PIN_6 = 256,
+	CAN_PIN_7 = 257,
 };
 
 /* Plase keep updating these defines */
