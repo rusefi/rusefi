@@ -529,17 +529,17 @@ end_struct
 #define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 
 
-custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
+custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS commonly only used for NA engines\nSpeed Density requires MAP sensor and is the default choice for may installs\nMAF air charge is a cylinder filling based method that uses a mass air flow sensor.;
 
 
-custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
+custom injection_mode_e 1 bits, U08, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;+This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 injection_mode_e injectionMode;+This is where the fuel injection type is defined: "Simultaneous" means all injectors will fire together at once. "Sequential" fires the injectors on a per cylinder basis, which requires individually wired injectors. "Batched" will fire the injectors in groups. If your injectors are individually wired you will also need to enable "Two wire batch emulation". \nset injection_mode X\nSee also twoWireBatchInjection
 angle_t extraInjectionOffset;+this is about deciding when the injector starts it's squirt\nSee also injectionPhase map\ntodo: do we need even need this since we have the map anyway?;"deg", 1, 0, -720, 720, 2
 angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.\nThere is tapering towards running timing advance\nset cranking_timing_angle X;"deg", 1, 0, -30, 30, 0
 
-custom ignition_mode_e 4 bits, U32, @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
+custom ignition_mode_e 1 bits, U08, @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
 int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 0, @@GAP_TRACKING_LENGTH@@, 0
@@ -569,7 +569,7 @@ can_nbc_e canNbcType;set can_mode X
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 
 
-custom display_mode_e 4 bits, U32, @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
+custom display_mode_e 1 bits, U08, @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
 
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
@@ -707,7 +707,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	Gpio mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast"
+custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
@@ -960,7 +960,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     launchActivationMode_e launchActivationMode;
 
     #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
-    custom antiLagActivationMode_e  4 bits, S32, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
+    custom antiLagActivationMode_e  1 bits, S08, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
     antiLagActivationMode_e antiLagActivationMode;
 
     int launchSpeedThreshold;+Disabled above this speed;"Kph", 1, 0, 0, 300, 0
