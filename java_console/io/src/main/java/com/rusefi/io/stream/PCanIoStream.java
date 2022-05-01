@@ -17,6 +17,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
@@ -104,6 +105,10 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             log.info("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
+                log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+                return;
+            }
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
