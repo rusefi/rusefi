@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 18:15:07 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 19:17:52 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -438,8 +438,6 @@ case IMU_VAG:
 }
 const char *getInjection_mode_e(injection_mode_e value){
 switch(value) {
-case Force_4_bytes_size_injection_mode:
-  return "Force_4_bytes_size_injection_mode";
 case IM_BATCH:
   return "IM_BATCH";
 case IM_SEQUENTIAL:
