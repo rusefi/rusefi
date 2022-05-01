@@ -51,7 +51,7 @@ public class Elm327Connector implements Closeable {
 	public Elm327Connector(IoStream underlyingStream) {
 		this.underlyingStream = underlyingStream;
 		underlyingStream.setInputListener(listener);
-		tsStream = new Elm327IoStream(this, "elm327Stream");
+		tsStream = new Elm327IoStream(this);
 	}
 
 	/**
