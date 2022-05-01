@@ -295,8 +295,6 @@ typedef enum __attribute__ ((__packed__)) {
 	 */
 	IM_SINGLE_POINT = 3,
 
-
-	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
