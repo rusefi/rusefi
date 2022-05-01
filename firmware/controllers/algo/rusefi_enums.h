@@ -179,7 +179,7 @@ typedef enum {
 	Force_4_bytes_size_log_format = ENUM_32_BITS,
 } log_format_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
 	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
@@ -191,7 +191,7 @@ typedef enum {
 	 * which could be adjusted according to current CLT
 	 */
 	IM_MANUAL = 1,
-	Force_4_bytes_size_idle_mode = ENUM_32_BITS,
+
 } idle_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -251,7 +251,6 @@ typedef enum {
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
-	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
 
 /**
@@ -370,7 +369,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	IMU_TYPE_MB_A0065422618 = 5,
 } imu_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
@@ -392,10 +391,9 @@ typedef enum {
 
 	ES_AEM = 6,
 
-	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
 	/**
@@ -457,10 +455,10 @@ typedef enum {
 	 */
 	MT_MPXH6400 = 14,
 
-	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
+
 } air_pressure_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SC_OFF = 0,
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
@@ -471,7 +469,6 @@ typedef enum {
 	SC_DETAILED_RPM = 4,
 	SC_AUX_FAST1 = 5,
 
-	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;
 
 typedef enum {
@@ -484,15 +481,15 @@ typedef enum {
 
 } gear_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CUSTOM = 0,
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
 	DensoTODO = 3,
-	Internal_ForceMyEnumIntSize_maf_sensor = ENUM_32_BITS,
+
 } maf_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * This is the default mode in which ECU controls timing dynamically
 	 */
@@ -503,14 +500,12 @@ typedef enum {
 	 */
 	TM_FIXED = 1,
 
-	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
 } timing_mode_e;
-
 
 /**
  * Net Body Computer types
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
@@ -525,14 +520,13 @@ typedef enum {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 
-	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
 	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
+
 } tChargeMode_e;
 
 // peak type
