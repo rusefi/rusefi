@@ -20,9 +20,10 @@ public class IsoTpConnectorTest {
 
         IsoTpConnector testConnector = new IsoTpConnector() {
             @Override
-            public void sendCanData(byte[] hdr, byte[] data, int offset, int payloadLength) {
-                String packetAsString =
-                        IoStream.printHexBinary(Elm327Connector.byteToString(hdr, data, offset, payloadLength));
+            public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+                byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
+
+                String packetAsString = IoStream.printHexBinary(Elm327Connector.byteToString(total));
                 packets.add(packetAsString);
 
             }

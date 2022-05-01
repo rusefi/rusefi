@@ -35,10 +35,8 @@ public class PCanIoStream extends AbstractIoStream {
 
     private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
         @Override
-        public void sendCanData(byte[] hdr, byte[] data, int offset, int len) {
-            byte[] total = new byte[hdr.length + len];
-            System.arraycopy(hdr, 0, total, 0, hdr.length);
-            System.arraycopy(data, offset, total, hdr.length, len);
+        public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+            byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
 
             log.info("-------sendIsoTp " + total.length + " byte(s):");
 
