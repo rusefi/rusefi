@@ -36,12 +36,11 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ADC_OFF = 0,
 	ADC_SLOW = 1,
 	ADC_FAST = 2,
 
-	Force_4_bytes_size_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
 typedef enum {
@@ -128,7 +127,7 @@ typedef enum  __attribute__ ((__packed__)) {
 /**
  * This enum is used to select your desired Engine Load calculation algorithm
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
@@ -147,15 +146,13 @@ typedef enum {
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
 
-	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DM_NONE = 0,
 	DM_HD44780 = 1,
 	DM_HD44780_OVER_PCF8574 = 2,
 
-	Force_4_bytes_size_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
 
@@ -256,7 +253,7 @@ typedef enum {
 /**
  * @brief Ignition Mode
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * in this mode only SPARKOUT_1_OUTPUT is used
 	 */
@@ -272,13 +269,12 @@ typedef enum {
 	 */
 	IM_TWO_COILS = 3,
 
-	Force_4_bytes_size_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
 /**
  * @see getNumberOfInjections
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * each cylinder has it's own injector but they all works in parallel
 	 */
@@ -302,17 +298,6 @@ typedef enum {
 
 	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
-
-/**
- * @brief Ignition Mode while cranking
- */
-typedef enum {
-	CIM_DEFAULT = 0,
-	CIM_FIXED_ANGLE = 1,
-
-	// todo: make this a one byte enum
-	Force_4_bytes_size_cranking_ignition_mode = ENUM_32_BITS,
-} cranking_ignition_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	UART_NONE = 0,
@@ -573,10 +558,9 @@ typedef enum {
 	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
 } launchActivationMode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
 	ALWAYS_ON_ANTILAG = 1,
-	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
