@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Apr 30 18:27:05 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 12:06:54 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -123,8 +123,6 @@ case Force_4_bytes_size_adc_channel_mode:
 }
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){
 switch(value) {
-case Force_4_bytes_size_cranking_map_type:
-  return "Force_4_bytes_size_cranking_map_type";
 case MT_BOSCH_2_5:
   return "MT_BOSCH_2_5";
 case MT_CUSTOM:
@@ -242,8 +240,6 @@ case CAN_BUS_NISSAN_VQ:
   return "CAN_BUS_NISSAN_VQ";
 case CAN_BUS_W202_C180:
   return "CAN_BUS_W202_C180";
-case Internal_ForceMyEnumIntSize_can_nbc:
-  return "Internal_ForceMyEnumIntSize_can_nbc";
   }
  return NULL;
 }
@@ -298,8 +294,6 @@ case ES_NarrowBand:
   return "ES_NarrowBand";
 case ES_PLX:
   return "ES_PLX";
-case Force_4_bytes_size_ego_sensor:
-  return "Force_4_bytes_size_ego_sensor";
   }
  return NULL;
 }
@@ -405,8 +399,6 @@ case HPFP_CAM_NONE:
 }
 const char *getIdle_mode_e(idle_mode_e value){
 switch(value) {
-case Force_4_bytes_size_idle_mode:
-  return "Force_4_bytes_size_idle_mode";
 case IM_AUTO:
   return "IM_AUTO";
 case IM_MANUAL:
@@ -549,8 +541,6 @@ case CUSTOM:
   return "CUSTOM";
 case DensoTODO:
   return "DensoTODO";
-case Internal_ForceMyEnumIntSize_maf_sensor:
-  return "Internal_ForceMyEnumIntSize_maf_sensor";
   }
  return NULL;
 }
@@ -564,8 +554,6 @@ case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
 case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
   return "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR";
-case Force_4_bytes_size_operation_mode_e:
-  return "Force_4_bytes_size_operation_mode_e";
 case OM_NONE:
   return "OM_NONE";
 case TWO_STROKE:
@@ -599,8 +587,6 @@ case OM_OPENDRAIN_INVERTED:
 }
 const char *getSensor_chart_e(sensor_chart_e value){
 switch(value) {
-case Internal_ForceMyEnumIntSize_sensor_chart:
-  return "Internal_ForceMyEnumIntSize_sensor_chart";
 case SC_AUX_FAST1:
   return "SC_AUX_FAST1";
 case SC_DETAILED_RPM:
@@ -657,8 +643,6 @@ case STEPPER_HALF:
 }
 const char *getTChargeMode_e(tChargeMode_e value){
 switch(value) {
-case Force_4bytes_size_tChargeMode_e:
-  return "Force_4bytes_size_tChargeMode_e";
 case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
 case TCHARGE_MODE_AIR_INTERP_TABLE:
@@ -670,8 +654,6 @@ case TCHARGE_MODE_RPM_TPS:
 }
 const char *getTiming_mode_e(timing_mode_e value){
 switch(value) {
-case Internal_ForceMyEnumIntSize_timing_mode:
-  return "Internal_ForceMyEnumIntSize_timing_mode";
 case TM_DYNAMIC:
   return "TM_DYNAMIC";
 case TM_FIXED:
