@@ -76,8 +76,6 @@ public class PCanIoStream extends AbstractIoStream {
 //        log.info("Send OK! length=" + payLoad.length);
     }
 
-    private DataListener listener;
-
     public PCanIoStream(PCANBasic can) {
         this.can = can;
         dataBuffer = createDataBuffer("");
@@ -90,16 +88,15 @@ public class PCanIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(DataListener listener) {
-        this.listener = listener;
         Executor threadExecutor = Executors.newSingleThreadExecutor(BinaryProtocolServer.getThreadFactory("PCAN reader"));
         threadExecutor.execute(() -> {
             while (!isClosed()) {
-                readOnePacket();
+                readOnePacket(listener);
             }
         });
     }
 
-    public void readOnePacket() {
+    private void readOnePacket(DataListener listener) {
         // todo: can we reuse instance?
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
