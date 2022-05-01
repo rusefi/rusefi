@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 12:06:54 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 18:15:07 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -116,8 +116,6 @@ case ADC_OFF:
   return "ADC_OFF";
 case ADC_SLOW:
   return "ADC_SLOW";
-case Force_4_bytes_size_adc_channel_mode:
-  return "Force_4_bytes_size_adc_channel_mode";
   }
  return NULL;
 }
@@ -160,8 +158,6 @@ const char *getAntiLagActivationMode_e(antiLagActivationMode_e value){
 switch(value) {
 case ALWAYS_ON_ANTILAG:
   return "ALWAYS_ON_ANTILAG";
-case Force_4bytes_size_antiLagActivationMode_e:
-  return "Force_4bytes_size_antiLagActivationMode_e";
 case SWITCH_INPUT_ANTILAG:
   return "SWITCH_INPUT_ANTILAG";
   }
@@ -254,17 +250,6 @@ case W202:
   }
  return NULL;
 }
-const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value){
-switch(value) {
-case CIM_DEFAULT:
-  return "CIM_DEFAULT";
-case CIM_FIXED_ANGLE:
-  return "CIM_FIXED_ANGLE";
-case Force_4_bytes_size_cranking_ignition_mode:
-  return "Force_4_bytes_size_cranking_ignition_mode";
-  }
- return NULL;
-}
 const char *getDisplay_mode_e(display_mode_e value){
 switch(value) {
 case DM_HD44780:
@@ -273,8 +258,6 @@ case DM_HD44780_OVER_PCF8574:
   return "DM_HD44780_OVER_PCF8574";
 case DM_NONE:
   return "DM_NONE";
-case Force_4_bytes_size_display_mode:
-  return "Force_4_bytes_size_display_mode";
   }
  return NULL;
 }
@@ -299,8 +282,6 @@ case ES_PLX:
 }
 const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
-case Force_4_bytes_size_engine_load_mode:
-  return "Force_4_bytes_size_engine_load_mode";
 case LM_ALPHA_N:
   return "LM_ALPHA_N";
 case LM_LUA:
@@ -427,8 +408,6 @@ case TPS_THRESHOLD:
 }
 const char *getIgnition_mode_e(ignition_mode_e value){
 switch(value) {
-case Force_4_bytes_size_ignition_mode:
-  return "Force_4_bytes_size_ignition_mode";
 case IM_INDIVIDUAL_COILS:
   return "IM_INDIVIDUAL_COILS";
 case IM_ONE_COIL:
