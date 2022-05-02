@@ -46,9 +46,7 @@ public:
 		// If there are scale factors, it must NOT be a float. Why would you scale a float?
 		static_assert(std::is_integral_v<T>);
 
-		val *= float(mul) / div;
-
-		m_value = std::roundf(val);
+		m_value = std::roundf(val * float(mul) / div);
 	}
 
 	// Only allow conversion directly to T when mul/div are both 1, otherwise this operator doesn't exist and the float conversion is used.
