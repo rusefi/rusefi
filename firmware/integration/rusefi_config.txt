@@ -86,7 +86,7 @@
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20210311
+#define TS_FILE_VERSION 20210312
 
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
@@ -107,12 +107,6 @@ struct_no_prefix engine_configuration_s
 
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 256
-
-! Back in the day we wanted enums to be 32 bit integers.
-! as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
-! todo: Technical debt: ENUM_32_BITS #3874
-#define ENUM_16_BITS 60000
-#define ENUM_32_BITS 2000000000
 
 #define AUX_ANALOG_INPUT_COUNT 8
 
@@ -1373,9 +1367,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 custom tChargeMode_e 1 bits, U08, @OFFSET@, [0:1], @@tChargeMode_e_enum@@
 tChargeMode_e tChargeMode;
 
-		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position", 1, 0, 0, 100, 0
-		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias", 1, 0, -100, 100, 2
-	
+
 	float hip9011Gain;;"", 1, 0, 0, 100, 2
 	int16_t etb_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
@@ -1523,6 +1515,9 @@ end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
 engine_configuration_s engineConfiguration;
+
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position", 1, 0, 0, 100, 0
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias", 1, 0, -100, 100, 2
 
 	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] iacPidMultTable;;"%", 1, 0, 0, 999, 2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 02 03:47:30 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 02 09:47:24 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -100,8 +100,6 @@ public class TsOutputs {
 	public static final String ENGINE_MAKE_VAG = "VAG";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
-	public static final int ENUM_16_BITS = 60000;
-	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
@@ -354,7 +352,7 @@ public class TsOutputs {
 	public static final int TS_COMPOSITE_ENABLE = 1;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
-	public static final int TS_FILE_VERSION = 20210311;
+	public static final int TS_FILE_VERSION = 20210312;
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';

@@ -695,8 +695,8 @@ TEST(etb, openLoopThrottle) {
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Map [0, 100] -> [-50, 50]
-	setLinearCurve(engineConfiguration->etbBiasBins, 0, 100);
-	setLinearCurve(engineConfiguration->etbBiasValues, -50, 50);
+	setLinearCurve(config->etbBiasBins, 0, 100);
+	setLinearCurve(config->etbBiasValues, -50, 50);
 
 	EXPECT_NEAR(-50, etb.getOpenLoop(0).value_or(-1), EPS4D);
 	EXPECT_NEAR(-25, etb.getOpenLoop(25).value_or(-1), EPS4D);
@@ -717,8 +717,8 @@ TEST(etb, openLoopNonThrottle) {
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	// Map [0, 100] -> [-50, 50]
-	setLinearCurve(engineConfiguration->etbBiasBins, 0, 100);
-	setLinearCurve(engineConfiguration->etbBiasValues, -50, 50);
+	setLinearCurve(config->etbBiasBins, 0, 100);
+	setLinearCurve(config->etbBiasValues, -50, 50);
 
 	// Should all return 0, as non-throttles don't use open loop table
 	EXPECT_EQ(0, etb.getOpenLoop(0).value_or(-1));

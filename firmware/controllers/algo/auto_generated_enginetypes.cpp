@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Apr 30 17:04:14 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon May 02 08:59:59 UTC 2022
 // see also gen_config_and_enums.bat
 
 
