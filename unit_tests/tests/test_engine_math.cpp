@@ -69,7 +69,6 @@ typedef enum {
     CS_CLOSED = 1,
     CS_SWIRL_TUMBLE = 2,
 
-	Internal_ForceMyEnumIntSize_chamber_stype = ENUM_32_BITS,
 } chamber_style_e;
 
 /**
