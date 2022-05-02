@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 01 19:18:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 02 01:21:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1069,43 +1069,45 @@ struct engine_configuration_s {
 	 */
 	ignition_mode_e ignitionMode;
 	/**
-	 * offset 421
-	 */
-	uint8_t alignmentFill_at_4[3];
-	/**
 	 * How many consecutive gap rations have to match expected ranges for sync to happen
 	count
-	 * offset 424
+	 * offset 421
 	 */
 	int8_t gapTrackingLengthOverride;
 	/**
 	 * Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
 	kph
-	 * offset 425
+	 * offset 422
 	 */
 	uint8_t maxIdleVss;
 	/**
+	 * need 4 byte alignment
+	units
+	 * offset 423
+	 */
+	uint8_t alignmentFill_at_423[1];
+	/**
 	 * Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
 	kPa
-	 * offset 426
+	 * offset 424
 	 */
 	uint16_t minOilPressureAfterStart;
 	/**
 	 * Dynamic uses the timing map to decide the ignition timing, Static timing fixes the timing to the value set below (only use for checking static timing with a timing light).
-	 * offset 428
+	 * offset 426
 	 */
 	timing_mode_e timingMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 429
+	 * offset 427
 	 */
-	uint8_t alignmentFill_at_429[3];
+	uint8_t alignmentFill_at_427[1];
 	/**
 	 * This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing
 	 * This mode is useful when adjusting distributor location.
 	RPM
-	 * offset 432
+	 * offset 428
 	 */
 	angle_t fixedModeTiming;
 	/**
@@ -1114,166 +1116,166 @@ struct engine_configuration_s {
 	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * set global_trigger_offset_angle X
 	deg btdc
-	 * offset 436
+	 * offset 432
 	 */
 	angle_t globalTriggerAngleOffset;
 	/**
 	 * Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
 	coef
-	 * offset 440
+	 * offset 436
 	 */
 	float analogInputDividerCoefficient;
 	/**
 	 * This is the ratio of the resistors for the battery voltage, measure the voltage at the battery and then adjust this number until the gauge matches the reading.
 	coef
-	 * offset 444
+	 * offset 440
 	 */
 	float vbattDividerCoeff;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsius
 	deg C
-	 * offset 448
+	 * offset 444
 	 */
 	float fanOnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsius
 	deg C
-	 * offset 452
+	 * offset 448
 	 */
 	float fanOffTemperature;
 	/**
 	 * Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.
 	revs/km
-	 * offset 456
+	 * offset 452
 	 */
 	float driveWheelRevPerKm;
 	/**
 	 * set can_mode X
-	 * offset 460
+	 * offset 456
 	 */
 	can_nbc_e canNbcType;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 461
+	 * offset 457
 	 */
-	uint8_t alignmentFill_at_461[3];
+	uint8_t alignmentFill_at_457[3];
 	/**
 	 * CANbus thread period in ms
 	ms
-	 * offset 464
+	 * offset 460
 	 */
 	int canSleepPeriodMs;
 	/**
-	 * offset 468
+	 * offset 464
 	 */
 	display_mode_e displayMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 469
+	 * offset 465
 	 */
-	uint8_t alignmentFill_at_469[3];
+	uint8_t alignmentFill_at_465[3];
 	/**
 	index
-	 * offset 472
+	 * offset 468
 	 */
 	int byFirmwareVersion;
 	/**
 	index
-	 * offset 476
+	 * offset 472
 	 */
 	int HD44780width;
 	/**
 	index
-	 * offset 480
+	 * offset 476
 	 */
 	int HD44780height;
 	/**
 	 * First throttle body, first sensor. See also pedalPositionAdcChannel
-	 * offset 484
+	 * offset 480
 	 */
 	adc_channel_e tps1_1AdcChannel;
 	/**
 	 * This is the processor input pin that the battery voltage circuit is connected to, if you are unsure of what pin to use, check the schematic that corresponds to your PCB.
-	 * offset 485
+	 * offset 481
 	 */
 	adc_channel_e vbattAdcChannel;
 	/**
 	 * This is the processor pin that your fuel level sensor in connected to. This is a non standard input so will need to be user defined.
-	 * offset 486
+	 * offset 482
 	 */
 	adc_channel_e fuelLevelSensor;
 	/**
 	 * Second throttle body position sensor, single channel so far
 	 * set_analog_input_pin tps2 X
-	 * offset 487
+	 * offset 483
 	 */
 	adc_channel_e tps2_1AdcChannel;
 	/**
 	 * 0.1 is a good default value
 	x
-	 * offset 488
+	 * offset 484
 	 */
 	float idle_derivativeFilterLoss;
 	/**
 	 * just a temporary solution
 	angle
-	 * offset 492
+	 * offset 488
 	 */
 	int trailingSparkAngle;
 	/**
-	 * offset 496
+	 * offset 492
 	 */
 	trigger_config_s trigger;
 	/**
-	 * offset 512
+	 * offset 508
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
 	 * Single value to be used in event of a failed MAP sensor 
 	 * This value is only used for speed density fueling calculations.
 	kPa
-	 * offset 513
+	 * offset 509
 	 */
 	uint8_t failedMapFallback;
 	/**
 	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.
 	%
-	 * offset 514
+	 * offset 510
 	 */
 	uint8_t boostControlSafeDutyCycle;
 	/**
-	 * offset 515
+	 * offset 511
 	 */
 	adc_channel_e mafAdcChannel;
 	/**
 	 * set global_fuel_correction X
 	coef
-	 * offset 516
+	 * offset 512
 	 */
 	float globalFuelCorrection;
 	/**
 	volts
-	 * offset 520
+	 * offset 516
 	 */
 	float adcVcc;
 	/**
 	Deg
-	 * offset 524
+	 * offset 520
 	 */
 	float mapCamDetectionAnglePosition;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
-	 * offset 528
+	 * offset 524
 	 */
 	brain_input_pin_e camInputs[CAM_INPUTS_COUNT];
 	/**
-	 * offset 536
+	 * offset 532
 	 */
 	uint8_t camInputsPadding[CAM_INPUTS_COUNT_padding];
 	/**
-	 * offset 536
+	 * offset 532
 	 */
 	afr_sensor_s afr;
 	/**
@@ -1282,9 +1284,23 @@ struct engine_configuration_s {
 	 * See also tps1_1AdcChannel
 	 * set_analog_input_pin pps X
 	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
-	 * offset 556
+	 * offset 552
 	 */
 	adc_channel_e throttlePedalPositionAdcChannel;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 553
+	 */
+	uint8_t alignmentFill_at_553[1];
+	/**
+	 * offset 554
+	 */
+	Gpio tle6240_cs;
+	/**
+	 * offset 556
+	 */
+	pin_output_mode_e tle6240_csPinMode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1292,223 +1308,224 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_557[1];
 	/**
-	 * offset 558
-	 */
-	Gpio tle6240_cs;
-	/**
-	 * offset 560
-	 */
-	pin_output_mode_e tle6240_csPinMode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 561
-	 */
-	uint8_t alignmentFill_at_561[1];
-	/**
 	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
-	 * offset 562
+	 * offset 558
 	 */
 	switch_input_pin_e throttlePedalUpPin;
 	/**
 	 * @see hasBaroSensor
-	 * offset 564
+	 * offset 560
 	 */
 	air_pressure_sensor_config_s baroSensor;
 	/**
-	 * offset 576
+	 * offset 572
 	 */
 	idle_hardware_s idle;
 	/**
 	 * Value between 0 and 100 used in Manual mode
 	%
-	 * offset 588
+	 * offset 584
 	 */
 	float manIdlePosition;
 	/**
 	 * Ignition timing to remove when a knock event occurs.
 	%
-	 * offset 592
+	 * offset 588
 	 */
 	scaled_channel<uint8_t, 10, 1> knockRetardAggression;
 	/**
 	 * After a knock event, reapply timing at this rate.
 	deg/s
-	 * offset 593
+	 * offset 589
 	 */
 	scaled_channel<uint8_t, 10, 1> knockRetardReapplyRate;
 	/**
 	 * Maximum amount of knock retard.
 	deg
-	 * offset 594
+	 * offset 590
 	 */
 	uint8_t knockRetardMaximum;
 	/**
 	 * Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
-	 * offset 595
+	 * offset 591
 	 */
 	uint8_t vssFilterReciprocal;
 	/**
 	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
 	ratio
-	 * offset 596
+	 * offset 592
 	 */
 	scaled_channel<uint16_t, 1000, 1> vssGearRatio;
 	/**
 	 * Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
 	count
-	 * offset 598
+	 * offset 594
 	 */
 	uint8_t vssToothCount;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 599
+	 * offset 595
 	 */
-	uint8_t alignmentFill_at_599[1];
+	uint8_t alignmentFill_at_595[1];
 	/**
-	 * offset 600
+	 * offset 596
 	 */
 	Gpio l9779_cs;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 602
+	 * offset 598
 	 */
-	uint8_t alignmentFill_at_602[2];
+	uint8_t alignmentFill_at_598[2];
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
 	 * rpm X
 	 * TODO: rename to triggerSimulatorRpm
 	Rpm
-	 * offset 604
+	 * offset 600
 	 */
 	int triggerSimulatorFrequency;
 	/**
-	 * offset 608
+	 * offset 604
 	 */
 	output_pin_e injectionPins[MAX_CYLINDER_COUNT];
 	/**
-	 * offset 632
+	 * offset 628
 	 */
 	output_pin_e ignitionPins[MAX_CYLINDER_COUNT];
 	/**
-	 * offset 656
+	 * offset 652
 	 */
 	pin_output_mode_e injectionPinMode;
 	/**
-	 * offset 657
+	 * offset 653
 	 */
 	pin_output_mode_e ignitionPinMode;
 	/**
-	 * offset 658
+	 * offset 654
 	 */
 	Gpio HD44780_rs;
 	/**
-	 * offset 660
+	 * offset 656
 	 */
 	Gpio HD44780_e;
 	/**
-	 * offset 662
+	 * offset 658
 	 */
 	Gpio HD44780_db4;
 	/**
-	 * offset 664
+	 * offset 660
 	 */
 	Gpio HD44780_db5;
 	/**
-	 * offset 666
+	 * offset 662
 	 */
 	Gpio HD44780_db6;
 	/**
-	 * offset 668
+	 * offset 664
 	 */
 	Gpio HD44780_db7;
 	/**
-	 * offset 670
+	 * offset 666
 	 */
 	Gpio gps_rx_pin;
 	/**
-	 * offset 672
+	 * offset 668
 	 */
 	Gpio gps_tx_pin;
 	/**
-	 * offset 674
+	 * offset 670
 	 */
 	output_pin_e fuelPumpPin;
 	/**
-	 * offset 676
+	 * offset 672
 	 */
 	pin_output_mode_e fuelPumpPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 677
+	 * offset 673
 	 */
-	uint8_t alignmentFill_at_677[1];
+	uint8_t alignmentFill_at_673[1];
 	/**
 	 * Check engine light, also malfunction indicator light. Always blinks once on boot.
-	 * offset 678
+	 * offset 674
 	 */
 	output_pin_e malfunctionIndicatorPin;
 	/**
-	 * offset 680
+	 * offset 676
 	 */
 	pin_output_mode_e malfunctionIndicatorPinMode;
 	/**
-	 * offset 681
+	 * offset 677
 	 */
 	pin_output_mode_e fanPinMode;
 	/**
-	 * offset 682
+	 * offset 678
 	 */
 	output_pin_e fanPin;
 	/**
 	 * Some cars have a switch to indicate that clutch pedal is all the way down
-	 * offset 684
+	 * offset 680
 	 */
 	switch_input_pin_e clutchDownPin;
 	/**
-	 * offset 686
+	 * offset 682
 	 */
 	output_pin_e alternatorControlPin;
 	/**
-	 * offset 688
+	 * offset 684
 	 */
 	pin_output_mode_e alternatorControlPinMode;
 	/**
-	 * offset 689
+	 * offset 685
 	 */
 	pin_input_mode_e clutchDownPinMode;
 	/**
-	 * offset 690
+	 * offset 686
 	 */
 	Gpio digitalPotentiometerChipSelect[DIGIPOT_COUNT];
 	/**
-	 * offset 698
+	 * offset 694
 	 */
 	pin_output_mode_e electronicThrottlePin1Mode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 699
+	 * offset 695
 	 */
-	uint8_t alignmentFill_at_699[1];
+	uint8_t alignmentFill_at_695[1];
 	/**
 	 * set_cj125_heater_pin XXX
-	 * offset 700
+	 * offset 696
 	 */
 	Gpio wboHeaterPin;
 	/**
 	 * set_cj125_cs_pin XXX
-	 * offset 702
+	 * offset 698
 	 */
 	Gpio cj125CsPin;
 	/**
-	 * offset 704
+	 * offset 700
 	 */
 	spi_device_e max31855spiDevice;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 701
+	 */
+	uint8_t alignmentFill_at_701[1];
+	/**
+	 * offset 702
+	 */
+	Gpio debugTriggerSync;
+	/**
+	 * Digital Potentiometer is used by stock ECU stimulation code
+	 * offset 704
+	 */
+	spi_device_e digitalPotentiometerSpiDevice;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1518,39 +1535,24 @@ struct engine_configuration_s {
 	/**
 	 * offset 706
 	 */
-	Gpio debugTriggerSync;
-	/**
-	 * Digital Potentiometer is used by stock ECU stimulation code
-	 * offset 708
-	 */
-	spi_device_e digitalPotentiometerSpiDevice;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 709
-	 */
-	uint8_t alignmentFill_at_709[1];
-	/**
-	 * offset 710
-	 */
 	Gpio mc33972_cs;
 	/**
-	 * offset 712
+	 * offset 708
 	 */
 	pin_output_mode_e mc33972_csPinMode;
 	/**
 	 * Useful in Research&Development phase
-	 * offset 713
+	 * offset 709
 	 */
 	adc_channel_e auxFastSensor1_adcChannel;
 	/**
 	 * First throttle body, second sensor.
-	 * offset 714
+	 * offset 710
 	 */
 	adc_channel_e tps1_2AdcChannel;
 	/**
 	 * Second throttle body, second sensor.
-	 * offset 715
+	 * offset 711
 	 */
 	adc_channel_e tps2_2AdcChannel;
 	/**
@@ -1558,39 +1560,53 @@ struct engine_configuration_s {
 	 * Second channel
 	 * See also tps1_1AdcChannel
 	 * See throttlePedalSecondaryUpVoltage and throttlePedalSecondaryWOTVoltage
-	 * offset 716
+	 * offset 712
 	 */
 	adc_channel_e throttlePedalPositionSecondAdcChannel;
 	/**
 	%
-	 * offset 717
+	 * offset 713
 	 */
 	uint8_t fuelLevelValues[FUEL_LEVEL_TABLE_COUNT];
 	/**
 	 * AFR, WBO, EGO - whatever you like to call it
-	 * offset 725
+	 * offset 721
 	 */
 	ego_sensor_e afr_type;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 726
+	 * offset 722
 	 */
-	uint8_t alignmentFill_at_726[2];
+	uint8_t alignmentFill_at_722[2];
 	/**
 	 * 0.1 is a good default value
 	x
-	 * offset 728
+	 * offset 724
 	 */
 	float idle_antiwindupFreq;
 	/**
-	 * offset 732
+	 * offset 728
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	 * offset 738
+	 * offset 734
 	 */
 	pin_output_mode_e hip9011CsPinMode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 735
+	 */
+	uint8_t alignmentFill_at_735[1];
+	/**
+	 * offset 736
+	 */
+	output_pin_e tachOutputPin;
+	/**
+	 * offset 738
+	 */
+	pin_output_mode_e tachOutputPinMode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1600,70 +1616,56 @@ struct engine_configuration_s {
 	/**
 	 * offset 740
 	 */
-	output_pin_e tachOutputPin;
-	/**
-	 * offset 742
-	 */
-	pin_output_mode_e tachOutputPinMode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 743
-	 */
-	uint8_t alignmentFill_at_743[1];
-	/**
-	 * offset 744
-	 */
 	output_pin_e mainRelayPin;
 	/**
-	 * offset 746
+	 * offset 742
 	 */
 	Gpio sdCardCsPin;
 	/**
 	 * set_can_tx_pin X
-	 * offset 748
+	 * offset 744
 	 */
 	Gpio canTxPin;
 	/**
 	 * set_can_rx_pin X
-	 * offset 750
+	 * offset 746
 	 */
 	Gpio canRxPin;
 	/**
-	 * offset 752
+	 * offset 748
 	 */
 	pin_input_mode_e throttlePedalUpPinMode;
 	/**
 	 * Additional idle % while A/C is active
 	%
-	 * offset 753
+	 * offset 749
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
 	 * Ratio between the wheels and your transmission output.
 	ratio
-	 * offset 754
+	 * offset 750
 	 */
 	scaled_channel<uint16_t, 100, 1> finalGearRatio;
 	/**
-	 * offset 756
+	 * offset 752
 	 */
 	brain_input_pin_e tcuInputSpeedSensorPin;
 	/**
-	 * offset 758
+	 * offset 754
 	 */
 	uint8_t tcuInputSpeedSensorTeeth;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 759
+	 * offset 755
 	 */
-	uint8_t alignmentFill_at_759[1];
+	uint8_t alignmentFill_at_755[1];
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
 	mv
-	 * offset 760
+	 * offset 756
 	 */
 	uint16_t wastegatePositionMin;
 	/**
@@ -1671,14 +1673,14 @@ struct engine_configuration_s {
 	 * You probably don't have one of these!
 	 * 1 volt = 1000 units
 	mv
-	 * offset 762
+	 * offset 758
 	 */
 	uint16_t wastegatePositionMax;
 	/**
 	 * Voltage when the idle valve is closed.
 	 * You probably don't have one of these!
 	mv
-	 * offset 764
+	 * offset 760
 	 */
 	uint16_t idlePositionMin;
 	/**
@@ -1686,420 +1688,434 @@ struct engine_configuration_s {
 	 * You probably don't have one of these!
 	 * 1 volt = 1000 units
 	mv
-	 * offset 766
+	 * offset 762
 	 */
 	uint16_t idlePositionMax;
 	/**
 	 * Secondary TTL channel baud rate
 	BPs
-	 * offset 768
+	 * offset 764
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
 	 * Just for reference really, not taken into account by any logic at this point
 	CR
-	 * offset 772
+	 * offset 768
 	 */
 	float compressionRatio;
 	/**
 	 * Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.
 	 * See also directSelfStimulation which is different.
-	 * offset 776
+	 * offset 772
 	 */
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
-	 * offset 782
+	 * offset 778
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 785
+	 * offset 781
 	 */
-	uint8_t alignmentFill_at_785[1];
+	uint8_t alignmentFill_at_781[1];
 	/**
 	 * Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
-	 * offset 786
+	 * offset 782
 	 */
 	output_pin_e o2heaterPin;
 	/**
-	 * offset 788
+	 * offset 784
 	 */
 	pin_output_mode_e o2heaterPinModeTodO;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 789
+	 * offset 785
 	 */
-	uint8_t alignmentFill_at_789[3];
+	uint8_t alignmentFill_at_785[3];
 	/**
-	offset 792 bit 0 */
+	offset 788 bit 0 */
 	bool is_enabled_spi_1 : 1 {};
 	/**
-	offset 792 bit 1 */
+	offset 788 bit 1 */
 	bool is_enabled_spi_2 : 1 {};
 	/**
-	offset 792 bit 2 */
+	offset 788 bit 2 */
 	bool is_enabled_spi_3 : 1 {};
 	/**
 	 * enable sd/disable sd
-	offset 792 bit 3 */
+	offset 788 bit 3 */
 	bool isSdCardEnabled : 1 {};
 	/**
 	 * Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
-	offset 792 bit 4 */
+	offset 788 bit 4 */
 	bool rusefiVerbose29b : 1 {};
 	/**
-	offset 792 bit 5 */
+	offset 788 bit 5 */
 	bool isEngineControlEnabled : 1 {};
 	/**
-	offset 792 bit 6 */
+	offset 788 bit 6 */
 	bool isHip9011Enabled : 1 {};
 	/**
-	offset 792 bit 7 */
+	offset 788 bit 7 */
 	bool isVerboseAlternator : 1 {};
 	/**
-	offset 792 bit 8 */
+	offset 788 bit 8 */
 	bool useSerialPort : 1 {};
 	/**
 	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
-	offset 792 bit 9 */
+	offset 788 bit 9 */
 	bool useStepperIdle : 1 {};
 	/**
-	offset 792 bit 10 */
+	offset 788 bit 10 */
 	bool enabledStep1Limiter : 1 {};
 	/**
-	offset 792 bit 11 */
+	offset 788 bit 11 */
 	bool useTpicAdvancedMode : 1 {};
 	/**
-	offset 792 bit 12 */
+	offset 788 bit 12 */
 	bool useLcdScreen : 1 {};
 	/**
-	offset 792 bit 13 */
+	offset 788 bit 13 */
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
-	offset 792 bit 14 */
+	offset 788 bit 14 */
 	bool enableVerboseCanTx : 1 {};
 	/**
 	 * This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
-	offset 792 bit 15 */
+	offset 788 bit 15 */
 	bool onOffAlternatorLogic : 1 {};
 	/**
 	 * enable cj125/disable cj125
-	offset 792 bit 16 */
+	offset 788 bit 16 */
 	bool isCJ125Enabled : 1 {};
 	/**
 	 * Use rise or fall signal front
 	 * get vvtCamSensorUseRise
-	offset 792 bit 17 */
+	offset 788 bit 17 */
 	bool vvtCamSensorUseRise : 1 {};
 	/**
 	 * Useful for individual intakes
-	offset 792 bit 18 */
+	offset 788 bit 18 */
 	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
-	offset 792 bit 19 */
+	offset 788 bit 19 */
 	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
-	offset 792 bit 20 */
+	offset 788 bit 20 */
 	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
-	offset 792 bit 21 */
+	offset 788 bit 21 */
 	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
-	offset 792 bit 22 */
+	offset 788 bit 22 */
 	bool useIacTableForCoasting : 1 {};
 	/**
-	offset 792 bit 23 */
+	offset 788 bit 23 */
 	bool useNoiselessTriggerDecoder : 1 {};
 	/**
-	offset 792 bit 24 */
+	offset 788 bit 24 */
 	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
-	offset 792 bit 25 */
+	offset 788 bit 25 */
 	bool disableEtbWhenEngineStopped : 1 {};
 	/**
-	offset 792 bit 26 */
+	offset 788 bit 26 */
 	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	offset 792 bit 27 */
+	offset 788 bit 27 */
 	bool pauseEtbControl : 1 {};
 	/**
-	offset 792 bit 28 */
+	offset 788 bit 28 */
 	bool alignEngineSnifferAtTDC : 1 {};
 	/**
 	 * This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
-	offset 792 bit 29 */
+	offset 788 bit 29 */
 	bool useETBforIdleControl : 1 {};
 	/**
-	offset 792 bit 30 */
+	offset 788 bit 30 */
 	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
-	offset 792 bit 31 */
+	offset 788 bit 31 */
 	bool enableAemXSeries : 1 {};
 	/**
-	 * offset 796
+	 * offset 792
 	 */
 	brain_input_pin_e logicAnalyzerPins[LOGIC_ANALYZER_CHANNEL_COUNT];
 	/**
-	 * offset 804
+	 * offset 800
 	 */
 	pin_output_mode_e mainRelayPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 805
+	 * offset 801
 	 */
-	uint8_t alignmentFill_at_805[1];
+	uint8_t alignmentFill_at_801[1];
 	/**
-	 * offset 806
+	 * offset 802
 	 */
 	Gpio hip9011CsPin;
 	/**
-	 * offset 808
+	 * offset 804
 	 */
 	Gpio hip9011IntHoldPin;
 	/**
-	 * offset 810
+	 * offset 806
 	 */
 	pin_output_mode_e hip9011IntHoldPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 811
+	 * offset 807
 	 */
-	uint8_t alignmentFill_at_811[1];
+	uint8_t alignmentFill_at_807[1];
 	/**
-	 * offset 812
+	 * offset 808
 	 */
 	uint32_t verboseCanBaseAddress;
 	/**
 	v
-	 * offset 816
+	 * offset 812
 	 */
 	uint8_t mc33_hvolt;
 	/**
 	 * Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
 	kPa
-	 * offset 817
+	 * offset 813
 	 */
 	uint8_t minimumBoostClosedLoopMap;
 	/**
 	 * Optional Radiator Fan used with A/C
-	 * offset 818
+	 * offset 814
 	 */
 	output_pin_e acFanPin;
 	/**
-	 * offset 820
+	 * offset 816
 	 */
 	pin_output_mode_e acFanPinMode;
 	/**
-	 * offset 821
+	 * offset 817
 	 */
 	spi_device_e l9779spiDevice;
 	/**
 	volts
-	 * offset 822
+	 * offset 818
 	 */
 	scaled_channel<uint8_t, 10, 1> dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE];
 	/**
-	 * offset 830
+	 * offset 826
 	 */
 	imu_type_e imuType;
 	/**
 	multiplier
-	 * offset 831
+	 * offset 827
 	 */
 	scaled_channel<uint8_t, 50, 1> dwellVoltageCorrValues[DWELL_CURVE_SIZE];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 839
+	 * offset 835
 	 */
-	uint8_t alignmentFill_at_839[1];
+	uint8_t alignmentFill_at_835[1];
 	/**
 	kg
-	 * offset 840
+	 * offset 836
 	 */
 	uint16_t vehicleWeight;
 	/**
 	 * How far above idle speed do we consider idling?
 	 * For example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 	RPM
-	 * offset 842
+	 * offset 838
 	 */
 	int16_t idlePidRpmUpperLimit;
 	/**
 	 * Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
 	ms
-	 * offset 844
+	 * offset 840
 	 */
 	scaled_channel<uint16_t, 1000, 1> applyNonlinearBelowPulse;
 	/**
-	 * offset 846
+	 * offset 842
 	 */
 	Gpio lps25BaroSensorScl;
 	/**
-	 * offset 848
+	 * offset 844
 	 */
 	Gpio lps25BaroSensorSda;
 	/**
-	 * offset 850
+	 * offset 846
 	 */
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	/**
 	 * Some vehicles have a switch to indicate that clutch pedal is all the way up
-	 * offset 852
+	 * offset 848
 	 */
 	switch_input_pin_e clutchUpPin;
 	/**
-	 * offset 854
+	 * offset 850
 	 */
 	InjectorNonlinearMode injectorNonlinearMode;
 	/**
-	 * offset 855
+	 * offset 851
 	 */
 	pin_input_mode_e clutchUpPinMode;
 	/**
-	 * offset 856
+	 * offset 852
 	 */
 	Gpio max31855_cs[EGT_CHANNEL_COUNT];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
-	 * offset 872
+	 * offset 868
 	 */
 	brain_input_pin_e flexSensorPin;
 	/**
-	 * offset 874
+	 * offset 870
 	 */
 	Gpio test557pin;
 	/**
-	 * offset 876
+	 * offset 872
 	 */
 	pin_output_mode_e stepperDirectionPinMode;
 	/**
-	 * offset 877
+	 * offset 873
 	 */
 	spi_device_e mc33972spiDevice;
 	/**
 	 * Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
 	:1
-	 * offset 878
+	 * offset 874
 	 */
 	scaled_channel<uint8_t, 10, 1> stoichRatioSecondary;
 	/**
 	 * Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
 	%
-	 * offset 879
+	 * offset 875
 	 */
 	uint8_t etbMaximumPosition;
 	/**
 	 * SD card logging period, in milliseconds
 	ms
-	 * offset 880
+	 * offset 876
 	 */
 	int16_t sdCardPeriodMs;
 	/**
-	 * offset 882
+	 * offset 878
 	 */
 	adc_channel_e idlePositionSensor;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 883
+	 * offset 879
 	 */
-	uint8_t alignmentFill_at_883[1];
+	uint8_t alignmentFill_at_879[1];
 	/**
-	 * offset 884
+	 * offset 880
 	 */
 	Gpio debugMapAveraging;
 	/**
-	 * offset 886
+	 * offset 882
 	 */
 	output_pin_e starterRelayDisablePin;
 	/**
 	 * On some vehicles we can disable starter once engine is already running
-	 * offset 888
+	 * offset 884
 	 */
 	pin_output_mode_e starterRelayDisablePinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 889
+	 * offset 885
 	 */
-	uint8_t alignmentFill_at_889[1];
+	uint8_t alignmentFill_at_885[1];
 	/**
 	 * Some Subaru and some Mazda use double-solenoid idle air valve
-	 * offset 890
+	 * offset 886
 	 */
 	output_pin_e secondSolenoidPin;
 	/**
 	 * See also starterControlPin
-	 * offset 892
+	 * offset 888
 	 */
 	switch_input_pin_e startStopButtonPin;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 894
+	 * offset 890
 	 */
-	uint8_t alignmentFill_at_894[2];
+	uint8_t alignmentFill_at_890[2];
 	/**
 	 * This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
 	count
-	 * offset 896
+	 * offset 892
 	 */
 	int mapMinBufferLength;
 	/**
 	 * Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.
 	%
-	 * offset 900
+	 * offset 896
 	 */
 	int16_t idlePidDeactivationTpsThreshold;
 	/**
 	%
-	 * offset 902
+	 * offset 898
 	 */
 	int16_t stepperParkingExtraSteps;
 	/**
 	ADC
-	 * offset 904
+	 * offset 900
 	 */
 	uint16_t tps1SecondaryMin;
 	/**
 	ADC
-	 * offset 906
+	 * offset 902
 	 */
 	uint16_t tps1SecondaryMax;
 	/**
 	rpm
-	 * offset 908
+	 * offset 904
 	 */
 	int16_t antiLagRpmTreshold;
 	/**
 	 * Maximum time to crank starter when start/stop button is pressed
 	Seconds
-	 * offset 910
+	 * offset 906
 	 */
 	uint16_t startCrankingDuration;
 	/**
 	 * This pin is used for debugging - snap a logic analyzer on it and see if it's ever high
-	 * offset 912
+	 * offset 908
 	 */
 	Gpio triggerErrorPin;
 	/**
-	 * offset 914
+	 * offset 910
 	 */
 	pin_output_mode_e triggerErrorPinMode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 911
+	 */
+	uint8_t alignmentFill_at_911[1];
+	/**
+	 * offset 912
+	 */
+	output_pin_e acRelayPin;
+	/**
+	 * offset 914
+	 */
+	pin_output_mode_e acRelayPinMode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -2109,345 +2125,345 @@ struct engine_configuration_s {
 	/**
 	 * offset 916
 	 */
-	output_pin_e acRelayPin;
-	/**
-	 * offset 918
-	 */
-	pin_output_mode_e acRelayPinMode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 919
-	 */
-	uint8_t alignmentFill_at_919[1];
-	/**
-	 * offset 920
-	 */
 	script_setting_t scriptSetting[SCRIPT_SETTING_COUNT];
 	/**
-	 * offset 952
+	 * offset 948
 	 */
 	Gpio spi1mosiPin;
 	/**
-	 * offset 954
+	 * offset 950
 	 */
 	Gpio spi1misoPin;
 	/**
-	 * offset 956
+	 * offset 952
 	 */
 	Gpio spi1sckPin;
 	/**
-	 * offset 958
+	 * offset 954
 	 */
 	Gpio spi2mosiPin;
 	/**
-	 * offset 960
+	 * offset 956
 	 */
 	Gpio spi2misoPin;
 	/**
-	 * offset 962
+	 * offset 958
 	 */
 	Gpio spi2sckPin;
 	/**
-	 * offset 964
+	 * offset 960
 	 */
 	Gpio spi3mosiPin;
 	/**
-	 * offset 966
+	 * offset 962
 	 */
 	Gpio spi3misoPin;
 	/**
-	 * offset 968
+	 * offset 964
 	 */
 	Gpio spi3sckPin;
 	/**
 	 * Saab Combustion Detection Module knock signal input pin
 	 * also known as Saab Ion Sensing Module
-	 * offset 970
+	 * offset 966
 	 */
 	Gpio cdmInputPin;
 	/**
-	 * offset 972
+	 * offset 968
 	 */
 	Gpio joystickCenterPin;
 	/**
-	 * offset 974
+	 * offset 970
 	 */
 	Gpio joystickAPin;
 	/**
-	 * offset 976
+	 * offset 972
 	 */
 	Gpio joystickBPin;
 	/**
-	 * offset 978
+	 * offset 974
 	 */
 	Gpio joystickCPin;
 	/**
-	 * offset 980
+	 * offset 976
 	 */
 	Gpio joystickDPin;
 	/**
-	 * offset 982
+	 * offset 978
 	 */
 	uart_device_e consoleUartDevice;
 	/**
 	 * rusEFI console Sensor Sniffer mode
-	 * offset 983
+	 * offset 979
 	 */
 	sensor_chart_e sensorChartMode;
 	/**
-	 * offset 984
+	 * offset 980
 	 */
 	maf_sensor_type_e mafSensorType;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 985
+	 * offset 981
 	 */
-	uint8_t alignmentFill_at_985[3];
+	uint8_t alignmentFill_at_981[3];
 	/**
-	offset 988 bit 0 */
+	offset 984 bit 0 */
 	bool clutchUpPinInverted : 1 {};
 	/**
-	offset 988 bit 1 */
+	offset 984 bit 1 */
 	bool clutchDownPinInverted : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
-	offset 988 bit 2 */
+	offset 984 bit 2 */
 	bool useHbridgesToDriveIdleStepper : 1 {};
 	/**
-	offset 988 bit 3 */
+	offset 984 bit 3 */
 	bool multisparkEnable : 1 {};
 	/**
-	offset 988 bit 4 */
+	offset 984 bit 4 */
 	bool enableLaunchRetard : 1 {};
 	/**
-	offset 988 bit 5 */
+	offset 984 bit 5 */
 	bool unfinishedenableLaunchBoost : 1 {};
 	/**
-	offset 988 bit 6 */
+	offset 984 bit 6 */
 	bool unfinishedlaunchDisableBySpeed : 1 {};
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
-	offset 988 bit 7 */
+	offset 984 bit 7 */
 	bool enableCanVss : 1 {};
 	/**
-	offset 988 bit 8 */
+	offset 984 bit 8 */
 	bool enableInnovateLC2 : 1 {};
 	/**
-	offset 988 bit 9 */
+	offset 984 bit 9 */
 	bool showHumanReadableWarning : 1 {};
 	/**
 	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
-	offset 988 bit 10 */
+	offset 984 bit 10 */
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
-	offset 988 bit 11 */
+	offset 984 bit 11 */
 	bool tempBooleanForVerySpecialCases : 1 {};
 	/**
-	offset 988 bit 12 */
+	offset 984 bit 12 */
 	bool enableSoftwareKnock : 1 {};
 	/**
 	 * enable vvt_details
-	offset 988 bit 13 */
+	offset 984 bit 13 */
 	bool verboseVVTDecoding : 1 {};
 	/**
 	 * get invertCamVVTSignal
-	offset 988 bit 14 */
+	offset 984 bit 14 */
 	bool invertCamVVTSignal : 1 {};
 	/**
 	 * This property is useful if using rusEFI as TCM or BCM only
 	 * enable consumeObdSensors
-	offset 988 bit 15 */
+	offset 984 bit 15 */
 	bool consumeObdSensors : 1 {};
 	/**
-	offset 988 bit 16 */
+	offset 984 bit 16 */
 	bool knockBankCyl1 : 1 {};
 	/**
-	offset 988 bit 17 */
+	offset 984 bit 17 */
 	bool knockBankCyl2 : 1 {};
 	/**
-	offset 988 bit 18 */
+	offset 984 bit 18 */
 	bool knockBankCyl3 : 1 {};
 	/**
-	offset 988 bit 19 */
+	offset 984 bit 19 */
 	bool knockBankCyl4 : 1 {};
 	/**
-	offset 988 bit 20 */
+	offset 984 bit 20 */
 	bool knockBankCyl5 : 1 {};
 	/**
-	offset 988 bit 21 */
+	offset 984 bit 21 */
 	bool knockBankCyl6 : 1 {};
 	/**
-	offset 988 bit 22 */
+	offset 984 bit 22 */
 	bool knockBankCyl7 : 1 {};
 	/**
-	offset 988 bit 23 */
+	offset 984 bit 23 */
 	bool knockBankCyl8 : 1 {};
 	/**
-	offset 988 bit 24 */
+	offset 984 bit 24 */
 	bool knockBankCyl9 : 1 {};
 	/**
-	offset 988 bit 25 */
+	offset 984 bit 25 */
 	bool knockBankCyl10 : 1 {};
 	/**
-	offset 988 bit 26 */
+	offset 984 bit 26 */
 	bool knockBankCyl11 : 1 {};
 	/**
-	offset 988 bit 27 */
+	offset 984 bit 27 */
 	bool knockBankCyl12 : 1 {};
 	/**
-	offset 988 bit 28 */
+	offset 984 bit 28 */
 	bool tcuEnabled : 1 {};
 	/**
-	offset 988 bit 29 */
+	offset 984 bit 29 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
 	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
-	offset 988 bit 30 */
+	offset 984 bit 30 */
 	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
 	 * Print incoming and outgoing second bus CAN messages in rusEFI console
-	offset 988 bit 31 */
+	offset 984 bit 31 */
 	bool verboseCan2 : 1 {};
 	/**
-	 * offset 992
+	 * offset 988
 	 */
 	dc_io etbIo[ETB_COUNT];
 	/**
 	 * Wastegate control Solenoid
-	 * offset 1008
+	 * offset 1004
 	 */
 	output_pin_e boostControlPin;
 	/**
-	 * offset 1010
+	 * offset 1006
 	 */
 	pin_output_mode_e boostControlPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1011
+	 * offset 1007
 	 */
-	uint8_t alignmentFill_at_1011[1];
+	uint8_t alignmentFill_at_1007[1];
 	/**
-	 * offset 1012
+	 * offset 1008
 	 */
 	switch_input_pin_e antiLagActivatePin;
 	/**
-	 * offset 1014
+	 * offset 1010
 	 */
 	switch_input_pin_e launchActivatePin;
 	/**
-	 * offset 1016
+	 * offset 1012
 	 */
 	pid_s boostPid;
 	/**
-	 * offset 1036
+	 * offset 1032
 	 */
 	boostType_e boostType;
 	/**
 	Hz
-	 * offset 1040
+	 * offset 1036
 	 */
 	int boostPwmFrequency;
 	/**
-	 * offset 1044
+	 * offset 1040
 	 */
 	launchActivationMode_e launchActivationMode;
 	/**
-	 * offset 1048
+	 * offset 1044
 	 */
 	antiLagActivationMode_e antiLagActivationMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1049
+	 * offset 1045
 	 */
-	uint8_t alignmentFill_at_1049[3];
+	uint8_t alignmentFill_at_1045[3];
 	/**
 	 * Disabled above this speed
 	Kph
-	 * offset 1052
+	 * offset 1048
 	 */
 	int launchSpeedThreshold;
 	/**
 	 * Range from Launch Rpm for Timing Retard to activate
 	RPM
-	 * offset 1056
+	 * offset 1052
 	 */
 	int launchTimingRpmRange;
 	/**
 	 * Extra Fuel Added
 	%
-	 * offset 1060
+	 * offset 1056
 	 */
 	int launchFuelAdded;
 	/**
 	 * Duty Cycle for the Boost Solenoid
 	%
-	 * offset 1064
+	 * offset 1060
 	 */
 	int launchBoostDuty;
 	/**
 	 * RPM Range for Hard Cut
 	rpm
-	 * offset 1068
+	 * offset 1064
 	 */
 	int hardCutRpmRange;
 	/**
 	rpm
-	 * offset 1072
+	 * offset 1068
 	 */
 	int launchAdvanceRpmRange;
 	/**
 	rpm
-	 * offset 1076
+	 * offset 1072
 	 */
 	int launchTpsTreshold;
 	/**
 	rpm
-	 * offset 1080
+	 * offset 1076
 	 */
 	float launchActivateDelay;
 	/**
-	 * offset 1084
+	 * offset 1080
 	 */
 	stft_s stft;
 	/**
-	 * offset 1108
+	 * offset 1104
 	 */
 	dc_io stepperDcIo[DC_PER_STEPPER];
 	/**
 	 * For example, BMW, GM or Chevrolet
 	 * REQUIRED for rusEFI Online
-	 * offset 1124
+	 * offset 1120
 	 */
 	vehicle_info_t engineMake;
 	/**
 	 * For example, LS1 or NB2
 	 * REQUIRED for rusEFI Online
-	 * offset 1156
+	 * offset 1152
 	 */
 	vehicle_info_t engineCode;
 	/**
 	 * For example, Hunchback or Orange Miata
 	 * Vehicle name has to be unique between your vehicles.
 	 * REQUIRED for rusEFI Online
-	 * offset 1188
+	 * offset 1184
 	 */
 	vehicle_info_t vehicleName;
 	/**
-	 * offset 1220
+	 * offset 1216
 	 */
 	output_pin_e tcu_solenoid[TCU_SOLENOID_COUNT];
 	/**
-	 * offset 1232
+	 * offset 1228
 	 */
 	etb_function_e etbFunctions[ETB_COUNT];
 	/**
-	 * offset 1234
+	 * offset 1230
 	 */
 	spi_device_e drv8860spiDevice;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 1231
+	 */
+	uint8_t alignmentFill_at_1231[1];
+	/**
+	 * offset 1232
+	 */
+	Gpio drv8860_cs;
+	/**
+	 * offset 1234
+	 */
+	pin_output_mode_e drv8860_csPinMode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -2457,445 +2473,431 @@ struct engine_configuration_s {
 	/**
 	 * offset 1236
 	 */
-	Gpio drv8860_cs;
-	/**
-	 * offset 1238
-	 */
-	pin_output_mode_e drv8860_csPinMode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 1239
-	 */
-	uint8_t alignmentFill_at_1239[1];
-	/**
-	 * offset 1240
-	 */
 	Gpio drv8860_miso;
 	/**
 	volt
-	 * offset 1242
+	 * offset 1238
 	 */
 	scaled_channel<uint16_t, 1000, 1> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
 	/**
-	 * offset 1258
+	 * offset 1254
 	 */
 	output_pin_e luaOutputPins[LUA_PWM_COUNT];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1274
+	 * offset 1270
 	 */
-	uint8_t alignmentFill_at_1274[2];
+	uint8_t alignmentFill_at_1270[2];
 	/**
 	 * Angle between cam sensor and VVT zero position
 	 * set vvt_offset X
 	value
-	 * offset 1276
+	 * offset 1272
 	 */
 	float vvtOffsets[CAM_INPUTS_COUNT];
 	/**
-	 * offset 1292
+	 * offset 1288
 	 */
 	float vvtOffsetsPadding[CAM_INPUTS_COUNT_padding];
 	/**
-	 * offset 1292
+	 * offset 1288
 	 */
 	vr_threshold_s vrThreshold[VR_THRESHOLD_COUNT];
 	/**
-	 * offset 1324
+	 * offset 1320
 	 */
 	gppwm_note_t gpPwmNote[GPPWM_CHANNELS];
 	/**
 	ADC
-	 * offset 1388
+	 * offset 1384
 	 */
 	uint16_t tps2SecondaryMin;
 	/**
 	ADC
-	 * offset 1390
+	 * offset 1386
 	 */
 	uint16_t tps2SecondaryMax;
 	/**
-	offset 1392 bit 0 */
+	offset 1388 bit 0 */
 	bool disablePrimaryUart : 1 {};
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
-	offset 1392 bit 1 */
+	offset 1388 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
 	 * Print details into rusEFI console
 	 * enable verbose_idle
-	offset 1392 bit 2 */
+	offset 1388 bit 2 */
 	bool isVerboseIAC : 1 {};
 	/**
-	offset 1392 bit 3 */
+	offset 1388 bit 3 */
 	bool boardUseTachPullUp : 1 {};
 	/**
-	offset 1392 bit 4 */
+	offset 1388 bit 4 */
 	bool boardUseTempPullUp : 1 {};
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
-	offset 1392 bit 5 */
+	offset 1388 bit 5 */
 	bool isEngineChartEnabled : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
-	offset 1392 bit 6 */
+	offset 1388 bit 6 */
 	bool silentTriggerError : 1 {};
 	/**
-	offset 1392 bit 7 */
+	offset 1388 bit 7 */
 	bool useLinearCltSensor : 1 {};
 	/**
 	 * enable can_read/disable can_read
-	offset 1392 bit 8 */
+	offset 1388 bit 8 */
 	bool canReadEnabled : 1 {};
 	/**
 	 * enable can_write/disable can_write
-	offset 1392 bit 9 */
+	offset 1388 bit 9 */
 	bool canWriteEnabled : 1 {};
 	/**
-	offset 1392 bit 10 */
+	offset 1388 bit 10 */
 	bool useLinearIatSensor : 1 {};
 	/**
-	offset 1392 bit 11 */
+	offset 1388 bit 11 */
 	bool boardUse2stepPullDown : 1 {};
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
-	offset 1392 bit 12 */
+	offset 1388 bit 12 */
 	bool tachPulseDurationAsDutyCycle : 1 {};
 	/**
 	 * This enables smart alternator control and activates the extra alternator settings.
-	offset 1392 bit 13 */
+	offset 1388 bit 13 */
 	bool isAlternatorControlEnabled : 1 {};
 	/**
 	 * This setting flips the signal from the primary engine speed sensor.
-	offset 1392 bit 14 */
+	offset 1388 bit 14 */
 	bool invertPrimaryTriggerSignal : 1 {};
 	/**
 	 * This setting flips the signal from the secondary engine speed sensor.
-	offset 1392 bit 15 */
+	offset 1388 bit 15 */
 	bool invertSecondaryTriggerSignal : 1 {};
 	/**
-	offset 1392 bit 16 */
+	offset 1388 bit 16 */
 	bool cutFuelOnHardLimit : 1 {};
 	/**
-	offset 1392 bit 17 */
+	offset 1388 bit 17 */
 	bool cutSparkOnHardLimit : 1 {};
 	/**
-	offset 1392 bit 18 */
+	offset 1388 bit 18 */
 	bool launchFuelCutEnable : 1 {};
 	/**
 	 * This is the Cut Mode normally used
-	offset 1392 bit 19 */
+	offset 1388 bit 19 */
 	bool launchSparkCutEnable : 1 {};
 	/**
-	offset 1392 bit 20 */
+	offset 1388 bit 20 */
 	bool boardUseCrankPullUp : 1 {};
 	/**
-	offset 1392 bit 21 */
+	offset 1388 bit 21 */
 	bool boardUseCamPullDown : 1 {};
 	/**
-	offset 1392 bit 22 */
+	offset 1388 bit 22 */
 	bool boardUseCamVrPullUp : 1 {};
 	/**
-	offset 1392 bit 23 */
+	offset 1388 bit 23 */
 	bool boardUseD2PullDown : 1 {};
 	/**
-	offset 1392 bit 24 */
+	offset 1388 bit 24 */
 	bool boardUseD3PullDown : 1 {};
 	/**
-	offset 1392 bit 25 */
+	offset 1388 bit 25 */
 	bool boardUseD4PullDown : 1 {};
 	/**
-	offset 1392 bit 26 */
+	offset 1388 bit 26 */
 	bool boardUseD5PullDown : 1 {};
 	/**
 	 * Sometimes we just have to shut the engine down. Use carefully!
-	offset 1392 bit 27 */
+	offset 1388 bit 27 */
 	bool useFSIO5ForCriticalIssueEngineStop : 1 {};
 	/**
 	 * Sometimes we have to miss injection on purpose to attract driver's attention
-	offset 1392 bit 28 */
+	offset 1388 bit 28 */
 	bool useFSIO4ForSeriousEngineWarning : 1 {};
 	/**
-	offset 1392 bit 29 */
+	offset 1388 bit 29 */
 	bool launchActivateInverted : 1 {};
 	/**
-	offset 1392 bit 30 */
+	offset 1388 bit 30 */
 	bool twoStroke : 1 {};
 	/**
 	 * Where is your primary skipped wheel located?
-	offset 1392 bit 31 */
+	offset 1388 bit 31 */
 	bool skippedWheelOnCam : 1 {};
 	/**
-	 * offset 1396
+	 * offset 1392
 	 */
 	adc_channel_e hipOutputChannel;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1397
+	 * offset 1393
 	 */
-	uint8_t alignmentFill_at_1397[1];
+	uint8_t alignmentFill_at_1393[1];
 	/**
 	 * A/C button input
-	 * offset 1398
+	 * offset 1394
 	 */
 	switch_input_pin_e acSwitch;
 	/**
-	 * offset 1400
+	 * offset 1396
 	 */
 	adc_channel_e vRefAdcChannel;
 	/**
 	 * Expected neutral position
 	%
-	 * offset 1401
+	 * offset 1397
 	 */
 	uint8_t etbNeutralPosition;
 	/**
 	 * See also idleRpmPid
-	 * offset 1402
+	 * offset 1398
 	 */
 	idle_mode_e idleMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1403
+	 * offset 1399
 	 */
-	uint8_t alignmentFill_at_1403[1];
+	uint8_t alignmentFill_at_1399[1];
 	/**
 	 * Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
-	offset 1404 bit 0 */
+	offset 1400 bit 0 */
 	bool isInjectionEnabled : 1 {};
 	/**
 	 * Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
-	offset 1404 bit 1 */
+	offset 1400 bit 1 */
 	bool isIgnitionEnabled : 1 {};
 	/**
 	 * When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
-	offset 1404 bit 2 */
+	offset 1400 bit 2 */
 	bool isCylinderCleanupEnabled : 1 {};
 	/**
 	 * Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
-	offset 1404 bit 3 */
+	offset 1400 bit 3 */
 	bool complexWallModel : 1 {};
 	/**
-	offset 1404 bit 4 */
+	offset 1400 bit 4 */
 	bool alwaysInstantRpm : 1 {};
 	/**
-	offset 1404 bit 5 */
+	offset 1400 bit 5 */
 	bool isMapAveragingEnabled : 1 {};
 	/**
 	 * If enabled, use separate temperature multiplier table for cranking idle position.
 	 * If disabled, use normal running multiplier table applied to the cranking base position.
-	offset 1404 bit 6 */
+	offset 1400 bit 6 */
 	bool overrideCrankingIacSetting : 1 {};
 	/**
 	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
-	offset 1404 bit 7 */
+	offset 1400 bit 7 */
 	bool useSeparateAdvanceForIdle : 1 {};
 	/**
-	offset 1404 bit 8 */
+	offset 1400 bit 8 */
 	bool isWaveAnalyzerEnabled : 1 {};
 	/**
 	 * This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
-	offset 1404 bit 9 */
+	offset 1400 bit 9 */
 	bool useSeparateVeForIdle : 1 {};
 	/**
 	 * enable trigger_details
-	offset 1404 bit 10 */
+	offset 1400 bit 10 */
 	bool verboseTriggerSynchDetails : 1 {};
 	/**
 	 * Usually if we have no trigger events that means engine is stopped
 	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
 	 * delay is needed
-	offset 1404 bit 11 */
+	offset 1400 bit 11 */
 	bool isManualSpinningMode : 1 {};
 	/**
 	 * This is needed if your coils are individually wired and you wish to use batch injection.
 	 * enable two_wire_batch_injection
-	offset 1404 bit 12 */
+	offset 1400 bit 12 */
 	bool twoWireBatchInjection : 1 {};
 	/**
 	 * VR sensors are only precise on rising front
 	 * enable trigger_only_front
-	offset 1404 bit 13 */
+	offset 1400 bit 13 */
 	bool useOnlyRisingEdgeForTrigger : 1 {};
 	/**
 	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
-	offset 1404 bit 14 */
+	offset 1400 bit 14 */
 	bool twoWireBatchIgnition : 1 {};
 	/**
-	offset 1404 bit 15 */
+	offset 1400 bit 15 */
 	bool useFixedBaroCorrFromMap : 1 {};
 	/**
 	 * In Constant mode, timing is automatically tapered to running as RPM increases.
 	 * In Table mode, the "Cranking ignition advance" table is used directly.
-	offset 1404 bit 16 */
+	offset 1400 bit 16 */
 	bool useSeparateAdvanceForCranking : 1 {};
 	/**
 	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 	 * You probably don't need this.
-	offset 1404 bit 17 */
+	offset 1400 bit 17 */
 	bool useAdvanceCorrectionsForCranking : 1 {};
 	/**
 	 * Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.
-	offset 1404 bit 18 */
+	offset 1400 bit 18 */
 	bool flexCranking : 1 {};
 	/**
 	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
-	offset 1404 bit 19 */
+	offset 1400 bit 19 */
 	bool useIacPidMultTable : 1 {};
 	/**
-	offset 1404 bit 20 */
+	offset 1400 bit 20 */
 	bool isBoostControlEnabled : 1 {};
 	/**
 	 * Interpolates the Ignition Retard from 0 to 100% within the RPM Range
-	offset 1404 bit 21 */
+	offset 1400 bit 21 */
 	bool launchSmoothRetard : 1 {};
 	/**
-	offset 1404 bit 22 */
+	offset 1400 bit 22 */
 	bool unused1476b20 : 1 {};
 	/**
-	offset 1404 bit 23 */
+	offset 1400 bit 23 */
 	bool unused1476b8 : 1 {};
 	/**
-	offset 1404 bit 24 */
+	offset 1400 bit 24 */
 	bool unused_1484_bit_24 : 1 {};
 	/**
-	offset 1404 bit 25 */
+	offset 1400 bit 25 */
 	bool unused_1484_bit_25 : 1 {};
 	/**
-	offset 1404 bit 26 */
+	offset 1400 bit 26 */
 	bool unused_1484_bit_26 : 1 {};
 	/**
-	offset 1404 bit 27 */
+	offset 1400 bit 27 */
 	bool unused_1484_bit_27 : 1 {};
 	/**
-	offset 1404 bit 28 */
+	offset 1400 bit 28 */
 	bool unused_1484_bit_28 : 1 {};
 	/**
-	offset 1404 bit 29 */
+	offset 1400 bit 29 */
 	bool unused_1484_bit_29 : 1 {};
 	/**
-	offset 1404 bit 30 */
+	offset 1400 bit 30 */
 	bool unused_1484_bit_30 : 1 {};
 	/**
-	offset 1404 bit 31 */
+	offset 1400 bit 31 */
 	bool unused_1484_bit_31 : 1 {};
 	/**
 	count
-	 * offset 1408
+	 * offset 1404
 	 */
 	uint32_t engineChartSize;
 	/**
 	mult
-	 * offset 1412
+	 * offset 1408
 	 */
 	float turboSpeedSensorMultiplier;
 	/**
-	 * offset 1416
+	 * offset 1412
 	 */
 	Gpio camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	 * offset 1424
+	 * offset 1420
 	 */
 	uint8_t camInputsDebugPadding[CAM_INPUTS_COUNT_padding];
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
-	 * offset 1424
+	 * offset 1420
 	 */
 	int16_t acIdleRpmBump;
 	/**
 	 * set warningPeriod X
 	seconds
-	 * offset 1426
+	 * offset 1422
 	 */
 	int16_t warningPeriod;
 	/**
 	angle
-	 * offset 1428
+	 * offset 1424
 	 */
 	float knockDetectionWindowStart;
 	/**
 	angle
-	 * offset 1432
+	 * offset 1428
 	 */
 	float knockDetectionWindowEnd;
 	/**
 	ms
-	 * offset 1436
+	 * offset 1432
 	 */
 	float idleStepperReactionTime;
 	/**
 	count
-	 * offset 1440
+	 * offset 1436
 	 */
 	int idleStepperTotalSteps;
 	/**
 	 * TODO: finish this #413
 	sec
-	 * offset 1444
+	 * offset 1440
 	 */
 	float noAccelAfterHardLimitPeriodSecs;
 	/**
 	 * At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
 	index
-	 * offset 1448
+	 * offset 1444
 	 */
 	int mapAveragingSchedulingAtIndex;
 	/**
 	kPa
-	 * offset 1452
+	 * offset 1448
 	 */
 	float baroCorrPressureBins[BARO_CORR_SIZE];
 	/**
 	RPM
-	 * offset 1468
+	 * offset 1464
 	 */
 	float baroCorrRpmBins[BARO_CORR_SIZE];
 	/**
 	ratio
-	 * offset 1484
+	 * offset 1480
 	 */
 	float baroCorrTable[BARO_CORR_SIZE][BARO_CORR_SIZE];
 	/**
 	 * Cranking fuel correction coefficient based on TPS
 	Ratio
-	 * offset 1548
+	 * offset 1544
 	 */
 	float crankingTpsCoef[CRANKING_CURVE_SIZE];
 	/**
 	%
-	 * offset 1580
+	 * offset 1576
 	 */
 	float crankingTpsBins[CRANKING_CURVE_SIZE];
 	/**
 	 * Duration in ms or duty cycle depending on selected mode
-	 * offset 1612
+	 * offset 1608
 	 */
 	float tachPulseDuractionMs;
 	/**
 	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
 	Seconds
-	 * offset 1616
+	 * offset 1612
 	 */
 	float wwaeTau;
 	/**
-	 * offset 1620
+	 * offset 1616
 	 */
 	pid_s alternatorControl;
 	/**
-	 * offset 1640
+	 * offset 1636
 	 */
 	pid_s etb;
 	/**
-	 * offset 1660
+	 * offset 1656
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	 * offset 1666
+	 * offset 1662
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
@@ -2903,7 +2905,7 @@ struct engine_configuration_s {
 	 * See also tps2_1AdcChannel
 	 * set tps2_min X
 	ADC
-	 * offset 1668
+	 * offset 1664
 	 */
 	int16_t tps2Min;
 	/**
@@ -2911,18 +2913,33 @@ struct engine_configuration_s {
 	 * See also tps1_1AdcChannel
 	 * set tps2_max X
 	ADC
-	 * offset 1670
+	 * offset 1666
 	 */
 	int16_t tps2Max;
 	/**
 	 * See also startStopButtonPin
-	 * offset 1672
+	 * offset 1668
 	 */
 	output_pin_e starterControlPin;
 	/**
-	 * offset 1674
+	 * offset 1670
 	 */
 	pin_input_mode_e startStopButtonMode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 1671
+	 */
+	uint8_t alignmentFill_at_1671[1];
+	/**
+	 * offset 1672
+	 */
+	Gpio mc33816_flag0;
+	/**
+	Pulse
+	 * offset 1674
+	 */
+	uint8_t tachPulsePerRev;
 	/**
 	 * need 4 byte alignment
 	units
@@ -2930,1131 +2947,1116 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1675[1];
 	/**
-	 * offset 1676
-	 */
-	Gpio mc33816_flag0;
-	/**
-	Pulse
-	 * offset 1678
-	 */
-	uint8_t tachPulsePerRev;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 1679
-	 */
-	uint8_t alignmentFill_at_1679[1];
-	/**
 	 * kPa value which is too low to be true
 	kPa
-	 * offset 1680
+	 * offset 1676
 	 */
 	float mapErrorDetectionTooLow;
 	/**
 	 * kPa value which is too high to be true
 	kPa
-	 * offset 1684
+	 * offset 1680
 	 */
 	float mapErrorDetectionTooHigh;
 	/**
 	 * How long to wait for the spark to fire before recharging the coil for another spark.
 	ms
-	 * offset 1688
+	 * offset 1684
 	 */
 	scaled_channel<uint16_t, 1000, 1> multisparkSparkDuration;
 	/**
 	 * This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.
 	ms
-	 * offset 1690
+	 * offset 1686
 	 */
 	scaled_channel<uint16_t, 1000, 1> multisparkDwell;
 	/**
 	 * See cltIdleRpmBins
-	 * offset 1692
+	 * offset 1688
 	 */
 	pid_s idleRpmPid;
 	/**
 	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
 	Fraction
-	 * offset 1712
+	 * offset 1708
 	 */
 	float wwaeBeta;
 	/**
 	 * blue LED on many rusEFI boards.
 	 * Blue Communication LED which is expected to blink at 50% duty cycle during normal board operation.
 	 * If USB communication cable is connected Blue LED starts to blink faster.
-	 * offset 1716
+	 * offset 1712
 	 */
 	Gpio communicationLedPin;
 	/**
 	 * Green LED on many rusEFI boards.
 	 * Off if engine is stopped, blinks if engine is cranking, solid if engine is running.
-	 * offset 1718
+	 * offset 1714
 	 */
 	Gpio runningLedPin;
 	/**
 	 * See also EFI_CONSOLE_RX_BRAIN_PIN
-	 * offset 1720
+	 * offset 1716
 	 */
 	Gpio binarySerialTxPin;
 	/**
-	 * offset 1722
+	 * offset 1718
 	 */
 	Gpio binarySerialRxPin;
 	/**
-	 * offset 1724
+	 * offset 1720
 	 */
 	Gpio auxValves[AUX_DIGITAL_VALVE_COUNT];
 	/**
-	 * offset 1728
+	 * offset 1724
 	 */
 	switch_input_pin_e tcuUpshiftButtonPin;
 	/**
-	 * offset 1730
+	 * offset 1726
 	 */
 	switch_input_pin_e tcuDownshiftButtonPin;
 	/**
 	voltage
-	 * offset 1732
+	 * offset 1728
 	 */
 	float throttlePedalUpVoltage;
 	/**
 	 * Pedal in the floor
 	voltage
-	 * offset 1736
+	 * offset 1732
 	 */
 	float throttlePedalWOTVoltage;
 	/**
 	 * on ECU start turn fuel pump on to build fuel pressure
 	seconds
-	 * offset 1740
+	 * offset 1736
 	 */
 	int16_t startUpFuelPumpDuration;
 	/**
 	 * If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
 	RPM
-	 * offset 1742
+	 * offset 1738
 	 */
 	int16_t idlePidRpmDeadZone;
 	/**
 	 * CLT-based target RPM for automatic idle controller
 	C
-	 * offset 1744
+	 * offset 1740
 	 */
 	float cltIdleRpmBins[CLT_CURVE_SIZE];
 	/**
 	 * See idleRpmPid
 	RPM
-	 * offset 1808
+	 * offset 1804
 	 */
 	scaled_channel<uint8_t, 1, 50> cltIdleRpm[CLT_CURVE_SIZE];
 	/**
 	 * This is the target battery voltage the alternator PID control will attempt to maintain
 	Volts
-	 * offset 1824
+	 * offset 1820
 	 */
 	float targetVBatt;
 	/**
 	 * Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.
 	%
-	 * offset 1828
+	 * offset 1824
 	 */
 	float alternatorOffAboveTps;
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	cycles
-	 * offset 1832
+	 * offset 1828
 	 */
 	int16_t afterCrankingIACtaperDuration;
 	/**
 	 * Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value
 	percent
-	 * offset 1834
+	 * offset 1830
 	 */
 	int16_t iacByTpsTaper;
 	/**
 	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * set_aux_tx_pin X
-	 * offset 1836
+	 * offset 1832
 	 */
 	Gpio auxSerialTxPin;
 	/**
-	 * offset 1838
+	 * offset 1834
 	 */
 	Gpio warningLedPin;
 	/**
 	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * set_aux_rx_pin X
-	 * offset 1840
+	 * offset 1836
 	 */
 	Gpio auxSerialRxPin;
 	/**
-	 * offset 1842
+	 * offset 1838
 	 */
 	Gpio LIS302DLCsPin;
 	/**
 	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
 	sec
-	 * offset 1844
+	 * offset 1840
 	 */
 	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
 	/**
 	 * Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
 	kph
-	 * offset 1845
+	 * offset 1841
 	 */
 	uint8_t coastingFuelCutVssLow;
 	/**
 	 * Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
 	kph
-	 * offset 1846
+	 * offset 1842
 	 */
 	uint8_t coastingFuelCutVssHigh;
 	/**
 	 * Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
 	sec
-	 * offset 1847
+	 * offset 1843
 	 */
 	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
 	/**
 	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	roc
-	 * offset 1848
+	 * offset 1844
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	 * offset 1852
+	 * offset 1848
 	 */
 	brain_input_pin_e auxSpeedSensorInputPin[2];
 	/**
-	 * offset 1856
+	 * offset 1852
 	 */
 	uint8_t totalGearsCount;
 	/**
 	 * Sets what part of injection's is controlled by the injection phase table.
-	 * offset 1857
+	 * offset 1853
 	 */
 	InjectionTimingMode injectionTimingMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1858
+	 * offset 1854
 	 */
-	uint8_t alignmentFill_at_1858[2];
+	uint8_t alignmentFill_at_1854[2];
 	/**
 	 * Band rate for primary TTL
 	BPs
-	 * offset 1860
+	 * offset 1856
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
 	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 	roc
-	 * offset 1864
+	 * offset 1860
 	 */
 	float tpsDecelEnleanmentThreshold;
 	/**
 	 * Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 	coeff
-	 * offset 1868
+	 * offset 1864
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
 	 * ExpAverage alpha coefficient
 	coeff
-	 * offset 1872
+	 * offset 1868
 	 */
 	float slowAdcAlpha;
 	/**
 	 * See http://rusefi.com/s/debugmode
 	 * 
 	 * set debug_mode X
-	 * offset 1876
+	 * offset 1872
 	 */
 	debug_mode_e debugMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1877
+	 * offset 1873
 	 */
-	uint8_t alignmentFill_at_1877[3];
+	uint8_t alignmentFill_at_1873[3];
 	/**
 	BPs
-	 * offset 1880
+	 * offset 1876
 	 */
 	uint32_t auxSerialSpeed;
 	/**
 	voltage
-	 * offset 1884
+	 * offset 1880
 	 */
 	float throttlePedalSecondaryUpVoltage;
 	/**
 	 * Pedal in the floor
 	voltage
-	 * offset 1888
+	 * offset 1884
 	 */
 	float throttlePedalSecondaryWOTVoltage;
 	/**
 	 * set can_baudrate
-	 * offset 1892
+	 * offset 1888
 	 */
 	can_baudrate_e canBaudRate;
 	/**
 	 * Override the Y axis (load) value used for the VE table.
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
-	 * offset 1893
+	 * offset 1889
 	 */
 	ve_override_e veOverrideMode;
 	/**
-	 * offset 1894
+	 * offset 1890
 	 */
 	can_baudrate_e can2BaudRate;
 	/**
 	 * Override the Y axis (load) value used for the AFR table.
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
-	 * offset 1895
+	 * offset 1891
 	 */
 	load_override_e afrOverrideMode;
 	/**
 	A
-	 * offset 1896
+	 * offset 1892
 	 */
 	scaled_channel<uint8_t, 10, 1> mc33_hpfp_i_peak;
 	/**
 	A
-	 * offset 1897
+	 * offset 1893
 	 */
 	scaled_channel<uint8_t, 10, 1> mc33_hpfp_i_hold;
 	/**
 	 * How long to deactivate power when hold current is reached before applying power again
 	us
-	 * offset 1898
+	 * offset 1894
 	 */
 	uint8_t mc33_hpfp_i_hold_off;
 	/**
 	 * Maximum amount of time the solenoid can be active before assuming a programming error
 	ms
-	 * offset 1899
+	 * offset 1895
 	 */
 	uint8_t mc33_hpfp_max_hold;
 	/**
 	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	offset 1900 bit 0 */
+	offset 1896 bit 0 */
 	bool stepperDcInvertedPins : 1 {};
 	/**
-	offset 1900 bit 1 */
+	offset 1896 bit 1 */
 	bool unused1740b0 : 1 {};
 	/**
-	offset 1900 bit 2 */
+	offset 1896 bit 2 */
 	bool unused1740b1 : 1 {};
 	/**
-	offset 1900 bit 3 */
+	offset 1896 bit 3 */
 	bool unused1740b2 : 1 {};
 	/**
-	offset 1900 bit 4 */
+	offset 1896 bit 4 */
 	bool unused1127 : 1 {};
 	/**
-	offset 1900 bit 5 */
+	offset 1896 bit 5 */
 	bool unused1128 : 1 {};
 	/**
-	offset 1900 bit 6 */
+	offset 1896 bit 6 */
 	bool unused1129 : 1 {};
 	/**
-	offset 1900 bit 7 */
+	offset 1896 bit 7 */
 	bool unused1130 : 1 {};
 	/**
-	offset 1900 bit 8 */
+	offset 1896 bit 8 */
 	bool unusedBit_546_8 : 1 {};
 	/**
-	offset 1900 bit 9 */
+	offset 1896 bit 9 */
 	bool unusedBit_546_9 : 1 {};
 	/**
-	offset 1900 bit 10 */
+	offset 1896 bit 10 */
 	bool unusedBit_546_10 : 1 {};
 	/**
-	offset 1900 bit 11 */
+	offset 1896 bit 11 */
 	bool unusedBit_546_11 : 1 {};
 	/**
-	offset 1900 bit 12 */
+	offset 1896 bit 12 */
 	bool unusedBit_546_12 : 1 {};
 	/**
-	offset 1900 bit 13 */
+	offset 1896 bit 13 */
 	bool unusedBit_546_13 : 1 {};
 	/**
-	offset 1900 bit 14 */
+	offset 1896 bit 14 */
 	bool unusedBit_546_14 : 1 {};
 	/**
-	offset 1900 bit 15 */
+	offset 1896 bit 15 */
 	bool unusedBit_546_15 : 1 {};
 	/**
-	offset 1900 bit 16 */
+	offset 1896 bit 16 */
 	bool unusedBit_546_16 : 1 {};
 	/**
-	offset 1900 bit 17 */
+	offset 1896 bit 17 */
 	bool unusedBit_546_17 : 1 {};
 	/**
-	offset 1900 bit 18 */
+	offset 1896 bit 18 */
 	bool unusedBit_546_18 : 1 {};
 	/**
-	offset 1900 bit 19 */
+	offset 1896 bit 19 */
 	bool unusedBit_546_19 : 1 {};
 	/**
-	offset 1900 bit 20 */
+	offset 1896 bit 20 */
 	bool unusedBit_546_20 : 1 {};
 	/**
-	offset 1900 bit 21 */
+	offset 1896 bit 21 */
 	bool unusedBit_546_21 : 1 {};
 	/**
-	offset 1900 bit 22 */
+	offset 1896 bit 22 */
 	bool unusedBit_546_22 : 1 {};
 	/**
-	offset 1900 bit 23 */
+	offset 1896 bit 23 */
 	bool unusedBit_546_23 : 1 {};
 	/**
-	offset 1900 bit 24 */
+	offset 1896 bit 24 */
 	bool unusedBit_546_24 : 1 {};
 	/**
-	offset 1900 bit 25 */
+	offset 1896 bit 25 */
 	bool unusedBit_546_25 : 1 {};
 	/**
-	offset 1900 bit 26 */
+	offset 1896 bit 26 */
 	bool unusedBit_546_26 : 1 {};
 	/**
-	offset 1900 bit 27 */
+	offset 1896 bit 27 */
 	bool unusedBit_546_27 : 1 {};
 	/**
-	offset 1900 bit 28 */
+	offset 1896 bit 28 */
 	bool unusedBit_546_28 : 1 {};
 	/**
-	offset 1900 bit 29 */
+	offset 1896 bit 29 */
 	bool unusedBit_546_29 : 1 {};
 	/**
-	offset 1900 bit 30 */
+	offset 1896 bit 30 */
 	bool unusedBit_546_30 : 1 {};
 	/**
-	offset 1900 bit 31 */
+	offset 1896 bit 31 */
 	bool unusedBit_546_31 : 1 {};
 	/**
 	ms
-	 * offset 1904
+	 * offset 1900
 	 */
 	scaled_channel<uint8_t, 1, 5> benchTestOffTime;
 	/**
 	count
-	 * offset 1905
+	 * offset 1901
 	 */
 	uint8_t benchTestCount;
 	/**
 	ms
-	 * offset 1906
+	 * offset 1902
 	 */
 	scaled_channel<uint8_t, 1, 5> benchTestOnTime;
 	/**
-	 * offset 1907
+	 * offset 1903
 	 */
 	pin_input_mode_e launchActivatePinMode;
 	/**
 	 * set_can2_tx_pin X
-	 * offset 1908
+	 * offset 1904
 	 */
 	Gpio can2TxPin;
 	/**
 	 * set_can2_rx_pin X
-	 * offset 1910
+	 * offset 1906
 	 */
 	Gpio can2RxPin;
 	/**
-	 * offset 1912
+	 * offset 1908
 	 */
 	pin_output_mode_e starterControlPinMode;
 	/**
-	 * offset 1913
+	 * offset 1909
 	 */
 	adc_channel_e wastegatePositionSensor;
 	/**
 	 * Override the Y axis (load) value used for the ignition table.
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
-	 * offset 1914
+	 * offset 1910
 	 */
 	load_override_e ignOverrideMode;
 	/**
 	 * Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
-	 * offset 1915
+	 * offset 1911
 	 */
 	injector_pressure_type_e injectorPressureType;
 	/**
-	 * offset 1916
+	 * offset 1912
 	 */
 	output_pin_e hpfpValvePin;
 	/**
-	 * offset 1918
+	 * offset 1914
 	 */
 	pin_output_mode_e hpfpValvePinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1919
+	 * offset 1915
 	 */
-	uint8_t alignmentFill_at_1919[1];
+	uint8_t alignmentFill_at_1915[1];
 	/**
 	 * MAP value above which fuel is cut in case of overboost.
 	 * Set to 0 to disable overboost cut.
 	kPa (absolute)
-	 * offset 1920
+	 * offset 1916
 	 */
 	float boostCutPressure;
 	/**
 	kg/h
-	 * offset 1924
+	 * offset 1920
 	 */
 	scaled_channel<uint8_t, 1, 5> tchargeBins[16];
 	/**
 	ratio
-	 * offset 1940
+	 * offset 1936
 	 */
 	scaled_channel<uint8_t, 100, 1> tchargeValues[16];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
-	 * offset 1956
+	 * offset 1952
 	 */
 	float fixedTiming;
 	/**
 	 * MAP voltage for low point
 	v
-	 * offset 1960
+	 * offset 1956
 	 */
 	float mapLowValueVoltage;
 	/**
 	 * MAP voltage for low point
 	v
-	 * offset 1964
+	 * offset 1960
 	 */
 	float mapHighValueVoltage;
 	/**
 	 * EGO value correction
 	value
-	 * offset 1968
+	 * offset 1964
 	 */
 	float egoValueShift;
 	/**
-	 * offset 1972
+	 * offset 1968
 	 */
 	output_pin_e vvtPins[CAM_INPUTS_COUNT];
 	/**
-	 * offset 1980
+	 * offset 1976
 	 */
 	spi_device_e cj125SpiDevice;
 	/**
-	 * offset 1981
+	 * offset 1977
 	 */
 	pin_output_mode_e cj125CsPinMode;
 	/**
-	 * offset 1982
+	 * offset 1978
 	 */
 	pin_output_mode_e sdCardCsPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 1983
+	 * offset 1979
 	 */
-	uint8_t alignmentFill_at_1983[1];
+	uint8_t alignmentFill_at_1979[1];
 	/**
 	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
 	percent
-	 * offset 1984
+	 * offset 1980
 	 */
 	int crankingIACposition;
 	/**
-	 * offset 1988
+	 * offset 1984
 	 */
 	float tChargeMinRpmMinTps;
 	/**
-	 * offset 1992
+	 * offset 1988
 	 */
 	float tChargeMinRpmMaxTps;
 	/**
-	 * offset 1996
+	 * offset 1992
 	 */
 	float tChargeMaxRpmMinTps;
 	/**
-	 * offset 2000
+	 * offset 1996
 	 */
 	float tChargeMaxRpmMaxTps;
 	/**
-	 * offset 2004
+	 * offset 2000
 	 */
 	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
-	 * offset 2008
+	 * offset 2004
 	 */
 	uint8_t fan1ExtraIdle;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2009
+	 * offset 2005
 	 */
-	uint8_t alignmentFill_at_2009[3];
+	uint8_t alignmentFill_at_2005[3];
 	/**
 	Hz
-	 * offset 2012
+	 * offset 2008
 	 */
 	int alternatorPwmFrequency;
 	/**
 	 * Narrow Band WBO Approximation
 	V
-	 * offset 2016
+	 * offset 2012
 	 */
 	float narrowToWideOxygenBins[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
 	/**
 	ratio
-	 * offset 2048
+	 * offset 2044
 	 */
 	float narrowToWideOxygen[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE];
 	/**
 	 * set vvt_mode X
-	 * offset 2080
+	 * offset 2076
 	 */
 	vvt_mode_e vvtMode[CAMS_PER_BANK];
 	/**
-	 * offset 2082
+	 * offset 2078
 	 */
 	uint8_t vvtModePadding[CAMS_PER_BANK_padding];
 	/**
 	 * Additional idle % when fan #2 is active
 	%
-	 * offset 2082
+	 * offset 2078
 	 */
 	uint8_t fan2ExtraIdle;
 	/**
 	 * Delay to allow fuel pressure to build before firing the priming pulse.
 	sec
-	 * offset 2083
+	 * offset 2079
 	 */
 	scaled_channel<uint8_t, 100, 1> primingDelay;
 	/**
-	 * offset 2084
+	 * offset 2080
 	 */
 	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
 	/**
-	 * offset 2092
+	 * offset 2088
 	 */
 	output_pin_e trailingCoilPins[MAX_CYLINDER_COUNT];
 	/**
 	 * CLT-based timing correction
 	C
-	 * offset 2116
+	 * offset 2112
 	 */
 	float cltTimingBins[CLT_TIMING_CURVE_SIZE];
 	/**
 	degree
-	 * offset 2148
+	 * offset 2144
 	 */
 	float cltTimingExtra[CLT_TIMING_CURVE_SIZE];
 	/**
-	 * offset 2180
+	 * offset 2176
 	 */
 	tle8888_mode_e tle8888mode;
 	/**
-	 * offset 2181
+	 * offset 2177
 	 */
 	pin_output_mode_e LIS302DLCsPinMode;
 	/**
 	 * None = I have a MAP-referenced fuel pressure regulator
 	 * Fixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)
 	 * Sensed rail pressure = I have a fuel pressure sensor
-	 * offset 2182
+	 * offset 2178
 	 */
 	injector_compensation_mode_e injectorCompensationMode;
 	/**
-	 * offset 2183
+	 * offset 2179
 	 */
 	pin_output_mode_e fan2PinMode;
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 	kPa
-	 * offset 2184
+	 * offset 2180
 	 */
 	float fuelReferencePressure;
 	/**
 	 * Fuel multiplier (enrichment) immediately after engine start
 	mult
-	 * offset 2188
+	 * offset 2184
 	 */
 	float postCrankingFactor;
 	/**
 	 * Time over which to taper out after start enrichment
 	seconds
-	 * offset 2192
+	 * offset 2188
 	 */
 	float postCrankingDurationSec;
 	/**
-	 * offset 2196
+	 * offset 2192
 	 */
 	ThermistorConf auxTempSensor1;
 	/**
-	 * offset 2228
+	 * offset 2224
 	 */
 	ThermistorConf auxTempSensor2;
 	/**
 	Deg
-	 * offset 2260
+	 * offset 2256
 	 */
 	int16_t knockSamplingDuration;
 	/**
 	Hz
-	 * offset 2262
+	 * offset 2258
 	 */
 	int16_t etbFreq;
 	/**
-	 * offset 2264
+	 * offset 2260
 	 */
 	pid_s etbWastegatePid;
 	/**
 	 * For micro-stepping, make sure that PWM frequency (etbFreq) is high enough
-	 * offset 2284
+	 * offset 2280
 	 */
 	stepper_num_micro_steps_e stepperNumMicroSteps;
 	/**
 	 * Use to limit the current when the stepper motor is idle, not moving (100% = no limit)
 	%
-	 * offset 2285
+	 * offset 2281
 	 */
 	uint8_t stepperMinDutyCycle;
 	/**
 	 * Use to limit the max.current through the stepper motor (100% = no limit)
 	%
-	 * offset 2286
+	 * offset 2282
 	 */
 	uint8_t stepperMaxDutyCycle;
 	/**
-	 * offset 2287
+	 * offset 2283
 	 */
 	spi_device_e sdCardSpiDevice;
 	/**
 	 * per-cylinder timing correction
 	deg
-	 * offset 2288
+	 * offset 2284
 	 */
 	angle_t timing_offset_cylinder[MAX_CYLINDER_COUNT];
 	/**
 	seconds
-	 * offset 2336
+	 * offset 2332
 	 */
 	float idlePidActivationTime;
 	/**
-	 * offset 2340
+	 * offset 2336
 	 */
 	pin_mode_e spi1SckMode;
 	/**
 	 * Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.
-	 * offset 2341
+	 * offset 2337
 	 */
 	pin_mode_e spi1MosiMode;
 	/**
-	 * offset 2342
+	 * offset 2338
 	 */
 	pin_mode_e spi1MisoMode;
 	/**
-	 * offset 2343
+	 * offset 2339
 	 */
 	pin_mode_e spi2SckMode;
 	/**
-	 * offset 2344
+	 * offset 2340
 	 */
 	pin_mode_e spi2MosiMode;
 	/**
-	 * offset 2345
+	 * offset 2341
 	 */
 	pin_mode_e spi2MisoMode;
 	/**
-	 * offset 2346
+	 * offset 2342
 	 */
 	pin_mode_e spi3SckMode;
 	/**
-	 * offset 2347
+	 * offset 2343
 	 */
 	pin_mode_e spi3MosiMode;
 	/**
-	 * offset 2348
+	 * offset 2344
 	 */
 	pin_mode_e spi3MisoMode;
 	/**
-	 * offset 2349
+	 * offset 2345
 	 */
 	pin_output_mode_e stepperEnablePinMode;
 	/**
 	 * ResetB
-	 * offset 2350
+	 * offset 2346
 	 */
 	Gpio mc33816_rstb;
 	/**
-	 * offset 2352
+	 * offset 2348
 	 */
 	Gpio mc33816_driven;
 	/**
 	 * Brake pedal switch
-	 * offset 2354
+	 * offset 2350
 	 */
 	switch_input_pin_e brakePedalPin;
 	/**
 	 * lambda input
-	 * offset 2356
+	 * offset 2352
 	 */
 	adc_channel_e cj125ua;
 	/**
 	 * heater input
-	 * offset 2357
+	 * offset 2353
 	 */
 	adc_channel_e cj125ur;
 	/**
-	 * offset 2358
+	 * offset 2354
 	 */
 	pin_input_mode_e brakePedalPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2359
+	 * offset 2355
 	 */
-	uint8_t alignmentFill_at_2359[1];
+	uint8_t alignmentFill_at_2355[1];
 	/**
-	 * offset 2360
+	 * offset 2356
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
 	/**
-	 * offset 2400
+	 * offset 2396
 	 */
 	float injectorCorrectionPolynomial[8];
 	/**
 	C
-	 * offset 2432
+	 * offset 2428
 	 */
 	int8_t primeBins[8];
 	/**
-	 * offset 2440
+	 * offset 2436
 	 */
 	linear_sensor_s oilPressure;
 	/**
-	 * offset 2460
+	 * offset 2456
 	 */
 	spi_device_e accelerometerSpiDevice;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2461
+	 * offset 2457
 	 */
-	uint8_t alignmentFill_at_2461[1];
+	uint8_t alignmentFill_at_2457[1];
 	/**
-	 * offset 2462
+	 * offset 2458
 	 */
 	output_pin_e fan2Pin;
 	/**
 	 * Cooling fan turn-on temperature threshold, in Celsius
 	deg C
-	 * offset 2464
+	 * offset 2460
 	 */
 	uint8_t fan2OnTemperature;
 	/**
 	 * Cooling fan turn-off temperature threshold, in Celsius
 	deg C
-	 * offset 2465
+	 * offset 2461
 	 */
 	uint8_t fan2OffTemperature;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2466
+	 * offset 2462
 	 */
-	uint8_t alignmentFill_at_2466[2];
+	uint8_t alignmentFill_at_2462[2];
 	/**
 	x
-	 * offset 2468
+	 * offset 2464
 	 */
 	float scriptCurve1Bins[SCRIPT_CURVE_16];
 	/**
 	y
-	 * offset 2532
+	 * offset 2528
 	 */
 	float scriptCurve1[SCRIPT_CURVE_16];
 	/**
 	x
-	 * offset 2596
+	 * offset 2592
 	 */
 	float scriptCurve2Bins[SCRIPT_CURVE_16];
 	/**
 	y
-	 * offset 2660
+	 * offset 2656
 	 */
 	float scriptCurve2[SCRIPT_CURVE_16];
 	/**
 	x
-	 * offset 2724
+	 * offset 2720
 	 */
 	float scriptCurve3Bins[SCRIPT_CURVE_8];
 	/**
 	y
-	 * offset 2756
+	 * offset 2752
 	 */
 	float scriptCurve3[SCRIPT_CURVE_8];
 	/**
 	x
-	 * offset 2788
+	 * offset 2784
 	 */
 	float scriptCurve4Bins[SCRIPT_CURVE_8];
 	/**
 	y
-	 * offset 2820
+	 * offset 2816
 	 */
 	float scriptCurve4[SCRIPT_CURVE_8];
 	/**
-	 * offset 2852
+	 * offset 2848
 	 */
 	Gpio stepperEnablePin;
 	/**
-	 * offset 2854
+	 * offset 2850
 	 */
 	Gpio tle8888_cs;
 	/**
-	 * offset 2856
+	 * offset 2852
 	 */
 	pin_output_mode_e tle8888_csPinMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 2857
+	 * offset 2853
 	 */
-	uint8_t alignmentFill_at_2857[1];
+	uint8_t alignmentFill_at_2853[1];
 	/**
-	 * offset 2858
+	 * offset 2854
 	 */
 	Gpio mc33816_cs;
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	RPM
-	 * offset 2860
+	 * offset 2856
 	 */
 	float crankingAdvanceBins[CRANKING_ADVANCE_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Cranking (see useSeparateAdvanceForCranking)
 	deg
-	 * offset 2876
+	 * offset 2872
 	 */
 	float crankingAdvance[CRANKING_ADVANCE_CURVE_SIZE];
 	/**
 	 * todo: more comments
-	 * offset 2892
+	 * offset 2888
 	 */
 	Gpio servoOutputPins[SERVO_COUNT];
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
-	 * offset 2908
+	 * offset 2904
 	 */
 	int16_t coastingFuelCutRpmHigh;
 	/**
 	 * This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle
 	rpm
-	 * offset 2910
+	 * offset 2906
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
 	 * Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
 	%
-	 * offset 2912
+	 * offset 2908
 	 */
 	int16_t coastingFuelCutTps;
 	/**
 	 * Fuel cutoff is disabled when the engine is cold.
 	C
-	 * offset 2914
+	 * offset 2910
 	 */
 	int16_t coastingFuelCutClt;
 	/**
 	 * Increases PID reaction for RPM<target by adding extra percent to PID-error
 	%
-	 * offset 2916
+	 * offset 2912
 	 */
 	int16_t pidExtraForLowRpm;
 	/**
 	 * MAP value above which fuel injection is re-enabled.
 	kPa
-	 * offset 2918
+	 * offset 2914
 	 */
 	int16_t coastingFuelCutMap;
 	/**
 	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
 	C
-	 * offset 2920
+	 * offset 2916
 	 */
 	float iacCoastingBins[CLT_CURVE_SIZE];
 	/**
 	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
 	%
-	 * offset 2984
+	 * offset 2980
 	 */
 	float iacCoasting[CLT_CURVE_SIZE];
 	/**
-	 * offset 3048
+	 * offset 3044
 	 */
 	linear_sensor_s highPressureFuel;
 	/**
-	 * offset 3068
+	 * offset 3064
 	 */
 	linear_sensor_s lowPressureFuel;
 	/**
 	 * CLT-based target RPM for hard limit depending on CLT like on Lexus LFA
 	C
-	 * offset 3088
+	 * offset 3084
 	 */
 	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE];
 	/**
 	 * See idleRpmPid
-	 * offset 3092
+	 * offset 3088
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
 	/**
-	 * offset 3100
+	 * offset 3096
 	 */
 	gppwm_note_t scriptCurveName[SCRIPT_CURVE_COUNT];
 	/**
 	x
-	 * offset 3196
+	 * offset 3192
 	 */
 	float scriptCurve5Bins[SCRIPT_CURVE_8];
 	/**
 	y
-	 * offset 3228
+	 * offset 3224
 	 */
 	float scriptCurve5[SCRIPT_CURVE_8];
 	/**
 	x
-	 * offset 3260
+	 * offset 3256
 	 */
 	float scriptCurve6Bins[SCRIPT_CURVE_8];
 	/**
 	y
-	 * offset 3292
+	 * offset 3288
 	 */
 	float scriptCurve6[SCRIPT_CURVE_8];
 	/**
-	 * offset 3324
+	 * offset 3320
 	 */
 	gppwm_note_t scriptTableName[SCRIPT_TABLE_COUNT];
 	/**
-	 * offset 3388
+	 * offset 3384
 	 */
 	gppwm_note_t scriptSettingName[SCRIPT_SETTING_COUNT];
 	/**
 	 * Heat transfer coefficient at zero flow.
 	 * 0 means the air charge is fully heated to the same temperature as CLT.
 	 * 1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
-	 * offset 3516
+	 * offset 3512
 	 */
 	float tChargeAirCoefMin;
 	/**
 	 * Heat transfer coefficient at high flow, as defined by "max air flow".
 	 * 0 means the air charge is fully heated to the same temperature as CLT.
 	 * 1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
-	 * offset 3520
+	 * offset 3516
 	 */
 	float tChargeAirCoefMax;
 	/**
 	 * High flow point for heat transfer estimation.
 	 * Set this to perhaps 50-75% of your maximum airflow at wide open throttle.
 	kg/h
-	 * offset 3524
+	 * offset 3520
 	 */
 	float tChargeAirFlowMax;
 	/**
 	 * Maximum allowed rate of increase allowed for the estimated charge temperature
 	deg/sec
-	 * offset 3528
+	 * offset 3524
 	 */
 	float tChargeAirIncrLimit;
 	/**
 	 * Maximum allowed rate of decrease allowed for the estimated charge temperature
 	deg/sec
-	 * offset 3532
+	 * offset 3528
 	 */
 	float tChargeAirDecrLimit;
 	/**
-	 * offset 3536
+	 * offset 3532
 	 */
 	tChargeMode_e tChargeMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 3537
+	 * offset 3533
 	 */
-	uint8_t alignmentFill_at_3537[3];
+	uint8_t alignmentFill_at_3533[3];
 	/**
 	 * target TPS value, 0 to 100%
 	 * TODO: use int8 data date once we template interpolation method
 	target TPS position
-	 * offset 3540
+	 * offset 3536
 	 */
 	float etbBiasBins[ETB_BIAS_CURVE_LENGTH];
 	/**
 	 * PWM bias, 0 to 100%
 	ETB duty cycle bias
-	 * offset 3572
+	 * offset 3568
 	 */
 	float etbBiasValues[ETB_BIAS_CURVE_LENGTH];
 	/**
-	 * offset 3604
+	 * offset 3600
 	 */
 	float hip9011Gain;
 	/**
 	 * iTerm min value
-	 * offset 3608
+	 * offset 3604
 	 */
 	int16_t etb_iTermMin;
 	/**
 	 * iTerm max value
-	 * offset 3610
+	 * offset 3606
 	 */
 	int16_t etb_iTermMax;
 	/**
 	 * See useIdleTimingPidControl
-	 * offset 3612
+	 * offset 3608
 	 */
 	pid_s idleTimingPid;
 	/**
 	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
 	RPM
-	 * offset 3632
+	 * offset 3628
 	 */
 	int16_t idleTimingPidDeadZone;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	cycles
-	 * offset 3634
+	 * offset 3630
 	 */
 	int16_t tpsAccelFractionPeriod;
 	/**
 	 * A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions
 	coef
-	 * offset 3636
+	 * offset 3632
 	 */
 	float tpsAccelFractionDivisor;
 	/**
-	 * offset 3640
+	 * offset 3636
 	 */
 	spi_device_e tle8888spiDevice;
 	/**
-	 * offset 3641
+	 * offset 3637
 	 */
 	spi_device_e mc33816spiDevice;
 	/**
 	 * iTerm min value
-	 * offset 3642
+	 * offset 3638
 	 */
 	int16_t idlerpmpid_iTermMin;
 	/**
-	 * offset 3644
+	 * offset 3640
 	 */
 	spi_device_e tle6240spiDevice;
 	/**
@@ -4064,358 +4066,372 @@ struct engine_configuration_s {
 	 * E85 = 9.9
 	 * E100 = 9.0
 	:1
-	 * offset 3645
+	 * offset 3641
 	 */
 	scaled_channel<uint8_t, 10, 1> stoichRatioPrimary;
 	/**
 	 * iTerm max value
-	 * offset 3646
+	 * offset 3642
 	 */
 	int16_t idlerpmpid_iTermMax;
 	/**
 	 * This sets the range of the idle control on the ETB. At 100% idle position, the value specified here sets the base ETB position.
 	%
-	 * offset 3648
+	 * offset 3644
 	 */
 	float etbIdleThrottleRange;
 	/**
 	 * Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor
-	 * offset 3652
+	 * offset 3648
 	 */
 	uint8_t cylinderBankSelect[MAX_CYLINDER_COUNT];
 	/**
 	mg
-	 * offset 3664
+	 * offset 3660
 	 */
 	scaled_channel<uint8_t, 1, 5> primeValues[8];
 	/**
 	 * Trigger comparator center point voltage
 	V
-	 * offset 3672
+	 * offset 3668
 	 */
 	uint8_t triggerCompCenterVolt;
 	/**
 	 * Trigger comparator hysteresis voltage (Min)
 	V
-	 * offset 3673
+	 * offset 3669
 	 */
 	uint8_t triggerCompHystMin;
 	/**
 	 * Trigger comparator hysteresis voltage (Max)
 	V
-	 * offset 3674
+	 * offset 3670
 	 */
 	uint8_t triggerCompHystMax;
 	/**
 	 * VR-sensor saturation RPM
 	RPM
-	 * offset 3675
+	 * offset 3671
 	 */
 	scaled_channel<uint8_t, 1, 50> triggerCompSensorSatRpm;
 	/**
-	 * offset 3676
+	 * offset 3672
 	 */
 	pid_s idleRpmPid2;
 	/**
 	%
-	 * offset 3696
+	 * offset 3692
 	 */
 	uint8_t iacPidMultTable[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 	/**
 	Load
-	 * offset 3760
+	 * offset 3756
 	 */
 	uint8_t iacPidMultLoadBins[IAC_PID_MULT_SIZE];
 	/**
 	RPM
-	 * offset 3768
+	 * offset 3764
 	 */
 	scaled_channel<uint8_t, 1, 50> iacPidMultRpmBins[IAC_PID_MULT_SIZE];
 	/**
 	 * set can_vss X
-	 * offset 3776
+	 * offset 3772
 	 */
 	can_vss_nbc_e canVssNbcType;
 	/**
-	 * offset 3780
+	 * offset 3776
 	 */
 	gppwm_channel gppwm[GPPWM_CHANNELS];
 	/**
 	mA
-	 * offset 4148
+	 * offset 4144
 	 */
 	uint16_t mc33_i_boost;
 	/**
 	mA
-	 * offset 4150
+	 * offset 4146
 	 */
 	uint16_t mc33_i_peak;
 	/**
 	mA
-	 * offset 4152
+	 * offset 4148
 	 */
 	uint16_t mc33_i_hold;
 	/**
 	us
-	 * offset 4154
+	 * offset 4150
 	 */
 	uint16_t mc33_t_max_boost;
 	/**
 	us
-	 * offset 4156
+	 * offset 4152
 	 */
 	uint16_t mc33_t_peak_off;
 	/**
 	us
-	 * offset 4158
+	 * offset 4154
 	 */
 	uint16_t mc33_t_peak_tot;
 	/**
 	us
-	 * offset 4160
+	 * offset 4156
 	 */
 	uint16_t mc33_t_bypass;
 	/**
 	us
-	 * offset 4162
+	 * offset 4158
 	 */
 	uint16_t mc33_t_hold_off;
 	/**
 	us
-	 * offset 4164
+	 * offset 4160
 	 */
 	uint16_t mc33_t_hold_tot;
 	/**
-	 * offset 4166
+	 * offset 4162
 	 */
 	pin_input_mode_e tcuUpshiftButtonPinMode;
 	/**
-	 * offset 4167
+	 * offset 4163
 	 */
 	pin_input_mode_e tcuDownshiftButtonPinMode;
 	/**
-	 * offset 4168
+	 * offset 4164
 	 */
 	pin_input_mode_e acSwitchMode;
 	/**
-	 * offset 4169
+	 * offset 4165
 	 */
 	pin_output_mode_e tcu_solenoid_mode[TCU_SOLENOID_COUNT];
 	/**
 	 * Knock sensor output knock detection threshold depending on current RPM.
 	dB
-	 * offset 4175
+	 * offset 4171
 	 */
 	scaled_channel<int8_t, 2, 1> knockBaseNoise[ENGINE_NOISE_CURVE_SIZE];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 4191
+	 * offset 4187
 	 */
-	uint8_t alignmentFill_at_4191[1];
+	uint8_t alignmentFill_at_4187[1];
 	/**
 	from
-	 * offset 4192
+	 * offset 4188
 	 */
 	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
-	 * offset 4264
+	 * offset 4260
 	 */
 	int8_t unused4080[12];
 	/**
 	to
-	 * offset 4276
+	 * offset 4272
 	 */
 	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
 	/**
 	lobes/cam
-	 * offset 4348
+	 * offset 4344
 	 */
 	uint8_t hpfpCamLobes;
 	/**
-	 * offset 4349
+	 * offset 4345
 	 */
 	hpfp_cam_e hpfpCam;
 	/**
 	 * Crank angle ATDC of first lobe peak
 	deg
-	 * offset 4350
+	 * offset 4346
 	 */
 	uint8_t hpfpPeakPos;
 	/**
 	 * If the requested activation time is below this angle, don't bother running the pump
 	deg
-	 * offset 4351
+	 * offset 4347
 	 */
 	uint8_t hpfpMinAngle;
 	/**
 	 * Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
 	cc
-	 * offset 4352
+	 * offset 4348
 	 */
 	scaled_channel<uint16_t, 1000, 1> hpfpPumpVolume;
 	/**
 	 * How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
 	deg
-	 * offset 4354
+	 * offset 4350
 	 */
 	uint8_t hpfpActivationAngle;
 	/**
-	 * offset 4355
+	 * offset 4351
 	 */
 	uint8_t issFilterReciprocal;
 	/**
 	%/kPa
-	 * offset 4356
+	 * offset 4352
 	 */
 	scaled_channel<uint16_t, 1000, 1> hpfpPidP;
 	/**
 	%/kPa/lobe
-	 * offset 4358
+	 * offset 4354
 	 */
 	scaled_channel<uint16_t, 100000, 1> hpfpPidI;
 	/**
 	 * The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.
 	kPa/s
-	 * offset 4360
+	 * offset 4356
 	 */
 	uint16_t hpfpTargetDecay;
 	/**
 	%
-	 * offset 4362
+	 * offset 4358
 	 */
 	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileQuantityBins[HPFP_LOBE_PROFILE_SIZE];
 	/**
 	deg
-	 * offset 4378
+	 * offset 4374
 	 */
 	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileAngle[HPFP_LOBE_PROFILE_SIZE];
 	/**
 	volts
-	 * offset 4394
+	 * offset 4390
 	 */
 	uint8_t hpfpDeadtimeVoltsBins[HPFP_DEADTIME_SIZE];
 	/**
 	ms
-	 * offset 4402
+	 * offset 4398
 	 */
 	scaled_channel<uint16_t, 1000, 1> hpfpDeadtimeMS[HPFP_DEADTIME_SIZE];
 	/**
 	kPa
-	 * offset 4418
+	 * offset 4414
 	 */
 	uint16_t hpfpTarget[HPFP_TARGET_SIZE][HPFP_TARGET_SIZE];
 	/**
 	load
-	 * offset 4618
+	 * offset 4614
 	 */
 	scaled_channel<uint16_t, 10, 1> hpfpTargetLoadBins[HPFP_TARGET_SIZE];
 	/**
 	RPM
-	 * offset 4638
+	 * offset 4634
 	 */
 	scaled_channel<uint8_t, 1, 50> hpfpTargetRpmBins[HPFP_TARGET_SIZE];
 	/**
 	%
-	 * offset 4648
+	 * offset 4644
 	 */
 	int8_t hpfpCompensation[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_SIZE];
 	/**
 	cc/lobe
-	 * offset 4748
+	 * offset 4744
 	 */
 	scaled_channel<uint16_t, 1000, 1> hpfpCompensationLoadBins[HPFP_COMPENSATION_SIZE];
 	/**
 	RPM
-	 * offset 4768
+	 * offset 4764
 	 */
 	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
 	/**
-	 * offset 4778
+	 * offset 4774
 	 */
 	output_pin_e stepper_raw_output[4];
 	/**
 	ratio
-	 * offset 4786
+	 * offset 4782
 	 */
 	scaled_channel<uint16_t, 100, 1> gearRatio[GEARS_COUNT];
 	/**
 	 * We need to give engine time to build oil pressure without diverting it to VVT
 	ms
-	 * offset 4802
+	 * offset 4798
 	 */
 	uint16_t vvtActivationDelayMs;
 	/**
 	deg C
-	 * offset 4804
+	 * offset 4800
 	 */
 	int8_t wwCltBins[WWAE_TABLE_SIZE];
 	/**
-	 * offset 4812
+	 * offset 4808
 	 */
 	scaled_channel<uint8_t, 100, 1> wwTauCltValues[WWAE_TABLE_SIZE];
 	/**
-	 * offset 4820
+	 * offset 4816
 	 */
 	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE];
 	/**
 	kPa
-	 * offset 4828
+	 * offset 4824
 	 */
 	int8_t wwMapBins[WWAE_TABLE_SIZE];
 	/**
-	 * offset 4836
+	 * offset 4832
 	 */
 	scaled_channel<uint8_t, 100, 1> wwTauMapValues[WWAE_TABLE_SIZE];
 	/**
-	 * offset 4844
+	 * offset 4840
 	 */
 	scaled_channel<uint8_t, 100, 1> wwBetaMapValues[WWAE_TABLE_SIZE];
 	/**
 	Nm
-	 * offset 4852
+	 * offset 4848
 	 */
 	scaled_channel<uint8_t, 1, 10> torqueTable[TORQUE_CURVE_SIZE][TORQUE_CURVE_SIZE];
 	/**
 	RPM
-	 * offset 4888
+	 * offset 4884
 	 */
 	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
 	/**
 	Load
-	 * offset 4900
+	 * offset 4896
 	 */
 	uint16_t torqueLoadBins[TORQUE_CURVE_SIZE];
 	/**
-	 * offset 4912
+	 * offset 4908
 	 */
 	GearControllerMode gearControllerMode;
 	/**
-	 * offset 4913
+	 * offset 4909
 	 */
 	TransmissionControllerMode transmissionControllerMode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 4914
+	 * offset 4910
 	 */
-	uint8_t alignmentFill_at_4914[2];
+	uint8_t alignmentFill_at_4910[2];
 	/**
-	 * offset 4916
+	 * offset 4912
 	 */
 	linear_sensor_s auxLinear1;
 	/**
-	 * offset 4936
+	 * offset 4932
 	 */
 	linear_sensor_s auxLinear2;
 	/**
-	 * offset 4956
+	 * offset 4952
 	 */
 	output_pin_e tcu_tcc_onoff_solenoid;
 	/**
-	 * offset 4958
+	 * offset 4954
 	 */
 	pin_output_mode_e tcu_tcc_onoff_solenoid_mode;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4955
+	 */
+	uint8_t alignmentFill_at_4955[1];
+	/**
+	 * offset 4956
+	 */
+	output_pin_e tcu_tcc_pwm_solenoid;
+	/**
+	 * offset 4958
+	 */
+	pin_output_mode_e tcu_tcc_pwm_solenoid_mode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -4425,64 +4441,50 @@ struct engine_configuration_s {
 	/**
 	 * offset 4960
 	 */
-	output_pin_e tcu_tcc_pwm_solenoid;
+	pwm_freq_t tcu_tcc_pwm_solenoid_freq;
 	/**
 	 * offset 4962
 	 */
-	pin_output_mode_e tcu_tcc_pwm_solenoid_mode;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 4963
-	 */
-	uint8_t alignmentFill_at_4963[1];
-	/**
-	 * offset 4964
-	 */
-	pwm_freq_t tcu_tcc_pwm_solenoid_freq;
-	/**
-	 * offset 4966
-	 */
 	output_pin_e tcu_pc_solenoid_pin;
 	/**
-	 * offset 4968
+	 * offset 4964
 	 */
 	pin_output_mode_e tcu_pc_solenoid_pin_mode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 4969
+	 * offset 4965
 	 */
-	uint8_t alignmentFill_at_4969[1];
+	uint8_t alignmentFill_at_4965[1];
 	/**
-	 * offset 4970
+	 * offset 4966
 	 */
 	pwm_freq_t tcu_pc_solenoid_freq;
 	/**
-	 * offset 4972
+	 * offset 4968
 	 */
 	output_pin_e tcu_32_solenoid_pin;
 	/**
-	 * offset 4974
+	 * offset 4970
 	 */
 	pin_output_mode_e tcu_32_solenoid_pin_mode;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 4975
+	 * offset 4971
 	 */
-	uint8_t alignmentFill_at_4975[1];
+	uint8_t alignmentFill_at_4971[1];
 	/**
-	 * offset 4976
+	 * offset 4972
 	 */
 	pwm_freq_t tcu_32_solenoid_freq;
 	/**
 	units
-	 * offset 4978
+	 * offset 4974
 	 */
 	uint8_t mainUnusedEnd[250];
 };
-static_assert(sizeof(engine_configuration_s) == 5228);
+static_assert(sizeof(engine_configuration_s) == 5224);
 
 // start of cyl_trim_s
 struct cyl_trim_s {
@@ -4500,155 +4502,155 @@ struct persistent_config_s {
 	 */
 	engine_configuration_s engineConfiguration;
 	/**
-	 * offset 5228
+	 * offset 5224
 	 */
 	error_message_t warning_message;
 	/**
 	C
-	 * offset 5348
+	 * offset 5344
 	 */
 	float afterstartCoolantBins[AFTERSTART_HOLD_CURVE_SIZE];
 	/**
 	Seconds
-	 * offset 5380
+	 * offset 5376
 	 */
 	float afterstartHoldTime[AFTERSTART_HOLD_CURVE_SIZE];
 	/**
 	%
-	 * offset 5412
+	 * offset 5408
 	 */
 	float afterstartEnrich[AFTERSTART_ENRICH_CURVE_SIZE];
 	/**
 	Seconds
-	 * offset 5444
+	 * offset 5440
 	 */
 	float afterstartDecayTime[AFTERSTART_DECAY_CURVE_SIZE];
 	/**
-	 * offset 5476
+	 * offset 5472
 	 */
 	scaled_channel<uint8_t, 2, 1> boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 5540
+	 * offset 5536
 	 */
 	scaled_channel<uint8_t, 1, 50> boostRpmBins[BOOST_RPM_COUNT];
 	/**
-	 * offset 5548
+	 * offset 5544
 	 */
 	scaled_channel<uint8_t, 1, 2> boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	%
-	 * offset 5612
+	 * offset 5608
 	 */
 	scaled_channel<uint8_t, 1, 1> boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	%
-	 * offset 5620
+	 * offset 5616
 	 */
 	uint8_t pedalToTpsTable[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
 	/**
 	%
-	 * offset 5684
+	 * offset 5680
 	 */
 	uint8_t pedalToTpsPedalBins[PEDAL_TO_TPS_SIZE];
 	/**
 	RPM
-	 * offset 5692
+	 * offset 5688
 	 */
 	scaled_channel<uint8_t, 1, 50> pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	C
-	 * offset 5700
+	 * offset 5696
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	%
-	 * offset 5732
+	 * offset 5728
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
 	RPM
-	 * offset 5764
+	 * offset 5760
 	 */
 	scaled_channel<uint8_t, 1, 50> idleAdvanceBins[IDLE_ADVANCE_CURVE_SIZE];
 	/**
 	 * Optional timing advance table for Idle (see useSeparateAdvanceForIdle)
 	deg
-	 * offset 5772
+	 * offset 5768
 	 */
 	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
 	RPM
-	 * offset 5804
+	 * offset 5800
 	 */
 	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE];
 	/**
 	load
-	 * offset 5808
+	 * offset 5804
 	 */
 	scaled_channel<uint8_t, 1, 1> idleVeLoadBins[IDLE_VE_SIZE];
 	/**
 	%
-	 * offset 5812
+	 * offset 5808
 	 */
 	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE];
 	/**
-	 * offset 5844
+	 * offset 5840
 	 */
 	lua_script_t luaScript;
 	/**
 	C
-	 * offset 13844
+	 * offset 13840
 	 */
 	float cltFuelCorrBins[CLT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 13908
+	 * offset 13904
 	 */
 	float cltFuelCorr[CLT_CURVE_SIZE];
 	/**
 	C
-	 * offset 13972
+	 * offset 13968
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 14036
+	 * offset 14032
 	 */
 	float iatFuelCorr[IAT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 14100
+	 * offset 14096
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
 	/**
 	C
-	 * offset 14132
+	 * offset 14128
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 14164
+	 * offset 14160
 	 */
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	/**
 	counter
-	 * offset 14196
+	 * offset 14192
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based idle position multiplier for simple manual idle controller
 	C
-	 * offset 14228
+	 * offset 14224
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
 	 * CLT-based idle position multiplier for simple manual idle controller
 	ratio
-	 * offset 14292
+	 * offset 14288
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
@@ -4656,336 +4658,336 @@ struct persistent_config_s {
 	 * kg/hour value.
 	 * By the way 2.081989116 kg/h = 1 ft3/m
 	kg/hour
-	 * offset 14356
+	 * offset 14352
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
 	/**
 	V
-	 * offset 15380
+	 * offset 15376
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
 	deg
-	 * offset 16404
+	 * offset 16400
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
-	 * offset 16916
+	 * offset 16912
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 16980
+	 * offset 16976
 	 */
 	uint16_t ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
 	deg
-	 * offset 17012
+	 * offset 17008
 	 */
 	int16_t injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 17524
+	 * offset 17520
 	 */
 	uint16_t injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 17556
+	 * offset 17552
 	 */
 	uint16_t injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
 	onoff
-	 * offset 17588
+	 * offset 17584
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	kPa
-	 * offset 17648
+	 * offset 17644
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
-	 * offset 18160
+	 * offset 18156
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18192
+	 * offset 18188
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 18224
+	 * offset 18220
 	 */
 	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18288
+	 * offset 18284
 	 */
 	uint16_t vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 18304
+	 * offset 18300
 	 */
 	uint16_t vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 18320
+	 * offset 18316
 	 */
 	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18384
+	 * offset 18380
 	 */
 	uint16_t vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 18400
+	 * offset 18396
 	 */
 	uint16_t vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	deg
-	 * offset 18416
+	 * offset 18412
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 18928
+	 * offset 18924
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18960
+	 * offset 18956
 	 */
 	uint16_t ignitionRpmBins[IGN_RPM_COUNT];
 	/**
 	%
-	 * offset 18992
+	 * offset 18988
 	 */
 	scaled_channel<uint16_t, 10, 1> veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
-	 * offset 19504
+	 * offset 19500
 	 */
 	uint16_t veLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 19536
+	 * offset 19532
 	 */
 	uint16_t veRpmBins[FUEL_RPM_COUNT];
 	/**
 	lambda
-	 * offset 19568
+	 * offset 19564
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
-	 * offset 19824
+	 * offset 19820
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 19856
+	 * offset 19852
 	 */
 	uint16_t lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 19888
+	 * offset 19884
 	 */
 	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
-	 * offset 20144
+	 * offset 20140
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	to
-	 * offset 20176
+	 * offset 20172
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	value
-	 * offset 20208
+	 * offset 20204
 	 */
 	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20464
+	 * offset 20460
 	 */
 	uint16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20480
+	 * offset 20476
 	 */
 	uint16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20496
+	 * offset 20492
 	 */
 	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20560
+	 * offset 20556
 	 */
 	uint16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20576
+	 * offset 20572
 	 */
 	uint16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20592
+	 * offset 20588
 	 */
 	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20656
+	 * offset 20652
 	 */
 	uint16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20672
+	 * offset 20668
 	 */
 	uint16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20688
+	 * offset 20684
 	 */
 	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20752
+	 * offset 20748
 	 */
 	uint16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20768
+	 * offset 20764
 	 */
 	uint16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
-	 * offset 20784
+	 * offset 20780
 	 */
 	uint16_t ignTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 20792
+	 * offset 20788
 	 */
 	uint16_t ignTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 20800
+	 * offset 20796
 	 */
 	cyl_trim_s ignTrims[12];
 	/**
-	 * offset 20992
+	 * offset 20988
 	 */
 	uint16_t fuelTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 21000
+	 * offset 20996
 	 */
 	uint16_t fuelTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 21008
+	 * offset 21004
 	 */
 	cyl_trim_s fuelTrims[12];
 	/**
 	ratio
-	 * offset 21200
+	 * offset 21196
 	 */
 	scaled_channel<uint16_t, 100, 1> crankingFuelCoefE100[CRANKING_CURVE_SIZE];
 	/**
 	Airmass
-	 * offset 21216
+	 * offset 21212
 	 */
 	uint8_t tcu_pcAirmassBins[8];
 	/**
 	%
-	 * offset 21224
+	 * offset 21220
 	 */
 	uint8_t tcu_pcValsR[8];
 	/**
 	%
-	 * offset 21232
+	 * offset 21228
 	 */
 	uint8_t tcu_pcValsN[8];
 	/**
 	%
-	 * offset 21240
+	 * offset 21236
 	 */
 	uint8_t tcu_pcVals1[8];
 	/**
 	%
-	 * offset 21248
+	 * offset 21244
 	 */
 	uint8_t tcu_pcVals2[8];
 	/**
 	%
-	 * offset 21256
+	 * offset 21252
 	 */
 	uint8_t tcu_pcVals3[8];
 	/**
 	%
-	 * offset 21264
+	 * offset 21260
 	 */
 	uint8_t tcu_pcVals4[8];
 	/**
 	%
-	 * offset 21272
+	 * offset 21268
 	 */
 	uint8_t tcu_pcVals12[8];
 	/**
 	%
-	 * offset 21280
+	 * offset 21276
 	 */
 	uint8_t tcu_pcVals23[8];
 	/**
 	%
-	 * offset 21288
+	 * offset 21284
 	 */
 	uint8_t tcu_pcVals34[8];
 	/**
 	%
-	 * offset 21296
+	 * offset 21292
 	 */
 	uint8_t tcu_pcVals21[8];
 	/**
 	%
-	 * offset 21304
+	 * offset 21300
 	 */
 	uint8_t tcu_pcVals32[8];
 	/**
 	%
-	 * offset 21312
+	 * offset 21308
 	 */
 	uint8_t tcu_pcVals43[8];
 	/**
 	TPS
-	 * offset 21320
+	 * offset 21316
 	 */
 	uint8_t tcu_tccTpsBins[8];
 	/**
 	MPH
-	 * offset 21328
+	 * offset 21324
 	 */
 	uint8_t tcu_tccLockSpeed[8];
 	/**
 	MPH
-	 * offset 21336
+	 * offset 21332
 	 */
 	uint8_t tcu_tccUnlockSpeed[8];
 	/**
 	KPH
-	 * offset 21344
+	 * offset 21340
 	 */
 	uint8_t tcu_32SpeedBins[8];
 	/**
 	%
-	 * offset 21352
+	 * offset 21348
 	 */
 	uint8_t tcu_32Vals[8];
 };
-static_assert(sizeof(persistent_config_s) == 21360);
+static_assert(sizeof(persistent_config_s) == 21356);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 01 19:18:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 02 01:21:34 UTC 2022
