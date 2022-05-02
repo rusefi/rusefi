@@ -960,6 +960,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->auxLinear2.v2;
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 		return engineConfiguration->auxLinear2.value2;
+	if (strEqualCaseInsensitive(name, "etbMinimumPosition"))
+		return engineConfiguration->etbMinimumPosition;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -3361,6 +3363,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 	{
 		engineConfiguration->auxLinear2.value2 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "etbMinimumPosition"))
+	{
+		engineConfiguration->etbMinimumPosition = value;
 		return;
 	}
 }
