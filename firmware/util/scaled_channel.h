@@ -67,7 +67,6 @@ public:
 		static_assert(mul == 1 && div == 1,
 			      "Increment operator only supported for non-scaled integer types");
 		static_assert(std::is_integral_v<T>, "Increment operator only supported for non-scaled integer types");
-	
 
 		m_value++;
 	}
