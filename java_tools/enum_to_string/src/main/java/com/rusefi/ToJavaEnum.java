@@ -49,7 +49,9 @@ public class ToJavaEnum {
         int index = 0;
         for (Value value : sorted) {
             int numericValue = value.getIntValueMaybeResolve(registry);
-            if (index != numericValue && !value.getName().startsWith("Force_4_bytes_size"))
+            if (index != numericValue
+                    && !value.getName().startsWith("Force_2_bytes_size")
+                    && !value.getName().startsWith("Force_4_bytes_size"))
                 throw new IllegalStateException("Got explicit ordinal " + numericValue + " instead of ordinal " + index + " in " + value);
             sb.append("\t" + value.getName() + ",\n");
             index++;
