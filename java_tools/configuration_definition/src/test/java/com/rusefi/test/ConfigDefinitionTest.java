@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class ConfigDefinitionTest {
     private static final String FIRMWARE = "../../firmware";
@@ -27,5 +28,6 @@ public class ConfigDefinitionTest {
 
         System.out.println(sb);
         assertNotNull(sb);
+        assertTrue("Seems too long" + sb, sb.length() < 100000);
     }
 }

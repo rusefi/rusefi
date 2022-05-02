@@ -72,7 +72,7 @@ public class ParseState {
         if (stringValueMap == null)
             return null;
         for (Value value : stringValueMap.values()) {
-            if (value.getValue().contains("ENUM_32_BITS"))
+            if (value.isForceSize())
                 continue;
 
             if (isNumeric(value.getValue())) {
