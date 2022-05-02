@@ -902,11 +902,11 @@ void proteusLuaDemo() {
 	engineConfiguration->luaOutputPins[1] = Gpio::D10;
 	engineConfiguration->luaOutputPins[2] = Gpio::D11;
 
-	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 8000, 1);
-	setLinearCurve(engineConfiguration->scriptCurve2, 0, 100, 1);
+	setLinearCurve(config->scriptCurve2Bins, 0, 8000, 1);
+	setLinearCurve(config->scriptCurve2, 0, 100, 1);
 
-	copyArray(engineConfiguration->scriptCurve3Bins, defaultBiasBins);
-	copyArray(engineConfiguration->scriptCurve3, defaultBiasValues);
+	copyArray(config->scriptCurve3Bins, defaultBiasBins);
+	copyArray(config->scriptCurve3, defaultBiasValues);
 
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;

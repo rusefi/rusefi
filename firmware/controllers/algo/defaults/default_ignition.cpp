@@ -112,8 +112,8 @@ void setDefaultIgnition() {
 	engineConfiguration->trailingSparkAngle = 10;
 
 	// CLT correction
-	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
-	setArrayValues(engineConfiguration->cltTimingExtra, 0.0f);
+	setLinearCurve(config->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
+	setArrayValues(config->cltTimingExtra, 0.0f);
 
 	// IAT correction
 	setDefaultIatTimingCorrection();

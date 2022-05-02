@@ -114,7 +114,7 @@ angle_t getAdvanceCorrections(int rpm) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (engineConfiguration->useSeparateAdvanceForCranking) {
-		return interpolate2d(rpm, engineConfiguration->crankingAdvanceBins, engineConfiguration->crankingAdvance);
+		return interpolate2d(rpm, config->crankingAdvanceBins, config->crankingAdvance);
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start

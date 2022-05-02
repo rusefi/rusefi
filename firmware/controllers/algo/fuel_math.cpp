@@ -94,7 +94,7 @@ float getCrankingFuel3(
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 	engine->engineState.cranking.tpsCoefficient =
 		tps.Valid
-		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
+		? interpolate2d(tps.Value, config->crankingTpsBins, config->crankingTpsCoef)
 		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
@@ -358,7 +358,7 @@ angle_t getCltTimingCorrection() {
 	if (!valid)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d(clt, config->cltTimingBins, config->cltTimingExtra);
 }
 
 float getIatFuelCorrection() {
@@ -376,9 +376,9 @@ float getBaroCorrection() {
 		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 
 		float correction = interpolate3d(
-			engineConfiguration->baroCorrTable,
-			engineConfiguration->baroCorrPressureBins, pressure,
-			engineConfiguration->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
+			config->baroCorrTable,
+			config->baroCorrPressureBins, pressure,
+			config->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
 		);
 
 		if (cisnan(correction) || correction < 0.01) {
