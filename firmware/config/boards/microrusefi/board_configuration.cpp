@@ -210,13 +210,13 @@ void setBoardDefaultConfiguration() {
 
 
 	// SPI for SD card
-	engineConfiguration->is_enabled_spi_2 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = Gpio::B15;
-	engineConfiguration->spi2misoPin = Gpio::B14;
-	engineConfiguration->spi2sckPin = Gpio::B13;
-	engineConfiguration->sdCardCsPin = Gpio::E15;
+//	engineConfiguration->is_enabled_spi_2 = true;
+//	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
+//
+//	engineConfiguration->spi2mosiPin = Gpio::B15;
+//	engineConfiguration->spi2misoPin = Gpio::B14;
+//	engineConfiguration->spi2sckPin = Gpio::B13;
+//	engineConfiguration->sdCardCsPin = Gpio::E15;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
