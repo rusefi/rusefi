@@ -680,8 +680,6 @@
 #define engineMake_offset 1072
 #define engineSnifferRpmThreshold_offset 7
 #define engineType_offset 0
-#define ENUM_16_BITS 60000
-#define ENUM_32_BITS 2000000000
 #define ERROR_BUFFER_SIZE 120
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
@@ -1884,7 +1882,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 3742742587
+#define SIGNATURE_HASH 2937807761
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2398,7 +2396,7 @@
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
-#define TS_FILE_VERSION 20210311
+#define TS_FILE_VERSION 20210312
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
 #define TS_GET_CONFIG_ERROR 'e'
@@ -2464,7 +2462,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.05.02.subaru_eg33_f7.3742742587"
+#define TS_SIGNATURE "rusEFI 2022.05.02.subaru_eg33_f7.2937807761"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
