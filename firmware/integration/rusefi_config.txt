@@ -86,13 +86,13 @@
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20210310
+#define TS_FILE_VERSION 20210311
 
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10010
+#define FLASH_DATA_VERSION 10011
 
 #define LOG_DELIMITER "`"
 
@@ -440,10 +440,6 @@ uint8_t autoscale engineSnifferRpmThreshold;Engine sniffer would be disabled abo
 	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
 	uint8_t multisparkMaxExtraSparkCount;+Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 
-
-
-uint8_t[DWELL_CURVE_SIZE] autoscale sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 2
-	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms", 1, 0, 0, 30, 2
 
 struct injector_s
 	float flow;+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min;"cm3/min", 1, 0, 0, 99999, 2
@@ -1114,18 +1110,11 @@ float noAccelAfterHardLimitPeriodSecs;TODO: finish this #413;"sec", 1, 0, 0, 60,
 
 int mapAveragingSchedulingAtIndex;+At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
-float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa", 1, 0, 0, 200, 2
-float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 2
 
-float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"ratio", 1, 0, 0, 2, 2
-	
 	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
 custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	
-	
-	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
-	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
-	
+
 ! todo: rename field remove 'ms', also fix typo in name should be 'tachPulseDuration' and that would be an incompatible breaking change for users :(
 	float tachPulseDuractionMs;+Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
 
@@ -1165,9 +1154,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	int16_t startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
 	int16_t idlePidRpmDeadZone;+If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 200, 0
 	
-	
-	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C", 1, 0, -100, 250, 2
-	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 8000, 0
 
 	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%", 1, 0, 0, 200, 2
@@ -1275,8 +1261,6 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	uint8_t fan1ExtraIdle;+Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
-	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V", 1, 0, -10, 10, 3
-	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio", 1, 0, -40, 40, 2
 
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
@@ -1285,8 +1269,6 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
-	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
-	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
 tle8888_mode_e tle8888mode;
 
@@ -1350,24 +1332,14 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	output_pin_e fan2Pin;
 	uint8_t fan2OnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 	uint8_t fan2OffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
+
 #define SCRIPT_CURVE_COUNT 6
 #define SCRIPT_TABLE_COUNT 4
-	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve3Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve3;;"y", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve4;;"y", 1, 0, -999, 1000, 3
 
 	Gpio stepperEnablePin;
 	Gpio tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
 	Gpio mc33816_cs;
-
-float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 18000, 2
-float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg", 1, 0, -20, 90, 2
 
 	Gpio[SERVO_COUNT iterate] servoOutputPins;todo: more comments
 
@@ -1379,8 +1351,6 @@ float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance 
 	int16_t pidExtraForLowRpm;+Increases PID reaction for RPM<target by adding extra percent to PID-error;"%", 1, 0, 0, 100, 0
 	int16_t coastingFuelCutMap;+MAP value above which fuel injection is re-enabled.;"kPa", 1, 0, 0, 250, 0
 	
-float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C", 1, 0, -100, 250, 2
-float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%", 1, 0, 0, 100, 2
 
 	linear_sensor_s highPressureFuel;
 	linear_sensor_s lowPressureFuel;
@@ -1389,10 +1359,7 @@ int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard 
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"", 1, 0, 0, 8000, 0
 
 gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
-	float[SCRIPT_CURVE_8] scriptCurve5Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
-	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
+
 gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
 gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
 
@@ -1442,9 +1409,6 @@ tChargeMode_e tChargeMode;
 
 	pid_s idleRpmPid2
 
-	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] iacPidMultTable;;"%", 1, 0, 0, 999, 2
-	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2
-	uint8_t[IAC_PID_MULT_SIZE] autoscale iacPidMultRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
  	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:0], "BMW_e46", "W202"
 	can_vss_nbc_e canVssNbcType;set can_vss X
@@ -1557,6 +1521,47 @@ end_struct
 
 ! note that this magic field name is used by LiveDataParserPanel
 engine_configuration_s engineConfiguration;
+
+	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] iacPidMultTable;;"%", 1, 0, 0, 999, 2
+	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2
+	uint8_t[IAC_PID_MULT_SIZE] autoscale iacPidMultRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+
+    uint8_t[DWELL_CURVE_SIZE] autoscale sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 2
+	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms", 1, 0, 0, 30, 2
+
+	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C", 1, 0, -100, 250, 2
+	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 8000, 0
+	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
+	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
+
+
+	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve3Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve3;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve4;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve5Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
+
+	float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa", 1, 0, 0, 200, 2
+    float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 2
+
+    float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"ratio", 1, 0, 0, 2, 2
+
+	float[CRANKING_CURVE_SIZE] crankingTpsCoef;Cranking fuel correction coefficient based on TPS;"Ratio", 1, 0, 0, 700, 2
+	float[CRANKING_CURVE_SIZE] crankingTpsBins;;"%", 1, 0, 0, 100, 2
+	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygenBins;Narrow Band WBO Approximation;"V", 1, 0, -10, 10, 3
+	float[NARROW_BAND_WIDE_BAND_CONVERSION_SIZE] narrowToWideOxygen;;"ratio", 1, 0, -40, 40, 2
+
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 18000, 2
+float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg", 1, 0, -20, 90, 2
+float[CLT_CURVE_SIZE] iacCoastingBins;CLT-based idle position for coasting (used in Auto-PID Idle mode);"C", 1, 0, -100, 250, 2
+float[CLT_CURVE_SIZE] iacCoasting;    CLT-based idle position for coasting (used in Auto-PID Idle mode);"%", 1, 0, 0, 100, 2
 
 error_message_t warning_message;
 
