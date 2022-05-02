@@ -164,18 +164,6 @@ typedef enum  __attribute__ ((__packed__)) {
 
 } tle8888_mode_e;
 
-
-typedef enum {
-	LF_NATIVE = 0,
-	/**
-	 * http://www.efianalytics.com/MegaLogViewer/
-	 * log example: http://svn.code.sf.net/p/rusefi/code/trunk/misc/ms_logs/
-	 */
-	LM_MLV = 1,
-
-	Force_4_bytes_size_log_format = ENUM_32_BITS,
-} log_format_e;
-
 typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
@@ -325,17 +313,17 @@ typedef enum __attribute__ ((__packed__)) {
 	SPI_DEVICE_4 = 4,
 } spi_device_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
-	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+
 } can_vss_nbc_e;
 
 /**
  * inertia measurement unit, yawn accelerometer
  * By the way both kinds of BOSCH use Housing : TE 1-967640-1, pins 144969-1 seal 967056-1 plug 967067-2
  */
-typedef enum  __attribute__ ((__packed__)) {
+typedef enum __attribute__ ((__packed__)) {
 	IMU_NONE = 0,
 	IMU_VAG = 1,
 	/**
@@ -530,30 +518,26 @@ typedef enum {
   FAILED = 128
 } PidAutoTune_AutoTunerState;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	INIT = 0,
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
 	PID_VALUE = 4,
 	PID_UPPER = 16,
 	BLIP = 64,
-	/**
-	 * Live Docs reads 4 byte value so we want 4 byte enum
-	 */
-	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
+
 } idle_state_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
-	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+
 } boostType_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_LAUNCH = 0,
 	CLUTCH_INPUT_LAUNCH = 1,
 	ALWAYS_ACTIVE_LAUNCH = 2,
-	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
 } launchActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
