@@ -330,6 +330,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
 
+	float minPosition = engineConfiguration->etbMinimumPosition;
+	if (minPosition < 0.01) {
+		// compatibility with legacy tunes, todo: remove in Nov of 2022
+		minPosition = 1;
+	}
+
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
 	float maxPosition = engineConfiguration->etbMaximumPosition;
 
@@ -341,7 +347,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		maxPosition = minF(maxPosition, 100);
 	}
 
-	targetPosition = clampF(1, targetPosition, maxPosition);
+	targetPosition = clampF(minPosition, targetPosition, maxPosition);
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
