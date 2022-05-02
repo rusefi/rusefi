@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun May 01 19:17:52 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon May 02 03:12:06 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -167,8 +167,6 @@ const char *getBoostType_e(boostType_e value){
 switch(value) {
 case CLOSED_LOOP:
   return "CLOSED_LOOP";
-case Force_4bytes_size_boostType_e:
-  return "Force_4bytes_size_boostType_e";
 case OPEN_LOOP:
   return "OPEN_LOOP";
   }
@@ -243,8 +241,6 @@ const char *getCan_vss_nbc_e(can_vss_nbc_e value){
 switch(value) {
 case BMW_e46:
   return "BMW_e46";
-case Force_4_bytes_size_can_vss_nbc_e:
-  return "Force_4_bytes_size_can_vss_nbc_e";
 case W202:
   return "W202";
   }
@@ -391,8 +387,6 @@ const char *getIdle_state_e(idle_state_e value){
 switch(value) {
 case BLIP:
   return "BLIP";
-case Force_4bytes_size_idle_state_e:
-  return "Force_4bytes_size_idle_state_e";
 case INIT:
   return "INIT";
 case PID_UPPER:
@@ -475,8 +469,6 @@ case ALWAYS_ACTIVE_LAUNCH:
   return "ALWAYS_ACTIVE_LAUNCH";
 case CLUTCH_INPUT_LAUNCH:
   return "CLUTCH_INPUT_LAUNCH";
-case Force_4bytes_size_launchActivationMode_e:
-  return "Force_4bytes_size_launchActivationMode_e";
 case SWITCH_INPUT_LAUNCH:
   return "SWITCH_INPUT_LAUNCH";
   }
@@ -494,17 +486,6 @@ case AFR_None:
   return "AFR_None";
 case AFR_Tps:
   return "AFR_Tps";
-  }
- return NULL;
-}
-const char *getLog_format_e(log_format_e value){
-switch(value) {
-case Force_4_bytes_size_log_format:
-  return "Force_4_bytes_size_log_format";
-case LF_NATIVE:
-  return "LF_NATIVE";
-case LM_MLV:
-  return "LM_MLV";
   }
  return NULL;
 }
