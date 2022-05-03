@@ -26,7 +26,7 @@ import static tel.schich.javacan.CanSocketOptions.RECV_OWN_MSGS;
 
 public class SocketCANIoStream extends AbstractIoStream {
     static Logging log = getLogging(SocketCANIoStream.class);
-    private final IncomingDataBuffer dataBuffer = createDataBuffer("[SocketCAN] ");
+    private final IncomingDataBuffer dataBuffer;
     private final RawCanChannel socket;
 
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
@@ -59,11 +59,13 @@ public class SocketCANIoStream extends AbstractIoStream {
             socket = CanChannels.newRawChannel();
             socket.bind(canInterface);
 
-            socket.configureBlocking(false);
+            socket.configureBlocking(true); // we want reader thread to wait for messages
             socket.setOption(RECV_OWN_MSGS, true);
         } catch (IOException e) {
             throw new IllegalStateException("Error looking up", e);
         }
+        // buffer could only be created once socket variable is not null due to callback
+        dataBuffer = createDataBuffer("[SocketCAN] ");
     }
 
     @Nullable
