@@ -46,7 +46,8 @@
 !
 !
 ! each field is declared as
-! type name;comment
+! type name;comment;scale,offset,min,max,number_of_digits
+! hello;I like rusEFI;1,0,-10,10,2
 !
 !
 !
@@ -1506,7 +1507,7 @@ output_pin_e tcu_32_solenoid_pin
 pin_output_mode_e tcu_32_solenoid_pin_mode
 pwm_freq_t tcu_32_solenoid_freq
 
-float etbMinimumPosition
+float etbMinimumPosition;;"%", 1, 0, 0.01, 100, 2
 
 uint8_t[246] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
