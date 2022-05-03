@@ -534,7 +534,7 @@ pins:
     
   - pin: 5N 
     id: [A0, EFI_ADC_0]
-    class: switch_inputs
+    class: [switch_inputs, analog_inputs]
     ts_name: 5N - TPS2
     function: TPS
 
