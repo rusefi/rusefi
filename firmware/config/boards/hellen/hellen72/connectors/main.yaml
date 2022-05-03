@@ -60,12 +60,12 @@ pins:
     type: inj
     color: white Y1
 
-  - pin: 2H
-    id: C9
-    class: outputs
-    ts_name: 2H - COIL_B2 (PWM4)
-    function: EGR Valve #3 Coil
-    type: ls
+#  - pin: 2H
+    #    id: C9
+    #    class: outputs
+    #  ts_name: 2H - COIL_B2 (PWM4)
+    #  function: EGR Valve #3 Coil
+  #  type: ls
 
   - pin: 2I
     id: C8
@@ -493,7 +493,7 @@ pins:
     ts_name: 5D - SENSOR INPUT
     function: Optional sensor input
    
-  - pin: 5E     
+  - pin: 5E
     id: C9
     class: outputs
     ts_name: 5E - SOLENOID OUTPUT
