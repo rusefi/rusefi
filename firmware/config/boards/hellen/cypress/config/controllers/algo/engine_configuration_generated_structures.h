@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 02 09:19:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:08 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4316,6 +4316,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_3742[2];
 	/**
+	%
 	 * offset 3744
 	 */
 	float etbMinimumPosition;
@@ -5020,4 +5021,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon May 02 09:19:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:08 UTC 2022
