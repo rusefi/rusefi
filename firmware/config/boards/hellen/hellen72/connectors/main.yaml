@@ -475,11 +475,11 @@ pins:
     ts_name: 5A - Pressure Input
     function: in_map1
 
-  - pin: 5B    
-    id: F8
-    class: switch_inputs
-    ts_name: 5B - IN RES3
-    function: options port in_res3
+#  - pin: 5B
+    #    id: F8
+    #  class: switch_inputs
+    #   ts_name: 5B - IN RES3
+    #  function: options port in_res3
     
   - pin: 5C    
     id: E15
