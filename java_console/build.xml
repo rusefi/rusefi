@@ -3,6 +3,7 @@
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
+
     <resources id="libs">
         <string>lib/mockito-all-1.10.19.jar</string>
         <string>../java_tools/configuration_definition/lib/snakeyaml.jar</string>
@@ -31,8 +32,10 @@
         <string>lib/miglayout-4.0.jar</string>
         <string>lib/surfaceplotter-2.0.1.jar</string>
         <string>../java_tools/configuration_definition/lib/antlr-4.9.3-complete.jar</string>
+        <string>lib/javacan-core.jar</string>
     </resources>
     <pathconvert property="lib_list" refid="libs" pathsep=":" />
+
     <target name="clean">
         <delete dir="build"/>
         <delete dir="${hw_tests}"/>
@@ -201,6 +204,10 @@
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
             <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
+            <zipfileset src="lib/javacan-core.jar" includes="**/*.class"/>
+            <zipfileset src="lib/javacan-core-x86_64.jar" includes="**/*.class"/>
+            <zipfileset src="lib/slf4j-api.jar" includes="**/*.class"/>
+            <zipfileset src="lib/slf4j-simple.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
