@@ -22,7 +22,7 @@ public class SocketCANSandbox {
 /*
         for (int i = 0; i < 17; i++) {
             String signature = BinaryProtocol.getSignature(tsStream);
-            System.out.println("Got " + i + " " + signature + " signature via PCAN");
+            System.out.println("Got " + i + " " + signature + " signature via SocketCAN");
             if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
                 throw new IllegalStateException("Unexpected S " + signature);
         }
