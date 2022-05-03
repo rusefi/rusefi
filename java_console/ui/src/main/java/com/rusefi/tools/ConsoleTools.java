@@ -63,9 +63,10 @@ public class ConsoleTools {
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
         registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-        registerTool("pcan_connector", strings -> CANConnectorStartup.start(PCanIoStream.getPCANIoStream()), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-        registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create()), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-
+        registerTool("pcan_connector", strings -> CANConnectorStartup.start(PCanIoStream.getPCANIoStream()), "Connect your rusEFI ECU using PCAN CAN-bus adapter");
+        if (!FileLog.isWindows()) {
+            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create()), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
+        }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI Online authentication token.");
