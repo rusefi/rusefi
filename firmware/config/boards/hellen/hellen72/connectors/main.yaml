@@ -417,11 +417,11 @@ pins:
     function: TPS sensor input
     color: green B2
 
-  - pin: 4W
-    id: EFI_ADC_0
-    class: analog_inputs
-    ts_name: 4W - O2S (A13)
-    function: Front O2 Sensor Signal
+#  - pin: 4W
+ #   id: EFI_ADC_0
+#    class: analog_inputs
+ #   ts_name: 4W - O2S (A13)
+#    function: Front O2 Sensor Signal
 
   - pin: 4X
     id: EFI_ADC_10
@@ -499,11 +499,11 @@ pins:
     ts_name: 5E - SOLENOID OUTPUT
     function: Output
 
-  - pin: 5F    
-    id: H13
-    class: outputs
-    ts_name: 5F - HIGHSIDE OUTPUT
-    function: high output
+ # - pin: 5F
+ #   id: H13
+ #   class: outputs
+ #   ts_name: 5F - HIGHSIDE OUTPUT
+ #   function: high output
     
   - pin: 5H     
     function: GND
@@ -516,12 +516,12 @@ pins:
     
   - pin: 5J
         
-  - pin: 5K     
-    id: F14
-    class: outputs
-    ts_name: 5K - BOOST OUT
-    function: BOOST OUT
-    type: inj
+#  - pin: 5K
+#    id: F14
+ #   class: outputs
+ #   ts_name: 5K - BOOST OUT
+ #   function: BOOST OUT
+#    type: inj
   
   - pin: 5L
     function: +5v
