@@ -626,11 +626,11 @@ void proteusBoardTest() {
 	engineConfiguration->ignitionPins[4] = PROTEUS_IGN_6;
 	engineConfiguration->ignitionPins[5] = PROTEUS_IGN_7;
 
-	engineConfiguration->ignitionPins[6] = Gpio::D15;// "Highside 3"    # pin 13/black35
+	engineConfiguration->ignitionPins[6] = PROTEUS_HS_3;
 	engineConfiguration->ignitionPins[7] = PROTEUS_IGN_3;
 	engineConfiguration->ignitionPins[8] = PROTEUS_IGN_9;
 	engineConfiguration->ignitionPins[9] = PROTEUS_IGN_8;
-	engineConfiguration->ignitionPins[10] = PROTEUS_IGN_1;
+	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
 

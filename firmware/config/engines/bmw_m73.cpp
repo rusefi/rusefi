@@ -252,7 +252,7 @@ void setEngineBMW_M73_Proteus() {
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 	// set_analog_input_pin pps pa4
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_PPS;
 
 	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
