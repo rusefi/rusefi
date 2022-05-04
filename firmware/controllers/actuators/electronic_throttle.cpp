@@ -85,6 +85,10 @@
 #error "Unexpected OS ACCESS HERE"
 #endif
 
+#if HW_PROTEUS
+#include "proteus_meta.h"
+#endif // HW_PROTEUS
+
 #ifndef ETB_MAX_COUNT
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
@@ -1070,6 +1074,7 @@ void setHitachiEtbCalibration() {
 }
 
 void setProteusHitachiEtbDefaults() {
+#if HW_PROTEUS
 	setHitachiEtbCalibration();
 
 	// EFI_ADC_12: "Analog Volt 3"
@@ -1083,6 +1088,7 @@ void setProteusHitachiEtbDefaults() {
 
 	// EFI_ADC_2: "Analog Volt 7"
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+#endif // HW_PROTEUS
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
