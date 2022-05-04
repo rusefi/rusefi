@@ -26,6 +26,9 @@ Release template (copy/paste this for new release):
 ### Added
  - FasterEngineSpinUp should be enabled by default #4094
 
+### Fixed
+ - 36-1 trigger gaps #4132
+
 ## April 20202 Release - "Day 58"
 
 All notable user-facing or behavior-altering changes will be documented in this file.
