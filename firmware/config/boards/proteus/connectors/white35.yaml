@@ -79,7 +79,7 @@ pins:
     id: [A4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 9
-    function: "Analog Voltage Input #9"
+    function: "Analog Voltage Input #9 (PPS)"
     type: av
 
   - pin: 18
