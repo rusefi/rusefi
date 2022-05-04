@@ -84,7 +84,7 @@
 
 #if HW_PROTEUS
 #include "proteus_meta.h"
-#endif
+#endif // HW_PROTEUS
 
 void m73engine() {
 	// 13641435991 injector
