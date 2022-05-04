@@ -72,7 +72,7 @@ pins:
     id: [A2, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 7
-    function: "Analog Voltage Input #7"
+    function: "Analog Voltage Input #7 (PPS2)"
     type: av
 
   - pin: 17
