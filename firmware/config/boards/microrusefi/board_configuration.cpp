@@ -169,7 +169,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi2sckPin = Gpio::B13;
 
 	// SPI3 for expansion header
-	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 	engineConfiguration->spi3misoPin = Gpio::C11;
 	engineConfiguration->spi3sckPin = Gpio::C10;
@@ -217,6 +216,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardCsPin = Gpio::E15;
+
+	// Don't enable expansion header SPI by default
+	engineConfiguration->is_enabled_spi_3 = false;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
