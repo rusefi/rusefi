@@ -162,13 +162,14 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::B6;
 	engineConfiguration->canRxPin = Gpio::B12;
 
-	// SPI2 for onboard SD card
+	// SPI2 for onboard SD card on v0.6.0
 	engineConfiguration->is_enabled_spi_2 = true;
 	engineConfiguration->spi2mosiPin = Gpio::B15;
 	engineConfiguration->spi2misoPin = Gpio::B14;
 	engineConfiguration->spi2sckPin = Gpio::B13;
 
 	// SPI3 for expansion header
+	// Don't override enable since you might want these pins for something else
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 	engineConfiguration->spi3misoPin = Gpio::C11;
 	engineConfiguration->spi3sckPin = Gpio::C10;
@@ -211,8 +212,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-
-	// Enable onboard SD card
+	// Enable onboard SD card on v0.6.0
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardCsPin = Gpio::E15;
