@@ -109,7 +109,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
  *
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
-void initGmLS24(TriggerWaveform *s) {
+static void initGmLS24_base(TriggerWaveform *s, float shortToothWidth) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	/* 
@@ -148,15 +148,30 @@ void initGmLS24(TriggerWaveform *s) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, 5);
+		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, shortToothWidth);
 	}
 
-	s->tdcPosition = 50;
 	s->useOnlyPrimaryForSync = true;
+}
+
+void initGmLS24(TriggerWaveform *s) {
+	initGmLS24_base(s, 5);
 
 	// This is tooth #20, at 310 degrees ATDC #1
 	s->setTriggerSynchronizationGap(2.0f);
 	s->setSecondTriggerSynchronizationGap(0.5f);
 	s->setThirdTriggerSynchronizationGap(2.0f);
+
+	s->tdcPosition = 50;
 }
 
+void initGmLS24_2(TriggerWaveform *s) {
+	initGmLS24_base(s, 3);
+
+	// This is tooth #20, at 312 degrees ATDC #1
+	s->setTriggerSynchronizationGap(4.0f);
+	s->setSecondTriggerSynchronizationGap(0.25f);
+	s->setThirdTriggerSynchronizationGap(4.0f);
+
+	s->tdcPosition = 48;
+}
