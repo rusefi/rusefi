@@ -637,7 +637,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_TOOTHED_WHEEL_36_2:
 		setToothedWheelConfiguration(this, 36, 2, triggerOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -646,8 +647,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, triggerOperationMode);
-		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.9, 3.5);
-		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:
