@@ -28,7 +28,7 @@ Release template (copy/paste this for new release):
  - ETB low limit is now configurable #4119
 
 ### Fixed
- - 36-1 trigger gaps #4132
+ - Make 36-2 trigger sync parameters more generous #4132
 
 ## April 20202 Release - "Day 58"
 
