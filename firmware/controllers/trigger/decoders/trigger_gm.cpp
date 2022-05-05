@@ -89,9 +89,9 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult, float shortToothWidth)
 {
-	int window = (isShortLong ? 5 : 10) * mult;
+	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth)) * mult;
 	int end = startAngle + mult * 15;
 
 	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
@@ -148,7 +148,7 @@ void initGmLS24(TriggerWaveform *s) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER);
+		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, 5);
 	}
 
 	s->tdcPosition = 50;
