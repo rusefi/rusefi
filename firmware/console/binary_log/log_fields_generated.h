@@ -99,6 +99,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.knock[9],  GAUGE_NAME_KNOCK_10, "dBv", 0},
 	{engine->outputChannels.knock[10], GAUGE_NAME_KNOCK_11, "dBv", 0},
 	{engine->outputChannels.knock[11], GAUGE_NAME_KNOCK_12, "dBv", 0},
+	{engine->outputChannels.knockCount, GAUGE_NAME_KNOCK_COUNTER, "", 0},
+	{engine->outputChannels.knockRetard, GAUGE_NAME_KNOCK_RETARD, "deg", 1},
 	{engine->outputChannels.sparkCutReason, "Spark Cut Code", "", 0},
 	{engine->outputChannels.fuelCutReason, "Fuel Cut Code", "", 0},
 	{engine->outputChannels.auxLinear1, GAUGE_NAME_AUX_LINEAR_1, "", 2},
