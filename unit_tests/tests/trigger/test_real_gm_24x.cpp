@@ -10,7 +10,7 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	eth.setTriggerType(TT_GM_LS_24);
+	eth.setTriggerType(TT_GM_24x);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

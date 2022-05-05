@@ -101,7 +101,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 }
 
 /**
- * TT_GM_LS_24
+ * TT_GM_24x and TT_GM_24x_2
  * https://www.mediafire.com/?40mfgeoe4ctti
  * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
  * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
@@ -109,7 +109,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
  *
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
-static void initGmLS24_base(TriggerWaveform *s, float shortToothWidth) {
+static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	/* 
@@ -121,14 +121,15 @@ static void initGmLS24_base(TriggerWaveform *s, float shortToothWidth) {
 	 * encodes the pattern of which type of gap occurs in the
 	 * pattern.  Starting from the LSB, each bit left is the 
 	 * next gap in sequence as the crank turns.  A 0 indicates
-	 * long-short, while a 1 indicates short-long.
+	 * long-short (late rising edge), while a 1 indicates
+	 * short-long (early rising edge).
 	 * 
 	 * The first few bits read are 0xE (LSB first!) = 0 - 1 - 1 - 1, so the pattern
 	 * looks like this:
-	 * ___     _   ___   ___   ___
-	 *    |___| |_|   |_|   |_|   |_ etc
+	 * ___     _   ___   ___     _
+	 *    |___| |_|   |_|   |___| |_ etc
 	 * 
-	 *    |  0  |  1  |  1  |  1  |
+	 *    |  0  |  1  |  1  |  0  |
 	 * 
 	 *     ___ = 10 degrees, _ = 5 deg
 	 * 
@@ -154,7 +155,8 @@ static void initGmLS24_base(TriggerWaveform *s, float shortToothWidth) {
 	s->useOnlyPrimaryForSync = true;
 }
 
-void initGmLS24(TriggerWaveform *s) {
+// TT_GM_24x
+void initGmLS24_5deg(TriggerWaveform *s) {
 	initGmLS24_base(s, 5);
 
 	// This is tooth #20, at 310 degrees ATDC #1
@@ -165,7 +167,8 @@ void initGmLS24(TriggerWaveform *s) {
 	s->tdcPosition = 50;
 }
 
-void initGmLS24_2(TriggerWaveform *s) {
+// TT_GM_24x_2
+void initGmLS24_3deg(TriggerWaveform *s) {
 	initGmLS24_base(s, 3);
 
 	// This is tooth #20, at 312 degrees ATDC #1
