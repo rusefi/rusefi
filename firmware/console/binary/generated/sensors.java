@@ -15,7 +15,7 @@ mafMeasured("MAF sensor", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 28, 0.1
 MAPValue("MAP", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 30, 0.03333333333333333, 0.0, 0.0, "kPa"),
 baroPressure("baroPressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 32, 0.03333333333333333, 0.0, 0.0, "kPa"),
 lambdaValue("Lambda", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 34, 1.0E-4, 0.0, 0.0, ""),
-knockRetard("knockRetard", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 36, 0.1, 0.0, 0.0, "deg"),
+knockRetard("knock: retard", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 36, 0.1, 0.0, 0.0, "deg"),
 idleCurrentPosition("idleCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 37, 0.5, 0.0, 100.0, "%"),
 VBatt("VBatt", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 38, 0.001, 0.0, 0.0, "V"),
 oilPressure("Oil Pressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 0.03333333333333333, 0.0, 0.0, "kPa"),

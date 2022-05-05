@@ -869,8 +869,9 @@
 #define GAUGE_NAME_KNOCK_7 "knock 7"
 #define GAUGE_NAME_KNOCK_8 "knock 8"
 #define GAUGE_NAME_KNOCK_9 "knock 9"
-#define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
+#define GAUGE_NAME_KNOCK_COUNTER "knock: count"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
+#define GAUGE_NAME_KNOCK_RETARD "knock: retard"
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_LAST_ERROR "Last error"
@@ -1903,7 +1904,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 911234003
+#define SIGNATURE_HASH 2569435466
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2483,7 +2484,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.05.04.hellen_cypress.911234003"
+#define TS_SIGNATURE "rusEFI 2022.05.05.hellen_cypress.2569435466"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
