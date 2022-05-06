@@ -746,8 +746,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureTriTach(this);
 		break;
 
-	case TT_GM_LS_24:
-		initGmLS24(this);
+	case TT_GM_24x:
+		initGmLS24_5deg(this);
+		break;
+
+	case TT_GM_24x_2:
+		initGmLS24_3deg(this);
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:
