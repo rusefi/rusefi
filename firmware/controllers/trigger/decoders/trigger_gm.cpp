@@ -157,7 +157,7 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 
 // TT_GM_24x
 void initGmLS24_5deg(TriggerWaveform *s) {
-	initGmLS24_base(s, 5);
+	initGmLS24(s, 5);
 
 	// This is tooth #20, at 310 degrees ATDC #1
 	s->setTriggerSynchronizationGap(2.0f);
@@ -169,7 +169,7 @@ void initGmLS24_5deg(TriggerWaveform *s) {
 
 // TT_GM_24x_2
 void initGmLS24_3deg(TriggerWaveform *s) {
-	initGmLS24_base(s, 3);
+	initGmLS24(s, 3);
 
 	// This is tooth #20, at 312 degrees ATDC #1
 	s->setTriggerSynchronizationGap(4.0f);
