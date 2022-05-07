@@ -2,12 +2,49 @@
 
 #include "AemXSeriesLambda.h"
 
-using ::testing::StrictMock;
-using ::testing::_;
+TEST(CanWideband, AcceptFrameId0) {
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
 
-TEST(CanWideband, DecodeValid) {
-	Sensor::resetRegistry();
+	CANRxFrame frame;
 
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// Check that the AEM format frame is accepted
+	frame.SID = 0x180;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI standard data is accepted
+	frame.SID = 0x190;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI extended data is accepted
+	frame.SID = 0x191;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+}
+
+TEST(CanWideband, AcceptFrameId1) {
+	AemXSeriesWideband dut(1, SensorType::Lambda2);
+
+	CANRxFrame frame;
+
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// Check that the AEM format frame is accepted
+	frame.SID = 0x181;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI standard data is accepted
+	frame.SID = 0x192;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI extended data is accepted
+	frame.SID = 0x193;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+}
+
+TEST(CanWideband, DecodeValidAemFormat) {
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	dut.Register();
 
@@ -52,6 +89,50 @@ TEST(CanWideband, DecodeValid) {
 		1 << 7;		// Data valid
 	frame.data8[7] = 1 << 6; // Sensor fault!
 
+	dut.processFrame(frame, getTimeNowNt());
+	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+
+	Sensor::resetRegistry();
+}
+
+TEST(CanWideband, DecodeRusefiStandard)
+{
+	EngineTestHelper eth(TEST_ENGINE);
+
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	dut.Register();
+
+	CANRxFrame frame;
+	frame.SID = 0x190;
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// version
+	frame.data8[0] = 0;
+
+	// valid
+	frame.data8[1] = 1;
+
+	// data = 0.7 lambda
+	*reinterpret_cast<uint16_t*>(&frame.data8[2]) = 7000;
+
+	// data = 1234 deg C
+	*reinterpret_cast<uint16_t*>(&frame.data8[4]) = 1234;
+
+	engine->outputChannels.wbTemperature[0] = 0;
+
+	// check not set
+	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+
+	// check that lambda updates
+	dut.processFrame(frame, getTimeNowNt());
+	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
+
+	// Check that temperature updates
+	EXPECT_EQ(engine->outputChannels.wbTemperature[0], 1234);
+
+	// Check that valid bit is respected (should be invalid now)
+	frame.data8[1] = 0;
 	dut.processFrame(frame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 }
