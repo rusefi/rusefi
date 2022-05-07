@@ -7,7 +7,6 @@
 # entry format, where 'key' is a unique ID:
 # key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
 # Naming convention: top level struct in .txt file should be called key_s
-# todo: double-check if manual git add is requited or if (both) generated files are auto-added into git
 # at the moment new line would need to be added into StateDictionary.java manually todo: Add code generation of StateDictionary.java
 #
 # see gen_live_documentation.sh which is the main generation script
@@ -15,6 +14,7 @@
 #
 Usages:
   output_channels: ["TsOutputs.java", "console/binary", "-prepend=integration/rusefi_config.txt" ]
+  knock_controller: [ "KnockController.java", "controllers/engine_cycle" ]
   high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
   injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
   launch_control_state: [ "LaunchControl.java", "controllers/algo" ]

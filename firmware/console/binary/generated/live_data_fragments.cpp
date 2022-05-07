@@ -3,6 +3,7 @@
 #include "tunerstudio.h"
 static const FragmentEntry fragments[] = {
 	reinterpret_cast<const output_channels_s*>(getStructAddr(LDS_output_channels)),
+	reinterpret_cast<const knock_controller_s*>(getStructAddr(LDS_knock_controller)),
 	reinterpret_cast<const high_pressure_fuel_pump_s*>(getStructAddr(LDS_high_pressure_fuel_pump)),
 	reinterpret_cast<const injector_model_s*>(getStructAddr(LDS_injector_model)),
 	reinterpret_cast<const launch_control_state_s*>(getStructAddr(LDS_launch_control_state)),

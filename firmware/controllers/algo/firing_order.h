@@ -14,7 +14,7 @@
 /**
  * thank you https://www.ingenieriaymecanicaautomotriz.com/firing-order-its-purpose-and-order-in-different-numbers-of-cylinders/
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	FO_1 = 0,
 
 	// 2 cylinder
@@ -80,5 +80,4 @@ typedef enum {
 
 	// next value to use: 32
 
-	Force_4b_firing_order = ENUM_32_BITS,
 } firing_order_e;

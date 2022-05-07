@@ -172,8 +172,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->driveWheelRevPerKm;
 	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
 		return engineConfiguration->canSleepPeriodMs;
-	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
-		return engineConfiguration->weHaveUnusedHere;
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
 		return engineConfiguration->byFirmwareVersion;
 	if (strEqualCaseInsensitive(name, "HD44780width"))
@@ -962,6 +960,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->auxLinear2.v2;
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 		return engineConfiguration->auxLinear2.value2;
+	if (strEqualCaseInsensitive(name, "etbMinimumPosition"))
+		return engineConfiguration->etbMinimumPosition;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -1393,11 +1393,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
 	{
 		engineConfiguration->canSleepPeriodMs = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "weHaveUnusedHere"))
-	{
-		engineConfiguration->weHaveUnusedHere = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
@@ -3368,6 +3363,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
 	{
 		engineConfiguration->auxLinear2.value2 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "etbMinimumPosition"))
+	{
+		engineConfiguration->etbMinimumPosition = value;
 		return;
 	}
 }

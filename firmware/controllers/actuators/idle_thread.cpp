@@ -24,7 +24,7 @@
 #endif
 
 int IdleController::getTargetRpm(float clt) {
-	targetRpmByClt = interpolate2d(clt, engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm);
+	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
 	// Bump for AC
 	targetRpmAcBump = engine->acSwitchState ? engineConfiguration->acIdleRpmBump : 0;
@@ -124,7 +124,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, 
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
 	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting;
 	if (useIacTableForCoasting) {
-		return interpolate2d(clt, engineConfiguration->iacCoastingBins, engineConfiguration->iacCoasting);
+		return interpolate2d(clt, config->iacCoastingBins, config->iacCoasting);
 	}
 
 	percent_t running = getRunningOpenLoop(clt, tps);
@@ -255,9 +255,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	if (engineConfiguration->useIacPidMultTable) {
 		float engineLoad = getFuelingLoad();
 		float multCoef = interpolate3d(
-			engineConfiguration->iacPidMultTable,
-			engineConfiguration->iacPidMultLoadBins, engineLoad,
-			engineConfiguration->iacPidMultRpmBins, rpm
+			config->iacPidMultTable,
+			config->iacPidMultLoadBins, engineLoad,
+			config->iacPidMultRpmBins, rpm
 		);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
 		newValue = interpolateClamped(0, 0, 1, newValue, multCoef);

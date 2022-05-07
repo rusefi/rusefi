@@ -20,7 +20,7 @@ typedef enum __attribute__ ((__packed__)) {
 /**
  * Hardware pin. This enum is platform-specific.
  */
-enum class Gpio : uint8_t {
+enum class Gpio : uint16_t {
 	Unassigned = 0,
 	// only used as return value of 'parseBrainPin' function do we really this this logic special value at all?!
 	Invalid = 1,
@@ -269,6 +269,15 @@ enum class Gpio : uint8_t {
 	L9779_OUT_28 = 246,
 	L9779_OUT_MRD = 247,
 	L9779_PIN_KEY = 248,
+
+	CAN_PIN_0 = 250,
+	CAN_PIN_1 = 251,
+	CAN_PIN_2 = 252,
+	CAN_PIN_3 = 253,
+	CAN_PIN_4 = 254,
+	CAN_PIN_5 = 255,
+	CAN_PIN_6 = 256,
+	CAN_PIN_7 = 257,
 };
 
 /* Please keep updating these defines */

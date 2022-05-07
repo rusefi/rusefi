@@ -1393,7 +1393,6 @@ menuDialog = main
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
-;		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
 
 		groupMenu = "Cylinder fuel trims"
 		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
@@ -2033,20 +2032,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = fuelParams, "Fuel characteristics", yAxis
 		field = "Stoichiometric ratio",			stoichRatioPrimary,		{isInjectionEnabled == 1}
 		field = "E100 stoichiometric ratio", 	stoichRatioSecondary,	{isInjectionEnabled == 1 && flexSensorPin != 0 }
-
-	dialog = fuelTrimSettings, "Fuel Trim",	yAxis
-		field = "Cylinder 1",					fuelTrim1
-		field = "Cylinder 2",					fuelTrim2,  {cylindersCount >  1}
-		field = "Cylinder 3",					fuelTrim3,  {cylindersCount >  2}
-		field = "Cylinder 4",					fuelTrim4,  {cylindersCount >  3}
-		field = "Cylinder 5",					fuelTrim5,  {cylindersCount >  4}
-		field = "Cylinder 6",					fuelTrim6,  {cylindersCount >  5}
-		field = "Cylinder 7",					fuelTrim7,  {cylindersCount >  6}
-		field = "Cylinder 8",					fuelTrim8,  {cylindersCount >  7}
-		field = "Cylinder 9",					fuelTrim9,  {cylindersCount >  8}
-		field = "Cylinder 10",					fuelTrim10, {cylindersCount >  9}
-		field = "Cylinder 11",					fuelTrim11, {cylindersCount > 10}
-		field = "Cylinder 12",					fuelTrim12, {cylindersCount > 11}
 
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of pins for batch mode"
@@ -2961,6 +2946,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
 		field = "knockDetectionWindowStart",knockDetectionWindowStart, {enableSoftwareKnock}
 		field = "knockSamplingDuration",    knockSamplingDuration, {enableSoftwareKnock}
+		field = knockRetardAggression,      knockRetardAggression
+		field = knockRetardReapplyRate,     knockRetardReapplyRate
+		field = knockRetardMaximum,         knockRetardMaximum
+
 		field = ""
 		field = "Select the nearest sensor for each cylinder"
 		field = "Cylinder 1",			knockBankCyl1,  {enableSoftwareKnock}
@@ -3612,6 +3601,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
 		field = "PWM Frequency",						etbFreq
+		field = "Minimum ETB position",					etbMinimumPosition
 		field = "Maximum ETB position",					etbMaximumPosition
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places

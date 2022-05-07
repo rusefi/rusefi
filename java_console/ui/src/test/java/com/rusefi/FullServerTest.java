@@ -116,7 +116,7 @@ public class FullServerTest {
                     TestHelper.TEST_TOKEN_1, TcpConnector.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
-            TestHelper.assertLatch("controllerRegistered", controllerRegistered);
+            TestHelper.assertLatch("controllerRegistered. todo: this test should not depend on internet connection and having real .ini on rusEFI online", controllerRegistered);
 
             SessionDetails authenticatorSessionDetails = new SessionDetails(NetworkConnector.Implementation.Unknown, controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken(), rusEFIVersion.CONSOLE_VERSION);
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));

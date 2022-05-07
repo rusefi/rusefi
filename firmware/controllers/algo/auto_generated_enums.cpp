@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Thu Apr 28 22:03:38 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:48 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -103,6 +103,22 @@ case Gpio::C8:
   return "C8";
 case Gpio::C9:
   return "C9";
+case Gpio::CAN_PIN_0:
+  return "CAN_PIN_0";
+case Gpio::CAN_PIN_1:
+  return "CAN_PIN_1";
+case Gpio::CAN_PIN_2:
+  return "CAN_PIN_2";
+case Gpio::CAN_PIN_3:
+  return "CAN_PIN_3";
+case Gpio::CAN_PIN_4:
+  return "CAN_PIN_4";
+case Gpio::CAN_PIN_5:
+  return "CAN_PIN_5";
+case Gpio::CAN_PIN_6:
+  return "CAN_PIN_6";
+case Gpio::CAN_PIN_7:
+  return "CAN_PIN_7";
 case Gpio::D0:
   return "D0";
 case Gpio::D1:

@@ -21,6 +21,11 @@ endif
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
 EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::B10 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::B11
 
+# on MRE 0.6.0 we have SD card on SPI2 which shared channel 3 with USART3
+# todo: enable serial which would not DMA thus not conflict?
+DDEFS += -DSTM32_UART_USE_USART3=FALSE -DHAL_USE_UART=FALSE
+DDEFS += -DEFI_USE_UART_DMA=FALSE -DTS_NO_PRIMARY=TRUE
+
 DDEFS += -DEFI_CAN_SERIAL=TRUE
 
 DDEFS += -DEFI_CJ125=FALSE -DBOARD_L9779_COUNT=0 -DEFI_HD44780_LCD=FALSE -DEFI_LCD=FALSE 
