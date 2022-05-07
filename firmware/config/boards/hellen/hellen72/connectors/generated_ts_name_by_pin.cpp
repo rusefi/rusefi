@@ -4,16 +4,19 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A0: return "5N - TPS2";
+		case Gpio::A3: return "5P - PPS1";
 		case Gpio::A6: return "3V - CAM (A19)";
 		case Gpio::A7: return "4J - VTCS/AUX4 (A20)";
 		case Gpio::A9: return "3P - O2H2 (O7)";
 		case Gpio::B0: return "4F - AC_PRES/AUX1 (A23)";
 		case Gpio::B1: return "3Y - CRANK (A24)";
+		case Gpio::C0: return "5A - Pressure Input";
 		case Gpio::C4: return "4H - Neutral/AUX2 (A21)";
 		case Gpio::C6: return "2E - COIL_A1 (PWM1)";
 		case Gpio::C7: return "2E - COIL_A2 (PWM2)";
 		case Gpio::C8: return "2I - COIL_B1 (PWM3)";
-		case Gpio::C9: return "2H - COIL_B2 (PWM4)";
+		case Gpio::C9: return "5E - SOLENOID OUTPUT";
 		case Gpio::D10: return "2J - INJ_4";
 		case Gpio::D11: return "2G - INJ_3";
 		case Gpio::D12: return "2B - ECF (PWM8)";
@@ -21,6 +24,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D14: return "2Q - IDLE (PWM5)";
 		case Gpio::D15: return "3M - ALTERN (PWM6)";
 		case Gpio::D9: return "2C - AC Fan / INJ_5";
+		case Gpio::E12: return "5I - Digital Input";
+		case Gpio::E15: return "5C - Digital Input";
 		case Gpio::E2: return "3Z - IGN_5 / GNDA";
 		case Gpio::E3: return "3N - IGN_4";
 		case Gpio::E4: return "2O - IGN_3";
@@ -30,6 +35,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "2N - VTSC / INJ_6";
 		case Gpio::F13: return "3C - Purge Solenoid / INJ_7";
 		case Gpio::F14: return "3D - EGR Solenoid / INJ_8";
+		case Gpio::F5: return "5D - SENSOR INPUT";
 		case Gpio::F8: return "4I - Clutch (A8)";
 		case Gpio::F9: return "4B - Brake/RES1 (A7)";
 		case Gpio::G2: return "2M - FPUMP (O9)";
@@ -40,6 +46,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::H13: return "3U - AWARN (O2)";
 		case Gpio::H14: return "3J - O2H (O3)";
 		case Gpio::H15: return "2K - AC (O4)";
+		case Gpio::H5: return "5M - PPS2 OR TEMPERATURE SENSOR";
 		case Gpio::I0: return "4R - VVT (O5)";
 		case Gpio::I2: return "3H - MAIN (O1)";
 		case Gpio::I5: return "4K - IGN_6 / +5V_MAP";

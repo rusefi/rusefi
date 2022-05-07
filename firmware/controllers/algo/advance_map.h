@@ -11,7 +11,6 @@
 
 angle_t getAdvance(int rpm, float engineLoad);
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad);
-float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);
 float getInitialAdvance(int rpm, float map, float advanceMax);
 
 angle_t getAdvanceCorrections(int rpm);

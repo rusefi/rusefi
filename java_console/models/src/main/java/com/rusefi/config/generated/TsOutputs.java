@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Apr 29 23:46:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu May 05 04:56:54 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -100,13 +100,11 @@ public class TsOutputs {
 	public static final String ENGINE_MAKE_VAG = "VAG";
 	public static final int ENGINE_NOISE_CURVE_SIZE = 16;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
-	public static final int ENUM_16_BITS = 60000;
-	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10010;
+	public static final int FLASH_DATA_VERSION = 10011;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -200,8 +198,9 @@ public class TsOutputs {
 	public static final String GAUGE_NAME_KNOCK_7 = "knock 7";
 	public static final String GAUGE_NAME_KNOCK_8 = "knock 8";
 	public static final String GAUGE_NAME_KNOCK_9 = "knock 9";
-	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
+	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: count";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
+	public static final String GAUGE_NAME_KNOCK_RETARD = "knock: retard";
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
 	public static final String GAUGE_NAME_LAMBDA2 = "Lambda 2";
 	public static final String GAUGE_NAME_LAST_ERROR = "Last error";
@@ -354,7 +353,7 @@ public class TsOutputs {
 	public static final int TS_COMPOSITE_ENABLE = 1;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
-	public static final int TS_FILE_VERSION = 20210310;
+	public static final int TS_FILE_VERSION = 20210312;
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';

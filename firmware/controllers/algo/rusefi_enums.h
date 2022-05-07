@@ -36,12 +36,11 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ADC_OFF = 0,
 	ADC_SLOW = 1,
 	ADC_FAST = 2,
 
-	Force_4_bytes_size_adc_channel_mode = ENUM_32_BITS,
 } adc_channel_mode_e;
 
 typedef enum {
@@ -128,7 +127,7 @@ typedef enum  __attribute__ ((__packed__)) {
 /**
  * This enum is used to select your desired Engine Load calculation algorithm
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
@@ -147,15 +146,13 @@ typedef enum {
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
 
-	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DM_NONE = 0,
 	DM_HD44780 = 1,
 	DM_HD44780_OVER_PCF8574 = 2,
 
-	Force_4_bytes_size_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
 
@@ -167,19 +164,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
 } tle8888_mode_e;
 
-
-typedef enum {
-	LF_NATIVE = 0,
-	/**
-	 * http://www.efianalytics.com/MegaLogViewer/
-	 * log example: http://svn.code.sf.net/p/rusefi/code/trunk/misc/ms_logs/
-	 */
-	LM_MLV = 1,
-
-	Force_4_bytes_size_log_format = ENUM_32_BITS,
-} log_format_e;
-
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
 	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
@@ -191,7 +176,7 @@ typedef enum {
 	 * which could be adjusted according to current CLT
 	 */
 	IM_MANUAL = 1,
-	Force_4_bytes_size_idle_mode = ENUM_32_BITS,
+
 } idle_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -251,13 +236,12 @@ typedef enum {
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
-	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
 } operation_mode_e;
 
 /**
  * @brief Ignition Mode
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * in this mode only SPARKOUT_1_OUTPUT is used
 	 */
@@ -273,13 +257,12 @@ typedef enum {
 	 */
 	IM_TWO_COILS = 3,
 
-	Force_4_bytes_size_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
 /**
  * @see getNumberOfInjections
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * each cylinder has it's own injector but they all works in parallel
 	 */
@@ -300,20 +283,7 @@ typedef enum {
 	 */
 	IM_SINGLE_POINT = 3,
 
-
-	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
-
-/**
- * @brief Ignition Mode while cranking
- */
-typedef enum {
-	CIM_DEFAULT = 0,
-	CIM_FIXED_ANGLE = 1,
-
-	// todo: make this a one byte enum
-	Force_4_bytes_size_cranking_ignition_mode = ENUM_32_BITS,
-} cranking_ignition_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	UART_NONE = 0,
@@ -343,17 +313,17 @@ typedef enum __attribute__ ((__packed__)) {
 	SPI_DEVICE_4 = 4,
 } spi_device_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
-	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+
 } can_vss_nbc_e;
 
 /**
  * inertia measurement unit, yawn accelerometer
  * By the way both kinds of BOSCH use Housing : TE 1-967640-1, pins 144969-1 seal 967056-1 plug 967067-2
  */
-typedef enum  __attribute__ ((__packed__)) {
+typedef enum __attribute__ ((__packed__)) {
 	IMU_NONE = 0,
 	IMU_VAG = 1,
 	/**
@@ -370,7 +340,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	IMU_TYPE_MB_A0065422618 = 5,
 } imu_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
@@ -392,10 +362,9 @@ typedef enum {
 
 	ES_AEM = 6,
 
-	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
 	/**
@@ -457,10 +426,10 @@ typedef enum {
 	 */
 	MT_MPXH6400 = 14,
 
-	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
+
 } air_pressure_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SC_OFF = 0,
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
@@ -471,7 +440,6 @@ typedef enum {
 	SC_DETAILED_RPM = 4,
 	SC_AUX_FAST1 = 5,
 
-	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;
 
 typedef enum {
@@ -484,15 +452,15 @@ typedef enum {
 
 } gear_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CUSTOM = 0,
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
 	DensoTODO = 3,
-	Internal_ForceMyEnumIntSize_maf_sensor = ENUM_32_BITS,
+
 } maf_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * This is the default mode in which ECU controls timing dynamically
 	 */
@@ -503,21 +471,12 @@ typedef enum {
 	 */
 	TM_FIXED = 1,
 
-	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
 } timing_mode_e;
-
-typedef enum {
-    CS_OPEN = 0,
-    CS_CLOSED = 1,
-    CS_SWIRL_TUMBLE = 2,
-
-	Internal_ForceMyEnumIntSize_chamber_stype = ENUM_32_BITS,
-} chamber_style_e;
 
 /**
  * Net Body Computer types
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
@@ -532,14 +491,13 @@ typedef enum {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 
-	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
 	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
+
 } tChargeMode_e;
 
 // peak type
@@ -560,36 +518,31 @@ typedef enum {
   FAILED = 128
 } PidAutoTune_AutoTunerState;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	INIT = 0,
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
 	PID_VALUE = 4,
 	PID_UPPER = 16,
 	BLIP = 64,
-	/**
-	 * Live Docs reads 4 byte value so we want 4 byte enum
-	 */
-	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
+
 } idle_state_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
-	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+
 } boostType_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_LAUNCH = 0,
 	CLUTCH_INPUT_LAUNCH = 1,
 	ALWAYS_ACTIVE_LAUNCH = 2,
-	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
 } launchActivationMode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
 	ALWAYS_ON_ANTILAG = 1,
-	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {

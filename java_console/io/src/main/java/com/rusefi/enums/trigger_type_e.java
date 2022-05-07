@@ -31,7 +31,7 @@ public enum trigger_type_e {
 	TT_NISSAN_SR20VE,
 	TT_2JZ_3_34,
 	TT_ROVER_K,
-	TT_GM_LS_24,
+	TT_GM_24x,
 	TT_HONDA_CBR_600,
 	TT_2JZ_1_12,
 	TT_CHRYSLER_NGC_36_2_2,
@@ -78,6 +78,7 @@ public enum trigger_type_e {
 	TT_36_2_1_1,
 	TT_VVT_MITSUBISHI_6G75,
 	TT_VVT_TOYOTA_4_1,
+	TT_GM_24x_2,
 	TT_UNUSED,
 	Force_4_bytes_size_trigger_type,
 }

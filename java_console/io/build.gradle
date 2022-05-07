@@ -22,6 +22,7 @@ dependencies {
     implementation project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.0'
+    implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
     implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'

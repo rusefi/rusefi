@@ -66,6 +66,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->tachPulseDuractionMs = 0.5;
 	engineConfiguration->tachPulsePerRev = 1;
 
+	engineConfiguration->etbMinimumPosition = 1;
+	engineConfiguration->etbMaximumPosition = 100;
 
 	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
 	engineConfiguration->issFilterReciprocal = 2;

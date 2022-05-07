@@ -589,12 +589,12 @@ bool validateConfig() {
 
 	// Ignition
 	{
-		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
+		ensureArrayIsAscending("Dwell RPM", config->sparkDwellRpmBins);
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
 
-		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
+		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
 
 		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
 		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
@@ -610,12 +610,12 @@ bool validateConfig() {
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
 	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
-	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
+	ensureArrayIsAscending("Cranking TPS", config->crankingTpsBins);
 
 	// Idle tables
-	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
+	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	ensureArrayIsAscendingOrDefault("Idle coasting position", engineConfiguration->iacCoastingBins);
+	ensureArrayIsAscendingOrDefault("Idle coasting position", config->iacCoastingBins);
 	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
 	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);

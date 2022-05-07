@@ -3,8 +3,8 @@ package com.rusefi.binaryprotocol.test;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.stream.PCanIoStream;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class PCanSandbox {
     private static final Logging log = getLogging(PCanSandbox.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        PCanIoStream tsStream = PCanIoStream.getPCANIoStream();
+        AbstractIoStream tsStream = PCanIoStream.getPCANIoStream();
         if (tsStream == null)
             throw new IOException("No PCAN");
 
@@ -41,12 +41,9 @@ public class PCanSandbox {
 */
 
         BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
-        linkManager.submit(new Runnable() {
-            @Override
-            public void run() {
-                boolean response = bp.requestOutputChannels();
-                log.info("requestOutputChannels " + response);
-            }
+        linkManager.submit(() -> {
+            boolean response = bp.requestOutputChannels();
+            log.info("requestOutputChannels " + response);
         });
 
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
