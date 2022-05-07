@@ -331,7 +331,7 @@ void startLua() {
 	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
 	if (isStm32F42x()) {
 		char *buffer = (char *)0x20020000;
-		heaps[0].reinit(buffer, 60000);
+		userHeap.reinit(buffer, 60000);
 	}
 #endif
 
