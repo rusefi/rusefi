@@ -408,7 +408,7 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
-	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID) {
+	if (brainPin == Gpio::Unassigned || brainPin == Gpio::Invalid) {
 	    // todo: make 'setOnchipValue' or 'reportsetOnchipValueError' virtual and override for NamedOutputPin?
 		warning(CUSTOM_ERR_6586, "attempting to change unassigned pin");
 		return;
@@ -608,7 +608,7 @@ void OutputPin::deInit() {
 #endif /* EFI_GPIO_HARDWARE */
 
 	// Clear the pin so that it won't get set any more
-	brainPin = GPIO_UNASSIGNED;
+	brainPin = Gpio::Unassigned;
 }
 
 #if EFI_GPIO_HARDWARE

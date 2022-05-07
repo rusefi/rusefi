@@ -12,6 +12,7 @@
 #include "efifeatures.h"
 #include "rusefi_types.h"
 
+#define MS_PER_SECOND 1000
 #define US_PER_SECOND 1000000
 #define US_PER_SECOND_F 1000000.0
 #define US_PER_SECOND_LL 1000000LL
@@ -34,6 +35,7 @@
 
 // And back
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+#define NT2USF(x) (((float)(x)) / US_TO_NT_MULTIPLIER)
 
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
@@ -45,9 +47,6 @@
  * handling of first ever event and an event which has happened after a large pause in engine activity
  */
 #define DEEP_IN_THE_PAST_SECONDS -10
-
-// todo: implement a function to work with times considering counter overflow
-#define overflowDiff(now, time) ((now) - (time))
 
 #ifdef __cplusplus
 /**

@@ -49,8 +49,14 @@ class DefaultLogging {
 			handler.getLevel() == Level.INFO;
 	}
 
+	Map<String, Exception> configureLogFileAndConsole(String log_file) {
+		Map<String, Exception> result = configureLogFile(log_file);
+		initAndAdd(new ConsoleHandler(), Level.ALL, getRootLogger());
+		return result;
+	}
+
 	Map<String, Exception> configureLogFile(String log_file) {
-		Logger root = Logger.getLogger("");
+		Logger root = getRootLogger();
 		Map<String, Exception> errors = new LinkedHashMap<String, Exception>();
 
 		try {
@@ -71,18 +77,14 @@ class DefaultLogging {
 			}
 			if (handler == null)
 				handler = new ConsoleHandler();
-			handler.setFormatter(new LogFormatter());
-			handler.setLevel(Level.ALL);
-			root.addHandler(handler);
+			initAndAdd(handler, Level.ALL, root);
 
 			// configure "err" file
 			String err_file = getProperty(Logging.ERR_FILE_PROPERTY, null);
 			if (err_file != null) {
 				try {
 					handler = new FileHandler(err_file, getLimit(Logging.ERR_MAX_FILE_SIZE_PROPERTY, errors), 2, true);
-					handler.setFormatter(new LogFormatter());
-					handler.setLevel(Level.WARNING);
-					root.addHandler(handler);
+					initAndAdd(handler, Level.WARNING, root);
 				} catch (IOException e) {
 					errors.put(err_file, e);
 				}
@@ -91,6 +93,16 @@ class DefaultLogging {
 			// ignore -- does not have persmission to change configuration
 		}
 		return errors;
+	}
+
+	private void initAndAdd(Handler handler, Level all, Logger root) {
+		handler.setFormatter(new LogFormatter());
+		handler.setLevel(all);
+		root.addHandler(handler);
+	}
+
+	private Logger getRootLogger() {
+		return Logger.getLogger("");
 	}
 
 	Object getPeer(String name) {

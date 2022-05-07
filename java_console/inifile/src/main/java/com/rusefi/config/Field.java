@@ -2,12 +2,12 @@ package com.rusefi.config;
 
 import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
@@ -26,7 +26,7 @@ public class Field {
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
-    // todo: add multiplier support!
+    private double scale = 1;
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -159,8 +159,7 @@ public class Field {
     }
 
     public void setValue(byte[] content, boolean value) {
-        ByteBuffer wrapped = ByteBuffer.wrap(content, 0, content.length);
-        wrapped.order(ByteOrder.LITTLE_ENDIAN);
+        ByteBuffer wrapped = FileUtil.littleEndianWrap(content, 0, content.length);
         if (bitOffset != NO_BIT_OFFSET) {
             int packed = wrapped.getInt();
             int thisBit = (value ? 1 : 0) << bitOffset;
@@ -227,8 +226,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
-        Field field = new Field(name, offset, type, options);
-        return field;
+        return new Field(name, offset, type, options);
     }
 
     public static Field create(String name, int offset, int stringSize, FieldType type) {
@@ -251,5 +249,14 @@ public class Field {
 
     public boolean getBooleanValue(ConfigurationImage ci) {
         return getValue(ci) != 0.0;
+    }
+
+    public Field setScale(double scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    public double getScale() {
+        return scale;
     }
 }

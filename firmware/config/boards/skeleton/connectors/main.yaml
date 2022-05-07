@@ -32,7 +32,7 @@ pins:
 
   # TC4427 ignition outputs (5v)
   - pin: 9
-    id: GPIOD_4
+    id: D4
     class: outputs
     color: dark blue
     function: Ignition 1
@@ -40,7 +40,7 @@ pins:
     type: ign
 
   - pin: 10
-    id: GPIOD_3
+    id: D3
     class: outputs
     color: dark blue
     function: Ignition 2
@@ -48,7 +48,7 @@ pins:
     type: ign
 
   - pin: 11
-    id: GPIOD_2
+    id: D2
     class: outputs
     color: dark blue
     function: Ignition 3
@@ -56,7 +56,7 @@ pins:
     type: ign
 
   - pin: 12
-    id: GPIOD_1
+    id: D1
     class: outputs
     color: dark blue
     function: Ignition 4
@@ -64,7 +64,7 @@ pins:
     type: ign
 
   - pin: 13
-    id: GPIOD_6
+    id: D6
     class: outputs
     color: yellow
     function: Alternator (see JP2 jumper note)
@@ -73,7 +73,7 @@ pins:
 
   # TC4427 general purpose output (selectable 5v/12v)
   - pin: 14
-    id: GPIOD_7
+    id: D7
     class: outputs
     color: yellow
     function: (see JP2 jumper note)
@@ -81,7 +81,7 @@ pins:
     type: gp_high
 
   - pin: 18
-    id: [GPIOA_0, EFI_ADC_0]
+    id: [A0, EFI_ADC_0]
     class: [switch_inputs, analog_inputs]
     color: red
     function: CLT sensor
@@ -89,7 +89,7 @@ pins:
     type: at
 
   - pin: 19
-    id: [GPIOC_2, EFI_ADC_12]
+    id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     color: red
     function: Starting from version 0.5.0 this pin can be used as 5V input for USB connection through main connector (No need to open case to access micro-USB connector)
@@ -97,7 +97,7 @@ pins:
     type: av
   
   - pin: 20
-    id: [GPIOC_3, EFI_ADC_13]
+    id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
     color: red left
     function: Throttle position sensor (TPS)
@@ -105,14 +105,14 @@ pins:
     type: av
 
   - pin: 22
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     color: dark green
     ts_name: 22 - AN temp 4
     type: at
 
   - pin: 23
-    id: [GPIOA_1, EFI_ADC_1]
+    id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     color: dark green
     function: IAT sensor
@@ -120,7 +120,7 @@ pins:
     type: at
 
   - pin: 24
-    id: [GPIOA_2, EFI_ADC_2]
+    id: [A2, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
     color: dark green
     ts_name: 24 - AN temp 3
@@ -128,21 +128,21 @@ pins:
 
   # RC filter input for hall
   - pin: 25
-    id: [GPIOA_5, GPIOA_5]
+    id: [A5, A5]
     class: [event_inputs, switch_inputs]
     color: light blue right
     ts_name: 25 - Hall Cam
     type: hall
     
   - pin: 26
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     color: light blue
     ts_name: 26 - AN volt 2
     type: av
 
   - pin: 27
-    id: [GPIOC_0, EFI_ADC_10]
+    id: [C0, EFI_ADC_10]
     class: [switch_inputs, analog_inputs]
     color: light blue
     function: MAP sensor
@@ -150,21 +150,21 @@ pins:
     type: av
 
   - pin: 28
-    id: [GPIOA_4, EFI_ADC_4]
+    id: [A4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     color: light blue left
     ts_name: 28 - AN volt 10
     type: av
 
   - pin: 30
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     color: pink
     ts_name: 30 - AN volt 7
     type: av
 
   - pin: 31
-    id: [GPIOA_7, EFI_ADC_7]
+    id: [A7, EFI_ADC_7]
     class: [switch_inputs, analog_inputs]
     color: pink
     function: Throttle Pedal Position Sensor (PPS)
@@ -172,7 +172,7 @@ pins:
     type: av
 
   - pin: 32
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     color: pink
     function: External wideband O2 sensor
@@ -207,7 +207,7 @@ pins:
     type: [gp_low, gp_pp]
 
   - pin: 36
-    id: [GPIOB_0, EFI_ADC_8]
+    id: [B0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     color: orange left    
     ts_name: 36 - AN volt 8
@@ -230,7 +230,7 @@ pins:
     type: inj
 
   - pin: 40
-    id: [GPIOB_1, EFI_ADC_9]
+    id: [B1, EFI_ADC_9]
     class: [switch_inputs, analog_inputs]
     color: grey
     ts_name: 40 - AN volt 9
@@ -262,7 +262,7 @@ pins:
     type: [gp_low, gp_pp]
 
   - pin: 45
-    id: GPIOC_6
+    id: C6
     class: event_inputs
     color: light green right
     function: Crank VR+/hall

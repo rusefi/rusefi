@@ -13,7 +13,7 @@
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DEFAULT_FRANKENSO = 0,
 
 	MIATA_PROTEUS_TCU = 1,
@@ -51,7 +51,7 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	UNUSED_19 = 19,
+	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
@@ -66,7 +66,7 @@ typedef enum {
 	 */
 	HONDA_ACCORD_CD_TWO_WIRES = 17,
 
-	UNUSED18 = 18,
+	TEST_33816 = 18,
 
 
 	SUBARU_2003_WRX = 22,
@@ -93,7 +93,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	UNUSED30 = 30,
+	PROTEUS_ANALOG_PWM_TEST = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
@@ -134,9 +134,9 @@ typedef enum {
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	UNUSED_50 = 50,
+	BMW_M73_MRE = 50,
 
-	UNUSED_51 = 51,
+	BMW_M73_MRE_SLAVE = 51,
 
 
 	TEST_ISSUE_366_BOTH = 52,
@@ -158,11 +158,9 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	UNUSED60 = 60,
+	L9779_BENCH_ENGINE = 60,
 
-	UNUSED61 = 61,
-
-	PROTEUS_ANALOG_PWM_TEST = 106,
+	EEPROM_BENCH_ENGINE = 61,
 
 	VW_B6 = 62,
 
@@ -228,28 +226,20 @@ typedef enum {
 	 * this configuration has as few pins configured as possible
 	 */
 	MINIMAL_PINS = 99,
-	UNUSED100 = 100,
-	UNUSED101 = 101,
-	VAG_18_TURBO = 102,
 
-	TEST_33816 = 103,
+	TEST_100 = 100,
+	TEST_101 = 101,
+	TEST_102 = 102,
 
-	BMW_M73_MRE = 104,
-	BMW_M73_MRE_SLAVE = 105,
-
-	TEST_ROTARY = 107,
-
-	TEST_108 = 108,
-	TEST_109 = 109,
-	TEST_110 = 110,
-
-	Force_4_bytes_size_engine_type = ENUM_32_BITS,
+    // java code generator handles this value in a special way
+    // also looks like 2 enums are either 1 byte or 4 bytes
+	Force_4_bytes_size_engine_type = 70000,
 } engine_type_e;
 
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
 	DBG_GPPWM = 2,
@@ -317,7 +307,6 @@ typedef enum {
 	DBG_VVT_3_PID = 50,
 	DBG_VVT_4_PID = 51,
 
-	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
 
 /**
@@ -399,8 +388,6 @@ typedef enum {
 	TT_2JZ_3_34 = 25,
 
 	TT_ROVER_K = 26,
-
-	TT_GM_LS_24 = 27,
 
 	TT_HONDA_CBR_600 = 28,
 
@@ -503,7 +490,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_UNUSED_62 = 62,
+	TT_VVT_MITSUBISHI_3A92 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 
@@ -519,6 +506,22 @@ typedef enum {
 
 	TT_TOOTHED_WHEEL_32_2 = 69,
 
+	// Mitsubishi 4B11 would be this with half moon camshaft
+	TT_36_2_1 = 70,
+
+	// Mitsubishi 3 cyl and 6 cyl
+	TT_36_2_1_1 = 71,
+
+
+    TT_VVT_MITSUBISHI_6G75 = 72,
+
+	TT_VVT_TOYOTA_4_1 = 73,
+
+	// GM 24x with 5/10 degree gaps
+	TT_GM_24x = 27,
+
+	// GM 24x with 3/12 degree gaps
+	TT_GM_24x_2 = 74,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -526,10 +529,11 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 70, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 75, // this is used if we want to iterate over all trigger types
 
-	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
-	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
+    // java code generator handles this value in a special way
+    // also looks like 2 enums are either 1 byte or 4 bytes
+	Force_4_bytes_size_trigger_type = 70000,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
 

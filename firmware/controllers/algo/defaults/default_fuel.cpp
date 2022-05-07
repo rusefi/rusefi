@@ -87,12 +87,12 @@ static void setDefaultVETable() {
 
 	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
 
-	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
+	setRpmTableBin(config->baroCorrRpmBins, BARO_CORR_SIZE);
+	setLinearCurve(config->baroCorrPressureBins, 75, 105, 1);
 	for (int i = 0; i < BARO_CORR_SIZE;i++) {
 		for (int j = 0; j < BARO_CORR_SIZE;j++) {
 			// Default baro table is all 1.0, we can't recommend a reasonable default here
-			engineConfiguration->baroCorrTable[i][j] = 1;
+			config->baroCorrTable[i][j] = 1;
 		}
 	}
 }
@@ -103,7 +103,7 @@ static void setDefaultFuelCutParameters() {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutMap = 30;
-	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutClt = 60;
 }
 
 static void setDefaultStftSettings() {
@@ -119,14 +119,14 @@ static void setDefaultStftSettings() {
 	cfg.startupDelay = 60;
 
 	// Only correct in [12.0, 17.0]
-	cfg.minAfr = 120;
-	cfg.maxAfr = 170;
+	cfg.minAfr = 12;
+	cfg.maxAfr = 17;
 
 	// Above 60 deg C
 	cfg.minClt = 60;
 
 	// 0.5% deadband
-	cfg.deadband = 5;
+	cfg.deadband = 0.5f;
 
 	// Sensible region defaults
 	cfg.maxIdleRegionRpm = 1000;
@@ -136,7 +136,7 @@ static void setDefaultStftSettings() {
 	// Sensible cell defaults
 	for (size_t i = 0; i < efi::size(cfg.cellCfgs); i++) {
 		// 30 second time constant - nice and slow
-		cfg.cellCfgs[i].timeConstant = 30 * 10;
+		cfg.cellCfgs[i].timeConstant = 30;
 
 		/// Allow +-5%
 		cfg.cellCfgs[i].maxAdd = 5;

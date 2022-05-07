@@ -43,7 +43,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
-
+#if EFI_SHAFT_POSITION_INPUT
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
@@ -51,6 +51,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 			handleShaftSignal(i, currentValue, stamp);
 		}
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 PwmConfig triggerSignal;

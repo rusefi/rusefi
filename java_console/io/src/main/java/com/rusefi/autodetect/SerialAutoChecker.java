@@ -34,6 +34,8 @@ public class SerialAutoChecker {
      * @return ECU signature from specified stream
      */
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+        if (stream == null)
+            return null;
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
             if (Elm327Connector.checkConnection(serialPort, stream)) {
                 // todo: this method is supposed to return signature not serial port!
@@ -71,12 +73,14 @@ public class SerialAutoChecker {
             /**
              * propagating result after closing the port so that it could be used right away
              */
-            result.set(new AutoDetectResult(serialPort, signature));
+            AutoDetectResult value = new AutoDetectResult(serialPort, signature);
+            log.info("Propagating " + value);
+            result.set(value);
             portFound.countDown();
         }
     }
 
-    @NotNull
+    @Nullable
     private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
             return SerialIoStream.openPort(serialPort);
@@ -121,6 +125,14 @@ public class SerialAutoChecker {
         @Nullable
         public String getSignature() {
             return signature;
+        }
+
+        @Override
+        public String toString() {
+            return "AutoDetectResult{" +
+                    "serialPort='" + serialPort + '\'' +
+                    ", signature='" + signature + '\'' +
+                    '}';
         }
     }
 }

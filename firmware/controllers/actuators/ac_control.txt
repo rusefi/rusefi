@@ -7,7 +7,9 @@ bit engineTooHot
 bit tpsTooHigh
 
 bit acButtonState
+bit isDisabledByLua;For setAcDisabled Lua method
 
 int latest_usage_ac_control;
+int acSwitchLastChangeTimeMs;
 
 end_struct

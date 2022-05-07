@@ -1,6 +1,6 @@
 /**
  * @file        lps25.h
- * @brief       Driver for the ST LPS25HB pressure sensor
+ * @brief       Driver for the ST LPS22HB and LPS25HB pressure sensor
  *
  * @date February 6, 2020
  * @author Matthew Kennedy, (c) 2020
@@ -9,8 +9,6 @@
 #pragma once
 
 #include "i2c_bb.h"
-
-#include "expected.h"
 
 class Lps25 {
 public:
@@ -25,5 +23,14 @@ public:
 private:
 	BitbangI2c m_i2c;
 
+	enum class Type {
+		Lps22,
+		Lps25,
+	};
+
+	Type m_type;
+
 	bool m_hasInit = false;
+
+	uint8_t regCr1() const;
 };

@@ -38,7 +38,7 @@ public class ChartRepository {
     }
 
     public interface ChartRepositoryListener {
-        public void onDigitalChart(String chart);
+        void onDigitalChart(String chart);
     }
 
     public ChartScrollControl createControls(final ChartRepositoryListener listener) {

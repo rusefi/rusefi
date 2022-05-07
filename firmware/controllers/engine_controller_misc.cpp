@@ -36,29 +36,6 @@ void irqExitHook() {}
 void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
-#if EFI_ENABLE_MOCK_ADC
-/**
- * in 2021 the api is Sensor::setMockValue
- * todo: remove this mockAdcState https://github.com/rusefi/rusefi/issues/3672
- */
-void setMockVoltage(int hwChannel, float voltage) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
-}
-
-// used by HW CI testing
-void setMockMafVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
-}
-
-void setMockAfrVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
-}
-
-void setMockMapVoltage(float voltage) {
-	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
-}
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 #if !EFI_UNIT_TEST
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU

@@ -32,19 +32,30 @@ class scaled_channel : scaled_channel_base {
 	using TSelf = scaled_channel<T, mul, div>;
 
 public:
+	struct IncompleteType;
+
 	constexpr scaled_channel() : m_value(static_cast<T>(0)) { }
-	constexpr scaled_channel(float val)
-	{
-		val *= float(mul) / div;
-		if (std::is_integral_v<T>) {
-			m_value = std::roundf(val);
-		} else {
-			m_value = val;
-		}
+
+	// Only allow conversion directly to T when mul/div are both 1, otherwise this constructor doesn't exist and the float conversion is used.
+	constexpr scaled_channel(std::conditional_t<mul == 1 && div == 1, T, IncompleteType> val) {
+		m_value = val;
+	}
+
+	// Scale the float in to our scaled channel
+	constexpr scaled_channel(std::conditional_t<mul != 1 || div != 1, float, IncompleteType> val) {
+		// If there are scale factors, it must NOT be a float. Why would you scale a float?
+		static_assert(std::is_integral_v<T>);
+
+		m_value = std::roundf(val * float(mul) / div);
+	}
+
+	// Only allow conversion directly to T when mul/div are both 1, otherwise this operator doesn't exist and the float conversion is used.
+	constexpr operator typename std::conditional_t<mul == 1 && div == 1, T, IncompleteType>() const {
+		return m_value;
 	}
 
 	// Allow reading back out as a float (note: this may be lossy!)
-	constexpr operator float() const {
+	constexpr operator typename std::conditional_t<mul != 1 || div != 1, float, IncompleteType>() const {
 		return m_value * (float(div) / mul);
 	}
 
@@ -56,7 +67,6 @@ public:
 		static_assert(mul == 1 && div == 1,
 			      "Increment operator only supported for non-scaled integer types");
 		static_assert(std::is_integral_v<T>, "Increment operator only supported for non-scaled integer types");
-	
 
 		m_value++;
 	}

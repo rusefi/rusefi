@@ -1,3 +1,5 @@
+#include "pch.h"
+
 #include "trigger_mercedes.h"
 #include "trigger_structure.h"
 

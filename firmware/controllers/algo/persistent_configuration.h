@@ -15,5 +15,5 @@ typedef struct {
 	int version;
 	int size;
 	persistent_config_s persistentConfiguration;
-	crc_t value;
+	uint32_t value;
 } persistent_config_container_s;

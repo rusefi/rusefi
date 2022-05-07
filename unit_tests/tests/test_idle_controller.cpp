@@ -9,7 +9,6 @@
 
 #include "advance_map.h"
 #include "efi_pid.h"
-#include "fsio_impl.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
 
@@ -56,9 +55,9 @@ TEST(idle_v2, testTargetRpm) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
 
-	for (size_t i = 0; i < efi::size(engineConfiguration->cltIdleRpmBins); i++) {
-		engineConfiguration->cltIdleRpmBins[i] = i * 10;
-		engineConfiguration->cltIdleRpm[i] = i * 100;
+	for (size_t i = 0; i < efi::size(config->cltIdleRpmBins); i++) {
+		config->cltIdleRpmBins[i] = i * 10;
+		config->cltIdleRpm[i] = i * 100;
 	}
 
 	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
@@ -212,7 +211,7 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 
 struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
-	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (const, override));
+	MOCK_METHOD(float, getRunningOpenLoop, (float clt, SensorResult tps), (override));
 };
 
 TEST(idle_v2, testOpenLoopCranking) {
@@ -286,8 +285,8 @@ TEST(idle_v2, openLoopCoastingTable) {
 	// enable & configure feature
 	engineConfiguration->useIacTableForCoasting = true;
 	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		engineConfiguration->iacCoastingBins[i] = 10 * i;
-		engineConfiguration->iacCoasting[i] = 5 * i;
+		config->iacCoastingBins[i] = 10 * i;
+		config->iacCoasting[i] = 5 * i;
 	}
 
 	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0, 2));

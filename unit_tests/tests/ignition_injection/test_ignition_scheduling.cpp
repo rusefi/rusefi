@@ -39,6 +39,7 @@ TEST(ignition, twoCoils) {
 
 TEST(ignition, trailingSpark) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
@@ -46,7 +47,7 @@ TEST(ignition, trailingSpark) {
 	 */
 	engine->enableOverdwellProtection = false;
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

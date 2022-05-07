@@ -36,6 +36,9 @@ However, for F40X & F42X this may be useless. STOP in itself eats more current t
 With F4 only having PA0 available for wakeup, this negates its need.
 */
 void stm32_stop() {
+	// Don't get bothered by interrupts
+	__disable_irq();
+
 	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 	enginePins.errorLedPin.setValue(0);
@@ -43,10 +46,6 @@ void stm32_stop() {
 	enginePins.communicationLedPin.setValue(0);
 	enginePins.warningLedPin.setValue(0);
 
-
-	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
-	
-	boardPrepareForStop();
 	PWR->CR &= ~PWR_CR_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR |= PWR_CR_FPDS;	// turn off flash in stop mode
 	#ifdef STM32F429xx //F40X Does not have these regulators available.
@@ -55,28 +54,30 @@ void stm32_stop() {
 	#endif
 	PWR->CR |= PWR_CR_LPDS;	// regulator in low power mode
 
+	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
+	boardPrepareForStop();
 
 	// enable Deepsleep mode
-	__disable_irq();
 	__WFI();
 
 	// Lastly, reboot
 	NVIC_SystemReset();
 }
 /* 
-Standby for both F4 & F7 works perfectly, with very little curent consumption. Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
-Cannot be used for CAN wakeup without hardware modificatinos.
+ * Standby for both F4 & F7 works perfectly, with very little current consumption.
+ * Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
 */
 void stm32_standby() {
+	// Don't get bothered by interrupts
+	__disable_irq();
+
 	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 	PWR->CR |= PWR_CR_PDDS;	// PDDS = use standby mode (not stop mode)
 	PWR->CR |= PWR_CR_CSBF;	// Clear standby flag
-	
 
 	// Do anything the board wants to prepare for standby mode - enabling wakeup sources!
 	boardPrepareForStandby();
 
-	__disable_irq();
 	__WFI();
 }

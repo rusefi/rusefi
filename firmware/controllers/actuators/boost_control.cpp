@@ -111,23 +111,23 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	if (isBelowClosedLoopThreshold) {
 		// We're below the CL threshold, inhibit CL for now
 		m_pid.reset();
-		closedLoopPart = 0;
-		return closedLoopPart;
+		return 0;
 	}
 
-	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
-	return closedLoopPart;
+	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
-	auto closedLoop = getClosedLoopImpl(target, manifoldPressure);
+	closedLoopPart = getClosedLoopImpl(target, manifoldPressure);
+
+	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
+	m_pid.postState(engine->outputChannels.boostStatus);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.boostControlTarget = target;
 #endif /* EFI_TUNER_STUDIO */
 
-	return closedLoop;
+	return closedLoopPart;
 }
 
 void BoostController::setOutput(expected<float> output) {
@@ -173,7 +173,6 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostPid.iFactor = 0.3;
 	engineConfiguration->boostPid.maxValue = 20;
 	engineConfiguration->boostPid.minValue = -20;
-	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setLinearCurve(config->boostRpmBins, 0, 8000, 1);

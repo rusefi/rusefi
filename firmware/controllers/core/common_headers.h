@@ -31,7 +31,3 @@
 #include "datalogging.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */
-
-#ifndef FIRMWARE_ID
-#define FIRMWARE_ID "source"
-#endif

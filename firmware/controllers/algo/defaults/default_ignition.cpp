@@ -5,8 +5,8 @@
 
 static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
-	engineConfiguration->multisparkSparkDuration = 1000;
-	engineConfiguration->multisparkDwell = 2000;
+	engineConfiguration->multisparkSparkDuration = 1;
+	engineConfiguration->multisparkDwell = 2;
 
 	// Conservative defaults - probably won't blow up coils
 	engineConfiguration->multisparkMaxRpm = 1500;
@@ -98,6 +98,9 @@ void setDefaultIgnition() {
 	// Dwell table
 	setConstantDwell(4);
 
+	setLinearCurve(engineConfiguration->dwellVoltageCorrVoltBins, 8, 15, 0.1);
+	setLinearCurve(engineConfiguration->dwellVoltageCorrValues, 1, 1, 1);
+
 	// Multispark
 	setDefaultMultisparkParameters();
 
@@ -109,8 +112,8 @@ void setDefaultIgnition() {
 	engineConfiguration->trailingSparkAngle = 10;
 
 	// CLT correction
-	setLinearCurve(engineConfiguration->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
-	setArrayValues(engineConfiguration->cltTimingExtra, 0.0f);
+	setLinearCurve(config->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
+	setArrayValues(config->cltTimingExtra, 0.0f);
 
 	// IAT correction
 	setDefaultIatTimingCorrection();

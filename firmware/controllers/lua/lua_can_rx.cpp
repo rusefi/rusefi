@@ -3,7 +3,6 @@
 #if EFI_CAN_SUPPORT
 
 #include "rusefi_lua.h"
-#include "can.h"
 
 static constexpr size_t maxFilterCount = 48;
 

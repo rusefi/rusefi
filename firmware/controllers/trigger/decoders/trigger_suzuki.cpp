@@ -5,7 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "trigger_subaru.h"
+#include "pch.h"
+
+#include "trigger_suzuki.h"
 
 void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
@@ -31,6 +33,3 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(0.22);
 	s->setSecondTriggerSynchronizationGap(1);
 }
-
-
-

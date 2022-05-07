@@ -132,7 +132,12 @@ public class SensorGauge {
         //radial1.setTrackStop(to);
 
         radial1.setMinValue(minValue);
-        radial1.setMaxValue(maxValue);
+        if (minValue == maxValue) {
+            // a bit of a hack to survive not great input data
+            radial1.setMaxValue(minValue + 10);
+        } else {
+            radial1.setMaxValue(maxValue);
+        }
         radial1.setThresholdVisible(false);
         radial1.setPointerColor(ColorDef.RED);
 

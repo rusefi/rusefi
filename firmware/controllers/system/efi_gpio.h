@@ -69,7 +69,7 @@ public:
 	int unitTestTurnedOnCounter = 0;
 #endif
 
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
+	brain_pin_e brainPin = Gpio::Unassigned;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
 	/* used for external pins */
@@ -213,6 +213,10 @@ public:
 	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+	OutputPin tcuTccOnoffSolenoid;
+	OutputPin tcuTccPwmSolenoid;
+	OutputPin tcuPcSolenoid;
+	OutputPin tcu32Solenoid;
 
 private:
 	void startInjectionPins();
@@ -252,6 +256,5 @@ const char *portname(ioportid_t GPIOx);
 
 void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
-const char *hwPortname(brain_pin_e brainPin);
 
 extern EnginePins enginePins;

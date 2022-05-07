@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
@@ -11,7 +10,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
@@ -59,7 +57,7 @@ public class TestHelper {
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setController(ci);
-        state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
+        state.setCurrentOutputs(new byte[1 + Fields.TS_TOTAL_OUTPUT_SIZE]);
 
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));

@@ -4,49 +4,49 @@ pins:
 
 
   - pin: 6
-    id: GPIOC_9
+    id: C9
     class: outputs
     function: Ignition Coil #1
     ts_name: Coil 1F
 
   - pin: 7
-    id: GPIOE_14
+    id: E14
     class: outputs
     function: Ignition Coil #3
     ts_name: Coil 1G
 
   - pin: 8
-    id: GPIOC_7
+    id: C7
     class: outputs
     function: Ignition Coil #2
     ts_name: Coil 1H
 
   - pin: 9
-    id: GPIOE_10
+    id: E10
     class: outputs
     function: Spare High #5
     ts_name: Coil 1I
 
   - pin: 12
-    id: GPIOE_8
+    id: E8
     class: outputs
     function: Spare High #6
     ts_name: Coil 1L
 
   - pin: 13
-    id: GPIOE_12
+    id: E12
     class: outputs
     function: Ignition Coil #4
     ts_name: Coil 1M
 
   - pin: 15
-    id: GPIOD_8
+    id: D8
     class: outputs
     function: Spare High #8
     ts_name: Coil 1O
 
   - pin: 16
-    id: GPIOD_9
+    id: D9
     class: outputs
     function: Spare High #7
     ts_name: Coil 1P
@@ -76,25 +76,25 @@ pins:
     function: CAN low
 
   - pin: 35
-    id: GPIOC_13
+    id: C13
     class: outputs
     ts_name: Injector 2M
     function: Idle Valve Control Solenoid
 
   - pin: 36
-    id: GPIOD_7
+    id: D7
     class: outputs
     ts_name: Injector 2N
     function: Main Relay
 
   - pin: 37
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: Injector 2O
     function: Coolant Fan Relay
 
   - pin: 38
-    id: GPIOE_6
+    id: E6
     class: outputs
     ts_name: Injector 2P
     function: Spare low #2
@@ -176,49 +176,52 @@ pins:
     function: Coolant Temp Sensor
 
   - pin: 57
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: Injector 3S
     function: Spare low #1
 
   - pin: 58
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: Injector 3T
     function: Fuel Pump Relay
 
   - pin: 59
-    id: GPIOD_3
+    id: D3
     class: outputs
     ts_name: Injector 3U
     function: Spare low
 
   - pin: 60
-    id: GPIOE_2
+    id: E2
     class: outputs
     ts_name: Injector 3V
     function: Injector #2
 
   - pin: 61
-    id: GPIOB_9
+    id: B9
     class: outputs
     ts_name: Injector 3W
     function: Injector #1
 
   - pin: 62
-    id: GPIOD_5
+    id: D5
     class: outputs
     ts_name: Injector 3X
     function: Spare low
 
   - pin: 63
-    id: GPIOB_8
+    id: B8
     class: outputs
     ts_name: Injector 3Y
     function: Injector #3
 
   - pin: 64
-    id: GPIOB_7
+    id: B7
     class: outputs
     ts_name: Injector 3Z
     function: Injector #4
+
+info:
+  id: Frankenso

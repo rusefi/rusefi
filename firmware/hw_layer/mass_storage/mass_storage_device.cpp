@@ -188,7 +188,7 @@ void MassStorageController::attachLun(uint8_t lunIndex,
 	scsiStart(&lun.target, &lun.config);
 }
 
-extern "C" bool msd_request_hook_new(USBDriver *usbp) {
+bool msd_request_hook_new(USBDriver *usbp) {
 	/* check that the request is for interface 0.*/
 	if (MSD_SETUP_INDEX(usbp->setup) != 0) {
 		return false;

@@ -1,13 +1,8 @@
 #!/bin/bash
 
-export EXTRA_PARAMS="-DDUMMY \
- -DDEFAULT_ENGINE_TYPE=FRANKENSO_MIATA_NA6_VAF \
- -DSHORT_BOARD_NAME=frankenso_na6 \
- \
- \
- \
- \
- -DFIRMWARE_ID=\\\"frankensoNA6\\\""
+DEFAULT_ENGINE_TYPE=-DDEFAULT_ENGINE_TYPE=FRANKENSO_MIATA_NA6_VAF
+FW_ID_ENV=frankensoNA6
 
-bash ../common_make.sh
+export EXTRA_PARAMS="-DDUMMY -DSHORT_BOARD_NAME=frankenso_na6"
 
+bash ../common_make.sh f407-discovery ARCH_STM32F4

@@ -518,7 +518,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
-#if EFI_PROD_CODE
+		// Don't do this check at all if using SDMMC interface instead of SPI
+#if EFI_PROD_CODE && !defined(EFI_SDC_DEVICE)
 		if (engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 			return;
 		}

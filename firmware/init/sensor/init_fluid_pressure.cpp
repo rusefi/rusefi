@@ -17,6 +17,12 @@ static FunctionalSensor fuelPressureSensorHigh(SensorType::FuelPressureHigh, /* 
 
 static ProxySensor injectorPressure(SensorType::FuelPressureInjector);
 
+static LinearFunc auxLinear1Func;
+static FunctionalSensor auxLinear1Sensor(SensorType::AuxLinear1, /* timeout = */ MS2NT(50));
+
+static LinearFunc auxLinear2Func;
+static FunctionalSensor auxLinear2Sensor(SensorType::AuxLinear2, /* timeout = */ MS2NT(50));
+
 /**
  * @param bandwidth Hertz, used by low pass filter in to analog subscribers
  */
@@ -49,6 +55,8 @@ void initOilPressure() {
 	initFluidPressure(oilpSensorFunc, oilpSensor, engineConfiguration->oilPressure, 10);
 	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, engineConfiguration->lowPressureFuel, 10);
 	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
+	initFluidPressure(auxLinear1Func, auxLinear1Sensor, engineConfiguration->auxLinear1, 10);
+	initFluidPressure(auxLinear2Func, auxLinear2Sensor, engineConfiguration->auxLinear2, 10);
 
 	injectorPressure.setProxiedSensor(
 		engineConfiguration->injectorPressureType == IPT_High
@@ -63,4 +71,6 @@ void deinitOilPressure() {
 	AdcSubscription::UnsubscribeSensor(oilpSensor);
 	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow);
 	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
+	AdcSubscription::UnsubscribeSensor(auxLinear1Sensor);
+	AdcSubscription::UnsubscribeSensor(auxLinear2Sensor);
 }

@@ -11,13 +11,15 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
+#ifndef EFI_BOOST_CONTROL
 #define EFI_BOOST_CONTROL TRUE
+#endif
 
+#ifndef EFI_LAUNCH_CONTROL
 #define EFI_LAUNCH_CONTROL TRUE
+#endif
 
 #define EFI_DYNO_VIEW TRUE
-
-#define EFI_FSIO TRUE
 
 #ifndef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
@@ -33,7 +35,9 @@
 
 #define EFI_MC33816 TRUE
 
+#ifndef EFI_HPFP
 #define EFI_HPFP TRUE
+#endif
 
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
@@ -53,11 +57,6 @@
 #if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
@@ -83,7 +82,9 @@
 /**
  * TunerStudio support.
  */
+#ifndef EFI_TUNER_STUDIO
 #define EFI_TUNER_STUDIO TRUE
+#endif
 
 /**
  * Bluetooth UART setup support.
@@ -102,13 +103,19 @@
 /**
  * Dev console support.
  */
+#ifndef EFI_CLI_SUPPORT
 #define EFI_CLI_SUPPORT TRUE
+#endif
 
 #define EFI_RTC TRUE
 
+#ifndef EFI_ALTERNATOR_CONTROL
 #define EFI_ALTERNATOR_CONTROL TRUE
+#endif
 
+#ifndef EFI_AUX_PID
 #define EFI_AUX_PID TRUE
+#endif
 
 #define EFI_SIGNAL_EXECUTOR_SLEEP FALSE
 #define EFI_SIGNAL_EXECUTOR_ONE_TIMER TRUE
@@ -234,6 +241,10 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
+#ifndef EFI_TCU
+#define EFI_TCU TRUE
+#endif
+
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
 #endif
@@ -270,13 +281,13 @@
 	#define EFI_USE_COMPRESSED_INI_MSD
 	#define ENABLE_PERF_TRACE TRUE
 
-	#define LUA_USER_HEAP 20000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 20000
 #else
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
-	#define LUA_USER_HEAP 15000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 12000
 #endif
 
@@ -312,10 +323,14 @@
 /**
  * Do we need Malfunction Indicator blinking logic?
  */
+#ifndef EFI_MALFUNCTION_INDICATOR
 #define EFI_MALFUNCTION_INDICATOR TRUE
 //#define EFI_MALFUNCTION_INDICATOR FALSE
+#endif
 
+#ifndef CONSOLE_MAX_ACTIONS
 #define CONSOLE_MAX_ACTIONS 180
+#endif
 
 #define EFI_MAP_AVERAGING TRUE
 //#define EFI_MAP_AVERAGING FALSE
@@ -334,11 +349,6 @@
  */
 
 #define EFI_SPI3_AF 6
-
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
 
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
@@ -378,11 +388,11 @@
 
 // todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
 #endif
 // todo: start using consoleSerialRxPin? Not sure
 #ifndef EFI_CONSOLE_RX_BRAIN_PIN
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 #endif
 // todo: this should be detected automatically based on pin selection
 // https://github.com/rusefi/rusefi/issues/3536
@@ -397,7 +407,7 @@
 #endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
 #ifndef LED_ERROR_BRAIN_PIN_MODE
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT

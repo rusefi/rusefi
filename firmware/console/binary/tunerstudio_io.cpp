@@ -19,11 +19,13 @@ size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 }
 #endif
 
-void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
+#define isBigPacket(size) ((size) > BLOCKING_FACTOR + 7)
+
+void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	auto scratchBuffer = this->scratchBuffer;
 
 	// don't transmit too large a buffer
-	efiAssertVoid(OBD_PCM_Processor_Fault, size <= BLOCKING_FACTOR + 7, "writeCrcPacketSmall tried to transmit too large a packet")
+	efiAssertVoid(OBD_PCM_Processor_Fault, !isBigPacket(size), "copyAndWriteSmallCrcPacket tried to transmit too large a packet")
 
 	// If transmitting data, copy it in to place in the scratch buffer
 	// We want to prevent the data changing itself (higher priority threads could write
@@ -33,6 +35,13 @@ void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf
 		memcpy(scratchBuffer + 3, buf, size);
 	}
 
+	crcAndWriteBuffer(responseCode, size);
+}
+
+void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
+	efiAssertVoid(OBD_PCM_Processor_Fault, !isBigPacket(size), "crcAndWriteBuffer tried to transmit too large a packet")
+
+	auto scratchBuffer = this->scratchBuffer;
 	// Index 0/1 = packet size (big endian)
 	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
 	// Index 2 = response code
@@ -79,26 +88,35 @@ TsChannelBase::TsChannelBase(const char *name) {
 	this->name = name;
 }
 
+void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
+	if (isBigPacket(size) && !allowLongPackets) {
+		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+	}
+}
+
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
 	}
 
-	if (size <= BLOCKING_FACTOR + 7) {
-		// small packets use small packet optimization
-		writeCrcPacketSmall(responseCode, buf, size);
-	} else {
+	assertPacketSize(size, allowLongPackets);
+
+	if (isBigPacket(size)) {
+		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending
 		writeCrcPacketLarge(responseCode, buf, size);
+	} else {
+		// for small packets we use a buffer for CRC calculation
+		copyAndWriteSmallCrcPacket(responseCode, buf, size);
 	}
 }
 
-void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
+void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets /* = false */) {
 	if (mode == TS_CRC) {
-		writeCrcPacket(TS_RESPONSE_OK, buffer, size);
+		writeCrcPacket(TS_RESPONSE_OK, buffer, size, allowLongPackets);
 	} else {
 		if (size > 0) {
 			write(buffer, size, true);

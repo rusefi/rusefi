@@ -11,12 +11,8 @@
 #include "trigger_input.h"
 
 void setBoardDefaultConfiguration() {
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->invertPrimaryTriggerSignal = true;
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
 	engineConfiguration->isEngineChartEnabled = false;
@@ -44,9 +40,9 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
-	engineConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
-	engineConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
-	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.stepperDirectionPin = Gpio::Unassigned;
+	engineConfiguration->idle.stepperStepPin = Gpio::Unassigned;
+	engineConfiguration->stepperEnablePin = Gpio::Unassigned;
 
 	engineConfiguration->useLinearCltSensor = true;
 	// todo:
@@ -68,10 +64,10 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->mapMinBufferLength = 4;
 
-	engineConfiguration->communicationLedPin = GPIO_UNASSIGNED;//GPIOJ_0;
-	engineConfiguration->runningLedPin = GPIO_UNASSIGNED;
-	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
-	engineConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
+	engineConfiguration->communicationLedPin = Gpio::Unassigned;//GPIOJ_0;
+	engineConfiguration->runningLedPin = Gpio::Unassigned;
+	engineConfiguration->warningLedPin = Gpio::Unassigned;
+	engineConfiguration->triggerErrorPin = Gpio::Unassigned;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
 	engineConfiguration->clt.adcChannel = EFI_ADC_26;
@@ -98,19 +94,19 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
 	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
 
-	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[0] = GPIOB_0;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->acSwitch = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[0] = Gpio::B0;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 #if 0	
 
 	// todo:
 	int i;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
@@ -126,10 +122,10 @@ void setBoardDefaultConfiguration() {
 void setSerialConfigurationOverrides() {
 #if 0
 	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOC_7;
-	engineConfiguration->binarySerialRxPin = GPIOC_6;
-	engineConfiguration->consoleSerialTxPin = GPIOA_10;
-	engineConfiguration->consoleSerialRxPin = GPIOA_11;
+	engineConfiguration->binarySerialTxPin = Gpio::C7;
+	engineConfiguration->binarySerialRxPin = Gpio::C6;
+	engineConfiguration->consoleSerialTxPin = Gpio::A10;
+	engineConfiguration->consoleSerialRxPin = Gpio::A11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 #endif

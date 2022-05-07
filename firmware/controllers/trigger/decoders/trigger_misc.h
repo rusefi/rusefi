@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void configureFiatIAQ_P8(TriggerWaveform * s);
 void configureDaihatsu4(TriggerWaveform * s);

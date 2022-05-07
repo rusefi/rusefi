@@ -24,16 +24,16 @@ void setCamaro4() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 
 	engineConfiguration->injectionMode = IM_BATCH;
 	engineConfiguration->twoWireBatchInjection = true;
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_GM_LS_24;
+	setCrankOperationMode();
+	engineConfiguration->trigger.type = TT_GM_24x;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0; // PA0
 
@@ -56,31 +56,31 @@ void setCamaro4() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_13;
 
 
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
-	engineConfiguration->injectionPins[0] = GPIOE_6;
-	engineConfiguration->injectionPins[1] = GPIOE_5;
-	engineConfiguration->injectionPins[2] = GPIOD_7;
-	engineConfiguration->injectionPins[3] = GPIOC_13;
-	engineConfiguration->injectionPins[4] = GPIOE_3;
-	engineConfiguration->injectionPins[5] = GPIOE_4;
-	engineConfiguration->injectionPins[6] = GPIOD_3;
-	engineConfiguration->injectionPins[7] = GPIOE_2;
+	engineConfiguration->injectionPins[0] = Gpio::E6;
+	engineConfiguration->injectionPins[1] = Gpio::E5;
+	engineConfiguration->injectionPins[2] = Gpio::D7;
+	engineConfiguration->injectionPins[3] = Gpio::C13;
+	engineConfiguration->injectionPins[4] = Gpio::E3;
+	engineConfiguration->injectionPins[5] = Gpio::E4;
+	engineConfiguration->injectionPins[6] = Gpio::D3;
+	engineConfiguration->injectionPins[7] = Gpio::E2;
 
 
-	engineConfiguration->ignitionPins[0] = GPIOC_9;
-	engineConfiguration->ignitionPins[1] = GPIOC_7;
-	engineConfiguration->ignitionPins[2] = GPIOE_14;
-	engineConfiguration->ignitionPins[3] = GPIOE_12;
-	engineConfiguration->ignitionPins[4] = GPIOE_10;
-	engineConfiguration->ignitionPins[5] = GPIOE_8;
-	engineConfiguration->ignitionPins[6] = GPIOD_9;
-	engineConfiguration->ignitionPins[7] = GPIOD_8;
+	engineConfiguration->ignitionPins[0] = Gpio::C9;
+	engineConfiguration->ignitionPins[1] = Gpio::C7;
+	engineConfiguration->ignitionPins[2] = Gpio::E14;
+	engineConfiguration->ignitionPins[3] = Gpio::E12;
+	engineConfiguration->ignitionPins[4] = Gpio::E10;
+	engineConfiguration->ignitionPins[5] = Gpio::E8;
+	engineConfiguration->ignitionPins[6] = Gpio::D9;
+	engineConfiguration->ignitionPins[7] = Gpio::D8;
 
-	engineConfiguration->fuelPumpPin = GPIOB_8;
-	engineConfiguration->fanPin = GPIO_UNASSIGNED;
-	engineConfiguration->mainRelayPin = GPIOD_5;
+	engineConfiguration->fuelPumpPin = Gpio::B8;
+	engineConfiguration->fanPin = Gpio::Unassigned;
+	engineConfiguration->mainRelayPin = Gpio::D5;
 }
 
 

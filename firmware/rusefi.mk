@@ -26,6 +26,13 @@ endif
 
 -include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/config.mk
 
+PIN_NAMES_FILE=$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/connectors/generated_ts_name_by_pin.cpp
+
+ifneq ("$(wildcard $(PIN_NAMES_FILE))","")
+$(info found $(PIN_NAMES_FILE) )
+ALLCPPSRC += $(PIN_NAMES_FILE)
+endif
+
 # CPU-dependent defs
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	CPU_STARTUP = startup_stm32f7xx.mk

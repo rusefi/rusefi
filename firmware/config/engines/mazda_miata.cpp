@@ -15,7 +15,6 @@
 
 #include "pch.h"
 
-#include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "advance_map.h"
 #include "custom_engine.h"
@@ -77,8 +76,8 @@ static void commonMiataNa() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
-	engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU
+	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
@@ -91,10 +90,10 @@ static void commonMiataNa() {
 	// Frankenstein: high side #5 is PC9
 	// Frankenstein: high side #6 is PC7
 
-	engineConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	engineConfiguration->ignitionPins[1] = GPIOE_14; // Frankenstein: high side #4
-	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E12; // Frankenstein: high side #3
+	engineConfiguration->ignitionPins[1] = Gpio::E14; // Frankenstein: high side #4
+	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->cranking.baseFuel = 24;
@@ -114,7 +113,7 @@ void common079721_2351() {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED; // fuel pump is not controlled by ECU on this engine
+	engineConfiguration->fuelPumpPin = Gpio::Unassigned; // fuel pump is not controlled by ECU on this engine
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -152,31 +151,31 @@ void setFrankensteinMiata1996() {
 #endif
 
 	// upside down
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 
-	engineConfiguration->fuelPumpPin = GPIOE_4;
-	engineConfiguration->idle.solenoidPin = GPIOE_5;
+	engineConfiguration->fuelPumpPin = Gpio::E4;
+	engineConfiguration->idle.solenoidPin = Gpio::E5;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->clt.adcChannel = EFI_ADC_11;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
 
-	engineConfiguration->ignitionPins[0] = GPIOE_12; // Frankenstein: high side #3
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOE_14; // Frankenstein: high side #4
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E12; // Frankenstein: high side #3
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::E14; // Frankenstein: high side #4
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	// harness is sequential but we have a limited board
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	engineConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[0] = Gpio::B9; // Frankenstein: low side - out #12
+	engineConfiguration->injectionPins[1] = Gpio::B8; // Frankenstein: low side - out #11
+	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }

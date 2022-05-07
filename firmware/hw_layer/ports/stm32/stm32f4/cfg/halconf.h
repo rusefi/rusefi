@@ -35,6 +35,8 @@
 
 #include "rusefi_halconf.h"
 
+#include "../../cfg/halconf_community.h"
+
 /**
  * @brief   Enables the FLASH subsystem.
  */

@@ -32,7 +32,7 @@ public class SensorLiveGraph extends JPanel {
     private final Node config;
     private final JMenuItem extraItem;
     @NotNull
-    private ChangePeriod period = ChangePeriod._100;
+    private ChangePeriod period;
     private Sensor sensor;
     private boolean autoScale;
     private double customUpper;

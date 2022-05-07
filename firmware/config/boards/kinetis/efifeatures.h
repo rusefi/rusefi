@@ -12,8 +12,6 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
-#define EFI_FSIO FALSE
-
 #define EFI_CDM_INTEGRATION FALSE
 
 #define EFI_TOOTH_LOGGER FALSE
@@ -32,11 +30,6 @@
 #if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
  #define EFI_ENABLE_ASSERTS FALSE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
- #define EFI_ENABLE_MOCK_ADC FALSE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 #define EFI_TEXT_LOGGING FALSE
 
@@ -166,6 +159,10 @@
 #define EFI_VEHICLE_SPEED FALSE
 #endif
 
+#ifndef EFI_TCU
+#define EFI_TCU FALSE
+#endif
+
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR FALSE
 #endif
@@ -242,11 +239,6 @@
 
 #define EFI_SPI3_AF 3
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
@@ -267,8 +259,8 @@
 #define TS_PRIMARY_PORT UARTD2
 #undef TS_SECONDARY_PORT
 
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOA_10
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOA_11
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::A10
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::A11
 #define EFI_CONSOLE_AF 3
 
 #define TS_SERIAL_AF 2
@@ -284,9 +276,9 @@
 //#define EFI_TRIGGER_DEBUG_BLINK TRUE
 //#define EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS TRUE
 
-#define LED_WARNING_BRAIN_PIN GPIOD_13
+#define LED_WARNING_BRAIN_PIN Gpio::D13
 
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 
 #define EFI_WARNING_LED FALSE
@@ -297,8 +289,7 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define STATUS_LOGGING_BUFFER_SIZE 120 /*1800*/
-#define SETTINGS_LOGGING_BUFFER_SIZE 100 /*1000*/
+#define LOGIC_ANALYZER_BUFFER_SIZE 120 /*1800*/
 #define DL_OUTPUT_BUFFER 10 /*6500*/
 
 #define UTILITY_THREAD_STACK_SIZE 270 /*400*/

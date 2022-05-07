@@ -1,7 +1,10 @@
 # this file is consumed by TriggerProcessor.java during the gen_config.sh code generation phase
 
 triggers:
-  - name: TT_GM_LS_24
+  - name: TT_GM_24x
+    isFirstCrankBased: true
+
+  - name: TT_GM_24x_2
     isFirstCrankBased: true
 
   - name: TT_HONDA_K_12_1

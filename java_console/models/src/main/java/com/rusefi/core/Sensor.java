@@ -17,7 +17,7 @@ import static com.rusefi.config.generated.Fields.*;
 /**
  * @author Andrey Belomutskiy
  * 2/11/13
- * @see Fields#TS_OUTPUT_SIZE
+ * @see GetOutputsCommand#OUTPUT_SIZE
  */
 public enum Sensor {
     /**
@@ -25,9 +25,10 @@ public enum Sensor {
      */
 
     // RPM, vss
-    RPM(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, 0, 8000, "RPM"),
-    SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, 0, 5, "RPM/kph"),
-    VSS(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 10, 1, 0, 150, "kph"),
+    RPMValue(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, 0, 8000, "RPM"),
+    rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM/s"),
+    speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
+    vehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, 0.0, 0.0, "kph"),
 
     // Temperatures
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 11, 1, 0, 5, "C"),
@@ -55,10 +56,11 @@ public enum Sensor {
     crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     TARGET_AFR(GAUGE_NAME_TARGET_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 48, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
     baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, 50, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
-    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / PACK_MULT_MS, 0, 15, "ms"),
+    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / PACK_MULT_FUEL_MASS, 0, 15, "ms"),
     actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, 54, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.UINT8, 56, 0.5, 0, 100, "%"),
-    veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.FLOAT, 57, 0.5, 0, 100, "%"),
+    veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.UINT8, 57, 0.5, 0, 100, "%"),
+    // injectionOffset
     tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, 60, 1.0 / PACK_MULT_TEMPERATURE, 30, 140, "C"),
 
     // Corrections
@@ -154,6 +156,15 @@ public enum Sensor {
 
     instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 514, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
+
+    targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 968, 1.0, -1.0, -1.0, ""),
+//    baseDwell("baseDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
+//    dwellVoltageCorrection("dwellVoltageCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 976, 1.0, -1.0, -1.0, ""),
+    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
+    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
+    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
+    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
+    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),

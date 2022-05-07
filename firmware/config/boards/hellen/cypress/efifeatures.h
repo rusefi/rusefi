@@ -13,8 +13,6 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
-#define EFI_FSIO TRUE
-
 #define EFI_CDM_INTEGRATION FALSE
 
 #define EFI_TOOTH_LOGGER FALSE
@@ -33,11 +31,6 @@
 #if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
  #define EFI_ENABLE_ASSERTS FALSE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
- #define EFI_ENABLE_MOCK_ADC FALSE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 #define EFI_TEXT_LOGGING TRUE
 
@@ -181,6 +174,8 @@
 
 #define EFI_VEHICLE_SPEED FALSE
 
+#define EFI_TCU FALSE
+
 #define EFI_ENGINE_EMULATOR TRUE
 
 #define EFI_EMULATE_POSITION_SENSORS TRUE
@@ -253,11 +248,6 @@
 
 #define EFI_SPI3_AF PAL_MODE_ALTERNATIVE_SPI
 
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
-
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
  */
@@ -313,11 +303,11 @@
 // LED1 = GPIOJ_15
 // LED2 = GPIOJ_0
 // LED3 = GPIOJ_12
-// LED4 = GPIOA_0
+// LED4 = Gpio::A0
 
-#define LED_WARNING_BRAIN_PIN GPIOA_0
+#define LED_WARNING_BRAIN_PIN Gpio::A0
 
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOJ_15
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::J15
 #define LED_ERROR_BRAIN_PIN_MODE INVERTED_OUTPUT
 
 #define EFI_WARNING_LED FALSE
@@ -328,8 +318,6 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define STATUS_LOGGING_BUFFER_SIZE 1800
-#define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #define DL_OUTPUT_BUFFER 6500
 
 //#define UTILITY_THREAD_STACK_SIZE 270 /*400*/

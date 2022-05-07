@@ -211,7 +211,7 @@ TEST(pidAutoTune, delayLine) {
 	ASSERT_TRUE(result) << "should be true#5";
 }
 
-TEST(misc, testPidAuto) {
+TEST(pidAutoTune, testPidAuto) {
 	printf("*************************************************** testPidAuto\r\n");
 
 	testPidAutoZigZagStable();

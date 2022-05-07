@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Jan 31 23:24:08 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri May 06 12:30:02 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -144,8 +144,6 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
-case Force_4_bytes_size_debug_mode_e:
-  return "Force_4_bytes_size_debug_mode_e";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -171,6 +169,8 @@ case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
   return "DODGE_RAM";
+case EEPROM_BENCH_ENGINE:
+  return "EEPROM_BENCH_ENGINE";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case ET_UNUSED96:
@@ -257,6 +257,8 @@ case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
+case L9779_BENCH_ENGINE:
+  return "L9779_BENCH_ENGINE";
 case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
@@ -321,12 +323,12 @@ case SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
-case TEST_108:
-  return "TEST_108";
-case TEST_109:
-  return "TEST_109";
-case TEST_110:
-  return "TEST_110";
+case TEST_100:
+  return "TEST_100";
+case TEST_101:
+  return "TEST_101";
+case TEST_102:
+  return "TEST_102";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CRANK_ENGINE:
@@ -349,30 +351,10 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED100:
-  return "UNUSED100";
-case UNUSED101:
-  return "UNUSED101";
-case UNUSED18:
-  return "UNUSED18";
-case UNUSED30:
-  return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
-case UNUSED60:
-  return "UNUSED60";
-case UNUSED61:
-  return "UNUSED61";
-case UNUSED_19:
-  return "UNUSED_19";
 case UNUSED_48:
   return "UNUSED_48";
-case UNUSED_50:
-  return "UNUSED_50";
-case UNUSED_51:
-  return "UNUSED_51";
-case VAG_18_TURBO:
-  return "VAG_18_TURBO";
 case VW_ABA:
   return "VW_ABA";
 case VW_B6:
@@ -390,6 +372,10 @@ case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
   return "TT_2JZ_3_34";
+case TT_36_2_1:
+  return "TT_36_2_1";
+case TT_36_2_1_1:
+  return "TT_36_2_1_1";
 case TT_36_2_2_2:
   return "TT_36_2_2_2";
 case TT_3_1_CAM:
@@ -420,12 +406,14 @@ case TT_FORD_ST170:
   return "TT_FORD_ST170";
 case TT_FORD_TFI_PIP:
   return "TT_FORD_TFI_PIP";
+case TT_GM_24x:
+  return "TT_GM_24x";
+case TT_GM_24x_2:
+  return "TT_GM_24x_2";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_GM_LS_24:
-  return "TT_GM_LS_24";
 case TT_HONDA_1_24:
   return "TT_HONDA_1_24";
 case TT_HONDA_1_4_24:
@@ -514,8 +502,6 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
-case TT_UNUSED_62:
-  return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
@@ -524,8 +510,14 @@ case TT_VVT_JZ:
   return "TT_VVT_JZ";
 case TT_VVT_MIATA_NB:
   return "TT_VVT_MIATA_NB";
+case TT_VVT_MITSUBISHI_3A92:
+  return "TT_VVT_MITSUBISHI_3A92";
+case TT_VVT_MITSUBISHI_6G75:
+  return "TT_VVT_MITSUBISHI_6G75";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
+case TT_VVT_TOYOTA_4_1:
+  return "TT_VVT_TOYOTA_4_1";
   }
  return NULL;
 }

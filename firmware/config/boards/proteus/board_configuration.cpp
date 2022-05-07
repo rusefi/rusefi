@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
@@ -55,9 +54,9 @@ void setSdCardConfigurationOverrides() {
 
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = GPIOE_4;
-	engineConfiguration->runningLedPin = GPIOE_5;
-	engineConfiguration->warningLedPin = GPIOE_6;
+	engineConfiguration->communicationLedPin = Gpio::E4;
+	engineConfiguration->runningLedPin = Gpio::E5;
+	engineConfiguration->warningLedPin = Gpio::E6;
 }
 
 static void setupVbatt() {
@@ -82,23 +81,23 @@ static void setupEtb() {
 
 	// Throttle #1
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = GPIOD_12;
+	engineConfiguration->etbIo[0].controlPin = Gpio::D12;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::D10;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = GPIOD_11;
+	engineConfiguration->etbIo[0].disablePin = Gpio::D11;
 	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 	// Throttle #2
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin = GPIOD_13;
+	engineConfiguration->etbIo[1].controlPin = Gpio::D13;
 	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
+	engineConfiguration->etbIo[1].directionPin1 = Gpio::D9;
 	// Disable pin
-	engineConfiguration->etbIo[1].disablePin = GPIOD_8;
+	engineConfiguration->etbIo[1].disablePin = Gpio::D8;
 	// Unused
-	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
@@ -113,11 +112,11 @@ static void setupDefaultSensorInputs() {
 #else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 #endif
 
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;
@@ -132,12 +131,12 @@ static void setupDefaultSensorInputs() {
 static void setupSdCard() {
 
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOD_2;
+	engineConfiguration->sdCardCsPin = Gpio::D2;
 
 	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
 }
 
 void setBoardConfigOverrides() {
@@ -148,24 +147,24 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 
 #if defined(STM32F4) || defined(STM32F7)
-	engineConfiguration->can2RxPin = GPIOB_12;
-	engineConfiguration->can2TxPin = GPIOB_13;
+	engineConfiguration->can2RxPin = Gpio::B12;
+	engineConfiguration->can2TxPin = Gpio::B13;
 #endif
 
-	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
-	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
+	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
+	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -186,12 +185,6 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
-
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
@@ -209,23 +202,12 @@ void setBoardDefaultConfiguration() {
 
 	// If we're running as hardware CI, borrow a few extra pins for that
 #ifdef HARDWARE_CI
-	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
-	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::G3;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::G2;
 #endif
 }
 
 void boardPrepareForStop() {
-	#ifdef STM32F7XX
-	// enable EXTI on PD0 - CAN RX pin
-	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT); //Select Pin 0 on D Port - PD0, CAN RX as input
-	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PD0 to interrupt on rising edge
-	#endif
-
-	#ifdef STM32F4XX
-	// enable EXTI on PA0 - The only WKUP pin F4 has.
-	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
-	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT); //Select Pin 0 on A Port - PA0, Wkup
-	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PA0 to interrupt on rising edge
-
-	#endif
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }

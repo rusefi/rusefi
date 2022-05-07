@@ -4,7 +4,7 @@ import com.rusefi.*;
 
 import static com.rusefi.ToolUtil.EOL;
 
-public class BaseCHeaderConsumer extends AbstractConfigurationConsumer {
+public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
     private final StringBuilder content = new StringBuilder();
 
@@ -78,11 +78,12 @@ public class BaseCHeaderConsumer extends AbstractConfigurationConsumer {
             iterator.end();
         }
 
-        content.append("\t/** total size " + iterator.currentOffset + "*/" + EOL);
-        content.append("};" + EOL + EOL);
+        content.append("};" + EOL);
+        content.append("static_assert(sizeof(" + structure.name + ") == " + iterator.currentOffset + ");\n");
+        content.append(EOL);
     }
 
-    public StringBuilder getContent() {
-        return content;
+    public String getContent() {
+        return content.toString();
     }
 }

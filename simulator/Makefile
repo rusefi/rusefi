@@ -39,17 +39,15 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# this config if debugging is needed, but the binary is about 50M
-#  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
-# this config producec a smaller binary file
-# 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
-# see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2 -g -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+	USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+
+#	If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
+	USE_OPT += -O2
+#	USE_OPT += -O0 -g
 
 	ifeq ($(OS),Windows_NT)
 	else
- 	 USE_OPT +=  -m32
+		USE_OPT += -m32
 	endif
 endif
 
@@ -158,7 +156,6 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-        main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -172,7 +169,8 @@ CPPSRC = $(ALLCPPSRC) \
 	simulator/rusEfiFunctionalTest.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
-	$(TEST_SRC_CPP)
+	$(TEST_SRC_CPP) \
+	main.cpp
 
 
 # List ASM source files here
@@ -243,6 +241,8 @@ CPPWARN = -Wall -Wextra -Wundef
 
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
+DDEFS += -DFIRMWARE_ID=\"simulator\"
+
 
 # Define ASM defines here
 UADEFS =

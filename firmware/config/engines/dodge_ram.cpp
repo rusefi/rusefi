@@ -15,7 +15,6 @@
 void setDodgeRam1996() {
 	setFrankensoConfiguration();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_DODGE_RAM;
 	engineConfiguration->injector.flow = 243.6; // 23.2lb/h
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;

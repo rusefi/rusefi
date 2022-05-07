@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
@@ -23,12 +22,12 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
+	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
@@ -36,13 +35,13 @@ static void setInjectorPins() {
 
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = H144_IGN_1;
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = H144_IGN_2;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -64,10 +63,10 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = H144_IN_CAM;
+	engineConfiguration->triggerInputPins[1] = H144_IN_CRANK;
+	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -93,16 +92,21 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
+
+	engineConfiguration->etb_use_two_wires = true;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7;	// PWM 3
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8;	// PWM 4
+	engineConfiguration->etbIo[0].controlPin = Gpio::C6;		// PWM 2
 }
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -124,22 +128,16 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->boostControlPin = H144_LS_6;
 	engineConfiguration->acSwitch = H144_IN_D_AUX3;
 	engineConfiguration->acRelayPin = H144_OUT_IO6;
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
+	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
     engineConfiguration->tachOutputPin = H144_OUT_PWM1;
 	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
 	engineConfiguration->fan2Pin = H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -151,7 +149,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPin = H144_IN_D_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-// ?	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
+// ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 }
 
 /**

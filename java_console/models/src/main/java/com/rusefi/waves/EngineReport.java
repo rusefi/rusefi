@@ -68,8 +68,7 @@ public class EngineReport {
         return list;
     }
 
-
-    private TimeAxisTranslator timeAxisTranslator = new TimeAxisTranslator() {
+    private final TimeAxisTranslator timeAxisTranslator = new TimeAxisTranslator() {
         @Override
         public int getMaxTime() {
             return maxTime;
@@ -81,9 +80,15 @@ public class EngineReport {
         }
 
         @Override
-        public int timeToScreen(int time, int width) {
-            double translated = (time - minTime) * 1.0 / getDuration();
-            return (int) (width * translated);
+        public int timeToScreen(double time, int width) {
+            // 0 = left side
+            // 1 = right side
+            double fraction = (time - minTime) * 1.0 / getDuration();
+
+            // Space to leave on the left side to avoid overlap
+            int offset = 150;
+
+            return (int) (offset + (width - offset) * fraction);
         }
 
         @Override

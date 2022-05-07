@@ -27,9 +27,10 @@ CPPSRC += $(ALLCPPSRC) \
 	$(FRAMEWORK_SRC_CPP) \
 	$(TESTS_SRC_CPP) \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
-	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
-	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
+	$(CONSOLE_COMMON_SRC_CPP) \
+	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(PROJECT_DIR)/../unit_tests/native/native_impl.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
@@ -38,8 +39,10 @@ INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
+	$(PROJECT_DIR)/config/boards/hellen \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
+	$(UNIT_TESTS_DIR)/native \
 	$(UNIT_TESTS_DIR)/tests \
 	$(UNIT_TESTS_DIR)/tests/sensor \
 	$(UNIT_TESTS_DIR)/test_basic_math

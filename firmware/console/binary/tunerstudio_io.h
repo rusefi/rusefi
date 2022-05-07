@@ -8,6 +8,7 @@
 
 #pragma once
 #include "global.h"
+#include "tunerstudio_impl.h"
 
 #if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
 	#define HAS_PRIMARY true
@@ -29,11 +30,6 @@
 #include "pin_repository.h"
 #endif
 
-typedef enum {
-	TS_PLAIN = 0,
-	TS_CRC = 1
-} ts_response_format_e;
-
 class TsChannelBase {
 public:
 	TsChannelBase(const char *name);
@@ -53,8 +49,8 @@ public:
 #ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
-	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
+	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
+	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets = false);
 
 	/**
 	 * See 'blockingFactor' in rusefi.ini
@@ -62,8 +58,11 @@ public:
 	char scratchBuffer[BLOCKING_FACTOR + 30];
 	const char *name;
 
+	void assertPacketSize(size_t size, bool allowLongPackets);
+	void crcAndWriteBuffer(uint8_t responseCode, size_t size);
+	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+
 private:
-	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 

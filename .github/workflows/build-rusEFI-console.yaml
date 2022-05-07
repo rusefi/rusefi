@@ -25,6 +25,15 @@ jobs:
         working-directory: ./java_tools/configuration_definition
         run: ant antlr
 
+      - name: Print GCC version
+        working-directory: .
+        run: gcc -v
+
+      - name: Build Native Unit Tests as shared library
+        working-directory: ./unit_tests/
+# we have a unit test of JNI thus we need to build shared library
+        run: make -j4
+
       - name: Test console
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
         working-directory: ./java_console

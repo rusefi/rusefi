@@ -58,7 +58,7 @@ public:
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
 #if EFI_TUNER_STUDIO
-	void postState(pid_status_s *pidStatus) const;
+	void postState(pid_status_s& pidStatus) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
