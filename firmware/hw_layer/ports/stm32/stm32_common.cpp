@@ -660,7 +660,7 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_4) {
 #if STM32_SPI_USE_SPI4
 //		scheduleMsg(&logging, "Turning on SPI4 pins");
-		/* there is no cofiguration fields for SPI4 in engineConfiguration, rely on board init code
+		/* there are no configuration fields for SPI4 in engineConfiguration, rely on board init code
 		 * it should set proper functions for SPI4 pins */
 #endif /* STM32_SPI_USE_SPI4 */
 	}

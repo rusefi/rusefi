@@ -17,6 +17,8 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.stream.PCanIoStream;
+import com.rusefi.io.stream.SocketCANIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
@@ -61,8 +63,10 @@ public class ConsoleTools {
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
         registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-        registerTool("pcan_connector", strings -> PCANConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-
+        registerTool("pcan_connector", strings -> CANConnectorStartup.start(PCanIoStream.getPCANIoStream()), "Connect your rusEFI ECU using PCAN CAN-bus adapter");
+        if (!FileLog.isWindows()) {
+            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create()), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
+        }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI Online authentication token.");

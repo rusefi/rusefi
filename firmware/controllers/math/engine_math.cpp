@@ -56,18 +56,18 @@ float getIgnitionLoad() {
  */
 void setSingleCoilDwell() {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellRpmBins[i] = (i + 1) * 50;
-		engineConfiguration->sparkDwellValues[i] = 4;
+		config->sparkDwellRpmBins[i] = (i + 1) * 50;
+		config->sparkDwellValues[i] = 4;
 	}
 
-	engineConfiguration->sparkDwellRpmBins[5] = 500;
-	engineConfiguration->sparkDwellValues[5] = 4;
+	config->sparkDwellRpmBins[5] = 500;
+	config->sparkDwellValues[5] = 4;
 
-	engineConfiguration->sparkDwellRpmBins[6] = 4500;
-	engineConfiguration->sparkDwellValues[6] = 4;
+	config->sparkDwellRpmBins[6] = 4500;
+	config->sparkDwellValues[6] = 4;
 
-	engineConfiguration->sparkDwellRpmBins[7] = 12500;
-	engineConfiguration->sparkDwellValues[7] = 0;
+	config->sparkDwellRpmBins[7] = 12500;
+	config->sparkDwellValues[7] = 0;
 }
 
 /**
@@ -81,7 +81,7 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		baseDwell = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		baseDwell = interpolate2d(rpm, config->sparkDwellRpmBins, config->sparkDwellValues);
 		dwellVoltageCorrection = interpolate2d(
 				Sensor::getOrZero(SensorType::BatteryVoltage),
 				engineConfiguration->dwellVoltageCorrVoltBins,

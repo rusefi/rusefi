@@ -21,6 +21,7 @@ public class EnumAsTsVariable {
                 "\n" +
                 "\t// 2 cylinder\n" +
                 "\tFO_1_2 = 8,\n" +
+                "Force_2b_firing_order = ENUM_16_BITS,\n" +
                 "Force_4b_firing_order = ENUM_32_BITS,\n" +
                 "} firing_order_e;")));
 

@@ -626,11 +626,11 @@ void proteusBoardTest() {
 	engineConfiguration->ignitionPins[4] = PROTEUS_IGN_6;
 	engineConfiguration->ignitionPins[5] = PROTEUS_IGN_7;
 
-	engineConfiguration->ignitionPins[6] = Gpio::D15;// "Highside 3"    # pin 13/black35
+	engineConfiguration->ignitionPins[6] = PROTEUS_HS_3;
 	engineConfiguration->ignitionPins[7] = PROTEUS_IGN_3;
 	engineConfiguration->ignitionPins[8] = PROTEUS_IGN_9;
 	engineConfiguration->ignitionPins[9] = PROTEUS_IGN_8;
-	engineConfiguration->ignitionPins[10] = PROTEUS_IGN_1;
+	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
 
@@ -902,11 +902,11 @@ void proteusLuaDemo() {
 	engineConfiguration->luaOutputPins[1] = Gpio::D10;
 	engineConfiguration->luaOutputPins[2] = Gpio::D11;
 
-	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 8000, 1);
-	setLinearCurve(engineConfiguration->scriptCurve2, 0, 100, 1);
+	setLinearCurve(config->scriptCurve2Bins, 0, 8000, 1);
+	setLinearCurve(config->scriptCurve2, 0, 100, 1);
 
-	copyArray(engineConfiguration->scriptCurve3Bins, defaultBiasBins);
-	copyArray(engineConfiguration->scriptCurve3, defaultBiasValues);
+	copyArray(config->scriptCurve3Bins, defaultBiasBins);
+	copyArray(config->scriptCurve3, defaultBiasValues);
 
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;

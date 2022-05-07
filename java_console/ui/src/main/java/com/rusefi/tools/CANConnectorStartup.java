@@ -1,16 +1,15 @@
 package com.rusefi.tools;
 
-import com.rusefi.io.stream.PCanIoStream;
+import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpConnector;
 
 import java.io.IOException;
 
-public class PCANConnectorStartup {
-    public static void start() throws IOException {
-        PCanIoStream tsStream = PCanIoStream.getPCANIoStream();
+public class CANConnectorStartup {
+    public static void start(AbstractIoStream tsStream) throws IOException {
         if (tsStream == null)
-            throw new IOException("No PCAN");
+            throw new IOException("Failed to initialise connector");
 
         BinaryProtocolProxy.createProxy(tsStream, TcpConnector.DEFAULT_PORT, BinaryProtocolProxy.ClientApplicationActivityListener.VOID);
 

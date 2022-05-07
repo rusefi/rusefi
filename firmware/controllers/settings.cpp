@@ -981,11 +981,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setScriptCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->scriptCurve1, value, value, 1);
+	setLinearCurve(config->scriptCurve1, value, value, 1);
 }
 
 static void setScriptCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->scriptCurve2, value, value, 1);
+	setLinearCurve(config->scriptCurve2, value, value, 1);
 }
 
 struct command_i_s {
