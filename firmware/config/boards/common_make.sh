@@ -1,7 +1,8 @@
 #!/bin/bash
 
-PROJECT_BOARD=$1
-PROJECT_CPU=$2
+#exporting for OpenBlt Makefile
+export PROJECT_BOARD=$1
+export PROJECT_CPU=$2
 
 SCRIPT_NAME="common_make.sh"
 echo "Entering $SCRIPT_NAME with board $1 and CPU $2"
