@@ -1905,7 +1905,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 1077043801
+#define SIGNATURE_HASH 1655384082
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2476,6 +2476,8 @@
 #define ts_show_gps true
 #define ts_show_hardware_simulator true
 #define ts_show_hip9011 true
+#define ts_show_ignitionPinMode true
+#define ts_show_injectionPinMode true
 #define ts_show_joystick true
 #define ts_show_lcd true
 #define ts_show_main_relay true
@@ -2486,7 +2488,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.05.08.hellen_cypress.1077043801"
+#define TS_SIGNATURE "rusEFI 2022.05.08.hellen_cypress.1655384082"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
