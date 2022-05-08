@@ -1,4 +1,11 @@
 struct_no_prefix trigger_state_s
 	float currentGap;
 	uint32_t totalRevolutionCounter;Crank revolution counter
+    float autoscale     vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
+    float autoscale vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
+
+    uint8_t triggerStateIndex
+    uint8_t vvtCounter
+	uint8_t vvtSyncCounter
+	uint8_t vvtStateIndex
 end_struct
