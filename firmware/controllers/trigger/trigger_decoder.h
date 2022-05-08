@@ -174,6 +174,7 @@ private:
 	bool isFirstEvent;
 
 	bool m_hasSynchronizedSymmetrical = false;
+	Timer synchronizedSymmetrical;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?

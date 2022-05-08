@@ -24,7 +24,7 @@ TEST(realCrankingNB2, normalCranking) {
 
 	// Check the number of times VVT information was used to adjust crank phase
 	// This should happen exactly once: once we sync, we shouldn't lose it.
-	EXPECT_EQ(engine->outputChannels.vvtSyncCounter, 1);
+	EXPECT_EQ(engine->triggerCentral.triggerState.vvtSyncCounter, 1);
 
 	ASSERT_EQ(942, round(Sensor::getOrZero(SensorType::Rpm)));
 

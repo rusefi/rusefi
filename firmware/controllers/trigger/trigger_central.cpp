@@ -115,7 +115,7 @@ static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
 	if (offset > 0) {
-		engine->outputChannels.vvtSyncCounter++;
+		tc->triggerState.vvtSyncCounter++;
 	}
 	return offset;
 }
@@ -292,8 +292,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
-		engine->outputChannels.vvtSyncGapRatio = vvtState->currentGap;
-		engine->outputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
+		tc->triggerState.vvtSyncGapRatio = vvtState->triggerSyncGapRatio;
+		tc->triggerState.vvtStateIndex = vvtState->currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -314,9 +314,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.vvtCurrentPosition = currentPosition;
-#endif /* EFI_TUNER_STUDIO */
+	tc->triggerState.vvtCurrentPosition = currentPosition;
 
 	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 		// this is not sync tooth - exiting
@@ -337,9 +335,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		break;
 	}
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.vvtCounter++;
-#endif /* EFI_TUNER_STUDIO */
+	tc->triggerState.vvtCounter++;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
@@ -627,10 +623,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
-#if EFI_TUNER_STUDIO
-			engine->outputChannels.triggerSyncGapRatio = triggerState.currentGap;
-			engine->outputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
-#endif /* EFI_TUNER_STUDIO */
+
+	triggerState.triggerStateIndex = triggerState.currentCycle.current_index;
 
 
 	/**
