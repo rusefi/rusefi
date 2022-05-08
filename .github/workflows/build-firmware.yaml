@@ -105,12 +105,12 @@ jobs:
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
-           # skip-rate: 60
+            skip-rate: 60
 
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
-          #  skip-rate: 60
+            skip-rate: 60
 
           - build-target: cypress
             folder: hellen
@@ -164,7 +164,7 @@ jobs:
           - build-target: proteus_f4_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f4.ini
-    #        skip-rate: 90
+            skip-rate: 90
 
           - build-target: proteus_f7
             folder: proteus
