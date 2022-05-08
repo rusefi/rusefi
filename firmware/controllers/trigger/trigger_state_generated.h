@@ -8,7 +8,7 @@ struct trigger_state_s {
 	/**
 	 * offset 0
 	 */
-	float currentGap = (float)0;
+	float triggerSyncGapRatio = (float)0;
 	/**
 	 * Crank revolution counter
 	 * offset 4

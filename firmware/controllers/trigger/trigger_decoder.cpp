@@ -561,7 +561,7 @@ void TriggerState::decodeTriggerEvent(
 		bool wasSynchronized = getShaftSynchronized();
 
 		if (triggerShape.isSynchronizationNeeded) {
-			currentGap = (float)toothDurations[0] / toothDurations[1];
+			triggerSyncGapRatio = (float)toothDurations[0] / toothDurations[1];
 
 			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType);
 			if (isSynchronizationPoint) {
@@ -576,7 +576,7 @@ void TriggerState::decodeTriggerEvent(
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
 #if EFI_UNIT_TEST
-			actualSynchGap = currentGap;
+			actualSynchGap = triggerSyncGapRatio;
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -718,7 +718,7 @@ bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type
 	if (triggerType == TT_MIATA_VVT) {
 		auto secondGap = (float)toothDurations[1] / toothDurations[2];
 
-		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], currentGap, triggerShape.syncronizationRatioTo[0]);
+		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], triggerSyncGapRatio, triggerShape.syncronizationRatioTo[0]);
 		bool secondGapOk  = isInRange(triggerShape.syncronizationRatioFrom[1], secondGap,  triggerShape.syncronizationRatioTo[1]);
 
 		// One or both teeth was impossible range, this is not the sync point
@@ -728,7 +728,7 @@ bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type
 
 		// If both teeth are in the range of possibility, return whether this gap is
 		// shorter than the last or not.  If it is, this is the sync point.
-		return currentGap < secondGap;
+		return triggerSyncGapRatio < secondGap;
 	}
 
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {

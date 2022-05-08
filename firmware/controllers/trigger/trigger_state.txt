@@ -1,8 +1,9 @@
 struct_no_prefix trigger_state_s
-	float currentGap;
 	uint32_t totalRevolutionCounter;Crank revolution counter
     float autoscale     vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
     float autoscale vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
+    float autoscale triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
+    float triggerActualSyncGapRatio;
 
     uint8_t triggerStateIndex
     uint8_t vvtCounter

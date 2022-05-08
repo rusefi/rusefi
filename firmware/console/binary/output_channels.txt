@@ -310,9 +310,6 @@ uint8_t unusedWat
 	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.5, 0, 0, 100, 1
 	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 0.5, 0, 0, 100, 1
 
-
-    float autoscale triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
-
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
 	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5, 0, -50, 50, 1
