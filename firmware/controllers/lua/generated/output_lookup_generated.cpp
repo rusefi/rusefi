@@ -382,20 +382,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.boostControllerOutput;
 	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
 		return engine->outputChannels.boostControllerOpenLoopPart;
-	if (strEqualCaseInsensitive(name, "vvtSyncGapRatio"))
-		return engine->outputChannels.vvtSyncGapRatio;
-	if (strEqualCaseInsensitive(name, "vvtCurrentPosition"))
-		return engine->outputChannels.vvtCurrentPosition;
 	if (strEqualCaseInsensitive(name, "triggerSyncGapRatio"))
 		return engine->outputChannels.triggerSyncGapRatio;
-	if (strEqualCaseInsensitive(name, "triggerStateIndex"))
-		return engine->outputChannels.triggerStateIndex;
-	if (strEqualCaseInsensitive(name, "vvtCounter"))
-		return engine->outputChannels.vvtCounter;
-	if (strEqualCaseInsensitive(name, "vvtSyncCounter"))
-		return engine->outputChannels.vvtSyncCounter;
-	if (strEqualCaseInsensitive(name, "vvtStateIndex"))
-		return engine->outputChannels.vvtStateIndex;
 	if (strEqualCaseInsensitive(name, "fallbackMap"))
 		return engine->outputChannels.fallbackMap;
 	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
