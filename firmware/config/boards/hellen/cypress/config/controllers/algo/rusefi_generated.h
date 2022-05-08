@@ -1524,6 +1524,7 @@
 #define isInjectionEnabled_offset 1352
 #define isManualSpinningMode_offset 1352
 #define isMapAveragingEnabled_offset 1352
+#define isPhaseSyncRequiredForIgnition_offset 1352
 #define isSdCardEnabled_offset 744
 #define issFilterReciprocal_offset 3119
 #define issue_294_31_offset 100
@@ -1904,7 +1905,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 399941958
+#define SIGNATURE_HASH 1077043801
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2485,12 +2486,12 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.05.08.hellen_cypress.399941958"
+#define TS_SIGNATURE "rusEFI 2022.05.08.hellen_cypress.1077043801"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1024
+#define TS_TOTAL_OUTPUT_SIZE 1016
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2524,7 +2525,6 @@
 #define unused1128_offset 1608
 #define unused1129_offset 1608
 #define unused1130_offset 1608
-#define unused1476b20_offset 1352
 #define unused1476b8_offset 1352
 #define unused1740b0_offset 1608
 #define unused1740b1_offset 1608

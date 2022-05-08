@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 08 12:03:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2759,8 +2759,9 @@ struct engine_configuration_s {
 	offset 1352 bit 21 */
 	bool launchSmoothRetard : 1 {};
 	/**
+	 * Some engines are OK running semi-random sequential while other engine require phase synchronization
 	offset 1352 bit 22 */
-	bool unused1476b20 : 1 {};
+	bool isPhaseSyncRequiredForIgnition : 1 {};
 	/**
 	offset 1352 bit 23 */
 	bool unused1476b8 : 1 {};
@@ -5039,4 +5040,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21324);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun May 08 12:03:23 UTC 2022

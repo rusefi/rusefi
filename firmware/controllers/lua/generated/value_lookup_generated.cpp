@@ -574,6 +574,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isBoostControlEnabled;
 	if (strEqualCaseInsensitive(name, "launchSmoothRetard"))
 		return engineConfiguration->launchSmoothRetard;
+	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
+		return engineConfiguration->isPhaseSyncRequiredForIgnition;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "turboSpeedSensorMultiplier"))
@@ -2398,6 +2400,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "launchSmoothRetard"))
 	{
 		engineConfiguration->launchSmoothRetard = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
+	{
+		engineConfiguration->isPhaseSyncRequiredForIgnition = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
