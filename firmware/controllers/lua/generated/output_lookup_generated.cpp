@@ -382,8 +382,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.boostControllerOutput;
 	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
 		return engine->outputChannels.boostControllerOpenLoopPart;
-	if (strEqualCaseInsensitive(name, "triggerSyncGapRatio"))
-		return engine->outputChannels.triggerSyncGapRatio;
 	if (strEqualCaseInsensitive(name, "fallbackMap"))
 		return engine->outputChannels.fallbackMap;
 	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
