@@ -81,7 +81,7 @@ void TriggerState::resetTriggerState() {
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 
-	m_hasSynchronizedSymmetrical = false;
+	m_hasSynchronizedPhase = false;
 }
 
 void TriggerState::setTriggerErrorState() {
@@ -394,8 +394,8 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle) {
-	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncSymmetricalCrank", false);
+angle_t TriggerState::syncEnginePhase(int divider, int remainder, angle_t engineCycle) {
+	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncEnginePhase", false);
 	angle_t totalShift = 0;
 	while (getTotalRevolutionCounter() % divider != remainder) {
 		/**
@@ -408,7 +408,8 @@ angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t e
 	}
 
 	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
-	m_hasSynchronizedSymmetrical = true;
+	m_hasSynchronizedPhase = true;
+	synchronizedPhase.reset();
 
 	return totalShift;
 }
