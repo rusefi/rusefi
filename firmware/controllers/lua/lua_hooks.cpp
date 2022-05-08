@@ -175,7 +175,7 @@ static int lua_txCan(lua_State* l) {
 	}
 
 	// conform ext parameter to true/false
-	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+	CanTxMessage msg(CanCategory::LUA, id, 8, ext == 0 ? false : true);
 	msg.busIndex = channel - HUMAN_OFFSET;
 
 	// Unfortunately there is no way to inspect the length of a table,
