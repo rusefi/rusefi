@@ -1069,7 +1069,7 @@ bit flexCranking;Enable a second cranking table to use for E100 flex fuel, inter
 bit useIacPidMultTable;+This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 bit isBoostControlEnabled
 bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within the RPM Range
-bit unused1476b20
+bit isPhaseSyncRequiredForIgnition;Some engines are OK running semi-random sequential while other engine require phase synchronization
 	bit unused1476b8
 bit unused_1484_bit_24
 bit unused_1484_bit_25
