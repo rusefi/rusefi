@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 12:02:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 13:03:46 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1199,175 +1199,170 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> boostControllerOpenLoopPart = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 414
-	 */
-	uint8_t alignmentFill_at_414[2];
-	/**
-	 * @@GAUGE_NAME_TRG_GAP@@
-	 * offset 416
-	 */
-	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
-	/**
 	kPa
-	 * offset 420
+	 * offset 414
 	 */
 	scaled_channel<uint16_t, 10, 1> fallbackMap = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_CLOSED_LOOP@@
 	%
-	 * offset 422
+	 * offset 416
 	 */
 	scaled_channel<int8_t, 2, 1> boostControllerClosedLoopPart = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_DETECTED_GEAR@@
-	 * offset 423
+	 * offset 417
 	 */
 	uint8_t detectedGear = (uint8_t)0;
 	/**
 	deg
-	 * offset 424
+	 * offset 418
 	 */
 	scaled_channel<int16_t, 100, 1> timingCltCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 426
+	 * offset 420
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 428
+	 * offset 422
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 430
+	 * offset 424
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
-	 * offset 432
+	 * offset 426
 	 */
 	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
 	/**
-	 * offset 434
+	 * offset 428
 	 */
 	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
 	/**
-	 * offset 436
+	 * offset 430
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 438
+	 * offset 432
 	 */
 	uint16_t maxTriggerReentrant = (uint16_t)0;
 	/**
-	 * offset 440
+	 * offset 434
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 442
+	 * offset 436
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
-	 * offset 444
+	 * need 4 byte alignment
+	units
+	 * offset 438
+	 */
+	uint8_t alignmentFill_at_438[2];
+	/**
+	 * offset 440
 	 */
 	int triggerPrimaryFall = (int)0;
 	/**
-	 * offset 448
+	 * offset 444
 	 */
 	int triggerPrimaryRise = (int)0;
 	/**
-	 * offset 452
+	 * offset 448
 	 */
 	int triggerSecondaryFall = (int)0;
 	/**
-	 * offset 456
+	 * offset 452
 	 */
 	int triggerSecondaryRise = (int)0;
 	/**
-	 * offset 460
+	 * offset 456
 	 */
 	int triggerVvtFall = (int)0;
 	/**
-	 * offset 464
+	 * offset 460
 	 */
 	int triggerVvtRise = (int)0;
 	/**
-	 * offset 468
+	 * offset 464
 	 */
 	uint8_t startStopStateToggleCounter = (uint8_t)0;
 	/**
-	 * offset 469
+	 * offset 465
 	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 470
+	 * offset 466
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
-	 * offset 471
+	 * offset 467
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 472
+	 * offset 468
 	 */
 	float injectorFlowPressureRatio = (float)0;
 	/**
 	kPa
-	 * offset 476
+	 * offset 472
 	 */
 	float injectorFlowPressureDelta = (float)0;
 	/**
-	 * offset 480
+	 * offset 476
 	 */
 	float etbIntegralError = (float)0;
 	/**
 	%
-	 * offset 484
+	 * offset 480
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	 * offset 488
+	 * offset 484
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 500
+	 * offset 496
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 512
+	 * offset 508
 	 */
 	pid_status_s etbStatus;
 	/**
-	 * offset 524
+	 * offset 520
 	 */
 	pid_status_s boostStatus;
 	/**
 	 * "aux speed 1"
 	s
-	 * offset 536
+	 * offset 532
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * "aux speed 2"
 	s
-	 * offset 538
+	 * offset 534
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 540
+	 * offset 536
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
-	 * offset 542
+	 * offset 538
 	 */
 	uint8_t unusedAtTheEnd[78];
 };
-static_assert(sizeof(output_channels_s) == 620);
+static_assert(sizeof(output_channels_s) == 616);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 12:02:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 13:03:46 UTC 2022
