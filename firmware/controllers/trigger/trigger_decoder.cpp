@@ -719,7 +719,7 @@ bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type
 	if (triggerType == TT_MIATA_VVT) {
 		auto secondGap = (float)toothDurations[1] / toothDurations[2];
 
-		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], triggerSyncGapRatio, triggerShape.syncronizationRatioTo[0]);
+		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], (float)triggerSyncGapRatio, triggerShape.syncronizationRatioTo[0]);
 		bool secondGapOk  = isInRange(triggerShape.syncronizationRatioFrom[1], secondGap,  triggerShape.syncronizationRatioTo[1]);
 
 		// One or both teeth was impossible range, this is not the sync point
