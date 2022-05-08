@@ -26,6 +26,7 @@ Release template (copy/paste this for new release):
 ### Added
  - FasterEngineSpinUp should be enabled by default #4094
  - ETB low limit is now configurable #4119
+ - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
