@@ -28,7 +28,7 @@ Usages:
   engine_state: [ "EngineState.java", "controllers/algo" ]
   tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
   trigger_central: [ "TriggerCentral.java", "controllers/trigger", "-with_c_defines=true" ]
-  trigger_state: [ "TriggerState.java", "controllers/trigger" ]
+  trigger_state: [ "TriggerState.java", "controllers/trigger", "-prepend=integration/rusefi_config.txt" ]
   wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
   idle_state: [ "IdleState.java", "controllers/actuators" ]
   ignition_state: [ "IgnitionState.java", "controllers/algo" ]
