@@ -26,7 +26,6 @@ Release template (copy/paste this for new release):
 ### Added
  - FasterEngineSpinUp should be enabled by default #4094
  - ETB low limit is now configurable #4119
- - Ford Mustang firing order 1-5-4-2-6-3-7-8 #4150
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
