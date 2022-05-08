@@ -50,7 +50,7 @@ typedef enum __attribute__ ((__packed__)) {
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5,
 	FO_1_8_7_2_6_5_4_3 = 11,
-	FO_1_5_4_2_6_3_7_8 = 12,
+	FO_1_5_4_2_6_3_7_8 = 12, // Ford Mustang
 	FO_1_2_7_8_4_5_6_3 = 19,
 	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W
 	FO_1_2_3_4_5_6_7_8 = 25, // linearly incrementing, for V8 testing
