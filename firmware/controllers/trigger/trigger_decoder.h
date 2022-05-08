@@ -86,7 +86,7 @@ public:
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	void incrementTotalEventCounter();
-	angle_t syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle);
+	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
 	efitime_t getTotalEventCounter() const;
 
@@ -156,11 +156,11 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
-	// Returns true if syncSymmetricalCrank has been called,
-	// ie if we have enough VVT information to have full sync on
+	// Returns true if syncEnginePhase has been called,
+	// i.e. if we have enough VVT information to have full sync on
 	// an indeterminite crank pattern
-	bool hasSynchronizedSymmetrical() const {
-		return m_hasSynchronizedSymmetrical;
+	bool hasSynchronizedPhase() const {
+		return m_hasSynchronizedPhase;
 	}
 
 private:
@@ -173,8 +173,9 @@ private:
 
 	bool isFirstEvent;
 
-	bool m_hasSynchronizedSymmetrical = false;
-	Timer synchronizedSymmetrical;
+	// todo: migrate from 'm_hasSynchronizedPhase' to 'synchronizedPhase'
+	bool m_hasSynchronizedPhase = false;
+	Timer synchronizedPhase;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?
