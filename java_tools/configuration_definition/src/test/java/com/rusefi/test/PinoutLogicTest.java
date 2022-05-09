@@ -22,14 +22,14 @@ public class PinoutLogicTest {
 
         {
             ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", "10"));
-            String result = PinoutLogic.enumToOptionsList("NO", enumState, list);
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getShorterForm();
             assertEquals("\"1\",\"NO\",\"10\"", result);
 
         }
 
         {
             ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", null, null, null, null, null, "10"));
-            String result = PinoutLogic.enumToOptionsList("NO", enumState, list);
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list).getShorterForm();
             assertEquals("0=\"1\",1=\"NO\",7=\"10\"", result);
         }
     }

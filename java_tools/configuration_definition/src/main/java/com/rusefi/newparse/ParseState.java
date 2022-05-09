@@ -10,6 +10,8 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import static com.rusefi.VariableRegistry.AUTO_ENUM_SUFFIX;
+
 public class ParseState {
     private final Map<String, Definition> definitions = new HashMap<>();
     private final Map<String, Struct> structs = new HashMap<>();
@@ -217,7 +219,7 @@ public class ParseState {
         if (rhs.startsWith("@@")) {
             String defName = rhs.replaceAll("@", "");
 
-            if (defName.endsWith("_auto_enum")) {
+            if (defName.endsWith(AUTO_ENUM_SUFFIX)) {
                 // clip off the "_auto_enum" part
                 defName = defName.substring(0, defName.length() - 10);
                 values = resolveEnumValues(defName);

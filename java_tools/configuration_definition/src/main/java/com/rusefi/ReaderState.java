@@ -121,7 +121,7 @@ public class ReaderState {
 
         String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
-            variableRegistry.register(name + "_auto_enum", autoEnumOptions);
+            variableRegistry.register(name + VariableRegistry.AUTO_ENUM_SUFFIX, autoEnumOptions);
         }
 
         line = line.substring(index).trim();

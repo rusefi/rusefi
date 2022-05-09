@@ -8,6 +8,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.*;
 import java.util.*;
 
+import static com.rusefi.VariableRegistry.FULL_JAVA_ENUM;
+import static com.rusefi.VariableRegistry.ENUM_SUFFIX;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 public class PinoutLogic {
@@ -64,15 +66,16 @@ public class PinoutLogic {
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
-            String sb = enumToOptionsList(nothingName, enumList, kv.getValue());
-            if (sb.length() > 0) {
-                registry.register(outputEnumName, sb);
+            EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
+            if (pair.getSimpleForm().length() > 0) {
+                registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
             }
+            registry.register(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm());
         }
     }
 
     @NotNull
-    public static String enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
+    public static EnumPair enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
         StringBuilder simpleForm = new StringBuilder();
         StringBuilder smartForm = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
@@ -92,9 +95,9 @@ public class PinoutLogic {
                 simpleForm.append(quotedValue);
             }
         }
-        if (smartForm.length() < simpleForm.length())
-            return smartForm.toString();
-        return simpleForm.toString();
+        String shorterForm = smartForm.length() < simpleForm.length() ? smartForm.toString() : simpleForm.toString();
+
+        return new EnumPair(shorterForm, simpleForm.toString());
     }
 
     private static void appendCommandIfNeeded(StringBuilder sb) {

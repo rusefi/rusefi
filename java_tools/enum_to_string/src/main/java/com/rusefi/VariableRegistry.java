@@ -20,12 +20,14 @@ import static com.devexperts.logging.Logging.getLogging;
  * 3/30/2015
  */
 public class VariableRegistry {
+    public static final String AUTO_ENUM_SUFFIX = "_auto_enum";
     private static final Logging log = getLogging(VariableRegistry.class);
 
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
     public static final String CHAR_SUFFIX = "_char";
     public static final String ENUM_SUFFIX = "_enum";
+    public static final String FULL_JAVA_ENUM = "_fullenum";
     public static final char MULT_TOKEN = '*';
     public static final String DEFINE = "#define";
     private static final String HEX_PREFIX = "0x";

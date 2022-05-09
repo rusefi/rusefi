@@ -10,8 +10,7 @@ import java.util.Set;
 import static com.rusefi.ToolUtil.EOL;
 
 public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
-    // todo: why is this field 'static'?
-    protected static final Set<String> javaEnums = new HashSet<>();
+    protected final Set<String> existingJavaEnums = new HashSet<>();
 
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
@@ -81,10 +80,12 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
                     content.append("FieldType.FLOAT);" + EOL);
                 } else {
-                    String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
+                    String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
+                    if (enumOptions == null)
+                        enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
 
-                    if (enumOptions != null && !javaEnums.contains(configField.getType())) {
-                        javaEnums.add(configField.getType());
+                    if (enumOptions != null && !existingJavaEnums.contains(configField.getType())) {
+                        existingJavaEnums.add(configField.getType());
                         content.append("\tpublic static final String[] " + configField.getType() + " = {" + enumOptions + "};" + EOL);
                     }
 
