@@ -2,10 +2,13 @@ package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.*;
+
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 public class PinoutLogic {
     private static final String CONFIG_BOARDS = "config/boards/";
@@ -59,29 +62,40 @@ public class PinoutLogic {
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < kv.getValue().size(); i++) {
-                if (sb.length() > 0)
-                    sb.append(",");
-                String key = "";
-                for (Map.Entry<String, Value> entry : enumList.entrySet()) {
-                    if (entry.getValue().getIntValue() == i) {
-                        key = entry.getKey();
-                        break;
-                    }
-                }
-                if (key.equals(nothingName)) {
-                    sb.append("\"NONE\"");
-                } else if (kv.getValue().get(i) == null) {
-                    sb.append("\"INVALID\"");
-                } else {
-                    sb.append("\"" + kv.getValue().get(i) + "\"");
-                }
-            }
+            String sb = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (sb.length() > 0) {
-                registry.register(outputEnumName, sb.toString());
+                registry.register(outputEnumName, sb);
             }
         }
+    }
+
+    @NotNull
+    public static String enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < values.size(); i++) {
+            if (sb.length() > 0)
+                sb.append(",");
+            String key = findKey(enumList, i);
+            if (key.equals(nothingName)) {
+                sb.append("\"NONE\"");
+            } else if (values.get(i) == null) {
+                sb.append(quote("INVALID"));
+            } else {
+                sb.append("\"" + values.get(i) + "\"");
+            }
+        }
+        return sb.toString();
+    }
+
+    private static String findKey(EnumsReader.EnumState enumList, int i) {
+        String key = "";
+        for (Map.Entry<String, Value> entry : enumList.entrySet()) {
+            if (entry.getValue().getIntValue() == i) {
+                key = entry.getKey();
+                break;
+            }
+        }
+        return key;
     }
 
     @SuppressWarnings("unchecked")
@@ -172,10 +186,6 @@ public class PinoutLogic {
 
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
         }
-    }
-
-    private String quote(String value) {
-        return "\"" + value + "\"";
     }
 
     public List<String> getInputFiles() {

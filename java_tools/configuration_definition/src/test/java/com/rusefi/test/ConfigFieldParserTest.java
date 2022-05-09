@@ -72,7 +72,7 @@ public class ConfigFieldParserTest {
         ReaderState state = new ReaderState();
 
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
-        state.readBufferedReader(test, (consumer));
+        state.readBufferedReader(test, consumer);
     }
 
     @Test
