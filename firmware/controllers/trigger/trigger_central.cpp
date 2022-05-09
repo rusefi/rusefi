@@ -134,7 +134,7 @@ static void turnOffAllDebugFields(void *arg) {
 
 static angle_t adjustCrankPhase(int camIndex) {
 	float maxSyncThreshold = engineConfiguration->maxCamPhaseResolveRpm;
-	if (maxSyncThreshold != 0 && Sensor::get(SensorType::Rpm) > maxSyncThreshold) {
+	if (maxSyncThreshold != 0 && Sensor::getOrZero(SensorType::Rpm) > maxSyncThreshold) {
 		// The user has elected to stop trying to resolve crank phase after some RPM.
 		// Maybe their cam sensor only works at low RPM or something.
 		// Anyway, don't try to change crank phase at all, and return that we made no change.
