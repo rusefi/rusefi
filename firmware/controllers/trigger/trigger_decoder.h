@@ -217,7 +217,7 @@ public:
 	// i.e. if we have enough VVT information to have full sync on
 	// an indeterminite crank pattern
 	bool hasSynchronizedPhase() const {
-		return !synchronizedPhase.hasElapsedSec(3);
+		return m_hasSynchronizedPhase;
 	}
 
 private:
@@ -228,7 +228,7 @@ private:
 	float m_instantRpm = 0;
 	float m_instantRpmRatio = 0;
 
-	Timer synchronizedPhase;
+	bool m_hasSynchronizedPhase = false;
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
