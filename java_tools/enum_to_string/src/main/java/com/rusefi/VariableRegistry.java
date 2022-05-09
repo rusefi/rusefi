@@ -40,6 +40,7 @@ public class VariableRegistry {
     public Map<String, Integer> intValues = new HashMap<>();
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // todo: move thid logic to JavaFieldsConsumer since that's the consumer?
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public void readPrependValues(String prependFile) throws IOException {
@@ -219,7 +220,8 @@ public class VariableRegistry {
         } catch (NumberFormatException e) {
             //SystemOut.println("Not an integer: " + value);
 
-            if (!var.trim().endsWith(ENUM_SUFFIX)) {
+            if (!var.trim().endsWith(ENUM_SUFFIX) &&
+                    !var.trim().endsWith(FULL_JAVA_ENUM)) {
                 if (isQuoted(value, '"')) {
                     // quoted and not with enum suffix means plain string define statement
                     javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + ToolUtil.EOL);
