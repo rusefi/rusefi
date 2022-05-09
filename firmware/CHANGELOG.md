@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
+ - Synchronized Phase handling fixes #4099
 
 ## April 20202 Release - "Day 58"
 
