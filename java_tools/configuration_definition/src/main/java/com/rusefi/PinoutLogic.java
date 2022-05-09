@@ -13,6 +13,8 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 public class PinoutLogic {
     private static final String CONFIG_BOARDS = "config/boards/";
     private static final String CONNECTORS = "/connectors";
+    private static final String QUOTED_NONE = quote("NONE");
+    private static final String QUOTED_INVALID = quote("INVALID");
 
     private final File[] boardYamlFiles;
     private final String boardName;
@@ -71,20 +73,33 @@ public class PinoutLogic {
 
     @NotNull
     public static String enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder simpleForm = new StringBuilder();
+        StringBuilder smartForm = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
-            if (sb.length() > 0)
-                sb.append(",");
+            appendCommandIfNeeded(simpleForm);
             String key = findKey(enumList, i);
             if (key.equals(nothingName)) {
-                sb.append("\"NONE\"");
+                simpleForm.append(QUOTED_NONE);
+                appendCommandIfNeeded(smartForm);
+                smartForm.append(i + "=" + QUOTED_NONE);
+
             } else if (values.get(i) == null) {
-                sb.append(quote("INVALID"));
+                simpleForm.append(QUOTED_INVALID);
             } else {
-                sb.append("\"" + values.get(i) + "\"");
+                appendCommandIfNeeded(smartForm);
+                String quotedValue = quote(values.get(i));
+                smartForm.append(i + "=" + quotedValue);
+                simpleForm.append(quotedValue);
             }
         }
-        return sb.toString();
+        if (smartForm.length() < simpleForm.length())
+            return smartForm.toString();
+        return simpleForm.toString();
+    }
+
+    private static void appendCommandIfNeeded(StringBuilder sb) {
+        if (sb.length() > 0)
+            sb.append(",");
     }
 
     private static String findKey(EnumsReader.EnumState enumList, int i) {
