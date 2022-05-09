@@ -414,6 +414,10 @@ angle_t TriggerStateWithRunningStatistics::syncEnginePhase(int divider, int rema
 		vvtSyncCounter++;
 	}
 
+	if (totalShift > 0) {
+		vvtSyncCounter++;
+	}
+
 	return totalShift;
 }
 

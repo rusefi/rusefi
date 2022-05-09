@@ -183,6 +183,8 @@ public:
 		m_hasSynchronizedPhase = !m_needsDisambiguation;
 	}
 
+	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
+
 	float getInstantRpm() const {
 		return m_instantRpm;
 	}
@@ -215,8 +217,6 @@ public:
 	 * Needed for early spin-up RPM detection.
 	 */
 	void setLastEventTimeForInstantRpm(efitick_t nowNt);
-
-	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
 	// Returns true if syncEnginePhase has been called,
 	// i.e. if we have enough VVT information to have full sync on
