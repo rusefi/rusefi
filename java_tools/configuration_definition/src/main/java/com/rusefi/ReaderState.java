@@ -146,8 +146,11 @@ public class ReaderState {
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
 */
+            /*
+            why did we have this here? todo: remove in June 2022
             for (int i = enums.size(); i < totalCount; i++)
-                tunerStudioLine += ", \"INVALID\"";
+                tunerStudioLine += ", " + PinoutLogic.QUOTED_INVALID;
+             */
         }
 
         tsCustomLine.put(name, tunerStudioLine);

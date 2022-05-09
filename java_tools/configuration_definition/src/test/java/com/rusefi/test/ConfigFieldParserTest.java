@@ -88,8 +88,8 @@ public class ConfigFieldParserTest {
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "int = scalar, S08, 2, \"\", 1, 0, 0, 100, 0\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
@@ -108,8 +108,8 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
@@ -126,7 +126,7 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int2 = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
