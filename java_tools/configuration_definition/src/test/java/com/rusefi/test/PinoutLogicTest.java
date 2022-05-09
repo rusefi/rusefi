@@ -20,10 +20,17 @@ public class PinoutLogicTest {
         currentValues.put("KEY4", new Value("NO", "4"));
         EnumsReader.EnumState enumState = new EnumsReader.EnumState(currentValues, "pins", true);
 
-        ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", null, null, null, null, null, "10"));
+        {
+            ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", "10"));
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list);
+            assertEquals("\"1\",\"NO\",\"10\"", result);
 
-        String result = PinoutLogic.enumToOptionsList("NO", enumState, list);
-        assertEquals("\"1\",\"NO\",\"INVALID\",\"INVALID\",\"INVALID\",\"INVALID\",\"INVALID\",\"10\"", result);
+        }
 
+        {
+            ArrayList<String> list = new ArrayList<>(Arrays.asList("1", "NO", null, null, null, null, null, "10"));
+            String result = PinoutLogic.enumToOptionsList("NO", enumState, list);
+            assertEquals("0=\"1\",1=\"NO\",7=\"10\"", result);
+        }
     }
 }
