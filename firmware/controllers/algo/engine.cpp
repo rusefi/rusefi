@@ -612,20 +612,29 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
 // this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	return type != TT_TOOTHED_WHEEL
-			&& type != TT_ONE
-			&& type != TT_3_1_CAM
-			&& type != TT_36_2_2_2
-			&& type != TT_TOOTHED_WHEEL_60_2
-			&& type != TT_TOOTHED_WHEEL_36_1;
+	switch (type) {
+		case TT_TOOTHED_WHEEL:
+		case TT_ONE:
+		case TT_3_1_CAM:
+		case TT_36_2_2_2:	// TODO: should this one be in this list?
+		case TT_TOOTHED_WHEEL_60_2:
+		case TT_TOOTHED_WHEEL_36_1:
+			// These modes could be either cam or crank speed
+			return false;
+		default:
+			return true;
+	}
 }
 
 operation_mode_e Engine::getOperationMode() {
-	/**
-	 * here we ignore user-provided setting for well known triggers.
-	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-	 */
-	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : lookupOperationMode();
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return triggerCentral.triggerShape.getOperationMode();
+	} else {
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
 }
 
 /**
