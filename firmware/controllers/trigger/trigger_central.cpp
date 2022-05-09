@@ -113,11 +113,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
-	angle_t offset = tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
-	if (offset > 0) {
-		tc->triggerState.vvtSyncCounter++;
-	}
-	return offset;
+	return tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
 }
 
 static void turnOffAllDebugFields(void *arg) {
