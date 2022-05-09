@@ -151,13 +151,13 @@ void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
 
-	transmitStruct<Status>	  (base + 0, isExt);
-	transmitStruct<Speeds>	  (base + 1, isExt);
-	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET, isExt);
-	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET, isExt);
-	transmitStruct<Sensors2>	(base + 4, isExt);
-	transmitStruct<Fueling>	 (base + 5, isExt);
-	transmitStruct<Fueling2>	(base + 6, isExt);
+	transmitStruct<Status>	    (CanCategory::VERBOSE, base + 0, isExt);
+	transmitStruct<Speeds>	    (CanCategory::VERBOSE, base + 1, isExt);
+	transmitStruct<PedalAndTps> (CanCategory::VERBOSE, base + CAN_PEDAL_TPS_OFFSET, isExt);
+	transmitStruct<Sensors1>	(CanCategory::VERBOSE, base + CAN_SENSOR_1_OFFSET, isExt);
+	transmitStruct<Sensors2>	(CanCategory::VERBOSE, base + 4, isExt);
+	transmitStruct<Fueling>	    (CanCategory::VERBOSE, base + 5, isExt);
+	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt);
 }
 
 #endif // EFI_CAN_SUPPORT
