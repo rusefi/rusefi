@@ -32,8 +32,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.brakePedalState;
 	if (strEqualCaseInsensitive(name, "toothLogReady"))
 		return engine->outputChannels.toothLogReady;
-	if (strEqualCaseInsensitive(name, "acSwitchState"))
-		return engine->outputChannels.acSwitchState;
 	if (strEqualCaseInsensitive(name, "isTpsError"))
 		return engine->outputChannels.isTpsError;
 	if (strEqualCaseInsensitive(name, "isCltError"))
@@ -42,8 +40,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isMapError;
 	if (strEqualCaseInsensitive(name, "isIatError"))
 		return engine->outputChannels.isIatError;
-	if (strEqualCaseInsensitive(name, "acState"))
-		return engine->outputChannels.acState;
 	if (strEqualCaseInsensitive(name, "isTriggerError"))
 		return engine->outputChannels.isTriggerError;
 	if (strEqualCaseInsensitive(name, "hasCriticalError"))
