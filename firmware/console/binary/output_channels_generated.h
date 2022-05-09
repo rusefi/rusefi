@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 13:03:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 09 09:39:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -86,9 +86,8 @@ struct output_channels_s {
 	offset 0 bit 16 */
 	bool toothLogReady : 1 {};
 	/**
-	 * @@INDICATOR_NAME_AC_SWITCH@@
 	offset 0 bit 17 */
-	bool acSwitchState : 1 {};
+	bool unused3123 : 1 {};
 	/**
 	offset 0 bit 18 */
 	bool isTpsError : 1 {};
@@ -103,7 +102,7 @@ struct output_channels_s {
 	bool isIatError : 1 {};
 	/**
 	offset 0 bit 22 */
-	bool acState : 1 {};
+	bool unused131313 : 1 {};
 	/**
 	offset 0 bit 23 */
 	bool isTriggerError : 1 {};
@@ -1365,4 +1364,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 616);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 13:03:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 09 09:39:55 UTC 2022

@@ -2,14 +2,21 @@ package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.*;
 
+import static com.rusefi.VariableRegistry.FULL_JAVA_ENUM;
+import static com.rusefi.VariableRegistry.ENUM_SUFFIX;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
+
 public class PinoutLogic {
     private static final String CONFIG_BOARDS = "config/boards/";
     private static final String CONNECTORS = "/connectors";
+    private static final String QUOTED_NONE = quote("NONE");
+    public static final String QUOTED_INVALID = quote("INVALID");
 
     private final File[] boardYamlFiles;
     private final String boardName;
@@ -59,29 +66,54 @@ public class PinoutLogic {
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < kv.getValue().size(); i++) {
-                if (sb.length() > 0)
-                    sb.append(",");
-                String key = "";
-                for (Map.Entry<String, Value> entry : enumList.entrySet()) {
-                    if (entry.getValue().getIntValue() == i) {
-                        key = entry.getKey();
-                        break;
-                    }
-                }
-                if (key.equals(nothingName)) {
-                    sb.append("\"NONE\"");
-                } else if (kv.getValue().get(i) == null) {
-                    sb.append("\"INVALID\"");
-                } else {
-                    sb.append("\"" + kv.getValue().get(i) + "\"");
-                }
+            EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
+            if (pair.getSimpleForm().length() > 0) {
+                registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
             }
-            if (sb.length() > 0) {
-                registry.register(outputEnumName, sb.toString());
+            registry.register(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm());
+        }
+    }
+
+    @NotNull
+    public static EnumPair enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
+        StringBuilder simpleForm = new StringBuilder();
+        StringBuilder smartForm = new StringBuilder();
+        for (int i = 0; i < values.size(); i++) {
+            appendCommandIfNeeded(simpleForm);
+            String key = findKey(enumList, i);
+            if (key.equals(nothingName)) {
+                simpleForm.append(QUOTED_NONE);
+                appendCommandIfNeeded(smartForm);
+                smartForm.append(i + "=" + QUOTED_NONE);
+
+            } else if (values.get(i) == null) {
+                simpleForm.append(QUOTED_INVALID);
+            } else {
+                appendCommandIfNeeded(smartForm);
+                String quotedValue = quote(values.get(i));
+                smartForm.append(i + "=" + quotedValue);
+                simpleForm.append(quotedValue);
             }
         }
+        String shorterForm = smartForm.length() < simpleForm.length() ? smartForm.toString() : simpleForm.toString();
+
+        return new EnumPair(shorterForm, simpleForm.toString());
+    }
+
+    private static void appendCommandIfNeeded(StringBuilder sb) {
+        if (sb.length() > 0)
+            sb.append(",");
+    }
+
+    private static String findKey(EnumsReader.EnumState enumList, int i) {
+        String key = "";
+        for (Map.Entry<String, Value> entry : enumList.entrySet()) {
+            if (entry.getValue().getIntValue() == i) {
+                key = entry.getKey();
+                break;
+            }
+        }
+        return key;
     }
 
     @SuppressWarnings("unchecked")
@@ -172,10 +204,6 @@ public class PinoutLogic {
 
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
         }
-    }
-
-    private String quote(String value) {
-        return "\"" + value + "\"";
     }
 
     public List<String> getInputFiles() {

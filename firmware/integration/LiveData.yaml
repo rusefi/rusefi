@@ -19,7 +19,7 @@ Usages:
   injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
   launch_control_state: [ "LaunchControl.java", "controllers/algo" ]
   boost_control: [ "BoostControl.java", "controllers/actuators" ]
-  ac_control: [ "AcControl.java", "controllers/actuators" ]
+  ac_control: [ "AcControl.java", "controllers/actuators", "-prepend=integration/rusefi_config.txt" ]
   fan_control: [ "FanControl.java", "controllers/actuators" ]
   fuel_pump_control: [ "FuelPump.java", "controllers/actuators" ]
   main_relay: [ "MainRelay.java", "controllers/actuators" ]

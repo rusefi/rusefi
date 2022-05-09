@@ -49,7 +49,6 @@ bool AcController::getAcState() {
 		return false;
 	}
 
-	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
 	return acButtonState;
 }
@@ -60,11 +59,6 @@ void AcController::onSlowCallback() {
 	m_acEnabled = isEnabled;
 
 	enginePins.acRelay.setValue(isEnabled);
-
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.acSwitchState = engine->acSwitchState;
-	engine->outputChannels.acState = isEnabled;
-#endif // EFI_TUNER_STUDIO
 }
 
 bool AcController::isAcEnabled() const {

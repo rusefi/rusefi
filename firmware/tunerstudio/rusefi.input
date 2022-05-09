@@ -2049,7 +2049,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection Pin 10 ",	    			injectionPins10, {isInjectionEnabled == 1 && cylindersCount > 9}
 		field = "Injection Pin 11 ",					injectionPins11, {isInjectionEnabled == 1 && cylindersCount > 10}
 		field = "Injection Pin 12 ",					injectionPins12, {isInjectionEnabled == 1 && cylindersCount > 11}
-		field = ""
+		field = ""@@if_ts_show_injectionPinMode
 		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}@@if_ts_show_injectionPinMode
 
 	dialog = cylinderBankSelect, "Cylinder Banks", yAxis

@@ -11,5 +11,4 @@ public:
 private:
 	bool getAcState();
 
-	bool m_acEnabled = false;
 };

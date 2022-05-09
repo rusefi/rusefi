@@ -20,12 +20,12 @@ bit isFan2On
 bit alternatorOnOff;
 bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 bit toothLogReady;
-bit acSwitchState;@@INDICATOR_NAME_AC_SWITCH@@
+bit unused3123
 bit isTpsError;
 bit isCltError;
 bit isMapError;
 bit isIatError;
-bit acState;
+bit unused131313;
 bit isTriggerError;
 bit hasCriticalError;
 bit isWarnNow;

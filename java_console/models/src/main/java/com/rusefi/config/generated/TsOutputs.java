@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun May 08 13:03:46 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 09 09:39:55 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -404,12 +404,12 @@ public class TsOutputs {
 	public static final Field ALTERNATORONOFF = Field.create("ALTERNATORONOFF", 0, FieldType.BIT, 14);
 	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 0, FieldType.BIT, 15);
 	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 16);
-	public static final Field ACSWITCHSTATE = Field.create("ACSWITCHSTATE", 0, FieldType.BIT, 17);
+	public static final Field UNUSED3123 = Field.create("UNUSED3123", 0, FieldType.BIT, 17);
 	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 18);
 	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 19);
 	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 20);
 	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 21);
-	public static final Field ACSTATE = Field.create("ACSTATE", 0, FieldType.BIT, 22);
+	public static final Field UNUSED131313 = Field.create("UNUSED131313", 0, FieldType.BIT, 22);
 	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 23);
 	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 24);
 	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 25);
@@ -827,12 +827,12 @@ public class TsOutputs {
 	ALTERNATORONOFF,
 	BRAKEPEDALSTATE,
 	TOOTHLOGREADY,
-	ACSWITCHSTATE,
+	UNUSED3123,
 	ISTPSERROR,
 	ISCLTERROR,
 	ISMAPERROR,
 	ISIATERROR,
-	ACSTATE,
+	UNUSED131313,
 	ISTRIGGERERROR,
 	HASCRITICALERROR,
 	ISWARNNOW,

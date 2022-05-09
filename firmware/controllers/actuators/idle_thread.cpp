@@ -27,7 +27,7 @@ int IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
 	// Bump for AC
-	targetRpmAcBump = engine->acSwitchState ? engineConfiguration->acIdleRpmBump : 0;
+	targetRpmAcBump = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmBump : 0;
 
 	return targetRpmByClt + targetRpmAcBump;
 }
@@ -95,7 +95,7 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
-	running += engine->acSwitchState ? engineConfiguration->acIdleExtraOffset : 0;
+	running += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 

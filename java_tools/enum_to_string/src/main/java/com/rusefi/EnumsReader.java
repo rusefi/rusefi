@@ -2,12 +2,20 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.SystemOut;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -130,7 +138,7 @@ public class EnumsReader {
     }
 
     public static class EnumState {
-        public Map<String, Value> values;
+        public final Map<String, Value> values;
         public final String enumName;
         public final boolean isEnumClass;
 
