@@ -184,6 +184,8 @@ void Engine::updateTriggerWaveform() {
 		initVvtShape(camIndex, initState);
 	}
 
+	engine->triggerCentral.triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
+
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals();
 	}
