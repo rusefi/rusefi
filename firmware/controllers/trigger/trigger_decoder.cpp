@@ -411,6 +411,10 @@ angle_t TriggerState::syncEnginePhase(int divider, int remainder, angle_t engine
 	m_hasSynchronizedPhase = true;
 	synchronizedPhase.reset();
 
+	if (totalShift > 0) {
+		vvtSyncCounter++;
+	}
+
 	return totalShift;
 }
 
