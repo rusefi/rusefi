@@ -167,9 +167,9 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(10, 0));
 
 	// Turn on AC!
-	engine->acSwitchState = true;
+	engine->module<AcController>()->acButtonState = true;
 	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(10, 0));
-	engine->acSwitchState = false;
+	engine->module<AcController>()->acButtonState = false;
 
 	// Turn the fan on!
 	enginePins.fanRelay.setValue(1);
@@ -181,7 +181,7 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
 
 	// Turn on everything!
-	engine->acSwitchState = true;
+	engine->module<AcController>()->acButtonState = true;
 	enginePins.fanRelay.setValue(1);
 	enginePins.fanRelay2.setValue(1);
 	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(10, 0));

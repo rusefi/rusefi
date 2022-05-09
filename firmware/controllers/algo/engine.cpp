@@ -324,11 +324,11 @@ void Engine::updateSwitchInputs() {
 	}
 	if (hasAcToggle()) {
 		bool result = getAcToggle();
-		if (engine->acSwitchState != result) {
-			engine->acSwitchState = result;
-			engine->module<AcController>().unmock().acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
+		AcController & acController = engine->module<AcController>().unmock();
+		if (acController.acButtonState != result) {
+			acController.acButtonState = result;
+			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
-		engine->acSwitchState = result;
 	}
 	engine->clutchUpState = getClutchUpState();
 

@@ -365,9 +365,6 @@ public:
 	bool clutchDownState = false;
 	bool brakePedalState = false;
 
-	// todo: extract some helper which would contain boolean state and most recent toggle time?
-	bool acSwitchState = false;
-
 	bool isRunningPwmTest = false;
 
 	/**
