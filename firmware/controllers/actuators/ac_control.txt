@@ -5,8 +5,9 @@ bit engineTooFast
 bit noClt
 bit engineTooHot
 bit tpsTooHigh
+bit m_acEnabled
 
-bit acButtonState
+bit acButtonState;@@INDICATOR_NAME_AC_SWITCH@@
 bit isDisabledByLua;For setAcDisabled Lua method
 
 int latest_usage_ac_control;
