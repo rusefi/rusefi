@@ -81,7 +81,6 @@ void TriggerState::resetTriggerState() {
 	totalEventCountBase = 0;
 	isFirstEvent = true;
 
-	m_hasSynchronizedPhase = false;
 	synchronizedPhase.init();
 }
 
@@ -409,7 +408,6 @@ angle_t TriggerState::syncEnginePhase(int divider, int remainder, angle_t engine
 	}
 
 	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
-	m_hasSynchronizedPhase = true;
 	synchronizedPhase.reset();
 
 	return totalShift;

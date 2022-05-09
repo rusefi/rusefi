@@ -160,7 +160,7 @@ public:
 	// i.e. if we have enough VVT information to have full sync on
 	// an indeterminite crank pattern
 	bool hasSynchronizedPhase() const {
-		return m_hasSynchronizedPhase;
+		return !synchronizedPhase.hasElapsedSec(3);
 	}
 
 private:
@@ -173,8 +173,6 @@ private:
 
 	bool isFirstEvent;
 
-	// todo: migrate from 'm_hasSynchronizedPhase' to 'synchronizedPhase'
-	bool m_hasSynchronizedPhase = false;
 	Timer synchronizedPhase;
 };
 
