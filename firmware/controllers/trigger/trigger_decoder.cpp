@@ -80,8 +80,6 @@ void TriggerState::resetTriggerState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
-
-	m_hasSynchronizedPhase = false;
 }
 
 void TriggerState::setTriggerErrorState() {
@@ -227,6 +225,8 @@ void TriggerStateWithRunningStatistics::resetTriggerState() {
 	spinningEventIndex = 0;
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
+
+	m_hasSynchronizedPhase = false;
 }
 
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps() {
@@ -394,7 +394,7 @@ void TriggerCentral::validateCamVvtCounters() {
 	}
 }
 
-angle_t TriggerState::syncEnginePhase(int divider, int remainder, angle_t engineCycle) {
+angle_t TriggerStateWithRunningStatistics::syncEnginePhase(int divider, int remainder, angle_t engineCycle) {
 	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncEnginePhase", false);
 	angle_t totalShift = 0;
 	while (getTotalRevolutionCounter() % divider != remainder) {

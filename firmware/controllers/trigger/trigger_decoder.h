@@ -86,7 +86,6 @@ public:
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
 	void incrementTotalEventCounter();
-	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
 	efitime_t getTotalEventCounter() const;
 
@@ -156,13 +155,6 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
-	// Returns true if syncEnginePhase has been called,
-	// i.e. if we have enough VVT information to have full sync on
-	// an indeterminite crank pattern
-	bool hasSynchronizedPhase() const {
-		return m_hasSynchronizedPhase;
-	}
-
 private:
 	void resetCurrentCycleState();
 	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
@@ -172,8 +164,6 @@ private:
 	int64_t totalEventCountBase;
 
 	bool isFirstEvent;
-
-	bool m_hasSynchronizedPhase = false;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?
@@ -221,6 +211,15 @@ public:
 	 */
 	void setLastEventTimeForInstantRpm(efitick_t nowNt);
 
+	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
+
+	// Returns true if syncEnginePhase has been called,
+	// i.e. if we have enough VVT information to have full sync on
+	// an indeterminite crank pattern
+	bool hasSynchronizedPhase() const {
+		return m_hasSynchronizedPhase;
+	}
+
 private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
@@ -229,6 +228,7 @@ private:
 	float m_instantRpm = 0;
 	float m_instantRpmRatio = 0;
 
+	bool m_hasSynchronizedPhase = false;
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
