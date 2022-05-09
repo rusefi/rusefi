@@ -8,13 +8,10 @@
  */
 class Timer {
 public:
-	Timer();
 	void reset();
 
 	// Reset the timer to a known timestamp (don't take a timestamp internally)
 	void reset(efitick_t nowNt);
-	// returns timer to the most original-as-constructed state
-	void init();
 
 	bool hasElapsedSec(float seconds) const;
 	bool hasElapsedMs(float ms) const;
@@ -35,5 +32,5 @@ public:
 
 private:
 	// Use not-quite-minimum value to avoid overflow
-	efitick_t m_lastReset;
+	efitick_t m_lastReset = INT64_MIN / 8;
 };

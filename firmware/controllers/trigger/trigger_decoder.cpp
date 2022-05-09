@@ -82,7 +82,6 @@ void TriggerState::resetTriggerState() {
 	isFirstEvent = true;
 
 	m_hasSynchronizedPhase = false;
-	synchronizedPhase.init();
 }
 
 void TriggerState::setTriggerErrorState() {
