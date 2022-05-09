@@ -178,6 +178,11 @@ public:
 	TriggerStateWithRunningStatistics();
 	void resetTriggerState() override;
 
+	void resetHasFullSync() {
+		// If this trigger doesn't need disambiguation, we already have phase sync
+		m_hasSynchronizedPhase = !m_needsDisambiguation;
+	}
+
 	float getInstantRpm() const {
 		return m_instantRpm;
 	}
@@ -220,6 +225,12 @@ public:
 		return m_hasSynchronizedPhase;
 	}
 
+	void setNeedsDisambiguation(bool needsDisambiguation) {
+		m_needsDisambiguation = needsDisambiguation;
+
+		resetHasFullSync();
+	}
+
 private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
@@ -228,6 +239,7 @@ private:
 	float m_instantRpm = 0;
 	float m_instantRpmRatio = 0;
 
+	bool m_needsDisambiguation = false;
 	bool m_hasSynchronizedPhase = false;
 };
 

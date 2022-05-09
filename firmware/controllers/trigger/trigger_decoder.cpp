@@ -226,7 +226,7 @@ void TriggerStateWithRunningStatistics::resetTriggerState() {
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps() {
