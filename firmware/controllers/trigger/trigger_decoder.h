@@ -173,9 +173,7 @@ private:
 
 	bool isFirstEvent;
 
-	// todo: migrate from 'm_hasSynchronizedPhase' to 'synchronizedPhase'
 	bool m_hasSynchronizedPhase = false;
-	Timer synchronizedPhase;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?
