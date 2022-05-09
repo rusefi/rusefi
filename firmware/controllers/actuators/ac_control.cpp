@@ -49,7 +49,6 @@ bool AcController::getAcState() {
 		return false;
 	}
 
-	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
 	return acButtonState;
 }
