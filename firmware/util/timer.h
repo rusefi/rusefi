@@ -8,6 +8,7 @@
  */
 class Timer {
 public:
+	Timer();
 	void reset();
 
 	// Reset the timer to a known timestamp (don't take a timestamp internally)
