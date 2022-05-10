@@ -241,8 +241,7 @@ public:
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
-	void OnTriggerSyncronization(bool wasSynchronized) override;
-	void OnTriggerInvalidIndex(int currentIndex) override;
+	void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
 #endif
 

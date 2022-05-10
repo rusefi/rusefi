@@ -285,9 +285,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		return;
 	}
 
-	if (isVvtWithRealDecoder) {
-		TriggerDecoderBase& vvtDecoder = tc->vvtState[bankIndex][camIndex];
+	TriggerDecoderBase& vvtDecoder = tc->vvtState[bankIndex][camIndex];
 
+	if (isVvtWithRealDecoder) {
 		vvtDecoder.decodeTriggerEvent(
 				"vvt",
 			tc->vvtShape[camIndex],
@@ -320,7 +320,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	tc->triggerState.vvtCurrentPosition = currentPosition;
 
-	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+	if (isVvtWithRealDecoder && vvtDecoder.currentCycle.current_index != 0) {
 		// this is not sync tooth - exiting
 		return;
 	}
@@ -626,10 +626,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine,
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
-
-
-	triggerState.triggerStateIndex = triggerState.currentCycle.current_index;
-
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
