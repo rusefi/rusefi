@@ -47,7 +47,7 @@ public class PCanIoStream extends AbstractIoStream {
     };
 
     @Nullable
-    public static PCanIoStream getPCANIoStream() {
+    public static PCanIoStream createStream() {
         PCANBasic can = new PCANBasic();
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);

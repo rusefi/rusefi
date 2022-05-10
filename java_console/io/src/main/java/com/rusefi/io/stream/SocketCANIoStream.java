@@ -66,7 +66,7 @@ public class SocketCANIoStream extends AbstractIoStream {
 
     public SocketCANIoStream() {
         try {
-            NetworkDevice canInterface = NetworkDevice.lookup("can0");
+            NetworkDevice canInterface = NetworkDevice.lookup(System.getProperty("CAN_DEVICE_NAME", "can0"));
             socket = CanChannels.newRawChannel();
             socket.bind(canInterface);
 
@@ -121,5 +121,9 @@ public class SocketCANIoStream extends AbstractIoStream {
     @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
+    }
+
+    public static IoStream createStream() {
+        return new SocketCANIoStream();
     }
 }

@@ -20,7 +20,7 @@ public class PCanSandbox {
     private static final Logging log = getLogging(PCanSandbox.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        AbstractIoStream tsStream = PCanIoStream.getPCANIoStream();
+        AbstractIoStream tsStream = PCanIoStream.createStream();
         if (tsStream == null)
             throw new IOException("No PCAN");
 
