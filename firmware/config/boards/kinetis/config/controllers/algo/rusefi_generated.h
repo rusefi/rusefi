@@ -1662,6 +1662,7 @@
 #define maxAcClt_offset 11
 #define maxAcRpm_offset 9
 #define maxAcTps_offset 10
+#define maxCamPhaseResolveRpm_offset 3000
 #define maxIdleVss_offset 378
 #define mc33816_cs_offset 2024
 #define mc33816_driven_offset 1924
@@ -1891,7 +1892,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 4019708450
+#define SIGNATURE_HASH 23233905
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2474,7 +2475,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.05.09.kin.4019708450"
+#define TS_SIGNATURE "rusEFI 2022.05.10.kin.23233905"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2517,7 +2518,7 @@
 #define unused1740b0_offset 1608
 #define unused1740b1_offset 1608
 #define unused1740b2_offset 1608
-#define unused4080_offset 3000
+#define unused4080_offset 3001
 #define unused_1484_bit_24_offset 1352
 #define unused_1484_bit_25_offset 1352
 #define unused_1484_bit_26_offset 1352

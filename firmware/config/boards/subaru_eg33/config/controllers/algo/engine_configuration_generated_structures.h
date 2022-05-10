@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun May 08 12:03:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue May 10 04:27:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4053,9 +4053,15 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
+	 * Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.
+	rpm
 	 * offset 3028
 	 */
-	int8_t unused4080[12];
+	scaled_channel<uint8_t, 1, 50> maxCamPhaseResolveRpm;
+	/**
+	 * offset 3029
+	 */
+	int8_t unused4080[11];
 	/**
 	to
 	 * offset 3040
@@ -5022,4 +5028,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun May 08 12:03:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue May 10 04:27:17 UTC 2022
