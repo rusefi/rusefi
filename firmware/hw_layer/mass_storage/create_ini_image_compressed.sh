@@ -18,8 +18,8 @@ echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for 
 
 rm -f $IMAGE $IMAGE.gz
 
-# copy *count*KB of zeroes
-dd if=/dev/zero of=$IMAGE bs=1152 count=$FS_SIZE
+# copy *FS_SIZE*KB of zeroes
+dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
 
 # create a FAT filesystem inside, name it RUSEFI
 mkfs.fat $IMAGE
