@@ -226,7 +226,7 @@ void TriggerStateWithRunningStatistics::resetTriggerState() {
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
-	synchronizedPhase.init();
+	m_hasSynchronizedPhase = false;
 }
 
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps() {
@@ -408,7 +408,7 @@ angle_t TriggerStateWithRunningStatistics::syncEnginePhase(int divider, int rema
 	}
 
 	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
-	synchronizedPhase.reset();
+	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
 		vvtSyncCounter++;
