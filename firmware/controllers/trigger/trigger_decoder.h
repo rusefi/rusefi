@@ -13,7 +13,7 @@
 #include "trigger_state_generated.h"
 #include "timer.h"
 
-class TriggerState;
+class TriggerDecoderBase;
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
@@ -40,7 +40,7 @@ protected:
 	virtual trigger_type_e getType() const = 0;
 };
 
-typedef void (*TriggerStateCallback)(TriggerState *);
+typedef void (*TriggerStateCallback)(TriggerDecoderBase*);
 
 typedef struct {
 	/**
@@ -74,9 +74,9 @@ typedef struct {
 /**
  * @see TriggerWaveform for trigger wheel shape definition
  */
-class TriggerState : public trigger_state_s {
+class TriggerDecoderBase : public trigger_state_s {
 public:
-	TriggerState();
+	TriggerDecoderBase();
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
@@ -173,9 +173,9 @@ private:
 /**
  * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
  */
-class TriggerStateWithRunningStatistics : public TriggerState {
+class PrimaryTriggerDecoder : public TriggerDecoderBase {
 public:
-	TriggerStateWithRunningStatistics();
+	PrimaryTriggerDecoder();
 	void resetTriggerState() override;
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
@@ -231,12 +231,14 @@ private:
 	bool m_hasSynchronizedPhase = false;
 };
 
+class VvtTriggerDecoder : public TriggerDecoderBase { };
+
 angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,
-	TriggerState& state);
+	TriggerDecoderBase& state);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);
