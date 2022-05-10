@@ -1429,7 +1429,9 @@ tChargeMode_e tChargeMode;
 
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideFrom;;"from", 1, 0, 0, 20, 2
 
-	int8_t[12] unused4080;;"",1,0,0,0,0
+	uint8_t autoscale maxCamPhaseResolveRpm;Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.;"rpm", 50, 0, 0, 12500, 0
+
+	int8_t[11] unused4080;;"",1,0,0,0,0
 
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"to", 1, 0, 0, 20, 2
 
