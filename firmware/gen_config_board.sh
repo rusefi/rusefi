@@ -61,6 +61,7 @@ java -DSystemOut.name=logs/gen_config_board \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
+# we generate both versions of the header but only one would be actually included due to conditional compilation see EFI_USE_COMPRESSED_INI_MSD
 # todo: make things consistent by
 # 0) having generated content not in the same folder with the tool generating content?
 # 1) using unique file name for each configuration?
