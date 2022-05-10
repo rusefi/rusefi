@@ -926,6 +926,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mc33_t_hold_off;
 	if (strEqualCaseInsensitive(name, "mc33_t_hold_tot"))
 		return engineConfiguration->mc33_t_hold_tot;
+	if (strEqualCaseInsensitive(name, "maxCamPhaseResolveRpm"))
+		return engineConfiguration->maxCamPhaseResolveRpm;
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
 		return engineConfiguration->hpfpCamLobes;
 	if (strEqualCaseInsensitive(name, "hpfpPeakPos"))
@@ -3280,6 +3282,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "mc33_t_hold_tot"))
 	{
 		engineConfiguration->mc33_t_hold_tot = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "maxCamPhaseResolveRpm"))
+	{
+		engineConfiguration->maxCamPhaseResolveRpm = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
