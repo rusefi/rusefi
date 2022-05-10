@@ -28,6 +28,8 @@ chmod u+x $HEX2DFU
 mkdir -p deliver
 rm -f deliver/*
 
+set -e
+
 echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
 $HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
 
