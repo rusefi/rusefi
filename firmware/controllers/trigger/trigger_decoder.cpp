@@ -691,7 +691,6 @@ void TriggerDecoderBase::decodeTriggerEvent(
 			;
 
 			onShaftSynchronization(triggerCycleCallback, wasSynchronized, nowNt, triggerShape);
-
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
 			;
@@ -703,13 +702,14 @@ void TriggerDecoderBase::decodeTriggerEvent(
 
 		toothed_previous_time = nowNt;
 	}
-	if (getShaftSynchronized() && !isValidIndex(triggerShape) && triggerStateListener) {
+
+	if (getShaftSynchronized() && !isValidIndex(triggerShape)) {
 		// We've had too many events since the last sync point, we should have seen a sync point by now.
 		// This is a trigger error.
 
 		// let's not show a warning if we are just starting to spin
 		if (Sensor::getOrZero(SensorType::Rpm) != 0) {
-			warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentCycle.current_index, triggerShape.getSize());
+			warning(CUSTOM_SYNC_ERROR, "sync error for %s: index #%d above total size %d", name, currentCycle.current_index, triggerShape.getSize());
 			setTriggerErrorState();
 
 			// TODO: should we increment totalTriggerErrorCounter here too?
@@ -724,6 +724,8 @@ void TriggerDecoderBase::decodeTriggerEvent(
 	if (triggerStateListener) {
 		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
+
+	triggerStateIndex = currentCycle.current_index;
 }
 
 bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {
