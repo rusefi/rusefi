@@ -106,7 +106,7 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerState &initState) {
+static void initVvtShape(int camIndex, TriggerDecoderBase &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 
 	if (vvtMode != VVT_INACTIVE) {
@@ -126,7 +126,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 }
 
 void Engine::updateTriggerWaveform() {
-	static TriggerState initState;
+	static TriggerDecoderBase initState;
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -165,7 +165,7 @@ void Engine::updateTriggerWaveform() {
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
