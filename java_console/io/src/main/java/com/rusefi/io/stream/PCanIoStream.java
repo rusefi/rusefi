@@ -29,7 +29,7 @@ public class PCanIoStream extends AbstractIoStream {
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
-            sendCanPacket(new byte[]{0x30, 0, 0, 0, 0, 0, 0, 0});
+            sendCanPacket(FLOW_CONTROL);
         }
     };
 
@@ -37,10 +37,6 @@ public class PCanIoStream extends AbstractIoStream {
         @Override
         public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
             byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
-
-            log.info("-------sendIsoTp " + total.length + " byte(s):");
-
-            log.info("Sending " + IoStream.printHexBinary(total));
 
             sendCanPacket(total);
         }
@@ -64,6 +60,10 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     private void sendCanPacket(byte[] payLoad) {
+        log.info("-------sendIsoTp " + payLoad.length + " byte(s):");
+
+        log.info("Sending " + IoStream.printHexBinary(payLoad));
+
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
         TPCANStatus status = can.Write(CHANNEL, msg);
