@@ -39,7 +39,7 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
 void TriggerStimulatorHelper::feedSimulatedEvent(
 		const TriggerStateCallback triggerCycleCallback,
 		const TriggerConfiguration& triggerConfiguration,
-		TriggerState& state,
+		TriggerDecoderBase& state,
 		const TriggerWaveform& shape,
 		int i
 		) {
@@ -97,7 +97,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 		const TriggerStateCallback triggerCycleCallback,
 		const TriggerConfiguration& triggerConfiguration,
 		const uint32_t syncIndex,
-		TriggerState& state,
+		TriggerDecoderBase& state,
 		TriggerWaveform& shape
 		) {
 
@@ -141,7 +141,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 		TriggerWaveform& shape,
 		const TriggerConfiguration& triggerConfiguration,
-		TriggerState& state) {
+		TriggerDecoderBase& state) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
 		feedSimulatedEvent(nullptr,
 				triggerConfiguration,
