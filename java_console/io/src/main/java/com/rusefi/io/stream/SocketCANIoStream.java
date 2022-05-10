@@ -50,9 +50,11 @@ public class SocketCANIoStream extends AbstractIoStream {
     };
 
     private void sendCanPacket(byte[] total) {
-        log.info("-------sendIsoTp " + total.length + " byte(s):");
+        if (log.debugEnabled())
+            log.debug("-------sendIsoTp " + total.length + " byte(s):");
 
-        log.info("Sending " + IoStream.printHexBinary(total));
+        if (log.debugEnabled())
+            log.debug("Sending " + IoStream.printHexBinary(total));
 
         CanFrame packet = CanFrame.create(Fields.CAN_ECU_SERIAL_RX_ID, FD_NO_FLAGS, total);
         try {
@@ -100,9 +102,11 @@ public class SocketCANIoStream extends AbstractIoStream {
     private void readOnePacket(DataListener listener) {
         try {
             CanFrame rx = socket.read();
-            log.info("GOT " + rx);
+            if (log.debugEnabled())
+                log.debug("GOT " + rx);
             if (rx.getId() != CAN_ECU_SERIAL_TX_ID) {
-                log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+                if (log.debugEnabled())
+                    log.debug("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
                 return;
             }
             byte[] raw = new byte[rx.getDataLength()];

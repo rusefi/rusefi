@@ -60,9 +60,11 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     private void sendCanPacket(byte[] payLoad) {
-        log.info("-------sendIsoTp " + payLoad.length + " byte(s):");
+        if (log.debugEnabled())
+            log.debug("-------sendIsoTp " + payLoad.length + " byte(s):");
 
-        log.info("Sending " + IoStream.printHexBinary(payLoad));
+        if (log.debugEnabled())
+            log.debug("Sending " + IoStream.printHexBinary(payLoad));
 
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
@@ -98,7 +100,8 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            log.info("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            if (log.debugEnabled())
+                log.debug("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
                 log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
                 return;
