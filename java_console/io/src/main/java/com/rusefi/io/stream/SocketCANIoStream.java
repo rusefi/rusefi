@@ -60,7 +60,7 @@ public class SocketCANIoStream extends AbstractIoStream {
             socket.bind(canInterface);
 
             socket.configureBlocking(true); // we want reader thread to wait for messages
-            socket.setOption(RECV_OWN_MSGS, true);
+            socket.setOption(RECV_OWN_MSGS, false);
         } catch (IOException e) {
             throw new IllegalStateException("Error looking up", e);
         }
