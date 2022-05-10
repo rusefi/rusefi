@@ -57,7 +57,7 @@ static const int16_t supportedPids4160[] = {
 };
 
 static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
-	CanTxMessage resp(OBD_TEST_RESPONSE);
+	CanTxMessage resp(CanCategory::OBD, OBD_TEST_RESPONSE);
 
 	// write number of bytes
 	resp[0] = (uint8_t)(2 + numBytes);

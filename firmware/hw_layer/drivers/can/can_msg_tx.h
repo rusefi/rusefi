@@ -15,6 +15,16 @@
 #include "os_access.h"
 #include "can.h"
 
+enum class CanCategory : uint16_t {
+	NBC = 0,
+	VERBOSE = 1,
+	LUA = 2,
+	DOWNSTREAM_FLASHING = 3,
+	SERIAL = 4,
+	WBO_SERVICE = 5,
+	OBD = 6,
+};
+
 /**
  * Represent a message to be transmitted over CAN.
  * 
@@ -29,7 +39,7 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
@@ -90,7 +100,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t id, bool isExtended) : CanTxMessage(id, sizeof(TData), isExtended) { }
+	explicit CanTxTyped(CanCategory category, uint32_t id, bool isExtended) : CanTxMessage(category, id, sizeof(TData), isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -111,9 +121,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(uint32_t id, bool isExtended)
+void transmitStruct(CanCategory category, uint32_t id, bool isExtended)
 {
-	CanTxTyped<TData> frame(id, isExtended);
+	CanTxTyped<TData> frame(category, id, isExtended);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

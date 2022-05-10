@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 09 08:20:06 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue May 10 04:27:20 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1637,6 +1637,7 @@ public class Fields {
 	public static final int maxAcClt_offset = 11;
 	public static final int maxAcRpm_offset = 9;
 	public static final int maxAcTps_offset = 10;
+	public static final int maxCamPhaseResolveRpm_offset = 3028;
 	public static final int maxIdleVss_offset = 378;
 	public static final int mc33816_cs_offset = 2052;
 	public static final int mc33816_driven_offset = 1932;
@@ -1853,6 +1854,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
+	public static final int SIGNATURE_HASH = 437103862;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2374,7 +2376,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.05.09.all.4109945765";
+	public static final String TS_SIGNATURE = "rusEFI 2022.05.10.all.437103862";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
@@ -2414,7 +2416,7 @@ public class Fields {
 	public static final int unused1740b0_offset = 1608;
 	public static final int unused1740b1_offset = 1608;
 	public static final int unused1740b2_offset = 1608;
-	public static final int unused4080_offset = 3028;
+	public static final int unused4080_offset = 3029;
 	public static final int unused_1484_bit_24_offset = 1352;
 	public static final int unused_1484_bit_25_offset = 1352;
 	public static final int unused_1484_bit_26_offset = 1352;
@@ -3726,7 +3728,8 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDEFROM16 = Field.create("TRIGGERGAPOVERRIDEFROM16", 3016, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM17 = Field.create("TRIGGERGAPOVERRIDEFROM17", 3020, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM18 = Field.create("TRIGGERGAPOVERRIDEFROM18", 3024, FieldType.FLOAT);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3028, FieldType.INT8).setScale(1.0);
+	public static final Field MAXCAMPHASERESOLVERPM = Field.create("MAXCAMPHASERESOLVERPM", 3028, FieldType.INT8).setScale(50.0);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3029, FieldType.INT8).setScale(1.0);
 	public static final Field TRIGGERGAPOVERRIDETO1 = Field.create("TRIGGERGAPOVERRIDETO1", 3040, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO2 = Field.create("TRIGGERGAPOVERRIDETO2", 3044, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO3 = Field.create("TRIGGERGAPOVERRIDETO3", 3048, FieldType.FLOAT);
@@ -5113,6 +5116,7 @@ public class Fields {
 	TRIGGERGAPOVERRIDEFROM16,
 	TRIGGERGAPOVERRIDEFROM17,
 	TRIGGERGAPOVERRIDEFROM18,
+	MAXCAMPHASERESOLVERPM,
 	UNUSED4080,
 	TRIGGERGAPOVERRIDETO1,
 	TRIGGERGAPOVERRIDETO2,

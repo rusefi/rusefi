@@ -22,7 +22,7 @@
 }
 #endif // EFI_CAN_SUPPORT
 
-CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+CanTxMessage::CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc, bool isExtended) {
 #if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
 	// ST bxCAN device
