@@ -68,10 +68,8 @@ void TriggerDecoderBase::resetTriggerState() {
 	totalRevolutionCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
-	lastDecodingErrorTime = US2NT(-10000000LL);
-	someSortOfTriggerError = false;
+	m_timeSinceDecodeError.init();
 
-	curSignal = SHAFT_PRIMARY_FALLING;
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = 0;
 
@@ -83,8 +81,7 @@ void TriggerDecoderBase::resetTriggerState() {
 }
 
 void TriggerDecoderBase::setTriggerErrorState() {
-	lastDecodingErrorTime = getTimeNowNt();
-	someSortOfTriggerError = true;
+	m_timeSinceDecodeError.reset();
 }
 
 void TriggerDecoderBase::resetCurrentCycleState() {
@@ -418,7 +415,14 @@ void TriggerDecoderBase::incrementTotalEventCounter() {
 	totalRevolutionCounter++;
 }
 
+void PrimaryTriggerDecoder::onTriggerError() {
+	// On trigger error, we've lost full sync
+	m_hasSynchronizedPhase = false;
+}
+
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
+	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
+
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount(i));
@@ -505,12 +509,12 @@ void TriggerDecoderBase::decodeTriggerEvent(
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];
 
-	if (!useOnlyRisingEdgeForTrigger && curSignal == prevSignal) {
+	// Check that we didn't get the same edge twice in a row - that should be impossible
+	if (!useOnlyRisingEdgeForTrigger && prevSignal == signal) {
 		orderingErrorCounter++;
 	}
 
-	prevSignal = curSignal;
-	curSignal = signal;
+	prevSignal = signal;
 
 	currentCycle.eventCount[triggerWheel]++;
 
@@ -581,7 +585,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
+			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError() && !silentTriggerError)) {
 
 				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
@@ -615,7 +619,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 							gap,
 							ratioFrom,
 							triggerShape.syncronizationRatioTo[i],
-							boolToString(someSortOfTriggerError));
+							boolToString(someSortOfTriggerError()));
 					}
 				}
 			}
@@ -630,7 +634,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 							gap,
 							triggerShape.syncronizationRatioFrom[i],
 							triggerShape.syncronizationRatioTo[i],
-							boolToString(someSortOfTriggerError));
+							boolToString(someSortOfTriggerError()));
 				}
 			}
 #endif /* EFI_PROD_CODE */
@@ -667,7 +671,18 @@ void TriggerDecoderBase::decodeTriggerEvent(
 
 		if (isSynchronizationPoint) {
 			if (triggerStateListener) {
-				triggerStateListener->OnTriggerSyncronization(wasSynchronized);
+				bool isDecodingError = validateEventCounters(triggerShape);
+
+				triggerStateListener->OnTriggerSyncronization(wasSynchronized, isDecodingError);
+
+				// If we got a sync point, but the wrong number of events since the last sync point
+				if (wasSynchronized && isDecodingError) {
+					setTriggerErrorState();
+					totalTriggerErrorCounter++;
+
+					// This is a decoding error
+					onTriggerError();
+				}
 			}
 
 			setShaftSynchronized(true);
@@ -676,7 +691,6 @@ void TriggerDecoderBase::decodeTriggerEvent(
 			;
 
 			onShaftSynchronization(triggerCycleCallback, wasSynchronized, nowNt, triggerShape);
-
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
 			;
@@ -688,21 +702,31 @@ void TriggerDecoderBase::decodeTriggerEvent(
 
 		toothed_previous_time = nowNt;
 	}
+
+	// TODO: should we include triggerStateListener here? That seems vestigial from when it called a listener, but it changes the behavior to remove it.
 	if (getShaftSynchronized() && !isValidIndex(triggerShape) && triggerStateListener) {
-		triggerStateListener->OnTriggerInvalidIndex(currentCycle.current_index);
+		// We've had too many events since the last sync point, we should have seen a sync point by now.
+		// This is a trigger error.
+
+		// let's not show a warning if we are just starting to spin
+		if (Sensor::getOrZero(SensorType::Rpm) != 0) {
+			warning(CUSTOM_SYNC_ERROR, "sync error for %s: index #%d above total size %d", name, currentCycle.current_index, triggerShape.getSize());
+			setTriggerErrorState();
+
+			// TODO: should we increment totalTriggerErrorCounter here too?
+		}
+
+		onTriggerError();
+
 		return;
 	}
-	if (someSortOfTriggerError) {
-		if (getTimeNowNt() - lastDecodingErrorTime > NT_PER_SECOND) {
-			someSortOfTriggerError = false;
-		}
-	}
-
 
 	// Needed for early instant-RPM detection
 	if (triggerStateListener) {
 		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
+
+	triggerStateIndex = currentCycle.current_index;
 }
 
 bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {

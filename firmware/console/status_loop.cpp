@@ -344,7 +344,7 @@ static void initStatusLeds() {
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
+	bool justHadError = engine->triggerCentral.triggerState.someSortOfTriggerError();
 	return justHadError || engine->triggerCentral.isTriggerDecoderError();
 #else
 	return false;
