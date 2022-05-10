@@ -703,7 +703,8 @@ void TriggerDecoderBase::decodeTriggerEvent(
 		toothed_previous_time = nowNt;
 	}
 
-	if (getShaftSynchronized() && !isValidIndex(triggerShape)) {
+	// TODO: should we include triggerStateListener here? That seems vestigial from when it called a listener, but it changes the behavior to remove it.
+	if (getShaftSynchronized() && !isValidIndex(triggerShape) && triggerStateListener) {
 		// We've had too many events since the last sync point, we should have seen a sync point by now.
 		// This is a trigger error.
 
