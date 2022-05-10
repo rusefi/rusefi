@@ -106,7 +106,7 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerState &initState) {
+static void initVvtShape(int camIndex, TriggerDecoderBase &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 
 	if (vvtMode != VVT_INACTIVE) {
@@ -126,7 +126,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 }
 
 void Engine::updateTriggerWaveform() {
-	static TriggerState initState;
+	static TriggerDecoderBase initState;
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -165,7 +165,7 @@ void Engine::updateTriggerWaveform() {
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
@@ -389,11 +389,8 @@ void Engine::OnTriggerStateDecodingError() {
 			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
-	triggerCentral.triggerState.setTriggerErrorState();
 
-
-	triggerCentral.triggerState.totalTriggerErrorCounter++;
-	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
+	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
@@ -425,23 +422,12 @@ void Engine::OnTriggerSynchronizationLost() {
 	}
 }
 
-void Engine::OnTriggerInvalidIndex(int currentIndex) {
-	// let's not show a warning if we are just starting to spin
-	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
-		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
-		triggerCentral.triggerState.setTriggerErrorState();
-	}
-}
+void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) {
+	// TODO: this logic probably shouldn't be part of engine.cpp
 
-void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 	// We only care about trigger shape once we have synchronized trigger. Anything could happen
 	// during first revolution and it's fine
 	if (wasSynchronized) {
-		/**
-	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
-
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
 		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape

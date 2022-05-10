@@ -29,23 +29,19 @@ public class SocketCANIoStream extends AbstractIoStream {
     private final IncomingDataBuffer dataBuffer;
     private final RawCanChannel socket;
 
-    private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
+    private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
+        @Override
+        protected void onTpFirstFrame() {
+            sendCanPacket(FLOW_CONTROL);
+        }
+    };
 
     private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
         @Override
         public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
             byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
 
-            log.info("-------sendIsoTp " + total.length + " byte(s):");
-
-            log.info("Sending " + IoStream.printHexBinary(total));
-
-            CanFrame packet = CanFrame.create(Fields.CAN_ECU_SERIAL_RX_ID, FD_NO_FLAGS, total);
-            try {
-                socket.write(packet);
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+            sendCanPacket(total);
         }
 
         @Override
@@ -53,14 +49,29 @@ public class SocketCANIoStream extends AbstractIoStream {
         }
     };
 
+    private void sendCanPacket(byte[] total) {
+        if (log.debugEnabled())
+            log.debug("-------sendIsoTp " + total.length + " byte(s):");
+
+        if (log.debugEnabled())
+            log.debug("Sending " + IoStream.printHexBinary(total));
+
+        CanFrame packet = CanFrame.create(Fields.CAN_ECU_SERIAL_RX_ID, FD_NO_FLAGS, total);
+        try {
+            socket.write(packet);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     public SocketCANIoStream() {
         try {
-            NetworkDevice canInterface = NetworkDevice.lookup("can0");
+            NetworkDevice canInterface = NetworkDevice.lookup(System.getProperty("CAN_DEVICE_NAME", "can0"));
             socket = CanChannels.newRawChannel();
             socket.bind(canInterface);
 
             socket.configureBlocking(true); // we want reader thread to wait for messages
-            socket.setOption(RECV_OWN_MSGS, true);
+            socket.setOption(RECV_OWN_MSGS, false);
         } catch (IOException e) {
             throw new IllegalStateException("Error looking up", e);
         }
@@ -91,9 +102,11 @@ public class SocketCANIoStream extends AbstractIoStream {
     private void readOnePacket(DataListener listener) {
         try {
             CanFrame rx = socket.read();
-            log.info("GOT " + rx);
+            if (log.debugEnabled())
+                log.debug("GOT " + rx);
             if (rx.getId() != CAN_ECU_SERIAL_TX_ID) {
-                log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+                if (log.debugEnabled())
+                    log.debug("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
                 return;
             }
             byte[] raw = new byte[rx.getDataLength()];
@@ -108,5 +121,9 @@ public class SocketCANIoStream extends AbstractIoStream {
     @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
+    }
+
+    public static IoStream createStream() {
+        return new SocketCANIoStream();
     }
 }

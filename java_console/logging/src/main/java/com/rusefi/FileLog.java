@@ -59,6 +59,10 @@ public enum FileLog {
         }
     }
 
+    public static boolean isLinux() {
+        return getOsName().equalsIgnoreCase("Linux");
+    }
+
     public static String getOsName() {
         return System.getProperty("os.name");
     }

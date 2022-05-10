@@ -65,7 +65,7 @@ static void testDodgeNeonDecoder() {
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
 
-	TriggerState state;
+	TriggerDecoderBase state;
 
 	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
 
@@ -112,8 +112,8 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
-	TriggerState state_;
-	TriggerState *sta = &state_;
+	TriggerDecoderBase state_;
+	TriggerDecoderBase *sta = &state_;
 
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 

@@ -61,7 +61,7 @@ public:
 #define TRIGGER_CHANNEL_COUNT 3
 
 class Engine;
-class TriggerState;
+class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
@@ -267,7 +267,7 @@ public:
 	int triggerShapeSynchPointIndex;
 
 	void initializeSyncPoint(
-			TriggerState& state,
+			TriggerDecoderBase& state,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_config_s& triggerConfig
 			);

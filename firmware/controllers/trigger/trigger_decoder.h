@@ -13,13 +13,12 @@
 #include "trigger_state_generated.h"
 #include "timer.h"
 
-class TriggerState;
+class TriggerDecoderBase;
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
 	virtual void OnTriggerStateProperState(efitick_t nowNt) = 0;
-	virtual void OnTriggerSyncronization(bool wasSynchronized) = 0;
-	virtual void OnTriggerInvalidIndex(int currentIndex) = 0;
+	virtual void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) = 0;
 	virtual void OnTriggerSynchronizationLost() = 0;
 #endif // EFI_SHAFT_POSITION_INPUT
 };
@@ -40,7 +39,7 @@ protected:
 	virtual trigger_type_e getType() const = 0;
 };
 
-typedef void (*TriggerStateCallback)(TriggerState *);
+typedef void (*TriggerStateCallback)(TriggerDecoderBase*);
 
 typedef struct {
 	/**
@@ -74,9 +73,9 @@ typedef struct {
 /**
  * @see TriggerWaveform for trigger wheel shape definition
  */
-class TriggerState : public trigger_state_s {
+class TriggerDecoderBase : public trigger_state_s {
 public:
-	TriggerState();
+	TriggerDecoderBase();
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
@@ -98,7 +97,6 @@ public:
 			const trigger_event_e signal,
 			const efitime_t nowUs);
 
-	bool validateEventCounters(const TriggerWaveform& triggerShape) const;
 	void onShaftSynchronization(
 			const TriggerStateCallback triggerCycleCallback,
 			bool wasSynchronized,
@@ -116,10 +114,6 @@ public:
 	Timer previousEventTimer;
 
 	void setTriggerErrorState();
-
-	efitick_t lastDecodingErrorTime;
-	// the boolean flag is a performance optimization so that complex comparison is avoided if no error
-	bool someSortOfTriggerError;
 
 	/**
 	 * current duration at index zero and previous durations are following
@@ -155,15 +149,29 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
+	bool someSortOfTriggerError() const {
+		return m_timeSinceDecodeError.getElapsedSeconds(1);
+	}
+
+protected:
+	// Called when some problem is detected with trigger decoding.
+	// That means either:
+	//  - Too many events without a sync point
+	//  - Saw a sync point but the wrong number of events in the cycle
+	virtual void onTriggerError() { }
+
 private:
 	void resetCurrentCycleState();
 	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
 
-	trigger_event_e curSignal;
+	bool validateEventCounters(const TriggerWaveform& triggerShape) const;
+
 	trigger_event_e prevSignal;
 	int64_t totalEventCountBase;
 
 	bool isFirstEvent;
+
+	Timer m_timeSinceDecodeError;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?
@@ -173,9 +181,9 @@ private:
 /**
  * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
  */
-class TriggerStateWithRunningStatistics : public TriggerState {
+class PrimaryTriggerDecoder : public TriggerDecoderBase {
 public:
-	TriggerStateWithRunningStatistics();
+	PrimaryTriggerDecoder();
 	void resetTriggerState() override;
 
 	void resetHasFullSync() {
@@ -231,6 +239,8 @@ public:
 		resetHasFullSync();
 	}
 
+	void onTriggerError() override;
+
 private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
@@ -243,12 +253,14 @@ private:
 	bool m_hasSynchronizedPhase = false;
 };
 
+class VvtTriggerDecoder : public TriggerDecoderBase { };
+
 angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,
-	TriggerState& state);
+	TriggerDecoderBase& state);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);

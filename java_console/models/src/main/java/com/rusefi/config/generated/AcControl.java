@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon May 09 09:39:56 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Tue May 10 10:47:40 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -57,6 +57,7 @@ public class AcControl {
 	public static final String CMD_PWM = "pwm";
 	public static final String CMD_REBOOT = "reboot";
 	public static final String CMD_REBOOT_DFU = "reboot_dfu";
+	public static final String CMD_REBOOT_OPENBLT = "reboot_openblt";
 	public static final String CMD_RESET_ENGINE_SNIFFER = "reset_engine_chart";
 	public static final String CMD_RPM = "rpm";
 	public static final String CMD_SELF_STIMULATION = "self_stimulation";

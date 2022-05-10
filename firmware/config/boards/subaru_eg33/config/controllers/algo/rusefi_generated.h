@@ -371,6 +371,7 @@
 #define CMD_PWM "pwm"
 #define CMD_REBOOT "reboot"
 #define CMD_REBOOT_DFU "reboot_dfu"
+#define CMD_REBOOT_OPENBLT "reboot_openblt"
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_RPM "rpm"
 #define CMD_SELF_STIMULATION "self_stimulation"
@@ -1888,7 +1889,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 1967963255
+#define SIGNATURE_HASH 3966292144
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2472,7 +2473,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.05.10.subaru_eg33_f7.1967963255"
+#define TS_SIGNATURE "rusEFI 2022.05.10.subaru_eg33_f7.3966292144"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

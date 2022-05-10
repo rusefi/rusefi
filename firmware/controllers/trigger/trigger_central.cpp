@@ -285,10 +285,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		return;
 	}
 
-	if (isVvtWithRealDecoder) {
-		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
+	TriggerDecoderBase& vvtDecoder = tc->vvtState[bankIndex][camIndex];
 
-		vvtState->decodeTriggerEvent(
+	if (isVvtWithRealDecoder) {
+		vvtDecoder.decodeTriggerEvent(
 				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
@@ -296,8 +296,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
-		tc->triggerState.vvtSyncGapRatio = vvtState->triggerSyncGapRatio;
-		tc->triggerState.vvtStateIndex = vvtState->currentCycle.current_index;
+		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
+		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -320,7 +320,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	tc->triggerState.vvtCurrentPosition = currentPosition;
 
-	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+	if (isVvtWithRealDecoder && vvtDecoder.currentCycle.current_index != 0) {
 		// this is not sync tooth - exiting
 		return;
 	}
@@ -529,7 +529,7 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
  * @return true if the signal is passed through.
  */
 bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
-		TriggerState * triggerState,
+		TriggerDecoderBase * triggerState,
 		trigger_event_e signal) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
@@ -626,10 +626,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine,
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
-
-
-	triggerState.triggerStateIndex = triggerState.currentCycle.current_index;
-
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
