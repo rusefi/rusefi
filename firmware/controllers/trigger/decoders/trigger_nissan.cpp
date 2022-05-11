@@ -15,7 +15,7 @@
 /**
  * 8,2,2,2 Nissan pattern
  */
-static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2nd) {
+void initializeNissanSR20VE_4(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->gapBothDirections = true;
 	s->useOnlyPrimaryForSync = true;
@@ -33,19 +33,12 @@ static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2
 	float base = 180;
 	right = base - 4 * width;
 
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
-
 	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
+
+
 	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	// was is the the one with 360 opto sensor?
@@ -54,35 +47,23 @@ static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2
 
 	left = right;
 	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
+
 	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
+
 	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	base += 180;
 	left = right;
 	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
+
 	s->addEvent720(right, T_PRIMARY, TV_RISE);
 
 	left = right;
 	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
+
 	s->addEvent720(right, T_PRIMARY, TV_FALL);
 
 	base += 180;
@@ -93,19 +74,6 @@ static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2
 	left = right;
 	right = base;
 	s->addEvent720(right, T_PRIMARY, TV_FALL);
-}
-
-
-/**
- * Nissan Primera p11 year 1995-2002
- */
-
-void initializeNissanSR20VE_4(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, false);
-}
-
-void initializeNissanSR20VE_4_360(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, true);
 }
 
 static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
