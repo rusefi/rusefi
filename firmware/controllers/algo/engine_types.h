@@ -381,7 +381,6 @@ typedef enum {
 	/**
 	 * only the 4 tooth signal, without the 360 signal
 	 * 8,2,2,2 Nissan pattern
-	 * See also TT_NISSAN_SR20VE_360
 	 */
 	TT_NISSAN_SR20VE = 24,
 
@@ -424,10 +423,7 @@ typedef enum {
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 
-	/*
-	 * See also TT_NISSAN_SR20VE
-	 */
-	TT_NISSAN_SR20VE_360 = 38,
+	TT_UNUSED_38 = 38,
 
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
