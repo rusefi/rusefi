@@ -726,12 +726,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initialize2jzGE1_12(this);
 		break;
 
+	case TT_UNUSED_38:
 	case TT_NISSAN_SR20VE:
 		initializeNissanSR20VE_4(this);
-		break;
-
-	case TT_NISSAN_SR20VE_360:
-		initializeNissanSR20VE_4_360(this);
 		break;
 
 	case TT_ROVER_K:
