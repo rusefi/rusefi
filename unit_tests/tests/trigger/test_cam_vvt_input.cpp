@@ -53,9 +53,8 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireRise(50);
 		eth.fireFall(150);
 	}
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0));
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
+	EXPECT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
+	EXPECT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0));
 }
 
 TEST(trigger, testNoisyInput) {
@@ -141,8 +140,8 @@ TEST(trigger, testNB2CamInput) {
 
 	int totalRevolutionCountBeforeVvtSync = 5;
 	// need to be out of VVT sync to see VVT sync in action
-	eth.fireRise(25);
-	eth.fireRise(25);
+	eth.fireRise(25 * 70 / 180);
+	eth.fireRise(25 * 110 / 180);
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
 
@@ -174,7 +173,7 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US( 30));
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
-	EXPECT_NEAR(93.000f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
+	EXPECT_NEAR(288.0f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
