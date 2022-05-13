@@ -422,20 +422,18 @@ void PrimaryTriggerDecoder::onTriggerError() {
 
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount(i));
 	}
 
-
 #if EFI_UNIT_TEST
-			printf("sync point: isDecodingError=%d\r\n", isDecodingError);
-			if (isDecodingError) {
-				for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-					printf("count: cur=%d exp=%d\r\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount(i));
-				}
-			}
+	printf("validateEventCounters: isDecodingError=%d\n", isDecodingError);
+	if (isDecodingError) {
+		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
+			printf("count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount(i));
+		}
+	}
 #endif /* EFI_UNIT_TEST */
 
 	return isDecodingError;
@@ -670,22 +668,32 @@ void TriggerDecoderBase::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 		if (isSynchronizationPoint) {
+			bool isDecodingError = validateEventCounters(triggerShape);
+
 			if (triggerStateListener) {
-				bool isDecodingError = validateEventCounters(triggerShape);
-
 				triggerStateListener->OnTriggerSyncronization(wasSynchronized, isDecodingError);
-
-				// If we got a sync point, but the wrong number of events since the last sync point
-				if (wasSynchronized && isDecodingError) {
-					setTriggerErrorState();
-					totalTriggerErrorCounter++;
-
-					// This is a decoding error
-					onTriggerError();
-				}
 			}
 
-			setShaftSynchronized(true);
+			// If we got a sync point, but the wrong number of events since the last sync point
+			// One of two things has happened:
+			//  - We missed a tooth, and this is the real sync point
+			//  - Due to some mistake in timing, we found what looks like a sync point but actually isn't
+			// In either case, we should wait for another sync point before doing anything to try and run an engine,
+			// so we clear the synchronized flag.
+			if (wasSynchronized && isDecodingError) {
+				setTriggerErrorState();
+				totalTriggerErrorCounter++;
+
+				// Something wrong, no longer synchronized
+				setShaftSynchronized(false);
+
+				// This is a decoding error
+				onTriggerError();
+			} else {
+				// If this was the first sync point OR no decode error, we're synchronized!
+				setShaftSynchronized(true);
+			}
+
 			// this call would update duty cycle values
 			nextTriggerEvent()
 			;
@@ -703,8 +711,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 		toothed_previous_time = nowNt;
 	}
 
-	// TODO: should we include triggerStateListener here? That seems vestigial from when it called a listener, but it changes the behavior to remove it.
-	if (getShaftSynchronized() && !isValidIndex(triggerShape) && triggerStateListener) {
+	if (getShaftSynchronized() && !isValidIndex(triggerShape)) {
 		// We've had too many events since the last sync point, we should have seen a sync point by now.
 		// This is a trigger error.
 
@@ -717,6 +724,8 @@ void TriggerDecoderBase::decodeTriggerEvent(
 		}
 
 		onTriggerError();
+
+		setShaftSynchronized(false);
 
 		return;
 	}

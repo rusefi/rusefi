@@ -143,8 +143,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 
 	StrictMock<MockTriggerDecoder> dut;
 	// We expect one call to onTriggerError().
-	// TODO: uncomment this once decoder is fixed
-	// EXPECT_CALL(dut, onTriggerError());
+	EXPECT_CALL(dut, onTriggerError());
 
 	// Fire a few boring evenly spaced teeth
 	t += MS2NT(1);
@@ -178,8 +177,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	// This tooth is extra - expect a call to onTriggerError() and loss of sync!
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
-	// TODO: uncomment this once decoder is fixed
-	// EXPECT_FALSE(dut.getShaftSynchronized());
+	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(6, dut.currentCycle.current_index);
 }
 
@@ -193,8 +191,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 
 	StrictMock<MockTriggerDecoder> dut;
 	// We expect one call to onTriggerError().
-	// TODO: uncomment this once decoder is fixed
-	// EXPECT_CALL(dut, onTriggerError());
+	EXPECT_CALL(dut, onTriggerError());
 
 	// Fire a few boring evenly spaced teeth
 	t += MS2NT(1);
@@ -225,7 +222,6 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	doTooth(dut, shape, cfg, t);
 
 	// Sync is lost until we get to another sync point
-	// TODO: uncomment this once decoder is fixed
-	// EXPECT_FALSE(dut.getShaftSynchronized());
+	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
 }
