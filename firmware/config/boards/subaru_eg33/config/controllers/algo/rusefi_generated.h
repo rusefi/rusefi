@@ -1889,7 +1889,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 1018697188
+#define SIGNATURE_HASH 1961447896
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2473,7 +2473,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.05.11.subaru_eg33_f7.1018697188"
+#define TS_SIGNATURE "rusEFI 2022.05.13.subaru_eg33_f7.1961447896"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2619,7 +2619,7 @@
 #define vssGearRatio_offset 548
 #define vssToothCount_offset 550
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MITSUBISHI_3A92", "VVT_MAP_V_TWIN_ANOTHER", "VVT_MITSUBISHI_6G75"
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"
 #define vvt_mode_e_VVT_2JZ 2
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
 #define vvt_mode_e_VVT_BOSCH_QUICK_START 5
