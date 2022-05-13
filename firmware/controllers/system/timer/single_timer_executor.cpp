@@ -71,7 +71,8 @@ void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* s
 
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", deltaTimeNt, msg);
+		int32_t intDeltaTimeNt = (int32_t)deltaTimeNt;
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", intDeltaTimeNt, msg);
 		return;
 	}
 #endif
