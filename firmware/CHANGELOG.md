@@ -30,7 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
- - Improved logic used to disambiguate trigger sync using cam/VVT information #4099
+ - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
 
 ## April 20202 Release - "Day 58"
 
