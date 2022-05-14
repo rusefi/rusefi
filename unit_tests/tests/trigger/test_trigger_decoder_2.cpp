@@ -112,6 +112,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0, dut.getTotalRevolutionCounter());
 
 	// Do 100 turns and make sure we stay synchronized
 	for (int i = 0; i < 100; i++) {
@@ -130,6 +131,9 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 		doTooth(dut, shape, cfg, t);
 		EXPECT_TRUE(dut.getShaftSynchronized());
 		EXPECT_EQ(0, dut.currentCycle.current_index);
+
+		// We do one revolution per loop iteration
+		EXPECT_EQ(i + 1, dut.getTotalRevolutionCounter());
 	}
 }
 
@@ -224,4 +228,77 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	// Sync is lost until we get to another sync point
 	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
+}
+
+TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
+
+	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	cfg.update();
+
+	efitick_t t = 0;
+
+	PrimaryTriggerDecoder dut;
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	dut.setNeedsDisambiguation(shape.needsDisambiguation());
+
+	// Fire a few boring evenly spaced teeth
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+
+	// Missing tooth, 2x normal length!
+	t += MS2NT(2);
+	doTooth(dut, shape, cfg, t);
+
+	// Is synchronized
+	EXPECT_TRUE(dut.getShaftSynchronized());
+	// Has "full" sync, doesn't need cam information to sync
+	EXPECT_TRUE(dut.hasSynchronizedPhase());
+}
+
+TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
+	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR);
+
+	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	cfg.update();
+
+	efitick_t t = 0;
+
+	PrimaryTriggerDecoder dut;
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	dut.setNeedsDisambiguation(shape.needsDisambiguation());
+
+	// Fire a few boring evenly spaced teeth
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+
+	// Missing tooth, 2x normal length!
+	t += MS2NT(2);
+	doTooth(dut, shape, cfg, t);
+
+	// Is synchronized
+	EXPECT_TRUE(dut.getShaftSynchronized());
+	// Does not have full sync, this trigger is ambiguous
+	EXPECT_FALSE(dut.hasSynchronizedPhase());
+
+	// Provide cam assist information to the primary trigger
+	dut.syncEnginePhase(720, 2, 0);
+
+	// We now have full sync!
+	EXPECT_TRUE(dut.hasSynchronizedPhase());
+
+	// If there's a trigger error, we lose full sync
+	// Tests above ensure onTriggerError() is called properly
+	dut.onTriggerError();
+	EXPECT_FALSE(dut.hasSynchronizedPhase());
 }
