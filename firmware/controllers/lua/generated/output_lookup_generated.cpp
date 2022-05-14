@@ -354,6 +354,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tcRatio;
 	if (strEqualCaseInsensitive(name, "lastShiftTime"))
 		return engine->outputChannels.lastShiftTime;
+	if (strEqualCaseInsensitive(name, "vssEdgeCounter"))
+		return engine->outputChannels.vssEdgeCounter;
+	if (strEqualCaseInsensitive(name, "issEdgeCounter"))
+		return engine->outputChannels.issEdgeCounter;
 	if (strEqualCaseInsensitive(name, "auxLinear1"))
 		return engine->outputChannels.auxLinear1;
 	if (strEqualCaseInsensitive(name, "auxLinear2"))
