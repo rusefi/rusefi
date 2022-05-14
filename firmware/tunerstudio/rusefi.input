@@ -1215,6 +1215,8 @@ gaugeCategory = Sensors - Raw
    rawMafGauge          = rawMaf        , "Raw MAF",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawMapGauge          = rawMap        , "Raw MAP",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawAfrGauge          = rawAfr        , "Raw EGO",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   vssEdgeCounterGauge  = vssEdgeCounter
+   issEdgeCounterGauge  = issEdgeCounter
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, @@GAUGE_NAME_DESIRED_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
