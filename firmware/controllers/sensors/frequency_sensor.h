@@ -1,3 +1,6 @@
+/**
+ * @file frequency_sensor.h
+ */
 #include "functional_sensor.h"
 #include "timer.h"
 #include "biquad.h"
@@ -13,6 +16,7 @@ public:
 
 	void onEdge(efitick_t nowNt);
 
+	int eventCounter = 0;
 private:
 	Timer m_edgeTimer;
 	brain_pin_e m_pin = Gpio::Unassigned;
