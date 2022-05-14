@@ -292,7 +292,7 @@ TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
 	EXPECT_FALSE(dut.hasSynchronizedPhase());
 
 	// Provide cam assist information to the primary trigger
-	dut.syncEnginePhase(720, 2, 0);
+	dut.syncEnginePhase(2, 0, 720);
 
 	// We now have full sync!
 	EXPECT_TRUE(dut.hasSynchronizedPhase());
