@@ -891,27 +891,45 @@ static plain_get_float_s getF_plain[] = {
 #endif /* EFI_UNIT_TEST */
 
 
+static plain_get_float_s * findFloat2(const char *name) {
+	plain_get_float_s *currentF = &getF_plain[0];
+	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+		if (strEqualCaseInsensitive(name, currentF->token)) {
+			return currentF;
+		}
+		currentF++;
+	}
+	return nullptr;
+}
+
+static plain_get_integer_s *findInt(const char *name) {
+	plain_get_integer_s *currentI = &getI_plain[0];
+	while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
+		if (strEqualCaseInsensitive(name, currentI->token)) {
+			return currentI;
+		}
+		currentI++;
+	}
+	return nullptr;
+}
+
 static void getValue(const char *paramStr) {
 #if ! EFI_UNIT_TEST
 	{
-		const plain_get_integer_s *currentI = &getI_plain[0];
-		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
-			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
-				efiPrintf("%s value: %d", currentI->token, *currentI->value);
-				return;
-			}
-			currentI++;
+		plain_get_integer_s *known = findInt(paramStr);
+		if (known != nullptr) {
+			efiPrintf("%s value: %d", known->token, *known->value);
+			return;
 		}
 	}
 
-	const plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
-		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
-			float value = *currentF->value;
-			efiPrintf("%s value: %.2f", currentF->token, value);
+	{
+		plain_get_float_s * known = findFloat2(paramStr);
+		if (known != nullptr) {
+			float value = *known->value;
+			efiPrintf("%s value: %.2f", known->token, value);
 			return;
 		}
-		currentF++;
 	}
 
 
