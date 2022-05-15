@@ -114,8 +114,8 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	}
 
 	efiPrintf("=== injection ===");
-	efiPrintf("injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
+	efiPrintf("injection %s enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+			boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
@@ -179,12 +179,6 @@ static void setIgnitionPinMode(int value) {
 static void setIdlePinMode(int value) {
 	engineConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration();
-}
-
-static void setInjectionOffset(float value) {
-	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion();
 }
 
 static void setFuelPumpPinMode(int value) {
@@ -901,7 +895,6 @@ const plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
 		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
@@ -1000,7 +993,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},
