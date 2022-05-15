@@ -58,12 +58,7 @@ public class GetConfigValueConsumerTest {
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
         state.readBufferedReader(test, getConfigValueConsumer);
 
-        assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
-                "\t{\n" +
-                "\t\tconfig->iat.config.tempC_1 = value;\n" +
-                "\t\treturn;\n" +
-                "\t}\n" +
-                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
+        assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
                 "\t{\n" +
                 "\t\tconfig->iat.adcChannel = (int)value;\n" +
                 "\t\treturn;\n" +
