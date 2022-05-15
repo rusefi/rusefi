@@ -155,7 +155,7 @@ public class GetConfigValueConsumerTest {
                 "\n" +
                 "plain_get_float_s * findFloat(const char *name) {\n" +
                 "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
-                "\twhile (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {\n" +
+                "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
                 "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
                 "\t\t\treturn currentF;\n" +
                 "\t\t}\n" +

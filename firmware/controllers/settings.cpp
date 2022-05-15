@@ -893,7 +893,7 @@ static plain_get_float_s getF_plain[] = {
 
 static plain_get_float_s * findFloat2(const char *name) {
 	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+	while (currentF < getF_plain + efi::size(getF_plain)) {
 		if (strEqualCaseInsensitive(name, currentF->token)) {
 			return currentF;
 		}
@@ -904,7 +904,7 @@ static plain_get_float_s * findFloat2(const char *name) {
 
 static plain_get_integer_s *findInt(const char *name) {
 	plain_get_integer_s *currentI = &getI_plain[0];
-	while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
+	while (currentI < getI_plain + efi::size(getI_plain)) {
 		if (strEqualCaseInsensitive(name, currentI->token)) {
 			return currentI;
 		}
