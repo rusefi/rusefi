@@ -51,4 +51,13 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 */
 }
 
-
+void * hackEngineConfigurationPointer(void *ptr) {
+	// we know that 'engineConfiguration' was null at the time of initialization in unit tests
+#if EFI_UNIT_TEST
+			intptr_t offset = (intptr_t)ptr;
+			void * valuePtr = (void *)engineConfiguration + offset;
+			return valuePtr;
+#else
+			return ptr;
+#endif
+}
