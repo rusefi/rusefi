@@ -1,15 +1,5 @@
 #include "pch.h"
 #include "value_lookup.h"
-plain_get_float_s * findFloat(const char *name) {
-	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
-		if (strEqualCaseInsensitive(name, currentF->token)) {
-			return currentF;
-		}
-		currentF++;
-	}
-	return nullptr;
-}
 static plain_get_float_s getF_plain[] = {
 	{"injector.flow", &engineConfiguration->injector.flow},
 	{"cranking.baseFuel", &engineConfiguration->cranking.baseFuel},
@@ -154,6 +144,16 @@ static plain_get_float_s getF_plain[] = {
 	{"etbMinimumPosition", &engineConfiguration->etbMinimumPosition},
 };
 
+plain_get_float_s * findFloat(const char *name) {
+	plain_get_float_s *currentF = &getF_plain[0];
+	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+		if (strEqualCaseInsensitive(name, currentF->token)) {
+			return currentF;
+		}
+		currentF++;
+	}
+	return nullptr;
+}
 float getConfigValueByName(const char *name) {
 	{
 		plain_get_float_s * known = findFloat(name);
