@@ -3,11 +3,25 @@
 
 TEST(LuaBasic, configLookup) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
+	{
+		const char * name = "ignitionDwellForCrankingMs";
+		setConfigValueByName(name, 1.6);
+		ASSERT_NEAR(1.6, getConfigValueByName(name), EPS3D);
+	}
 
-	engineConfiguration->launchRpm = 100;
-	ASSERT_EQ(100.0, getConfigValueByName("launchRpm"));
+	{
+		const char * name = "launchRpm";
+		engineConfiguration->launchRpm = 100;
+		ASSERT_EQ(100.0, getConfigValueByName(name));
+		setConfigValueByName(name, 160);
+		ASSERT_EQ(150.0, getConfigValueByName(name));
+	}
 
-	engineConfiguration->maxAcTps = 40;
-	ASSERT_EQ(40.0, getConfigValueByName("maxAcTps"));
-
+	{
+		const char * name = "maxAcTps";
+		engineConfiguration->maxAcTps = 40;
+		ASSERT_EQ(40.0, getConfigValueByName(name));
+		setConfigValueByName(name, 103);
+		ASSERT_EQ(103.0, getConfigValueByName(name));
+	}
 }
