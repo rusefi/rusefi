@@ -18,7 +18,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
     static final String FILE_HEADER = "#include \"pch.h\"\n" +
-            "#include \"value_lookup.h\"\n" +
+            "#include \"value_lookup.h\"\n";
+    private static final String FIND_METHOD =
             "plain_get_float_s * findFloat(const char *name) {\n" +
             "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
             "\twhile (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {\n" +
@@ -127,6 +128,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getHeaderAndGetter() {
         return FILE_HEADER +
                 getFloatsSections() +
+                FIND_METHOD +
                 getComleteGetterBody();
     }
 

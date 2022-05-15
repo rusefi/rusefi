@@ -145,6 +145,14 @@ public class GetConfigValueConsumerTest {
 
         assertEquals("#include \"pch.h\"\n" +
                 "#include \"value_lookup.h\"\n" +
+                "static plain_get_float_s getF_plain[] = {\n" +
+                "\t{\"clt.config.tempC_1\", &engineConfiguration->clt.config.tempC_1},\n" +
+                "\t{\"clt.config.map.sensor.highValue\", &engineConfiguration->clt.config.map.sensor.highValue},\n" +
+                "\t{\"clt.config.injector.flow\", &engineConfiguration->clt.config.injector.flow},\n" +
+                "\t{\"clt.config.bias_resistor\", &engineConfiguration->clt.config.bias_resistor},\n" +
+                "\t{\"afr_type\", &engineConfiguration->afr_type},\n" +
+                "};\n" +
+                "\n" +
                 "plain_get_float_s * findFloat(const char *name) {\n" +
                 "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
                 "\twhile (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {\n" +
@@ -155,14 +163,6 @@ public class GetConfigValueConsumerTest {
                 "\t}\n" +
                 "\treturn nullptr;\n" +
                 "}\n" +
-                "static plain_get_float_s getF_plain[] = {\n" +
-                "\t{\"clt.config.tempC_1\", &engineConfiguration->clt.config.tempC_1},\n" +
-                "\t{\"clt.config.map.sensor.highValue\", &engineConfiguration->clt.config.map.sensor.highValue},\n" +
-                "\t{\"clt.config.injector.flow\", &engineConfiguration->clt.config.injector.flow},\n" +
-                "\t{\"clt.config.bias_resistor\", &engineConfiguration->clt.config.bias_resistor},\n" +
-                "\t{\"afr_type\", &engineConfiguration->afr_type},\n" +
-                "};\n" +
-                "\n" +
                 "float getConfigValueByName(const char *name) {\n" +
                 "\t{\n" +
                 "\t\tplain_get_float_s * known = findFloat(name);\n" +
