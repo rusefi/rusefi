@@ -45,8 +45,8 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
-	scheduleByTimestamp("scheduleForLater", scheduling, getTimeNowUs() + delayUs, action);
+void SingleTimerExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
+	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
