@@ -146,8 +146,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->specs.cylindersCount;
 	if (strEqualCaseInsensitive(name, "cylinderBore"))
 		return engineConfiguration->cylinderBore;
-	if (strEqualCaseInsensitive(name, "extraInjectionOffset"))
-		return engineConfiguration->extraInjectionOffset;
 	if (strEqualCaseInsensitive(name, "crankingTimingAngle"))
 		return engineConfiguration->crankingTimingAngle;
 	if (strEqualCaseInsensitive(name, "gapTrackingLengthOverride"))
@@ -1332,11 +1330,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "cylinderBore"))
 	{
 		engineConfiguration->cylinderBore = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "extraInjectionOffset"))
-	{
-		engineConfiguration->extraInjectionOffset = value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "crankingTimingAngle"))
