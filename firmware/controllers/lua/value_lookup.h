@@ -27,3 +27,5 @@ plain_get_float_s * findFloat(const char *name);
 float getConfigValueByName(const char *name);
 void setConfigValueByName(const char *name, float value);
 float getOutputValueByName(const char *name);
+
+void * hackEngineConfigurationPointer(void *ptr);
