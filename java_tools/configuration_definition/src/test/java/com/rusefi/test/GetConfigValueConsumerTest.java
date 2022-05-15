@@ -21,12 +21,24 @@ public class GetConfigValueConsumerTest {
                 "\tdc_io[2 iterate] etbIn\n" +
                 "end_struct\n";
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, (getConfigValueConsumer));
+        state.readBufferedReader(test, getConfigValueConsumer);
 
-        assertEquals("#include \"pch.h\"\n" +
+        assertEquals(
+                "static plain_get_float_s getF_plain[] = {\n" +
+                        "};\n\n"
+                , getConfigValueConsumer.getFloatsSections());
+
+
+        assertEquals(
                 "float getConfigValueByName(const char *name) {\n" +
+                "\t{\n" +
+                "\t\tplain_get_float_s * known = findFloat(name);\n" +
+                "\t\tif (known != nullptr) {\n" +
+                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
+                "\t\t}\n" +
+                "\t}\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getGetterForUnitTest());
+                "}\n", getConfigValueConsumer.getComleteGetterBody());
     }
 
     @Test
@@ -44,7 +56,7 @@ public class GetConfigValueConsumerTest {
                 "ThermistorConf iat;\n" +
                 "end_struct\n";
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, (getConfigValueConsumer));
+        state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
                 "\t{\n" +
@@ -57,14 +69,23 @@ public class GetConfigValueConsumerTest {
                 "\t\treturn;\n" +
                 "\t}\n", getConfigValueConsumer.getSetterBody());
 
-        assertEquals("#include \"pch.h\"\n" +
-                "float getConfigValueByName(const char *name) {\n" +
-                "\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
-                "\t\treturn config->iat.config.tempC_1;\n" +
+        assertEquals(
+                "static plain_get_float_s getF_plain[] = {\n" +
+                "\t{\"iat.config.tempC_1\", &engineConfiguration->iat.config.tempC_1},\n" +
+                "};\n" +
+                "\n", getConfigValueConsumer.getFloatsSections());
+
+        assertEquals("float getConfigValueByName(const char *name) {\n" +
+                "\t{\n" +
+                "\t\tplain_get_float_s * known = findFloat(name);\n" +
+                "\t\tif (known != nullptr) {\n" +
+                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
+                "\t\t}\n" +
+                "\t}\n" +
                 "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
                 "\t\treturn config->iat.adcChannel;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getGetterForUnitTest());
+                "}\n", getConfigValueConsumer.getComleteGetterBody());
     }
 
     @Test
@@ -120,28 +141,43 @@ public class GetConfigValueConsumerTest {
 
 
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
-        state.readBufferedReader(test, (getConfigValueConsumer));
+        state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals("#include \"pch.h\"\n" +
+                "#include \"value_lookup.h\"\n" +
+                "plain_get_float_s * findFloat(const char *name) {\n" +
+                "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
+                "\twhile (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {\n" +
+                "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
+                "\t\t\treturn currentF;\n" +
+                "\t\t}\n" +
+                "\t\tcurrentF++;\n" +
+                "\t}\n" +
+                "\treturn nullptr;\n" +
+                "}\n" +
+                "static plain_get_float_s getF_plain[] = {\n" +
+                "\t{\"clt.config.tempC_1\", &engineConfiguration->clt.config.tempC_1},\n" +
+                "\t{\"clt.config.map.sensor.highValue\", &engineConfiguration->clt.config.map.sensor.highValue},\n" +
+                "\t{\"clt.config.injector.flow\", &engineConfiguration->clt.config.injector.flow},\n" +
+                "\t{\"clt.config.bias_resistor\", &engineConfiguration->clt.config.bias_resistor},\n" +
+                "\t{\"afr_type\", &engineConfiguration->afr_type},\n" +
+                "};\n" +
+                "\n" +
                 "float getConfigValueByName(const char *name) {\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.config.tempC_1\"))\n" +
-                "\t\treturn config->clt.config.tempC_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.config.map.sensor.highValue\"))\n" +
-                "\t\treturn config->clt.config.map.sensor.highValue;\n" +
+                "\t{\n" +
+                "\t\tplain_get_float_s * known = findFloat(name);\n" +
+                "\t\tif (known != nullptr) {\n" +
+                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
+                "\t\t}\n" +
+                "\t}\n" +
                 "\tif (strEqualCaseInsensitive(name, \"clt.config.map.sensor.hwChannel\"))\n" +
                 "\t\treturn config->clt.config.map.sensor.hwChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.config.injector.flow\"))\n" +
-                "\t\treturn config->clt.config.injector.flow;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.config.bias_resistor\"))\n" +
-                "\t\treturn config->clt.config.bias_resistor;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
                 "\t\treturn config->clt.adcChannel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
                 "\t\treturn config->issue_294_31;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
                 "\t\treturn config->baseFuel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"afr_type\"))\n" +
-                "\t\treturn config->afr_type;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"speedToRpmRatio\"))\n" +
                 "\t\treturn config->speedToRpmRatio;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"afr_typet\"))\n" +
@@ -153,6 +189,6 @@ public class GetConfigValueConsumerTest {
                 "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
                 "\t\treturn config->enableFan1WithAc;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getGetterForUnitTest());
+                "}\n", getConfigValueConsumer.getHeaderAndGetter());
     }
 }

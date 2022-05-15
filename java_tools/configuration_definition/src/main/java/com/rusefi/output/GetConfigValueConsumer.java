@@ -11,22 +11,45 @@ import java.io.IOException;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
-    static final String FILE_HEADER = "#include \"pch.h\"\n";
-    private static final String GET_METHOD_HEADER = "float getConfigValueByName(const char *name) {\n";
+    static final String FILE_HEADER = "#include \"pch.h\"\n" +
+            "#include \"value_lookup.h\"\n" +
+            "plain_get_float_s * findFloat(const char *name) {\n" +
+            "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
+            "\twhile (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {\n" +
+            "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
+            "\t\t\treturn currentF;\n" +
+            "\t\t}\n" +
+            "\t\tcurrentF++;\n" +
+            "\t}\n" +
+            "\treturn nullptr;\n" +
+            "}\n";
+
+    private static final String GET_METHOD_HEADER =
+            "float getConfigValueByName(const char *name) {\n"            +
+            "\t{\n" +
+            "\t\tplain_get_float_s * known = findFloat(name);\n" +
+            "\t\tif (known != nullptr) {\n" +
+            "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
+            "\t\t}\n" +
+            "\t}\n"
+            ;
+
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
     private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final StringBuilder getterBody = new StringBuilder();
     private final StringBuilder setterBody = new StringBuilder();
+    private final StringBuilder allFloatAddresses = new StringBuilder(
+            "static plain_get_float_s getF_plain[] = {\n");
     private final String outputFileName;
 
     public GetConfigValueConsumer(String outputFileName) {
-        System.out.println("Hello " + getClass() + " " + outputFileName);
         this.outputFileName = outputFileName;
     }
 
@@ -70,14 +93,16 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-        getterBody.append(getCompareName(userName));
-        getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
 
         if (TypesHelper.isFloat(cf.getType())) {
+            allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
             setterBody.append(getCompareName(userName));
             String str = getAssignment(cf, javaName, "");
             setterBody.append(str);
         } else {
+            getterBody.append(getCompareName(userName));
+            getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
+
             setterBody.append(getCompareName(userName));
             String str = getAssignment(cf, javaName, "(int)");
             setterBody.append(str);
@@ -99,9 +124,20 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         return "\tif (strEqualCaseInsensitive(name, \"" + userName + "\"))\n";
     }
 
-    public String getGetterForUnitTest() {
+    public String getHeaderAndGetter() {
         return FILE_HEADER +
-                GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
+                getFloatsSections() +
+                getComleteGetterBody();
+    }
+
+    @NotNull
+    public String getComleteGetterBody() {
+        return GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
+    }
+
+    @NotNull
+    public String getFloatsSections() {
+        return allFloatAddresses + "};\n\n";
     }
 
     public String getSetterBody() {
@@ -109,8 +145,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     public String getContent() {
-        return FILE_HEADER +
-                GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER
+        return getHeaderAndGetter()
                 +
                 SET_METHOD_HEADER + setterBody + SET_METHOD_FOOTER
                 ;
