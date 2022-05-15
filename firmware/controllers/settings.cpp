@@ -16,7 +16,6 @@
 #include "idle_thread.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
-#include "value_lookup.h"
 
 #if EFI_PROD_CODE
 #include "rtc_helper.h"
@@ -841,13 +840,29 @@ static void printAllInfo() {
 #endif
 }
 
+struct plain_get_integer_s {
+	const char *token;
+	int *value;
+};
+
+struct plain_get_short_s {
+	const char *token;
+	uint16_t *value;
+};
+
+struct plain_get_float_s {
+	const char *token;
+	float *value;
+};
+
+
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
-static plain_get_integer_s getI_plain[] = {
+const plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
 //		{"injection_mode", setInjectionMode},
@@ -876,7 +891,7 @@ static plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-static plain_get_float_s getF_plain[] = {
+const plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
@@ -891,44 +906,27 @@ static plain_get_float_s getF_plain[] = {
 #endif /* EFI_UNIT_TEST */
 
 
-static plain_get_float_s * findFloat2(const char *name) {
-	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
-		if (strEqualCaseInsensitive(name, currentF->token)) {
-			return currentF;
-		}
-	}
-	return nullptr;
-}
-
-static plain_get_integer_s *findInt(const char *name) {
-	plain_get_integer_s *currentI = &getI_plain[0];
-	while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
-		if (strEqualCaseInsensitive(name, currentI->token)) {
-			return currentI;
-		}
-		currentI++;
-	}
-	return nullptr;
-}
-
 static void getValue(const char *paramStr) {
 #if ! EFI_UNIT_TEST
 	{
-		plain_get_integer_s *known = findInt(paramStr);
-		if (known != nullptr) {
-			efiPrintf("%s value: %d", known->token, *known->value);
-			return;
+		const plain_get_integer_s *currentI = &getI_plain[0];
+		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
+			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
+				efiPrintf("%s value: %d", currentI->token, *currentI->value);
+				return;
+			}
+			currentI++;
 		}
 	}
 
-	{
-		plain_get_float_s * known = findFloat2(paramStr);
-		if (known != nullptr) {
-			float value = *known->value;
-			efiPrintf("%s value: %.2f", known->token, value);
+	const plain_get_float_s *currentF = &getF_plain[0];
+	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
+		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
+			float value = *currentF->value;
+			efiPrintf("%s value: %.2f", currentF->token, value);
 			return;
 		}
+		currentF++;
 	}
 
 
