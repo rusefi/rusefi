@@ -42,7 +42,14 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             ;
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
+    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n" +
+            "\t{\n" +
+            "\t\tplain_get_float_s * known = findFloat(name);\n" +
+            "\t\tif (known != nullptr) {\n" +
+            "\t\t\t*(float*)hackEngineConfigurationPointer(known->value) = value;\n" +
+            "\t\t}\n" +
+            "\t}\n" +
+            "\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final StringBuilder getterBody = new StringBuilder();
     private final StringBuilder setterBody = new StringBuilder();
@@ -97,9 +104,6 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         if (TypesHelper.isFloat(cf.getType())) {
             allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
-            setterBody.append(getCompareName(userName));
-            String str = getAssignment(cf, javaName, "");
-            setterBody.append(str);
         } else {
             getterBody.append(getCompareName(userName));
             getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
