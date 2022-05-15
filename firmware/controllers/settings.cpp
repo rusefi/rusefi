@@ -16,6 +16,7 @@
 #include "idle_thread.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
+#include "value_lookup.h"
 
 #if EFI_PROD_CODE
 #include "rtc_helper.h"
@@ -840,29 +841,13 @@ static void printAllInfo() {
 #endif
 }
 
-struct plain_get_integer_s {
-	const char *token;
-	int *value;
-};
-
-struct plain_get_short_s {
-	const char *token;
-	uint16_t *value;
-};
-
-struct plain_get_float_s {
-	const char *token;
-	float *value;
-};
-
-
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
-const plain_get_integer_s getI_plain[] = {
+static plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
 //		{"injection_mode", setInjectionMode},
@@ -891,7 +876,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-const plain_get_float_s getF_plain[] = {
+static plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
