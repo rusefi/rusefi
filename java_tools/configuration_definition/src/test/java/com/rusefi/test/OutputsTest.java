@@ -131,6 +131,7 @@ public class OutputsTest {
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
                 "#include \"pch.h\"\n" +
+                        "#include \"value_lookup.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
                         "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
                         "\t\treturn engine->outputChannels.issue_294_31;\n" +
