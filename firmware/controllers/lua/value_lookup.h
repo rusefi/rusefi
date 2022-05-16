@@ -17,10 +17,26 @@ struct plain_get_short_s {
 	uint16_t *value;
 };
 
+struct plain_get_u8_s {
+	const char *token;
+	uint8_t *value;
+};
+
 struct plain_get_float_s {
 	const char *token;
 	float *value;
 };
+
+template<typename T>
+T* findPair(const char *name, T array[], size_t count) {
+	for (int i = 0;i<count;i++) {
+		T *current = &array[i];
+		if (strEqualCaseInsensitive(name, current->token)) {
+			return current;
+		}
+	}
+	return nullptr;
+}
 
 plain_get_float_s * findFloat(const char *name);
 

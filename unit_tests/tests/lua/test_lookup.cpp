@@ -24,4 +24,10 @@ TEST(LuaBasic, configLookup) {
 		setConfigValueByName(name, 103);
 		ASSERT_EQ(103.0, getConfigValueByName(name));
 	}
+
+	{
+		const char * name = "multisparkMaxSparkingAngle";
+		setConfigValueByName(name, 13);
+		ASSERT_EQ(13.0, getConfigValueByName(name));
+	}
 }
