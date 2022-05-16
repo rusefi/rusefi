@@ -55,7 +55,7 @@ void * hackEngineConfigurationPointer(void *ptr) {
 	// we know that 'engineConfiguration' was null at the time of initialization in unit tests
 #if EFI_UNIT_TEST
 			intptr_t offset = (intptr_t)ptr;
-			void * valuePtr = (void *)engineConfiguration + offset;
+			void * valuePtr = (void *)(char *)engineConfiguration + offset;
 			return valuePtr;
 #else
 			return ptr;
