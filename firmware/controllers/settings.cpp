@@ -876,31 +876,7 @@ static plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-static plain_get_float_s getF_plain[] = {
-		{"adcVcc", &engineConfiguration->adcVcc},
-		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
-		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
-		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
-		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
-		{"clt_bias", &engineConfiguration->clt.config.bias_resistor},
-		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
-		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
-		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
-};
 #endif /* EFI_UNIT_TEST */
-
-
-static plain_get_float_s * findFloat2(const char *name) {
-	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + efi::size(getF_plain)) {
-		if (strEqualCaseInsensitive(name, currentF->token)) {
-			return currentF;
-		}
-		currentF++;
-	}
-	return nullptr;
-}
 
 static plain_get_integer_s *findInt(const char *name) {
 	plain_get_integer_s *currentI = &getI_plain[0];
@@ -924,7 +900,7 @@ static void getValue(const char *paramStr) {
 	}
 
 	{
-		plain_get_float_s * known = findFloat2(paramStr);
+		plain_get_float_s * known = findFloat(paramStr);
 		if (known != nullptr) {
 			float value = *known->value;
 			efiPrintf("%s value: %.2f", known->token, value);
