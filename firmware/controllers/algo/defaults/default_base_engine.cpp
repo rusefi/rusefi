@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "defaults.h"
+#include "vr_pwm.h"
 
 static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
@@ -78,4 +79,7 @@ void setDefaultBaseEngine() {
 #else
 	engineConfiguration->warningPeriod = 0;
 #endif /* EFI_PROD_CODE */
+
+	setDefaultVrThresholds();
+
 }
