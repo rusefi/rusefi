@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 10 04:27:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1035,13 +1035,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_366[2];
 	/**
-	 * this is about deciding when the injector starts it's squirt
-	 * See also injectionPhase map
-	 * todo: do we need even need this since we have the map anyway?
-	deg
 	 * offset 368
 	 */
-	angle_t extraInjectionOffset;
+	angle_t unusedHere1341234;
 	/**
 	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * There is tapering towards running timing advance
@@ -5028,4 +5024,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 10 04:27:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022

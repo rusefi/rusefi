@@ -733,7 +733,6 @@
 #define etbWastegatePid_offset_offset 1856
 #define etbWastegatePid_periodMs_offset 1858
 #define etbWastegatePid_pFactor_offset 1844
-#define extraInjectionOffset_offset 368
 #define failedMapFallback_offset 465
 #define fan1ExtraIdle_offset 1716
 #define fan2ExtraIdle_offset 1726
@@ -1889,7 +1888,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 3488268478
+#define SIGNATURE_HASH 190404257
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2473,7 +2472,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.05.15.subaru_eg33_f7.3488268478"
+#define TS_SIGNATURE "rusEFI 2022.05.16.subaru_eg33_f7.190404257"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2550,6 +2549,7 @@
 #define unusedBit_537_31_offset 1608
 #define unusedBit_537_8_offset 1608
 #define unusedBit_537_9_offset 1608
+#define unusedHere1341234_offset 368
 #define useAdvanceCorrectionsForCranking_offset 1352
 #define useCicPidForIdle_offset 100
 #define useEeprom_offset 100

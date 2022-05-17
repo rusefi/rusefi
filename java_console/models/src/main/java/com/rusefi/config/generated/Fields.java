@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 15 00:24:05 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 15 23:12:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -706,7 +706,6 @@ public class Fields {
 	public static final int etbWastegatePid_offset_offset = 1856;
 	public static final int etbWastegatePid_periodMs_offset = 1858;
 	public static final int etbWastegatePid_pFactor_offset = 1844;
-	public static final int extraInjectionOffset_offset = 368;
 	public static final int failedMapFallback_offset = 465;
 	public static final int fan1ExtraIdle_offset = 1716;
 	public static final int fan2ExtraIdle_offset = 1726;
@@ -1855,6 +1854,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
+	public static final int SIGNATURE_HASH = 1679312416;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2376,7 +2376,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.05.15.all.2695614527";
+	public static final String TS_SIGNATURE = "rusEFI 2022.05.16.all.1679312416";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
@@ -2450,6 +2450,7 @@ public class Fields {
 	public static final int unusedBit_537_31_offset = 1608;
 	public static final int unusedBit_537_8_offset = 1608;
 	public static final int unusedBit_537_9_offset = 1608;
+	public static final int unusedHere1341234_offset = 368;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1352;
 	public static final int useCicPidForIdle_offset = 100;
 	public static final int useEeprom_offset = 100;
@@ -2668,7 +2669,7 @@ public class Fields {
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 364, FieldType.INT8).setScale(1.0);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 365, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_366 = Field.create("ALIGNMENTFILL_AT_366", 366, FieldType.INT8).setScale(1.0);
-	public static final Field EXTRAINJECTIONOFFSET = Field.create("EXTRAINJECTIONOFFSET", 368, FieldType.FLOAT);
+	public static final Field UNUSEDHERE1341234 = Field.create("UNUSEDHERE1341234", 368, FieldType.FLOAT);
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 372, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 376, FieldType.INT8).setScale(1.0);
 	public static final Field GAPTRACKINGLENGTHOVERRIDE = Field.create("GAPTRACKINGLENGTHOVERRIDE", 377, FieldType.INT8).setScale(1.0);
@@ -4077,7 +4078,7 @@ public class Fields {
 	CRANKINGINJECTIONMODE,
 	INJECTIONMODE,
 	ALIGNMENTFILL_AT_366,
-	EXTRAINJECTIONOFFSET,
+	UNUSEDHERE1341234,
 	CRANKINGTIMINGANGLE,
 	IGNITIONMODE,
 	GAPTRACKINGLENGTHOVERRIDE,
