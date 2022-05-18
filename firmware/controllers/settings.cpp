@@ -16,6 +16,7 @@
 #include "idle_thread.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
+#include "value_lookup.h"
 
 #if EFI_PROD_CODE
 #include "rtc_helper.h"
@@ -114,8 +115,8 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	}
 
 	efiPrintf("=== injection ===");
-	efiPrintf("injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
+	efiPrintf("injection %s enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+			boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
@@ -181,12 +182,6 @@ static void setIdlePinMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setInjectionOffset(float value) {
-	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion();
-}
-
 static void setFuelPumpPinMode(int value) {
 	engineConfiguration->fuelPumpPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration();
@@ -199,11 +194,6 @@ static void setMalfunctionIndicatorPinMode(int value) {
 
 static void setSensorChartMode(int value) {
 	engineConfiguration->sensorChartMode = (sensor_chart_e) value;
-	doPrintConfiguration();
-}
-
-static void setOperationMode(int value) {
-	engineConfiguration->ambiguousOperationMode = (operation_mode_e)value;
 	doPrintConfiguration();
 }
 
@@ -355,6 +345,7 @@ static void setInjectorLag(float voltage, float value) {
 	setCurveValue(INJECTOR_LAG_CURVE, voltage, value);
 }
 
+/*
 static void setToothedWheel(int total, int skipped) {
 	if (total < 1 || skipped >= total) {
 		efiPrintf("invalid parameters %d %d", total, skipped);
@@ -369,6 +360,7 @@ static void setToothedWheel(int total, int skipped) {
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
+*/
 
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
@@ -428,7 +420,7 @@ static void setPotSpi(int spi) {
 
 static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
 	brain_pin_e pin = parseBrainPin(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		efiPrintf("invalid pin name [%s]", pinName);
 	}
 	return pin;
@@ -445,7 +437,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -456,7 +448,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 // this method is useful for desperate time debugging
 void readPin(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
@@ -467,7 +459,7 @@ void readPin(const char *pinName) {
 // this method is useful for desperate time debugging or hardware validation
 static void benchSetPinValue(const char *pinName, int bit) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
@@ -485,7 +477,7 @@ static void benchSetPin(const char *pinName) {
 
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting %s pin to %s please save&restart", name, hwPortname(pin));
@@ -556,7 +548,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -575,7 +567,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -600,7 +592,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -613,7 +605,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -626,7 +618,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 // set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	adc_channel_e channel = getAdcChannel(pin);
@@ -666,7 +658,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 		return;
 	}
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
@@ -676,7 +668,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 
 static void showPinFunction(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == GPIO_INVALID) {
+	if (pin == Gpio::Invalid) {
 		return;
 	}
 	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));
@@ -849,29 +841,13 @@ static void printAllInfo() {
 #endif
 }
 
-struct plain_get_integer_s {
-	const char *token;
-	int *value;
-};
-
-struct plain_get_short_s {
-	const char *token;
-	uint16_t *value;
-};
-
-struct plain_get_float_s {
-	const char *token;
-	float *value;
-};
-
-
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
-const plain_get_integer_s getI_plain[] = {
+static plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
 //		{"injection_mode", setInjectionMode},
@@ -900,43 +876,36 @@ const plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-const plain_get_float_s getF_plain[] = {
-		{"adcVcc", &engineConfiguration->adcVcc},
-		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
-		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"injection_offset", &engineConfiguration->extraInjectionOffset},
-		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
-		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
-		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
-		{"clt_bias", &engineConfiguration->clt.config.bias_resistor},
-		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
-		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
-		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
-};
 #endif /* EFI_UNIT_TEST */
 
+static plain_get_integer_s *findInt(const char *name) {
+	plain_get_integer_s *currentI = &getI_plain[0];
+	while (currentI < getI_plain + efi::size(getI_plain)) {
+		if (strEqualCaseInsensitive(name, currentI->token)) {
+			return currentI;
+		}
+		currentI++;
+	}
+	return nullptr;
+}
 
 static void getValue(const char *paramStr) {
 #if ! EFI_UNIT_TEST
 	{
-		const plain_get_integer_s *currentI = &getI_plain[0];
-		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
-			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
-				efiPrintf("%s value: %d", currentI->token, *currentI->value);
-				return;
-			}
-			currentI++;
+		plain_get_integer_s *known = findInt(paramStr);
+		if (known != nullptr) {
+			efiPrintf("%s value: %d", known->token, *known->value);
+			return;
 		}
 	}
 
-	const plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
-		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
-			float value = *currentF->value;
-			efiPrintf("%s value: %.2f", currentF->token, value);
+	{
+		plain_get_float_s * known = findFloat(paramStr);
+		if (known != nullptr) {
+			float value = *known->value;
+			efiPrintf("%s value: %.2f", known->token, value);
 			return;
 		}
-		currentF++;
 	}
 
 
@@ -984,11 +953,11 @@ static void getValue(const char *paramStr) {
 }
 
 static void setScriptCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->scriptCurve1, value, value, 1);
+	setLinearCurve(config->scriptCurve1, value, value, 1);
 }
 
 static void setScriptCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->scriptCurve2, value, value, 1);
+	setLinearCurve(config->scriptCurve2, value, value, 1);
 }
 
 struct command_i_s {
@@ -1003,7 +972,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},
@@ -1068,7 +1036,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_pin_mode", setIdlePinMode},
 		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
-		{"operation_mode", setOperationMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
@@ -1154,8 +1121,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
-		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
 		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
@@ -1215,7 +1180,7 @@ void initSettings(void) {
 	addConsoleActionS(CMD_ENABLE, enable);
 	addConsoleActionS(CMD_DISABLE, disable);
 
-	addConsoleActionII("set_toothed_wheel", setToothedWheel);
+//	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 
 	addConsoleActionFF("set_injector_lag", setInjectorLag);
 

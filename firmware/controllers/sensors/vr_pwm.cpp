@@ -8,7 +8,7 @@ static SimplePwm pwms[VR_THRESHOLD_COUNT];
 static void updateVrPwm(int rpm, size_t index) {
 	auto& cfg = engineConfiguration->vrThreshold[index];
 
-	if (cfg.pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(cfg.pin)) {
 		return;
 	}
 
@@ -33,7 +33,7 @@ void initVrPwm() {
 	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
 		auto& cfg = engineConfiguration->vrThreshold[i];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(cfg.pin)) {
 			continue;
 		}
 
@@ -44,5 +44,12 @@ void initVrPwm() {
 			10000,	// it's guaranteed to be hardware PWM, the faster the PWM, the less noise makes it through
 			0
 		);
+	}
+}
+
+void setDefaultVrThresholds() {
+	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
 	}
 }

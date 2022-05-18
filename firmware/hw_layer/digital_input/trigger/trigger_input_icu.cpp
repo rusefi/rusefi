@@ -26,9 +26,8 @@ int icuFallingCallbackCounter = 0;
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
 	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+
 	int index = (int)arg;
 
 #if EFI_TOOTH_LOGGER
@@ -43,9 +42,8 @@ static void vvtRisingCallback(void *arg) {
 static void vvtFallingCallback(void * arg) {
 	efitick_t now = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
 	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+
 	int index = (int)arg;
 #if EFI_TOOTH_LOGGER
 	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
@@ -62,9 +60,8 @@ static void shaftRisingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
 	TRIGGER_BAIL_IF_SELF_STIM
-#endif
+
 	icuRisingCallbackCounter++;
 
 	//	icucnt_t last_width = icuGetWidth(icup); so far we are fine with system time
@@ -76,9 +73,7 @@ static void shaftFallingCallback(bool isPrimary) {
 	efitick_t stamp = getTimeNowNt();
 
 	TRIGGER_BAIL_IF_DISABLED
-#if HW_CHECK_MODE
 	TRIGGER_BAIL_IF_SELF_STIM
-#endif
 
 	icuFallingCallbackCounter++;
 

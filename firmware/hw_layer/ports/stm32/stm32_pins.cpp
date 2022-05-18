@@ -141,11 +141,11 @@ static int getPortIndex(ioportid_t port) {
 }
 
 ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 int getBrainPinIndex(brain_pin_e brainPin) {
-	return (brainPin - GPIOA_0) % PORT_SIZE;
+	return (brainPin - Gpio::A0) % PORT_SIZE;
 }
 
 int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
@@ -159,11 +159,11 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 	if (!isBrainPinValid(brainPin)) {
 /*
  *  https://github.com/dron0gus please help
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
  */
 		return GPIO_NULL;
 	}
-	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 /**
@@ -177,30 +177,30 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 	if (brain_pin_is_onchip(brainPin))
 		return getBrainPinIndex(brainPin);
 
-	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
+	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip Gpio: %d", msg, brainPin);
 	return EFI_ERROR_CODE;
 }
 
 /**
- * Parse string representation of physical pin into brain_pin_e ordinal.
+ * Parse string representation of physical pin into Gpio ordinal.
  *
- * @return GPIO_UNASSIGNED for "none", GPIO_INVALID for invalid entry
+ * @return Gpio::Unassigned for "none", Gpio::Invalid for invalid entry
  */
 brain_pin_e parseBrainPin(const char *str) {
 	if (strEqual(str, "none"))
-		return GPIO_UNASSIGNED;
+		return Gpio::Unassigned;
 	// todo: create method toLowerCase?
 	if (str[0] != 'p' && str[0] != 'P') {
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 	char port = str[1];
 	brain_pin_e basePin;
 	if (port >= 'a' && port <= 'z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + PORT_SIZE * (port - 'a'));
+		basePin = Gpio::A0 + PORT_SIZE * (port - 'a');
 	} else if (port >= 'A' && port <= 'Z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + PORT_SIZE * (port - 'A'));
+		basePin = Gpio::A0 + PORT_SIZE * (port - 'A');
 	} else {
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 	const char *pinStr = str + 2;
 	int pin = atoi(pinStr);

@@ -80,7 +80,7 @@ void setProteusHondaElement2003() {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_3;
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
-	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = Gpio::Unassigned;
 
 
 	engineConfiguration->mainRelayPin = PROTEUS_LS_9;

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Sun Jan 02 13:40:19 EST 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo\tps_accel_state.txt Thu Apr 14 20:46:48 EDT 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -48,7 +48,7 @@ public class TpsAccelState {
 	public static final Field MAXEXTRAPERCYCLE = Field.create("MAXEXTRAPERCYCLE", 32, FieldType.FLOAT);
 	public static final Field MAXEXTRAPERPERIOD = Field.create("MAXEXTRAPERPERIOD", 36, FieldType.FLOAT);
 	public static final Field MAXINJECTEDPERPERIOD = Field.create("MAXINJECTEDPERPERIOD", 40, FieldType.FLOAT);
-	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT);
+	public static final Field CYCLECNT = Field.create("CYCLECNT", 44, FieldType.INT).setScale(1.0);
 	public static final Field[] VALUES = {
 	TPSFROM,
 	TPSTO,

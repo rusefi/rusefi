@@ -28,8 +28,8 @@ void setHonda600() {
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	// upside down wiring
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::C6;
 
 
 	// set global_trigger_offset_angle 180
@@ -95,33 +95,33 @@ void setHonda600() {
 	// Frankenso low out #11: PB8 injector #3
 	// Frankenso low out #12: PB7 injector #4
 
-	engineConfiguration->fuelPumpPin = GPIOE_4;
-	engineConfiguration->mainRelayPin = GPIOD_7;
-	engineConfiguration->idle.solenoidPin = GPIOC_13;
+	engineConfiguration->fuelPumpPin = Gpio::E4;
+	engineConfiguration->mainRelayPin = Gpio::D7;
+	engineConfiguration->idle.solenoidPin = Gpio::C13;
 
-	engineConfiguration->fanPin = GPIOE_5;
+	engineConfiguration->fanPin = Gpio::E5;
 
-	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
-	engineConfiguration->injectionPins[1] = GPIOD_5; // #2
-	engineConfiguration->injectionPins[2] = GPIOB_7; // #3
-	engineConfiguration->injectionPins[3] = GPIOB_8; // #4
+	engineConfiguration->injectionPins[0] = Gpio::B9; // #1
+	engineConfiguration->injectionPins[1] = Gpio::D5; // #2
+	engineConfiguration->injectionPins[2] = Gpio::B7; // #3
+	engineConfiguration->injectionPins[3] = Gpio::B8; // #4
 
 	setDefaultCustomMaps();
 	setAlgorithm(LM_ALPHA_N);
 
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[8] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[9] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[10] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[11] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[6] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[7] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[8] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[9] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[10] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[11] = Gpio::Unassigned;
 
-	engineConfiguration->ignitionPins[0] = GPIOE_14;
-	engineConfiguration->ignitionPins[1] = GPIOC_7;
-	engineConfiguration->ignitionPins[2] = GPIOE_10;
-	engineConfiguration->ignitionPins[3] = GPIOC_9; // #4
+	engineConfiguration->ignitionPins[0] = Gpio::E14;
+	engineConfiguration->ignitionPins[1] = Gpio::C7;
+	engineConfiguration->ignitionPins[2] = Gpio::E10;
+	engineConfiguration->ignitionPins[3] = Gpio::C9; // #4
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;

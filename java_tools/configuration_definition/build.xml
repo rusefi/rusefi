@@ -33,6 +33,7 @@
                 destdir="build/classes"
                 classpath="${console_path}/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.9.3-complete.jar">
             <src path="src/main/java"/>
+            <src path="src/test/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/inifile/src/main/java"/>
             <src path="${console_path}/logging/src/main/java"/>
@@ -53,6 +54,7 @@
             <classpath path="build/classes:lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.9.3-complete.jar"/>
             <batchtest todir="build">
                 <fileset dir="src/main/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="src/test/java" includes="**/*Test.java"/>
                 <fileset dir="../enum_to_string/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>

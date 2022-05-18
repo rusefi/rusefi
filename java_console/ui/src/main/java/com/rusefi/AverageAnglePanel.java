@@ -37,7 +37,7 @@ public class AverageAnglePanel {
         uiContext.sensorSnifferCentral.addListener(new SensorSnifferCentral.AnalogChartListener() {
                                            @Override
                                            public void onAnalogChart(String message) {
-                                               int rpm = (int) SensorCentral.getInstance().getValue(Sensor.RPM);
+                                               int rpm = (int) SensorCentral.getInstance().getValue(Sensor.RPMValue);
                                                aa.add(rpm, message);
                                                showResults();
                                            }

@@ -65,7 +65,7 @@ static void testDodgeNeonDecoder() {
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
 
-	TriggerState state;
+	TriggerDecoderBase state;
 
 	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
 
@@ -112,8 +112,8 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
-	TriggerState state_;
-	TriggerState *sta = &state_;
+	TriggerDecoderBase state_;
+	TriggerDecoderBase *sta = &state_;
 
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
@@ -149,6 +149,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -191,7 +192,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_NEAR(7.9579, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
-	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000)) << "running dwell";
+	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
@@ -199,7 +200,7 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
+	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
 
 	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm), 0.0001);
 }
@@ -217,10 +218,10 @@ TEST(misc, testFordAspire) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
+	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000);
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000));
+	assertEqualsM("higher rpm dwell", 3.25, engine->ignitionState.getSparkDwell(6000));
 
 }
 
@@ -313,7 +314,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
+	assertEqualsM("injection angle", 4.095, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
@@ -326,7 +327,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size/2";
+	ASSERT_EQ( 4,  engine->executor.size()) << "queue size/2";
 	{
 	scheduling_s *ev0 = engine->executor.getForUnitTest(0);
 
@@ -348,9 +349,9 @@ TEST(misc, testRpmCalculator) {
 	eth.fireFall(5);
 	ASSERT_EQ( 3,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #3";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 3";
-	assertEqualsM("ev 3", start + 13333 - 1515, engine->executor.getForUnitTest(0)->momentX);
-	assertEqualsM2("ev 5", start + 14277, engine->executor.getForUnitTest(1)->momentX, 2);
-	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
+	assertEqualsM("ev 3", start + 13333 - 1515 + 2459, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("ev 5", start + 14277 + 500, engine->executor.getForUnitTest(1)->momentX, 2);
+	assertEqualsM("3/3", start + 14777 + 677, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
 	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
@@ -372,21 +373,19 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
-	eth.assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
-
 
 	ASSERT_EQ( 6,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #4";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 4";
 	engine->executor.clear();
 
 	eth.fireFall(5);
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 5";
+	ASSERT_EQ( 0,  engine->executor.size()) << "queue size 5";
 // todo: assert queue elements
 	engine->executor.clear();
 
 
 	eth.fireRise(5);
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 6";
+	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 6";
 	assertEqualsM("6/0", start + 40944, engine->executor.getForUnitTest(0)->momentX);
 	assertEqualsM("6/1", start + 41444, engine->executor.getForUnitTest(1)->momentX);
 	engine->executor.clear();
@@ -396,16 +395,14 @@ TEST(misc, testRpmCalculator) {
 	engine->executor.clear();
 
 	eth.fireRise(5 /*ms*/);
-	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 8";
-	// todo: assert queue elements completely
-	assertEqualsM("8/0", start + 53333 - 1515, engine->executor.getForUnitTest(0)->momentX);
-	assertEqualsM2("8/1", start + 54277, engine->executor.getForUnitTest(1)->momentX, 0);
-	assertEqualsM2("8/2", start + 54777, engine->executor.getForUnitTest(2)->momentX, 0);
+	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 8";
+	assertEqualsM("8/0", start + 53333 - 1515 + 2459, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("8/1", start + 54277 + 2459 - 1959, engine->executor.getForUnitTest(1)->momentX, 0);
 	engine->executor.clear();
 
 
 	eth.fireFall(5);
-	ASSERT_EQ( 0,  engine->executor.size()) << "queue size 9";
+	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 9";
 	engine->executor.clear();
 
 
@@ -645,6 +642,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
@@ -946,6 +944,7 @@ TEST(big, testSequential) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
@@ -1063,6 +1062,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;

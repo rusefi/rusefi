@@ -1,6 +1,5 @@
 package com.rusefi.ui.widgets;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.IMethodInvocation;
@@ -174,7 +173,7 @@ public class DetachedSensor {
     }
 
     public static void create(UIContext uiContext, Node child) {
-        Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPM.name()), Sensor.RPM);
+        Sensor sensor = Sensor.lookup(child.getProperty(NAME, Sensor.RPMValue.name()), Sensor.RPMValue);
         int width = child.getIntProperty(WIDTH, 256);
         int xpos = child.getIntProperty(XPOS, 0);
         int ypos = child.getIntProperty(YPOS, 0);

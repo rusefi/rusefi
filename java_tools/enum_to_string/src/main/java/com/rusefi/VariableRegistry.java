@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -20,13 +19,15 @@ import static com.devexperts.logging.Logging.getLogging;
 /**
  * 3/30/2015
  */
-public class VariableRegistry  {
+public class VariableRegistry {
+    public static final String AUTO_ENUM_SUFFIX = "_auto_enum";
     private static final Logging log = getLogging(VariableRegistry.class);
 
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
     public static final String CHAR_SUFFIX = "_char";
     public static final String ENUM_SUFFIX = "_enum";
+    public static final String FULL_JAVA_ENUM = "_fullenum";
     public static final char MULT_TOKEN = '*';
     public static final String DEFINE = "#define";
     private static final String HEX_PREFIX = "0x";
@@ -39,6 +40,7 @@ public class VariableRegistry  {
     public Map<String, Integer> intValues = new HashMap<>();
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // todo: move thid logic to JavaFieldsConsumer since that's the consumer?
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public void readPrependValues(String prependFile) throws IOException {
@@ -94,7 +96,7 @@ public class VariableRegistry  {
         if (stringValueMap == null)
             return null;
         for (Value value : stringValueMap.values()) {
-            if (value.getValue().contains("ENUM_32_BITS"))
+            if (value.isForceSize())
                 continue;
 
             if (isNumeric(value.getValue())) {
@@ -131,6 +133,7 @@ public class VariableRegistry  {
     /**
      * This method replaces variables references like @@var@@ with actual values
      * An exception is thrown if we do not have such variable
+     *
      * @return string with variable values inlined
      */
     public String applyVariables(String line) {
@@ -150,10 +153,14 @@ public class VariableRegistry  {
     }
 
     public void register(String var, String param) {
-        String value = doRegister(var, param);
-        if (value == null)
-            return;
-        tryToRegisterAsInteger(var, value);
+        try {
+            String value = doRegister(var, param);
+            if (value == null)
+                return;
+            tryToRegisterAsInteger(var, value);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While [" + var + "][" + param + "]", e);
+        }
     }
 
     @Nullable
@@ -165,7 +172,7 @@ public class VariableRegistry  {
         }
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
-        if (!isQuoted(value, '"') && multPosition != -1) {
+        if (!value.contains("\n") && !isQuoted(value, '"') && multPosition != -1) {
             Integer first = Integer.valueOf(value.substring(0, multPosition).trim());
             Integer second = Integer.valueOf(value.substring(multPosition + 1).trim());
             value = String.valueOf(first * second);
@@ -213,7 +220,8 @@ public class VariableRegistry  {
         } catch (NumberFormatException e) {
             //SystemOut.println("Not an integer: " + value);
 
-            if (!var.trim().endsWith(ENUM_SUFFIX)) {
+            if (!var.trim().endsWith(ENUM_SUFFIX) &&
+                    !var.trim().endsWith(FULL_JAVA_ENUM)) {
                 if (isQuoted(value, '"')) {
                     // quoted and not with enum suffix means plain string define statement
                     javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + ToolUtil.EOL);

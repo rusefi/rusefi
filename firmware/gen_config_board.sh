@@ -41,11 +41,13 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
+# in rare cases order of arguments is important - '-tool' should be specified before '-definition'
 java -DSystemOut.name=logs/gen_config_board \
+ $COMMON_GEN_CONFIG_PREFIX \
+ 	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
   -romraider integration \
-	-tool gen_config.sh \
- -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
+  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
@@ -59,12 +61,13 @@ java -DSystemOut.name=logs/gen_config_board \
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
+# we generate both versions of the header but only one would be actually included due to conditional compilation see EFI_USE_COMPRESSED_INI_MSD
 # todo: make things consistent by
 # 0) having generated content not in the same folder with the tool generating content?
 # 1) using unique file name for each configuration?
 # 2) leverage consistent caching mechanism so that image is generated only in case of fresh .ini. Laziest approach would be to return exit code from java process above
 #
-hw_layer/mass_storage/create_ini_image.sh            ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             112 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
-hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1024 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image.sh            ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image.h             128 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
+hw_layer/mass_storage/create_ini_image_compressed.sh ./tunerstudio/generated/${INI} ./hw_layer/mass_storage/ramdisk_image_compressed.h 1088 ${SHORT_BOARDNAME} ${BOARD_SPECIFIC_URL}
 
 exit 0

@@ -38,7 +38,6 @@
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
-#include "os_util.h"
 
 static Timer diagResponse;
 

@@ -6,6 +6,8 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
+#include "pch.h"
+
 #include "lps25.h"
 
 static constexpr uint8_t addr = 0x5C;

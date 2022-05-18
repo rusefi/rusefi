@@ -14,6 +14,7 @@ TEST(realCrankingVQ40, normalCranking) {
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	bool hasSeenFirstVvt = false;
 
@@ -22,7 +23,7 @@ TEST(realCrankingVQ40, normalCranking) {
 		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 
 		if (vvt1 != 0 && !hasSeenFirstVvt) {
-			EXPECT_NEAR(vvt1, 24.91, 1);
+			EXPECT_NEAR(vvt1, -33.204, 1);
 			hasSeenFirstVvt = true;
 		}
 	}

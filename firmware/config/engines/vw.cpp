@@ -25,7 +25,7 @@ void setVwAba() {
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
@@ -42,10 +42,10 @@ void setVwAba() {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-	engineConfiguration->ignitionPins[0] = GPIOE_14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->idlePositionSensor = EFI_ADC_3; // PA3
@@ -77,7 +77,7 @@ void setHellen121Vag_v6_cyl() {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.7;
 
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7; // 87a
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::A7; // 87a
 
 	engineConfiguration->specs.firingOrder = FO_1_4_3_6_2_5;
 }

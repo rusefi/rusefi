@@ -1,0 +1,11 @@
+struct_no_prefix ignition_state_s
+
+float baseDwell
+float dwellVoltageCorrection
+
+    float luaTimingAdd;
+    float luaTimingMult;
+
+! ignition_state
+end_struct
+

@@ -79,9 +79,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
-		+ engine->knockController.getKnockRetard();
-
-	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
+		+ engine->module<KnockController>()->getKnockRetard();
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	const int index = engine->ignitionPin[event->cylinderIndex];

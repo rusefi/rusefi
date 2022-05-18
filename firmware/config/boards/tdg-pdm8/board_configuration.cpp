@@ -13,8 +13,8 @@ void setBoardConfigOverrides() {
 	engineConfiguration->vbattDividerCoeff = 11;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
 
-	engineConfiguration->canTxPin = GPIOA_12;
-	engineConfiguration->canRxPin = GPIOA_11;
+	engineConfiguration->canTxPin = Gpio::A12;
+	engineConfiguration->canRxPin = Gpio::A11;
 }
 
 // TODO: these are made up values

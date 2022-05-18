@@ -112,7 +112,9 @@ struct Sensors2 {
 static void populateFrame(Sensors2& msg) {
 	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
+#if EFI_SHAFT_POSITION_INPUT
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
@@ -120,13 +122,14 @@ struct Fueling {
 	scaled_channel<uint16_t, 1000> cylAirmass;
 	scaled_channel<uint16_t, 100> estAirflow;
 	scaled_ms fuel_pulse;
-	uint16_t pad;
+	uint16_t knockCount;
 };
 
 static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
+	msg.knockCount = engine->module<KnockController>()->getKnockCount();
 }
 
 struct Fueling2 {
@@ -148,13 +151,13 @@ void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
 
-	transmitStruct<Status>	  (base + 0, isExt);
-	transmitStruct<Speeds>	  (base + 1, isExt);
-	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET, isExt);
-	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET, isExt);
-	transmitStruct<Sensors2>	(base + 4, isExt);
-	transmitStruct<Fueling>	 (base + 5, isExt);
-	transmitStruct<Fueling2>	(base + 6, isExt);
+	transmitStruct<Status>	    (CanCategory::VERBOSE, base + 0, isExt);
+	transmitStruct<Speeds>	    (CanCategory::VERBOSE, base + 1, isExt);
+	transmitStruct<PedalAndTps> (CanCategory::VERBOSE, base + CAN_PEDAL_TPS_OFFSET, isExt);
+	transmitStruct<Sensors1>	(CanCategory::VERBOSE, base + CAN_SENSOR_1_OFFSET, isExt);
+	transmitStruct<Sensors2>	(CanCategory::VERBOSE, base + 4, isExt);
+	transmitStruct<Fueling>	    (CanCategory::VERBOSE, base + 5, isExt);
+	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt);
 }
 
 #endif // EFI_CAN_SUPPORT

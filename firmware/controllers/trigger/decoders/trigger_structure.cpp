@@ -56,6 +56,7 @@ TriggerWaveform::TriggerWaveform() {
 void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSynchronizationNeeded = true; // that's default value
 	bothFrontsRequired = false;
+	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
@@ -84,7 +85,8 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 #if EFI_UNIT_TEST
 	memset(&triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
 	memset(&triggerSignalStates, 0, sizeof(triggerSignalStates));
-#endif
+	knownOperationMode = true;
+#endif // EFI_UNIT_TEST
 }
 
 size_t TriggerWaveform::getSize() const {
@@ -442,7 +444,7 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
@@ -456,8 +458,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
+		/**
+		 * huh? why all know skipped wheel shapes use 'setToothedWheelConfiguration' method
+		 * which touches 'useRiseEdge' flag while here we do not touch it?!
+		 */
 		initializeSkippedToothTriggerWaveformExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, ambiguousOperationMode);
+				triggerConfig->customSkippedToothCount, triggerOperationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -594,7 +600,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
+		setToothedWheelConfiguration(this, 1, 0, triggerOperationMode);
 		break;
 
 	case TT_MAZDA_SOHC_4:
@@ -606,7 +612,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_VVT_JZ:
-		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
+		setToothedWheelConfiguration(this, 3, 0, triggerOperationMode);
 		break;
 
 	case TT_36_2_1_1:
@@ -618,20 +624,21 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 	    break;
 
 	case TT_TOOTHED_WHEEL_32_2:
-		setToothedWheelConfiguration(this, 32, 2, ambiguousOperationMode);
+		setToothedWheelConfiguration(this, 32, 2, triggerOperationMode);
 		// todo: add this second/third into 'setToothedWheelConfiguration' as long as we have enough tooth?
 		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		setThirdTriggerSynchronizationGap(1);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
+		setToothedWheelConfiguration(this, 60, 2, triggerOperationMode);
 		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:
-		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setToothedWheelConfiguration(this, 36, 2, triggerOperationMode);
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -639,8 +646,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setToothedWheelConfiguration(this, 36, 1, triggerOperationMode);
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:
@@ -720,12 +726,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initialize2jzGE1_12(this);
 		break;
 
+	case TT_UNUSED_38:
 	case TT_NISSAN_SR20VE:
 		initializeNissanSR20VE_4(this);
-		break;
-
-	case TT_NISSAN_SR20VE_360:
-		initializeNissanSR20VE_4_360(this);
 		break;
 
 	case TT_ROVER_K:
@@ -740,8 +743,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureTriTach(this);
 		break;
 
-	case TT_GM_LS_24:
-		initGmLS24(this);
+	case TT_GM_24x:
+		initGmLS24_5deg(this);
+		break;
+
+	case TT_GM_24x_2:
+		initGmLS24_3deg(this);
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:

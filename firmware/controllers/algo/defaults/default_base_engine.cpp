@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "defaults.h"
+#include "vr_pwm.h"
 
 static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
@@ -34,7 +35,7 @@ void setDefaultBaseEngine() {
 
 	// Trigger
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
@@ -66,10 +67,19 @@ void setDefaultBaseEngine() {
 	engineConfiguration->tachPulseDuractionMs = 0.5;
 	engineConfiguration->tachPulsePerRev = 1;
 
+	engineConfiguration->etbMinimumPosition = 1;
+	engineConfiguration->etbMaximumPosition = 100;
+
+	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
+	engineConfiguration->issFilterReciprocal = 2;
+
 	// Check engine light
 #if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;
 #else
 	engineConfiguration->warningPeriod = 0;
 #endif /* EFI_PROD_CODE */
+
+	setDefaultVrThresholds();
+
 }

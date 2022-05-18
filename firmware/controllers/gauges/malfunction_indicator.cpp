@@ -85,7 +85,7 @@ private:
 		UNUSED(nowNt);
 
 		validateStack("MIL", STACK_USAGE_MIL, 128);
-
+#if EFI_SHAFT_POSITION_INPUT
 		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
 			enginePins.checkEnginePin.setValue(1);
 			chThdSleepMilliseconds(500);
@@ -100,6 +100,7 @@ private:
 			int code = localErrorCopy.error_codes[p];
 			DisplayErrorCode(DigitLength(code), code);
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 	}
 };
 

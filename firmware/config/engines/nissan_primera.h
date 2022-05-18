@@ -10,4 +10,3 @@
 #include "engine_configuration.h"
 
 void setNissanPrimeraEngineConfiguration();
-void setNissanPrimeraEngineConfiguration_360();

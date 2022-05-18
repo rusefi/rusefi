@@ -52,7 +52,7 @@ enum class SensorType : unsigned char {
 	// This maps to the pedal if we have one, and Tps1 if not.
 	DriverThrottleIntent,
 
-	AuxTemp1,
+	AuxTemp1, // 20
 	AuxTemp2,
 
 	Lambda1,
@@ -93,6 +93,9 @@ enum class SensorType : unsigned char {
 
 	AuxSpeed1,
 	AuxSpeed2,
+
+
+	InputShaftSpeed,
 
 	// Leave me at the end!
 	PlaceholderLast,

@@ -5,13 +5,6 @@ void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
-void setHellenDefaultVrThresholds() {
-	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
-	}
-}
-
 void setHellen144LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
@@ -26,10 +19,10 @@ void setHellen176LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
-	engineConfiguration->communicationLedPin = GPIOH_10;
+	engineConfiguration->communicationLedPin = Gpio::H10;
 #endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
+	engineConfiguration->runningLedPin = Gpio::H9;  // green
+	engineConfiguration->warningLedPin = Gpio::H11; // yellow
 }
 
 // this should be called before setHellenXXXLedPins()
@@ -75,7 +68,9 @@ void detectHellenMcuType() {
 	}
 }
 
+int hellenBoardId = 0;
+
 void detectHellenBoardType() {
 	detectHellenMcuType();
-	detectHellenBoardId();
+	hellenBoardId = detectHellenBoardId();
 }

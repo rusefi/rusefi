@@ -132,23 +132,23 @@ static void setHondaAccordConfigurationCommon() {
 	// Frankenso low out #10: PD5 Injector #3
 	// Frankenso low out #11: PB8 injector #1
 	// Frankenso low out #12: PB7 injector #4
-	engineConfiguration->fuelPumpPin = GPIOE_3;
+	engineConfiguration->fuelPumpPin = Gpio::E3;
 	engineConfiguration->fuelPumpPinMode = OM_DEFAULT;
-	engineConfiguration->malfunctionIndicatorPin = GPIOE_2;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::E2;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
-	engineConfiguration->fanPin = GPIOE_4; // blue wire
+	engineConfiguration->fanPin = Gpio::E4; // blue wire
 
-	engineConfiguration->idle.solenoidPin = GPIOD_3; // green wire
+	engineConfiguration->idle.solenoidPin = Gpio::D3; // green wire
 
-	engineConfiguration->injectionPins[0] = GPIOB_8;
-	engineConfiguration->injectionPins[1] = GPIOB_9;
-	engineConfiguration->injectionPins[2] = GPIOD_5;
-	engineConfiguration->injectionPins[3] = GPIOB_7;
+	engineConfiguration->injectionPins[0] = Gpio::B8;
+	engineConfiguration->injectionPins[1] = Gpio::B9;
+	engineConfiguration->injectionPins[2] = Gpio::D5;
+	engineConfiguration->injectionPins[3] = Gpio::B7;
 
-	engineConfiguration->ignitionPins[0] = GPIOE_12; // white wire
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E12; // white wire
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
 
 	setFrankenso_01_LCD(engineConfiguration);

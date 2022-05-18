@@ -65,17 +65,17 @@ float getCurveValue(int index, float key) {
 	// not great code at all :(
 	switch (index) {
 	default:
-		return interpolate2d(key, engineConfiguration->scriptCurve1Bins, engineConfiguration->scriptCurve1);
+		return interpolate2d(key, config->scriptCurve1Bins, config->scriptCurve1);
 	case 1:
-		return interpolate2d(key, engineConfiguration->scriptCurve2Bins, engineConfiguration->scriptCurve2);
+		return interpolate2d(key, config->scriptCurve2Bins, config->scriptCurve2);
 	case 2:
-		return interpolate2d(key, engineConfiguration->scriptCurve3Bins, engineConfiguration->scriptCurve3);
+		return interpolate2d(key, config->scriptCurve3Bins, config->scriptCurve3);
 	case 3:
-		return interpolate2d(key, engineConfiguration->scriptCurve4Bins, engineConfiguration->scriptCurve4);
+		return interpolate2d(key, config->scriptCurve4Bins, config->scriptCurve4);
 	case 4:
-		return interpolate2d(key, engineConfiguration->scriptCurve5Bins, engineConfiguration->scriptCurve5);
+		return interpolate2d(key, config->scriptCurve5Bins, config->scriptCurve5);
 	case 5:
-		return interpolate2d(key, engineConfiguration->scriptCurve6Bins, engineConfiguration->scriptCurve6);
+		return interpolate2d(key, config->scriptCurve6Bins, config->scriptCurve6);
 	}
 }
 

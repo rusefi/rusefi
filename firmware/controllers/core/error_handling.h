@@ -37,8 +37,7 @@ extern bool hasFirmwareErrorFlag;
 
 #define hasFirmwareError() hasFirmwareErrorFlag
 
-// todo: rename to getCriticalErrorMessage
-const char* getFirmwareError(void);
+const char* getCriticalErrorMessage(void);
 const char* getWarningMessage(void);
 
 // todo: better place for this shared declaration?

@@ -202,10 +202,12 @@ jobs:
 
           - build-target: f429-discovery
             folder: f429-discovery
+            skip-rate: 90
 
           - build-target: core8
             folder: core8
             ini-file: rusefi_core8.ini
+            skip-rate: 90
 
           - build-target: atlas
             folder: atlas
@@ -241,6 +243,18 @@ jobs:
         sudo apt-get install zip
         sudo apt-get install dosfstools
 
+    - name: Generate Live Documentation
+      if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
+      # live_data_ids.h is generated above so order of operations is important here!
+    - name: Generate Enum Strings
+      if: ${{ env.skip != 'true' }}
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
+      # depends on gen_live_documentation.sh for instance TS_TOTAL_OUTPUT_SIZE
     - name: Generate Default config
       if: ${{ env.skip != 'true' }}
       # todo: why do we even need this 'gen_config_default.sh' here?!
@@ -250,32 +264,22 @@ jobs:
     - name: Generate Configs for build-target
       if: ${{ matrix.skip-config != 'yes' && env.skip != 'true' }}
       working-directory: ./firmware/
+      # todo: we have code duplication with gen_config.sh here :(
       run: |
         if [ "${{ matrix.build-target }}" = "kinetis" ]; then
           cd config/boards/kinetis/config
-          bash gen_config.sh
+          bash gen_kinetis_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "cypress" ]; then
           cd config/boards/hellen/cypress/config
-          bash gen_config.sh
+          bash gen_cypress_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
-          bash config/boards/subaru_eg33/config/gen_config.sh
+          bash config/boards/subaru_eg33/config/gen_subaru_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
-
-    - name: Generate Live Documentation
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
-
-    # live_data_ids.h is generated above so order of operations is important here!
-    - name: Generate Enum Strings
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC

@@ -7,8 +7,8 @@
 #include "init.h"
 #include "frequency_sensor.h"
 
-static FrequencySensor auxSpeed1(SensorType::AuxSpeed1, MS2NT(500), 0.05f);
-static FrequencySensor auxSpeed2(SensorType::AuxSpeed2, MS2NT(500), 0.05f);
+static FrequencySensor auxSpeed1(SensorType::AuxSpeed1, MS2NT(500));
+static FrequencySensor auxSpeed2(SensorType::AuxSpeed2, MS2NT(500));
 
 static class : public SensorConverter  {
 public:
@@ -23,8 +23,8 @@ public:
 
 
 void initAuxSpeedSensors() {
-	auxSpeed1.initIfValid(engineConfiguration->auxSpeedSensorInputPin[0], converter);
-	auxSpeed2.initIfValid(engineConfiguration->auxSpeedSensorInputPin[1], converter);
+	auxSpeed1.initIfValid(engineConfiguration->auxSpeedSensorInputPin[0], converter, 0.05f);
+	auxSpeed2.initIfValid(engineConfiguration->auxSpeedSensorInputPin[1], converter, 0.05f);
 }
 
 void deinitAuxSpeedSensors() {

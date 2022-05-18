@@ -1,5 +1,8 @@
 package com.rusefi.native_;
 
+import com.opensr5.ConfigurationImage;
+import com.rusefi.config.Field;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.enums.SensorType;
 import org.junit.Test;
@@ -7,6 +10,7 @@ import org.junit.Test;
 import java.nio.ByteBuffer;
 
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
+import static com.rusefi.config.generated.Fields.engine_type_e_MRE_MIATA_NB2_MAP;
 import static com.rusefi.shared.FileUtil.littleEndianWrap;
 import static junit.framework.Assert.*;
 
@@ -31,9 +35,18 @@ public class JniUnitTest {
 
         engineLogic.setSensor(SensorType.Rpm.name(), 4000);
         engineLogic.invokePeriodicCallback();
-        assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPM));
+        assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPMValue));
 
         assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
+
+        engineLogic.setEngineType(engine_type_e_MRE_MIATA_NB2_MAP);
+        assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
+    }
+
+    private double getField(EngineLogic engineLogic, Field gearratio1) {
+        byte[] configuration = engineLogic.getConfiguration();
+        assertNotNull("configuration", configuration);
+        return gearratio1.getValue(new ConfigurationImage(configuration), gearratio1.getScale());
     }
 
     private double getValue(byte[] outputs, Sensor sensor) {

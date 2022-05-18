@@ -12,6 +12,7 @@
 #include "efifeatures.h"
 #include "rusefi_types.h"
 
+#define MS_PER_SECOND 1000
 #define US_PER_SECOND 1000000
 #define US_PER_SECOND_F 1000000.0
 #define US_PER_SECOND_LL 1000000LL

@@ -292,6 +292,17 @@ struct LuaThread : ThreadController<4096> {
 	void ThreadTask() override;
 };
 
+static void resetLua() {
+	engine->module<AcController>().unmock().isDisabledByLua = false;
+#if EFI_CAN_SUPPORT
+	resetLuaCanRx();
+#endif // EFI_CAN_SUPPORT
+
+	// De-init pins, they will reinit next start of the script.
+	luaDeInitPins();
+}
+
+
 static bool needsReset = false;
 
 // Each invocation of runOneLua will:
@@ -335,12 +346,7 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 		engine->outputChannels.luaInvocationCounter++;
 	}
 
-#if EFI_CAN_SUPPORT
-	resetLuaCanRx();
-#endif // EFI_CAN_SUPPORT
-
-	// De-init pins, they will reinit next start of the script.
-	luaDeInitPins();
+	resetLua();
 
 	return true;
 }

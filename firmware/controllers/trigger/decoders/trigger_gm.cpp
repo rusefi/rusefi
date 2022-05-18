@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_gm.h"
 
 static float addTooth(float offset, TriggerWaveform *s) {
@@ -22,6 +24,7 @@ static float addTooth(float offset, TriggerWaveform *s) {
 void configureGm60_2_2_2(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = false;
+	s->isSecondWheelCam = true;
 
 	float m = CRANK_MODE_MULTIPLIER;
 	int offset = 1 * m;
@@ -86,9 +89,9 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(6);
 }
 
-static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult)
+static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s, int mult, float shortToothWidth)
 {
-	int window = (isShortLong ? 5 : 10) * mult;
+	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth)) * mult;
 	int end = startAngle + mult * 15;
 
 	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
@@ -98,7 +101,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 }
 
 /**
- * TT_GM_LS_24
+ * TT_GM_24x and TT_GM_24x_2
  * https://www.mediafire.com/?40mfgeoe4ctti
  * http://www.ls1gto.com/forums/archive/index.php/t-190549.htm
  * http://www.ls2.com/forums/showthread.php/834483-LS-Timing-Reluctor-Wheels-Explained
@@ -106,7 +109,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
  *
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
-void initGmLS24(TriggerWaveform *s) {
+static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	/* 
@@ -118,14 +121,15 @@ void initGmLS24(TriggerWaveform *s) {
 	 * encodes the pattern of which type of gap occurs in the
 	 * pattern.  Starting from the LSB, each bit left is the 
 	 * next gap in sequence as the crank turns.  A 0 indicates
-	 * long-short, while a 1 indicates short-long.
+	 * long-short (late rising edge), while a 1 indicates
+	 * short-long (early rising edge).
 	 * 
 	 * The first few bits read are 0xE (LSB first!) = 0 - 1 - 1 - 1, so the pattern
 	 * looks like this:
-	 * ___     _   ___   ___   ___
-	 *    |___| |_|   |_|   |_|   |_ etc
+	 * ___     _   ___   ___     _
+	 *    |___| |_|   |_|   |___| |_ etc
 	 * 
-	 *    |  0  |  1  |  1  |  1  |
+	 *    |  0  |  1  |  1  |  0  |
 	 * 
 	 *     ___ = 10 degrees, _ = 5 deg
 	 * 
@@ -145,15 +149,32 @@ void initGmLS24(TriggerWaveform *s) {
 		bool bit = code & 0x000001;
 		code = code >> 1;
 
-		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER);
+		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, shortToothWidth);
 	}
 
-	s->tdcPosition = 50;
 	s->useOnlyPrimaryForSync = true;
+}
+
+// TT_GM_24x
+void initGmLS24_5deg(TriggerWaveform *s) {
+	initGmLS24(s, 5);
 
 	// This is tooth #20, at 310 degrees ATDC #1
 	s->setTriggerSynchronizationGap(2.0f);
 	s->setSecondTriggerSynchronizationGap(0.5f);
 	s->setThirdTriggerSynchronizationGap(2.0f);
+
+	s->tdcPosition = 50;
 }
 
+// TT_GM_24x_2
+void initGmLS24_3deg(TriggerWaveform *s) {
+	initGmLS24(s, 3);
+
+	// This is tooth #20, at 312 degrees ATDC #1
+	s->setTriggerSynchronizationGap(4.0f);
+	s->setSecondTriggerSynchronizationGap(0.25f);
+	s->setThirdTriggerSynchronizationGap(4.0f);
+
+	s->tdcPosition = 48;
+}

@@ -27,7 +27,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
-            Sensor.RPM,
+            Sensor.RPMValue,
             Sensor.MAF,
             Sensor.CLT,
             Sensor.IAT,
@@ -43,7 +43,7 @@ public class GaugesPanel {
             Sensor.lastErrorCode,
             Sensor.Lambda,
             Sensor.VBATT,
-            Sensor.VSS,
+            Sensor.vehicleSpeedKph,
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";

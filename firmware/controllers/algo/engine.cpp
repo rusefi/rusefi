@@ -16,7 +16,6 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "os_util.h"
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
@@ -99,7 +98,15 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerState &initState) {
+static operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
+static void initVvtShape(int camIndex, TriggerDecoderBase &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 
 	if (vvtMode != VVT_INACTIVE) {
@@ -109,7 +116,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 
 		auto& shape = engine->triggerCentral.vvtShape[camIndex];
 		shape.initializeTriggerWaveform(
-				engineConfiguration->ambiguousOperationMode,
+				lookupOperationMode(),
 				engineConfiguration->vvtCamSensorUseRise, &config);
 
 		shape.initializeSyncPoint(initState,
@@ -118,8 +125,8 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 	}
 }
 
-void Engine::initializeTriggerWaveform() {
-	static TriggerState initState;
+void Engine::updateTriggerWaveform() {
+	static TriggerDecoderBase initState;
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -132,7 +139,7 @@ void Engine::initializeTriggerWaveform() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			engineConfiguration->ambiguousOperationMode,
+			lookupOperationMode(),
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
 	/**
@@ -158,7 +165,7 @@ void Engine::initializeTriggerWaveform() {
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
@@ -184,9 +191,9 @@ void Engine::initializeTriggerWaveform() {
 }
 
 #if ANALOG_HW_CHECK_MODE
-static void assertCloseTo(const char * msg, float actual, float expected) {
-	if (actual < 0.75 * expected || actual > 1.25 * expected) {
-		firmwareError(OBD_PCM_Processor_Fault, "%s analog input validation failed %f vs %f", msg, actual, expected);
+static void assertCloseTo(const char* msg, float actual, float expected) {
+	if (actual < 0.95f * expected || actual > 1.05f * expected) {
+		firmwareError(OBD_PCM_Processor_Fault, "%s validation failed actual=%f vs expected=%f", msg, actual, expected);
 	}
 }
 #endif // ANALOG_HW_CHECK_MODE
@@ -241,6 +248,11 @@ void Engine::periodicSlowCallback() {
 #if ANALOG_HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
+
+#if ! HW_CHECK_ALWAYS_STIMULATE
+	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
+#endif
+
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
@@ -251,10 +263,11 @@ void Engine::periodicSlowCallback() {
 			isHappyTest = true;
 		}
 	}
-	assertCloseTo("clt", Sensor::get(SensorType::Clt).Value, 49.3);
-	assertCloseTo("iat", Sensor::get(SensorType::Iat).Value, 73.2);
-	assertCloseTo("aut1", Sensor::get(SensorType::AuxTemp1).Value, 13.8);
-	assertCloseTo("aut2", Sensor::get(SensorType::AuxTemp2).Value, 6.2);
+
+	assertCloseTo("clt", Sensor::getRaw(SensorType::Clt), 1.351f);
+	assertCloseTo("iat", Sensor::getRaw(SensorType::Iat), 2.245f);
+	assertCloseTo("aut1", Sensor::getRaw(SensorType::AuxTemp1), 2.750f);
+	assertCloseTo("aut2", Sensor::getRaw(SensorType::AuxTemp2), 3.176f);
 #endif // ANALOG_HW_CHECK_MODE
 }
 
@@ -311,11 +324,11 @@ void Engine::updateSwitchInputs() {
 	}
 	if (hasAcToggle()) {
 		bool result = getAcToggle();
-		if (engine->acSwitchState != result) {
-			engine->acSwitchState = result;
-			engine->acSwitchLastChangeTime = getTimeNowUs();
+		AcController & acController = engine->module<AcController>().unmock();
+		if (acController.acButtonState != result) {
+			acController.acButtonState = result;
+			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
-		engine->acSwitchState = result;
 	}
 	engine->clutchUpState = getClutchUpState();
 
@@ -374,11 +387,8 @@ void Engine::OnTriggerStateDecodingError() {
 			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
-	triggerCentral.triggerState.setTriggerErrorState();
 
-
-	triggerCentral.triggerState.totalTriggerErrorCounter++;
-	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
+	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
@@ -410,23 +420,12 @@ void Engine::OnTriggerSynchronizationLost() {
 	}
 }
 
-void Engine::OnTriggerInvalidIndex(int currentIndex) {
-	// let's not show a warning if we are just starting to spin
-	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
-		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
-		triggerCentral.triggerState.setTriggerErrorState();
-	}
-}
+void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) {
+	// TODO: this logic probably shouldn't be part of engine.cpp
 
-void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 	// We only care about trigger shape once we have synchronized trigger. Anything could happen
 	// during first revolution and it's fine
 	if (wasSynchronized) {
-		/**
-	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
-
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
 		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
@@ -597,22 +596,31 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+// this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	return type != TT_TOOTHED_WHEEL
-			&& type != TT_ONE
-			&& type != TT_ONE_PLUS_ONE
-			&& type != TT_3_1_CAM
-			&& type != TT_36_2_2_2
-			&& type != TT_TOOTHED_WHEEL_60_2
-			&& type != TT_TOOTHED_WHEEL_36_1;
+	switch (type) {
+		case TT_TOOTHED_WHEEL:
+		case TT_ONE:
+		case TT_3_1_CAM:
+		case TT_36_2_2_2:	// TODO: should this one be in this list?
+		case TT_TOOTHED_WHEEL_60_2:
+		case TT_TOOTHED_WHEEL_36_1:
+			// These modes could be either cam or crank speed
+			return false;
+		default:
+			return true;
+	}
 }
 
 operation_mode_e Engine::getOperationMode() {
-	/**
-	 * here we ignore user-provided setting for well known triggers.
-	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-	 */
-	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return triggerCentral.triggerShape.getOperationMode();
+	} else {
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
 }
 
 /**
@@ -627,8 +635,6 @@ void Engine::periodicFastCallback() {
 #endif
 
 	engineState.periodicFastCallback();
-
-	knockController.periodicFastCallback();
 
 	tachSignalCallback();
 

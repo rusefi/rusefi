@@ -15,7 +15,7 @@ void setHellen121nissanQR() {
 	engineConfiguration->specs.displacement = 2;
 	strcpy(engineConfiguration->engineCode, "QR");
 
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::Unassigned;
 
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
 

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Mar 22 10:38:42 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed May 11 10:48:27 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -144,8 +144,6 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
-case Force_4_bytes_size_debug_mode_e:
-  return "Force_4_bytes_size_debug_mode_e";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -408,12 +406,14 @@ case TT_FORD_ST170:
   return "TT_FORD_ST170";
 case TT_FORD_TFI_PIP:
   return "TT_FORD_TFI_PIP";
+case TT_GM_24x:
+  return "TT_GM_24x";
+case TT_GM_24x_2:
+  return "TT_GM_24x_2";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_GM_LS_24:
-  return "TT_GM_LS_24";
 case TT_HONDA_1_24:
   return "TT_HONDA_1_24";
 case TT_HONDA_1_4_24:
@@ -458,8 +458,6 @@ case TT_NISSAN_QR25:
   return "TT_NISSAN_QR25";
 case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
-case TT_NISSAN_SR20VE_360:
-  return "TT_NISSAN_SR20VE_360";
 case TT_NISSAN_VQ30:
   return "TT_NISSAN_VQ30";
 case TT_NISSAN_VQ35:
@@ -502,6 +500,8 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_38:
+  return "TT_UNUSED_38";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:

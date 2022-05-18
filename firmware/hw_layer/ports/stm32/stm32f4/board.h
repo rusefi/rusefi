@@ -27,8 +27,8 @@
 #define BOARD_NAME                  "F4 for rusEFI"
 
 #define EFI_USB_AF 10U
-#define EFI_USB_SERIAL_DM GPIOA_11
-#define EFI_USB_SERIAL_DP GPIOA_12
+#define EFI_USB_SERIAL_DM Gpio::A11
+#define EFI_USB_SERIAL_DP Gpio::A12
 
 // Ignore USB VBUS pin (we're never a host, only a device)
 #define BOARD_OTG_NOVBUSSENS TRUE

@@ -9,7 +9,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
 #include "tunerstudio_io.h"
 
 #define DOT_MLG ".mlg"
@@ -18,6 +17,7 @@ void initEarlyMmcCard();
 void initMmcCard();
 bool isSdCardAlive(void);
 
-extern "C"
-#endif
 void onUsbConnectedNotifyMmcI(void);
+
+struct USBDriver;
+bool msd_request_hook_new(USBDriver *usbp);

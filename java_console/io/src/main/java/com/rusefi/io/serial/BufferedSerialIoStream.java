@@ -47,6 +47,6 @@ public class BufferedSerialIoStream extends SerialIoStream {
 
     @Override
     public String toString() {
-        return port + " " + super.toString();
+        return "serial=" + port;
     }
 }

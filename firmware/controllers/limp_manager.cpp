@@ -1,8 +1,8 @@
 #include "pch.h"
 
 #include "limp_manager.h"
-
 #include "fuel_math.h"
+#include "main_trigger_callback.h"
 
 #define CLEANUP_MODE_TPS 90
 
@@ -22,6 +22,16 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
+			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
+		allowFuel.clear(ClearReason::EnginePhase);
+		allowSpark.clear(ClearReason::EnginePhase);
+	}
+
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
 		allowFuel.clear(ClearReason::FaultRevLimit);
@@ -33,14 +43,14 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
-
+#if EFI_SHAFT_POSITION_INPUT
 	if (engine->rpmCalculator.isRunning()) {
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
 		// Only check if the setting is enabled
 		if (minOilPressure > 0) {
 			// Has it been long enough we should have pressure?
-			bool isTimedOut = engine->rpmCalculator.getTimeSinceEngineStart(nowNt) > 5.0f;
+			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
 
 			// Only check before timed out
 			if (!isTimedOut) {
@@ -93,6 +103,8 @@ todo AndreiKA this change breaks 22 unit tests?
 */
 	}
 	
+#endif // EFI_SHAFT_POSITION_INPUT
+
 #if EFI_LAUNCH_CONTROL
 	// Fuel cut if launch control engaged
 	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {

@@ -53,9 +53,8 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireRise(50);
 		eth.fireFall(150);
 	}
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0));
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
+	EXPECT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
+	EXPECT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0));
 }
 
 TEST(trigger, testNoisyInput) {
@@ -84,12 +83,12 @@ TEST(trigger, testCamInput) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE);
-	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
+	engineConfiguration->camInputs[0] = Gpio::A10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 
@@ -124,25 +123,25 @@ TEST(trigger, testCamInput) {
 TEST(trigger, testNB2CamInput) {
 	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
-	// this crank trigger would be easier to test, crank shape is less important for this test
-	eth.setTriggerType(TT_ONE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
-	for (int i = 0; i < 4;i++) {
-		eth.fireRise(25);
+	for (int i = 0; i < 6;i++) {
+		eth.fireRise(25 * 70 / 180);
+		eth.fireRise(25 * 110 / 180);
 		ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
 	}
-	eth.fireRise(25);
+	eth.fireRise(25 * 70 / 180);
+	eth.fireRise(25 * 110 / 180);
 	// first time we have RPM
-	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
+	ASSERT_EQ(1250,  round(Sensor::getOrZero(SensorType::Rpm)));
 
-	int totalRevolutionCountBeforeVvtSync = 6;
+	int totalRevolutionCountBeforeVvtSync = 5;
 	// need to be out of VVT sync to see VVT sync in action
-	eth.fireRise(25);
-	eth.fireRise(25);
+	eth.fireRise(25 * 70 / 180);
+	eth.fireRise(25 * 110 / 180);
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
 
@@ -174,13 +173,13 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US( 30));
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
-	EXPECT_NEAR(-211.59f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
+	EXPECT_NEAR(288.0f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
 	float dutyCycleNt = engine->triggerCentral.vvtState[0][0].currentCycle.totalTimeNtCopy[0];
 	EXPECT_FLOAT_EQ(27'000'000, dutyCycleNt);
 	EXPECT_FLOAT_EQ(0.056944445f, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
 
-	EXPECT_EQ(22, waveChart.getSize());
+	EXPECT_EQ(40, waveChart.getSize());
 }

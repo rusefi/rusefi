@@ -26,7 +26,7 @@ public class Field {
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
-    // todo: add multiplier support!
+    private double scale = 1;
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -226,8 +226,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
-        Field field = new Field(name, offset, type, options);
-        return field;
+        return new Field(name, offset, type, options);
     }
 
     public static Field create(String name, int offset, int stringSize, FieldType type) {
@@ -250,5 +249,14 @@ public class Field {
 
     public boolean getBooleanValue(ConfigurationImage ci) {
         return getValue(ci) != 0.0;
+    }
+
+    public Field setScale(double scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    public double getScale() {
+        return scale;
     }
 }

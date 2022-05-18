@@ -32,3 +32,14 @@ TEST(ScaledChannel, Basic) {
 		i2 =  -11; EXPECT_FLOAT_EQ(i2,  -10); // round
 	}
 }
+
+TEST(ScaledChannel, IntegerBehavior) {
+	scaled_channel<uint32_t, 1, 1> test;
+
+	// Check that a round trip thru scaled_channel gets us back the same integer
+	uint32_t a = 20210311;
+	test = a;
+	uint32_t b = test;
+
+	EXPECT_EQ(a, b);
+}
