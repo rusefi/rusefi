@@ -236,6 +236,11 @@ typedef enum {
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
+	// Same pattern TWELVE TIMES on the crank wheel!
+	// This usually means Honda, which often has a 12 tooth crank wheel or 24 tooth cam wheel
+	// without a missing tooth.
+	FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6,
+
 } operation_mode_e;
 
 /**
