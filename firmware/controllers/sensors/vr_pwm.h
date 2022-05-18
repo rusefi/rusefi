@@ -2,3 +2,4 @@
 
 void initVrPwm();
 void updateVrPwm();
+void setDefaultVrThresholds();

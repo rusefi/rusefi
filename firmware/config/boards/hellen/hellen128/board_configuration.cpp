@@ -220,7 +220,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
 
-	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = Gpio::D14;
 	hellenWbo();
 }

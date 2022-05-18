@@ -146,3 +146,22 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->addEvent360(offset + 270, T_PRIMARY, TV_RISE);
 	s->addEvent360(offset + 340, T_PRIMARY, TV_FALL);
 }
+
+// Useful for:
+// - Honda 24+1 (set this on crank primary, single tooth cam)
+// - AEM 24+1 CAS wheel (same config as Honda)
+void configure12ToothCrank(TriggerWaveform* s) {
+	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR);
+
+	s->useRiseEdge = true;
+	s->shapeWithoutTdc = true;
+
+	// Sync after 3 good teeth
+	for (size_t i = 0; i < 3; i++) {
+		s->setTriggerSynchronizationGap3(i, 0.75f, 1.25f);
+	}
+
+	// Just a single tooth with 50% duty cycle
+	s->addEventAngle(15, T_PRIMARY, TV_FALL);
+	s->addEventAngle(30, T_PRIMARY, TV_RISE);
+}
