@@ -123,6 +123,7 @@ bool TriggerWaveform::needsDisambiguation() const {
 		case FOUR_STROKE_CRANK_SENSOR:
 		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
 			return true;
 		case FOUR_STROKE_CAM_SENSOR:
 		case TWO_STROKE:
