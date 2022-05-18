@@ -69,11 +69,14 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 
 	// only print info if we're in can debug mode
 
+	int id = CAN_ID(rx);
+
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
 	efiPrintf("CAN RX bus %d ID %x(%d) DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
 			busIndex,
-			CAN_ID(rx),
-			CAN_ID(rx), rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
+			id,	id, // once in hex, once in dec
+			rx.DLC,
+			rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
 			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
 
 }
