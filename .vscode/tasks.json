@@ -132,6 +132,22 @@
 			}
 		},
 		{
+			"label": "Build Firmware (TDG PDM8)",
+			"type": "shell",
+			"command": "make -j12 PROJECT_BOARD=tdg-pdm8",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=tdg-pdm8'"
+			},
+			"options": {
+				"cwd": "${workspaceRoot}/firmware"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Build Unit Tests",
 			"type": "shell",
 			"command": "make -j12",
