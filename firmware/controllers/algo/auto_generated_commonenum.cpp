@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon May 02 03:12:06 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 18 03:18:14 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -512,6 +512,8 @@ case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
   return "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR";
 case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
   return "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR";
+case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+  return "FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR";
 case OM_NONE:
   return "OM_NONE";
 case TWO_STROKE:
