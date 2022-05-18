@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Wed May 18 03:18:15 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Wed May 18 04:13:25 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -403,10 +403,6 @@ case Gpio::PROTECTED_PIN_14:
   return "PROTECTED_PIN_14";
 case Gpio::PROTECTED_PIN_15:
   return "PROTECTED_PIN_15";
-case Gpio::PROTECTED_PIN_16:
-  return "PROTECTED_PIN_16";
-case Gpio::PROTECTED_PIN_17:
-  return "PROTECTED_PIN_17";
 case Gpio::PROTECTED_PIN_2:
   return "PROTECTED_PIN_2";
 case Gpio::PROTECTED_PIN_3:

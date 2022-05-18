@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 18 03:18:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed May 18 04:14:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -962,14 +962,14 @@ public class Fields {
 	public static final int Gpio_C7 = 41;
 	public static final int Gpio_C8 = 42;
 	public static final int Gpio_C9 = 43;
-	public static final int Gpio_CAN_PIN_0 = 250;
-	public static final int Gpio_CAN_PIN_1 = 251;
-	public static final int Gpio_CAN_PIN_2 = 252;
-	public static final int Gpio_CAN_PIN_3 = 253;
-	public static final int Gpio_CAN_PIN_4 = 254;
-	public static final int Gpio_CAN_PIN_5 = 255;
-	public static final int Gpio_CAN_PIN_6 = 256;
-	public static final int Gpio_CAN_PIN_7 = 257;
+	public static final int Gpio_CAN_PIN_0 = 249;
+	public static final int Gpio_CAN_PIN_1 = 250;
+	public static final int Gpio_CAN_PIN_2 = 251;
+	public static final int Gpio_CAN_PIN_3 = 252;
+	public static final int Gpio_CAN_PIN_4 = 253;
+	public static final int Gpio_CAN_PIN_5 = 254;
+	public static final int Gpio_CAN_PIN_6 = 255;
+	public static final int Gpio_CAN_PIN_7 = 256;
 	public static final int Gpio_D0 = 50;
 	public static final int Gpio_D1 = 51;
 	public static final int Gpio_D10 = 60;
@@ -1104,24 +1104,22 @@ public class Fields {
 	public static final int Gpio_MC33972_PIN_1 = 146;
 	public static final int Gpio_MC33972_PIN_21 = 166;
 	public static final int Gpio_MC33972_PIN_22 = 167;
-	public static final int Gpio_PROTECTED_PIN_0 = 290;
-	public static final int Gpio_PROTECTED_PIN_1 = 291;
-	public static final int Gpio_PROTECTED_PIN_10 = 300;
-	public static final int Gpio_PROTECTED_PIN_11 = 301;
-	public static final int Gpio_PROTECTED_PIN_12 = 302;
-	public static final int Gpio_PROTECTED_PIN_13 = 303;
-	public static final int Gpio_PROTECTED_PIN_14 = 304;
-	public static final int Gpio_PROTECTED_PIN_15 = 305;
-	public static final int Gpio_PROTECTED_PIN_16 = 306;
-	public static final int Gpio_PROTECTED_PIN_17 = 307;
-	public static final int Gpio_PROTECTED_PIN_2 = 292;
-	public static final int Gpio_PROTECTED_PIN_3 = 293;
-	public static final int Gpio_PROTECTED_PIN_4 = 294;
-	public static final int Gpio_PROTECTED_PIN_5 = 295;
-	public static final int Gpio_PROTECTED_PIN_6 = 296;
-	public static final int Gpio_PROTECTED_PIN_7 = 297;
-	public static final int Gpio_PROTECTED_PIN_8 = 298;
-	public static final int Gpio_PROTECTED_PIN_9 = 299;
+	public static final int Gpio_PROTECTED_PIN_0 = 257;
+	public static final int Gpio_PROTECTED_PIN_1 = 258;
+	public static final int Gpio_PROTECTED_PIN_10 = 267;
+	public static final int Gpio_PROTECTED_PIN_11 = 268;
+	public static final int Gpio_PROTECTED_PIN_12 = 269;
+	public static final int Gpio_PROTECTED_PIN_13 = 270;
+	public static final int Gpio_PROTECTED_PIN_14 = 271;
+	public static final int Gpio_PROTECTED_PIN_15 = 272;
+	public static final int Gpio_PROTECTED_PIN_2 = 259;
+	public static final int Gpio_PROTECTED_PIN_3 = 260;
+	public static final int Gpio_PROTECTED_PIN_4 = 261;
+	public static final int Gpio_PROTECTED_PIN_5 = 262;
+	public static final int Gpio_PROTECTED_PIN_6 = 263;
+	public static final int Gpio_PROTECTED_PIN_7 = 264;
+	public static final int Gpio_PROTECTED_PIN_8 = 265;
+	public static final int Gpio_PROTECTED_PIN_9 = 266;
 	public static final int Gpio_TLE6240_PIN_1 = 199;
 	public static final int Gpio_TLE6240_PIN_10 = 208;
 	public static final int Gpio_TLE6240_PIN_11 = 209;
