@@ -1,517 +1,293 @@
 pins:
-  # Grey A line
-  - pin: Grey A1
-    id: F13
+  - id: B14
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A1 - Injector 1
+    ts_name: Low Side 1 (B14 v2.1 ONLY)
     
-  - pin: Grey A2
-    id: F14
+  - id: B15
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A2 - Injector 2
+    ts_name: Low Side 2 (B15 v2.1 ONLY)
+    
+  - id: F13
+    class: outputs
+    ts_name: Low Side 1 (F13)
+    
+  - id: F14
+    class: outputs
+    ts_name: Low Side 2 (F14)
 
-  - pin: Grey A3
-    id: D8
+  - id: D8
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A3 - Injector 3
+    ts_name: Low Side 3 (D8)
     
-  - pin: Grey A4
-    id: D9
+  - id: D9
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A4 - Injector 4
+    ts_name: Low Side 4 (D9)
     
-  - pin: Grey A5
-    id: D10
+  - id: D10
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A5 - Injector 5
+    ts_name: Low Side 5 (D10)
     
-  - pin: Grey A6
-    id: D11
+  - id: D11
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A6 - Injector 6
+    ts_name: Low Side 6 (D11)
     
-  - pin: Grey A7
-    id: D12
+  - id: D12
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A7 - Injector 7
+    ts_name: Low Side 7 (D12)
     
-  - pin: Grey A8
-    id: D13
+  - id: D13
     class: outputs
-    function: Low Side Output
-    type: inj
-    ts_name: Grey A8 - Injector 8
+    ts_name: Low Side 8 (D13)
     
-  # Grey B line
-  
-  - pin: Grey B1
-    id: E15
+  - id: D14
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B1 - Ignition 1
+    ts_name: Low Side 9 (D14)
     
-  - pin: Grey B2
-    id: E14
+  - id: D15
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B2 - Ignition 2
+    ts_name: Low Side 10 (D15)
     
-  - pin: Grey B3
-    id: E13
+  - id: G2
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B3 - Ignition 3
+    ts_name: Low Side 11 (G2)
     
-  - pin: Grey B4
-    id: E12
+  - id: G3
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B4 - Ignition 4
+    ts_name: Low Side 12 (G3)
     
-  - pin: Grey B5
-    id: E11
+  - id: G4
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B5 - Ignition 5
+    ts_name: Low Side 13 (G4)
     
-  - pin: Grey B6
-    id: F15
+  - id: G5
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B6 - Ignition 6
+    ts_name: Low Side 14 (G5)
     
-  - pin: Grey B7
-    id: G0
+  - id: G6
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B7 - Ignition 7
+    ts_name: Low Side 15 (G6)
     
-  - pin: Grey B8
-    id: G1
+  - id: G7
     class: outputs
-    function: High Side Output
-    type: ign
-    ts_name: Grey B8 - Ignition 8
+    ts_name: Low Side 16 (G7)
     
-  # Grey C line
-  
-  - pin: Grey C1
-    id: EFI_ADC_6
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C1 - Analog Sensor Input
-    
-  - pin: Grey C2
-    id: EFI_ADC_7
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C2 - Analog Sensor Input
-    
-  - pin: Grey C3
-    id: EFI_ADC_14
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C3 - Analog Sensor Input
-    
-  - pin: Grey C4
-    id: EFI_ADC_1
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C4 - Analog Sensor Input
-    
-  - pin: Grey C5
-    id: EFI_ADC_2
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C5 - Analog Sensor Input
-    
-  - pin: Grey C6
-    id: EFI_ADC_3
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C6 - Analog Sensor Input
-    
-  - pin: Grey C7
-    id: EFI_ADC_4
-    class: analog_inputs
-    function: Sensor Input
-    ts_name: Grey C7 - Analog Sensor Input
-
-  - pin: Grey C8
-    id: D14
+  - id: G8
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Grey C8 - Low Side Output
+    ts_name: Low Side 17 (G8)
     
-  # Black A line
-  
-  - pin: Black A1
-    id: G3
+  - id: C6
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Black A1 - Low Side Output
-
-  - pin: Black A2
-    id: G4
+    ts_name: Low Side 18 (C6)
+    
+  - id: C7
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Black A2 - Low Side Output
+    ts_name: Low Side 19 (C7)
     
-  - pin: Black A3
-    id: G5
+  - id: A8
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Black A3 - Low Side Output
+    ts_name: Low Side 20 (A8)
     
-  - pin: Black A4
-    id: G6
+  - id: D5
     class: outputs
-    function: Low Side Output / DBW_OUT+
-    type: ls
-    ts_name: Black A4 - Low Side Output / DBW_OUT+
+    ts_name: Low Side 21 (D5)
     
-  - pin: Black A5
-    id: G7
+  - id: D4
     class: outputs
-    function: Low Side Output / DBW_OUT-
-    type: ls
-    ts_name: Black A5 - Low Side Output / DBW_OUT-
+    ts_name: Low Side 22 (D4)
     
-  - pin: Black A6
-    id: C13
-    class: switch_inputs
-    function: LSU1_IA / Digital Input
-    type: hall
-    ts_name: Black A6 - LSU4.9 PIN 5 / Digital Input 8
-    
-  - pin: Black A7
-    id: F1
-    class: switch_inputs
-    function: LSU1_VGND / Digital Input
-    type: hall
-    ts_name: Black A7 - LSU4.9 PIN 2 / Digital Input 5
-    
-  - pin: Black A8
-    function: LSU1_HEATER- / Sensor +5v Power Feed
-    type: gnd
-    ts_name: Black A8 - LSU4.9 PIN 3 / Sensor +5v Power Feed
-
- # Black B line
-  
-  - pin: Black B1
-    id: G2
+  - id: D3
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Black B1 - Low Side Output
+    ts_name: Low Side 23 (D3)
     
-  - pin: Black B2
-    id: F5
-    class: switch_inputs
-    function: Digital Input
-    type: hall
-    ts_name: Black B2 - Digital Input 1
-
-  - pin: Black B3
-    id: F4
-    class: switch_inputs
-    function: Digital Input
-    type: hall
-    ts_name: Black B3 - Digital Input 2
-
-  - pin: Black B4
-    id: F3
-    class: switch_inputs
-    function: Digital Input
-    type: hall
-    ts_name: Black B4 - Digital Input 3
-
-  - pin: Black B5
-    id: EFI_ADC_10
-    class: analog_inputs
-    function: Sensor Input / Knock 2
-    ts_name: Black B5 - Analog Sensor Input / Knock 2
-
-  - pin: Black B6
-    id: E6
-    class: switch_inputs
-    function: LSU1_NERMEST / Digital Input
-    type: hall
-    ts_name: Black B6 - LSU4.9 PIN 6 / Digital Input 7
-    
-  - pin: Black B7
-    id: F0
-    class: switch_inputs
-    function: LSU1_IP / Digital Input
-    type: hall
-    ts_name: Black B7 - LSU4.9 PIN 1 / Digital Input 6
-    
-  - pin: Black B8
-    function: +12V
-    type: 12v
-
-  # Black C line
-  
-  - pin: Black C1
-    id: D15
+  - id: A15
     class: outputs
-    function: Low Side Output
-    type: ls
-    ts_name: Black C1 - Low Side Output
-
-  - pin: Black C2
-    id: [E2, E2]
-    class: [event_inputs, switch_inputs]
-    function: Camshaft Sensor (VR+/Hall)
-    type: hall
-    ts_name: Camshaft Sensor VR+/Hall
-
-  - pin: Black C3
-    class: event_inputs
-    function: Camshaft Sensor (VR-)
-    type: hall
-    ts_name: Camshaft Sensor VR-
-
-  - pin: Black C4
-    class: event_inputs
-    function: Crank Sensor (VR-)
-    type: hall
-    ts_name: Crank Sensor VR-
-    
-  - pin: Black C5
-    id: [E3, E3]
-    class: [event_inputs, switch_inputs]
-    function: Crank Sensor (VR+/Hall)
-    type: hall
-    ts_name: Crank Sensor VR+/Hall
+    ts_name: Low Side 24 (A15)
         
-  - pin: Black C6
-    id: EFI_ADC_15
-    class: analog_inputs
-    function: Sensor Input / Knock 1
-    ts_name: Black C6 - Analog Sensor Input / Knock 1
-
-  - pin: Black C7
-    function: Sensor +5v Power Feed
-    type: 5v
+  - id: E15
+    class: outputs
+    ts_name: High Side 1 (E15)
+        
+  - id: E14
+    class: outputs
+    ts_name: High Side 2 (E14)
+        
+  - id: E13
+    class: outputs
+    ts_name: High Side 3 (E13)
+        
+  - id: E12
+    class: outputs
+    ts_name: High Side 4 (E12)
+        
+  - id: E11
+    class: outputs
+    ts_name: High Side 5 (E11)
+        
+  - id: F15
+    class: outputs
+    ts_name: High Side 6 (F15)
+        
+  - id: G0
+    class: outputs
+    ts_name: High Side 7 (G0)
+        
+  - id: G1
+    class: outputs
+    ts_name: High Side 8 (G1)
+        
+  - id: E7
+    class: outputs
+    ts_name: High Side 9 (E7)
+        
+  - id: E10
+    class: outputs
+    ts_name: High Side 10 (E10)
+        
+  - id: E9
+    class: outputs
+    ts_name: High Side 11 (E9)
+        
+  - id: E8
+    class: outputs
+    ts_name: High Side 12 (E8)
+        
+  - id: F7
+    class: outputs
+    ts_name: StepEr Direction (F7)
+        
+  - id: F8
+    class: outputs
+    ts_name: StepEr Control (F8)
+        
+  - id: F9
+    class: outputs
+    ts_name: StepEr Disable (F9)
+        
+  - id: B7
+    class: outputs
+    ts_name: DBW Disable (B7)
+        
+  - id: B8
+    class: outputs
+    ts_name: DBW Control (B8)
+        
+  - id: B9
+    class: outputs
+    ts_name: DBW Direction (B9)
     
-  - pin: Black C8
-    function: Power Ground
-    type: gnd
-  
-
-  #On-board
-  
-  - pin: On-board MAP
-    id: EFI_ADC_5
+  - id: EFI_ADC_0
     class: analog_inputs
-    function: MAP Sensor Input
-    ts_name: On-board MAP
+    ts_name: On-board Battery Sense (A0)
     
-  - pin: On-board BARO
-    id: EFI_ADC_8
+  - id: EFI_ADC_1
     class: analog_inputs
-    function: BARO Sensor Input
-    ts_name: On-board BARO (optional)
-
-  - pin: On-board O2
-    id: EFI_ADC_11
-    class: analog_inputs
-    function: O2 Sensor Input
-    ts_name: On-board O2
-
-  - pin: On-board O2(Secondary)
-    id: EFI_ADC_12
-    class: analog_inputs
-    function: O2 Sensor Input
-    ts_name: On-board O2(Secondary)
+    ts_name: Analog Inputs 1 (A1)
     
-  - pin: On-board Battery Sense
-    id: EFI_ADC_0
+  - id: EFI_ADC_2
     class: analog_inputs
-    function: +12V
-    ts_name: On-board Battery Sense
-    type: 12v
+    ts_name: Analog Inputs 2 (A2)
+    
+  - id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: Analog Inputs 3 (A3)
+    
+  - id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: Analog Inputs 4 (A4)
+    
+  - id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: On-board MAP (A5)
+    
+  - id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: Analog Inputs 6 (A6)
+    
+  - id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Analog Inputs 7 (A7)
+    
+  - id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: On-board BARO (B0) 
+    
+  - id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: Analog Inputs 9 (B1)
+    
+  - id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: Analog Inputs 10 (C0)
+    
+  - id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Primary On-board O2 (C1)
+    
+  - id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: Secondary On-board O2 (C2)    
+    
+  - id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: Analog Inputs 13 (C3)
+    
+  - id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Analog Inputs 14 (C4)
+    
+  - id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Analog Inputs 15 (C5)    
+
+  - id: [E2, E2]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 1 (E2)
+
+  - id: [E3, E3]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 2 (E3)
+
+  - id: [E4, E4]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 3 (E4)
+
+  - id: [E5, E5]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 4 (E5)
+
+  - id: [F5, F5]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 1 (F5)
+
+  - id: [F4, F4]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 2 (F4)
+
+  - id: [F3, F3]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 3 (F3)
+
+  - id: [F2, F2]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 4 (F2)
+
+  - id: [F1, F1]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 5 (F1)
+
+  - id: [F0, F0]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 6 (F0)
+
+  - id: [E6, E6]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 7 (E6)
+
+  - id: [C13, C13]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 8 (C13)
 
 info:
   title: Core8
   name: Core8
   board_url: https://rusefi.com/s/core8
-  image:
-    file: main.jpg
-  pins:
-    - pin: Grey A8
-      x: 716
-      y: 346
-    - pin: Grey A7
-      x: 652
-      y: 346
-    - pin: Grey A6
-      x: 600
-      y: 346
-    - pin: Grey A5
-      x: 551
-      y: 346
-    - pin: Grey A4
-      x: 498
-      y: 346
-    - pin: Grey A3
-      x: 446
-      y: 346
-    - pin: Grey A2
-      x: 385
-      y: 346
-    - pin: Grey A1
-      x: 335
-      y: 346
-
-    - pin: Grey B8
-      x: 716
-      y: 270
-    - pin: Grey B7
-      x: 649
-      y: 270
-    - pin: Grey B6
-      x: 595
-      y: 270
-    - pin: Grey B5
-      x: 545
-      y: 270
-    - pin: Grey B4
-      x: 496
-      y: 270
-    - pin: Grey B3
-      x: 446
-      y: 270
-    - pin: Grey B2
-      x: 399
-      y: 270
-    - pin: Grey B1
-      x: 335
-      y: 270
-
-    - pin: Grey C8
-      x: 705
-      y: 195
-    - pin: Grey C7
-      x: 649
-      y: 195
-    - pin: Grey C6
-      x: 597
-      y: 195
-    - pin: Grey C5
-      x: 545
-      y: 195
-    - pin: Grey C4
-      x: 497
-      y: 195
-    - pin: Grey C3
-      x: 446
-      y: 195
-    - pin: Grey C2
-      x: 396
-      y: 195
-    - pin: Grey C1
-      x: 329
-      y: 195
-
-
-    - pin: Black A8
-      x: 1471
-      y: 346
-    - pin: Black A7
-      x: 1420
-      y: 346
-    - pin: Black A6
-      x: 1369
-      y: 346
-    - pin: Black A5
-      x: 1315
-      y: 346
-    - pin: Black A4
-      x: 1266
-      y: 346
-    - pin: Black A3
-      x: 1217
-      y: 346
-    - pin: Black A2
-      x: 1161
-      y: 346
-    - pin: Black A1
-      x: 1105
-      y: 346
-
-    - pin: Black B8
-      x: 1467
-      y: 270
-    - pin: Black B7
-      x: 1413
-      y: 270
-    - pin: Black B6
-      x: 1369
-      y: 270
-    - pin: Black B5
-      x: 1313
-      y: 270
-    - pin: Black B4
-      x: 1265
-      y: 270
-    - pin: Black B3
-      x: 1212
-      y: 270
-    - pin: Black B2
-      x: 1168
-      y: 270
-    - pin: Black B1
-      x: 1101
-      y: 270
-
-    - pin: Black C8
-      x: 1471
-      y: 195
-    - pin: Black C7
-      x: 1418
-      y: 195
-    - pin: Black C6
-      x: 1365
-      y: 195
-    - pin: Black C5
-      x: 1313
-      y: 195
-    - pin: Black C4
-      x: 1268
-      y: 195
-    - pin: Black C3
-      x: 1219
-      y: 195
-    - pin: Black C2
-      x: 1167
-      y: 195
-    - pin: Black C1
-      x: 1107
-      y: 195
