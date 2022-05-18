@@ -423,7 +423,7 @@ typedef enum {
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 
-	TT_UNUSED_38 = 38,
+	TT_12_TOOTH_CRANK = 38,
 
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
