@@ -5,6 +5,11 @@
 static OutputPin pins[VR_THRESHOLD_COUNT];
 static SimplePwm pwms[VR_THRESHOLD_COUNT];
 
+// Default to 3.3v if not defined, most boards wire the VR threshold input directly to an MCU pin.
+#ifndef VR_SUPPLY_VOLTAGE
+#define VR_SUPPLY_VOLTAGE 3.3f
+#endif
+
 static void updateVrPwm(int rpm, size_t index) {
 	auto& cfg = engineConfiguration->vrThreshold[index];
 
@@ -16,7 +21,9 @@ static void updateVrPwm(int rpm, size_t index) {
 
 	// 0v   threshold voltage = 3.3v output from mcu = 100% duty
 	// 2.5v threshold voltage = 0v   output from mcu = 0% duty
-	float duty = interpolateClamped(0, 1, 2.5f, 0, thresholdVoltage);
+	float thresholdInputVoltage = interpolateClamped(0, 3.3f, 2.5f, 0, thresholdVoltage);
+
+	float duty = thresholdInputVoltage / VR_SUPPLY_VOLTAGE;
 
 	pwms[index].setSimplePwmDutyCycle(duty);
 }
