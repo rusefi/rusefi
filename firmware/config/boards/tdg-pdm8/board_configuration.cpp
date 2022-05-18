@@ -36,6 +36,5 @@ static const ProtectedGpioConfig cfgs[] = {
 };
 
 void boardInitHardware() {
-	// We recycle GPIOI_0..7 for protected outputs since this is a 64-pin STM32 which has no port I
-	protectedGpio_add(Gpio::I0, cfgs);
+	protectedGpio_add(Gpio::PDM_0, cfgs);
 }

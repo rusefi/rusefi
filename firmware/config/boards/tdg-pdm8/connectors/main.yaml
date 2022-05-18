@@ -7,56 +7,56 @@ pins:
     ts_name: Battery Sense
 
   - pin: 3/13
-    id: I7
+    id: PDM_7
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 8
 
   - pin: 4/14
-    id: I6
+    id: PDM_6
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 7
 
   - pin: 5/15
-    id: I5
+    id: PDM_5
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 6
 
   - pin: 6/16
-    id: I4
+    id: PDM_4
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 5
 
   - pin: 7/17
-    id: I3
+    id: PDM_3
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 4
 
   - pin: 8/18
-    id: I2
+    id: PDM_2
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 3
 
   - pin: 9/19
-    id: I1
+    id: PDM_1
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 2
 
   - pin: 10/20
-    id: I0
+    id: PDM_0
     class: outputs
     function: High Side Output
     type: hs

@@ -278,15 +278,29 @@ enum class Gpio : uint16_t {
 	CAN_PIN_5 = 255,
 	CAN_PIN_6 = 256,
 	CAN_PIN_7 = 257,
+
+	PDM_0  = 258,
+	PDM_1  = 259,
+	PDM_2  = 260,
+	PDM_3  = 261,
+	PDM_4  = 262,
+	PDM_5  = 263,
+	PDM_6  = 264,
+	PDM_7  = 265,
+	PDM_8  = 266,
+	PDM_9  = 267,
+	PDM_10 = 268,
+	PDM_11 = 269,
+	PDM_12 = 270,
+	PDM_13 = 271,
+	PDM_14 = 272,
+	PDM_15 = 273,
 };
 
 /* Please keep updating these defines */
-#ifndef BRAIN_PIN_ONCHIP_LAST
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::I15
-#endif
-
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
-#define BRAIN_PIN_LAST 			Gpio::L9779_PIN_KEY
+#define BRAIN_PIN_LAST 			Gpio::PDM_15
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
 
 /**
