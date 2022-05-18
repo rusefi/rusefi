@@ -138,7 +138,7 @@ int protectedGpio_add(brain_pin_e base, const ProtectedGpioConfig* const configs
 
 	int result = gpiochip_register(base, "protected", protectedGpios, PROTECTED_CHANNEL_COUNT);
 
-	if (result == 0) {
+	if (result == static_cast<int>(base)) {
 		didInit = true;
 	}
 
