@@ -36,5 +36,5 @@ static const ProtectedGpioConfig cfgs[] = {
 };
 
 void boardInitHardware() {
-	protectedGpio_add(Gpio::PDM_0, cfgs);
+	protectedGpio_add(Gpio::PROTECTED_PIN_0, cfgs);
 }
