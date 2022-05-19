@@ -99,37 +99,14 @@ void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	setValidValue(lambdaFloat, nowNt);
 }
 
-// TODO: include rusEFI wideband file directly
-namespace wbo
-{
-struct StandardData
-{
-    uint8_t Version;
-    uint8_t Valid;
-
-    uint16_t Lambda;
-    uint16_t TemperatureC;
-
-    uint16_t pad;
-};
-
-struct DiagData
-{
-    uint16_t Esr;
-    uint16_t NernstDc;
-    uint8_t PumpDuty;
-    uint8_t Status;
-
-    uint8_t HeaterDuty;
-    uint8_t pad;
-};
-} // namespace wbo
+#include "wideband_firmware/for_rusefi/wideband_can.h"
 
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
 
-	// TODO: enforce version check
-	//bool versionValid = data->Version != RUSEFI_WIDEBAND_VERSION;
+	if (data->Version != RUSEFI_WIDEBAND_VERSION) {
+		// TODO: firmwareError here
+	}
 
 	float lambda = 0.0001f * data->Lambda;
 	engine->outputChannels.wbTemperature[m_sensorIndex] = data->TemperatureC;
