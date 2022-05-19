@@ -1641,7 +1641,7 @@ menuDialog = main
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
-		subMenu = vrThreshold,				"VR Sensor Threshold"
+		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
 		subMenu = fancyHardwareDialog,      "Fancy Hardware"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
@@ -3895,7 +3895,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = vrThreshold
 	    topicHelp = "vrThresholdHelp"
 		panel = vrThreshold1
-		panel = vrThreshold2
+		panel = vrThreshold2@@if_ts_show_vr_threshold_2
 
 	dialog = gppwm1left, ""
 		field = "Pin", gppwm1_pin
