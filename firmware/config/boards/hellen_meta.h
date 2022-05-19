@@ -8,7 +8,6 @@
 #pragma once
 
 void hellenWbo();
-void setHellenDefaultVrThresholds();
 
 void setHellen144LedPins();
 void setHellen176LedPins();

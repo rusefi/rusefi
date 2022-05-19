@@ -4,7 +4,7 @@
 #include "frequency_sensor.h"
 #include "input_shaft_speed_converter.h"
 
-static FrequencySensor inputShaftSpeedSensor(SensorType::InputShaftSpeed, MS2NT(500));
+FrequencySensor inputShaftSpeedSensor(SensorType::InputShaftSpeed, MS2NT(500));
 static InputShaftSpeedConverter inputSpeedConverter;
 
 void initInputShaftSpeedSensor() {

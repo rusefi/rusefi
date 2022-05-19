@@ -175,7 +175,7 @@ static int lua_txCan(lua_State* l) {
 	}
 
 	// conform ext parameter to true/false
-	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+	CanTxMessage msg(CanCategory::LUA, id, 8, ext == 0 ? false : true);
 	msg.busIndex = channel - HUMAN_OFFSET;
 
 	// Unfortunately there is no way to inspect the length of a table,
@@ -305,7 +305,7 @@ static int lua_getDigital(lua_State* l) {
 		case 0: state = engine->clutchDownState; break;
 		case 1: state = engine->clutchUpState; break;
 		case 2: state = engine->brakePedalState; break;
-		case 3: state = engine->acSwitchState; break;
+		case 3: state = engine->module<AcController>().unmock().acButtonState; break;
 		default:
 			// Return nil to indicate invalid parameter
 			lua_pushnil(l);

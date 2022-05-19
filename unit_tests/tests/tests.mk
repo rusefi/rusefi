@@ -1,6 +1,7 @@
 TESTS_SRC_CPP = \
 	tests/trigger/test_symmetrical_crank.cpp \
 	tests/trigger/test_trigger_decoder.cpp \
+	tests/trigger/test_trigger_decoder_2.cpp \
 	tests/trigger/test_trigger_noiseless.cpp \
 	tests/trigger/test_trigger_multi_sync.cpp \
 	tests/trigger/test_trigger_input_adc.cpp \
@@ -28,6 +29,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e65.cpp \
 	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \

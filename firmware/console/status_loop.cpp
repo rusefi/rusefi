@@ -53,6 +53,7 @@
 #include "binary_logging.h"
 #include "buffered_writer.h"
 #include "dynoview.h"
+#include "frequency_sensor.h"
 
 extern bool main_loop_started;
 
@@ -344,7 +345,7 @@ static void initStatusLeds() {
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
+	bool justHadError = engine->triggerCentral.triggerState.someSortOfTriggerError();
 	return justHadError || engine->triggerCentral.isTriggerDecoderError();
 #else
 	return false;
@@ -782,6 +783,10 @@ void updateTunerStudioState() {
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
+	extern FrequencySensor inputShaftSpeedSensor;
+	tsOutputChannels->issEdgeCounter = inputShaftSpeedSensor.eventCounter;
+	extern FrequencySensor vehicleSpeedSensor;
+	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;

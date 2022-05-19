@@ -46,7 +46,7 @@ static msg_t seThread(void *arg) {
 
 		float durationMs = 0 + position * 0.02f;
 
-		engine->executor.scheduleForLater(&servoTurnSignalOff, (int)MS2US(durationMs), { &servoTachPinLow, pin });
+		engine->executor.scheduleForLater("servo", &servoTurnSignalOff, (int)MS2US(durationMs), { &servoTachPinLow, pin });
 
 
 		chThdSleepMilliseconds(19);

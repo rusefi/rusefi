@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1035,13 +1035,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_366[2];
 	/**
-	 * this is about deciding when the injector starts it's squirt
-	 * See also injectionPhase map
-	 * todo: do we need even need this since we have the map anyway?
-	deg
 	 * offset 368
 	 */
-	angle_t extraInjectionOffset;
+	angle_t unusedHere1341234;
 	/**
 	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * There is tapering towards running timing advance
@@ -2753,8 +2749,9 @@ struct engine_configuration_s {
 	offset 1352 bit 21 */
 	bool launchSmoothRetard : 1 {};
 	/**
+	 * Some engines are OK running semi-random sequential while other engine require phase synchronization
 	offset 1352 bit 22 */
-	bool unused1476b20 : 1 {};
+	bool isPhaseSyncRequiredForIgnition : 1 {};
 	/**
 	offset 1352 bit 23 */
 	bool unused1476b8 : 1 {};
@@ -4052,9 +4049,15 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
+	 * Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.
+	rpm
 	 * offset 3028
 	 */
-	int8_t unused4080[12];
+	scaled_channel<uint8_t, 1, 50> maxCamPhaseResolveRpm;
+	/**
+	 * offset 3029
+	 */
+	int8_t unused4080[11];
 	/**
 	to
 	 * offset 3040
@@ -5021,4 +5024,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue May 03 06:58:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022

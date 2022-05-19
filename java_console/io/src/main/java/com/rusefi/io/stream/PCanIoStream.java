@@ -29,7 +29,7 @@ public class PCanIoStream extends AbstractIoStream {
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
-            sendCanPacket(new byte[]{0x30, 0, 0, 0, 0, 0, 0, 0});
+            sendCanPacket(FLOW_CONTROL);
         }
     };
 
@@ -37,10 +37,6 @@ public class PCanIoStream extends AbstractIoStream {
         @Override
         public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
             byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
-
-            log.info("-------sendIsoTp " + total.length + " byte(s):");
-
-            log.info("Sending " + IoStream.printHexBinary(total));
 
             sendCanPacket(total);
         }
@@ -51,7 +47,7 @@ public class PCanIoStream extends AbstractIoStream {
     };
 
     @Nullable
-    public static PCanIoStream getPCANIoStream() {
+    public static PCanIoStream createStream() {
         PCANBasic can = new PCANBasic();
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
@@ -64,6 +60,12 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     private void sendCanPacket(byte[] payLoad) {
+        if (log.debugEnabled())
+            log.debug("-------sendIsoTp " + payLoad.length + " byte(s):");
+
+        if (log.debugEnabled())
+            log.debug("Sending " + IoStream.printHexBinary(payLoad));
+
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
         TPCANStatus status = can.Write(CHANNEL, msg);
@@ -98,7 +100,8 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            log.info("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            if (log.debugEnabled())
+                log.debug("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
                 log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
                 return;

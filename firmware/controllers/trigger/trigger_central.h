@@ -31,7 +31,7 @@ class TriggerNoiseFilter {
 public:
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt,
-			TriggerState * triggerState,
+			TriggerDecoderBase* triggerState,
 			trigger_event_e signal);
 
 	efitick_t lastSignalTimes[HW_EVENT_TYPES];
@@ -108,12 +108,12 @@ public:
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
 #if EFI_SHAFT_POSITION_INPUT
-	TriggerStateWithRunningStatistics triggerState;
+	PrimaryTriggerDecoder triggerState;
 #endif //EFI_SHAFT_POSITION_INPUT
 
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK];
 	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;
@@ -142,3 +142,4 @@ void onConfigurationChangeTriggerCallback();
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
+#define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24

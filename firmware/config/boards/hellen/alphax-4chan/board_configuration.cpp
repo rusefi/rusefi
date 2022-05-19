@@ -204,7 +204,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
-	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
 }

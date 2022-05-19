@@ -121,7 +121,7 @@ public class ReaderState {
 
         String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
-            variableRegistry.register(name + "_auto_enum", autoEnumOptions);
+            variableRegistry.register(name + VariableRegistry.AUTO_ENUM_SUFFIX, autoEnumOptions);
         }
 
         line = line.substring(index).trim();
@@ -146,8 +146,9 @@ public class ReaderState {
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
 */
+            // this is needed to avoid 'bit Constant engineType, contains fewer options (103) that expected(128)' TS warning
             for (int i = enums.size(); i < totalCount; i++)
-                tunerStudioLine += ", \"INVALID\"";
+                tunerStudioLine += ", " + PinoutLogic.QUOTED_INVALID;
         }
 
         tsCustomLine.put(name, tunerStudioLine);

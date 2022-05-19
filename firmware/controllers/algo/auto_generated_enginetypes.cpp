@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri May 06 12:30:02 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed May 18 03:18:14 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -366,6 +366,8 @@ const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
 case Force_4_bytes_size_trigger_type:
   return "Force_4_bytes_size_trigger_type";
+case TT_12_TOOTH_CRANK:
+  return "TT_12_TOOTH_CRANK";
 case TT_1_16:
   return "TT_1_16";
 case TT_2JZ_1_12:
@@ -458,8 +460,6 @@ case TT_NISSAN_QR25:
   return "TT_NISSAN_QR25";
 case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
-case TT_NISSAN_SR20VE_360:
-  return "TT_NISSAN_SR20VE_360";
 case TT_NISSAN_VQ30:
   return "TT_NISSAN_VQ30";
 case TT_NISSAN_VQ35:

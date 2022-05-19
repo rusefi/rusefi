@@ -93,6 +93,8 @@ static int getCrankDivider(operation_mode_e operationMode) {
 		return SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
 		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER;
 	default:
 	case FOUR_STROKE_CAM_SENSOR:
 	case TWO_STROKE:
@@ -114,11 +116,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
-	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
-	if (offset > 0) {
-		engine->outputChannels.vvtSyncCounter++;
-	}
-	return offset;
+	return tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
 }
 
 static void turnOffAllDebugFields(void *arg) {
@@ -138,6 +136,14 @@ static void turnOffAllDebugFields(void *arg) {
 }
 
 static angle_t adjustCrankPhase(int camIndex) {
+	float maxSyncThreshold = engineConfiguration->maxCamPhaseResolveRpm;
+	if (maxSyncThreshold != 0 && Sensor::getOrZero(SensorType::Rpm) > maxSyncThreshold) {
+		// The user has elected to stop trying to resolve crank phase after some RPM.
+		// Maybe their cam sensor only works at low RPM or something.
+		// Anyway, don't try to change crank phase at all, and return that we made no change.
+		return 0;
+	}
+
 	TriggerCentral *tc = &engine->triggerCentral;
 	operation_mode_e operationMode = engine->getOperationMode();
 
@@ -284,10 +290,10 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		return;
 	}
 
-	if (isVvtWithRealDecoder) {
-		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
+	TriggerDecoderBase& vvtDecoder = tc->vvtState[bankIndex][camIndex];
 
-		vvtState->decodeTriggerEvent(
+	if (isVvtWithRealDecoder) {
+		vvtDecoder.decodeTriggerEvent(
 				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
@@ -295,8 +301,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
-		engine->outputChannels.vvtSyncGapRatio = vvtState->currentGap;
-		engine->outputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
+		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
+		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -317,11 +323,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.vvtCurrentPosition = currentPosition;
-#endif /* EFI_TUNER_STUDIO */
+	tc->triggerState.vvtCurrentPosition = currentPosition;
 
-	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+	if (isVvtWithRealDecoder && vvtDecoder.currentCycle.current_index != 0) {
 		// this is not sync tooth - exiting
 		return;
 	}
@@ -340,9 +344,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		break;
 	}
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.vvtCounter++;
-#endif /* EFI_TUNER_STUDIO */
+	tc->triggerState.vvtCounter++;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
@@ -534,7 +536,7 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
  * @return true if the signal is passed through.
  */
 bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
-		TriggerState * triggerState,
+		TriggerDecoderBase * triggerState,
 		trigger_event_e signal) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
@@ -631,12 +633,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine,
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
-
-#if EFI_TUNER_STUDIO
-			engine->outputChannels.triggerSyncGapRatio = triggerState.currentGap;
-			engine->outputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
-#endif /* EFI_TUNER_STUDIO */
-
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree

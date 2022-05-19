@@ -205,7 +205,7 @@
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
             <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
             <zipfileset src="lib/javacan-core.jar" includes="**/*.class"/>
-            <zipfileset src="lib/javacan-core-x86_64.jar" includes="**/*.class"/>
+            <zipfileset src="lib/javacan-core-x86_64.jar" includes="**/*.class **/*.xml **/*.properties **/*.so"/>
             <zipfileset src="lib/slf4j-api.jar" includes="**/*.class"/>
             <zipfileset src="lib/slf4j-simple.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>

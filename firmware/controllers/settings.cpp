@@ -16,6 +16,7 @@
 #include "idle_thread.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
+#include "value_lookup.h"
 
 #if EFI_PROD_CODE
 #include "rtc_helper.h"
@@ -114,8 +115,8 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	}
 
 	efiPrintf("=== injection ===");
-	efiPrintf("injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
+	efiPrintf("injection %s enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+			boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
@@ -179,12 +180,6 @@ static void setIgnitionPinMode(int value) {
 static void setIdlePinMode(int value) {
 	engineConfiguration->idle.solenoidPinMode = (pin_output_mode_e) value;
 	doPrintConfiguration();
-}
-
-static void setInjectionOffset(float value) {
-	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion();
 }
 
 static void setFuelPumpPinMode(int value) {
@@ -846,29 +841,13 @@ static void printAllInfo() {
 #endif
 }
 
-struct plain_get_integer_s {
-	const char *token;
-	int *value;
-};
-
-struct plain_get_short_s {
-	const char *token;
-	uint16_t *value;
-};
-
-struct plain_get_float_s {
-	const char *token;
-	float *value;
-};
-
-
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
 };
 
-const plain_get_integer_s getI_plain[] = {
+static plain_get_integer_s getI_plain[] = {
 //		{"cranking_rpm", &engineConfiguration->cranking.rpm},
 //		{"cranking_injection_mode", setCrankingInjectionMode},
 //		{"injection_mode", setInjectionMode},
@@ -897,43 +876,36 @@ const plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-const plain_get_float_s getF_plain[] = {
-		{"adcVcc", &engineConfiguration->adcVcc},
-		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
-		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"injection_offset", &engineConfiguration->extraInjectionOffset},
-		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
-		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
-		{"vbatt_divider", &engineConfiguration->vbattDividerCoeff},
-		{"clt_bias", &engineConfiguration->clt.config.bias_resistor},
-		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
-		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
-		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
-};
 #endif /* EFI_UNIT_TEST */
 
+static plain_get_integer_s *findInt(const char *name) {
+	plain_get_integer_s *currentI = &getI_plain[0];
+	while (currentI < getI_plain + efi::size(getI_plain)) {
+		if (strEqualCaseInsensitive(name, currentI->token)) {
+			return currentI;
+		}
+		currentI++;
+	}
+	return nullptr;
+}
 
 static void getValue(const char *paramStr) {
 #if ! EFI_UNIT_TEST
 	{
-		const plain_get_integer_s *currentI = &getI_plain[0];
-		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
-			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
-				efiPrintf("%s value: %d", currentI->token, *currentI->value);
-				return;
-			}
-			currentI++;
+		plain_get_integer_s *known = findInt(paramStr);
+		if (known != nullptr) {
+			efiPrintf("%s value: %d", known->token, *known->value);
+			return;
 		}
 	}
 
-	const plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
-		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
-			float value = *currentF->value;
-			efiPrintf("%s value: %.2f", currentF->token, value);
+	{
+		plain_get_float_s * known = findFloat(paramStr);
+		if (known != nullptr) {
+			float value = *known->value;
+			efiPrintf("%s value: %.2f", known->token, value);
 			return;
 		}
-		currentF++;
 	}
 
 
@@ -1000,7 +972,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},

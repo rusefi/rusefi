@@ -72,12 +72,15 @@ static float getRpmMultiplier(operation_mode_e mode) {
 		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
 		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
+	} else if (mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR) {
+		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
 		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
 		// unit test coverage still runs if the value below is changed to '2' not a great sign!
 		return 1;
 	}
+
 	return 1;
 }
 

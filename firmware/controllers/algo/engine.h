@@ -241,8 +241,7 @@ public:
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
-	void OnTriggerSyncronization(bool wasSynchronized) override;
-	void OnTriggerInvalidIndex(int currentIndex) override;
+	void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
 #endif
 
@@ -364,9 +363,6 @@ public:
 	bool clutchUpState = false;
 	bool clutchDownState = false;
 	bool brakePedalState = false;
-
-	// todo: extract some helper which would contain boolean state and most recent toggle time?
-	bool acSwitchState = false;
 
 	bool isRunningPwmTest = false;
 

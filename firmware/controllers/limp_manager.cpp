@@ -23,7 +23,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
-			&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
+			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync

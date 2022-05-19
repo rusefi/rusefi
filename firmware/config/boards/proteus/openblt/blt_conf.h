@@ -50,7 +50,7 @@
 /** \brief Motorola or Intel style byte ordering. */
 #define BOOT_CPU_BYTE_ORDER_MOTOROLA     (0)
 /** \brief Enable/disable hook function call right before user program start. */
-#define BOOT_CPU_USER_PROGRAM_START_HOOK (1)
+#define BOOT_CPU_USER_PROGRAM_START_HOOK (0)
 
 
 /****************************************************************************************

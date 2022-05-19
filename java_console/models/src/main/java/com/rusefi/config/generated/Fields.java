@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri May 06 12:30:47 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 19 18:50:42 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -353,6 +353,7 @@ public class Fields {
 	public static final String CMD_PWM = "pwm";
 	public static final String CMD_REBOOT = "reboot";
 	public static final String CMD_REBOOT_DFU = "reboot_dfu";
+	public static final String CMD_REBOOT_OPENBLT = "reboot_openblt";
 	public static final String CMD_RESET_ENGINE_SNIFFER = "reset_engine_chart";
 	public static final String CMD_RPM = "rpm";
 	public static final String CMD_SELF_STIMULATION = "self_stimulation";
@@ -705,7 +706,6 @@ public class Fields {
 	public static final int etbWastegatePid_offset_offset = 1856;
 	public static final int etbWastegatePid_periodMs_offset = 1858;
 	public static final int etbWastegatePid_pFactor_offset = 1844;
-	public static final int extraInjectionOffset_offset = 368;
 	public static final int failedMapFallback_offset = 465;
 	public static final int fan1ExtraIdle_offset = 1716;
 	public static final int fan2ExtraIdle_offset = 1726;
@@ -962,14 +962,14 @@ public class Fields {
 	public static final int Gpio_C7 = 41;
 	public static final int Gpio_C8 = 42;
 	public static final int Gpio_C9 = 43;
-	public static final int Gpio_CAN_PIN_0 = 250;
-	public static final int Gpio_CAN_PIN_1 = 251;
-	public static final int Gpio_CAN_PIN_2 = 252;
-	public static final int Gpio_CAN_PIN_3 = 253;
-	public static final int Gpio_CAN_PIN_4 = 254;
-	public static final int Gpio_CAN_PIN_5 = 255;
-	public static final int Gpio_CAN_PIN_6 = 256;
-	public static final int Gpio_CAN_PIN_7 = 257;
+	public static final int Gpio_CAN_PIN_0 = 249;
+	public static final int Gpio_CAN_PIN_1 = 250;
+	public static final int Gpio_CAN_PIN_2 = 251;
+	public static final int Gpio_CAN_PIN_3 = 252;
+	public static final int Gpio_CAN_PIN_4 = 253;
+	public static final int Gpio_CAN_PIN_5 = 254;
+	public static final int Gpio_CAN_PIN_6 = 255;
+	public static final int Gpio_CAN_PIN_7 = 256;
 	public static final int Gpio_D0 = 50;
 	public static final int Gpio_D1 = 51;
 	public static final int Gpio_D10 = 60;
@@ -1104,6 +1104,22 @@ public class Fields {
 	public static final int Gpio_MC33972_PIN_1 = 146;
 	public static final int Gpio_MC33972_PIN_21 = 166;
 	public static final int Gpio_MC33972_PIN_22 = 167;
+	public static final int Gpio_PROTECTED_PIN_0 = 257;
+	public static final int Gpio_PROTECTED_PIN_1 = 258;
+	public static final int Gpio_PROTECTED_PIN_10 = 267;
+	public static final int Gpio_PROTECTED_PIN_11 = 268;
+	public static final int Gpio_PROTECTED_PIN_12 = 269;
+	public static final int Gpio_PROTECTED_PIN_13 = 270;
+	public static final int Gpio_PROTECTED_PIN_14 = 271;
+	public static final int Gpio_PROTECTED_PIN_15 = 272;
+	public static final int Gpio_PROTECTED_PIN_2 = 259;
+	public static final int Gpio_PROTECTED_PIN_3 = 260;
+	public static final int Gpio_PROTECTED_PIN_4 = 261;
+	public static final int Gpio_PROTECTED_PIN_5 = 262;
+	public static final int Gpio_PROTECTED_PIN_6 = 263;
+	public static final int Gpio_PROTECTED_PIN_7 = 264;
+	public static final int Gpio_PROTECTED_PIN_8 = 265;
+	public static final int Gpio_PROTECTED_PIN_9 = 266;
 	public static final int Gpio_TLE6240_PIN_1 = 199;
 	public static final int Gpio_TLE6240_PIN_10 = 208;
 	public static final int Gpio_TLE6240_PIN_11 = 209;
@@ -1491,6 +1507,7 @@ public class Fields {
 	public static final int isInjectionEnabled_offset = 1352;
 	public static final int isManualSpinningMode_offset = 1352;
 	public static final int isMapAveragingEnabled_offset = 1352;
+	public static final int isPhaseSyncRequiredForIgnition_offset = 1352;
 	public static final int isSdCardEnabled_offset = 744;
 	public static final int issFilterReciprocal_offset = 3119;
 	public static final int issue_294_31_offset = 100;
@@ -1636,6 +1653,7 @@ public class Fields {
 	public static final int maxAcClt_offset = 11;
 	public static final int maxAcRpm_offset = 9;
 	public static final int maxAcTps_offset = 10;
+	public static final int maxCamPhaseResolveRpm_offset = 3028;
 	public static final int maxIdleVss_offset = 378;
 	public static final int mc33816_cs_offset = 2052;
 	public static final int mc33816_driven_offset = 1932;
@@ -1690,6 +1708,7 @@ public class Fields {
 	public static final int operation_mode_e_FOUR_STROKE_CRANK_SENSOR = 1;
 	public static final int operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4;
 	public static final int operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5;
+	public static final int operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6;
 	public static final int operation_mode_e_OM_NONE = 0;
 	public static final int operation_mode_e_TWO_STROKE = 3;
 	public static final int overrideCrankingIacSetting_offset = 1352;
@@ -1852,6 +1871,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
+	public static final int SIGNATURE_HASH = 519383648;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2136,6 +2156,7 @@ public class Fields {
 	public static final int trigger_todoRemoveMeOneDay0_offset = 452;
 	public static final int trigger_todoRemoveMeOneDay1_offset = 452;
 	public static final int trigger_type_e_Force_4_bytes_size_trigger_type = 70000;
+	public static final int trigger_type_e_TT_12_TOOTH_CRANK = 38;
 	public static final int trigger_type_e_TT_1_16 = 50;
 	public static final int trigger_type_e_TT_2JZ_1_12 = 29;
 	public static final int trigger_type_e_TT_2JZ_3_34 = 25;
@@ -2182,7 +2203,6 @@ public class Fields {
 	public static final int trigger_type_e_TT_NISSAN_MR18_CRANK = 68;
 	public static final int trigger_type_e_TT_NISSAN_QR25 = 61;
 	public static final int trigger_type_e_TT_NISSAN_SR20VE = 24;
-	public static final int trigger_type_e_TT_NISSAN_SR20VE_360 = 38;
 	public static final int trigger_type_e_TT_NISSAN_VQ30 = 60;
 	public static final int trigger_type_e_TT_NISSAN_VQ35 = 58;
 	public static final int trigger_type_e_TT_ONE = 18;
@@ -2373,10 +2393,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.05.06.all.2545893593";
+	public static final String TS_SIGNATURE = "rusEFI 2022.05.19.all.519383648";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1024;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2409,12 +2429,11 @@ public class Fields {
 	public static final int unused1128_offset = 1608;
 	public static final int unused1129_offset = 1608;
 	public static final int unused1130_offset = 1608;
-	public static final int unused1476b20_offset = 1352;
 	public static final int unused1476b8_offset = 1352;
 	public static final int unused1740b0_offset = 1608;
 	public static final int unused1740b1_offset = 1608;
 	public static final int unused1740b2_offset = 1608;
-	public static final int unused4080_offset = 3028;
+	public static final int unused4080_offset = 3029;
 	public static final int unused_1484_bit_24_offset = 1352;
 	public static final int unused_1484_bit_25_offset = 1352;
 	public static final int unused_1484_bit_26_offset = 1352;
@@ -2448,6 +2467,7 @@ public class Fields {
 	public static final int unusedBit_537_31_offset = 1608;
 	public static final int unusedBit_537_8_offset = 1608;
 	public static final int unusedBit_537_9_offset = 1608;
+	public static final int unusedHere1341234_offset = 368;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1352;
 	public static final int useCicPidForIdle_offset = 100;
 	public static final int useEeprom_offset = 100;
@@ -2666,7 +2686,7 @@ public class Fields {
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 364, FieldType.INT8).setScale(1.0);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 365, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_366 = Field.create("ALIGNMENTFILL_AT_366", 366, FieldType.INT8).setScale(1.0);
-	public static final Field EXTRAINJECTIONOFFSET = Field.create("EXTRAINJECTIONOFFSET", 368, FieldType.FLOAT);
+	public static final Field UNUSEDHERE1341234 = Field.create("UNUSEDHERE1341234", 368, FieldType.FLOAT);
 	public static final Field CRANKINGTIMINGANGLE = Field.create("CRANKINGTIMINGANGLE", 372, FieldType.FLOAT);
 	public static final Field IGNITIONMODE = Field.create("IGNITIONMODE", 376, FieldType.INT8).setScale(1.0);
 	public static final Field GAPTRACKINGLENGTHOVERRIDE = Field.create("GAPTRACKINGLENGTHOVERRIDE", 377, FieldType.INT8).setScale(1.0);
@@ -2696,7 +2716,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 439, FieldType.INT8, adc_channel_e).setScale(1.0);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 440, FieldType.FLOAT);
 	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 444, FieldType.INT).setScale(1.0);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 448, FieldType.INT, trigger_type_e).setScale(1.0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 452, FieldType.BIT, 0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY1 = Field.create("TRIGGER_TODOREMOVEMEONEDAY1", 452, FieldType.BIT, 1);
@@ -3217,7 +3237,7 @@ public class Fields {
 	public static final Field USEIACPIDMULTTABLE = Field.create("USEIACPIDMULTTABLE", 1352, FieldType.BIT, 19);
 	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1352, FieldType.BIT, 20);
 	public static final Field LAUNCHSMOOTHRETARD = Field.create("LAUNCHSMOOTHRETARD", 1352, FieldType.BIT, 21);
-	public static final Field UNUSED1476B20 = Field.create("UNUSED1476B20", 1352, FieldType.BIT, 22);
+	public static final Field ISPHASESYNCREQUIREDFORIGNITION = Field.create("ISPHASESYNCREQUIREDFORIGNITION", 1352, FieldType.BIT, 22);
 	public static final Field UNUSED1476B8 = Field.create("UNUSED1476B8", 1352, FieldType.BIT, 23);
 	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1352, FieldType.BIT, 24);
 	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1352, FieldType.BIT, 25);
@@ -3403,7 +3423,7 @@ public class Fields {
 	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 1716, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_1717 = Field.create("ALIGNMENTFILL_AT_1717", 1717, FieldType.INT8).setScale(1.0);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 1720, FieldType.INT).setScale(1.0);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 1724, FieldType.INT8, vvt_mode_e).setScale(1.0);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 1725, FieldType.INT8, vvt_mode_e).setScale(1.0);
 	public static final Field VVTMODEPADDING = Field.create("VVTMODEPADDING", 1726, FieldType.INT8).setScale(1.0);
@@ -3726,7 +3746,8 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDEFROM16 = Field.create("TRIGGERGAPOVERRIDEFROM16", 3016, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM17 = Field.create("TRIGGERGAPOVERRIDEFROM17", 3020, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM18 = Field.create("TRIGGERGAPOVERRIDEFROM18", 3024, FieldType.FLOAT);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3028, FieldType.INT8).setScale(1.0);
+	public static final Field MAXCAMPHASERESOLVERPM = Field.create("MAXCAMPHASERESOLVERPM", 3028, FieldType.INT8).setScale(50.0);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3029, FieldType.INT8).setScale(1.0);
 	public static final Field TRIGGERGAPOVERRIDETO1 = Field.create("TRIGGERGAPOVERRIDETO1", 3040, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO2 = Field.create("TRIGGERGAPOVERRIDETO2", 3044, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO3 = Field.create("TRIGGERGAPOVERRIDETO3", 3048, FieldType.FLOAT);
@@ -4074,7 +4095,7 @@ public class Fields {
 	CRANKINGINJECTIONMODE,
 	INJECTIONMODE,
 	ALIGNMENTFILL_AT_366,
-	EXTRAINJECTIONOFFSET,
+	UNUSEDHERE1341234,
 	CRANKINGTIMINGANGLE,
 	IGNITIONMODE,
 	GAPTRACKINGLENGTHOVERRIDE,
@@ -4613,7 +4634,7 @@ public class Fields {
 	USEIACPIDMULTTABLE,
 	ISBOOSTCONTROLENABLED,
 	LAUNCHSMOOTHRETARD,
-	UNUSED1476B20,
+	ISPHASESYNCREQUIREDFORIGNITION,
 	UNUSED1476B8,
 	UNUSED_1484_BIT_24,
 	UNUSED_1484_BIT_25,
@@ -5113,6 +5134,7 @@ public class Fields {
 	TRIGGERGAPOVERRIDEFROM16,
 	TRIGGERGAPOVERRIDEFROM17,
 	TRIGGERGAPOVERRIDEFROM18,
+	MAXCAMPHASERESOLVERPM,
 	UNUSED4080,
 	TRIGGERGAPOVERRIDETO1,
 	TRIGGERGAPOVERRIDETO2,
