@@ -139,13 +139,15 @@ pins:
     type: can
 
   - pin: 41
-# H144_IN_AUX1
-    id: EFI_ADC_8
+# H144_IN_PPS
+    id: EFI_ADC_3
     class: analog_inputs
     ts_name: 41 - PPS 1
     function: PPS 1 sensor input
 
   - pin: 42
+    # H144_IN_AUX1
+    id: EFI_ADC_8
     class: analog_inputs
     ts_name: 42 - PPS 2
     function: PPS 2 sensor input
