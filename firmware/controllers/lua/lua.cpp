@@ -375,7 +375,7 @@ static LuaThread luaThread;
 #endif
 
 void startLua() {
-#if defined(STM32F4) && !defined(IS_STM32F429)
+#if defined(STM32F4) && !defined(EFI_IS_F42x)
 	// we need this on microRusEFI for sure
 	// definitely should NOT have this on Proteus
 	// on Hellen a bit of open question what's the best track
