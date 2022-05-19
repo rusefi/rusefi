@@ -1909,20 +1909,60 @@ event 46 1 1 666.00
 event 47 1 0 668.00
 event 48 1 1 686.00
 event 49 1 0 688.00
-TRIGGERTYPE 38 8 TT_UNUSED_38 630.00
+TRIGGERTYPE 38 48 TT_12_TOOTH_CRANK 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.96 0.00
+# duty 0.50 0.00
 event 0 0 1 0.00
-event 1 0 0 4.00
-event 2 0 1 180.00
-event 3 0 0 184.00
-event 4 0 1 360.00
-event 5 0 0 364.00
-event 6 0 1 528.00
-event 7 0 0 544.00
+event 1 0 0 15.00
+event 2 0 1 30.00
+event 3 0 0 45.00
+event 4 0 1 60.00
+event 5 0 0 75.00
+event 6 0 1 90.00
+event 7 0 0 105.00
+event 8 0 1 120.00
+event 9 0 0 135.00
+event 10 0 1 150.00
+event 11 0 0 165.00
+event 12 0 1 180.00
+event 13 0 0 195.00
+event 14 0 1 210.00
+event 15 0 0 225.00
+event 16 0 1 240.00
+event 17 0 0 255.00
+event 18 0 1 270.00
+event 19 0 0 285.00
+event 20 0 1 300.00
+event 21 0 0 315.00
+event 22 0 1 330.00
+event 23 0 0 345.00
+event 24 0 1 360.00
+event 25 0 0 375.00
+event 26 0 1 390.00
+event 27 0 0 405.00
+event 28 0 1 420.00
+event 29 0 0 435.00
+event 30 0 1 450.00
+event 31 0 0 465.00
+event 32 0 1 480.00
+event 33 0 0 495.00
+event 34 0 1 510.00
+event 35 0 0 525.00
+event 36 0 1 540.00
+event 37 0 0 555.00
+event 38 0 1 570.00
+event 39 0 0 585.00
+event 40 0 1 600.00
+event 41 0 0 615.00
+event 42 0 1 630.00
+event 43 0 0 645.00
+event 44 0 1 660.00
+event 45 0 0 675.00
+event 46 0 1 690.00
+event 47 0 0 705.00
 TRIGGERTYPE 39 32 TT_DODGE_NEON_1995_ONLY_CRANK 279.00
 knownOperationMode=true
 crankBased=true
