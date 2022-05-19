@@ -150,7 +150,7 @@ public:
 			);
 
 	bool someSortOfTriggerError() const {
-		return m_timeSinceDecodeError.getElapsedSeconds(1);
+		return !m_timeSinceDecodeError.getElapsedSeconds(1);
 	}
 
 protected:
