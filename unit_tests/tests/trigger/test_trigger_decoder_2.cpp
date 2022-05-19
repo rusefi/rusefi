@@ -85,6 +85,8 @@ TEST(TriggerDecoder, FindsFirstSyncPoint) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(2, dut.currentCycle.current_index);
+
+	EXPECT_FALSE(dut.someSortOfTriggerError());
 }
 
 
@@ -130,6 +132,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 		doTooth(dut, shape, cfg, t);
 		EXPECT_TRUE(dut.getShaftSynchronized());
 		EXPECT_EQ(0, dut.currentCycle.current_index);
+		EXPECT_FALSE(dut.someSortOfTriggerError());
 	}
 }
 
@@ -216,6 +219,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(2, dut.currentCycle.current_index);
+	EXPECT_FALSE(dut.someSortOfTriggerError());
 
 	// Missing tooth, but it comes early - not enough teeth have happened yet!
 	t += MS2NT(2);
@@ -224,4 +228,5 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	// Sync is lost until we get to another sync point
 	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_TRUE(dut.someSortOfTriggerError());
 }
