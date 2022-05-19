@@ -246,8 +246,8 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case Gpio::B4:  return stm32_pwm_config{&PWMD3, 0, 2};
 	case Gpio::B5:  return stm32_pwm_config{&PWMD3, 1, 2};
 
-	case Gpio::C6:  return stm32_pwm_config{&PWMD3, 2, 2};
-	case Gpio::C7:  return stm32_pwm_config{&PWMD3, 3, 2};
+	case Gpio::C6:  return stm32_pwm_config{&PWMD3, 0, 2};
+	case Gpio::C7:  return stm32_pwm_config{&PWMD3, 1, 2};
 #endif
 #if STM32_PWM_USE_TIM4
 	case Gpio::B6:  return stm32_pwm_config{&PWMD4, 0, 2};
@@ -287,12 +287,12 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	}
 };
 
-stm32_hardware_pwm pwms[5];
+static stm32_hardware_pwm hardPwms[5];
 
 stm32_hardware_pwm* getNextPwmDevice() {
-	for (size_t i = 0; i < efi::size(pwms); i++) {
-		if (!pwms[i].hasInit()) {
-			return &pwms[i];
+	for (size_t i = 0; i < efi::size(hardPwms); i++) {
+		if (!hardPwms[i].hasInit()) {
+			return &hardPwms[i];
 		}
 	}
 
