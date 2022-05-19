@@ -245,6 +245,9 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 #if STM32_PWM_USE_TIM3
 	case Gpio::B4:  return stm32_pwm_config{&PWMD3, 0, 2};
 	case Gpio::B5:  return stm32_pwm_config{&PWMD3, 1, 2};
+
+	case Gpio::C6:  return stm32_pwm_config{&PWMD3, 2, 2};
+	case Gpio::C7:  return stm32_pwm_config{&PWMD3, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM4
 	case Gpio::B6:  return stm32_pwm_config{&PWMD4, 0, 2};
@@ -264,10 +267,21 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case Gpio::A3:  return stm32_pwm_config{&PWMD5, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM8
+
+#if !STM32_PWM_USE_TIM3
+	// If TIM3 is not used, put these pins on TIM8 instead..
+	// See https://github.com/rusefi/rusefi/issues/639
+	// See https://github.com/rusefi/rusefi/pull/3032
 	case Gpio::C6:  return stm32_pwm_config{&PWMD8, 0, 3};
 	case Gpio::C7:  return stm32_pwm_config{&PWMD8, 1, 3};
+#endif
+
 	case Gpio::C8:  return stm32_pwm_config{&PWMD8, 2, 3};
 	case Gpio::C9:  return stm32_pwm_config{&PWMD8, 3, 3};
+#endif
+#if STM32_PWM_USE_TIM9
+	case Gpio::E5:  return stm32_pwm_config{&PWMD9, 0, 3};
+	case Gpio::E6:  return stm32_pwm_config{&PWMD9, 1, 3};
 #endif
 	default: return unexpected;
 	}
