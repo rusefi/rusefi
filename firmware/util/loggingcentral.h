@@ -33,7 +33,7 @@ void scheduleLogging(Logging *logging);
 
 // Stores the result of one call to efiPrintfInternal in the queue to be copied out to the output buffer
 struct LogLineBuffer {
-	char buffer[128];
+	char buffer[256];
 };
 
 template <size_t TBufferSize>
