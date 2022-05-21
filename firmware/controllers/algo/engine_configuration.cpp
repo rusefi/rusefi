@@ -905,6 +905,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+	case PROTEUS_VW_B6:
+		setProteusVwPassatB6();
+		break;
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest();
 		break;
@@ -1016,7 +1019,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
-	case PROTEUS_VW_B6:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
 		break;
