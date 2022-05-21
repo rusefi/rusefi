@@ -351,13 +351,13 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED39:
+case PROTEUS_VW_B6:
   return "UNUSED39";
 case UNUSED_48:
   return "UNUSED_48";
 case VW_ABA:
   return "VW_ABA";
-case VW_B6:
+case MRE_VW_B6:
   return "VW_B6";
   }
  return NULL;
