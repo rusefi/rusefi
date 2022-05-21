@@ -863,8 +863,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
-	case VW_B6:
-		setVwPassatB6();
+	case MRE_VW_B6:
+		setMreVwPassatB6();
 		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
@@ -1016,7 +1016,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
-	case UNUSED39:
+	case PROTEUS_VW_B6:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
 		break;

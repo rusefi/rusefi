@@ -18,7 +18,7 @@
  * VW_B6
  * has to be microRusEFI 0.5.2
  */
-void setVwPassatB6() {
+void setMreVwPassatB6() {
 #if HW_MICRO_RUSEFI
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
