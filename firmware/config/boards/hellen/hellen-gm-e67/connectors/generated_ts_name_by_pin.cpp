@@ -4,6 +4,7 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::C13: return "C2-1 - Coil 1";
 		case Gpio::D2: return "C1-13 - Fuel Pump";
 		default: return nullptr;
 	}
