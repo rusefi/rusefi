@@ -25,6 +25,7 @@ for BOARD in \
    "hellen/hellen72 hellen72" \
    "hellen/hellen81 hellen81" \
    "hellen/hellen-nb1 hellen-nb1" \
+   "hellen/hellen-gm-e67 hellen-gm-e67" \
    "hellen/hellen64_miataNA6_94 hellenNA6" \
    "hellen/hellenNA8_96 hellenNA8_96" \
    "microrusefi mre_f7" \
