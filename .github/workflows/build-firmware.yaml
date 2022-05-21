@@ -24,6 +24,7 @@ jobs:
             hellen81,
             hellen88bmw,
             hellen-nb1,
+            hellen-gm-e67,
             hellenNA8_96,
             hellenNA6,
             hellen128,
@@ -84,6 +85,10 @@ jobs:
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
+
+          - build-target: hellen-gm-e67
+            folder: hellen/hellen-gm-e67
+            ini-file: rusefi_hellen-gm-e67.ini
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
