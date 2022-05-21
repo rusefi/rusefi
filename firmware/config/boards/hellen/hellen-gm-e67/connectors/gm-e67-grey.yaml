@@ -1,0 +1,8 @@
+pins:
+  - pin: 33
+    function: CAN bus low
+    type: can
+
+  - pin: 53
+    function: CAN bus high
+    type: can
