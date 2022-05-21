@@ -1,0 +1,8 @@
+pins:
+  - pin: 13
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Fuel Pump Relay Output
+    type: hs
+    ts_name: C1-13 - Fuel Pump
