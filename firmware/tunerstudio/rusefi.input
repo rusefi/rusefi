@@ -1769,7 +1769,8 @@ cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
 ; MRE_MIATA_NB2_MAP = 11
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_VW_B6_16_hex@@"
+cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_VW_B6_16_hex@@"
+cmd_set_engine_type_Proteus_VW_B6		    = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
 cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
 cmd_set_engine_type_MRE_SECONDARY_CAN       		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
 
