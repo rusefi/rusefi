@@ -6,3 +6,70 @@ pins:
     type: ign
     ts_name: C2-1 - Coil 1
     function: Coil 1
+
+
+
+  - pin: 16
+    # H144_LS_3
+    id: D11
+    class: outputs
+    ts_name: C2-16 INJ 3
+    function: injector output 3
+    type: inj
+
+  - pin: 32
+    # H144_LS_2
+    id: G8
+    class: outputs
+    ts_name: C2-32 INJ 2
+    function: injector output 2
+    type: inj
+
+
+  - pin: 48
+    # H144_LS_8
+    id: F14
+    class: outputs
+    ts_name: C2-48 INJ 8
+    function: injector output 8
+    type: inj
+
+  - pin: 49
+    # H144_LS_5
+    id: D9
+    class: outputs
+    ts_name: C2-49 INJ 5
+    function: injector output 5
+    type: inj
+
+  - pin: 52
+    # H144_LS_6
+    id: F12
+    class: outputs
+    ts_name: C2-52 INJ 6
+    function: injector output 6
+    type: inj
+
+  - pin: 70
+    # H144_LS_4
+    id: D10
+    class: outputs
+    ts_name: C2-70 INJ 4
+    function: injector output 4
+    type: inj
+
+  - pin: 71
+    # H144_LS_7
+    id: F13
+    class: outputs
+    ts_name: C2-71 INJ 7
+    function: injector output 7
+    type: inj
+
+  - pin: 72
+    # H144_LS_1
+    id: G7
+    class: outputs
+    ts_name: C2-72 INJ 1
+    function: injectpr output 1
+    type: inj
