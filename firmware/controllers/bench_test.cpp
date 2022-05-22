@@ -453,7 +453,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
 			/* WARN: fixed charge time */
-			doRunSparkBench(index, 300.0, 4.0,
+			doRunSparkBench(index, 300.0, engineConfiguration->benchTestOnTime,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;

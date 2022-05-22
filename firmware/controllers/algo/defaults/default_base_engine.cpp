@@ -55,6 +55,10 @@ void setDefaultBaseEngine() {
 	// Fuel pump
 	engineConfiguration->startUpFuelPumpDuration = 4;
 
+	engineConfiguration->benchTestOnTime = 4;
+	engineConfiguration->benchTestOffTime = 500;
+	engineConfiguration->benchTestCount = 3;
+
 	// Fans
 	engineConfiguration->fanOnTemperature = 95;
 	engineConfiguration->fanOffTemperature = 91;

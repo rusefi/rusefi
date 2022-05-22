@@ -2117,6 +2117,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Solenoid #5", cmd_test_sol5
 		commandButton = "Solenoid #6", cmd_test_sol6
 
+    dialog = testOther
+        field = "Count", benchTestCount
+        field = "On Time", benchTestOnTime
+        field = "Off Time", benchTestOffTime
+        panel = testSolenoids
+
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
 		field = ""
@@ -3677,7 +3683,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = ioTest, "Bench Test & Commands", xAxis
 		panel = testSpark
 		panel = testInjectors
-		panel = testSolenoids
+		panel = testOther
 		panel = testLuaOut
 		panel = testMisc
 
