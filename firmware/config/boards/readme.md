@@ -22,7 +22,7 @@ New board procedure once you have new folder in this *boards* directory
 
 2) update [build-firmware.yaml](https://github.com/rusefi/rusefi/blob/master/.github/workflows/build-firmware.yaml) to get new firmware bundle on https://rusefi.com/build_server/
 
-3) add 
+3) add connector pinout mapping [yaml](https://en.wikipedia.org/wiki/YAML) file see examples of yaml files in 'connectors' subfolders here.
 
 
 See also https://github.com/rusefi/rusefi/wiki/Hardware
