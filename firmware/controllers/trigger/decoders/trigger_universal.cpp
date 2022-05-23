@@ -158,7 +158,7 @@ void configure12ToothCrank(TriggerWaveform* s) {
 
 	// Sync after 3 good teeth
 	for (size_t i = 0; i < 3; i++) {
-		s->setTriggerSynchronizationGap3(i, 0.75f, 1.25f);
+		s->setTriggerSynchronizationGap3(i, 0.55f, 1.45f);
 	}
 
 	// Just a single tooth with 50% duty cycle
