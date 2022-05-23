@@ -105,6 +105,33 @@ pins:
     function: igniter
     type: ign
 
+  - pin: 59
+    # H144_IN_SENS4
+    id: F6
+    class: outputs
+    ts_name: C2-59 - Cam
+    function: Cam Sensor Input
+    type: ls
+    color: purple
+
+  - pin: 64
+    # H144_IN_TPS
+    id: EFI_ADC_3
+    class: outputs
+    ts_name: C2-64 - TPS1
+    function: TPS1
+    type: ls
+    color: purple
+
+  - pin: 66
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: outputs
+    ts_name: C2-66 - TPS2
+    function: TPS2
+    type: ls
+    color: purple
+
   - pin: 70
     # H144_LS_4
     id: D10
