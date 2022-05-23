@@ -35,11 +35,11 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::I8;
-	engineConfiguration->ignitionPins[1] = Gpio::E5;
-	engineConfiguration->ignitionPins[2] = Gpio::E4;
-	engineConfiguration->ignitionPins[3] = Gpio::E3;
-	engineConfiguration->ignitionPins[4] = Gpio::E2;
+	engineConfiguration->ignitionPins[0] = H176_IGN_1;
+	engineConfiguration->ignitionPins[1] = H176_IGN_2;
+	engineConfiguration->ignitionPins[2] = H176_IGN_3;
+	engineConfiguration->ignitionPins[3] = H176_IGN_4;
+	engineConfiguration->ignitionPins[4] = H176_IGN_5;
 	engineConfiguration->ignitionPins[5] = Gpio::I5;
 	engineConfiguration->ignitionPins[6] = Gpio::I6;
 	engineConfiguration->ignitionPins[7] = Gpio::I7;

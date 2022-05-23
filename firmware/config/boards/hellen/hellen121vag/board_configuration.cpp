@@ -30,7 +30,7 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = Gpio::I8; // 102 - IGN_1
+	engineConfiguration->ignitionPins[0] = H176_IGN_1; // 102 - IGN_1
 	engineConfiguration->ignitionPins[1] = Gpio::E5 ; // 7 - IGN_2
 	engineConfiguration->ignitionPins[2] = Gpio::E4; // 111 - IGN_3
 	engineConfiguration->ignitionPins[3] = Gpio::E3; // 94 - IGN_4
