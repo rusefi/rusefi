@@ -6,3 +6,21 @@ pins:
     function: Fuel Pump Relay Output
     type: hs
     ts_name: C1-13 - Fuel Pump
+
+  - pin: 40
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: C1-40 - MAIN
+    function: Main relay control
+    type: ls
+    color: purple
+
+  - pin: 63
+    # H144_IN_SENS2
+    id: F4
+    class: outputs
+    ts_name: C1-63 - Crank
+    function: Crank Input
+    type: ls
+    color: purple
