@@ -68,7 +68,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;

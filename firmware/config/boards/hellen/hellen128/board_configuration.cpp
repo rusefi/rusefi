@@ -213,7 +213,7 @@ void setBoardDefaultConfiguration() {
 	 * md_sanci latest tune
 	 * https://rusefi.com/online/view.php?msq=630
 	 */
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->throttlePedalUpVoltage = 1.49;
 	engineConfiguration->throttlePedalWOTVoltage = 4.72;
