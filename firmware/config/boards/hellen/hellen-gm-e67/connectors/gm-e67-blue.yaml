@@ -7,6 +7,15 @@ pins:
     type: hs
     ts_name: C1-13 - Fuel Pump
 
+  - pin: 26
+    # H144_OUT_IO6
+    id: G11
+    class: outputs
+    ts_name: C1-26 - Starter Relay
+    function: Starter Relay
+    type: ls
+    color: purple
+
   - pin: 40
     # H144_OUT_IO3
     id: G14
@@ -32,11 +41,11 @@ pins:
     function: PPS2 analog input
     type: av
 
-  - pin: 63
-    # H144_IN_SENS2
-    id: F4
+  - pin: 56
+    # H144_OUT_IO8
+    id: G4
     class: outputs
-    ts_name: C1-63 - Crank
-    function: Crank Input
+    ts_name: C1-56 - Starter Enable
+    function: Starter Enable
     type: ls
     color: purple

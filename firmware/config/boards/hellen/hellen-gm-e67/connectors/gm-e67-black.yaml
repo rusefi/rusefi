@@ -114,9 +114,18 @@ pins:
     type: ls
     color: purple
 
+  - pin: 63
+    # H144_IN_SENS2
+    id: F4
+    class: outputs
+    ts_name: C2-63 - Crank
+    function: Crank Input
+    type: ls
+    color: purple
+
   - pin: 64
     # H144_IN_TPS
-    id: EFI_ADC_3
+    id: EFI_ADC_4
     class: outputs
     ts_name: C2-64 - TPS1
     function: TPS1
