@@ -17,6 +17,22 @@ pins:
     function: injector output 3
     type: inj
 
+  - pin: 17
+    # H144_IGN_8
+    id: E6
+    class: outputs
+    ts_name: C2-17 - IGN 8
+    function: igniter
+    type: ign
+
+  - pin: 18
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    ts_name: C2-18 - IGN 4
+    function: igniter
+    type: ign
+
   - pin: 32
     # H144_LS_2
     id: G8
@@ -25,6 +41,21 @@ pins:
     function: injector output 2
     type: inj
 
+  - pin: 33
+    # H144_IGN_7
+    id: B9
+    class: outputs
+    ts_name: C2-33 - IGN 7
+    function: igniter
+    type: ign
+
+  - pin: 34
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    ts_name: C2-34 - IGN 5
+    function: igniter
+    type: ign
 
   - pin: 48
     # H144_LS_8
@@ -49,6 +80,30 @@ pins:
     ts_name: C2-52 INJ 6
     function: injector output 6
     type: inj
+
+  - pin: 53
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    ts_name: C2-53 - IGN 2
+    function: igniter
+    type: ign
+
+  - pin: 54
+    # H144_IGN_6
+    id: B8
+    class: outputs
+    ts_name: C2-54 - IGN 6
+    function: igniter
+    type: ign
+
+  - pin: 55
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    ts_name: C2-55 - IGN 3
+    function: igniter
+    type: ign
 
   - pin: 70
     # H144_LS_4
