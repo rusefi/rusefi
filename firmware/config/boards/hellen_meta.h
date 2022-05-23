@@ -45,6 +45,14 @@ void detectHellenBoardType();
 #define H144_IGN_4 Gpio::E3
 #define H144_IGN_5 Gpio::E2
 #define H144_IGN_6 Gpio::B8
+#define H144_IGN_7 Gpio::B9
+#define H144_IGN_8 Gpio::E6
+
+#define H176_IGN_1 Gpio::I8
+#define H176_IGN_2 Gpio::E5
+#define H176_IGN_3 Gpio::E4
+#define H176_IGN_4 Gpio::E3
+#define H176_IGN_5 Gpio::E2
 
 #define H144_OUT_PWM1 Gpio::D13
 #define H144_OUT_PWM2 Gpio::C6
