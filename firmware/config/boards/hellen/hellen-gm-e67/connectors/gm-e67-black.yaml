@@ -120,7 +120,7 @@ pins:
     class: outputs
     ts_name: C2-64 - TPS1
     function: TPS1
-    type: ls
+    type: av
     color: purple
 
   - pin: 66
@@ -129,7 +129,7 @@ pins:
     class: outputs
     ts_name: C2-66 - TPS2
     function: TPS2
-    type: ls
+    type: av
     color: purple
 
   - pin: 70
