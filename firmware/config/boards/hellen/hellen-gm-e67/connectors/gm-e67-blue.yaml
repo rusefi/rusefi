@@ -16,6 +16,22 @@ pins:
     type: ls
     color: purple
 
+  - pin: 47
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: C1-47 - PPS1
+    function: PPS1 analog input
+    type: av
+
+  - pin: 49
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: C1-49 - PPS2
+    function: PPS2 analog input
+    type: av
+
   - pin: 63
     # H144_IN_SENS2
     id: F4
