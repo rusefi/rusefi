@@ -1,6 +1,6 @@
 /************************************************************************************//**
 * \file         config/boards/microrusefi/openblt/blt_conf.h
-* \brief        Bootloader configuration header file for RusEFI MicroRusEFI board
+* \brief        Bootloader configuration header file for rusEFI
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
@@ -43,10 +43,7 @@
  * called the moment the user program is about to be started. This could be used to
  * de-initialize application specific parts, for example to stop blinking an LED, etc.
  */
-/** \brief Frequency of the external crystal oscillator. */
-#define BOOT_CPU_XTAL_SPEED_KHZ          (8000)
-/** \brief Desired system speed. */
-#define BOOT_CPU_SYSTEM_SPEED_KHZ        (168000)
+
 /** \brief Motorola or Intel style byte ordering. */
 #define BOOT_CPU_BYTE_ORDER_MOTOROLA     (0)
 /** \brief Enable/disable hook function call right before user program start. */
@@ -81,8 +78,6 @@
 #define BOOT_COM_CAN_RX_MSG_ID          (0x667 /*| 0x80000000*/)
 /** \brief Configure number of bytes in the host->target CAN message. */
 #define BOOT_COM_CAN_RX_MAX_DATA        (8)
-/** \brief Select the desired CAN peripheral as a zero based index. */
-#define BOOT_COM_CAN_CHANNEL_INDEX      (1)
 
 /* The RS232 communication interface is selected by setting the BOOT_COM_RS232_ENABLE
  * configurable to 1. Configurable BOOT_COM_RS232_BAUDRATE selects the communication speed
@@ -100,8 +95,6 @@
 #define BOOT_COM_RS232_TX_MAX_DATA       (64)
 /** \brief Configure number of bytes in the host->target data packet. */
 #define BOOT_COM_RS232_RX_MAX_DATA       (64)
-/** \brief Select the desired UART peripheral as a zero based index. */
-#define BOOT_COM_RS232_CHANNEL_INDEX     (2)
 
 
 /****************************************************************************************
@@ -147,6 +140,7 @@
  *         RusEFI uses dual bank mode.
  */
 #define BOOT_FLASH_CUSTOM_LAYOUT_ENABLE (1)
+
 /** \brief Use one of 'reserved' IRQ vectors at the beginig on vector table.
  */
 #define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x1C)
