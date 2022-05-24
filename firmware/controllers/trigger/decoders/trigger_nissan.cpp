@@ -121,7 +121,7 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->tdcPosition = 00;
+	s->tdcPosition = 120;
 
 	int x = 360 + 52;
 
