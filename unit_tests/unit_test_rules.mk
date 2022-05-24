@@ -137,6 +137,10 @@ ifndef JAVA_HOME
 $(error JAVA_HOME is undefined - due to JNI integration unit tests depend on JAVA_HOME)
 endif
 
+ifneq (1,$(words [$(JAVA_HOME)]))
+$(error JAVA_HOME $(JAVA_HOME) seems to contain spaces this would not work well. please use folder name without space often progra~1)
+endif
+
 AOPT = -fPIC -I$(JAVA_HOME)/include
 
 ifeq ($(OS),Windows_NT)
