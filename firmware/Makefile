@@ -361,10 +361,10 @@ ULIBS = -lm --specs=nano.specs
 include $(RULESFILE)
 
 openblt:
-	make -f $(PROJECT_DIR)/openblt.mk
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk
 
 openblt_clean:
-	make -f $(PROJECT_DIR)/openblt.mk clean
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean
 
 # Enable precompiled header
 include rusefi_pch.mk
