@@ -156,7 +156,7 @@ public class rusEFI extends Activity {
 
 //        switchOrProgramDfu();
 
-        SoundBroadcast.checkOrRequestPermission(this);
+//        SoundBroadcast.checkOrRequestPermission(this);
     }
 
     private String getAuthToken() {
