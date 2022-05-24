@@ -78,6 +78,7 @@ include $(OPENBLT_BOARD_DIR)/board.mk
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.c)
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.h)
 
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/blt_conf.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/hooks.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
