@@ -22,3 +22,5 @@ endif
 #| Specify library files                                                                |
 #|--------------------------------------------------------------------------------------|
 LIBS = 
+
+BRDFLAGS += -DSTATUS_LED_PORT=GPIOE -DSTATUS_LED_PIN=GPIO_PIN_3
