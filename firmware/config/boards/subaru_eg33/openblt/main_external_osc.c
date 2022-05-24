@@ -1,12 +1,10 @@
 /************************************************************************************//**
-* \file         Demo/ARMCM7_STM32F7_Nucleo_F767ZI_GCC/Boot/main.c
 * \brief        Bootloader application source file.
-* \ingroup      Boot_ARMCM7_STM32F7_Nucleo_F767ZI_GCC
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
 *----------------------------------------------------------------------------------------
-*   Copyright (c) 2019  by Feaser    http://www.feaser.com    All rights reserved
+*   Copyright (c) 2021  by Feaser    http://www.feaser.com    All rights reserved
 *
 *----------------------------------------------------------------------------------------
 *                            L I C E N S E
@@ -30,7 +28,15 @@
 * Include files
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
+#ifdef STM32F429xx
+#include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32F767xx
 #include "stm32f7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32H743xx
+#include "stm32h7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
 
 
 /****************************************************************************************
@@ -91,8 +97,8 @@ static void Init(void)
 ****************************************************************************************/
 static void SystemClock_Config(void)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct;
-  RCC_ClkInitTypeDef RCC_ClkInitStruct;
+  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /* Configure the main internal regulator output voltage. */
   __HAL_RCC_PWR_CLK_ENABLE();
@@ -171,12 +177,12 @@ void HAL_MspInit(void)
 #endif
 
   /* Configure GPIO pin for the Red LED. */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Pin = STATUS_LED_PIN;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-  HAL_GPIO_WritePin(GPIOG, GPIO_PIN_8, GPIO_PIN_RESET);
+  HAL_GPIO_Init(STATUS_LED_PORT, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_RESET);
 
 #if 0
   /* Configure GPIO pin for (optional) backdoor entry input. */

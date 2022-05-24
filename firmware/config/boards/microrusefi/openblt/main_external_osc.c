@@ -1,7 +1,5 @@
 /************************************************************************************//**
-* \file         Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/main.c
 * \brief        Bootloader application source file.
-* \ingroup      Boot_ARMCM4_STM32F4_Nucleo_F429ZI_GCC
 * \internal
 *----------------------------------------------------------------------------------------
 *                          C O P Y R I G H T
@@ -30,7 +28,15 @@
 * Include files
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
+#ifdef STM32F429xx
 #include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32F767xx
+#include "stm32f7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
+#ifdef STM32H743xx
+#include "stm32h7xx.h"                           /* STM32 CPU and HAL header           */
+#endif
 
 
 /****************************************************************************************
@@ -169,12 +175,12 @@ void HAL_MspInit(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
 
   /* Configure PE3 pin for the LED. */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Pin = STATUS_LED_PIN;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+  HAL_GPIO_Init(STATUS_LED_PORT, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_SET);
 
 #if 0
   /* Configure GPIO pin for (optional) backdoor entry input. */
@@ -240,10 +246,10 @@ void HAL_MspDeInit(void)
   HAL_RCC_DeInit();
 
   /* Reset GPIO pin for the LED to turn it off. */
-  HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(STATUS_LED_PORT, STATUS_LED_PIN, GPIO_PIN_RESET);
 
   /* Deinit used GPIOs. */
-  HAL_GPIO_DeInit(GPIOE, GPIO_PIN_3);
+  HAL_GPIO_DeInit(STATUS_LED_PORT, STATUS_LED_PIN);
 
 #if 0
   HAL_GPIO_DeInit(GPIOC, GPIO_PIN_13);
