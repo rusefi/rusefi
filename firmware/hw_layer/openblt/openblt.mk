@@ -79,6 +79,9 @@ BRDFLAGS    += -DHSE_VALUE=8000000
 #|--------------------------------------------------------------------------------------|
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.c)
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.h)
+
+PROJ_FILES += hw_layer/openblt/hook.c
+
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# Collect bootloader port files
