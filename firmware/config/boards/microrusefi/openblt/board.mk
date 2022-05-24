@@ -13,6 +13,8 @@ BRDFLAGS    = -DSTM32F429xx
 #|--------------------------------------------------------------------------------------|
 #| Specify library files                                                                |
 #|--------------------------------------------------------------------------------------|
-LIBS = 
+LIBS =
+
+BRDFLAGS    += -DHSE_VALUE=8000000
 
 BRDFLAGS += -DSTATUS_LED_PORT=GPIOE -DSTATUS_LED_PIN=GPIO_PIN_3

@@ -18,6 +18,9 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	BRDFLAGS     = -DSTM32H743xx
 endif
 
+# We use HSI (internal) on proteus. We define HSE (external) only to have compiler happy.
+BRDFLAGS    += -DHSE_VALUE=8000000
+
 #|--------------------------------------------------------------------------------------|
 #| Specify library files                                                                |
 #|--------------------------------------------------------------------------------------|
