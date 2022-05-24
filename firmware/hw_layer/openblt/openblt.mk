@@ -81,6 +81,8 @@ PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.c)
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.h)
 
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/hooks.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
