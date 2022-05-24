@@ -105,7 +105,7 @@ public class rusEFI extends Activity {
 
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
-        // turn on scree while ADB debugging idle phone
+        // turn on screen while ADB debugging idle phone
         turnScreenOn();
 
         mStatusView = findViewById(R.id.text_status);
@@ -128,7 +128,7 @@ public class rusEFI extends Activity {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(rusEFI.this);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString(AuthTokenUtil.AUTH_TOKEN, text);
-                    editor.commit();
+                    editor.apply();
                     authStatusMessage.setVisibility(View.GONE);
                     authStatusClickableUrl.setVisibility(View.GONE);
                 }
