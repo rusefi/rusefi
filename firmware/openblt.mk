@@ -72,6 +72,8 @@ PROJ_FILES=
 include $(OPENBLT_PORT_DIR)/port.mk
 include $(OPENBLT_BOARD_DIR)/board.mk
 
+BRDFLAGS    += -DHSE_VALUE=8000000
+
 #|--------------------------------------------------------------------------------------|
 #| Collect bootloader core files                                                        |
 #|--------------------------------------------------------------------------------------|

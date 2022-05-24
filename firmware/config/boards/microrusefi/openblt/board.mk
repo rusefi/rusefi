@@ -8,7 +8,7 @@ PROJ_FILES += $(filter-out $(OPENBLT_BOARD_DIR)/flash_layout.c, $(call rwildcard
 #|--------------------------------------------------------------------------------------|
 #| Options for toolchain binaries                                                       |
 #|--------------------------------------------------------------------------------------|
-BRDFLAGS    = -DSTM32F429xx -DHSE_VALUE=8000000
+BRDFLAGS    = -DSTM32F429xx
 
 #|--------------------------------------------------------------------------------------|
 #| Specify library files                                                                |
