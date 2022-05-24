@@ -15,3 +15,4 @@ BRDFLAGS    = -DSTM32F767xx -DHSE_VALUE=25000000
 #|--------------------------------------------------------------------------------------|
 LIBS = 
 
+BRDFLAGS += -DSTATUS_LED_PORT=GPIOG -DSTATUS_LED_PIN=GPIO_PIN_8

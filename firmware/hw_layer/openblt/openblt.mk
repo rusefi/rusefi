@@ -72,8 +72,6 @@ PROJ_FILES=
 include $(OPENBLT_PORT_DIR)/port.mk
 include $(OPENBLT_BOARD_DIR)/board.mk
 
-BRDFLAGS    += -DHSE_VALUE=8000000
-
 #|--------------------------------------------------------------------------------------|
 #| Collect bootloader core files                                                        |
 #|--------------------------------------------------------------------------------------|
@@ -98,7 +96,7 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# Port specific options
 	PORTFLAGS  += -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-    # todo: do we need startup_stmXX.s here?
+    PROJ_FILES += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/openblt/lib/startup_stm32f767xx.s
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7/*.c)
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7/*.h)
