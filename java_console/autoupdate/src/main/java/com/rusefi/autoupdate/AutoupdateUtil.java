@@ -36,7 +36,7 @@ public class AutoupdateUtil {
             JProgressBar jProgressBar = new JProgressBar();
 
             frameHelper.getFrame().setTitle(title);
-            jProgressBar.setMaximum(ConnectionAndMeta.STEPS);
+            jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
             jProgressBarAtomicReference.set(jProgressBar);
             frameHelper.showFrame(jProgressBar, true);
         }
