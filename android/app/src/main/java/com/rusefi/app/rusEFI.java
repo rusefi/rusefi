@@ -35,6 +35,7 @@ import android.text.util.Linkify;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -55,6 +56,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.ErrorInfoCommand;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
@@ -73,6 +75,8 @@ public class rusEFI extends Activity {
 //    protected static final int DFU_DETACH_TIMEOUT = 1000;
 
     private static final String VERSION = "rusEFI app v0.20220524\n";
+
+    private static final int LOCAL_PORT = 29001;
 
     /* UI elements */
     private TextView mStatusView;
@@ -101,6 +105,9 @@ public class rusEFI extends Activity {
 
         findViewById(R.id.buttonSound).setVisibility(View.GONE);
         findViewById(R.id.buttonDfu).setVisibility(View.GONE);
+
+        Button view = findViewById(R.id.localBroadcast);
+        view.setText("Local broadcast on " + LOCAL_PORT);
 
         broadcastStatus = findViewById(R.id.broadcastStatus);
         broadcastStatus.setVisibility(View.GONE);
@@ -264,6 +271,9 @@ public class rusEFI extends Activity {
         connectDashboard();
     }
 
+    public void onLocalBroadcast(View view) {
+    }
+
     /**
      * Called when the user touches a button
      */
@@ -344,6 +354,10 @@ public class rusEFI extends Activity {
         try {
             String signature = BinaryProtocol.getSignature(serial);
             visibleLogAppend("Connected to " + signature);
+            ErrorInfoCommand.send(serial);
+            String configError = ErrorInfoCommand.getResponse(serial.getDataBuffer());
+            if (configError != null)
+                visibleLogAppend("[CRITICAL] " + configError);
 
         } catch (IOException e) {
             e.printStackTrace();
