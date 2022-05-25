@@ -13,14 +13,12 @@ jobs:
         include:
           - build-target: f4-disco
             script: hardware_ci_f4_discovery
-            board: f407-discovery
             runs-on: hw-ci-f4-discovery
             folder: f407-discovery
             config-name: all
 
-          - build-target: proteus
+          - build-target: proteus_f4
             script: hardware_ci_proteus
-            board: proteus
             runs-on: hw-ci-proteus
             folder: proteus
             config-name: proteus_f4
@@ -65,7 +63,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j6 PROJECT_BOARD=${{matrix.board}}
+      run: make -j6 PROJECT_BOARD=${{matrix.folder}}
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
