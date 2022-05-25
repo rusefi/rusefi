@@ -62,7 +62,7 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
+      run: make -j6 EXTRA_2_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
