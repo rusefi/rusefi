@@ -21,6 +21,9 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.shared.FileUtil.close;
 
+/**
+ * Takes any IoStream and exposes it as local TCP/IP server socket
+ */
 public class BinaryProtocolProxy {
     private static final Logging log = getLogging(BinaryProtocolProxy.class);
     /**
@@ -30,6 +33,9 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
+    /**
+     * @return starts a thread and returns a reference to ServerSocketReference
+     */
     public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, ClientApplicationActivityListener clientApplicationActivityListener) throws IOException {
         CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
