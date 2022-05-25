@@ -64,7 +64,6 @@ jobs:
       run: echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV
 
     - name: Build Firmware
-      working-directory: ./firmware
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
 
     - name: Check for STLINK
