@@ -46,6 +46,8 @@ else
   # standalone images (for use with no bootloader)
   cp build/rusefi.bin  deliver/
   cp build/rusefi.dfu  deliver/
+ # rusEFI console DFU uses rusefi*.hex file
+ cp build/rusefi.hex  deliver/
 fi
 
 # bootloader and composite image
@@ -63,10 +65,10 @@ if [ $USE_OPENBLT = "yes" ]; then
   echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
   $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
   #todo: how to create 'signed' hex and srec? Do we need?
+  # rusEFI console DFU uses rusefi*.hex file TODO FIX ME
+  cp build/rusefi.hex  deliver/
 fi
 
-# rusEFI console DFU uses rusefi*.hex file
-cp build/rusefi.hex  deliver/
 
 echo "$SCRIPT_NAME: build folder content:"
 ls -l build
