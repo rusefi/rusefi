@@ -16,12 +16,14 @@ jobs:
             runs-on: hw-ci-f4-discovery
             folder: f407-discovery
             config-name: all
+            ini-file: rusefi_f4-disco.ini
 
           - build-target: proteus_f4
             script: hardware_ci_proteus
             runs-on: hw-ci-proteus
             folder: proteus
             config-name: proteus_f4
+            ini-file: rusefi_proteus_f4.ini
 
     runs-on: ${{matrix.runs-on}}
 
@@ -63,14 +65,14 @@ jobs:
 
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j6 PROJECT_BOARD=${{matrix.folder}}
+      run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
-      run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "build/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
+      run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
     - name: Generate Java (Antlr)
       working-directory: ./java_tools/configuration_definition
