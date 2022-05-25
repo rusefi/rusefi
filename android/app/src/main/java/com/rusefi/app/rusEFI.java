@@ -26,14 +26,12 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.util.Linkify;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,6 +43,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.rusefi.Callable;
 import com.rusefi.Timeouts;
 import com.rusefi.app.serial.AndroidSerial;
+import com.rusefi.app.util.AndroidUtil;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.dfu.DfuConnection;
@@ -115,7 +114,7 @@ public class rusEFI extends Activity {
         usbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
 
         // turn on screen while ADB debugging idle phone
-        turnScreenOn();
+        AndroidUtil.turnScreenOn(this);
 
         mStatusView = findViewById(R.id.text_status);
         mResultView = findViewById(R.id.text_result);
@@ -178,15 +177,6 @@ public class rusEFI extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(mUsbReceiver);
-    }
-
-    private void turnScreenOn() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            setTurnScreenOn(true);
-        } else {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        }
     }
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
