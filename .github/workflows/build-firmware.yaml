@@ -369,6 +369,7 @@ jobs:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
 
+  # here we build f407-discovery
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
