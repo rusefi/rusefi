@@ -60,9 +60,12 @@ jobs:
       working-directory: ./firmware
       run: make clean
 
+    - name: Set EXTRA env
+      run: echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV
+
     - name: Build Firmware
       working-directory: ./firmware
-      run: make -j6 EXTRA_2_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
+      run: make -j6 PROJECT_BOARD=${{matrix.board}}
 
     - name: Check for STLINK
       run: lsusb | grep 'ST-LINK\|STLINK'
