@@ -54,6 +54,13 @@
             android:text="Sound" />
 
         <Button
+            android:id="@+id/buttonConnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onConnectButton"
+            android:text="Connect" />
+
+        <Button
             android:id="@+id/buttonBroadcast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +71,7 @@
             android:id="@+id/broadcastStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="Hello rusEFI" />
 
         <ScrollView
             android:layout_width="match_parent"
