@@ -57,6 +57,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ErrorInfoCommand;
 import com.rusefi.io.serial.StreamConnector;
+import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.ui.StatusConsumer;
@@ -261,7 +262,26 @@ public class rusEFI extends Activity {
         connectDashboard();
     }
 
+    /**
+     * MRE + USB cable + Android + WiFi I get about 8Hz Runtime Data Rate :( 
+     */
     public void onLocalBroadcast(View view) {
+        AndroidSerial serial = AndroidSerial.getAndroidSerial(this, mStatusView, usbManager);
+        if (serial == null) {
+            // error already reported to mStatusView
+            return;
+        }
+        try {
+            BinaryProtocolProxy.createProxy(serial, LOCAL_PORT, new BinaryProtocolProxy.ClientApplicationActivityListener() {
+                @Override
+                public void onActivity() {
+
+                }
+            });
+            visibleLogAppend("Running TCP/IP proxy on " + LOCAL_PORT);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
