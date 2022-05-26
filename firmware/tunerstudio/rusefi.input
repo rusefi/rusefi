@@ -2015,10 +2015,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
-		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
-        field = "Cam sensor bank 1 exhaust",        camInputs2, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 intake",         camInputs3, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 exhaust",        camInputs4, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 }
+		field = "Cam sensor bank 1 intake",	        camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
+        field = "Cam sensor bank 1 exhaust",        camInputs2, { camInputs2 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+        field = "Cam sensor bank 2 intake",         camInputs3, { camInputs3 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+        field = "Cam sensor bank 2 exhaust",        camInputs4, { camInputs4 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 ) }
 		field = "Invert cam inputs",                invertCamVVTSignal, { camInputs1 != 0 }
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
@@ -2481,8 +2481,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
 		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MOSI",							spi1mosiPin, { spi1mosiPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MISO",							spi1misoPin, { spi1misoPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
 		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
 		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
 		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
@@ -3138,7 +3138,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = startStopDialog, "Start/Stop Button"
 		field = "Start/Stop Button Pin",		startStopButtonPin
 		field = "Start/Stop Button Mode",				startStopButtonMode
-		field = "Starter Control",						starterControlPin, {startStopButtonPin != 0}
+		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
@@ -3515,7 +3515,7 @@ dialog = tcuControls, "Transmission Settings"
     dialog = boostDialog, ""
 		field = "Enable",                           isBoostControlEnabled
 		field = "Control Mode",                     boostType, { isBoostControlEnabled }
-		field = "Output",							boostControlPin, { isBoostControlEnabled }
+		field = "Output",							boostControlPin, { boostControlPin != 0 || isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
@@ -3798,7 +3798,7 @@ dialog = tcuControls, "Transmission Settings"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 
-	    field = "Launch Button",                        launchActivatePin,      {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+	    field = "Launch Button",                        launchActivatePin,      { launchActivatePin != 0 || (launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1)}
 	    field = "Launch Button inverted",				launchActivateInverted
 	    field = "Launch Button mode",                   launchActivatePinMode,  {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 
@@ -3836,7 +3836,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = antiLag, "AntiLag Settings NOT WORKING"
         field = "Enable AntiLag",               antiLagEnabled
 	    field = "Activation Mode",          	antiLagActivationMode,  {antiLagEnabled == 1}
-        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivationMode == 1 && antiLagEnabled == 1}
+        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivatePin != 0 || ( antiLagActivationMode == 1 && antiLagEnabled == 1 ) }
 
 
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
