@@ -70,7 +70,7 @@ rwildcard = $(strip $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filte
 #|--------------------------------------------------------------------------------------|
 PROJ_FILES=
 include $(OPENBLT_PORT_DIR)/port.mk
-include $(OPENBLT_BOARD_DIR)/board.mk
+include $(OPENBLT_BOARD_DIR)/oblt_board.mk
 
 #|--------------------------------------------------------------------------------------|
 #| Collect bootloader core files                                                        |
