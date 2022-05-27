@@ -35,3 +35,5 @@ BRDFLAGS += -DBOOT_CPU_SYSTEM_SPEED_KHZ=168000
 BRDFLAGS += -DBOOT_COM_RS232_CHANNEL_INDEX=2
 # \brief Select the desired CAN peripheral as a zero based index.
 BRDFLAGS += -DBOOT_COM_CAN_CHANNEL_INDEX=0
+
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/main_internal_osc.c
