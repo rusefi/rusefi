@@ -1212,9 +1212,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit unused1128
 	bit unused1129
 	bit unused1130
-	uint8_t autoscale benchTestOffTime;;"ms", 5, 0, 0, 2000, 1
-	uint8_t benchTestCount;;"count", 1, 0, 0, 250, 1
-	uint8_t autoscale benchTestOnTime;;"ms", 5, 0, 0, 2000, 1
+	uint8_t autoscale benchTestOffTime;Time between bench test pulses;"ms", 5, 0, 0, 2000, 1
+	uint8_t benchTestCount;How many test bench pulses do you want;"count", 1, 0, 0, 250, 1
+	uint8_t autoscale benchTestOnTime;Length of each of the test pulses;"ms", 5, 0, 0, 2000, 1
 	pin_input_mode_e launchActivatePinMode;
 	Gpio can2TxPin;set_can2_tx_pin X
 	Gpio can2RxPin;set_can2_rx_pin X
@@ -2019,6 +2019,7 @@ end_struct
 #define TS_PAGE_COMMAND 'P'
 ! 0x46
 #define TS_COMMAND_F 'F'
+#define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
 ! versionInfo
 #define TS_GET_FIRMWARE_VERSION 'V'
 ! returns getFirmwareError(), works together with ind_hasFatalError
@@ -2054,6 +2055,8 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_hip9011 true
+#define ts_show_vr_threshold_all true
+#define ts_show_vr_threshold_2 true
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_cj125 true

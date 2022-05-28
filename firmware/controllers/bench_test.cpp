@@ -453,7 +453,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
 			/* WARN: fixed charge time */
-			doRunSparkBench(index, 300.0, 4.0,
+			doRunSparkBench(index, 300.0, engineConfiguration->benchTestOnTime,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
@@ -535,6 +535,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 }
 
 void onConfigurationChangeBenchTest() {
+	if (engineConfiguration->benchTestOnTime == 0)
+		engineConfiguration->benchTestOnTime = 4; // default value if configuration was not specified
 	if (engineConfiguration->benchTestOffTime < 5)
 		engineConfiguration->benchTestOffTime = 500; // default value if configuration was not specified
 	if (engineConfiguration->benchTestCount < 1)

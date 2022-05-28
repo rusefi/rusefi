@@ -1,0 +1,24 @@
+pins:
+  - pin: 33
+    function: CAN bus low
+    type: can
+
+  - pin: 53
+    function: CAN bus high
+    type: can
+
+  - pin: 55
+    # H144_IN_CLT
+    id: EFI_ADC_12
+    type: av
+    ts_name: C3-55 - CLT
+    function: CLT
+    color: purple
+
+  - pin: 56
+    # H144_IN_IAT
+    id: EFI_ADC_13
+    type: av
+    ts_name: C3-56 - IAT
+    function: CLT
+    color: purple

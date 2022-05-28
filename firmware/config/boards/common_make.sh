@@ -65,9 +65,6 @@ if [ $USE_OPENBLT = "yes" ]; then
   #todo: how to create 'signed' hex and srec? Do we need?
 fi
 
-# rusEFI console DFU uses rusefi*.hex file
-cp build/rusefi.hex  deliver/
-
 echo "$SCRIPT_NAME: build folder content:"
 ls -l build
 

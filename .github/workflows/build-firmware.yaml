@@ -24,6 +24,7 @@ jobs:
             hellen81,
             hellen88bmw,
             hellen-nb1,
+            hellen-gm-e67,
             hellenNA8_96,
             hellenNA6,
             hellen128,
@@ -84,6 +85,10 @@ jobs:
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
+
+          - build-target: hellen-gm-e67
+            folder: hellen/hellen-gm-e67
+            ini-file: rusefi_hellen-gm-e67.ini
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
@@ -329,13 +334,6 @@ jobs:
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
 
-    - name: Attach console junit results
-      if: ${{ env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: console ${{matrix.build-target}} junit
-        path: ./java_console/build/*.txt
-
     - name: Upload build bin
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
@@ -371,6 +369,7 @@ jobs:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
 
+  # here we build f407-discovery
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:

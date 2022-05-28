@@ -1,0 +1,51 @@
+pins:
+  - pin: 13
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Fuel Pump Relay Output
+    type: hs
+    ts_name: C1-13 - Fuel Pump
+
+  - pin: 26
+    # H144_OUT_IO6
+    id: G11
+    class: outputs
+    ts_name: C1-26 - Starter Relay
+    function: Starter Relay
+    type: ls
+    color: purple
+
+  - pin: 40
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: C1-40 - MAIN
+    function: Main relay control
+    type: ls
+    color: purple
+
+  - pin: 47
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: C1-47 - PPS1
+    function: PPS1 analog input
+    type: av
+
+  - pin: 49
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: C1-49 - PPS2
+    function: PPS2 analog input
+    type: av
+
+  - pin: 56
+    # H144_OUT_IO8
+    id: G4
+    class: outputs
+    ts_name: C1-56 - Starter Enable
+    function: Starter Enable
+    type: ls
+    color: purple

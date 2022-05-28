@@ -1,6 +1,7 @@
 
-/* Define STM32F765 flash layout in dual bank mode. Only first bank is defined */
+/* Define STM32F4, STM32F7 or STM32F765 flash layout in dual bank mode. Only first bank is defined */
 
+// todo: document the magic which accesses this 'static' field?!
 static const tFlashSector flashLayout[] =
 {
   /* space is reserved for a bootloader configuration with all supported communication

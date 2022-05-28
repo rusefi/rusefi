@@ -362,14 +362,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	}
 #endif /* EFI_CDM_INTEGRATION */
 
-	if (trgEventIndex >= engine->engineCycleEventCount) {
-		/**
-		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
-		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
-		 */
-		return;
-	}
-
 	int rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking

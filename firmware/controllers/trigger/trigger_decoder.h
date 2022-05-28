@@ -70,6 +70,10 @@ typedef struct {
 #endif // EFI_UNIT_TEST
 } current_cycle_state_s;
 
+struct TriggerDecodeResult {
+	uint32_t CurrentIndex;
+};
+
 /**
  * @see TriggerWaveform for trigger wheel shape definition
  */
@@ -88,7 +92,7 @@ public:
 
 	efitime_t getTotalEventCounter() const;
 
-	void decodeTriggerEvent(
+	expected<TriggerDecodeResult> decodeTriggerEvent(
 			const char *msg,
 			const TriggerWaveform& triggerShape,
 			const TriggerStateCallback triggerCycleCallback,
@@ -150,7 +154,7 @@ public:
 			);
 
 	bool someSortOfTriggerError() const {
-		return m_timeSinceDecodeError.getElapsedSeconds(1);
+		return !m_timeSinceDecodeError.getElapsedSeconds(1);
 	}
 
 protected:

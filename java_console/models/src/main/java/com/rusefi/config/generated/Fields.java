@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu May 19 00:32:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat May 28 14:53:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -618,6 +618,7 @@ public class Fields {
 	public static final int engine_type_e_MRE_MIATA_NB2_MAP = 11;
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
+	public static final int engine_type_e_MRE_VW_B6 = 62;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
@@ -630,6 +631,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_PROTEUS_VAG_80_18T = 92;
+	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
@@ -647,10 +649,8 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
-	public static final int engine_type_e_UNUSED39 = 39;
 	public static final int engine_type_e_UNUSED_48 = 48;
 	public static final int engine_type_e_VW_ABA = 32;
-	public static final int engine_type_e_VW_B6 = 62;
 	public static final int engineChartSize_offset = 1356;
 	public static final int engineCode_offset = 1104;
 	public static final int engineConfiguration_offset = 0;
@@ -2371,6 +2371,7 @@ public class Fields {
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
+	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
@@ -2392,7 +2393,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.05.19.all.2247751693";
+	public static final String TS_SIGNATURE = "rusEFI 2022.05.28.all.2663635739";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;

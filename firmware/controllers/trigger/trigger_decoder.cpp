@@ -479,7 +479,7 @@ void TriggerDecoderBase::onShaftSynchronization(
  * @param signal type of event which just happened
  * @param nowNt current time
  */
-void TriggerDecoderBase::decodeTriggerEvent(
+expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		const char *msg,
 		const TriggerWaveform& triggerShape,
 		const TriggerStateCallback triggerCycleCallback,
@@ -502,7 +502,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 
 	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
-	efiAssertVoid(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal");
+	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal", unexpected);
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];
@@ -727,7 +727,7 @@ void TriggerDecoderBase::decodeTriggerEvent(
 
 		setShaftSynchronized(false);
 
-		return;
+		return unexpected;
 	}
 
 	// Needed for early instant-RPM detection
@@ -736,6 +736,12 @@ void TriggerDecoderBase::decodeTriggerEvent(
 	}
 
 	triggerStateIndex = currentCycle.current_index;
+
+	if (getShaftSynchronized()) {
+		return TriggerDecodeResult{ currentCycle.current_index };
+	} else {
+		return unexpected;
+	}
 }
 
 bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {

@@ -12,10 +12,8 @@ else
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 endif
 
-ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
-  LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
-endif
-
+# see also openblt/board.mk STATUS_LED
+LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 
 # *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 

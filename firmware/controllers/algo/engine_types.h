@@ -111,7 +111,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
-	UNUSED39 = 39,
+	PROTEUS_VW_B6 = 39,
 
 	FRANKENSO_BMW_M73_F = 40,
 
@@ -162,7 +162,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	EEPROM_BENCH_ENGINE = 61,
 
-	VW_B6 = 62,
+	MRE_VW_B6 = 62,
 
 	PROTEUS_BMW_M73 = 63,
 

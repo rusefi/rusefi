@@ -117,7 +117,9 @@ public class BinaryProtocolServer {
                     continue;
                 }
                 log.info("Accepting binary protocol proxy port connection on " + port);
-                threadFactory.newThread(clientSocketRunnableFactory.apply(clientSocket)).start();
+                Runnable clientRunnable = clientSocketRunnableFactory.apply(clientSocket);
+                Objects.requireNonNull(clientRunnable, "Runnable for " + clientSocket);
+                threadFactory.newThread(clientRunnable).start();
             }
         };
         threadFactory.newThread(runnable).start();
