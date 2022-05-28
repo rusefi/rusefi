@@ -2475,7 +2475,7 @@
 #define ts_show_tunerstudio_port false
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.05.27.subaru_eg33_f7.212655383"
+#define TS_SIGNATURE "rusEFI 2022.05.28.subaru_eg33_f7.212655383"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
