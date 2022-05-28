@@ -50,6 +50,10 @@ public class BinaryProtocolServer {
     private static final int SD_STATUS_OFFSET = 246;
     private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
+    static {
+        log.configureDebugEnabled(false);
+    }
+
     public AtomicInteger unknownCommands = new AtomicInteger();
 
     public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
@@ -149,14 +153,7 @@ public class BinaryProtocolServer {
             if (length == null)
                 continue;
 
-            if (log.debugEnabled())
-                log.debug("Got [" + length + "] length promise");
-
-            Packet packet = readPromisedBytes(in, length);
-            byte[] payload = packet.getPacket();
-
-            if (payload.length == 0)
-                throw new IOException("Empty packet");
+            byte[] payload = getPacketContent(in, length);
 
             byte command = payload[0];
 
@@ -211,11 +208,24 @@ public class BinaryProtocolServer {
         }
     }
 
+    @NotNull
+    public static byte[] getPacketContent(IncomingDataBuffer in, Integer length) throws IOException {
+        if (log.debugEnabled())
+            log.debug("Got [" + length + "] length promise");
+
+        Packet packet = readPromisedBytes(in, length);
+        byte[] payload = packet.getPacket();
+
+        if (payload.length == 0)
+            throw new IOException("Empty packet");
+        return payload;
+    }
+
     /**
      * @return null if we have handled GET_PROTOCOL_VERSION_COMMAND command
      */
     @Nullable
-    private Integer getPendingPacketLengthOrHandleProtocolCommand(Socket clientSocket, Context context, IncomingDataBuffer in) throws IOException {
+    public static Integer getPendingPacketLengthOrHandleProtocolCommand(Socket clientSocket, Context context, IncomingDataBuffer in) throws IOException {
         AtomicBoolean handled = new AtomicBoolean();
         Handler protocolCommandHandler = () -> {
             handleProtocolCommand(clientSocket);
@@ -280,7 +290,8 @@ public class BinaryProtocolServer {
     }
 
     public static void handleProtocolCommand(Socket clientSocket) throws IOException {
-        log.info("Got plain F command");
+        if (log.debugEnabled())
+            log.debug("Got plain GetProtocol F command");
         OutputStream outputStream = clientSocket.getOutputStream();
         outputStream.write(TS_PROTOCOL.getBytes());
         outputStream.flush();
