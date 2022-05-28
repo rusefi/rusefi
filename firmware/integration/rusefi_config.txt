@@ -1993,9 +1993,9 @@ end_struct
 ! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND
 ! TS auto-detect depends on well-known queryCommand value 'Q'
 #define TS_QUERY_COMMAND 'Q'
-! 0x6B
+! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
-! 0x52
+! 0x52 82
 #define TS_READ_COMMAND 'R'
 ! 0x47
 #define TS_GET_TEXT 'G'
@@ -2015,12 +2015,12 @@ end_struct
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
-! 0x50
+! 0x50 80
 #define TS_PAGE_COMMAND 'P'
 ! 0x46
 #define TS_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
-! versionInfo
+! versionInfo 0x56 86
 #define TS_GET_FIRMWARE_VERSION 'V'
 ! returns getFirmwareError(), works together with ind_hasFatalError
 #define TS_GET_CONFIG_ERROR 'e'
