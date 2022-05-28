@@ -26,7 +26,8 @@ LIBS =
 # We use HSI (internal) on proteus. We define HSE (external) only to have compiler happy.
 BRDFLAGS    += -DHSE_VALUE=8000000
 
-BRDFLAGS += -DSTATUS_LED_PORT=GPIOE -DSTATUS_LED_PIN=GPIO_PIN_3
+# hellen144
+BRDFLAGS += -DSTATUS_LED_PORT=GPIOG -DSTATUS_LED_PIN=GPIO_PIN_0
 
 # Frequency of the external crystal oscillator
 BRDFLAGS += -DBOOT_CPU_XTAL_SPEED_KHZ=8000
