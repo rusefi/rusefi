@@ -587,6 +587,52 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	return false;
 }
 
+void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
+#if WITH_TS_STATE
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
+		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
+		auto toothAngle360 = currentPhase;
+		while (toothAngle360 >= 360) {
+			toothAngle360 -= 360;
+		}
+
+		if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
+			// we are somewhere close to 'mapCamDetectionAnglePosition'
+
+			// warning: hack hack hack
+			float map = engine->outputChannels.instantMAPValue;
+
+			// Compute diff against the last time we were here
+			float diff = map - mapCamPrevCycleValue;
+			mapCamPrevCycleValue = map;
+
+			if (diff > 0) {
+				mapVvt_map_peak++;
+				int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+				prevChangeAtCycle = revolutionCounter;
+
+				hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
+				hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+#if EFI_UNIT_TEST
+				// hack? feature? existing unit test relies on VVT phase available right away
+				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
+				int rpm = Sensor::getOrZero(SensorType::Rpm);
+				efitick_t nowNt = getTimeNowNt();
+				engine->limpManager.updateState(rpm, nowNt);
+#endif // EFI_UNIT_TEST
+			}
+
+			mapVvt_MAP_AT_SPECIAL_POINT = map;
+			mapVvt_MAP_AT_DIFF = diff;
+		}
+
+		mapCamPrevToothAngle = toothAngle360;
+	}
+#endif // WITH_TS_STATE
+}
+
 /**
  * This method is NOT invoked for VR falls.
  */
@@ -617,11 +663,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	efiAssertVoid(CUSTOM_TRIGGER_EVENT_TYPE, eventIndex >= 0 && eventIndex < HW_EVENT_TYPES, "signal type");
 	hwEventCounters[eventIndex]++;
 
-
-	/**
-	 * This invocation changes the state of triggerState
-	 */
-	triggerState.decodeTriggerEvent(
+	// Decode the trigger!
+	auto decodeResult = triggerState.decodeTriggerEvent(
 			"trigger",
 			triggerShape,
 			nullptr,
@@ -629,33 +672,38 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
-	/**
-	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
-	 * cycle into a four stroke, 720 degrees cycle.
-	 */
-	operation_mode_e operationMode = engine->getOperationMode();
-	int crankDivider = getCrankDivider(operationMode);
-	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
-	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
-	if (triggerIndexForListeners == 0) {
-		m_syncPointTimer.reset(timestamp);
-	}
-	reportEventToWaveChart(signal, triggerIndexForListeners);
-
-	if (!triggerState.getShaftSynchronized()) {
-		// we should not propagate event if we do not know where we are
-		return;
-	}
-
-	if (triggerState.isValidIndex(engine->triggerCentral.triggerShape)) {
+	// Don't propagate state if we don't know where we are
+	if (decodeResult) {
 		ScopePerf perf(PE::ShaftPositionListeners);
+
+		/**
+		 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
+		 * cycle into a four stroke, 720 degrees cycle.
+		 */
+		int crankDivider = getCrankDivider(engine->getOperationMode());
+		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * getTriggerSize());
+		if (triggerIndexForListeners == 0) {
+			m_syncPointTimer.reset(timestamp);
+		}
+
+		reportEventToWaveChart(signal, triggerIndexForListeners);
+
+		// Compute the current engine absolute phase, 0 means currently at #1 TDC
+		auto currentPhase = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.currentEnginePhase = currentPhase;
+#endif // EFI_TUNER_STUDIO
 
 #if TRIGGER_EXTREME_LOGGING
 	efiPrintf("trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
+		// Update engine RPM
 		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp);
 
+		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);
 
 #if !EFI_UNIT_TEST
@@ -668,57 +716,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
 #endif
 
+		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
-		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
-		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.currentEnginePhase = toothAngle;
-#endif // EFI_TUNER_STUDIO
-
-#if WITH_TS_STATE
-		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
-				Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
-			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
-			auto toothAngle360 = toothAngle;
-			while (toothAngle360 >= 360) {
-				toothAngle360 -= 360;
-			}
-
-			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
-				// we are somewhere close to 'mapCamDetectionAnglePosition'
-
-				// warning: hack hack hack
-				float map = engine->outputChannels.instantMAPValue;
-
-				// Compute diff against the last time we were here
-				float diff = map - mapCamPrevCycleValue;
-				mapCamPrevCycleValue = map;
-
-				if (diff > 0) {
-					mapVvt_map_peak++;
-					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
-					mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
-					prevChangeAtCycle = revolutionCounter;
-
-					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
-					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
-#if EFI_UNIT_TEST
-					// hack? feature? existing unit test relies on VVT phase available right away
-					// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
-					int rpm = Sensor::getOrZero(SensorType::Rpm);
-					efitick_t nowNt = getTimeNowNt();
-					engine->limpManager.updateState(rpm, nowNt);
-#endif // EFI_UNIT_TEST
-				}
-
-				mapVvt_MAP_AT_SPECIAL_POINT = map;
-				mapVvt_MAP_AT_DIFF = diff;
-			}
-
-			mapCamPrevToothAngle = toothAngle360;
-		}
-#endif // WITH_TS_STATE
+		// Decode the MAP based "cam" sensor
+		decodeMapCam(timestamp, currentPhase);
+	} else {
+		reportEventToWaveChart(signal, 0);
 	}
 }
 

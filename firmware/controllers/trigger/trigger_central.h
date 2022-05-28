@@ -122,6 +122,8 @@ public:
 	Timer m_lastEventTimer;
 
 private:
+	void decodeMapCam(efitick_t nowNt, float currentPhase);
+
 	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
 	// not TDC point
 	Timer m_syncPointTimer;
