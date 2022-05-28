@@ -6,26 +6,26 @@ import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
-import com.rusefi.binaryprotocol.*;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolState;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
@@ -145,16 +145,9 @@ public class BinaryProtocolServer {
         IncomingDataBuffer in = stream.getDataBuffer();
 
         while (true) {
-            AtomicBoolean handled = new AtomicBoolean();
-            Handler protocolCommandHandler = () -> {
-                handleProtocolCommand(clientSocket);
-                handled.set(true);
-            };
-
-            int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
-            if (handled.get()) {
+            Integer length = getPendingPacketLengthOrHandleProtocolCommand(clientSocket, context, in);
+            if (length == null)
                 continue;
-            }
 
             if (log.debugEnabled())
                 log.debug("Got [" + length + "] length promise");
@@ -171,7 +164,7 @@ public class BinaryProtocolServer {
 
             if (command == Fields.TS_HELLO_COMMAND) {
                 new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
-            } else if (command == Fields.TS_COMMAND_F) {
+            } else if (command == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
@@ -218,6 +211,24 @@ public class BinaryProtocolServer {
         }
     }
 
+    /**
+     * @return null if we have handled GET_PROTOCOL_VERSION_COMMAND command
+     */
+    @Nullable
+    private Integer getPendingPacketLengthOrHandleProtocolCommand(Socket clientSocket, Context context, IncomingDataBuffer in) throws IOException {
+        AtomicBoolean handled = new AtomicBoolean();
+        Handler protocolCommandHandler = () -> {
+            handleProtocolCommand(clientSocket);
+            handled.set(true);
+        };
+
+        int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
+        if (handled.get()) {
+            return null;
+        }
+        return length;
+    }
+
     private static void sendOkResponse(TcpIoStream stream) throws IOException {
         byte[] response = new byte[1];
         response[0] = TS_RESPONSE_OK;
@@ -230,7 +241,7 @@ public class BinaryProtocolServer {
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
         byte first = in.readByte(ioTimeout);
-        if (first == Fields.TS_COMMAND_F) {
+        if (first == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
             protocolCommandHandler.handle();
             return 0;
         }
