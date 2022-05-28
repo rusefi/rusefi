@@ -716,8 +716,22 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
 #endif
 
+		// TODO: is this logic to compute next trigger tooth angle correct?
+		auto nextToothIndex = triggerIndexForListeners + 1;
+		if (nextToothIndex >= engine->engineCycleEventCount) {
+			nextToothIndex -= engine->engineCycleEventCount;
+		}
+
+		float nextPhase = 0;
+
+		do {
+			// I don't love this.
+			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex++] - tdcPosition();
+			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+		} while (nextPhase == currentPhase);
+
 		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp);
+		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
 
 		// Decode the MAP based "cam" sensor
 		decodeMapCam(timestamp, currentPhase);
