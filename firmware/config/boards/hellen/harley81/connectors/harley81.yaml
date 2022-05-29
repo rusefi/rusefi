@@ -202,6 +202,8 @@ pins:
     function: Map
 
   - pin: 55
+  #H144_IN_MAP2
+    id: EFI_ADC_11
     class: analog_inputs
     ts_name: 55 Engine Temperature
     function: Engine Temperature

@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
  - ETB low limit is now configurable #4119
  - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
  - Maintainability: frequency sensors need a simple event counter in the logs #4173
+ - TS bench test commands are now configurable #4192
+ - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132

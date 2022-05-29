@@ -54,6 +54,20 @@
             android:text="Sound" />
 
         <Button
+            android:id="@+id/buttonConnect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onConnectButton"
+            android:text="Connect" />
+
+        <Button
+            android:id="@+id/localBroadcast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onLocalBroadcast"
+            android:text="local" />
+
+        <Button
             android:id="@+id/buttonBroadcast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +78,7 @@
             android:id="@+id/broadcastStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="Hello rusEFI" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -75,6 +89,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </ScrollView>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

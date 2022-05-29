@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 22 15:13:02 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3293,16 +3293,19 @@ struct engine_configuration_s {
 	offset 1608 bit 31 */
 	bool unusedBit_537_31 : 1 {};
 	/**
+	 * Time between bench test pulses
 	ms
 	 * offset 1612
 	 */
 	scaled_channel<uint8_t, 1, 5> benchTestOffTime;
 	/**
+	 * How many test bench pulses do you want
 	count
 	 * offset 1613
 	 */
 	uint8_t benchTestCount;
 	/**
+	 * Length of each of the test pulses
 	ms
 	 * offset 1614
 	 */
@@ -5024,4 +5027,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 15 15:02:38 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun May 22 15:13:02 UTC 2022

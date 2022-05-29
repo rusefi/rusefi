@@ -12,10 +12,8 @@ else
   BOARDINC += $(BOARDS_DIR)/microrusefi # For knock_config.h
 endif
 
-ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
-  LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
-endif
-
+# see also openblt/board.mk STATUS_LED
+LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 
 # *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
@@ -25,6 +23,9 @@ EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::B10 -DEFI_CONSOLE_RX_BRA
 # todo: enable serial which would not DMA thus not conflict?
 DDEFS += -DSTM32_UART_USE_USART3=FALSE -DHAL_USE_UART=FALSE
 DDEFS += -DEFI_USE_UART_DMA=FALSE -DTS_NO_PRIMARY=TRUE
+
+# todo: technical debt: EFI_LOGIC_ANALYZER does not work in PAL mode
+DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE -DEFI_LOGIC_ANALYZER=FALSE
 
 DDEFS += -DEFI_CAN_SERIAL=TRUE
 

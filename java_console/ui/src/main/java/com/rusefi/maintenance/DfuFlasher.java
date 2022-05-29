@@ -179,14 +179,14 @@ public class DfuFlasher {
 
     private static String getDfuWriteCommand() throws FileNotFoundException {
         String prefix = "rusefi";
-        String suffix = ".hex";
-        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
-        if (hexFileName == null)
+        String suffix = ".bin";
+        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
+        if (fileName == null)
             throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
         // we need quotes in case if absolute path contains spaces
-        String hexAbsolutePath = quote(new File(hexFileName).getAbsolutePath());
+        String hexAbsolutePath = quote(new File(fileName).getAbsolutePath());
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " 0x08000000 -v -s";
     }
 
     private static String quote(String absolutePath) {

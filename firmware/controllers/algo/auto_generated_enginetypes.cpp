@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed May 18 03:18:14 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat May 21 05:55:45 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -293,6 +293,8 @@ case MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
+case MRE_VW_B6:
+  return "MRE_VW_B6";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROTEUS_ANALOG_PWM_TEST:
@@ -317,6 +319,8 @@ case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case PROTEUS_VAG_80_18T:
   return "PROTEUS_VAG_80_18T";
+case PROTEUS_VW_B6:
+  return "PROTEUS_VW_B6";
 case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
@@ -351,14 +355,10 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED39:
-  return "UNUSED39";
 case UNUSED_48:
   return "UNUSED_48";
 case VW_ABA:
   return "VW_ABA";
-case VW_B6:
-  return "VW_B6";
   }
  return NULL;
 }

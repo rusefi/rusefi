@@ -3719,7 +3719,7 @@ event 8 0 1 480.00
 event 9 0 0 500.00
 event 10 0 1 520.00
 event 11 0 0 540.00
-TRIGGERTYPE 60 42 TT_NISSAN_VQ30 0.00
+TRIGGERTYPE 60 42 TT_NISSAN_VQ30 120.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false

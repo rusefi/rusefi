@@ -12,6 +12,8 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 DDEFS += -DFIRMWARE_ID=\"hellen81hd\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
+DDEFS += -DSTM32_PWM_USE_TIM3=TRUE -DHAL_USE_ICU=FALSE
+
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 # Enable serial pins on expansion header
