@@ -90,7 +90,7 @@ TsChannelBase::TsChannelBase(const char *name) {
 
 void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
 	if (isBigPacket(size) && !allowLongPackets) {
-		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+		firmwareError(OBD_PCM_Processor_Fault, "[USE PROPER CONSOLE VERSION ] disallowed long packet of size %d", size);
 	}
 }
 
