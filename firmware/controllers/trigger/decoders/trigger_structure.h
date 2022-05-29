@@ -194,7 +194,7 @@ public:
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
 	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
 	 * but name is supposed to hint at the fact that decoders should not be assigning to it
-	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
+	 * Please use "getSize()" function to read this value
 	 */
 	MultiChannelStateSequenceWithData<PWM_PHASE_MAX_COUNT> wave;
 
@@ -247,7 +247,7 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape(TriggerFormDetails *details);
+	void prepareShape(TriggerFormDetails& details);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
@@ -297,6 +297,8 @@ private:
  */
 class TriggerFormDetails {
 public:
+	void prepareEventAngles(TriggerWaveform *shape);
+
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
