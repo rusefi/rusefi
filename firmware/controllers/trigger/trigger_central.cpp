@@ -226,6 +226,11 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
+	if (engine->directSelfStimulation || !engine->hwTriggerInputEnabled) {
+		// sensor noise + self-stim = loss of trigger sync
+		return;
+	}
+
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -411,6 +416,11 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
+
+	if (engine->directSelfStimulation || !engine->hwTriggerInputEnabled) {
+		// sensor noise + self-stim = loss of trigger sync
+		return;
+	}
 
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
