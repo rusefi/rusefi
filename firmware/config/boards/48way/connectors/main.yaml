@@ -4,10 +4,10 @@ pins:
       ts_name: Fan Relay (E2)
     - id: E3
       class: outputs
-      ts_name: Fuel Relay (E3)  
+      ts_name: Fuel Relay (E3)
     - id: E4
       class: switch_inputs
-      ts_name: Launch Control (E4)    
+      ts_name: Launch Control (E4)
     - id: E5
       class: outputs
       ts_name: Tachometer (E5)
@@ -71,7 +71,7 @@ pins:
     - id: C7
       class: outputs
       ts_name: Boost Controller Output (C7)
-    - id: C6:
+    - id: C6
       class: outputs
       ts_name: Idle1 Output (C6)
     - id: D15
