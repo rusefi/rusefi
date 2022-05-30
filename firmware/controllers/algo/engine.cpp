@@ -106,13 +106,12 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	auto& shape = engine->triggerCentral.vvtShape[camIndex];
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
 	shape.initializeTriggerWaveform(
 			lookupOperationMode(),
 			engineConfiguration->vvtCamSensorUseRise, config);
 
-	shape.initializeSyncPoint(initState, engine->vvtTriggerConfiguration[camIndex]);
+	shape.initializeSyncPoint(initState, config);
 }
 
 void Engine::updateTriggerWaveform() {
@@ -173,7 +172,11 @@ void Engine::updateTriggerWaveform() {
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?
 		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
-			initVvtShape(camIndex, vvtTriggerConfiguration[camIndex], initState);
+			initVvtShape(
+				triggerCentral.vvtShape[camIndex],
+				vvtTriggerConfiguration[camIndex],
+				initState
+			);
 		}
 	}
 
