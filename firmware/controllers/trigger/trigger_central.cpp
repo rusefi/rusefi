@@ -746,6 +746,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Decode the MAP based "cam" sensor
 		decodeMapCam(timestamp, currentPhase);
 	} else {
+		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0);
 	}
 }
