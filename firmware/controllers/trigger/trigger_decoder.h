@@ -31,12 +31,12 @@ public:
 	const char* const PrintPrefix;
 	bool UseOnlyRisingEdgeForTrigger;
 	bool VerboseTriggerSynchDetails;
-	trigger_type_e TriggerType;
+	trigger_config_s TriggerType;
 
 protected:
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
-	virtual trigger_type_e getType() const = 0;
+	virtual trigger_config_s getType() const = 0;
 };
 
 typedef void (*TriggerStateCallback)(TriggerDecoderBase*);
@@ -149,8 +149,7 @@ public:
 
 	uint32_t findTriggerZeroEventIndex(
 			TriggerWaveform& shape,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
+			const TriggerConfiguration& triggerConfiguration
 			);
 
 	bool someSortOfTriggerError() const {

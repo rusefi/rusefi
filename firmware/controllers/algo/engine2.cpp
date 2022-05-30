@@ -203,8 +203,8 @@ bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engineConfiguration->useOnlyRisingEdgeForTrigger;
 }
 
-trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return engineConfiguration->trigger.type;
+trigger_config_s PrimaryTriggerConfiguration::getType() const {
+	return engineConfiguration->trigger;
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
@@ -215,9 +215,9 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engineConfiguration->vvtCamSensorUseRise;
 }
 
-trigger_type_e VvtTriggerConfiguration::getType() const {
-	// Convert from VVT type to trigger type
-	return getVvtTriggerType(engineConfiguration->vvtMode[index]);
+trigger_config_s VvtTriggerConfiguration::getType() const {
+	// Convert from VVT type to trigger_config_s
+	return { getVvtTriggerType(engineConfiguration->vvtMode[index]), 0, 0 };
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

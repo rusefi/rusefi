@@ -115,7 +115,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 	int revolutionCounter = state.getTotalRevolutionCounter();
 	if (revolutionCounter != TEST_REVOLUTIONS) {
 		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
-				getTrigger_type_e(triggerConfiguration.TriggerType),
+				getTrigger_type_e(triggerConfiguration.TriggerType.type),
 				revolutionCounter);
 		shape.setShapeDefinitionError(true);
 		return;
@@ -124,7 +124,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("Happy %s revolutionCounter=%d\r\n",
-					getTrigger_type_e(triggerConfiguration.TriggerType),
+					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					revolutionCounter);
 		}
 #endif /* EFI_UNIT_TEST */
