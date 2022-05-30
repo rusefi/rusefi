@@ -29,6 +29,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E4: return "Launch Control (E4)";
 		case Gpio::E5: return "Tachometer (E5)";
 		case Gpio::E6: return "Camshaft Input (E6)";
+		case Gpio::C13: return "Crankshaft Input (C13);
 		case Gpio::E8: return "Injector 8 Output (E8)";
 		case Gpio::E9: return "Injector 7 Output (E9)";
 		default: return nullptr;
