@@ -42,8 +42,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
 	TriggerWaveform& shape = eth.engine.triggerCentral.triggerShape;
-	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
-			engineConfiguration->trigger);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration);
 }
 
 TEST(trigger, testSkipped2_0) {
