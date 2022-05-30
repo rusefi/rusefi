@@ -1,8 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="LiveDocsMetaParser" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.LiveDocsMetaParser" />
+  <configuration default="false" name="UsagesReader" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.UsagesReader" />
     <module name="configuration_definition" />
-    <option name="PROGRAM_PARAMETERS" value="&quot;../../firmware/controllers/math/speed_density.cpp&quot; &quot;../../&quot;" />
+    <option name="PROGRAM_PARAMETERS" value="integration/LiveData.yaml" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../firmware" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="com.rusefi.ldmp.*" />
