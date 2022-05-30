@@ -4,42 +4,42 @@ pins:
       ts_name: Fan Relay (E2)
     - id: E3
       class: outputs
-      ts_name: Fuel Relay (E3)    
+      ts_name: Fuel Relay (E3)  
     - id: E4
-      class: analog_inputs
-      ts_name: Launch Control (E4)      
+      class: switch_inputs
+      ts_name: Launch Control (E4)    
     - id: E5
       class: outputs
       ts_name: Tachometer (E5)
     - id: [E6, E6]
       class: [switch_inputs, event_inputs]
       ts_name: Camshaft Input (E6)
-    - id: A0
-      class: analog_inputs
+    - id: [A0, EFI_ADC_0]
+      class: [switch_inputs, analog_inputs]
       ts_name: Battery Reference Input (A0)
-    - id: A1
-      class: analog_inputs
+    - id: [A1, EFI_ADC_1]
+      class: [switch_inputs, analog_inputs]
       ts_name: TPS Reference Input (A1)
-    - id: A2
-      class: analog_inputs
+    - id: [A2, EFI_ADC_2]
+      class: [switch_inputs, analog_inputs]
       ts_name: CLT Reference Input (A2)
-    - id: A3
-      class: analog_inputs
+    - id: [A3, EFI_ADC_3]
+      class: [switch_inputs, analog_inputs]
       ts_name: IAT Reference Input (A3)
-    - id: A4
-      class: analog_inputs
+    - id: [A4, EFI_ADC_4]
+      class: [switch_inputs, analog_inputs]
       ts_name: O2 Reference Input (A4)
-    - id: C4
-      class: analog_inputs
+    - id: [C4, EFI_ADC_14]
+      class: [switch_inputs, analog_inputs]
       ts_name: Fuel Pressure Reference Input (C4)
-    - id: C5
-      class: analog_inputs
+    - id: [C5, EFI_ADC_15]
+      class: [switch_inputs, analog_inputs]
       ts_name: Oil Pressure Reference Input (C5)
-    - id: B0
-      class: analog_inputs
+    - id: [B0, EFI_ADC_8]
+      class: [switch_inputs, analog_inputs]
       ts_name: MAP Pressure Reference Input (B0)
-    - id: B1
-      class: analog_inputs
+    - id: [B1, EFI_ADC_9]
+      class: [switch_inputs, analog_inputs]
       ts_name: BARO Pressure Reference Input (B1)
     - id: E8
       class: outputs
