@@ -279,12 +279,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->HD44780height;
 	if (strEqualCaseInsensitive(name, "trailingSparkAngle"))
 		return engineConfiguration->trailingSparkAngle;
-	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay0"))
-		return engineConfiguration->trigger.todoRemoveMeOneDay0;
-	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay1"))
-		return engineConfiguration->trigger.todoRemoveMeOneDay1;
-	if (strEqualCaseInsensitive(name, "trigger.useOnlyFirstChannel"))
-		return engineConfiguration->trigger.useOnlyFirstChannel;
 	if (strEqualCaseInsensitive(name, "trigger.customTotalToothCount"))
 		return engineConfiguration->trigger.customTotalToothCount;
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
@@ -1146,21 +1140,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "trailingSparkAngle"))
 	{
 		engineConfiguration->trailingSparkAngle = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay0"))
-	{
-		engineConfiguration->trigger.todoRemoveMeOneDay0 = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay1"))
-	{
-		engineConfiguration->trigger.todoRemoveMeOneDay1 = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "trigger.useOnlyFirstChannel"))
-	{
-		engineConfiguration->trigger.useOnlyFirstChannel = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "trigger.customTotalToothCount"))
