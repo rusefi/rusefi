@@ -169,7 +169,7 @@ void Engine::updateTriggerWaveform() {
 	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
 	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
 
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?
 		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
 			initVvtShape(
