@@ -17,7 +17,7 @@ import java.io.IOException;
 public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
     private boolean hadError = false;
 
-    static void parseDefinitionFile(ParseTreeListener listener, String filePath) throws IOException {
+    public static void parseDefinitionFile(ParseTreeListener listener, String filePath) throws IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
         CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
@@ -37,7 +37,7 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
             throw new RuntimeException("Parse failed, see error output above!");
         }
 
-        SystemOut.println("Successfully parsed " + filePath + " in " + durationMs + "ms");
+        SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
     }
 
     public boolean hadError() {

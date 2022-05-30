@@ -36,7 +36,7 @@ public class FieldOptions {
         return other;
     }
 
-    private static String tryRound(float value) {
+    public static String tryRound(float value) {
         int intVal = Math.round(value);
 
         // If the rounded value can exactly represent this float, then print as an integer
