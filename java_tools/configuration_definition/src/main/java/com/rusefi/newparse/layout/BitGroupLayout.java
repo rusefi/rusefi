@@ -55,7 +55,7 @@ public class BitGroupLayout extends Layout {
 
             String name = prefixer.get(bit.name);
 
-            ps.print(prefixer.get(bit.name));
+            ps.print(name);
             ps.print(" = bits, U32, ");
             ps.print(actualOffset);
             ps.print(", [");
@@ -90,6 +90,24 @@ public class BitGroupLayout extends Layout {
                 ps.println("offset " + this.offsetWithinStruct + " bit " + i + " */");
                 ps.println("\tbool unusedBit_" + this.offsetWithinStruct + "_" + i + " : 1 {};");
             }
+        }
+    }
+
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        int actualOffset = this.offset + offsetAdd;
+
+        for (int i = 0; i < bits.size(); i++) {
+            BitLayout bit = bits.get(i);
+
+            ps.print(prefixer.get(bit.name));
+            ps.print(" = bits, U32, ");
+            ps.print(actualOffset);
+            ps.print(", [");
+            ps.print(i + ":" + i);
+
+            ps.print("]");
+
+            ps.println();
         }
     }
 }

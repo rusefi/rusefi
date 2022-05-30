@@ -73,4 +73,9 @@ public class ArrayLayout extends Layout {
             this.prototypeLayout.writeCLayout(ps, this.length);
         }
     }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        this.prototypeLayout.writeOutputChannelLayout(ps, prefixer, offsetAdd, this.length);
+    }
 }
