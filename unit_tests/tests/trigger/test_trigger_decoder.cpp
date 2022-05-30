@@ -119,28 +119,28 @@ TEST(trigger, testSomethingWeird) {
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
@@ -236,9 +236,6 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
-
-	ASSERT_NEAR(channel1duty, t->expectedDutyCycle[0], 0.0001) << msg << " channel1duty";
-	ASSERT_NEAR(channel2duty, t->expectedDutyCycle[1], 0.0001) << msg << " channel2duty";
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
