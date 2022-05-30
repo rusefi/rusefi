@@ -147,8 +147,7 @@ void calculateTriggerSynchPoint(
 	}
 }
 
-void prepareEventAngles(TriggerWaveform *shape,
-		TriggerFormDetails *details) {
+void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	int triggerShapeSynchPointIndex = shape->triggerShapeSynchPointIndex;
 	if (triggerShapeSynchPointIndex == EFI_ERROR_CODE) {
 		return;
@@ -160,7 +159,7 @@ void prepareEventAngles(TriggerWaveform *shape,
 
 	size_t length = shape->getLength();
 
-	memset(details->eventAngles, 0, sizeof(details->eventAngles));
+	memset(eventAngles, 0, sizeof(eventAngles));
 
 	// this may be <length for some triggers like symmetrical crank Miata NB
 	size_t triggerShapeLength = shape->getSize();
@@ -171,9 +170,9 @@ void prepareEventAngles(TriggerWaveform *shape,
 	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {
 			// explicit check for zero to avoid issues where logical zero is not exactly zero due to float nature
-			details->eventAngles[0] = 0;
+			eventAngles[0] = 0;
 			// this value would be used in case of front-only
-			details->eventAngles[1] = 0;
+			eventAngles[1] = 0;
 		} else {
 			// Rotate the trigger around so that the sync point is at position 0
 			auto wrappedIndex = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
@@ -196,11 +195,11 @@ void prepareEventAngles(TriggerWaveform *shape,
 				// In case this is a rising event, replace the following fall event with the rising as well
 				if (shape->isRiseEvent[triggerDefinitionIndex]) {
 					riseOnlyIndex += 2;
-					details->eventAngles[riseOnlyIndex] = angle;
-					details->eventAngles[riseOnlyIndex + 1] = angle;
+					eventAngles[riseOnlyIndex] = angle;
+					eventAngles[riseOnlyIndex + 1] = angle;
 				}
 			} else {
-				details->eventAngles[eventIndex] = angle;
+				eventAngles[eventIndex] = angle;
 			}
 		}
 	}

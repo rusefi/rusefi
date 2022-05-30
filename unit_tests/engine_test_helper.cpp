@@ -390,8 +390,8 @@ void EngineTestHelper::executeUntil(int timeUs) {
 }
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
-	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
 	setCamOperationMode();
+	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
 }
 
 void setVerboseTrigger(bool isEnabled) {

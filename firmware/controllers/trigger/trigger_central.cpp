@@ -227,7 +227,10 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
-	TRIGGER_BAIL_IF_SELF_STIM
+	if (engine->directSelfStimulation || !engine->hwTriggerInputEnabled) {
+		// sensor noise + self-stim = loss of trigger sync
+		return;
+	}
 
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
@@ -415,7 +418,10 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	TRIGGER_BAIL_IF_SELF_STIM
+	if (engine->directSelfStimulation || !engine->hwTriggerInputEnabled) {
+		// sensor noise + self-stim = loss of trigger sync
+		return;
+	}
 
 	handleShaftSignal(signalIndex, isRising, timestamp);
 }
@@ -685,9 +691,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 		 * cycle into a four stroke, 720 degrees cycle.
 		 */
-		int crankDivider = getCrankDivider(engine->getOperationMode());
+		int crankDivider = getCrankDivider(triggerShape.getOperationMode());
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
-		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * getTriggerSize());
+		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 		if (triggerIndexForListeners == 0) {
 			m_syncPointTimer.reset(timestamp);
 		}
