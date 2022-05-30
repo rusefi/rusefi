@@ -39,34 +39,7 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 static void setEtbConfig() {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
 
-	// Throttle #1
-	// PWM pin
-	//engineConfiguration->etbIo[0].controlPin = Gpio::B8;
-	// DIR pin
-	//engineConfiguration->etbIo[0].directionPin1 = Gpio::B9;
-	// Disable pin
-	//engineConfiguration->etbIo[0].disablePin = Gpio::B7;
-	// Unused
-	//engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
-
-	// Throttle #2
-	// PWM pin
-	//engineConfiguration->etbIo[1].controlPin = Gpio::Unassigned;
-	// DIR pin
-	//engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
-	// Disable pin
-	//engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
-	// Unused
-	//engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
-
-	// we only have pwm/dir, no dira/dirb
-	//engineConfiguration->etb_use_two_wires = false;
 }
 
 static void setupVbatt() {
@@ -117,22 +90,12 @@ static void setupDefaultSensorInputs() {
 	
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_9;
 
-	//engineConfiguration->lps25BaroSensorScl = Gpio::B10;
-	//engineConfiguration->lps25BaroSensorSda = Gpio::B11;
-
 }
 
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
-
-	//engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = false;
-
-	//engineConfiguration->canWriteEnabled = true;
-	//engineConfiguration->canReadEnabled = true;
-	//engineConfiguration->canSleepPeriodMs = 50;
-
 	engineConfiguration->canBaudRate = B500KBPS;
 	engineConfiguration->can2BaudRate = B500KBPS;
 }
