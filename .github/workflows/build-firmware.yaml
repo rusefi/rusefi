@@ -51,6 +51,7 @@ jobs:
             subaru_eg33_f7,
             f429-discovery,
             core8,
+            48way,
             atlas,
             tdg-pdm8,
         ]
@@ -215,6 +216,10 @@ jobs:
             folder: core8
             ini-file: rusefi_core8.ini
             skip-rate: 90
+
+          - build-target: 48way
+            folder: 48way
+            ini-file: rusefi_48way.ini
 
           - build-target: atlas
             folder: atlas
