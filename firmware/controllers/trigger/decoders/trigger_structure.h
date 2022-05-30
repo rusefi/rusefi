@@ -74,7 +74,7 @@ class TriggerWaveform {
 public:
 	TriggerWaveform();
 	void initializeTriggerWaveform(operation_mode_e triggerOperationMode,
-			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
+			bool useOnlyRisingEdgeForTrigger, const TriggerConfiguration& triggerConfig);
 	void setShapeDefinitionError(bool value);
 
 	/**
@@ -265,9 +265,8 @@ public:
 
 	void initializeSyncPoint(
 			TriggerDecoderBase& state,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
-			);
+			const TriggerConfiguration& triggerConfiguration
+		);
 
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
