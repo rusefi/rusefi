@@ -280,6 +280,9 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	}
 
 	float angleFromNow = eventAngle - currentPhase;
+	if (angleFromNow < 0) {
+		angleFromNow += engine->engineCycle;
+	}
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
