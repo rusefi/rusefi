@@ -15,13 +15,13 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 4\r\n" +
-                "page = 1\r\n" +
-                "xyz = scalar, S08, 0, \"units\", 1, 2, 3, 4, 5\r\n" +
-                "; unused 3 bytes at offset 1\r\n" +
-                "; total TS size = 4\r\n" +
-                "[SettingContextHelp]\r\n" +
-                "\txyz = \"comment\"\r\n", ts);
+                "pageSize            = 4\n" +
+                "page = 1\n" +
+                "xyz = scalar, S08, 0, \"units\", 1, 2, 3, 4, 5\n" +
+                "; unused 3 bytes at offset 1\n" +
+                "; total TS size = 4\n" +
+                "[SettingContextHelp]\n" +
+                "\txyz = \"comment\"\n", ts);
     }
 
     @Test
@@ -32,12 +32,12 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 8\r\n" +
-                        "page = 1\r\n" +
-                        "abc = scalar, S32, 0, \"\", 1, 2, 3, 4, 5\r\n" +
-                        "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\r\n" +
-                        "; total TS size = 8\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 8\n" +
+                        "page = 1\n" +
+                        "abc = scalar, S32, 0, \"\", 1, 2, 3, 4, 5\n" +
+                        "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
+                        "; total TS size = 8\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -48,13 +48,13 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 8\r\n" +
-                        "page = 1\r\n" +
-                        "abc = scalar, S32, 0, \"\", 1, 2, 3, 4, 5\r\n" +
-                        "xyz = scalar, S08, 4, \"\", 6, 7, 8, 9, 10\r\n" +
-                        "; unused 3 bytes at offset 5\r\n" +
-                        "; total TS size = 8\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 8\n" +
+                        "page = 1\n" +
+                        "abc = scalar, S32, 0, \"\", 1, 2, 3, 4, 5\n" +
+                        "xyz = scalar, S08, 4, \"\", 6, 7, 8, 9, 10\n" +
+                        "; unused 3 bytes at offset 5\n" +
+                        "; total TS size = 8\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -65,13 +65,13 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 8\r\n" +
-                        "page = 1\r\n" +
-                        "abc = scalar, S08, 0, \"\", 1, 2, 3, 4, 5\r\n" +
-                        "; unused 3 bytes at offset 1\r\n" +
-                        "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\r\n" +
-                        "; total TS size = 8\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 8\n" +
+                        "page = 1\n" +
+                        "abc = scalar, S08, 0, \"\", 1, 2, 3, 4, 5\n" +
+                        "; unused 3 bytes at offset 1\n" +
+                        "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
+                        "; total TS size = 8\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -83,14 +83,14 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 8\r\n" +
-                        "page = 1\r\n" +
-                        "abc = scalar, S16, 0, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "def = scalar, S08, 2, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 1 bytes at offset 3\r\n" +
-                        "xyz = scalar, S32, 4, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; total TS size = 8\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 8\n" +
+                        "page = 1\n" +
+                        "abc = scalar, S16, 0, \"\", 1, 0, 0, 0, 0\n" +
+                        "def = scalar, S08, 2, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 3\n" +
+                        "xyz = scalar, S32, 4, \"\", 1, 0, 0, 0, 0\n" +
+                        "; total TS size = 8\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -101,13 +101,13 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 16\r\n" +
-                        "page = 1\r\n" +
-                        "abc = array, S08, 0, [10], \"\", 1, 2, 3, 4, 5\r\n" +
-                        "; unused 2 bytes at offset 10\r\n" +
-                        "xyz = scalar, S32, 12, \"\", 6, 7, 8, 9, 10\r\n" +
-                        "; total TS size = 16\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 16\n" +
+                        "page = 1\n" +
+                        "abc = array, S08, 0, [10], \"\", 1, 2, 3, 4, 5\n" +
+                        "; unused 2 bytes at offset 10\n" +
+                        "xyz = scalar, S32, 12, \"\", 6, 7, 8, 9, 10\n" +
+                        "; total TS size = 16\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -117,12 +117,12 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 52\r\n" +
-                        "page = 1\r\n" +
-                        "abc = array, S08, 0, [10x5], \"\", 1, 2, 3, 4, 5\r\n" +
-                        "; unused 2 bytes at offset 50\r\n" +
-                        "; total TS size = 52\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 52\n" +
+                        "page = 1\n" +
+                        "abc = array, S08, 0, [10x5], \"\", 1, 2, 3, 4, 5\n" +
+                        "; unused 2 bytes at offset 50\n" +
+                        "; total TS size = 52\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -138,16 +138,16 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 16\r\n" +
-                        "page = 1\r\n" +
-                        "a_abc = scalar, S32, 0, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "a_def = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 3 bytes at offset 5\r\n" +
-                        "b_abc = scalar, S32, 8, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "b_def = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 3 bytes at offset 13\r\n" +
-                        "; total TS size = 16\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 16\n" +
+                        "page = 1\n" +
+                        "a_abc = scalar, S32, 0, \"\", 1, 0, 0, 0, 0\n" +
+                        "a_def = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 3 bytes at offset 5\n" +
+                        "b_abc = scalar, S32, 8, \"\", 1, 0, 0, 0, 0\n" +
+                        "b_def = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 3 bytes at offset 13\n" +
+                        "; total TS size = 16\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -158,14 +158,14 @@ public class LayoutTest {
                         "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 16\r\n" +
-                        "page = 1\r\n" +
-                        "myArr1 = scalar, S32, 0, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "myArr2 = scalar, S32, 4, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "myArr3 = scalar, S32, 8, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "myArr4 = scalar, S32, 12, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; total TS size = 16\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 16\n" +
+                        "page = 1\n" +
+                        "myArr1 = scalar, S32, 0, \"\", 1, 0, 0, 0, 0\n" +
+                        "myArr2 = scalar, S32, 4, \"\", 1, 0, 0, 0, 0\n" +
+                        "myArr3 = scalar, S32, 8, \"\", 1, 0, 0, 0, 0\n" +
+                        "myArr4 = scalar, S32, 12, \"\", 1, 0, 0, 0, 0\n" +
+                        "; total TS size = 16\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -176,10 +176,10 @@ public class LayoutTest {
                         "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 0\r\n" +
-                        "page = 1\r\n" +
-                        "; total TS size = 0\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 0\n" +
+                        "page = 1\n" +
+                        "; total TS size = 0\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -194,22 +194,22 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 16\r\n" +
-                        "page = 1\r\n" +
-                        "arr1_var1 = scalar, U08, 0, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 1 bytes at offset 1\r\n" +
-                        "arr1_var2 = scalar, U16, 2, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "arr2_var1 = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 1 bytes at offset 5\r\n" +
-                        "arr2_var2 = scalar, U16, 6, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "arr3_var1 = scalar, U08, 8, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 1 bytes at offset 9\r\n" +
-                        "arr3_var2 = scalar, U16, 10, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "arr4_var1 = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; unused 1 bytes at offset 13\r\n" +
-                        "arr4_var2 = scalar, U16, 14, \"\", 1, 0, 0, 0, 0\r\n" +
-                        "; total TS size = 16\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 16\n" +
+                        "page = 1\n" +
+                        "arr1_var1 = scalar, U08, 0, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 1\n" +
+                        "arr1_var2 = scalar, U16, 2, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr2_var1 = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 5\n" +
+                        "arr2_var2 = scalar, U16, 6, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr3_var1 = scalar, U08, 8, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 9\n" +
+                        "arr3_var2 = scalar, U16, 10, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr4_var1 = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 13\n" +
+                        "arr4_var2 = scalar, U16, 14, \"\", 1, 0, 0, 0, 0\n" +
+                        "; total TS size = 16\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 
     @Test
@@ -221,12 +221,12 @@ public class LayoutTest {
                 "end_struct");
 
         Assert.assertEquals(
-                "pageSize            = 4\r\n" +
-                        "page = 1\r\n" +
-                        "first = bits, U32, 0, [0:0], \"false\", \"true\"\r\n" +
-                        "second = bits, U32, 0, [1:1], \"false\", \"true\"\r\n" +
-                        "withOpt = bits, U32, 0, [2:2], \"b\", \"a\"\r\n" +
-                        "; total TS size = 4\r\n" +
-                        "[SettingContextHelp]\r\n", ts);
+                "pageSize            = 4\n" +
+                        "page = 1\n" +
+                        "first = bits, U32, 0, [0:0], \"false\", \"true\"\n" +
+                        "second = bits, U32, 0, [1:1], \"false\", \"true\"\n" +
+                        "withOpt = bits, U32, 0, [2:2], \"b\", \"a\"\n" +
+                        "; total TS size = 4\n" +
+                        "[SettingContextHelp]\n", ts);
     }
 }
