@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.SystemOut;
@@ -189,11 +190,8 @@ public class ConfigDefinition {
 
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
-/*
-
         // Parse the input files
         {
-
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
@@ -219,7 +217,6 @@ public class ConfigDefinition {
             // TsWriter writer = new TsWriter();
             // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
-*/
 
         if (tsOutputsDestination != null) {
             /**
