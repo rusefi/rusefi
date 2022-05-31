@@ -2,7 +2,6 @@ package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.StringField;
-import com.rusefi.newparse.parsing.UnusedField;
 
 import java.io.PrintStream;
 
