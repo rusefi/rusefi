@@ -299,7 +299,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
-			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
@@ -677,7 +676,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	auto decodeResult = triggerState.decodeTriggerEvent(
 			"trigger",
 			triggerShape,
-			nullptr,
 			engine,
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
@@ -799,7 +797,6 @@ void triggerInfo(void) {
 
 	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));
-	efiPrintf("expected duty #0=%.2f/#1=%.2f", TRIGGER_WAVEFORM(expectedDutyCycle[0]), TRIGGER_WAVEFORM(expectedDutyCycle[1]));
 
 	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
