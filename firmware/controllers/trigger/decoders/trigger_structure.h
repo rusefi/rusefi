@@ -122,12 +122,6 @@ public:
 	int version = 0;
 
 	/**
-	 * duty cycle for each individual trigger channel
-	 */
-	float expectedDutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
-
-
-	/**
 	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
 	 *
 	 * Usually second or third gap is not needed, but some crazy triggers like 36-2-2-2 require two consecutive

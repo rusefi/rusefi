@@ -22,8 +22,7 @@ public:
 			const TriggerConfiguration& triggerConfiguration,
 			TriggerDecoderBase& state);
 
-	void assertSyncPositionAndSetDutyCycle(
-			const TriggerStateCallback triggerCycleCallback,
+	void assertSyncPosition(
 			const TriggerConfiguration& triggerConfiguration,
 			const uint32_t index,
 			TriggerDecoderBase& state,
@@ -31,7 +30,7 @@ public:
 			);
 
 	// send next event so that we can see how state reacts
-	void feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
+	void feedSimulatedEvent(
 			const TriggerConfiguration& triggerConfiguration,
 			TriggerDecoderBase& state,
 			const TriggerWaveform& shape,
