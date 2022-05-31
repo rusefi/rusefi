@@ -2,16 +2,13 @@ package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.BitGroup;
-import com.rusefi.newparse.parsing.EnumField;
-import com.rusefi.newparse.parsing.Type;
-import com.rusefi.newparse.parsing.UnusedField;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class BitGroupLayout extends Layout {
-    private class BitLayout {
+    private static class BitLayout {
         public final String name;
         public final String comment;
         public final String trueValue;
@@ -55,7 +52,7 @@ public class BitGroupLayout extends Layout {
 
             String name = prefixer.get(bit.name);
 
-            ps.print(prefixer.get(bit.name));
+            ps.print(name);
             ps.print(" = bits, U32, ");
             ps.print(actualOffset);
             ps.print(", [");
