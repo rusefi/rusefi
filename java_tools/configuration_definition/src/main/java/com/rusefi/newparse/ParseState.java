@@ -120,7 +120,7 @@ public class ParseState {
                 case NotAllowed:
                     throw new IllegalStateException("Tried to add definition for " + name + ", but one already existed.");
                 case Replace:
-                    definitions.remove(existingDefinition);
+                    definitions.remove(name);
                     break;
                 case IgnoreNew:
                     // ignore the new definition, do nothing
@@ -539,7 +539,6 @@ public class ParseState {
         String structName = ctx.identifier().getText();
 
         assert(scope != null);
-        assert(scope.structFields != null);
 
         String comment = ctx.restOfLine() == null ? null : ctx.restOfLine().getText();
 
@@ -559,7 +558,6 @@ public class ParseState {
     @Override
     public void exitUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
         assert(scope != null);
-        assert(scope.structFields != null);
 
         // unions must have at least 1 member
         assert(!scope.structFields.isEmpty());
