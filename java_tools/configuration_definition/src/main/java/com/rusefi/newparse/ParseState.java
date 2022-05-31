@@ -121,6 +121,7 @@ public class ParseState {
                     throw new IllegalStateException("Tried to add definition for " + name + ", but one already existed.");
                 case Replace:
                     definitions.remove(existingDefinition);
+                    break;
                 case IgnoreNew:
                     // ignore the new definition, do nothing
                     return;
@@ -167,11 +168,11 @@ public class ParseState {
             addDefinition(name, Double.parseDouble(ctx.floatNum().getText()));
         } else if (ctx.numexpr() != null) {
             double evalResult = evalResults.remove();
-            double floored = Math.floor(evalResult);
+            int floored = (int)Math.floor(evalResult);
 
             if (Math.abs(floored - evalResult) < 0.001) {
                 // value is an int, process as such
-                handleIntDefinition(name, (int)floored);
+                handleIntDefinition(name, floored);
             } else {
                 // Value is a double, add it
                 addDefinition(name, evalResult);
