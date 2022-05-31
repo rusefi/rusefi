@@ -416,6 +416,11 @@ public class ParseState {
 
             if (lastElement instanceof BitGroup) {
                 group = (BitGroup)lastElement;
+
+                // If this group is full, create a new one instead of continuing on here.
+                if (group.bitFields.size() == 32) {
+                    group = null;
+                }
             }
         }
 

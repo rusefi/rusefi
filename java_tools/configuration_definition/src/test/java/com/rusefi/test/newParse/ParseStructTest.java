@@ -325,4 +325,20 @@ public class ParseStructTest {
         Assert.assertEquals("\"b\"", bf.falseValue);
         Assert.assertEquals("comment", bf.comment);
     }
+
+    @Test
+    public void bitFieldsThirtyThreeBits() throws IOException {
+        StringBuilder input = new StringBuilder("struct myStruct\n");
+        for (int i = 0; i < 33; i++) {
+            input.append("bit myBit").append(i).append("\n");
+        }
+        input.append("end_struct\n");
+
+        ParseState state = parse(input.toString());
+
+        Assert.assertEquals(2, state.getLastStruct().fields.size());
+
+        Assert.assertEquals(32, ((BitGroup)state.getLastStruct().fields.get(0)).bitFields.size());
+        Assert.assertEquals(1, ((BitGroup)state.getLastStruct().fields.get(1)).bitFields.size());
+    }
 }
