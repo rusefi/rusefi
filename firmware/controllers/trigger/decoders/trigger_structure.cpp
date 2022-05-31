@@ -447,26 +447,26 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, bool useOnlyRisingEdgeForTrigger, const TriggerConfiguration& triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
-	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
+	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig.TriggerType.type), (int)triggerConfig.TriggerType.type);
 #endif
 
 	shapeDefinitionError = false;
 
 	this->useOnlyRisingEdgeForTriggerTemp = useOnlyRisingEdgeForTrigger;
 
-	switch (triggerConfig->type) {
+	switch (triggerConfig.TriggerType.type) {
 
 	case TT_TOOTHED_WHEEL:
 		/**
 		 * huh? why all know skipped wheel shapes use 'setToothedWheelConfiguration' method
 		 * which touches 'useRiseEdge' flag while here we do not touch it?!
 		 */
-		initializeSkippedToothTriggerWaveformExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, triggerOperationMode);
+		initializeSkippedToothTriggerWaveformExt(this, triggerConfig.TriggerType.customTotalToothCount,
+				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -775,7 +775,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	default:
 		setShapeDefinitionError(true);
-		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig->type);
+		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
 	}
 	/**
 	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'

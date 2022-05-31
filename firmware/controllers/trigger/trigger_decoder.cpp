@@ -109,10 +109,8 @@ float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 void TriggerWaveform::initializeSyncPoint(TriggerDecoderBase& state,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig) {
-	triggerShapeSynchPointIndex = state.findTriggerZeroEventIndex(*this,
-			triggerConfiguration, triggerConfig);
+			const TriggerConfiguration& triggerConfiguration) {
+	triggerShapeSynchPointIndex = state.findTriggerZeroEventIndex(*this, triggerConfiguration);
 }
 
 /**
@@ -127,9 +125,7 @@ void calculateTriggerSynchPoint(
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 	engine->triggerErrorDetection.clear();
-	shape.initializeSyncPoint(state,
-			engine->primaryTriggerConfiguration,
-			engineConfiguration->trigger);
+	shape.initializeSyncPoint(state, engine->primaryTriggerConfiguration);
 
 	int length = shape.getLength();
 	engine->engineCycleEventCount = length;
@@ -534,7 +530,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
-					getTrigger_type_e(triggerConfiguration.TriggerType),
+					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					getTrigger_event_e(signal),
 					(int)nowNt,
 					currentCycle.current_index);
@@ -550,7 +546,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #if !EFI_PROD_CODE
 		if (printTriggerTrace) {
 			printf("%s event %s %d\r\n",
-					getTrigger_type_e(triggerConfiguration.TriggerType),
+					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					getTrigger_event_e(signal),
 					nowNt);
 			printf("decodeTriggerEvent ratio %.2f: current=%d previous=%d\r\n", 1.0 * toothDurations[0] / toothDurations[1],
@@ -565,7 +561,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		if (triggerShape.isSynchronizationNeeded) {
 			triggerSyncGapRatio = (float)toothDurations[0] / toothDurations[1];
 
-			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType);
+			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType.type);
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}
@@ -660,7 +656,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
-					getTrigger_type_e(triggerConfiguration.TriggerType),
+					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
 		}
@@ -810,9 +806,7 @@ static void onFindIndexCallback(TriggerDecoderBase *state) {
  */
 uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 		TriggerWaveform& shape,
-		const TriggerConfiguration& triggerConfiguration,
-		const trigger_config_s& triggerConfig) {
-	UNUSED(triggerConfig);
+		const TriggerConfiguration& triggerConfiguration) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 128, "findPos", -1);
 #endif
