@@ -1,6 +1,5 @@
 package com.rusefi.newparse.parsing;
 
-import java.io.PrintStream;
 import java.util.List;
 
 public class Struct implements Field {
