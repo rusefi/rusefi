@@ -113,7 +113,11 @@ public:
 
 	TriggerWaveform triggerShape;
 
-	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK] = {
+		{"VVT B1 Int", "VVT B1 Exh"},
+		{"VVT B2 Int", "VVT B1 Exh"}
+	};
+
 	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;

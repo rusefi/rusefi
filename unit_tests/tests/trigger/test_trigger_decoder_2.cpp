@@ -29,6 +29,8 @@ private:
 };
 
 struct MockTriggerDecoder : public TriggerDecoderBase {
+	MockTriggerDecoder() : TriggerDecoderBase("mock") { }
+
 	MOCK_METHOD(void, onTriggerError, (), (override));
 };
 

@@ -62,7 +62,7 @@ struct TriggerDecodeResult {
  */
 class TriggerDecoderBase : public trigger_state_s {
 public:
-	TriggerDecoderBase();
+	TriggerDecoderBase(const char* name);
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
@@ -108,7 +108,7 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
-	const char *name = nullptr;
+	const char* const name;
 
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
@@ -165,7 +165,7 @@ private:
  */
 class PrimaryTriggerDecoder : public TriggerDecoderBase {
 public:
-	PrimaryTriggerDecoder();
+	PrimaryTriggerDecoder(const char* name);
 	void resetTriggerState() override;
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
@@ -223,7 +223,10 @@ private:
 	bool m_hasSynchronizedPhase = false;
 };
 
-class VvtTriggerDecoder : public TriggerDecoderBase { };
+class VvtTriggerDecoder : public TriggerDecoderBase {
+public:
+	VvtTriggerDecoder(const char* name) : TriggerDecoderBase(name) { }
+};
 
 angle_t getEngineCycle(operation_mode_e operationMode);
 
