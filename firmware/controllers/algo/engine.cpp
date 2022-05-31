@@ -107,9 +107,7 @@ static operation_mode_e lookupOperationMode() {
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->vvtCamSensorUseRise, config);
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
 
 	shape.initializeSyncPoint(initState, config);
 }
@@ -127,9 +125,7 @@ void Engine::updateTriggerWaveform() {
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->useOnlyRisingEdgeForTrigger, primaryTriggerConfiguration));
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field

@@ -34,7 +34,7 @@ struct MockTriggerDecoder : public TriggerDecoderBase {
 
 static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
 	TriggerWaveform shape;
-	shape.initializeTriggerWaveform(mode, true, config);
+	shape.initializeTriggerWaveform(mode, config);
 
 	return shape;
 }

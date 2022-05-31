@@ -343,7 +343,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 
 #define nextTriggerEvent() \
  { \
-	if (triggerConfiguration.UseOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
+	if (useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }
