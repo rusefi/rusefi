@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "value_lookup.h"
 float getOutputValueByName(const char *name) {
 	if (strEqualCaseInsensitive(name, "sd_present"))
 		return engine->outputChannels.sd_present;
