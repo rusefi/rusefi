@@ -55,7 +55,7 @@ public class BitGroupLayout extends Layout {
 
             String name = prefixer.get(bit.name);
 
-            ps.print(prefixer.get(bit.name));
+            ps.print(name);
             ps.print(" = bits, U32, ");
             ps.print(actualOffset);
             ps.print(", [");
