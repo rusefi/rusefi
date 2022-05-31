@@ -85,6 +85,14 @@ public class ParseDefinitionsTest {
         );
     }
 
+    @Test(expected = RuntimeException.class)
+    public void definitionEvalNonNumeric() throws IOException {
+        parse(
+                "#define val1 \"foo\"\n" +
+                        "#define val2 val1 + 1"
+        );
+    }
+
     @Test
     public void definitionOverwritePolicyReplace() throws IOException {
         ParseState state = new ParseState();

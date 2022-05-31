@@ -144,18 +144,11 @@ public class ParseState {
 
     @Override
     public void exitContent(RusefiConfigGrammarParser.ContentContext ctx) {
-        if (!scopes.empty())
-            throw new IllegalStateException();
-        if (scope != null)
-            throw new IllegalStateException();
-
-        if (typedefName != null)
-            throw new IllegalStateException();
-
-        if (!evalResults.isEmpty())
-            throw new IllegalStateException();
-        if (!evalStack.empty())
-            throw new IllegalStateException();
+        assert(scopes.empty());
+        assert(scope == null);
+        assert(typedefName == null);
+        assert(evalResults.isEmpty());
+        assert(evalStack.empty());
     }
 
     @Override

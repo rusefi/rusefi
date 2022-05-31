@@ -241,4 +241,88 @@ public class ParseStructTest {
         Assert.assertEquals(5, af.length[0]);
         Assert.assertTrue(af.prototype instanceof StructField);
     }
+
+    @Test
+    public void typedefScalar() throws IOException {
+        ParseState ps = parse("custom myTypedef 4 scalar, F32, @OFFSET@, \"unit\", 1, 2, 3, 4, 5\n" +
+                "struct myStruct\n" +
+                "myTypedef foo;comment\n" +
+                "end_struct");
+        ScalarField sf = (ScalarField)ps.getLastStruct().fields.get(0);
+
+        Assert.assertEquals("foo", sf.name);
+
+        Assert.assertEquals(false, sf.autoscale);
+        Assert.assertEquals(4, sf.type.size);
+        Assert.assertEquals("float", sf.type.cType);
+        Assert.assertEquals("F32", sf.type.tsType);
+
+        FieldOptions opt = sf.options;
+        Assert.assertEquals("comment", opt.comment);
+        Assert.assertEquals("\"unit\"", opt.units);
+        Assert.assertEquals(1, opt.scale, 0.001f);
+        Assert.assertEquals(2, opt.offset, 0.001f);
+        Assert.assertEquals(3, opt.min, 0.001f);
+        Assert.assertEquals(4, opt.max, 0.001f);
+        Assert.assertEquals(5, opt.digits);
+    }
+
+    @Test
+    public void typedefString() throws IOException {
+        ParseState ps = parse("custom lua_script_t 1000 string, ASCII, @OFFSET@, 1000\n" +
+                "struct myStruct\n" +
+                "lua_script_t luaScript\n" +
+                "end_struct");
+        StringField sf = (StringField)ps.getLastStruct().fields.get(0);
+
+        Assert.assertEquals("luaScript", sf.name);
+        Assert.assertEquals(1000, sf.size);
+    }
+
+    @Test
+    public void unused() throws IOException {
+        ParseState state = parse(
+                "struct_no_prefix myStruct\n" +
+                        "unused 27\n" +
+                        "end_struct\n"
+        );
+
+        UnusedField uf = (UnusedField)state.getLastStruct().fields.get(0);
+
+        Assert.assertEquals(27, uf.size);
+    }
+
+    @Test
+    public void bitFieldsBasic() throws IOException {
+        ParseState state = parse(
+                "struct_no_prefix myStruct\n" +
+                        "bit myBit1\n" +
+                        "bit myBit2\n" +
+                        "end_struct\n"
+        );
+
+        BitGroup bf = (BitGroup)state.getLastStruct().fields.get(0);
+
+        Assert.assertEquals(2, bf.bitFields.size());
+
+        Assert.assertEquals("myBit1", bf.bitFields.get(0).name);
+        Assert.assertEquals("myBit2", bf.bitFields.get(1).name);
+    }
+
+    @Test
+    public void bitFieldsAdvanced() throws IOException {
+        ParseState state = parse(
+                "struct_no_prefix myStruct\n" +
+                        "bit myBit,\"a\",\"b\";comment\n" +
+                        "end_struct\n"
+        );
+
+        BitGroup bg = (BitGroup)state.getLastStruct().fields.get(0);
+        BitField bf = bg.bitFields.get(0);
+
+        Assert.assertEquals("myBit", bf.name);
+        Assert.assertEquals("\"a\"", bf.trueValue);
+        Assert.assertEquals("\"b\"", bf.falseValue);
+        Assert.assertEquals("comment", bf.comment);
+    }
 }
