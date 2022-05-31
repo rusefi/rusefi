@@ -29,6 +29,10 @@ public class ParseState {
 
     private Struct lastStruct = null;
 
+    public ParseState() {
+        this.enumsReader = null;
+    }
+
     public ParseState(EnumsReader enumsReader) {
         this.enumsReader = enumsReader;
 
@@ -68,6 +72,10 @@ public class ParseState {
     }
 
     private String[] resolveEnumValues(String enumName) {
+        if (this.enumsReader == null) {
+            return new String[0];
+        }
+
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
         EnumsReader.EnumState stringValueMap = this.enumsReader.getEnums().get(enumName);
@@ -82,7 +90,7 @@ public class ParseState {
             } else {
                 Definition def = this.definitions.get(value.getValue());
                 if (def == null)
-                    throw new IllegalStateException("No value for " + value);;
+                    throw new IllegalStateException("No value for " + value);
                 valueNameById.put((Integer)def.value, value.getName());
             }
         }
@@ -312,21 +320,34 @@ public class ParseState {
 
             String sValue = fo.getChild(2).getText();
 
-            if (key.equals("unit")) {
-                options.units = sValue;
-            } else if (key.equals("comment")) {
-                options.comment = sValue;
-            } else if (key.equals("digits")) {
-                options.digits = Integer.parseInt(sValue);
-            } else {
-                Double value = evalResults.remove();
+            switch (key) {
+                case "unit":
+                    options.units = sValue;
+                    break;
+                case "comment":
+                    options.comment = sValue;
+                    break;
+                case "digits":
+                    options.digits = Integer.parseInt(sValue);
+                    break;
+                default:
+                    Double value = evalResults.remove();
 
-                switch (key) {
-                    case "min": options.min = value.floatValue(); break;
-                    case "max": options.max = value.floatValue(); break;
-                    case "scale": options.scale = value.floatValue(); break;
-                    case "offset": options.offset = value.floatValue(); break;
-                }
+                    switch (key) {
+                        case "min":
+                            options.min = value.floatValue();
+                            break;
+                        case "max":
+                            options.max = value.floatValue();
+                            break;
+                        case "scale":
+                            options.scale = value.floatValue();
+                            break;
+                        case "offset":
+                            options.offset = value.floatValue();
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -432,6 +453,10 @@ public class ParseState {
         boolean iterate = ctx.Iterate() != null;
         boolean autoscale = ctx.Autoscale() != null;
 
+        if (iterate && length.length != 1) {
+            throw new IllegalStateException("Cannot iterate multi dimensional array: " + name);
+        }
+
         // First check if this is an array of structs
         if (structs.containsKey(type)) {
             // iterate required for structs
@@ -517,7 +542,7 @@ public class ParseState {
         assert(scope != null);
         assert(scope.structFields != null);
 
-        String comment = ctx.restOfLine() == null ? null : ctx.restOfLine().getText().toString();
+        String comment = ctx.restOfLine() == null ? null : ctx.restOfLine().getText();
 
         Struct s = new Struct(structName, scope.structFields, ctx.StructNoPrefix() != null, comment);
         structs.put(structName, s);
@@ -549,8 +574,7 @@ public class ParseState {
         scope.structFields.add(u);
     }
 
-    private Stack<Double> evalStack = new Stack<>();
-
+    private final Stack<Double> evalStack = new Stack<>();
 
     @Override
     public void exitEvalNumber(RusefiConfigGrammarParser.EvalNumberContext ctx) {
@@ -615,9 +639,9 @@ public class ParseState {
     }
 
         };
-    };
+    }
 
     static class Scope {
-        public List<Field> structFields = new ArrayList<>();
+        public final List<Field> structFields = new ArrayList<>();
     }
 }
