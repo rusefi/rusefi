@@ -23,7 +23,25 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
         CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
 
         long start = System.nanoTime();
+        parse(listener, in);
+        double durationMs = (System.nanoTime() - start) / 1e6;
 
+        SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
+    }
+
+    public static void parseDefinitionString(ParseTreeListener listener, String content) throws IOException {
+        SystemOut.println("Parsing string (Antlr)");
+
+        CharStream in = new ANTLRInputStream(content);
+
+        long start = System.nanoTime();
+        parse(listener, in);
+        double durationMs = (System.nanoTime() - start) / 1e6;
+
+        SystemOut.println("Successfully parsed (Antlr) in " + durationMs + "ms");
+    }
+
+    private static void parse(ParseTreeListener listener, CharStream in) {
         RusefiConfigGrammarParser parser = new RusefiConfigGrammarParser(new CommonTokenStream(new RusefiConfigGrammarLexer(in)));
 
         RusefiParseErrorStrategy errorStrategy = new RusefiParseErrorStrategy();
@@ -31,13 +49,10 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
 
         ParseTree tree = parser.content();
         new ParseTreeWalker().walk(listener, tree);
-        double durationMs = (System.nanoTime() - start) / 1e6;
 
         if (errorStrategy.hadError()) {
             throw new RuntimeException("Parse failed, see error output above!");
         }
-
-        SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
     }
 
     public boolean hadError() {
