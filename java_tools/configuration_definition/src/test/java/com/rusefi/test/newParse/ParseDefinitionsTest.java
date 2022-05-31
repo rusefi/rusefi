@@ -75,6 +75,16 @@ public class ParseDefinitionsTest {
         Assert.assertEquals(63, def3.asDouble(), 1e-5);
     }
 
+
+    @Test(expected = RuntimeException.class)
+    public void definitionEvalMissingDefinition() throws IOException {
+        parse(
+            "#define val1 20\n" +
+            "#define val2 val1 + 1\n" +
+            "#define val3 3 * valgggggg"
+        );
+    }
+
     @Test
     public void definitionOverwritePolicyReplace() throws IOException {
         ParseState state = new ParseState();
