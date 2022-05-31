@@ -19,9 +19,12 @@ public class ParseDefinitionsTest {
         Assert.assertNull(state.findDefinition("notFoo"));
 
         Definition def = state.findDefinition("foo");
-
         Assert.assertTrue(def.isNumeric());
         Assert.assertEquals(123, def.asDouble(), 1e-5);
+
+        Definition defHex = state.findDefinition("foo_16_hex");
+        Assert.assertFalse(defHex.isNumeric());
+        Assert.assertEquals("\\x00\\x7b", defHex.value);
     }
 
     @Test

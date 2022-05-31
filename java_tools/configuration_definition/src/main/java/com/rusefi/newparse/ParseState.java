@@ -55,7 +55,7 @@ public class ParseState {
         addDefinition(name, value);
 
         // Also add ints as 16b hex
-        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
+        addDefinition(name + "_16_hex", String.format("\\x%02x\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     private static boolean isNumeric(String str) {
