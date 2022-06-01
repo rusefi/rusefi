@@ -53,8 +53,6 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
         if (errorStrategy.hadError()) {
             throw new RuntimeException("Parse failed, see error output above!");
         }
-
-        SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
     }
 
     public boolean hadError() {
