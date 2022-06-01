@@ -17,7 +17,6 @@ import java.util.TreeMap;
 public class AverageAngles {
     static String PRIMARY = "T_PRIMARY";
     static String SECONDARY = "T_SECONDARY";
-    static String T_CHANNEL_3 = "T_CHANNEL_3";
     private int count;
 
     enum trigger_event_e {
@@ -25,8 +24,6 @@ public class AverageAngles {
         SHAFT_PRIMARY_RISING(PRIMARY),
         SHAFT_SECONDARY_FALLING(SECONDARY),
         SHAFT_SECONDARY_RISING(SECONDARY),
-        SHAFT_3RD_FALLING(T_CHANNEL_3),
-        SHAFT_3RD_RISING(T_CHANNEL_3);
 
         private String channel;
 
