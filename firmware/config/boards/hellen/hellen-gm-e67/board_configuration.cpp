@@ -159,8 +159,6 @@ void setBoardDefaultConfiguration() {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides() {
-	/*
-	 * todo: what SPI does this HW use? also we have a popular "uart 3 conflict with spi 2"
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
@@ -168,5 +166,4 @@ void setSdCardConfigurationOverrides() {
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
-	 */
 }
