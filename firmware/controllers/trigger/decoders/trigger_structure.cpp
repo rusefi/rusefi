@@ -668,23 +668,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_HONDA_4_24:
-		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
-		shapeWithoutTdc = true;
-		break;
-
-	case TT_HONDA_1_24:
-		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10);
-		break;
-
-	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(this);
-		break;
-
-	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(this);
-		break;
-
+	case UNUSED_12:
+	case UNUSED_13:
+	case UNUSED_21:
+	case UNUSED_34:
 	case TT_1_16:
 		configureOnePlus16(this);
 		break;
