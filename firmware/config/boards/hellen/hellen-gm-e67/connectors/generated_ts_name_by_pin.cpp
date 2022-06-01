@@ -10,7 +10,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::B8: return "C2-54 - IGN 6";
 		case Gpio::B9: return "C2-33 - IGN 7";
-		case Gpio::C13: return "C2-1 - Coil 1";
+		case Gpio::C13: return "C2-1 - IGN 1";
 		case Gpio::D10: return "C2-70 INJ 4";
 		case Gpio::D11: return "C2-16 INJ 3";
 		case Gpio::D2: return "C1-13 - Fuel Pump";
