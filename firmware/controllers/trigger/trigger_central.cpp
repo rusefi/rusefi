@@ -43,7 +43,8 @@ static scheduling_s debugToggleScheduling;
 TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
-		vvtPosition()
+		vvtPosition(),
+		triggerState("TRG")
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();

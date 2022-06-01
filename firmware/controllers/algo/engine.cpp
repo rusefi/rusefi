@@ -107,15 +107,13 @@ static operation_mode_e lookupOperationMode() {
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->vvtCamSensorUseRise, config);
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
 
 	shape.initializeSyncPoint(initState, config);
 }
 
 void Engine::updateTriggerWaveform() {
-	static TriggerDecoderBase initState;
+	static TriggerDecoderBase initState("init");
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -127,9 +125,7 @@ void Engine::updateTriggerWaveform() {
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->useOnlyRisingEdgeForTrigger, primaryTriggerConfiguration));
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
@@ -160,14 +156,8 @@ void Engine::updateTriggerWaveform() {
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
 				initState);
 
-		engine->triggerCentral.triggerState.name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
-
-	engine->triggerCentral.vvtState[0][0].name = "VVT B1 Int";
-	engine->triggerCentral.vvtState[0][1].name = "VVT B1 Exh";
-	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
-	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?

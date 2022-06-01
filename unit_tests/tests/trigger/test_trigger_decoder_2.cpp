@@ -29,12 +29,14 @@ private:
 };
 
 struct MockTriggerDecoder : public TriggerDecoderBase {
+	MockTriggerDecoder() : TriggerDecoderBase("mock") { }
+
 	MOCK_METHOD(void, onTriggerError, (), (override));
 };
 
 static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
 	TriggerWaveform shape;
-	shape.initializeTriggerWaveform(mode, true, config);
+	shape.initializeTriggerWaveform(mode, config);
 
 	return shape;
 }
