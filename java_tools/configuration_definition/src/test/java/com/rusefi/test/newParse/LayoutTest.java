@@ -5,14 +5,15 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.rusefi.test.newParse.NewParseHelper.parseToOutputChannels;
 import static com.rusefi.test.newParse.NewParseHelper.parseToTs;
 
 public class LayoutTest {
     @Test
     public void singleField() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int8_t xyz;comment;\"units\", 1, 2, 3, 4, 5\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 4\n" +
@@ -21,15 +22,20 @@ public class LayoutTest {
                 "; unused 3 bytes at offset 1\n" +
                 "; total TS size = 4\n" +
                 "[SettingContextHelp]\n" +
-                "\txyz = \"comment\"\n", ts);
+                "\txyz = \"comment\"\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "xyz = scalar, S08, 0, \"units\", 1, 2\n" +
+                        "; total TS size = 4\n"
+                , parseToOutputChannels(input));
     }
 
     @Test
     public void twoFieldsSameSize() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int32_t abc;;\"\", 1, 2, 3, 4, 5\n" +
                 "int32_t xyz;;\"\", 6, 7, 8, 9, 10\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 8\n" +
@@ -37,7 +43,12 @@ public class LayoutTest {
                         "abc = scalar, S32, 0, \"\", 1, 2, 3, 4, 5\n" +
                         "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 8\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "abc = scalar, S32, 0, \"\", 1, 2\n" +
+                "xyz = scalar, S32, 4, \"\", 6, 7\n" +
+                "; total TS size = 8\n", parseToOutputChannels(input));
     }
 
     @Test
@@ -214,11 +225,11 @@ public class LayoutTest {
 
     @Test
     public void bits() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "bit first\n" +
                 "bit second\n" +
                 "bit withOpt,\"a\",\"b\"\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 4\n" +
@@ -227,6 +238,13 @@ public class LayoutTest {
                         "second = bits, U32, 0, [1:1], \"false\", \"true\"\n" +
                         "withOpt = bits, U32, 0, [2:2], \"b\", \"a\"\n" +
                         "; total TS size = 4\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "first = bits, U32, 0, [0:0]\n" +
+                        "second = bits, U32, 0, [1:1]\n" +
+                        "withOpt = bits, U32, 0, [2:2]\n" +
+                        "; total TS size = 4\n"
+                , parseToOutputChannels(input));
     }
 }

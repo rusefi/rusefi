@@ -18,6 +18,10 @@ public class OutputChannelWriter {
         this.ps = new PrintStream(new FileOutputStream(outputFile));
     }
 
+    public OutputChannelWriter(PrintStream ps) {
+        this.ps = ps;
+    }
+
     private int cumulativeSize = 0;
 
     public void writeOutputChannels(ParseState parser) throws FileNotFoundException {

@@ -3,6 +3,7 @@ package com.rusefi.test.newParse;
 import com.rusefi.RusefiParseErrorStrategy;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.outputs.CStructWriter;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.newparse.outputs.TsWriter;
 
 import java.io.*;
@@ -43,6 +44,20 @@ public class NewParseHelper {
         PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
 
         writer.writeLayoutAndComments(state, ps);
+
+        return baos.toString(utf8);
+    }
+
+    public static String parseToOutputChannels(String input) throws IOException {
+        ParseState state = parse(input);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final String utf8 = StandardCharsets.UTF_8.name();
+
+        PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
+
+        OutputChannelWriter writer = new OutputChannelWriter(ps);
+        writer.writeOutputChannels(state);
 
         return baos.toString(utf8);
     }
