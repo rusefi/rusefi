@@ -96,7 +96,7 @@ public:
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
-	trigger_type_e getType() const override;
+	trigger_config_s getType() const override;
 };
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
@@ -109,7 +109,7 @@ public:
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
-	trigger_type_e getType() const override;
+	trigger_config_s getType() const override;
 };
 
 class PrimeController : public EngineModule {

@@ -74,7 +74,7 @@ class TriggerWaveform {
 public:
 	TriggerWaveform();
 	void initializeTriggerWaveform(operation_mode_e triggerOperationMode,
-			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
+			bool useOnlyRisingEdgeForTrigger, const TriggerConfiguration& triggerConfig);
 	void setShapeDefinitionError(bool value);
 
 	/**
@@ -120,12 +120,6 @@ public:
 	 * this variable is incremented after each trigger shape redefinition
 	 */
 	int version = 0;
-
-	/**
-	 * duty cycle for each individual trigger channel
-	 */
-	float expectedDutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
-
 
 	/**
 	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
@@ -265,9 +259,8 @@ public:
 
 	void initializeSyncPoint(
 			TriggerDecoderBase& state,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
-			);
+			const TriggerConfiguration& triggerConfiguration
+		);
 
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 

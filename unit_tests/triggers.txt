@@ -6,7 +6,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
-# duty 0.50 0.38
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 52.76
 event 2 1 0 121.90
@@ -22,7 +22,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.49 0.21
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 20.00
 event 2 1 0 60.00
@@ -64,7 +64,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
-# duty 0.30 0.61
+# end of meta section
 event 0 0 0 0.00
 event 1 1 0 13.83
 event 2 1 1 123.63
@@ -82,7 +82,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.08 0.04
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 4.00
 event 2 1 0 8.00
@@ -110,7 +110,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.90 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 60.00
@@ -144,7 +144,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.94 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 210.00
@@ -158,7 +158,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.63 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 66.96
 event 2 0 1 180.00
@@ -172,7 +172,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.48 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 6.00
 event 2 0 1 12.00
@@ -294,7 +294,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.49 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 20.00
@@ -370,7 +370,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.92 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 47.00
@@ -388,7 +388,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.36 0.38
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 13.32
 event 2 1 0 81.30
@@ -406,7 +406,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.81 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 8.37
 event 2 1 0 23.37
@@ -468,7 +468,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.50 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 7.50
 event 2 2 1 15.00
@@ -532,7 +532,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 144.00
 event 2 0 1 180.00
@@ -552,7 +552,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
-# duty 0.81 0.38
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 14.88
 event 2 1 0 82.69
@@ -568,7 +568,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.75 0.25
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 180.00
 event 2 1 1 360.00
@@ -578,7 +578,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 120.00
 event 2 0 1 240.00
@@ -590,7 +590,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 360.00
 TRIGGERTYPE 19 34 TT_DODGE_RAM 0.00
@@ -598,7 +598,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.50 0.06
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 17.30
 event 2 1 0 20.00
@@ -638,7 +638,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 9.00
 event 2 0 1 12.00
@@ -876,7 +876,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.92 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 7.50
 event 2 1 0 22.50
@@ -932,7 +932,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.88 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 7.00
 event 2 0 1 20.00
@@ -962,7 +962,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -1088,7 +1088,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.96 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 4.00
 event 2 0 1 180.00
@@ -1102,7 +1102,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.01 0.53
+# end of meta section
 event 0 1 1 0.00
 event 1 1 0 5.00
 event 2 1 1 10.00
@@ -1250,7 +1250,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.56 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -1384,7 +1384,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 15.00
@@ -1486,7 +1486,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.51 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 0 0.20
 event 2 1 1 15.00
@@ -1546,7 +1546,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.99 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 0 10.00
 event 2 1 1 25.00
@@ -1602,7 +1602,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.49 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 20.00
@@ -1672,7 +1672,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.94 0.33
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 40.00
 event 2 1 1 170.00
@@ -1688,7 +1688,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 144.00
 event 2 0 1 180.00
@@ -1708,7 +1708,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.04 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 106.00
 event 2 0 1 110.00
@@ -1730,7 +1730,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.97 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 0 14.90
 event 2 0 0 21.90
@@ -1786,7 +1786,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.08 0.04
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 4.00
 event 2 1 0 8.00
@@ -1814,7 +1814,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.95 0.08
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 1 1 63.00
@@ -1858,7 +1858,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.50 0.07
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 26.00
 event 2 1 0 28.00
@@ -1914,7 +1914,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 15.00
 event 2 0 1 30.00
@@ -1968,7 +1968,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.80 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 4.00
 event 2 0 1 16.00
@@ -2006,7 +2006,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.50 0.04
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 58.00
 event 2 1 0 60.00
@@ -2046,7 +2046,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.17 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 120.00
 event 2 0 1 180.00
@@ -2056,7 +2056,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.93 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 180.00
@@ -2072,7 +2072,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.13 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 281.00
 event 2 0 1 319.00
@@ -2084,7 +2084,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 8.18
 event 2 0 1 12.27
@@ -2258,7 +2258,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.45
 event 2 0 1 8.18
@@ -2516,7 +2516,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.86 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 4.00
 event 2 0 1 30.00
@@ -2574,7 +2574,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 0 0.00
 event 1 0 1 40.00
 event 2 0 0 80.00
@@ -2588,7 +2588,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.47 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 20.00
@@ -2662,7 +2662,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.01 0.17
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 15.00
 event 2 1 0 20.00
@@ -2718,7 +2718,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.99 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 4.00
 event 2 1 1 21.50
@@ -2758,7 +2758,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.95 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 180.00
@@ -2778,7 +2778,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.89 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 8.00
 event 2 0 1 180.00
@@ -2804,7 +2804,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 1.00 0.50
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 0.05
 event 2 0 0 1.33
@@ -3354,7 +3354,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
-# duty 0.98 0.45
+# end of meta section
 event 0 0 1 0.00
 event 1 1 1 2.00
 event 2 1 0 8.00
@@ -3470,7 +3470,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.26 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 131.00
 event 2 0 1 134.00
@@ -3488,7 +3488,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.94 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 10.00
 event 2 0 1 240.00
@@ -3502,7 +3502,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.83 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 3.00
 event 2 0 1 20.00
@@ -3580,7 +3580,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.58 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -3706,7 +3706,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.83 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 20.00
 event 2 0 1 240.00
@@ -3724,7 +3724,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.77 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 8.00
 event 2 0 1 18.00
@@ -3772,7 +3772,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.56 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -3906,7 +3906,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.94 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 120.00
@@ -3928,7 +3928,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.01 0.17
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 15.00
 event 2 1 0 20.00
@@ -3984,7 +3984,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
-# duty 0.01 0.17
+# end of meta section
 event 0 0 0 0.00
 event 1 1 1 15.00
 event 2 1 0 20.00
@@ -4040,7 +4040,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.53 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 45.00
 event 2 0 1 90.00
@@ -4062,7 +4062,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.97 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 140.00
@@ -4078,7 +4078,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.81 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 30.00
 event 2 0 1 180.00
@@ -4094,7 +4094,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.56 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -4228,7 +4228,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.47 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 11.25
 event 2 0 1 22.50
@@ -4294,7 +4294,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.54 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -4432,7 +4432,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.56 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -4566,7 +4566,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.56 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00
 event 2 0 1 10.00
@@ -4700,7 +4700,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.08 0.00
+# end of meta section
 event 0 0 0 0.00
 event 1 0 1 160.00
 event 2 0 0 180.00
@@ -4712,7 +4712,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
-# duty 0.50 0.00
+# end of meta section
 event 0 0 1 0.00
 event 1 0 0 3.00
 event 2 0 1 15.00

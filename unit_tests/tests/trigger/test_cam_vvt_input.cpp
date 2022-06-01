@@ -177,9 +177,5 @@ TEST(trigger, testNB2CamInput) {
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
-	float dutyCycleNt = engine->triggerCentral.vvtState[0][0].currentCycle.totalTimeNtCopy[0];
-	EXPECT_FLOAT_EQ(27'000'000, dutyCycleNt);
-	EXPECT_FLOAT_EQ(0.056944445f, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
-
 	EXPECT_EQ(40, waveChart.getSize());
 }

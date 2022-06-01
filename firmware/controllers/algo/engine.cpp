@@ -106,23 +106,12 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerDecoderBase &initState) {
-	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(
+			lookupOperationMode(),
+			engineConfiguration->vvtCamSensorUseRise, config);
 
-	if (vvtMode != VVT_INACTIVE) {
-		trigger_config_s config;
-		// todo: should 'vvtWithRealDecoder' be used here?
-		config.type = getVvtTriggerType(vvtMode);
-
-		auto& shape = engine->triggerCentral.vvtShape[camIndex];
-		shape.initializeTriggerWaveform(
-				lookupOperationMode(),
-				engineConfiguration->vvtCamSensorUseRise, &config);
-
-		shape.initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration[camIndex],
-				config);
-	}
+	shape.initializeSyncPoint(initState, config);
 }
 
 void Engine::updateTriggerWaveform() {
@@ -140,7 +129,7 @@ void Engine::updateTriggerWaveform() {
 
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(
 			lookupOperationMode(),
-			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
+			engineConfiguration->useOnlyRisingEdgeForTrigger, primaryTriggerConfiguration));
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
@@ -180,8 +169,15 @@ void Engine::updateTriggerWaveform() {
 	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
 	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
 
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		initVvtShape(camIndex, initState);
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+		// todo: should 'vvtWithRealDecoder' be used here?
+		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
+			initVvtShape(
+				triggerCentral.vvtShape[camIndex],
+				vvtTriggerConfiguration[camIndex],
+				initState
+			);
+		}
 	}
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
