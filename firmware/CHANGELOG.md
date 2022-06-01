@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
  - TS bench test commands are now configurable #4192
  - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199
  - microRusEFI can now use more pins for Cam position sensor #3032
+ - hard requirement for console version match #4187
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
