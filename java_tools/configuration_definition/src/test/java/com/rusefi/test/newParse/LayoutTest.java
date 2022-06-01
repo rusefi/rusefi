@@ -53,10 +53,10 @@ public class LayoutTest {
 
     @Test
     public void twoFieldsBigThenSmall() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int32_t abc;;\"\", 1, 2, 3, 4, 5\n" +
                 "int8_t xyz;;\"\", 6, 7, 8, 9, 10\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 8\n" +
@@ -65,15 +65,20 @@ public class LayoutTest {
                         "xyz = scalar, S08, 4, \"\", 6, 7, 8, 9, 10\n" +
                         "; unused 3 bytes at offset 5\n" +
                         "; total TS size = 8\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "abc = scalar, S32, 0, \"\", 1, 2\n" +
+                "xyz = scalar, S08, 4, \"\", 6, 7\n" +
+                "; total TS size = 8\n", parseToOutputChannels(input));
     }
 
     @Test
     public void twoFieldsSmallThenBig() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int8_t abc;;\"\", 1, 2, 3, 4, 5\n" +
                 "int32_t xyz;;\"\", 6, 7, 8, 9, 10\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 8\n" +
@@ -82,16 +87,21 @@ public class LayoutTest {
                         "; unused 3 bytes at offset 1\n" +
                         "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 8\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "abc = scalar, S08, 0, \"\", 1, 2\n" +
+                "xyz = scalar, S32, 4, \"\", 6, 7\n" +
+                "; total TS size = 8\n", parseToOutputChannels(input));
     }
 
     @Test
     public void threeFieldsSmallInMisalignment() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int16_t abc\n" +
                 "int8_t def\n" +
                 "int32_t xyz\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 8\n" +
@@ -101,15 +111,21 @@ public class LayoutTest {
                         "; unused 1 bytes at offset 3\n" +
                         "xyz = scalar, S32, 4, \"\", 1, 0, 0, 0, 0\n" +
                         "; total TS size = 8\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "abc = scalar, S16, 0, \"\", 1, 0\n" +
+                "def = scalar, S08, 2, \"\", 1, 0\n" +
+                "xyz = scalar, S32, 4, \"\", 1, 0\n" +
+                "; total TS size = 8\n", parseToOutputChannels(input));
     }
 
     @Test
     public void twoFieldsArrayThenBig() throws IOException {
-        String ts = parseToTs("struct_no_prefix myStruct\n" +
+        String input = "struct_no_prefix myStruct\n" +
                 "int8_t[10] abc;;\"\", 1, 2, 3, 4, 5\n" +
                 "int32_t xyz;;\"\", 6, 7, 8, 9, 10\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 16\n" +
@@ -118,7 +134,21 @@ public class LayoutTest {
                         "; unused 2 bytes at offset 10\n" +
                         "xyz = scalar, S32, 12, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 16\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "abc1 = scalar, S08, 0, \"\", 1, 2\n" +
+                "abc2 = scalar, S08, 1, \"\", 1, 2\n" +
+                "abc3 = scalar, S08, 2, \"\", 1, 2\n" +
+                "abc4 = scalar, S08, 3, \"\", 1, 2\n" +
+                "abc5 = scalar, S08, 4, \"\", 1, 2\n" +
+                "abc6 = scalar, S08, 5, \"\", 1, 2\n" +
+                "abc7 = scalar, S08, 6, \"\", 1, 2\n" +
+                "abc8 = scalar, S08, 7, \"\", 1, 2\n" +
+                "abc9 = scalar, S08, 8, \"\", 1, 2\n" +
+                "abc10 = scalar, S08, 9, \"\", 1, 2\n" +
+                "xyz = scalar, S32, 12, \"\", 6, 7\n" +
+                "; total TS size = 16\n", parseToOutputChannels(input));
     }
 
     @Test
@@ -163,10 +193,9 @@ public class LayoutTest {
 
     @Test
     public void arrayIterate() throws IOException {
-        String ts = parseToTs(
-                        "struct_no_prefix rootStruct\n" +
+        String input = "struct_no_prefix rootStruct\n" +
                         "int32_t[4 iterate] myArr\n" +
-                        "end_struct");
+                        "end_struct";
 
         Assert.assertEquals(
                 "pageSize            = 16\n" +
@@ -176,7 +205,14 @@ public class LayoutTest {
                         "myArr3 = scalar, S32, 8, \"\", 1, 0, 0, 0, 0\n" +
                         "myArr4 = scalar, S32, 12, \"\", 1, 0, 0, 0, 0\n" +
                         "; total TS size = 16\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "myArr1 = scalar, S32, 0, \"\", 1, 0\n" +
+                "myArr2 = scalar, S32, 4, \"\", 1, 0\n" +
+                "myArr3 = scalar, S32, 8, \"\", 1, 0\n" +
+                "myArr4 = scalar, S32, 12, \"\", 1, 0\n" +
+                "; total TS size = 16\n", parseToOutputChannels(input));
     }
 
     @Test
