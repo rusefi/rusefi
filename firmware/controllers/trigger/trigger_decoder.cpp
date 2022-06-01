@@ -334,8 +334,8 @@ bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const
 	return currentCycle.current_index < triggerShape.getSize();
 }
 
-static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
-static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
+static trigger_wheel_e eventIndex[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
+static trigger_value_e eventType[4] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
