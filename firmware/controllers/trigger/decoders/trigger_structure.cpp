@@ -77,7 +77,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
-	wave.waveCount = TRIGGER_CHANNEL_COUNT;
+	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
 	wave.phaseCount = 0;
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
