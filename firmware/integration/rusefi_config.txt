@@ -95,6 +95,9 @@
 ! when this happens.
 #define FLASH_DATA_VERSION 10012
 
+! this offset is part of console compatibility mechanism, please DO NOT change this offset
+#define TS_FILE_VERSION_OFFSET 124
+
 #define LOG_DELIMITER "`"
 
 ! all the sub-structures are going to be nested within the primary structure, that's
