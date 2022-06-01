@@ -47,8 +47,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	if (engine->rpmCalculator.isRunning()) {
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
-		// Only check if the setting is enabled
-		if (minOilPressure > 0) {
+		// Only check if the setting is enabled and you have an oil pressure sensor
+		if (minOilPressure > 0 && Sensor::hasSensor(SensorType::OilPressure)) {
 			// Has it been long enough we should have pressure?
 			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
 
