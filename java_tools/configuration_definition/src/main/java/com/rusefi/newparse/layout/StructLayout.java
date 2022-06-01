@@ -4,12 +4,11 @@ import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StructLayout extends Layout {
-    /*private*/public List<Layout> children = new ArrayList<>();
+    /*private*/public final List<Layout> children = new ArrayList<>();
 
     public final String typeName;
     private final String name;
@@ -93,7 +92,7 @@ public class StructLayout extends Layout {
             return addStruct(offset, sf.struct, sf.name);
         }
 
-        Layout l = null;
+        Layout l;
         if (f instanceof ScalarField) {
             l = new ScalarLayout((ScalarField)f);
         } else if (f instanceof EnumField) {

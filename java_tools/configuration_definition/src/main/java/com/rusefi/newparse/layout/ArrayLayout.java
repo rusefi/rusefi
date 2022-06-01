@@ -58,7 +58,7 @@ public class ArrayLayout extends Layout {
 
     @Override
     public String toString() {
-        return "Array of " + this.prototypeLayout.toString() + " length " + this.length[0] + " " + super.toString();
+        return "Array of " + this.prototypeLayout + " length " + this.length[0] + " " + super.toString();
     }
 
     @Override

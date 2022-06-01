@@ -9,10 +9,10 @@ import com.rusefi.newparse.parsing.Type;
 import java.io.PrintStream;
 
 public class ScalarLayout extends Layout {
-    private String name;
-    private Type type;
-    private FieldOptions options;
-    private boolean autoscale;
+    public final String name;
+    private final Type type;
+    private final FieldOptions options;
+    private final boolean autoscale;
 
     public ScalarLayout(ScalarField field) {
         this.name = field.name;

@@ -7,12 +7,11 @@ import com.rusefi.newparse.parsing.ScalarField;
 import com.rusefi.newparse.parsing.Union;
 
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UnionLayout extends Layout {
-    private List<Layout> children = new ArrayList<>();
+    private final List<Layout> children = new ArrayList<>();
 
     public UnionLayout(Union u) {
         for (Field f : u.fields) {
@@ -36,24 +35,24 @@ public class UnionLayout extends Layout {
     @Override
     public void setOffset(int offset) {
         super.setOffset(offset);
-        this.children.stream().forEach(c -> c.setOffset(offset));
+        this.children.forEach(c -> c.setOffset(offset));
     }
 
     @Override
     public void setOffsetWithinStruct(int offset) {
         super.setOffsetWithinStruct(offset);
-        this.children.stream().forEach(c -> c.setOffsetWithinStruct(offset));
+        this.children.forEach(c -> c.setOffsetWithinStruct(offset));
     }
 
     @Override
     public int getSize() {
-        return this.children.stream().map(l -> l.getSize()).max(Integer::compare).get();
+        return this.children.stream().map(Layout::getSize).max(Integer::compare).get();
     }
 
     @Override
     public int getAlignment() {
         // The alignment of the union is the largest alignment required by one of the members
-        return this.children.stream().map(l -> l.getAlignment()).max(Integer::compare).get();
+        return this.children.stream().map(Layout::getAlignment).max(Integer::compare).get();
     }
 
     @Override
