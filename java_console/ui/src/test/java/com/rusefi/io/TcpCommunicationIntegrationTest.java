@@ -1,7 +1,6 @@
 package com.rusefi.io;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -35,7 +34,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("onConnectionFailed");
                 failedCountDownLatch.countDown();
             }
@@ -65,7 +64,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("Failed");
             }
         });
@@ -108,7 +107,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("Failed");
             }
         });

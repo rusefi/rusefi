@@ -48,7 +48,7 @@ public class SandboxCommon {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 log.info("onConnectionFailed");
             }
         });
