@@ -49,7 +49,6 @@
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
-#include "honda_accord.h"
 #include "honda_k_dbc.h"
 #include "honda_600.h"
 #include "hyundai.h"
