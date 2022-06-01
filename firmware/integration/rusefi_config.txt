@@ -188,7 +188,7 @@ struct_no_prefix engine_configuration_s
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
-#define TRIGGER_INPUT_PIN_COUNT 3
+#define TRIGGER_INPUT_PIN_COUNT 2
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
@@ -709,6 +709,7 @@ custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 	float idle_antiwindupFreq;+0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
+	uint16_t unused688
 	pin_output_mode_e hip9011CsPinMode;
 	output_pin_e tachOutputPin;
 	pin_output_mode_e tachOutputPinMode;
@@ -1115,6 +1116,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s alternatorControl;
 	pid_s etb;
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
+	uint16_t unused1452
 	brain_input_pin_e turboSpeedSensorInputPin;
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
