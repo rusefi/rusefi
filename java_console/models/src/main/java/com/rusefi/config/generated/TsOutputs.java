@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon May 30 11:18:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 01 14:46:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -355,6 +355,7 @@ public class TsOutputs {
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20210312;
+	public static final int TS_FILE_VERSION_OFFSET = 124;
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
