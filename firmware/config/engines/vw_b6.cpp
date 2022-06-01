@@ -111,7 +111,7 @@ static void commonPassatB6() {
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
 	commonPassatB6();
-#endif
+
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	coolantControl->pin = PROTEUS_LS_5;
 
@@ -119,6 +119,7 @@ void setProteusVwPassatB6() {
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
 	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
+#endif
 }
 
 /**
