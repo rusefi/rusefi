@@ -23,7 +23,7 @@ public class AverageAngles {
         SHAFT_PRIMARY_FALLING(PRIMARY),
         SHAFT_PRIMARY_RISING(PRIMARY),
         SHAFT_SECONDARY_FALLING(SECONDARY),
-        SHAFT_SECONDARY_RISING(SECONDARY),
+        SHAFT_SECONDARY_RISING(SECONDARY);
 
         private String channel;
 
