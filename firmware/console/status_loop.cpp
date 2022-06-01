@@ -725,6 +725,7 @@ void updateTunerStudioState() {
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
+	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
 
 #if EFI_SHAFT_POSITION_INPUT
 
