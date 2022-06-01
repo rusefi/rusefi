@@ -4,7 +4,7 @@ pins:
     id: C13
     class: outputs
     type: ign
-    ts_name: C2-1 - Coil 1
+    ts_name: C2-1 - IGN 1
     function: Coil 1
 
 
