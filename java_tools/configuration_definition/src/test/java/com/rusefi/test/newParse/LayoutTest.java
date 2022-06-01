@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import static com.rusefi.test.newParse.NewParseHelper.parseToOutputChannels;
 import static com.rusefi.test.newParse.NewParseHelper.parseToTs;
+import static org.junit.Assert.assertEquals;
 
 public class LayoutTest {
     @Test
@@ -282,5 +283,25 @@ public class LayoutTest {
                         "withOpt = bits, U32, 0, [2:2]\n" +
                         "; total TS size = 4\n"
                 , parseToOutputChannels(input));
+    }
+
+    @Test
+    public void bigOutputChannels() throws IOException {
+        String input = "struct_no_prefix total\n" +
+                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +
+                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "angle_t m_requested_pump;Computed requested pump \n" +
+                "float tCharge;speed density\n" +
+                "end_struct\n";
+
+        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
+                "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
+                "isForcedInduction = bits, U32, 8, [0:0]\n" +
+                "enableFan1WithAc = bits, U32, 8, [1:1]\n" +
+                "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
+                "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
+                "; total TS size = 20\n", parseToOutputChannels(input));
     }
 }
