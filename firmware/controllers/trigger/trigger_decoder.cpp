@@ -38,7 +38,9 @@
 #include "sensor_chart.h"
 #endif
 
-TriggerDecoderBase::TriggerDecoderBase() {
+TriggerDecoderBase::TriggerDecoderBase(const char* name)
+	: name(name)
+{
 	resetTriggerState();
 }
 
@@ -90,10 +92,12 @@ void TriggerDecoderBase::resetCurrentCycleState() {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-PrimaryTriggerDecoder::PrimaryTriggerDecoder() :
-		//https://en.cppreference.com/w/cpp/language/zero_initialization
-		timeOfLastEvent(), instantRpmValue()
-		{
+PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
+	: TriggerDecoderBase(name)
+	//https://en.cppreference.com/w/cpp/language/zero_initialization
+	, timeOfLastEvent()
+	, instantRpmValue()
+{
 }
 
 #if ! EFI_PROD_CODE
@@ -343,7 +347,7 @@ static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_F
 
 #define nextTriggerEvent() \
  { \
-	if (triggerConfiguration.UseOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
+	if (useOnlyRisingEdgeForTrigger) {currentCycle.current_index++;} \
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }

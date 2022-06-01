@@ -113,7 +113,23 @@ public:
 
 	TriggerWaveform triggerShape;
 
-	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK] = {
+		{
+			"VVT B1 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		},
+#if BANKS_COUNT >= 2
+		{
+			"VVT B2 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		}
+#endif
+	};
+
 	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;

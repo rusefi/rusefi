@@ -73,8 +73,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(operation_mode_e triggerOperationMode,
-			bool useOnlyRisingEdgeForTrigger, const TriggerConfiguration& triggerConfig);
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig);
 	void setShapeDefinitionError(bool value);
 
 	/**
