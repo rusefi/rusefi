@@ -1048,9 +1048,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case FRANKENSO_MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration();
 		break;
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfiguration1_24();
-		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
 		break;

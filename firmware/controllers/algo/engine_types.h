@@ -61,11 +61,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	MITSU_4G93 = 16,
 
-	/**
-	 * a version of HONDA_ACCORD_CD which only uses two of three trigger input sensors
-	 */
-	HONDA_ACCORD_CD_TWO_WIRES = 17,
-
 	TEST_33816 = 18,
 
 
@@ -221,6 +216,7 @@ typedef enum __attribute__ ((__packed__)) {
     ET_UNUSED96 = 96,
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
+	ET_UNUSED_17 = 17,
 
 	/**
 	 * this configuration has as few pins configured as possible
