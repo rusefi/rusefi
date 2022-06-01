@@ -8,9 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-/**
- * proposed alternative which does not seem to be covered by any unit tests
- */
 public class OutputChannelWriter {
     private final PrintStream ps;
 
