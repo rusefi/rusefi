@@ -131,30 +131,30 @@ private:
 	RedundantSensor m_redund;
 };
 
-FuncSensPair tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
-FuncSensPair tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
-FuncSensPair tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
-FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
+static FuncSensPair tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
+static FuncSensPair tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
+static FuncSensPair tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
+static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 
 // Used in case of "normal", non-Ford ETB TPS
-RedundantPair tps1(tps1p, tps1s, SensorType::Tps1);
-RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
+static RedundantPair tps1(tps1p, tps1s, SensorType::Tps1);
+static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
 
 // Used only in case of weird Ford-style ETB TPS
-RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
-RedundantFordTps fordTps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
+static RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
+static RedundantFordTps fordTps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 
 // Pedal sensors and redundancy
-FuncSensPair pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
-FuncSensPair pedalSecondary(1, SensorType::AcceleratorPedalSecondary);
-RedundantPair pedal(pedalPrimary, pedalSecondary, SensorType::AcceleratorPedal);
+static FuncSensPair pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
+static FuncSensPair pedalSecondary(1, SensorType::AcceleratorPedalSecondary);
+static RedundantPair pedal(pedalPrimary, pedalSecondary, SensorType::AcceleratorPedal);
 
 // This sensor indicates the driver's throttle intent - Pedal if we have one, TPS if not.
-ProxySensor driverIntent(SensorType::DriverThrottleIntent);
+static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
 // These sensors are TPS-like, so handle them in here too
-FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
-FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
+static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
+static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
 	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
