@@ -27,7 +27,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
 
-## May 2022 Release - "Day 98"
+## June 2022 Release - "Day 98"
 
 ### Added
  - FasterEngineSpinUp should be enabled by default #4094
