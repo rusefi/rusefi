@@ -108,7 +108,7 @@ pins:
   - pin: 59
     # H144_IN_SENS4
     id: F6
-    class: outputs
+    class: event_inputs
     ts_name: C2-59 - Cam
     function: Cam Sensor Input
     type: ls
@@ -117,7 +117,7 @@ pins:
   - pin: 63
     # H144_IN_SENS2
     id: F4
-    class: outputs
+    class: event_inputs
     ts_name: C2-63 - Crank
     function: Crank Input
     type: ls
