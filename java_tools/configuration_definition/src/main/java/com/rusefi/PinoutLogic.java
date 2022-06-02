@@ -135,7 +135,7 @@ public class PinoutLogic {
             SystemOut.println("Null yaml for " + yamlFile);
             return;
         }
-        SystemOut.println(data);
+        log.info("Got from " + yamlFile + ": " +  data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
