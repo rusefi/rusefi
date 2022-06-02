@@ -3,6 +3,14 @@ pins:
     function: CAN bus low
     type: can
 
+  - pin: 49
+    # H144_OUT_IO12
+    id: A8
+    class: outputs
+    function: Radiator Fan Relay
+    type: hs
+    ts_name: C3-49 - Fan Relay
+
   - pin: 53
     function: CAN bus high
     type: can
@@ -22,5 +30,32 @@ pins:
     type: av
     class: analog_inputs
     ts_name: C3-56 - IAT
-    function: CLT
+    function: IAT
+    color: purple
+
+  - pin: 57
+    # H144_IN_AUX4
+    id: EFI_ADC_7
+    type: av
+    class: analog_inputs
+    ts_name: C3-57 - A/C Pressure
+    function: A/C Pressure
+    color: purple
+
+  - pin: 58
+    # H144_IN_MAP3
+    id: EFI_ADC_2
+    type: av
+    class: analog_inputs
+    ts_name: C3-58 - Baro
+    function: Baro Pressure
+    color: purple
+
+  - pin: 59
+    # H144_IN_MAP2
+    id: EFI_ADC_11
+    type: av
+    class: analog_inputs
+    ts_name: C3-59 - MAP
+    function: MAP
     color: purple
