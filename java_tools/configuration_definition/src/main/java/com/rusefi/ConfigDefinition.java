@@ -162,7 +162,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    pinoutLogic = PinoutLogic.create(boardName);
+                    pinoutLogic = PinoutLogic.create(boardName, PinoutLogic.CONFIG_BOARDS);
                     if (pinoutLogic != null)
                         state.inputFiles.addAll(pinoutLogic.getInputFiles());
                     break;
