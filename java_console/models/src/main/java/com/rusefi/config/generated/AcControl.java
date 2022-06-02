@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Thu Jun 02 00:32:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Thu Jun 02 01:28:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -341,7 +341,7 @@ public class AcControl {
 	public static final String TRIGGER_COMMENT = "#";
 	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
-	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
+	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;

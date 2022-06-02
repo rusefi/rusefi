@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 30 11:18:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 02 01:29:28 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1484,6 +1484,10 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * offset 688
+	 */
+	uint16_t unused688;
+	/**
 	 * offset 690
 	 */
 	pin_output_mode_e hip9011CsPinMode;
@@ -2772,6 +2776,10 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * offset 1452
+	 */
+	uint16_t unused1452;
+	/**
 	 * offset 1454
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
@@ -3129,76 +3137,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1608 bit 8 */
-	bool unusedBit_538_8 : 1 {};
+	bool unusedBit_540_8 : 1 {};
 	/**
 	offset 1608 bit 9 */
-	bool unusedBit_538_9 : 1 {};
+	bool unusedBit_540_9 : 1 {};
 	/**
 	offset 1608 bit 10 */
-	bool unusedBit_538_10 : 1 {};
+	bool unusedBit_540_10 : 1 {};
 	/**
 	offset 1608 bit 11 */
-	bool unusedBit_538_11 : 1 {};
+	bool unusedBit_540_11 : 1 {};
 	/**
 	offset 1608 bit 12 */
-	bool unusedBit_538_12 : 1 {};
+	bool unusedBit_540_12 : 1 {};
 	/**
 	offset 1608 bit 13 */
-	bool unusedBit_538_13 : 1 {};
+	bool unusedBit_540_13 : 1 {};
 	/**
 	offset 1608 bit 14 */
-	bool unusedBit_538_14 : 1 {};
+	bool unusedBit_540_14 : 1 {};
 	/**
 	offset 1608 bit 15 */
-	bool unusedBit_538_15 : 1 {};
+	bool unusedBit_540_15 : 1 {};
 	/**
 	offset 1608 bit 16 */
-	bool unusedBit_538_16 : 1 {};
+	bool unusedBit_540_16 : 1 {};
 	/**
 	offset 1608 bit 17 */
-	bool unusedBit_538_17 : 1 {};
+	bool unusedBit_540_17 : 1 {};
 	/**
 	offset 1608 bit 18 */
-	bool unusedBit_538_18 : 1 {};
+	bool unusedBit_540_18 : 1 {};
 	/**
 	offset 1608 bit 19 */
-	bool unusedBit_538_19 : 1 {};
+	bool unusedBit_540_19 : 1 {};
 	/**
 	offset 1608 bit 20 */
-	bool unusedBit_538_20 : 1 {};
+	bool unusedBit_540_20 : 1 {};
 	/**
 	offset 1608 bit 21 */
-	bool unusedBit_538_21 : 1 {};
+	bool unusedBit_540_21 : 1 {};
 	/**
 	offset 1608 bit 22 */
-	bool unusedBit_538_22 : 1 {};
+	bool unusedBit_540_22 : 1 {};
 	/**
 	offset 1608 bit 23 */
-	bool unusedBit_538_23 : 1 {};
+	bool unusedBit_540_23 : 1 {};
 	/**
 	offset 1608 bit 24 */
-	bool unusedBit_538_24 : 1 {};
+	bool unusedBit_540_24 : 1 {};
 	/**
 	offset 1608 bit 25 */
-	bool unusedBit_538_25 : 1 {};
+	bool unusedBit_540_25 : 1 {};
 	/**
 	offset 1608 bit 26 */
-	bool unusedBit_538_26 : 1 {};
+	bool unusedBit_540_26 : 1 {};
 	/**
 	offset 1608 bit 27 */
-	bool unusedBit_538_27 : 1 {};
+	bool unusedBit_540_27 : 1 {};
 	/**
 	offset 1608 bit 28 */
-	bool unusedBit_538_28 : 1 {};
+	bool unusedBit_540_28 : 1 {};
 	/**
 	offset 1608 bit 29 */
-	bool unusedBit_538_29 : 1 {};
+	bool unusedBit_540_29 : 1 {};
 	/**
 	offset 1608 bit 30 */
-	bool unusedBit_538_30 : 1 {};
+	bool unusedBit_540_30 : 1 {};
 	/**
 	offset 1608 bit 31 */
-	bool unusedBit_538_31 : 1 {};
+	bool unusedBit_540_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -4934,4 +4942,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon May 30 11:18:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 02 01:29:28 UTC 2022
