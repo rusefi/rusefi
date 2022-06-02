@@ -35,7 +35,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "25 - INJ_6";
 		case Gpio::F13: return "72 - INJ_7";
 		case Gpio::F14: return "73 - INJ_8";
-		case Gpio::F5: return "9 - IN_SENS3";
 		case Gpio::G2: return "70 - OUT_PUMP";
 		case Gpio::G3: return "46 - OUT_CANIST";
 		case Gpio::G4: return "31 - OUT_CE";

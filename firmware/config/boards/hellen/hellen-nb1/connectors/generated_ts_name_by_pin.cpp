@@ -37,7 +37,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "3T/4D - BOOST OUT";
 		case Gpio::F14: return "3Q - VICS";
 		case Gpio::F3: return "3J - O2S2";
-		case Gpio::F7: return "2M - KNOCK";
 		case Gpio::F9: return "1F - Brake/RES1";
 		case Gpio::G11: return "1S - AC Relay";
 		case Gpio::G12: return "1Q - Aternator Warning Lamp";
