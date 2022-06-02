@@ -24,6 +24,12 @@ Release template (copy/paste this for new release):
 # Changelog
 
 ### Added
+
+### Fixed
+
+## May 2022 Release - "Day 58"
+
+### Added
  - FasterEngineSpinUp should be enabled by default #4094
  - ETB low limit is now configurable #4119
  - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
@@ -40,7 +46,7 @@ Release template (copy/paste this for new release):
 ### Removed
  - Various Honda 24/4/1 trigger modes (that didn't work very well), replaced with "12 tooth crank" mode.
 
-## April 20202 Release - "Day 58"
+## April 2022 Release - "Day 58"
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
