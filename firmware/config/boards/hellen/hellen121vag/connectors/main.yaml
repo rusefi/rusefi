@@ -116,8 +116,8 @@ pins:
     type: ls
     
   - pin: 38
-    id: [F9, ADC3_CHANNEL_7]
-    class: [switch_inputs, analog_inputs]
+    id: [F9]
+    class: [switch_inputs]
     ts_name: 48 - IN RES1
     function: IN_RES1
 

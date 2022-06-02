@@ -64,9 +64,9 @@ pins:
 
   - pin: 9
     function: Fuel Level / CLT Analog Input
-    id: F5
-    class: analog_inputs
-    ts_name: 9 - IN_SENS3
+#    id: F5
+#    class: analog_inputs
+#    ts_name: 9 - IN_SENS3
     color: white
 
   - pin: 10

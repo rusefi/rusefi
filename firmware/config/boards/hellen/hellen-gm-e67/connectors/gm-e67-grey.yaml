@@ -11,6 +11,7 @@ pins:
     # H144_IN_CLT
     id: EFI_ADC_12
     type: av
+    class: analog_inputs
     ts_name: C3-55 - CLT
     function: CLT
     color: purple
@@ -19,6 +20,7 @@ pins:
     # H144_IN_IAT
     id: EFI_ADC_13
     type: av
+    class: analog_inputs
     ts_name: C3-56 - IAT
     function: CLT
     color: purple
