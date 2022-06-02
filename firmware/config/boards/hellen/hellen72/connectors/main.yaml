@@ -284,8 +284,8 @@ pins:
     color: black W4
 
   - pin: 4B
-    id: [F9, ADC3_CHANNEL_7]
-    class: [switch_inputs, analog_inputs]
+    id: [F9]
+    class: [switch_inputs]
     ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
 

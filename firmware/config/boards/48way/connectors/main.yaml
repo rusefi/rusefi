@@ -69,7 +69,7 @@ pins:
       class: outputs
       ts_name: Injector 1 Output (E15)
     - id: E1
-      class: analog_inputs
+      class: switch_inputs
       ts_name: Clutch Input (E1)
     - id: C7
       class: outputs
