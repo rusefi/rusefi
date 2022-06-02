@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 01 14:47:14 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 02 00:33:38 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -191,7 +191,7 @@ public class Fields {
 	public static final int benchTestOnTime_offset = 1614;
 	public static final int binarySerialRxPin_offset = 1510;
 	public static final int binarySerialTxPin_offset = 1508;
-	public static final int BLOCKING_FACTOR = 256;
+	public static final int BLOCKING_FACTOR = 500;
 	public static final int boardUse2stepPullDown_offset = 1340;
 	public static final int boardUseCamPullDown_offset = 1340;
 	public static final int boardUseCamVrPullUp_offset = 1340;
@@ -1871,6 +1871,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
+	public static final int SIGNATURE_HASH = 59977318;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2362,7 +2363,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.01.all.3224237016";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.02.all.59977318";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
