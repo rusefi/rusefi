@@ -121,6 +121,7 @@ public class VariableRegistry {
         int maxValue = valueNameById.lastKey();
 
         StringBuilder sb = new StringBuilder();
+        // todo: TS enum key-value form #4232
         for (int i = 0; i <= maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(", ");
