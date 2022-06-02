@@ -201,11 +201,11 @@ public class PinoutLogic {
         File dirName = new File(dirPath);
         FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
         File[] boardYamlFiles = dirName.listFiles(filter);
-        Arrays.sort(boardYamlFiles);
         if (boardYamlFiles == null) {
             log.info("No yaml files in " + dirPath);
             return null;
         }
+        Arrays.sort(boardYamlFiles);
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
