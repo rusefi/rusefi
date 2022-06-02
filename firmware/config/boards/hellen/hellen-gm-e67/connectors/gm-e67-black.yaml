@@ -126,7 +126,7 @@ pins:
   - pin: 64
     # H144_IN_TPS
     id: EFI_ADC_4
-    class: outputs
+    class: analog_inputs
     ts_name: C2-64 - TPS1
     function: TPS1
     type: av
@@ -135,7 +135,7 @@ pins:
   - pin: 66
     # H144_IN_AUX1
     id: EFI_ADC_8
-    class: outputs
+    class: analog_inputs
     ts_name: C2-66 - TPS2
     function: TPS2
     type: av
