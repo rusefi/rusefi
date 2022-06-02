@@ -34,7 +34,16 @@ public class PinoutLogic {
         this.boardYamlFiles = boardYamlFiles;
     }
 
-    private static void registerPins(ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state) {
+    private static Map.Entry<String, Value> find(EnumsReader.EnumState enumList, String id) {
+        for (Map.Entry<String, Value> kv : enumList.entrySet()) {
+            if (kv.getKey().equals(id)) {
+                return kv;
+            }
+        }
+        return null;
+    }
+
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -54,17 +63,17 @@ public class PinoutLogic {
             String pinType = listPinType.getPinType();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             Objects.requireNonNull(enumList, "Enum for " + pinType);
-            for (Map.Entry<String, Value> kv : enumList.entrySet()) {
-                if (kv.getKey().equals(id)) {
+            Map.Entry<String, Value> kv = find(enumList, id);
+            if (kv == null) {
+                throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
+            }
+
                     int index = kv.getValue().getIntValue();
                     classList.ensureCapacity(index + 1);
                     for (int ii = classList.size(); ii <= index; ii++) {
                         classList.add(null);
                     }
                     classList.set(index, listPin.getPinTsName());
-                    break;
-                }
-            }
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             PinType namePinType = PinType.find(kv.getKey());
@@ -176,20 +185,23 @@ public class PinoutLogic {
         PinState thisPin = new PinState(id, pinTsName, pinClass);
         globalList.add(thisPin);
     }
-
+/*
     public static void main(String[] args) throws IOException {
-        PinoutLogic logic = create("hellen-gm-e67","../../firmware/config/boards/hellen/");
+        String boardName = "hellen-gm-e67";
+        PinoutLogic logic = create(boardName,"../../firmware/config/boards/hellen/");
         logic.readFiles();
         log.info(logic.toString());
 
-        registerPins(logic.globalList, new VariableRegistry(), new ReaderState());
+        registerPins(boardName, logic.globalList, new VariableRegistry(), new ReaderState());
     }
+*/
 
     public static PinoutLogic create(String boardName, String rootFolder) {
         String dirPath = rootFolder + boardName + PinoutLogic.CONNECTORS;
         File dirName = new File(dirPath);
         FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
         File[] boardYamlFiles = dirName.listFiles(filter);
+        Arrays.sort(boardYamlFiles);
         if (boardYamlFiles == null) {
             log.info("No yaml files in " + dirPath);
             return null;
@@ -199,7 +211,7 @@ public class PinoutLogic {
 
     public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state) throws IOException {
         readFiles();
-        registerPins(globalList, registry, state);
+        registerPins(boardName, globalList, registry, state);
 
         try (FileWriter getTsNameByIdFile = new FileWriter(PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp")) {
             getTsNameByIdFile.append(header);
