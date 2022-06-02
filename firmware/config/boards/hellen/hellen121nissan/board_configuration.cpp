@@ -65,7 +65,6 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	// todo: remove from default since 4 cylinder does not use it

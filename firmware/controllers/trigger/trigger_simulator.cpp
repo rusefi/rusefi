@@ -70,9 +70,8 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
-	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
-	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
-
+	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING };
+	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING };
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
@@ -88,7 +87,6 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 			}
 		}
 	}
-
 }
 
 void TriggerStimulatorHelper::assertSyncPosition(

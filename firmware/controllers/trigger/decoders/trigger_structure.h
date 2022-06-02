@@ -58,8 +58,6 @@ public:
 	void setAngle(angle_t angle);
 };
 
-#define TRIGGER_CHANNEL_COUNT 3
-
 class Engine;
 class TriggerDecoderBase;
 class TriggerFormDetails;

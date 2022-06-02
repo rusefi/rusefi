@@ -66,7 +66,6 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = Gpio::B1; // 82 - VR
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A6; // 86 - CAM1
 

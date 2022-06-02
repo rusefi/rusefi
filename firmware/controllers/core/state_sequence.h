@@ -24,7 +24,7 @@
 // todo https://github.com/rusefi/rusefi/issues/3003
 #define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
-#define PWM_PHASE_MAX_WAVE_PER_PWM 3
+#define PWM_PHASE_MAX_WAVE_PER_PWM 2
 
 typedef trigger_value_e pin_state_t;
 
