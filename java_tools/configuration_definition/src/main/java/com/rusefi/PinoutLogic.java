@@ -16,7 +16,7 @@ public class PinoutLogic {
     private static final String CONFIG_BOARDS = "config/boards/";
     private static final String CONNECTORS = "/connectors";
     private static final String QUOTED_NONE = quote("NONE");
-    public static final String QUOTED_INVALID = quote("INVALID");
+    public static final String QUOTED_INVALID = quote(VariableRegistry.INVALID);
 
     private final File[] boardYamlFiles;
     private final String boardName;
