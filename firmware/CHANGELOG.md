@@ -37,6 +37,9 @@ Release template (copy/paste this for new release):
  - Make 36-2 trigger sync parameters more generous #4132
  - Synchronized Phase handling fixes #4099
 
+### Removed
+ - Various Honda 24/4/1 trigger modes (that didn't work very well), replaced with "12 tooth crank" mode.
+
 ## April 20202 Release - "Day 58"
 
 All notable user-facing or behavior-altering changes will be documented in this file.

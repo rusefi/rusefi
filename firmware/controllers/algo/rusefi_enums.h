@@ -53,8 +53,6 @@ typedef enum {
 typedef enum {
 	T_PRIMARY = 0,
 	T_SECONDARY = 1,
-	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
-	T_CHANNEL_3 = 2,
 	T_NONE = 15
 } trigger_wheel_e;
 
@@ -64,8 +62,6 @@ typedef enum {
 	SHAFT_PRIMARY_RISING = 1,
 	SHAFT_SECONDARY_FALLING = 2,
 	SHAFT_SECONDARY_RISING = 3,
-	SHAFT_3RD_FALLING = 4,
-	SHAFT_3RD_RISING = 5,
 } trigger_event_e;
 
 typedef enum  __attribute__ ((__packed__)) {
