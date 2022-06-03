@@ -22,6 +22,8 @@ static void commonPassatB6() {
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
 
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
@@ -143,7 +145,7 @@ void setProteusVwPassatB6() {
 
 
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_PPS;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
 #endif
 }
