@@ -147,6 +147,10 @@ void setProteusVwPassatB6() {
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
 	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
 
+	//engineConfiguration->boostControlPin = PROTEUS_LS_8;
+	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
+	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
+
 
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
 	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
