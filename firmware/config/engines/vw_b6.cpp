@@ -22,6 +22,7 @@ static void commonPassatB6() {
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
 
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
