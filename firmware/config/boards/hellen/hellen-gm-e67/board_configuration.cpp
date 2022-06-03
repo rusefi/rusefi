@@ -102,6 +102,23 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
 
+	// TLE9201 driver
+    // This chip has three control pins:
+    // DIR - sets direction of the motor
+    // PWM - pwm control (enable high, coast low)
+    // DIS - disables motor (enable low)
+
+    //ETB1
+    // PWM pin
+    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM8;
+    // DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_IO13;
+   	// Disable pin
+   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO4;
+   	// Unused
+ 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+
+
 }
 
 void setSerialConfigurationOverrides() {
