@@ -93,8 +93,7 @@ public class ConfigField {
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
                 if (!hasAutoscale && !scale.trim().equals("1")) {
-                    System.out.println("GRRRRRRRRRRRRRRRR " + "Unexpected scale of " + scale + " without autoscale on " + this);
-//                throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
+                    throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
                 }
             }
         }
