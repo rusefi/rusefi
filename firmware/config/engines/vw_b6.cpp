@@ -22,6 +22,10 @@ static void commonPassatB6() {
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
+	engineConfiguration->disableEtbWhenEngineStopped = true;
+
 
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
@@ -129,6 +133,8 @@ static void commonPassatB6() {
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
 	commonPassatB6();
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 
 	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
@@ -140,6 +146,15 @@ void setProteusVwPassatB6() {
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
 	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
+
+	//engineConfiguration->boostControlPin = PROTEUS_LS_8;
+	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
+	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
+
+
+	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
 #endif
 }
 

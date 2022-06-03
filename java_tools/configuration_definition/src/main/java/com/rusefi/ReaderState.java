@@ -346,7 +346,7 @@ public class ReaderState {
     }
 
     public void addPrepend(String fileName) {
-        if (fileName.isEmpty()) {
+        if (fileName == null || fileName.isEmpty()) {
             // see UsagesReader use-case with dynamic prepend usage
             return;
         }

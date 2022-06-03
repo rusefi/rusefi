@@ -137,8 +137,8 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		pcts = &config->tcu_pcVals4;
 		break;
 	}
-	int pct = interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
-	pcPwm.setSimplePwmDutyCycle(pct*0.01);
+	float duty = 0.01f * interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
+	pcPwm.setSimplePwmDutyCycle(duty);
 }
 
 void Gm4l6xTransmissionController::set32State(gear_e gear) {
