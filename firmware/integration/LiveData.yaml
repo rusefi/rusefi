@@ -77,6 +77,7 @@ Usages:
     java: TriggerState.java
     folder: controllers/trigger
     prepend: integration/rusefi_config.txt
+    output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
 
   - name: wall_fuel_state
     java: WallFuelState.java
@@ -85,6 +86,7 @@ Usages:
   - name: idle_state
     java: IdleState.java
     folder: controllers/actuators
+    output_name: idle
 
   - name: ignition_state
     java: IgnitionState.java

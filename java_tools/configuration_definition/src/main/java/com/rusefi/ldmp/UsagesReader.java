@@ -70,7 +70,7 @@ public class UsagesReader {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
@@ -82,9 +82,10 @@ public class UsagesReader {
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
         EntryHandler handler = new EntryHandler() {
-
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException {
+                // TODO: use outputNames
+
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition);
 
@@ -125,7 +126,21 @@ public class UsagesReader {
             // Defaults to false if not specified
             withCDefines = withCDefines != null && withCDefines;
 
-            handler.onEntry(name, java, folder, prepend, withCDefines);
+            Object outputNames = entry.get("output_name");
+
+            String[] outputNamesArr;
+            if (outputNames == null) {
+                outputNamesArr = new String[0];
+            } else if (outputNames instanceof String) {
+                outputNamesArr = new String[1];
+                outputNamesArr[0] = (String)outputNames;
+            } else {
+                ArrayList<String> nameList = (ArrayList<String>)outputNames;
+                outputNamesArr = new String[nameList.size()];
+                nameList.toArray(outputNamesArr);
+            }
+
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
