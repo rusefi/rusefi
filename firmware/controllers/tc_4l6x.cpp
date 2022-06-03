@@ -96,7 +96,7 @@ void Gm4l6xTransmissionController::setTccState() {
 }
 
 void Gm4l6xTransmissionController::setPcState(gear_e gear) {
-	uint8_t (*pcts)[efi::size(config->tcu_pcAirmassBins)];
+	uint8_t (*pcts)[sizeof(config->tcu_pcAirmassBins)/sizeof(config->tcu_pcAirmassBins[0])];
 	if (gear != getCurrentGear()) {
 		shiftingFrom = getCurrentGear();
 		isShifting = true;
