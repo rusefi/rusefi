@@ -1646,7 +1646,7 @@ uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 #if LAMBDA
 uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
 #else
-uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
+uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
 #endif
 
 ! union
@@ -1697,7 +1697,7 @@ uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 
 
 #define TCU_MAGIC_SIZE 8
 
-uint8_t[TCU_MAGIC_SIZE] tcu_pcAirmassBins;;"Airmass", 1, 0, 0, 255, 2
+uint8_t[TCU_MAGIC_SIZE] autoscale tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
 uint8_t[TCU_MAGIC_SIZE] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_MAGIC_SIZE] tcu_pcValsN;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_MAGIC_SIZE] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
