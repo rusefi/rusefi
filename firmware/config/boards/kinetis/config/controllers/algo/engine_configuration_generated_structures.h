@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 04:51:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 05:20:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4870,7 +4870,7 @@ struct persistent_config_s {
 	Airmass
 	 * offset 21180
 	 */
-	uint8_t tcu_pcAirmassBins[TCU_MAGIC_SIZE];
+	scaled_channel<uint8_t, 50, 1> tcu_pcAirmassBins[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21188
@@ -4960,4 +4960,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21324);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 04:51:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 05:20:51 UTC 2022
