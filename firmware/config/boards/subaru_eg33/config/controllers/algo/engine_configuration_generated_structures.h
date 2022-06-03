@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jun 02 01:29:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jun 03 04:51:15 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3850,19 +3850,19 @@ struct engine_configuration_s {
 	V
 	 * offset 2516
 	 */
-	uint8_t triggerCompCenterVolt;
+	scaled_channel<uint8_t, 50, 1> triggerCompCenterVolt;
 	/**
 	 * Trigger comparator hysteresis voltage (Min)
 	V
 	 * offset 2517
 	 */
-	uint8_t triggerCompHystMin;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMin;
 	/**
 	 * Trigger comparator hysteresis voltage (Max)
 	V
 	 * offset 2518
 	 */
-	uint8_t triggerCompHystMax;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMax;
 	/**
 	 * VR-sensor saturation RPM
 	RPM
@@ -4852,67 +4852,67 @@ struct persistent_config_s {
 	Airmass
 	 * offset 21208
 	 */
-	uint8_t tcu_pcAirmassBins[8];
+	uint8_t tcu_pcAirmassBins[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21216
 	 */
-	uint8_t tcu_pcValsR[8];
+	uint8_t tcu_pcValsR[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21224
 	 */
-	uint8_t tcu_pcValsN[8];
+	uint8_t tcu_pcValsN[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21232
 	 */
-	uint8_t tcu_pcVals1[8];
+	uint8_t tcu_pcVals1[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21240
 	 */
-	uint8_t tcu_pcVals2[8];
+	uint8_t tcu_pcVals2[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21248
 	 */
-	uint8_t tcu_pcVals3[8];
+	uint8_t tcu_pcVals3[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21256
 	 */
-	uint8_t tcu_pcVals4[8];
+	uint8_t tcu_pcVals4[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21264
 	 */
-	uint8_t tcu_pcVals12[8];
+	uint8_t tcu_pcVals12[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21272
 	 */
-	uint8_t tcu_pcVals23[8];
+	uint8_t tcu_pcVals23[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21280
 	 */
-	uint8_t tcu_pcVals34[8];
+	uint8_t tcu_pcVals34[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21288
 	 */
-	uint8_t tcu_pcVals21[8];
+	uint8_t tcu_pcVals21[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21296
 	 */
-	uint8_t tcu_pcVals32[8];
+	uint8_t tcu_pcVals32[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21304
 	 */
-	uint8_t tcu_pcVals43[8];
+	uint8_t tcu_pcVals43[TCU_MAGIC_SIZE];
 	/**
 	TPS
 	 * offset 21312
@@ -4942,4 +4942,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jun 02 01:29:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jun 03 04:51:15 UTC 2022

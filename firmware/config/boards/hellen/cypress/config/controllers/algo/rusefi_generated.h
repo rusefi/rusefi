@@ -1923,7 +1923,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 143933722
+#define SIGNATURE_HASH 2921861758
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2059,6 +2059,7 @@
 #define tcu_32SpeedBins_offset 21336
 #define tcu_32Vals_offset 21344
 #define TCU_GEAR_COUNT 10
+#define TCU_MAGIC_SIZE 8
 #define tcu_pc_solenoid_freq_offset 3734
 #define tcu_pc_solenoid_pin_mode_offset 3732
 #define tcu_pc_solenoid_pin_offset 3730
@@ -2474,7 +2475,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.03.hellen_cypress.143933722"
+#define TS_SIGNATURE "rusEFI 2022.06.03.hellen_cypress.2921861758"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
