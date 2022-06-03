@@ -1397,9 +1397,9 @@ tChargeMode_e tChargeMode;
 
 	uint8_t[8] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
 
-	uint8_t triggerCompCenterVolt;+Trigger comparator center point voltage;"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
-	uint8_t triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
-	uint8_t triggerCompHystMax;+Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
+	uint8_t autoscale triggerCompCenterVolt;+Trigger comparator center point voltage;"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
+	uint8_t autoscale triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
+	uint8_t autoscale triggerCompHystMax;+Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompSensorSatRpm;+VR-sensor saturation RPM;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
 	pid_s idleRpmPid2
