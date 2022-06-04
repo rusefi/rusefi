@@ -1,4 +1,20 @@
 pins:
+  - pin: 7
+    # H144_OUT_PWM1
+    id: D13
+    class: outputs
+    function: Radiator Fan Relay
+    type: hs
+    ts_name: C3-7 - Alternator Enable
+
+  - pin: 16
+    # H144_OUT_IO9
+    id: G13
+    class: outputs
+    function: Radiator Fan Relay
+    type: hs
+    ts_name: C3-16 - Coolant Pump
+
   - pin: 33
     function: CAN bus low
     type: can
