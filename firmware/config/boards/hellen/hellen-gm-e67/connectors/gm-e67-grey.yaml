@@ -1,4 +1,20 @@
 pins:
+  - pin: 7
+    # H144_OUT_PWM1
+    id: D13
+    class: outputs
+    function: Alternator Enable
+    type: hs
+    ts_name: C3-7 - Alternator Enable
+
+  - pin: 16
+    # H144_OUT_IO9
+    id: G13
+    class: outputs
+    function: Coolant Pump
+    type: hs
+    ts_name: C3-16 - Coolant Pump
+
   - pin: 33
     function: CAN bus low
     type: can
@@ -59,3 +75,16 @@ pins:
     ts_name: C3-59 - MAP
     function: MAP
     color: purple
+
+  - pin: 66
+    # H144_IN_VSS
+    id: F11
+    class: switch_inputs
+    function: Vehicle Speed Sensor Input Pos
+    type: hall
+    ts_name: C3-66 - VSS Input
+    color: gray
+
+  - pin: 67
+    function: Vehicle Speed Sensor Input Neg
+    color: gray

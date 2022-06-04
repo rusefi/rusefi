@@ -1909,7 +1909,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 1456940695
+#define SIGNATURE_HASH 641887220
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2045,6 +2045,7 @@
 #define tcu_32SpeedBins_offset 21308
 #define tcu_32Vals_offset 21316
 #define TCU_GEAR_COUNT 10
+#define TCU_MAGIC_SIZE 8
 #define tcu_pc_solenoid_freq_offset 3706
 #define tcu_pc_solenoid_pin_mode_offset 3704
 #define tcu_pc_solenoid_pin_offset 3702
@@ -2460,7 +2461,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.03.kin.1456940695"
+#define TS_SIGNATURE "rusEFI 2022.06.04.kin.641887220"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
