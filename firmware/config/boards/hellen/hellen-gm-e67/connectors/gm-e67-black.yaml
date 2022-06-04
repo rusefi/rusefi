@@ -114,6 +114,15 @@ pins:
     type: ls
     color: purple
 
+  - pin: 60
+    # H144_IN_O2S2
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: C2-60 - Oil Pressure
+    function: Oil Pressure
+    type: av
+    color: purple
+
   - pin: 63
     # H144_IN_SENS2
     id: F4
