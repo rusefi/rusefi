@@ -308,9 +308,9 @@ pins:
     function: A/C Pressure In
 
   - pin: 4H
-    id: [C4, EFI_ADC_14]
-    class: [switch_inputs, analog_inputs]
-    ts_name: 4H - Neutral/AUX2 (A21)
+    id: E14
+    class: event_inputs
+    ts_name: 4H - Neutral
     function: Neutral Switch
 
   - pin: 4I
@@ -527,8 +527,8 @@ pins:
     function: +5v
   
   - pin: 5M
-    id: H5
-    class: switch_inputs
+    id: [C4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
     ts_name: 5M - PPS2 OR TEMPERATURE SENSOR
     function: PPS
     
@@ -542,8 +542,8 @@ pins:
     function: TPS
     
   - pin: 5P
-    id: A3
-    class: switch_inputs
+    id: [A3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
     ts_name: 5P - PPS1   
     
   - pin: 5R     
