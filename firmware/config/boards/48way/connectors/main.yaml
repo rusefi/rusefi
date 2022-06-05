@@ -14,6 +14,9 @@ pins:
     - id: [E6, E6]
       class: [switch_inputs, event_inputs]
       ts_name: Camshaft Input (E6)
+    - id: [C13, C13]
+      class: [switch_inputs, event_inputs]
+      ts_name: CrankShaft Input (C13)
     - id: EFI_ADC_0
       class: analog_inputs
       ts_name: Battery Reference Input (A0)
@@ -66,7 +69,7 @@ pins:
       class: outputs
       ts_name: Injector 1 Output (E15)
     - id: E1
-      class: analog_inputs
+      class: switch_inputs
       ts_name: Clutch Input (E1)
     - id: C7
       class: outputs

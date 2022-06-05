@@ -1082,9 +1082,9 @@ void setProteusHitachiEtbDefaults() {
 	// EFI_ADC_13: "Analog Volt 4"
 	engineConfiguration->tps2_1AdcChannel = PROTEUS_IN_TPS2_1;
 	// EFI_ADC_0: "Analog Volt 5"
-	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
+	engineConfiguration->tps2_2AdcChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	// EFI_ADC_1: "Analog Volt 6"
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_PPS;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_6;
 
 	// EFI_ADC_2: "Analog Volt 7"
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;

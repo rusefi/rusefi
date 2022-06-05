@@ -1,4 +1,12 @@
 pins:
+  - pin: 12
+    # H144_OUT_IO11
+    id: G2
+    class: outputs
+    function: MIL Check Engine
+    type: hs
+    ts_name: C1-12 Check Engine
+
   - pin: 13
     # H144_OUT_IO5
     id: D2
@@ -6,6 +14,22 @@ pins:
     function: Fuel Pump Relay Output
     type: hs
     ts_name: C1-13 - Fuel Pump
+
+  - pin: 19
+# H144_IN_VBATT
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: C1-19 Battery Sense
+    type: 12v
+
+  - pin: 25
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    function: Tachometer Output
+    type: hs
+    ts_name: C1-25 Tach
 
   - pin: 26
     # H144_OUT_IO6

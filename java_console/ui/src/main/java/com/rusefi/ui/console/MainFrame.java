@@ -57,7 +57,7 @@ public class MainFrame {
         this.consoleUI = Objects.requireNonNull(consoleUI);
 
         this.tabbedPane = tabbedPane;
-        listener = () -> {
+        listener = (String s) -> {
         };
     }
 
@@ -78,7 +78,11 @@ public class MainFrame {
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
         linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String errorMessage) {
+                log.error("onConnectionFailed " + errorMessage);
+                String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
+                        errorMessage;
+                JOptionPane.showMessageDialog(frame.getFrame(), message);
             }
 
             @Override

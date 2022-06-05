@@ -4,7 +4,7 @@ pins:
     id: C13
     class: outputs
     type: ign
-    ts_name: C2-1 - Coil 1
+    ts_name: C2-1 - IGN 1
     function: Coil 1
 
 
@@ -108,16 +108,25 @@ pins:
   - pin: 59
     # H144_IN_SENS4
     id: F6
-    class: outputs
+    class: event_inputs
     ts_name: C2-59 - Cam
     function: Cam Sensor Input
     type: ls
     color: purple
 
+  - pin: 60
+    # H144_IN_O2S2
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: C2-60 - Oil Pressure
+    function: Oil Pressure
+    type: av
+    color: purple
+
   - pin: 63
     # H144_IN_SENS2
     id: F4
-    class: outputs
+    class: event_inputs
     ts_name: C2-63 - Crank
     function: Crank Input
     type: ls
@@ -126,7 +135,7 @@ pins:
   - pin: 64
     # H144_IN_TPS
     id: EFI_ADC_4
-    class: outputs
+    class: analog_inputs
     ts_name: C2-64 - TPS1
     function: TPS1
     type: av
@@ -135,7 +144,7 @@ pins:
   - pin: 66
     # H144_IN_AUX1
     id: EFI_ADC_8
-    class: outputs
+    class: analog_inputs
     ts_name: C2-66 - TPS2
     function: TPS2
     type: av

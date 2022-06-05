@@ -62,15 +62,15 @@ pins:
     function: GND
    
   - pin: 1Q
-    id: [F9, ADC3_CHANNEL_7]
-    class: [switch_inputs, analog_inputs]
+    id: [F9]
+    class: [switch_inputs]
     ts_name: 1Q - Brake/RES1
     function: Brake Switch
     
   - pin: 1S
-    id: F7
-    class: analog_inputs
-    ts_name: 2M - KNOCK
+#    id: F7
+#    class: analog_inputs
+#    ts_name: 2M - KNOCK
     function: Knock sens. in
     
   - pin: 1U

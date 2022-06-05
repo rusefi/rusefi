@@ -116,7 +116,6 @@ static void setupDefaultSensorInputs() {
 #endif
 
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;

@@ -24,6 +24,12 @@ Release template (copy/paste this for new release):
 # Changelog
 
 ### Added
+
+### Fixed
+
+## June 2022 Release - "Day 98"
+
+### Added
  - FasterEngineSpinUp should be enabled by default #4094
  - ETB low limit is now configurable #4119
  - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
@@ -31,12 +37,16 @@ Release template (copy/paste this for new release):
  - TS bench test commands are now configurable #4192
  - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199
  - microRusEFI can now use more pins for Cam position sensor #3032
+ - hard requirement for console version match #4187
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
  - Synchronized Phase handling fixes #4099
 
-## April 20202 Release - "Day 58"
+### Removed
+ - Various Honda 24/4/1 trigger modes (that didn't work very well), replaced with "12 tooth crank" mode.
+
+## April 2022 Release - "Day 58"
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 

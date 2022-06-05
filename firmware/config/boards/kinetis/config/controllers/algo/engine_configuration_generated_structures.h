@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 30 11:18:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 05:20:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1490,6 +1490,10 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * offset 688
+	 */
+	uint16_t unused688;
+	/**
 	 * offset 690
 	 */
 	pin_output_mode_e hip9011CsPinMode;
@@ -2790,6 +2794,10 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * offset 1452
+	 */
+	uint16_t unused1452;
+	/**
 	 * offset 1454
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
@@ -3147,76 +3155,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1608 bit 8 */
-	bool unusedBit_541_8 : 1 {};
+	bool unusedBit_543_8 : 1 {};
 	/**
 	offset 1608 bit 9 */
-	bool unusedBit_541_9 : 1 {};
+	bool unusedBit_543_9 : 1 {};
 	/**
 	offset 1608 bit 10 */
-	bool unusedBit_541_10 : 1 {};
+	bool unusedBit_543_10 : 1 {};
 	/**
 	offset 1608 bit 11 */
-	bool unusedBit_541_11 : 1 {};
+	bool unusedBit_543_11 : 1 {};
 	/**
 	offset 1608 bit 12 */
-	bool unusedBit_541_12 : 1 {};
+	bool unusedBit_543_12 : 1 {};
 	/**
 	offset 1608 bit 13 */
-	bool unusedBit_541_13 : 1 {};
+	bool unusedBit_543_13 : 1 {};
 	/**
 	offset 1608 bit 14 */
-	bool unusedBit_541_14 : 1 {};
+	bool unusedBit_543_14 : 1 {};
 	/**
 	offset 1608 bit 15 */
-	bool unusedBit_541_15 : 1 {};
+	bool unusedBit_543_15 : 1 {};
 	/**
 	offset 1608 bit 16 */
-	bool unusedBit_541_16 : 1 {};
+	bool unusedBit_543_16 : 1 {};
 	/**
 	offset 1608 bit 17 */
-	bool unusedBit_541_17 : 1 {};
+	bool unusedBit_543_17 : 1 {};
 	/**
 	offset 1608 bit 18 */
-	bool unusedBit_541_18 : 1 {};
+	bool unusedBit_543_18 : 1 {};
 	/**
 	offset 1608 bit 19 */
-	bool unusedBit_541_19 : 1 {};
+	bool unusedBit_543_19 : 1 {};
 	/**
 	offset 1608 bit 20 */
-	bool unusedBit_541_20 : 1 {};
+	bool unusedBit_543_20 : 1 {};
 	/**
 	offset 1608 bit 21 */
-	bool unusedBit_541_21 : 1 {};
+	bool unusedBit_543_21 : 1 {};
 	/**
 	offset 1608 bit 22 */
-	bool unusedBit_541_22 : 1 {};
+	bool unusedBit_543_22 : 1 {};
 	/**
 	offset 1608 bit 23 */
-	bool unusedBit_541_23 : 1 {};
+	bool unusedBit_543_23 : 1 {};
 	/**
 	offset 1608 bit 24 */
-	bool unusedBit_541_24 : 1 {};
+	bool unusedBit_543_24 : 1 {};
 	/**
 	offset 1608 bit 25 */
-	bool unusedBit_541_25 : 1 {};
+	bool unusedBit_543_25 : 1 {};
 	/**
 	offset 1608 bit 26 */
-	bool unusedBit_541_26 : 1 {};
+	bool unusedBit_543_26 : 1 {};
 	/**
 	offset 1608 bit 27 */
-	bool unusedBit_541_27 : 1 {};
+	bool unusedBit_543_27 : 1 {};
 	/**
 	offset 1608 bit 28 */
-	bool unusedBit_541_28 : 1 {};
+	bool unusedBit_543_28 : 1 {};
 	/**
 	offset 1608 bit 29 */
-	bool unusedBit_541_29 : 1 {};
+	bool unusedBit_543_29 : 1 {};
 	/**
 	offset 1608 bit 30 */
-	bool unusedBit_541_30 : 1 {};
+	bool unusedBit_543_30 : 1 {};
 	/**
 	offset 1608 bit 31 */
-	bool unusedBit_541_31 : 1 {};
+	bool unusedBit_543_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -3860,19 +3868,19 @@ struct engine_configuration_s {
 	V
 	 * offset 2488
 	 */
-	uint8_t triggerCompCenterVolt;
+	scaled_channel<uint8_t, 50, 1> triggerCompCenterVolt;
 	/**
 	 * Trigger comparator hysteresis voltage (Min)
 	V
 	 * offset 2489
 	 */
-	uint8_t triggerCompHystMin;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMin;
 	/**
 	 * Trigger comparator hysteresis voltage (Max)
 	V
 	 * offset 2490
 	 */
-	uint8_t triggerCompHystMax;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMax;
 	/**
 	 * VR-sensor saturation RPM
 	RPM
@@ -4862,67 +4870,67 @@ struct persistent_config_s {
 	Airmass
 	 * offset 21180
 	 */
-	uint8_t tcu_pcAirmassBins[8];
+	scaled_channel<uint8_t, 50, 1> tcu_pcAirmassBins[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21188
 	 */
-	uint8_t tcu_pcValsR[8];
+	uint8_t tcu_pcValsR[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21196
 	 */
-	uint8_t tcu_pcValsN[8];
+	uint8_t tcu_pcValsN[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21204
 	 */
-	uint8_t tcu_pcVals1[8];
+	uint8_t tcu_pcVals1[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21212
 	 */
-	uint8_t tcu_pcVals2[8];
+	uint8_t tcu_pcVals2[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21220
 	 */
-	uint8_t tcu_pcVals3[8];
+	uint8_t tcu_pcVals3[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21228
 	 */
-	uint8_t tcu_pcVals4[8];
+	uint8_t tcu_pcVals4[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21236
 	 */
-	uint8_t tcu_pcVals12[8];
+	uint8_t tcu_pcVals12[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21244
 	 */
-	uint8_t tcu_pcVals23[8];
+	uint8_t tcu_pcVals23[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21252
 	 */
-	uint8_t tcu_pcVals34[8];
+	uint8_t tcu_pcVals34[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21260
 	 */
-	uint8_t tcu_pcVals21[8];
+	uint8_t tcu_pcVals21[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21268
 	 */
-	uint8_t tcu_pcVals32[8];
+	uint8_t tcu_pcVals32[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21276
 	 */
-	uint8_t tcu_pcVals43[8];
+	uint8_t tcu_pcVals43[TCU_MAGIC_SIZE];
 	/**
 	TPS
 	 * offset 21284
@@ -4952,4 +4960,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21324);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon May 30 11:18:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jun 03 05:20:51 UTC 2022

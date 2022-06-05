@@ -9,14 +9,6 @@
 
 class TriggerWaveform;
 
-void configureHondaAccordCDDip(TriggerWaveform *s);
-void configureHondaAccordShifted(TriggerWaveform *s);
-
-void configureHonda_1_4_24(TriggerWaveform *s, bool withOneEventSignal, bool withFourEventSignal,
-		trigger_wheel_e const oneEventWave,
-		trigger_wheel_e const fourEventWave,
-		float d);
-
 void configureOnePlus16(TriggerWaveform *s);
 
 void configureHondaCbr600(TriggerWaveform *s);

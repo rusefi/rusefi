@@ -6,6 +6,6 @@ public class AbstractConnectionStateListener implements ConnectionStateListener 
     }
 
     @Override
-    public void onConnectionFailed() {
+    public void onConnectionFailed(String s) {
     }
 }

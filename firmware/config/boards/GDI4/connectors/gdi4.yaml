@@ -1,7 +1,91 @@
 pins:
+  - pin: 1a
+    function: Power Ground
+    color: black
+
+  - pin: 2a
+    function: Power Ground
+    color: black
+
+  - pin: 4a
+    function: +12v power
+    color: red
+
   - pin: 6a
-    function: Aux Analog #0
+    function: Aux Analog 0
     color: orange
+
+  - pin: 44a
+    function: Injector Control 1
+    color: blue
+
+  - pin: 45a
+    function: Injector Control 2
+    color: blue
+
+  - pin: 46a
+    function: Injector Control 3
+    color: blue
+
+  - pin: 47a
+    function: Injector Control 4
+    color: blue
+
+  - pin: 52a
+    function: CAN High
+    color: yellow
+
+  - pin: 53a
+    function: CAN Low
+    color: yellow
+
+  - pin: 90a
+    function: Injector Output 3 Negative
+    color: blue
+
+  - pin: 91a
+    function: Injector Output 3 Negative
+    color: blue
+
+  - pin: 92a
+    function: Injector Output 4 Negative
+    color: blue
+
+  - pin: 93a
+    function: Injector Output 4 Negative
+    color: blue
+
+  - pin: 94a
+    function: Injector Output 3 Positive
+    color: blue
+
+  - pin: 95a
+    function: Injector Output 3 Positive
+    color: blue
+
+  - pin: 96a
+    function: Injector Output 4 Positive
+    color: blue
+
+  - pin: 97a
+    function: Injector Output 4 Positive
+    color: blue
+
+  - pin: 114a
+    function: Injector Output 1 Negative
+    color: blue
+
+  - pin: 118a
+    function: Injector Output 1 Positive
+    color: blue
+
+  - pin: 119a
+    function: Injector Output 2 Negative
+    color: blue
+
+  - pin: 121a
+    function: Injector Output 2 Positive
+    color: blue
 
 
 info:
@@ -467,6 +551,10 @@ info:
     - pin: 112a
       x: 3201
       y: 258
+
+    - pin: 114a
+      x: 3516
+      y: 585
 
     - pin: 113a
       x: 3282

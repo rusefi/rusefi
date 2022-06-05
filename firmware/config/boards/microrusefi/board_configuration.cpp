@@ -121,7 +121,6 @@ static void setupDefaultSensorInputs() {
 	// tle8888 VR conditioner
 	engineConfiguration->triggerInputPins[0] = Gpio::C6;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A5;
 

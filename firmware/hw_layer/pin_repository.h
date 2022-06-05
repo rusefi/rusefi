@@ -59,6 +59,7 @@ int brainPin_to_index(brain_pin_e brainPin);
 unsigned int getBrainPinOnchipNum(void);
 unsigned int getBrainPinTotalNum(void);
 const char *hwPortname(brain_pin_e brainPin);
+// the main usage for human-readable board-specific pin reference is convenience of error messages in case of pin conflict.
 const char * getBoardSpecificPinName(brain_pin_e brainPin);
 
 #ifdef __cplusplus

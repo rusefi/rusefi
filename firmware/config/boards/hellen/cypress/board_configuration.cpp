@@ -97,7 +97,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->triggerInputPins[0] = Gpio::B0;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 #if 0	
 

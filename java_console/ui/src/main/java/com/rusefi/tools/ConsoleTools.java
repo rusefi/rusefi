@@ -263,7 +263,7 @@ public class ConsoleTools {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
 
             }
         });

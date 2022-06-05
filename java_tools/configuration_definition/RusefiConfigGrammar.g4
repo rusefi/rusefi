@@ -8,6 +8,7 @@ grammar RusefiConfigGrammar;
 ENDL: ('\n' | '\r\n' | '\r');
 
 LINE_COMMENT: '!' ~[\r\n]* -> skip;
+LINE_COMMENT2: '//' ~[\r\n]* -> skip;
 WS: [ \t]+ -> skip ;
 
 // Special tokens need highest priority
