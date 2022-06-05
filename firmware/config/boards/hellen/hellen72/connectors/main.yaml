@@ -289,10 +289,7 @@ pins:
     ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
 
-  - pin: 4C
-    id: [F10, EFI_ADC_3]
-    class: [switch_inputs, analog_inputs]
-    ts_name: 4C - Steering/RES2 (A16)
+  - pin: 4C    
     function: Power Steering Switch
 
   - pin: 4D
@@ -314,7 +311,7 @@ pins:
     function: Neutral Switch
 
   - pin: 4I
-  # H144_IN_RES3
+  # H144_IN_RES3 
     id: F8
     class: switch_inputs
     ts_name: 4I - Clutch (A8)
@@ -439,10 +436,7 @@ pins:
 # huh?    ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
-  - pin: 4AB
-    # huh?    id: EFI_ADC_3
-    # huh?    class: analog_inputs
-    # huh?    ts_name: 4AB - FTP/PPS (A18)
+  - pin: 4AB   
     function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
