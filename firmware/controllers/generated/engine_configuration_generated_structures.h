@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 22 15:13:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 03 05:20:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -480,114 +480,17 @@ struct trigger_config_s {
 	 */
 	trigger_type_e type;
 	/**
-	offset 4 bit 0 */
-	bool todoRemoveMeOneDay0 : 1 {};
-	/**
-	offset 4 bit 1 */
-	bool todoRemoveMeOneDay1 : 1 {};
-	/**
-	 * This option could be used if your second trigger channel is broken
-	offset 4 bit 2 */
-	bool useOnlyFirstChannel : 1 {};
-	/**
-	offset 4 bit 3 */
-	bool unusedBit_4_3 : 1 {};
-	/**
-	offset 4 bit 4 */
-	bool unusedBit_4_4 : 1 {};
-	/**
-	offset 4 bit 5 */
-	bool unusedBit_4_5 : 1 {};
-	/**
-	offset 4 bit 6 */
-	bool unusedBit_4_6 : 1 {};
-	/**
-	offset 4 bit 7 */
-	bool unusedBit_4_7 : 1 {};
-	/**
-	offset 4 bit 8 */
-	bool unusedBit_4_8 : 1 {};
-	/**
-	offset 4 bit 9 */
-	bool unusedBit_4_9 : 1 {};
-	/**
-	offset 4 bit 10 */
-	bool unusedBit_4_10 : 1 {};
-	/**
-	offset 4 bit 11 */
-	bool unusedBit_4_11 : 1 {};
-	/**
-	offset 4 bit 12 */
-	bool unusedBit_4_12 : 1 {};
-	/**
-	offset 4 bit 13 */
-	bool unusedBit_4_13 : 1 {};
-	/**
-	offset 4 bit 14 */
-	bool unusedBit_4_14 : 1 {};
-	/**
-	offset 4 bit 15 */
-	bool unusedBit_4_15 : 1 {};
-	/**
-	offset 4 bit 16 */
-	bool unusedBit_4_16 : 1 {};
-	/**
-	offset 4 bit 17 */
-	bool unusedBit_4_17 : 1 {};
-	/**
-	offset 4 bit 18 */
-	bool unusedBit_4_18 : 1 {};
-	/**
-	offset 4 bit 19 */
-	bool unusedBit_4_19 : 1 {};
-	/**
-	offset 4 bit 20 */
-	bool unusedBit_4_20 : 1 {};
-	/**
-	offset 4 bit 21 */
-	bool unusedBit_4_21 : 1 {};
-	/**
-	offset 4 bit 22 */
-	bool unusedBit_4_22 : 1 {};
-	/**
-	offset 4 bit 23 */
-	bool unusedBit_4_23 : 1 {};
-	/**
-	offset 4 bit 24 */
-	bool unusedBit_4_24 : 1 {};
-	/**
-	offset 4 bit 25 */
-	bool unusedBit_4_25 : 1 {};
-	/**
-	offset 4 bit 26 */
-	bool unusedBit_4_26 : 1 {};
-	/**
-	offset 4 bit 27 */
-	bool unusedBit_4_27 : 1 {};
-	/**
-	offset 4 bit 28 */
-	bool unusedBit_4_28 : 1 {};
-	/**
-	offset 4 bit 29 */
-	bool unusedBit_4_29 : 1 {};
-	/**
-	offset 4 bit 30 */
-	bool unusedBit_4_30 : 1 {};
-	/**
-	offset 4 bit 31 */
-	bool unusedBit_4_31 : 1 {};
-	/**
 	number
-	 * offset 8
+	 * offset 4
 	 */
 	int customTotalToothCount;
 	/**
 	number
-	 * offset 12
+	 * offset 8
 	 */
 	int customSkippedToothCount;
 };
-static_assert(sizeof(trigger_config_s) == 16);
+static_assert(sizeof(trigger_config_s) == 12);
 
 // start of afr_sensor_s
 struct afr_sensor_s {
@@ -1216,6 +1119,10 @@ struct engine_configuration_s {
 	 */
 	trigger_config_s trigger;
 	/**
+	 * offset 460
+	 */
+	int unused460;
+	/**
 	 * offset 464
 	 */
 	spi_device_e hip9011SpiDevice;
@@ -1576,6 +1483,10 @@ struct engine_configuration_s {
 	 * offset 684
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
+	/**
+	 * offset 688
+	 */
+	uint16_t unused688;
 	/**
 	 * offset 690
 	 */
@@ -2865,6 +2776,10 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * offset 1452
+	 */
+	uint16_t unused1452;
+	/**
 	 * offset 1454
 	 */
 	brain_input_pin_e turboSpeedSensorInputPin;
@@ -3222,76 +3137,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1608 bit 8 */
-	bool unusedBit_537_8 : 1 {};
+	bool unusedBit_540_8 : 1 {};
 	/**
 	offset 1608 bit 9 */
-	bool unusedBit_537_9 : 1 {};
+	bool unusedBit_540_9 : 1 {};
 	/**
 	offset 1608 bit 10 */
-	bool unusedBit_537_10 : 1 {};
+	bool unusedBit_540_10 : 1 {};
 	/**
 	offset 1608 bit 11 */
-	bool unusedBit_537_11 : 1 {};
+	bool unusedBit_540_11 : 1 {};
 	/**
 	offset 1608 bit 12 */
-	bool unusedBit_537_12 : 1 {};
+	bool unusedBit_540_12 : 1 {};
 	/**
 	offset 1608 bit 13 */
-	bool unusedBit_537_13 : 1 {};
+	bool unusedBit_540_13 : 1 {};
 	/**
 	offset 1608 bit 14 */
-	bool unusedBit_537_14 : 1 {};
+	bool unusedBit_540_14 : 1 {};
 	/**
 	offset 1608 bit 15 */
-	bool unusedBit_537_15 : 1 {};
+	bool unusedBit_540_15 : 1 {};
 	/**
 	offset 1608 bit 16 */
-	bool unusedBit_537_16 : 1 {};
+	bool unusedBit_540_16 : 1 {};
 	/**
 	offset 1608 bit 17 */
-	bool unusedBit_537_17 : 1 {};
+	bool unusedBit_540_17 : 1 {};
 	/**
 	offset 1608 bit 18 */
-	bool unusedBit_537_18 : 1 {};
+	bool unusedBit_540_18 : 1 {};
 	/**
 	offset 1608 bit 19 */
-	bool unusedBit_537_19 : 1 {};
+	bool unusedBit_540_19 : 1 {};
 	/**
 	offset 1608 bit 20 */
-	bool unusedBit_537_20 : 1 {};
+	bool unusedBit_540_20 : 1 {};
 	/**
 	offset 1608 bit 21 */
-	bool unusedBit_537_21 : 1 {};
+	bool unusedBit_540_21 : 1 {};
 	/**
 	offset 1608 bit 22 */
-	bool unusedBit_537_22 : 1 {};
+	bool unusedBit_540_22 : 1 {};
 	/**
 	offset 1608 bit 23 */
-	bool unusedBit_537_23 : 1 {};
+	bool unusedBit_540_23 : 1 {};
 	/**
 	offset 1608 bit 24 */
-	bool unusedBit_537_24 : 1 {};
+	bool unusedBit_540_24 : 1 {};
 	/**
 	offset 1608 bit 25 */
-	bool unusedBit_537_25 : 1 {};
+	bool unusedBit_540_25 : 1 {};
 	/**
 	offset 1608 bit 26 */
-	bool unusedBit_537_26 : 1 {};
+	bool unusedBit_540_26 : 1 {};
 	/**
 	offset 1608 bit 27 */
-	bool unusedBit_537_27 : 1 {};
+	bool unusedBit_540_27 : 1 {};
 	/**
 	offset 1608 bit 28 */
-	bool unusedBit_537_28 : 1 {};
+	bool unusedBit_540_28 : 1 {};
 	/**
 	offset 1608 bit 29 */
-	bool unusedBit_537_29 : 1 {};
+	bool unusedBit_540_29 : 1 {};
 	/**
 	offset 1608 bit 30 */
-	bool unusedBit_537_30 : 1 {};
+	bool unusedBit_540_30 : 1 {};
 	/**
 	offset 1608 bit 31 */
-	bool unusedBit_537_31 : 1 {};
+	bool unusedBit_540_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -3935,19 +3850,19 @@ struct engine_configuration_s {
 	V
 	 * offset 2516
 	 */
-	uint8_t triggerCompCenterVolt;
+	scaled_channel<uint8_t, 50, 1> triggerCompCenterVolt;
 	/**
 	 * Trigger comparator hysteresis voltage (Min)
 	V
 	 * offset 2517
 	 */
-	uint8_t triggerCompHystMin;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMin;
 	/**
 	 * Trigger comparator hysteresis voltage (Max)
 	V
 	 * offset 2518
 	 */
-	uint8_t triggerCompHystMax;
+	scaled_channel<uint8_t, 50, 1> triggerCompHystMax;
 	/**
 	 * VR-sensor saturation RPM
 	RPM
@@ -4937,67 +4852,67 @@ struct persistent_config_s {
 	Airmass
 	 * offset 21208
 	 */
-	uint8_t tcu_pcAirmassBins[8];
+	scaled_channel<uint8_t, 50, 1> tcu_pcAirmassBins[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21216
 	 */
-	uint8_t tcu_pcValsR[8];
+	uint8_t tcu_pcValsR[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21224
 	 */
-	uint8_t tcu_pcValsN[8];
+	uint8_t tcu_pcValsN[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21232
 	 */
-	uint8_t tcu_pcVals1[8];
+	uint8_t tcu_pcVals1[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21240
 	 */
-	uint8_t tcu_pcVals2[8];
+	uint8_t tcu_pcVals2[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21248
 	 */
-	uint8_t tcu_pcVals3[8];
+	uint8_t tcu_pcVals3[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21256
 	 */
-	uint8_t tcu_pcVals4[8];
+	uint8_t tcu_pcVals4[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21264
 	 */
-	uint8_t tcu_pcVals12[8];
+	uint8_t tcu_pcVals12[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21272
 	 */
-	uint8_t tcu_pcVals23[8];
+	uint8_t tcu_pcVals23[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21280
 	 */
-	uint8_t tcu_pcVals34[8];
+	uint8_t tcu_pcVals34[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21288
 	 */
-	uint8_t tcu_pcVals21[8];
+	uint8_t tcu_pcVals21[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21296
 	 */
-	uint8_t tcu_pcVals32[8];
+	uint8_t tcu_pcVals32[TCU_MAGIC_SIZE];
 	/**
 	%
 	 * offset 21304
 	 */
-	uint8_t tcu_pcVals43[8];
+	uint8_t tcu_pcVals43[TCU_MAGIC_SIZE];
 	/**
 	TPS
 	 * offset 21312
@@ -5027,4 +4942,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun May 22 15:13:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 03 05:20:55 UTC 2022

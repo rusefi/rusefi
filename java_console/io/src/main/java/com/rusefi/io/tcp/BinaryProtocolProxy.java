@@ -63,7 +63,7 @@ public class BinaryProtocolProxy {
          */
         while (!targetEcu.isClosed()) {
             byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
-            if (firstByte == Fields.TS_COMMAND_F) {
+            if (firstByte == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 clientStream.write(TS_PROTOCOL.getBytes());
                 clientStream.flush();
                 continue;

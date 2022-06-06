@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.TestHelper.*;
@@ -141,7 +140,7 @@ public class FullServerTest {
                 }
 
                 @Override
-                public void onConnectionFailed() {
+                public void onConnectionFailed(String s) {
                     System.out.println("Failed");
                 }
             });

@@ -449,7 +449,7 @@ void prepareOutputSignals() {
 
 	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
 
-	TRIGGER_WAVEFORM(prepareShape(&engine->triggerCentral.triggerFormDetails));
+	TRIGGER_WAVEFORM(prepareShape(engine->triggerCentral.triggerFormDetails));
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();

@@ -106,27 +106,14 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerDecoderBase &initState) {
-	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
 
-	if (vvtMode != VVT_INACTIVE) {
-		trigger_config_s config;
-		// todo: should 'vvtWithRealDecoder' be used here?
-		config.type = getVvtTriggerType(vvtMode);
-
-		auto& shape = engine->triggerCentral.vvtShape[camIndex];
-		shape.initializeTriggerWaveform(
-				lookupOperationMode(),
-				engineConfiguration->vvtCamSensorUseRise, &config);
-
-		shape.initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration[camIndex],
-				config);
-	}
+	shape.initializeSyncPoint(initState, config);
 }
 
 void Engine::updateTriggerWaveform() {
-	static TriggerDecoderBase initState;
+	static TriggerDecoderBase initState("init");
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -138,9 +125,7 @@ void Engine::updateTriggerWaveform() {
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
@@ -171,17 +156,18 @@ void Engine::updateTriggerWaveform() {
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
 				initState);
 
-		engine->triggerCentral.triggerState.name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
-	engine->triggerCentral.vvtState[0][0].name = "VVT B1 Int";
-	engine->triggerCentral.vvtState[0][1].name = "VVT B1 Exh";
-	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
-	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
-
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		initVvtShape(camIndex, initState);
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+		// todo: should 'vvtWithRealDecoder' be used here?
+		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
+			initVvtShape(
+				triggerCentral.vvtShape[camIndex],
+				vvtTriggerConfiguration[camIndex],
+				initState
+			);
+		}
 	}
 
 	// This is not the right place for this, but further refactoring has to happen before it can get moved.

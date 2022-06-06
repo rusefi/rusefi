@@ -1,12 +1,9 @@
 package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
-import com.rusefi.newparse.parsing.EnumField;
-import com.rusefi.newparse.parsing.Type;
 import com.rusefi.newparse.parsing.UnusedField;
 
 import java.io.PrintStream;
-import java.util.Random;
 
 public class UnusedLayout extends Layout {
     private final int size;

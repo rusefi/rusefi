@@ -40,26 +40,28 @@ public class PortHolder {
         this.ioStreamFactory = ioStreamFactory;
     }
 
-    boolean connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
+    /**
+     * @return true if OK, false if error
+     */
+    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported
-            return false;
+            return;
         }
         synchronized (portLock) {
             bp = new BinaryProtocol(linkManager, stream);
             portLock.notifyAll();
         }
 
-        boolean result = bp.connectAndReadConfiguration( arguments, dataListener);
+        String errorMessage = bp.connectAndReadConfiguration(arguments, dataListener);
         if (listener != null) {
-            if (result) {
+            if (errorMessage == null) {
                 listener.onConnectionEstablished();
             } else {
-                listener.onConnectionFailed();
+                listener.onConnectionFailed(errorMessage);
             }
         }
-        return result;
     }
 
     public void close() {

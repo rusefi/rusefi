@@ -725,6 +725,7 @@ void updateTunerStudioState() {
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
+	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
 
 #if EFI_SHAFT_POSITION_INPUT
 
@@ -856,7 +857,6 @@ void updateTunerStudioState() {
 		break;
 		}
 	case DBG_TRIGGER_COUNTERS:
-// no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
@@ -866,8 +866,6 @@ void updateTunerStudioState() {
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
 #endif // EFI_SHAFT_POSITION_INPUT
 
-		// debugFloatField6 used
-		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 		break;
 #if EFI_HIP_9011_DEBUG
 	case DBG_KNOCK:

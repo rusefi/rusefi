@@ -31,15 +31,13 @@ public:
 	const char* const PrintPrefix;
 	bool UseOnlyRisingEdgeForTrigger;
 	bool VerboseTriggerSynchDetails;
-	trigger_type_e TriggerType;
+	trigger_config_s TriggerType;
 
 protected:
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
-	virtual trigger_type_e getType() const = 0;
+	virtual trigger_config_s getType() const = 0;
 };
-
-typedef void (*TriggerStateCallback)(TriggerDecoderBase*);
 
 typedef struct {
 	/**
@@ -52,22 +50,7 @@ typedef struct {
 	 * see TriggerWaveform
 	 */
 	size_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
-	/**
-	 * This array is used to calculate duty cycle of each trigger channel.
-	 * Current implementation is a bit funny - it does not really consider if an event
-	 * is a rise or a fall, it works based on the event order within synchronization cycle.
-	 *
-	 * 32 bit value is good enough here, overflows will happen but they would work just fine.
-	 */
-	uint32_t timeOfPreviousEventNt[PWM_PHASE_MAX_WAVE_PER_PWM];
-	/**
-	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
-	 */
-	uint32_t totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-#if EFI_UNIT_TEST
-	uint32_t totalTimeNtCopy[PWM_PHASE_MAX_WAVE_PER_PWM];
-#endif // EFI_UNIT_TEST
 } current_cycle_state_s;
 
 struct TriggerDecodeResult {
@@ -79,7 +62,7 @@ struct TriggerDecodeResult {
  */
 class TriggerDecoderBase : public trigger_state_s {
 public:
-	TriggerDecoderBase();
+	TriggerDecoderBase(const char* name);
 	/**
 	 * current trigger processing index, between zero and #size
 	 */
@@ -95,14 +78,12 @@ public:
 	expected<TriggerDecodeResult> decodeTriggerEvent(
 			const char *msg,
 			const TriggerWaveform& triggerShape,
-			const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener* triggerStateListener,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_event_e signal,
 			const efitime_t nowUs);
 
 	void onShaftSynchronization(
-			const TriggerStateCallback triggerCycleCallback,
 			bool wasSynchronized,
 			const efitick_t nowNt,
 			const TriggerWaveform& triggerShape);
@@ -127,9 +108,7 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
-	const char *name = nullptr;
-
-	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
+	const char* const name;
 
 	/**
 	 * how many times since ECU reboot we had unexpected number of teeth in trigger cycle
@@ -149,8 +128,7 @@ public:
 
 	uint32_t findTriggerZeroEventIndex(
 			TriggerWaveform& shape,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
+			const TriggerConfiguration& triggerConfiguration
 			);
 
 	bool someSortOfTriggerError() const {
@@ -187,7 +165,7 @@ private:
  */
 class PrimaryTriggerDecoder : public TriggerDecoderBase {
 public:
-	PrimaryTriggerDecoder();
+	PrimaryTriggerDecoder(const char* name);
 	void resetTriggerState() override;
 
 	void resetHasFullSync() {
@@ -257,7 +235,10 @@ private:
 	bool m_hasSynchronizedPhase = false;
 };
 
-class VvtTriggerDecoder : public TriggerDecoderBase { };
+class VvtTriggerDecoder : public TriggerDecoderBase {
+public:
+	VvtTriggerDecoder(const char* name) : TriggerDecoderBase(name) { }
+};
 
 angle_t getEngineCycle(operation_mode_e operationMode);
 

@@ -63,7 +63,7 @@ public class TriggerWheelInfo {
                 break; // here we will read until first comment line which designates end of key-value pairs section
             String[] keyValue = line.split("=");
             if (keyValue.length != 2)
-                throw new IllegalStateException("Key/value lines expected");
+                throw new IllegalStateException("Key/value lines expected: [" + line + "]");
             switch (keyValue[0]) {
                 case TRIGGER_IS_CRANK_KEY:
                     isCrankBased = Boolean.parseBoolean(keyValue[1]);
