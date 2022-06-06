@@ -33,7 +33,6 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createStarterTest());
-        content.add(createDizzyTest());
         content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
@@ -76,11 +75,6 @@ public class BenchTestPane {
                 return "idlebench";
             }
         };
-        return panel.getContent();
-    }
-
-    private Component createDizzyTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Dizzy", "dizzy.jpg", TEST, "dizzybench");
         return panel.getContent();
     }
 
