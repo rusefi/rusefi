@@ -10,10 +10,10 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.rusefi.CommandControl.TEST;
+import static com.rusefi.config.generated.Fields.*;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
@@ -85,17 +85,17 @@ public class BenchTestPane {
     }
 
     private Component createStarterTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Starter", "", TEST, Fields.CMD_STARTER_BENCH);
+        CommandControl panel = new FixedCommandControl(uiContext, "Starter", "", TEST, CMD_STARTER_BENCH);
         return panel.getContent();
     }
 
     private Component createFanTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, CMD_FAN_BENCH);
         return panel.getContent();
     }
 
     private Component createAcRelayTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, CMD_AC_RELAY_BENCH);
         return panel.getContent();
     }
 
