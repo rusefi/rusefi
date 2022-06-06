@@ -26,6 +26,7 @@ Release template (copy/paste this for new release):
 ### Added
 
 ### Fixed
+ - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
 
 ## June 2022 Release - "Day 98"
 
@@ -41,7 +42,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Make 36-2 trigger sync parameters more generous #4132
- - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
+ - Synchronized Phase handling fixes #4099
 
 ### Removed
  - Various Honda 24/4/1 trigger modes (that didn't work very well), replaced with "12 tooth crank" mode.
