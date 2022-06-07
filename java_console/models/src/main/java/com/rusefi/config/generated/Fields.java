@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 04 01:30:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 06 21:24:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -339,9 +339,11 @@ public class Fields {
 	public static final String CMD_FAN2_BENCH = "fan2bench";
 	public static final String CMD_FAN_BENCH = "fanbench";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
+	public static final String CMD_FUEL_PUMP_BENCH = "fuelpumpbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_GET = "get";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
+	public static final String CMD_IDLE_BENCH = "idlebench";
 	public static final String CMD_IDLE_PIN = "set_idle_pin";
 	public static final String CMD_IGNITION = "ignition";
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
@@ -1871,7 +1873,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
-	public static final int SIGNATURE_HASH = 1026376307;
+	public static final int SIGNATURE_HASH = 167005304;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2359,7 +2361,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.04.all.1026376307";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.06.all.167005304";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;

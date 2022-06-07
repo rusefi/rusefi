@@ -333,9 +333,11 @@
 #define CMD_FAN2_BENCH "fan2bench"
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FUEL_BENCH "fuelbench"
+#define CMD_FUEL_PUMP_BENCH "fuelpumpbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_GET "get"
 #define CMD_HPFP_BENCH "hpfpbench"
+#define CMD_IDLE_BENCH "idlebench"
 #define CMD_IDLE_PIN "set_idle_pin"
 #define CMD_IGNITION "ignition"
 #define CMD_IGNITION_PIN "set_ignition_pin"
@@ -1909,7 +1911,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 641887220
+#define SIGNATURE_HASH 312174079
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2461,7 +2463,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.04.kin.641887220"
+#define TS_SIGNATURE "rusEFI 2022.06.06.kin.312174079"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

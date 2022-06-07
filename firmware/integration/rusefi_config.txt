@@ -1898,6 +1898,8 @@ end_struct
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"
+#define CMD_FUEL_PUMP_BENCH "fuelpumpbench"
+#define CMD_IDLE_BENCH "idlebench"
 #define CMD_SPARK_BENCH "sparkbench"
 #define CMD_STARTER_BENCH "starterbench"
 #define CMD_HPFP_BENCH "hpfpbench"
