@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Fri Jun 03 04:50:14 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Mon Jun 06 21:23:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -43,9 +43,11 @@ public class TriggerState {
 	public static final String CMD_FAN2_BENCH = "fan2bench";
 	public static final String CMD_FAN_BENCH = "fanbench";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
+	public static final String CMD_FUEL_PUMP_BENCH = "fuelpumpbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_GET = "get";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
+	public static final String CMD_IDLE_BENCH = "idlebench";
 	public static final String CMD_IDLE_PIN = "set_idle_pin";
 	public static final String CMD_IGNITION = "ignition";
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
