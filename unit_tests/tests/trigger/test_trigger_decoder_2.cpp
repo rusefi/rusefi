@@ -239,7 +239,7 @@ TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
 
 	efitick_t t = 0;
 
-	PrimaryTriggerDecoder dut;
+	PrimaryTriggerDecoder dut("test");
 
 	// This is not the right place for this, but further refactoring has to happen before it can get moved.
 	dut.setNeedsDisambiguation(shape.needsDisambiguation());
@@ -270,7 +270,7 @@ TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
 
 	efitick_t t = 0;
 
-	PrimaryTriggerDecoder dut;
+	PrimaryTriggerDecoder dut("test");
 
 	// This is not the right place for this, but further refactoring has to happen before it can get moved.
 	dut.setNeedsDisambiguation(shape.needsDisambiguation());
