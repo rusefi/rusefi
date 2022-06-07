@@ -182,3 +182,8 @@ void detectHellenBoardType();
 #define H_SPI2_MISO Gpio::B14
 #define H_SPI2_SCK Gpio::B13
 #define H_SPI2_CS Gpio::B12
+
+#define H_SPI3_MOSI Gpio::C12
+#define H_SPI3_MISO Gpio::C11
+#define H_SPI3_SCK Gpio::C10
+#define H_SPI3_CS Gpio::A15

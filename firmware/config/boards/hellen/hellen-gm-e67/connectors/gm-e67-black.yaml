@@ -1,4 +1,32 @@
 pins:
+  - pin: J7_1
+    # H_SPI3_MOSI
+    id: C12
+    class: outputs
+    ts_name: J7_1 AUX
+    function: J7_1 AUX
+
+  - pin: J7_2
+    # H_SPI3_MISO
+    id: C11
+    class: outputs
+    ts_name: J7_2 AUX
+    function: J7_2 AUX
+
+  - pin: J7_3
+    # H_SPI3_SCK
+    id: C10
+    class: outputs
+    ts_name: J7_3 AUX
+    function: J7_3 AUX
+
+  - pin: J7_1
+    # H_SPI3_CS
+    id: A15
+    class: outputs
+    ts_name: J7_4 AUX
+    function: J7_4 AUX
+
   - pin: 1
     # H144_IGN_1
     id: C13
