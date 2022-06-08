@@ -1,4 +1,18 @@
 pins:
+  - pin: J4_4
+    # H144_OUT_PWM5
+    id: C9
+    class: outputs
+    ts_name: J4_4 Wastegate Solenoid
+    function: Wastegate Solenoid
+
+  - pin: J4_4
+    # H144_OUT_IO1
+    id: D3
+    class: outputs
+    ts_name: J4_5 Error Light
+    function: Error Light Output
+
   - pin: J7_1
     # H_SPI3_MOSI
     id: C12
