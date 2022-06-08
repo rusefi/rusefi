@@ -146,6 +146,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->boostControlPin = H144_OUT_PWM5;
+	engineConfiguration->brakePedalPin = H144_IN_RES2;
 //	engineConfiguration->acSwitch = H144_IN_D_AUX3;
 //	engineConfiguration->acRelayPin = H144_OUT_IO6;
 	engineConfiguration->fuelPumpPin = H144_OUT_IO5;

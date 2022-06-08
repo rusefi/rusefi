@@ -1,4 +1,12 @@
 pins:
+  - pin: 7
+#H144_IN_RES2
+    id: F10
+    class: switch_inputs
+    ts_name: C1-7 Stop/Brake Pedal
+    function: Stop/Brake Pedal switch input
+    type: din
+
   - pin: 12
     # H144_OUT_IO11
     id: G2
@@ -14,6 +22,9 @@ pins:
     function: Fuel Pump Relay Output
     type: hs
     ts_name: C1-13 - Fuel Pump
+
+  - pin: 14
+    function: stm32 BOOT
 
   - pin: 19
 # H144_IN_VBATT
@@ -40,6 +51,15 @@ pins:
     type: ls
     color: purple
 
+  - pin: 39
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    ts_name: C1-39 - VSS Output
+    function: VSS Output
+    type: hs
+    color: purple
+
   - pin: 40
     # H144_OUT_IO3
     id: G14
@@ -62,6 +82,13 @@ pins:
     class: analog_inputs
     function: Secondary Fuel Level
     ts_name: C1-45 Secondary Fuel Level
+
+  - pin: 46
+    # H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Vac Sense
+    ts_name: C1-46 Vac Sense
 
   - pin: 47
     # H144_IN_PPS
