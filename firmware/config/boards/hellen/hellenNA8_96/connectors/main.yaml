@@ -4,6 +4,14 @@
 #
 
 pins:
+  - pin: p18_p22
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Aux P18/P22
+    type: hs
+    ts_name: P18/P22
+
   - pin: 1A
     id: D12
     class: outputs
