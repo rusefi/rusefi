@@ -183,6 +183,15 @@ pins:
     type: av
     color: purple
 
+  - pin: 65
+    # H144_IN_MAP1
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: C2-65 - Trans Fluids
+    function: Trans Fluids Temperature
+    type: av
+    color: purple
+
   - pin: 66
     # H144_IN_AUX1
     id: EFI_ADC_8
