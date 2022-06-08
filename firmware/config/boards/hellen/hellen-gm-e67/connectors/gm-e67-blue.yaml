@@ -49,6 +49,20 @@ pins:
     type: ls
     color: purple
 
+  - pin: 44
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: Primary Fuel Level
+    ts_name: C1-44 Primary Fuel Level
+
+  - pin: 45
+    # H144_IN_CAM_ANALOG
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: Secondary Fuel Level
+    ts_name: C1-45 Secondary Fuel Level
+
   - pin: 47
     # H144_IN_PPS
     id: EFI_ADC_3
