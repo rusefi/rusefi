@@ -22,7 +22,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[4] = H144_LS_5;
 	engineConfiguration->injectionPins[5] = H144_LS_6;
 	engineConfiguration->injectionPins[6] = H144_LS_7;
-	engineConfiguration->injectionPins[7] = H144_LS_7;
+	engineConfiguration->injectionPins[7] = H144_LS_8;
 
 	// Disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
