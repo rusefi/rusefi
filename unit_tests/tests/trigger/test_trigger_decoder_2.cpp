@@ -232,10 +232,10 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
@@ -263,10 +263,10 @@ TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
