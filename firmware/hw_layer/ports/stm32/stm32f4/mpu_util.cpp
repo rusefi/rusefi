@@ -65,7 +65,7 @@ void stm32_stop() {
 }
 /* 
  * Standby for both F4 & F7 works perfectly, with very little current consumption.
- * Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
+ * Downside is that there is a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
 */
 void stm32_standby() {
 	// Don't get bothered by interrupts

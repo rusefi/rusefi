@@ -1346,6 +1346,7 @@ gaugeCategory = DynoView
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
+	indicator = { isPumpOn }, "No Pump", "Pump", white, black, green, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
@@ -2380,7 +2381,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = allTriggerDebug, "Trigger Debug"
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
         field = "cam 3 debug",                          camInputsDebug3
