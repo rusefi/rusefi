@@ -170,6 +170,9 @@ void Engine::updateTriggerWaveform() {
 		}
 	}
 
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	engine->triggerCentral.triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
+
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals();
 	}
