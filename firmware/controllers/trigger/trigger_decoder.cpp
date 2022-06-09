@@ -216,7 +216,7 @@ void PrimaryTriggerDecoder::resetTriggerState() {
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
@@ -401,7 +401,7 @@ void TriggerDecoderBase::incrementTotalEventCounter() {
 
 void PrimaryTriggerDecoder::onTriggerError() {
 	// On trigger error, we've lost full sync
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
