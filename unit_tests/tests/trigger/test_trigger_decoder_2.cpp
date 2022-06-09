@@ -266,7 +266,7 @@ TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
 	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
+	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR, cfg);
 
 	efitick_t t = 0;
 
