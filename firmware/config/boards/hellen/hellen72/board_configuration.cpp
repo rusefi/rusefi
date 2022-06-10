@@ -147,6 +147,11 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
+	
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8; // out_pwm4
+	engineConfiguration->etbIo[0].controlPin = Gpio::C6; // ETB_EN out_pwm2
+	engineConfiguration->etb_use_two_wires = true;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
