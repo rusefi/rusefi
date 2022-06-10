@@ -578,6 +578,21 @@ pins:
     
   - pin: 5AE
     function: WBO_H+
+    
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN  
 
 
 info:
