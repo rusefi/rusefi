@@ -37,19 +37,19 @@ pins:
     type: inj
     color: blue Y1
 
-  - pin: 2E
-    id: C7
-    class: outputs
-    ts_name: 2E - COIL_A2 (PWM2)
-    function: EGR Valve #1 Coil
-    type: ls
+ #- pin: 2E
+ #  id: C7 
+ #  class: outputs
+ #  ts_name: 2E - COIL_A2 (PWM2)
+ #  function: EGR Valve #1 Coil
+ #  type: ls
 
-  - pin: 2F
-    id: C6
-    class: outputs
-    ts_name: 2E - COIL_A1 (PWM1)
-    function: EGR Valve #2 Coil
-    type: ls
+ # - pin: 2F
+ #  id: C6
+ #  class: outputs
+ #  ts_name: 2E - COIL_A1 (PWM1)
+ #  function: EGR Valve #2 Coil
+ #  type: ls
 
   - pin: 2G
 #INJ3 Q309
@@ -67,12 +67,12 @@ pins:
     #  function: EGR Valve #3 Coil
   #  type: ls
 
-  - pin: 2I
-    id: C8
-    class: outputs
-    ts_name: 2I - COIL_B1 (PWM3)
-    function: EGR Valve #4 Coil
-    type: ls
+ # - pin: 2I
+ #  id: C8
+  # class: outputs
+  # ts_name: 2I - COIL_B1 (PWM3)
+  # function: EGR Valve #4 Coil
+ # type: ls
 
   - pin: 2J
 #INJ4 Q310
@@ -578,6 +578,21 @@ pins:
     
   - pin: 5AE
     function: WBO_H+
+    
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN  
 
 
 info:
