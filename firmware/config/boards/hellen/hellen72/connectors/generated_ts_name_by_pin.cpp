@@ -15,9 +15,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B1: return "3Y - CRANK (A24)";
 		case Gpio::C0: return "5A - Pressure Input";
 		case Gpio::C4: return "5M - PPS2 OR TEMPERATURE SENSOR";
-		case Gpio::C6: return "2E - COIL_A1 (PWM1)";
-		case Gpio::C7: return "2E - COIL_A2 (PWM2)";
-		case Gpio::C8: return "2I - COIL_B1 (PWM3)";
+		case Gpio::C6: return "ETB EN";
+		case Gpio::C7: return "ETB +";
+		case Gpio::C8: return "ETB -";
 		case Gpio::C9: return "5E - SOLENOID OUTPUT";
 		case Gpio::D10: return "2J - INJ_4";
 		case Gpio::D11: return "2G - INJ_3";

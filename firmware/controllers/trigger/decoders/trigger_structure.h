@@ -248,6 +248,9 @@ public:
 
 	angle_t getCycleDuration() const;
 
+	// Returns true if this trigger alone can fully sync the current engine for sequential mode.
+	bool needsDisambiguation() const;
+
 	/**
 	 * index of synchronization event within TriggerWaveform
 	 * See findTriggerZeroEventIndex()
