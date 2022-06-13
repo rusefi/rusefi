@@ -325,11 +325,22 @@ pins:
     class: outputs
     ts_name: 104 Wastegate
     function: OUT_WASTEGATE
-  
-  - pin: 105a
+
+    #
+    # rev A and B used H144_OUT_PWM6 D14
+    # rev C uses H144_OUT_IO4 G5
+    #
+  - pin: 105a_legacy
     id: D14
     class: outputs
-    ts_name: 105 - IDLE
+    ts_name: 105 - IDLE rev A,B
+    function: IAC
+    type: ls
+
+  - pin: 105a
+    id: G5
+    class: outputs
+    ts_name: 105 - IDLE rev C+
     function: IAC
     type: ls
   
