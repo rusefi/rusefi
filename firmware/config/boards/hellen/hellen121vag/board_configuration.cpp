@@ -16,10 +16,10 @@
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::G7; // 96 - INJ_1
-	engineConfiguration->injectionPins[1] = Gpio::G8;
-	engineConfiguration->injectionPins[2] = Gpio::D11; // 97 - INJ_3
-	engineConfiguration->injectionPins[3] = Gpio::D10;
+	engineConfiguration->injectionPins[0] = H176_LS_1; // 96 - INJ_1
+	engineConfiguration->injectionPins[1] = H176_LS_2;
+	engineConfiguration->injectionPins[2] = H176_LS_3; // 97 - INJ_3
+	engineConfiguration->injectionPins[3] = H176_LS_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -149,8 +149,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; // 47 - CEL
 	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
-	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
-	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+
+// earlier revisions?	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+    engineConfiguration->idle.solenoidPin = H144_OUT_IO4;
+
+	engineConfiguration->fanPin = H144_OUT_PWM8;
 	engineConfiguration->mainRelayPin = H144_OUT_IO1;
 
 //	engineConfiguration->injectorCompensationMode

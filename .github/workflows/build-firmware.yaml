@@ -107,7 +107,7 @@ jobs:
           - build-target: hellen121vag
             folder: hellen/hellen121vag
             ini-file: rusefi_hellen121vag.ini
-            skip-rate: 90
+            skip-rate: 0
 
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
