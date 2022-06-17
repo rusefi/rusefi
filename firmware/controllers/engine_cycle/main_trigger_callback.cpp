@@ -324,11 +324,18 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
 		return true;
 	}
+	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
+		// in rare cases engines do not like random sequential mode
+		return true;
+	}
 
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc
-	return operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR || operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR;
+	return
+		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 }
 
 /**
@@ -354,14 +361,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		engine->knockLogic(cdmKnockValue);
 	}
 #endif /* EFI_CDM_INTEGRATION */
-
-	if (trgEventIndex >= engine->engineCycleEventCount) {
-		/**
-		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
-		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
-		 */
-		return;
-	}
 
 	int rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {

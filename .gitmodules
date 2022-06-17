@@ -22,7 +22,6 @@
 [submodule "firmware/controllers/can/wideband_firmware"]
 	path = firmware/controllers/can/wideband_firmware
 	url = https://github.com/mck1117/wideband
-	branch = 20210110-hotfix
 [submodule "firmware/ext/uzlib"]
 	path = firmware/ext/uzlib
 	url = https://github.com/pfalcon/uzlib

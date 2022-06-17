@@ -15,7 +15,7 @@ public class ConnectionAndMeta {
     public static final String BASE_URL_LATEST = "https://rusefi.com/build_server/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
-    public static final int STEPS = 1000;
+    public static final int CENTUM = 100;
     private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
@@ -42,15 +42,13 @@ public class ConnectionAndMeta {
             downloadedFileSize += newDataSize;
 
             // calculate progress
-            final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * STEPS);
-
-            int currentPercentage = (int) (100L * downloadedFileSize / completeFileSize);
+            int currentPercentage = (int) (CENTUM * downloadedFileSize / completeFileSize);
             if (currentPercentage > printedPercentage + 5) {
                 System.out.println("Downloaded " + currentPercentage + "%");
                 printedPercentage = currentPercentage;
+                listener.onPercentage(currentPercentage);
             }
 
-            listener.onPercentage(currentProgress);
 
             bout.write(data, 0, newDataSize);
         }
@@ -86,7 +84,7 @@ public class ConnectionAndMeta {
     }
 
     public interface DownloadProgressListener {
-        void onPercentage(int currentProgress);
+        void onPercentage(int currentPercentage);
     }
 
     private static class AcceptAnyCertificateTrustManager implements X509TrustManager {

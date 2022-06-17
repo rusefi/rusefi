@@ -84,7 +84,7 @@
 
 #if HW_PROTEUS
 #include "proteus_meta.h"
-#endif
+#endif // HW_PROTEUS
 
 void m73engine() {
 	// 13641435991 injector
@@ -251,8 +251,7 @@ void setEngineBMW_M73_Proteus() {
 	m73engine();
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
-	// set_analog_input_pin pps pa4
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
+
 
 	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
@@ -278,6 +277,7 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->startStopButtonPin = Gpio::E12;
 	engineConfiguration->startStopButtonMode = PI_PULLUP;
 
+	// tps and pps
 	setProteusHitachiEtbDefaults();
 
 	engineConfiguration->useETBforIdleControl = true;

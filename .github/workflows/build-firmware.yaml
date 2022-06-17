@@ -24,6 +24,7 @@ jobs:
             hellen81,
             hellen88bmw,
             hellen-nb1,
+            hellen-gm-e67,
             hellenNA8_96,
             hellenNA6,
             hellen128,
@@ -50,6 +51,7 @@ jobs:
             subaru_eg33_f7,
             f429-discovery,
             core8,
+            48way,
             atlas,
             tdg-pdm8,
         ]
@@ -79,11 +81,15 @@ jobs:
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 60
+            skip-rate: 90
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
+
+          - build-target: hellen-gm-e67
+            folder: hellen/hellen-gm-e67
+            ini-file: rusefi_hellen-gm-e67.ini
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
@@ -96,21 +102,22 @@ jobs:
           - build-target: hellen128
             folder: hellen/hellen128
             ini-file: rusefi_hellen128mercedes.ini
+            skip-rate: 50
 
           - build-target: hellen121vag
             folder: hellen/hellen121vag
             ini-file: rusefi_hellen121vag.ini
-            skip-rate: 60
+            skip-rate: 0
 
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
-           # skip-rate: 60
+            skip-rate: 90
 
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
-          #  skip-rate: 60
+            skip-rate: 60
 
           - build-target: cypress
             folder: hellen
@@ -119,10 +126,12 @@ jobs:
           - build-target: frankenso_na6
             folder: frankenso
             ini-file: rusefi_frankenso_na6.ini
-            
+            skip-rate: 50
+
           - build-target: kinetis
             folder: kinetis
             ini-file: rusefi_kinetis.ini
+            skip-rate: 50
 
           - build-target: mre_f4
             folder: microrusefi
@@ -141,7 +150,8 @@ jobs:
           - build-target: mre_f4_hardware_QC_special_build
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            
+            skip-rate: 90
+
           - build-target: mre_f7
             folder: microrusefi
             ini-file: rusefi_mre_f7.ini
@@ -151,11 +161,12 @@ jobs:
           - build-target: prometheus_405
             folder: prometheus
             ini-file: rusefi_prometheus_405.ini
+            skip-rate: 90
 
           - build-target: prometheus_469
             folder: prometheus
             ini-file: rusefi_prometheus_469.ini
-            skip-rate: 50
+            skip-rate: 90
 
           - build-target: proteus_f4
             folder: proteus
@@ -173,51 +184,59 @@ jobs:
           - build-target: proteus_f7_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
+            skip-rate: 90
 
           - build-target: proteus_h7
             folder: proteus
             ini-file: rusefi_proteus_h7.ini
+            skip-rate: 50
 
           - build-target: proteus_legacy
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-            skip-rate: 50
+            skip-rate: 90
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            skip-rate: 50
+            skip-rate: 95
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 50
+            skip-rate: 95
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
+            skip-rate: 50
 
           - build-target: f429-discovery
             folder: f429-discovery
-            skip-rate: 90
+            skip-rate: 95
 
           - build-target: core8
             folder: core8
             ini-file: rusefi_core8.ini
-            skip-rate: 90
+            skip-rate: 95
+
+          - build-target: 48way
+            folder: 48way
+            ini-file: rusefi_48way.ini
+            skip-rate: 95
 
           - build-target: atlas
             folder: atlas
             ini-file: rusefi_atlas.ini
-            skip-rate: 90
+            skip-rate: 95
 
           - build-target: tdg-pdm8
             folder: tdg-pdm8
             ini-file: rusefi_tdg-pdm8.ini
-            skip-rate: 90
+            skip-rate: 95
 
     steps:
     - name: Execution throttle early exit
@@ -327,13 +346,6 @@ jobs:
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
 
-    - name: Attach console junit results
-      if: ${{ env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: console ${{matrix.build-target}} junit
-        path: ./java_console/build/*.txt
-
     - name: Upload build bin
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
@@ -369,6 +381,7 @@ jobs:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
 
+  # here we build f407-discovery
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:

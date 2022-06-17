@@ -19,7 +19,7 @@ echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOAR
 
 rm -f $ZIP $IMAGE
 
-# copy *count*KB of zeroes
+# copy *FS_SIZE*KB of zeroes
 dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
 
 # create a FAT filesystem inside, name it RUSEFI

@@ -15,97 +15,28 @@
 /**
  * 8,2,2,2 Nissan pattern
  */
-static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2nd) {
+void initializeNissanSR20VE_4(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->gapBothDirections = true;
 	s->useOnlyPrimaryForSync = true;
 
 	s->tdcPosition = 630;
 
-	float width = 4;
 	s->setTriggerSynchronizationGap2(9.67 * 0.75, 16);
 
-	float left = 0;
-	float right;
+	float width = 4;
 
-	int total = 360; // 360 on cam, over 720 crank degree
+	s->addEvent720(1 * 180 - 4 * width, T_PRIMARY, TV_RISE);
+	s->addEvent720(1 * 180, T_PRIMARY, TV_FALL);
 
-	float base = 180;
-	right = base - 4 * width;
+	s->addEvent720(2 * 180 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(2 * 180, T_PRIMARY, TV_FALL);
 
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
+	s->addEvent720(3 * 180 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(3 * 180, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	// was is the the one with 360 opto sensor?
-
-	base += 180;
-
-	left = right;
-	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	base += 180;
-	left = right;
-	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	base += 180;
-	left = right;
-	right = base - width;
-
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-	left = right;
-	right = base;
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-}
-
-
-/**
- * Nissan Primera p11 year 1995-2002
- */
-
-void initializeNissanSR20VE_4(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, false);
-}
-
-void initializeNissanSR20VE_4_360(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, true);
+	s->addEvent720(4 * 180 - width, T_PRIMARY, TV_RISE);
+	s->addEvent720(4 * 180, T_PRIMARY, TV_FALL);
 }
 
 static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
@@ -190,7 +121,7 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->tdcPosition = 00;
+	s->tdcPosition = 120;
 
 	int x = 360 + 52;
 

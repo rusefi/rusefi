@@ -89,10 +89,10 @@ pins:
     type: 12V
 
   - pin: 16
-    id: EFI_ADC3_10
-    class: analog_inputs
+#    id: EFI_ADC3_10
+#    class: analog_inputs
     function: Atm Pressure Sensor output to TCU
-    ts_name: (BUG!) A16 - Atm Pressure Sensor Ain
+#    ts_name: (BUG!) A16 - Atm Pressure Sensor Ain
     type: av
 
   - pin: 17

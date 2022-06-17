@@ -42,8 +42,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
 	TriggerWaveform& shape = eth.engine.triggerCentral.triggerShape;
-	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration,
-			engineConfiguration->trigger);
+	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration);
 }
 
 TEST(trigger, testSkipped2_0) {
@@ -65,7 +64,7 @@ static void testDodgeNeonDecoder() {
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
 
-	TriggerState state;
+	TriggerDecoderBase state("test");
 
 	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
 
@@ -112,36 +111,36 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
-	TriggerState state_;
-	TriggerState *sta = &state_;
+	TriggerDecoderBase state_("test");
+	TriggerDecoderBase *sta = &state_;
 
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
 	int r = 10;
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r);
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized"; // still no synchronization
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, ++r);
 	ASSERT_TRUE(sta->shaft_is_synchronized); // first signal rise synchronize
 	ASSERT_EQ(0, sta->getCurrentIndex());
-	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(1, sta->getCurrentIndex());
 
 	for (int i = 2; i < 10;) {
-		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 		assertEqualsM("even", i++, sta->getCurrentIndex());
-		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 		assertEqualsM("odd", i++, sta->getCurrentIndex());
 	}
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(10, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_FALLING, r++);
 	ASSERT_EQ(11, sta->getCurrentIndex());
 
-	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, nullptr, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
+	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
@@ -237,9 +236,6 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
-
-	ASSERT_NEAR(channel1duty, t->expectedDutyCycle[0], 0.0001) << msg << " channel1duty";
-	ASSERT_NEAR(channel2duty, t->expectedDutyCycle[1], 0.0001) << msg << " channel2duty";
 }
 
 static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
@@ -314,7 +310,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 31.365, ie0->injectionStart.angleOffsetFromTriggerEvent);
+	assertEqualsM("injection angle", 4.095, ie0->injectionStart.angleOffsetFromTriggerEvent);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
@@ -327,7 +323,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size/2";
+	ASSERT_EQ( 4,  engine->executor.size()) << "queue size/2";
 	{
 	scheduling_s *ev0 = engine->executor.getForUnitTest(0);
 
@@ -349,9 +345,9 @@ TEST(misc, testRpmCalculator) {
 	eth.fireFall(5);
 	ASSERT_EQ( 3,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #3";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 3";
-	assertEqualsM("ev 3", start + 13333 - 1515, engine->executor.getForUnitTest(0)->momentX);
-	assertEqualsM2("ev 5", start + 14277, engine->executor.getForUnitTest(1)->momentX, 2);
-	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
+	assertEqualsM("ev 3", start + 13333 - 1515 + 2459, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("ev 5", start + 14277 + 500, engine->executor.getForUnitTest(1)->momentX, 2);
+	assertEqualsM("3/3", start + 14777 + 677, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
 	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
@@ -373,21 +369,19 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
-	eth.assertInjectorUpEvent("ev 0/2", 0, -4849, 2);
-
 
 	ASSERT_EQ( 6,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #4";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 4";
 	engine->executor.clear();
 
 	eth.fireFall(5);
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 5";
+	ASSERT_EQ( 0,  engine->executor.size()) << "queue size 5";
 // todo: assert queue elements
 	engine->executor.clear();
 
 
 	eth.fireRise(5);
-	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 6";
+	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 6";
 	assertEqualsM("6/0", start + 40944, engine->executor.getForUnitTest(0)->momentX);
 	assertEqualsM("6/1", start + 41444, engine->executor.getForUnitTest(1)->momentX);
 	engine->executor.clear();
@@ -397,16 +391,14 @@ TEST(misc, testRpmCalculator) {
 	engine->executor.clear();
 
 	eth.fireRise(5 /*ms*/);
-	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 8";
-	// todo: assert queue elements completely
-	assertEqualsM("8/0", start + 53333 - 1515, engine->executor.getForUnitTest(0)->momentX);
-	assertEqualsM2("8/1", start + 54277, engine->executor.getForUnitTest(1)->momentX, 0);
-	assertEqualsM2("8/2", start + 54777, engine->executor.getForUnitTest(2)->momentX, 0);
+	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 8";
+	assertEqualsM("8/0", start + 53333 - 1515 + 2459, engine->executor.getForUnitTest(0)->momentX);
+	assertEqualsM2("8/1", start + 54277 + 2459 - 1959, engine->executor.getForUnitTest(1)->momentX, 0);
 	engine->executor.clear();
 
 
 	eth.fireFall(5);
-	ASSERT_EQ( 0,  engine->executor.size()) << "queue size 9";
+	ASSERT_EQ( 2,  engine->executor.size()) << "queue size 9";
 	engine->executor.clear();
 
 
@@ -464,7 +456,6 @@ TEST(trigger, testTriggerDecoder) {
 	testTriggerDecoder2("test1+1", DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
-	testTriggerDecoder2("testAccordCd 2w", HONDA_ACCORD_CD_TWO_WIRES, 2, 0.9167, 0.5);
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
@@ -1076,6 +1067,8 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	setConstantDwell(45);
 
+	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
+
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 
@@ -1086,6 +1079,8 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	eth.fireRise(20);
 	eth.fireFall(20);
+
+	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
 
 	eth.executeActions();
 

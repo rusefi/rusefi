@@ -28,6 +28,7 @@
 #include "AdcConfiguration.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
+#include "protected_gpio.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #ifndef ADC_BUF_DEPTH_FAST
@@ -387,6 +388,8 @@ public:
 			slowAdcCounter++;
 
 			AdcSubscription::UpdateSubscribers(nowNt);
+
+			protectedGpio_check(nowNt);
 		}
 	}
 };

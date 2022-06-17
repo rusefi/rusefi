@@ -10,7 +10,6 @@
 class TriggerWaveform;
 
 void initializeNissanSR20VE_4(TriggerWaveform *s);
-void initializeNissanSR20VE_4_360(TriggerWaveform *s);
 
 void initializeNissanVQvvt(TriggerWaveform *s);
 void initializeNissanMRvvt(TriggerWaveform *s);

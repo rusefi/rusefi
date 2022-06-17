@@ -28,8 +28,8 @@ void setDefaultCranking() {
 
 	engineConfiguration->postCrankingDurationSec = 10;
 
-	setLinearCurve(engineConfiguration->crankingTpsCoef, /*from*/1, /*to*/1, 1);
-	setLinearCurve(engineConfiguration->crankingTpsBins, 0, 100, 1);
+	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/1, 1);
+	setLinearCurve(config->crankingTpsBins, 0, 100, 1);
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
@@ -75,10 +75,10 @@ void setDefaultCranking() {
 
 	// Cranking ignition timing
 	static const float advanceValues[] = { 0, 0, 0, 0 };
-	copyArray(engineConfiguration->crankingAdvance, advanceValues);
+	copyArray(config->crankingAdvance, advanceValues);
 
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
-	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
+	copyArray(config->crankingAdvanceBins, advanceBins);
 
 	engineConfiguration->useTLE8888_cranking_hack = true;
 }

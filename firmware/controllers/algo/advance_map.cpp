@@ -114,7 +114,7 @@ angle_t getAdvanceCorrections(int rpm) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (engineConfiguration->useSeparateAdvanceForCranking) {
-		return interpolate2d(rpm, engineConfiguration->crankingAdvanceBins, engineConfiguration->crankingAdvance);
+		return interpolate2d(rpm, config->crankingAdvanceBins, config->crankingAdvance);
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
@@ -212,46 +212,6 @@ size_t getMultiSparkCount(int rpm) {
 	} else {
 		return 0;
 	}
-}
-
-/**
- * @param octane gas octane number
- * @param bore in mm
- */
-float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore) {
-    int octaneCorrection;
-    if ( octane <= 90) {
-        octaneCorrection = -2;
-    } else if (octane < 94) {
-        octaneCorrection = -1;
-    } else {
-        octaneCorrection = 0;
-    }
-
-    int compressionCorrection;
-    if (compression <= 9) {
-        compressionCorrection = 2;
-    } else if (compression <= 10) {
-        compressionCorrection = 1;
-    } else if (compression <= 11) {
-        compressionCorrection = 0;
-    } else {
-        // compression ratio above 11
-        compressionCorrection = -2;
-    }
-    int base;
-    if (style == CS_OPEN) {
-    	base = 33;
-    } else if (style == CS_CLOSED) {
-    	base = 28;
-    } else {
-    	// CS_SWIRL_TUMBLE
-    	base = 22;
-    }
-
-    float boreCorrection = (bore - 4 * 25.4) / 25.4 * 6;
-    float result = base + octaneCorrection + compressionCorrection + boreCorrection;
-    return ((int)(result * 10)) / 10.0;
 }
 
 #endif // EFI_ENGINE_CONTROL

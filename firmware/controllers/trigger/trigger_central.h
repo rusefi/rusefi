@@ -31,7 +31,7 @@ class TriggerNoiseFilter {
 public:
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt,
-			TriggerState * triggerState,
+			TriggerDecoderBase* triggerState,
 			trigger_event_e signal);
 
 	efitick_t lastSignalTimes[HW_EVENT_TYPES];
@@ -108,12 +108,28 @@ public:
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
 #if EFI_SHAFT_POSITION_INPUT
-	TriggerStateWithRunningStatistics triggerState;
+	PrimaryTriggerDecoder triggerState;
 #endif //EFI_SHAFT_POSITION_INPUT
 
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK] = {
+		{
+			"VVT B1 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		},
+#if BANKS_COUNT >= 2
+		{
+			"VVT B2 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		}
+#endif
+	};
+
 	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;
@@ -122,6 +138,8 @@ public:
 	Timer m_lastEventTimer;
 
 private:
+	void decodeMapCam(efitick_t nowNt, float currentPhase);
+
 	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
 	// not TDC point
 	Timer m_syncPointTimer;
@@ -142,3 +160,4 @@ void onConfigurationChangeTriggerCallback();
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
+#define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24

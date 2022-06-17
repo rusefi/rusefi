@@ -36,13 +36,14 @@ enable2ndByteCanID = false
 
 [TunerStudio]
    queryCommand   = "S"
-   versionInfo    = "V"  ; firmwave version for title bar.
+   versionInfo    = "V"  ; firmware version for title bar.
    signature    = @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
    ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
    useLegacyFTempUnits = false
+   ignoreMissingBitOptions = true
 
-   ; Optimize comms for fast rusefi ECUs
+   ; Optimize comms for fast rusEFI ECUs
    noCommReadDelay = true;
    defaultRuntimeRecordPerSec = 100;
    maxUnusedRuntimeRange = 1000;
@@ -1215,6 +1216,8 @@ gaugeCategory = Sensors - Raw
    rawMafGauge          = rawMaf        , "Raw MAF",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawMapGauge          = rawMap        , "Raw MAP",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawAfrGauge          = rawAfr        , "Raw EGO",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   vssEdgeCounterGauge  = vssEdgeCounter, "Raw VSS",           "counter", 0, 5, 0, 0, 5, 5, 3, 0
+   issEdgeCounterGauge  = issEdgeCounter, "Raw ISS",           "counter", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
    desiredGearGauge = tcuDesiredGear, @@GAUGE_NAME_DESIRED_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
@@ -1323,8 +1326,8 @@ gaugeCategory = DynoView
     indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black
     indicator = { clutchDownState }, "Clutch Down",   "Clutch Down",   white, black, yellow,   black
     indicator = { brakePedalState }, "brake",   "brake down",   white, black, red,   black
-    indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
-	indicator = { acState }, "AC off", "AC on", white, black, blue, white
+    indicator = { acButtonState }, "AC switch off", "AC switch on", white, black, blue, white
+	indicator = { m_acEnabled }, "AC off", "AC on", white, black, blue, white
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
 	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 	indicator = { dfcoActive }, "no decel cut", "decel cut", white, black, yellow, black
@@ -1343,6 +1346,7 @@ gaugeCategory = DynoView
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
+	indicator = { isPumpOn }, "No Pump", "Pump", white, black, green, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
@@ -1393,7 +1397,6 @@ menuDialog = main
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
-;		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
 
 		groupMenu = "Cylinder fuel trims"
 		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
@@ -1639,7 +1642,7 @@ menuDialog = main
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
-		subMenu = vrThreshold,				"VR Sensor Threshold"
+		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
 		subMenu = fancyHardwareDialog,      "Fancy Hardware"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
@@ -1767,7 +1770,8 @@ cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
 ; MRE_MIATA_NB2_MAP = 11
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_VW_B6_16_hex@@"
+cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_VW_B6_16_hex@@"
+cmd_set_engine_type_Proteus_VW_B6		    = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
 cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
 cmd_set_engine_type_MRE_SECONDARY_CAN       		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
 
@@ -1818,6 +1822,7 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00
 cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
+cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
@@ -1911,7 +1916,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection phase control mode",				injectionTimingMode, { isInjectionEnabled }
 
 	dialog = ignitionOutputs, "Ignition Outputs"
-		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}
+		field = "Ignition Pin Mode",         	        ignitionPinMode, {isIgnitionEnabled == 1}@@if_ts_show_ignitionPinMode
 		field = "Ignition Pin 1",                       ignitionPins1, {isIgnitionEnabled == 1}
 		; see rusefi_config.txt comment next to 'ignitionPin2logic' which says
 		; this section is auto-generated by FiringOrderTSLogic.java
@@ -1990,8 +1995,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
-		field = "VVT offset bank 2 intake",			    vvtOffsets3, { camInputs3 != 0 }
+		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
+		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
+		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2006,14 +2013,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
 
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
+		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins2 != 0 || (triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
-		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
-        field = "Cam sensor bank 1 exhaust",        camInputs2, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 intake",         camInputs3, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 exhaust",        camInputs4, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 }
+		field = "Cam sensor bank 1 intake",	        camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
+        field = "Cam sensor bank 1 exhaust",        camInputs2, { camInputs2 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+        field = "Cam sensor bank 2 intake",         camInputs3, { camInputs3 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 ) }
+        field = "Cam sensor bank 2 exhaust",        camInputs4, { camInputs4 != 0 || (vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 ) }
 		field = "Invert cam inputs",                invertCamVVTSignal, { camInputs1 != 0 }
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
@@ -2034,20 +2041,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Stoichiometric ratio",			stoichRatioPrimary,		{isInjectionEnabled == 1}
 		field = "E100 stoichiometric ratio", 	stoichRatioSecondary,	{isInjectionEnabled == 1 && flexSensorPin != 0 }
 
-	dialog = fuelTrimSettings, "Fuel Trim",	yAxis
-		field = "Cylinder 1",					fuelTrim1
-		field = "Cylinder 2",					fuelTrim2,  {cylindersCount >  1}
-		field = "Cylinder 3",					fuelTrim3,  {cylindersCount >  2}
-		field = "Cylinder 4",					fuelTrim4,  {cylindersCount >  3}
-		field = "Cylinder 5",					fuelTrim5,  {cylindersCount >  4}
-		field = "Cylinder 6",					fuelTrim6,  {cylindersCount >  5}
-		field = "Cylinder 7",					fuelTrim7,  {cylindersCount >  6}
-		field = "Cylinder 8",					fuelTrim8,  {cylindersCount >  7}
-		field = "Cylinder 9",					fuelTrim9,  {cylindersCount >  8}
-		field = "Cylinder 10",					fuelTrim10, {cylindersCount >  9}
-		field = "Cylinder 11",					fuelTrim11, {cylindersCount > 10}
-		field = "Cylinder 12",					fuelTrim12, {cylindersCount > 11}
-
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of pins for batch mode"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
@@ -2062,8 +2055,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection Pin 10 ",	    			injectionPins10, {isInjectionEnabled == 1 && cylindersCount > 9}
 		field = "Injection Pin 11 ",					injectionPins11, {isInjectionEnabled == 1 && cylindersCount > 10}
 		field = "Injection Pin 12 ",					injectionPins12, {isInjectionEnabled == 1 && cylindersCount > 11}
-		field = ""
-		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}
+		field = ""@@if_ts_show_injectionPinMode
+		field = "injection Pin Mode",       			injectionPinMode, {isInjectionEnabled == 1}@@if_ts_show_injectionPinMode
 
 	dialog = cylinderBankSelect, "Cylinder Banks", yAxis
 		field = "Cylinder 1",						cylinderBankSelect1, {isInjectionEnabled == 1}
@@ -2125,6 +2118,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Solenoid #4", cmd_test_sol4
 		commandButton = "Solenoid #5", cmd_test_sol5
 		commandButton = "Solenoid #6", cmd_test_sol6
+
+    dialog = testOther
+        field = "Count", benchTestCount
+        field = "On Time", benchTestOnTime
+        field = "Off Time", benchTestOffTime
+        panel = testSolenoids
 
 	dialog = injectionSettingsEast, "", yAxis
 		panel = testInjectors
@@ -2382,7 +2381,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = allTriggerDebug, "Trigger Debug"
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
         field = "cam 3 debug",                          camInputsDebug3
@@ -2484,8 +2482,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
 		field = "CAN TX pin",							canTxPin @@if_ts_show_can_pins
-		field = "SPI1 MOSI",							spi1mosiPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
-		field = "SPI1 MISO",							spi1misoPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MOSI",							spi1mosiPin, { spi1mosiPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
+		field = "SPI1 MISO",							spi1misoPin, { spi1misoPin != 0 || is_enabled_spi_1 == 1} @@if_ts_show_spi
 		field = "SPI1 SCK",								spi1sckPin, {is_enabled_spi_1 == 1} @@if_ts_show_spi
 		field = "SPI2 MOSI",							spi2mosiPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
 		field = "SPI2 MISO",							spi2misoPin, {is_enabled_spi_2 == 1} @@if_ts_show_spi
@@ -3141,7 +3139,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = startStopDialog, "Start/Stop Button"
 		field = "Start/Stop Button Pin",		startStopButtonPin
 		field = "Start/Stop Button Mode",				startStopButtonMode
-		field = "Starter Control",						starterControlPin, {startStopButtonPin != 0}
+		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
@@ -3518,7 +3516,7 @@ dialog = tcuControls, "Transmission Settings"
     dialog = boostDialog, ""
 		field = "Enable",                           isBoostControlEnabled
 		field = "Control Mode",                     boostType, { isBoostControlEnabled }
-		field = "Output",							boostControlPin, { isBoostControlEnabled }
+		field = "Output",							boostControlPin, { boostControlPin != 0 || isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
@@ -3616,6 +3614,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
 		field = "PWM Frequency",						etbFreq
+		field = "Minimum ETB position",					etbMinimumPosition
 		field = "Maximum ETB position",					etbMaximumPosition
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
@@ -3685,7 +3684,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = ioTest, "Bench Test & Commands", xAxis
 		panel = testSpark
 		panel = testInjectors
-		panel = testSolenoids
+		panel = testOther
 		panel = testLuaOut
 		panel = testMisc
 
@@ -3729,6 +3728,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
+		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
@@ -3800,7 +3800,7 @@ dialog = tcuControls, "Transmission Settings"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 
-	    field = "Launch Button",                        launchActivatePin,      {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+	    field = "Launch Button",                        launchActivatePin,      { launchActivatePin != 0 || (launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1)}
 	    field = "Launch Button inverted",				launchActivateInverted
 	    field = "Launch Button mode",                   launchActivatePinMode,  {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 
@@ -3838,7 +3838,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = antiLag, "AntiLag Settings NOT WORKING"
         field = "Enable AntiLag",               antiLagEnabled
 	    field = "Activation Mode",          	antiLagActivationMode,  {antiLagEnabled == 1}
-        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivationMode == 1 && antiLagEnabled == 1}
+        field = "Switch Input",                 antiLagActivatePin,  {antiLagActivatePin != 0 || ( antiLagActivationMode == 1 && antiLagEnabled == 1 ) }
 
 
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
@@ -3904,7 +3904,7 @@ dialog = tcuControls, "Transmission Settings"
 	dialog = vrThreshold
 	    topicHelp = "vrThresholdHelp"
 		panel = vrThreshold1
-		panel = vrThreshold2
+		panel = vrThreshold2@@if_ts_show_vr_threshold_2
 
 	dialog = gppwm1left, ""
 		field = "Pin", gppwm1_pin

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,7 @@ public class UsagesReader {
     }
 
     interface EntryHandler {
-        void onEntry(String name, List elements) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
@@ -78,31 +79,12 @@ public class UsagesReader {
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
         EntryHandler handler = new EntryHandler() {
-
             @Override
-            public void onEntry(String name, List elements) throws IOException {
-                String javaName = (String) elements.get(0);
-                String folder = (String) elements.get(1);
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException {
+                // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition);
-
-                boolean withCDefines = false;
-                String prepend = "";
-                for (int i = 2; i < elements.size(); i++) {
-                    String keyValue = (String) elements.get(i);
-                    String[] pair = keyValue.trim().split("=");
-                    String key = pair[0];
-                    String value = pair[1];
-                    if (key.equals(ConfigDefinition.KEY_WITH_C_DEFINES)) {
-                        withCDefines = Boolean.parseBoolean(value);
-                    } else if (key.equals(ConfigDefinition.KEY_PREPEND)) {
-                        prepend = value;
-                    }
-                }
-
-//            String macroName = elements.size() > 2 ? ((String)elements.get(2)).trim() : "";
-
 
                 ReaderState state = new ReaderState();
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
@@ -128,15 +110,34 @@ public class UsagesReader {
             }
         };
 
-        LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
+        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>)data.get("Usages");
 
-        for (Map.Entry entry : liveDocs.entrySet()) {
-            String name = (String) entry.getKey();
-            System.out.println(" " + name);
-            System.out.println("  " + entry.getValue());
-            List elements = (List) entry.getValue();
+        fragmentsContent.append("static const FragmentEntry fragments[] = {\n");
 
-            handler.onEntry(name, elements);
+        for (LinkedHashMap entry : liveDocs) {
+            String name = (String)entry.get("name");
+            String java = (String)entry.get("java");
+            String folder = (String)entry.get("folder");
+            String prepend = (String)entry.get("prepend");
+            Boolean withCDefines = (Boolean)entry.get("withCDefines");
+            // Defaults to false if not specified
+            withCDefines = withCDefines != null && withCDefines;
+
+            Object outputNames = entry.get("output_name");
+
+            String[] outputNamesArr;
+            if (outputNames == null) {
+                outputNamesArr = new String[0];
+            } else if (outputNames instanceof String) {
+                outputNamesArr = new String[1];
+                outputNamesArr[0] = (String)outputNames;
+            } else {
+                ArrayList<String> nameList = (ArrayList<String>)outputNames;
+                outputNamesArr = new String[nameList.size()];
+                nameList.toArray(outputNamesArr);
+            }
+
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention

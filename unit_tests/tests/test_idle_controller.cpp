@@ -55,9 +55,9 @@ TEST(idle_v2, testTargetRpm) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
 
-	for (size_t i = 0; i < efi::size(engineConfiguration->cltIdleRpmBins); i++) {
-		engineConfiguration->cltIdleRpmBins[i] = i * 10;
-		engineConfiguration->cltIdleRpm[i] = i * 100;
+	for (size_t i = 0; i < efi::size(config->cltIdleRpmBins); i++) {
+		config->cltIdleRpmBins[i] = i * 10;
+		config->cltIdleRpm[i] = i * 100;
 	}
 
 	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
@@ -167,9 +167,9 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(10, 0));
 
 	// Turn on AC!
-	engine->acSwitchState = true;
+	engine->module<AcController>()->acButtonState = true;
 	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(10, 0));
-	engine->acSwitchState = false;
+	engine->module<AcController>()->acButtonState = false;
 
 	// Turn the fan on!
 	enginePins.fanRelay.setValue(1);
@@ -181,7 +181,7 @@ TEST(idle_v2, runningFanAcBump) {
 	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(10, 0));
 
 	// Turn on everything!
-	engine->acSwitchState = true;
+	engine->module<AcController>()->acButtonState = true;
 	enginePins.fanRelay.setValue(1);
 	enginePins.fanRelay2.setValue(1);
 	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(10, 0));
@@ -285,8 +285,8 @@ TEST(idle_v2, openLoopCoastingTable) {
 	// enable & configure feature
 	engineConfiguration->useIacTableForCoasting = true;
 	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		engineConfiguration->iacCoastingBins[i] = 10 * i;
-		engineConfiguration->iacCoasting[i] = 5 * i;
+		config->iacCoastingBins[i] = 10 * i;
+		config->iacCoasting[i] = 5 * i;
 	}
 
 	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0, 2));

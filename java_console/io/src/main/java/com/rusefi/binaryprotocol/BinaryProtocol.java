@@ -15,6 +15,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.Nullable;
@@ -164,21 +165,47 @@ public class BinaryProtocol {
      *
      * @return true if everything fine
      */
-    public boolean connectAndReadConfiguration(Arguments arguments, DataListener listener) {
+    public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
             signature = getSignature(stream);
             log.info("Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
-            return false;
+            return "Failed to read signature " + e;
         }
+
+        String errorMessage = validateConfigVersion();
+        if (errorMessage != null)
+            return errorMessage;
+
         readImage(arguments, Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
-            return false;
+            return "Failed to read calibration";
 
         startPullThread(listener);
         binaryProtocolLogger.start();
-        return true;
+        return null;
+    }
+
+    /**
+     * @return null if everything is good, error message otherwise
+     */
+    private String validateConfigVersion() {
+        int requestSize = 4;
+        byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
+
+        String msg = "load TS_CONFIG_VERSION";
+        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, msg);
+        if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+            close();
+            return "Failed to " + msg;
+        }
+        int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
+        if (actualVersion != TS_FILE_VERSION) {
+            log.error("Got TS_CONFIG_VERSION " + actualVersion);
+            return "Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected";
+        }
+        return null;
     }
 
     private void startPullThread(final DataListener textListener) {
@@ -310,6 +337,7 @@ public class BinaryProtocol {
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
+                // todo: looks like forever retry? that's weird
                 continue;
             }
 

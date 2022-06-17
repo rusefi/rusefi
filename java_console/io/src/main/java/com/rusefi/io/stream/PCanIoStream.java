@@ -17,31 +17,26 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
     static Logging log = getLogging(PCanIoStream.class);
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
-    private final IncomingDataBuffer dataBuffer;
+    private final IncomingDataBuffer dataBuffer = createDataBuffer("[PCAN] ");
     private final PCANBasic can;
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
-            sendCanPacket(new byte[]{0x30, 0, 0, 0, 0, 0, 0, 0});
+            sendCanPacket(FLOW_CONTROL);
         }
     };
 
     private final IsoTpConnector isoTpConnector = new IsoTpConnector() {
         @Override
-        public void sendCanData(byte[] hdr, byte[] data, int offset, int len) {
-            byte[] total = new byte[hdr.length + len];
-            System.arraycopy(hdr, 0, total, 0, hdr.length);
-            System.arraycopy(data, offset, total, hdr.length, len);
-
-            log.info("-------sendIsoTp " + total.length + " byte(s):");
-
-            log.info("Sending " + IoStream.printHexBinary(total));
+        public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+            byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
 
             sendCanPacket(total);
         }
@@ -52,7 +47,7 @@ public class PCanIoStream extends AbstractIoStream {
     };
 
     @Nullable
-    public static PCanIoStream getPCANIoStream() {
+    public static PCanIoStream createStream() {
         PCANBasic can = new PCANBasic();
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
@@ -65,6 +60,12 @@ public class PCanIoStream extends AbstractIoStream {
     }
 
     private void sendCanPacket(byte[] payLoad) {
+        if (log.debugEnabled())
+            log.debug("-------sendIsoTp " + payLoad.length + " byte(s):");
+
+        if (log.debugEnabled())
+            log.debug("Sending " + IoStream.printHexBinary(payLoad));
+
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
         TPCANStatus status = can.Write(CHANNEL, msg);
@@ -75,11 +76,8 @@ public class PCanIoStream extends AbstractIoStream {
 //        log.info("Send OK! length=" + payLoad.length);
     }
 
-    private DataListener listener;
-
     public PCanIoStream(PCANBasic can) {
         this.can = can;
-        dataBuffer = createDataBuffer("");
     }
 
     @Override
@@ -89,21 +87,25 @@ public class PCanIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(DataListener listener) {
-        this.listener = listener;
         Executor threadExecutor = Executors.newSingleThreadExecutor(BinaryProtocolServer.getThreadFactory("PCAN reader"));
         threadExecutor.execute(() -> {
             while (!isClosed()) {
-                readOnePacket();
+                readOnePacket(listener);
             }
         });
     }
 
-    public void readOnePacket() {
+    private void readOnePacket(DataListener listener) {
         // todo: can we reuse instance?
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            log.info("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            if (log.debugEnabled())
+                log.debug("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
+                log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+                return;
+            }
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 

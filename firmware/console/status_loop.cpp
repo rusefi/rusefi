@@ -53,6 +53,7 @@
 #include "binary_logging.h"
 #include "buffered_writer.h"
 #include "dynoview.h"
+#include "frequency_sensor.h"
 
 extern bool main_loop_started;
 
@@ -344,7 +345,7 @@ static void initStatusLeds() {
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
+	bool justHadError = engine->triggerCentral.triggerState.someSortOfTriggerError();
 	return justHadError || engine->triggerCentral.isTriggerDecoderError();
 #else
 	return false;
@@ -724,6 +725,7 @@ void updateTunerStudioState() {
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
+	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
 
 #if EFI_SHAFT_POSITION_INPUT
 
@@ -782,6 +784,10 @@ void updateTunerStudioState() {
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
+	extern FrequencySensor inputShaftSpeedSensor;
+	tsOutputChannels->issEdgeCounter = inputShaftSpeedSensor.eventCounter;
+	extern FrequencySensor vehicleSpeedSensor;
+	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
@@ -851,7 +857,6 @@ void updateTunerStudioState() {
 		break;
 		}
 	case DBG_TRIGGER_COUNTERS:
-// no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
@@ -861,8 +866,6 @@ void updateTunerStudioState() {
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
 #endif // EFI_SHAFT_POSITION_INPUT
 
-		// debugFloatField6 used
-		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 		break;
 #if EFI_HIP_9011_DEBUG
 	case DBG_KNOCK:

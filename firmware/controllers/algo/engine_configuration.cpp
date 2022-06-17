@@ -49,7 +49,6 @@
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
-#include "honda_accord.h"
 #include "honda_k_dbc.h"
 #include "honda_600.h"
 #include "hyundai.h"
@@ -213,9 +212,9 @@ void incrementGlobalConfigurationVersion() {
  */
 void setConstantDwell(floatms_t dwellMs) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
+		config->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setArrayValues(engineConfiguration->sparkDwellValues, dwellMs);
+	setArrayValues(config->sparkDwellValues, dwellMs);
 }
 
 void setWholeIgnitionIatCorr(float value) {
@@ -331,23 +330,23 @@ static void setDefaultWarmupIdleCorrection() {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget() {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
+	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
+	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
 }
 
 static void setDefaultFrankensoStepperIdleParameters() {
@@ -367,8 +366,8 @@ static void setCanFrankensoDefaults() {
  * see also setDefaultIdleSpeedTarget()
  */
 void setTargetRpmCurve(int rpm) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
-	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
+	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
+	setLinearCurve(config->cltIdleRpm, rpm, rpm, 10);
 }
 
 void setDefaultGppwmParameters() {
@@ -529,16 +528,16 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve1, 0, 100, 1);
+	setLinearCurve(config->scriptCurve1Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve1, 0, 100, 1);
 
-	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve2, 30, 170, 1);
+	setLinearCurve(config->scriptCurve2Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve2, 30, 170, 1);
 
-	setLinearCurve(engineConfiguration->scriptCurve3Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve4Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve5Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve6Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve3Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve4Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();
@@ -863,8 +862,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
-	case VW_B6:
-		setVwPassatB6();
+	case MRE_VW_B6:
+		setMreVwPassatB6();
 		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
@@ -905,6 +904,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+	case PROTEUS_VW_B6:
+		setProteusVwPassatB6();
+		break;
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest();
 		break;
@@ -1016,7 +1018,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
-	case UNUSED39:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
 		break;
@@ -1045,9 +1046,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration();
-		break;
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfiguration1_24();
 		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
@@ -1143,7 +1141,7 @@ void validateConfiguration() {
 	 * negative zeros altogether. Unfortunately default configuration had one and here we are mitigating that.
 	 */
 	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
-		engineConfiguration->cltIdleRpmBins[i] = fixNegativeZero(engineConfiguration->cltIdleRpmBins[i]);
+		config->cltIdleRpmBins[i] = fixNegativeZero(config->cltIdleRpmBins[i]);
 	}
 }
 

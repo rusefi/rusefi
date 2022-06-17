@@ -22,7 +22,7 @@ TEST(LuaHooks, TestCurve) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	strcpy(engineConfiguration->scriptCurveName[3], "hello");
-	setLinearCurve(engineConfiguration->scriptCurve4, 500, 600, 1);
+	setLinearCurve(config->scriptCurve4, 500, 600, 1);
 
 	int index = getCurveIndexByName("helLO");
 	ASSERT_EQ(index, 3);

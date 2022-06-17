@@ -25,17 +25,20 @@ for BOARD in \
    "hellen/hellen72 hellen72" \
    "hellen/hellen81 hellen81" \
    "hellen/hellen-nb1 hellen-nb1" \
+   "hellen/hellen-gm-e67 hellen-gm-e67" \
    "hellen/hellen64_miataNA6_94 hellenNA6" \
    "hellen/hellenNA8_96 hellenNA8_96" \
    "microrusefi mre_f7" \
    "microrusefi mre_f4" \
    "core8 core8" \
+   "48way 48way" \
    "frankenso frankenso_na6" \
    "prometheus prometheus_469" \
    "prometheus prometheus_405" \
    "proteus proteus_f7" \
    "proteus proteus_f4" \
    "proteus proteus_h7" \
+   "f407-discovery f407-discovery" \
    "f429-discovery f429-discovery" \
    "atlas atlas"\
    "tdg-pdm8 tdg-pdm8"\
@@ -47,6 +50,8 @@ for BOARD in \
  [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME $INI"; exit 1; }
 done
 
+#
+# TODO: it's time to kill the 'default' bundle concept and just live happily with explicit f407-discovery
 # default config should be generated after normal custom boards so that it would be default
 # firmware/controllers/generated/rusefi_generated.h file which would be pushed into VCS
 bash gen_config_default.sh

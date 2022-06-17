@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:48 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Wed May 18 04:13:25 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -387,6 +387,38 @@ case Gpio::MC33972_PIN_21:
   return "MC33972_PIN_21";
 case Gpio::MC33972_PIN_22:
   return "MC33972_PIN_22";
+case Gpio::PROTECTED_PIN_0:
+  return "PROTECTED_PIN_0";
+case Gpio::PROTECTED_PIN_1:
+  return "PROTECTED_PIN_1";
+case Gpio::PROTECTED_PIN_10:
+  return "PROTECTED_PIN_10";
+case Gpio::PROTECTED_PIN_11:
+  return "PROTECTED_PIN_11";
+case Gpio::PROTECTED_PIN_12:
+  return "PROTECTED_PIN_12";
+case Gpio::PROTECTED_PIN_13:
+  return "PROTECTED_PIN_13";
+case Gpio::PROTECTED_PIN_14:
+  return "PROTECTED_PIN_14";
+case Gpio::PROTECTED_PIN_15:
+  return "PROTECTED_PIN_15";
+case Gpio::PROTECTED_PIN_2:
+  return "PROTECTED_PIN_2";
+case Gpio::PROTECTED_PIN_3:
+  return "PROTECTED_PIN_3";
+case Gpio::PROTECTED_PIN_4:
+  return "PROTECTED_PIN_4";
+case Gpio::PROTECTED_PIN_5:
+  return "PROTECTED_PIN_5";
+case Gpio::PROTECTED_PIN_6:
+  return "PROTECTED_PIN_6";
+case Gpio::PROTECTED_PIN_7:
+  return "PROTECTED_PIN_7";
+case Gpio::PROTECTED_PIN_8:
+  return "PROTECTED_PIN_8";
+case Gpio::PROTECTED_PIN_9:
+  return "PROTECTED_PIN_9";
 case Gpio::TLE6240_PIN_1:
   return "TLE6240_PIN_1";
 case Gpio::TLE6240_PIN_10:

@@ -106,27 +106,14 @@ static operation_mode_e lookupOperationMode() {
 	}
 }
 
-static void initVvtShape(int camIndex, TriggerState &initState) {
-	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
 
-	if (vvtMode != VVT_INACTIVE) {
-		trigger_config_s config;
-		// todo: should 'vvtWithRealDecoder' be used here?
-		config.type = getVvtTriggerType(vvtMode);
-
-		auto& shape = engine->triggerCentral.vvtShape[camIndex];
-		shape.initializeTriggerWaveform(
-				lookupOperationMode(),
-				engineConfiguration->vvtCamSensorUseRise, &config);
-
-		shape.initializeSyncPoint(initState,
-				engine->vvtTriggerConfiguration[camIndex],
-				config);
-	}
+	shape.initializeSyncPoint(initState, config);
 }
 
 void Engine::updateTriggerWaveform() {
-	static TriggerState initState;
+	static TriggerDecoderBase initState("init");
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -138,9 +125,7 @@ void Engine::updateTriggerWaveform() {
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			lookupOperationMode(),
-			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
+	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
@@ -165,24 +150,28 @@ void Engine::updateTriggerWaveform() {
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		/**
-	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
 				initState);
 
-		engine->triggerCentral.triggerState.name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
-	engine->triggerCentral.vvtState[0][0].name = "VVT B1 Int";
-	engine->triggerCentral.vvtState[0][1].name = "VVT B1 Exh";
-	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
-	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
-
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		initVvtShape(camIndex, initState);
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+		// todo: should 'vvtWithRealDecoder' be used here?
+		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
+			initVvtShape(
+				triggerCentral.vvtShape[camIndex],
+				vvtTriggerConfiguration[camIndex],
+				initState
+			);
+		}
 	}
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	engine->triggerCentral.triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals();
@@ -324,11 +313,11 @@ void Engine::updateSwitchInputs() {
 	}
 	if (hasAcToggle()) {
 		bool result = getAcToggle();
-		if (engine->acSwitchState != result) {
-			engine->acSwitchState = result;
-			engine->module<AcController>().unmock().acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
+		AcController & acController = engine->module<AcController>().unmock();
+		if (acController.acButtonState != result) {
+			acController.acButtonState = result;
+			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
-		engine->acSwitchState = result;
 	}
 	engine->clutchUpState = getClutchUpState();
 
@@ -387,11 +376,8 @@ void Engine::OnTriggerStateDecodingError() {
 			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
-	triggerCentral.triggerState.setTriggerErrorState();
 
-
-	triggerCentral.triggerState.totalTriggerErrorCounter++;
-	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
+	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
@@ -423,23 +409,12 @@ void Engine::OnTriggerSynchronizationLost() {
 	}
 }
 
-void Engine::OnTriggerInvalidIndex(int currentIndex) {
-	// let's not show a warning if we are just starting to spin
-	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
-		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
-		triggerCentral.triggerState.setTriggerErrorState();
-	}
-}
+void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) {
+	// TODO: this logic probably shouldn't be part of engine.cpp
 
-void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 	// We only care about trigger shape once we have synchronized trigger. Anything could happen
 	// during first revolution and it's fine
 	if (wasSynchronized) {
-		/**
-	 	 * We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-	 	 */
-		bool isDecodingError = triggerCentral.triggerState.validateEventCounters(triggerCentral.triggerShape);
-
 		enginePins.triggerDecoderErrorPin.setValue(isDecodingError);
 
 		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
@@ -612,20 +587,29 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
 // this is related to 'knownOperationMode' flag
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	return type != TT_TOOTHED_WHEEL
-			&& type != TT_ONE
-			&& type != TT_3_1_CAM
-			&& type != TT_36_2_2_2
-			&& type != TT_TOOTHED_WHEEL_60_2
-			&& type != TT_TOOTHED_WHEEL_36_1;
+	switch (type) {
+		case TT_TOOTHED_WHEEL:
+		case TT_ONE:
+		case TT_3_1_CAM:
+		case TT_36_2_2_2:	// TODO: should this one be in this list?
+		case TT_TOOTHED_WHEEL_60_2:
+		case TT_TOOTHED_WHEEL_36_1:
+			// These modes could be either cam or crank speed
+			return false;
+		default:
+			return true;
+	}
 }
 
 operation_mode_e Engine::getOperationMode() {
-	/**
-	 * here we ignore user-provided setting for well known triggers.
-	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-	 */
-	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : lookupOperationMode();
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return triggerCentral.triggerShape.getOperationMode();
+	} else {
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
 }
 
 /**

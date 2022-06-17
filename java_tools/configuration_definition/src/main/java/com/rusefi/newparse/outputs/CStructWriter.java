@@ -13,8 +13,10 @@ import java.io.PrintStream;
  */
 public class CStructWriter {
     public void writeCStructs(ParseState parser, String outputFile) throws FileNotFoundException {
-        PrintStream ps = new PrintStream(new FileOutputStream(outputFile));
+        writeCStructs(parser, new PrintStream(new FileOutputStream(outputFile)));
+    }
 
+    public void writeCStructs(ParseState parser, PrintStream ps) {
         ps.println(
                 "// begin\n" +
                 "#pragma once\n" +

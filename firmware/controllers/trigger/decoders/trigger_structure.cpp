@@ -59,7 +59,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
-	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
 
 	setTriggerSynchronizationGap(2);
 	for (int gapIndex = 1; gapIndex < GAP_TRACKING_LENGTH ; gapIndex++) {
@@ -78,7 +77,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
-	wave.waveCount = TRIGGER_CHANNEL_COUNT;
+	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
 	wave.phaseCount = 0;
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
@@ -108,11 +107,29 @@ angle_t TriggerWaveform::getCycleDuration() const {
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+	case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_CRANK_SENSOR:
 	case TWO_STROKE:
 		return TWO_STROKE_CYCLE_DURATION;
 	default:
 		return FOUR_STROKE_CYCLE_DURATION;
+	}
+}
+
+bool TriggerWaveform::needsDisambiguation() const {
+	switch (getOperationMode()) {
+		case FOUR_STROKE_CRANK_SENSOR:
+		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+			return true;
+		case FOUR_STROKE_CAM_SENSOR:
+		case TWO_STROKE:
+			return false;
+		default:
+			firmwareError(OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
+			return true;
 	}
 }
 
@@ -124,6 +141,7 @@ angle_t TriggerWaveform::getCycleDuration() const {
  */
 size_t TriggerWaveform::getLength() const {
 	/**
+	 * 24 for FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR
 	 * 6 for FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
 	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
@@ -414,14 +432,14 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	}
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
+void TriggerWaveform::prepareShape(TriggerFormDetails& details) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (shapeDefinitionError) {
 		// Nothing to do here if there's a problem with the trigger shape
 		return;
 	}
 
-	prepareEventAngles(this, details);
+	details.prepareEventAngles(this);
 #endif
 }
 
@@ -444,26 +462,27 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
-	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
+	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig.TriggerType.type), (int)triggerConfig.TriggerType.type);
 #endif
 
 	shapeDefinitionError = false;
 
+	bool useOnlyRisingEdgeForTrigger = triggerConfig.UseOnlyRisingEdgeForTrigger;
 	this->useOnlyRisingEdgeForTriggerTemp = useOnlyRisingEdgeForTrigger;
 
-	switch (triggerConfig->type) {
+	switch (triggerConfig.TriggerType.type) {
 
 	case TT_TOOTHED_WHEEL:
 		/**
 		 * huh? why all know skipped wheel shapes use 'setToothedWheelConfiguration' method
 		 * which touches 'useRiseEdge' flag while here we do not touch it?!
 		 */
-		initializeSkippedToothTriggerWaveformExt(this, triggerConfig->customTotalToothCount,
-				triggerConfig->customSkippedToothCount, triggerOperationMode);
+		initializeSkippedToothTriggerWaveformExt(this, triggerConfig.TriggerType.customTotalToothCount,
+				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -637,7 +656,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_TOOTHED_WHEEL_36_2:
 		setToothedWheelConfiguration(this, 36, 2, triggerOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
+		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -646,7 +666,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, triggerOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:
@@ -665,23 +684,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_HONDA_4_24:
-		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
-		shapeWithoutTdc = true;
-		break;
-
-	case TT_HONDA_1_24:
-		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10);
-		break;
-
-	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(this);
-		break;
-
-	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(this);
-		break;
-
+	case UNUSED_12:
+	case UNUSED_13:
+	case UNUSED_21:
+	case UNUSED_34:
 	case TT_1_16:
 		configureOnePlus16(this);
 		break;
@@ -726,12 +732,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initialize2jzGE1_12(this);
 		break;
 
-	case TT_NISSAN_SR20VE:
-		initializeNissanSR20VE_4(this);
+	case TT_12_TOOTH_CRANK:
+		configure12ToothCrank(this);
 		break;
 
-	case TT_NISSAN_SR20VE_360:
-		initializeNissanSR20VE_4_360(this);
+	case TT_NISSAN_SR20VE:
+		initializeNissanSR20VE_4(this);
 		break;
 
 	case TT_ROVER_K:
@@ -746,8 +752,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureTriTach(this);
 		break;
 
-	case TT_GM_LS_24:
-		initGmLS24(this);
+	case TT_GM_24x:
+		initGmLS24_5deg(this);
+		break;
+
+	case TT_GM_24x_2:
+		initGmLS24_3deg(this);
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:
@@ -768,7 +778,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	default:
 		setShapeDefinitionError(true);
-		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig->type);
+		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
 	}
 	/**
 	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'

@@ -87,12 +87,12 @@ static void setDefaultVETable() {
 
 	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
 
-	setRpmTableBin(engineConfiguration->baroCorrRpmBins, BARO_CORR_SIZE);
-	setLinearCurve(engineConfiguration->baroCorrPressureBins, 75, 105, 1);
+	setRpmTableBin(config->baroCorrRpmBins, BARO_CORR_SIZE);
+	setLinearCurve(config->baroCorrPressureBins, 75, 105, 1);
 	for (int i = 0; i < BARO_CORR_SIZE;i++) {
 		for (int j = 0; j < BARO_CORR_SIZE;j++) {
 			// Default baro table is all 1.0, we can't recommend a reasonable default here
-			engineConfiguration->baroCorrTable[i][j] = 1;
+			config->baroCorrTable[i][j] = 1;
 		}
 	}
 }

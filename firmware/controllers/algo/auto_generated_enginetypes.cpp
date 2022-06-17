@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Mar 22 10:38:42 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Jun 02 01:28:31 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -144,8 +144,6 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
-case Force_4_bytes_size_debug_mode_e:
-  return "Force_4_bytes_size_debug_mode_e";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -181,6 +179,8 @@ case ET_UNUSED97:
   return "ET_UNUSED97";
 case ET_UNUSED98:
   return "ET_UNUSED98";
+case ET_UNUSED_17:
+  return "ET_UNUSED_17";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -257,8 +257,6 @@ case HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
-case HONDA_ACCORD_CD_TWO_WIRES:
-  return "HONDA_ACCORD_CD_TWO_WIRES";
 case L9779_BENCH_ENGINE:
   return "L9779_BENCH_ENGINE";
 case MAZDA_MIATA_2003_BOARD_TEST:
@@ -295,6 +293,8 @@ case MRE_SECONDARY_CAN:
   return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
+case MRE_VW_B6:
+  return "MRE_VW_B6";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
 case PROTEUS_ANALOG_PWM_TEST:
@@ -319,6 +319,8 @@ case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
 case PROTEUS_VAG_80_18T:
   return "PROTEUS_VAG_80_18T";
+case PROTEUS_VW_B6:
+  return "PROTEUS_VW_B6";
 case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
@@ -353,14 +355,10 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED39:
-  return "UNUSED39";
 case UNUSED_48:
   return "UNUSED_48";
 case VW_ABA:
   return "VW_ABA";
-case VW_B6:
-  return "VW_B6";
   }
  return NULL;
 }
@@ -368,6 +366,8 @@ const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
 case Force_4_bytes_size_trigger_type:
   return "Force_4_bytes_size_trigger_type";
+case TT_12_TOOTH_CRANK:
+  return "TT_12_TOOTH_CRANK";
 case TT_1_16:
   return "TT_1_16";
 case TT_2JZ_1_12:
@@ -408,20 +408,14 @@ case TT_FORD_ST170:
   return "TT_FORD_ST170";
 case TT_FORD_TFI_PIP:
   return "TT_FORD_TFI_PIP";
+case TT_GM_24x:
+  return "TT_GM_24x";
+case TT_GM_24x_2:
+  return "TT_GM_24x_2";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_GM_LS_24:
-  return "TT_GM_LS_24";
-case TT_HONDA_1_24:
-  return "TT_HONDA_1_24";
-case TT_HONDA_1_4_24:
-  return "TT_HONDA_1_4_24";
-case TT_HONDA_4_24:
-  return "TT_HONDA_4_24";
-case TT_HONDA_ACCORD_1_24_SHIFTED:
-  return "TT_HONDA_ACCORD_1_24_SHIFTED";
 case TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
 case TT_HONDA_K_12_1:
@@ -458,8 +452,6 @@ case TT_NISSAN_QR25:
   return "TT_NISSAN_QR25";
 case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
-case TT_NISSAN_SR20VE_360:
-  return "TT_NISSAN_SR20VE_360";
 case TT_NISSAN_VQ30:
   return "TT_NISSAN_VQ30";
 case TT_NISSAN_VQ35:
@@ -518,6 +510,14 @@ case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
 case TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
+case UNUSED_12:
+  return "UNUSED_12";
+case UNUSED_13:
+  return "UNUSED_13";
+case UNUSED_21:
+  return "UNUSED_21";
+case UNUSED_34:
+  return "UNUSED_34";
   }
  return NULL;
 }

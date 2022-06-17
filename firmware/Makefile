@@ -46,8 +46,10 @@ endif
 
 
 # Compiler options here.
+# yes we have two kinds of EXTRA_*PARAMS so that we can define those in two different places independently
+#
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
+  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
 endif
 
 # EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
@@ -361,10 +363,10 @@ ULIBS = -lm --specs=nano.specs
 include $(RULESFILE)
 
 openblt:
-	make -f $(PROJECT_DIR)/openblt.mk
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk
 
 openblt_clean:
-	make -f $(PROJECT_DIR)/openblt.mk clean
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean
 
 # Enable precompiled header
 include rusefi_pch.mk

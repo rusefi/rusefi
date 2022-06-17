@@ -82,10 +82,9 @@ static void setupVbatt() {
 static void setupTle8888() {
 	// on microRusEFI SPI3 is exposed on PC10/PC11 and there is interest to use SD card there
 	// PB3/PB4 could be either SPI1 or SP3, let's use not SPI3 to address the contention
-	// Enable spi1
-	engineConfiguration->is_enabled_spi_1 = true;
 
-	// Wire up spi1
+	// Enable and wire up SPI1
+	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->spi1mosiPin = Gpio::B5;
 	engineConfiguration->spi1misoPin = Gpio::B4;
 	engineConfiguration->spi1sckPin = Gpio::B3;
@@ -122,7 +121,6 @@ static void setupDefaultSensorInputs() {
 	// tle8888 VR conditioner
 	engineConfiguration->triggerInputPins[0] = Gpio::C6;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A5;
 
@@ -163,10 +161,14 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::B6;
 	engineConfiguration->canRxPin = Gpio::B12;
 
-	// SPI for SD card
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	// SPI2 for onboard SD card on v0.6.0
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->spi2mosiPin = Gpio::B15;
+	engineConfiguration->spi2misoPin = Gpio::B14;
+	engineConfiguration->spi2sckPin = Gpio::B13;
 
+	// SPI3 for expansion header
+	// Don't override enable since you might want these pins for something else
 	engineConfiguration->spi3mosiPin = Gpio::C12;
 	engineConfiguration->spi3misoPin = Gpio::C11;
 	engineConfiguration->spi3sckPin = Gpio::C10;
@@ -175,10 +177,6 @@ void setBoardConfigOverrides() {
 void setSerialConfigurationOverrides() {
 	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
-
-
-
-
 }
 
 
@@ -192,7 +190,6 @@ void setSerialConfigurationOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
-	engineConfiguration->sdCardCsPin = Gpio::B9;
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
@@ -213,6 +210,14 @@ void setBoardDefaultConfiguration() {
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
+
+	// Enable onboard SD card on v0.6.0
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
+	engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardCsPin = Gpio::E15;
+
+	// Don't enable expansion header SPI by default
+	engineConfiguration->is_enabled_spi_3 = false;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

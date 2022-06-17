@@ -58,7 +58,7 @@ pins:
     id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 3
-    function: "Analog Voltage Input #3"
+    function: "Analog Voltage Input #3 TPS1_2"
     type: av
 
   - pin: 15
@@ -72,14 +72,14 @@ pins:
     id: [A2, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 7
-    function: "Analog Voltage Input #7"
+    function: "Analog Voltage Input #7 (PPS2)"
     type: av
 
   - pin: 17
     id: [A4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 9
-    function: "Analog Voltage Input #9"
+    function: "Analog Voltage Input #9 (PPS)"
     type: av
 
   - pin: 18
