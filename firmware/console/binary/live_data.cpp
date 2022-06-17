@@ -83,9 +83,12 @@ const trigger_central_s* getLiveDataAddr() {
 }
 
 template<>
-const trigger_state_s* getLiveDataAddr() {
+const trigger_state_s* getLiveDataAddr(size_t idx) {
 #if EFI_SHAFT_POSITION_INPUT
-	return &engine->triggerCentral.triggerState;
+	switch (idx) {
+		case 0: return &engine->triggerCentral.triggerState;
+		default: return &engine->triggerCentral.vvtState[idx - 1];
+	}
 #else
 	return nullptr;
 #endif
