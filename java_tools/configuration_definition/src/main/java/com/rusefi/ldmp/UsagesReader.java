@@ -112,8 +112,6 @@ public class UsagesReader {
 
         ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>)data.get("Usages");
 
-        fragmentsContent.append("static const FragmentEntry fragments[] = {\n");
-
         for (LinkedHashMap entry : liveDocs) {
             String name = (String)entry.get("name");
             String java = (String)entry.get("java");
