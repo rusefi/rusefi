@@ -15,7 +15,7 @@ public class TsWriter {
     private static final Pattern OPTIONAL_LINE = Pattern.compile("@@if_([a-zA-Z0-9_]+)");
 
     public void writeTunerstudio(ParseState parser, String inputFile, String outputFile) throws IOException {
-        PrintStream ps = new PrintStream(new FileOutputStream(outputFile));
+        PrintStream ps = new PrintStreamAlwaysUnix(new FileOutputStream(outputFile));
         writeTunerstudio(parser, inputFile, ps);
         ps.close();
     }

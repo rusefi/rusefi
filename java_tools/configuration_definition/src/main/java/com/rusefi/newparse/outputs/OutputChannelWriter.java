@@ -12,7 +12,7 @@ public class OutputChannelWriter {
     private final PrintStream ps;
 
     public OutputChannelWriter(String outputFile) throws FileNotFoundException {
-        this.ps = new PrintStream(new FileOutputStream(outputFile));
+        this.ps = new PrintStreamAlwaysUnix(new FileOutputStream(outputFile));
     }
 
     public OutputChannelWriter(PrintStream ps) {
