@@ -166,7 +166,6 @@ public class TriggerImage {
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
         EngineReport re1 = new EngineReport(waves.get(1).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
-        EngineReport re2 = new EngineReport(waves.get(2).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
@@ -176,17 +175,11 @@ public class TriggerImage {
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
         upDownImage1.setRenderText(false);
 
-        UpDownImage upDownImage2 = new UpDownImage(re2, "trigger");
-        upDownImage2.setRenderText(false);
-
         boolean isSingleSensor = re1.getList().isEmpty();
-        boolean isThirdVisible = !re2.getList().isEmpty();
 
         int height;
         if (isSingleSensor) {
             height = 1;
-        } else if (isThirdVisible) {
-            height = 3;
         } else {
             height = 2;
         }
@@ -198,9 +191,6 @@ public class TriggerImage {
 
         if (!isSingleSensor)
             triggerPanel.add(upDownImage1);
-
-        if (isThirdVisible)
-            triggerPanel.add(upDownImage2);
 
         triggerPanel.name = getTriggerName(triggerWheelInfo);
 //        triggerPanel.id = "#" + triggerWheelInfo.id;
