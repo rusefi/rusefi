@@ -79,4 +79,15 @@ public class EnumLayout extends Layout {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
         ps.println("\t" + this.enumType + " " + this.name + "[" + arrayLength[0] + "];");
     }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        // Output an enum as a scalar, since there's no TS support for enum output channels
+        ps.print(prefixer.get(name));
+        ps.print(" = scalar, ");
+        ps.print(this.type.tsType);
+        ps.print(", ");
+        ps.print(this.offset + offsetAdd);
+        ps.println(", \"\", 1, 0");
+    }
 }

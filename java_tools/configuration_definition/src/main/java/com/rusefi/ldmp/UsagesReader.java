@@ -114,7 +114,7 @@ public class UsagesReader {
 
                     parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
 
-                    if (!prepend.isEmpty()) {
+                    if (prepend != null && !prepend.isEmpty()) {
                         RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
                     }
 
