@@ -54,7 +54,6 @@ static void commonPassatB6() {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
-	engineConfiguration->verboseVVTDecoding = true;
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 

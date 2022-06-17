@@ -547,52 +547,14 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 				enginePins.debugTriggerSync.toggle();
 			}
 
-			/**
-			 * todo: technically we can afford detailed logging even with 60/2 as long as low RPM
-			 * todo: figure out exact threshold as a function of RPM and tooth count?
-			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
-			 */
-			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
-
 #if EFI_UNIT_TEST
 			actualSynchGap = triggerSyncGapRatio;
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE || EFI_SIMULATOR
-			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError() && !silentTriggerError)) {
-
-				int rpm = Sensor::getOrZero(SensorType::Rpm);
-				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
-
-				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
-					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
-					if (cisnan(ratioFrom)) {
-						// we do not track gap at this depth
-						continue;
-					}
-
-					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					if (cisnan(gap)) {
-						efiPrintf("index=%d NaN gap, you have noise issues?",
-								i);
-					} else {
-						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
-								triggerConfiguration.PrintPrefix,
-								(int)Sensor::getOrZero(SensorType::Rpm),
-							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
-							currentCycle.current_index,
-							i,
-							gap,
-							ratioFrom,
-							triggerShape.syncronizationRatioTo[i],
-							boolToString(someSortOfTriggerError()));
-					}
-				}
-			}
-#else
+#if EFI_UNIT_TEST
 			if (printTriggerTrace) {
 				float gap = 1.0 * toothDurations[0] / toothDurations[1];
-				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
+				for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							triggerConfiguration.PrintPrefix,

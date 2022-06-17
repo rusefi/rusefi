@@ -40,9 +40,6 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
-	// Default this to on - if you want to diagnose, turn it off.
-	engineConfiguration->silentTriggerError = true;
-
 	// Advanced Trigger
 
 	// Battery and alternator

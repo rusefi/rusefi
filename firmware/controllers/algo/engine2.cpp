@@ -195,7 +195,6 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 
 void TriggerConfiguration::update() {
 	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
-	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();
 	TriggerType = getType();
 }
 
@@ -207,10 +206,6 @@ trigger_config_s PrimaryTriggerConfiguration::getType() const {
 	return engineConfiguration->trigger;
 }
 
-bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engineConfiguration->verboseTriggerSynchDetails;
-}
-
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engineConfiguration->vvtCamSensorUseRise;
 }
@@ -218,8 +213,4 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 trigger_config_s VvtTriggerConfiguration::getType() const {
 	// Convert from VVT type to trigger_config_s
 	return { getVvtTriggerType(engineConfiguration->vvtMode[index]), 0, 0 };
-}
-
-bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return engineConfiguration->verboseVVTDecoding;
 }

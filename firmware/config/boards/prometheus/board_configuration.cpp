@@ -246,9 +246,6 @@ void setBoardDefaultConfiguration() {
 	setPrometheusDefaults();
 #endif
 
-	//!!!!!!!!!!!!!!!!!!!
-	//engineConfiguration->silentTriggerError = true;
-
 	//!!!!!!!!!!!!!
 	//engineConfiguration->isEngineChartEnabled = false;
 }

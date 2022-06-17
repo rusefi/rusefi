@@ -376,20 +376,6 @@ void Engine::OnTriggerStateDecodingError() {
 			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
-
-	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
-#if EFI_PROD_CODE
-		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
-				triggerCentral.triggerState.currentCycle.current_index,
-				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-				TRIGGER_WAVEFORM(getExpectedEventCount(2)),
-				triggerCentral.triggerState.currentCycle.eventCount[0],
-				triggerCentral.triggerState.currentCycle.eventCount[1],
-				triggerCentral.triggerState.currentCycle.eventCount[2]);
-#endif /* EFI_PROD_CODE */
-	}
-
 }
 
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {

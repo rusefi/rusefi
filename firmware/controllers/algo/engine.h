@@ -95,7 +95,6 @@ public:
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
 };
 
@@ -108,7 +107,6 @@ public:
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
 };
 
