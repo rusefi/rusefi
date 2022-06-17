@@ -362,6 +362,7 @@ pins:
 info:
   title: microRusEFI
   name: Main Connector
+  board_url: https://rusefi.com/s/microrusefi
   id: main
   image:
     file: main.jpg
