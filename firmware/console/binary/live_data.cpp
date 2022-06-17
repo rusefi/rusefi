@@ -94,6 +94,7 @@ const trigger_state_s* getLiveDataAddr(size_t idx) {
 		case 2: return &engine->triggerCentral.vvtState[0][1];
 		case 3: return &engine->triggerCentral.vvtState[1][0];
 		case 4: return &engine->triggerCentral.vvtState[1][1];
+		default: return nullptr;
 	}
 #else
 	return nullptr;
