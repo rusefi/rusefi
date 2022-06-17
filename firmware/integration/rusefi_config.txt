@@ -652,7 +652,7 @@ uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 
 
 	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, 2, 200, 0
 
-	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
+	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 	Gpio l9779_cs;
 
@@ -1572,10 +1572,10 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%", 1, 0, 0, 600, 1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds", 1, 0, 0, 100, 1
 
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0 , 0, 100, 1
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableClosedLoop;;"", 2, 0 , 0, 3000, 0
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 3000, 0
 uint8_t[BOOST_LOAD_COUNT] autoscale boostTpsBins;;"%", 1, 0, 0, 100, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
