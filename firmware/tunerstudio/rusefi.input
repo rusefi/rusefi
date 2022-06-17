@@ -1346,6 +1346,7 @@ gaugeCategory = DynoView
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
+	indicator = { isPumpOn }, "No Pump", "Pump", white, black, green, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
@@ -1821,6 +1822,7 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00
 cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
+cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
@@ -1995,7 +1997,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
 		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
-		field = "Require CAM/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
+		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
@@ -2379,7 +2381,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = allTriggerDebug, "Trigger Debug"
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
         field = "cam 3 debug",                          camInputsDebug3
@@ -3727,6 +3728,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
+		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets

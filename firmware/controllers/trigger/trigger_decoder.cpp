@@ -216,7 +216,7 @@ void PrimaryTriggerDecoder::resetTriggerState() {
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
@@ -334,8 +334,8 @@ bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const
 	return currentCycle.current_index < triggerShape.getSize();
 }
 
-static trigger_wheel_e eventIndex[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
-static trigger_value_e eventType[6] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE, TV_FALL, TV_RISE };
+static trigger_wheel_e eventIndex[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
+static trigger_value_e eventType[4] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
@@ -401,7 +401,7 @@ void TriggerDecoderBase::incrementTotalEventCounter() {
 
 void PrimaryTriggerDecoder::onTriggerError() {
 	// On trigger error, we've lost full sync
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
@@ -478,7 +478,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
 
-	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_3RD_RISING, "unexpected signal", unexpected);
+	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
 	trigger_value_e type = eventType[signal];

@@ -58,8 +58,6 @@ public:
 	void setAngle(angle_t angle);
 };
 
-#define TRIGGER_CHANNEL_COUNT 3
-
 class Engine;
 class TriggerDecoderBase;
 class TriggerFormDetails;
@@ -249,6 +247,9 @@ public:
 	angle_t getAngle(int phaseIndex) const;
 
 	angle_t getCycleDuration() const;
+
+	// Returns true if this trigger alone can fully sync the current engine for sequential mode.
+	bool needsDisambiguation() const;
 
 	/**
 	 * index of synchronization event within TriggerWaveform

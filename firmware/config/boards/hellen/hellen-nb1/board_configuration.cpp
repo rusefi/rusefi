@@ -65,7 +65,6 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;

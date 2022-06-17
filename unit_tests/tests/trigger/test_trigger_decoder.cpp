@@ -456,7 +456,6 @@ TEST(trigger, testTriggerDecoder) {
 	testTriggerDecoder2("test1+1", DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
-	testTriggerDecoder2("testAccordCd 2w", HONDA_ACCORD_CD_TWO_WIRES, 2, 0.9167, 0.5);
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
@@ -1068,6 +1067,8 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	setConstantDwell(45);
 
+	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
+
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 
@@ -1078,6 +1079,8 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	eth.fireRise(20);
 	eth.fireFall(20);
+
+	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
 
 	eth.executeActions();
 

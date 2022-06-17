@@ -77,7 +77,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
-	wave.waveCount = TRIGGER_CHANNEL_COUNT;
+	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
 	wave.phaseCount = 0;
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
@@ -114,6 +114,22 @@ angle_t TriggerWaveform::getCycleDuration() const {
 		return TWO_STROKE_CYCLE_DURATION;
 	default:
 		return FOUR_STROKE_CYCLE_DURATION;
+	}
+}
+
+bool TriggerWaveform::needsDisambiguation() const {
+	switch (getOperationMode()) {
+		case FOUR_STROKE_CRANK_SENSOR:
+		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+			return true;
+		case FOUR_STROKE_CAM_SENSOR:
+		case TWO_STROKE:
+			return false;
+		default:
+			firmwareError(OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
+			return true;
 	}
 }
 
@@ -668,23 +684,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_HONDA_4_24:
-		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
-		shapeWithoutTdc = true;
-		break;
-
-	case TT_HONDA_1_24:
-		configureHonda_1_4_24(this, true, false, T_PRIMARY, T_NONE, 10);
-		break;
-
-	case TT_HONDA_ACCORD_1_24_SHIFTED:
-		configureHondaAccordShifted(this);
-		break;
-
-	case TT_HONDA_1_4_24:
-		configureHondaAccordCDDip(this);
-		break;
-
+	case UNUSED_12:
+	case UNUSED_13:
+	case UNUSED_21:
+	case UNUSED_34:
 	case TT_1_16:
 		configureOnePlus16(this);
 		break;

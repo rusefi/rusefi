@@ -185,7 +185,7 @@
 #define benchTestOnTime_offset 1614
 #define binarySerialRxPin_offset 1510
 #define binarySerialTxPin_offset 1508
-#define BLOCKING_FACTOR 256
+#define BLOCKING_FACTOR 500
 #define boardUse2stepPullDown_offset 1340
 #define boardUseCamPullDown_offset 1340
 #define boardUseCamVrPullUp_offset 1340
@@ -333,9 +333,11 @@
 #define CMD_FAN2_BENCH "fan2bench"
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FUEL_BENCH "fuelbench"
+#define CMD_FUEL_PUMP_BENCH "fuelpumpbench"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 #define CMD_GET "get"
 #define CMD_HPFP_BENCH "hpfpbench"
+#define CMD_IDLE_BENCH "idlebench"
 #define CMD_IDLE_PIN "set_idle_pin"
 #define CMD_IGNITION "ignition"
 #define CMD_IGNITION_PIN "set_ignition_pin"
@@ -548,7 +550,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 16
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE", "HELLEN_NA8_96", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "TEST_33816", "TEST_ROTARY", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "TEST_CRANK_ENGINE", "SACHS", "PROTEUS_ANALOG_PWM_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "PROTEUS_VW_B6", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "L9779_BENCH_ENGINE", "EEPROM_BENCH_ENGINE", "MRE_VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "TEST_100", "TEST_101", "TEST_102"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE", "HELLEN_NA8_96", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "ET_UNUSED_17", "TEST_33816", "TEST_ROTARY", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "TEST_CRANK_ENGINE", "SACHS", "PROTEUS_ANALOG_PWM_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "PROTEUS_VW_B6", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "L9779_BENCH_ENGINE", "EEPROM_BENCH_ENGINE", "MRE_VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "TEST_100", "TEST_101", "TEST_102"
 #define engine_type_e_BMW_M73_M 24
 #define engine_type_e_BMW_M73_MRE 50
 #define engine_type_e_BMW_M73_MRE_SLAVE 51
@@ -562,6 +564,7 @@
 #define engine_type_e_ET_UNUSED96 96
 #define engine_type_e_ET_UNUSED97 97
 #define engine_type_e_ET_UNUSED98 98
+#define engine_type_e_ET_UNUSED_17 17
 #define engine_type_e_ETB_BENCH_ENGINE 58
 #define engine_type_e_Force_4_bytes_size_engine_type 70000
 #define engine_type_e_FORD_ASPIRE_1996 3
@@ -601,7 +604,6 @@
 #define engine_type_e_HELLEN_NB2 69
 #define engine_type_e_HELLEN_NB2_36 86
 #define engine_type_e_HONDA_600 43
-#define engine_type_e_HONDA_ACCORD_CD_TWO_WIRES 17
 #define engine_type_e_L9779_BENCH_ENGINE 60
 #define engine_type_e_MAZDA_MIATA_2003_BOARD_TEST 55
 #define engine_type_e_MAZDA_MIATA_2003_NA_RAIL 54
@@ -1909,7 +1911,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 1536507508
+#define SIGNATURE_HASH 335428559
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2045,6 +2047,7 @@
 #define tcu_32SpeedBins_offset 21308
 #define tcu_32Vals_offset 21316
 #define TCU_GEAR_COUNT 10
+#define TCU_MAGIC_SIZE 8
 #define tcu_pc_solenoid_freq_offset 3706
 #define tcu_pc_solenoid_pin_mode_offset 3704
 #define tcu_pc_solenoid_pin_offset 3702
@@ -2189,21 +2192,19 @@
 #define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71 || trigger_type == 74
 #define trigger_customSkippedToothCount_offset 456
 #define trigger_customTotalToothCount_offset 452
-#define trigger_event_e_SHAFT_3RD_FALLING 4
-#define trigger_event_e_SHAFT_3RD_RISING 5
 #define trigger_event_e_SHAFT_PRIMARY_FALLING 0
 #define trigger_event_e_SHAFT_PRIMARY_RISING 1
 #define trigger_event_e_SHAFT_SECONDARY_FALLING 2
 #define trigger_event_e_SHAFT_SECONDARY_RISING 3
 #define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
-#define TRIGGER_INPUT_PIN_COUNT 3
+#define TRIGGER_INPUT_PIN_COUNT 2
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
 #define trigger_offset 448
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
-#define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_MERCEDES_2_SEGMENT", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_24x", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_12_TOOTH_CRANK", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_NISSAN_MR18_CAM_VVT", "TT_TRI_TACH", "TT_GM_60_2_2_2", "TT_SKODA_FAVORIT", "TT_VVT_BARRA_3_PLUS_1", "TT_KAWA_KX450F", "TT_NISSAN_VQ35", "TT_VVT_NISSAN_VQ35", "TT_NISSAN_VQ30", "TT_NISSAN_QR25", "TT_VVT_MITSUBISHI_3A92", "TT_SUBARU_SVX_CRANK_1", "TT_SUBARU_SVX_CAM_VVT", "TT_FORD_TFI_PIP", "TT_SUZUKI_G13B", "TT_HONDA_K_4_1", "TT_NISSAN_MR18_CRANK", "TT_TOOTHED_WHEEL_32_2", "TT_36_2_1", "TT_36_2_1_1", "TT_VVT_MITSUBISHI_6G75", "TT_VVT_TOYOTA_4_1", "TT_GM_24x_2", "TT_UNUSED"
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
+#define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_MERCEDES_2_SEGMENT", "TT_MITSUBISHI", "UNUSED_12", "UNUSED_13", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "UNUSED_21", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_24x", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "UNUSED_34", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_12_TOOTH_CRANK", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_NISSAN_MR18_CAM_VVT", "TT_TRI_TACH", "TT_GM_60_2_2_2", "TT_SKODA_FAVORIT", "TT_VVT_BARRA_3_PLUS_1", "TT_KAWA_KX450F", "TT_NISSAN_VQ35", "TT_VVT_NISSAN_VQ35", "TT_NISSAN_VQ30", "TT_NISSAN_QR25", "TT_VVT_MITSUBISHI_3A92", "TT_SUBARU_SVX_CRANK_1", "TT_SUBARU_SVX_CAM_VVT", "TT_FORD_TFI_PIP", "TT_SUZUKI_G13B", "TT_HONDA_K_4_1", "TT_NISSAN_MR18_CRANK", "TT_TOOTHED_WHEEL_32_2", "TT_36_2_1", "TT_36_2_1_1", "TT_VVT_MITSUBISHI_6G75", "TT_VVT_TOYOTA_4_1", "TT_GM_24x_2", "TT_UNUSED"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "INVALID", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "INVALID", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
 #define trigger_type_e_Force_4_bytes_size_trigger_type 70000
 #define trigger_type_e_TT_12_TOOTH_CRANK 38
 #define trigger_type_e_TT_1_16 50
@@ -2230,10 +2231,6 @@
 #define trigger_type_e_TT_GM_24x_2 74
 #define trigger_type_e_TT_GM_60_2_2_2 54
 #define trigger_type_e_TT_GM_7X 5
-#define trigger_type_e_TT_HONDA_1_24 21
-#define trigger_type_e_TT_HONDA_1_4_24 13
-#define trigger_type_e_TT_HONDA_4_24 12
-#define trigger_type_e_TT_HONDA_ACCORD_1_24_SHIFTED 34
 #define trigger_type_e_TT_HONDA_CBR_600 28
 #define trigger_type_e_TT_HONDA_K_12_1 46
 #define trigger_type_e_TT_HONDA_K_4_1 67
@@ -2281,12 +2278,15 @@
 #define trigger_type_e_TT_VVT_MITSUBISHI_6G75 72
 #define trigger_type_e_TT_VVT_NISSAN_VQ35 59
 #define trigger_type_e_TT_VVT_TOYOTA_4_1 73
+#define trigger_type_e_UNUSED_12 12
+#define trigger_type_e_UNUSED_13 13
+#define trigger_type_e_UNUSED_21 21
+#define trigger_type_e_UNUSED_34 34
 #define trigger_type_offset 448
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 12 || trigger_type == 13 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
 #define trigger_value_e_TV_FALL 0
 #define trigger_value_e_TV_RISE 1
-#define trigger_wheel_e_T_CHANNEL_3 2
 #define trigger_wheel_e_T_NONE 15
 #define trigger_wheel_e_T_PRIMARY 0
 #define trigger_wheel_e_T_SECONDARY 1
@@ -2334,10 +2334,8 @@
 #define triggerGapOverrideTo9_offset 3044
 #define triggerInputDebugPins1_offset 1448
 #define triggerInputDebugPins2_offset 1450
-#define triggerInputDebugPins3_offset 1452
 #define triggerInputPins1_offset 684
 #define triggerInputPins2_offset 686
-#define triggerInputPins3_offset 688
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define triggerSimulatorFrequency_offset 556
 #define triggerSimulatorPinModes1_offset 734
@@ -2393,6 +2391,7 @@
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
 #define TS_FILE_VERSION 20210312
+#define TS_FILE_VERSION_OFFSET 124
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
 #define TS_GET_CONFIG_ERROR 'e'
@@ -2464,7 +2463,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.01.kin.1536507508"
+#define TS_SIGNATURE "rusEFI 2022.06.17.kin.335428559"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2503,12 +2502,14 @@
 #define unused1128_offset 1608
 #define unused1129_offset 1608
 #define unused1130_offset 1608
+#define unused1452_offset 1452
 #define unused1476b8_offset 1352
 #define unused1740b0_offset 1608
 #define unused1740b1_offset 1608
 #define unused1740b2_offset 1608
 #define unused4080_offset 3001
 #define unused460_offset 460
+#define unused688_offset 688
 #define unused_1484_bit_24_offset 1352
 #define unused_1484_bit_25_offset 1352
 #define unused_1484_bit_26_offset 1352
@@ -2518,30 +2519,30 @@
 #define unused_1484_bit_30_offset 1352
 #define unused_1484_bit_31_offset 1352
 #define unusedBit_45_31_offset 100
-#define unusedBit_541_10_offset 1608
-#define unusedBit_541_11_offset 1608
-#define unusedBit_541_12_offset 1608
-#define unusedBit_541_13_offset 1608
-#define unusedBit_541_14_offset 1608
-#define unusedBit_541_15_offset 1608
-#define unusedBit_541_16_offset 1608
-#define unusedBit_541_17_offset 1608
-#define unusedBit_541_18_offset 1608
-#define unusedBit_541_19_offset 1608
-#define unusedBit_541_20_offset 1608
-#define unusedBit_541_21_offset 1608
-#define unusedBit_541_22_offset 1608
-#define unusedBit_541_23_offset 1608
-#define unusedBit_541_24_offset 1608
-#define unusedBit_541_25_offset 1608
-#define unusedBit_541_26_offset 1608
-#define unusedBit_541_27_offset 1608
-#define unusedBit_541_28_offset 1608
-#define unusedBit_541_29_offset 1608
-#define unusedBit_541_30_offset 1608
-#define unusedBit_541_31_offset 1608
-#define unusedBit_541_8_offset 1608
-#define unusedBit_541_9_offset 1608
+#define unusedBit_543_10_offset 1608
+#define unusedBit_543_11_offset 1608
+#define unusedBit_543_12_offset 1608
+#define unusedBit_543_13_offset 1608
+#define unusedBit_543_14_offset 1608
+#define unusedBit_543_15_offset 1608
+#define unusedBit_543_16_offset 1608
+#define unusedBit_543_17_offset 1608
+#define unusedBit_543_18_offset 1608
+#define unusedBit_543_19_offset 1608
+#define unusedBit_543_20_offset 1608
+#define unusedBit_543_21_offset 1608
+#define unusedBit_543_22_offset 1608
+#define unusedBit_543_23_offset 1608
+#define unusedBit_543_24_offset 1608
+#define unusedBit_543_25_offset 1608
+#define unusedBit_543_26_offset 1608
+#define unusedBit_543_27_offset 1608
+#define unusedBit_543_28_offset 1608
+#define unusedBit_543_29_offset 1608
+#define unusedBit_543_30_offset 1608
+#define unusedBit_543_31_offset 1608
+#define unusedBit_543_8_offset 1608
+#define unusedBit_543_9_offset 1608
 #define unusedHere1341234_offset 368
 #define useAdvanceCorrectionsForCranking_offset 1352
 #define useCicPidForIdle_offset 100

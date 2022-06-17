@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon May 30 11:18:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon Jun 06 21:23:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -14,7 +14,7 @@ public class AcControl {
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
-	public static final int BLOCKING_FACTOR = 256;
+	public static final int BLOCKING_FACTOR = 500;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
 	public static final int CAM_INPUTS_COUNT = 4;
@@ -43,9 +43,11 @@ public class AcControl {
 	public static final String CMD_FAN2_BENCH = "fan2bench";
 	public static final String CMD_FAN_BENCH = "fanbench";
 	public static final String CMD_FUEL_BENCH = "fuelbench";
+	public static final String CMD_FUEL_PUMP_BENCH = "fuelpumpbench";
 	public static final String CMD_FUNCTIONAL_TEST_MODE = "test_mode";
 	public static final String CMD_GET = "get";
 	public static final String CMD_HPFP_BENCH = "hpfpbench";
+	public static final String CMD_IDLE_BENCH = "idlebench";
 	public static final String CMD_IDLE_PIN = "set_idle_pin";
 	public static final String CMD_IGNITION = "ignition";
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
@@ -330,6 +332,7 @@ public class AcControl {
 	public static final int STFT_BANK_COUNT = 2;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int TCU_GEAR_COUNT = 10;
+	public static final int TCU_MAGIC_SIZE = 8;
 	public static final int TCU_SOLENOID_COUNT = 6;
 	public static final int TOOTH_DATA_LENGTH = 2000;
 	public static final int TOOTH_PACKET_COUNT = 1000;
@@ -341,7 +344,7 @@ public class AcControl {
 	public static final String TRIGGER_COMMENT = "#";
 	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
-	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
+	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
@@ -355,6 +358,7 @@ public class AcControl {
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20210312;
+	public static final int TS_FILE_VERSION_OFFSET = 124;
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';

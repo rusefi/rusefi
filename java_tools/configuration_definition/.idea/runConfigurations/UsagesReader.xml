@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="UsagesReader" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="UsagesReader" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.UsagesReader" />
     <module name="configuration_definition" />
     <option name="PROGRAM_PARAMETERS" value="integration/LiveData.yaml" />

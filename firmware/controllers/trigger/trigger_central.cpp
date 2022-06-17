@@ -266,13 +266,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 #if EFI_TOOTH_LOGGER
 // todo: we need to start logging different VVT channels differently!!!
-		trigger_event_e tooth;
-		if (index == 0) {
-			tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		} else {
-			// todo: nicer solution is needed
-			tooth = front == TV_RISE ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		}
+		trigger_event_e tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 
 		LogTriggerTooth(tooth, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
@@ -544,9 +538,8 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 		TriggerDecoderBase * triggerState,
 		trigger_event_e signal) {
 	// todo: find a better place for these defs
-	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
-			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
-	static const trigger_wheel_e triggerIdx[6] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY, T_CHANNEL_3, T_CHANNEL_3 };
+	static const trigger_event_e opposite[4] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING };
+	static const trigger_wheel_e triggerIdx[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
 	// we process all trigger channels independently
 	trigger_wheel_e ti = triggerIdx[signal];
 	// falling is opposite to rising, and vise versa

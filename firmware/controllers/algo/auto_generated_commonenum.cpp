@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed May 18 03:18:14 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jun 02 01:28:31 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -636,10 +636,6 @@ case TL_SEMI_AUTO:
 }
 const char *getTrigger_event_e(trigger_event_e value){
 switch(value) {
-case SHAFT_3RD_FALLING:
-  return "SHAFT_3RD_FALLING";
-case SHAFT_3RD_RISING:
-  return "SHAFT_3RD_RISING";
 case SHAFT_PRIMARY_FALLING:
   return "SHAFT_PRIMARY_FALLING";
 case SHAFT_PRIMARY_RISING:
@@ -662,8 +658,6 @@ case TV_RISE:
 }
 const char *getTrigger_wheel_e(trigger_wheel_e value){
 switch(value) {
-case T_CHANNEL_3:
-  return "T_CHANNEL_3";
 case T_NONE:
   return "T_NONE";
 case T_PRIMARY:

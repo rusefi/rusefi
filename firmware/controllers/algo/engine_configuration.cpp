@@ -49,7 +49,6 @@
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
-#include "honda_accord.h"
 #include "honda_k_dbc.h"
 #include "honda_600.h"
 #include "hyundai.h"
@@ -1047,9 +1046,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration();
-		break;
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfiguration1_24();
 		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();

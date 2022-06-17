@@ -19,9 +19,13 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = H144_LS_2;
 	engineConfiguration->injectionPins[2] = H144_LS_3;
 	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[4] = H144_LS_5;
+	engineConfiguration->injectionPins[5] = H144_LS_6;
+	engineConfiguration->injectionPins[6] = H144_LS_7;
+	engineConfiguration->injectionPins[7] = H144_LS_8;
 
 	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
@@ -44,7 +48,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = H144_IGN_8;
 
 	// disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
+	for (int i = 8; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
@@ -69,7 +73,6 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = H144_IN_SENS4;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
@@ -103,6 +106,23 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
 
+	// TLE9201 driver
+    // This chip has three control pins:
+    // DIR - sets direction of the motor
+    // PWM - pwm control (enable high, coast low)
+    // DIS - disables motor (enable low)
+
+    //ETB1
+    // PWM pin
+    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM8;
+    // DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_IO13;
+   	// Disable pin
+   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO4;
+   	// Unused
+ 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+
+
 }
 
 void setSerialConfigurationOverrides() {
@@ -125,16 +145,16 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->boostControlPin = H144_LS_6;
-	engineConfiguration->acSwitch = H144_IN_D_AUX3;
-	engineConfiguration->acRelayPin = H144_OUT_IO6;
-	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
-	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
-    engineConfiguration->tachOutputPin = H144_OUT_PWM1;
-	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
-	engineConfiguration->fan2Pin = H144_OUT_IO2;
+	engineConfiguration->boostControlPin = H144_OUT_PWM5;
+	engineConfiguration->brakePedalPin = H144_IN_RES2;
+//	engineConfiguration->acSwitch = H144_IN_D_AUX3;
+//	engineConfiguration->acRelayPin = H144_OUT_IO6;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO5;
+	engineConfiguration->fanPin = H144_OUT_IO12;
+	engineConfiguration->mainRelayPin = H144_OUT_IO3;
+    engineConfiguration->tachOutputPin = H144_OUT_PWM7;
+	engineConfiguration->alternatorControlPin = H144_OUT_PWM1;
+//	engineConfiguration->fan2Pin = H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -143,6 +163,19 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
 	engineConfiguration->enableSoftwareKnock = true;
+
+	// random values to have valid config
+	engineConfiguration->tpsMin = 0;
+	engineConfiguration->tpsMax = 1000;
+	// random values to have valid config
+	engineConfiguration->tps1SecondaryMin = 1000;
+	engineConfiguration->tps1SecondaryMax = 0;
+	// random values to have valid config
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 5.0;
+	// random values to have valid config
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
