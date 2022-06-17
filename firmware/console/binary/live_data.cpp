@@ -90,7 +90,10 @@ const trigger_state_s* getLiveDataAddr(size_t idx) {
 #if EFI_SHAFT_POSITION_INPUT
 	switch (idx) {
 		case 0: return &engine->triggerCentral.triggerState;
-		default: return &engine->triggerCentral.vvtState[idx - 1];
+		case 1: return &engine->triggerCentral.vvtState[0][0];
+		case 2: return &engine->triggerCentral.vvtState[0][1];
+		case 3: return &engine->triggerCentral.vvtState[1][0];
+		case 4: return &engine->triggerCentral.vvtState[1][1];
 	}
 #else
 	return nullptr;
