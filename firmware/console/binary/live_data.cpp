@@ -5,6 +5,9 @@
 template <typename TStruct>
 const TStruct* getLiveDataAddr();
 
+template <typename TStruct>
+const TStruct* getLiveDataAddr(size_t index);
+
 template<>
 const output_channels_s* getLiveDataAddr() {
 	return &engine->outputChannels;
