@@ -848,6 +848,11 @@ void triggerInfo(void) {
 	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ENGINE_SNIFFER
+	efiPrintf("engine sniffer current size=%d", waveChart.getSize());
+#endif /* EFI_ENGINE_SNIFFER */
+
 }
 
 static void resetRunningTriggerCounters() {
