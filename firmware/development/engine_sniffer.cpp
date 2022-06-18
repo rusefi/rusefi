@@ -110,8 +110,8 @@ int WaveChart::getSize() {
 
 #if ! EFI_UNIT_TEST
 static void printStatus() {
-	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
-	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
+	efiPrintf("engine sniffer: %s", boolToString(engine->isEngineSnifferEnabled));
+	efiPrintf("engine sniffer size=%d", engineConfiguration->engineChartSize);
 }
 
 static void setChartActive(int value) {
@@ -232,7 +232,7 @@ void initWaveChart(WaveChart *chart) {
 	chart->init();
 
 #if EFI_HISTOGRAMS
-	initHistogram(&engineSnifferHisto, "wave chart");
+	initHistogram(&engineSnifferHisto, "engine sniffer");
 #endif /* EFI_HISTOGRAMS */
 
 #if ! EFI_UNIT_TEST
