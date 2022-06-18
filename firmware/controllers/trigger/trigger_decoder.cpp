@@ -559,7 +559,9 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError() && !silentTriggerError)) {
+			bool verbose = engine->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
+
+			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
 
 				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
