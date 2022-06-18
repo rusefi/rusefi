@@ -274,7 +274,7 @@ void Engine::updateSlowSensors() {
 
 #if EFI_ENGINE_CONTROL
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
+	isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();

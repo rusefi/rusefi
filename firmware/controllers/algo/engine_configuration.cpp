@@ -656,8 +656,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->baroSensor.lowValue = 0;
 	engineConfiguration->baroSensor.highValue = 500;
 
-	engineConfiguration->isEngineChartEnabled = true;
-
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
 #else

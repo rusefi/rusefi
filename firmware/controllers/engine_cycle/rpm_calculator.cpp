@@ -332,7 +332,15 @@ static void onTdcCallback(void *) {
 void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && engine->isEngineChartEnabled && engine->tdcMarkEnabled) {
+	if (isTriggerSynchronizationPoint && engine->isEngineSnifferEnabled) {
+
+#if EFI_UNIT_TEST
+		if (!engine->tdcMarkEnabled) {
+			return;
+		}
+#endif // EFI_UNIT_TEST
+
+
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = Sensor::getOrZero(SensorType::Rpm);

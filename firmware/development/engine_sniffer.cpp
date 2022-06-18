@@ -145,7 +145,7 @@ void WaveChart::publish() {
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
-	if (engine->isEngineChartEnabled) {
+	if (engine->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
 }
@@ -154,14 +154,14 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+#if EFI_TEXT_LOGGING
 	ScopePerf perf(PE::EngineSniffer);
 	efitick_t nowNt = getTimeNowNt();
 
 	if (nowNt < pauseEngineSnifferUntilNt) {
 		return;
 	}
-#if EFI_TEXT_LOGGING
-	if (!engine->isEngineChartEnabled) {
+	if (!engine->isEngineSnifferEnabled) {
 		return;
 	}
 	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)
