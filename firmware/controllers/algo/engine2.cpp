@@ -92,12 +92,13 @@ void EngineState::periodicFastCallback() {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
+	
 	if (engine->rpmCalculator.isCranking()) {
-		crankingTime = nowNt;
-		timeSinceCranking = 0.0f;
-	} else {
-		timeSinceCranking = nowNt - crankingTime;
+		crankingTimer.reset(nowNt);
 	}
+
+	running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
+
 	recalculateAuxValveTiming();
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -114,8 +115,6 @@ void EngineState::periodicFastCallback() {
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	if (engineConfiguration->postCrankingFactor > 1.0f) {
-		// convert to microsecs and then to seconds
-		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / US_PER_SECOND_F;
 		// use interpolation for correction taper
 		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
 			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
