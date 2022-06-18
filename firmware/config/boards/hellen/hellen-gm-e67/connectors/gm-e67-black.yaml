@@ -34,12 +34,40 @@ pins:
     ts_name: J7_3 AUX
     function: J7_3 AUX
 
-  - pin: J7_1
+  - pin: J7_4
     # H_SPI3_CS
     id: A15
     class: outputs
     ts_name: J7_4 AUX
     function: J7_4 AUX
+
+  - pin: J7_5
+    # H144_UART2_TX
+    id: D5
+    class: outputs
+    ts_name: J7_5 AUX
+    function: J7_5 AUX
+
+  - pin: J7_6
+    # H144_UART2_RX
+    id: D6
+    class: outputs
+    ts_name: J7_6 AUX
+    function: J7_6 AUX
+
+  - pin: J7_7
+    # H144_UART1_RX
+    id: E0
+    class: outputs
+    ts_name: J7_7 AUX
+    function: J7_7 AUX
+
+  - pin: J7_8
+    # H144_UART1_TX
+    id: E1
+    class: outputs
+    ts_name: J7_8 AUX
+    function: J7_8 AUX
 
   - pin: 1
     # H144_IGN_1

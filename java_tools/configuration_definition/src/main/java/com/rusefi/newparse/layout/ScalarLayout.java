@@ -86,9 +86,9 @@ public class ScalarLayout extends Layout {
     }
 
     private String makeScaleString() {
-        float scale = this.options.scale;
+        double scale = this.options.scale;
 
-        int mul, div;
+        long mul, div;
 
         if (scale < 1) {
             mul = Math.round(1 / scale);
@@ -98,9 +98,9 @@ public class ScalarLayout extends Layout {
             div = Math.round(scale);
         }
 
-        float actualScale = (float) div / mul;
+        double actualScale = (double)mul / div;
 
-        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) > 0.0001f)) {
+        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001)) {
             throw new RuntimeException("assertion failure: scale string generation failure for " + this.name);
         }
 

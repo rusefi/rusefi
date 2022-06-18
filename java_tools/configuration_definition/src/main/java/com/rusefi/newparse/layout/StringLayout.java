@@ -8,10 +8,12 @@ import java.io.PrintStream;
 public class StringLayout extends Layout {
     private final String name;
     private final int size;
+    private final String comment;
 
     public StringLayout(StringField field) {
         this.name = field.name;
         this.size = field.size;
+        this.comment = field.comment;
     }
 
     @Override
@@ -41,8 +43,9 @@ public class StringLayout extends Layout {
 
         ps.println();
 
-        // TODO: write string comments
-        // meta.addComment(name, ??);
+        if (!this.comment.isEmpty()) {
+            meta.addComment(name, comment);
+        }
     }
 
     @Override

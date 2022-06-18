@@ -147,10 +147,6 @@ public class ReaderState {
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
 */
-            // todo: TS enum key-value form #4232?
-            // this is needed to avoid 'bit Constant engineType, contains fewer options (103) that expected(128)' TS warning
-            for (int i = enums.size(); i < totalCount; i++)
-                tunerStudioLine += ", " + PinoutLogic.QUOTED_INVALID;
         }
 
         tsCustomLine.put(name, tunerStudioLine);

@@ -56,13 +56,6 @@ public class EnumLayout extends Layout {
             writeEnumVal(ps, this.values[i]);
         }
 
-        // Pad out the rest of the enum's values with "INVALID"
-        int expectedNumber = 2 << this.endBit;
-        for (int i = this.values.length; i < expectedNumber; i++) {
-            ps.print(", ");
-            writeEnumVal(ps, "INVALID");
-        }
-
         ps.println();
 
         meta.addComment(name, this.options.comment);

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 03 05:20:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 18 18:50:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2148,6 +2148,7 @@ struct engine_configuration_s {
 	offset 940 bit 12 */
 	bool enableSoftwareKnock : 1 {};
 	/**
+	 * Verbose info in console below engineSnifferRpmThreshold
 	 * enable vvt_details
 	offset 940 bit 13 */
 	bool verboseVVTDecoding : 1 {};
@@ -2441,9 +2442,8 @@ struct engine_configuration_s {
 	offset 1340 bit 4 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1340 bit 5 */
-	bool isEngineChartEnabled : 1 {};
+	bool unused234234234 : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
 	offset 1340 bit 6 */
@@ -2608,6 +2608,7 @@ struct engine_configuration_s {
 	offset 1352 bit 9 */
 	bool useSeparateVeForIdle : 1 {};
 	/**
+	 * Verbose info in console below engineSnifferRpmThreshold
 	 * enable trigger_details
 	offset 1352 bit 10 */
 	bool verboseTriggerSynchDetails : 1 {};
@@ -4942,4 +4943,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 03 05:20:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jun 18 18:50:40 UTC 2022

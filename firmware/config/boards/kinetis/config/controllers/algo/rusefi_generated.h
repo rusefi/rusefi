@@ -507,7 +507,7 @@
 #define dwellVoltageCorrValues_offset 783
 #define dwellVoltageCorrVoltBins_offset 774
 #define ego_sensor_e_auto_enum "ES_BPSX_D1", "ES_Innovate_MTX_L", "ES_14Point7_Free", "ES_NarrowBand", "ES_PLX", "ES_Custom", "ES_AEM"
-#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
+#define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom"
 #define ego_sensor_e_ES_14Point7_Free 2
 #define ego_sensor_e_ES_AEM 6
 #define ego_sensor_e_ES_BPSX_D1 0
@@ -1519,7 +1519,6 @@
 #define isCJ125Verbose_offset 100
 #define isCylinderCleanupEnabled_offset 1352
 #define isDoubleSolenoidIdle_offset 100
-#define isEngineChartEnabled_offset 1340
 #define isEngineControlEnabled_offset 744
 #define isFasterEngineSpinUpEnabled_offset 744
 #define isForcedInduction_offset 100
@@ -1574,7 +1573,7 @@
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum "SWITCH_INPUT_LAUNCH", "CLUTCH_INPUT_LAUNCH", "ALWAYS_ACTIVE_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
-#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)", "INVALID"
+#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)"
 #define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
 #define launchActivationMode_offset 996
 #define launchAdvanceRpmRange_offset 1020
@@ -1911,7 +1910,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 335428559
+#define SIGNATURE_HASH 1759857773
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2463,7 +2462,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.17.kin.335428559"
+#define TS_SIGNATURE "rusEFI 2022.06.18.kin.1759857773"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2507,6 +2506,7 @@
 #define unused1740b0_offset 1608
 #define unused1740b1_offset 1608
 #define unused1740b2_offset 1608
+#define unused234234234_offset 1340
 #define unused4080_offset 3001
 #define unused460_offset 460
 #define unused688_offset 688
