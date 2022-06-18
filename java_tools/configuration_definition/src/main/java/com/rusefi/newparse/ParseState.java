@@ -204,14 +204,8 @@ public class ParseState {
 
     @Override
     public void enterEnumTypedefSuffix(RusefiConfigGrammarParser.EnumTypedefSuffixContext ctx) {
-        String replacementIdent = ctx.replacementIdent().getText();
-        int endBit;
-        if (replacementIdent == null) {
-            RusefiConfigGrammarParser.IntegerContext integer = ctx.integer(2);
-            endBit = Integer.parseInt(integer.getText());
-        } else {
-            endBit = Integer.parseInt(replacementIdent);
-        }
+        int endBit = Integer.parseInt(ctx.integer(1).getText());
+
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
         String rhs = ctx.enumRhs().getText();
@@ -296,10 +290,10 @@ public class ParseState {
             // this is a legacy field option list, parse it as such
             if (!ctx.numexpr().isEmpty()) {
                 options.units = ctx.QuotedString().getText();
-                options.scale = evalResults.remove().floatValue();
-                options.offset = evalResults.remove().floatValue();
-                options.min = evalResults.remove().floatValue();
-                options.max = evalResults.remove().floatValue();
+                options.scale = evalResults.remove();
+                options.offset = evalResults.remove();
+                options.min = evalResults.remove();
+                options.max = evalResults.remove();
                 options.digits = Integer.parseInt(ctx.integer().getText());
 
                 // we should have consumed everything on the results list
@@ -329,16 +323,16 @@ public class ParseState {
 
                     switch (key) {
                         case "min":
-                            options.min = value.floatValue();
+                            options.min = value;
                             break;
                         case "max":
-                            options.max = value.floatValue();
+                            options.max = value;
                             break;
                         case "scale":
-                            options.scale = value.floatValue();
+                            options.scale = value;
                             break;
                         case "offset":
-                            options.offset = value.floatValue();
+                            options.offset = value;
                             break;
                     }
                     break;
@@ -383,8 +377,11 @@ public class ParseState {
                 scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
                 return;
             } else if (typedef instanceof StringTypedef) {
+                options = new FieldOptions();
+                handleFieldOptionsList(options, ctx.fieldOptionsList());
+
                 StringTypedef sTypedef = (StringTypedef) typedef;
-                scope.structFields.add(new StringField(name, sTypedef.size));
+                scope.structFields.add(new StringField(name, sTypedef.size, options.comment));
                 return;
             } else {
                 // TODO: throw
@@ -492,7 +489,10 @@ public class ParseState {
                 // iterate required for strings
                 assert(iterate);
 
-                StringField prototype = new StringField(name, sTypedef.size);
+                options = new FieldOptions();
+                handleFieldOptionsList(options, ctx.fieldOptionsList());
+
+                StringField prototype = new StringField(name, sTypedef.size, options.comment);
                 scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else {
