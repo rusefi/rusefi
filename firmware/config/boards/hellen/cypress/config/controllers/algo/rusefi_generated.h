@@ -1533,7 +1533,6 @@
 #define isCJ125Verbose_offset 100
 #define isCylinderCleanupEnabled_offset 1352
 #define isDoubleSolenoidIdle_offset 100
-#define isEngineChartEnabled_offset 1340
 #define isEngineControlEnabled_offset 744
 #define isFasterEngineSpinUpEnabled_offset 744
 #define isForcedInduction_offset 100
@@ -1925,7 +1924,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 778947041
+#define SIGNATURE_HASH 182048651
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2477,7 +2476,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.18.hellen_cypress.778947041"
+#define TS_SIGNATURE "rusEFI 2022.06.18.hellen_cypress.182048651"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2521,6 +2520,7 @@
 #define unused1740b0_offset 1608
 #define unused1740b1_offset 1608
 #define unused1740b2_offset 1608
+#define unused234234234_offset 1340
 #define unused4080_offset 3029
 #define unused460_offset 460
 #define unused688_offset 688
