@@ -15,8 +15,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
-	engineConfiguration->isEngineChartEnabled = false;
-
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
