@@ -114,14 +114,6 @@ static void printStatus() {
 	efiPrintf("engine sniffer size=%d", engineConfiguration->engineChartSize);
 }
 
-static void setChartActive(int value) {
-	engineConfiguration->isEngineChartEnabled = value;
-	printStatus();
-#if EFI_CLOCK_LOCKS
-	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
-#endif /* EFI_CLOCK_LOCKS */
-}
-
 void setChartSize(int newSize) {
 	if (newSize < 5) {
 		return;
@@ -238,7 +230,6 @@ void initWaveChart(WaveChart *chart) {
 #if ! EFI_UNIT_TEST
 	printStatus();
 	addConsoleActionI("chartsize", setChartSize);
-	addConsoleActionI("chart", setChartActive);
 	// this is used by HW CI
 	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
 #endif // EFI_UNIT_TEST
