@@ -41,7 +41,7 @@ public class NewParseHelper {
         PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
 
         OutputChannelWriter writer = new OutputChannelWriter(ps);
-        writer.writeOutputChannels(state);
+        writer.writeOutputChannels(state, null);
 
         return baos.toString(utf8);
     }
