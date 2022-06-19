@@ -67,4 +67,20 @@ public abstract class Layout {
     public void writeCLayout(PrintStream ps, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
+
+    public void writeOutputChannelLayout(PrintStream ps, String prefix, int offsetAdd) {
+        StructNamePrefixer prefixer = new StructNamePrefixer();
+
+        if (prefix != null) {
+            prefixer.push(prefix);
+        }
+
+        writeOutputChannelLayout(ps, prefixer, offsetAdd);
+    }
+
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) { }
+
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+        throw new IllegalStateException("This type can't be in an array!");
+    }
 }
