@@ -248,8 +248,5 @@ void setBoardDefaultConfiguration() {
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
-
-	//!!!!!!!!!!!!!
-	//engineConfiguration->isEngineChartEnabled = false;
 }
 

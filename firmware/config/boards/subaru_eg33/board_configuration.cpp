@@ -244,9 +244,6 @@ void setBoardDefaultConfiguration() {
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
 
-	//!!!!!!!!!!!!!
-	//engineConfiguration->isEngineChartEnabled = false;
-
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
 		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)

@@ -113,7 +113,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	}
 
 	// Don't log at significant engine speed
-	if (Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->engineSnifferRpmThreshold) {
+	if (!engine->isEngineSnifferEnabled) {
 		return;
 	}
 

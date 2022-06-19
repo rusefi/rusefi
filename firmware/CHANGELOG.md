@@ -24,8 +24,10 @@ Release template (copy/paste this for new release):
 # Changelog
 
 ### Added
+ - verbose trigger sync should reuse engineSnifferRpmThreshold #4259
 
 ### Fixed
+ - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
 
 ## June 2022 Release - "Day 98"
 

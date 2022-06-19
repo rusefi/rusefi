@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
@@ -43,7 +45,7 @@ public class PinoutLogic {
         return null;
     }
 
-    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state) {
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state, ParseState parseState) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -84,8 +86,10 @@ public class PinoutLogic {
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getSimpleForm().length() > 0) {
                 registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
+                parseState.addDefinition(outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
             }
             registry.register(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm());
+            parseState.addDefinition(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm(), Definition.OverwritePolicy.IgnoreNew);
         }
     }
 
@@ -209,9 +213,9 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state, ParseState parseState) throws IOException {
         readFiles();
-        registerPins(boardName, globalList, registry, state);
+        registerPins(boardName, globalList, registry, state, parseState);
 
         try (FileWriter getTsNameByIdFile = new FileWriter(PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS + File.separator + "generated_ts_name_by_pin.cpp")) {
             getTsNameByIdFile.append(header);

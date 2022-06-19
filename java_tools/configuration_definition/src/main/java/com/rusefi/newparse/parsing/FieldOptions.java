@@ -3,10 +3,10 @@ package com.rusefi.newparse.parsing;
 import java.io.PrintStream;
 
 public class FieldOptions {
-    public float min;
-    public float max;
-    public float scale;
-    public float offset;
+    public double min;
+    public double max;
+    public double scale;
+    public double offset;
     public int digits;
     public String units;
     public String comment;
@@ -36,14 +36,14 @@ public class FieldOptions {
         return other;
     }
 
-    public static String tryRound(float value) {
-        int intVal = Math.round(value);
+    public static String tryRound(double value) {
+        long longVal = Math.round(value);
 
         // If the rounded value can exactly represent this float, then print as an integer
-        if (value == intVal) {
-            return Integer.toString(intVal);
+        if (value == longVal) {
+            return Long.toString(longVal);
         } else {
-            return Float.toString(value);
+            return Double.toString(value);
         }
     }
 

@@ -110,16 +110,8 @@ int WaveChart::getSize() {
 
 #if ! EFI_UNIT_TEST
 static void printStatus() {
-	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
-	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
-}
-
-static void setChartActive(int value) {
-	engineConfiguration->isEngineChartEnabled = value;
-	printStatus();
-#if EFI_CLOCK_LOCKS
-	maxLockedDuration = 0; // todo: why do we reset this here? why only this and not all metrics?
-#endif /* EFI_CLOCK_LOCKS */
+	efiPrintf("engine sniffer: %s", boolToString(engine->isEngineSnifferEnabled));
+	efiPrintf("engine sniffer size=%d", engineConfiguration->engineChartSize);
 }
 
 void setChartSize(int newSize) {
@@ -145,7 +137,7 @@ void WaveChart::publish() {
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
-	if (engine->isEngineChartEnabled) {
+	if (engine->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
 }
@@ -154,14 +146,14 @@ void WaveChart::publish() {
  * @brief	Register an event for digital sniffer
  */
 void WaveChart::addEvent3(const char *name, const char * msg) {
+#if EFI_TEXT_LOGGING
 	ScopePerf perf(PE::EngineSniffer);
 	efitick_t nowNt = getTimeNowNt();
 
 	if (nowNt < pauseEngineSnifferUntilNt) {
 		return;
 	}
-#if EFI_TEXT_LOGGING
-	if (!engine->isEngineChartEnabled) {
+	if (!engine->isEngineSnifferEnabled) {
 		return;
 	}
 	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)
@@ -232,13 +224,13 @@ void initWaveChart(WaveChart *chart) {
 	chart->init();
 
 #if EFI_HISTOGRAMS
-	initHistogram(&engineSnifferHisto, "wave chart");
+	initHistogram(&engineSnifferHisto, "engine sniffer");
 #endif /* EFI_HISTOGRAMS */
 
 #if ! EFI_UNIT_TEST
 	printStatus();
 	addConsoleActionI("chartsize", setChartSize);
-	addConsoleActionI("chart", setChartActive);
+	// this is used by HW CI
 	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
 #endif // EFI_UNIT_TEST
 }

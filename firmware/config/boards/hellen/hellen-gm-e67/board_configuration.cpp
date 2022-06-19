@@ -22,7 +22,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[4] = H144_LS_5;
 	engineConfiguration->injectionPins[5] = H144_LS_6;
 	engineConfiguration->injectionPins[6] = H144_LS_7;
-	engineConfiguration->injectionPins[7] = H144_LS_7;
+	engineConfiguration->injectionPins[7] = H144_LS_8;
 
 	// Disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
@@ -145,7 +145,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-//	engineConfiguration->boostControlPin = H144_LS_6;
+	engineConfiguration->boostControlPin = H144_OUT_PWM5;
+	engineConfiguration->brakePedalPin = H144_IN_RES2;
 //	engineConfiguration->acSwitch = H144_IN_D_AUX3;
 //	engineConfiguration->acRelayPin = H144_OUT_IO6;
 	engineConfiguration->fuelPumpPin = H144_OUT_IO5;
@@ -162,6 +163,19 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
 	engineConfiguration->enableSoftwareKnock = true;
+
+	// random values to have valid config
+	engineConfiguration->tpsMin = 0;
+	engineConfiguration->tpsMax = 1000;
+	// random values to have valid config
+	engineConfiguration->tps1SecondaryMin = 1000;
+	engineConfiguration->tps1SecondaryMax = 0;
+	// random values to have valid config
+	engineConfiguration->throttlePedalUpVoltage = 0;
+	engineConfiguration->throttlePedalWOTVoltage = 5.0;
+	// random values to have valid config
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
