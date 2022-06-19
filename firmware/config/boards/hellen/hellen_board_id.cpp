@@ -97,7 +97,12 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	float Xcur, Xnext;
 	Xnext = x0;
 
+    int safetyLimit = 5000; // since we had https://github.com/rusefi/rusefi/issues/4084 let's add paranoia check
 	do {
+	    if (safetyLimit-- < 0) {
+	        firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
+	        return Xnext;
+	    }
 		Xcur = Xnext;
 		Xnext = Xcur - fx(Xcur) / dfx(Xcur);
 
