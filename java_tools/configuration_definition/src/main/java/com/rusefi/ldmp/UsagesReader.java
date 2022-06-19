@@ -117,7 +117,13 @@ public class UsagesReader {
 
                     RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
 
-                    outputChannelWriter.writeOutputChannels(parseState);
+                    // if (outputNames.length == 0) {
+                        outputChannelWriter.writeOutputChannels(parseState, null);
+                    // } else {
+                    //     for (int i = 0; i < outputNames.length; i++) {
+                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
+                    //     }
+                    // }
                 }
 
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
