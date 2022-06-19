@@ -34,6 +34,7 @@ public:
 private:
 	Logging logging;
 	char timeBuffer[_MAX_FILLER + 2];
+	// current number of events in buffer, see getSize()
 	uint32_t counter = 0;
 	/**
 	 * We want to avoid visual jitter thus we want the left edge to be aligned

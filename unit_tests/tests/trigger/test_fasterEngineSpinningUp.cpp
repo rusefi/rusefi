@@ -19,8 +19,10 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	engineConfiguration->cranking.rpm = 999;
 	// set sequential injection mode to test auto-change to simultaneous when spinning-up
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
+	// Lie that this trigger requires disambiguation
+	engine->triggerCentral.triggerState.setNeedsDisambiguation(true);
 
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 
 	eth.fireRise(1000 /*ms*/);
 
@@ -67,13 +69,17 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	ASSERT_EQ( 200,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#2";
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode());
-	// test if ignition mode is restored to ind.coils
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
+	// Should still be in wasted spark since we don't have cam sync yet
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
 	eth.assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, 148375);
 	eth.assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, 149999);
+
+	// Now perform a fake VVT sync and check that ignition mode changes to sequential
+	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
+	ASSERT_EQ(IM_SEQUENTIAL, getCurrentIgnitionMode());
 
 	// skip, clear & advance 1 more revolution at higher RPM
 	eth.fireFall(60);

@@ -86,8 +86,10 @@ void detectHellenBoardType();
 
 // A24
 #define H144_IN_CRANK Gpio::B1
+#define H144_IN_CRANK_ANALOG EFI_ADC_9
 // A19
 #define H144_IN_CAM Gpio::A6
+#define H144_IN_CAM_ANALOG EFI_ADC_6
 // DIN5
 #define H144_IN_VSS Gpio::F11
 
@@ -182,3 +184,8 @@ void detectHellenBoardType();
 #define H_SPI2_MISO Gpio::B14
 #define H_SPI2_SCK Gpio::B13
 #define H_SPI2_CS Gpio::B12
+
+#define H_SPI3_MOSI Gpio::C12
+#define H_SPI3_MISO Gpio::C11
+#define H_SPI3_SCK Gpio::C10
+#define H_SPI3_CS Gpio::A15

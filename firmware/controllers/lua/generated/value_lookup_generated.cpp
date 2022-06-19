@@ -533,8 +533,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseTachPullUp;
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 		return engineConfiguration->boardUseTempPullUp;
-	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
-		return engineConfiguration->isEngineChartEnabled;
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 		return engineConfiguration->silentTriggerError;
 	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
@@ -1775,11 +1773,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 	{
 		engineConfiguration->boardUseTempPullUp = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
-	{
-		engineConfiguration->isEngineChartEnabled = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))

@@ -1997,7 +1997,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
 		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
-		field = "Require CAM/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
+		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
@@ -2381,7 +2381,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = allTriggerDebug, "Trigger Debug"
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
         field = "cam 3 debug",                          camInputsDebug3
@@ -2954,15 +2953,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
-	dialog = softwareKnockCfg, "Configuration"
+	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
 		field = "Cylinder Bore",			cylinderBore
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
 		field = "knockDetectionWindowStart",knockDetectionWindowStart, {enableSoftwareKnock}
 		field = "knockSamplingDuration",    knockSamplingDuration, {enableSoftwareKnock}
-		field = knockRetardAggression,      knockRetardAggression
-		field = knockRetardReapplyRate,     knockRetardReapplyRate
-		field = knockRetardMaximum,         knockRetardMaximum
 
 		field = ""
 		field = "Select the nearest sensor for each cylinder"
@@ -2979,8 +2975,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
 		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
 
+	dialog = softwareKnockResponseCfg, "Response"
+		field = knockRetardAggression,      knockRetardAggression
+		field = knockRetardReapplyRate,     knockRetardReapplyRate
+		field = knockRetardMaximum,         knockRetardMaximum
+
+	dialog = softwareKnockLeft, ""
+		panel = softwareKnockCfg
+		panel = softwareKnockResponseCfg
+
 	dialog = softwareKnock, "Software Knock", border
-		panel = softwareKnockCfg, West
+		panel = softwareKnockLeft, West
 		panel = knockThresholdCurve, Center
 
 ;			Engine->hip9011 Settings
@@ -3288,8 +3293,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
-		field = "Engine Sniffer", 						isEngineChartEnabled			
-		field = "  Threshold", 							engineSnifferRpmThreshold
+		field = "Engine Sniffer Threshold", 			engineSnifferRpmThreshold
 		
 	dialog = generalSettings, "General"
 		field = "!https://rusefi.com/s/fuel"

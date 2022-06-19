@@ -4,6 +4,8 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
+#include "live_data.h"
+
 #include "status_loop.h"
 
 #if EFI_TUNER_STUDIO
@@ -53,7 +55,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	/**
 	 * collect data from all models
 	 */
-	copyRange(scratchBuffer + 3, getFragments(), offset, count);
+	copyRange(scratchBuffer + 3, getLiveDataFragments(), offset, count);
 
 	tsChannel->crcAndWriteBuffer(TS_RESPONSE_OK, count);
 }

@@ -190,6 +190,10 @@ public class ConfigDefinition {
 
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
+        if (pinoutLogic != null) {
+            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state, parseState);
+        }
+
         // Parse the input files
         {
             // Load prepend files
@@ -215,7 +219,7 @@ public class ConfigDefinition {
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
+            // writer.writeTunerstudio(parseState, tsInputFileFolder + "/rusefi.input", tsInputFileFolder + "/" + state.tsFileOutputName);
         }
 
         if (tsOutputsDestination != null) {
@@ -238,10 +242,6 @@ public class ConfigDefinition {
 
         if (state.destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
-
-        if (pinoutLogic != null) {
-            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state);
-        }
 
         state.doJob();
 

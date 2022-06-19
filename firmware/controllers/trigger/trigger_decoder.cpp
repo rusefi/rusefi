@@ -216,7 +216,7 @@ void PrimaryTriggerDecoder::resetTriggerState() {
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
@@ -401,7 +401,7 @@ void TriggerDecoderBase::incrementTotalEventCounter() {
 
 void PrimaryTriggerDecoder::onTriggerError() {
 	// On trigger error, we've lost full sync
-	m_hasSynchronizedPhase = false;
+	resetHasFullSync();
 }
 
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
@@ -559,7 +559,9 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError() && !silentTriggerError)) {
+			bool verbose = engine->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
+
+			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
 
 				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
@@ -576,15 +578,20 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 						efiPrintf("index=%d NaN gap, you have noise issues?",
 								i);
 					} else {
-						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
+						float ratioTo = triggerShape.syncronizationRatioTo[i];
+
+						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
+
+						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
 								(int)Sensor::getOrZero(SensorType::Rpm),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							currentCycle.current_index,
 							i,
+							gapOk ? "Y" : "n",
 							gap,
 							ratioFrom,
-							triggerShape.syncronizationRatioTo[i],
+							ratioTo,
 							boolToString(someSortOfTriggerError()));
 					}
 				}

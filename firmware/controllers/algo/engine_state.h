@@ -30,8 +30,7 @@ public:
 
 	FuelConsumptionState fuelConsumption;
 
-	efitick_t crankingTime = 0;
-	efitick_t timeSinceCranking = 0;
+	Timer crankingTimer;
 
 	WarningCodeState warnings;
 

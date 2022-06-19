@@ -22,8 +22,6 @@ static volatile size_t sampleCount = 0;
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
 static void completionCallback(ADCDriver* adcp) {
-	palClearPad(GPIOD, 2);
-
 	if (adcp->state == ADC_COMPLETE) {
 		knockNeedsProcess = true;
 
