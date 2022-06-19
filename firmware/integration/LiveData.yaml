@@ -21,10 +21,12 @@ Usages:
   - name: knock_controller
     java: KnockController.java
     folder: controllers/engine_cycle
+    output_name: knock
 
   - name: high_pressure_fuel_pump
     java: HighPressureFuelPump.java
     folder: controllers/engine_cycle
+    output_name: hpfp
 
   - name: injector_model
     java: InjectorModel.java
@@ -37,23 +39,28 @@ Usages:
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
+    output_name: boost
 
   - name: ac_control
     java: AcControl.java
     folder: controllers/actuators
     prepend: integration/rusefi_config.txt
+    output_name: ac
 
   - name: fan_control
     java: FanControl.java
     folder: controllers/actuators
+    output_name: [ "fan1", "fan2" ]
 
   - name: fuel_pump_control
     java: FuelPump.java
     folder: controllers/actuators
+    output_name: fuelPump
 
   - name: main_relay
     java: MainRelay.java
     folder: controllers/actuators
+    output_name: mainRelay
 
   #todo: handle ETB pid and Idle pid which point at same pid_state.txt
   # - name: pid_state
@@ -95,3 +102,4 @@ Usages:
   - name: electronic_throttle
     java: ElectronicThrottle.java
     folder: controllers/actuators
+    output_name: [ "etb1", "etb2" ]
