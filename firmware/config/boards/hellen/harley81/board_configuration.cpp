@@ -167,8 +167,8 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 	setupEtb();
 	engineConfiguration->acSwitch = Gpio::Unassigned;
-	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
-	engineConfiguration->fanPin = H144_OUT_PWM4;
+//	engineConfiguration->fuelPumpPin = Gpio::Unassigned;//H144_OUT_PWM2;
+//	engineConfiguration->fanPin = Gpio::Unassigned;//H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
     engineConfiguration->tachOutputPin = H144_OUT_PWM3;
 
@@ -181,6 +181,14 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	// random values to have valid config
+	engineConfiguration->tps1SecondaryMin = 1000;
+	engineConfiguration->tps1SecondaryMax = 0;
+	// random values to have valid config
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
+
 
 	engineConfiguration->clutchDownPin = H144_IN_D_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
