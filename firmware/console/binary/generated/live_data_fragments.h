@@ -6,7 +6,8 @@ getLiveDataAddr<injector_model_s>(),
 getLiveDataAddr<launch_control_state_s>(),
 getLiveDataAddr<boost_control_s>(),
 getLiveDataAddr<ac_control_s>(),
-getLiveDataAddr<fan_control_s>(),
+getLiveDataAddr<fan_control_s>(0),	// fan1
+// getLiveDataAddr<fan_control_s>(1),	// fan2
 getLiveDataAddr<fuel_pump_control_s>(),
 getLiveDataAddr<main_relay_s>(),
 getLiveDataAddr<engine_state_s>(),
@@ -20,4 +21,5 @@ getLiveDataAddr<trigger_state_s>(0),	// trg
 getLiveDataAddr<wall_fuel_state_s>(),
 getLiveDataAddr<idle_state_s>(),
 getLiveDataAddr<ignition_state_s>(),
-getLiveDataAddr<electronic_throttle_s>(),
+getLiveDataAddr<electronic_throttle_s>(0),	// etb1
+// getLiveDataAddr<electronic_throttle_s>(1),	// etb2
