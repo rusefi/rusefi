@@ -192,8 +192,22 @@ public class StructLayout extends Layout {
 
         this.children.forEach(c -> c.writeCLayout(ps));
 
-        ps.println("\t/** total size " + getSize() + "*/");
         ps.println("};");
+        ps.println("static_assert(sizeof(" + this.typeName + ") == " + getSize() + ");");
+
         ps.println();
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        if (!this.noPrefix) {
+            prefixer.push(this.name);
+        }
+
+        this.children.forEach(c -> c.writeOutputChannelLayout(ps, prefixer, offsetAdd));
+
+        if (!this.noPrefix) {
+            prefixer.pop();
+        }
     }
 }
