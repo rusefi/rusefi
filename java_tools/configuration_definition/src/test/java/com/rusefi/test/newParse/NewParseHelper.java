@@ -39,8 +39,9 @@ public class NewParseHelper {
         final String utf8 = StandardCharsets.UTF_8.name();
 
         PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
+        PrintStream psDatalog = new PrintStreamAlwaysUnix(baos, true, utf8);
 
-        OutputChannelWriter writer = new OutputChannelWriter(ps);
+        OutputChannelWriter writer = new OutputChannelWriter(ps, psDatalog);
         writer.writeOutputChannels(state);
 
         return baos.toString(utf8);

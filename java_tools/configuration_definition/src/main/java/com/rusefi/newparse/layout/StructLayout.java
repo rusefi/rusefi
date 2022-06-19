@@ -199,12 +199,12 @@ public class StructLayout extends Layout {
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
         if (!this.noPrefix) {
             prefixer.push(this.name);
         }
 
-        this.children.forEach(c -> c.writeOutputChannelLayout(ps, prefixer, offsetAdd));
+        this.children.forEach(c -> c.writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd));
 
         if (!this.noPrefix) {
             prefixer.pop();
