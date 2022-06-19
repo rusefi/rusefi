@@ -72,8 +72,11 @@ end_struct
 ! actually define a member of 'running_fuel_s' type
 running_fuel_s running
 
-	float etbFeedForward;;"%", 1, 0, 0, 100, 2
-	float targetFromTable;;"%", 1, 0, 0, 100, 2
+	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
+
+	! todo: move these to ETB state, not engine
+	percent_t etbFeedForward
+	percent_t targetFromTable
 
 	! spark-related
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
