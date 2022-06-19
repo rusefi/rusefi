@@ -3,6 +3,8 @@ package com.rusefi.test.newParse;
 import com.rusefi.RusefiParseErrorStrategy;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.outputs.CStructWriter;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
+import com.rusefi.newparse.outputs.PrintStreamAlwaysUnix;
 import com.rusefi.newparse.outputs.TsWriter;
 
 import java.io.*;
@@ -13,23 +15,6 @@ public class NewParseHelper {
         ParseState parseState = new ParseState();
         RusefiParseErrorStrategy.parseDefinitionString(parseState.getListener(), input);
         return parseState;
-    }
-
-    private static class PrintStreamAlwaysUnix extends PrintStream {
-        public PrintStreamAlwaysUnix(OutputStream out, boolean autoFlush, String encoding) throws UnsupportedEncodingException {
-            super(out, autoFlush, encoding);
-        }
-
-        @Override
-        public void println() {
-            print('\n');
-        }
-
-        @Override
-        public void println(String s) {
-            print(s);
-            println();
-        }
     }
 
     public static String parseToTs(String input) throws IOException {
@@ -43,6 +28,20 @@ public class NewParseHelper {
         PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
 
         writer.writeLayoutAndComments(state, ps);
+
+        return baos.toString(utf8);
+    }
+
+    public static String parseToOutputChannels(String input) throws IOException {
+        ParseState state = parse(input);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        final String utf8 = StandardCharsets.UTF_8.name();
+
+        PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
+
+        OutputChannelWriter writer = new OutputChannelWriter(ps);
+        writer.writeOutputChannels(state, null);
 
         return baos.toString(utf8);
     }

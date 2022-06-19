@@ -2,7 +2,9 @@
 struct_no_prefix idle_state_s
 custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
     idle_state_e idleState
-custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
+
+	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
+
     percent_t currentIdlePosition;that's current position with CLT and IAT corrections
     percent_t baseIdlePosition;current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
     percent_t iacByTpsTaper;iacByTpsTaper portion of idle
