@@ -510,7 +510,7 @@ case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
 case TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
-case UNUSED_12:
+case TT_EZ30:
   return "UNUSED_12";
 case UNUSED_13:
   return "UNUSED_13";
