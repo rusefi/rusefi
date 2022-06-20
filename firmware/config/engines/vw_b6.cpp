@@ -158,7 +158,20 @@ void setProteusVwPassatB6() {
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
 
 	strncpy(config->luaScript, R"(
-canRxAdd(0x050)
+AIRBAG = 0x050
+TCU_1 = 0x440
+TCU_2 = 0x540
+BRAKE_2 = 0x5A0
+
+canRxAdd(AIRBAG)
+canRxAdd(TCU_1)
+canRxAdd(TCU_2)
+canRxAdd(BRAKE_2)
+
+function setTwoBytes(data, offset, value)
+	data[offset + 1] = value % 255
+	data[offset + 2] = (value >> 8) % 255
+end
 
 shallSleep = Timer.new();
 
@@ -166,12 +179,15 @@ shallSleep = Timer.new();
 hadIgnitionEvent = false;
 
 function onCanRx(bus, id, dlc, data)
-	print('got CAN id=' ..id ..' dlc=' ..dlc)
 	id11 = id % 2048
-	if id11 == 0x050 then
+	if id11 == AIRBAG then
 		-- looks like we have ignition key do not sleep!
 		shallSleep:reset();
 		hadIgnitionEvent = true;
+	else
+    	print('got CAN id=' ..id ..' dlc=' ..dlc)
+
+
 	end
 end
 
