@@ -126,35 +126,6 @@ static void commonPassatB6() {
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-
-	strncpy(config->luaScript, R"(
-canRxAdd(0x050)
-
-shallSleep = Timer.new();
-
--- we want to turn on with hardware switch while ignition key is off
-hadIgnitionEvent = false;
-
-function onCanRx(bus, id, dlc, data)
-	print('got CAN id=' ..id ..' dlc=' ..dlc)
-	id11 = id % 2048
-	if id11 == 0x050 then
-		-- looks like we have ignition key do not sleep!
-		shallSleep:reset();
-		hadIgnitionEvent = true;
-	end
-end
-
-function onTick()
-
-   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
-     -- looks like ignition key was removed
-     mcu_standby()
-   end
-end
-
-)", efi::size(config->luaScript));
-#endif
 }
 
 /**
@@ -185,6 +156,35 @@ void setProteusVwPassatB6() {
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
 	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+
+	strncpy(config->luaScript, R"(
+canRxAdd(0x050)
+
+shallSleep = Timer.new();
+
+-- we want to turn on with hardware switch while ignition key is off
+hadIgnitionEvent = false;
+
+function onCanRx(bus, id, dlc, data)
+	print('got CAN id=' ..id ..' dlc=' ..dlc)
+	id11 = id % 2048
+	if id11 == 0x050 then
+		-- looks like we have ignition key do not sleep!
+		shallSleep:reset();
+		hadIgnitionEvent = true;
+	end
+end
+
+function onTick()
+
+   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
+     -- looks like ignition key was removed
+     mcu_standby()
+   end
+end
+
+)", efi::size(config->luaScript));
+
 #endif
 }
 

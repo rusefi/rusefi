@@ -25,6 +25,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - verbose trigger sync should reuse engineSnifferRpmThreshold #4259
+ - Subaru EZ30 variation of 36/2/2/2 trigger
 
 ### Fixed
  - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
