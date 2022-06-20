@@ -502,7 +502,7 @@ typedef enum {
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
 
-	UNUSED_12 = 12,
+	TT_SUBARU_EZ30 = 12,
 	UNUSED_13 = 13,
 	UNUSED_21 = 21,
 	UNUSED_34 = 34,

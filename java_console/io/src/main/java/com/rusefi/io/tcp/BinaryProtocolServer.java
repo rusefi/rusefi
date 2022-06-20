@@ -60,7 +60,7 @@ public class BinaryProtocolServer {
 
     public static final ServerSocketFunction PLAIN_SOCKET_FACTORY = port -> {
         ServerSocket serverSocket = new ServerSocket(port);
-        log.info("ServerSocket " + port + " created");
+        log.info("ServerSocket " + port + " created. Feel free to point TS at IP Address 'localhost' port " + port);
         return serverSocket;
     };
 
