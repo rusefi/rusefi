@@ -400,8 +400,8 @@ case TT_DODGE_RAM:
   return "TT_DODGE_RAM";
 case TT_DODGE_STRATUS:
   return "TT_DODGE_STRATUS";
-case TT_EZ30:
-  return "TT_EZ30";
+case TT_SUBARU_EZ30:
+  return "TT_SUBARU_EZ30";
 case TT_FIAT_IAW_P8:
   return "TT_FIAT_IAW_P8";
 case TT_FORD_ASPIRE:
