@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 20 11:48:25 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 20 15:47:19 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2171,7 +2171,6 @@ public class Fields {
 	public static final int trigger_type_e_TT_DODGE_NEON_2003_CRANK = 32;
 	public static final int trigger_type_e_TT_DODGE_RAM = 19;
 	public static final int trigger_type_e_TT_DODGE_STRATUS = 22;
-	public static final int trigger_type_e_TT_EZ30 = 12;
 	public static final int trigger_type_e_TT_FIAT_IAW_P8 = 41;
 	public static final int trigger_type_e_TT_FORD_ASPIRE = 1;
 	public static final int trigger_type_e_TT_FORD_ST170 = 42;
@@ -2208,6 +2207,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_SKODA_FAVORIT = 55;
 	public static final int trigger_type_e_TT_SUBARU_7_6 = 36;
 	public static final int trigger_type_e_TT_SUBARU_7_WITHOUT_6 = 51;
+	public static final int trigger_type_e_TT_SUBARU_EZ30 = 12;
 	public static final int trigger_type_e_TT_SUBARU_SVX = 49;
 	public static final int trigger_type_e_TT_SUBARU_SVX_CAM_VVT = 64;
 	public static final int trigger_type_e_TT_SUBARU_SVX_CRANK_1 = 63;
