@@ -82,6 +82,7 @@ static void commonPassatB6() {
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
+	coolantControl->loadAxis = GPPWM_Clt;
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -125,6 +126,35 @@ static void commonPassatB6() {
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+
+	strncpy(config->luaScript, R"(
+canRxAdd(0x050)
+
+shallSleep = Timer.new();
+
+-- we want to turn on with hardware switch while ignition key is off
+hadIgnitionEvent = false;
+
+function onCanRx(bus, id, dlc, data)
+	print('got CAN id=' ..id ..' dlc=' ..dlc)
+	id11 = id % 2048
+	if id11 == 0x050 then
+		-- looks like we have ignition key do not sleep!
+		shallSleep:reset();
+		hadIgnitionEvent = true;
+	end
+end
+
+function onTick()
+
+   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
+     -- looks like ignition key was removed
+     mcu_standby()
+   end
+end
+
+)", efi::size(config->luaScript));
+#endif
 }
 
 /**
