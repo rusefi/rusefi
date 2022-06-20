@@ -401,7 +401,7 @@ event 8 1 0 437.19
 event 9 0 1 532.74
 event 10 1 1 546.37
 event 11 1 0 613.22
-TRIGGERTYPE 12 34 UNUSED_12 0.00
+TRIGGERTYPE 12 34 TT_EZ30 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
