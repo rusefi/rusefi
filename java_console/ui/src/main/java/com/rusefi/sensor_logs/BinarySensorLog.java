@@ -2,7 +2,6 @@ package com.rusefi.sensor_logs;
 
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
-import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -11,7 +10,6 @@ import com.rusefi.rusEFIVersion;
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +20,7 @@ import java.util.stream.Collectors;
 public class BinarySensorLog implements SensorLog {
     private final Function<Sensor, Double> valueProvider;
     private final Collection<Sensor> sensors;
+    private final List<BinaryLogEntry> entries;
     private DataOutputStream stream;
 
     private String fileName;
@@ -35,15 +34,11 @@ public class BinarySensorLog implements SensorLog {
     public BinarySensorLog(Function<Sensor, Double> valueProvider, Sensor... sensors) {
         this.valueProvider = valueProvider;
         this.sensors = filterOutSensorsWithoutType(Objects.requireNonNull(sensors, "sensors"));
+        entries = SensorHelper.values(this.sensors);
     }
 
-    private Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
-        return Arrays.stream(sensors).filter(new Predicate<Sensor>() {
-            @Override
-            public boolean test(Sensor sensor) {
-                return sensor.getType() != null;
-            }
-        }).collect(Collectors.toCollection(ArrayList::new));
+    private static Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
+        return Arrays.stream(sensors).filter(sensor -> sensor.getType() != null).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
@@ -108,11 +103,8 @@ public class BinarySensorLog implements SensorLog {
         }
 
         int fieldsDataSize = 0;
-        for (Sensor sensor : sensors) {
-            FieldType type = sensor.getType();
-            if (type == null)
-                throw new NullPointerException("No type for " + sensor);
-            fieldsDataSize += type.getStorageSize();
+        for (BinaryLogEntry entry : entries) {
+            fieldsDataSize += entry.getByteSize();
         }
 
         // 0006h Format version = 01
@@ -121,7 +113,7 @@ public class BinarySensorLog implements SensorLog {
         // 0008h Timestamp
         stream.writeInt((int) (System.currentTimeMillis() / 1000));
         // 000ch
-        int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * sensors.size();
+        int offsetToText = Fields.MLQ_HEADER_SIZE + Fields.MLQ_FIELD_HEADER_SIZE * entries.size();
         stream.writeShort(offsetToText);
         stream.writeShort(0); // reserved?
         // 0010h = offset_to_data
@@ -129,14 +121,14 @@ public class BinarySensorLog implements SensorLog {
         // 0012h
         stream.writeShort(fieldsDataSize);
         // 0014h number of fields
-        stream.writeShort(sensors.size());
+        stream.writeShort(entries.size());
 
-        for (Sensor sensor : sensors) {
-            String name = SensorLogger.getSensorName(sensor, 0);
-            String unit = sensor.getUnits();
+        for (BinaryLogEntry sensor : entries) {
+            String name = sensor.getName();
+            String unit = sensor.getUnit();
 
             // 0000h
-            stream.write(getSensorTypeValue(sensor));
+            stream.write(sensor.getByteSize());
             // 0001h
             writeLine(stream, name, 34);
             // 0023h
@@ -151,25 +143,6 @@ public class BinarySensorLog implements SensorLog {
         if (stream.size() != offsetToText)
             throw new IllegalStateException("We are doing something wrong :( stream.size=" + stream.size());
         writeLine(stream, headerText, headerText.length());
-    }
-
-    private int getSensorTypeValue(Sensor sensor) {
-        switch (sensor.getType()) {
-            case UINT8:
-                return 0;
-            case INT8:
-                return 1;
-            case UINT16:
-                return 2;
-            case INT16:
-                return 3;
-            case INT:
-                return 4;
-            case FLOAT:
-                return 7;
-            default:
-                throw new UnsupportedOperationException("" + sensor.getType());
-        }
     }
 
     @Override
