@@ -125,6 +125,17 @@ TEST(LuaE65, gearTorque2) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x019F);
 }
 
+TEST(LuaE65, gearTorque3) {
+	const char* realdata = GET_BIT_RANGE R"(
+
+	function testFunc()
+		data = {0x9F, 0xDF, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
+		return getBitRange(data, 0, 16)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xDF9F);
+}
+
 
 TEST(LuaE65, sumChecksum) {
 	// checksum is first byte
