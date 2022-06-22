@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 22 04:13:59 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 22 20:56:03 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1872,7 +1872,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2066;
 	public static final int servoOutputPins8_offset = 2068;
 	public static final int showHumanReadableWarning_offset = 940;
-	public static final int SIGNATURE_HASH = 1976367283;
 	public static final int silentTriggerError_offset = 1340;
 	public static final int skippedWheelOnCam_offset = 1340;
 	public static final int slowAdcAlpha_offset = 1580;
@@ -2360,7 +2359,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.22.all.1976367283";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.22.all.3472126379";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
@@ -2397,7 +2396,6 @@ public class Fields {
 	public static final int unused1129_offset = 1608;
 	public static final int unused1130_offset = 1608;
 	public static final int unused1452_offset = 1452;
-	public static final int unused1476b8_offset = 1352;
 	public static final int unused1740b0_offset = 1608;
 	public static final int unused1740b1_offset = 1608;
 	public static final int unused1740b2_offset = 1608;
@@ -2441,6 +2439,7 @@ public class Fields {
 	public static final int unusedHere1341234_offset = 368;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1352;
 	public static final int useCicPidForIdle_offset = 100;
+	public static final int useCltBasedRpmLimit_offset = 1352;
 	public static final int useEeprom_offset = 100;
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1352;
@@ -3178,7 +3177,7 @@ public class Fields {
 	public static final Field ISBOOSTCONTROLENABLED = Field.create("ISBOOSTCONTROLENABLED", 1352, FieldType.BIT, 20);
 	public static final Field LAUNCHSMOOTHRETARD = Field.create("LAUNCHSMOOTHRETARD", 1352, FieldType.BIT, 21);
 	public static final Field ISPHASESYNCREQUIREDFORIGNITION = Field.create("ISPHASESYNCREQUIREDFORIGNITION", 1352, FieldType.BIT, 22);
-	public static final Field UNUSED1476B8 = Field.create("UNUSED1476B8", 1352, FieldType.BIT, 23);
+	public static final Field USECLTBASEDRPMLIMIT = Field.create("USECLTBASEDRPMLIMIT", 1352, FieldType.BIT, 23);
 	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1352, FieldType.BIT, 24);
 	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1352, FieldType.BIT, 25);
 	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1352, FieldType.BIT, 26);
@@ -4544,7 +4543,7 @@ public class Fields {
 	ISBOOSTCONTROLENABLED,
 	LAUNCHSMOOTHRETARD,
 	ISPHASESYNCREQUIREDFORIGNITION,
-	UNUSED1476B8,
+	USECLTBASEDRPMLIMIT,
 	UNUSED_1484_BIT_24,
 	UNUSED_1484_BIT_25,
 	UNUSED_1484_BIT_26,

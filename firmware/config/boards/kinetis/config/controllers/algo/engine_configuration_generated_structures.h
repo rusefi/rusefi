@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 18 18:50:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 22 20:55:57 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2491,6 +2491,7 @@ struct engine_configuration_s {
 	offset 1340 bit 16 */
 	bool cutFuelOnHardLimit : 1 {};
 	/**
+	 * Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 	offset 1340 bit 17 */
 	bool cutSparkOnHardLimit : 1 {};
 	/**
@@ -2671,8 +2672,9 @@ struct engine_configuration_s {
 	offset 1352 bit 22 */
 	bool isPhaseSyncRequiredForIgnition : 1 {};
 	/**
+	 * If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 	offset 1352 bit 23 */
-	bool unused1476b8 : 1 {};
+	bool useCltBasedRpmLimit : 1 {};
 	/**
 	offset 1352 bit 24 */
 	bool unused_1484_bit_24 : 1 {};
@@ -3714,13 +3716,12 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s lowPressureFuel;
 	/**
-	 * CLT-based target RPM for hard limit depending on CLT like on Lexus LFA
 	C
 	 * offset 2096
 	 */
 	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE];
 	/**
-	 * See idleRpmPid
+	RPM
 	 * offset 2100
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
@@ -4961,4 +4962,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21324);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jun 18 18:50:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 22 20:55:57 UTC 2022
