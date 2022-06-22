@@ -43,7 +43,7 @@ static void ensureInitialized(WaveReader *reader) {
 	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
 }
 
-static void waAnaWidthCallback(WaveReader *reader) {
+static void riseCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
@@ -88,7 +88,7 @@ void WaveReader::onFallEvent() {
 	periodEventTimeUs = nowUs;
 }
 
-static void waIcuPeriodCallback(WaveReader *reader) {
+static void fallCallback(WaveReader *reader) {
 	reader->onFallEvent();
 }
 
@@ -114,9 +114,8 @@ static void initWave(const char *name, int index) {
 	reader->hw = startDigitalCapture("wave input", brainPin);
 
 	if (reader->hw != NULL) {
-		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
-
-		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
+		reader->hw->setWidthCallback((VoidInt)(void*) riseCallback, (void*) reader);
+		reader->hw->setPeriodCallback((VoidInt)(void*) fallCallback, (void*) reader);
 	}
 
 	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
