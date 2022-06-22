@@ -61,11 +61,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 	MITSU_4G93 = 16,
 
-	/**
-	 * a version of HONDA_ACCORD_CD which only uses two of three trigger input sensors
-	 */
-	HONDA_ACCORD_CD_TWO_WIRES = 17,
-
 	TEST_33816 = 18,
 
 
@@ -221,6 +216,7 @@ typedef enum __attribute__ ((__packed__)) {
     ET_UNUSED96 = 96,
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
+	ET_UNUSED_17 = 17,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -341,11 +337,6 @@ typedef enum {
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
 
-	// this makes sense because mechanical spark distribution does not require synchronization
-	TT_HONDA_4_24 = 12,
-
-	TT_HONDA_1_4_24 = 13,
-
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
 
@@ -367,8 +358,6 @@ typedef enum {
 	 * It looks like this is the VR shape if you have your wires flipped
 	 */
 	TT_60_2_VW = 20,
-
-	TT_HONDA_1_24 = 21,
 
 	TT_DODGE_STRATUS = 22,
 
@@ -406,12 +395,6 @@ typedef enum {
 	 * See also TT_MAZDA_MIATA_VVT_TEST
 	 */
 	TT_MIATA_VVT = 33,
-
-	/**
-	 * This is a different version of TT_HONDA_ACCORD_1_24
-	 * See https://sourceforge.net/p/rusefi/tickets/319/
-	 */
-	TT_HONDA_ACCORD_1_24_SHIFTED = 34,
 
 	/**
 	 * a version of NB1 with shifted CAM, useful for VVT testing & development
@@ -518,6 +501,11 @@ typedef enum {
 
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
+
+	TT_SUBARU_EZ30 = 12,
+	UNUSED_13 = 13,
+	UNUSED_21 = 21,
+	UNUSED_34 = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt

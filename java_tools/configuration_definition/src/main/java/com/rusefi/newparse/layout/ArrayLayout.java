@@ -58,7 +58,7 @@ public class ArrayLayout extends Layout {
 
     @Override
     public String toString() {
-        return "Array of " + this.prototypeLayout.toString() + " length " + this.length[0] + " " + super.toString();
+        return "Array of " + this.prototypeLayout + " length " + this.length[0] + " " + super.toString();
     }
 
     @Override
@@ -72,5 +72,10 @@ public class ArrayLayout extends Layout {
         if (this.length[0] > 0) {
             this.prototypeLayout.writeCLayout(ps, this.length);
         }
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        this.prototypeLayout.writeOutputChannelLayout(ps, prefixer, offsetAdd, this.length);
     }
 }

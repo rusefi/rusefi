@@ -35,7 +35,7 @@ end \
 	byteIndex = bitIndex >> 3  \
 	shift = bitIndex - byteIndex * 8  \
 	value = data[1 + byteIndex]  \
-	if (shift + bitIndex > 8) then  \
+	if (shift + bitWidth > 8) then  \
 		value = value + data[2 + byteIndex] * 256  \
 	end  \
 	mask = (1 << bitWidth) - 1  \
@@ -112,6 +112,28 @@ TEST(LuaE65, gearTorque) {
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 800);
+}
+
+TEST(LuaE65, gearTorque2) {
+	const char* realdata = GET_BIT_RANGE R"(
+
+	function testFunc()
+		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
+		return getBitRange(data, 0, 16)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x019F);
+}
+
+TEST(LuaE65, gearTorque3) {
+	const char* realdata = GET_BIT_RANGE R"(
+
+	function testFunc()
+		data = {0x9F, 0xDF, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
+		return getBitRange(data, 0, 16)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xDF9F);
 }
 
 

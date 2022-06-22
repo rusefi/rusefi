@@ -11,8 +11,6 @@
 #include "trigger_structure.h"
 #include "trigger_central.h"
 
-#define TRIGGER_SUPPORTED_CHANNELS 2
-
 void turnOnTriggerInputPins();
 void applyNewTriggerInputPins();
 void startTriggerInputPins();

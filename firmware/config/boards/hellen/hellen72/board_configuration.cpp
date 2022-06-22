@@ -70,7 +70,6 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = Gpio::B1;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A6;
 
@@ -94,6 +93,11 @@ void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
+	
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8; // out_pwm4
+	engineConfiguration->etbIo[0].controlPin = Gpio::C6; // ETB_EN out_pwm2
+	engineConfiguration->etb_use_two_wires = true;
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
@@ -166,10 +170,10 @@ void setBoardDefaultConfiguration() {
 void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
-	engineConfiguration->spi3mosiPin = Gpio::C12;
-	engineConfiguration->spi3misoPin = Gpio::C11;
-	engineConfiguration->spi3sckPin = Gpio::C10;
-	engineConfiguration->sdCardCsPin = Gpio::A15;
+	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
+	engineConfiguration->spi3misoPin = H_SPI3_MISO;
+	engineConfiguration->spi3sckPin = H_SPI3_SCK;
+	engineConfiguration->sdCardCsPin = H_SPI3_CS;
 
 //	engineConfiguration->spi2mosiPin = Gpio::B15;
 //	engineConfiguration->spi2misoPin = Gpio::B14;

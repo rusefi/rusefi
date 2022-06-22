@@ -4,12 +4,11 @@ import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StructLayout extends Layout {
-    /*private*/public List<Layout> children = new ArrayList<>();
+    /*private*/public final List<Layout> children = new ArrayList<>();
 
     public final String typeName;
     private final String name;
@@ -93,7 +92,7 @@ public class StructLayout extends Layout {
             return addStruct(offset, sf.struct, sf.name);
         }
 
-        Layout l = null;
+        Layout l;
         if (f instanceof ScalarField) {
             l = new ScalarLayout((ScalarField)f);
         } else if (f instanceof EnumField) {
@@ -193,8 +192,22 @@ public class StructLayout extends Layout {
 
         this.children.forEach(c -> c.writeCLayout(ps));
 
-        ps.println("\t/** total size " + getSize() + "*/");
         ps.println("};");
+        ps.println("static_assert(sizeof(" + this.typeName + ") == " + getSize() + ");");
+
         ps.println();
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        if (!this.noPrefix) {
+            prefixer.push(this.name);
+        }
+
+        this.children.forEach(c -> c.writeOutputChannelLayout(ps, prefixer, offsetAdd));
+
+        if (!this.noPrefix) {
+            prefixer.pop();
+        }
     }
 }

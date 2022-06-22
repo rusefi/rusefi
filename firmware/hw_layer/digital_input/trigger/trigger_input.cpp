@@ -71,7 +71,7 @@ enum triggerType {
 	TRIGGER_ADC,
 };
 
-static triggerType shaftTriggerType[TRIGGER_SUPPORTED_CHANNELS];
+static triggerType shaftTriggerType[TRIGGER_INPUT_PIN_COUNT];
 static triggerType camTriggerType[CAM_INPUTS_COUNT];
 
 static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
@@ -169,7 +169,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 /*==========================================================================*/
 
 void stopTriggerInputPins() {
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			turnOffTriggerInputPin(i, true);
 		}
@@ -184,7 +184,7 @@ void stopTriggerInputPins() {
 static const char* const camNames[] = { "cam1", "cam2", "cam3", "cam4"};
 
 void startTriggerInputPins() {
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			const char * msg = (i == 0 ? "Trigger #1" : (i == 1 ? "Trigger #2" : "Trigger #3"));
 			turnOnTriggerInputPin(msg, i, true);

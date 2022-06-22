@@ -113,7 +113,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	}
 
 	// Don't log at significant engine speed
-	if (Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->engineSnifferRpmThreshold) {
+	if (!engine->isEngineSnifferEnabled) {
 		return;
 	}
 
@@ -148,15 +148,6 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	case SHAFT_SECONDARY_RISING:
 		currentTrigger2 = true;
 		break;
-// major hack to get most value of limited logic data write
-#if EFI_UNIT_TEST
-	case SHAFT_3RD_FALLING:
-		currentCoilState = false;
-		break;
-	case SHAFT_3RD_RISING:
-		currentCoilState = true;
-		break;
-#endif
 	default:
 		break;
 	}

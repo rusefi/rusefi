@@ -109,7 +109,6 @@ void setBoardDefaultConfiguration() {
 	 * camshaft is always trigger#1 input and then crankshaft is trigger#2. */
 	engineConfiguration->triggerInputPins[0] = Gpio::H12;	/* cam */
 	engineConfiguration->triggerInputPins[1] = Gpio::H10;	/* crank pos #1 */
-	engineConfiguration->triggerInputPins[2] = Gpio::E9;		/* crank pos #2 */
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
 	/* SPI devices: mess of board and engine configurations */
@@ -244,9 +243,6 @@ void setBoardDefaultConfiguration() {
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
-
-	//!!!!!!!!!!!!!
-	//engineConfiguration->isEngineChartEnabled = false;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
 		setAlgorithm(LM_SPEED_DENSITY);

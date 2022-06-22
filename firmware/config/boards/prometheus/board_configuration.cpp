@@ -164,7 +164,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->triggerInputPins[0] = Gpio::A5;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = is469 ? Gpio::E9 : Gpio::A6;
 	
 	engineConfiguration->tachOutputPin = Gpio::C8;
@@ -249,8 +248,5 @@ void setBoardDefaultConfiguration() {
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
-
-	//!!!!!!!!!!!!!
-	//engineConfiguration->isEngineChartEnabled = false;
 }
 

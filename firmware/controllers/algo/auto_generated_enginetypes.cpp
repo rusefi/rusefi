@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat May 21 05:55:45 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Jun 20 15:46:06 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -179,6 +179,8 @@ case ET_UNUSED97:
   return "ET_UNUSED97";
 case ET_UNUSED98:
   return "ET_UNUSED98";
+case ET_UNUSED_17:
+  return "ET_UNUSED_17";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -255,8 +257,6 @@ case HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
-case HONDA_ACCORD_CD_TWO_WIRES:
-  return "HONDA_ACCORD_CD_TWO_WIRES";
 case L9779_BENCH_ENGINE:
   return "L9779_BENCH_ENGINE";
 case MAZDA_MIATA_2003_BOARD_TEST:
@@ -416,14 +416,6 @@ case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:
   return "TT_GM_7X";
-case TT_HONDA_1_24:
-  return "TT_HONDA_1_24";
-case TT_HONDA_1_4_24:
-  return "TT_HONDA_1_4_24";
-case TT_HONDA_4_24:
-  return "TT_HONDA_4_24";
-case TT_HONDA_ACCORD_1_24_SHIFTED:
-  return "TT_HONDA_ACCORD_1_24_SHIFTED";
 case TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
 case TT_HONDA_K_12_1:
@@ -480,6 +472,8 @@ case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
 case TT_SUBARU_7_WITHOUT_6:
   return "TT_SUBARU_7_WITHOUT_6";
+case TT_SUBARU_EZ30:
+  return "TT_SUBARU_EZ30";
 case TT_SUBARU_SVX:
   return "TT_SUBARU_SVX";
 case TT_SUBARU_SVX_CAM_VVT:
@@ -518,6 +512,12 @@ case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
 case TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
+case UNUSED_13:
+  return "UNUSED_13";
+case UNUSED_21:
+  return "UNUSED_21";
+case UNUSED_34:
+  return "UNUSED_34";
   }
  return NULL;
 }

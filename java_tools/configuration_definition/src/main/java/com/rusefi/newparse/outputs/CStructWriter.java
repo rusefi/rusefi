@@ -8,13 +8,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
-/**
- * proposed alternative which does not seem to be covered by any unit tests
- */
 public class CStructWriter {
     public void writeCStructs(ParseState parser, String outputFile) throws FileNotFoundException {
-        PrintStream ps = new PrintStream(new FileOutputStream(outputFile));
+        writeCStructs(parser, new PrintStreamAlwaysUnix(new FileOutputStream(outputFile)));
+    }
 
+    public void writeCStructs(ParseState parser, PrintStream ps) {
         ps.println(
                 "// begin\n" +
                 "#pragma once\n" +

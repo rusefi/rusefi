@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.SystemOut;
@@ -161,7 +162,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    pinoutLogic = PinoutLogic.create(boardName);
+                    pinoutLogic = PinoutLogic.create(boardName, PinoutLogic.CONFIG_BOARDS);
                     if (pinoutLogic != null)
                         state.inputFiles.addAll(pinoutLogic.getInputFiles());
                     break;
@@ -189,11 +190,12 @@ public class ConfigDefinition {
 
         new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
-/*
+        if (pinoutLogic != null) {
+            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state, parseState);
+        }
 
         // Parse the input files
         {
-
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
@@ -217,9 +219,8 @@ public class ConfigDefinition {
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
+            // writer.writeTunerstudio(parseState, tsInputFileFolder + "/rusefi.input", tsInputFileFolder + "/" + state.tsFileOutputName);
         }
-*/
 
         if (tsOutputsDestination != null) {
             /**
@@ -241,10 +242,6 @@ public class ConfigDefinition {
 
         if (state.destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
-
-        if (pinoutLogic != null) {
-            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state);
-        }
 
         state.doJob();
 

@@ -96,7 +96,7 @@ public:
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
-	trigger_type_e getType() const override;
+	trigger_config_s getType() const override;
 };
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
@@ -109,7 +109,7 @@ public:
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
-	trigger_type_e getType() const override;
+	trigger_config_s getType() const override;
 };
 
 class PrimeController : public EngineModule {
@@ -280,7 +280,7 @@ public:
 #endif
 #if EFI_UNIT_TEST
 	TestExecutor executor;
-#endif
+#endif // EFI_UNIT_TEST
 
 #if EFI_ENGINE_CONTROL
 	FuelSchedule injectionEvents;
@@ -290,11 +290,13 @@ public:
 
 	bool etbAutoTune = false;
 	/**
-	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
+	 * this is based on engineSnifferRpmThreshold settings and current RPM
 	 */
-	bool isEngineChartEnabled = false;
+	bool isEngineSnifferEnabled = false;
 
-	bool tdcMarkEnabled = true; // used by unit tests only
+#if EFI_UNIT_TEST
+	bool tdcMarkEnabled = true;
+#endif // EFI_UNIT_TEST
 
 	/**
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings

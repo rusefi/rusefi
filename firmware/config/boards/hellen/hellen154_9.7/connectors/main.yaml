@@ -3,6 +3,68 @@ pins:
     function: Power GND
     type: gnd
 
+  - pin: K1
+    class: ground
+    function: Power Ground
+
+  - pin: K2
+    class: ground
+    function: Power Ground
+
+  - pin: K3
+    class: 12v
+    function: 12v from ECU relay
+
+  - pin: K4
+    class: ground
+    function: Power Ground
+
+  - pin: K5
+    class: 12v
+    function: 12v from ECU relay
+
+  - pin: K6
+    class: 12v
+    function: 12v from ECU relay
+
+
+
+
+
+
+  - pin: A1
+    class: outputs
+    function: Injector 2 Neg
+
+  - pin: A2
+    class: outputs
+    function: Injector 1 Neg
+
+  - pin: A16
+    class: outputs
+    function: Injector 4 Neg
+
+  - pin: A17
+    class: outputs
+    function: Injector 3 Neg
+
+  - pin: A32
+    class: outputs
+    function: Injector 3 Pos
+
+  - pin: A33
+    class: outputs
+    function: Injector 1 Pos
+
+  - pin: A47
+    class: outputs
+    function: Injector 2 Pos
+
+  - pin: A48
+    class: outputs
+    function: Injector 4 Pos
+
+
 info:
   title: Hellen 154 VAG GDI
   image:

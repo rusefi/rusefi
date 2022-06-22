@@ -4,7 +4,7 @@ using ::testing::StrictMock;
 
 class MockTriggerConfiguration : public TriggerConfiguration {
 public:
-	MockTriggerConfiguration(bool useOnlyRise, trigger_type_e type)
+	MockTriggerConfiguration(bool useOnlyRise, trigger_config_s type)
 		: TriggerConfiguration("Mock")
 		, m_useOnlyRise(useOnlyRise)
 		, m_type(type)
@@ -19,39 +19,35 @@ protected:
 		return false;
 	}
 
-	trigger_type_e getType() const override {
+	trigger_config_s getType() const override {
 		return m_type;
 	}
 
 private:
 	const bool m_useOnlyRise;
-	const trigger_type_e m_type;
+	const trigger_config_s m_type;
 };
 
 struct MockTriggerDecoder : public TriggerDecoderBase {
+	MockTriggerDecoder() : TriggerDecoderBase("mock") { }
+
 	MOCK_METHOD(void, onTriggerError, (), (override));
 };
 
-static TriggerWaveform makeTriggerShape(operation_mode_e mode) {
-	// Configure a 4-1 trigger wheel
-	trigger_config_s config;
-	config.type = TT_TOOTHED_WHEEL;
-	config.customTotalToothCount = 4;
-	config.customSkippedToothCount = 1;
-
+static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
 	TriggerWaveform shape;
-	shape.initializeTriggerWaveform(mode, true, &config);
+	shape.initializeTriggerWaveform(mode, config);
 
 	return shape;
 }
 
-#define doTooth(dut, shape, cfg, t) dut.decodeTriggerEvent("", shape, nullptr, nullptr, cfg, SHAFT_PRIMARY_RISING, t)
+#define doTooth(dut, shape, cfg, t) dut.decodeTriggerEvent("", shape, nullptr, cfg, SHAFT_PRIMARY_RISING, t)
 
 TEST(TriggerDecoder, FindsFirstSyncPoint) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
@@ -91,10 +87,10 @@ TEST(TriggerDecoder, FindsFirstSyncPoint) {
 
 
 TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
@@ -114,6 +110,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(0, dut.getTotalRevolutionCounter());
 
 	// Do 100 turns and make sure we stay synchronized
 	for (int i = 0; i < 100; i++) {
@@ -133,14 +130,17 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 		EXPECT_TRUE(dut.getShaftSynchronized());
 		EXPECT_EQ(0, dut.currentCycle.current_index);
 		EXPECT_FALSE(dut.someSortOfTriggerError());
+
+		// We do one revolution per loop iteration
+		EXPECT_EQ(i + 1, dut.getTotalRevolutionCounter());
 	}
 }
 
 TEST(TriggerDecoder, TooManyTeeth_CausesError) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
@@ -185,10 +185,10 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
-	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR);
-
-	MockTriggerConfiguration cfg(true, TT_TOOTHED_WHEEL);
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 
 	efitick_t t = 0;
 
@@ -229,4 +229,77 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
 	EXPECT_TRUE(dut.someSortOfTriggerError());
+}
+
+TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
+
+	efitick_t t = 0;
+
+	PrimaryTriggerDecoder dut("test");
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	dut.setNeedsDisambiguation(shape.needsDisambiguation());
+
+	// Fire a few boring evenly spaced teeth
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+
+	// Missing tooth, 2x normal length!
+	t += MS2NT(2);
+	doTooth(dut, shape, cfg, t);
+
+	// Is synchronized
+	EXPECT_TRUE(dut.getShaftSynchronized());
+	// Has "full" sync, doesn't need cam information to sync
+	EXPECT_TRUE(dut.hasSynchronizedPhase());
+}
+
+TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
+	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	cfg.update();
+
+	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR, cfg);
+
+	efitick_t t = 0;
+
+	PrimaryTriggerDecoder dut("test");
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	dut.setNeedsDisambiguation(shape.needsDisambiguation());
+
+	// Fire a few boring evenly spaced teeth
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+	t += MS2NT(1);
+	doTooth(dut, shape, cfg, t);
+
+	// Missing tooth, 2x normal length!
+	t += MS2NT(2);
+	doTooth(dut, shape, cfg, t);
+
+	// Is synchronized
+	EXPECT_TRUE(dut.getShaftSynchronized());
+	// Does not have full sync, this trigger is ambiguous
+	EXPECT_FALSE(dut.hasSynchronizedPhase());
+
+	// Provide cam assist information to the primary trigger
+	dut.syncEnginePhase(2, 0, 720);
+
+	// We now have full sync!
+	EXPECT_TRUE(dut.hasSynchronizedPhase());
+
+	// If there's a trigger error, we lose full sync
+	// Tests above ensure onTriggerError() is called properly
+	dut.onTriggerError();
+	EXPECT_FALSE(dut.hasSynchronizedPhase());
 }

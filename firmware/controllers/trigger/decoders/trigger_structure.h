@@ -58,8 +58,6 @@ public:
 	void setAngle(angle_t angle);
 };
 
-#define TRIGGER_CHANNEL_COUNT 3
-
 class Engine;
 class TriggerDecoderBase;
 class TriggerFormDetails;
@@ -73,8 +71,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(operation_mode_e triggerOperationMode,
-			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig);
 	void setShapeDefinitionError(bool value);
 
 	/**
@@ -120,12 +117,6 @@ public:
 	 * this variable is incremented after each trigger shape redefinition
 	 */
 	int version = 0;
-
-	/**
-	 * duty cycle for each individual trigger channel
-	 */
-	float expectedDutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
-
 
 	/**
 	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
@@ -257,6 +248,9 @@ public:
 
 	angle_t getCycleDuration() const;
 
+	// Returns true if this trigger alone can fully sync the current engine for sequential mode.
+	bool needsDisambiguation() const;
+
 	/**
 	 * index of synchronization event within TriggerWaveform
 	 * See findTriggerZeroEventIndex()
@@ -265,9 +259,8 @@ public:
 
 	void initializeSyncPoint(
 			TriggerDecoderBase& state,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
-			);
+			const TriggerConfiguration& triggerConfiguration
+		);
 
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 

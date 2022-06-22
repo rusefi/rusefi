@@ -56,13 +56,6 @@ public class EnumLayout extends Layout {
             writeEnumVal(ps, this.values[i]);
         }
 
-        // Pad out the rest of the enum's values with "INVALID"
-        int expectedNumber = 2 << this.endBit;
-        for (int i = this.values.length; i < expectedNumber; i++) {
-            ps.print(", ");
-            writeEnumVal(ps, "INVALID");
-        }
-
         ps.println();
 
         meta.addComment(name, this.options.comment);
@@ -78,5 +71,16 @@ public class EnumLayout extends Layout {
     public void writeCLayout(PrintStream ps, int[] arrayLength) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
         ps.println("\t" + this.enumType + " " + this.name + "[" + arrayLength[0] + "];");
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        // Output an enum as a scalar, since there's no TS support for enum output channels
+        ps.print(prefixer.get(name));
+        ps.print(" = scalar, ");
+        ps.print(this.type.tsType);
+        ps.print(", ");
+        ps.print(this.offset + offsetAdd);
+        ps.println(", \"\", 1, 0");
     }
 }

@@ -13,24 +13,93 @@
 # todo: what is sequence of events in terms of 'live_data_e' code generation?
 #
 Usages:
-  output_channels: ["TsOutputs.java", "console/binary", "-prepend=integration/rusefi_config.txt" ]
-  knock_controller: [ "KnockController.java", "controllers/engine_cycle" ]
-  high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
-  injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
-  launch_control_state: [ "LaunchControl.java", "controllers/algo" ]
-  boost_control: [ "BoostControl.java", "controllers/actuators" ]
-  ac_control: [ "AcControl.java", "controllers/actuators", "-prepend=integration/rusefi_config.txt" ]
-  fan_control: [ "FanControl.java", "controllers/actuators" ]
-  fuel_pump_control: [ "FuelPump.java", "controllers/actuators" ]
-  main_relay: [ "MainRelay.java", "controllers/actuators" ]
-  #todo: handle ETB pid and Idle pid which point at same pid_state.txt
-  #pid_state: [ "PidState.java", "util/math" ]
-  engine_state: [ "EngineState.java", "controllers/algo" ]
-  tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
-  trigger_central: [ "TriggerCentral.java", "controllers/trigger", "-with_c_defines=true" ]
-  trigger_state: [ "TriggerState.java", "controllers/trigger", "-prepend=integration/rusefi_config.txt" ]
-  wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
-  idle_state: [ "IdleState.java", "controllers/actuators" ]
-  ignition_state: [ "IgnitionState.java", "controllers/algo" ]
-  electronic_throttle: [ "ElectronicThrottle.java", "controllers/actuators" ]
+  - name: output_channels
+    java: TsOutputs.java
+    folder: console/binary
+    prepend: integration/rusefi_config.txt
 
+  - name: knock_controller
+    java: KnockController.java
+    folder: controllers/engine_cycle
+    output_name: knock
+
+  - name: high_pressure_fuel_pump
+    java: HighPressureFuelPump.java
+    folder: controllers/engine_cycle
+    output_name: hpfp
+
+  - name: injector_model
+    java: InjectorModel.java
+    folder: controllers/algo/fuel
+
+  - name: launch_control_state
+    java: LaunchControl.java
+    folder: controllers/algo
+
+  - name: boost_control
+    java: BoostControl.java
+    folder: controllers/actuators
+    output_name: boost
+
+  - name: ac_control
+    java: AcControl.java
+    folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
+    output_name: ac
+
+  - name: fan_control
+    java: FanControl.java
+    folder: controllers/actuators
+    output_name: [ "fan1", "fan2" ]
+
+  - name: fuel_pump_control
+    java: FuelPump.java
+    folder: controllers/actuators
+    output_name: fuelPump
+
+  - name: main_relay
+    java: MainRelay.java
+    folder: controllers/actuators
+    output_name: mainRelay
+
+  #todo: handle ETB pid and Idle pid which point at same pid_state.txt
+  # - name: pid_state
+  #   java: PidState.java
+  #   folder: util/math
+
+  - name: engine_state
+    java: EngineState.java
+    folder: controllers/algo
+
+  - name: tps_accel_state
+    java: TpsAccelState.java
+    folder: controllers/algo
+
+  - name: trigger_central
+    java: TriggerCentral.java
+    folder: controllers/trigger
+    withCDefines: true
+
+  - name: trigger_state
+    java: TriggerState.java
+    folder: controllers/trigger
+    prepend: integration/rusefi_config.txt
+    output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
+
+  - name: wall_fuel_state
+    java: WallFuelState.java
+    folder: controllers/algo
+
+  - name: idle_state
+    java: IdleState.java
+    folder: controllers/actuators
+    output_name: idle
+
+  - name: ignition_state
+    java: IgnitionState.java
+    folder: controllers/algo
+
+  - name: electronic_throttle
+    java: ElectronicThrottle.java
+    folder: controllers/actuators
+    output_name: [ "etb1", "etb2" ]

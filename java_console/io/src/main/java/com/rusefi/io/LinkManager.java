@@ -95,7 +95,7 @@ public class LinkManager implements Closeable {
 
         startAndConnect(port, new ConnectionStateListener() {
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 IoUtils.exit("CONNECTION FAILED, did you specify the right port name?", -1);
             }
 
@@ -246,7 +246,7 @@ public class LinkManager implements Closeable {
                     try {
                         return TcpIoStream.open(port);
                     } catch (Throwable e) {
-                        stateListener.onConnectionFailed();
+                        stateListener.onConnectionFailed("Error " + e);
                         return null;
                     }
                 }

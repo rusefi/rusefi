@@ -88,8 +88,27 @@ public class ConfigFieldParserTest {
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "int = scalar, S08, 2, \"\", 1, 0, 0, 100, 0\n" +
+                "; total TS size = 4\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testShortForm() throws IOException {
+        String test = "struct pid_s\n" +
+                "#define ego_sensor_e_enum \"BPSX\"\n" +
+                "custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "ego_sensor_e afr_type1;\n" +
+                "ego_sensor_e afr_type2;\n" +
+                "int8_t int\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\"\n" +
+                "afr_type2 = bits, S08, 1, [0:1], \"BPSX\"\n" +
                 "int = scalar, S08, 2, \"\", 1, 0, 0, 100, 0\n" +
                 "; total TS size = 4\n", tsProjectConsumer.getContent());
     }
@@ -108,8 +127,8 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
-                "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
+                "afr_type2 = bits, S16, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 
@@ -126,7 +145,7 @@ public class ConfigFieldParserTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int2 = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
-                "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
+                "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }
 

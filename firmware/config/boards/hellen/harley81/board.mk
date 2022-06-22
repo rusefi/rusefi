@@ -21,5 +21,3 @@ DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
 DDEFS += -DSHORT_BOARD_NAME=harley81
 
-# temp workaround of https://github.com/rusefi/rusefi/issues/4084
-DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE

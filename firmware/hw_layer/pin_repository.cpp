@@ -54,7 +54,7 @@ int brainPin_to_index(brain_pin_e brainPin) {
 
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 #if ! EFI_BOOTLOADER
-	efiPrintf("%s on %s", msg, hwPortname(brainPin));
+	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
 #endif
 
 	int index = brainPin_to_index(brainPin);
@@ -81,6 +81,9 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
+#if ! EFI_BOOTLOADER
+	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
+#endif
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;

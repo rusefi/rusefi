@@ -343,8 +343,8 @@ public class rusEFI extends Activity {
                         }
 
                         @Override
-                        public void onConnectionFailed() {
-                            mResultView.post(() -> visibleLogAppend("Connection failed\n"));
+                        public void onConnectionFailed(String errorMessage) {
+                            mResultView.post(() -> visibleLogAppend("Connection failed " + errorMessage + " \n"));
                         }
                     });
 

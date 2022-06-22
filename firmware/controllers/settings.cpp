@@ -715,8 +715,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
 		engineConfiguration->isCJ125Verbose = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
-		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
 		engineConfiguration->enabledStep1Limiter = isEnabled;
 #if EFI_PROD_CODE
@@ -731,9 +729,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
-		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "use_only_first_channel")) {
-		engineConfiguration->trigger.useOnlyFirstChannel = isEnabled;
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;

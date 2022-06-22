@@ -21,6 +21,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class VariableRegistry {
     public static final String AUTO_ENUM_SUFFIX = "_auto_enum";
+    public static final String INVALID = "INVALID";
     private static final Logging log = getLogging(VariableRegistry.class);
 
     public static final String _16_HEX_SUFFIX = "_16_hex";
@@ -120,11 +121,12 @@ public class VariableRegistry {
         int maxValue = valueNameById.lastKey();
 
         StringBuilder sb = new StringBuilder();
+        // todo: TS enum key-value form #4232
         for (int i = 0; i <= maxValue; i++) {
             if (sb.length() > 0)
                 sb.append(", ");
 
-            String value = valueNameById.getOrDefault(i, "INVALID");
+            String value = valueNameById.getOrDefault(i, INVALID);
             sb.append("\"" + value + "\"");
         }
         return sb.toString();

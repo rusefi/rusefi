@@ -65,7 +65,6 @@ void setBoardOverrides() {
 
 	engineConfiguration->triggerInputPins[0] = Gpio::E7;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_1;
 	engineConfiguration->tle6240_cs = Gpio::B0;

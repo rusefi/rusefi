@@ -4,10 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
@@ -41,7 +38,6 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
-    private static SensorCentral.SensorListener wrongVersionListener;
 
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -204,21 +200,6 @@ public class ConsoleUI {
             if (result == JOptionPane.NO_OPTION)
                 System.exit(-1);
         }
-        wrongVersionListener = new SensorCentral.SensorListener() {
-            @Override
-            public void onSensorUpdate(double value) {
-                // todo: we need to migrate to TS_SIGNATURE validation!!!
-                if (value != Fields.TS_FILE_VERSION) {
-                    String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
-                            "Console compatible with " + Fields.TS_FILE_VERSION + " while firmware compatible with " +
-                            (int) value;
-                    JOptionPane.showMessageDialog(getFrame(), message);
-                    assert wrongVersionListener != null;
-                    SensorCentral.getInstance().removeListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
-                }
-            }
-        };
-        SensorCentral.getInstance().addListener(Sensor.TS_CONFIG_VERSION, wrongVersionListener);
         JustOneInstance.onStart();
         try {
             boolean isPortDefined = args.length > 0;

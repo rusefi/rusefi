@@ -48,14 +48,14 @@ public class SandboxCommon {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 log.info("onConnectionFailed");
             }
         });
 
         imageLatch.await(1, TimeUnit.MINUTES);
         ConfigurationImage ci = configurationImageAtomicReference.get();
-        log.info("Got ConfigurationImage " + ci + ", " + ci.getSize());
+        log.info("Got ConfigurationImage " + ci + ", size=" + ci.getSize());
         return ci;
     }
 

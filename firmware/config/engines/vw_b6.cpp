@@ -20,6 +20,18 @@ static void commonPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
+	engineConfiguration->disableEtbWhenEngineStopped = true;
+
+
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
+	}
+
 	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
@@ -55,6 +67,12 @@ static void commonPassatB6() {
 	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
 	engineConfiguration->highPressureFuel.value2 = BAR2KPA(140);
 
+	engineConfiguration->lowPressureFuel.v1 = 0.5; /* volts */;
+	engineConfiguration->lowPressureFuel.value1 = PSI2KPA(0);
+	engineConfiguration->lowPressureFuel.v2 = 4.5; /* volts */;
+	// todo: what's the proper calibration of this Bosch sensor? is it really 200psi?
+	engineConfiguration->lowPressureFuel.value2 = PSI2KPA(200);
+
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
 	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
@@ -64,6 +82,7 @@ static void commonPassatB6() {
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
+	coolantControl->loadAxis = GPPWM_Clt;
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -106,11 +125,82 @@ static void commonPassatB6() {
 
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;}
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+}
 
+/**
+ * set engine_type 39
+ */
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
 	commonPassatB6();
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
+
+	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_5;
+	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
+
+	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	coolantControl->pin = PROTEUS_LS_5;
+
+	engineConfiguration->mainRelayPin = PROTEUS_LS_6;
+
+	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
+	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
+
+	//engineConfiguration->boostControlPin = PROTEUS_LS_8;
+	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
+	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
+
+
+	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+
+	strncpy(config->luaScript, R"(
+AIRBAG = 0x050
+TCU_1 = 0x440
+TCU_2 = 0x540
+BRAKE_2 = 0x5A0
+
+canRxAdd(AIRBAG)
+canRxAdd(TCU_1)
+canRxAdd(TCU_2)
+canRxAdd(BRAKE_2)
+
+function setTwoBytes(data, offset, value)
+	data[offset + 1] = value % 255
+	data[offset + 2] = (value >> 8) % 255
+end
+
+shallSleep = Timer.new();
+
+-- we want to turn on with hardware switch while ignition key is off
+hadIgnitionEvent = false;
+
+function onCanRx(bus, id, dlc, data)
+	id11 = id % 2048
+	if id11 == AIRBAG then
+		-- looks like we have ignition key do not sleep!
+		shallSleep:reset();
+		hadIgnitionEvent = true;
+	else
+    	print('got CAN id=' ..id ..' dlc=' ..dlc)
+
+
+	end
+end
+
+function onTick()
+
+   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
+     -- looks like ignition key was removed
+     mcu_standby()
+   end
+end
+
+)", efi::size(config->luaScript));
+
 #endif
 }
 
@@ -138,11 +228,6 @@ void setMreVwPassatB6() {
 
 	// "19 - AN volt 4"
 	engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_12;
-	engineConfiguration->lowPressureFuel.v1 = 0.5; /* volts */;
-	engineConfiguration->lowPressureFuel.value1 = PSI2KPA(0);
-	engineConfiguration->lowPressureFuel.v2 = 4.5; /* volts */;
-	// todo: what's the proper calibration of this Bosch sensor? is it really 200psi?
-	engineConfiguration->lowPressureFuel.value2 = PSI2KPA(200);
 
 	engineConfiguration->isSdCardEnabled = false;
 

@@ -3,6 +3,10 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.RusefiParseErrorStrategy;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,10 +35,7 @@ public class UsagesReader {
 
     private final StringBuilder fancyNewMenu = new StringBuilder();
 
-    private final StringBuilder fragmentsContent = new StringBuilder(
-            header +
-                    "#include \"pch.h\"\n" +
-                    "#include \"tunerstudio.h\"\n");
+    private final StringBuilder fragmentsContent = new StringBuilder(header);
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -69,50 +71,31 @@ public class UsagesReader {
     }
 
     interface EntryHandler {
-        void onEntry(String name, List elements) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        ConfigurationConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputChannelWriter outputChannelWriter = new OutputChannelWriter(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
         EntryHandler handler = new EntryHandler() {
-
             @Override
-            public void onEntry(String name, List elements) throws IOException {
-                String javaName = (String) elements.get(0);
-                String folder = (String) elements.get(1);
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException {
+                // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition);
 
-                boolean withCDefines = false;
-                String prepend = "";
-                for (int i = 2; i < elements.size(); i++) {
-                    String keyValue = (String) elements.get(i);
-                    String[] pair = keyValue.trim().split("=");
-                    String key = pair[0];
-                    String value = pair[1];
-                    if (key.equals(ConfigDefinition.KEY_WITH_C_DEFINES)) {
-                        withCDefines = Boolean.parseBoolean(value);
-                    } else if (key.equals(ConfigDefinition.KEY_PREPEND)) {
-                        prepend = value;
-                    }
-                }
-
-//            String macroName = elements.size() > 2 ? ((String)elements.get(2)).trim() : "";
-
-
                 ReaderState state = new ReaderState();
-                state.setDefinitionInputFile(folder + File.separator + name + ".txt");
+                String definitionInputFile = folder + File.separator + name + ".txt";
+                state.setDefinitionInputFile(definitionInputFile);
                 state.withC_Defines = withCDefines;
 
                 state.addDestination(javaSensorsConsumer,
-                        outputsSections,
                         dataLogConsumer
                 );
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
@@ -123,6 +106,26 @@ public class UsagesReader {
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
                 state.doJob();
 
+                {
+                    ParseState parseState = new ParseState(state.enumsReader);
+
+                    parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+
+                    if (prepend != null && !prepend.isEmpty()) {
+                        RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
+                    }
+
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
+
+                    // if (outputNames.length == 0) {
+                        outputChannelWriter.writeOutputChannels(parseState, null);
+                    // } else {
+                    //     for (int i = 0; i < outputNames.length; i++) {
+                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
+                    //     }
+                    // }
+                }
+
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
 
                 fancyNewMenu.append(fragmentDialogConsumer.menuLine());
@@ -131,39 +134,65 @@ public class UsagesReader {
             }
         };
 
-        LinkedHashMap<?, ?> liveDocs = (LinkedHashMap) data.get("Usages");
+        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>)data.get("Usages");
 
-        fragmentsContent.append("static const FragmentEntry fragments[] = {\n");
+        for (LinkedHashMap entry : liveDocs) {
+            String name = (String)entry.get("name");
+            String java = (String)entry.get("java");
+            String folder = (String)entry.get("folder");
+            String prepend = (String)entry.get("prepend");
+            Boolean withCDefines = (Boolean)entry.get("withCDefines");
+            // Defaults to false if not specified
+            withCDefines = withCDefines != null && withCDefines;
 
-        for (Map.Entry entry : liveDocs.entrySet()) {
-            String name = (String) entry.getKey();
-            System.out.println(" " + name);
-            System.out.println("  " + entry.getValue());
-            List elements = (List) entry.getValue();
+            Object outputNames = entry.get("output_name");
 
-            handler.onEntry(name, elements);
+            String[] outputNamesArr;
+            if (outputNames == null) {
+                outputNamesArr = new String[0];
+            } else if (outputNames instanceof String) {
+                outputNamesArr = new String[1];
+                outputNamesArr[0] = (String)outputNames;
+            } else {
+                ArrayList<String> nameList = (ArrayList<String>)outputNames;
+                outputNamesArr = new String[nameList.size()];
+                nameList.toArray(outputNamesArr);
+            }
+
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
             enumContent.append(enumName + ",\n");
 
-            fragmentsContent
-                    .append("\treinterpret_cast<const ")
-                    .append(type)
-                    .append("*>(getStructAddr(")
-                    .append(enumName)
-                    .append(")),\n");
+            if (outputNamesArr.length < 2) {
+                fragmentsContent
+                        .append("getLiveDataAddr<")
+                        .append(type)
+                        .append(">(),\n");
+            } else {
+                for (int i = 0; i < outputNamesArr.length; i++) {
+                    if (i != 0) {
+                        // TODO: remove once the rest of the handling for multiple copies of one struct is in place.
+                        fragmentsContent.append("// ");
+                    }
+
+                    fragmentsContent
+                            .append("getLiveDataAddr<")
+                            .append(type)
+                            .append(">(")
+                            .append(i)
+                            .append("),\t// ")
+                            .append(outputNamesArr[i])
+                            .append("\n");
+                }
+            }
         }
         enumContent.append("} live_data_e;\n");
 
         totalSensors.append(javaSensorsConsumer.getContent());
 
-        fragmentsContent
-            .append("};\n\n")
-            .append("FragmentList getFragments() {\n\treturn { fragments, efi::size(fragments) };\n}\n");
-
         return javaSensorsConsumer.sensorTsPosition;
-
     }
 
     private void writeFiles() throws IOException {
@@ -171,7 +200,7 @@ public class UsagesReader {
             fw.write(enumContent.toString());
         }
 
-        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.cpp")) {
+        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
             fw.write(fragmentsContent.toString());
         }
     }

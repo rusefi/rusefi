@@ -15,8 +15,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
-	engineConfiguration->isEngineChartEnabled = false;
-
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
@@ -97,7 +95,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->triggerInputPins[0] = Gpio::B0;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerInputPins[2] = Gpio::Unassigned;
 
 #if 0	
 

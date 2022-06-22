@@ -486,6 +486,14 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoefE100
       gauge       = CLTGauge
 
+	curve = cltRevLimitCurve, ""
+	  columnLabel = "Coolant", "RPM Limit"
+	  xAxis      = -40, 120, 9
+	  yAxis      = 0, 8000, 9
+	  xBins      = cltRevLimitRpmBins, coolant
+	  yBins      = cltRevLimitRpm
+	  gauge      = CLTGauge
+
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
       xAxis       =  0, 50, 11
@@ -1346,6 +1354,7 @@ gaugeCategory = DynoView
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
+	indicator = { isPumpOn }, "No Pump", "Pump", white, black, green, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
@@ -1373,6 +1382,7 @@ menuDialog = main
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
+		subMenu = cltRevLimitCurve,			"CLT-based RPM Limit", 0, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = triggerConfiguration_IO, "Advanced Trigger"
 		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
@@ -1821,6 +1831,7 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00
 cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
+cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
@@ -1995,7 +2006,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
 		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
-		field = "Require CAM/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
+		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
@@ -2011,7 +2022,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
 
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
+		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins2 != 0 || (triggerInputPins1 != 0 &&                           (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
@@ -2379,7 +2390,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = allTriggerDebug, "Trigger Debug"
         field = "trigger 1 debug",                      triggerInputDebugPins1
         field = "trigger 2 debug",                      triggerInputDebugPins2
-        field = "trigger 3 debug",                      triggerInputDebugPins3
         field = "cam 1 debug",                          camInputsDebug1
         field = "cam 2 debug",                          camInputsDebug2
         field = "cam 3 debug",                          camInputsDebug3
@@ -2952,15 +2962,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
-	dialog = softwareKnockCfg, "Configuration"
+	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
 		field = "Cylinder Bore",			cylinderBore
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
 		field = "knockDetectionWindowStart",knockDetectionWindowStart, {enableSoftwareKnock}
 		field = "knockSamplingDuration",    knockSamplingDuration, {enableSoftwareKnock}
-		field = knockRetardAggression,      knockRetardAggression
-		field = knockRetardReapplyRate,     knockRetardReapplyRate
-		field = knockRetardMaximum,         knockRetardMaximum
 
 		field = ""
 		field = "Select the nearest sensor for each cylinder"
@@ -2977,8 +2984,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
 		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
 
+	dialog = softwareKnockResponseCfg, "Response"
+		field = knockRetardAggression,      knockRetardAggression
+		field = knockRetardReapplyRate,     knockRetardReapplyRate
+		field = knockRetardMaximum,         knockRetardMaximum
+
+	dialog = softwareKnockLeft, ""
+		panel = softwareKnockCfg
+		panel = softwareKnockResponseCfg
+
 	dialog = softwareKnock, "Software Knock", border
-		panel = softwareKnockCfg, West
+		panel = softwareKnockLeft, West
 		panel = knockThresholdCurve, Center
 
 ;			Engine->hip9011 Settings
@@ -3286,8 +3302,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
-		field = "Engine Sniffer", 						isEngineChartEnabled			
-		field = "  Threshold", 							engineSnifferRpmThreshold
+		field = "Engine Sniffer Threshold", 			engineSnifferRpmThreshold
 		
 	dialog = generalSettings, "General"
 		field = "!https://rusefi.com/s/fuel"
@@ -3300,7 +3315,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = limitsSettings, "Limits"
 		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
-        field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
+		field = "Use CLT-based RPM limit curve",		useCltBasedRpmLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
+        field = "RPM hard limit",                       rpmHardLimit, { (cutFuelOnHardLimit || cutSparkOnHardLimit) &&  !useCltBasedRpmLimit }
 		field = "Boost cut pressure",					boostCutPressure
 		field = "Minimum oil pressure after start",		minOilPressureAfterStart
 
@@ -3727,6 +3743,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
+		commandButton = "Proteus GDI VAG B6 test",  cmd_set_engine_type_PROTEUS_VW_B6@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets

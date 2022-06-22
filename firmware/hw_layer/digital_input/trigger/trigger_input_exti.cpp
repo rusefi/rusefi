@@ -21,7 +21,7 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
+static ioline_t shaftLines[TRIGGER_INPUT_PIN_COUNT];
 static ioline_t camLines[CAM_INPUTS_COUNT];
 
 static void shaft_callback(void *arg, efitick_t stamp) {

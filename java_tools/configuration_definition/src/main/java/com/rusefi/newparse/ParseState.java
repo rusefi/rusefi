@@ -29,6 +29,10 @@ public class ParseState {
 
     private Struct lastStruct = null;
 
+    public ParseState() {
+        this.enumsReader = null;
+    }
+
     public ParseState(EnumsReader enumsReader) {
         this.enumsReader = enumsReader;
 
@@ -51,7 +55,7 @@ public class ParseState {
         addDefinition(name, value);
 
         // Also add ints as 16b hex
-        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
+        addDefinition(name + "_16_hex", String.format("\\x%02x\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     private static boolean isNumeric(String str) {
@@ -68,6 +72,10 @@ public class ParseState {
     }
 
     private String[] resolveEnumValues(String enumName) {
+        if (this.enumsReader == null) {
+            return new String[0];
+        }
+
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
         EnumsReader.EnumState stringValueMap = this.enumsReader.getEnums().get(enumName);
@@ -82,7 +90,7 @@ public class ParseState {
             } else {
                 Definition def = this.definitions.get(value.getValue());
                 if (def == null)
-                    throw new IllegalStateException("No value for " + value);;
+                    throw new IllegalStateException("No value for " + value);
                 valueNameById.put((Integer)def.value, value.getName());
             }
         }
@@ -112,7 +120,8 @@ public class ParseState {
                 case NotAllowed:
                     throw new IllegalStateException("Tried to add definition for " + name + ", but one already existed.");
                 case Replace:
-                    definitions.remove(existingDefinition);
+                    definitions.remove(name);
+                    break;
                 case IgnoreNew:
                     // ignore the new definition, do nothing
                     return;
@@ -135,18 +144,11 @@ public class ParseState {
 
     @Override
     public void exitContent(RusefiConfigGrammarParser.ContentContext ctx) {
-        if (!scopes.empty())
-            throw new IllegalStateException();
-        if (scope != null)
-            throw new IllegalStateException();
-
-        if (typedefName != null)
-            throw new IllegalStateException();
-
-        if (!evalResults.isEmpty())
-            throw new IllegalStateException();
-        if (!evalStack.empty())
-            throw new IllegalStateException();
+        assert(scopes.empty());
+        assert(scope == null);
+        assert(typedefName == null);
+        assert(evalResults.isEmpty());
+        assert(evalStack.empty());
     }
 
     @Override
@@ -159,11 +161,11 @@ public class ParseState {
             addDefinition(name, Double.parseDouble(ctx.floatNum().getText()));
         } else if (ctx.numexpr() != null) {
             double evalResult = evalResults.remove();
-            double floored = Math.floor(evalResult);
+            int floored = (int)Math.floor(evalResult);
 
             if (Math.abs(floored - evalResult) < 0.001) {
                 // value is an int, process as such
-                handleIntDefinition(name, (int)floored);
+                handleIntDefinition(name, floored);
             } else {
                 // Value is a double, add it
                 addDefinition(name, evalResult);
@@ -202,14 +204,8 @@ public class ParseState {
 
     @Override
     public void enterEnumTypedefSuffix(RusefiConfigGrammarParser.EnumTypedefSuffixContext ctx) {
-        String replacementIdent = ctx.replacementIdent().getText();
-        int endBit;
-        if (replacementIdent == null) {
-            RusefiConfigGrammarParser.IntegerContext integer = ctx.integer(2);
-            endBit = Integer.parseInt(integer.getText());
-        } else {
-            endBit = Integer.parseInt(replacementIdent);
-        }
+        int endBit = Integer.parseInt(ctx.integer(1).getText());
+
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
         String rhs = ctx.enumRhs().getText();
@@ -294,10 +290,10 @@ public class ParseState {
             // this is a legacy field option list, parse it as such
             if (!ctx.numexpr().isEmpty()) {
                 options.units = ctx.QuotedString().getText();
-                options.scale = evalResults.remove().floatValue();
-                options.offset = evalResults.remove().floatValue();
-                options.min = evalResults.remove().floatValue();
-                options.max = evalResults.remove().floatValue();
+                options.scale = evalResults.remove();
+                options.offset = evalResults.remove();
+                options.min = evalResults.remove();
+                options.max = evalResults.remove();
                 options.digits = Integer.parseInt(ctx.integer().getText());
 
                 // we should have consumed everything on the results list
@@ -312,21 +308,34 @@ public class ParseState {
 
             String sValue = fo.getChild(2).getText();
 
-            if (key.equals("unit")) {
-                options.units = sValue;
-            } else if (key.equals("comment")) {
-                options.comment = sValue;
-            } else if (key.equals("digits")) {
-                options.digits = Integer.parseInt(sValue);
-            } else {
-                Double value = evalResults.remove();
+            switch (key) {
+                case "unit":
+                    options.units = sValue;
+                    break;
+                case "comment":
+                    options.comment = sValue;
+                    break;
+                case "digits":
+                    options.digits = Integer.parseInt(sValue);
+                    break;
+                default:
+                    Double value = evalResults.remove();
 
-                switch (key) {
-                    case "min": options.min = value.floatValue(); break;
-                    case "max": options.max = value.floatValue(); break;
-                    case "scale": options.scale = value.floatValue(); break;
-                    case "offset": options.offset = value.floatValue(); break;
-                }
+                    switch (key) {
+                        case "min":
+                            options.min = value;
+                            break;
+                        case "max":
+                            options.max = value;
+                            break;
+                        case "scale":
+                            options.scale = value;
+                            break;
+                        case "offset":
+                            options.offset = value;
+                            break;
+                    }
+                    break;
             }
         }
 
@@ -368,8 +377,11 @@ public class ParseState {
                 scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
                 return;
             } else if (typedef instanceof StringTypedef) {
+                options = new FieldOptions();
+                handleFieldOptionsList(options, ctx.fieldOptionsList());
+
                 StringTypedef sTypedef = (StringTypedef) typedef;
-                scope.structFields.add(new StringField(name, sTypedef.size));
+                scope.structFields.add(new StringField(name, sTypedef.size, options.comment));
                 return;
             } else {
                 // TODO: throw
@@ -401,6 +413,11 @@ public class ParseState {
 
             if (lastElement instanceof BitGroup) {
                 group = (BitGroup)lastElement;
+
+                // If this group is full, create a new one instead of continuing on here.
+                if (group.bitFields.size() == 32) {
+                    group = null;
+                }
             }
         }
 
@@ -431,6 +448,10 @@ public class ParseState {
         // check if the iterate token is present
         boolean iterate = ctx.Iterate() != null;
         boolean autoscale = ctx.Autoscale() != null;
+
+        if (iterate && length.length != 1) {
+            throw new IllegalStateException("Cannot iterate multi dimensional array: " + name);
+        }
 
         // First check if this is an array of structs
         if (structs.containsKey(type)) {
@@ -468,7 +489,10 @@ public class ParseState {
                 // iterate required for strings
                 assert(iterate);
 
-                StringField prototype = new StringField(name, sTypedef.size);
+                options = new FieldOptions();
+                handleFieldOptionsList(options, ctx.fieldOptionsList());
+
+                StringField prototype = new StringField(name, sTypedef.size, options.comment);
                 scope.structFields.add(new ArrayField<>(prototype, length, iterate));
                 return;
             } else {
@@ -515,9 +539,8 @@ public class ParseState {
         String structName = ctx.identifier().getText();
 
         assert(scope != null);
-        assert(scope.structFields != null);
 
-        String comment = ctx.restOfLine() == null ? null : ctx.restOfLine().getText().toString();
+        String comment = ctx.restOfLine() == null ? null : ctx.restOfLine().getText();
 
         Struct s = new Struct(structName, scope.structFields, ctx.StructNoPrefix() != null, comment);
         structs.put(structName, s);
@@ -535,7 +558,6 @@ public class ParseState {
     @Override
     public void exitUnionField(RusefiConfigGrammarParser.UnionFieldContext ctx) {
         assert(scope != null);
-        assert(scope.structFields != null);
 
         // unions must have at least 1 member
         assert(!scope.structFields.isEmpty());
@@ -549,8 +571,7 @@ public class ParseState {
         scope.structFields.add(u);
     }
 
-    private Stack<Double> evalStack = new Stack<>();
-
+    private final Stack<Double> evalStack = new Stack<>();
 
     @Override
     public void exitEvalNumber(RusefiConfigGrammarParser.EvalNumberContext ctx) {
@@ -615,9 +636,9 @@ public class ParseState {
     }
 
         };
-    };
+    }
 
     static class Scope {
-        public List<Field> structFields = new ArrayList<>();
+        public final List<Field> structFields = new ArrayList<>();
     }
 }

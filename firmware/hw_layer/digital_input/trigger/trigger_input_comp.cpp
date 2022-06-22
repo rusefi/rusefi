@@ -151,7 +151,7 @@ void stopTriggerInputPins(void) {
 	compDisable(EFI_COMP_PRIMARY_DEVICE);
 	isCompEnabled = false;
 #if 0
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}
