@@ -4,6 +4,7 @@ import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -61,5 +62,12 @@ public class ConfigurationImage {
         byte[] r = new byte[size];
         System.arraycopy(content, offset, r, 0, size);
         return r;
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigurationImage{" +
+                "size=" + content.length +
+                '}';
     }
 }
