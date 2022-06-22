@@ -23,7 +23,6 @@
 #if EFI_LOGIC_ANALYZER
 
 #define CHART_RESET_DELAY 1
-#define MAX_ICU_COUNT 5
 
 #if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
@@ -35,8 +34,7 @@ extern WaveChart waveChart;
 static volatile uint32_t engineCycleDurationUs;
 static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
-static int waveReaderCount = 0;
-static WaveReader readers[MAX_ICU_COUNT];
+static WaveReader readers[4];
 
 static void ensureInitialized(WaveReader *reader) {
 	/*may be*/UNUSED(reader);
@@ -88,15 +86,22 @@ void WaveReader::onFallEvent() {
 	periodEventTimeUs = nowUs;
 }
 
-static void fallCallback(WaveReader *reader) {
-	reader->onFallEvent();
+void logicAnalyzerCallback(void* arg, efitick_t stamp) {
+	WaveReader* instance = reinterpret_cast<WaveReader*>(arg);
+
+	bool rise = palReadLine(instance->line) == PAL_HIGH;
+
+	if(rise) {
+		riseCallback(instance);
+	} else {
+		instance->onFallEvent();
+	}
 }
 
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
-	waveReaderCount++;
-	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
+	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
 	WaveReader *reader = &readers[index];
 
 	if (!isBrainPinValid(brainPin)) {
@@ -110,18 +115,11 @@ static void initWave(const char *name, int index) {
 
 	reader->name = name;
 
-	reader->hw = startDigitalCapture("wave input", brainPin);
+	reader->line = PAL_LINE(getHwPort("logic", brainPin), getHwPin("logic", brainPin));
 
-	if (reader->hw != NULL) {
-		reader->hw->setWidthCallback((VoidInt)(void*) riseCallback, (void*) reader);
-		reader->hw->setPeriodCallback((VoidInt)(void*) fallCallback, (void*) reader);
-	}
+	efiExtiEnablePin("logic", brainPin, PAL_EVENT_MODE_BOTH_EDGES, logicAnalyzerCallback, (void*)reader);
 
 	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
-}
-
-WaveReader::WaveReader() {
-	hw = nullptr;
 }
 
 void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
@@ -232,7 +230,7 @@ void stopLogicAnalyzerPins() {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
 		if (isBrainPinValid(brainPin)) {
-			stopDigitalCapture("wave input", brainPin);
+			efiExtiDisablePin(brainPin);
 		}
 	}
 }

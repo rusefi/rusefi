@@ -16,10 +16,10 @@
 
 class WaveReader {
 public:
-	WaveReader();
 	void onFallEvent();
 
-	digital_input_s *hw;
+	ioline_t line;
+
 	const char *name = nullptr;
 	volatile int fallEventCounter = 0;
 	volatile int riseEventCounter = 0;

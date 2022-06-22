@@ -66,7 +66,7 @@
  * Build-in logic analyzer support. Logic analyzer viewer is one of the java console panes.
  */
 #ifndef EFI_LOGIC_ANALYZER
-#define EFI_LOGIC_ANALYZER FALSE
+#define EFI_LOGIC_ANALYZER TRUE
 #endif
 
 #ifndef EFI_ICU_INPUTS
