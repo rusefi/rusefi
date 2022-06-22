@@ -17,6 +17,8 @@ DDEFS += -DFIRMWARE_ID=\"hellen81\"
 #DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DHAL_TRIGGER_USE_ADC=TRUE
 
+
+
 TRIGGER_USE_ADC = yes
 
 # we need fast ADC for software trigger detector

@@ -16,7 +16,6 @@ DDEFS += $(VAR_DEF_ENGINE_TYPE)
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-
 DDEFS += -DEFI_CAN_SERIAL=TRUE
 
 # Turn off stuff proteus doesn't have/need
