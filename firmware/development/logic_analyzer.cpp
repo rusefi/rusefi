@@ -107,7 +107,6 @@ static void initWave(const char *name, int index) {
 		reader->hw = nullptr;
 		return;
 	}
-		
 
 	reader->name = name;
 
