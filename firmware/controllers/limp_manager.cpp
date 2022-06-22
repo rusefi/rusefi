@@ -10,15 +10,20 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
-	// User-configured hard RPM limit
-	if (rpm > engineConfiguration->rpmHardLimit) {
-		warning(CUSTOM_OBD_NAN_INJECTION, "Hit hard limit %d", engineConfiguration->rpmHardLimit);
-		if (engineConfiguration->cutFuelOnHardLimit) {
-			allowFuel.clear(ClearReason::HardLimit);
-		}
+	{
+		// User-configured hard RPM limit, either constant or CLT-lookup
+		float revLimit = engineConfiguration->useCltBasedRpmLimit
+			? interpolate2d(Sensor::get(SensorType::Clt).value_or(0), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
+			: (float)engineConfiguration->rpmHardLimit;
 
-		if (engineConfiguration->cutSparkOnHardLimit) {
-			allowSpark.clear(ClearReason::HardLimit);
+		if (rpm > revLimit) {
+			if (engineConfiguration->cutFuelOnHardLimit) {
+				allowFuel.clear(ClearReason::HardLimit);
+			}
+
+			if (engineConfiguration->cutSparkOnHardLimit) {
+				allowSpark.clear(ClearReason::HardLimit);
+			}
 		}
 	}
 
