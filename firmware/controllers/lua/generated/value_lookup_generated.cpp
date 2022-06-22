@@ -633,6 +633,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchSmoothRetard;
 	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
 		return engineConfiguration->isPhaseSyncRequiredForIgnition;
+	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
+		return engineConfiguration->useCltBasedRpmLimit;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -2023,6 +2025,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
 	{
 		engineConfiguration->isPhaseSyncRequiredForIgnition = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
+	{
+		engineConfiguration->useCltBasedRpmLimit = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
