@@ -2,6 +2,7 @@ package com.rusefi.sensor_logs;
 
 import com.rusefi.core.Sensor;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -18,6 +19,7 @@ public class BinarySensorLogSandbox {
         };
 
         BinarySensorLog l = new BinarySensorLog(valueProvider,
+                Arrays.asList(
                 Sensor.TIME_SECONDS,
                 Sensor.RPMValue,
                 Sensor.vehicleSpeedKph,
@@ -31,7 +33,7 @@ public class BinarySensorLogSandbox {
                 Sensor.Lambda,
                 Sensor.TARGET_AFR,
                 Sensor.FIRMWARE_VERSION,
-                Sensor.CLT);
+                Sensor.CLT));
 
         values.put(Sensor.TIME_SECONDS, 1.0);
         values.put(Sensor.RPMValue, 0.0);

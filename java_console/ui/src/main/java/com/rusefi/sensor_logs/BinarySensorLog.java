@@ -3,42 +3,29 @@ package com.rusefi.sensor_logs;
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.Sensor;
-import com.rusefi.core.SensorCentral;
 import com.rusefi.rusEFIVersion;
 
 import java.io.*;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * MLV .mlq binary log file
  * </p>
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class BinarySensorLog implements SensorLog {
-    private final Function<Sensor, Double> valueProvider;
-    private final Collection<Sensor> sensors;
-    private final List<BinaryLogEntry> entries;
+public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
+    private final Function<T, Double> valueProvider;
+    private final Collection<T> entries;
     private DataOutputStream stream;
 
     private String fileName;
 
     private int counter;
 
-    public BinarySensorLog() {
-        this(sensor -> SensorCentral.getInstance().getValue(sensor), SensorLogger.SENSORS);
-    }
-
-    public BinarySensorLog(Function<Sensor, Double> valueProvider, Sensor... sensors) {
+    public BinarySensorLog(Function<T, Double> valueProvider, Collection<T> sensors) {
         this.valueProvider = valueProvider;
-        this.sensors = filterOutSensorsWithoutType(Objects.requireNonNull(sensors, "sensors"));
-        entries = SensorHelper.values(this.sensors);
-    }
-
-    private static Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
-        return Arrays.stream(sensors).filter(sensor -> sensor.getType() != null).collect(Collectors.toCollection(ArrayList::new));
+        this.entries = Objects.requireNonNull(sensors, "entries");
     }
 
     @Override
@@ -70,7 +57,7 @@ public class BinarySensorLog implements SensorLog {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 DataOutputStream dos = new DataOutputStream(baos);
 
-                for (Sensor sensor : sensors) {
+                for (T sensor : entries) {
                     double value = valueProvider.apply(sensor);
                     sensor.writeToLog(dos, value);
                 }
