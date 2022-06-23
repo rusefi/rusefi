@@ -103,23 +103,9 @@ void setBoardConfigOverrides() {
 
 // Hellen81a uses SPI2 for SD-card
 #if 1
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = Gpio::B15;
-	engineConfiguration->spi2misoPin = Gpio::B14;
-	engineConfiguration->spi2sckPin = Gpio::B13;
-	engineConfiguration->sdCardCsPin = Gpio::B12;
-
-	engineConfiguration->is_enabled_spi_2 = true;
+	setHellenSdCardSpi2();
 #else
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-
-	engineConfiguration->spi3mosiPin = Gpio::C12;
-	engineConfiguration->spi3misoPin = Gpio::C11;
-	engineConfiguration->spi3sckPin = Gpio::C10;
-	engineConfiguration->sdCardCsPin = Gpio::A15;
-
-	engineConfiguration->is_enabled_spi_3 = true;
+	setHellenSdCardSpi3();
 #endif
 
 	engineConfiguration->clt.config.bias_resistor = 4700;

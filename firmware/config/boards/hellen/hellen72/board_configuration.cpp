@@ -92,18 +92,8 @@ static void setupDefaultSensorInputs() {
 void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
+	setHellenSdCardSpi3();
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
-	engineConfiguration->spi3misoPin = H_SPI3_MISO;
-	engineConfiguration->spi3sckPin = H_SPI3_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI3_CS;
-//	engineConfiguration->spi2mosiPin = Gpio::B15;
-//	engineConfiguration->spi2misoPin = Gpio::B14;
-//	engineConfiguration->spi2sckPin = Gpio::B13;
-//	engineConfiguration->sdCardCsPin = Gpio::B12;
-	engineConfiguration->is_enabled_spi_3 = true;
-	
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8; // out_pwm4
 	engineConfiguration->etbIo[0].controlPin = Gpio::C6; // ETB_EN out_pwm2
