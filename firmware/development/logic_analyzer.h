@@ -11,15 +11,14 @@
 
 #if EFI_LOGIC_ANALYZER
 
-#include "digital_input_icu.h"
 #include "engine_sniffer.h"
 
 class WaveReader {
 public:
-	WaveReader();
 	void onFallEvent();
 
-	digital_input_s *hw;
+	ioline_t line = 0;
+
 	const char *name = nullptr;
 	volatile int fallEventCounter = 0;
 	volatile int riseEventCounter = 0;

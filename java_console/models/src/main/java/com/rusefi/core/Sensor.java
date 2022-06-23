@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
@@ -19,7 +20,7 @@ import static com.rusefi.config.generated.Fields.*;
  * 2/11/13
  * @see GetOutputsCommand#OUTPUT_SIZE
  */
-public enum Sensor {
+public enum Sensor implements BinaryLogEntry {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
@@ -220,6 +221,8 @@ public enum Sensor {
         offset = -1;
     }
 
+
+
     public static Collection<Sensor> getSensorsForCategory(String category) {
         final Set<Sensor> sensors = new TreeSet<>(Comparator.comparing(o -> o.getName().toLowerCase()));
 
@@ -280,6 +283,31 @@ public enum Sensor {
         return name;
     }
 
+    @Override
+    public String getUnit() {
+        return units;
+    }
+
+    @Override
+    public int getByteSize() {
+        switch (getType()) {
+            case UINT8:
+                return 0;
+            case INT8:
+                return 1;
+            case UINT16:
+                return 2;
+            case INT16:
+                return 3;
+            case INT:
+                return 4;
+            case FLOAT:
+                return 7;
+            default:
+                throw new UnsupportedOperationException("" + getType());
+        }
+    }
+
     public SensorCategory getCategory() {
         return category;
     }
@@ -312,6 +340,7 @@ public enum Sensor {
         return value;
     }
 
+    @Override
     public void writeToLog(DataOutputStream dos, double value) throws IOException {
         switch (type) {
             case INT8:

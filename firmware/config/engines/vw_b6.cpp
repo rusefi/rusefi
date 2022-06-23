@@ -82,6 +82,7 @@ static void commonPassatB6() {
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
+	coolantControl->loadAxis = GPPWM_Clt;
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -155,6 +156,51 @@ void setProteusVwPassatB6() {
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
 	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+
+	strncpy(config->luaScript, R"(
+AIRBAG = 0x050
+TCU_1 = 0x440
+TCU_2 = 0x540
+BRAKE_2 = 0x5A0
+
+canRxAdd(AIRBAG)
+canRxAdd(TCU_1)
+canRxAdd(TCU_2)
+canRxAdd(BRAKE_2)
+
+function setTwoBytes(data, offset, value)
+	data[offset + 1] = value % 255
+	data[offset + 2] = (value >> 8) % 255
+end
+
+shallSleep = Timer.new();
+
+-- we want to turn on with hardware switch while ignition key is off
+hadIgnitionEvent = false;
+
+function onCanRx(bus, id, dlc, data)
+	id11 = id % 2048
+	if id11 == AIRBAG then
+		-- looks like we have ignition key do not sleep!
+		shallSleep:reset();
+		hadIgnitionEvent = true;
+	else
+    	print('got CAN id=' ..id ..' dlc=' ..dlc)
+
+
+	end
+end
+
+function onTick()
+
+   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
+     -- looks like ignition key was removed
+     mcu_standby()
+   end
+end
+
+)", efi::size(config->luaScript));
+
 #endif
 }
 

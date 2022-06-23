@@ -1,8 +1,5 @@
 #include "pch.h"
 
-void setSdCardConfigurationOverrides() {
-}
-
 /**
  * @brief Board-specific initialization code.
  * @todo  Add your board-specific code, if any.

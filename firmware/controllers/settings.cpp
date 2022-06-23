@@ -715,8 +715,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
 		engineConfiguration->isCJ125Verbose = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "engine_sniffer")) {
-		engineConfiguration->isEngineChartEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "step1limimter")) {
 		engineConfiguration->enabledStep1Limiter = isEnabled;
 #if EFI_PROD_CODE

@@ -86,9 +86,9 @@ public class ScalarLayout extends Layout {
     }
 
     private String makeScaleString() {
-        float scale = this.options.scale;
+        double scale = this.options.scale;
 
-        int mul, div;
+        long mul, div;
 
         if (scale < 1) {
             mul = Math.round(1 / scale);
@@ -98,9 +98,9 @@ public class ScalarLayout extends Layout {
             div = Math.round(scale);
         }
 
-        float actualScale = (float)mul / div;
+        double actualScale = (double)mul / div;
 
-        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001f)) {
+        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001)) {
             throw new RuntimeException("assertion failure: scale string generation failure for " + this.name);
         }
 
@@ -146,5 +146,41 @@ public class ScalarLayout extends Layout {
         }
 
         ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
+    }
+
+    private void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, String name) {
+        ps.print(prefixer.get(name));
+        //ps.print(" = " + fieldType + ", ");
+        ps.print(" = scalar, ");
+        ps.print(this.type.tsType);
+        ps.print(", ");
+        ps.print(this.offset + offsetAdd);
+        ps.print(", ");
+        ps.print(this.options.units);
+        ps.print(", ");
+        ps.print(FieldOptions.tryRound(this.options.scale));
+        ps.print(", ");
+        ps.print(FieldOptions.tryRound(this.options.offset));
+
+        ps.println();
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd) {
+        writeOutputChannelLayout(ps, prefixer, offsetAdd, this.name);
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+        if (arrayLength.length != 1) {
+            throw new IllegalStateException("Output channels don't support multi dimension arrays");
+        }
+
+        int elementOffset = offsetAdd;
+
+        for (int i = 0; i < arrayLength[0]; i++) {
+            writeOutputChannelLayout(ps, prefixer, elementOffset, this.name + (i + 1));
+            elementOffset += type.size;
+        }
     }
 }

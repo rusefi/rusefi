@@ -510,8 +510,8 @@ static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
 static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
-	if (!engine->isEngineChartEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
-		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineChartEnabled
+	if (!engine->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
+		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineSnifferEnabled
 	}
 
 
@@ -863,6 +863,11 @@ void triggerInfo(void) {
 	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
 
 #endif /* EFI_PROD_CODE */
+
+#if EFI_ENGINE_SNIFFER
+	efiPrintf("engine sniffer current size=%d", waveChart.getSize());
+#endif /* EFI_ENGINE_SNIFFER */
+
 }
 
 static void resetRunningTriggerCounters() {

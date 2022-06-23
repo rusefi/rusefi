@@ -15,8 +15,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
-	engineConfiguration->isEngineChartEnabled = false;
-
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
@@ -128,9 +126,6 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 #endif
-}
-
-void setSdCardConfigurationOverrides() {
 }
 
 void setAdcChannelOverrides() {

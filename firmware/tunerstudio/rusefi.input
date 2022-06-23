@@ -486,6 +486,14 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoefE100
       gauge       = CLTGauge
 
+	curve = cltRevLimitCurve, ""
+	  columnLabel = "Coolant", "RPM Limit"
+	  xAxis      = -40, 120, 9
+	  yAxis      = 0, 8000, 9
+	  xBins      = cltRevLimitRpmBins, coolant
+	  yBins      = cltRevLimitRpm
+	  gauge      = CLTGauge
+
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
       xAxis       =  0, 50, 11
@@ -1374,6 +1382,7 @@ menuDialog = main
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
+		subMenu = cltRevLimitCurve,			"CLT-based RPM Limit", 0, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = triggerConfiguration_IO, "Advanced Trigger"
 		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
@@ -1997,7 +2006,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
 		field = "VVT offset bank 2 intake",				vvtOffsets3, { camInputs3 != 0 }
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
-		field = "Require CAM/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
+		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
@@ -2953,15 +2962,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Pin mode",				malfunctionIndicatorPinMode	
 		field = "Warning Period",									warningPeriod
 
-	dialog = softwareKnockCfg, "Configuration"
+	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
 		field = "Cylinder Bore",			cylinderBore
 		field = "Knock filter frequency",	knockBandCustom, {enableSoftwareKnock}
 		field = "knockDetectionWindowStart",knockDetectionWindowStart, {enableSoftwareKnock}
 		field = "knockSamplingDuration",    knockSamplingDuration, {enableSoftwareKnock}
-		field = knockRetardAggression,      knockRetardAggression
-		field = knockRetardReapplyRate,     knockRetardReapplyRate
-		field = knockRetardMaximum,         knockRetardMaximum
 
 		field = ""
 		field = "Select the nearest sensor for each cylinder"
@@ -2978,8 +2984,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Cylinder 11",			knockBankCyl11, {enableSoftwareKnock && cylindersCount >= 11}
 		field = "Cylinder 12",			knockBankCyl12, {enableSoftwareKnock && cylindersCount >= 12}
 
+	dialog = softwareKnockResponseCfg, "Response"
+		field = knockRetardAggression,      knockRetardAggression
+		field = knockRetardReapplyRate,     knockRetardReapplyRate
+		field = knockRetardMaximum,         knockRetardMaximum
+
+	dialog = softwareKnockLeft, ""
+		panel = softwareKnockCfg
+		panel = softwareKnockResponseCfg
+
 	dialog = softwareKnock, "Software Knock", border
-		panel = softwareKnockCfg, West
+		panel = softwareKnockLeft, West
 		panel = knockThresholdCurve, Center
 
 ;			Engine->hip9011 Settings
@@ -3287,8 +3302,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = monitoringSettings, "rusEFI Console Settings"
 		field = "Sensor Sniffer",         	    		sensorChartMode
 		field = "  Threshold",							sensorSnifferRpmThreshold
-		field = "Engine Sniffer", 						isEngineChartEnabled			
-		field = "  Threshold", 							engineSnifferRpmThreshold
+		field = "Engine Sniffer Threshold", 			engineSnifferRpmThreshold
 		
 	dialog = generalSettings, "General"
 		field = "!https://rusefi.com/s/fuel"
@@ -3301,7 +3315,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = limitsSettings, "Limits"
 		field = "Cut fuel on RPM limit",				cutFuelOnHardLimit
 		field = "Cut spark on RPM limit",				cutSparkOnHardLimit
-        field = "RPM hard limit",                       rpmHardLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
+		field = "Use CLT-based RPM limit curve",		useCltBasedRpmLimit, { cutFuelOnHardLimit || cutSparkOnHardLimit }
+        field = "RPM hard limit",                       rpmHardLimit, { (cutFuelOnHardLimit || cutSparkOnHardLimit) &&  !useCltBasedRpmLimit }
 		field = "Boost cut pressure",					boostCutPressure
 		field = "Minimum oil pressure after start",		minOilPressureAfterStart
 
@@ -3709,6 +3724,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Disconnect all controllers you don't want to set!"
 		commandButton = "Set Index 0",     cmd_set_wideband_idx_0
 		commandButton = "Set Index 1",     cmd_set_wideband_idx_1
+		field = "Force O2 sensor heating", forceO2Heating
 
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"

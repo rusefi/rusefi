@@ -533,8 +533,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseTachPullUp;
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 		return engineConfiguration->boardUseTempPullUp;
-	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
-		return engineConfiguration->isEngineChartEnabled;
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 		return engineConfiguration->silentTriggerError;
 	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
@@ -635,6 +633,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchSmoothRetard;
 	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
 		return engineConfiguration->isPhaseSyncRequiredForIgnition;
+	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
+		return engineConfiguration->useCltBasedRpmLimit;
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+		return engineConfiguration->forceO2Heating;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -1777,11 +1779,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->boardUseTempPullUp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
-	{
-		engineConfiguration->isEngineChartEnabled = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 	{
 		engineConfiguration->silentTriggerError = (int)value;
@@ -2030,6 +2027,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
 	{
 		engineConfiguration->isPhaseSyncRequiredForIgnition = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
+	{
+		engineConfiguration->useCltBasedRpmLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+	{
+		engineConfiguration->forceO2Heating = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))

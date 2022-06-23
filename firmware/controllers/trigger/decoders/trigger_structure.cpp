@@ -117,6 +117,22 @@ angle_t TriggerWaveform::getCycleDuration() const {
 	}
 }
 
+bool TriggerWaveform::needsDisambiguation() const {
+	switch (getOperationMode()) {
+		case FOUR_STROKE_CRANK_SENSOR:
+		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
+		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
+		case FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR:
+			return true;
+		case FOUR_STROKE_CAM_SENSOR:
+		case TWO_STROKE:
+			return false;
+		default:
+			firmwareError(OBD_PCM_Processor_Fault, "bad operationMode() in needsDisambiguation");
+			return true;
+	}
+}
+
 /**
  * Trigger event count equals engine cycle event count if we have a cam sensor.
  * Two trigger cycles make one engine cycle in case of a four stroke engine If we only have a cranksensor.
@@ -668,7 +684,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaK_12_1(this);
 		break;
 
-	case UNUSED_12:
+	case TT_SUBARU_EZ30:
+		initializeSubaruEZ30(this);
+		break;
+
 	case UNUSED_13:
 	case UNUSED_21:
 	case UNUSED_34:

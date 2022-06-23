@@ -47,8 +47,9 @@ public class PCanSandbox {
             log.info("requestOutputChannels " + response);
         });
 
+        long start = System.currentTimeMillis();
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
-        log.info("Got ConfigurationImage " + ci);
+        log.info("Got ConfigurationImage " + ci + " in " + (System.currentTimeMillis() - start) + "ms");
 
         Thread.sleep(5 * SECOND);
 

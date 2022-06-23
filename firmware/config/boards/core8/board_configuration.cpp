@@ -34,10 +34,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = Gpio::G1;
 }
 
-
-void setSdCardConfigurationOverrides(void) {
-}
-
 static void setEtbConfig() {
 	// TLE9201 driver
 	// This chip has three control pins:
