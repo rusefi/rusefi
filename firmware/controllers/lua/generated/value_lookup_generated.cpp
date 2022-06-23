@@ -635,6 +635,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isPhaseSyncRequiredForIgnition;
 	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
 		return engineConfiguration->useCltBasedRpmLimit;
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+		return engineConfiguration->forceO2Heating;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -2030,6 +2032,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
 	{
 		engineConfiguration->useCltBasedRpmLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+	{
+		engineConfiguration->forceO2Heating = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))

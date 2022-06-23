@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 23 00:18:15 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 23 19:31:57 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -726,6 +726,7 @@ public class Fields {
 	public static final int FLASH_DATA_VERSION = 10012;
 	public static final int flexCranking_offset = 1352;
 	public static final int flexSensorPin_offset = 824;
+	public static final int forceO2Heating_offset = 1352;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -2359,7 +2360,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.23.all.3472126379";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.23.all.3298929990";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
@@ -2403,7 +2404,6 @@ public class Fields {
 	public static final int unused4080_offset = 3029;
 	public static final int unused460_offset = 460;
 	public static final int unused688_offset = 688;
-	public static final int unused_1484_bit_24_offset = 1352;
 	public static final int unused_1484_bit_25_offset = 1352;
 	public static final int unused_1484_bit_26_offset = 1352;
 	public static final int unused_1484_bit_27_offset = 1352;
@@ -3178,7 +3178,7 @@ public class Fields {
 	public static final Field LAUNCHSMOOTHRETARD = Field.create("LAUNCHSMOOTHRETARD", 1352, FieldType.BIT, 21);
 	public static final Field ISPHASESYNCREQUIREDFORIGNITION = Field.create("ISPHASESYNCREQUIREDFORIGNITION", 1352, FieldType.BIT, 22);
 	public static final Field USECLTBASEDRPMLIMIT = Field.create("USECLTBASEDRPMLIMIT", 1352, FieldType.BIT, 23);
-	public static final Field UNUSED_1484_BIT_24 = Field.create("UNUSED_1484_BIT_24", 1352, FieldType.BIT, 24);
+	public static final Field FORCEO2HEATING = Field.create("FORCEO2HEATING", 1352, FieldType.BIT, 24);
 	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1352, FieldType.BIT, 25);
 	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1352, FieldType.BIT, 26);
 	public static final Field UNUSED_1484_BIT_27 = Field.create("UNUSED_1484_BIT_27", 1352, FieldType.BIT, 27);
@@ -4544,7 +4544,7 @@ public class Fields {
 	LAUNCHSMOOTHRETARD,
 	ISPHASESYNCREQUIREDFORIGNITION,
 	USECLTBASEDRPMLIMIT,
-	UNUSED_1484_BIT_24,
+	FORCEO2HEATING,
 	UNUSED_1484_BIT_25,
 	UNUSED_1484_BIT_26,
 	UNUSED_1484_BIT_27,
