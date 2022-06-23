@@ -89,7 +89,7 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 
-	setHellenSdCardSpi3()
+	setHellenSdCardSpi3();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
