@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "digital_input.h"
-
 #if HAL_USE_PAL
 
 using ExtiCallback = void(*)(void*, efitick_t);

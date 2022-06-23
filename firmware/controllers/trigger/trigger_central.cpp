@@ -745,11 +745,6 @@ static void triggerShapeInfo() {
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
-#if HAL_USE_ICU == TRUE
-extern int icuRisingCallbackCounter;
-extern int icuFallingCallbackCounter;
-#endif /* HAL_USE_ICU */
-
 void triggerInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
@@ -759,10 +754,6 @@ void triggerInfo(void) {
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 		efiPrintf("trigger PAL mode %d", engine->hwTriggerInputEnabled);
 #else
-
-#if HAL_USE_ICU == TRUE
-	efiPrintf("trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
-#endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
 
