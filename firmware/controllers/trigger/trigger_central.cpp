@@ -310,9 +310,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		return;
 	}
 
-	angle_t currentPosition = currentPhase.Value;
-	// convert engine cycle angle into trigger cycle angle
-	currentPosition -= tdcPosition();
+	angle_t angleFromPrimarySyncPoint = currentPhase.Value;
+	// convert trigger cycle angle into engine cycle angle
+	angle_t currentPosition = angleFromPrimarySyncPoint - tdcPosition();
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
 
 #if EFI_UNIT_TEST
@@ -366,9 +366,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	default:
 		// else, do nothing
 		break;
-    }
+	}
 
-	if (absF(vvtPosition - tdcPosition()) < 7) {
+	if (absF(angleFromPrimarySyncPoint) < 7) {
 		/**
 		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
 		 * wrong order due to belt flex or else
