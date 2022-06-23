@@ -107,13 +107,6 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->is_enabled_spi_1 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = true;
-}
-
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -248,5 +241,10 @@ void setBoardDefaultConfiguration() {
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
+
+	engineConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->sdCardCsPin = Gpio::A2;
+	engineConfiguration->isSdCardEnabled = true;
 }
 

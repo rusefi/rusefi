@@ -296,15 +296,7 @@ void setDefaultBasePins() {
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = Gpio::D4;
 	engineConfiguration->isSdCardEnabled = true;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
-	setSdCardConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 static void setDefaultWarmupIdleCorrection() {

@@ -49,9 +49,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides() {
-}
-
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
 	engineConfiguration->communicationLedPin = Gpio::E4;
@@ -128,7 +125,6 @@ static void setupDefaultSensorInputs() {
 }
 
 static void setupSdCard() {
-
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->sdCardCsPin = Gpio::D2;
 
