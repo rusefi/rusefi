@@ -109,15 +109,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

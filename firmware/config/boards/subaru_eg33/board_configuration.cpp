@@ -11,8 +11,7 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
+static void setSerialConfigurationOverrides() {
 	engineConfiguration->binarySerialTxPin = Gpio::E1;
 	engineConfiguration->binarySerialRxPin = Gpio::E0;
 	/* actually Bluetooth/WiFi interface */

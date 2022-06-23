@@ -117,15 +117,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = Gpio::D0;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

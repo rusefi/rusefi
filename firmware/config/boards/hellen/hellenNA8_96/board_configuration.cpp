@@ -106,15 +106,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->etbIo[0].controlPin = Gpio::C6;		// PWM 2
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

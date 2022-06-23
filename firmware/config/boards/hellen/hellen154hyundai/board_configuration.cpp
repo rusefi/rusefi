@@ -128,15 +128,6 @@ void setBoardConfigOverrides() {
 	}
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

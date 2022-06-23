@@ -286,11 +286,6 @@ void setDefaultBasePins() {
 	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
-	setSerialConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
@@ -1187,4 +1182,3 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 // These symbols are weak so that a board_configuration.cpp file can override them
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
-__attribute__((weak)) void setSerialConfigurationOverrides() { }
