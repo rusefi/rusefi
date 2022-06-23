@@ -2,9 +2,6 @@
 
 #include "protected_gpio.h"
 
-void setSdCardConfigurationOverrides() {
-}
-
 void setBoardConfigOverrides() {
 	// No divider, just direct connected analog inputs (they're all internal, so why divide?)
 	engineConfiguration->analogInputDividerCoefficient = 1;

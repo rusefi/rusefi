@@ -92,7 +92,17 @@ static void setupDefaultSensorInputs() {
 void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
+	engineConfiguration->spi3misoPin = H_SPI3_MISO;
+	engineConfiguration->spi3sckPin = H_SPI3_SCK;
+	engineConfiguration->sdCardCsPin = H_SPI3_CS;
+//	engineConfiguration->spi2mosiPin = Gpio::B15;
+//	engineConfiguration->spi2misoPin = Gpio::B14;
+//	engineConfiguration->spi2sckPin = Gpio::B13;
+//	engineConfiguration->sdCardCsPin = Gpio::B12;
+	engineConfiguration->is_enabled_spi_3 = true;
 	
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8; // out_pwm4
@@ -161,23 +171,4 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	hellenWbo();
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-
-	engineConfiguration->spi3mosiPin = H_SPI3_MOSI;
-	engineConfiguration->spi3misoPin = H_SPI3_MISO;
-	engineConfiguration->spi3sckPin = H_SPI3_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI3_CS;
-
-//	engineConfiguration->spi2mosiPin = Gpio::B15;
-//	engineConfiguration->spi2misoPin = Gpio::B14;
-//	engineConfiguration->spi2sckPin = Gpio::B13;
-//	engineConfiguration->sdCardCsPin = Gpio::B12;
-	engineConfiguration->is_enabled_spi_3 = true;
 }
