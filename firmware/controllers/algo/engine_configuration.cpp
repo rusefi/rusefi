@@ -61,7 +61,6 @@
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
@@ -948,8 +947,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
-	case HELLEN_NB1:
 	case HELLEN_NA8_96:
+		setHellenMiata96();
+		break;
+	case HELLEN_NB1:
 		setHellenNB1();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
@@ -1035,7 +1036,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTle8888TestConfiguration();
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
-		setMazdaMiataNA8Configuration();
+		setFrankensoMazdaMiataNA8Configuration();
 		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();

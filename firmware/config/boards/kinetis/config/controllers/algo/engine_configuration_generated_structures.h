@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 22 20:55:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 23 19:31:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2676,8 +2676,9 @@ struct engine_configuration_s {
 	offset 1352 bit 23 */
 	bool useCltBasedRpmLimit : 1 {};
 	/**
+	 * If enabled, don't wait for engine start to heat O2 sensors. WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 	offset 1352 bit 24 */
-	bool unused_1484_bit_24 : 1 {};
+	bool forceO2Heating : 1 {};
 	/**
 	offset 1352 bit 25 */
 	bool unused_1484_bit_25 : 1 {};
@@ -4962,4 +4963,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21324);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 22 20:55:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jun 23 19:31:51 UTC 2022
