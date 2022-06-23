@@ -50,6 +50,7 @@ void setFrankensoMazdaMiataNA8Configuration() {
 	engineConfiguration->injectionPins[1] = Gpio::E2; // #2 pin 3V
 	engineConfiguration->injectionPins[2] = Gpio::B8; // #3 pin 3Y
 	engineConfiguration->injectionPins[3] = Gpio::B7; // #4 pin 3Z
+}
 
 void setHellenMiata96() {
 	miataNAcommonEngineSettings();
