@@ -281,7 +281,6 @@ void setDefaultBasePins() {
 
 	// set UART pads configuration based on the board
 // needed also by bootloader code
-	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = Gpio::C10;
 	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
