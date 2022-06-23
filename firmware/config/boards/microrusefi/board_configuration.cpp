@@ -174,12 +174,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi3sckPin = Gpio::C10;
 }
 
-void setSerialConfigurationOverrides() {
-	// why would MRE disable serial by default? we definitely have pads exposed
-	engineConfiguration->useSerialPort = false;
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

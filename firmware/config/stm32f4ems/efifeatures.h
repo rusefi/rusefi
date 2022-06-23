@@ -388,11 +388,10 @@
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-// todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
 #endif
-// todo: start using consoleSerialRxPin? Not sure
+
 #ifndef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 #endif

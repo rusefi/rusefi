@@ -107,25 +107,10 @@ void setBoardDefaultConfiguration() {
 	
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
-
-	// we call it here because setDefaultBoardConfiguration() is not called for DEFAULT_ENGINE_TYPE=MINIMAL_PINS
-	setSerialConfigurationOverrides();
 #endif
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->isFastAdcEnabled = false;
-}
-
-void setSerialConfigurationOverrides() {
-#if 0
-	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = Gpio::C7;
-	engineConfiguration->binarySerialRxPin = Gpio::C6;
-	engineConfiguration->consoleSerialTxPin = Gpio::A10;
-	engineConfiguration->consoleSerialRxPin = Gpio::A11;
-	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-#endif
 }
 
 void setAdcChannelOverrides() {
