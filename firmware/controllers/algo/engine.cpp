@@ -204,7 +204,7 @@ void Engine::periodicSlowCallback() {
 
 	updateVrPwm();
 
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.o2heater.setValue(engineConfiguration->forceO2Heating || engine->rpmCalculator.isRunning());
 	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
