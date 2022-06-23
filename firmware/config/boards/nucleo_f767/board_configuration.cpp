@@ -23,9 +23,6 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
-}
-
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.

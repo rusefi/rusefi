@@ -34,10 +34,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[7] = Gpio::D10;
 }
 
-
-void setSdCardConfigurationOverrides(void) {
-}
-
 static void setEtbConfig() {
 
 }

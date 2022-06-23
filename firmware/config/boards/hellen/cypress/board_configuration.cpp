@@ -128,9 +128,6 @@ void setSerialConfigurationOverrides() {
 #endif
 }
 
-void setSdCardConfigurationOverrides() {
-}
-
 void setAdcChannelOverrides() {
 	addAdcChannelForTrigger();
 }

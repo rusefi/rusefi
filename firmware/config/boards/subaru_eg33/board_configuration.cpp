@@ -22,13 +22,6 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->is_enabled_spi_1 = false;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = false;
-}
-
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -182,6 +175,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi3MisoMode = PO_DEFAULT;
 	engineConfiguration->spi3sckPin = Gpio::C10;
 	engineConfiguration->spi3SckMode = PO_DEFAULT;
+
+	engineConfiguration->is_enabled_spi_1 = false;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->sdCardCsPin = Gpio::A2;
+	engineConfiguration->isSdCardEnabled = false;
 
 	/* TODO: add settings for SPI4 */
 
