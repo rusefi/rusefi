@@ -1,12 +1,9 @@
 #include "pch.h"
 
+#include "live_data.h"
+
 #include "tunerstudio.h"
-
-template <typename TStruct>
-const TStruct* getLiveDataAddr();
-
-template <typename TStruct>
-const TStruct* getLiveDataAddr(size_t index);
+#include "wideband_state_generated.h"
 
 template<>
 const output_channels_s* getLiveDataAddr() {
