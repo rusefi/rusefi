@@ -19,11 +19,11 @@
 #include "os_util.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
+#include "digital_input_exti.h"
 
 #if EFI_LOGIC_ANALYZER
 
 #define CHART_RESET_DELAY 1
-#define MAX_ICU_COUNT 5
 
 #if EFI_ENGINE_SNIFFER
 extern WaveChart waveChart;
@@ -35,15 +35,9 @@ extern WaveChart waveChart;
 static volatile uint32_t engineCycleDurationUs;
 static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
-static int waveReaderCount = 0;
-static WaveReader readers[MAX_ICU_COUNT];
+static WaveReader readers[4];
 
-static void ensureInitialized(WaveReader *reader) {
-	/*may be*/UNUSED(reader);
-	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
-}
-
-static void waAnaWidthCallback(WaveReader *reader) {
+static void riseCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
@@ -88,15 +82,22 @@ void WaveReader::onFallEvent() {
 	periodEventTimeUs = nowUs;
 }
 
-static void waIcuPeriodCallback(WaveReader *reader) {
-	reader->onFallEvent();
+void logicAnalyzerCallback(void* arg, efitick_t stamp) {
+	WaveReader* instance = reinterpret_cast<WaveReader*>(arg);
+
+	bool rise = palReadLine(instance->line) == PAL_HIGH;
+
+	if(rise) {
+		riseCallback(instance);
+	} else {
+		instance->onFallEvent();
+	}
 }
 
 static void initWave(const char *name, int index) {
 	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
-	waveReaderCount++;
-	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
+	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
 	WaveReader *reader = &readers[index];
 
 	if (!isBrainPinValid(brainPin)) {
@@ -104,26 +105,17 @@ static void initWave(const char *name, int index) {
 		 *  in case we are running, and we select none for a channel that was running, 
 		 *  this way we ensure that we do not get false report from that channel 
 		 **/
-		reader->hw = nullptr;
+		reader->line = 0;
 		return;
 	}
-		
 
 	reader->name = name;
 
-	reader->hw = startDigitalCapture("wave input", brainPin);
+	reader->line = PAL_LINE(getHwPort("logic", brainPin), getHwPin("logic", brainPin));
 
-	if (reader->hw != NULL) {
-		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
-
-		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
-	}
+	efiExtiEnablePin("logic", brainPin, PAL_EVENT_MODE_BOTH_EDGES, logicAnalyzerCallback, (void*)reader);
 
 	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
-}
-
-WaveReader::WaveReader() {
-	hw = nullptr;
 }
 
 void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
@@ -138,70 +130,65 @@ void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efiti
 }
 
 static float getSignalOnTime(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	if (getTimeNowUs() - reader->lastActivityTimeUs > 4 * US_PER_SECOND) {
+	WaveReader& reader = readers[index];
+
+	if (getTimeNowUs() - reader.lastActivityTimeUs > 4 * US_PER_SECOND) {
 		return 0.0f; // dwell time has expired
 	}
-	return reader->last_wave_high_widthUs / 1000.0f;
+	return reader.last_wave_high_widthUs / 1000.0f;
 }
 
 static efitime_t getWaveOffset(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->waveOffsetUs;
+	return readers[index].waveOffsetUs;
 }
 
 static float getSignalPeriodMs(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->signalPeriodUs / 1000.0f;
+	return readers[index].signalPeriodUs / 1000.0f;
 }
 
 static void reportWave(Logging *logging, int index) {
-	if (readers[index].hw == nullptr) {
+	if (readers[index].line == 0) {
 		return;
 	}
-	if (readers[index].hw->started) {
+
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 
-		float dwellMs = getSignalOnTime(index);
-		float periodMs = getSignalPeriodMs(index);
+	float dwellMs = getSignalOnTime(index);
+	float periodMs = getSignalPeriodMs(index);
 
-		logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
-		logging->appendFloat(100.0f * dwellMs / periodMs, 2);
+	logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(100.0f * dwellMs / periodMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
+
+	/**
+	 * that's the ON time of the LAST signal
+	 */
+	logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(dwellMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
+
+	/**
+	 * that's the total ON time during the previous engine cycle
+	 */
+	logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
+
+	logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(periodMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
+
+	uint32_t offsetUs = getWaveOffset(index);
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	if (rpm != 0) {
+		float oneDegreeUs = getOneDegreeTimeUs(rpm);
+
+		logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
+		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
+		fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
+		logging->appendFloat(angle, 3);
 		logging->appendPrintf("%s", LOG_DELIMITER);
-
-		/**
-		 * that's the ON time of the LAST signal
-		 */
-		logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
-		logging->appendFloat(dwellMs, 2);
-		logging->appendPrintf("%s", LOG_DELIMITER);
-
-		/**
-		 * that's the total ON time during the previous engine cycle
-		 */
-		logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
-		logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-		logging->appendPrintf("%s", LOG_DELIMITER);
-
-		logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
-		logging->appendFloat(periodMs, 2);
-		logging->appendPrintf("%s", LOG_DELIMITER);
-
-		uint32_t offsetUs = getWaveOffset(index);
-		int rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (rpm != 0) {
-			float oneDegreeUs = getOneDegreeTimeUs(rpm);
-
-			logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
-			float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-			fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
-			logging->appendFloat(angle, 3);
-			logging->appendPrintf("%s", LOG_DELIMITER);
-		}
 	}
 }
 
@@ -234,27 +221,26 @@ void stopLogicAnalyzerPins() {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
 		if (isBrainPinValid(brainPin)) {
-			stopDigitalCapture("wave input", brainPin);
+			efiExtiDisablePin(brainPin);
 		}
 	}
 }
 
 static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled_channel<uint32_t> *freq) {
-
-	float high,period;
+	float high, period;
 
 	if ((duty == nullptr) || (freq == nullptr)) {
 		return;
 	}
 
-	if (readers[index].hw == nullptr) {
+	if (readers[index].line == 0) {
 		*duty = 0.0;
 		*freq = 0;
 	} else {
 		high = getSignalOnTime(index);
 		period = getSignalPeriodMs(index);
 
-		if ((period != 0) && (readers[index].hw->started)) {
+		if (period != 0) {
 
 			*duty = (high * 1000.0f) /(period * 10.0f);
 			*freq = (int)(1 / (period / 1000.0f));
