@@ -448,8 +448,6 @@ void TriggerDecoderBase::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
-static int lastEmulatorType = -1;
-
 /**
  * @brief Trigger decoding happens here
  * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
@@ -494,17 +492,9 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	extern int emulatorType;
-
 	if (toothed_previous_time > nowNt) {
-		int prevTooth = toothed_previous_time;
-		int now2 = nowNt;
-		int delta = prevTooth - now2;
-		int now3 = getTimeNowNt();
-		firmwareError(CUSTOM_OBD_93, "out of order trigger p=%d n=%d an=%d et=%d let=%d", prevTooth, now2, now3, emulatorType, lastEmulatorType);
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
 	}
-
-	lastEmulatorType = emulatorType;
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
