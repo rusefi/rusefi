@@ -1925,7 +1925,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 2173559628
+#define SIGNATURE_HASH 1453981144
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2477,7 +2477,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.23.hellen_cypress.2173559628"
+#define TS_SIGNATURE "rusEFI 2022.06.24.hellen_cypress.1453981144"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2524,6 +2524,7 @@
 #define unused4080_offset 3029
 #define unused460_offset 460
 #define unused688_offset 688
+#define unused744b8_offset 744
 #define unused_1484_bit_25_offset 1352
 #define unused_1484_bit_26_offset 1352
 #define unused_1484_bit_27_offset 1352
@@ -2583,7 +2584,6 @@
 #define useSeparateAdvanceForIdle_offset 1352
 #define useSeparateIdleTablesForCrankingTaper_offset 100
 #define useSeparateVeForIdle_offset 1352
-#define useSerialPort_offset 744
 #define useStepperIdle_offset 744
 #define useTLE8888_cranking_hack_offset 100
 #define useTLE8888_stepper_offset 100

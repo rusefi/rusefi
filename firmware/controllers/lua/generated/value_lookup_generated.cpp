@@ -335,8 +335,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isHip9011Enabled;
 	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
 		return engineConfiguration->isVerboseAlternator;
-	if (strEqualCaseInsensitive(name, "useSerialPort"))
-		return engineConfiguration->useSerialPort;
 	if (strEqualCaseInsensitive(name, "useStepperIdle"))
 		return engineConfiguration->useStepperIdle;
 	if (strEqualCaseInsensitive(name, "enabledStep1Limiter"))
@@ -1282,11 +1280,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "useSerialPort"))
-	{
-		engineConfiguration->useSerialPort = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useStepperIdle"))
