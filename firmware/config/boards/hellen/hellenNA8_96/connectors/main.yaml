@@ -113,6 +113,7 @@ pins:
     function: Rear O2 Sensor Signal
         
   - pin: 2F
+# H144_IN_TPS
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 2F - TPS
@@ -153,6 +154,7 @@ pins:
     function: GND
     
   - pin: int_map
+# H144_IN_MAP3
     id: EFI_ADC_2
     class: analog_inputs
     ts_name: intMAP

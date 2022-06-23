@@ -149,12 +149,7 @@ void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
+	setHellenSdCardSpi2();
 
 	setHellen128ETBConfig();
 

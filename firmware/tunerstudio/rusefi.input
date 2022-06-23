@@ -3722,6 +3722,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Disconnect all controllers you don't want to set!"
 		commandButton = "Set Index 0",     cmd_set_wideband_idx_0
 		commandButton = "Set Index 1",     cmd_set_wideband_idx_1
+		field = "Force O2 sensor heating", forceO2Heating
 
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"

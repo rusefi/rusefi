@@ -67,11 +67,12 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[1] = H144_IN_CRANK;
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3;
+    engineConfiguration->map.sensor.type = MT_MPXH6400;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -87,12 +88,7 @@ void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
