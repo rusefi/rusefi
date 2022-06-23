@@ -72,6 +72,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3;
+    engineConfiguration->map.sensor.type = MT_MPXH6400;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
