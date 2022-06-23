@@ -101,15 +101,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *

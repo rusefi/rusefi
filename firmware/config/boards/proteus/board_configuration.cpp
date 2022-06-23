@@ -154,15 +154,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
