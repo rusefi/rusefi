@@ -18,8 +18,9 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 	return afrWrapper.getLambda();
 });
 
-#if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
+
+#if EFI_CAN_SUPPORT
 static AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
