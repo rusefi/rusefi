@@ -25,7 +25,7 @@ void setMiataNA6_MAP_MRE();
  * set engine_type 20
  */
 void setMiata94_MAP_MRE();
-
+void miataNAcommonEngineSettings();
 
 /**
  * set engine_type 34
