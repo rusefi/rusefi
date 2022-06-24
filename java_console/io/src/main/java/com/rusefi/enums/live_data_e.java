@@ -22,4 +22,5 @@ public enum live_data_e {
 	LDS_idle_state,
 	LDS_ignition_state,
 	LDS_electronic_throttle,
+	LDS_wideband_state,
 }

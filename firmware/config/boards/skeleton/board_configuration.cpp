@@ -22,7 +22,6 @@
  * firmware/controllers/algo/engine_configuration.cpp
  *  void setBoardDefaultConfiguration();
  *  void setPinConfigurationOverrides();
- *  void setSerialConfigurationOverrides();
  *
  * Future: Clean up the distinction between these functions.
  */
@@ -108,15 +107,6 @@ static void setupDefaultSensorInputs() {
 }
 
 // Future: configure USART3 for LIN bus and UART4 for console
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration overrides.
  *

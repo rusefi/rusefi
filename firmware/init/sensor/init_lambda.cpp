@@ -3,6 +3,7 @@
 #include "init.h"
 #include "adc_subscription.h"
 #include "function_pointer_sensor.h"
+#include "live_data.h"
 
 struct GetAfrWrapper {
 	float getLambda() {
@@ -17,11 +18,24 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 	return afrWrapper.getLambda();
 });
 
-#if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
+
+#if EFI_CAN_SUPPORT
 static AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
+
+template <>
+const wideband_state_s* getLiveDataAddr(size_t idx) {
+#if EFI_CAN_SUPPORT
+	switch (idx) {
+		case 0: return &aem1;
+		case 1: return &aem2;
+	}
+#endif
+
+	return nullptr;
+}
 
 void initLambda() {
 

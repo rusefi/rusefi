@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jun 23 19:31:57 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jun 24 00:18:17 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -444,6 +444,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_37 = 37;
 	public static final int debug_mode_e_DBG_38 = 38;
 	public static final int debug_mode_e_DBG_43 = 43;
+	public static final int debug_mode_e_DBG_46 = 46;
 	public static final int debug_mode_e_DBG_8 = 8;
 	public static final int debug_mode_e_DBG_9 = 9;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS = 21;
@@ -466,7 +467,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_LUA = 48;
 	public static final int debug_mode_e_DBG_MAP = 27;
 	public static final int debug_mode_e_DBG_METRICS = 28;
-	public static final int debug_mode_e_DBG_RUSEFI_WIDEBAND = 46;
 	public static final int debug_mode_e_DBG_SD_CARD = 13;
 	public static final int debug_mode_e_DBG_SOFT_SPARK_CUT = 6;
 	public static final int debug_mode_e_DBG_SR5_PROTOCOL = 14;
@@ -2360,10 +2360,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.23.all.3298929990";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.24.all.2759818183";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1024;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2404,6 +2404,7 @@ public class Fields {
 	public static final int unused4080_offset = 3029;
 	public static final int unused460_offset = 460;
 	public static final int unused688_offset = 688;
+	public static final int unused744b8_offset = 744;
 	public static final int unused_1484_bit_25_offset = 1352;
 	public static final int unused_1484_bit_26_offset = 1352;
 	public static final int unused_1484_bit_27_offset = 1352;
@@ -2463,7 +2464,6 @@ public class Fields {
 	public static final int useSeparateAdvanceForIdle_offset = 1352;
 	public static final int useSeparateIdleTablesForCrankingTaper_offset = 100;
 	public static final int useSeparateVeForIdle_offset = 1352;
-	public static final int useSerialPort_offset = 744;
 	public static final int useStepperIdle_offset = 744;
 	public static final int useTLE8888_cranking_hack_offset = 100;
 	public static final int useTLE8888_stepper_offset = 100;
@@ -2854,7 +2854,7 @@ public class Fields {
 	public static final Field ISENGINECONTROLENABLED = Field.create("ISENGINECONTROLENABLED", 744, FieldType.BIT, 5);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 744, FieldType.BIT, 6);
 	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 744, FieldType.BIT, 7);
-	public static final Field USESERIALPORT = Field.create("USESERIALPORT", 744, FieldType.BIT, 8);
+	public static final Field UNUSED744B8 = Field.create("UNUSED744B8", 744, FieldType.BIT, 8);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 744, FieldType.BIT, 9);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 744, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
@@ -3275,7 +3275,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1572, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1576, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 1580, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
+	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 1584, FieldType.INT8, debug_mode_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_1585 = Field.create("ALIGNMENTFILL_AT_1585", 1585, FieldType.INT8).setScale(1.0);
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 1588, FieldType.INT).setScale(1.0);
@@ -4224,7 +4224,7 @@ public class Fields {
 	ISENGINECONTROLENABLED,
 	ISHIP9011ENABLED,
 	ISVERBOSEALTERNATOR,
-	USESERIALPORT,
+	UNUSED744B8,
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,
 	USETPICADVANCEDMODE,

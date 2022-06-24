@@ -92,7 +92,7 @@ void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 
-	setHellenSdCardSpi3();
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
@@ -100,15 +100,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
-
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
 
 /**
  * @brief   Board-specific configuration defaults.
