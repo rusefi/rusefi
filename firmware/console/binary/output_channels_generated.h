@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat May 14 12:18:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -825,547 +825,543 @@ struct output_channels_s {
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
 	/**
-	deg C
+	%
 	 * offset 320
-	 */
-	uint16_t wbTemperature[2];
-	/**
-	%
-	 * offset 324
-	 */
-	uint8_t wbHeaterDuty[2];
-	/**
-	%
-	 * offset 326
 	 */
 	scaled_channel<int16_t, 100, 1> tps1Split = (int16_t)0;
 	/**
 	%
-	 * offset 328
+	 * offset 322
 	 */
 	scaled_channel<int16_t, 100, 1> tps2Split = (int16_t)0;
 	/**
 	%
-	 * offset 330
+	 * offset 324
 	 */
 	scaled_channel<int16_t, 100, 1> tps12Split = (int16_t)0;
 	/**
 	%
-	 * offset 332
+	 * offset 326
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
 	 * "DI: Pump Angle"
 	deg
-	 * offset 334
+	 * offset 328
 	 */
 	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_TARGET@@
 	kPa
-	 * offset 336
+	 * offset 330
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
 	 * "Spark Cut Code"
 	code
-	 * offset 338
+	 * offset 332
 	 */
 	scaled_channel<int8_t, 1, 1> sparkCutReason = (int8_t)0;
 	/**
 	 * "Fuel Cut Code"
 	code
-	 * offset 339
+	 * offset 333
 	 */
 	scaled_channel<int8_t, 1, 1> fuelCutReason = (int8_t)0;
 	/**
+	 * need 4 byte alignment
+	units
+	 * offset 334
+	 */
+	uint8_t alignmentFill_at_334[2];
+	/**
 	 * "DI: fuel_requested_percent"
 	v
-	 * offset 340
+	 * offset 336
 	 */
 	float fuel_requested_percent = (float)0;
 	/**
 	 * "DI: fuel_requested_percent_pi"
 	v
-	 * offset 344
+	 * offset 340
 	 */
 	float fuel_requested_percent_pi = (float)0;
 	/**
 	 * "DI: m_I_sum_percent"
 	v
-	 * offset 348
+	 * offset 344
 	 */
 	float m_I_sum_percent = (float)0;
 	/**
 	 * "DI: m_pressureTarget_kPa"
 	v
-	 * offset 352
+	 * offset 348
 	 */
 	float m_pressureTarget_kPa = (float)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
 	kg/h
-	 * offset 356
+	 * offset 352
 	 */
 	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
 	/**
 	rpm
-	 * offset 358
+	 * offset 354
 	 */
 	uint16_t instantRpm = (uint16_t)0;
 	/**
 	 * "DI: next start"
 	v
-	 * offset 360
+	 * offset 356
 	 */
 	float di_nextStart = (float)0;
 	/**
 	counter
-	 * offset 364
+	 * offset 360
 	 */
 	uint16_t systemEventReuse = (uint16_t)0;
 	/**
 	V
-	 * offset 366
+	 * offset 362
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
 	/**
 	V
-	 * offset 368
+	 * offset 364
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
 	/**
 	%
-	 * offset 370
+	 * offset 366
 	 */
 	uint8_t tpsAccelFrom = (uint8_t)0;
 	/**
 	%
-	 * offset 371
+	 * offset 367
 	 */
 	uint8_t tpsAccelTo = (uint8_t)0;
 	/**
-	 * offset 372
+	 * offset 368
 	 */
 	scaled_channel<float, 1, 1> calibrationValue2 = (float)0;
 	/**
-	offset 376 bit 0 */
+	offset 372 bit 0 */
 	bool isMainRelayOn : 1 {};
 	/**
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 376 bit 1 */
+	offset 372 bit 1 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 376 bit 2 */
-	bool unusedBit_182_2 : 1 {};
+	offset 372 bit 2 */
+	bool unusedBit_181_2 : 1 {};
 	/**
-	offset 376 bit 3 */
-	bool unusedBit_182_3 : 1 {};
+	offset 372 bit 3 */
+	bool unusedBit_181_3 : 1 {};
 	/**
-	offset 376 bit 4 */
-	bool unusedBit_182_4 : 1 {};
+	offset 372 bit 4 */
+	bool unusedBit_181_4 : 1 {};
 	/**
-	offset 376 bit 5 */
-	bool unusedBit_182_5 : 1 {};
+	offset 372 bit 5 */
+	bool unusedBit_181_5 : 1 {};
 	/**
-	offset 376 bit 6 */
-	bool unusedBit_182_6 : 1 {};
+	offset 372 bit 6 */
+	bool unusedBit_181_6 : 1 {};
 	/**
-	offset 376 bit 7 */
-	bool unusedBit_182_7 : 1 {};
+	offset 372 bit 7 */
+	bool unusedBit_181_7 : 1 {};
 	/**
-	offset 376 bit 8 */
-	bool unusedBit_182_8 : 1 {};
+	offset 372 bit 8 */
+	bool unusedBit_181_8 : 1 {};
 	/**
-	offset 376 bit 9 */
-	bool unusedBit_182_9 : 1 {};
+	offset 372 bit 9 */
+	bool unusedBit_181_9 : 1 {};
 	/**
-	offset 376 bit 10 */
-	bool unusedBit_182_10 : 1 {};
+	offset 372 bit 10 */
+	bool unusedBit_181_10 : 1 {};
 	/**
-	offset 376 bit 11 */
-	bool unusedBit_182_11 : 1 {};
+	offset 372 bit 11 */
+	bool unusedBit_181_11 : 1 {};
 	/**
-	offset 376 bit 12 */
-	bool unusedBit_182_12 : 1 {};
+	offset 372 bit 12 */
+	bool unusedBit_181_12 : 1 {};
 	/**
-	offset 376 bit 13 */
-	bool unusedBit_182_13 : 1 {};
+	offset 372 bit 13 */
+	bool unusedBit_181_13 : 1 {};
 	/**
-	offset 376 bit 14 */
-	bool unusedBit_182_14 : 1 {};
+	offset 372 bit 14 */
+	bool unusedBit_181_14 : 1 {};
 	/**
-	offset 376 bit 15 */
-	bool unusedBit_182_15 : 1 {};
+	offset 372 bit 15 */
+	bool unusedBit_181_15 : 1 {};
 	/**
-	offset 376 bit 16 */
-	bool unusedBit_182_16 : 1 {};
+	offset 372 bit 16 */
+	bool unusedBit_181_16 : 1 {};
 	/**
-	offset 376 bit 17 */
-	bool unusedBit_182_17 : 1 {};
+	offset 372 bit 17 */
+	bool unusedBit_181_17 : 1 {};
 	/**
-	offset 376 bit 18 */
-	bool unusedBit_182_18 : 1 {};
+	offset 372 bit 18 */
+	bool unusedBit_181_18 : 1 {};
 	/**
-	offset 376 bit 19 */
-	bool unusedBit_182_19 : 1 {};
+	offset 372 bit 19 */
+	bool unusedBit_181_19 : 1 {};
 	/**
-	offset 376 bit 20 */
-	bool unusedBit_182_20 : 1 {};
+	offset 372 bit 20 */
+	bool unusedBit_181_20 : 1 {};
 	/**
-	offset 376 bit 21 */
-	bool unusedBit_182_21 : 1 {};
+	offset 372 bit 21 */
+	bool unusedBit_181_21 : 1 {};
 	/**
-	offset 376 bit 22 */
-	bool unusedBit_182_22 : 1 {};
+	offset 372 bit 22 */
+	bool unusedBit_181_22 : 1 {};
 	/**
-	offset 376 bit 23 */
-	bool unusedBit_182_23 : 1 {};
+	offset 372 bit 23 */
+	bool unusedBit_181_23 : 1 {};
 	/**
-	offset 376 bit 24 */
-	bool unusedBit_182_24 : 1 {};
+	offset 372 bit 24 */
+	bool unusedBit_181_24 : 1 {};
 	/**
-	offset 376 bit 25 */
-	bool unusedBit_182_25 : 1 {};
+	offset 372 bit 25 */
+	bool unusedBit_181_25 : 1 {};
 	/**
-	offset 376 bit 26 */
-	bool unusedBit_182_26 : 1 {};
+	offset 372 bit 26 */
+	bool unusedBit_181_26 : 1 {};
 	/**
-	offset 376 bit 27 */
-	bool unusedBit_182_27 : 1 {};
+	offset 372 bit 27 */
+	bool unusedBit_181_27 : 1 {};
 	/**
-	offset 376 bit 28 */
-	bool unusedBit_182_28 : 1 {};
+	offset 372 bit 28 */
+	bool unusedBit_181_28 : 1 {};
 	/**
-	offset 376 bit 29 */
-	bool unusedBit_182_29 : 1 {};
+	offset 372 bit 29 */
+	bool unusedBit_181_29 : 1 {};
 	/**
-	offset 376 bit 30 */
-	bool unusedBit_182_30 : 1 {};
+	offset 372 bit 30 */
+	bool unusedBit_181_30 : 1 {};
 	/**
-	offset 376 bit 31 */
-	bool unusedBit_182_31 : 1 {};
+	offset 372 bit 31 */
+	bool unusedBit_181_31 : 1 {};
 	/**
 	count
-	 * offset 380
+	 * offset 376
 	 */
 	int luaInvocationCounter = (int)0;
 	/**
 	nt
-	 * offset 384
+	 * offset 380
 	 */
 	int luaLastCycleDuration = (int)0;
 	/**
 	count
-	 * offset 388
+	 * offset 384
 	 */
 	uint8_t testBenchIter = (uint8_t)0;
 	/**
-	 * offset 389
+	 * offset 385
 	 */
 	uint8_t unusedWat = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_TC_RATIO@@
 	value
-	 * offset 390
+	 * offset 386
 	 */
 	scaled_channel<uint16_t, 100, 1> tcRatio = (uint16_t)0;
 	/**
 	 * "S"
-	 * offset 392
+	 * offset 388
 	 */
 	float lastShiftTime = (float)0;
 	/**
-	 * offset 396
+	 * offset 392
 	 */
 	int vssEdgeCounter = (int)0;
 	/**
-	 * offset 400
+	 * offset 396
 	 */
 	int issEdgeCounter = (int)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_1@@
-	 * offset 404
+	 * offset 400
 	 */
 	scaled_channel<int16_t, 100, 1> auxLinear1 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_2@@
-	 * offset 406
+	 * offset 402
 	 */
 	scaled_channel<int16_t, 100, 1> auxLinear2 = (int16_t)0;
 	/**
-	offset 408 bit 0 */
+	offset 404 bit 0 */
 	bool launchSpeedCondition : 1 {};
 	/**
-	offset 408 bit 1 */
+	offset 404 bit 1 */
 	bool launchRpmCondition : 1 {};
 	/**
-	offset 408 bit 2 */
+	offset 404 bit 2 */
 	bool launchTpsCondition : 1 {};
 	/**
-	offset 408 bit 3 */
+	offset 404 bit 3 */
 	bool launchActivateSwitchCondition : 1 {};
 	/**
-	offset 408 bit 4 */
+	offset 404 bit 4 */
 	bool launchIsLaunchCondition : 1 {};
 	/**
-	offset 408 bit 5 */
+	offset 404 bit 5 */
 	bool launchCombinedConditions : 1 {};
 	/**
-	offset 408 bit 6 */
+	offset 404 bit 6 */
 	bool dfcoActive : 1 {};
 	/**
-	offset 408 bit 7 */
+	offset 404 bit 7 */
 	bool tpsAccelActive : 1 {};
 	/**
-	offset 408 bit 8 */
-	bool unusedBit_230_8 : 1 {};
+	offset 404 bit 8 */
+	bool unusedBit_229_8 : 1 {};
 	/**
-	offset 408 bit 9 */
-	bool unusedBit_230_9 : 1 {};
+	offset 404 bit 9 */
+	bool unusedBit_229_9 : 1 {};
 	/**
-	offset 408 bit 10 */
-	bool unusedBit_230_10 : 1 {};
+	offset 404 bit 10 */
+	bool unusedBit_229_10 : 1 {};
 	/**
-	offset 408 bit 11 */
-	bool unusedBit_230_11 : 1 {};
+	offset 404 bit 11 */
+	bool unusedBit_229_11 : 1 {};
 	/**
-	offset 408 bit 12 */
-	bool unusedBit_230_12 : 1 {};
+	offset 404 bit 12 */
+	bool unusedBit_229_12 : 1 {};
 	/**
-	offset 408 bit 13 */
-	bool unusedBit_230_13 : 1 {};
+	offset 404 bit 13 */
+	bool unusedBit_229_13 : 1 {};
 	/**
-	offset 408 bit 14 */
-	bool unusedBit_230_14 : 1 {};
+	offset 404 bit 14 */
+	bool unusedBit_229_14 : 1 {};
 	/**
-	offset 408 bit 15 */
-	bool unusedBit_230_15 : 1 {};
+	offset 404 bit 15 */
+	bool unusedBit_229_15 : 1 {};
 	/**
-	offset 408 bit 16 */
-	bool unusedBit_230_16 : 1 {};
+	offset 404 bit 16 */
+	bool unusedBit_229_16 : 1 {};
 	/**
-	offset 408 bit 17 */
-	bool unusedBit_230_17 : 1 {};
+	offset 404 bit 17 */
+	bool unusedBit_229_17 : 1 {};
 	/**
-	offset 408 bit 18 */
-	bool unusedBit_230_18 : 1 {};
+	offset 404 bit 18 */
+	bool unusedBit_229_18 : 1 {};
 	/**
-	offset 408 bit 19 */
-	bool unusedBit_230_19 : 1 {};
+	offset 404 bit 19 */
+	bool unusedBit_229_19 : 1 {};
 	/**
-	offset 408 bit 20 */
-	bool unusedBit_230_20 : 1 {};
+	offset 404 bit 20 */
+	bool unusedBit_229_20 : 1 {};
 	/**
-	offset 408 bit 21 */
-	bool unusedBit_230_21 : 1 {};
+	offset 404 bit 21 */
+	bool unusedBit_229_21 : 1 {};
 	/**
-	offset 408 bit 22 */
-	bool unusedBit_230_22 : 1 {};
+	offset 404 bit 22 */
+	bool unusedBit_229_22 : 1 {};
 	/**
-	offset 408 bit 23 */
-	bool unusedBit_230_23 : 1 {};
+	offset 404 bit 23 */
+	bool unusedBit_229_23 : 1 {};
 	/**
-	offset 408 bit 24 */
-	bool unusedBit_230_24 : 1 {};
+	offset 404 bit 24 */
+	bool unusedBit_229_24 : 1 {};
 	/**
-	offset 408 bit 25 */
-	bool unusedBit_230_25 : 1 {};
+	offset 404 bit 25 */
+	bool unusedBit_229_25 : 1 {};
 	/**
-	offset 408 bit 26 */
-	bool unusedBit_230_26 : 1 {};
+	offset 404 bit 26 */
+	bool unusedBit_229_26 : 1 {};
 	/**
-	offset 408 bit 27 */
-	bool unusedBit_230_27 : 1 {};
+	offset 404 bit 27 */
+	bool unusedBit_229_27 : 1 {};
 	/**
-	offset 408 bit 28 */
-	bool unusedBit_230_28 : 1 {};
+	offset 404 bit 28 */
+	bool unusedBit_229_28 : 1 {};
 	/**
-	offset 408 bit 29 */
-	bool unusedBit_230_29 : 1 {};
+	offset 404 bit 29 */
+	bool unusedBit_229_29 : 1 {};
 	/**
-	offset 408 bit 30 */
-	bool unusedBit_230_30 : 1 {};
+	offset 404 bit 30 */
+	bool unusedBit_229_30 : 1 {};
 	/**
-	offset 408 bit 31 */
-	bool unusedBit_230_31 : 1 {};
+	offset 404 bit 31 */
+	bool unusedBit_229_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_BOOST_OUTPUT@@
 	%
-	 * offset 412
+	 * offset 408
 	 */
 	scaled_channel<uint8_t, 2, 1> boostControllerOutput = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_OPEN_LOOP@@
 	%
-	 * offset 413
+	 * offset 409
 	 */
 	scaled_channel<uint8_t, 2, 1> boostControllerOpenLoopPart = (uint8_t)0;
 	/**
 	kPa
-	 * offset 414
+	 * offset 410
 	 */
 	scaled_channel<uint16_t, 10, 1> fallbackMap = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_BOOST_CLOSED_LOOP@@
 	%
-	 * offset 416
+	 * offset 412
 	 */
 	scaled_channel<int8_t, 2, 1> boostControllerClosedLoopPart = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_DETECTED_GEAR@@
-	 * offset 417
+	 * offset 413
 	 */
 	uint8_t detectedGear = (uint8_t)0;
 	/**
 	deg
-	 * offset 418
+	 * offset 414
 	 */
 	scaled_channel<int16_t, 100, 1> timingCltCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 420
+	 * offset 416
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 422
+	 * offset 418
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 424
+	 * offset 420
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
-	 * offset 426
+	 * offset 422
 	 */
 	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
 	/**
-	 * offset 428
+	 * offset 424
 	 */
 	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
 	/**
-	 * offset 430
+	 * offset 426
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 432
+	 * offset 428
 	 */
 	uint16_t maxTriggerReentrant = (uint16_t)0;
 	/**
-	 * offset 434
+	 * offset 430
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 436
+	 * offset 432
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 438
+	 * offset 434
 	 */
-	uint8_t alignmentFill_at_438[2];
+	uint8_t alignmentFill_at_434[2];
 	/**
-	 * offset 440
+	 * offset 436
 	 */
 	int triggerPrimaryFall = (int)0;
 	/**
-	 * offset 444
+	 * offset 440
 	 */
 	int triggerPrimaryRise = (int)0;
 	/**
-	 * offset 448
+	 * offset 444
 	 */
 	int triggerSecondaryFall = (int)0;
 	/**
-	 * offset 452
+	 * offset 448
 	 */
 	int triggerSecondaryRise = (int)0;
 	/**
-	 * offset 456
+	 * offset 452
 	 */
 	int triggerVvtFall = (int)0;
 	/**
-	 * offset 460
+	 * offset 456
 	 */
 	int triggerVvtRise = (int)0;
 	/**
-	 * offset 464
+	 * offset 460
 	 */
 	uint8_t startStopStateToggleCounter = (uint8_t)0;
 	/**
-	 * offset 465
+	 * offset 461
 	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 466
+	 * offset 462
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
-	 * offset 467
+	 * offset 463
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 468
+	 * offset 464
 	 */
 	float injectorFlowPressureRatio = (float)0;
 	/**
 	kPa
-	 * offset 472
+	 * offset 468
 	 */
 	float injectorFlowPressureDelta = (float)0;
 	/**
-	 * offset 476
+	 * offset 472
 	 */
 	float etbIntegralError = (float)0;
 	/**
 	%
-	 * offset 480
+	 * offset 476
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	 * offset 484
+	 * offset 480
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 496
+	 * offset 492
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 508
+	 * offset 504
 	 */
 	pid_status_s etbStatus;
 	/**
-	 * offset 520
+	 * offset 516
 	 */
 	pid_status_s boostStatus;
 	/**
 	 * "aux speed 1"
 	s
-	 * offset 532
+	 * offset 528
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * "aux speed 2"
 	s
-	 * offset 534
+	 * offset 530
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 536
+	 * offset 532
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
-	 * offset 538
+	 * offset 534
 	 */
 	uint8_t unusedAtTheEnd[78];
 };
-static_assert(sizeof(output_channels_s) == 616);
+static_assert(sizeof(output_channels_s) == 612);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat May 14 12:18:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
