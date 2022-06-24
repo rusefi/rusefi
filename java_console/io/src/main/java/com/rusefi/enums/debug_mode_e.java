@@ -50,7 +50,7 @@ public enum debug_mode_e {
 	DBG_43,
 	DBG_DYNO_VIEW,
 	DBG_LOGIC_ANALYZER,
-	DBG_RUSEFI_WIDEBAND,
+	DBG_46,
 	DBG_TCU,
 	DBG_LUA,
 	DBG_VVT_2_PID,
