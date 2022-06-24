@@ -718,12 +718,24 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
 #endif
 
+		// TODO: is this logic to compute next trigger tooth angle correct?
+		auto nextToothIndex = triggerIndexForListeners;
+		float nextPhase = 0;
+
+		do {
+			// I don't love this.
+			nextToothIndex = (nextToothIndex + 1) % engine->engineCycleEventCount;
+			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
+			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+		} while (nextPhase == currentPhase);
+
 		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp);
+		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
 
 		// Decode the MAP based "cam" sensor
 		decodeMapCam(timestamp, currentPhase);
 	} else {
+		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0);
 	}
 }

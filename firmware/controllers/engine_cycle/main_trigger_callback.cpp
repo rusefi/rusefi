@@ -156,11 +156,30 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
-void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
-	uint32_t eventIndex = injectionStart.triggerEventIndex;
-// right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
-//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < engine->triggerShape.getLength(), "handleFuel/event sch index");
-	if (eventIndex != trgEventIndex) {
+static bool isPhaseInRange(float test, float current, float next) {
+	bool afterCurrent = test >= current;
+	bool beforeNext = test < next;
+
+	if (next > current) {
+		// we're not near the end of the cycle, comparison is simple
+		// 0            |------------------------|       720
+		//            next                    current
+		return afterCurrent && beforeNext;
+	} else {
+		// we're near the end of the cycle so we have to check the wraparound
+		// 0 -----------|                        |------ 720
+		//            next                    current
+		// Check whether test is after current (ie, between current tooth and end of cycle)
+		// or if test if before next (ie, between start of cycle and next tooth)
+		return afterCurrent || beforeNext;
+	}
+}
+
+void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+	auto eventAngle = injectionStartAngle;
+
+	// Determine whether our angle is going to happen before (or near) the next tooth
+	if (!isPhaseInRange(eventAngle, currentPhase, nextPhase)) {
 		return;
 	}
 
@@ -174,8 +193,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
-		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
-		  eventIndex,
+		printf("fuel injectionDuration=%.2fms adjusted=%.2fms\n",
 		  engine->injectionDuration,
 		  injectionDuration);
 	}
@@ -261,12 +279,17 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		endAction = { &turnInjectionPinLow, this };
 	}
 
-	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, injectionStart.angleOffsetFromTriggerEvent, startAction);
+	float angleFromNow = eventAngle - currentPhase;
+	if (angleFromNow < 0) {
+		angleFromNow += engine->engineCycle;
+	}
+
+	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
 	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
-		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", injectionStart.angleOffsetFromTriggerEvent, NT2US(startTime - nowNt), injectionDuration);
+		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", angleFromNow, NT2US(startTime - nowNt), injectionDuration);
 #endif
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("handleFuel pin=%s eventIndex %d duration=%.2fms %d", outputs[0]->name,
@@ -278,7 +301,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt) {
+static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
@@ -307,7 +330,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	fs->onTriggerTooth(trgEventIndex, rpm, nowNt);
+	fs->onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
 }
 
 #if EFI_PROD_CODE
@@ -342,7 +365,7 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 #if ! HW_CHECK_MODE
@@ -404,7 +427,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp);
+	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, trgEventIndex, edgeTimestamp);

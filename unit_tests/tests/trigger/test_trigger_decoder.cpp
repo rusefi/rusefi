@@ -310,7 +310,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 4.095, ie0->injectionStart.angleOffsetFromTriggerEvent);
+	assertEqualsM("injection angle", 499.095, ie0->injectionStartAngle);
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
@@ -490,9 +490,8 @@ TEST(trigger, testTriggerDecoder) {
 }
 
 static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
-	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
-	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);
-	assertEqualsM4(msg, " event offset", angleOffset, ev->injectionStart.angleOffsetFromTriggerEvent);
+	EXPECT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
+	EXPECT_NEAR_M4(angleOffset, ev->injectionStartAngle) << msg << "inj index";
 }
 
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
@@ -547,8 +546,8 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	FuelSchedule * t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153);
-	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333);
+	assertInjectionEvent("#0", &t->elements[0], 0, 1, 153 + 360);
+	assertInjectionEvent("#1_i_@", &t->elements[1], 1, 1, 333 + 360);
 	assertInjectionEvent("#2@", &t->elements[2], 0, 0, 153);
 	assertInjectionEvent("inj#3@", &t->elements[3], 1, 0, 153 + 180);
 
@@ -623,8 +622,8 @@ static void setTestBug299(EngineTestHelper *eth) {
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
-	assertEqualsM4(msg, "inj#0", value0, enginePins.injectors[0].currentLogicValue);
-	assertEqualsM4(msg, "inj#1", value1, enginePins.injectors[1].currentLogicValue);
+	EXPECT_EQ(value0, enginePins.injectors[0].currentLogicValue);
+	EXPECT_EQ(value1, enginePins.injectors[1].currentLogicValue);
 }
 
 static void setArray(float* p, size_t count, float value) {
@@ -716,7 +715,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	t = &engine->injectionEvents;
 
 	assertInjectionEvent("#0", &t->elements[0], 0, 0, 315);
-	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 135);
+	assertInjectionEvent("#1__", &t->elements[1], 1, 1, 495);
 	assertInjectionEvent("inj#2", &t->elements[2], 0, 0, 153);
 	assertInjectionEvent("inj#3", &t->elements[3], 1, 0, 333);
 
@@ -803,10 +802,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 315);
-	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135);
-	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 315);
-	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 45 + 90);
+	assertInjectionEvent("#0#", &t->elements[0], 0, 0, 135 + 180);
+	assertInjectionEvent("#1#", &t->elements[1], 1, 1, 135 + 360);
+	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 135 + 540);
+	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 135);
 
 	engine->injectionDuration = 17.5;
 	// Injection duration of 17.5ms
@@ -849,8 +848,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	t = &engine->injectionEvents;
 
 	assertInjectionEvent("#00", &t->elements[0], 0, 0, 225); // 87.5 duty cycle
-	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45);
-	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225);
+	assertInjectionEvent("#10", &t->elements[1], 1, 1, 45  + 360);
+	assertInjectionEvent("#20", &t->elements[2], 0, 1, 225 + 360);
 	assertInjectionEvent("#30", &t->elements[3], 1, 0, 45);
 
 	 // todo: what's what? a mix of new something and old something?
@@ -903,8 +902,8 @@ TEST(big, testTwoWireBatch) {
 
 	FuelSchedule * t = &engine->injectionEvents;
 
-	assertInjectionEventBatch("#0", &t->elements[0],		0, 3, 1, 153);	// Cyl 1 and 4
-	assertInjectionEventBatch("#1_i_@", &t->elements[1],	2, 1, 1, 153 + 180);	// Cyl 3 and 2
+	assertInjectionEventBatch("#0", &t->elements[0],		0, 3, 1, 153 + 360);	// Cyl 1 and 4
+	assertInjectionEventBatch("#1_i_@", &t->elements[1],	2, 1, 1, 153 + 540);	// Cyl 3 and 2
 	assertInjectionEventBatch("#2@", &t->elements[2],		3, 0, 0, 153);	// Cyl 4 and 1
 	assertInjectionEventBatch("inj#3@", &t->elements[3],	1, 2, 0, 153 + 180);	// Cyl 2 and 3
 }
@@ -931,8 +930,8 @@ TEST(big, testSequential) {
 
 	FuelSchedule * t = &engine->injectionEvents;
 
-	assertInjectionEvent("#0", &t->elements[0],		0, 1, 126);	// Cyl 1
-	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 180);	// Cyl 3
+	assertInjectionEvent("#0", &t->elements[0],		0, 1, 126 + 360);	// Cyl 1
+	assertInjectionEvent("#1_i_@", &t->elements[1],	2, 1, 126 + 540);	// Cyl 3
 	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
 	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
 }
