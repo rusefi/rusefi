@@ -83,6 +83,7 @@ void TriggerDecoderBase::resetTriggerState() {
 
 void TriggerDecoderBase::setTriggerErrorState() {
 	m_timeSinceDecodeError.reset();
+	totalTriggerErrorCounter++;
 }
 
 void TriggerDecoderBase::resetCurrentCycleState() {
@@ -518,11 +519,8 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 #endif /* EFI_UNIT_TEST */
 
-		/**
-		 * For less important events we simply increment the index.
-		 */
-		nextTriggerEvent()
-		;
+		// For less important events we simply increment the index.
+		nextTriggerEvent();
 	} else {
 #if !EFI_PROD_CODE
 		if (printTriggerTrace) {
@@ -657,7 +655,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// so we clear the synchronized flag.
 			if (wasSynchronized && isDecodingError) {
 				setTriggerErrorState();
-				totalTriggerErrorCounter++;
 
 				// Something wrong, no longer synchronized
 				setShaftSynchronized(false);
@@ -670,13 +667,11 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			}
 
 			// this call would update duty cycle values
-			nextTriggerEvent()
-			;
+			nextTriggerEvent();
 
 			onShaftSynchronization(wasSynchronized, nowNt, triggerShape);
 		} else {	/* if (!isSynchronizationPoint) */
-			nextTriggerEvent()
-			;
+			nextTriggerEvent();
 		}
 
 		for (int i = triggerShape.gapTrackingLength; i > 0; i--) {
@@ -694,8 +689,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		if (Sensor::getOrZero(SensorType::Rpm) != 0) {
 			warning(CUSTOM_SYNC_ERROR, "sync error for %s: index #%d above total size %d", name, currentCycle.current_index, triggerShape.getSize());
 			setTriggerErrorState();
-
-			// TODO: should we increment totalTriggerErrorCounter here too?
 		}
 
 		onTriggerError();
