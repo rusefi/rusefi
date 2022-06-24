@@ -719,16 +719,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif
 
 		// TODO: is this logic to compute next trigger tooth angle correct?
-		auto nextToothIndex = triggerIndexForListeners + 1;
-		if (nextToothIndex >= engine->engineCycleEventCount) {
-			nextToothIndex -= engine->engineCycleEventCount;
-		}
-
+		auto nextToothIndex = triggerIndexForListeners;
 		float nextPhase = 0;
 
 		do {
 			// I don't love this.
-			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex++] - tdcPosition();
+			nextToothIndex = (nextToothIndex + 1) % engine->engineCycleEventCount;
+			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentPhase);
 
