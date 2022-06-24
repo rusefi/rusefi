@@ -13,7 +13,7 @@
 
 void initMainEventListener();
 
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp);
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, float currentPhase, float nextPhase);
 bool noFiringUntilVvtSync(vvt_mode_e vvtMode);
 
 void startSimultaniousInjection(void* = nullptr);
