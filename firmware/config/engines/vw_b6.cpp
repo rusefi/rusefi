@@ -159,9 +159,11 @@ void setProteusVwPassatB6() {
 
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
+MOTOR_1 = 0x280
 TCU_1 = 0x440
 TCU_2 = 0x540
 BRAKE_2 = 0x5A0
+MOTOR_7 = 0x588
 
 canRxAdd(AIRBAG)
 canRxAdd(TCU_1)
@@ -173,31 +175,57 @@ function setTwoBytes(data, offset, value)
 	data[offset + 2] = (value >> 8) % 255
 end
 
-shallSleep = Timer.new();
+shallSleep = Timer.new()
 
 -- we want to turn on with hardware switch while ignition key is off
-hadIgnitionEvent = false;
+hadIgnitionEvent = false
 
 function onCanRx(bus, id, dlc, data)
 	id11 = id % 2048
 	if id11 == AIRBAG then
 		-- looks like we have ignition key do not sleep!
-		shallSleep:reset();
-		hadIgnitionEvent = true;
+		shallSleep : reset()
+		hadIgnitionEvent = true
 	else
-    	print('got CAN id=' ..id ..' dlc=' ..dlc)
+		print('got CAN id=' ..id ..' dlc=' ..dlc)
 
 
 	end
 end
 
-function onTick()
-
-   if hadIgnitionEvent and shallSleep:getElapsedSeconds() > 3 then
-     -- looks like ignition key was removed
-     mcu_standby()
-   end
+function setTwoBytes(data, offset, value)
+	value = math.floor(value)
+	data[offset + 2] = value >> 8
+	data[offset + 1] = value & 0xff
 end
+
+function xorChecksum(data)
+	return data[1] ~ data[2] ~ data[3] ~ data[4] ~ data[5] ~ data[6] ~ data[7]
+end
+
+canMotor1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotor7 = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+setTickRate(100)
+
+
+function onTick()
+	counter = (counter + 1) % 16
+
+	rpm = getSensor("RPM") or 0
+	clt = = getSensor("CLT") or 0
+
+	setTwoBytes(canMotor1, 2, 4 * rpm)
+	txCan(1, MOTOR_1, 0, canMotor1)
+
+	txCan(1, MOTOR_7, 0, canMotor7)
+
+	if hadIgnitionEvent and shallSleep : getElapsedSeconds() > 3 then
+		-- looks like ignition key was removed
+		mcu_standby()
+	end
+end
+
 
 )", efi::size(config->luaScript));
 
