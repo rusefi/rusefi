@@ -29,7 +29,7 @@ static void commonNA8() {
 	engineConfiguration->idleRpmPid.iFactor = 0.3;
 	engineConfiguration->idle_derivativeFilterLoss = 0.08;
 	engineConfiguration->idle_antiwindupFreq = 0.03;
-	engineConfiguration->idleRpmPid.dFactor = 0.02;
+	engineConfiguration->idleRpmPid.dFactor = 0.002;
 	engineConfiguration->idleRpmPid.offset = 9;
 	engineConfiguration->idleRpmPid.minValue = 76;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
@@ -38,6 +38,7 @@ static void commonNA8() {
 	engineConfiguration->idlePidRpmDeadZone = 100;
 	engineConfiguration->idlePidRpmUpperLimit = 350;
 
+	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->engineChartSize = 300;
 	engineConfiguration->silentTriggerError = true;
@@ -46,6 +47,9 @@ static void commonNA8() {
 	engineConfiguration->crankingIACposition = 36;
 	engineConfiguration->afterCrankingIACtaperDuration = 189;
 
+	engineConfiguration->crankingTimingAngle = 6;
+	engineConfiguration->ignitionDwellForCrankingMs = 4;
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
 	engineConfiguration->specs.displacement = 1.839;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
@@ -82,4 +86,5 @@ void setFrankensoMazdaMiataNA8Configuration() {
 void setHellenMiata96() {
 	miataNAcommonEngineSettings();
 	commonNA8();
+    engineConfiguration->map.sensor.type = MT_MPXH6400;
 }

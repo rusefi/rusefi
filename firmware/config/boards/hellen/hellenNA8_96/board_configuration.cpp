@@ -72,7 +72,6 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP3;
-    engineConfiguration->map.sensor.type = MT_MPXH6400;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -123,9 +122,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
     engineConfiguration->tachOutputPin = H144_OUT_PWM1;
-	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
 	engineConfiguration->fan2Pin = H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
