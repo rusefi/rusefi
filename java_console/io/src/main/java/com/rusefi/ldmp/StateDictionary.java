@@ -1,6 +1,5 @@
 package com.rusefi.ldmp;
 
-import com.rusefi.OutputChannel;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
@@ -48,6 +47,20 @@ public enum StateDictionary {
             missing.removeAll(map.keySet());
             throw new IllegalStateException("Some live_data_e does not have values: " + missing);
         }
+    }
+
+    static int getSize(Field[] values) {
+        Field last = values[values.length - 1];
+        return last.getOffset() + last.getType().getStorageSize();
+    }
+
+    public int getOffset(live_data_e live_data_e) {
+        int result = 0;
+        for (live_data_e index : live_data_e.values()) {
+            if (index.ordinal() < live_data_e.ordinal())
+                result += getSize(getFields(index));
+        }
+        return result;
     }
 
     private void register(live_data_e ldsIndex, Field[] values, String fileName) {

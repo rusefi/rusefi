@@ -19,12 +19,23 @@ public class SensorCentral implements ISensorCentral {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
 
     private final Map<Sensor, List<SensorListener>> allListeners = new EnumMap<>(Sensor.class);
+    private byte[] response;
 
-    public static ISensorCentral getInstance() {
+    public static SensorCentral getInstance() {
         return INSTANCE;
     }
 
     private SensorCentral() {
+    }
+
+    @Override
+    public void grabSensorValues(byte[] response) {
+        this.response = response;
+        ISensorCentral.super.grabSensorValues(response);
+    }
+
+    public byte[] getResponse() {
+        return response;
     }
 
     @Override
