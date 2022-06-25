@@ -161,7 +161,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->cylinderBore = 78;
 	engineConfiguration->knockBandCustom = 6.8;
 	engineConfiguration->vehicleWeight = 950;
-	engineConfiguration->totalGearsCount = 5;
+//	engineConfiguration->totalGearsCount = 5;
 
 	engineConfiguration->rpmHardLimit = 7200;
 	engineConfiguration->enableFan1WithAc = true;
