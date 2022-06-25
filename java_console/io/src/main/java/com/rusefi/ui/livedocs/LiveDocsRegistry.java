@@ -2,7 +2,7 @@ package com.rusefi.ui.livedocs;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public enum LiveDocsRegistry {
     }
 
     @NotNull
-    public static LiveDataProvider getLiveDataProvider(BinaryProtocol binaryProtocol) {
+    public static LiveDataProvider getLiveDataProvider() {
         return context -> {
             Field[] values = StateDictionary.INSTANCE.getFields(context);
             int size = Field.getStructureSize(values);
@@ -54,13 +54,12 @@ public enum LiveDocsRegistry {
             putShort(packet, 0, swap16(context.ordinal())); // offset
             putShort(packet, 2, swap16(size));
 
-            byte[] responseWithCode = binaryProtocol.executeCommand(Fields.TS_GET_STRUCT, packet, "get LiveDoc");
-            if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
-                return null;
+            int structOffset = StateDictionary.INSTANCE.getOffset(context);
+            byte[] overallOutputs = SensorCentral.getInstance().getResponse();
 
             byte[] response = new byte[size];
 
-            System.arraycopy(responseWithCode, 1, response, 0, size);
+            System.arraycopy(overallOutputs, structOffset, overallOutputs, 0, size);
             return response;
         };
     }
