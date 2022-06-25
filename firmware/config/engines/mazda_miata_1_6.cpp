@@ -157,7 +157,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;
-	engineConfiguration->cranking.rpm = 450;
+	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->cylinderBore = 78;
 	engineConfiguration->knockBandCustom = 6.8;
 	engineConfiguration->vehicleWeight = 950;
@@ -212,7 +212,7 @@ void miataNAcommonEngineSettings() {
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	engineConfiguration->cranking.baseFuel = 24;
+	engineConfiguration->cranking.baseFuel = 27.5;
 	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
 	config->crankingFuelCoef[1] = 2.2;
@@ -236,8 +236,8 @@ void miataNAcommonEngineSettings() {
 	strcpy(engineConfiguration->engineCode, "NA6");
 
 	// my car was originally a manual so proper TPS
-	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMax = 656; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->injectionMode = IM_BATCH;
 }

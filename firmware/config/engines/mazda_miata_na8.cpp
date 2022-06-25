@@ -19,6 +19,7 @@ static void commonNA8() {
 	 * 94-97 (tan) - #195500-2180
 	 */
 	engineConfiguration->injector.flow = 265;
+	engineConfiguration->useInstantRpmForIdle = true;
 
 	engineConfiguration->specs.displacement = 1.839;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
