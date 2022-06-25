@@ -177,7 +177,7 @@ void miataNAcommonEngineSettings() {
 
 	engineConfiguration->silentTriggerError = false;
 
-	engineConfiguration->manIdlePosition = 34;
+	engineConfiguration->manIdlePosition = 20;
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
@@ -185,7 +185,7 @@ void miataNAcommonEngineSettings() {
 	setMafDecodingBins();
 	miataNA_setIgnitionTable();
 
-	engineConfiguration->idle.solenoidFrequency = 160;
+	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setMapVeTable();

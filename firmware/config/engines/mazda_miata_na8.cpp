@@ -20,6 +20,32 @@ static void commonNA8() {
 	 */
 	engineConfiguration->injector.flow = 265;
 	engineConfiguration->useInstantRpmForIdle = true;
+	engineConfiguration->cylinderBore = 83;
+	engineConfiguration->knockBandCustom = 13.81;
+
+	engineConfiguration->idleMode = IM_AUTO;
+	// below 20% this valve seems to be opening for fail-safe idle air
+	engineConfiguration->idleRpmPid.pFactor = 0.0065;
+	engineConfiguration->idleRpmPid.iFactor = 0.3;
+	engineConfiguration->idle_derivativeFilterLoss = 0.08;
+	engineConfiguration->idle_antiwindupFreq = 0.03;
+	engineConfiguration->idleRpmPid.dFactor = 0.02;
+	engineConfiguration->idleRpmPid.offset = 9;
+	engineConfiguration->idleRpmPid.minValue = 76;
+	engineConfiguration->idlerpmpid_iTermMin = -15;
+	engineConfiguration->idlerpmpid_iTermMax = 30;
+	engineConfiguration->acIdleExtraOffset = 15;
+	engineConfiguration->idlePidRpmDeadZone = 100;
+	engineConfiguration->idlePidRpmUpperLimit = 350;
+
+	engineConfiguration->useIdleTimingPidControl = true;
+	engineConfiguration->engineChartSize = 300;
+	engineConfiguration->silentTriggerError = true;
+	engineConfiguration->wwaeTau = 0.1;
+	engineConfiguration->targetVBatt = 14.2;
+	engineConfiguration->crankingIACposition = 36;
+	engineConfiguration->afterCrankingIACtaperDuration = 189;
+
 
 	engineConfiguration->specs.displacement = 1.839;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
