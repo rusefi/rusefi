@@ -13,25 +13,15 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED 115200
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = Gpio::D8;
-	engineConfiguration->binarySerialRxPin = Gpio::D9;
-//	engineConfiguration->consoleSerialTxPin = Gpio::D8;
-//	engineConfiguration->consoleSerialRxPin = Gpio::D9;
-	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-}
-
-void setSdCardConfigurationOverrides() {
-}
-
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
 void setBoardDefaultConfiguration() {
-	setSerialConfigurationOverrides();
+	engineConfiguration->binarySerialTxPin = Gpio::D8;
+	engineConfiguration->binarySerialRxPin = Gpio::D9;
+	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
+	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 
 	engineConfiguration->runningLedPin = Gpio::B0; //green LED
 	engineConfiguration->warningLedPin = Gpio::Unassigned;

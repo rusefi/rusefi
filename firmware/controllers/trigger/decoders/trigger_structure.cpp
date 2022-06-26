@@ -684,7 +684,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaK_12_1(this);
 		break;
 
-	case UNUSED_12:
+	case TT_SUBARU_EZ30:
+		initializeSubaruEZ30(this);
+		break;
+
 	case UNUSED_13:
 	case UNUSED_21:
 	case UNUSED_34:

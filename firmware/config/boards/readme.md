@@ -26,3 +26,15 @@ New board procedure once you have new folder in this *boards* directory
 
 
 See also https://github.com/rusefi/rusefi/wiki/Hardware
+
+
+## FAQ
+
+# Q: how do I change Primary UART pins via TS?
+
+A: Primary UART, critical error LED pin and maybe a couple more of the most fundamental pins could NOT be chagned via TS. You would need another binary altogether - either another official binary or a custom binary.
+
+# Q: I need more info!
+
+A: please remember about https://github.com/rusefi/rusefi/wiki/Hardware#q-this-is-all-very-cool-but-you-guys-do-not-have-a-plugplay-for-my-trabant-i-think-i-will-go-and-make-a-new-rusefi-board-just-for-my-trabant
+

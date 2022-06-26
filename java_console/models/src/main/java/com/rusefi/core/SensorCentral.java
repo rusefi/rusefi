@@ -19,13 +19,23 @@ public class SensorCentral implements ISensorCentral {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
 
     private final Map<Sensor, List<SensorListener>> allListeners = new EnumMap<>(Sensor.class);
-    private SensorListener2 anySensorListener;
+    private byte[] response;
 
-    public static ISensorCentral getInstance() {
+    public static SensorCentral getInstance() {
         return INSTANCE;
     }
 
     private SensorCentral() {
+    }
+
+    @Override
+    public void grabSensorValues(byte[] response) {
+        this.response = response;
+        ISensorCentral.super.grabSensorValues(response);
+    }
+
+    public byte[] getResponse() {
+        return response;
     }
 
     @Override
@@ -41,24 +51,11 @@ public class SensorCentral implements ISensorCentral {
             listeners = allListeners.get(sensor);
         }
 
-        // todo: make this just a normal listener?
-        applyValueToTables(value, sensor, isUpdated);
-
         if (listeners == null)
             return isUpdated;
         for (SensorListener listener : listeners)
             listener.onSensorUpdate(value);
         return isUpdated;
-    }
-
-    private void applyValueToTables(double value, final Sensor sensor, boolean isUpdated) {
-        if (isUpdated && anySensorListener != null)
-            anySensorListener.onSensorUpdate(sensor, value);
-    }
-
-    @Override
-    public void setAnySensorListener(SensorListener2 anySensorListener) {
-        this.anySensorListener = anySensorListener;
     }
 
     @Override
@@ -92,9 +89,5 @@ public class SensorCentral implements ISensorCentral {
 
     public interface SensorListener {
         void onSensorUpdate(double value);
-    }
-
-    public interface SensorListener2 {
-        void onSensorUpdate(Sensor sensor, double value);
     }
 }

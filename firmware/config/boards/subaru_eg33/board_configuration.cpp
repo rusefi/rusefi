@@ -11,8 +11,7 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
+static void setSerialConfigurationOverrides() {
 	engineConfiguration->binarySerialTxPin = Gpio::E1;
 	engineConfiguration->binarySerialRxPin = Gpio::E0;
 	/* actually Bluetooth/WiFi interface */
@@ -20,13 +19,6 @@ void setSerialConfigurationOverrides() {
 	//engineConfiguration->consoleSerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-}
-
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->is_enabled_spi_1 = false;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = false;
 }
 
 /**
@@ -182,6 +174,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi3MisoMode = PO_DEFAULT;
 	engineConfiguration->spi3sckPin = Gpio::C10;
 	engineConfiguration->spi3SckMode = PO_DEFAULT;
+
+	engineConfiguration->is_enabled_spi_1 = false;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->sdCardCsPin = Gpio::A2;
+	engineConfiguration->isSdCardEnabled = false;
 
 	/* TODO: add settings for SPI4 */
 

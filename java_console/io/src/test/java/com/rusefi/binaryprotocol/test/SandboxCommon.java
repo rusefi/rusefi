@@ -55,7 +55,7 @@ public class SandboxCommon {
 
         imageLatch.await(1, TimeUnit.MINUTES);
         ConfigurationImage ci = configurationImageAtomicReference.get();
-        log.info("Got ConfigurationImage " + ci + ", " + ci.getSize());
+        log.info("Got ConfigurationImage " + ci + ", size=" + ci.getSize());
         return ci;
     }
 

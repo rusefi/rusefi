@@ -1,12 +1,9 @@
 #include "pch.h"
 
+#include "live_data.h"
+
 #include "tunerstudio.h"
-
-template <typename TStruct>
-const TStruct* getLiveDataAddr();
-
-template <typename TStruct>
-const TStruct* getLiveDataAddr(size_t index);
+#include "wideband_state_generated.h"
 
 template<>
 const output_channels_s* getLiveDataAddr() {
@@ -56,8 +53,12 @@ const ac_control_s* getLiveDataAddr() {
 }
 
 template<>
-const fan_control_s* getLiveDataAddr() {
-	return &engine->fan1;
+const fan_control_s* getLiveDataAddr(size_t idx) {
+	switch (idx) {
+		case 0: return &engine->fan1;
+		case 1: return &engine->fan2;
+		default: return nullptr;
+	}
 }
 
 template<>
@@ -117,8 +118,7 @@ const ignition_state_s* getLiveDataAddr() {
 }
 
 template<>
-const electronic_throttle_s* getLiveDataAddr() {
-	// todo: figure out how to handle two units?
+const electronic_throttle_s* getLiveDataAddr(size_t) {
 	// return engine->etbControllers[0];
 	return nullptr;
 }

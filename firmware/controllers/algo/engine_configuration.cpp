@@ -61,7 +61,6 @@
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
@@ -281,30 +280,16 @@ void setDefaultBasePins() {
 
 	// set UART pads configuration based on the board
 // needed also by bootloader code
-	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = Gpio::C10;
 	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
-	setSerialConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = Gpio::D4;
 	engineConfiguration->isSdCardEnabled = true;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
-	setSdCardConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 static void setDefaultWarmupIdleCorrection() {
@@ -956,8 +941,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
-	case HELLEN_NB1:
 	case HELLEN_NA8_96:
+		setHellenMiata96();
+		break;
+	case HELLEN_NB1:
 		setHellenNB1();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
@@ -1043,7 +1030,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTle8888TestConfiguration();
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
-		setMazdaMiataNA8Configuration();
+		setFrankensoMazdaMiataNA8Configuration();
 		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
@@ -1195,4 +1182,3 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 // These symbols are weak so that a board_configuration.cpp file can override them
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
-__attribute__((weak)) void setSerialConfigurationOverrides() { }

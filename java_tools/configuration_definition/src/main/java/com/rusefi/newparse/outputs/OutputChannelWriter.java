@@ -24,12 +24,12 @@ public class OutputChannelWriter {
 
     private int cumulativeSize = 0;
 
-    public void writeOutputChannels(ParseState parser) throws FileNotFoundException {
+    public void writeOutputChannels(ParseState parser, String namePrefix) throws FileNotFoundException {
         // Assume the last struct is the one we want...
         Struct s = parser.getStructs().get(parser.getStructs().size() - 1);
 
         StructLayout sl = new StructLayout(0, "root", s);
-        sl.writeOutputChannelLayout(ps, psDatalog, cumulativeSize);
+        sl.writeOutputChannelLayout(ps, psDatalog, namePrefix, cumulativeSize);
 
         cumulativeSize += sl.getSize();
         ps.println("; total TS size = " + cumulativeSize);

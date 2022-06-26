@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Jun 02 01:28:31 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Jun 24 00:17:24 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -70,6 +70,8 @@ case DBG_38:
   return "DBG_38";
 case DBG_43:
   return "DBG_43";
+case DBG_46:
+  return "DBG_46";
 case DBG_8:
   return "DBG_8";
 case DBG_9:
@@ -114,8 +116,6 @@ case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
-case DBG_RUSEFI_WIDEBAND:
-  return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SOFT_SPARK_CUT:
@@ -472,6 +472,8 @@ case TT_SUBARU_7_6:
   return "TT_SUBARU_7_6";
 case TT_SUBARU_7_WITHOUT_6:
   return "TT_SUBARU_7_WITHOUT_6";
+case TT_SUBARU_EZ30:
+  return "TT_SUBARU_EZ30";
 case TT_SUBARU_SVX:
   return "TT_SUBARU_SVX";
 case TT_SUBARU_SVX_CAM_VVT:
@@ -510,8 +512,6 @@ case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
 case TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
-case UNUSED_12:
-  return "UNUSED_12";
 case UNUSED_13:
   return "UNUSED_13";
 case UNUSED_21:

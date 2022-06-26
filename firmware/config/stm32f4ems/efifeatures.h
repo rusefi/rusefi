@@ -70,11 +70,11 @@
 #endif
 
 #ifndef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS TRUE
+#define EFI_ICU_INPUTS FALSE
 #endif
 
 #ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
+#define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */
 
 #ifndef HAL_TRIGGER_USE_ADC
@@ -388,11 +388,10 @@
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-// todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
 #endif
-// todo: start using consoleSerialRxPin? Not sure
+
 #ifndef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 #endif

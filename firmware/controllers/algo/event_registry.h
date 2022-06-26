@@ -24,7 +24,7 @@ public:
 	InjectionEvent();
 
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
-	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
+	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
 	/**
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
@@ -34,7 +34,8 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
-	event_trigger_position_s injectionStart;
+
+	float injectionStartAngle = 0;
 
 	scheduling_s signalTimerUp;
 	scheduling_s endOfInjectionEvent;
@@ -62,7 +63,7 @@ public:
 	void invalidate();
 
 	// Call this every trigger tooth.  It will schedule all required injector events.
-	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
+	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
 	/**
 	 * this method schedules all fuel events for an engine cycle

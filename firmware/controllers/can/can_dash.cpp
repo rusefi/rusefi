@@ -230,6 +230,7 @@ void canDashboardFiat(CanCycle cycle) {
 void canDashboardVAG(CanCycle cycle) {
 	if (cycle.isInterval(CI::_10ms)) {
 		{
+			// https://github.com/commaai/opendbc/blob/57c8340a180dd8c75139b18050eb17c72c9cb6e4/vw_golf_mk4.dbc#L394
 			//VAG Dashboard
 			CanTxMessage msg(CanCategory::NBC, CAN_VAG_Motor_1);
 			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 2); //RPM

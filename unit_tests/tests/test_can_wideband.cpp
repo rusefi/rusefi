@@ -95,6 +95,8 @@ TEST(CanWideband, DecodeValidAemFormat) {
 	Sensor::resetRegistry();
 }
 
+#include "wideband_firmware/for_rusefi/wideband_can.h"
+
 TEST(CanWideband, DecodeRusefiStandard)
 {
 	EngineTestHelper eth(TEST_ENGINE);
@@ -108,7 +110,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	frame.DLC = 8;
 
 	// version
-	frame.data8[0] = 0;
+	frame.data8[0] = RUSEFI_WIDEBAND_VERSION;
 
 	// valid
 	frame.data8[1] = 1;
@@ -119,8 +121,6 @@ TEST(CanWideband, DecodeRusefiStandard)
 	// data = 1234 deg C
 	*reinterpret_cast<uint16_t*>(&frame.data8[4]) = 1234;
 
-	engine->outputChannels.wbTemperature[0] = 0;
-
 	// check not set
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
@@ -129,10 +129,28 @@ TEST(CanWideband, DecodeRusefiStandard)
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// Check that temperature updates
-	EXPECT_EQ(engine->outputChannels.wbTemperature[0], 1234);
+	EXPECT_EQ(dut.tempC, 1234);
 
 	// Check that valid bit is respected (should be invalid now)
 	frame.data8[1] = 0;
 	dut.processFrame(frame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+}
+
+TEST(CanWideband, DecodeRusefiStandardWrongVersion)
+{
+	EngineTestHelper eth(TEST_ENGINE);
+
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	dut.Register();
+
+	CANRxFrame frame;
+	frame.SID = 0x190;
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// version - WRONG VERSION ON PURPOSE!
+	frame.data8[0] = RUSEFI_WIDEBAND_VERSION + 1;
+
+	EXPECT_FATAL_ERROR(dut.processFrame(frame, getTimeNowNt()));
 }

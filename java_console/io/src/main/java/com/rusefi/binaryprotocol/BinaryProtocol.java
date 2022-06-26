@@ -231,7 +231,7 @@ public class BinaryProtocol {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
                                 }
                                 if (linkManager.isNeedPullLiveData()) {
-                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
+                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
                                 }
                             }

@@ -296,7 +296,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_43 = 43,
 	DBG_DYNO_VIEW = 44,
 	DBG_LOGIC_ANALYZER = 45,
-	DBG_RUSEFI_WIDEBAND = 46,
+	DBG_46 = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
 	DBG_VVT_2_PID = 49,
@@ -502,7 +502,7 @@ typedef enum {
 	// GM 24x with 3/12 degree gaps
 	TT_GM_24x_2 = 74,
 
-	UNUSED_12 = 12,
+	TT_SUBARU_EZ30 = 12,
 	UNUSED_13 = 13,
 	UNUSED_21 = 21,
 	UNUSED_34 = 34,
