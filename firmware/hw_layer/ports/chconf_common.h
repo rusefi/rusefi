@@ -10,6 +10,8 @@
 
 #define _CHIBIOS_RT_CONF_VER_7_0_
 
+#define PACKED_VAR          __attribute__((packed))
+
 /**
  * @brief   Handling of instances.
  * @note    If enabled then threads assigned to various instances can
