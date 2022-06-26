@@ -1,11 +1,11 @@
 [submodule "firmware/ChibiOS"]
 	path = firmware/ChibiOS
 	url = https://github.com/rusefi/ChibiOS.git
-	branch = stable_20.3.x.rusefi_clean_history
+	branch = stable_21.11.x.rusefi
 [submodule "firmware/ChibiOS-Contrib"]
 	path = firmware/ChibiOS-Contrib
 	url = https://github.com/rusefi/ChibiOS-Contrib.git
-	branch = rusefi-20.3.x
+	branch = chibios-21.11.x
 [submodule "unit_tests/googletest"]
 	path = unit_tests/googletest
 	url = https://github.com/google/googletest.git
