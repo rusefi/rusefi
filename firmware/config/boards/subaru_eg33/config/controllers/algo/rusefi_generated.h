@@ -1891,7 +1891,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 2943255157
+#define SIGNATURE_HASH 4010062721
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2385,8 +2385,6 @@
 #define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F_char F
-#define TS_GET_STRUCT '9'
-#define TS_GET_STRUCT_char 9
 #define TS_GET_TEXT 'G'
 #define TS_GET_TEXT_char G
 #define TS_HELLO_COMMAND 'S'
@@ -2444,7 +2442,7 @@
 #define ts_show_tunerstudio_port false
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.26.subaru_eg33_f7.2943255157"
+#define TS_SIGNATURE "rusEFI 2022.06.26.subaru_eg33_f7.4010062721"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
