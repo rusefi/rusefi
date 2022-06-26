@@ -78,9 +78,10 @@ public class UsagesReader {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        OutputChannelWriter outputChannelWriter = new OutputChannelWriter(tsOutputsDestination + File.separator + "generated/output_channels.ini");
-
-        ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
+        OutputChannelWriter outputChannelWriter = new OutputChannelWriter(
+                tsOutputsDestination + File.separator + "generated/output_channels.ini",
+                tsOutputsDestination + File.separator + "generated/data_logs.ini"
+        );
 
         EntryHandler handler = new EntryHandler() {
             @Override
@@ -95,9 +96,7 @@ public class UsagesReader {
                 state.setDefinitionInputFile(definitionInputFile);
                 state.withC_Defines = withCDefines;
 
-                state.addDestination(javaSensorsConsumer,
-                        dataLogConsumer
-                );
+                state.addDestination(javaSensorsConsumer);
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
