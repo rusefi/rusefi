@@ -29,7 +29,7 @@
 #define _HALCONF_H_
 
 #define _CHIBIOS_HAL_CONF_
-#define _CHIBIOS_HAL_CONF_VER_7_1_
+#define _CHIBIOS_HAL_CONF_VER_8_0_
 
 /*#include "mcuconf.h"*/
 
