@@ -1,5 +1,7 @@
 #pragma once
 
+#define _CHIBIOS_HAL_CONF_VER_8_0_
+
 #include "efifeatures.h"
 #include "thread_priority.h"
 
