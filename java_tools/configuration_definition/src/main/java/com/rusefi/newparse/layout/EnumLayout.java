@@ -83,6 +83,12 @@ public class EnumLayout extends Layout {
         ps.print(this.offset + offsetAdd);
         ps.println(", \"\", 1, 0");
 
-        // todo: datalog
+        // Write the datalog entry as an integer, since there's no support for enums.
+        psDatalog.print("entry = ");
+        psDatalog.print(name);
+        psDatalog.print(", \"");
+        psDatalog.print(options.comment.isEmpty() ? name : options.comment);
+        psDatalog.print("\", int,    \"%d\"");
+        psDatalog.println();
     }
 }

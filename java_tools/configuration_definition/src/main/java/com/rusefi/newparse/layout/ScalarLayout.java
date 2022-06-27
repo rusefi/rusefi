@@ -98,9 +98,9 @@ public class ScalarLayout extends Layout {
             div = Math.round(scale);
         }
 
-        double actualScale = (double)mul / div;
+        double actualScale = (double)div / mul;
 
-        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001)) {
+        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) > 0.0001)) {
             throw new RuntimeException("assertion failure: scale string generation failure for " + this.name);
         }
 
