@@ -2559,7 +2559,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
 		field = "Input channel",						clt_adcChannel
-		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common CLT Sensors"
 			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
@@ -2592,7 +2592,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
-		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
 			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
@@ -3157,7 +3157,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
-		panel = batteryDialog
+		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
 		panel = startStopDialog
 
