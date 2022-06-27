@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 00:08:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1057,9 +1057,10 @@ struct output_channels_s {
 	 */
 	uint8_t testBenchIter = (uint8_t)0;
 	/**
+	 * "Current Range"
 	 * offset 385
 	 */
-	uint8_t unusedWat = (uint8_t)0;
+	uint8_t tcu_currentRange = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_TC_RATIO@@
 	value
@@ -1364,4 +1365,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 612);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 00:08:55 UTC 2022

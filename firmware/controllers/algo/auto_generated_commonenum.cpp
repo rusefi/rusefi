@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jun 02 01:28:31 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jun 27 00:08:52 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -9,6 +9,8 @@ const char *getGearControllerMode(GearControllerMode value){
 switch(value) {
 case GearControllerMode::ButtonShift:
   return "ButtonShift";
+case GearControllerMode::Generic:
+  return "Generic";
 case GearControllerMode::None:
   return "None";
   }
@@ -61,6 +63,35 @@ case MINIMUM:
   return "MINIMUM";
 case NOT_A_PEAK:
   return "NOT_A_PEAK";
+  }
+ return NULL;
+}
+const char *getSelectedGear(SelectedGear value){
+switch(value) {
+case SelectedGear::Drive:
+  return "Drive";
+case SelectedGear::Invalid:
+  return "Invalid";
+case SelectedGear::Low:
+  return "Low";
+case SelectedGear::Manual:
+  return "Manual";
+case SelectedGear::Manual1:
+  return "Manual1";
+case SelectedGear::Manual2:
+  return "Manual2";
+case SelectedGear::Manual3:
+  return "Manual3";
+case SelectedGear::ManualMinus:
+  return "ManualMinus";
+case SelectedGear::ManualPlus:
+  return "ManualPlus";
+case SelectedGear::Neutral:
+  return "Neutral";
+case SelectedGear::Park:
+  return "Park";
+case SelectedGear::Reverse:
+  return "Reverse";
   }
  return NULL;
 }
