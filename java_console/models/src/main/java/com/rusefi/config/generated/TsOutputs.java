@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 26 00:16:15 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 00:08:55 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -635,7 +635,7 @@ public class TsOutputs {
 	public static final Field LUAINVOCATIONCOUNTER = Field.create("LUAINVOCATIONCOUNTER", 376, FieldType.INT).setScale(1.0);
 	public static final Field LUALASTCYCLEDURATION = Field.create("LUALASTCYCLEDURATION", 380, FieldType.INT).setScale(1.0);
 	public static final Field TESTBENCHITER = Field.create("TESTBENCHITER", 384, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDWAT = Field.create("UNUSEDWAT", 385, FieldType.INT8).setScale(1.0);
+	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 385, FieldType.INT8).setScale(1.0);
 	public static final Field TCRATIO = Field.create("TCRATIO", 386, FieldType.INT16).setScale(0.01);
 	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 388, FieldType.FLOAT);
 	public static final Field VSSEDGECOUNTER = Field.create("VSSEDGECOUNTER", 392, FieldType.INT).setScale(1.0);
@@ -1049,7 +1049,7 @@ public class TsOutputs {
 	LUAINVOCATIONCOUNTER,
 	LUALASTCYCLEDURATION,
 	TESTBENCHITER,
-	UNUSEDWAT,
+	TCU_CURRENTRANGE,
 	TCRATIO,
 	LASTSHIFTTIME,
 	VSSEDGECOUNTER,

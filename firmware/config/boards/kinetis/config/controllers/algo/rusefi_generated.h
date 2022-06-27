@@ -907,8 +907,9 @@
 #define gear_e_GEAR_4 4
 #define gear_e_NEUTRAL 0
 #define gear_e_REVERSE -1
-#define GearControllerMode_auto_enum "None", "ButtonShift"
+#define GearControllerMode_auto_enum "None", "ButtonShift", "Generic"
 #define GearControllerMode_ButtonShift 1
+#define GearControllerMode_Generic 2
 #define GearControllerMode_None 0
 #define gearControllerMode_offset 3648
 #define gearRatio1_offset 3522
@@ -1890,6 +1891,18 @@
 #define sdCardPeriodMs_offset 832
 #define sdCardSpiDevice_offset 1859
 #define secondSolenoidPin_offset 842
+#define SelectedGear_Drive 6
+#define SelectedGear_Invalid 0
+#define SelectedGear_Low 11
+#define SelectedGear_Manual 7
+#define SelectedGear_Manual1 10
+#define SelectedGear_Manual2 9
+#define SelectedGear_Manual3 8
+#define SelectedGear_ManualMinus 2
+#define SelectedGear_ManualPlus 1
+#define SelectedGear_Neutral 5
+#define SelectedGear_Park 3
+#define SelectedGear_Reverse 4
 #define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "INVALID", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
 #define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 #define sensor_chart_e_SC_AUX_FAST1 5
@@ -1911,7 +1924,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 940
-#define SIGNATURE_HASH 4286210996
+#define SIGNATURE_HASH 2495533233
 #define silentTriggerError_offset 1340
 #define skippedWheelOnCam_offset 1340
 #define slowAdcAlpha_offset 1580
@@ -2461,7 +2474,7 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.06.26.kin.4286210996"
+#define TS_SIGNATURE "rusEFI 2022.06.27.kin.2495533233"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2508,7 +2521,6 @@
 #define unused4080_offset 3001
 #define unused460_offset 460
 #define unused688_offset 688
-#define unused744b8_offset 744
 #define unused_1484_bit_25_offset 1352
 #define unused_1484_bit_26_offset 1352
 #define unused_1484_bit_27_offset 1352
@@ -2589,6 +2601,7 @@
 #define verboseCan2_offset 940
 #define verboseCan_offset 100
 #define verboseCanBaseAddress_offset 764
+#define verboseQuad_offset 744
 #define verboseTLE8888_offset 744
 #define verboseTriggerSynchDetails_offset 1352
 #define verboseVVTDecoding_offset 940

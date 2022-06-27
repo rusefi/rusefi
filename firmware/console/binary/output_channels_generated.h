@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 02:35:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -49,7 +49,7 @@ struct output_channels_s {
 	offset 0 bit 5 */
 	bool isFuelPumpOn : 1 {};
 	/**
-	 * "radiator fan"
+	 * radiator fan
 	offset 0 bit 6 */
 	bool isFanOn : 1 {};
 	/**
@@ -342,7 +342,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
 	/**
-	 * "Engine Phase"
+	 * Engine Phase
 	deg
 	 * offset 70
 	 */
@@ -404,7 +404,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
-	 * "ETB Target"
+	 * ETB Target
 	%
 	 * offset 92
 	 */
@@ -416,13 +416,13 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
-	 * "ETB Error"
+	 * ETB Error
 	%
 	 * offset 96
 	 */
 	scaled_channel<int16_t, 100, 1> etb1Error = (int16_t)0;
 	/**
-	 * "Fuel level"
+	 * Fuel level
 	%
 	 * offset 98
 	 */
@@ -462,7 +462,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint32_t, 1, 1> seconds = (uint32_t)0;
 	/**
-	 * "Engine Mode"
+	 * Engine Mode
 	em
 	 * offset 116
 	 */
@@ -736,7 +736,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
-	 * "Vss Accel"
+	 * Vss Accel
 	m/s2
 	 * offset 284
 	 */
@@ -845,7 +845,7 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
-	 * "DI: Pump Angle"
+	 * DI: Pump Angle
 	deg
 	 * offset 328
 	 */
@@ -857,13 +857,13 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
-	 * "Spark Cut Code"
+	 * Spark Cut Code
 	code
 	 * offset 332
 	 */
 	scaled_channel<int8_t, 1, 1> sparkCutReason = (int8_t)0;
 	/**
-	 * "Fuel Cut Code"
+	 * Fuel Cut Code
 	code
 	 * offset 333
 	 */
@@ -875,25 +875,25 @@ struct output_channels_s {
 	 */
 	uint8_t alignmentFill_at_334[2];
 	/**
-	 * "DI: fuel_requested_percent"
+	 * DI: fuel_requested_percent
 	v
 	 * offset 336
 	 */
 	float fuel_requested_percent = (float)0;
 	/**
-	 * "DI: fuel_requested_percent_pi"
+	 * DI: fuel_requested_percent_pi
 	v
 	 * offset 340
 	 */
 	float fuel_requested_percent_pi = (float)0;
 	/**
-	 * "DI: m_I_sum_percent"
+	 * DI: m_I_sum_percent
 	v
 	 * offset 344
 	 */
 	float m_I_sum_percent = (float)0;
 	/**
-	 * "DI: m_pressureTarget_kPa"
+	 * DI: m_pressureTarget_kPa
 	v
 	 * offset 348
 	 */
@@ -910,7 +910,7 @@ struct output_channels_s {
 	 */
 	uint16_t instantRpm = (uint16_t)0;
 	/**
-	 * "DI: next start"
+	 * DI: next start
 	v
 	 * offset 356
 	 */
@@ -1057,9 +1057,10 @@ struct output_channels_s {
 	 */
 	uint8_t testBenchIter = (uint8_t)0;
 	/**
+	 * "Current Range"
 	 * offset 385
 	 */
-	uint8_t unusedWat = (uint8_t)0;
+	uint8_t tcu_currentRange = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_TC_RATIO@@
 	value
@@ -1339,13 +1340,13 @@ struct output_channels_s {
 	 */
 	pid_status_s boostStatus;
 	/**
-	 * "aux speed 1"
+	 * aux speed 1
 	s
 	 * offset 528
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
-	 * "aux speed 2"
+	 * aux speed 2
 	s
 	 * offset 530
 	 */
@@ -1364,4 +1365,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 612);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jun 24 00:17:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 02:35:54 UTC 2022

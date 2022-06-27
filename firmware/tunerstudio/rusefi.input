@@ -3886,6 +3886,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
+	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"

@@ -106,6 +106,10 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
 
+	// random values to have valid config
+	engineConfiguration->tps1SecondaryMin = 1000;
+	engineConfiguration->tps1SecondaryMax = 0;
+
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;

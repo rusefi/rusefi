@@ -351,6 +351,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.luaLastCycleDuration;
 	if (strEqualCaseInsensitive(name, "testBenchIter"))
 		return engine->outputChannels.testBenchIter;
+	if (strEqualCaseInsensitive(name, "tcu_currentRange"))
+		return engine->outputChannels.tcu_currentRange;
 	if (strEqualCaseInsensitive(name, "tcRatio"))
 		return engine->outputChannels.tcRatio;
 	if (strEqualCaseInsensitive(name, "lastShiftTime"))

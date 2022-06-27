@@ -755,7 +755,7 @@ bit is_enabled_spi_2
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
-	bit unused744b8
+	bit verboseQuad
 	bit useStepperIdle;+This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed. 
 	
 	bit enabledStep1Limiter
