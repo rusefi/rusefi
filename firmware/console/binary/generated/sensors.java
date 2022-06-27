@@ -177,7 +177,7 @@ calibrationValue2("calibrationValue2", SensorCategory.SENSOR_INPUTS, FieldType.I
 luaInvocationCounter("luaInvocationCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 376, 1.0, 0.0, 0.0, "count"),
 luaLastCycleDuration("luaLastCycleDuration", SensorCategory.SENSOR_INPUTS, FieldType.INT, 380, 1.0, 0.0, 0.0, "nt"),
 testBenchIter("testBenchIter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 384, 1.0, 0.0, 0.0, "count"),
-unusedWat("unusedWat", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 385, 1.0, -1.0, -1.0, ""),
+tcu_currentRange("Current Range", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 385, 1.0, 0.0, 0.0, ""),
 tcRatio("Torque Converter Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 386, 0.01, 0.0, 0.0, "value"),
 lastShiftTime("S", SensorCategory.SENSOR_INPUTS, FieldType.INT, 388, 1.0, -1.0, -1.0, ""),
 vssEdgeCounter("vssEdgeCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 392, 1.0, -1.0, -1.0, ""),

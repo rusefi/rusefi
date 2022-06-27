@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jun 26 00:17:08 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jun 27 00:09:49 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -904,6 +904,7 @@ public class Fields {
 	public static final int gear_e_NEUTRAL = 0;
 	public static final int gear_e_REVERSE = -1;
 	public static final int GearControllerMode_ButtonShift = 1;
+	public static final int GearControllerMode_Generic = 2;
 	public static final int GearControllerMode_None = 0;
 	public static final int gearControllerMode_offset = 3676;
 	public static final int gearRatio1_offset = 3550;
@@ -1856,6 +1857,18 @@ public class Fields {
 	public static final int sdCardPeriodMs_offset = 832;
 	public static final int sdCardSpiDevice_offset = 1867;
 	public static final int secondSolenoidPin_offset = 842;
+	public static final int SelectedGear_Drive = 6;
+	public static final int SelectedGear_Invalid = 0;
+	public static final int SelectedGear_Low = 11;
+	public static final int SelectedGear_Manual = 7;
+	public static final int SelectedGear_Manual1 = 10;
+	public static final int SelectedGear_Manual2 = 9;
+	public static final int SelectedGear_Manual3 = 8;
+	public static final int SelectedGear_ManualMinus = 2;
+	public static final int SelectedGear_ManualPlus = 1;
+	public static final int SelectedGear_Neutral = 5;
+	public static final int SelectedGear_Park = 3;
+	public static final int SelectedGear_Reverse = 4;
 	public static final int sensor_chart_e_SC_AUX_FAST1 = 5;
 	public static final int sensor_chart_e_SC_DETAILED_RPM = 4;
 	public static final int sensor_chart_e_SC_OFF = 0;
@@ -2359,7 +2372,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.06.26.all.3826600499";
+	public static final String TS_SIGNATURE = "rusEFI 2022.06.27.all.2412902710";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1024;
@@ -2403,7 +2416,6 @@ public class Fields {
 	public static final int unused4080_offset = 3029;
 	public static final int unused460_offset = 460;
 	public static final int unused688_offset = 688;
-	public static final int unused744b8_offset = 744;
 	public static final int unused_1484_bit_25_offset = 1352;
 	public static final int unused_1484_bit_26_offset = 1352;
 	public static final int unused_1484_bit_27_offset = 1352;
@@ -2482,6 +2494,7 @@ public class Fields {
 	public static final int verboseCan2_offset = 940;
 	public static final int verboseCan_offset = 100;
 	public static final int verboseCanBaseAddress_offset = 764;
+	public static final int verboseQuad_offset = 744;
 	public static final int verboseTLE8888_offset = 744;
 	public static final int verboseTriggerSynchDetails_offset = 1352;
 	public static final int verboseVVTDecoding_offset = 940;
@@ -2853,7 +2866,7 @@ public class Fields {
 	public static final Field ISENGINECONTROLENABLED = Field.create("ISENGINECONTROLENABLED", 744, FieldType.BIT, 5);
 	public static final Field ISHIP9011ENABLED = Field.create("ISHIP9011ENABLED", 744, FieldType.BIT, 6);
 	public static final Field ISVERBOSEALTERNATOR = Field.create("ISVERBOSEALTERNATOR", 744, FieldType.BIT, 7);
-	public static final Field UNUSED744B8 = Field.create("UNUSED744B8", 744, FieldType.BIT, 8);
+	public static final Field VERBOSEQUAD = Field.create("VERBOSEQUAD", 744, FieldType.BIT, 8);
 	public static final Field USESTEPPERIDLE = Field.create("USESTEPPERIDLE", 744, FieldType.BIT, 9);
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 744, FieldType.BIT, 10);
 	public static final Field USETPICADVANCEDMODE = Field.create("USETPICADVANCEDMODE", 744, FieldType.BIT, 11);
@@ -4223,7 +4236,7 @@ public class Fields {
 	ISENGINECONTROLENABLED,
 	ISHIP9011ENABLED,
 	ISVERBOSEALTERNATOR,
-	UNUSED744B8,
+	VERBOSEQUAD,
 	USESTEPPERIDLE,
 	ENABLEDSTEP1LIMITER,
 	USETPICADVANCEDMODE,
