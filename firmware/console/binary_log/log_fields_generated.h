@@ -1,3 +1,6 @@
+// todo: this file is NOT yet generated!
+// todo https://github.com/rusefi/rusefi/issues/3985
+
 static constexpr LogField fields[] = {
 	{engine->outputChannels.RPMValue, GAUGE_NAME_RPM, "rpm", 0},
 	{packedTime, GAUGE_NAME_TIME, "sec", 0},
@@ -67,7 +70,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.fuelPidCorrection[0], GAUGE_NAME_FUEL_TRIM, "%", 2},
 	{engine->outputChannels.fuelPidCorrection[1], GAUGE_NAME_FUEL_TRIM_2, "%", 2},
 	{engine->outputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "mg", 3},
-	{engine->outputChannels.wallFuelAmount, GAUGE_NAME_FUEL_WALL_CORRECTION, "mg", 3},
+	{engine->outputChannels.wallFuelAmount, GAUGE_NAME_FUEL_WALL_AMOUNT, "mg", 3},
 	{engine->outputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{engine->outputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
 	{engine->outputChannels.sparkDwellValue, GAUGE_COIL_DWELL_TIME, "ms", 1},
