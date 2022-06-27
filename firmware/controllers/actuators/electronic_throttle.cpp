@@ -871,6 +871,8 @@ void setDefaultEtbParameters() {
 	// voltage, not ADC like with TPS
 	engineConfiguration->throttlePedalUpVoltage = 0;
 	engineConfiguration->throttlePedalWOTVoltage = 5;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
 
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 
