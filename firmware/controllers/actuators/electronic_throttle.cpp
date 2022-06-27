@@ -874,8 +874,6 @@ void setDefaultEtbParameters() {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
 
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
-
 	engineConfiguration->etb = {
 		1,		// Kp
 		10,		// Ki
