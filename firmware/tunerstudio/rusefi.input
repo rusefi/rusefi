@@ -2749,8 +2749,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->idle Settings	
 	dialog = idleSolenoid, "Solenoid"
 		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
-		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
-		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
+		field = "Idle Solenoid Pin",					idle_solenoidPin,  { idle_solenoidPin != 0 ||  !useStepperIdle }
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { idle_solenoidPin != 0 || (!useStepperIdle && isDoubleSolenoidIdle ) }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
 	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
