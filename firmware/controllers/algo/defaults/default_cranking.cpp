@@ -74,8 +74,7 @@ void setDefaultCranking() {
 	}
 
 	// Cranking ignition timing
-	static const float advanceValues[] = { 0, 0, 0, 0 };
-	copyArray(config->crankingAdvance, advanceValues);
+	setArrayValues(config->crankingAdvance, 0);
 
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
 	copyArray(config->crankingAdvanceBins, advanceBins);
