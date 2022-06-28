@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
  - Improved logic used to disambiguate trigger sync using cam/VVT information. Engine now runs in wasted spark until cam sync is achieved, at which point it switches to fully sequential. #4099
  - visiting "live data" tab causes fatal error on ECU #4271
  - SD card logs are broken by double fuel: wall correction #4291
+ - many RPM fields limited at 12500 #4298
 
 ## June 2022 Release - "Day 98"
 
