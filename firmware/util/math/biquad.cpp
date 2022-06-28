@@ -58,10 +58,7 @@ void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, fl
 float Biquad::filter(float input) {
 	float result = input * a0 + z1;
 	if (engineConfiguration->verboseQuad) {
-	    efiPrintf("input %f", input);
-	    efiPrintf("a0 %f", a0);
-	    efiPrintf("z1 %f", z1);
-	    efiPrintf("result %f", result);
+		efiPrintf("input %f, a0 %f, z1 %f, result %f", input, a0, z1, result);
 	}
 	z1 = input * a1 + z2 - b1 * result;
 	z2 = input * a2 - b2 * result;
