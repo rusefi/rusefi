@@ -225,7 +225,7 @@ struct_no_prefix engine_configuration_s
 !
 ! one byte RPM with '50' multiplier limits us at 12750 RPM which is below what small engines do
 ! in order for rusEFI to run on some F1 engines shall we move away from one byte RPM or bump multiplier to 100 or what?
-#define RPM_1_BYTE_PACKING_MULT 50
+#define RPM_1_BYTE_PACKING_MULT 100
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 
