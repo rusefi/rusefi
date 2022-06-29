@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jun 29 03:21:08 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -17,8 +17,21 @@ struct electronic_throttle_s {
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
+	/**
+	 * offset 12
+	 */
+	percent_t etbFeedForward = (percent_t)0;
+	/**
+	 * offset 16
+	 */
+	float etbIntegralError = (float)0;
+	/**
+	%
+	 * offset 20
+	 */
+	float etbCurrentTarget = (float)0;
 };
-static_assert(sizeof(electronic_throttle_s) == 12);
+static_assert(sizeof(electronic_throttle_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jun 29 03:21:08 EDT 2022
