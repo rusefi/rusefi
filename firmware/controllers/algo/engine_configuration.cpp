@@ -317,21 +317,8 @@ static void setDefaultWarmupIdleCorrection() {
 static void setDefaultIdleSpeedTarget() {
 	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+	copyArray(config->cltIdleRpmBins, {  -30, - 20,  -10,    0,   10,   20,   30,   40,   50,  60,  70,  80,  90, 100 , 110,  120 });
+	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
 }
 
 static void setDefaultFrankensoStepperIdleParameters() {
@@ -1120,14 +1107,6 @@ void validateConfiguration() {
 		engineConfiguration->adcVcc = 3.0f;
 	}
 	engine->preCalculate();
-
-	/**
-	 * TunerStudio text tune files convert negative zero into positive zero so to keep things consistent we should avoid
-	 * negative zeros altogether. Unfortunately default configuration had one and here we are mitigating that.
-	 */
-	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
-		config->cltIdleRpmBins[i] = fixNegativeZero(config->cltIdleRpmBins[i]);
-	}
 }
 
 void applyNonPersistentConfiguration() {
