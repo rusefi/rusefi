@@ -165,6 +165,10 @@ public class ScalarLayout extends Layout {
 
         ps.println();
 
+        if (this.name.startsWith("unused")) {
+            return;
+        }
+
         psDatalog.print("entry = ");
         psDatalog.print(name);
         psDatalog.print(", \"");

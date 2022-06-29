@@ -108,6 +108,10 @@ public class BitGroupLayout extends Layout {
 
             ps.println();
 
+            if (bit.name.startsWith("unused")) {
+                continue;
+            }
+
             psDatalog.print("entry = ");
             psDatalog.print(name);
             psDatalog.print(", \"");
