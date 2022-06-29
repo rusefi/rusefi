@@ -18,8 +18,8 @@
  * Unfortunately ChibiOS has two versions of methods for different
  * contexts.
  */
-#define isLocked() (ch.dbg.lock_cnt > 0)
-#define isIsrContext() (ch.dbg.isr_cnt > 0)
+#define isLocked() (ch0.dbg.lock_cnt > 0)
+#define isIsrContext() (ch0.dbg.isr_cnt > 0)
 
 #define assertIsrContext(code) efiAssertVoid(code, isIsrContext(), "NOT_ISR")
 

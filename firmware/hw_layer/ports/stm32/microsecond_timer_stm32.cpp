@@ -42,8 +42,9 @@ static constexpr PWMConfig timerConfig = {
 		{PWM_OUTPUT_DISABLED, nullptr},
 		{PWM_OUTPUT_DISABLED, nullptr}
 	},
-	0,	// CR1
-	0	// CR2
+	0,	// CR2
+	0,	// BDTR
+	0	// DIER
 };
 
 void portInitMicrosecondTimer() {

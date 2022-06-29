@@ -9,7 +9,7 @@
 #include "os_util.h"
 #include "perf_trace.h"
 
-void runAndScheduleNext(PeriodicTimerController *controller) {
+void runAndScheduleNext(ch_virtual_timer*, PeriodicTimerController *controller) {
 #if !EFI_UNIT_TEST
 	{
 		ScopePerf perf(PE::PeriodicTimerControllerPeriodicTask);
