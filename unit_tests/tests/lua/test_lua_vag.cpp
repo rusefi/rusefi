@@ -132,11 +132,12 @@ TEST(LuaVag, packMotor3) {
 
  		data[2] = (iat + 48) / 0.75
 		data[3] = tps / 0.4
+		data[5] = 0x22 
  		data[8] = tps / 0.4
 
 		print(arrayToString(data))
 
-		expected = { 0x00, 0x62, 0xFA, 0x00, 0x00, 0x00, 0x00, 0xFA }
+		expected = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA }
 		return equals(data, expected)
 	end
 	)";
