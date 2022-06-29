@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 03:21:08 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 22:14:57 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -275,7 +275,7 @@ struct engine_state_s {
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
-	 * How does this board self identifies
+	 * Detected Board ID
 	id
 	 * offset 122
 	 */
@@ -383,4 +383,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 128);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 03:21:08 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 22:14:57 UTC 2022

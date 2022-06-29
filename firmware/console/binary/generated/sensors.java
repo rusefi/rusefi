@@ -321,7 +321,7 @@ dwellAngle("ignition dwell duration as crankshaft angle\nNAN if engine is stoppe
 cltTimingCorrection("cltTimingCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 780, 0.01, -20.0, 20.0, "deg"),
 timingIatCorrection("timingIatCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 782, 0.01, -20.0, 20.0, "deg"),
 timingPidCorrection("timingPidCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 784, 0.01, -20.0, 20.0, "deg"),
-hellenBoardId("How does this board self identifies", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 786, 1.0, 0.0, 3000.0, "id"),
+hellenBoardId("Detected Board ID", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 786, 1.0, 0.0, 3000.0, "id"),
 tpsFrom("tpsFrom", SensorCategory.SENSOR_INPUTS, FieldType.INT, 792, 1.0, -1.0, -1.0, ""),
 tpsTo("tpsTo", SensorCategory.SENSOR_INPUTS, FieldType.INT, 796, 1.0, -1.0, -1.0, ""),
 deltaTps("deltaTps", SensorCategory.SENSOR_INPUTS, FieldType.INT, 800, 1.0, -1.0, -1.0, ""),
