@@ -163,10 +163,10 @@ float getConfigValueByName(const char *name) {
 	}
 	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
 		return engineConfiguration->sensorSnifferRpmThreshold;
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-		return engineConfiguration->rpmHardLimit;
 	if (strEqualCaseInsensitive(name, "launchRpm"))
 		return engineConfiguration->launchRpm;
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+		return engineConfiguration->rpmHardLimit;
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
 		return engineConfiguration->engineSnifferRpmThreshold;
 	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
@@ -854,14 +854,14 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-	{
-		engineConfiguration->rpmHardLimit = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "launchRpm"))
 	{
 		engineConfiguration->launchRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+	{
+		engineConfiguration->rpmHardLimit = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
