@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 00:08:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 29 05:31:17 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -679,9 +679,9 @@ public class TsOutputs {
 	public static final Field FALLBACKMAP = Field.create("FALLBACKMAP", 410, FieldType.INT16).setScale(0.1);
 	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 412, FieldType.INT8).setScale(0.5);
 	public static final Field DETECTEDGEAR = Field.create("DETECTEDGEAR", 413, FieldType.INT8).setScale(1.0);
-	public static final Field TIMINGCLTCORRECTION = Field.create("TIMINGCLTCORRECTION", 414, FieldType.INT16).setScale(0.01);
-	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 416, FieldType.INT16).setScale(0.01);
-	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 418, FieldType.INT16).setScale(0.01);
+	public static final Field UNUSEDAIMINGCLTCORRECTION = Field.create("UNUSEDAIMINGCLTCORRECTION", 414, FieldType.INT16).setScale(0.01);
+	public static final Field UNUSEDATIMINGIATCORRECTION = Field.create("UNUSEDATIMINGIATCORRECTION", 416, FieldType.INT16).setScale(0.01);
+	public static final Field UNUSEDATIMINGPIDCORRECTION = Field.create("UNUSEDATIMINGPIDCORRECTION", 418, FieldType.INT16).setScale(0.01);
 	public static final Field INSTANTMAPVALUE = Field.create("INSTANTMAPVALUE", 420, FieldType.INT16).setScale(0.03333333333333333);
 	public static final Field MOSTRECENTTIMEBETWEENSPARKEVENTS = Field.create("MOSTRECENTTIMEBETWEENSPARKEVENTS", 422, FieldType.INT16).setScale(1.0);
 	public static final Field MOSTRECENTTIMEBETWEENIGNITIONEVENTS = Field.create("MOSTRECENTTIMEBETWEENIGNITIONEVENTS", 424, FieldType.INT16).setScale(1.0);
@@ -1093,9 +1093,9 @@ public class TsOutputs {
 	FALLBACKMAP,
 	BOOSTCONTROLLERCLOSEDLOOPPART,
 	DETECTEDGEAR,
-	TIMINGCLTCORRECTION,
-	TIMINGIATCORRECTION,
-	TIMINGPIDCORRECTION,
+	UNUSEDAIMINGCLTCORRECTION,
+	UNUSEDATIMINGIATCORRECTION,
+	UNUSEDATIMINGPIDCORRECTION,
 	INSTANTMAPVALUE,
 	MOSTRECENTTIMEBETWEENSPARKEVENTS,
 	MOSTRECENTTIMEBETWEENIGNITIONEVENTS,
