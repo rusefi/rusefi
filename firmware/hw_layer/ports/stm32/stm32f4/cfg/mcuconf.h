@@ -36,6 +36,7 @@
 #define STM32F415_MCUCONF
 #define STM32F407_MCUCONF
 #define STM32F417_MCUCONF
+#define STM32F429_MCUCONF
 
 // Allows LSE init to timeout and configure fallback RTC clock source in case
 #define RUSEFI_STM32_LSE_WAIT_MAX           1000000
