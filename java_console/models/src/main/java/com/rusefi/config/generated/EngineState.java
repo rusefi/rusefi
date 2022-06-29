@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Apr 18 03:04:20 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 05:19:54 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -69,6 +69,8 @@ public class EngineState {
 	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 116, FieldType.FLOAT);
 	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 120, FieldType.FLOAT);
 	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 124, FieldType.FLOAT);
+	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 128, FieldType.INT16).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_130 = Field.create("ALIGNMENTFILL_AT_130", 130, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_ISTCHARGEAIRMODEL,
 	SD_UNUSEDBIT_1_1,
@@ -133,5 +135,7 @@ public class EngineState {
 	SPARKDWELL,
 	DWELLANGLE,
 	CLTTIMINGCORRECTION,
+	HELLENBOARDID,
+	ALIGNMENTFILL_AT_130,
 	};
 }

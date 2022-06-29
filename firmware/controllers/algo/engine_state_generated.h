@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 05:19:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -271,8 +271,20 @@ struct engine_state_s {
 	 * offset 124
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
+	/**
+	 * How does this board self identifies
+	id
+	 * offset 128
+	 */
+	int16_t hellenBoardId = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 130
+	 */
+	uint8_t alignmentFill_at_130[2];
 };
-static_assert(sizeof(engine_state_s) == 128);
+static_assert(sizeof(engine_state_s) == 132);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 05:19:54 UTC 2022
