@@ -380,7 +380,8 @@ int detectHellenBoardId() {
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - beginNt));
 
-	boardId = HELLEN_GET_BOARD_ID(rIdx[0], rIdx[1]);
+	// '+1' so that we can distinguish between identification not invoked and identification invoked
+	boardId = 1 + HELLEN_GET_BOARD_ID(rIdx[0], rIdx[1]);
 	efiPrintf("* RESULT: BoardId = %d, R1 = %.0f, R2 = %.0f (Elapsed time: %d ms)", boardId, R[0], R[1], elapsed_Ms);
 #endif /* EFI_PROD_CODE */
 	return boardId;

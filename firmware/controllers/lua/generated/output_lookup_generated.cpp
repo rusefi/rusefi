@@ -21,16 +21,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.needBurn;
 	if (strEqualCaseInsensitive(name, "sd_msd"))
 		return engine->outputChannels.sd_msd;
-	if (strEqualCaseInsensitive(name, "clutchUpState"))
-		return engine->outputChannels.clutchUpState;
-	if (strEqualCaseInsensitive(name, "clutchDownState"))
-		return engine->outputChannels.clutchDownState;
 	if (strEqualCaseInsensitive(name, "isFan2On"))
 		return engine->outputChannels.isFan2On;
 	if (strEqualCaseInsensitive(name, "alternatorOnOff"))
 		return engine->outputChannels.alternatorOnOff;
-	if (strEqualCaseInsensitive(name, "brakePedalState"))
-		return engine->outputChannels.brakePedalState;
 	if (strEqualCaseInsensitive(name, "toothLogReady"))
 		return engine->outputChannels.toothLogReady;
 	if (strEqualCaseInsensitive(name, "isTpsError"))
@@ -307,28 +301,14 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tps12Split;
 	if (strEqualCaseInsensitive(name, "accPedalSplit"))
 		return engine->outputChannels.accPedalSplit;
-	if (strEqualCaseInsensitive(name, "m_requested_pump"))
-		return engine->outputChannels.m_requested_pump;
-	if (strEqualCaseInsensitive(name, "boostControlTarget"))
-		return engine->outputChannels.boostControlTarget;
 	if (strEqualCaseInsensitive(name, "sparkCutReason"))
 		return engine->outputChannels.sparkCutReason;
 	if (strEqualCaseInsensitive(name, "fuelCutReason"))
 		return engine->outputChannels.fuelCutReason;
-	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
-		return engine->outputChannels.fuel_requested_percent;
-	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))
-		return engine->outputChannels.fuel_requested_percent_pi;
-	if (strEqualCaseInsensitive(name, "m_I_sum_percent"))
-		return engine->outputChannels.m_I_sum_percent;
-	if (strEqualCaseInsensitive(name, "m_pressureTarget_kPa"))
-		return engine->outputChannels.m_pressureTarget_kPa;
 	if (strEqualCaseInsensitive(name, "mafEstimate"))
 		return engine->outputChannels.mafEstimate;
 	if (strEqualCaseInsensitive(name, "instantRpm"))
 		return engine->outputChannels.instantRpm;
-	if (strEqualCaseInsensitive(name, "di_nextStart"))
-		return engine->outputChannels.di_nextStart;
 	if (strEqualCaseInsensitive(name, "systemEventReuse"))
 		return engine->outputChannels.systemEventReuse;
 	if (strEqualCaseInsensitive(name, "rawMap"))
@@ -365,18 +345,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.auxLinear1;
 	if (strEqualCaseInsensitive(name, "auxLinear2"))
 		return engine->outputChannels.auxLinear2;
-	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
-		return engine->outputChannels.launchSpeedCondition;
-	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
-		return engine->outputChannels.launchRpmCondition;
-	if (strEqualCaseInsensitive(name, "launchTpsCondition"))
-		return engine->outputChannels.launchTpsCondition;
-	if (strEqualCaseInsensitive(name, "launchActivateSwitchCondition"))
-		return engine->outputChannels.launchActivateSwitchCondition;
-	if (strEqualCaseInsensitive(name, "launchIsLaunchCondition"))
-		return engine->outputChannels.launchIsLaunchCondition;
-	if (strEqualCaseInsensitive(name, "launchCombinedConditions"))
-		return engine->outputChannels.launchCombinedConditions;
 	if (strEqualCaseInsensitive(name, "dfcoActive"))
 		return engine->outputChannels.dfcoActive;
 	if (strEqualCaseInsensitive(name, "tpsAccelActive"))
@@ -387,16 +355,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.boostControllerOpenLoopPart;
 	if (strEqualCaseInsensitive(name, "fallbackMap"))
 		return engine->outputChannels.fallbackMap;
-	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
-		return engine->outputChannels.boostControllerClosedLoopPart;
 	if (strEqualCaseInsensitive(name, "detectedGear"))
 		return engine->outputChannels.detectedGear;
-	if (strEqualCaseInsensitive(name, "timingCltCorrection"))
-		return engine->outputChannels.timingCltCorrection;
-	if (strEqualCaseInsensitive(name, "timingIatCorrection"))
-		return engine->outputChannels.timingIatCorrection;
-	if (strEqualCaseInsensitive(name, "timingPidCorrection"))
-		return engine->outputChannels.timingPidCorrection;
 	if (strEqualCaseInsensitive(name, "instantMAPValue"))
 		return engine->outputChannels.instantMAPValue;
 	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenSparkEvents"))
@@ -435,10 +395,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.injectorFlowPressureRatio;
 	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
 		return engine->outputChannels.injectorFlowPressureDelta;
-	if (strEqualCaseInsensitive(name, "etbIntegralError"))
-		return engine->outputChannels.etbIntegralError;
-	if (strEqualCaseInsensitive(name, "etbCurrentTarget"))
-		return engine->outputChannels.etbCurrentTarget;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.iTerm"))
 		return engine->outputChannels.alternatorStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.dTerm"))

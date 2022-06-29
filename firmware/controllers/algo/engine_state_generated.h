@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 03:21:08 EDT 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -247,32 +247,140 @@ struct engine_state_s {
 	 */
 	running_fuel_s running;
 	/**
-	 * offset 108
-	 */
-	percent_t etbFeedForward = (percent_t)0;
-	/**
-	 * offset 112
-	 */
-	percent_t targetFromTable = (percent_t)0;
-	/**
 	 * ignition dwell duration in ms
 	 * See also dwellAngle
-	 * offset 116
+	 * offset 108
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	 * offset 120
+	 * offset 112
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
-	 * offset 124
+	deg
+	 * offset 116
 	 */
-	angle_t cltTimingCorrection = (angle_t)0;
+	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 118
+	 */
+	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 120
+	 */
+	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
+	/**
+	 * How does this board self identifies
+	id
+	 * offset 122
+	 */
+	int16_t hellenBoardId = (int16_t)0;
+	/**
+	 * @@INDICATOR_NAME_CLUTCH_UP@@
+	offset 124 bit 0 */
+	bool clutchUpState : 1 {};
+	/**
+	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
+	offset 124 bit 1 */
+	bool clutchDownState : 1 {};
+	/**
+	 * @@INDICATOR_NAME_BRAKE_DOWN@@
+	offset 124 bit 2 */
+	bool brakePedalState : 1 {};
+	/**
+	offset 124 bit 3 */
+	bool unusedBit_21_3 : 1 {};
+	/**
+	offset 124 bit 4 */
+	bool unusedBit_21_4 : 1 {};
+	/**
+	offset 124 bit 5 */
+	bool unusedBit_21_5 : 1 {};
+	/**
+	offset 124 bit 6 */
+	bool unusedBit_21_6 : 1 {};
+	/**
+	offset 124 bit 7 */
+	bool unusedBit_21_7 : 1 {};
+	/**
+	offset 124 bit 8 */
+	bool unusedBit_21_8 : 1 {};
+	/**
+	offset 124 bit 9 */
+	bool unusedBit_21_9 : 1 {};
+	/**
+	offset 124 bit 10 */
+	bool unusedBit_21_10 : 1 {};
+	/**
+	offset 124 bit 11 */
+	bool unusedBit_21_11 : 1 {};
+	/**
+	offset 124 bit 12 */
+	bool unusedBit_21_12 : 1 {};
+	/**
+	offset 124 bit 13 */
+	bool unusedBit_21_13 : 1 {};
+	/**
+	offset 124 bit 14 */
+	bool unusedBit_21_14 : 1 {};
+	/**
+	offset 124 bit 15 */
+	bool unusedBit_21_15 : 1 {};
+	/**
+	offset 124 bit 16 */
+	bool unusedBit_21_16 : 1 {};
+	/**
+	offset 124 bit 17 */
+	bool unusedBit_21_17 : 1 {};
+	/**
+	offset 124 bit 18 */
+	bool unusedBit_21_18 : 1 {};
+	/**
+	offset 124 bit 19 */
+	bool unusedBit_21_19 : 1 {};
+	/**
+	offset 124 bit 20 */
+	bool unusedBit_21_20 : 1 {};
+	/**
+	offset 124 bit 21 */
+	bool unusedBit_21_21 : 1 {};
+	/**
+	offset 124 bit 22 */
+	bool unusedBit_21_22 : 1 {};
+	/**
+	offset 124 bit 23 */
+	bool unusedBit_21_23 : 1 {};
+	/**
+	offset 124 bit 24 */
+	bool unusedBit_21_24 : 1 {};
+	/**
+	offset 124 bit 25 */
+	bool unusedBit_21_25 : 1 {};
+	/**
+	offset 124 bit 26 */
+	bool unusedBit_21_26 : 1 {};
+	/**
+	offset 124 bit 27 */
+	bool unusedBit_21_27 : 1 {};
+	/**
+	offset 124 bit 28 */
+	bool unusedBit_21_28 : 1 {};
+	/**
+	offset 124 bit 29 */
+	bool unusedBit_21_29 : 1 {};
+	/**
+	offset 124 bit 30 */
+	bool unusedBit_21_30 : 1 {};
+	/**
+	offset 124 bit 31 */
+	bool unusedBit_21_31 : 1 {};
 };
 static_assert(sizeof(engine_state_s) == 128);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 03:21:08 EDT 2022

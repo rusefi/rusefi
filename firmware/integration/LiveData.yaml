@@ -39,6 +39,7 @@ Usages:
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
     output_name: boost
 
   - name: ac_control
@@ -70,6 +71,7 @@ Usages:
   - name: engine_state
     java: EngineState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config.txt
 
   - name: tps_accel_state
     java: TpsAccelState.java
