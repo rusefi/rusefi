@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Thu Apr 14 20:46:48 EDT 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jun 29 07:56:18 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -42,7 +42,7 @@ public class HighPressureFuelPump {
 	public static final Field UNUSEDBIT_6_30 = Field.create("UNUSEDBIT_6_30", 12, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_6_31 = Field.create("UNUSEDBIT_6_31", 12, FieldType.BIT, 31);
 	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 16, FieldType.FLOAT);
-	public static final Field NEXTSTART = Field.create("NEXTSTART", 20, FieldType.FLOAT);
+	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 20, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	M_REQUESTED_PUMP,
 	FUEL_REQUESTED_PERCENT,
@@ -80,6 +80,6 @@ public class HighPressureFuelPump {
 	UNUSEDBIT_6_30,
 	UNUSEDBIT_6_31,
 	NEXTLOBE,
-	NEXTSTART,
+	DI_NEXTSTART,
 	};
 }
