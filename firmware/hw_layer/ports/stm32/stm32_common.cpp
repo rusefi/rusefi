@@ -622,7 +622,8 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 }
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
-	spiConfig->end_cb = nullptr;
+	spiConfig->data_cb = nullptr;
+	spiConfig->error_cb = nullptr;
 	ioportid_t port = getHwPort("spi", csPin);
 	ioportmask_t pin = getHwPin("spi", csPin);
 	spiConfig->ssport = port;
@@ -635,7 +636,6 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 // fast mode is 80mhz/2 = 40MHz
 SPIConfig mmc_hs_spicfg = {
 		.circular = false,
-		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cfg1 = 7 // 8 bits per byte
@@ -646,7 +646,6 @@ SPIConfig mmc_hs_spicfg = {
 // Slow mode is 80mhz/4 = 20MHz
 SPIConfig mmc_ls_spicfg = {
 		.circular = false,
-		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cfg1 = 7 // 8 bits per byte
@@ -665,7 +664,9 @@ SPIConfig mmc_ls_spicfg = {
 // Fast mode is 54 or 27 MHz (technically out of spec, needs testing!)
 SPIConfig mmc_hs_spicfg = {
 		.circular = false,
-		.end_cb = NULL,
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 = SPI_BaudRatePrescaler_2,
@@ -674,7 +675,9 @@ SPIConfig mmc_hs_spicfg = {
 
 SPIConfig mmc_ls_spicfg = {
 		.circular = false,
-		.end_cb = NULL,
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 = SPI_BaudRatePrescaler_8,
