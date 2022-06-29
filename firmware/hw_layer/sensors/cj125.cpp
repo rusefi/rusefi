@@ -42,7 +42,6 @@ static SPIDriver *driver;
 
 static SPIConfig cj125spicfg = {
 		.circular = false,
-		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =

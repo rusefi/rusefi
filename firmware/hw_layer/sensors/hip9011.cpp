@@ -94,7 +94,6 @@ HIP9011 instance(&hardware);
 #if EFI_PROD_CODE
 static SPIConfig hipSpiCfg = {
 	.circular = false,
-	.end_cb = NULL,
 	.ssport = NULL,
 	.sspad = 0,
 	.cr1 =

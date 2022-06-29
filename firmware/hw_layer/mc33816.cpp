@@ -37,7 +37,6 @@ static unsigned short mcChipId;
 static unsigned short mcDriverStatus;
 
 static SPIConfig spiCfg = { .circular = false,
-		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
