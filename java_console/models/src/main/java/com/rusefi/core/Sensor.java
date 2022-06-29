@@ -155,17 +155,17 @@ public enum Sensor implements BinaryLogEntry {
     accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
     accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 
-    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 514, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 390, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
 
-    targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 968, 1.0, -1.0, -1.0, ""),
+    targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 940, 1.0, -1.0, -1.0, ""),
 //    baseDwell("baseDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
 //    dwellVoltageCorrection("dwellVoltageCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 976, 1.0, -1.0, -1.0, ""),
-    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
-    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
-    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
-    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
-    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
+//    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
+//    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
+//    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
+//    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
+//    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
