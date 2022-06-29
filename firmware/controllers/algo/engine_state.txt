@@ -83,7 +83,6 @@ running_fuel_s running
 
     int16_t hellenBoardId;How does this board self identifies;"id", 1, 0, 0, 3000, 0
 
-    bit clutchDownState
     bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
     bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
