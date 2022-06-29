@@ -131,7 +131,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
 			boolToString(engine->clutchUpState));
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
-			boolToString(engine->clutchDownState));
+			boolToString(engine->engineState.clutchDownState));
 
 	efiPrintf("digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 
