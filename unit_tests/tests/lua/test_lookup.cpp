@@ -14,7 +14,7 @@ TEST(LuaBasic, configLookup) {
 		engineConfiguration->launchRpm = 100;
 		ASSERT_EQ(100.0, getConfigValueByName(name));
 		setConfigValueByName(name, 160);
-		ASSERT_EQ(150.0, getConfigValueByName(name));
+		ASSERT_EQ(160.0, getConfigValueByName(name));
 	}
 
 	{
