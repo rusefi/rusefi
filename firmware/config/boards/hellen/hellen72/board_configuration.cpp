@@ -92,7 +92,14 @@ static void setupDefaultSensorInputs() {
 void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
-	setHellenSdCardSpi3();
+
+	if (engine->engineState.hellenBoardId == 0) {
+		// Rev a-d use SPI3 for SD card
+		setHellenSdCardSpi3();
+	} else {
+		// Revs E and later use SPI2 for SD card
+		setHellenSdCardSpi2();
+	}
 
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::C8; // out_pwm4
