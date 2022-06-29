@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 05:19:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 06:03:13 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -268,23 +268,28 @@ struct engine_state_s {
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
+	deg
 	 * offset 124
 	 */
-	angle_t cltTimingCorrection = (angle_t)0;
+	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 126
+	 */
+	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 128
+	 */
+	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * How does this board self identifies
 	id
-	 * offset 128
-	 */
-	int16_t hellenBoardId = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	units
 	 * offset 130
 	 */
-	uint8_t alignmentFill_at_130[2];
+	int16_t hellenBoardId = (int16_t)0;
 };
 static_assert(sizeof(engine_state_s) == 132);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 05:19:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 06:03:13 UTC 2022
