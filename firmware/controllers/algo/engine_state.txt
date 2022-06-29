@@ -83,5 +83,7 @@ running_fuel_s running
 	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
 	angle_t cltTimingCorrection
 
+    int16_t hellenBoardId;How does this board self identifies;"id", 1, 0, 0, 3000, 0
+
 ! engine_state2_s
 end_struct
