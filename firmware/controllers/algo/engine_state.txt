@@ -74,10 +74,6 @@ running_fuel_s running
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-	! todo: move these to ETB state, not engine
-	percent_t etbFeedForward
-	percent_t targetFromTable
-
 	! spark-related
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
 	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
@@ -88,6 +84,9 @@ running_fuel_s running
     int16_t hellenBoardId;How does this board self identifies;"id", 1, 0, 0, 3000, 0
 
     bit clutchDownState
+    bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
+    bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
+    bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 
 ! engine_state2_s
 end_struct
