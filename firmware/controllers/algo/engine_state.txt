@@ -81,7 +81,7 @@ running_fuel_s running
 	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 
-    int16_t hellenBoardId;How does this board self identifies;"id", 1, 0, 0, 3000, 0
+    int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
 
     bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
