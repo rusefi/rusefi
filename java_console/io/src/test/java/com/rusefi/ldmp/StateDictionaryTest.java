@@ -7,9 +7,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class StateDictionaryTest {
-
-    private static final int OUTPUTS_SIZE = 612;
-
     @Test
     public void testStateDictionaryIsComplete() {
         // we assert that this does not fail
@@ -17,13 +14,8 @@ public class StateDictionaryTest {
     }
 
     @Test
-    public void testStructSize() {
-        // todo: do we have this struct size anywhere?
-        assertEquals(OUTPUTS_SIZE, StateDictionary.getSize(TsOutputs.VALUES));
-    }
-
-    @Test
     public void testOffset() {
-        assertEquals(OUTPUTS_SIZE, StateDictionary.INSTANCE.getOffset(live_data_e.LDS_knock_controller));
+        int outputsSize = StateDictionary.getSize(TsOutputs.VALUES);
+        assertEquals(outputsSize, StateDictionary.INSTANCE.getOffset(live_data_e.LDS_knock_controller));
     }
 }
