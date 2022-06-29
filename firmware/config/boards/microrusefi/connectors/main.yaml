@@ -132,7 +132,7 @@ pins:
     id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     color: red
-    function: Starting from version 0.5.0 this pin can be used as 5V input for USB connection through main connector (No need to open case to access micro-USB connector)
+    function: Starting from version 0.5.0 this pin can be used as 5V input for USB connection through main connector (No need to open case to access micro-USB connector) WATCH OUT FOR D7
     ts_name: 19 - AN volt 4
     type: av
   
