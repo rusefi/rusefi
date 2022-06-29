@@ -4,7 +4,9 @@ import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import com.fazecast.jSerialComm.SerialPortThreadFactory;
 import com.opensr5.io.DataListener;
+import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
@@ -24,6 +26,8 @@ public class SerialIoStream extends AbstractIoStream {
 
     static {
         log.info("Using com.fazecast.jSerialComm " + SerialPort.getVersion());
+        // NamedThreadFactory has daemon=false by default and we like that!
+        SerialPortThreadFactory.set(new NamedThreadFactory("jSerialComm"));
     }
 
     public SerialIoStream(@Nullable SerialPort sp, String port) {
