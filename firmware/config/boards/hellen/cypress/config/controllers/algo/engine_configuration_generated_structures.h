@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jun 29 15:25:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jun 29 17:24:47 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2914,7 +2914,7 @@ struct engine_configuration_s {
 	 */
 	float throttlePedalWOTVoltage;
 	/**
-	 * on IGN voltage detection start turn fuel pump on to build fuel pressure
+	 * on IGN voltage detection turn fuel pump on to build fuel pressure
 	seconds
 	 * offset 1528
 	 */
@@ -4945,4 +4945,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21352);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jun 29 15:25:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Jun 29 17:24:47 UTC 2022
