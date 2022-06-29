@@ -34,7 +34,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		return launchActivatePinState;
 	} else if (isClutchActivated) {
 		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-			return engine->clutchDownState;
+			return engine->engineState.clutchDownState;
 		} else {
 			return false;
 		}
@@ -113,10 +113,6 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
-
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.clutchDownState = engine->clutchDownState;
-#endif /* EFI_TUNER_STUDIO */
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
