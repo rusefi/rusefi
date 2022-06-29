@@ -367,17 +367,15 @@ percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosit
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
-	float ff = 0;
-
 	// Don't apply open loop for wastegate/idle valve, only real ETB
 	if (m_function != ETB_Wastegate
 		&& m_function != ETB_IdleValve) {
-		ff = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
+		etbFeedForward = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
+	} else {
+	    etbFeedForward = 0;
 	}
 
-	engine->engineState.etbFeedForward = ff;
-
-	return ff;
+	return etbFeedForward;
 }
 
 expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, percent_t actualThrottlePosition) {
