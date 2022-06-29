@@ -36,7 +36,6 @@ static bool needToWriteConfiguration = false;
 NO_CACHE SNORDriver snor1;
 
 const WSPIConfig WSPIcfg1 = {
-	.end_cb			= NULL,
 	.error_cb		= NULL,
 	.dcr			= STM32_DCR_FSIZE(23U) |	/* 8MB device.          */
 					  STM32_DCR_CSHT(1U)		/* NCS 2 cycles delay.  */

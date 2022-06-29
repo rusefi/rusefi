@@ -22,7 +22,6 @@
 #include "mpu_util.h"
 
 static SPIConfig spiCfg = { .circular = false,
-		.end_cb = NULL,
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
