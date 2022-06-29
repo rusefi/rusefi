@@ -302,7 +302,7 @@ static int lua_getDigital(lua_State* l) {
 	bool state = false;
 
 	switch (idx) {
-		case 0: state = engine->clutchDownState; break;
+		case 0: state = engine->engineState.clutchDownState; break;
 		case 1: state = engine->clutchUpState; break;
 		case 2: state = engine->brakePedalState; break;
 		case 3: state = engine->module<AcController>().unmock().acButtonState; break;

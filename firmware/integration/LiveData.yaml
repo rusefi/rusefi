@@ -70,6 +70,7 @@ Usages:
   - name: engine_state
     java: EngineState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config.txt
 
   - name: tps_accel_state
     java: TpsAccelState.java

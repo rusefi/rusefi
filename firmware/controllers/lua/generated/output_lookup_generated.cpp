@@ -391,12 +391,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.boostControllerClosedLoopPart;
 	if (strEqualCaseInsensitive(name, "detectedGear"))
 		return engine->outputChannels.detectedGear;
-	if (strEqualCaseInsensitive(name, "timingCltCorrection"))
-		return engine->outputChannels.timingCltCorrection;
-	if (strEqualCaseInsensitive(name, "timingIatCorrection"))
-		return engine->outputChannels.timingIatCorrection;
-	if (strEqualCaseInsensitive(name, "timingPidCorrection"))
-		return engine->outputChannels.timingPidCorrection;
 	if (strEqualCaseInsensitive(name, "instantMAPValue"))
 		return engine->outputChannels.instantMAPValue;
 	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenSparkEvents"))

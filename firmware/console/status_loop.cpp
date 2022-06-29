@@ -690,10 +690,6 @@ static void updateFlags() {
 	engine->outputChannels.launchTriggered = engine->launchController.isLaunchCondition;
 #endif
 
-	engine->outputChannels.clutchUpState = engine->clutchUpState;
-	engine->outputChannels.clutchDownState = engine->clutchDownState;
-	engine->outputChannels.brakePedalState = engine->brakePedalState;
-
 #if EFI_PROD_CODE
 	engine->outputChannels.isTriggerError = isTriggerErrorNow();
 #endif // EFI_PROD_CODE

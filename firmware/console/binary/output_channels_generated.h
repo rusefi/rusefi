@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 02:35:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 29 05:31:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1218,17 +1218,17 @@ struct output_channels_s {
 	deg
 	 * offset 414
 	 */
-	scaled_channel<int16_t, 100, 1> timingCltCorrection = (int16_t)0;
+	scaled_channel<int16_t, 100, 1> unusedAimingCltCorrection = (int16_t)0;
 	/**
 	deg
 	 * offset 416
 	 */
-	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
+	scaled_channel<int16_t, 100, 1> unusedAtimingIatCorrection = (int16_t)0;
 	/**
 	deg
 	 * offset 418
 	 */
-	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
+	scaled_channel<int16_t, 100, 1> unusedAtimingPidCorrection = (int16_t)0;
 	/**
 	 * Instant MAP
 	kPa
@@ -1365,4 +1365,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 612);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jun 27 02:35:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 29 05:31:17 UTC 2022

@@ -16,6 +16,8 @@
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
 #define ts_show_sd_pins false
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
 
 ! in case of direct Lua control we need UI to undo defaults
 #define ts_show_etb_pins true

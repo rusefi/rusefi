@@ -363,7 +363,6 @@ public:
 	void updateTriggerWaveform();
 
 	bool clutchUpState = false;
-	bool clutchDownState = false;
 	bool brakePedalState = false;
 
 	bool isRunningPwmTest = false;

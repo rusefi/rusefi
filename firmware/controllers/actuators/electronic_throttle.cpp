@@ -303,8 +303,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	float targetFromTable = m_pedalMap->getValue(rpm, sanitizedPedal);
-	engine->engineState.targetFromTable = targetFromTable;
+	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);
 
 	percent_t etbIdlePosition = clampF(
 									0,
@@ -317,7 +316,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// [0, 100] -> [idle, 100]
 	// 0% target from table -> idle position as target
 	// 100% target from table -> 100% target position
-	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
+	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
 	percent_t targetPosition = idlePosition + luaAdjustment;
 
@@ -504,16 +503,10 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		// Check that we're not over the error limit
-		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
-
-#if EFI_TUNER_STUDIO
-		if (m_function == ETB_Throttle1) {
-			engine->outputChannels.etbIntegralError = errorIntegral;
-		}
-#endif // EFI_TUNER_STUDIO
+		etbIntegralError = m_errorAccumulator.accumulate(target - observation);
 
 		// Allow up to 10 percent-seconds of error
-		if (errorIntegral > 10.0f) {
+		if (etbIntegralError > 10.0f) {
 			// TODO: figure out how to handle uncalibrated ETB 
 			//engine->limpManager.etbProblem();
 		}
@@ -573,7 +566,6 @@ void EtbController::update() {
 		}
 	}
 
-	engine->outputChannels.etbCurrentTarget = engine->engineState.targetFromTable;
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -873,8 +865,6 @@ void setDefaultEtbParameters() {
 	engineConfiguration->throttlePedalWOTVoltage = 5;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
-
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 
 	engineConfiguration->etb = {
 		1,		// Kp
