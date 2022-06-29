@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 06:03:13 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 06:20:31 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -458,6 +458,38 @@ public class EngineState {
 	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 126, FieldType.INT16).setScale(0.01);
 	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 128, FieldType.INT16).setScale(0.01);
 	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 130, FieldType.INT16).setScale(1.0);
+	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 132, FieldType.BIT, 0);
+	public static final Field UNUSEDBIT_21_1 = Field.create("UNUSEDBIT_21_1", 132, FieldType.BIT, 1);
+	public static final Field UNUSEDBIT_21_2 = Field.create("UNUSEDBIT_21_2", 132, FieldType.BIT, 2);
+	public static final Field UNUSEDBIT_21_3 = Field.create("UNUSEDBIT_21_3", 132, FieldType.BIT, 3);
+	public static final Field UNUSEDBIT_21_4 = Field.create("UNUSEDBIT_21_4", 132, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT_21_5 = Field.create("UNUSEDBIT_21_5", 132, FieldType.BIT, 5);
+	public static final Field UNUSEDBIT_21_6 = Field.create("UNUSEDBIT_21_6", 132, FieldType.BIT, 6);
+	public static final Field UNUSEDBIT_21_7 = Field.create("UNUSEDBIT_21_7", 132, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT_21_8 = Field.create("UNUSEDBIT_21_8", 132, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_21_9 = Field.create("UNUSEDBIT_21_9", 132, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_21_10 = Field.create("UNUSEDBIT_21_10", 132, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_21_11 = Field.create("UNUSEDBIT_21_11", 132, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_21_12 = Field.create("UNUSEDBIT_21_12", 132, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_21_13 = Field.create("UNUSEDBIT_21_13", 132, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_21_14 = Field.create("UNUSEDBIT_21_14", 132, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_21_15 = Field.create("UNUSEDBIT_21_15", 132, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_21_16 = Field.create("UNUSEDBIT_21_16", 132, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_21_17 = Field.create("UNUSEDBIT_21_17", 132, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_21_18 = Field.create("UNUSEDBIT_21_18", 132, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_21_19 = Field.create("UNUSEDBIT_21_19", 132, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_21_20 = Field.create("UNUSEDBIT_21_20", 132, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_21_21 = Field.create("UNUSEDBIT_21_21", 132, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_21_22 = Field.create("UNUSEDBIT_21_22", 132, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_21_23 = Field.create("UNUSEDBIT_21_23", 132, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_21_24 = Field.create("UNUSEDBIT_21_24", 132, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_21_25 = Field.create("UNUSEDBIT_21_25", 132, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_21_26 = Field.create("UNUSEDBIT_21_26", 132, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_21_27 = Field.create("UNUSEDBIT_21_27", 132, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_21_28 = Field.create("UNUSEDBIT_21_28", 132, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_21_29 = Field.create("UNUSEDBIT_21_29", 132, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_21_30 = Field.create("UNUSEDBIT_21_30", 132, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_21_31 = Field.create("UNUSEDBIT_21_31", 132, FieldType.BIT, 31);
 	public static final Field[] VALUES = {
 	SD_ISTCHARGEAIRMODEL,
 	SD_UNUSEDBIT_1_1,
@@ -525,5 +557,37 @@ public class EngineState {
 	TIMINGIATCORRECTION,
 	TIMINGPIDCORRECTION,
 	HELLENBOARDID,
+	CLUTCHDOWNSTATE,
+	UNUSEDBIT_21_1,
+	UNUSEDBIT_21_2,
+	UNUSEDBIT_21_3,
+	UNUSEDBIT_21_4,
+	UNUSEDBIT_21_5,
+	UNUSEDBIT_21_6,
+	UNUSEDBIT_21_7,
+	UNUSEDBIT_21_8,
+	UNUSEDBIT_21_9,
+	UNUSEDBIT_21_10,
+	UNUSEDBIT_21_11,
+	UNUSEDBIT_21_12,
+	UNUSEDBIT_21_13,
+	UNUSEDBIT_21_14,
+	UNUSEDBIT_21_15,
+	UNUSEDBIT_21_16,
+	UNUSEDBIT_21_17,
+	UNUSEDBIT_21_18,
+	UNUSEDBIT_21_19,
+	UNUSEDBIT_21_20,
+	UNUSEDBIT_21_21,
+	UNUSEDBIT_21_22,
+	UNUSEDBIT_21_23,
+	UNUSEDBIT_21_24,
+	UNUSEDBIT_21_25,
+	UNUSEDBIT_21_26,
+	UNUSEDBIT_21_27,
+	UNUSEDBIT_21_28,
+	UNUSEDBIT_21_29,
+	UNUSEDBIT_21_30,
+	UNUSEDBIT_21_31,
 	};
 }
