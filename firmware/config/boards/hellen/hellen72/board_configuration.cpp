@@ -93,8 +93,7 @@ void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 
-	extern int hellenBoardId;
-	if (hellenBoardId == 0) {
+	if (engine->engineState.hellenBoardId == 0) {
 		// Rev a-d use SPI3 for SD card
 		setHellenSdCardSpi3();
 	} else {
