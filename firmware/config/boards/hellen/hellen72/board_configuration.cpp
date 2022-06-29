@@ -99,7 +99,7 @@ void setBoardConfigOverrides() {
 		setHellenSdCardSpi3();
 	} else {
 		// Revs E and later use SPI2 for SD card
-		setHellenSdCardSpi2
+		setHellenSdCardSpi2();
 	}
 
 	engineConfiguration->etbIo[0].directionPin1 = Gpio::C7; // out_pwm3
