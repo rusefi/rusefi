@@ -293,7 +293,7 @@ static bool getClutchUpState() {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
 #endif // EFI_GPIO_HARDWARE
-	return engine->engineState.luaAdjustments.clutchUpState;
+	return engine->engineState.lua.clutchUpState;
 }
 
 static bool getBrakePedalState() {
@@ -301,7 +301,7 @@ static bool getBrakePedalState() {
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
-	return engine->engineState.luaAdjustments.brakePedalState;
+	return engine->engineState.lua.brakePedalState;
 #endif // EFI_GPIO_HARDWARE
 }
 
