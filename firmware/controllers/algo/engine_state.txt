@@ -6,7 +6,7 @@ struct LuaAdjustments
 	float fuelAdd
 
 	bit clutchUpState
-	brakePedalState
+	bit brakePedalState
 
 end_struct
 
