@@ -3,6 +3,111 @@
 // begin
 #pragma once
 #include "rusefi_types.h"
+// start of LuaAdjustments
+struct LuaAdjustments {
+	/**
+	 * offset 0
+	 */
+	float fuelAdd = (float)0;
+	/**
+	offset 4 bit 0 */
+	bool clutchUpState : 1 {};
+	/**
+	offset 4 bit 1 */
+	bool brakePedalState : 1 {};
+	/**
+	offset 4 bit 2 */
+	bool unusedBit_3_2 : 1 {};
+	/**
+	offset 4 bit 3 */
+	bool unusedBit_3_3 : 1 {};
+	/**
+	offset 4 bit 4 */
+	bool unusedBit_3_4 : 1 {};
+	/**
+	offset 4 bit 5 */
+	bool unusedBit_3_5 : 1 {};
+	/**
+	offset 4 bit 6 */
+	bool unusedBit_3_6 : 1 {};
+	/**
+	offset 4 bit 7 */
+	bool unusedBit_3_7 : 1 {};
+	/**
+	offset 4 bit 8 */
+	bool unusedBit_3_8 : 1 {};
+	/**
+	offset 4 bit 9 */
+	bool unusedBit_3_9 : 1 {};
+	/**
+	offset 4 bit 10 */
+	bool unusedBit_3_10 : 1 {};
+	/**
+	offset 4 bit 11 */
+	bool unusedBit_3_11 : 1 {};
+	/**
+	offset 4 bit 12 */
+	bool unusedBit_3_12 : 1 {};
+	/**
+	offset 4 bit 13 */
+	bool unusedBit_3_13 : 1 {};
+	/**
+	offset 4 bit 14 */
+	bool unusedBit_3_14 : 1 {};
+	/**
+	offset 4 bit 15 */
+	bool unusedBit_3_15 : 1 {};
+	/**
+	offset 4 bit 16 */
+	bool unusedBit_3_16 : 1 {};
+	/**
+	offset 4 bit 17 */
+	bool unusedBit_3_17 : 1 {};
+	/**
+	offset 4 bit 18 */
+	bool unusedBit_3_18 : 1 {};
+	/**
+	offset 4 bit 19 */
+	bool unusedBit_3_19 : 1 {};
+	/**
+	offset 4 bit 20 */
+	bool unusedBit_3_20 : 1 {};
+	/**
+	offset 4 bit 21 */
+	bool unusedBit_3_21 : 1 {};
+	/**
+	offset 4 bit 22 */
+	bool unusedBit_3_22 : 1 {};
+	/**
+	offset 4 bit 23 */
+	bool unusedBit_3_23 : 1 {};
+	/**
+	offset 4 bit 24 */
+	bool unusedBit_3_24 : 1 {};
+	/**
+	offset 4 bit 25 */
+	bool unusedBit_3_25 : 1 {};
+	/**
+	offset 4 bit 26 */
+	bool unusedBit_3_26 : 1 {};
+	/**
+	offset 4 bit 27 */
+	bool unusedBit_3_27 : 1 {};
+	/**
+	offset 4 bit 28 */
+	bool unusedBit_3_28 : 1 {};
+	/**
+	offset 4 bit 29 */
+	bool unusedBit_3_29 : 1 {};
+	/**
+	offset 4 bit 30 */
+	bool unusedBit_3_30 : 1 {};
+	/**
+	offset 4 bit 31 */
+	bool unusedBit_3_31 : 1 {};
+};
+static_assert(sizeof(LuaAdjustments) == 8);
+
 // start of speed_density_s
 struct speed_density_s {
 	/**
@@ -201,186 +306,191 @@ struct engine_state_s {
 	/**
 	 * offset 0
 	 */
+	LuaAdjustments lua;
+	/**
+	 * offset 8
+	 */
 	speed_density_s sd;
-	/**
-	 * offset 24
-	 */
-	float targetAFR = (float)0;
-	/**
-	 * offset 28
-	 */
-	float engineCycleDurationMs = (float)0;
 	/**
 	 * offset 32
 	 */
-	float minRpmKcurrentTPS = (float)0;
+	float targetAFR = (float)0;
 	/**
 	 * offset 36
 	 */
-	int currentTpsAdc = (int)0;
+	float engineCycleDurationMs = (float)0;
 	/**
 	 * offset 40
 	 */
-	float tpsVoltageMCU = (float)0;
+	float minRpmKcurrentTPS = (float)0;
 	/**
 	 * offset 44
 	 */
-	float tpsVoltageBoard = (float)0;
+	int currentTpsAdc = (int)0;
 	/**
 	 * offset 48
 	 */
-	float currentBaroCorrectedVE = (float)0;
+	float tpsVoltageMCU = (float)0;
 	/**
 	 * offset 52
 	 */
-	float injectorFlowCorrection = (float)0;
+	float tpsVoltageBoard = (float)0;
 	/**
 	 * offset 56
 	 */
-	float baroCorrection = (float)0;
+	float currentBaroCorrectedVE = (float)0;
 	/**
 	 * offset 60
 	 */
+	float injectorFlowCorrection = (float)0;
+	/**
+	 * offset 64
+	 */
+	float baroCorrection = (float)0;
+	/**
+	 * offset 68
+	 */
 	cranking_fuel_s cranking;
 	/**
-	 * offset 80
+	 * offset 88
 	 */
 	running_fuel_s running;
 	/**
 	 * ignition dwell duration in ms
 	 * See also dwellAngle
-	 * offset 108
+	 * offset 116
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	 * offset 112
+	 * offset 120
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
 	deg
-	 * offset 116
+	 * offset 124
 	 */
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 118
+	 * offset 126
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 120
+	 * offset 128
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * Detected Board ID
 	id
-	 * offset 122
+	 * offset 130
 	 */
 	int16_t hellenBoardId = (int16_t)0;
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_UP@@
-	offset 124 bit 0 */
+	offset 132 bit 0 */
 	bool clutchUpState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 124 bit 1 */
+	offset 132 bit 1 */
 	bool clutchDownState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
-	offset 124 bit 2 */
+	offset 132 bit 2 */
 	bool brakePedalState : 1 {};
 	/**
-	offset 124 bit 3 */
-	bool unusedBit_21_3 : 1 {};
+	offset 132 bit 3 */
+	bool unusedBit_22_3 : 1 {};
 	/**
-	offset 124 bit 4 */
-	bool unusedBit_21_4 : 1 {};
+	offset 132 bit 4 */
+	bool unusedBit_22_4 : 1 {};
 	/**
-	offset 124 bit 5 */
-	bool unusedBit_21_5 : 1 {};
+	offset 132 bit 5 */
+	bool unusedBit_22_5 : 1 {};
 	/**
-	offset 124 bit 6 */
-	bool unusedBit_21_6 : 1 {};
+	offset 132 bit 6 */
+	bool unusedBit_22_6 : 1 {};
 	/**
-	offset 124 bit 7 */
-	bool unusedBit_21_7 : 1 {};
+	offset 132 bit 7 */
+	bool unusedBit_22_7 : 1 {};
 	/**
-	offset 124 bit 8 */
-	bool unusedBit_21_8 : 1 {};
+	offset 132 bit 8 */
+	bool unusedBit_22_8 : 1 {};
 	/**
-	offset 124 bit 9 */
-	bool unusedBit_21_9 : 1 {};
+	offset 132 bit 9 */
+	bool unusedBit_22_9 : 1 {};
 	/**
-	offset 124 bit 10 */
-	bool unusedBit_21_10 : 1 {};
+	offset 132 bit 10 */
+	bool unusedBit_22_10 : 1 {};
 	/**
-	offset 124 bit 11 */
-	bool unusedBit_21_11 : 1 {};
+	offset 132 bit 11 */
+	bool unusedBit_22_11 : 1 {};
 	/**
-	offset 124 bit 12 */
-	bool unusedBit_21_12 : 1 {};
+	offset 132 bit 12 */
+	bool unusedBit_22_12 : 1 {};
 	/**
-	offset 124 bit 13 */
-	bool unusedBit_21_13 : 1 {};
+	offset 132 bit 13 */
+	bool unusedBit_22_13 : 1 {};
 	/**
-	offset 124 bit 14 */
-	bool unusedBit_21_14 : 1 {};
+	offset 132 bit 14 */
+	bool unusedBit_22_14 : 1 {};
 	/**
-	offset 124 bit 15 */
-	bool unusedBit_21_15 : 1 {};
+	offset 132 bit 15 */
+	bool unusedBit_22_15 : 1 {};
 	/**
-	offset 124 bit 16 */
-	bool unusedBit_21_16 : 1 {};
+	offset 132 bit 16 */
+	bool unusedBit_22_16 : 1 {};
 	/**
-	offset 124 bit 17 */
-	bool unusedBit_21_17 : 1 {};
+	offset 132 bit 17 */
+	bool unusedBit_22_17 : 1 {};
 	/**
-	offset 124 bit 18 */
-	bool unusedBit_21_18 : 1 {};
+	offset 132 bit 18 */
+	bool unusedBit_22_18 : 1 {};
 	/**
-	offset 124 bit 19 */
-	bool unusedBit_21_19 : 1 {};
+	offset 132 bit 19 */
+	bool unusedBit_22_19 : 1 {};
 	/**
-	offset 124 bit 20 */
-	bool unusedBit_21_20 : 1 {};
+	offset 132 bit 20 */
+	bool unusedBit_22_20 : 1 {};
 	/**
-	offset 124 bit 21 */
-	bool unusedBit_21_21 : 1 {};
+	offset 132 bit 21 */
+	bool unusedBit_22_21 : 1 {};
 	/**
-	offset 124 bit 22 */
-	bool unusedBit_21_22 : 1 {};
+	offset 132 bit 22 */
+	bool unusedBit_22_22 : 1 {};
 	/**
-	offset 124 bit 23 */
-	bool unusedBit_21_23 : 1 {};
+	offset 132 bit 23 */
+	bool unusedBit_22_23 : 1 {};
 	/**
-	offset 124 bit 24 */
-	bool unusedBit_21_24 : 1 {};
+	offset 132 bit 24 */
+	bool unusedBit_22_24 : 1 {};
 	/**
-	offset 124 bit 25 */
-	bool unusedBit_21_25 : 1 {};
+	offset 132 bit 25 */
+	bool unusedBit_22_25 : 1 {};
 	/**
-	offset 124 bit 26 */
-	bool unusedBit_21_26 : 1 {};
+	offset 132 bit 26 */
+	bool unusedBit_22_26 : 1 {};
 	/**
-	offset 124 bit 27 */
-	bool unusedBit_21_27 : 1 {};
+	offset 132 bit 27 */
+	bool unusedBit_22_27 : 1 {};
 	/**
-	offset 124 bit 28 */
-	bool unusedBit_21_28 : 1 {};
+	offset 132 bit 28 */
+	bool unusedBit_22_28 : 1 {};
 	/**
-	offset 124 bit 29 */
-	bool unusedBit_21_29 : 1 {};
+	offset 132 bit 29 */
+	bool unusedBit_22_29 : 1 {};
 	/**
-	offset 124 bit 30 */
-	bool unusedBit_21_30 : 1 {};
+	offset 132 bit 30 */
+	bool unusedBit_22_30 : 1 {};
 	/**
-	offset 124 bit 31 */
-	bool unusedBit_21_31 : 1 {};
+	offset 132 bit 31 */
+	bool unusedBit_22_31 : 1 {};
 };
-static_assert(sizeof(engine_state_s) == 128);
+static_assert(sizeof(engine_state_s) == 136);
 
 // end
 // this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 22:14:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jun 29 22:24:49 EDT 2022
