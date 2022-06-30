@@ -61,23 +61,16 @@
 //#define HELLEN_BOARD_ID_DEBUG
 
 #if EFI_PROD_CODE
-#if STM32_GPT_USE_TIM6
-#define HELLEN_BOARD_ID_GPTDEVICE GPTD6
-#else
-#error "STM32_GPT_USE_TIM6 is required for Hellen Board-ID detector!"
-#endif /* STM32_GPT_USE_TIM6 */
 
 static void hellenBoardIdInputCallback(void *arg, efitick_t nowNt) {
 	UNUSED(arg);
-	chibios_rt::CriticalSectionLocker csl;
-
 	HellenBoardIdFinderState *state = (HellenBoardIdFinderState *)arg;
-
 	// Now start discharging immediately! This should be the first command in the interrupt handler.
 	palClearPad(state->rOutputPinPort, state->rOutputPinIdx);
 
 	state->timeChargeNt = nowNt;
 
+	chibios_rt::CriticalSectionLocker csl;
 	chSemSignalI(&state->boardId_wake);  // no need to call chSchRescheduleS() because we're inside the ISR
 }
 
@@ -97,20 +90,22 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	float Xcur, Xnext;
 	Xnext = x0;
 
-    int safetyLimit = 5000; // since we had https://github.com/rusefi/rusefi/issues/4084 let's add paranoia check
-	do {
-	    if (safetyLimit-- < 0) {
-	        firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
-	        return Xnext;
-	    }
+	// All real cases converge in ~3 iterations, so just do a fixed number.
+	// We're a little paranoid about https://github.com/rusefi/rusefi/issues/4084
+	for (size_t i = 0; i < 10; i++) {
 		Xcur = Xnext;
 		Xnext = Xcur - fx(Xcur) / dfx(Xcur);
 
 #ifdef HELLEN_BOARD_ID_DEBUG
 		efiPrintf ("* %f", Xnext);
 #endif /* HELLEN_BOARD_ID_DEBUG */		
-	} while (absF(Xnext - Xcur) > deltaX);
-	
+	}
+
+	// But check anyway that we actually *DID* converge.
+	if (absF(Xnext - Xcur) > deltaX) {
+		firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
+	}
+
 	return Xnext;
 }
 
@@ -133,7 +128,8 @@ float HellenBoardIdFinderBase::findClosestResistor(float R, bool testOnlyMajorSe
 	*rIdx = -1;
 	float minDelta = 1.e6f;
 	for (size_t i = 0; i < rValueSize; i++) {
-		float delta = absF(R - rAllValues[i]);
+		// Find the nearest resistor by least ratio error
+		float delta = absF(1 - (R / rAllValues[i]));
 		if (delta < minDelta) {
 			minDelta = delta;
 			*rIdx = i;
@@ -163,9 +159,10 @@ float HellenBoardIdFinderBase::calc(float Tc1_us, float Tc2_us, float Rest, floa
 	// solve the equation for R (1 Ohm precision is more than enough)
     *Rmeasured = rSolver.solve(Tc1_us, Tc2_us, Rest, C, 1.0f);
 
-	// add 30 Ohms for pin's internal resistance
+	// add 22 Ohms for pin's internal resistance
 	// (according to the STM32 datasheets, the voltage drop on an output pin can be up to 0.4V for 8 mA current)
-	constexpr float Rinternal = 30.0f;
+	// Actual measured value was is in the low-20s on most chips.
+	constexpr float Rinternal = 22.0f;
 	float R = findClosestResistor(*Rmeasured - Rinternal, testOnlyMajorSeries, rIdx);
 
 	// Find the 'real' capacitance value and use it for the next resistor iteration (gives more precision)
@@ -220,34 +217,39 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
     	return false;
     }
 
+	// Timestamps:
+	// t1 = Starts charging from 0v
+	// t2 = Threshold reached, starts discharging
+	// t3 = Random voltage reached, starts charging again
+	// t4 = Threshold reached again, process finished.
+
 	// 2. Start charging until the input pin triggers (V01 threshold is reached)
 	state.timeChargeNt = 0;
-	efitick_t nowNt1 = getTimeNowNt();
+	efitick_t t1 = getTimeNowNt();
 	palSetPad(state.rOutputPinPort, state.rOutputPinIdx);
 	chSemWaitTimeout(&state.boardId_wake, TIME_US2I(Tf_us));
+	efitick_t t2 = state.timeChargeNt;
 
 	// 3. At the moment, the discharging has already been started!
 	// Meanwhile we need to do some checks - until some pre-selected voltage is presumably reached.
 
-	// if voltage didn't change on the input pin, then the charging didn't start,
+	// if voltage didn't change on the input pin (or changed impossibly fast), then the charging didn't start,
 	// meaning there's no capacitor and/or resistors on these pins.
-	if (state.timeChargeNt <= nowNt1) {
+	if (t2 - t1 < US2NT(100)) {
 		efiPrintf("* Hellen Board ID circuitry wasn't detected! Aborting!");
 		return false;
 	}
 
 	// 4. calculate the first charging time
-	Tc1_us = NT2USF(state.timeChargeNt - nowNt1);
+	efitick_t Tc1_nt = t2 - t1;
+	Tc1_us = NT2USF(Tc1_nt);
 	// We use the same 'charging time' to discharge the capacitor to some random voltage below the threshold voltage.
-	float Td_us = Tc1_us;
-
-	// we can make a tiny delay adjustments to compensate for the code execution overhead (every usec matters!)
-	efitick_t nowNt2 = getTimeNowNt();
-	float TdAdj_us = NT2USF(nowNt2 - state.timeChargeNt);
+	efitick_t Td_nt = Tc1_nt;
 
 	// 5. And now just wait for the rest of the discharge process...
-	// We cannot use chThdSleepMicroseconds() here because we need more precise delay
-	gptPolledDelay(&HELLEN_BOARD_ID_GPTDEVICE, Td_us - TdAdj_us);
+	// Spin wait since chThdSleepMicroseconds() lacks the resolution we need
+	efitick_t t3 = t2 + Td_nt;
+	while (getTimeNowNt() < t3) ;
 
 	// the input pin state should be low when the capacitor is discharged to Vl
 	pinState = palReadPad(state.rInputPinPort, state.rInputPinIdx);
@@ -257,28 +259,29 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 	palSetPad(state.rOutputPinPort, state.rOutputPinIdx);
 
 	// Wait for the charging completion
-	efitick_t nowNt3 = getTimeNowNt();
 	chSemReset(&state.boardId_wake, 0);
 	chSemWaitTimeout(&state.boardId_wake, TIME_US2I(Tf_us));
+	efitick_t t4 = state.timeChargeNt;
 
 	// 7. calculate the second charge time
-	Tc2_us = NT2USF(state.timeChargeNt - nowNt3);
+	Tc2_us = NT2USF(t4 - t3);
 
 #ifdef HELLEN_BOARD_ID_DEBUG
 	efitick_t nowNt4 = getTimeNowNt();
-	efiPrintf("* dTime21 = %d", (int)(nowNt2 - nowNt1));
-	efiPrintf("* dTime32 = %d", (int)(nowNt3 - nowNt2));
-	efiPrintf("* dTime43 = %d", (int)(nowNt4 - nowNt3));
-	efiPrintf("* Tc1 = %f, Tc2 = %f, Td = %f, TdAdj = %f", Tc1_us, Tc2_us, Td_us, TdAdj_us);
+	efiPrintf("* dTime2-1 = %d", (int)(t2 - t1));
+	efiPrintf("* dTime3-2 = %d", (int)(t3 - t2));
+	efiPrintf("* dTime4-3 = %d", (int)(t4 - t3));
+	efiPrintf("* Tc1 = %f, Tc2 = %f, Td = %f", Tc1_us, Tc2_us, Td_us);
 #endif /* HELLEN_BOARD_ID_DEBUG */
 
     // sanity checks
     if (pinState != 0) {
-    	efiPrintf("* Board detection error! (Td=%f is too small)", Td_us);
-    	return false;
+		float Td_us = NT2USF(Td_nt);
+		efiPrintf("* Board detection error! (Td=%f is too small)", Td_us);
+		return false;
     }
 
-	if (state.timeChargeNt <= nowNt3) {
+	if (t4 <= t3) {
 		efiPrintf("* Estimates are out of limit! Something went wrong. Aborting!");
 		return false;
 	}
@@ -312,7 +315,7 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimesAveraged(int i, float & T
 
 
 int detectHellenBoardId() {
-	int boardId = 0;
+	int boardId = -1;
 #if EFI_PROD_CODE
 	efiPrintf("Starting Hellen Board ID detection...");
 	efitick_t beginNt = getTimeNowNt();
@@ -332,8 +335,6 @@ int detectHellenBoardId() {
 
 	// init some ChibiOs objects
 	chSemObjectInit(&finder.state.boardId_wake, 0);
-	static constexpr GPTConfig gptCfg = { 1000000 /* 1 MHz timer clock.*/, NULL, 0, 0 };
-	gptStart(&HELLEN_BOARD_ID_GPTDEVICE, &gptCfg);
 
 	// R1 is the first, R2 is the second
 	for (int i = 0; i < numPins; i++) {
@@ -375,13 +376,22 @@ int detectHellenBoardId() {
 		palSetPadMode(getBrainPinPort(rPins[k]), getBrainPinIndex(rPins[k]), PAL_MODE_RESET);
 	}
 
-	gptStop(&HELLEN_BOARD_ID_GPTDEVICE);
-
 	efitick_t endNt = getTimeNowNt();
 	int elapsed_Ms = US2MS(NT2US(endNt - beginNt));
 
-	// '+1' so that we can distinguish between identification not invoked and identification invoked
-	boardId = 1 + HELLEN_GET_BOARD_ID(rIdx[0], rIdx[1]);
+	// Check that all resistors were actually detected
+	bool allRValid = true;
+	for (size_t i = 0; i < numPins; i++) {
+		allRValid &= R[i] != 0;
+	}
+
+	// Decode board ID only if all resistors could be decoded, otherwise we return -1
+	if (allRValid) {
+		boardId = HELLEN_GET_BOARD_ID(rIdx[0], rIdx[1]);
+	} else {
+		boardId = -1;
+	}
+
 	efiPrintf("* RESULT: BoardId = %d, R1 = %.0f, R2 = %.0f (Elapsed time: %d ms)", boardId, R[0], R[1], elapsed_Ms);
 #endif /* EFI_PROD_CODE */
 	return boardId;
