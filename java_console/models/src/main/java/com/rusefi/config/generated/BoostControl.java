@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Wed Jun 29 07:56:18 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jun 30 03:37:30 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -107,7 +107,7 @@ public class BoostControl {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10012;
+	public static final int FLASH_DATA_VERSION = 10013;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -321,7 +321,6 @@ public class BoostControl {
 	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
 	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
 	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
-	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int SCRIPT_CURVE_16 = 16;
 	public static final int SCRIPT_CURVE_8 = 8;
 	public static final int SCRIPT_CURVE_COUNT = 6;
@@ -424,10 +423,12 @@ public class BoostControl {
 	public static final Field UNUSEDBIT_5_29 = Field.create("UNUSEDBIT_5_29", 0, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_5_30 = Field.create("UNUSEDBIT_5_30", 0, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_5_31 = Field.create("UNUSEDBIT_5_31", 0, FieldType.BIT, 31);
-	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 4, FieldType.FLOAT);
-	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 8, FieldType.INT8).setScale(0.5);
-	public static final Field ALIGNMENTFILL_AT_9 = Field.create("ALIGNMENTFILL_AT_9", 9, FieldType.INT8).setScale(1.0);
-	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 10, FieldType.INT16).setScale(0.03333333333333333);
+	public static final Field LOADTARGETADD = Field.create("LOADTARGETADD", 4, FieldType.FLOAT);
+	public static final Field LOADTARGETMULT = Field.create("LOADTARGETMULT", 8, FieldType.FLOAT);
+	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT);
+	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 16, FieldType.INT8).setScale(0.5);
+	public static final Field ALIGNMENTFILL_AT_17 = Field.create("ALIGNMENTFILL_AT_17", 17, FieldType.INT8).setScale(1.0);
+	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 18, FieldType.INT16).setScale(0.03333333333333333);
 	public static final Field[] VALUES = {
 	ISTPSINVALID,
 	M_SHOULDRESETPID,
@@ -461,9 +462,11 @@ public class BoostControl {
 	UNUSEDBIT_5_29,
 	UNUSEDBIT_5_30,
 	UNUSEDBIT_5_31,
+	LOADTARGETADD,
+	LOADTARGETMULT,
 	OPENLOOPPART,
 	BOOSTCONTROLLERCLOSEDLOOPPART,
-	ALIGNMENTFILL_AT_9,
+	ALIGNMENTFILL_AT_17,
 	BOOSTCONTROLTARGET,
 	};
 }
