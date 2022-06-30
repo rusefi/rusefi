@@ -2,6 +2,17 @@
 
 struct_no_prefix engine_state_s
 
+struct LuaAdjustments
+	float fuelAdd
+
+	bit clutchUpState
+	brakePedalState
+
+end_struct
+
+LuaAdjustments lua
+
+
 struct speed_density_s
 
 bit isTChargeAirModel

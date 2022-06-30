@@ -14,11 +14,7 @@
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {
-	float fuelAdd = 0;
 	float fuelMult = 1;
-
-	bool clutchUpState = false;
-	bool brakePedalState = false;
 };
 
 class EngineState : public engine_state_s {
