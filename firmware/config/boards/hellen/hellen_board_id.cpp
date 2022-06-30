@@ -96,7 +96,7 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	do {
 		if (safetyLimit-- < 0) {
 			firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
-			return Xnext;
+			break;
 		}
 		Xcur = Xnext;
 		Xnext = Xcur - fx(Xcur) / dfx(Xcur);
