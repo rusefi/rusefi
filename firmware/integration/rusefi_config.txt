@@ -1533,7 +1533,7 @@ engine_configuration_s engineConfiguration;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 
 
-	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -10000, 10000, 3
+	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -100000, 100000, 3
 	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -10000, 10000, 3
