@@ -13,7 +13,7 @@
 #include "efi_pid.h"
 #include "engine_state_generated.h"
 
-struct LuaAdjustments {
+struct LuaAdjustmentsLegacy {
 	float fuelMult = 1;
 };
 
