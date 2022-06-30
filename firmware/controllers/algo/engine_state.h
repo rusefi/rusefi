@@ -76,5 +76,5 @@ public:
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
 
-	LuaAdjustments luaAdjustments;
+	LuaAdjustmentsLegacy luaAdjustments;
 };
