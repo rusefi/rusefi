@@ -90,21 +90,21 @@ float HellenBoardIdSolver::solve(float Tc1, float Tc2, float x0, float y, float 
 	float Xcur, Xnext;
 	Xnext = x0;
 
-	// All real cases converge in ~3 iterations, so just do a fixed number.
-	// We're a little paranoid about https://github.com/rusefi/rusefi/issues/4084
-	for (size_t i = 0; i < 10; i++) {
+	// since we had https://github.com/rusefi/rusefi/issues/4084 let's add paranoia check
+	// All real cases seem to converge in <= 5 iterations, so we don't need to try more than 20.
+	int safetyLimit = 20;
+	do {
+		if (safetyLimit-- < 0) {
+			firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
+			return Xnext;
+		}
 		Xcur = Xnext;
 		Xnext = Xcur - fx(Xcur) / dfx(Xcur);
 
 #ifdef HELLEN_BOARD_ID_DEBUG
 		efiPrintf ("* %f", Xnext);
-#endif /* HELLEN_BOARD_ID_DEBUG */		
-	}
-
-	// But check anyway that we actually *DID* converge.
-	if (absF(Xnext - Xcur) > deltaX) {
-		firmwareError(OBD_PCM_Processor_Fault, "hellen boardID is broken");
-	}
+#endif /* HELLEN_BOARD_ID_DEBUG */
+	} while (absF(Xnext - Xcur) > deltaX);
 
 	return Xnext;
 }
