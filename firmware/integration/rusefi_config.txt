@@ -1533,7 +1533,7 @@ engine_configuration_s engineConfiguration;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 
 
-	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -100000, 100000, 3
+	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -10000, 10000, 3
 	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -10000, 10000, 3
@@ -1657,7 +1657,7 @@ float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"to",	  1, 0, 0, 25500, 2
 
-float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, -10000, 10000, 2
+float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, -100000, 100000, 2
 int16_t[SCRIPT_TABLE_8] scriptTable1LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[SCRIPT_TABLE_8] scriptTable1RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
