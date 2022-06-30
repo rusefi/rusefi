@@ -775,8 +775,6 @@ void loadConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
-	detectBoardType();
-
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }

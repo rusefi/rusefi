@@ -202,6 +202,8 @@ void runRusEfi() {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
+	detectBoardType();
+
 #if EFI_ETHERNET
 	startEthernetConsole();
 #endif
