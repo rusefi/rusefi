@@ -4,6 +4,7 @@ struct_no_prefix engine_state_s
 
 struct LuaAdjustments
 	float fuelAdd
+	float fuelMult
 
 	bit clutchUpState
 	bit brakePedalState
