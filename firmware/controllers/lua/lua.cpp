@@ -310,7 +310,7 @@ void LuaThread::ThreadTask() {
 		bool wasOk = runOneLua(myAlloc, config->luaScript);
 
 		// Reset any lua adjustments the script made
-		engine->engineState.luaAdjustments = {};
+		// todo https://github.com/rusefi/rusefi/issues/4308 engine->engineState.luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin

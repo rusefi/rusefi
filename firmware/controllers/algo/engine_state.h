@@ -13,10 +13,6 @@
 #include "efi_pid.h"
 #include "engine_state_generated.h"
 
-struct LuaAdjustmentsLegacy {
-	float fuelMult = 1;
-};
-
 class EngineState : public engine_state_s {
 public:
 	EngineState();
@@ -75,6 +71,4 @@ public:
 
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
-
-	LuaAdjustmentsLegacy luaAdjustments;
 };
