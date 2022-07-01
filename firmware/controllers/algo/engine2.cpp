@@ -79,6 +79,8 @@ float FuelConsumptionState::getConsumptionGramPerSecond() const {
 
 EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
+	// todo: https://github.com/rusefi/rusefi/issues/4308
+	lua.fuelMult = 1;
 }
 
 void EngineState::updateSlowSensors() {
