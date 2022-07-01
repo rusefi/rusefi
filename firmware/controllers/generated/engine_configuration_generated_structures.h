@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 29 22:52:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:30 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4769,12 +4769,12 @@ struct persistent_config_s {
 	L
 	 * offset 20404
 	 */
-	uint16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20420
 	 */
-	uint16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20436
@@ -4784,12 +4784,12 @@ struct persistent_config_s {
 	L
 	 * offset 20500
 	 */
-	uint16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20516
 	 */
-	uint16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20532
@@ -4799,12 +4799,12 @@ struct persistent_config_s {
 	L
 	 * offset 20596
 	 */
-	uint16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20612
 	 */
-	uint16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20628
@@ -4814,12 +4814,12 @@ struct persistent_config_s {
 	L
 	 * offset 20692
 	 */
-	uint16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20708
 	 */
-	uint16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
 	 * offset 20724
 	 */
@@ -4945,4 +4945,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jun 29 22:52:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:30 UTC 2022
