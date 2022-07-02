@@ -24,8 +24,12 @@
 
 #include "hal.h"
 
-#include <string.h>
 #include <linux/can.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
+
+#include <cstring>
+#include <queue>
 
 #if (HAL_USE_CAN == TRUE) || defined(__DOXYGEN__)
 
@@ -68,6 +72,8 @@ void can_lld_init(void) {
 	canObjectInit(&CAND1);
 }
 
+static std::vector<CANDriver*> instances;
+
 /**
  * @brief   Configures and activates the CAN peripheral.
  *
@@ -86,20 +92,31 @@ void can_lld_start(CANDriver *canp) {
 		return;
 	}
 
-	struct sockaddr_can addr;
+	sockaddr_can addr;
 
 	memset(&addr, 0, sizeof(addr));
 	addr.can_family = AF_CAN;
 
-	// TODO: what index? is 0 right?
-	addr.can_ifindex = 0;
+	{
+		// Determine index of the CAN device with the requested name
+		ifreq ifr;
+		strcpy(ifr.ifr_name, canp->deviceName);
+		ioctl(canp->sock, SIOCGIFINDEX, &ifr);
+		addr.can_ifindex = ifr.ifr_ifindex;
+	}
 
-	int result = bind(canp->sock, (struct sockaddr*)&addr, sizeof(addr));
+	int result = bind(canp->sock, (sockaddr*)&addr, sizeof(addr));
 
 	if (result < 0) {
 		// TODO: handle
 		return;
 	}
+
+	// Initialize the rx queue
+	canp->rx = new std::queue<can_frame>;
+
+	// Add this instance so it will have receive listened to by the "interrupt handler"
+	instances.push_back(canp);
 
 	// TODO: can we even set bitrate from userspace?
 }
@@ -114,7 +131,15 @@ void can_lld_start(CANDriver *canp) {
 void can_lld_stop(CANDriver *canp) {
 	(void)canp;
 
-	// TODO: close socket
+	// Remove from the "interrupt handler" list
+	std::remove(instances.begin(), instances.end(), canp);
+
+	// Close the socket.
+	close(canp->sock);
+	canp->sock = 0;
+
+	// Free the rx queue
+	delete reinterpret_cast<std::queue<can_frame>*>(canp->rx);
 }
 
 /**
@@ -133,6 +158,7 @@ bool can_lld_is_tx_empty(CANDriver *canp, canmbx_t mailbox) {
 	(void)canp;
 	(void)mailbox;
 
+	// The queue is practically infinitely deep, so it is always safe to call can_lld_transmit.
 	return true;
 }
 
@@ -154,16 +180,21 @@ void can_lld_transmit(CANDriver *canp,
 		return;
 	}
 
-	struct can_frame frame;
+	can_frame frame;
 
 	memcpy(frame.data, ctfp->data8, 8);
 	frame.can_dlc = ctfp->DLC;
 
 	frame.can_id = ctfp->IDE ? ctfp->EID : ctfp->SID;
 	// bit 31 is 1 for extended, 0 for standard
-	frame.can_id |= ctfp->IDE << 31;
+	frame.can_id |= ctfp->IDE ? (1 << 31) : 0;
 
-	write(canp->sock, &frame, sizeof(frame));
+	int res = write(canp->sock, &frame, sizeof(frame));
+
+	if (res != sizeof(frame)) {
+		// TODO: handle err
+		return;
+	}
 }
 
 /**
@@ -179,10 +210,32 @@ void can_lld_transmit(CANDriver *canp,
  * @notapi
  */
 bool can_lld_is_rx_nonempty(CANDriver *canp, canmbx_t mailbox) {
-	(void)canp;
 	(void)mailbox;
 
-	return false;
+	return !reinterpret_cast<std::queue<can_frame>*>(canp->rx)->empty();
+}
+
+extern "C" bool check_can_isr() {
+	bool intOccured = false;
+
+	for (auto canp : instances) {
+		can_frame frame;
+		int result = recv(canp->sock, &frame, sizeof(frame), MSG_DONTWAIT);
+
+		// no frame received, nothing to do
+		if (result != sizeof(frame)) {
+			continue;
+		}
+
+		intOccured = true;
+
+		CH_IRQ_PROLOGUE();
+		reinterpret_cast<std::queue<can_frame>*>(canp->rx)->push(frame);
+		_can_rx_full_isr(canp, 0);
+		CH_IRQ_EPILOGUE();
+	}
+
+	return intOccured;
 }
 
 /**
@@ -199,20 +252,19 @@ void can_lld_receive(CANDriver *canp,
                      CANRxFrame *crfp) {
 	(void)mailbox;
 
-	if (canp->sock < 0) {
-		return;
-	}
+	auto queue = reinterpret_cast<std::queue<can_frame>*>(canp->rx);
 
-	struct can_frame frame;
-	int nBytes = read(canp->sock, &frame, sizeof(frame));
+	can_frame frame = queue->front();
+	queue->pop();
 
-	if (nBytes < 1) {
-		return;
-	}
-
-	memcpy(crfp->data8, frame.data, 8);
-	
 	crfp->DLC = frame.can_dlc;
+
+	memcpy(crfp->data8, frame.data, crfp->DLC);
+
+	// If <8 byte packet, pad with zeroes to avoid spilling stack state or garbage data from the returned frame
+	if (crfp->DLC < 8) {
+		memset(crfp->data8 + crfp->DLC, 0, 8 - crfp->DLC);
+	}
 
 	// SID bits overlap with EID, no reason to copy both, but mask off err/rtr/etc bits
 	crfp->EID = CAN_ERR_MASK & frame.can_id;

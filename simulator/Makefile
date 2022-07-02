@@ -156,7 +156,6 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-		simulator/can/hal_can_lld.c \
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -169,6 +168,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(CONSOLE_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
+	simulator/can/hal_can_lld.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
 	$(TEST_SRC_CPP) \

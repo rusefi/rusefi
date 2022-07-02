@@ -35,9 +35,7 @@ typedef uint32_t canmbx_t;
 
 typedef struct CANDriver CANDriver;
 
-typedef struct {
-	uint32_t bitrate;
-} CANConfig;
+typedef struct { } CANConfig;
 
 struct CANDriver {
   /**
@@ -110,7 +108,12 @@ struct CANDriver {
   can_callback_t            error_cb;
 #endif
 
+	const char* deviceName;
+
 	int sock;
+
+	// This contains a std::queue of received frames
+	void* rx;
 };
 
 typedef struct {

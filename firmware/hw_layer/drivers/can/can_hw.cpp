@@ -123,11 +123,12 @@ static const CANConfig canConfig1000 = {
 #endif
 
 #else // not EFI_PROD_CODE
-// Simulator config is easy, just set bit rate and magic happens.
-static const CANConfig canConfig100  = { 100 };
-static const CANConfig canConfig250  = { 250 };
-static const CANConfig canConfig500  = { 500 };
-static const CANConfig canConfig1000 = { 1000 };
+// Nothing to actually set for the simulator's CAN config.
+// It's impossible to set CAN bitrate from userspace, so we can't set it.
+static const CANConfig canConfig100;
+static const CANConfig canConfig250;
+static const CANConfig canConfig500;
+static const CANConfig canConfig1000;
 #endif
 
 class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
