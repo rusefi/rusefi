@@ -53,6 +53,8 @@ private:
 	const uint8_t m_offset;
 };
 
+#if EFI_PROD_CODE
+
 template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
@@ -94,3 +96,5 @@ public:
 	int PID;
 	float Scale;
 };
+
+#endif // EFI_PROD_CODE
