@@ -105,7 +105,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	if (engine->engineState.hellenBoardId == 0) {
+	if (engine->engineState.hellenBoardId == -1) {
 		// first revision of did not have Hellen Board ID
 		// https://github.com/rusefi/hellen154hyundai/issues/55
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;

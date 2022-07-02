@@ -27,13 +27,15 @@ TEST(hellen_board_id, testClosestResistor) {
 	int rIdx;
 	// use only major series
 	EXPECT_FLOAT_EQ(1000, finder.findClosestResistor(876, true, &rIdx));
-	EXPECT_FLOAT_EQ(1000, finder.findClosestResistor(1100, true, &rIdx));
-	EXPECT_FLOAT_EQ(1200, finder.findClosestResistor(1100+1, true, &rIdx));
+
+	// break point between 1000 and 1200 = ~1091
+	EXPECT_FLOAT_EQ(1000, finder.findClosestResistor(1090, true, &rIdx));
+	EXPECT_FLOAT_EQ(1200, finder.findClosestResistor(1091, true, &rIdx));
 	// use full series
-	EXPECT_FLOAT_EQ(1000, finder.findClosestResistor(1050, false, &rIdx));
-	EXPECT_FLOAT_EQ(1100, finder.findClosestResistor(1050+1, false, &rIdx));
-	EXPECT_FLOAT_EQ(1100, finder.findClosestResistor(1149, false, &rIdx));
-	EXPECT_FLOAT_EQ(1200, finder.findClosestResistor(1150, false, &rIdx));
+	EXPECT_FLOAT_EQ(1000, finder.findClosestResistor(1047, false, &rIdx));
+	EXPECT_FLOAT_EQ(1100, finder.findClosestResistor(1049, false, &rIdx));
+	EXPECT_FLOAT_EQ(1100, finder.findClosestResistor(1147, false, &rIdx));
+	EXPECT_FLOAT_EQ(1200, finder.findClosestResistor(1149, false, &rIdx));
 
 	EXPECT_FLOAT_EQ(510, finder.findClosestResistor(0, true, &rIdx));
 	ASSERT_EQ(0, rIdx);
@@ -51,6 +53,6 @@ TEST(hellen_board_id, testCalc) {
 	float R = finder.calc(1024.714f, 724.639555f, 1099.0f, 1.0f, false, &Rmeasured, &newC, &rIdx);
 	EXPECT_NEAR(1100, R, 0.001);
 	EXPECT_NEAR(1099.998779, Rmeasured, 0.001);
-	EXPECT_NEAR(0.973396897, newC, 0.001);
+	EXPECT_NEAR(0.980316, newC, 0.001);
 	ASSERT_EQ(19, rIdx);
 }
