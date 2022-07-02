@@ -109,6 +109,8 @@ struct CANDriver {
    */
   can_callback_t            error_cb;
 #endif
+
+	int sock;
 };
 
 typedef struct {

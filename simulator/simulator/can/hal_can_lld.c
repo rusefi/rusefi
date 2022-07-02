@@ -24,6 +24,9 @@
 
 #include "hal.h"
 
+#include <string.h>
+#include <linux/can.h>
+
 #if (HAL_USE_CAN == TRUE) || defined(__DOXYGEN__)
 
 /*===========================================================================*/
@@ -75,7 +78,30 @@ void can_lld_init(void) {
 void can_lld_start(CANDriver *canp) {
 	(void)canp;
 
-	// TODO: open socket
+	// create socket
+	canp->sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+
+	if (canp->sock < 0) {
+		// TODO: handle
+		return;
+	}
+
+	struct sockaddr_can addr;
+
+	memset(&addr, 0, sizeof(addr));
+	addr.can_family = AF_CAN;
+
+	// TODO: what index? is 0 right?
+	addr.can_ifindex = 0;
+
+	int result = bind(canp->sock, (struct sockaddr*)&addr, sizeof(addr));
+
+	if (result < 0) {
+		// TODO: handle
+		return;
+	}
+
+	// TODO: can we even set bitrate from userspace?
 }
 
 /**
@@ -122,11 +148,22 @@ bool can_lld_is_tx_empty(CANDriver *canp, canmbx_t mailbox) {
 void can_lld_transmit(CANDriver *canp,
                       canmbx_t mailbox,
                       const CANTxFrame *ctfp) {
-	(void)canp;
 	(void)mailbox;
-	(void)ctfp;
 
-	// TODO: tx frame
+	if (canp->sock < 0) {
+		return;
+	}
+
+	struct can_frame frame;
+
+	memcpy(frame.data, ctfp->data8, 8);
+	frame.can_dlc = ctfp->DLC;
+
+	frame.can_id = ctfp->IDE ? ctfp->EID : ctfp->SID;
+	// bit 31 is 1 for extended, 0 for standard
+	frame.can_id |= ctfp->IDE << 31;
+
+	write(canp->sock, &frame, sizeof(frame));
 }
 
 /**
@@ -160,11 +197,27 @@ bool can_lld_is_rx_nonempty(CANDriver *canp, canmbx_t mailbox) {
 void can_lld_receive(CANDriver *canp,
                      canmbx_t mailbox,
                      CANRxFrame *crfp) {
-	(void)canp;
 	(void)mailbox;
-	(void)crfp;
 
-	// TODO: rx frame
+	if (canp->sock < 0) {
+		return;
+	}
+
+	struct can_frame frame;
+	int nBytes = read(canp->sock, &frame, sizeof(frame));
+
+	if (nBytes < 1) {
+		return;
+	}
+
+	memcpy(crfp->data8, frame.data, 8);
+	
+	crfp->DLC = frame.can_dlc;
+
+	// SID bits overlap with EID, no reason to copy both, but mask off err/rtr/etc bits
+	crfp->EID = CAN_ERR_MASK & frame.can_id;
+
+	crfp->IDE = (frame.can_id &  CAN_EFF_FLAG) != 0;
 }
 
 /**

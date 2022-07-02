@@ -117,6 +117,10 @@ void rusEfiFunctionalTest(void) {
 	startSerialChannels();
 
 	engineConfiguration->enableVerboseCanTx = true;
+
+	// Disable CAN read/write for now...
+	engineConfiguration->canWriteEnabled = false;
+	engineConfiguration->canReadEnabled = false;
 	initCan();
 
 	startLua();
