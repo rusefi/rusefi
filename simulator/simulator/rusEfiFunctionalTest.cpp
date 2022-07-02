@@ -118,10 +118,12 @@ void rusEfiFunctionalTest(void) {
 
 	engineConfiguration->enableVerboseCanTx = true;
 
+#if HAL_USE_CAN
 	// Set CAN device name
 	CAND1.deviceName = "can0";
 
 	initCan();
+#endif // HAL_USE_CAN
 
 	startLua();
 

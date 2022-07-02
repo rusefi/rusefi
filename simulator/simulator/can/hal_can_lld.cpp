@@ -24,14 +24,14 @@
 
 #include "hal.h"
 
+#if (HAL_USE_CAN == TRUE) || defined(__DOXYGEN__)
+
 #include <linux/can.h>
 #include <net/if.h>
 #include <sys/ioctl.h>
 
 #include <cstring>
 #include <queue>
-
-#if (HAL_USE_CAN == TRUE) || defined(__DOXYGEN__)
 
 /*===========================================================================*/
 /* Driver local definitions.                                                 */
