@@ -70,6 +70,8 @@ CANDriver CAND1;
 void can_lld_init(void) {
 	/* Driver initialization.*/
 	canObjectInit(&CAND1);
+
+	CAND1.sock = -1;
 }
 
 static std::vector<CANDriver*> instances;
@@ -84,10 +86,16 @@ static std::vector<CANDriver*> instances;
 void can_lld_start(CANDriver *canp) {
 	(void)canp;
 
-	// create socket
-	canp->sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+	// Check that this device is not already started
+	osalDbgCheck(canp->sock <= 0);
 
-	if (canp->sock < 0) {
+	// Check that a name is set
+	osalDbgCheck(canp->deviceName != nullptr);
+
+	// create socket
+	int sock = socket(PF_CAN, SOCK_RAW, CAN_RAW);
+
+	if (sock < 0) {
 		// TODO: handle
 		return;
 	}
@@ -101,16 +109,16 @@ void can_lld_start(CANDriver *canp) {
 		// Determine index of the CAN device with the requested name
 		ifreq ifr;
 		strcpy(ifr.ifr_name, canp->deviceName);
-		ioctl(canp->sock, SIOCGIFINDEX, &ifr);
+		ioctl(sock, SIOCGIFINDEX, &ifr);
 		addr.can_ifindex = ifr.ifr_ifindex;
 	}
 
-	int result = bind(canp->sock, (sockaddr*)&addr, sizeof(addr));
-
-	if (result < 0) {
+	if (bind(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
 		// TODO: handle
 		return;
 	}
+
+	canp->sock = sock;
 
 	// Initialize the rx queue
 	canp->rx = new std::queue<can_frame>;
@@ -136,7 +144,7 @@ void can_lld_stop(CANDriver *canp) {
 
 	// Close the socket.
 	close(canp->sock);
-	canp->sock = 0;
+	canp->sock = -1;
 
 	// Free the rx queue
 	delete reinterpret_cast<std::queue<can_frame>*>(canp->rx);
@@ -220,6 +228,8 @@ bool check_can_isr() {
 
 	for (auto canp : instances) {
 		can_frame frame;
+
+		// nonblocking read so it fails instantly in case no frame is queued
 		int result = recv(canp->sock, &frame, sizeof(frame), MSG_DONTWAIT);
 
 		// no frame received, nothing to do
