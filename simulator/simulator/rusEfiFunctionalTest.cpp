@@ -161,7 +161,8 @@ void logMsg(const char *format, ...) {
 //	fclose(fp);
 }
 
-bool didInitCan = false;
+#if HAL_USE_CAN
+static bool didInitCan = false;
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 	if (didInitCan) {
 		return nullptr;
@@ -170,3 +171,4 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 	didInitCan = true;
 	return &CAND1;
 }
+#endif // HAL_USE_CAN
