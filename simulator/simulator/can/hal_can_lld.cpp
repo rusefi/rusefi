@@ -167,7 +167,8 @@ bool can_lld_is_tx_empty(CANDriver *canp, canmbx_t mailbox) {
 	(void)mailbox;
 
 	// The queue is practically infinitely deep, so it is always safe to call can_lld_transmit.
-	return true;
+	// Therefore, just return whether or not the CAN interface actually got initialized
+	return canp->sock >= 0;
 }
 
 /**
@@ -183,10 +184,6 @@ void can_lld_transmit(CANDriver *canp,
                       canmbx_t mailbox,
                       const CANTxFrame *ctfp) {
 	(void)mailbox;
-
-	if (canp->sock < 0) {
-		return;
-	}
 
 	can_frame frame;
 
@@ -219,6 +216,11 @@ void can_lld_transmit(CANDriver *canp,
  */
 bool can_lld_is_rx_nonempty(CANDriver *canp, canmbx_t mailbox) {
 	(void)mailbox;
+
+	// CAN init failed, claim that the queue is full.
+	if (canp->sock < 0) {
+		return false;
+	}
 
 	return !reinterpret_cast<std::queue<can_frame>*>(canp->rx)->empty();
 }
