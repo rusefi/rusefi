@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Jul 02 07:53:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Jul 02 08:20:03 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,33 +6,33 @@
 // start of ac_control_s
 struct ac_control_s {
 	/**
-	 * AC engine too slow
+	 * @@INDICATOR_NAME_AC_SWITCH@@
 	offset 0 bit 0 */
+	bool acButtonState : 1 {};
+	/**
+	 * AC enabled
+	offset 0 bit 1 */
+	bool m_acEnabled : 1 {};
+	/**
+	 * AC engine too slow
+	offset 0 bit 2 */
 	bool engineTooSlow : 1 {};
 	/**
 	 * AC engine too fast
-	offset 0 bit 1 */
+	offset 0 bit 3 */
 	bool engineTooFast : 1 {};
 	/**
 	 * AC no CLT
-	offset 0 bit 2 */
+	offset 0 bit 4 */
 	bool noClt : 1 {};
 	/**
 	 * AC engine too hot
-	offset 0 bit 3 */
+	offset 0 bit 5 */
 	bool engineTooHot : 1 {};
 	/**
 	 * AC tps too high
-	offset 0 bit 4 */
-	bool tpsTooHigh : 1 {};
-	/**
-	 * AC enabled
-	offset 0 bit 5 */
-	bool m_acEnabled : 1 {};
-	/**
-	 * @@INDICATOR_NAME_AC_SWITCH@@
 	offset 0 bit 6 */
-	bool acButtonState : 1 {};
+	bool tpsTooHigh : 1 {};
 	/**
 	 * AC disabled by Lua
 	offset 0 bit 7 */
@@ -122,4 +122,4 @@ struct ac_control_s {
 static_assert(sizeof(ac_control_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Jul 02 07:53:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Jul 02 08:20:03 UTC 2022
