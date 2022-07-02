@@ -118,10 +118,6 @@ void rusEfiFunctionalTest(void) {
 
 	engineConfiguration->enableVerboseCanTx = true;
 
-	// Disable CAN read/write for now...
-	engineConfiguration->canWriteEnabled = true;
-	engineConfiguration->canReadEnabled = true;
-
 	// Set CAN device name
 	CAND1.deviceName = "can0";
 

@@ -46,8 +46,9 @@ ifeq ($(USE_OPT),)
 #	USE_OPT += -O0 -g
 
 	ifeq ($(OS),Windows_NT)
+		USE_OPT += -DEFI_SIM_IS_WINDOWS=1
 	else
-		USE_OPT += -m32
+		USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
 	endif
 endif
 
