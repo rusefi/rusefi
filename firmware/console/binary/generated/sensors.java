@@ -304,7 +304,7 @@ openLoopPart("openLoopPart", SensorCategory.SENSOR_INPUTS, FieldType.INT, 640, 1
 boostControllerClosedLoopPart("Boost Closed Loop", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 644, 0.5, -50.0, 50.0, "%"),
 alignmentFill_at_17("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 645, 1.0, -20.0, 100.0, "units"),
 boostControlTarget("Boost Target", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 646, 0.03333333333333333, 0.0, 0.0, "kPa"),
-latest_usage_ac_control("latest_usage_ac_control", SensorCategory.SENSOR_INPUTS, FieldType.INT, 652, 1.0, -1.0, -1.0, ""),
+latest_usage_ac_control("AC latest activity", SensorCategory.SENSOR_INPUTS, FieldType.INT, 652, 1.0, -1.0, -1.0, ""),
 acSwitchLastChangeTimeMs("acSwitchLastChangeTimeMs", SensorCategory.SENSOR_INPUTS, FieldType.INT, 656, 1.0, -1.0, -1.0, ""),
 lua("lua", SensorCategory.SENSOR_INPUTS, FieldType.INT, 672, 1.0, -1.0, -1.0, ""),
 sd("sd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 684, 1.0, -1.0, -1.0, ""),
