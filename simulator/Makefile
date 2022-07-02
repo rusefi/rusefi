@@ -156,6 +156,8 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
+		simulator/can/hal_can_lld.c \
+
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -183,6 +185,7 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
+          simulator/can \
           simulator
 
 # List ASM source files here

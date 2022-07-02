@@ -24,6 +24,7 @@
 #include "memstreams.h"
 #include <chprintf.h>
 #include "rusefi_lua.h"
+#include "can_hw.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -115,6 +116,9 @@ void rusEfiFunctionalTest(void) {
 
 	startSerialChannels();
 
+	engineConfiguration->enableVerboseCanTx = true;
+	initCan();
+
 	startLua();
 
 	extern bool main_loop_started;
@@ -149,4 +153,14 @@ void logMsg(const char *format, ...) {
 //	vfprintf(fp, format, args);
 //
 //	fclose(fp);
+}
+
+bool didInitCan = false;
+CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+	if (didInitCan) {
+		return nullptr;
+	}
+
+	didInitCan = true;
+	return &CAND1;
 }
