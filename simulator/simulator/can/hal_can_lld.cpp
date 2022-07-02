@@ -215,7 +215,7 @@ bool can_lld_is_rx_nonempty(CANDriver *canp, canmbx_t mailbox) {
 	return !reinterpret_cast<std::queue<can_frame>*>(canp->rx)->empty();
 }
 
-extern "C" bool check_can_isr() {
+bool check_can_isr() {
 	bool intOccured = false;
 
 	for (auto canp : instances) {

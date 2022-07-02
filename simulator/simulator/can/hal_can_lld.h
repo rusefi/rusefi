@@ -182,6 +182,9 @@ extern "C" {
 						CANRxFrame *ctfp);
 	void can_lld_abort(CANDriver *canp,
 						canmbx_t mailbox);
+
+	// Called from _sim_check_for_interrupts
+	bool check_can_isr(void);
 #ifdef __cplusplus
 }
 #endif
