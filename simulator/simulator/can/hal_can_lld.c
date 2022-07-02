@@ -74,6 +74,8 @@ void can_lld_init(void) {
  */
 void can_lld_start(CANDriver *canp) {
 	(void)canp;
+
+	// TODO: open socket
 }
 
 /**
@@ -85,6 +87,8 @@ void can_lld_start(CANDriver *canp) {
  */
 void can_lld_stop(CANDriver *canp) {
 	(void)canp;
+
+	// TODO: close socket
 }
 
 /**
@@ -122,7 +126,7 @@ void can_lld_transmit(CANDriver *canp,
 	(void)mailbox;
 	(void)ctfp;
 
-	// TODO: transmit frame
+	// TODO: tx frame
 }
 
 /**
@@ -159,6 +163,8 @@ void can_lld_receive(CANDriver *canp,
 	(void)canp;
 	(void)mailbox;
 	(void)crfp;
+
+	// TODO: rx frame
 }
 
 /**
