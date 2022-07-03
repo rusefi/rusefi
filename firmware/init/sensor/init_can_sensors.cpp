@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 #include "can_sensor.h"
 #include "can.h"
 
@@ -50,4 +50,4 @@ void initCanSensors() {
 		registerCanSensor(obdTpsSensor);
 	}
 }
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT

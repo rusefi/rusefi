@@ -24,6 +24,7 @@
 #include "memstreams.h"
 #include <chprintf.h>
 #include "rusefi_lua.h"
+#include "can_hw.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -115,6 +116,15 @@ void rusEfiFunctionalTest(void) {
 
 	startSerialChannels();
 
+	engineConfiguration->enableVerboseCanTx = true;
+
+#if HAL_USE_CAN
+	// Set CAN device name
+	CAND1.deviceName = "can0";
+
+	initCan();
+#endif // HAL_USE_CAN
+
 	startLua();
 
 	extern bool main_loop_started;
@@ -150,3 +160,15 @@ void logMsg(const char *format, ...) {
 //
 //	fclose(fp);
 }
+
+#if HAL_USE_CAN
+static bool didInitCan = false;
+CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+	if (didInitCan) {
+		return nullptr;
+	}
+
+	didInitCan = true;
+	return &CAND1;
+}
+#endif // HAL_USE_CAN
