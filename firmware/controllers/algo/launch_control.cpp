@@ -34,7 +34,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		return launchActivatePinState;
 	} else if (isClutchActivated) {
 		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-			return engine->clutchDownState;
+			return engine->engineState.clutchDownState;
 		} else {
 			return false;
 		}
@@ -85,14 +85,6 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-#if EFI_TUNER_STUDIO
-	// todo: implement fancy logging of all live data
-	engine->outputChannels.launchSpeedCondition = speedCondition;
-	engine->outputChannels.launchRpmCondition = rpmCondition;
-	engine->outputChannels.launchTpsCondition = tpsCondition;
-	engine->outputChannels.launchActivateSwitchCondition = activateSwitchCondition;
-#endif /* EFI_TUNER_STUDIO */
-
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
@@ -110,7 +102,7 @@ void LaunchControlBase::update() {
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
+	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ?
 	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
@@ -121,12 +113,6 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
-
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.clutchDownState = engine->clutchDownState;
-	engine->outputChannels.launchIsLaunchCondition = isLaunchCondition;
-	engine->outputChannels.launchCombinedConditions = combinedConditions;
-#endif /* EFI_TUNER_STUDIO */
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {

@@ -2,6 +2,18 @@
 
 struct_no_prefix engine_state_s
 
+struct LuaAdjustments
+	float fuelAdd
+	float fuelMult
+
+	bit clutchUpState
+	bit brakePedalState
+
+end_struct
+
+LuaAdjustments lua
+
+
 struct speed_density_s
 
 bit isTChargeAirModel
@@ -74,14 +86,18 @@ running_fuel_s running
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-	! todo: move these to ETB state, not engine
-	percent_t etbFeedForward
-	percent_t targetFromTable
-
 	! spark-related
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
 	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
-	angle_t cltTimingCorrection
+	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+
+    int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
+
+    bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
+    bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
+    bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 
 ! engine_state2_s
 end_struct

@@ -33,7 +33,6 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
 uint8_t* getWorkingPageAddr();
-const void * getStructAddr(live_data_e structId);
 
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"

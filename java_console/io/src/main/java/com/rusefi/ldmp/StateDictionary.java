@@ -1,6 +1,5 @@
 package com.rusefi.ldmp;
 
-import com.rusefi.OutputChannel;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
@@ -42,11 +41,26 @@ public enum StateDictionary {
         register(live_data_e.LDS_ignition_state, IgnitionState.VALUES, "advance_map");
         register(live_data_e.LDS_electronic_throttle, ElectronicThrottle.VALUES, "electronic_throttle");
         register(live_data_e.LDS_knock_controller, KnockController.VALUES, "knock_controller");
+        register(live_data_e.LDS_wideband_state, WidebandController.VALUES, "AemXSeriesLambda");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
             throw new IllegalStateException("Some live_data_e does not have values: " + missing);
         }
+    }
+
+    static int getSize(Field[] values) {
+        Field last = values[values.length - 1];
+        return last.getOffset() + last.getType().getStorageSize();
+    }
+
+    public int getOffset(live_data_e live_data_e) {
+        int result = 0;
+        for (live_data_e index : live_data_e.values()) {
+            if (index.ordinal() < live_data_e.ordinal())
+                result += getSize(getFields(index));
+        }
+        return result;
     }
 
     private void register(live_data_e ldsIndex, Field[] values, String fileName) {

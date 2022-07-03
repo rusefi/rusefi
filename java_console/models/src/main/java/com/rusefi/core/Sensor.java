@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
@@ -19,7 +20,7 @@ import static com.rusefi.config.generated.Fields.*;
  * 2/11/13
  * @see GetOutputsCommand#OUTPUT_SIZE
  */
-public enum Sensor {
+public enum Sensor implements BinaryLogEntry {
     /**
      * Please note that these enum names are used to make 'set_mock_XXX_voltage' commands
      */
@@ -154,17 +155,17 @@ public enum Sensor {
     accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
     accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 
-    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 514, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 390, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
 
-    targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 968, 1.0, -1.0, -1.0, ""),
+    targetRpmAcBump("targetRpmAcBump", SensorCategory.SENSOR_INPUTS, FieldType.INT, 940, 1.0, -1.0, -1.0, ""),
 //    baseDwell("baseDwell", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, -1.0, -1.0, ""),
 //    dwellVoltageCorrection("dwellVoltageCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 976, 1.0, -1.0, -1.0, ""),
-    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
-    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
-    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
-    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
-    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
+//    luaTimingAdd("luaTimingAdd", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
+//    luaTimingMult("luaTimingMult", SensorCategory.SENSOR_INPUTS, FieldType.INT, 984, 1.0, -1.0, -1.0, ""),
+//    etb_idlePosition("ETB idlePosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 988, 1.0, -1.0, -1.0, ""),
+//    trim("trim", SensorCategory.SENSOR_INPUTS, FieldType.INT, 992, 1.0, -1.0, -1.0, ""),
+//    luaAdjustment("luaAdjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT, 996, 1.0, -1.0, -1.0, ""),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
@@ -219,6 +220,8 @@ public enum Sensor {
         type = null;
         offset = -1;
     }
+
+
 
     public static Collection<Sensor> getSensorsForCategory(String category) {
         final Set<Sensor> sensors = new TreeSet<>(Comparator.comparing(o -> o.getName().toLowerCase()));
@@ -280,6 +283,31 @@ public enum Sensor {
         return name;
     }
 
+    @Override
+    public String getUnit() {
+        return units;
+    }
+
+    @Override
+    public int getByteSize() {
+        switch (getType()) {
+            case UINT8:
+                return 0;
+            case INT8:
+                return 1;
+            case UINT16:
+                return 2;
+            case INT16:
+                return 3;
+            case INT:
+                return 4;
+            case FLOAT:
+                return 7;
+            default:
+                throw new UnsupportedOperationException("" + getType());
+        }
+    }
+
     public SensorCategory getCategory() {
         return category;
     }
@@ -312,6 +340,7 @@ public enum Sensor {
         return value;
     }
 
+    @Override
     public void writeToLog(DataOutputStream dos, double value) throws IOException {
         switch (type) {
             case INT8:

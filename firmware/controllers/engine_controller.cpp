@@ -603,6 +603,13 @@ bool validateConfig() {
 	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
 	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 
+	ensureArrayIsAscendingOrDefault("Script Curve 1", config->scriptCurve1Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 2", config->scriptCurve2Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 3", config->scriptCurve3Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 4", config->scriptCurve4Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 5", config->scriptCurve5Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 6", config->scriptCurve6Bins);
+
 // todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
 	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);

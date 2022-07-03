@@ -45,8 +45,8 @@ expected<float> BoostController::getSetpoint() {
 	// Open loop needs to work even in case of invalid closed loop config
 	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
 	if (isNotClosedLoop) {
-		closedLoopPart = 0;
-		return closedLoopPart;
+		boostControllerClosedLoopPart = 0;
+		return (float)boostControllerClosedLoopPart;
 	}
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -118,16 +118,13 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
-	closedLoopPart = getClosedLoopImpl(target, manifoldPressure);
+	boostControllerClosedLoopPart = getClosedLoopImpl(target, manifoldPressure);
 
-	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
 	m_pid.postState(engine->outputChannels.boostStatus);
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.boostControlTarget = target;
-#endif /* EFI_TUNER_STUDIO */
+	boostControlTarget = target;
 
-	return closedLoopPart;
+	return (float)boostControllerClosedLoopPart;
 }
 
 void BoostController::setOutput(expected<float> output) {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#if !EFI_PROD_CODE || !EFI_CAN_SUPPORT
+#if EFI_UNIT_TEST || !EFI_CAN_SUPPORT
 #include "can_mocks.h"
 #endif // EFI_PROD_CODE
 

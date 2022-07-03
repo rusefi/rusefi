@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Jun 20 15:46:06 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Jun 24 00:17:24 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -70,6 +70,8 @@ case DBG_38:
   return "DBG_38";
 case DBG_43:
   return "DBG_43";
+case DBG_46:
+  return "DBG_46";
 case DBG_8:
   return "DBG_8";
 case DBG_9:
@@ -114,8 +116,6 @@ case DBG_MAP:
   return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
-case DBG_RUSEFI_WIDEBAND:
-  return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
 case DBG_SOFT_SPARK_CUT:

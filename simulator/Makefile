@@ -46,8 +46,9 @@ ifeq ($(USE_OPT),)
 #	USE_OPT += -O0 -g
 
 	ifeq ($(OS),Windows_NT)
+		USE_OPT += -DEFI_SIM_IS_WINDOWS=1
 	else
-		USE_OPT += -m32
+		USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
 	endif
 endif
 
@@ -157,6 +158,7 @@ include $(PROJECT_DIR)/common.mk
 # setting.
 CSRC =  $(ALLCSRC) \
 
+
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
@@ -167,6 +169,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(CONSOLE_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
+	simulator/can/hal_can_lld.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
 	$(TEST_SRC_CPP) \
@@ -183,6 +186,7 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
+          simulator/can \
           simulator
 
 # List ASM source files here

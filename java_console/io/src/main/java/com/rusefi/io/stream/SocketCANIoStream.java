@@ -103,10 +103,10 @@ public class SocketCANIoStream extends AbstractIoStream {
         try {
             CanFrame rx = socket.read();
             if (log.debugEnabled())
-                log.debug("GOT " + rx);
+                log.debug("GOT " + String.format("%X", rx));
             if (rx.getId() != CAN_ECU_SERIAL_TX_ID) {
                 if (log.debugEnabled())
-                    log.debug("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+                    log.debug("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getId()));
                 return;
             }
             byte[] raw = new byte[rx.getDataLength()];

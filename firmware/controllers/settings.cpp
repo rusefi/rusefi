@@ -131,7 +131,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
 			boolToString(engine->clutchUpState));
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
-			boolToString(engine->clutchDownState));
+			boolToString(engine->engineState.clutchDownState));
 
 	efiPrintf("digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 
@@ -723,8 +723,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
 #endif /* EFI_IDLE_CONTROL */
 #endif /* EFI_PROD_CODE */
-	} else if (strEqualCaseInsensitive(param, "serial")) {
-		engineConfiguration->useSerialPort = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {

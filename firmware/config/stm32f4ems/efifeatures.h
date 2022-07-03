@@ -70,11 +70,11 @@
 #endif
 
 #ifndef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS TRUE
+#define EFI_ICU_INPUTS FALSE
 #endif
 
 #ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
+#define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */
 
 #ifndef HAL_TRIGGER_USE_ADC
@@ -275,7 +275,6 @@
 #if defined(EFI_HAS_EXT_SDRAM)
     #define ENABLE_PERF_TRACE TRUE
     #define LUA_USER_HEAP (1 * 1024 * 1024)
-    #define LUA_SYSTEM_HEAP (1 * 1024 * 1024)
 #elif defined(EFI_IS_F42x)
     // F42x has more memory, so we can:
     //  - use compressed USB MSD image (requires 32k of memory)
@@ -284,13 +283,11 @@
 	#define ENABLE_PERF_TRACE TRUE
 
 	#define LUA_USER_HEAP 25000
-	#define LUA_SYSTEM_HEAP 20000
 #else
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
 	#define LUA_USER_HEAP 25000
-	#define LUA_SYSTEM_HEAP 12000
 #endif
 
 #ifndef EFI_LUA
@@ -388,11 +385,10 @@
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-// todo: start using consoleSerialTxPin? Not sure
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
 #endif
-// todo: start using consoleSerialRxPin? Not sure
+
 #ifndef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 #endif
