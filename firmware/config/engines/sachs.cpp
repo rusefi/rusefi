@@ -31,8 +31,6 @@ void setSachs() {
 	engineConfiguration->trigger.customTotalToothCount = 50;
 	engineConfiguration->trigger.customSkippedToothCount = 2;
 
-	engineConfiguration->useSerialPort = false;
-
 	// Frankenstein analog input #1: PA1 adc1 MAP
 	// Frankenstein analog input #2: PA3 adc3 TPS
 	// Frankenstein analog input #3: PC3 adc13 IAT

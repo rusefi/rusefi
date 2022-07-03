@@ -68,9 +68,7 @@ void detectHellenMcuType() {
 	}
 }
 
-int hellenBoardId = 0;
-
 void detectHellenBoardType() {
 	detectHellenMcuType();
-	hellenBoardId = detectHellenBoardId();
+	engine->engineState.hellenBoardId = detectHellenBoardId();
 }

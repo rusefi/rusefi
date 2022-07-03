@@ -97,23 +97,6 @@ void setPinConfigurationOverrides() {
 #endif
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = Gpio::A0;
-	engineConfiguration->binarySerialRxPin = Gpio::A1;
-//	engineConfiguration->consoleSerialTxPin = Gpio::A0;
-//	engineConfiguration->consoleSerialRxPin = Gpio::A1;
-	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
-	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
-}
-
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->is_enabled_spi_1 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = true;
-}
-
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
@@ -123,7 +106,10 @@ void setBoardDefaultConfiguration() {
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);
 
-	setSerialConfigurationOverrides();
+	engineConfiguration->binarySerialTxPin = Gpio::A0;
+	engineConfiguration->binarySerialRxPin = Gpio::A1;
+	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
+	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 
 	engineConfiguration->vbattAdcChannel = EFI_ADC_13;
 	engineConfiguration->tps1_1AdcChannel = is469 ? EFI_ADC_7 : EFI_ADC_14;
@@ -248,5 +234,10 @@ void setBoardDefaultConfiguration() {
 
 	//!!!!!!!!!!!!!!!!!!!
 	//engineConfiguration->silentTriggerError = true;
+
+	engineConfiguration->is_enabled_spi_1 = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->sdCardCsPin = Gpio::A2;
+	engineConfiguration->isSdCardEnabled = true;
 }
 

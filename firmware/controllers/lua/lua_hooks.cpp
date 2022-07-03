@@ -302,7 +302,7 @@ static int lua_getDigital(lua_State* l) {
 	bool state = false;
 
 	switch (idx) {
-		case 0: state = engine->clutchDownState; break;
+		case 0: state = engine->engineState.clutchDownState; break;
 		case 1: state = engine->clutchUpState; break;
 		case 2: state = engine->brakePedalState; break;
 		case 3: state = engine->module<AcController>().unmock().acButtonState; break;
@@ -530,11 +530,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 	lua_register(l, "setFuelAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+		engine->engineState.lua.fuelAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
 	lua_register(l, "setFuelMult", [](lua_State* l) {
-		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+		engine->engineState.lua.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
 #if EFI_PROD_CODE
@@ -549,12 +549,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 #endif // EFI_PROD_CODE
 
 	lua_register(l, "setClutchUpState", [](lua_State* l) {
-		engine->engineState.luaAdjustments.clutchUpState = lua_toboolean(l, 1);
+		engine->engineState.lua.clutchUpState = lua_toboolean(l, 1);
 		return 0;
 	});
 
 	lua_register(l, "setBrakePedalState", [](lua_State* l) {
-		engine->engineState.luaAdjustments.brakePedalState = lua_toboolean(l, 1);
+		engine->engineState.lua.brakePedalState = lua_toboolean(l, 1);
 		return 0;
 	});
 

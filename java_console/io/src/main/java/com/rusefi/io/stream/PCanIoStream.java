@@ -101,9 +101,10 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             if (log.debugEnabled())
-                log.debug("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+                log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
-                log.info("Skipping non " + CAN_ECU_SERIAL_TX_ID + " packet");
+//                if (log.debugEnabled())
+                log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
                 return;
             }
             byte[] decode = canDecoder.decodePacket(rx.getData());

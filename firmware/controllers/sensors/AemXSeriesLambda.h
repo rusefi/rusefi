@@ -2,7 +2,9 @@
 
 #include "can_sensor.h"
 
-class AemXSeriesWideband final : public CanSensorBase {
+#include "wideband_state_generated.h"
+
+class AemXSeriesWideband final : public CanSensorBase, public wideband_state_s {
 public:
 	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);
 

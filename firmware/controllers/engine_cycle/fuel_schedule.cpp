@@ -138,9 +138,12 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
-	ev->injectionStart.setAngle(openingAngle);
+
+	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->triggerCentral.triggerShape.getOperationMode()));
+	ev->injectionStartAngle = openingAngle;
+
 #if EFI_UNIT_TEST
-	printf("registerInjectionEvent openingAngle=%.2f trgIndex=%d inj %d\r\n", openingAngle, ev->injectionStart.triggerEventIndex, injectorIndex);
+	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, injectorIndex);
 #endif
 	return true;
 }
@@ -159,14 +162,14 @@ void FuelSchedule::addFuelEvents() {
 	isReady = true;
 }
 
-void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt) {
+void FuelSchedule::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	// Wait for schedule to be built - this happens the first time we get RPM
 	if (!isReady) {
 		return;
 	}
 
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		elements[i].onTriggerTooth(toothIndex, rpm, nowNt);
+		elements[i].onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
 	}
 }
 

@@ -13,14 +13,6 @@
 #include "efi_pid.h"
 #include "engine_state_generated.h"
 
-struct LuaAdjustments {
-	float fuelAdd = 0;
-	float fuelMult = 1;
-
-	bool clutchUpState = false;
-	bool brakePedalState = false;
-};
-
 class EngineState : public engine_state_s {
 public:
 	EngineState();
@@ -79,6 +71,4 @@ public:
 
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
-
-	LuaAdjustments luaAdjustments;
 };

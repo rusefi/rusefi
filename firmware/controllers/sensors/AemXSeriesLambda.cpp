@@ -58,30 +58,6 @@ void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
 
-	// This bit is a reserved bit on AEM - but is set on rusEfi's controller
-	bool isRusefiController = frame.data8[7] & 0x80;
-
-#if EFI_TUNER_STUDIO
-	// rusEfi controller sends some extra diagnostic data about its internal workings
-	if (isRusefiController && engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
-		float pumpDuty = frame.data8[2] / 255.0f;
-		float nernstVoltage = frame.data8[4] / 200.0f;
-
-		engine->outputChannels.debugFloatField1 = pumpDuty;
-		engine->outputChannels.debugFloatField3 = nernstVoltage;
-	}
-
-	if (isRusefiController) {
-		float wbEsr = frame.data8[3] * 4;
-
-		// TODO: convert ESR to temperature
-		engine->outputChannels.wbTemperature[m_sensorIndex] = wbEsr;
-
-		// TODO: decode heater duty
-		engine->outputChannels.wbHeaterDuty[m_sensorIndex] = 0;
-	}
-#endif
-
 	// bit 6 indicates sensor fault
 	bool sensorFault = frame.data8[7] & 0x40;
 	if (sensorFault) {
@@ -105,12 +81,13 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
 
 	if (data->Version != RUSEFI_WIDEBAND_VERSION) {
-		// TODO: firmwareError here
+		firmwareError(OBD_WB_FW_Mismatch, "Wideband controller index %d has wrong firmware version, please update!", m_sensorIndex);
+		return;
 	}
 
-	float lambda = 0.0001f * data->Lambda;
-	engine->outputChannels.wbTemperature[m_sensorIndex] = data->TemperatureC;
+	tempC = data->TemperatureC;
 
+	float lambda = 0.0001f * data->Lambda;
 	bool valid = data->Valid != 0;
 
 	if (valid) {
@@ -123,12 +100,17 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	auto data = reinterpret_cast<const wbo::DiagData*>(&frame.data8[0]);
 
-	engine->outputChannels.wbHeaterDuty[m_sensorIndex] = data->HeaterDuty / 255.0f;
+	// convert to percent
+	heaterDuty = data->HeaterDuty / 2.55f;
+	pumpDuty = data->PumpDuty / 2.55f;
 
-	if (m_sensorIndex == 0 || engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
-		engine->outputChannels.debugFloatField1 = data->PumpDuty / 255.0f;
-		engine->outputChannels.debugFloatField3 = data->NernstDc / 1000.0f;
-	}
+	// convert to volts
+	nernstVoltage = data->NernstDc * 0.001f;
+
+	// no conversion, just ohms
+	esr = data->Esr;
+
+	faultCode = static_cast<uint8_t>(data->Status);
 }
 
 #endif

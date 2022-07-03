@@ -204,7 +204,7 @@ void Engine::periodicSlowCallback() {
 
 	updateVrPwm();
 
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.o2heater.setValue(engineConfiguration->forceO2Heating || engine->rpmCalculator.isRunning());
 	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
@@ -293,7 +293,7 @@ static bool getClutchUpState() {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
 #endif // EFI_GPIO_HARDWARE
-	return engine->engineState.luaAdjustments.clutchUpState;
+	return engine->engineState.lua.clutchUpState;
 }
 
 static bool getBrakePedalState() {
@@ -301,7 +301,7 @@ static bool getBrakePedalState() {
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
-	return engine->engineState.luaAdjustments.brakePedalState;
+	return engine->engineState.lua.brakePedalState;
 #endif // EFI_GPIO_HARDWARE
 }
 
@@ -309,7 +309,7 @@ void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		engine->clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
+		engine->engineState.clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
 	}
 	if (hasAcToggle()) {
 		bool result = getAcToggle();

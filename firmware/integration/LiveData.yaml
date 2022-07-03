@@ -39,6 +39,7 @@ Usages:
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
     output_name: boost
 
   - name: ac_control
@@ -70,6 +71,7 @@ Usages:
   - name: engine_state
     java: EngineState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config.txt
 
   - name: tps_accel_state
     java: TpsAccelState.java
@@ -103,3 +105,8 @@ Usages:
     java: ElectronicThrottle.java
     folder: controllers/actuators
     output_name: [ "etb1", "etb2" ]
+
+  - name: wideband_state
+    java: WidebandController.java
+    folder: controllers/sensors/
+    output_name: [ "wb1", "wb2" ]

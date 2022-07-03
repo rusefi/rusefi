@@ -157,11 +157,6 @@ void HpfpController::onFastCallback() {
 			scheduleNextCycle();
 		}
 	}
-	engine->outputChannels.m_requested_pump = m_requested_pump;
-	engine->outputChannels.fuel_requested_percent = fuel_requested_percent;
-	engine->outputChannels.fuel_requested_percent_pi = fuel_requested_percent_pi;
-	engine->outputChannels.m_I_sum_percent = m_quantity.m_I_sum_percent;
-	engine->outputChannels.m_pressureTarget_kPa = m_quantity.m_pressureTarget_kPa;
 }
 
 void HpfpController::pinTurnOn(HpfpController *self) {
@@ -193,15 +188,14 @@ void HpfpController::scheduleNextCycle() {
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
-		nextStart = lobe - angle_requested - m_deadtime;
-		engine->outputChannels.di_nextStart = nextStart;
+		di_nextStart = lobe - angle_requested - m_deadtime;
 
 		/**
 		 * We are good to use just one m_event instance because new events are scheduled when we turn off valve.
 		 */
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
 			&m_event, TRIGGER_EVENT_UNDEFINED, 0,
-			nextStart,
+			di_nextStart,
 			{ pinTurnOn, this });
 
 		// Off will be scheduled after turning the valve on

@@ -86,7 +86,6 @@ void setBoardOverrides() {
 }
 
 void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = Gpio::C7;
 	engineConfiguration->binarySerialRxPin = Gpio::C6;
 //	engineConfiguration->consoleSerialTxPin = Gpio::A10;

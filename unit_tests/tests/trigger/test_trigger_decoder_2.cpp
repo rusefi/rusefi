@@ -167,6 +167,9 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
 
+	// Fake that we have RPM so that all trigger error detection is enabled
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
@@ -176,12 +179,16 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(4, dut.currentCycle.current_index);
+	EXPECT_EQ(0, dut.totalTriggerErrorCounter);
 
 	// This tooth is extra - expect a call to onTriggerError() and loss of sync!
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(6, dut.currentCycle.current_index);
+	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
+
+	Sensor::resetAllMocks();
 }
 
 TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
@@ -220,6 +227,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(2, dut.currentCycle.current_index);
 	EXPECT_FALSE(dut.someSortOfTriggerError());
+	EXPECT_EQ(0, dut.totalTriggerErrorCounter);
 
 	// Missing tooth, but it comes early - not enough teeth have happened yet!
 	t += MS2NT(2);
@@ -228,6 +236,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	// Sync is lost until we get to another sync point
 	EXPECT_FALSE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
+	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
 	EXPECT_TRUE(dut.someSortOfTriggerError());
 }
 

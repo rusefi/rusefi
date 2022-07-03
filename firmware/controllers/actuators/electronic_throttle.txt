@@ -4,6 +4,11 @@ float idlePosition
 float trim
 float luaAdjustment
 
+	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
+
+	percent_t etbFeedForward
+    float etbIntegralError;;"", 1, 0, -10000, 10000, 3
+    float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 
 
 end_struct

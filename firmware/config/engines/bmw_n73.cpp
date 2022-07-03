@@ -29,7 +29,7 @@ function getBitRange(data, bitIndex, bitWidth)
 	byteIndex = bitIndex >> 3
 	shift = bitIndex - byteIndex * 8
 	value = data[1 + byteIndex]
-	if (shift + bitIndex > 8) then
+	if (shift + bitWidth > 8) then
 		value = value + data[2 + byteIndex] * 256
 	end
 	mask = (1 << bitWidth) - 1

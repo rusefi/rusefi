@@ -16,17 +16,11 @@
 #define LUA_USER_HEAP 1
 #endif // LUA_USER_HEAP
 
-#ifndef LUA_SYSTEM_HEAP
-#define LUA_SYSTEM_HEAP 1
-#endif // LUA_SYSTEM_HEAP
-
-#ifndef EFI_HAS_EXT_SDRAM
-static char luaUserHeap[LUA_USER_HEAP];
-static char luaSystemHeap[LUA_SYSTEM_HEAP];
-#else
-static char luaUserHeap[LUA_USER_HEAP] SDRAM_OPTIONAL;
-static char luaSystemHeap[LUA_SYSTEM_HEAP] SDRAM_OPTIONAL;
+static char luaUserHeap[LUA_USER_HEAP]
+#ifdef EFI_HAS_EXT_SDRAM
+SDRAM_OPTIONAL
 #endif
+;
 
 class Heap {
 public:
@@ -95,28 +89,17 @@ public:
 	}
 };
 
-static Heap heaps[] = { luaUserHeap,
-#if LUA_SYSTEM_HEAP > 1
-luaSystemHeap
-#endif
-};
+static Heap userHeap(luaUserHeap);
 
-template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
-	static_assert(HeapIdx < efi::size(heaps));
-
 	if (engineConfiguration->debugMode == DBG_LUA) {
-		switch (HeapIdx) {
-			case 0: engine->outputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
-			case 1: engine->outputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
-		}
+		engine->outputChannels.debugIntField1 = userHeap.used();
 	}
 
-	return heaps[HeapIdx].realloc(ptr, osize, nsize);
+	return userHeap.realloc(ptr, osize, nsize);
 }
 #else // not EFI_PROD_CODE
 // Non-MCU code can use plain realloc function instead of custom implementation
-template <int /*ignored*/>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 	if (!nsize) {
 		free(ptr);
@@ -195,35 +178,6 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "script loaded successfully!");
 
 	return true;
-}
-
-static LuaHandle systemLua;
-
-const char* getSystemLuaScript();
-
-void initSystemLua() {
-#if LUA_SYSTEM_HEAP > 1
-	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
-
-	Timer startTimer;
-	startTimer.reset();
-
-	systemLua = setupLuaState(myAlloc<1>);
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
-
-	if (!loadScript(systemLua, getSystemLuaScript())) {
-		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
-		systemLua = nullptr;
-		return;
-	}
-
-	auto startTime = startTimer.getElapsedSeconds();
-
-#if !EFI_UNIT_TEST
-	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
-#endif
-#endif
 }
 
 #if !EFI_UNIT_TEST
@@ -352,13 +306,11 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
-	//initSystemLua();
-
 	while (!chThdShouldTerminateX()) {
-		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
+		bool wasOk = runOneLua(myAlloc, config->luaScript);
 
 		// Reset any lua adjustments the script made
-		engine->engineState.luaAdjustments = {};
+		// todo https://github.com/rusefi/rusefi/issues/4308 engine->engineState.luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -382,7 +334,7 @@ void startLua() {
 	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
 	if (isStm32F42x()) {
 		char *buffer = (char *)0x20020000;
-		heaps[0].reinit(buffer, 60000);
+		userHeap.reinit(buffer, 60000);
 	}
 #endif
 
@@ -409,27 +361,23 @@ void startLua() {
 	});
 
 	addConsoleAction("luamemory", [](){
-		for (size_t i = 0; i < efi::size(heaps); i++) {
-			auto heapSize = heaps[i].size();
-			auto memoryUsed = heaps[i].used();
-			float pct = 100.0f * memoryUsed / heapSize;
-			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
-		}
+		auto heapSize = userHeap.size();
+		auto memoryUsed = userHeap.used();
+		float pct = 100.0f * memoryUsed / heapSize;
+		efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
 	});
 #endif
 }
 
 #else // not EFI_UNIT_TEST
 
-void startLua() {
-	initSystemLua();
-}
+void startLua() { }
 
 #include <stdexcept>
 #include <string>
 
 static LuaHandle runScript(const char* script) {
-	auto ls = setupLuaState(myAlloc<0>);
+	auto ls = setupLuaState(myAlloc);
 
 	if (!ls) {
 		throw std::logic_error("Call to setupLuaState failed, returned null");
@@ -495,7 +443,7 @@ int testLuaReturnsInteger(const char* script) {
 }
 
 void testLuaExecString(const char* script) {
-	auto ls = setupLuaState(myAlloc<0>);
+	auto ls = setupLuaState(myAlloc);
 
 	if (!ls) {
 		throw std::logic_error("Call to setupLuaState failed, returned null");

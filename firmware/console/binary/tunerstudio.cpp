@@ -162,105 +162,6 @@ void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_
 	sendOkResponse(tsChannel, mode);
 }
 
-#if EFI_TUNER_STUDIO
-
-const void * getStructAddr(live_data_e structId) {
-#if EFI_UNIT_TEST
-	if (engine == nullptr) {
-		return nullptr;
-	}
-#endif
-	switch (structId) {
-	case LDS_output_channels:
-		return reinterpret_cast<const uint8_t*>(&engine->outputChannels);
-
-	case LDS_high_pressure_fuel_pump:
-#if EFI_HPFP
-		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
-#else
-		return nullptr; // explicit null to confirm that this struct is handled
-#endif // EFI_HPFP
-
-	case LDS_launch_control_state:
-#if EFI_LAUNCH_CONTROL
-		return static_cast<launch_control_state_s*>(&engine->launchController);
-#else
-		return nullptr; // explicit null to confirm that this struct is handled
-#endif // EFI_LAUNCH_CONTROL
-
-	case LDS_injector_model:
-		return static_cast<injector_model_s*>(&engine->module<InjectorModel>().unmock());
-
-	case LDS_boost_control:
-#if EFI_BOOST_CONTROL
-		return static_cast<boost_control_s*>(&engine->boostController);
-#else
-		return nullptr; // explicit null to confirm that this struct is handled
-#endif // EFI_BOOST_CONTROL
-
-	case LDS_ac_control:
-		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_fan_control:
-		return static_cast<fan_control_s*>(&engine->fan1);
-	case LDS_fuel_pump_control:
-		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
-	case LDS_main_relay:
-		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
-	case LDS_engine_state:
-		return static_cast<engine_state_s*>(&engine->engineState);
-	case LDS_tps_accel_state:
-		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-	case LDS_trigger_central:
-		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_trigger_state:
-#if EFI_SHAFT_POSITION_INPUT
-		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-#else
-		return nullptr;
-#endif // EFI_SHAFT_POSITION_INPUT
-	case LDS_wall_fuel_state:
-		return static_cast<wall_fuel_state_s*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_idle_state:
-		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
-	case LDS_ignition_state:
-		return static_cast<ignition_state_s*>(&engine->ignitionState);
-	case LDS_electronic_throttle:
-		// todo: figure out how to handle two units?
-		return nullptr;
-
-//#if EFI_ELECTRONIC_THROTTLE_BODY
-//	case LDS_ETB_PID:
-//		return engine->etbControllers[0]->getPidState();
-//#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-//
-//#ifndef EFI_IDLE_CONTROL
-//	case LDS_IDLE_PID:
-//		return static_cast<pid_state_s*>(getIdlePid());
-//#endif /* EFI_IDLE_CONTROL */
-	default:
-// huh?		firmwareError(OBD_PCM_Processor_Fault, "getStructAddr not implemented for %d", (int)structId);
-		return nullptr;
-	}
-}
-
-/**
- * Read internal structure for Live Doc
- * This is somewhat similar to read page and somewhat similar to read outputs
- * We can later consider combining this functionality
- */
-static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int size) {
-	tsState.readPageCommandsCounter++;
-
-	const void *addr = getStructAddr((live_data_e)structId);
-	if (addr == nullptr) {
-		// todo: add warning code - unexpected structId
-		return;
-	}
-	tsChannel->sendResponse(TS_CRC, (const uint8_t *)addr, size);
-}
-
-#endif // EFI_TUNER_STUDIO
-
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
 extern bool rebootForPresetPending;
@@ -398,7 +299,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
-			|| command == TS_GET_STRUCT
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
@@ -700,9 +600,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 	case TS_PAGE_COMMAND:
 		handlePageSelectCommand(tsChannel, TS_CRC);
-		break;
-	case TS_GET_STRUCT:
-		handleGetStructContent(tsChannel, offset, count);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
 		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));

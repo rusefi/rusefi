@@ -9,7 +9,7 @@
 
 #include "efifeatures.h"
 
-void initCan(void);
+void initCan();
 void setCanType(int type);
 void setCanVss(int type);
 

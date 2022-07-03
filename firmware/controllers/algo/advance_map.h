@@ -19,6 +19,7 @@ size_t getMultiSparkCount(int rpm);
 class IgnitionState : public ignition_state_s {
 public:
 	IgnitionState() {
+	// todo https://github.com/rusefi/rusefi/issues/4308
 		luaTimingMult = 1;
 	}
 	floatms_t getSparkDwell(int rpm);

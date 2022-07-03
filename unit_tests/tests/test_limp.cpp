@@ -43,6 +43,56 @@ TEST(limp, revLimit) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
+TEST(limp, revLimitCltBased) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	engineConfiguration->rpmHardLimit = 2500;
+
+	// Configure CLT-based rev limit curve
+	engineConfiguration->useCltBasedRpmLimit = true;
+	copyArray(engineConfiguration->cltRevLimitRpmBins, { 10, 20, 30, 40 });
+	copyArray(engineConfiguration->cltRevLimitRpm, { 1000, 2000, 3000, 4000 });
+
+	LimpManager dut;
+
+	// Check low temperature first
+	Sensor::setMockValue(SensorType::Clt, 10);
+
+	// Under rev limit, inj/ign allowed
+	dut.updateState(900, 0);
+	EXPECT_TRUE(dut.allowIgnition());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// Over rev limit, no injection
+	dut.updateState(1100, 0);
+	EXPECT_FALSE(dut.allowIgnition());
+	EXPECT_FALSE(dut.allowInjection());
+
+	// Now recover back to under limit
+	dut.updateState(900, 0);
+	EXPECT_TRUE(dut.allowIgnition());
+	EXPECT_TRUE(dut.allowInjection());
+
+
+	// Check middle temperature
+	Sensor::setMockValue(SensorType::Clt, 35);
+
+	// Under rev limit, inj/ign allowed
+	dut.updateState(3400, 0);
+	EXPECT_TRUE(dut.allowIgnition());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// Over rev limit, no injection
+	dut.updateState(3600, 0);
+	EXPECT_FALSE(dut.allowIgnition());
+	EXPECT_FALSE(dut.allowInjection());
+
+	// Now recover back to under limit
+	dut.updateState(3400, 0);
+	EXPECT_TRUE(dut.allowIgnition());
+	EXPECT_TRUE(dut.allowInjection());
+}
+
 TEST(limp, boostCut) {
 	EngineTestHelper eth(TEST_ENGINE);
 

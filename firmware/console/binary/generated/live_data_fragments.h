@@ -23,3 +23,5 @@ getLiveDataAddr<idle_state_s>(),
 getLiveDataAddr<ignition_state_s>(),
 getLiveDataAddr<electronic_throttle_s>(0),	// etb1
 // getLiveDataAddr<electronic_throttle_s>(1),	// etb2
+getLiveDataAddr<wideband_state_s>(0),	// wb1
+// getLiveDataAddr<wideband_state_s>(1),	// wb2

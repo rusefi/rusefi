@@ -174,12 +174,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi3sckPin = Gpio::C10;
 }
 
-void setSerialConfigurationOverrides() {
-	// why would MRE disable serial by default? we definitely have pads exposed
-	engineConfiguration->useSerialPort = false;
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
@@ -225,11 +219,4 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides() {
 }

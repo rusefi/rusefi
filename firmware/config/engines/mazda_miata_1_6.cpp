@@ -151,17 +151,17 @@ static const uint8_t mapBased16IgnitionTable[16][16] = {
 };
 #endif
 
-
-static void miataNAcommonEngineSettings() {
+void miataNAcommonEngineSettings() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;
-	engineConfiguration->cranking.rpm = 450;
+	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->cylinderBore = 78;
 	engineConfiguration->knockBandCustom = 6.8;
 	engineConfiguration->vehicleWeight = 950;
+//	engineConfiguration->totalGearsCount = 5;
 
 	engineConfiguration->rpmHardLimit = 7200;
 	engineConfiguration->enableFan1WithAc = true;
@@ -178,7 +178,7 @@ static void miataNAcommonEngineSettings() {
 
 	engineConfiguration->silentTriggerError = false;
 
-	engineConfiguration->manIdlePosition = 34;
+	engineConfiguration->manIdlePosition = 20;
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
@@ -186,7 +186,7 @@ static void miataNAcommonEngineSettings() {
 	setMafDecodingBins();
 	miataNA_setIgnitionTable();
 
-	engineConfiguration->idle.solenoidFrequency = 160;
+	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
 	setMapVeTable();
@@ -213,7 +213,7 @@ static void miataNAcommonEngineSettings() {
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	engineConfiguration->cranking.baseFuel = 24;
+	engineConfiguration->cranking.baseFuel = 27.5;
 	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
 	config->crankingFuelCoef[1] = 2.2;
@@ -237,8 +237,8 @@ static void miataNAcommonEngineSettings() {
 	strcpy(engineConfiguration->engineCode, "NA6");
 
 	// my car was originally a manual so proper TPS
-	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)
-	engineConfiguration->tpsMax = 656; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
+	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->injectionMode = IM_BATCH;
 }
