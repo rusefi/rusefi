@@ -23,6 +23,8 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+## July 2022 Release - "Day 130"
+
 ### Added
  - verbose trigger sync should reuse engineSnifferRpmThreshold #4259
  - Subaru EZ30 variation of 36/2/2/2 trigger
