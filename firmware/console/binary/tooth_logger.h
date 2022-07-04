@@ -14,8 +14,6 @@
 int copyCompositeEvents(CompositeEvent *events);
 #endif // EFI_UNIT_TEST
 
-int getCompositeRecordCount();
-
 void EnableToothLoggerIfNotEnabled();
 
 // Enable the tooth logger - this clears the buffer starts logging
