@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 29 22:52:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 01 10:57:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4787,12 +4787,12 @@ struct persistent_config_s {
 	L
 	 * offset 20376
 	 */
-	uint16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20392
 	 */
-	uint16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20408
@@ -4802,12 +4802,12 @@ struct persistent_config_s {
 	L
 	 * offset 20472
 	 */
-	uint16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20488
 	 */
-	uint16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20504
@@ -4817,12 +4817,12 @@ struct persistent_config_s {
 	L
 	 * offset 20568
 	 */
-	uint16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20584
 	 */
-	uint16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 20600
@@ -4832,12 +4832,12 @@ struct persistent_config_s {
 	L
 	 * offset 20664
 	 */
-	uint16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
+	int16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
 	 * offset 20680
 	 */
-	uint16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
+	int16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
 	 * offset 20696
 	 */
@@ -4963,4 +4963,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21272);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Jun 29 22:52:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Jul 01 10:57:23 UTC 2022

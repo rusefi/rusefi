@@ -20,8 +20,8 @@ pins:
 
   - pin: P40
     # H144_IN_MAP3 AIN15 A15 PA2
-    id: EFI_ADC_2
-    class: analog_inputs
+    id: [A2, EFI_ADC_2]
+    class: [switch_inputs, analog_inputs]
     ts_name: P40_IN_MAP3
 
   - pin: P41

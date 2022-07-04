@@ -534,7 +534,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 	lua_register(l, "setFuelMult", [](lua_State* l) {
-		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+		engine->engineState.lua.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
 #if EFI_PROD_CODE
