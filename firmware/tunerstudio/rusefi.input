@@ -118,8 +118,6 @@ enable2ndByteCanID = false
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
         continuousRead = true
-        ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
-        dataLength = @@COMPOSITE_DATA_LENGTH_HALF@@
 
 ;tooth
        ; recordDef = headerLen, footerLen, recordLen
