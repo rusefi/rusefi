@@ -162,18 +162,20 @@ public class UsagesReader {
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
-            enumContent.append(enumName + ",\n");
 
             if (outputNamesArr.length < 2) {
                 fragmentsContent
                         .append("getLiveDataAddr<")
                         .append(type)
                         .append(">(),\n");
+
+                enumContent.append(enumName + ",\n");
             } else {
                 for (int i = 0; i < outputNamesArr.length; i++) {
                     if (i != 0) {
                         // TODO: remove once the rest of the handling for multiple copies of one struct is in place.
                         fragmentsContent.append("// ");
+                        enumContent.append("// ");
                     }
 
                     fragmentsContent
@@ -184,6 +186,8 @@ public class UsagesReader {
                             .append("),\t// ")
                             .append(outputNamesArr[i])
                             .append("\n");
+
+                    enumContent.append(enumName + "// " + "_" + outputNamesArr[i] + ",\n");
                 }
             }
         }
