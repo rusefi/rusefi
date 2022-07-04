@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 04 03:49:18 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jul 04 21:05:03 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -383,9 +383,7 @@ public class Fields {
 	public static final int coastingFuelCutVssLow_offset = 1573;
 	public static final int communicationLedPin_offset = 1524;
 	public static final int complexWallModel_offset = 1372;
-	public static final int COMPOSITE_DATA_LENGTH = 2500;
-	public static final int COMPOSITE_DATA_LENGTH_HALF = 1250;
-	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final int compressionRatio_offset = 744;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
@@ -1885,7 +1883,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 962842244;
+	public static final int SIGNATURE_HASH = 874590669;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2372,7 +2370,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.04.all.962842244";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.04.all.874590669";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
