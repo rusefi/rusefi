@@ -656,6 +656,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
+	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		EnableToothLoggerIfNotEnabled();
+		// falls through
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
