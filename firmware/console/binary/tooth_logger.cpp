@@ -34,6 +34,51 @@ typedef struct __attribute__ ((packed)) {
 
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
+static volatile bool ToothLoggerEnabled = false;
+static uint32_t lastEdgeTimestamp = 0;
+
+static bool currentTrigger1 = false;
+static bool currentTrigger2 = false;
+static bool currentTdc = false;
+// any coil, all coils thrown together
+static bool currentCoilState = false;
+// same about injectors
+static bool currentInjectorState = false;
+
+#if EFI_UNIT_TEST
+#include "logicdata.h"
+
+static std::vector<CompositeEvent> events;
+
+const std::vector<CompositeEvent>& getCompositeEvents() {
+	return events;
+}
+
+void SetNextCompositeEntry(efitick_t timestamp) {
+	CompositeEvent event;
+
+	event.timestamp = timestamp;
+	event.primaryTrigger = currentTrigger1;
+	event.secondaryTrigger = currentTrigger2;
+	event.isTDC = currentTdc;
+	event.sync = engine->triggerCentral.triggerState.getShaftSynchronized();
+	event.coil = currentCoilState;
+	event.injector = currentInjectorState;
+
+	events.push_back(event);
+}
+
+void EnableToothLogger() {
+	ToothLoggerEnabled = true;
+	events.clear();
+}
+
+void DisableToothLogger() {
+	ToothLoggerEnabled = false;
+}
+
+#else // not EFI_UNIT_TEST
+
 static constexpr size_t bufferCount = 4;
 static constexpr size_t entriesPerBuffer = COMPOSITE_PACKET_COUNT / bufferCount;
 
@@ -49,39 +94,75 @@ static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers CCM_OPTI
 
 static CompositeBuffer* currentBuffer = nullptr;
 
-static volatile bool ToothLoggerEnabled = false;
-static uint32_t lastEdgeTimestamp = 0;
-
-static bool currentTrigger1 = false;
-static bool currentTrigger2 = false;
-static bool currentTdc = false;
-// any coil, all coils thrown together
-static bool currentCoilState = false;
-// same about injectors
-static bool currentInjectorState = false;
-
-#if EFI_UNIT_TEST
-#include "logicdata.h"
-int copyCompositeEvents(CompositeEvent *events) {
-	for (size_t i = 0; i < NextIdx; i++) {
-		CompositeEvent *event = &events[i];
-		event->timestamp = SWAP_UINT32(buffer[i].timestamp);
-		event->primaryTrigger = buffer[i].priLevel;
-		event->secondaryTrigger = buffer[i].secLevel;
-		event->isTDC = buffer[i].trigger;
-		event->sync = buffer[i].sync;
-		event->coil = buffer[i].coil;
-		event->injector = buffer[i].injector;
-	}
-	return NextIdx;
-}
-
-#endif // EFI_UNIT_TEST
-
 static void setToothLogReady(bool value) {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 	engine->outputChannels.toothLogReady = value;
 #endif // EFI_TUNER_STUDIO
+}
+
+void EnableToothLogger() {
+	chibios_rt::CriticalSectionLocker csl;
+
+	// Reset all buffers
+	for (size_t i = 0; i < efi::size(buffers); i++) {
+		buffers[i].nextIdx = 0;
+	}
+
+	// Reset state
+	currentBuffer = nullptr;
+
+	// Empty the filled buffer list
+	CompositeBuffer* dummy;
+	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
+
+	// Put all buffers in the free list
+	for (size_t i = 0; i < efi::size(buffers); i++) {
+		freeBuffers.postI(&buffers[i]);
+	}
+
+	// Reset the last edge to now - this prevents the first edge logged from being bogus
+	lastEdgeTimestamp = getTimeNowUs();
+
+	// Enable logging of edges as they come
+	ToothLoggerEnabled = true;
+
+	setToothLogReady(false);
+}
+
+void DisableToothLogger() {
+	ToothLoggerEnabled = false;
+	setToothLogReady(false);
+}
+
+expected<ToothLoggerBuffer> GetToothLoggerBuffer() {
+	chibios_rt::CriticalSectionLocker csl;
+
+	CompositeBuffer* buffer;
+	msg_t msg = filledBuffers.fetchI(&buffer);
+
+	if (msg == MSG_TIMEOUT) {
+		setToothLogReady(false);
+		return unexpected;
+	}
+
+	if (msg != MSG_OK) {
+		// What even happened if we didn't get timeout, but also didn't get OK?
+		return unexpected;
+	}
+
+	size_t entryCount = buffer->nextIdx;
+	buffer->nextIdx = 0;
+
+	// Return this buffer to the free list
+	msg = freeBuffers.postI(buffer);
+	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail", unexpected);
+
+	// If the used list is empty, clear the ready flag
+	if (filledBuffers.getUsedCountI() == 0) {
+		setToothLogReady(false);
+	}
+
+	return ToothLoggerBuffer{ reinterpret_cast<uint8_t*>(buffer->buffer), entryCount * sizeof(composite_logger_s)};
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {
@@ -147,6 +228,8 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		setToothLogReady(true);
 	}
 }
+
+#endif // EFI_UNIT_TEST
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	// bail if we aren't enabled
@@ -226,75 +309,10 @@ void LogTriggerInjectorState(efitick_t timestamp, bool state) {
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
-void EnableToothLogger() {
-	chibios_rt::CriticalSectionLocker csl;
-
-	// Reset all buffers
-	for (size_t i = 0; i < efi::size(buffers); i++) {
-		buffers[i].nextIdx = 0;
-	}
-
-	// Reset state
-	currentBuffer = nullptr;
-
-	// Empty the filled buffer list
-	CompositeBuffer* dummy;
-	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
-
-	// Put all buffers in the free list
-	for (size_t i = 0; i < efi::size(buffers); i++) {
-		freeBuffers.postI(&buffers[i]);
-	}
-
-	// Reset the last edge to now - this prevents the first edge logged from being bogus
-	lastEdgeTimestamp = getTimeNowUs();
-
-	// Enable logging of edges as they come
-	ToothLoggerEnabled = true;
-
-	setToothLogReady(false);
-}
-
 void EnableToothLoggerIfNotEnabled() {
 	if (!ToothLoggerEnabled) {
 		EnableToothLogger();
 	}
-}
-
-void DisableToothLogger() {
-	ToothLoggerEnabled = false;
-	setToothLogReady(false);
-}
-
-expected<ToothLoggerBuffer> GetToothLoggerBuffer() {
-	chibios_rt::CriticalSectionLocker csl;
-
-	CompositeBuffer* buffer;
-	msg_t msg = filledBuffers.fetchI(&buffer);
-
-	if (msg == MSG_TIMEOUT) {
-		setToothLogReady(false);
-		return unexpected;
-	}
-
-	if (msg != MSG_OK) {
-		// What even happened if we didn't get timeout, but also didn't get OK?
-		return unexpected;
-	}
-
-	size_t entryCount = buffer->nextIdx;
-	buffer->nextIdx = 0;
-
-	// Return this buffer to the free list
-	msg = freeBuffers.postI(buffer);
-	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail", unexpected);
-
-	// If the used list is empty, clear the ready flag
-	if (filledBuffers.getUsedCountI() == 0) {
-		setToothLogReady(false);
-	}
-
-	return ToothLoggerBuffer{ reinterpret_cast<uint8_t*>(buffer->buffer), entryCount * sizeof(composite_logger_s)};
 }
 
 #endif /* EFI_TOOTH_LOGGER */

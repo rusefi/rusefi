@@ -11,7 +11,7 @@
 
 #if EFI_UNIT_TEST
 #include "logicdata.h"
-int copyCompositeEvents(CompositeEvent *events);
+const std::vector<CompositeEvent>& getCompositeEvents();
 #endif // EFI_UNIT_TEST
 
 void EnableToothLoggerIfNotEnabled();
