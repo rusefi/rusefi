@@ -11,77 +11,6 @@ import static org.junit.Assert.assertEquals;
 
 public class OutputsTest {
     @Test
-    public void generateSomething() throws IOException {
-        ReaderState state = new ReaderState();
-        state.variableRegistry.register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
-        String test = "struct total\n" +
-                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +
-                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
-                "angle_t m_requested_pump;Computed requested pump \n" +
-                "float tCharge;speed density\n" +
-                "end_struct\n";
-
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
-        state.readBufferedReader(test, tsProjectConsumer);
-
-
-        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
-                "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
-                "isForcedInduction = bits, U32, 8, [0:0]\n" +
-                "enableFan1WithAc = bits, U32, 8, [1:1]\n" +
-                "unusedBit_5_2 = bits, U32, 8, [2:2]\n" +
-                "unusedBit_5_3 = bits, U32, 8, [3:3]\n" +
-                "unusedBit_5_4 = bits, U32, 8, [4:4]\n" +
-                "unusedBit_5_5 = bits, U32, 8, [5:5]\n" +
-                "unusedBit_5_6 = bits, U32, 8, [6:6]\n" +
-                "unusedBit_5_7 = bits, U32, 8, [7:7]\n" +
-                "unusedBit_5_8 = bits, U32, 8, [8:8]\n" +
-                "unusedBit_5_9 = bits, U32, 8, [9:9]\n" +
-                "unusedBit_5_10 = bits, U32, 8, [10:10]\n" +
-                "unusedBit_5_11 = bits, U32, 8, [11:11]\n" +
-                "unusedBit_5_12 = bits, U32, 8, [12:12]\n" +
-                "unusedBit_5_13 = bits, U32, 8, [13:13]\n" +
-                "unusedBit_5_14 = bits, U32, 8, [14:14]\n" +
-                "unusedBit_5_15 = bits, U32, 8, [15:15]\n" +
-                "unusedBit_5_16 = bits, U32, 8, [16:16]\n" +
-                "unusedBit_5_17 = bits, U32, 8, [17:17]\n" +
-                "unusedBit_5_18 = bits, U32, 8, [18:18]\n" +
-                "unusedBit_5_19 = bits, U32, 8, [19:19]\n" +
-                "unusedBit_5_20 = bits, U32, 8, [20:20]\n" +
-                "unusedBit_5_21 = bits, U32, 8, [21:21]\n" +
-                "unusedBit_5_22 = bits, U32, 8, [22:22]\n" +
-                "unusedBit_5_23 = bits, U32, 8, [23:23]\n" +
-                "unusedBit_5_24 = bits, U32, 8, [24:24]\n" +
-                "unusedBit_5_25 = bits, U32, 8, [25:25]\n" +
-                "unusedBit_5_26 = bits, U32, 8, [26:26]\n" +
-                "unusedBit_5_27 = bits, U32, 8, [27:27]\n" +
-                "unusedBit_5_28 = bits, U32, 8, [28:28]\n" +
-                "unusedBit_5_29 = bits, U32, 8, [29:29]\n" +
-                "unusedBit_5_30 = bits, U32, 8, [30:30]\n" +
-                "unusedBit_5_31 = bits, U32, 8, [31:31]\n" +
-                "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
-                "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
-                "; total TS size = 20\n", tsProjectConsumer.getContent());
-
-    }
-
-    @Test(expected = BitState.TooManyBitsInARow.class)
-    public void tooManyBits() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 40; i++)
-            sb.append("bit b" + i + "\n");
-        String test = "struct total\n" +
-                sb +
-                "end_struct\n";
-        ReaderState state = new ReaderState();
-
-        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
-        state.readBufferedReader(test, tsProjectConsumer);
-    }
-
-    @Test
     public void generateDataLog() throws IOException {
         String test = "struct total\n" +
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
@@ -99,23 +28,6 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
         state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
-
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        state.readBufferedReader(test, (dataLogConsumer));
-        assertEquals(
-                "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
-                        "entry = knock1, \"knock 1\", int,    \"%d\"\n" +
-                        "entry = knock2, \"knock 2\", int,    \"%d\"\n" +
-                        "entry = withName1, \"MyNameIsEarl 1\", int,    \"%d\"\n" +
-                        "entry = withName2, \"MyNameIsEarl 2\", int,    \"%d\"\n" +
-                        "entry = baseFuel, \"hello\", float,  \"%.3f\"\n" +
-                        "entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
-                        "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
-                        "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
-                        "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
-                        "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
-                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
-
     }
 
     @Test
@@ -155,16 +67,8 @@ public class OutputsTest {
                 "end_struct\n";
 
         ReaderState state = new ReaderState();
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
-        state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
-        assertEquals(
-                "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
-                        "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
-                        "entry = idleStatus_iTerm, \"idleStatus_iTerm\", float,  \"%.3f\"\n" +
-                        "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
-                dataLogConsumer.getContent());
-
+        state.readBufferedReader(test, gaugeConsumer);
         assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
                         "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +

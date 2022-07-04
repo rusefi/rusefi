@@ -7,7 +7,6 @@ import com.rusefi.TypesHelper;
 import java.io.IOException;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
-import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetConfigValueConsumer.FILE_HEADER;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
@@ -30,7 +29,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     private String processOutput(ReaderState readerState, ConfigField cf, String prefix) {
-        if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
+        if (cf.getName().contains("unused") || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())

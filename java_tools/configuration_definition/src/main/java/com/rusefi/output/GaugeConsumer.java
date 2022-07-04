@@ -2,12 +2,14 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.VariableRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.rusefi.output.DataLogConsumer.getComment;
+import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class GaugeConsumer implements ConfigurationConsumer {
@@ -60,5 +62,19 @@ public class GaugeConsumer implements ConfigurationConsumer {
 
     public String getContent() {
         return charArrayWriter.toString();
+    }
+
+    @NotNull
+    private static String getComment(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
+        String comment = variableRegistry.applyVariables(configField.getComment());
+        String[] comments = comment == null ? new String[0] : comment.split("\\\\n");
+        comment = (comments.length > 0) ? comments[0] : "";
+
+        if (comment.isEmpty())
+            comment = prefix + unquote(configField.getName());
+
+        if (comment.charAt(0) != '"')
+            comment = quote(comment);
+        return comment;
     }
 }

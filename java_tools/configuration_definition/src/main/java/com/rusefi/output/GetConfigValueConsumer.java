@@ -10,7 +10,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
-import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -84,7 +83,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     private String processConfig(ReaderState readerState, ConfigField cf, String prefix) {
-        if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
+        if (cf.getName().contains("unused") || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())

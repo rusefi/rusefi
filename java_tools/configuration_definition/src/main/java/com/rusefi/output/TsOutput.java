@@ -17,14 +17,7 @@ public class TsOutput {
     // https://github.com/rusefi/web_backend/issues/166
     private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
-    private final boolean isConstantsSection;
-    private final boolean registerOffsets;
     private final StringBuilder tsHeader = new StringBuilder();
-
-    public TsOutput(boolean longForm, boolean registerOffsets) {
-        this.isConstantsSection = longForm;
-        this.registerOffsets = registerOffsets;
-    }
 
     public String getContent() {
         return tsHeader.toString();
@@ -68,9 +61,8 @@ public class TsOutput {
 //                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
-                if (registerOffsets) {
-                    state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
-                }
+
+                state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
 
                 if (cs != null) {
                     String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
@@ -82,8 +74,7 @@ public class TsOutput {
                     tsHeader.append(" " + tsPosition + ", [");
                     tsHeader.append(bitIndex + ":" + bitIndex);
                     tsHeader.append("]");
-                    if (isConstantsSection)
-                        tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
+                    tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
                     tsHeader.append(EOL);
 
                     tsPosition += configField.getSize(next);
@@ -145,9 +136,7 @@ public class TsOutput {
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
-            if (isConstantsSection)
-                return quote("") + ", 1, 0, 0, 100, 0";
-            return quote("") + ", 1, 0";
+            return quote("") + ", 1, 0, 0, 100, 0";
         }
         try {
             String[] fields = tsInfo.split(",");
@@ -167,11 +156,7 @@ public class TsOutput {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            if (!isConstantsSection) {
-                String[] subarray = new String[3];
-                System.arraycopy(fields, 0, subarray, 0, subarray.length);
-                fields = subarray;
-            }
+
             for (String f : fields) {
                 if (sb.length() > 0) {
                     sb.append(",");
