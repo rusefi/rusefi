@@ -565,8 +565,6 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, nullptr, 0);
 }
 
-static int transmitted = 0;
-
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
@@ -658,41 +656,19 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
-		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-
-		{
-			EnableToothLoggerIfNotEnabled();
-			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
-
-			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
-
-			int currentEnd = getCompositeRecordCount();
-
-			// set debug_mode 40
-			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
-				engine->outputChannels.debugIntField1 = currentEnd;
-				engine->outputChannels.debugIntField2 = transmitted;
-
-			}
-
-			if (currentEnd > transmitted) {
-				// more normal case - tail after head
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted), true);
-				transmitted = currentEnd;
-			} else if (currentEnd == transmitted) {
-				tsChannel->sendResponse(TS_CRC, start, 0);
-			} else {
-				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
-				// sending end of the buffer, next transmission would take care of the rest
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted), true);
-				transmitted = 0;
-			}
-		}
-		break;
+	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		EnableToothLoggerIfNotEnabled();
+		// falls through
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length, true);
+
+			if (toothBuffer) {
+				tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+			} else {
+				// TS asked for a tooth logger buffer, but we don't have one to give it.
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			}
 		}
 
 		break;
