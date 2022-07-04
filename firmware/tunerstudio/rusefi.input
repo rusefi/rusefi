@@ -118,8 +118,6 @@ enable2ndByteCanID = false
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
         continuousRead = true
-        ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
-        dataLength = @@COMPOSITE_DATA_LENGTH_HALF@@
 
 ;tooth
        ; recordDef = headerLen, footerLen, recordLen
@@ -1067,8 +1065,9 @@ di_nextStartGauge = di_nextStart,"DI: next start", "v", 0.0,100.0, 0.0,100.0, 0.
 m_requested_pumpGauge = m_requested_pump,"DI: Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 fuel_requested_percentGauge = fuel_requested_percent,"DI: fuel_requested_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
 fuel_requested_percent_piGauge = fuel_requested_percent_pi,"DI: fuel_requested_percent_pi", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
-m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
-m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+;todo see comment in HpfpQuantity class definition
+;m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+;m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Sensors - Extra 2

@@ -377,9 +377,7 @@
 #define coastingFuelCutVssLow_offset 1573
 #define communicationLedPin_offset 1524
 #define complexWallModel_offset 1372
-#define COMPOSITE_DATA_LENGTH 2500
-#define COMPOSITE_DATA_LENGTH_HALF 1250
-#define COMPOSITE_PACKET_COUNT 500
+#define COMPOSITE_PACKET_COUNT 1000
 #define COMPOSITE_PACKET_SIZE 5
 #define compressionRatio_offset 744
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
@@ -1923,7 +1921,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 571270915
+#define SIGNATURE_HASH 2349456071
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2475,7 +2473,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.04.kin.571270915"
+#define TS_SIGNATURE "rusEFI 2022.07.04.kin.2349456071"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

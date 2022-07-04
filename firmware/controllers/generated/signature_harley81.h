@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh null
 //
 
-#define SIGNATURE_HASH 1301254651
-#define TS_SIGNATURE "rusEFI 2022.07.04.harley81.1301254651"
+#define SIGNATURE_HASH 3817516095
+#define TS_SIGNATURE "rusEFI 2022.07.04.harley81.3817516095"
