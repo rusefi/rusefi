@@ -659,7 +659,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length, true);
+
+			if (toothBuffer) {
+				tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+			} else {
+				// TS asked for a tooth logger buffer, but we don't have one to give it.
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			}
 		}
 
 		break;

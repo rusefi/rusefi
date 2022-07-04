@@ -34,11 +34,13 @@ typedef struct __attribute__ ((packed)) {
 
 static_assert(sizeof(composite_logger_s) == COMPOSITE_PACKET_SIZE, "composite packet size");
 
-static constexpr size_t bufferCount = 2;
+static constexpr size_t bufferCount = 4;
+static constexpr size_t entriesPerBuffer = COMPOSITE_PACKET_COUNT / bufferCount;
 
 struct CompositeBuffer {
-	composite_logger_s buffer[bufferCount / 2];
-	size_t nextIdx = 0;
+	composite_logger_s buffer[entriesPerBuffer];
+	size_t nextIdx;
+	Timer startTime;
 };
 
 static CompositeBuffer buffers[bufferCount] CCM_OPTIONAL;
@@ -82,26 +84,31 @@ static void setToothLogReady(bool value) {
 #endif // EFI_TUNER_STUDIO
 }
 
-CompositeBuffer* findBuffer() {
+static CompositeBuffer* findBuffer(efitick_t timestamp) {
 	CompositeBuffer* buffer;
 
 	if (!currentBuffer) {
-		chibios_rt::CriticalSectionLocker csl;
-
-		msg_t res = freeBuffers.fetchI(&buffer);
-
-		if (res != MSG_OK) {
+		// try and find a buffer, if none available, we can't log
+		if (MSG_OK != freeBuffers.fetchI(&buffer)) {
 			return nullptr;
 		}
+
+		// Record the time of the last buffer swap so we can force a swap after a minimum period of time
+		// This ensures the user sees *something* even if they don't have enough trigger events
+		// to fill the buffer.
+		buffer->startTime.reset(timestamp);
 
 		currentBuffer = buffer;
 	}
 
-	return buffer;
+	return currentBuffer;
 }
 
 static void SetNextCompositeEntry(efitick_t timestamp) {
-	CompositeBuffer* buffer = findBuffer();
+	// This is called from multiple interrupts/threads, so we need a lock.
+	chibios_rt::CriticalSectionLocker csl;
+
+	CompositeBuffer* buffer = findBuffer(timestamp);
 
 	if (!buffer) {
 		// All buffers are full, nothing to do here.
@@ -123,15 +130,15 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 
 	buffer->nextIdx++;
 
-	if (buffer->nextIdx >= efi::size(buffer->buffer)) {
-		chibios_rt::CriticalSectionLocker csl;
-		// Buffer is full!
-		
+	// if the buffer is full...
+	bool bufferFull = buffer->nextIdx >= efi::size(buffer->buffer);
+	// ... or it's been too long since the last flush
+	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
+
+	// Then cycle buffers and set the ready flag.
+	if (bufferFull || bufferTimedOut) {
 		// Post to the output queue
 		filledBuffers.postI(buffer);
-
-		// Reset next idx
-		buffer->nextIdx = 0;
 
 		// Null the current buffer so we get a new one next time
 		currentBuffer = nullptr;
@@ -220,6 +227,8 @@ void LogTriggerInjectorState(efitick_t timestamp, bool state) {
 }
 
 void EnableToothLogger() {
+	chibios_rt::CriticalSectionLocker csl;
+
 	// Reset all buffers
 	for (size_t i = 0; i < efi::size(buffers); i++) {
 		buffers[i].nextIdx = 0;
@@ -230,11 +239,11 @@ void EnableToothLogger() {
 
 	// Empty the filled buffer list
 	CompositeBuffer* dummy;
-	while (MSG_TIMEOUT != filledBuffers.fetch(&dummy, TIME_IMMEDIATE)) ;
+	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
 
 	// Put all buffers in the free list
 	for (size_t i = 0; i < efi::size(buffers); i++) {
-		freeBuffers.post(&buffers[i], TIME_IMMEDIATE);
+		freeBuffers.postI(&buffers[i]);
 	}
 
 	// Reset the last edge to now - this prevents the first edge logged from being bogus
@@ -257,24 +266,35 @@ void DisableToothLogger() {
 	setToothLogReady(false);
 }
 
-ToothLoggerBuffer GetToothLoggerBuffer() {
+expected<ToothLoggerBuffer> GetToothLoggerBuffer() {
+	chibios_rt::CriticalSectionLocker csl;
+
 	CompositeBuffer* buffer;
-	msg_t msg = filledBuffers.fetch(&buffer, TIME_IMMEDIATE);
+	msg_t msg = filledBuffers.fetchI(&buffer);
 
 	if (msg == MSG_TIMEOUT) {
-		// Buffer is empty, what do we do here?
-		return {};
+		setToothLogReady(false);
+		return unexpected;
 	}
 
 	if (msg != MSG_OK) {
 		// What even happened if we didn't get timeout, but also didn't get OK?
+		return unexpected;
 	}
 
-	// Return this buffer to the free list
-	msg = freeBuffers.post(buffer, TIME_IMMEDIATE);
-	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail", {});
+	size_t entryCount = buffer->nextIdx;
+	buffer->nextIdx = 0;
 
-	return { reinterpret_cast<uint8_t*>(buffer->buffer), sizeof(buffer->buffer)};
+	// Return this buffer to the free list
+	msg = freeBuffers.postI(buffer);
+	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail", unexpected);
+
+	// If the used list is empty, clear the ready flag
+	if (filledBuffers.getUsedCountI() == 0) {
+		setToothLogReady(false);
+	}
+
+	return ToothLoggerBuffer{ reinterpret_cast<uint8_t*>(buffer->buffer), entryCount * sizeof(composite_logger_s)};
 }
 
 #endif /* EFI_TOOTH_LOGGER */

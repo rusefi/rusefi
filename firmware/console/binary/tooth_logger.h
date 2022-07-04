@@ -38,4 +38,5 @@ struct ToothLoggerBuffer
 };
 
 // Get a reference to the buffer
-ToothLoggerBuffer GetToothLoggerBuffer();
+// Returns unexpected if no buffer is available
+expected<ToothLoggerBuffer> GetToothLoggerBuffer();
