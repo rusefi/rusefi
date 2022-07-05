@@ -642,7 +642,21 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", [](lua_State* l) {
 		auto eid = luaL_checkinteger(l, 1);
-		addLuaCanRxFilter(eid);
+
+		// TODO: add bus parameter to this function
+
+		addLuaCanRxFilter(eid, -1);
+
+		return 0;
+	});
+
+	lua_register(l, "canRxAdd2", [](lua_State* l) {
+		auto eid = luaL_checkinteger(l, 1);
+		auto bus = luaL_checkinteger(l, 2);
+
+		int funcRef = luaL_ref(l, LUA_REGISTRYINDEX);
+
+		addLuaCanRxFilter(eid, bus, funcRef);
 
 		return 0;
 	});

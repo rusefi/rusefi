@@ -6,23 +6,34 @@
 
 static constexpr size_t maxFilterCount = 48;
 
-size_t filterCount = 0;
-int32_t luaCanRxIds[maxFilterCount] = {0};
+struct Filter {
+	int32_t Id;
 
-static bool shouldRxCanFrame(const CANRxFrame& frame) {
+	int Bus;
+	int Callback;
+};
+
+size_t filterCount = 0;
+Filter filters[maxFilterCount] = {0};
+
+static Filter* getFilterForFrame(size_t busIndex, const CANRxFrame& frame) {
 	for (size_t i = 0; i < filterCount; i++) {
-		int32_t id = luaCanRxIds[i];
-		if (CAN_SID(frame) == id || CAN_EID(frame) == id) {
-			return true;
+		auto& filter = filters[i];
+
+		if (CAN_ID(frame) == filter.Id) {
+			if (filter.Bus == -1 || filter.Bus == busIndex) {
+				return &filter;
+			}
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 // Stores information about one received CAN frame: which bus, plus the actual frame
 struct CanFrameData {
 	uint8_t BusIndex;
+	int Callback;
 	CANRxFrame Frame;
 };
 
@@ -34,8 +45,10 @@ chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
+	auto filter = getFilterForFrame(busIndex, frame);
+
 	// Filter the frame if we aren't listening for it
-	if (!shouldRxCanFrame(frame)) {
+	if (!filter) {
 		return;
 	}
 
@@ -57,6 +70,7 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	// Copy the frame in to the buffer
 	frameBuffer->BusIndex = busIndex;
 	frameBuffer->Frame = frame;
+	frameBuffer->Callback = filter->Callback;
 
 	{
 		// Push the frame in to the queue under lock
@@ -66,7 +80,14 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 }
 
 static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
-	lua_getglobal(ls, "onCanRx");
+	if (data->Callback == -1) {
+		// No callback, use catch-all function
+		lua_getglobal(ls, "onCanRx");
+	} else {
+		// Push the specified callback on to the stack
+		lua_rawgeti(ls, LUA_REGISTRYINDEX, data->Callback);
+	}
+
 	if (lua_isnil(ls, -1)) {
 		// no rx function, ignore
 		efiPrintf("LUA CAN rx missing function onCanRx");
@@ -78,7 +99,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 
 	// Push bus, ID and DLC
 	lua_pushinteger(ls, data->BusIndex);	// TODO: support multiple busses!
-	lua_pushinteger(ls, CAN_EID(data->Frame));
+	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 
 	// Build table for data
@@ -144,18 +165,25 @@ void initLuaCanRx() {
 
 void resetLuaCanRx() {
 	// Clear all lua filters - reloading the script will reinit them
-	memset(luaCanRxIds, 0, sizeof(luaCanRxIds));
 	filterCount = 0;
 }
 
-void addLuaCanRxFilter(int32_t eid) {
+void addLuaCanRxFilter(int32_t eid, int bus) {
+	// "catch-all" callback has no callback, so pass -1
+	addLuaCanRxFilter(eid, bus, -1);
+}
+
+void addLuaCanRxFilter(int32_t eid, int bus, int callback) {
 	if (filterCount >= maxFilterCount) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}
 
 	efiPrintf("Added Lua CAN RX filter: %d", eid);
 
-	luaCanRxIds[filterCount] = eid;
+	filters[filterCount].Id = eid;
+	filters[filterCount].Bus = bus;
+	filters[filterCount].Callback = callback;
+
 	filterCount++;
 }
 
