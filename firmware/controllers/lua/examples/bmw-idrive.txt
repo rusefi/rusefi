@@ -12,7 +12,6 @@ canRxAdd(CAN_BUTTONS) -- buttons
 setTickRate(5) -- set tick rate to 5hz
 
 function onCanRx(bus, id, dlc, data)
-	id = id % 2048
 	-- 	print('got CAN id=' ..id ..' dlc=' ..dlc)
 
 	if id == CAN_BUTTONS then
