@@ -12,7 +12,7 @@ int32_t luaCanRxIds[maxFilterCount] = {0};
 static bool shouldRxCanFrame(const CANRxFrame& frame) {
 	for (size_t i = 0; i < filterCount; i++) {
 		int32_t id = luaCanRxIds[i];
-		if (CAN_SID(frame) == id || CAN_EID(frame) == id) {
+		if (CAN_ID(frame) == id) {
 			return true;
 		}
 	}
@@ -78,7 +78,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 
 	// Push bus, ID and DLC
 	lua_pushinteger(ls, data->BusIndex);	// TODO: support multiple busses!
-	lua_pushinteger(ls, CAN_EID(data->Frame));
+	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 
 	// Build table for data
