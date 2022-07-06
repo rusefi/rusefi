@@ -58,3 +58,12 @@ void backupRamSave(backup_ram_e idx, uint32_t value) {
 void backupRamFlush(void) {
 	// nothing to do here, in STM32 all data is saved instantaneously
 }
+
+// STM32 only has 4k bytes of backup SRAM
+static_assert(sizeof(BackupSramData) <= 4096);
+
+extern int __backup_sram_addr__;
+
+BackupSramData* getBackupSram() {
+	return reinterpret_cast<BackupSramData*>(&__backup_sram_addr__);
+}

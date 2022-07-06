@@ -181,6 +181,8 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
+	checkLastBootError();
+
 #ifdef STM32F7
 	void sys_dual_bank(void);
 	addConsoleAction("dual_bank", sys_dual_bank);

@@ -50,6 +50,8 @@ MEMORY
     ram7    : org = 0xD0000000, len = SDRAM_SIZE    /* SDRAM */
 }
 
+__backup_sram_addr__ = ORIGIN(ram5);
+
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
 
