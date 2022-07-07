@@ -4,7 +4,7 @@
 
 <b>GPL open-source DIY ECU</b>
 
-git clone https://github.com/TurboMarian/rusefi.git
+
 
 [![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
 [![Rusefi on Slack](https://img.shields.io/badge/slack-rusefi-orange.svg?style=flat&logo=slack)](https://rusefi.slack.com)
@@ -21,6 +21,8 @@ Current binaries are always available on our [build server](http://rusefi.com/bu
 # Cloning the repository
 
 Important note - we now use submodules:
+
+git clone https://github.com/TurboMarian/rusefi.git
 
 `git submodule update --init`
 
