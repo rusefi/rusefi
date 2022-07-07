@@ -366,7 +366,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 // Some ECUs are wired for SDIO/SDMMC instead of SPI
 #ifdef EFI_SDC_DEVICE
 static const SDCConfig sdcConfig = {
-	SDC_MODE_4BIT
+	SDC_MODE_1BIT
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
