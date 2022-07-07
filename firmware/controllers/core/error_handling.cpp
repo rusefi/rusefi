@@ -270,7 +270,7 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	}
 
 	auto sramState = getBackupSram();
-	strcpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
+	strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
 	sramState->Cookie = ErrorCookie::FirmwareError;
 #else
 
