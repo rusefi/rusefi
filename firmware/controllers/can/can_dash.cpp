@@ -80,7 +80,6 @@ static bool cluster_time_set;
 
 constexpr uint8_t e90_temp_offset = 49;
 
-// todo: those forward declarations are out of overall code style
 void canDashboardBMW(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
@@ -96,13 +95,8 @@ void updateDash(CanCycle cycle) {
 
 	// Transmit dash data, if enabled
 	switch (engineConfiguration->canNbcType) {
-	case CAN_BUS_NBC_NONE:
-		break;
 	case CAN_BUS_NBC_BMW:
 		canDashboardBMW(cycle);
-		break;
-	case CAN_BUS_Haltech:
-		canDashboardHaltech(cycle);
 		break;
 	case CAN_BUS_NBC_FIAT:
 		canDashboardFiat(cycle);
@@ -131,8 +125,10 @@ void updateDash(CanCycle cycle) {
 	case CAN_AIM_DASH:
 		canDashboardAim(cycle);
 		break;
+	case CAN_BUS_Haltech:
+		canDashboardHaltech(cycle);
+                break;
 	default:
-		firmwareError(OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
 		break;
 	}
 }
@@ -230,7 +226,6 @@ void canDashboardFiat(CanCycle cycle) {
 void canDashboardVAG(CanCycle cycle) {
 	if (cycle.isInterval(CI::_10ms)) {
 		{
-			// https://github.com/commaai/opendbc/blob/57c8340a180dd8c75139b18050eb17c72c9cb6e4/vw_golf_mk4.dbc#L394
 			//VAG Dashboard
 			CanTxMessage msg(CanCategory::NBC, CAN_VAG_Motor_1);
 			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 2); //RPM
@@ -553,7 +548,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* TPS  y = x/10 */
-			tmp = (uint16_t)((float)(Sensor::getOrZero(SensorType::Tps1)) * 10);
+			tmp = (((uint16_t)(Sensor::getOrZero(SensorType::Tps1))) * 10);
 			msg[4] = (tmp >> 8);
 			msg[5] = (tmp & 0x00ff);
 			/* Coolant pressure */
@@ -565,11 +560,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x361, 8);
 			/* Fuel pressure */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::FuelPressureLow));
+			tmp =  (uint16_t)((Sensor::getOrZero(SensorType::FuelPressureLow) + 101.3) * 10);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp&0x00ff);
 			/* Oil pressure */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::OilPressure));
+			tmp =  (uint16_t)((Sensor::getOrZero(SensorType::OilPressure) + 101.3) * 10);
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* Engine Demand */
@@ -578,7 +573,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[5] = (tmp & 0x00ff);
 			/* Wastegate Pressure */
 			msg[6] = 0;
-			msg[7] = 0;			
+			msg[7] = 0;					
 		}
 
 		/* 0x362 - 50Hz rate */
@@ -685,7 +680,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
 			/* Wideband Sensor 1 */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1)) * 1000;
+			tmp = (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000 * 14.7);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wideband Sensor 2 */
@@ -1049,7 +1044,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[1] = (tmp & 0x00ff);
 			/* Air Temperature */
 			tmp = ((Sensor::getOrZero(SensorType::Iat) + 273.15) * 10);
-			msg[2] = (tmp >> 8);
+                        msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* Fuel Temperature */
 			msg[4] = 0x00;
@@ -1077,9 +1072,8 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x3E2, 2);
 			/* Fuel Level in Liters */
-			tmp = (Sensor::getOrZero(SensorType::FuelLevel)* 10);
-			msg[0] = (tmp >> 8);
-			msg[1] = (tmp & 0x00ff);
+			msg[0] = 0x00;
+			msg[1] = 0xff;
 		}
 
 		/* 0x3E3 = 5Hz rate */

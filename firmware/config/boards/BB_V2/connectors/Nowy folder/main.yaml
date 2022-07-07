@@ -1,0 +1,209 @@
+pins:
+  # Low side outputs
+  - pin: 1
+    id: GPIOD_12
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 1
+    
+  - pin: 2
+    id: GPIOD_13
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 2
+
+  - pin: 3
+    id: GPIOD_14
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 3
+    
+  - pin: 4
+    id: GPIOD_15
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 4
+    
+  - pin: 5
+    id: GPIOE_9
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 5
+    
+  - pin: 6
+    id: GPIOE_11
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 6
+    
+  - pin: 7
+    id: GPIOE_14
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 7
+    
+  - pin: 8
+    id: GPIOE_13
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 8
+
+    - pin: 9
+    id: GPIOC_6
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Boost controler
+
+    - pin: 10
+    id: GPIOC_7
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Idle valve 1
+
+    - pin: 11
+    id: GPIOC_13
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Tacho output
+
+    - pin: 12
+    id: GPIOD_3
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low side output 1
+
+    - pin: 13
+    id: GPIOE_12
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: VVT output
+
+    - pin: 14
+    id: GPIOE_6
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Fan output
+
+    - pin: 15
+    id: GPIOE_3
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Fuel pump output
+
+    - pin: 16
+    id: GPIOB_12
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low current output 1
+
+    - pin: 17
+    id: GPIOD_3
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low side output 1
+
+    - pin: 18
+    id: GPIOB_14
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_PWM
+
+    - pin: 19
+    id: GPIOE_4
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_DIS
+
+    - pin: 20
+    id: GPIOD_5
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_DIR
+    
+  # High side
+  
+  - pin: 21
+    id: GPIOD_7
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 1
+    
+  - pin: 22
+    id: GPIOB_9
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 2
+    
+  - pin: 23
+    id: GPIOA_8
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 3
+    
+  - pin: 24
+    id: GPIOD_10
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 4
+    
+  - pin: 25
+    id: GPIOD_9
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 5
+    
+  - pin: 26
+    id: GPIOD_11
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 6
+    
+  - pin: 27
+    id: GPIOD_8
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 7
+    
+  - pin: 28
+    id: GPIOE_8
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 8
+    
+  # SENSORS
+  
+  - pin: 29
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Battery reference voltage
+
+   

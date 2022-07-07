@@ -71,7 +71,7 @@ static void sayHello() {
 
 	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
 
-#define MIN_FLASH_SIZE 1024
+#define MIN_FLASH_SIZE 512
 
 	int flashSize = TM_ID_GetFlashSize();
 	if (flashSize < MIN_FLASH_SIZE) {
