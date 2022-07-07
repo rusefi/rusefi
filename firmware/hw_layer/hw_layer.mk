@@ -10,11 +10,8 @@ HW_INC = hw_layer/$(CPU_HWLAYER) \
 HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(PROJECT_DIR)/hw_layer/microsecond_timer/microsecond_timer.cpp \
-	$(PROJECT_DIR)/hw_layer/digital_input/digital_input.cpp \
-	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_icu.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input.cpp \
-	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_icu.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_adc.cpp \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
