@@ -14,7 +14,6 @@
 #include "hal_comp.h"
 
 #include "trigger_input.h"
-#include "digital_input_icu.h"
 
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
