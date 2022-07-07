@@ -9,6 +9,8 @@
 #include "os_access.h"
 #include "backup_ram.h"
 
+#include <cstring>
+
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 
