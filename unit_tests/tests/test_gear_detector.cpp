@@ -27,6 +27,46 @@ TEST(GearDetector, ComputeGearRatio) {
 	EXPECT_EQ(0, GetGearRatioFor(507, 4.1, 0, 800));
 }
 
+
+TEST(GearDetector, GetRpmInGear) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	engineConfiguration->driveWheelRevPerKm = 507;
+	engineConfiguration->finalGearRatio = 4.10f;
+
+	// real gears from Volvo racecar
+	engineConfiguration->totalGearsCount = 5;
+	engineConfiguration->gearRatio[0] = 3.35f;
+	engineConfiguration->gearRatio[1] = 1.99f;
+	engineConfiguration->gearRatio[2] = 1.33f;
+	engineConfiguration->gearRatio[3] = 1.00f;
+	engineConfiguration->gearRatio[4] = 0.72f;
+
+	GearDetector dut;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 29.45f / 0.6214f);
+	EXPECT_NEAR(5500, dut.getRpmInGear(1), 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 49.57f / 0.6214f);
+	EXPECT_NEAR(5500, dut.getRpmInGear(2), 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 74.18f / 0.6214f);
+	EXPECT_NEAR(5500, dut.getRpmInGear(3), 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 98.65f / 0.6214f);
+	EXPECT_NEAR(5500, dut.getRpmInGear(4), 1);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 137.02f / 0.6214f);
+	EXPECT_NEAR(5500, dut.getRpmInGear(5), 1);
+
+	// Test some invalid cases
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(0));
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(10));
+
+	// Zero vehicle speed shouldn't cause a problem
+	Sensor::setMockValue(SensorType::VehicleSpeed, 0);
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(0));
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(1));
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(5));
+	EXPECT_FLOAT_EQ(0, dut.getRpmInGear(10));
+}
+
 TEST(GearDetector, DetermineGearSingleSpeed) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GearDetector dut;
