@@ -17,31 +17,16 @@
  * allocate the stack at compile time, it has to be a template parameter instead of a normal parameter)
  */
 template <int TStackSize>
-class ThreadController
+class ThreadController : public chibios_rt::BaseStaticThread<TStackSize>
 {
 private:
-    THD_WORKING_AREA(m_threadstack, TStackSize);
     const tprio_t m_prio;
-	bool m_isStarted = false;
-
-    /**
-     * The OS can only call a function with a single void* param.  We have
-     * to convert back to an instance of ThreadController, and call the task to run.
-     */
-    static void StaticThreadTaskAdapter(void* thread)
-    {
-        ThreadController* t = static_cast<ThreadController*>(thread);
-
-        // Run our thread task
-        t->ThreadTask();
-    }
 
 protected:
     /**
      * Override this function to implement your controller's thread's behavior.
      */
     virtual void ThreadTask() = 0;
-    thread_t* m_thread;
 
 	const char* const m_name;
 
@@ -57,13 +42,12 @@ public:
      */
     void Start()
     {
-		if (m_isStarted) {
-			warning(CUSTOM_OBD_6003, "Tried to start thread %s but it was already running", m_name);
-			return;
-		}
-
-        m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
-		m_thread->name = m_name;
-		m_isStarted = true;
+		this->start(m_prio);
     }
+
+	void main() override {
+		this->setName(m_name);
+
+		ThreadTask();
+	}
 };
