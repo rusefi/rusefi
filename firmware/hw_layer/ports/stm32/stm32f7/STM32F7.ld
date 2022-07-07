@@ -51,6 +51,8 @@ MEMORY
     ram7   (wx) : org = 0x00000000, len = 0
 }
 
+__backup_sram_addr__ = ORIGIN(ram5);
+
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
 

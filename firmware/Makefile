@@ -266,7 +266,8 @@ TCPPSRC =
 
 # List ASM source files here
 ASMXSRC = $(ALLXASMSRC) \
-	$(RUSEFIASM)
+	$(RUSEFIASM) \
+	main_hardfault_asm.S
 
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders

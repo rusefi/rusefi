@@ -76,7 +76,7 @@
 #define STM32_PLLI2SR_VALUE                 5
 #define STM32_PVD_ENABLE                    FALSE
 #define STM32_PLS                           STM32_PLS_LEV0
-#define STM32_BKPRAM_ENABLE                 FALSE
+#define STM32_BKPRAM_ENABLE                 TRUE
 
 /*
  * GPT driver system settings.
