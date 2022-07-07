@@ -231,7 +231,7 @@ public class BinaryProtocol {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
                                 }
                                 if (linkManager.isNeedPullLiveData()) {
-                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
+                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
                                 }
                             }
@@ -239,7 +239,7 @@ public class BinaryProtocol {
                     }
                     sleep(Timeouts.TEXT_PULL_PERIOD);
                 }
-                log.info("Stopping text pull");
+                log.info("Port shutdown: Stopping text pull");
             }
         };
         Thread tr = THREAD_FACTORY.newThread(textPull);

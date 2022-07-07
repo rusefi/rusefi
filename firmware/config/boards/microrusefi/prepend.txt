@@ -25,6 +25,8 @@
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
 #define ts_show_sd_pins true
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
 
 #define show_test_presets false
 #define show_Frankenso_presets false

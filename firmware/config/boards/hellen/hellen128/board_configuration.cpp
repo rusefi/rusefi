@@ -148,7 +148,9 @@ static void setHellen128ETBConfig() {
 void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	setHellenSdCardSpi2();
+
 	setHellen128ETBConfig();
 
     // this specific Hellen has less common pull-up value R49
@@ -158,15 +160,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
-
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
 
 /**
  * @brief   Board-specific configuration defaults.
@@ -221,18 +214,4 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vrThreshold[0].pin = Gpio::D14;
 	hellenWbo();
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
 }

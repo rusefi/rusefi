@@ -650,6 +650,7 @@ enum class TsCalMode : uint8_t {
 enum class GearControllerMode : uint8_t {
 	None = 0,
 	ButtonShift = 1,
+	Generic = 2,
 };
 
 enum class TransmissionControllerMode : uint8_t {
@@ -662,6 +663,21 @@ enum class InjectionTimingMode : uint8_t {
 	End = 0,
 	Start = 1,
 	Center = 2,
+};
+
+enum class SelectedGear : uint8_t {
+	Invalid = 0,
+	ManualPlus = 1,
+	ManualMinus = 2,
+	Park = 3,
+	Reverse = 4,
+	Neutral = 5,
+	Drive = 6,
+	Manual = 7,
+	Manual3 = 8,
+	Manual2 = 9,
+	Manual1 = 10,
+	Low = 11,
 };
 
 #endif // __cplusplus

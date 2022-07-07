@@ -1156,7 +1156,7 @@ typedef enum {
 	//P2228 Barometric Press Circ Low
 	//P2229 Barometric Press Circ High
 	//P2230 Barometric Press Circ Interm
-	//P2231 O2 Sensor Signal Circ Shorted to Heater Circ Bank1 Sensor 1
+	OBD_WB_FW_Mismatch = 2133, // actually: P2231 O2 Sensor Signal Circ Shorted to Heater Circ Bank1 Sensor 1
 	//P2232 O2 Sensor Signal Circ Shorted to Heater Circ Bank1 Sensor 2
 	//P2233 O2 Sensor Signal Circ Shorted to Heater Circ Bank1 Sensor 3
 	//P2234 O2 Sensor Signal Circ Shorted to Heater Circ Bank2 Sensor 1

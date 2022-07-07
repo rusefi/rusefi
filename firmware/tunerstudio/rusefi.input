@@ -118,8 +118,6 @@ enable2ndByteCanID = false
         dataReadTimeout = 10000 ; time in ms
         dataReadyCondition = { toothLogReady }
         continuousRead = true
-        ; each packet is @@COMPOSITE_PACKET_SIZE@@ and we have @@COMPOSITE_PACKET_COUNT@@ of those
-        dataLength = @@COMPOSITE_DATA_LENGTH_HALF@@
 
 ;tooth
        ; recordDef = headerLen, footerLen, recordLen
@@ -267,7 +265,6 @@ enable2ndByteCanID = false
      requiresPowerCycle = runningLedPin
      requiresPowerCycle = binarySerialTxPin
      requiresPowerCycle = binarySerialRxPin
-     requiresPowerCycle = useSerialPort
      requiresPowerCycle = tunerStudioSerialSpeed
      requiresPowerCycle = auxSerialRxPin
      requiresPowerCycle = auxSerialTxPin
@@ -1068,8 +1065,9 @@ di_nextStartGauge = di_nextStart,"DI: next start", "v", 0.0,100.0, 0.0,100.0, 0.
 m_requested_pumpGauge = m_requested_pump,"DI: Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 fuel_requested_percentGauge = fuel_requested_percent,"DI: fuel_requested_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
 fuel_requested_percent_piGauge = fuel_requested_percent_pi,"DI: fuel_requested_percent_pi", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
-m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
-m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+;todo see comment in HpfpQuantity class definition
+;m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+;m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Sensors - Extra 2
@@ -2560,7 +2558,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Sensors->CLT sensor
 	dialog = clt_thermistor, "CLT sensor"
 		field = "Input channel",						clt_adcChannel
-		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common CLT Sensors"
 			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
@@ -2593,7 +2591,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Sensors->IAT sensor
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
-		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}@@if_ts_show_clt_iat_pullup
 
 		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
 			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
@@ -2750,8 +2748,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->idle Settings	
 	dialog = idleSolenoid, "Solenoid"
 		field = "Idle Solenoid Pin Mode",   	  	    idle_solenoidPinMode, !useStepperIdle
-		field = "Idle Solenoid Pin",					idle_solenoidPin, !useStepperIdle
-		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
+		field = "Idle Solenoid Pin",					idle_solenoidPin,  { idle_solenoidPin != 0 ||  !useStepperIdle }
+		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { idle_solenoidPin != 0 || (!useStepperIdle && isDoubleSolenoidIdle ) }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
 	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
@@ -3158,7 +3156,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
-		panel = batteryDialog
+		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
 		panel = startStopDialog
 
@@ -3218,10 +3216,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;			Board->Connection
 	dialog = tsPort, "Calibration Secondary Serial"
-		field = "Use UART/TTL calibration serial?",		useSerialPort
-		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed, {useSerialPort == 1}
-		field = "TX pin",                               binarySerialTxPin, {useSerialPort == 1}
-		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
+		field = "tunerStudioSerialSpeed",				tunerStudioSerialSpeed
+		field = "TX pin",                               binarySerialTxPin
+		field = "RX pin",                               binarySerialRxPin
 
 	dialog = canHw1, "Primary CAN"
 		field = "Verbose Can",  verboseCan
@@ -3724,6 +3721,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "!Disconnect all controllers you don't want to set!"
 		commandButton = "Set Index 0",     cmd_set_wideband_idx_0
 		commandButton = "Set Index 1",     cmd_set_wideband_idx_1
+		field = "Force O2 sensor heating", forceO2Heating
 
 	dialog = engineTypeDialog, "Popular vehicles"
 		field = "!These buttons send a command to rusEFI controller to apply preset values"
@@ -3887,6 +3885,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
+	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"

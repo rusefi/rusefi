@@ -106,6 +106,10 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
 
+	// random values to have valid config
+	engineConfiguration->tps1SecondaryMin = 1000;
+	engineConfiguration->tps1SecondaryMax = 0;
+
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
@@ -157,7 +161,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
@@ -205,20 +210,6 @@ void setBoardDefaultConfiguration() {
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	engineConfiguration->vrThreshold[1].pin = H144_OUT_PWM4;
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
 }
 
 void boardPrepareForStop() {

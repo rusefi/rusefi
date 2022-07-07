@@ -163,10 +163,10 @@ float getConfigValueByName(const char *name) {
 	}
 	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
 		return engineConfiguration->sensorSnifferRpmThreshold;
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-		return engineConfiguration->rpmHardLimit;
 	if (strEqualCaseInsensitive(name, "launchRpm"))
 		return engineConfiguration->launchRpm;
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+		return engineConfiguration->rpmHardLimit;
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
 		return engineConfiguration->engineSnifferRpmThreshold;
 	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
@@ -335,8 +335,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isHip9011Enabled;
 	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
 		return engineConfiguration->isVerboseAlternator;
-	if (strEqualCaseInsensitive(name, "useSerialPort"))
-		return engineConfiguration->useSerialPort;
+	if (strEqualCaseInsensitive(name, "verboseQuad"))
+		return engineConfiguration->verboseQuad;
 	if (strEqualCaseInsensitive(name, "useStepperIdle"))
 		return engineConfiguration->useStepperIdle;
 	if (strEqualCaseInsensitive(name, "enabledStep1Limiter"))
@@ -635,6 +635,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isPhaseSyncRequiredForIgnition;
 	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
 		return engineConfiguration->useCltBasedRpmLimit;
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+		return engineConfiguration->forceO2Heating;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -852,14 +854,14 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-	{
-		engineConfiguration->rpmHardLimit = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "launchRpm"))
 	{
 		engineConfiguration->launchRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+	{
+		engineConfiguration->rpmHardLimit = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
@@ -1282,9 +1284,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isVerboseAlternator = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useSerialPort"))
+	if (strEqualCaseInsensitive(name, "verboseQuad"))
 	{
-		engineConfiguration->useSerialPort = (int)value;
+		engineConfiguration->verboseQuad = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useStepperIdle"))
@@ -2030,6 +2032,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
 	{
 		engineConfiguration->useCltBasedRpmLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+	{
+		engineConfiguration->forceO2Heating = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))

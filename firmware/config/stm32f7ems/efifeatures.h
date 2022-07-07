@@ -52,11 +52,9 @@
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-// todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_BRAIN_PIN
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
 
-// todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_BRAIN_PIN
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 
@@ -70,5 +68,3 @@
 
 #undef LUA_USER_HEAP
 #define LUA_USER_HEAP 100000
-#undef LUA_SYSTEM_HEAP
-#define LUA_SYSTEM_HEAP 100000

@@ -1,16 +1,18 @@
 struct_no_prefix ac_control_s
 
-bit engineTooSlow
-bit engineTooFast
-bit noClt
-bit engineTooHot
-bit tpsTooHigh
-bit m_acEnabled
-
+! main input and output to be displayed on top of View dialog
 bit acButtonState;@@INDICATOR_NAME_AC_SWITCH@@
-bit isDisabledByLua;For setAcDisabled Lua method
+bit m_acEnabled;AC enabled
 
-int latest_usage_ac_control;
+
+bit engineTooSlow;AC engine too slow
+bit engineTooFast;AC engine too fast
+bit noClt;AC no CLT
+bit engineTooHot;AC engine too hot
+bit tpsTooHigh;AC tps too high
+bit isDisabledByLua;AC disabled by Lua
+
+int latest_usage_ac_control;AC latest activity
 ! todo: extract some helper which would contain boolean state and most recent toggle time?
 int acSwitchLastChangeTimeMs;
 

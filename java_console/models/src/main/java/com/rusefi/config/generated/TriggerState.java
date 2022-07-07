@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Mon Jun 06 21:23:51 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Mon Jul 04 21:04:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -77,9 +77,7 @@ public class TriggerState {
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_DATA_LENGTH = 2500;
-	public static final int COMPOSITE_DATA_LENGTH_HALF = 1250;
-	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -107,7 +105,7 @@ public class TriggerState {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10012;
+	public static final int FLASH_DATA_VERSION = 10013;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -321,7 +319,6 @@ public class TriggerState {
 	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
 	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
 	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
-	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int SCRIPT_CURVE_16 = 16;
 	public static final int SCRIPT_CURVE_8 = 8;
 	public static final int SCRIPT_CURVE_COUNT = 6;
@@ -365,7 +362,6 @@ public class TriggerState {
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
-	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';

@@ -24,6 +24,8 @@
 
 static bool isCanEnabled = false;
 
+#if EFI_PROD_CODE
+
 // Values below calculated with http://www.bittiming.can-wiki.info/
 // Pick ST micro bxCAN
 // Clock rate of 42mhz for f4, 54mhz for f7, 80mhz for h7
@@ -118,6 +120,15 @@ static const CANConfig canConfig1000 = {
 	.TEST = 0,
 	.RXGFC = 0,
 };
+#endif
+
+#else // not EFI_PROD_CODE
+// Nothing to actually set for the simulator's CAN config.
+// It's impossible to set CAN bitrate from userspace, so we can't set it.
+static const CANConfig canConfig100;
+static const CANConfig canConfig250;
+static const CANConfig canConfig500;
+static const CANConfig canConfig1000;
 #endif
 
 class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
@@ -238,11 +249,13 @@ void startCanPins() {
 		return;
 	}
 
+#if EFI_PROD_CODE
 	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 
 	efiSetPadModeIfConfigurationChanged("CAN2 TX", can2TxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+#endif // EFI_PROD_CODE
 }
 
 static const CANConfig * findConfig(can_baudrate_e rate) {
@@ -262,7 +275,7 @@ static const CANConfig * findConfig(can_baudrate_e rate) {
 	}
 }
 
-void initCan(void) {
+void initCan() {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = false;

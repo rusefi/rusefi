@@ -7,6 +7,7 @@ bit noValve
 bit angleAboveMin
 bit isHpfpInactive
 angle_t nextLobe
-angle_t nextStart
+    float di_nextStart;DI: next start;"v", 1, 0, 0, 100, 0
+
 
 end_struct

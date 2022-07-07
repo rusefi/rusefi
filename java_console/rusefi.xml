@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Mon May 02 09:00:03 UTC 2022 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Wed Jun 29 22:51:56 UTC 2022 -->
 
     <rom>
         <romid>
@@ -10,20 +10,20 @@
             <ecuid>RUSEFI</ecuid>
             <make>rusEfi</make>
             <model>rusEfi</model>
-            <filesize>21352</filesize>
+            <filesize>21300</filesize>
         </romid>
 
         <table type="3D" name="Ignition Advance"
         category="Ignition"
-        storageaddress="47e8"
+        storageaddress="47b4"
                sizex="16" sizey="16" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="4a08" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="49d4" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="49e8" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="49b4" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
@@ -32,15 +32,15 @@
 
         <table type="3D" name="Ignition Advance IAT correction" 
         category="Ignition"
-        storageaddress="400c"
+        storageaddress="3fd8"
                sizex="16" sizey="16" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="424c" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="4218" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="420c" storagetype="float"
+            <table type="Y Axis" storageaddress="41d8" storagetype="float"
                    endian="big" logparam="engine_load">
                 <scaling units="temperature, C" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
@@ -49,15 +49,15 @@
 
         <table type="3D" name="Volumetric Efficiency"
         category="Fuel"
-        storageaddress="4a28"
+        storageaddress="49f4"
                sizex="16" sizey="16" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="4c48" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="4c14" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="4c28" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="4bf4" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="degree" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
@@ -66,16 +66,16 @@
 
         <table type="3D" name="SCRIPT Table #1" 
         category="SCRIPT"
-        storageaddress="4ee8" sizex="8"
+        storageaddress="4eb4" sizex="8"
                sizey="8" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="4ff8" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="4fc4" storagetype="float" endian="big"
                    logparam="">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="4fe8" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="4fb4" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
@@ -83,16 +83,16 @@
 
         <table type="3D" name="SCRIPT Table #2" 
         category="SCRIPT"
-        storageaddress="5008" sizex="8"
+        storageaddress="4fd4" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="5058" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="5024" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="5048" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="5014" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
@@ -100,16 +100,16 @@
 
         <table type="3D" name="SCRIPT Table #3" 
         category="SCRIPT"
-        storageaddress="5068" sizex="8"
+        storageaddress="5034" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="50b8" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="5084" storagetype="float" endian="big"
                    logparam="">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="50a8" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="5074" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
@@ -117,16 +117,16 @@
 
         <table type="3D" name="SCRIPT Table #4" 
         category="SCRIPT"
-        storageaddress="50c8" sizex="8"
+        storageaddress="5094" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="5118" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="50e4" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="5108" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="50d4" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
@@ -134,77 +134,77 @@
 
         <table type="3D" name="Target AFR"
         category="Fuel"
-        storageaddress="4c68" sizex="16"
+        storageaddress="4c34" sizex="16"
                sizey="16" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x/147" to_byte="x*147" format="0.00" fineincrement=".01"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="4d88" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="4d54" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="4d68" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="4d34" storagetype="float" endian="big">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
         <table type="3D" name="Baro Correction"
         category="Fuel"
-        storageaddress="1304" sizex="4"
+        storageaddress="12e0" sizex="4"
                sizey="4" storagetype="float" endian="big">
             <scaling units="Pressure" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
-            <table type="X Axis" storageaddress="12e4" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="12c0" storagetype="float" endian="big">
                 <scaling units="kPa" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="12f4" storagetype="float" endian="big">
+            <table type="Y Axis" storageaddress="12d0" storagetype="float" endian="big">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
         <table type="2D" name="Coolant-based Warnup Enrichment"
         category="Fuel"
-        storageaddress="364c" sizex="16"
+        storageaddress="3618" sizex="16"
                storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="360c" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="35d8" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="2D" name="SCRIPT Curve #1" storageaddress="1124"
+        <table type="2D" name="SCRIPT Curve #1" storageaddress="1100"
         category="SCRIPT"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="10e4" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="10c0" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="2D" name="SCRIPT Curve #2" storageaddress="11a4"
+        <table type="2D" name="SCRIPT Curve #2" storageaddress="1180"
         category="SCRIPT"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="1164" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="1140" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="2D" name="Coolant temperature-based extra idle air" storageaddress="37cc"
+        <table type="2D" name="Coolant temperature-based extra idle air" storageaddress="3798"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="378c" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="3758" storagetype="float" endian="big">
                 <scaling units="uni" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="2D" name="Injector Lag" storageaddress="44"
+        <table type="2D" name="Injector Lag" storageaddress="58"
                sizex="8" storagetype="float" endian="big">
             <scaling units="ms" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
-            <table type="X Axis" storageaddress="24" storagetype="float" endian="big">
+            <table type="X Axis" storageaddress="38" storagetype="float" endian="big">
                 <scaling units="Volts" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>

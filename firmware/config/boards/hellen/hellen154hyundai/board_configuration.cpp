@@ -94,19 +94,18 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-extern int hellenBoardId;
-
 static bool isFirstInvocation = true;
 
 void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	if (hellenBoardId == 0) {
+	if (engine->engineState.hellenBoardId == -1) {
 		// first revision of did not have Hellen Board ID
 		// https://github.com/rusefi/hellen154hyundai/issues/55
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
@@ -121,15 +120,6 @@ void setBoardConfigOverrides() {
 		}
 	}
 }
-
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
 
 /**
  * @brief   Board-specific configuration defaults.
@@ -204,18 +194,4 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->tps1SecondaryMin = 880;
 	engineConfiguration->tps1SecondaryMax = 68;
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides() {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
 }

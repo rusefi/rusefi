@@ -46,7 +46,7 @@ static void deInitOldAnalogInputs() {
 }
 
 void initNewSensors() {
-#if EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
 

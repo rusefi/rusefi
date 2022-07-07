@@ -52,6 +52,8 @@ static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
 #endif /* ENABLE_AUTO_DETECT_HSE */
 
+	efiPrintf("hellenBoardId=%d", engine->engineState.hellenBoardId);
+
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);

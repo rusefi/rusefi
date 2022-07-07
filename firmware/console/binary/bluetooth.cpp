@@ -174,12 +174,6 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = getBluetoothChannel();
-	
-	// if a binary protocol uses USB, we cannot init the bluetooth module!
-	if (!engineConfiguration->useSerialPort) {
-		efiPrintf("Failed! Serial Port connection is disabled!");
-		return;
-	}
 
 	if (btProcessIsStarted) {
 		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");

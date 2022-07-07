@@ -61,7 +61,6 @@
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
@@ -281,30 +280,16 @@ void setDefaultBasePins() {
 
 	// set UART pads configuration based on the board
 // needed also by bootloader code
-	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = Gpio::C10;
 	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
-	setSerialConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = Gpio::D4;
 	engineConfiguration->isSdCardEnabled = true;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
-	setSdCardConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 static void setDefaultWarmupIdleCorrection() {
@@ -330,23 +315,8 @@ static void setDefaultWarmupIdleCorrection() {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget() {
-	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
-
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
-	setCurveValue(config->cltIdleRpmBins, config->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+	copyArray(config->cltIdleRpmBins, {  -30, - 20,  -10,    0,   10,   20,   30,   40,   50,  60,  70,  80,  90, 100 , 110,  120 });
+	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
 }
 
 static void setDefaultFrankensoStepperIdleParameters() {
@@ -805,8 +775,6 @@ void loadConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
-	detectBoardType();
-
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }
@@ -956,8 +924,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
-	case HELLEN_NB1:
 	case HELLEN_NA8_96:
+		setHellenMiata96();
+		break;
+	case HELLEN_NB1:
 		setHellenNB1();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
@@ -1043,7 +1013,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTle8888TestConfiguration();
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
-		setMazdaMiataNA8Configuration();
+		setFrankensoMazdaMiataNA8Configuration();
 		break;
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
@@ -1133,14 +1103,6 @@ void validateConfiguration() {
 		engineConfiguration->adcVcc = 3.0f;
 	}
 	engine->preCalculate();
-
-	/**
-	 * TunerStudio text tune files convert negative zero into positive zero so to keep things consistent we should avoid
-	 * negative zeros altogether. Unfortunately default configuration had one and here we are mitigating that.
-	 */
-	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
-		config->cltIdleRpmBins[i] = fixNegativeZero(config->cltIdleRpmBins[i]);
-	}
 }
 
 void applyNonPersistentConfiguration() {
@@ -1195,4 +1157,3 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 // These symbols are weak so that a board_configuration.cpp file can override them
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
-__attribute__((weak)) void setSerialConfigurationOverrides() { }

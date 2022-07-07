@@ -125,9 +125,5 @@ void setHonda600() {
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
-
-#if EFI_CAN_SUPPORT
-	enableFrankensoCan();
-#endif /* EFI_CAN_SUPPORT */
 }
 

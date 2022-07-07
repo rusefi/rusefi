@@ -80,32 +80,27 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 }
 
 angle_t getAdvanceCorrections(int rpm) {
-	float iatCorrection;
-
 	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
 
 	if (!iatValid) {
-		iatCorrection = 0;
+		engine->engineState.timingIatCorrection = 0;
 	} else {
-		iatCorrection = interpolate3d(
+		engine->engineState.timingIatCorrection = interpolate3d(
 			config->ignitionIatCorrTable,
 			config->ignitionIatCorrLoadBins, iat,
 			config->ignitionIatCorrRpmBins, rpm
 		);
 	}
 
-	float pidTimingCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(rpm);
+	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(rpm);
 
 #if EFI_TUNER_STUDIO
-		engine->outputChannels.timingIatCorrection = iatCorrection;
-		engine->outputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
-		engine->outputChannels.timingPidCorrection = pidTimingCorrection;
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
-	return iatCorrection
+	return engine->engineState.timingIatCorrection
 		+ engine->engineState.cltTimingCorrection
-		+ pidTimingCorrection;
+		+ engine->engineState.timingPidCorrection;
 }
 
 /**

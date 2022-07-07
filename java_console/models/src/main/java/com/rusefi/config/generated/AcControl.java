@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon Jun 06 21:23:51 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon Jul 04 21:04:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -77,9 +77,7 @@ public class AcControl {
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_DATA_LENGTH = 2500;
-	public static final int COMPOSITE_DATA_LENGTH_HALF = 1250;
-	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -107,7 +105,7 @@ public class AcControl {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10012;
+	public static final int FLASH_DATA_VERSION = 10013;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -321,7 +319,6 @@ public class AcControl {
 	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
 	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
 	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
-	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int SCRIPT_CURVE_16 = 16;
 	public static final int SCRIPT_CURVE_8 = 8;
 	public static final int SCRIPT_CURVE_COUNT = 6;
@@ -365,7 +362,6 @@ public class AcControl {
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
-	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
@@ -393,13 +389,13 @@ public class AcControl {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 0);
-	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 1);
-	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 2);
-	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 3);
-	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 4);
-	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 5);
-	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 6);
+	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 0);
+	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 1);
+	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 2);
+	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 3);
+	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 4);
+	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 5);
+	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6);
 	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7);
 	public static final Field UNUSEDBIT_8_8 = Field.create("UNUSEDBIT_8_8", 0, FieldType.BIT, 8);
 	public static final Field UNUSEDBIT_8_9 = Field.create("UNUSEDBIT_8_9", 0, FieldType.BIT, 9);
@@ -428,13 +424,13 @@ public class AcControl {
 	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0);
 	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0);
 	public static final Field[] VALUES = {
+	ACBUTTONSTATE,
+	M_ACENABLED,
 	ENGINETOOSLOW,
 	ENGINETOOFAST,
 	NOCLT,
 	ENGINETOOHOT,
 	TPSTOOHIGH,
-	M_ACENABLED,
-	ACBUTTONSTATE,
 	ISDISABLEDBYLUA,
 	UNUSEDBIT_8_8,
 	UNUSEDBIT_8_9,
