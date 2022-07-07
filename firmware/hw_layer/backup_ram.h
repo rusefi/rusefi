@@ -56,6 +56,7 @@ enum class ErrorCookie : uint32_t {
 	HardFault = 0xdeadbeef,
 };
 
+#if EFI_PROD_CODE
 struct BackupSramData {
 	ErrorCookie Cookie;
 
@@ -70,3 +71,4 @@ struct BackupSramData {
 };
 
 BackupSramData* getBackupSram();
+#endif // EFI_PROD_CODE
