@@ -574,7 +574,7 @@ void initBenchTest() {
 
 	addConsoleActionFFFFF("luabench2", luaOutBench2);
 	instance.setPeriod(200 /*ms*/);
-	instance.Start();
+	instance.start();
 	onConfigurationChangeBenchTest();
 }
 

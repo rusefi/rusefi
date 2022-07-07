@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "global.h"
+#include "ch.hpp"
 
 /**
  * @brief A base class for a controller that requires its own thread.
@@ -20,34 +20,32 @@ template <int TStackSize>
 class ThreadController : public chibios_rt::BaseStaticThread<TStackSize>
 {
 private:
-    const tprio_t m_prio;
+	const tprio_t m_prio;
 
 protected:
-    /**
-     * Override this function to implement your controller's thread's behavior.
-     */
-    virtual void ThreadTask() = 0;
-
-	const char* const m_name;
-
-public:
-    ThreadController(const char* name, tprio_t priority)
-		: m_prio(priority)
-		, m_name(name)
-    {
-    }
-
-    /**
-     * @brief Start the thread.
-     */
-    void Start()
-    {
-		this->start(m_prio);
-    }
+	// Override this function to implement your controller's thread's behavior.
+	virtual void ThreadTask() = 0;
 
 	void main() override {
 		this->setName(m_name);
 
 		ThreadTask();
+	}
+
+	const char* const m_name;
+
+public:
+	ThreadController(const char* name, tprio_t priority)
+		: m_prio(priority)
+		, m_name(name)
+	{
+	}
+
+	/**
+	 * @brief Start the thread.
+	 */
+	void start()
+	{
+		chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
 	}
 };

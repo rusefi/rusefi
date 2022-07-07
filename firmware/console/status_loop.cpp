@@ -936,6 +936,6 @@ void startStatusThreads(void) {
 #endif /* EFI_PROD_CODE */
 
 #if EFI_LCD
-	lcdInstance.Start();
+	lcdInstance.start();
 #endif /* EFI_LCD */
 }
