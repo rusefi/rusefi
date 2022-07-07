@@ -4,6 +4,8 @@
 
 #include "tunerstudio.h"
 #include "wideband_state_generated.h"
+#include "electronic_throttle_generated.h"
+#include "knock_controller_generated.h"
 
 template<>
 const output_channels_s* getLiveDataAddr() {
