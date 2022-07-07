@@ -181,7 +181,9 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
+#if EFI_PROD_CODE
 	checkLastBootError();
+#endif
 
 #ifdef STM32F7
 	void sys_dual_bank(void);
