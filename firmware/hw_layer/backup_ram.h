@@ -10,6 +10,8 @@
 #include "global.h"
 #include "efi_gpio.h"
 
+#include "error_handling.h"
+
 typedef enum {
 	/**
 	 * IAC Stepper motor position, 16-bit (stored in BKP0R 0..15)
@@ -57,7 +59,7 @@ enum class ErrorCookie : uint32_t {
 struct BackupSramData {
 	ErrorCookie Cookie;
 
-	char ErrorString[256];
+	critical_msg_t ErrorString;
 	port_extctx FaultCtx;
 	uint32_t FaultType;
 	uint32_t FaultAddress;
