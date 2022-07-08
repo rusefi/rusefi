@@ -616,6 +616,19 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+#if EFI_VEHICLE_SPEED
+	lua_register(l, "getCurrentGear", [](lua_State* l) {
+		lua_pushinteger(l, engine->module<GearDetector>()->getCurrentGear());
+		return 1;
+	});
+
+	lua_register(l, "getRpmInGear", [](lua_State* l) {
+		auto idx = luaL_checkinteger(l, 1);
+		lua_pushinteger(l, engine->module<GearDetector>()->getRpmInGear(idx));
+		return 1;
+	});
+#endif // EFI_VEHICLE_SPEED
+
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
 	lua_register(l, "setPwmDuty", lua_setPwmDuty);
