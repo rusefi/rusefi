@@ -131,7 +131,7 @@ public class OutputsTest {
         state.readBufferedReader(test, (dataLogConsumer));
         assertEquals(
                 "entry = baseFuel, \"hello\", int,    \"%d\"\n" +
-                        "entry = baseFuel2, \"line1, int,    \"%d\"\n"
+                        "entry = baseFuel2, \"line1\", int,    \"%d\"\n"
                         , dataLogConsumer.getContent());
 
     }
