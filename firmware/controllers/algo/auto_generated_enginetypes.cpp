@@ -100,8 +100,8 @@ case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
 case DBG_GPPWM:
   return "DBG_GPPWM";
-case DBG_IDLE_CONTROL:
-  return "DBG_IDLE_CONTROL";
+case DBG_STEPPER_IDLE_CONTROL:
+  return "DBG_STEPPER_IDLE_CONTROL";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
