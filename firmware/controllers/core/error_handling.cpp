@@ -66,6 +66,7 @@ void checkLastBootError() {
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
 	auto sramState = getBackupSram();
 	sramState->Cookie = ErrorCookie::HardFault;
+	sramState->FaultType = type;
 	sramState->FaultAddress = faultAddress;
 	sramState->Csfr = csfr;
 	memcpy(&sramState->FaultCtx, ctx, sizeof(port_extctx));
