@@ -558,6 +558,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "setAcRequestState", [](lua_State* l) {
+		engine->engineState.lua.acRequestState = lua_toboolean(l, 1);
+		return 0;
+	});
+
 	lua_register(l, "getCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto result = getConfigValueByName(propertyName);
