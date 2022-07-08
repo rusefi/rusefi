@@ -406,19 +406,11 @@ void baseMCUInit(void) {
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
-
-extern "C" {
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
-}
-
 extern uint32_t __main_stack_base__;
-
-#define GET_CFSR() (*((volatile uint32_t *) (0xE000ED28)))
 
 typedef struct port_intctx intctx_t;
 
 EXTERNC int getRemainingStack(thread_t *otp) {
-
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
 	// coverity[uninit_use]
@@ -438,135 +430,6 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 	UNUSED(otp);
 	return 99999;
 #endif /* CH_DBG_ENABLE_STACK_CHECK */
-}
-
-void _unhandled_exception(void) {
-/*lint -restore*/
-
-  chDbgPanic3("_unhandled_exception", __FILE__, __LINE__);
-  while (true) {
-  }
-}
-
-void DebugMonitorVector(void) {
-	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
-	while (TRUE)
-		;
-}
-
-void UsageFaultVector(void) {
-	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
-	while (TRUE)
-		;
-}
-
-void BusFaultVector(void) {
-	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
-	while (TRUE) {
-	}
-}
-
-/**
- + * @brief   Register values for postmortem debugging.
- + */
-volatile uint32_t postmortem_r0;
-volatile uint32_t postmortem_r1;
-volatile uint32_t postmortem_r2;
-volatile uint32_t postmortem_r3;
-volatile uint32_t postmortem_r12;
-volatile uint32_t postmortem_lr; /* Link register. */
-volatile uint32_t postmortem_pc; /* Program counter. */
-volatile uint32_t postmortem_psr;/* Program status register. */
-volatile uint32_t postmortem_CFSR;
-volatile uint32_t postmortem_HFSR;
-volatile uint32_t postmortem_DFSR;
-volatile uint32_t postmortem_AFSR;
-volatile uint32_t postmortem_BFAR;
-volatile uint32_t postmortem_MMAR;
-volatile uint32_t postmortem_SCB_SHCSR;
-
-/**
- * @brief   Evaluates to TRUE if system runs under debugger control.
- * @note    This bit resets only by power reset.
- */
-#define is_under_debugger() (((CoreDebug)->DHCSR) & \
-                            CoreDebug_DHCSR_C_DEBUGEN_Msk)
-
-/**
- *
- */
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress) {
-
-	postmortem_r0 = pulFaultStackAddress[0];
-	postmortem_r1 = pulFaultStackAddress[1];
-	postmortem_r2 = pulFaultStackAddress[2];
-	postmortem_r3 = pulFaultStackAddress[3];
-	postmortem_r12 = pulFaultStackAddress[4];
-	postmortem_lr = pulFaultStackAddress[5];
-	postmortem_pc = pulFaultStackAddress[6];
-	postmortem_psr = pulFaultStackAddress[7];
-
-	/* Configurable Fault Status Register. Consists of MMSR, BFSR and UFSR */
-	postmortem_CFSR = GET_CFSR();
-
-	/* Hard Fault Status Register */
-	postmortem_HFSR = (*((volatile uint32_t *) (0xE000ED2C)));
-
-	/* Debug Fault Status Register */
-	postmortem_DFSR = (*((volatile uint32_t *) (0xE000ED30)));
-
-	/* Auxiliary Fault Status Register */
-	postmortem_AFSR = (*((volatile uint32_t *) (0xE000ED3C)));
-
-	/* Read the Fault Address Registers. These may not contain valid values.
-	 Check BFARVALID/MMARVALID to see if they are valid values
-	 MemManage Fault Address Register */
-	postmortem_MMAR = (*((volatile uint32_t *) (0xE000ED34)));
-	/* Bus Fault Address Register */
-	postmortem_BFAR = (*((volatile uint32_t *) (0xE000ED38)));
-
-	postmortem_SCB_SHCSR = SCB->SHCSR;
-
-	if (is_under_debugger()) {
-		__asm("BKPT #0\n");
-		// Break into the debugger
-	}
-
-	/* harmless infinite loop */
-	while (1) {
-		;
-	}
-}
-
-void HardFaultVector(void) {
-#if 0 && defined __GNUC__
-	__asm volatile (
-			" tst lr, #4                                                \n"
-			" ite eq                                                    \n"
-			" mrseq r0, msp                                             \n"
-			" mrsne r0, psp                                             \n"
-			" ldr r1, [r0, #24]                                         \n"
-			" ldr r2, handler2_address_const                            \n"
-			" bx r2                                                     \n"
-			" handler2_address_const: .word prvGetRegistersFromStack    \n"
-	);
-
-#else
-#endif /* 0 && defined __GNUC__ */
-
-	int cfsr = GET_CFSR();
-	if (cfsr & 0x1) {
-		chDbgPanic3("H IACCVIOL", __FILE__, __LINE__);
-	} else if (cfsr & 0x100) {
-		chDbgPanic3("H IBUSERR", __FILE__, __LINE__);
-	} else if (cfsr & 0x20000) {
-		chDbgPanic3("H INVSTATE", __FILE__, __LINE__);
-	} else {
-		chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
-	}
-
-	while (TRUE) {
-	}
 }
 
 #if HAL_USE_SPI
