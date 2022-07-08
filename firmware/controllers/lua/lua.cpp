@@ -149,6 +149,15 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 		return nullptr;
 	}
 
+	lua_atpanic(ls, [](lua_State* l) {
+		firmwareError(OBD_PCM_Processor_Fault, "Lua panic: %s", lua_tostring(l, -1));
+
+		// hang the lua thread
+		while (true) ;
+
+		return 0;
+	});
+
 	// Load Lua's own libraries
 	loadLibraries(ls);
 
