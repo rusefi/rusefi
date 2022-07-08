@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 04:28:20 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -10,12 +10,14 @@ struct idle_state_s {
 	 */
 	idle_state_e idleState = (idle_state_e)0;
 	/**
-	 * that's current position with CLT and IAT corrections
+	 * "idle: current position
+	 * that's current position with CLT and IAT corrections"
 	 * offset 4
 	 */
 	percent_t currentIdlePosition = (percent_t)0;
 	/**
-	 * current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
+	 * "idle: base value
+	 * current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)"
 	 * offset 8
 	 */
 	percent_t baseIdlePosition = (percent_t)0;
@@ -144,4 +146,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 32);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 04:28:20 UTC 2022
