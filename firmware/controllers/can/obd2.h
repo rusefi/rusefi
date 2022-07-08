@@ -39,7 +39,7 @@
 #define PID_FUEL_RATE 0x5E
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(const CANRxFrame& rx);
+void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex);
 #endif /* HAL_USE_CAN */
 
 #define ODB_RPM_MULT 4
