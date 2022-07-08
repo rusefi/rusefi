@@ -318,7 +318,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
-	percent_t targetPosition = idlePosition + luaAdjustment;
+	percent_t targetPosition = idlePosition + getLuaAdjustment();
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
@@ -359,6 +359,21 @@ expected<percent_t> EtbController::getSetpointEtb() {
 #endif // EFI_TUNER_STUDIO
 
 	return targetPosition;
+}
+
+void EtbController::setLuaAdjustment(float adjustment) {
+	luaAdjustment = adjustment;
+	m_luaAdjustmentTimer.reset();
+}
+
+float EtbController::getLuaAdjustment() const {
+	// If the lua position hasn't been set in 0.2 second, don't adjust!
+	// This avoids a stuck throttle due to hung/rogue/etc Lua script
+	if (m_luaAdjustmentTimer.getElapsedSeconds() > 0.2f) {
+		return 0;
+	} else {
+		return luaAdjustment;
+	}
 }
 
 percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
@@ -668,7 +683,7 @@ static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
 
 static_assert(ETB_COUNT == 2);
-EtbController* etbControllers[] = { &etb1, &etb2 };
+static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
@@ -1025,6 +1040,14 @@ void setEtbWastegatePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
 			etb->setWastegatePosition(pos);
+		}
+	}
+}
+
+void setEtbLuaAdjustment(percent_t pos) {
+	for (int i = 0; i < ETB_COUNT; i++) {
+		if (auto etb = engine->etbControllers[i]) {
+			etb->setLuaAdjustment(pos);
 		}
 	}
 }

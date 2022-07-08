@@ -540,10 +540,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_PROD_CODE
 	lua_register(l, "setEtbAdd", [](lua_State* l) {
 		auto luaAdjustment = luaL_checknumber(l, 1);
-		for (int i = 0 ; i < ETB_COUNT; i++) {
-			extern EtbController* etbControllers[];
-			etbControllers[i]->luaAdjustment = luaAdjustment;
-		}
+
+		setEtbLuaAdjustment(luaAdjustment);
+
 		return 0;
 	});
 #endif // EFI_PROD_CODE
