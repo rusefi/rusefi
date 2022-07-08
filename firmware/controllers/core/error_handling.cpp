@@ -110,7 +110,9 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		__NO_RETURN void onAssertionFailure();
 		onAssertionFailure();
 	} else {
-		// Not the main thread, reboot.
+		// Not the main thread.
+		// All hope is now lost.
+		// Reboot!
 		NVIC_SystemReset();
 	}
 }
