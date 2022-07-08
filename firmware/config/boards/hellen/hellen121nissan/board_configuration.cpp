@@ -126,8 +126,8 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::D15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::D14; // out_pwm6
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
 	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
 	engineConfiguration->etb_use_two_wires = true;
 
