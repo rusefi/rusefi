@@ -119,6 +119,24 @@ public class OutputsTest {
     }
 
     @Test
+    public void generateDataLogMultiLineCommentWithQuotes() throws IOException {
+        String test = "struct total\n" +
+                "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",1, 0, 0, 0, 0\n" +
+                "\tuint16_t autoscale baseFuel2;\"line1\\nline2\";\"mg\",1, 0, 0, 0, 0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        state.readBufferedReader(test, (dataLogConsumer));
+        assertEquals(
+                "entry = baseFuel, \"hello\", int,    \"%d\"\n" +
+                        "entry = baseFuel2, \"line1, int,    \"%d\"\n"
+                        , dataLogConsumer.getContent());
+
+    }
+
+    @Test
     public void generateGetOutputs() throws IOException {
         String test = "struct_no_prefix ts_outputs_s\n" +
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
