@@ -81,7 +81,6 @@ jobs:
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
