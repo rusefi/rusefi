@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 04:28:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 05:13:11 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,7 +22,7 @@ struct idle_state_s {
 	 */
 	percent_t baseIdlePosition = (percent_t)0;
 	/**
-	 * iacByTpsTaper portion of idle
+	 * idle: iacByTpsTaper portion of idle
 	 * offset 12
 	 */
 	percent_t iacByTpsTaper = (percent_t)0;
@@ -40,17 +40,21 @@ struct idle_state_s {
 	offset 20 bit 0 */
 	bool mightResetPid : 1 {};
 	/**
+	 * idle: shouldResetPid
 	offset 20 bit 1 */
 	bool shouldResetPid : 1 {};
 	/**
+	 * idle: wasResetPid
 	 * This is needed to slowly turn on the PID back after it was reset.
 	offset 20 bit 2 */
 	bool wasResetPid : 1 {};
 	/**
+	 * idle: mustResetPid
 	 * This is used when the PID configuration is changed, to guarantee the reset
 	offset 20 bit 3 */
 	bool mustResetPid : 1 {};
 	/**
+	 * idle: coasting
 	offset 20 bit 4 */
 	bool isCoasting : 1 {};
 	/**
@@ -60,9 +64,11 @@ struct idle_state_s {
 	offset 20 bit 6 */
 	bool notIdling : 1 {};
 	/**
+	 * idle: reset
 	offset 20 bit 7 */
 	bool needReset : 1 {};
 	/**
+	 * idle: dead zone
 	offset 20 bit 8 */
 	bool isInDeadZone : 1 {};
 	/**
@@ -135,10 +141,12 @@ struct idle_state_s {
 	offset 20 bit 31 */
 	bool unusedBit_22_31 : 1 {};
 	/**
+	 * idle: target by CLT
 	 * offset 24
 	 */
 	int targetRpmByClt = (int)0;
 	/**
+	 * idle: A/C bump
 	 * offset 28
 	 */
 	int targetRpmAcBump = (int)0;
@@ -146,4 +154,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 32);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 04:28:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Jul 08 05:13:11 UTC 2022
