@@ -1,6 +1,12 @@
 # https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 
 pins:
+  - pin: PPS1
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: PPS1
+
   - pin: Aux PPS2
 # H144_IN_AUX2
     id: EFI_ADC_14
