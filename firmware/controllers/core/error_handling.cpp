@@ -91,7 +91,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #if !EFI_PROD_CODE
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
-#endif
+#else // EFI_PROD_CODE
 
 #if EFI_HD44780_LCD
 	lcdShowPanicMessage((char *) msg);
@@ -115,6 +115,8 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		// Reboot!
 		NVIC_SystemReset();
 	}
+
+#endif // EFI_PROD_CODE
 }
 
 #else
