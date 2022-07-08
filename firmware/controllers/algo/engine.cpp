@@ -311,11 +311,16 @@ void Engine::updateSwitchInputs() {
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 		engine->engineState.clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
 	}
-	if (hasAcToggle()) {
-		bool result = getAcToggle();
+	{
+		bool currentState;
+		if (hasAcToggle()) {
+			currentState = getAcToggle();
+		} else {
+			currentState = engine->engineState.lua.acRequestState;
+		}
 		AcController & acController = engine->module<AcController>().unmock();
-		if (acController.acButtonState != result) {
-			acController.acButtonState = result;
+		if (acController.acButtonState != currentState) {
+			acController.acButtonState = currentState;
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}

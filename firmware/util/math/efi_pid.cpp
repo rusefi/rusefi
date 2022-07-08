@@ -137,7 +137,8 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) const {
 
 void Pid::postState(pid_status_s& pidStatus) const {
 	pidStatus.output = output;
-	pidStatus.error = getPrevError();
+	pidStatus.error = previousError;
+	pidStatus.pTerm = parameters == nullptr ? 0 : parameters->pFactor * previousError;
 	pidStatus.iTerm = iTerm;
 	pidStatus.dTerm = dTerm;
 }

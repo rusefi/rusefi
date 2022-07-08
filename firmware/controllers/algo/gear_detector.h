@@ -1,3 +1,4 @@
+#pragma once
 
 class GearDetector : public EngineModule {
 public:
@@ -11,8 +12,11 @@ public:
 
 	size_t determineGearFromRatio(float ratio) const;
 
+	float getRpmInGear(size_t gear) const;
+
 private:
 	float computeGearboxRatio() const;
+	float getDriveshaftRpm() const;
 
 	float m_gearboxRatio = 0;
 	size_t m_currentGear = 0;

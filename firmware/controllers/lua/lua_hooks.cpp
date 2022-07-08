@@ -557,6 +557,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "setAcRequestState", [](lua_State* l) {
+		engine->engineState.lua.acRequestState = lua_toboolean(l, 1);
+		return 0;
+	});
+
 	lua_register(l, "getCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto result = getConfigValueByName(propertyName);
@@ -614,6 +619,19 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+
+#if EFI_VEHICLE_SPEED
+	lua_register(l, "getCurrentGear", [](lua_State* l) {
+		lua_pushinteger(l, engine->module<GearDetector>()->getCurrentGear());
+		return 1;
+	});
+
+	lua_register(l, "getRpmInGear", [](lua_State* l) {
+		auto idx = luaL_checkinteger(l, 1);
+		lua_pushinteger(l, engine->module<GearDetector>()->getRpmInGear(idx));
+		return 1;
+	});
+#endif // EFI_VEHICLE_SPEED
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);

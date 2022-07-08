@@ -21,5 +21,5 @@ bool getAcToggle() {
 }
 
 bool hasAcToggle() {
-	return (isBrainPinValid(engineConfiguration->acSwitch));
+	return isBrainPinValid(engineConfiguration->acSwitch);
 }
