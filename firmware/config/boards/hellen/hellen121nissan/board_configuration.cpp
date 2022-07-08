@@ -94,6 +94,11 @@ void setBoardConfigOverrides() {
 	setupVbatt();
 	setHellenSdCardSpi3();
 
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
+	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
+	engineConfiguration->etb_use_two_wires = true;
+
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
@@ -126,10 +131,6 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
-	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
-	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
 	setCrankOperationMode();

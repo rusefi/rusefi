@@ -124,11 +124,6 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-    // hellen88bmw uses L6205PD
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM2; // ETB+
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM3; // ETB-
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM1; // ETB_EN
-	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
 	setCrankOperationMode();
