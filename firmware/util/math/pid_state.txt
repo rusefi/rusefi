@@ -1,4 +1,5 @@
 struct_no_prefix pid_state_s
+	float pTerm;
 	float iTerm;
 	float dTerm;we are remembering this only for debugging purposes
 	float target;only used for logging
