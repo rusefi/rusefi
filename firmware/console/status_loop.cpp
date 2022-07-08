@@ -67,8 +67,6 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
-extern int icuRisingCallbackCounter;
-extern int icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -853,9 +851,6 @@ void updateTunerStudioState() {
 		break;
 		}
 	case DBG_TRIGGER_COUNTERS:
-#if EFI_PROD_CODE && HAL_USE_ICU == TRUE
-		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
-#endif /* EFI_PROD_CODE */
 
 #if EFI_SHAFT_POSITION_INPUT
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
