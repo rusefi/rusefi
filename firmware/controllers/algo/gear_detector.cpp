@@ -77,11 +77,28 @@ size_t GearDetector::determineGearFromRatio(float ratio) const {
 	return currentGear;
 }
 
-float GearDetector::computeGearboxRatio() const {
+float GearDetector::getDriveshaftRpm() const {
 	auto vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
 	if (vssKph < 5) {
 		// Vehicle too slow to determine gearbox ratio, avoid div/0
+		return 0;
+	}
+
+	// Convert to wheel RPM
+	//                 km                        rev                        1 hr
+	//               ------ *               ------------              *  __________
+	//                 hr                        km                        60 min
+	float wheelRpm = vssKph * engineConfiguration->driveWheelRevPerKm * (1 / 60.0f);
+
+	// Convert to driveshaft RPM
+	return wheelRpm * engineConfiguration->finalGearRatio;
+}
+
+float GearDetector::computeGearboxRatio() const {
+	float driveshaftRpm = getDriveshaftRpm();
+
+	if (driveshaftRpm == 0) {
 		return 0;
 	}
 
@@ -92,16 +109,16 @@ float GearDetector::computeGearboxRatio() const {
 		engineRpm = Sensor::getOrZero(SensorType::Rpm);
 	}
 
-	// Convert to wheel RPM
-	//                 km                        rev                        1 hr
-	//               ------ *               ------------              *  __________
-	//                 hr                        km                        60 min
-	float wheelRpm = vssKph * engineConfiguration->driveWheelRevPerKm * (1 / 60.0f);
-
-	// Convert to driveshaft RPM
-	auto driveshaftRpm = wheelRpm * engineConfiguration->finalGearRatio;
-
 	return engineRpm / driveshaftRpm;
+}
+
+float GearDetector::getRpmInGear(size_t gear) const {
+	if (gear <= 0 || gear > engineConfiguration->totalGearsCount) {
+		return 0;
+	}
+
+	// Ideal engine RPM is driveshaft speed times gear
+	return getDriveshaftRpm() * engineConfiguration->gearRatio[gear - 1];
 }
 
 float GearDetector::getGearboxRatio() const {
