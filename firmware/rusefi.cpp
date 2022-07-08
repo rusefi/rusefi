@@ -170,7 +170,7 @@ void onAssertionFailure() {
 }
 
 void runRusEfiWithConfig();
-void runMainLoop() __attribute__ ((noreturn));
+__NO_RETURN void runMainLoop();
 
 void runRusEfi() {
 	engine->setConfig();
@@ -180,9 +180,7 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
-#if EFI_PROD_CODE
-	checkLastBootError();
-#endif
+	addConsoleAction("checkerror", checkLastBootError);
 
 #ifdef STM32F7
 	void sys_dual_bank(void);
