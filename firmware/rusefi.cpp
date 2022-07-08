@@ -170,10 +170,9 @@ void onAssertionFailure() {
 }
 
 void runRusEfiWithConfig();
-void runMainLoop();
+__NO_RETURN void runMainLoop();
 
 void runRusEfi() {
-	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING
@@ -312,8 +311,6 @@ void runMainLoop() {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(CUSTOM_RM_STACK, getCurrentRemainingStack() > 128, "stack#1");
-
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own rusEfi console
 		// todo: is this mostly dead code?
