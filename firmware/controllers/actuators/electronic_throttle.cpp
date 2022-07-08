@@ -325,6 +325,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	trim = clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
 	targetPosition += trim;
 
+	// Clamp before rev limiter to avoid ineffective rev limit due to crazy out of range position target
+	targetPosition = clampF(0, targetPosition, 100);
+
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
 	if (etbRpmLimit != 0) {
