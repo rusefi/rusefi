@@ -117,7 +117,7 @@ static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 		break;
 	case PID_FUEL_SYSTEM_STATUS:
 		// todo: add statuses
-		obdSendValue(_1_MODE, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
+		obdSendValue(_1_MODE, pid, 2, (2<<8)|(0), busIndex);	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
 		break;
 	case PID_ENGINE_LOAD:
 		obdSendValue(_1_MODE, pid, 1, getFuelingLoad() * ODB_TPS_BYTE_PERCENT, busIndex);
