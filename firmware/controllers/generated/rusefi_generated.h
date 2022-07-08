@@ -466,7 +466,6 @@
 #define debug_mode_e_DBG_ETB_AUTOTUNE 39
 #define debug_mode_e_DBG_EXECUTOR 18
 #define debug_mode_e_DBG_GPPWM 2
-#define debug_mode_e_DBG_STEPPER_IDLE_CONTROL 3
 #define debug_mode_e_DBG_INSTANT_RPM 22
 #define debug_mode_e_DBG_ION 30
 #define debug_mode_e_DBG_KNOCK 15
@@ -477,6 +476,7 @@
 #define debug_mode_e_DBG_SD_CARD 13
 #define debug_mode_e_DBG_SOFT_SPARK_CUT 6
 #define debug_mode_e_DBG_SR5_PROTOCOL 14
+#define debug_mode_e_DBG_STEPPER_IDLE_CONTROL 3
 #define debug_mode_e_DBG_TCU 47
 #define debug_mode_e_DBG_TLE8888 31
 #define debug_mode_e_DBG_TPS_ACCEL 1
@@ -488,7 +488,7 @@
 #define debug_mode_e_DBG_VVT_2_PID 49
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 856
 #define debugMode_offset 1604
@@ -1935,7 +1935,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2540106560
+#define SIGNATURE_HASH 3419982290
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2487,7 +2487,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.08.all.2540106560"
+#define TS_SIGNATURE "rusEFI 2022.07.08.all.3419982290"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
