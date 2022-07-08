@@ -180,7 +180,9 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
-	addConsoleAction("checkerror", checkLastBootError);
+#if EFI_PROD_CODE
+	checkLastBootError();
+#endif
 
 #ifdef STM32F7
 	void sys_dual_bank(void);
