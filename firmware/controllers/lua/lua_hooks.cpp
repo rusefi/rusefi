@@ -126,6 +126,9 @@ static int lua_findCurveIndex(lua_State* l) {
 	return 1;
 }
 
+/**
+ * @return number of elements
+ */
 static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
 	uint32_t result = 0;
 
