@@ -66,6 +66,10 @@ public:
 		return 0;
 	}
 
+	// Lua throttle adjustment
+	void setLuaAdjustment(percent_t adjustment) override;
+	float getLuaAdjustment() const;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
@@ -103,6 +107,8 @@ private:
 
 	uint8_t m_autotuneCounter = 0;
 	uint8_t m_autotuneCurrentParam = 0;
+
+	Timer m_luaAdjustmentTimer;
 };
 
 class EtbController1 : public EtbController { };

@@ -474,6 +474,57 @@ TEST(etb, setpointWastegateController) {
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 }
 
+TEST(etb, setpointLuaAdder) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController etb;
+
+	// Mock pedal map to just return 50%
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float, float) {
+			return 50;
+		});
+	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
+
+	// No adjustment, should be unadjusted
+	etb.setLuaAdjustment(0);
+	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
+
+	// Normal adjustments should do as expected
+	etb.setLuaAdjustment(10);
+	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
+	etb.setLuaAdjustment(-10);
+	EXPECT_EQ(40, etb.getSetpoint().value_or(-1));
+
+	// Crazy adjustments don't cause unreasonable target
+	etb.setLuaAdjustment(1000);
+	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
+	etb.setLuaAdjustment(-1000);
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+
+	extern int timeNowUs;
+	int startTime = 1e6;
+	timeNowUs = startTime;
+
+	// Adjustment works immediately after setting
+	etb.setLuaAdjustment(10);
+	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
+
+	// Adjustment works 0.19 second after setting
+	timeNowUs = startTime + 0.19 * 1e6;
+	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
+
+	// Adjustment resets to 0 after 0.21 second
+	timeNowUs = startTime + 0.21 * 1e6;
+	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
+}
+
 TEST(etb, etbTpsSensor) {
 	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
