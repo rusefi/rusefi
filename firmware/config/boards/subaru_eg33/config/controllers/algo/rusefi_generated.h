@@ -1901,7 +1901,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1507805375
+#define SIGNATURE_HASH 1393697406
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2187,6 +2187,8 @@
 #define trigger_event_e_SHAFT_PRIMARY_RISING 1
 #define trigger_event_e_SHAFT_SECONDARY_FALLING 2
 #define trigger_event_e_SHAFT_SECONDARY_RISING 3
+#define TRIGGER_GAP_FROM "gapFrom"
+#define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_GAPS_COUNT "gapsCount"
 #define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
@@ -2455,7 +2457,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.11.subaru_eg33_f7.1507805375"
+#define TS_SIGNATURE "rusEFI 2022.07.11.subaru_eg33_f7.1393697406"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
