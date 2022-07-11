@@ -13,11 +13,11 @@ else
 endif
 
 # see also openblt/board.mk STATUS_LED
-LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
+DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 
 # *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
-EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::B10 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::B11
+DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::B10 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::B11
 
 # on MRE 0.6.0 we have SD card on SPI2 which shared channel 3 with USART3
 # todo: enable serial which would not DMA thus not conflict?
@@ -28,8 +28,9 @@ DDEFS += -DEFI_CAN_SERIAL=TRUE
 
 DDEFS += -DEFI_CJ125=FALSE -DBOARD_L9779_COUNT=0 -DEFI_HD44780_LCD=FALSE -DEFI_LCD=FALSE 
 
-# Add them all together
-DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEFI\" $(LED_CRITICAL_ERROR_BRAIN_PIN) $(EFI_CONSOLE_TTL_PINS) -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
+DDEFS += -DEFI_USE_OSC=TRUE
+DDEFS += -DFIRMWARE_ID=\"microRusEFI\"
+DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += $(VAR_DEF_ENGINE_TYPE)
 
 # We are running on microRusEFI hardware!
