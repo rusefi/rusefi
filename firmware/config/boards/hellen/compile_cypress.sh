@@ -12,8 +12,6 @@ export EXTRA_PARAMS="-DDUMMY -D__USE_CMSIS\
  -DCH_DBG_THREADS_PROFILING=FALSE\
  "
 
-TRIGGER_USE_ADC = yes
-
 export BUILDDIR="build"
 export USE_FATFS="no"
 export USE_BOOTLOADER="no"
