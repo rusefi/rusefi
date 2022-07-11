@@ -214,6 +214,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
 #define TRIGGER_COMMENT "#"
+#define TRIGGER_GAPS_COUNT "gapsCount"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
