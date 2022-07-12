@@ -1390,13 +1390,14 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelayDialog,			"Main relay"
-		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump"
-		subMenu = fanSetting,				"Fan"
+		subMenu = fanSetting,				"Radiator Fan"
 		subMenu = acSettings,				"Air Conditioning"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
+		subMenu = startStopDialog,          "Start Button"
+		subMenu = starterRelay,				"Starter Disable relay"
 
 	menu = "Fuel"
 		# basic
@@ -3158,7 +3159,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
-		panel = startStopDialog
 
 	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",			vehicleSpeedSensorInputPin
