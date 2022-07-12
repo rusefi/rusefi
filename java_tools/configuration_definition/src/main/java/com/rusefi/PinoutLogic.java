@@ -21,7 +21,8 @@ public class PinoutLogic {
 
     public static final String CONFIG_BOARDS = "config/boards/";
     private static final String CONNECTORS = "/connectors";
-    private static final String QUOTED_NONE = quote("NONE");
+    private static final String NONE = "NONE";
+    private static final String QUOTED_NONE = quote(NONE);
     public static final String QUOTED_INVALID = quote(VariableRegistry.INVALID);
 
     private final File[] boardYamlFiles;
@@ -97,27 +98,34 @@ public class PinoutLogic {
     @NotNull
     public static EnumPair enumToOptionsList(String nothingName, EnumsReader.EnumState enumList, ArrayList<String> values) {
         StringBuilder simpleForm = new StringBuilder();
-        StringBuilder smartForm = new StringBuilder();
+
+        Map<Integer, String> pinMap = new HashMap<>();
+
         for (int i = 0; i < values.size(); i++) {
             appendCommaIfNeeded(simpleForm);
             String key = findKey(enumList, i);
+
+            String value = values.get(i);
+            if (i == 0) {
+                pinMap.put(i, NONE);
+            } else if (value != null) {
+                pinMap.put(i, value);
+            }
             if (key.equals(nothingName)) {
                 simpleForm.append(QUOTED_NONE);
-                appendCommaIfNeeded(smartForm);
-                smartForm.append(i + "=" + QUOTED_NONE);
-
-            } else if (values.get(i) == null) {
+            } else if (value == null) {
                 simpleForm.append(QUOTED_INVALID);
             } else {
-                appendCommaIfNeeded(smartForm);
-                String quotedValue = quote(values.get(i));
-                smartForm.append(i + "=" + quotedValue);
+                String quotedValue = quote(value);
                 simpleForm.append(quotedValue);
             }
         }
-        String shorterForm = smartForm.length() < simpleForm.length() ? smartForm.toString() : simpleForm.toString();
+        String keyValueForm = VariableRegistry.getHumanSortedTsKeyValueString(pinMap);
+        return new EnumPair(keyValueForm, simpleForm.toString());
 
-        return new EnumPair(shorterForm, simpleForm.toString());
+        //        String shorterForm = smartForm.length() < simpleForm.length() ? smartForm.toString() : simpleForm.toString();
+//
+//        return new EnumPair(shorterForm, simpleForm.toString());
     }
 
     private static void appendCommaIfNeeded(StringBuilder sb) {
