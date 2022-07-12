@@ -162,6 +162,7 @@ public class TriggerImage {
         UiUtils.trueLayout(content);
 
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
+        triggerPanel.gaps = triggerWheelInfo.getGaps();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -327,6 +328,7 @@ public class TriggerImage {
         // angle
         public double tdcPosition;
         public UpDownImage image;
+        public TriggerWheelInfo.TriggerGaps gaps;
 
         @Override
         public void paint(Graphics g) {
@@ -362,6 +364,12 @@ public class TriggerImage {
                 tdcMessage = "TDC at synchronization point";
             }
             g.drawString("     " + tdcMessage, 0, tdcFontSize);
+            g.setColor(Color.darkGray);
+            for (int i = 0; i < gaps.gapFrom.length; i++) {
+                String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
+                g.drawString("            " + message, 0, tdcFontSize * (2 + i));
+            }
+
 
             if (image == null)
                 return;
@@ -369,7 +377,7 @@ public class TriggerImage {
             g.drawLine(tdcX, 0, tdcX, h);
             Graphics2D g2 = (Graphics2D) g;
             g2.rotate(Math.PI / 2);
-            g2.drawString("TDC", 60, -tdcX - 3);
+            g2.drawString("TDC", 160, -tdcX - 3);
             g2.rotate(-Math.PI / 2);
         }
 
