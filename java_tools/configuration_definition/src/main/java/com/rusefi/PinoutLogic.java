@@ -78,16 +78,17 @@ public class PinoutLogic {
                     classList.set(index, listPin.getPinTsName());
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
-            PinType namePinType = PinType.find(kv.getKey());
+            String pinName = kv.getKey();
+            PinType namePinType = PinType.find(pinName);
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
-            if (pair.getSimpleForm().length() > 0) {
-                registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
-                parseState.addDefinition(outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
-            }
+            if (pair.getSimpleForm().isEmpty())
+                throw new IllegalStateException("No simple form for " + pinName);
+            registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
+            parseState.addDefinition(outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
             registry.register(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm());
             parseState.addDefinition(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm(), Definition.OverwritePolicy.IgnoreNew);
         }
