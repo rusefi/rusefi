@@ -4,6 +4,7 @@ import com.rusefi.config.generated.Fields;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,12 +22,13 @@ public class TriggerWheelInfo {
     private final boolean isCrankBased;
     private final boolean hasSecondChannel;
     private final boolean hardcodedOperationMode;
+    private final TriggerGaps gaps;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
-                            boolean hardcodedOperationMode, int gapTrackingLength) {
+                            boolean hardcodedOperationMode, TriggerGaps gaps) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -35,6 +37,7 @@ public class TriggerWheelInfo {
         this.isCrankBased = isCrankBased;
         this.hasSecondChannel = hasSecondChannel;
         this.hardcodedOperationMode = hardcodedOperationMode;
+        this.gaps = gaps;
     }
 
     private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
@@ -54,7 +57,7 @@ public class TriggerWheelInfo {
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
-        int gapTrackingLength = 0;
+        TriggerWheelInfo.TriggerGaps gaps = null;
         while (true) {
             line = reader.readLine();
             if (line == null || line.trim().startsWith("#"))
@@ -63,16 +66,21 @@ public class TriggerWheelInfo {
             if (keyValue.length != 2)
                 throw new IllegalStateException("Key/value lines expected: [" + line + "]");
             String key = keyValue[0];
+            String value = keyValue[1];
             if (key.startsWith(TRIGGER_GAP_FROM)) {
+                int index = getIndex(key);
+                gaps.gapFrom[index] = Double.parseDouble(value);
                 continue;
             }
             if (key.startsWith(TRIGGER_GAP_TO)) {
+                int index = getIndex(key);
+                gaps.gapTo[index] = Double.parseDouble(value);
                 continue;
             }
-            String value = keyValue[1];
             switch (key) {
                 case TRIGGER_GAPS_COUNT:
-                    gapTrackingLength = Integer.parseInt(value);
+                    int gapTrackingLength = Integer.parseInt(value);
+                    gaps = new TriggerGaps(gapTrackingLength);
                     break;
                 case TRIGGER_IS_CRANK_KEY:
                     isCrankBased = Boolean.parseBoolean(value);
@@ -99,13 +107,17 @@ public class TriggerWheelInfo {
                 isSecondWheelCam,
                 hasSecondChannel,
                 hardcodedOperationMode,
-                gapTrackingLength
+                gaps
         );
+    }
+
+    private static int getIndex(String key) {
+        return Integer.parseInt(key.split("\\.")[1]);
     }
 
     static void readWheels(String workingFolder, TriggerWheelInfoConsumer consumer) {
         String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
-        BufferedReader br = null;
+        BufferedReader br;
         try {
             br = new BufferedReader(new FileReader(fileName));
 
@@ -205,7 +217,29 @@ public class TriggerWheelInfo {
         return hardcodedOperationMode;
     }
 
+    public TriggerGaps getGaps() {
+        return gaps;
+    }
+
     public interface TriggerWheelInfoConsumer {
         void onWheel(TriggerWheelInfo wheelInfo);
+    }
+
+    static class TriggerGaps {
+        public double[] gapFrom;
+        public double[] gapTo;
+
+        public TriggerGaps(int gapTrackingLength) {
+            gapFrom = new double[gapTrackingLength];
+            gapTo = new double[gapTrackingLength];
+        }
+
+        @Override
+        public String toString() {
+            return "TriggerGaps{" +
+                    "gapFrom=" + Arrays.toString(gapFrom) +
+                    ", gapTo=" + Arrays.toString(gapTo) +
+                    '}';
+        }
     }
 }
