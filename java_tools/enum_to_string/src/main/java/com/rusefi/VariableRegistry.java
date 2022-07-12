@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -126,7 +125,7 @@ public class VariableRegistry {
         if (valueNameById == null)
             return null;
 
-        return getString(valueNameById);
+        return getHumanSortedTsKeyValueString(valueNameById);
     }
 
     private static String quote(String string) {
@@ -134,7 +133,7 @@ public class VariableRegistry {
     }
 
     @NotNull
-    public static String getString(Map<Integer, String> valueNameById) {
+    public static String getHumanSortedTsKeyValueString(Map<Integer, String> valueNameById) {
         TreeMap<Integer, String> humanDropDownSorted = new TreeMap<>((o1, o2) -> {
             if (o1.intValue() == o2)
                 return 0;

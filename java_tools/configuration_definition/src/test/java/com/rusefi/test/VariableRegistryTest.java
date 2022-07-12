@@ -66,6 +66,6 @@ public class VariableRegistryTest {
         input.put(1, "A");
         input.put(2, "Z");
         input.put(3, "N");
-        assertEquals("0=\"NONE\",1=\"A\",3=\"N\",2=\"Z\"", VariableRegistry.getString(input));
+        assertEquals("0=\"NONE\",1=\"A\",3=\"N\",2=\"Z\"", VariableRegistry.getHumanSortedTsKeyValueString(input));
     }
 }
