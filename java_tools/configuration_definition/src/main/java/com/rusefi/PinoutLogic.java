@@ -98,17 +98,17 @@ public class PinoutLogic {
         StringBuilder simpleForm = new StringBuilder();
         StringBuilder smartForm = new StringBuilder();
         for (int i = 0; i < values.size(); i++) {
-            appendCommandIfNeeded(simpleForm);
+            appendCommaIfNeeded(simpleForm);
             String key = findKey(enumList, i);
             if (key.equals(nothingName)) {
                 simpleForm.append(QUOTED_NONE);
-                appendCommandIfNeeded(smartForm);
+                appendCommaIfNeeded(smartForm);
                 smartForm.append(i + "=" + QUOTED_NONE);
 
             } else if (values.get(i) == null) {
                 simpleForm.append(QUOTED_INVALID);
             } else {
-                appendCommandIfNeeded(smartForm);
+                appendCommaIfNeeded(smartForm);
                 String quotedValue = quote(values.get(i));
                 smartForm.append(i + "=" + quotedValue);
                 simpleForm.append(quotedValue);
@@ -119,7 +119,7 @@ public class PinoutLogic {
         return new EnumPair(shorterForm, simpleForm.toString());
     }
 
-    private static void appendCommandIfNeeded(StringBuilder sb) {
+    private static void appendCommaIfNeeded(StringBuilder sb) {
         if (sb.length() > 0)
             sb.append(",");
     }
