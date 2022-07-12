@@ -7,10 +7,7 @@ import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.rusefi.config.generated.Fields.TRIGGER_IS_CRANK_KEY;
-import static com.rusefi.config.generated.Fields.TRIGGER_IS_SECOND_WHEEL_CAM;
-import static com.rusefi.config.generated.Fields.TRIGGER_HAS_SECOND_CHANNEL;
-import static com.rusefi.config.generated.Fields.TRIGGER_HARDCODED_OPERATION_MODE;
+import static com.rusefi.config.generated.Fields.*;
 
 public class TriggerWheelInfo {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
@@ -29,7 +26,7 @@ public class TriggerWheelInfo {
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
-                            boolean hardcodedOperationMode) {
+                            boolean hardcodedOperationMode, int gapTrackingLength) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -57,6 +54,7 @@ public class TriggerWheelInfo {
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
+        int gapTrackingLength = 0;
         while (true) {
             line = reader.readLine();
             if (line == null || line.trim().startsWith("#"))
@@ -64,18 +62,29 @@ public class TriggerWheelInfo {
             String[] keyValue = line.split("=");
             if (keyValue.length != 2)
                 throw new IllegalStateException("Key/value lines expected: [" + line + "]");
-            switch (keyValue[0]) {
+            String key = keyValue[0];
+            if (key.startsWith(TRIGGER_GAP_FROM)) {
+                continue;
+            }
+            if (key.startsWith(TRIGGER_GAP_TO)) {
+                continue;
+            }
+            String value = keyValue[1];
+            switch (key) {
+                case TRIGGER_GAPS_COUNT:
+                    gapTrackingLength = Integer.parseInt(value);
+                    break;
                 case TRIGGER_IS_CRANK_KEY:
-                    isCrankBased = Boolean.parseBoolean(keyValue[1]);
+                    isCrankBased = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_IS_SECOND_WHEEL_CAM:
-                    isSecondWheelCam = Boolean.parseBoolean(keyValue[1]);
+                    isSecondWheelCam = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_HAS_SECOND_CHANNEL:
-                    hasSecondChannel = Boolean.parseBoolean(keyValue[1]);
+                    hasSecondChannel = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_HARDCODED_OPERATION_MODE:
-                    hardcodedOperationMode = Boolean.parseBoolean(keyValue[1]);
+                    hardcodedOperationMode = Boolean.parseBoolean(value);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
@@ -89,7 +98,8 @@ public class TriggerWheelInfo {
                 isCrankBased,
                 isSecondWheelCam,
                 hasSecondChannel,
-                hardcodedOperationMode
+                hardcodedOperationMode,
+                gapTrackingLength
         );
     }
 
