@@ -85,6 +85,7 @@ public class PinoutLogic {
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getSimpleForm().length() > 0) {
+                // we seem to be here if specific pin category like switch_inputs has no pins
                 registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
                 parseState.addDefinition(outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
             }
