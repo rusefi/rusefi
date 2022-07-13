@@ -4,5 +4,5 @@ sample_code/*
 !sample_code/PT2001_LoadData.c
 !sample_code/PT2001_LoadData.h
 CSV Files
-Registers/*
+Registers/*.hex
 *.txt
