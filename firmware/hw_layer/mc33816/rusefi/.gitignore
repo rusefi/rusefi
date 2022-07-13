@@ -1,5 +1,8 @@
 bin
-sample_code
+sample_code/*
+!sample_code/PT2001_dram.h
+!sample_code/PT2001_LoadData.c
+!sample_code/PT2001_LoadData.h
 CSV Files
-Registers/*.hex
+Registers/*
 *.txt
