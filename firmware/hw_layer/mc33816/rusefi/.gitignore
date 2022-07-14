@@ -6,3 +6,5 @@ sample_code/*
 CSV Files
 Registers/*.hex
 *.txt
+*.vsdx
+*.def.hex
