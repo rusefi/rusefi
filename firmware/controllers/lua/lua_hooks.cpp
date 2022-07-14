@@ -91,41 +91,6 @@ static int lua_hasSensor(lua_State* l) {
 	return 1;
 }
 
-static int lua_table3d(lua_State* l) {
-	auto humanTableIdx = luaL_checkinteger(l, 1);
-	auto x = luaL_checknumber(l, 2);
-	auto y = luaL_checknumber(l, 3);
-
-	// index table, compute table lookup
-	auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
-
-	lua_pushnumber(l, result);
-	return 1;
-}
-
-static int lua_curve2d(lua_State* l) {
-	// index starting from 1
-	auto humanCurveIdx = luaL_checkinteger(l, 1);
-	auto x = luaL_checknumber(l, 2);
-
-	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
-
-	lua_pushnumber(l, result);
-	return 1;
-}
-
-static int lua_findCurveIndex(lua_State* l) {
-	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name);
-	if (result == EFI_ERROR_CODE) {
-		lua_pushnil(l);
-	} else {
-		// TS counts curve from 1 so convert indexing here
-		lua_pushnumber(l, result + HUMAN_OFFSET);
-	}
-	return 1;
-}
-
 /**
  * @return number of elements
  */
@@ -468,9 +433,40 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
-	lua_register(l, "table3d", lua_table3d);
-	lua_register(l, "curve", lua_curve2d);
-	lua_register(l, "findCurveIndex", lua_findCurveIndex);
+	lua_register(l, "table3d", [](lua_State* l) {
+		auto humanTableIdx = luaL_checkinteger(l, 1);
+		auto x = luaL_checknumber(l, 2);
+		auto y = luaL_checknumber(l, 3);
+
+		// index table, compute table lookup
+		auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
+
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "curve", [](lua_State* l) {
+		// index starting from 1
+		auto humanCurveIdx = luaL_checkinteger(l, 1);
+		auto x = luaL_checknumber(l, 2);
+
+		auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
+
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "findCurveIndex", [](lua_State* l) {
+		auto name = luaL_checklstring(l, 1, nullptr);
+		auto result = getCurveIndexByName(name);
+		if (result == EFI_ERROR_CODE) {
+			lua_pushnil(l);
+		} else {
+			// TS counts curve from 1 so convert indexing here
+			lua_pushnumber(l, result + HUMAN_OFFSET);
+		}
+		return 1;
+	});
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(l, "txCan", lua_txCan);
