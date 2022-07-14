@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Jul 11 16:49:48 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jul 14 13:56:19 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -424,8 +424,8 @@ public class BoostControl {
 	public static final Field UNUSEDBIT_5_29 = Field.create("UNUSEDBIT_5_29", 0, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_5_30 = Field.create("UNUSEDBIT_5_30", 0, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_5_31 = Field.create("UNUSEDBIT_5_31", 0, FieldType.BIT, 31);
-	public static final Field LOADTARGETADD = Field.create("LOADTARGETADD", 4, FieldType.FLOAT);
-	public static final Field LOADTARGETMULT = Field.create("LOADTARGETMULT", 8, FieldType.FLOAT);
+	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.FLOAT);
+	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT);
 	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT);
 	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 16, FieldType.INT8).setScale(0.5);
 	public static final Field ALIGNMENTFILL_AT_17 = Field.create("ALIGNMENTFILL_AT_17", 17, FieldType.INT8).setScale(1.0);
@@ -463,8 +463,8 @@ public class BoostControl {
 	UNUSEDBIT_5_29,
 	UNUSEDBIT_5_30,
 	UNUSEDBIT_5_31,
-	LOADTARGETADD,
-	LOADTARGETMULT,
+	LUATARGETADD,
+	LUATARGETMULT,
 	OPENLOOPPART,
 	BOOSTCONTROLLERCLOSEDLOOPPART,
 	ALIGNMENTFILL_AT_17,
