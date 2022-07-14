@@ -360,7 +360,9 @@ void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308
 	engineState.lua = {};
 	engineState.lua.fuelMult = 1;
+#if EFI_BOOST_CONTROL
 	boostController.resetLua();
+#endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
 }

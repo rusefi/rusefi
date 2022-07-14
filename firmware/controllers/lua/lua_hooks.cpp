@@ -522,6 +522,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+#if EFI_BOOST_CONTROL
 	lua_register(l, "setBoostAdd", [](lua_State* l) {
 		engine->boostController.luaTargetAdd = luaL_checknumber(l, 1);
 		return 0;
@@ -530,6 +531,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->boostController.luaTargetMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+#endif // EFI_BOOST_CONTROL
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
