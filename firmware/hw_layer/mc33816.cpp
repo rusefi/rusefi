@@ -21,7 +21,7 @@
 #include "mc33816.h"
 #include "mc33816_memory_map.h"
 #include "hardware.h"
-#include "mc33816_data.h"
+#include "mc33816/rusefi/sample_code/PT2001_LoadData.h"
 #include "mpu_util.h"
 
 static bool isInitializaed = false;
@@ -295,23 +295,23 @@ static void download_RAM(int target) {
       memory_area = 0x1;
       start_address = 0;
       codeWidthRegAddr = 0x107;
-      RAM_ptr = MC33816_code_RAM1;
-      size = sizeof(MC33816_code_RAM1) / 2;
+      RAM_ptr = PT2001_code_RAM1;
+      size = sizeof(PT2001_code_RAM1) / 2;
       break;
 
    case CODE_RAM2:
       memory_area = 0x2;
       start_address = 0;
       codeWidthRegAddr = 0x127;
-      RAM_ptr = MC33816_code_RAM2;
-      size = sizeof(MC33816_code_RAM2) / 2;
+      RAM_ptr = PT2001_code_RAM2;
+      size = sizeof(PT2001_code_RAM2) / 2;
       break;
 
    case DATA_RAM: // ch1 only?
       memory_area = 0x4;
       start_address = 0;
-      RAM_ptr = MC33816_data_RAM;
-      size = sizeof(MC33816_data_RAM) / 2;
+      RAM_ptr = PT2001_data_RAM;
+      size = sizeof(PT2001_data_RAM) / 2;
       break;
 // optional, both data_rams with 0x3, writes same code to both
    default:
@@ -355,32 +355,32 @@ static void download_register(int r_target) {
 	   {
 	   case REG_CH1:                              // channel 1 configurations
 	      r_start_address = 0x100;
-	      reg_ptr = MC33816_ch1_config;
-	      r_size = sizeof(MC33816_ch1_config) / 2;  // gets number of words to be sent
+	      reg_ptr = PT2001_ch1_config;
+	      r_size = sizeof(PT2001_ch1_config) / 2;  // gets number of words to be sent
 	      break;
 
 	   case REG_CH2:                              // channel 2 configurations
 	      r_start_address = 0x120;
-	      reg_ptr = MC33816_ch2_config;
-	      r_size = sizeof(MC33816_ch2_config) / 2;  // gets number of words to be sent
+	      reg_ptr = PT2001_ch2_config;
+	      r_size = sizeof(PT2001_ch2_config) / 2;  // gets number of words to be sent
 	      break;
 
 	   case REG_DIAG:                              // diagnostic configurations
 	      r_start_address = 0x140;
-	      reg_ptr = MC33816_diag_config;
-	      r_size = sizeof(MC33816_diag_config) / 2; // gets number of words to be sent
+	      reg_ptr = PT2001_diag_config;
+	      r_size = sizeof(PT2001_diag_config) / 2; // gets number of words to be sent
 	      break;
 
 	   case REG_IO:                              // IO configurations
 	      r_start_address = 0x180;
-	      reg_ptr = MC33816_io_config;
-	      r_size = sizeof(MC33816_io_config) / 2;   // gets number of words to be sent
+	      reg_ptr = PT2001_io_config;
+	      r_size = sizeof(PT2001_io_config) / 2;   // gets number of words to be sent
 	      break;
 
 	   case REG_MAIN:                              // main configurations
 	      r_start_address = 0x1C0;
-	      reg_ptr = MC33816_main_config;
-	      r_size = sizeof(MC33816_main_config) / 2; // gets number of words to be sent
+	      reg_ptr = PT2001_main_config;
+	      r_size = sizeof(PT2001_main_config) / 2; // gets number of words to be sent
 	      break;
 
 	   default:
