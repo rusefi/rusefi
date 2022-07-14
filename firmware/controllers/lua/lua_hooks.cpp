@@ -395,6 +395,11 @@ struct LuaPid final {
 		return m_pid.getOutput(target, input, dt);
 	}
 
+	void setOffset(float offset) {
+		m_params.offset = offset;
+		reset();
+	}
+
 	void reset() {
 		m_pid.reset();
 	}
@@ -422,6 +427,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	luaPid
 		.ctor<float, float, float, float, float>()
 		.fun("get", &LuaPid::get)
+		.fun("setOffset", &LuaPid::setOffset)
 		.fun("reset", &LuaPid::reset);
 
 	configureRusefiLuaUtilHooks(l);

@@ -23,17 +23,23 @@ function onTick()
 		desiredBoost = curve(desiredBoostCurve, launchStrength)
 
 		initialTorqueReduction = table3d(initialTorqueReductionTable, desiredRPM, desiredBoost)
+		pid:setOffset(initialTorqueReduction)
 
 
 		print ("Running LC " ..desiredRPM .." boost=" + desiredBoost ..' t=' ..initialTorqueReduction)
 
 	elseif launchButtonState == 1 then
 
+		rpm = getSensor("RPM")
+		-- handle nil RPM, todo: change firmware to avoid nil RPM
+		rpm = (rpm == nil and 0 or rpm)
+
 
 		print ("Running LC " ..desiredRPM .." boost=" + desiredBoost)
 
 	else
 		print "Not running LC"
+		setTimingAdd(0)
 	end
 
 end
