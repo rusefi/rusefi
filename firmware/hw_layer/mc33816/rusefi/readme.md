@@ -7,7 +7,7 @@ Source code here is different from but is heavily inspired by MC33816 example as
 
 1. Open "PT2001 Developer Studio", and open project `firmware/hw_layer/mc33816/rusefi/project.xml`.
 2. Press the "Build" button at the right/center of the window to assemble the microcode.
-3. Use `Tools` -> `Generate PT2001 Load Data Code` to generate C/heater files used by rusEFI to program the PT2001 over SPI at boot.
+3. Use `Tools` -> `Generate PT2001 Load Data Code` to generate C/header files used by rusEFI to program the PT2001 over SPI at boot (see `mc33816/rusefi/sample_code/`).
 
 ### PSC Simulator: Simulating microcode/config changes
 
