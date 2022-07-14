@@ -17,6 +17,7 @@ class BoostController : public boost_control_s, public ClosedLoopController<floa
 public:
 	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
 	void update();
+	void resetLua();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.

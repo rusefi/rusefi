@@ -522,7 +522,18 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-
+	lua_register(l, "setBoostAdd", [](lua_State* l) {
+		engine->boostController.luaTargetAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setBoostMult", [](lua_State* l) {
+		engine->boostController.luaTargetMult = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setTimingAdd", [](lua_State* l) {
+		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 	lua_register(l, "setTimingMult", [](lua_State* l) {
 		engine->ignitionState.luaTimingMult = luaL_checknumber(l, 1);
 		return 0;
@@ -611,11 +622,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 		int result = US2MS(getTimeNowUs()) - engine->module<AcController>().unmock().acSwitchLastChangeTimeMs;
 		lua_pushnumber(l, result);
 		return 1;
-	});
-
-	lua_register(l, "setTimingAdd", [](lua_State* l) {
-		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
-		return 0;
 	});
 
 #if EFI_VEHICLE_SPEED

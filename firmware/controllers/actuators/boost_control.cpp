@@ -28,6 +28,12 @@ void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const 
 	m_closedLoopTargetMap = closedLoopTargetMap;
 
 	m_pid.initPidClass(pidParams);
+	resetLua();
+}
+
+void BoostController::resetLua() {
+	luaTargetAdd = 0;
+	luaTargetMult = 1;
 }
 
 void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -60,7 +66,7 @@ expected<float> BoostController::getSetpoint() {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
-	return m_closedLoopTargetMap->getValue(rpm, tps.Value);
+    return m_closedLoopTargetMap->getValue(rpm, tps.Value) * luaTargetMult + luaTargetAdd;
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
