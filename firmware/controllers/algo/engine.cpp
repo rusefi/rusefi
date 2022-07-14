@@ -353,8 +353,18 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
+	resetLua();
 }
 
+void Engine::resetLua() {
+	// todo: https://github.com/rusefi/rusefi/issues/4308
+	engineState.lua = {};
+	engineState.lua.fuelMult = 1;
+	boostController.luaTargetAdd = 0;
+	boostController.luaTargetMult = 1;
+	ignitionState.luaTimingAdd = 0;
+	ignitionState.luaTimingMult = 1;
+}
 
 /**
  * Here we have a bunch of stuff which should invoked after configuration change
