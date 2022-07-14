@@ -7,3 +7,4 @@ CSV Files
 Registers/*.hex
 *.txt
 *.vsdx
+*.def.hex
