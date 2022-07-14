@@ -227,4 +227,22 @@
     <Direction>Output</Direction>
     <Radix>Decimal</Radix>
   </Wave>
+  <Wave>
+    <Name>Oaout1FlagOut</Name>
+    <Path>
+      <PathElement>PT2001</PathElement>
+    </Path>
+    <Ordinal>16</Ordinal>
+    <Direction>Output</Direction>
+    <Radix>Decimal</Radix>
+  </Wave>
+  <Wave>
+    <Name>Flag0Out</Name>
+    <Path>
+      <PathElement>PT2001</PathElement>
+    </Path>
+    <Ordinal>2</Ordinal>
+    <Direction>Output</Direction>
+    <Radix>Decimal</Radix>
+  </Wave>
 </Waves>
