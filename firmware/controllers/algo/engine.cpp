@@ -360,8 +360,7 @@ void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308
 	engineState.lua = {};
 	engineState.lua.fuelMult = 1;
-	boostController.luaTargetAdd = 0;
-	boostController.luaTargetMult = 1;
+	boostController.resetLua();
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
 }
