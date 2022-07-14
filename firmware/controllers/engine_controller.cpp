@@ -25,7 +25,7 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_impl.h"
+#include "script_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
 #include "main_trigger_callback.h"
@@ -507,8 +507,7 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-	// TODO: rename
-	initFsioImpl();
+	initScriptImpl();
 
 	initGpPwm();
 
