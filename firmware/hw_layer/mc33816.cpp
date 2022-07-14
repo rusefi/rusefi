@@ -173,6 +173,8 @@ static void setTimings() {
 	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * engineConfiguration->mc33_t_bypass));
 	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * engineConfiguration->mc33_t_hold_off));
 	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * engineConfiguration->mc33_t_hold_tot));
+	mcUpdateDram(MC33816Mem::Tboost_min, (MC_CK * engineConfiguration->mc33_t_min_boost));
+	mcUpdateDram(MC33816Mem::Tboost_max, (MC_CK * engineConfiguration->mc33_t_max_boost));
 
 	// HPFP solenoid settings
 	mcUpdateDram(MC33816Mem::HPFP_Ipeak,

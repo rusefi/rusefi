@@ -3,19 +3,19 @@
 //   Asic ID: PT2001
 //   Version: 
 //   DRAM
-//   Date: Wednesday, July 13, 2022
+//   Date: Thursday, July 14, 2022
 //   Author: makenne
 //
-0x00F0,             
-0x00F0,             
-0x008C,             
-0x2000,             
-0x01F4,             
-0x00B4,             
+0x00C0,             
+0x0092,             
+0x0049,             
 0x003C,             
+0x1068,             
+0x003C,             
+0x0168,             
 0xEA60,             
-0x0000,             
-0x0000,             
+0x0960,             
+0x0258,             
 0x0000,             
 0x0000,             
 0x0000,             
