@@ -23,7 +23,6 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011.cpp \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
-	$(PROJECT_DIR)/hw_layer/mc33816_data.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper_dual_hbridge.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \
@@ -33,6 +32,7 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/debounce.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp \
 
+ALLCSRC += $(PROJECT_DIR)/hw_layer/mc33816/rusefi/sample_code/PT2001_LoadData.c
 
 #
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
