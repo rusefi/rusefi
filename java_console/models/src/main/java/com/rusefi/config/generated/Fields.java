@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 14 06:15:01 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 14 12:08:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2372,7 +2372,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.14.all.2468421491";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.14.all.3397763854";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2414,6 +2414,8 @@ public class Fields {
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused234234234_offset = 1360;
 	public static final int unused4080_offset = 3121;
+	public static final int unused443_offset = 1360;
+	public static final int unused444_offset = 1360;
 	public static final int unused460_offset = 480;
 	public static final int unused688_offset = 708;
 	public static final int unused_1484_bit_25_offset = 1372;
@@ -2456,8 +2458,6 @@ public class Fields {
 	public static final int useETBforIdleControl_offset = 764;
 	public static final int useFixedBaroCorrFromMap_offset = 1372;
 	public static final int useFordRedundantTps_offset = 120;
-	public static final int useFSIO4ForSeriousEngineWarning_offset = 1360;
-	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1360;
 	public static final int useHbridgesToDriveIdleStepper_offset = 960;
 	public static final int useIacPidMultTable_offset = 1372;
 	public static final int useIacTableForCoasting_offset = 764;
@@ -3154,8 +3154,8 @@ public class Fields {
 	public static final Field BOARDUSED3PULLDOWN = Field.create("BOARDUSED3PULLDOWN", 1360, FieldType.BIT, 24);
 	public static final Field BOARDUSED4PULLDOWN = Field.create("BOARDUSED4PULLDOWN", 1360, FieldType.BIT, 25);
 	public static final Field BOARDUSED5PULLDOWN = Field.create("BOARDUSED5PULLDOWN", 1360, FieldType.BIT, 26);
-	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1360, FieldType.BIT, 27);
-	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1360, FieldType.BIT, 28);
+	public static final Field UNUSED443 = Field.create("UNUSED443", 1360, FieldType.BIT, 27);
+	public static final Field UNUSED444 = Field.create("UNUSED444", 1360, FieldType.BIT, 28);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1360, FieldType.BIT, 29);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1360, FieldType.BIT, 30);
 	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1360, FieldType.BIT, 31);
@@ -4520,8 +4520,8 @@ public class Fields {
 	BOARDUSED3PULLDOWN,
 	BOARDUSED4PULLDOWN,
 	BOARDUSED5PULLDOWN,
-	USEFSIO5FORCRITICALISSUEENGINESTOP,
-	USEFSIO4FORSERIOUSENGINEWARNING,
+	UNUSED443,
+	UNUSED444,
 	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
 	SKIPPEDWHEELONCAM,

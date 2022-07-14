@@ -1901,7 +1901,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2553341633
+#define SIGNATURE_HASH 3247717052
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2457,7 +2457,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.14.subaru_eg33_f7.2553341633"
+#define TS_SIGNATURE "rusEFI 2022.07.14.subaru_eg33_f7.3247717052"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2502,6 +2502,8 @@
 #define unused1740b2_offset 1628
 #define unused234234234_offset 1360
 #define unused4080_offset 3121
+#define unused443_offset 1360
+#define unused444_offset 1360
 #define unused460_offset 480
 #define unused688_offset 708
 #define unused_1484_bit_25_offset 1372
@@ -2544,8 +2546,6 @@
 #define useETBforIdleControl_offset 764
 #define useFixedBaroCorrFromMap_offset 1372
 #define useFordRedundantTps_offset 120
-#define useFSIO4ForSeriousEngineWarning_offset 1360
-#define useFSIO5ForCriticalIssueEngineStop_offset 1360
 #define useHbridgesToDriveIdleStepper_offset 960
 #define useIacPidMultTable_offset 1372
 #define useIacTableForCoasting_offset 764

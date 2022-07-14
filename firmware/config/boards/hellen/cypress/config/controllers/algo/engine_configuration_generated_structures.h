@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Jul 01 10:57:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jul 14 12:08:06 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2517,13 +2517,11 @@ struct engine_configuration_s {
 	offset 1360 bit 26 */
 	bool boardUseD5PullDown : 1 {};
 	/**
-	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1360 bit 27 */
-	bool useFSIO5ForCriticalIssueEngineStop : 1 {};
+	bool unused443 : 1 {};
 	/**
-	 * Sometimes we have to miss injection on purpose to attract driver's attention
 	offset 1360 bit 28 */
-	bool useFSIO4ForSeriousEngineWarning : 1 {};
+	bool unused444 : 1 {};
 	/**
 	offset 1360 bit 29 */
 	bool launchActivateInverted : 1 {};
@@ -4945,4 +4943,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Jul 01 10:57:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jul 14 12:08:06 UTC 2022
