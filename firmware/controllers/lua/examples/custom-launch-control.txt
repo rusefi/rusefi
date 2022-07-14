@@ -1,6 +1,9 @@
+-- analog knob controls desired launch RPM and boost
 desiredRpmCurve = findCurveIndex("desired_rpm")
 desiredBoostCurve = findCurveIndex("desired_boost")
+-- we lookup initial torque reduction based on desired RPM and boost
 initialTorqueReductionTable = findTableIndex("torque_red")
+-- we have tables for spark skip ratio and spark retard based on desired torque reduction
 sparkCutByTorqueCurve = findCurveIndex("spark_cut")
 sparkRetardByTorqueCurve = findCurveIndex("spark_retard")
 
@@ -9,6 +12,7 @@ previousLaunchButtonState = 0
 -- 50Hz
 setTickRate(50)
 
+-- we PID torque reduction TODO hard code better PID settings?
 -- p, i, d, min, max
 pid = Pid.new(2, 0, 0, -100, 100)
 
