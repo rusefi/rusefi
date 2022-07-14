@@ -1031,8 +1031,8 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
-bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
-bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
+bit unused443
+bit unused444
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
