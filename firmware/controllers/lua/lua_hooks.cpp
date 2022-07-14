@@ -20,8 +20,7 @@
 #include "lua_hooks_util.h"
 using namespace luaaa;
 
-// Some functions lean on existing FSIO implementation
-#include "fsio_impl.h"
+#include "script_impl.h"
 
 #if EFI_PROD_CODE
 #include "electronic_throttle_impl.h"
