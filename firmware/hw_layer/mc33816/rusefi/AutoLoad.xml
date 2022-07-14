@@ -1,0 +1,13 @@
+<LoadDefault xmlns="http://tempuri.org/AutoLoad.xsd">
+  <MicroCodesReload ch1="True" ch2="True" />
+  <DPRamsReload ch1="True" ch2="True" />
+  <ChannelParametersReload ch1="True" ch2="True" />
+  <MainConfigurationReload reload="True" />
+  <DiagnosisConfigurationReload reload="True" />
+  <CrossbarConfigurationReload reload="True" />
+  <StimulusReload reload="True" />
+  <ActuatorReload reload="True" />
+  <FeedbackReload reload="True" />
+  <GraphicsReload reload="True" />
+  <ForceFlashEnable ch1="True" ch2="True" />
+</LoadDefault>
