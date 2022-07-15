@@ -569,6 +569,13 @@ static void updateRawSensors() {
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
+	for (int i = 0;i<AUX_ANALOG_INPUT_COUNT;i++) {
+		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
+		if (ch != EFI_ADC_NONE) {
+			engine->outputChannels.rawAnalogInput[i] = getVoltage("raw aux", ch);
+		}
+	}
+
 	// TODO: transition AFR to new sensor model
 	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
 }
