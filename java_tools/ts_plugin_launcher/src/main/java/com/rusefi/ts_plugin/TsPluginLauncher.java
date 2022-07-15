@@ -100,4 +100,9 @@ public class TsPluginLauncher implements ApplicationPlugin {
     public double getRequiredPluginSpec() {
         return PLUGIN_API_VERSION;
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + getVersion();
+    }
 }
