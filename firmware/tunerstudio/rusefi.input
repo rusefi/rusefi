@@ -2829,14 +2829,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "derivativeFilterLoss",					idle_derivativeFilterLoss
 		field = "antiwindupFreq",						idle_antiwindupFreq
 		field = "D-factor",								idleRpmPid_dFactor
-		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
 		field = "iTerm Min",							idlerpmpid_iTermMin
 		field = "iTerm Max",							idlerpmpid_iTermMax
 		field = "PID Extra for low RPM",				pidExtraForLowRpm
-		field = idleIncrementalPidCic,					idleIncrementalPidCic
-		field = "use Cic Pid",							useCicPidForIdle
 		field = "Use IAC PID Multiplier Table",			useIacPidMultTable
 
 	dialog = idleOpenLoop, "Open Loop Idle"

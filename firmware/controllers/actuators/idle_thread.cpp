@@ -180,13 +180,11 @@ static void undoIdleBlipIfNeeded() {
  * @return idle valve position percentage for automatic closed loop mode
  */
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
-	auto idlePid = getIdlePid();
-
 	if (shouldResetPid) {
-		needReset = idlePid->getIntegration() <= 0 || mustResetPid;
+		needReset = m_pid.getIntegration() <= 0 || mustResetPid;
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
 		if (needReset) {
-			idlePid->reset();
+			m_pid.reset();
 			mustResetPid = false;
 		}
 		shouldResetPid = false;
@@ -194,8 +192,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 
 	// todo: move this to pid_s one day
-	industrialWithOverrideIdlePid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
-	industrialWithOverrideIdlePid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
+	m_pid.antiwindupFreq = engineConfiguration->idle_antiwindupFreq;
+	m_pid.derivativeFilterLoss = engineConfiguration->idle_derivativeFilterLoss;
 
 	efitimeus_t nowUs = getTimeNowUs();
 
@@ -243,9 +241,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
-	idlePid->setErrorAmplification(errorAmpCoef);
+	m_pid.setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	percent_t newValue = m_pid.getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 	idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -286,8 +284,8 @@ float IdleController::getIdlePosition() {
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread see stepper.cpp
 	 */
-		getIdlePid()->iTermMin = engineConfiguration->idlerpmpid_iTermMin;
-		getIdlePid()->iTermMax = engineConfiguration->idlerpmpid_iTermMax;
+		m_pid.iTermMin = engineConfiguration->idlerpmpid_iTermMin;
+		m_pid.iTermMax = engineConfiguration->idlerpmpid_iTermMax;
 
 		// On failed sensor, use 0 deg C - should give a safe highish idle
 		float clt = Sensor::getOrZero(SensorType::Clt);
@@ -319,7 +317,7 @@ float IdleController::getIdlePosition() {
         isVerboseIAC = engineConfiguration->isVerboseIAC && isAutomaticIdle;
 		if (isVerboseIAC) {
 			efiPrintf("Idle state %s", getIdle_state_e(idleState));
-			getIdlePid()->showPidStatus("idle");
+			m_pid.showPidStatus("idle");
 		}
 
 		finishIdleTestIfNeeded();
@@ -351,7 +349,7 @@ float IdleController::getIdlePosition() {
 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
-				getIdlePid()->postState(engine->outputChannels.idleStatus);
+				m_pid.postState(engine->outputChannels.idleStatus);
 			} else {
 				engine->outputChannels.idleCurrentPosition = iacPosition;
 				extern StepperMotor iacMotor;
@@ -374,7 +372,7 @@ void IdleController::onSlowCallback() {
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
-	shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
+	shouldResetPid = !m_pid.isSame(&previousConfiguration->idleRpmPid);
 	mustResetPid = shouldResetPid;
 #endif
 }
@@ -384,7 +382,7 @@ void IdleController::init() {
 	mightResetPid = false;
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
-	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
+	m_pid.initPidClass(&engineConfiguration->idleRpmPid);
 }
 
 #endif /* EFI_IDLE_CONTROL */

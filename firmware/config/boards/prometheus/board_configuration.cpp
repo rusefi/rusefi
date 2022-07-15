@@ -17,8 +17,6 @@ static bool is469 = false;
 
 
 static void setPrometheusDefaults() {
-	engineConfiguration->useCicPidForIdle = true;
-
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 

@@ -67,22 +67,9 @@ public:
 		return m_lastPhase == Phase::Idling || (engineConfiguration->useSeparateIdleTablesForCrankingTaper && m_lastPhase == Phase::CrankToIdleTaper);
 	}
 
-	PidIndustrial industrialWithOverrideIdlePid;
-
-	#if EFI_IDLE_PID_CIC
-	// Use PID with CIC integrator
-		PidCic idleCicPid;
-	#endif //EFI_IDLE_PID_CIC
-
-	Pid * getIdlePid() {
-	#if EFI_IDLE_PID_CIC
-		if (engineConfiguration->useCicPidForIdle) {
-			return &idleCicPid;
-		}
-	#endif /* EFI_IDLE_PID_CIC */
-		return &industrialWithOverrideIdlePid;
+	Pid& getIdlePid() {
+		return m_pid;
 	}
-
 
 private:
 
@@ -93,6 +80,8 @@ private:
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;
+
+	PidIndustrial m_pid;
 
 	Pid m_timingPid;
 };

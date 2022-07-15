@@ -72,7 +72,7 @@ static void showIdleInfo() {
 	}
 
 	if (engineConfiguration->idleMode == IM_AUTO) {
-		engine->module<IdleController>().unmock().getIdlePid()->showPidStatus("idle");
+		engine->module<IdleController>().unmock().getIdlePid().showPidStatus("idle");
 	}
 }
 
@@ -130,7 +130,7 @@ void stopPedalPins() {
 #if ! EFI_UNIT_TEST
 
 static void applyPidSettings() {
-	engine->module<IdleController>().unmock().getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+	engine->module<IdleController>().unmock().getIdlePid().updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 }
 
 void setTargetIdleRpm(int value) {
@@ -213,6 +213,9 @@ static void blipIdle(int idlePosition, int durationMs) {
 }
 
 void startIdleThread() {
+	// Force the idle controller to use 0 offset, as this is handled by the open loop table instead.
+	engineConfiguration->idleRpmPid.offset = 0;
+
 	engine->module<IdleController>().unmock().init();
 
 #if ! EFI_UNIT_TEST
