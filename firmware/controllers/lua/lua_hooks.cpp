@@ -10,7 +10,6 @@
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
-#include "crc.h"
 #include "settings.h"
 #include <new>
 
