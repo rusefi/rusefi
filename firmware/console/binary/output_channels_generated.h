@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Fri Jul 08 09:42:21 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 15 10:28:13 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1287,11 +1287,16 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
+	V
 	 * offset 510
 	 */
-	uint8_t unusedAtTheEnd[78];
+	scaled_channel<int16_t, 1000, 1> rawAnalogInput[AUX_ANALOG_INPUT_COUNT];
+	/**
+	 * offset 526
+	 */
+	uint8_t unusedAtTheEnd[62];
 };
 static_assert(sizeof(output_channels_s) == 588);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary\output_channels.txt Fri Jul 08 09:42:21 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 15 10:28:13 UTC 2022
