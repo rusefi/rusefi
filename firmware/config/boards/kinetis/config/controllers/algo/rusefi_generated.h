@@ -1701,6 +1701,7 @@
 #define mc33_t_hold_off_offset 2918
 #define mc33_t_hold_tot_offset 2920
 #define mc33_t_max_boost_offset 2910
+#define mc33_t_min_boost_offset 708
 #define mc33_t_peak_off_offset 2912
 #define mc33_t_peak_tot_offset 2914
 #define measureMapOnlyInOneCylinder_offset 764
@@ -1921,7 +1922,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1476472070
+#define SIGNATURE_HASH 2945840597
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2476,7 +2477,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.15.kin.1476472070"
+#define TS_SIGNATURE "rusEFI 2022.07.16.kin.2945840597"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2524,7 +2525,6 @@
 #define unused443_offset 1360
 #define unused444_offset 1360
 #define unused460_offset 480
-#define unused688_offset 708
 #define unused_1484_bit_25_offset 1372
 #define unused_1484_bit_26_offset 1372
 #define unused_1484_bit_27_offset 1372

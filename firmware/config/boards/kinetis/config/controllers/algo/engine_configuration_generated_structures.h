@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 14 12:08:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 16 06:38:16 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1490,9 +1490,11 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.
+	us
 	 * offset 708
 	 */
-	uint16_t unused688;
+	uint16_t mc33_t_min_boost;
 	/**
 	 * offset 710
 	 */
@@ -3923,6 +3925,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_i_hold;
 	/**
+	 * Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.
 	us
 	 * offset 2910
 	 */
@@ -4961,4 +4964,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21272);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 14 12:08:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 16 06:38:16 UTC 2022
