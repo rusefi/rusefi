@@ -303,6 +303,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->vssToothCount;
 	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
 		return engineConfiguration->triggerSimulatorFrequency;
+	if (strEqualCaseInsensitive(name, "mc33_t_min_boost"))
+		return engineConfiguration->mc33_t_min_boost;
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 		return engineConfiguration->acIdleExtraOffset;
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
@@ -1198,6 +1200,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
 	{
 		engineConfiguration->triggerSimulatorFrequency = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mc33_t_min_boost"))
+	{
+		engineConfiguration->mc33_t_min_boost = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
