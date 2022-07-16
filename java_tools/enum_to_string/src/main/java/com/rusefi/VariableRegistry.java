@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -90,12 +91,9 @@ public class VariableRegistry {
      * @return value>name map for specified enum name.
      */
     @Nullable
-    public TreeMap<Integer, String> resolveEnumValues(EnumsReader enumsReader, String enumName) {
+    private TreeMap<Integer, String> resolveEnumValues(@NotNull EnumsReader.EnumState stringValueMap) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
-        EnumsReader.EnumState stringValueMap = enumsReader.getEnums().get(enumName);
-        if (stringValueMap == null)
-            return null;
         for (Value value : stringValueMap.values()) {
             if (value.isForceSize())
                 continue;
@@ -113,21 +111,44 @@ public class VariableRegistry {
         return valueNameById;
     }
 
+    private static void appendCommaIfNeeded(StringBuilder sb) {
+        if (sb.length() > 0)
+            sb.append(",");
+    }
+
     public String getEnumOptionsForTunerStudio(EnumsReader enumsReader, String enumName) {
-        TreeMap<Integer, String> valueNameById = resolveEnumValues(enumsReader, enumName);
+        EnumsReader.EnumState stringValueMap = enumsReader.getEnums().get(enumName);
+        if (stringValueMap == null)
+            return null;
+
+        TreeMap<Integer, String> valueNameById = resolveEnumValues(stringValueMap);
         if (valueNameById == null)
             return null;
 
-        int maxValue = valueNameById.lastKey();
+        return getHumanSortedTsKeyValueString(valueNameById);
+    }
+
+    private static String quote(String string) {
+        return "\"" + string + "\"";
+    }
+
+    @NotNull
+    public static String getHumanSortedTsKeyValueString(Map<Integer, String> valueNameById) {
+        TreeMap<Integer, String> humanDropDownSorted = new TreeMap<>((o1, o2) -> {
+            if (o1.intValue() == o2)
+                return 0;
+            if (o1.intValue() == 0)
+                return -1; // "None" always go first
+            if (o2.intValue()==0)
+                return 1;
+            return valueNameById.get(o1).compareTo(valueNameById.get(o2));
+        });
+        humanDropDownSorted.putAll(valueNameById);
 
         StringBuilder sb = new StringBuilder();
-        // todo: TS enum key-value form #4232
-        for (int i = 0; i <= maxValue; i++) {
-            if (sb.length() > 0)
-                sb.append(", ");
-
-            String value = valueNameById.getOrDefault(i, INVALID);
-            sb.append("\"" + value + "\"");
+        for (Map.Entry<Integer, String> e : humanDropDownSorted.entrySet()) {
+            appendCommaIfNeeded(sb);
+            sb.append(e.getKey() + "=" + quote(e.getValue()));
         }
         return sb.toString();
     }

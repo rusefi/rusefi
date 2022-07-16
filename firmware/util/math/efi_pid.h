@@ -69,7 +69,7 @@ public:
 	float iTermMin = -1000000.0;
 	float iTermMax =  1000000.0;
 protected:
-	pid_s *parameters;
+	pid_s *parameters = nullptr;
 	virtual void updateITerm(float value);
 };
 

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Wed Jun 29 22:23:02 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jul 14 13:56:19 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -104,11 +104,11 @@ struct boost_control_s {
 	/**
 	 * offset 4
 	 */
-	float loadTargetAdd = (float)0;
+	float luaTargetAdd = (float)0;
 	/**
 	 * offset 8
 	 */
-	float loadTargetMult = (float)0;
+	float luaTargetMult = (float)0;
 	/**
 	 * offset 12
 	 */
@@ -135,4 +135,4 @@ struct boost_control_s {
 static_assert(sizeof(boost_control_s) == 20);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Wed Jun 29 22:23:02 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jul 14 13:56:19 UTC 2022

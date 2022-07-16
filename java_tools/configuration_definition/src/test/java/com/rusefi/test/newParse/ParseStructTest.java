@@ -1,13 +1,11 @@
 package com.rusefi.test.newParse;
 
-import com.rusefi.RusefiParseErrorStrategy;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.List;
 
 import static com.rusefi.test.newParse.NewParseHelper.parse;

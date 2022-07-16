@@ -69,10 +69,6 @@
 #define EFI_LOGIC_ANALYZER TRUE
 #endif
 
-#ifndef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS FALSE
-#endif
-
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */

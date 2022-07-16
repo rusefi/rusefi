@@ -6,8 +6,8 @@ bit isBelowClosedLoopThreshold;
 bit isNotClosedLoop;
 bit isZeroRpm
 
-float loadTargetAdd
-float loadTargetMult
+float luaTargetAdd
+float luaTargetMult
 
 float openLoopPart;
 	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5, 0, -50, 50, 1
