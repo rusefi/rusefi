@@ -56,6 +56,8 @@
 #define PT2001_D1_Tbypass  0x05
 #define PT2001_D1_Thold_off  0x06
 #define PT2001_D1_Thold_tot  0x07
+#define PT2001_D1_Tboost_max  0x08
+#define PT2001_D1_Tboost_min  0x09
 
 // DRAM 2 Parameter Addresses
 #define PT2001_D2_Vboost_high  0x40

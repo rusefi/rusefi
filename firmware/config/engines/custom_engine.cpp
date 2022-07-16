@@ -788,10 +788,11 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_i_boost = 13000;
 	engineConfiguration->mc33_i_peak = 9400;
 	engineConfiguration->mc33_i_hold = 3700;
-	engineConfiguration->mc33_t_max_boost = 470;
+	engineConfiguration->mc33_t_min_boost = 100;
+	engineConfiguration->mc33_t_max_boost = 400;
 	engineConfiguration->mc33_t_peak_off = 10;
 	engineConfiguration->mc33_t_peak_tot = 700;
-	engineConfiguration->mc33_t_bypass = 15;
+	engineConfiguration->mc33_t_bypass = 10;
 	engineConfiguration->mc33_t_hold_off = 60;
 	engineConfiguration->mc33_t_hold_tot = 10000;
 

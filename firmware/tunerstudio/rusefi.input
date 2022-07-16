@@ -2321,15 +2321,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Boost voltage",						mc33_hvolt
 
 		field = "Boost current target",					mc33_i_boost
+		field = "Min boost time",						mc33_t_min_boost
 		field = "Max boost time (timeout)",				mc33_t_max_boost
-		field = "Boost -> Peak Bypass Time",			mc33_t_peak_off
 
-		field = "Peak current target",					mc33_i_peak
-		field = "Peak time",							mc33_t_peak_tot
+		field = "Peak phase current target",			mc33_i_peak
+		field = "Peak phase duration",					mc33_t_peak_tot
+		field = "Peak phase loop off time",				mc33_t_peak_off
 		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
 
 		field = "Hold current target",					mc33_i_hold
-		field = "Hold off time",				mc33_t_hold_off
+		field = "Hold phase loop off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
 
 
