@@ -710,7 +710,7 @@ custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 	float idle_antiwindupFreq;+0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
-	uint16_t unused688
+	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
 	pin_output_mode_e hip9011CsPinMode;
 	output_pin_e tachOutputPin;
 	pin_output_mode_e tachOutputPinMode;
@@ -1411,7 +1411,7 @@ tChargeMode_e tChargeMode;
 	uint16_t mc33_i_boost;;"mA", 1, 0, 1000, 25000, 0
 	uint16_t mc33_i_peak;;"mA", 1, 0, 1000, 20000, 0
 	uint16_t mc33_i_hold;;"mA", 1, 0, 1000, 20000, 0
-	uint16_t mc33_t_max_boost;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_max_boost;Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_off;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_tot;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_bypass;;"us", 1, 0, 0, 10000, 0

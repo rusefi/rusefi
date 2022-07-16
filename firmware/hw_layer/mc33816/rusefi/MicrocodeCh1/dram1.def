@@ -6,3 +6,5 @@
 #define Tbypass 5;
 #define Thold_off 6;
 #define Thold_tot 7;
+#define Tboost_max 8;
+#define Tboost_min 9;
