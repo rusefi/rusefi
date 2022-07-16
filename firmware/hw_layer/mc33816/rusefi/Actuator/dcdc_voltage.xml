@@ -1,0 +1,17 @@
+<Actuator name="DCDC_Voltage" type="DcdcConverterCapacitor">
+  <Resistance>30</Resistance>
+  <Inductance>1000</Inductance>
+  <RSense>80</RSense>
+  <CurrentFeedback>
+  </CurrentFeedback>
+  <FeedBackSource>Form</FeedBackSource>
+  <OutputUsed number="1">
+    <Output>Ls7Command</Output>
+  </OutputUsed>
+  <VoltageLoad>
+    <Voltage>-1000</Voltage>
+    <Voltage>13</Voltage>
+  </VoltageLoad>
+  <LinkedActuator>DCDC_Current</LinkedActuator>
+  <BoostFeedback>VboostDiv</BoostFeedback>
+</Actuator>

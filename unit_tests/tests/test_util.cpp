@@ -18,7 +18,6 @@
 #include "nmea.h"
 #include "mmc_card.h"
 #include "lcd_menu_tree.h"
-#include "crc.h"
 #include "fl_stack.h"
 
 TEST(util, testitoa) {

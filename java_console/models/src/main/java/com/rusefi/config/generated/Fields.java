@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 07 04:39:37 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 16 06:38:23 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -457,7 +457,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ETB_AUTOTUNE = 39;
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
 	public static final int debug_mode_e_DBG_GPPWM = 2;
-	public static final int debug_mode_e_DBG_IDLE_CONTROL = 3;
 	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_KNOCK = 15;
@@ -468,6 +467,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_SD_CARD = 13;
 	public static final int debug_mode_e_DBG_SOFT_SPARK_CUT = 6;
 	public static final int debug_mode_e_DBG_SR5_PROTOCOL = 14;
+	public static final int debug_mode_e_DBG_STEPPER_IDLE_CONTROL = 3;
 	public static final int debug_mode_e_DBG_TCU = 47;
 	public static final int debug_mode_e_DBG_TLE8888 = 31;
 	public static final int debug_mode_e_DBG_TPS_ACCEL = 1;
@@ -1676,6 +1676,7 @@ public class Fields {
 	public static final int mc33_t_hold_off_offset = 2946;
 	public static final int mc33_t_hold_tot_offset = 2948;
 	public static final int mc33_t_max_boost_offset = 2938;
+	public static final int mc33_t_min_boost_offset = 708;
 	public static final int mc33_t_peak_off_offset = 2940;
 	public static final int mc33_t_peak_tot_offset = 2942;
 	public static final int measureMapOnlyInOneCylinder_offset = 764;
@@ -2156,6 +2157,9 @@ public class Fields {
 	public static final int trigger_event_e_SHAFT_PRIMARY_RISING = 1;
 	public static final int trigger_event_e_SHAFT_SECONDARY_FALLING = 2;
 	public static final int trigger_event_e_SHAFT_SECONDARY_RISING = 3;
+	public static final String TRIGGER_GAP_FROM = "gapFrom";
+	public static final String TRIGGER_GAP_TO = "gapTo";
+	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
 	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
@@ -2369,10 +2373,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.07.all.2540106560";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.16.all.3036339282";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1016;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2411,8 +2415,9 @@ public class Fields {
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused234234234_offset = 1360;
 	public static final int unused4080_offset = 3121;
+	public static final int unused443_offset = 1360;
+	public static final int unused444_offset = 1360;
 	public static final int unused460_offset = 480;
-	public static final int unused688_offset = 708;
 	public static final int unused_1484_bit_25_offset = 1372;
 	public static final int unused_1484_bit_26_offset = 1372;
 	public static final int unused_1484_bit_27_offset = 1372;
@@ -2453,8 +2458,6 @@ public class Fields {
 	public static final int useETBforIdleControl_offset = 764;
 	public static final int useFixedBaroCorrFromMap_offset = 1372;
 	public static final int useFordRedundantTps_offset = 120;
-	public static final int useFSIO4ForSeriousEngineWarning_offset = 1360;
-	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1360;
 	public static final int useHbridgesToDriveIdleStepper_offset = 960;
 	public static final int useIacPidMultTable_offset = 1372;
 	public static final int useIacTableForCoasting_offset = 764;
@@ -2823,7 +2826,7 @@ public class Fields {
 	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 700, FieldType.FLOAT);
 	public static final Field TRIGGERINPUTPINS1 = Field.create("TRIGGERINPUTPINS1", 704, FieldType.INT16, brain_input_pin_e).setScale(1.0);
 	public static final Field TRIGGERINPUTPINS2 = Field.create("TRIGGERINPUTPINS2", 706, FieldType.INT16, brain_input_pin_e).setScale(1.0);
-	public static final Field UNUSED688 = Field.create("UNUSED688", 708, FieldType.INT16).setScale(1.0);
+	public static final Field MC33_T_MIN_BOOST = Field.create("MC33_T_MIN_BOOST", 708, FieldType.INT16).setScale(1.0);
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 710, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_711 = Field.create("ALIGNMENTFILL_AT_711", 711, FieldType.INT8).setScale(1.0);
 	public static final Field TACHOUTPUTPIN = Field.create("TACHOUTPUTPIN", 712, FieldType.INT16, output_pin_e).setScale(1.0);
@@ -3151,8 +3154,8 @@ public class Fields {
 	public static final Field BOARDUSED3PULLDOWN = Field.create("BOARDUSED3PULLDOWN", 1360, FieldType.BIT, 24);
 	public static final Field BOARDUSED4PULLDOWN = Field.create("BOARDUSED4PULLDOWN", 1360, FieldType.BIT, 25);
 	public static final Field BOARDUSED5PULLDOWN = Field.create("BOARDUSED5PULLDOWN", 1360, FieldType.BIT, 26);
-	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1360, FieldType.BIT, 27);
-	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1360, FieldType.BIT, 28);
+	public static final Field UNUSED443 = Field.create("UNUSED443", 1360, FieldType.BIT, 27);
+	public static final Field UNUSED444 = Field.create("UNUSED444", 1360, FieldType.BIT, 28);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1360, FieldType.BIT, 29);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1360, FieldType.BIT, 30);
 	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1360, FieldType.BIT, 31);
@@ -3284,7 +3287,7 @@ public class Fields {
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1592, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1596, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 1600, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
+	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 1604, FieldType.INT8, debug_mode_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_1605 = Field.create("ALIGNMENTFILL_AT_1605", 1605, FieldType.INT8).setScale(1.0);
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 1608, FieldType.INT).setScale(1.0);
@@ -4193,7 +4196,7 @@ public class Fields {
 	IDLE_ANTIWINDUPFREQ,
 	TRIGGERINPUTPINS1,
 	TRIGGERINPUTPINS2,
-	UNUSED688,
+	MC33_T_MIN_BOOST,
 	HIP9011CSPINMODE,
 	ALIGNMENTFILL_AT_711,
 	TACHOUTPUTPIN,
@@ -4517,8 +4520,8 @@ public class Fields {
 	BOARDUSED3PULLDOWN,
 	BOARDUSED4PULLDOWN,
 	BOARDUSED5PULLDOWN,
-	USEFSIO5FORCRITICALISSUEENGINESTOP,
-	USEFSIO4FORSERIOUSENGINEWARNING,
+	UNUSED443,
+	UNUSED444,
 	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
 	SKIPPEDWHEELONCAM,

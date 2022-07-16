@@ -107,16 +107,6 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	channel.CallbackData = nullptr;
 }
 
-digital_input_s* startDigitalCaptureExti(const char * /*msg*/, brain_pin_e /*brainPin*/) {
-	return nullptr;
-}
-
-#if ! EFI_ICU_INPUTS
-digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
-	return startDigitalCaptureExti(msg, brainPin);
-}
-#endif // EFI_ICU_INPUTS
-
 static inline void triggerInterrupt() {
 	// Manually fire the I2C1_EV interrupt, it will be queued after this interrupt returns
 	NVIC->STIR = I2C1_EV_IRQn;

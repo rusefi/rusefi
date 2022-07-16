@@ -311,11 +311,16 @@ void Engine::updateSwitchInputs() {
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 		engine->engineState.clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
 	}
-	if (hasAcToggle()) {
-		bool result = getAcToggle();
+	{
+		bool currentState;
+		if (hasAcToggle()) {
+			currentState = getAcToggle();
+		} else {
+			currentState = engine->engineState.lua.acRequestState;
+		}
 		AcController & acController = engine->module<AcController>().unmock();
-		if (acController.acButtonState != result) {
-			acController.acButtonState = result;
+		if (acController.acButtonState != currentState) {
+			acController.acButtonState = currentState;
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}
@@ -348,8 +353,19 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
+	resetLua();
 }
 
+void Engine::resetLua() {
+	// todo: https://github.com/rusefi/rusefi/issues/4308
+	engineState.lua = {};
+	engineState.lua.fuelMult = 1;
+#if EFI_BOOST_CONTROL
+	boostController.resetLua();
+#endif // EFI_BOOST_CONTROL
+	ignitionState.luaTimingAdd = 0;
+	ignitionState.luaTimingMult = 1;
+}
 
 /**
  * Here we have a bunch of stuff which should invoked after configuration change

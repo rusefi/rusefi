@@ -44,10 +44,6 @@
 #define EFI_LOGIC_ANALYZER FALSE
 #endif
 
-#ifndef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS FALSE
-#endif
-
 /**
  * TunerStudio support.
  */

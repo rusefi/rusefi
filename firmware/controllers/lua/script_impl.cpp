@@ -10,7 +10,7 @@
 
 #include "pch.h"
 
-#include "fsio_impl.h"
+#include "script_impl.h"
 
 static fsio8_Map3D_f32t scriptTable1;
 static fsio8_Map3D_u8t scriptTable2;
@@ -79,8 +79,7 @@ float getCurveValue(int index, float key) {
 	}
 }
 
-// TODO: rename
-void initFsioImpl() {
+void initScriptImpl() {
 	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
 			config->scriptTable1RpmBins);
 	scriptTable2.init(config->scriptTable2, config->scriptTable2LoadBins,
