@@ -7,7 +7,6 @@
 
 #include "binary_logging.h"
 #include "log_field.h"
-#include "crc.h"
 #include "buffered_writer.h"
 
 #define TIME_PRECISION 1000
