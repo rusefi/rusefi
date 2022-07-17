@@ -54,12 +54,6 @@
 
 #define STM32_LSEDRV                (3U << 3U)
 
-// Nucleo boards use MCO signal from St-Link and NOT oscillator - these need STM32_HSE_BYPASS
-// if you do not have Sl-Link and MCO on your board, you need EFI_USE_OSC
-
-#ifndef EFI_USE_OSC
-#define STM32_HSE_BYPASS
-#endif /* EFI_USE_OSC */
 
 /*
  * Board voltages.

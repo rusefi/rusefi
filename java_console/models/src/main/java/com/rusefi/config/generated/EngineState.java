@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 08 04:44:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jul 11 16:49:48 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -339,6 +339,9 @@ public class EngineState {
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final String TRIGGER_COMMENT = "#";
+	public static final String TRIGGER_GAP_FROM = "gapFrom";
+	public static final String TRIGGER_GAP_TO = "gapTo";
+	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
 	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;

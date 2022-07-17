@@ -8,7 +8,6 @@
 #pragma once
 
 #include "globalaccess.h"
-#include "crc.h"
 #include "engine_configuration_generated_structures.h"
 
 typedef struct {

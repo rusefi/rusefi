@@ -25,8 +25,13 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - raw voltage gauges for Lua script aux analog inputs #4346
+
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
+ - Many drop downs menues are now sorted #4339
+ - rusEFI TS plugin launcher fixed
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639

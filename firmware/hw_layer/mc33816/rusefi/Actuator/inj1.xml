@@ -1,0 +1,23 @@
+<Actuator name="Inj1" type="BoostParallelSolenoid2">
+  <Resistance>1000</Resistance>
+  <Inductance>500</Inductance>
+  <RSense>10</RSense>
+  <CurrentFeedback>CurFbk1</CurrentFeedback>
+  <FeedBackSource>Form</FeedBackSource>
+  <OutputUsed number="3">
+    <Output>Hs1Command</Output>
+    <Output>Ls1Command</Output>
+    <Output>Hs2Command</Output>
+  </OutputUsed>
+  <VoltageLoad>
+    <Voltage>-66</Voltage>
+    <Voltage>-1</Voltage>
+    <Voltage>-1</Voltage>
+    <Voltage>65</Voltage>
+    <Voltage>-1</Voltage>
+    <Voltage>-1</Voltage>
+    <Voltage>13</Voltage>
+    <Voltage>65</Voltage>
+  </VoltageLoad>
+  <BoostFeedback>None</BoostFeedback>
+</Actuator>

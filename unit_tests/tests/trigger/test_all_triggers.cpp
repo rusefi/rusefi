@@ -73,6 +73,11 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 
 	fprintf(fp, "%s=%s\n", TRIGGER_HAS_SECOND_CHANNEL, shape->needSecondTriggerInput ? "true" : "false");
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
+	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
+	for (int i = 0; i < shape->gapTrackingLength; i++) {
+		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->syncronizationRatioFrom[i]);
+		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->syncronizationRatioTo[i]);
+	}
 	fprintf(fp, "# end of meta section\n");
 
 	for (size_t i = 0; i < shape->getLength(); i++) {

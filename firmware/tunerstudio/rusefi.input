@@ -1210,6 +1210,14 @@ gaugeCategory = Sensors - Raw
    rawTps1SecondaryGauge  = rawTps1Secondary, "Raw TPS 1 Secondary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawTps2PrimaryGauge  = rawTps2Primary, "Raw TPS 2 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawTps2SecondaryGauge  = rawTps2Secondary, "Raw TPS 2 Secondary", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput1Gauge  = rawAnalogInput1, "Raw Aux 1", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput2Gauge  = rawAnalogInput2, "Raw Aux 2", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput3Gauge  = rawAnalogInput3, "Raw Aux 3", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput4Gauge  = rawAnalogInput4, "Raw Aux 4", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput5Gauge  = rawAnalogInput5, "Raw Aux 5", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput6Gauge  = rawAnalogInput6, "Raw Aux 6", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput7Gauge  = rawAnalogInput7, "Raw Aux 7", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput8Gauge  = rawAnalogInput8, "Raw Aux 8", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsPrimaryGauge   = rawPpsPrimary , "Raw Pedal Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","V",0, 5, 0, 0, 5, 5, 3, 0
    rawCltGauge          = rawClt        , "Raw CLT",           "V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -1390,13 +1398,14 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelayDialog,			"Main relay"
-		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump"
-		subMenu = fanSetting,				"Fan"
+		subMenu = fanSetting,				"Radiator Fan"
 		subMenu = acSettings,				"Air Conditioning"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
+		subMenu = startStopDialog,          "Start Button"
+		subMenu = starterRelay,				"Starter Disable relay"
 
 	menu = "Fuel"
 		# basic
@@ -2245,7 +2254,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
-	dialog = tpsSensorLeft, "TPS"
+	dialog = tpsSensorLeft
 		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsNum2
@@ -2275,7 +2284,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-	dialog = tpsSensor, "TPS", border
+	dialog = tpsSensor, "", border
 		panel = tpsSensorLeft, West
 		panel = tpsGauges, East
 
@@ -2312,15 +2321,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Boost voltage",						mc33_hvolt
 
 		field = "Boost current target",					mc33_i_boost
+		field = "Min boost time",						mc33_t_min_boost
 		field = "Max boost time (timeout)",				mc33_t_max_boost
-		field = "Boost -> Peak Bypass Time",			mc33_t_peak_off
 
-		field = "Peak current target",					mc33_i_peak
-		field = "Peak time",							mc33_t_peak_tot
+		field = "Peak phase current target",			mc33_i_peak
+		field = "Peak phase duration",					mc33_t_peak_tot
+		field = "Peak phase loop off time",				mc33_t_peak_off
 		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
 
 		field = "Hold current target",					mc33_i_hold
-		field = "Hold off time",				mc33_t_hold_off
+		field = "Hold phase loop off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
 
 
@@ -3155,7 +3165,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
-		panel = startStopDialog
 
 	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",			vehicleSpeedSensorInputPin
