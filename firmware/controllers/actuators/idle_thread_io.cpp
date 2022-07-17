@@ -213,6 +213,9 @@ static void blipIdle(int idlePosition, int durationMs) {
 }
 
 void startIdleThread() {
+	// Force the idle controller to use 0 offset, as this is handled by the open loop table instead.
+	engineConfiguration->idleRpmPid.offset = 0;
+
 	engine->module<IdleController>().unmock().init();
 
 #if ! EFI_UNIT_TEST
