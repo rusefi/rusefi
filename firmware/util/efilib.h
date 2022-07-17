@@ -92,30 +92,6 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
-// C++ helpers go here
-namespace efi
-{
-template <typename T, size_t N>
-constexpr size_t size(const T(&)[N]) {
-    return N;
-}
-
-// Zero the passed object
-template <typename T>
-constexpr void clear(T* obj) {
-	// The cast to void* is to prevent errors like:
-	//    clearing an object of non-trivial type 'struct persistent_config_s'; use assignment or value-initialization instead
-	// This is technically wrong, but we know config objects only ever actually
-	// contain integral types, though they may be wrapped in a scaled_channel
-	memset(reinterpret_cast<void*>(obj), 0, sizeof(T));
-}
-
-template <typename T>
-constexpr void clear(T& obj) {
-	clear(&obj);
-}
-} // namespace efi
-
 #define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 
 #define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
