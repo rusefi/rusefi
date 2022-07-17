@@ -50,7 +50,7 @@ public class DfuUpload {
                         mResultView.post(() -> mResultView.append("Downloaded! " + "\n"));
                         uncompressFile(localFullFile, localFolder, localDfuImageFileName, mResultView);
 
-                    } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
+                    } catch (IOException e) {
                         mResultView.post(() -> mResultView.append("Error downloading " + e + "\n"));
                     }
                 }
