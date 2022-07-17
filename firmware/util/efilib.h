@@ -62,24 +62,15 @@ float atoff(const char *string);
 int atoi(const char *string);
 
 #define UNUSED(x) (void)(x)
-  
-int absI(int32_t value);
-float absF(float value);
+
 /**
  * Rounds value to specified precision.
  * @param precision some pow of 10 value - for example, 100 for two digit precision
  */
 float efiRound(float value, float precision);
-int maxI(int i1, int i2);
-int minI(int i1, int i2);
-float maxF(float i1, float i2);
-float minF(float i1, float i2);
+
 // sometimes known as 'itoa'
 char* itoa10(char *p, int num);
-bool isSameF(float v1, float v2);
-
-int clampI(int min, int clamp, int max);
-float clampF(float min, float clamp, float max);
 
 /**
  * clamps value into the [0, 100] range
@@ -91,14 +82,6 @@ bool strEqual(const char *str1, const char *str2);
 
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
-
-// @brief Compute e^x using a 4th order taylor expansion centered at x=-1.  Provides
-// bogus results outside the range -2 < x < 0.
-float expf_taylor(float x);
-
-// @brief Compute tan(theta) using a ratio of the Taylor series for sin and cos
-// Valid for the range [0, pi/2 - 0.01]
-float tanf_taylor(float theta);
 
 #ifdef __cplusplus
 }

@@ -38,6 +38,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
 	$(RUSEFI_LIB_CPP) \
+	$(RUSEFI_LIB_CPP_TEST) \
 
 INCDIR += \
 	$(PCH_DIR) \
