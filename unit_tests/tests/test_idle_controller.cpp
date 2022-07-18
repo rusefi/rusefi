@@ -304,7 +304,6 @@ TEST(idle_v2, closedLoopBasic) {
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
 	engineConfiguration->idleRpmPid.iFactor = 0;
 	engineConfiguration->idleRpmPid.dFactor = 0;
-	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->idleRpmPid.iFactor = 0;
 	engineConfiguration->idleRpmPid.periodMs = 0;
 	engineConfiguration->idleRpmPid.minValue = -50;
@@ -333,7 +332,6 @@ TEST(idle_v2, closedLoopDeadzone) {
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
 	engineConfiguration->idleRpmPid.iFactor = 0;
 	engineConfiguration->idleRpmPid.dFactor = 0;
-	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->idleRpmPid.iFactor = 0;
 	engineConfiguration->idleRpmPid.periodMs = 0;
 	engineConfiguration->idleRpmPid.minValue = -50;

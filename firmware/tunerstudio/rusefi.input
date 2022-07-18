@@ -89,7 +89,6 @@ enable2ndByteCanID = false
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
 
 ; CONFIG_DEFINITION_END
-	idleRpmPid_offset = "Constant base value"
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -2839,7 +2838,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "derivativeFilterLoss",					idle_derivativeFilterLoss
 		field = "antiwindupFreq",						idle_antiwindupFreq
 		field = "D-factor",								idleRpmPid_dFactor
-		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
 		field = "iTerm Min",							idlerpmpid_iTermMin
