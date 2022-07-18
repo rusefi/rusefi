@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639
+ - Idle PID "offset" field, as this role is filled more effectively by the various open loop parameters.
 
 ## July 2022 Release - "Day 130"
 
