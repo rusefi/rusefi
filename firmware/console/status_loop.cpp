@@ -572,7 +572,7 @@ static void updateRawSensors() {
 	for (int i = 0;i<AUX_ANALOG_INPUT_COUNT;i++) {
 		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
 		if (ch != EFI_ADC_NONE) {
-			engine->outputChannels.rawAnalogInput[i] = getVoltage("raw aux", ch);
+			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", ch);
 		}
 	}
 

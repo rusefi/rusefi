@@ -62,24 +62,15 @@ float atoff(const char *string);
 int atoi(const char *string);
 
 #define UNUSED(x) (void)(x)
-  
-int absI(int32_t value);
-float absF(float value);
+
 /**
  * Rounds value to specified precision.
  * @param precision some pow of 10 value - for example, 100 for two digit precision
  */
 float efiRound(float value, float precision);
-int maxI(int i1, int i2);
-int minI(int i1, int i2);
-float maxF(float i1, float i2);
-float minF(float i1, float i2);
+
 // sometimes known as 'itoa'
 char* itoa10(char *p, int num);
-bool isSameF(float v1, float v2);
-
-int clampI(int min, int clamp, int max);
-float clampF(float min, float clamp, float max);
 
 /**
  * clamps value into the [0, 100] range
@@ -92,14 +83,6 @@ bool strEqual(const char *str1, const char *str2);
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
 
-// @brief Compute e^x using a 4th order taylor expansion centered at x=-1.  Provides
-// bogus results outside the range -2 < x < 0.
-float expf_taylor(float x);
-
-// @brief Compute tan(theta) using a ratio of the Taylor series for sin and cos
-// Valid for the range [0, pi/2 - 0.01]
-float tanf_taylor(float theta);
-
 #ifdef __cplusplus
 }
 
@@ -108,30 +91,6 @@ float tanf_taylor(float theta);
 
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
-
-// C++ helpers go here
-namespace efi
-{
-template <typename T, size_t N>
-constexpr size_t size(const T(&)[N]) {
-    return N;
-}
-
-// Zero the passed object
-template <typename T>
-constexpr void clear(T* obj) {
-	// The cast to void* is to prevent errors like:
-	//    clearing an object of non-trivial type 'struct persistent_config_s'; use assignment or value-initialization instead
-	// This is technically wrong, but we know config objects only ever actually
-	// contain integral types, though they may be wrapped in a scaled_channel
-	memset(reinterpret_cast<void*>(obj), 0, sizeof(T));
-}
-
-template <typename T>
-constexpr void clear(T& obj) {
-	clear(&obj);
-}
-} // namespace efi
 
 #define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 

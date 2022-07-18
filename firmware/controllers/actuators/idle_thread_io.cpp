@@ -139,11 +139,6 @@ void setTargetIdleRpm(int value) {
 	showIdleInfo();
 }
 
-void setIdleOffset(float value)  {
-	engineConfiguration->idleRpmPid.offset = value;
-	showIdleInfo();
-}
-
 void setIdlePFactor(float value) {
 	engineConfiguration->idleRpmPid.pFactor = value;
 	applyPidSettings();

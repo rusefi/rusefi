@@ -89,7 +89,6 @@ enable2ndByteCanID = false
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
 
 ; CONFIG_DEFINITION_END
-	idleRpmPid_offset = "Constant base value"
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.

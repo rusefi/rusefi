@@ -21,6 +21,7 @@
 #include <rusefi/crc.h>
 #include <rusefi/interpolation.h>
 #include <rusefi/isnan.h>
+#include <rusefi/math.h>
 
 #include "efifeatures.h"
 #include "rusefi_generated.h"

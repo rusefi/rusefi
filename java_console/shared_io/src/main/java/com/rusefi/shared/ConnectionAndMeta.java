@@ -69,10 +69,15 @@ public class ConnectionAndMeta {
         return lastModified;
     }
 
-    public ConnectionAndMeta invoke(String baseUrl) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+    public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
-        SSLContext ctx = SSLContext.getInstance("TLS");
-        ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        SSLContext ctx = null;
+        try {
+            ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IOException("TLS exception", e);
+        }
 
         URL url = new URL(baseUrl + zipFileName);
         System.out.println("Connecting to " + url);
