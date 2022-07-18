@@ -262,9 +262,18 @@
 /*
  * SPI driver system settings.
  */
+#ifndef STM32_SPI_USE_SPI1
 #define STM32_SPI_USE_SPI1                  TRUE
+#endif
+
+#ifndef STM32_SPI_USE_SPI2
 #define STM32_SPI_USE_SPI2                  TRUE
+#endif
+
+#ifndef STM32_SPI_USE_SPI3
 #define STM32_SPI_USE_SPI3                  TRUE
+#endif
+
 #define STM32_SPI_USE_SPI4                  FALSE
 #define STM32_SPI_USE_SPI5                  FALSE
 #define STM32_SPI_USE_SPI6                  FALSE
