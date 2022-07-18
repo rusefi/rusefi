@@ -17,6 +17,8 @@ DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::E3
 
 # *TEMPORARY* breaking TTL thus breaking Bluetooth for microRusEFI in order to enable SPI3 for SD card
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
+# PB10/PB11 uses UART3 peripheral and J12/J13 on MRE
+# we also have PC10/PC11 exposed on J4 but that's same UART3
 DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::B10 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::B11
 
 # on MRE 0.6.0 we have SD card on SPI2 which shared channel 3 with USART3
