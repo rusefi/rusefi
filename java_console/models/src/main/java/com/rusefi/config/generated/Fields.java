@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 22:52:26 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 23:08:54 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1565,7 +1565,7 @@ public class Fields {
 	public static final int launchSpeedThreshold_offset = 1020;
 	public static final int launchTimingRetard_offset = 352;
 	public static final int launchTimingRpmRange_offset = 1024;
-	public static final int launchTpsTreshold_offset = 1044;
+	public static final int launchTpsThreshold_offset = 1044;
 	public static final int LE_COMMAND_LENGTH = 200;
 	public static final int linear_sensor_s_size = 20;
 	public static final int LIS302DLCsPin_offset = 1570;
@@ -2372,7 +2372,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.20.all.3723023493";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.21.all.2635143657";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -3051,7 +3051,7 @@ public class Fields {
 	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1032, FieldType.INT).setScale(1.0);
 	public static final Field HARDCUTRPMRANGE = Field.create("HARDCUTRPMRANGE", 1036, FieldType.INT).setScale(1.0);
 	public static final Field UNUSED962 = Field.create("UNUSED962", 1040, FieldType.INT).setScale(1.0);
-	public static final Field LAUNCHTPSTRESHOLD = Field.create("LAUNCHTPSTRESHOLD", 1044, FieldType.INT).setScale(1.0);
+	public static final Field LAUNCHTPSTHRESHOLD = Field.create("LAUNCHTPSTHRESHOLD", 1044, FieldType.INT).setScale(1.0);
 	public static final Field LAUNCHACTIVATEDELAY = Field.create("LAUNCHACTIVATEDELAY", 1048, FieldType.FLOAT);
 	public static final Field STFT_MAXIDLEREGIONRPM = Field.create("STFT_MAXIDLEREGIONRPM", 1052, FieldType.INT8).setScale(50.0);
 	public static final Field STFT_MAXOVERRUNLOAD = Field.create("STFT_MAXOVERRUNLOAD", 1053, FieldType.INT8).setScale(1.0);
@@ -4417,7 +4417,7 @@ public class Fields {
 	LAUNCHBOOSTDUTY,
 	HARDCUTRPMRANGE,
 	UNUSED962,
-	LAUNCHTPSTRESHOLD,
+	LAUNCHTPSTHRESHOLD,
 	LAUNCHACTIVATEDELAY,
 	STFT_MAXIDLEREGIONRPM,
 	STFT_MAXOVERRUNLOAD,

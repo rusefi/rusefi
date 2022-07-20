@@ -501,8 +501,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchBoostDuty;
 	if (strEqualCaseInsensitive(name, "hardCutRpmRange"))
 		return engineConfiguration->hardCutRpmRange;
-	if (strEqualCaseInsensitive(name, "launchTpsTreshold"))
-		return engineConfiguration->launchTpsTreshold;
+	if (strEqualCaseInsensitive(name, "launchTpsThreshold"))
+		return engineConfiguration->launchTpsThreshold;
 	if (strEqualCaseInsensitive(name, "stft.maxIdleRegionRpm"))
 		return engineConfiguration->stft.maxIdleRegionRpm;
 	if (strEqualCaseInsensitive(name, "stft.maxOverrunLoad"))
@@ -1695,9 +1695,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->hardCutRpmRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchTpsTreshold"))
+	if (strEqualCaseInsensitive(name, "launchTpsThreshold"))
 	{
-		engineConfiguration->launchTpsTreshold = (int)value;
+		engineConfiguration->launchTpsThreshold = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "stft.maxIdleRegionRpm"))
