@@ -404,7 +404,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	tsState.totalCounter++;
 
 	uint8_t firstByte;
-	int received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
+	size_t received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
 #if EFI_SIMULATOR
 		logMsg("received %d\r\n", received);
 #endif
