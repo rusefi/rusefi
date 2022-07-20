@@ -100,6 +100,8 @@ static void printErrorCounters() {
 
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
+/* 10mS when receiving byte by byte */
+#define TS_COMMUNICATION_TIMEOUT_SHORT	TIME_MS2I(10)
 
 static efitimems_t previousWriteReportMs = 0;
 
@@ -424,7 +426,8 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	uint8_t secondByte;
-	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
+	/* second byte should be received within minimal delay */
+	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT_SHORT);
 	if (received != 1) {
 		tunerStudioError(tsChannel, "TS: ERROR: no second byte");
 		return -1;
