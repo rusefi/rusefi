@@ -67,7 +67,8 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 		return false;
 	}
 
-	return engineConfiguration->launchTpsTreshold < tps.Value;
+    // todo: should this be 'launchTpsThreshold <= tps.Value' so that nicely calibrated TPS of zero does not prevent launch?
+	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
 /**
