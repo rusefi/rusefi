@@ -502,10 +502,6 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (actualCrc != expectedCrc) {
 		/* send error only if previously we where in sync */
 		if (tsChannel->in_sync) {
-			efiPrintf("TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
-					tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
-					tsChannel->scratchBuffer[incomingPacketSize + 3]);
-
 			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 					actualCrc, expectedCrc);
 			tunerStudioError(tsChannel, "ERROR: CRC issue");
