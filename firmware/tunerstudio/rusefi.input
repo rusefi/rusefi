@@ -3837,13 +3837,13 @@ dialog = tcuControls, "Transmission Settings"
         ;field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
         field = "TPS Threshold",                        launchTpsThreshold
 		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
-		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
-		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
-		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}
+		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Ignition Retard RPM Adder",            launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Hard Cut Mode"
 		field = "Ignition Cut",    						launchSparkCutEnable,  {launchControlEnabled == 1}
 		field = "Fuel Cut",	    						launchFuelCutEnable,  {launchControlEnabled == 1}
-		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
+		field = "Hard Cut RPM Adder",                   hardCutRpmRange,  {launchControlEnabled == 1}
 
 
 	dialog = smLaunchControl, "", border
