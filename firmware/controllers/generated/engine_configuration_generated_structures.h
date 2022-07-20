@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 16 06:38:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 22:52:26 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2280,7 +2280,7 @@ struct engine_configuration_s {
 	 */
 	int launchSpeedThreshold;
 	/**
-	 * Range from Launch Rpm for Timing Retard to activate
+	 * Range from Launch RPM for Timing Retard to activate
 	RPM
 	 * offset 1024
 	 */
@@ -2298,23 +2298,20 @@ struct engine_configuration_s {
 	 */
 	int launchBoostDuty;
 	/**
-	 * RPM Range for Hard Cut
-	rpm
+	 * Range from Launch RPM to activate Hard Cut
+	RPM
 	 * offset 1036
 	 */
 	int hardCutRpmRange;
 	/**
-	rpm
 	 * offset 1040
 	 */
-	int launchAdvanceRpmRange;
+	int unused962;
 	/**
-	rpm
 	 * offset 1044
 	 */
 	int launchTpsTreshold;
 	/**
-	rpm
 	 * offset 1048
 	 */
 	float launchActivateDelay;
@@ -4946,4 +4943,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 16 06:38:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 22:52:26 UTC 2022
