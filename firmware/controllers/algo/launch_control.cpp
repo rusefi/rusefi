@@ -102,8 +102,9 @@ void LaunchControlBase::update() {
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ?
-	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
+	retardThresholdRpm = engineConfiguration->launchRpm
+	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
+	         + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
