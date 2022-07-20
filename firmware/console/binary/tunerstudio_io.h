@@ -62,6 +62,8 @@ public:
 	void crcAndWriteBuffer(uint8_t responseCode, size_t size);
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 
+	bool in_sync = false;
+
 private:
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
