@@ -81,7 +81,6 @@ jobs:
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
@@ -345,6 +344,13 @@ jobs:
     - name: Package Bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
+
+    - name: Upload build elf
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: rusefi_${{matrix.build-target}}.elf
+        path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}

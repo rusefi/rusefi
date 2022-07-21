@@ -12,7 +12,6 @@
 
 #include "pch.h"
 #include "os_access.h"
-#include "crc.h"
 
 #if EFI_UNIT_TEST
 #define PRINT printf

@@ -6,7 +6,7 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
+#include "script_impl.h"
 #include "rusefi_lua.h"
 
 static const char* curveTestScript = R"(

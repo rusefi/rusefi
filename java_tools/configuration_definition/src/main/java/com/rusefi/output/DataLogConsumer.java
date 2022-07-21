@@ -75,7 +75,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     @NotNull
     public static String getComment(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
         String comment = variableRegistry.applyVariables(configField.getComment());
-        String[] comments = comment == null ? new String[0] : comment.split("\\\\n");
+        String[] comments = comment == null ? new String[0] : unquote(comment).split("\\\\n");
         comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())

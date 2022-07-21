@@ -101,7 +101,7 @@ public class OutputsTest {
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
-        state.readBufferedReader(test, (dataLogConsumer));
+        state.readBufferedReader(test, dataLogConsumer);
         assertEquals(
                 "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
                         "entry = knock1, \"knock 1\", int,    \"%d\"\n" +
@@ -115,6 +115,26 @@ public class OutputsTest {
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
                         "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
+
+    }
+
+    @Test
+    public void generateDataLogMultiLineCommentWithQuotes() throws IOException {
+        String test = "#define GAUGE_NAME_FUEL_BASE \"fuel: base mass\"\n" +
+                "struct total\n" +
+                "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",1, 0, 0, 0, 0\n" +
+                "\tuint16_t autoscale baseFuel2;\"line1\\nline2\";\"mg\",1, 0, 0, 0, 0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
+        state.readBufferedReader(test, dataLogConsumer);
+
+        assertEquals("\"fuel: base mass\"", state.variableRegistry.get("GAUGE_NAME_FUEL_BASE"));
+        assertEquals(
+                "entry = baseFuel, \"fuel: base mass\", int,    \"%d\"\n" +
+                        "entry = baseFuel2, \"line1\", int,    \"%d\"\n"
+                        , dataLogConsumer.getContent());
 
     }
 

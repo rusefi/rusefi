@@ -10,7 +10,6 @@
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
-#include "crc.h"
 #include "settings.h"
 #include <new>
 
@@ -20,8 +19,7 @@
 #include "lua_hooks_util.h"
 using namespace luaaa;
 
-// Some functions lean on existing FSIO implementation
-#include "fsio_impl.h"
+#include "script_impl.h"
 
 #if EFI_PROD_CODE
 #include "electronic_throttle_impl.h"
@@ -91,41 +89,9 @@ static int lua_hasSensor(lua_State* l) {
 	return 1;
 }
 
-static int lua_table3d(lua_State* l) {
-	auto humanTableIdx = luaL_checkinteger(l, 1);
-	auto x = luaL_checknumber(l, 2);
-	auto y = luaL_checknumber(l, 3);
-
-	// index table, compute table lookup
-	auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
-
-	lua_pushnumber(l, result);
-	return 1;
-}
-
-static int lua_curve2d(lua_State* l) {
-	// index starting from 1
-	auto humanCurveIdx = luaL_checkinteger(l, 1);
-	auto x = luaL_checknumber(l, 2);
-
-	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
-
-	lua_pushnumber(l, result);
-	return 1;
-}
-
-static int lua_findCurveIndex(lua_State* l) {
-	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name);
-	if (result == EFI_ERROR_CODE) {
-		lua_pushnil(l);
-	} else {
-		// TS counts curve from 1 so convert indexing here
-		lua_pushnumber(l, result + HUMAN_OFFSET);
-	}
-	return 1;
-}
-
+/**
+ * @return number of elements
+ */
 static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
 	uint32_t result = 0;
 
@@ -428,6 +394,11 @@ struct LuaPid final {
 		return m_pid.getOutput(target, input, dt);
 	}
 
+	void setOffset(float offset) {
+		m_params.offset = offset;
+		reset();
+	}
+
 	void reset() {
 		m_pid.reset();
 	}
@@ -455,6 +426,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	luaPid
 		.ctor<float, float, float, float, float>()
 		.fun("get", &LuaPid::get)
+		.fun("setOffset", &LuaPid::setOffset)
 		.fun("reset", &LuaPid::reset);
 
 	configureRusefiLuaUtilHooks(l);
@@ -465,9 +437,40 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
-	lua_register(l, "table3d", lua_table3d);
-	lua_register(l, "curve", lua_curve2d);
-	lua_register(l, "findCurveIndex", lua_findCurveIndex);
+	lua_register(l, "table3d", [](lua_State* l) {
+		auto humanTableIdx = luaL_checkinteger(l, 1);
+		auto x = luaL_checknumber(l, 2);
+		auto y = luaL_checknumber(l, 3);
+
+		// index table, compute table lookup
+		auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
+
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "curve", [](lua_State* l) {
+		// index starting from 1
+		auto humanCurveIdx = luaL_checkinteger(l, 1);
+		auto x = luaL_checknumber(l, 2);
+
+		auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
+
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "findCurveIndex", [](lua_State* l) {
+		auto name = luaL_checklstring(l, 1, nullptr);
+		auto result = getCurveIndexByName(name);
+		if (result == EFI_ERROR_CODE) {
+			lua_pushnil(l);
+		} else {
+			// TS counts curve from 1 so convert indexing here
+			lua_pushnumber(l, result + HUMAN_OFFSET);
+		}
+		return 1;
+	});
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(l, "txCan", lua_txCan);
@@ -524,7 +527,20 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-
+#if EFI_BOOST_CONTROL
+	lua_register(l, "setBoostAdd", [](lua_State* l) {
+		engine->boostController.luaTargetAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setBoostMult", [](lua_State* l) {
+		engine->boostController.luaTargetMult = luaL_checknumber(l, 1);
+		return 0;
+	});
+#endif // EFI_BOOST_CONTROL
+	lua_register(l, "setTimingAdd", [](lua_State* l) {
+		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 	lua_register(l, "setTimingMult", [](lua_State* l) {
 		engine->ignitionState.luaTimingMult = luaL_checknumber(l, 1);
 		return 0;
@@ -540,10 +556,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_PROD_CODE
 	lua_register(l, "setEtbAdd", [](lua_State* l) {
 		auto luaAdjustment = luaL_checknumber(l, 1);
-		for (int i = 0 ; i < ETB_COUNT; i++) {
-			extern EtbController* etbControllers[];
-			etbControllers[i]->luaAdjustment = luaAdjustment;
-		}
+
+		setEtbLuaAdjustment(luaAdjustment);
+
 		return 0;
 	});
 #endif // EFI_PROD_CODE
@@ -555,6 +570,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setBrakePedalState", [](lua_State* l) {
 		engine->engineState.lua.brakePedalState = lua_toboolean(l, 1);
+		return 0;
+	});
+
+	lua_register(l, "setAcRequestState", [](lua_State* l) {
+		engine->engineState.lua.acRequestState = lua_toboolean(l, 1);
 		return 0;
 	});
 
@@ -611,10 +631,18 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-	lua_register(l, "setTimingAdd", [](lua_State* l) {
-		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
-		return 0;
+#if EFI_VEHICLE_SPEED
+	lua_register(l, "getCurrentGear", [](lua_State* l) {
+		lua_pushinteger(l, engine->module<GearDetector>()->getCurrentGear());
+		return 1;
 	});
+
+	lua_register(l, "getRpmInGear", [](lua_State* l) {
+		auto idx = luaL_checkinteger(l, 1);
+		lua_pushinteger(l, engine->module<GearDetector>()->getRpmInGear(idx));
+		return 1;
+	});
+#endif // EFI_VEHICLE_SPEED
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);

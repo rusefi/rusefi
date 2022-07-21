@@ -1,7 +1,6 @@
 UTIL_DIR=$(PROJECT_DIR)/util
 
 UTILSRC = \
-	$(UTIL_DIR)/math/crc.c \
 	$(UTIL_DIR)/tinymt32.c \
 
 UTILSRC_CPP = \

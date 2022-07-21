@@ -45,3 +45,6 @@
 	path = java_console/luaformatter
 	url = https://github.com/rusefi/luaformatter
 	branch = prod
+[submodule "firmware/libfirmware"]
+	path = firmware/libfirmware
+	url = https://github.com/rusefi/libfirmware.git

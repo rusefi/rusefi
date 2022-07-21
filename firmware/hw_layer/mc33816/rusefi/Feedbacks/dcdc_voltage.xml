@@ -1,0 +1,99 @@
+<VoltageFeedbacks>
+  <Transition threshold="False" type="2">
+    <Input>FeedbackHs1Vds</Input>
+    <Output>Hs1Command</Output>
+    <SourceShared level="True">Hs2Command</SourceShared>
+    <AboveHigh>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+  </Transition>
+  <Transition threshold="True" type="2">
+    <Input>FeedbackHs1Vsrc</Input>
+    <Output>Hs1Command</Output>
+    <SourceShared level="True">Hs2Command</SourceShared>
+    <ActuatorNumber>-1</ActuatorNumber>
+    <Current>0</Current>
+    <AboveHigh>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+    <BelowHigh>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </BelowHigh>
+    <BelowLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </BelowLow>
+  </Transition>
+  <Transition threshold="False" type="2">
+    <Input>FeedbackHs2Vds</Input>
+    <Output>Hs2Command</Output>
+    <SourceShared level="False">Hs1Command</SourceShared>
+    <AboveHigh>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+  </Transition>
+  <Transition threshold="True" type="2">
+    <Input>FeedbackHs2Vsrc</Input>
+    <Output>Hs2Command</Output>
+    <SourceShared level="False">Hs1Command</SourceShared>
+    <ActuatorNumber>-1</ActuatorNumber>
+    <Current>0</Current>
+    <AboveHigh>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+    <BelowHigh>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </BelowHigh>
+    <BelowLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </BelowLow>
+  </Transition>
+  <Transition threshold="False" type="1">
+    <Input>FeedbackLs1Vds</Input>
+    <Output>Ls1Command</Output>
+    <AboveHigh>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+  </Transition>
+  <Transition threshold="False" type="2">
+    <Input>FeedbackHs2VdsVbat</Input>
+    <Output>Hs2Command</Output>
+    <SourceShared level="False">Hs1Command</SourceShared>
+    <AboveHigh>
+      <Value>False</Value>
+      <Delay>500 ns</Delay>
+    </AboveHigh>
+    <AboveLow>
+      <Value>True</Value>
+      <Delay>500 ns</Delay>
+    </AboveLow>
+  </Transition>
+</VoltageFeedbacks>

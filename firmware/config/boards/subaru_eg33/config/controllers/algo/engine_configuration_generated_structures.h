@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Jul 20 23:08:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1484,9 +1484,11 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.
+	us
 	 * offset 708
 	 */
-	uint16_t unused688;
+	uint16_t mc33_t_min_boost;
 	/**
 	 * offset 710
 	 */
@@ -2278,7 +2280,7 @@ struct engine_configuration_s {
 	 */
 	int launchSpeedThreshold;
 	/**
-	 * Range from Launch Rpm for Timing Retard to activate
+	 * Range from Launch RPM for Timing Retard to activate
 	RPM
 	 * offset 1024
 	 */
@@ -2296,23 +2298,20 @@ struct engine_configuration_s {
 	 */
 	int launchBoostDuty;
 	/**
-	 * RPM Range for Hard Cut
-	rpm
+	 * Range from Launch RPM to activate Hard Cut
+	RPM
 	 * offset 1036
 	 */
 	int hardCutRpmRange;
 	/**
-	rpm
 	 * offset 1040
 	 */
-	int launchAdvanceRpmRange;
+	int unused962;
 	/**
-	rpm
 	 * offset 1044
 	 */
-	int launchTpsTreshold;
+	int launchTpsThreshold;
 	/**
-	rpm
 	 * offset 1048
 	 */
 	float launchActivateDelay;
@@ -2517,13 +2516,11 @@ struct engine_configuration_s {
 	offset 1360 bit 26 */
 	bool boardUseD5PullDown : 1 {};
 	/**
-	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1360 bit 27 */
-	bool useFSIO5ForCriticalIssueEngineStop : 1 {};
+	bool unused443 : 1 {};
 	/**
-	 * Sometimes we have to miss injection on purpose to attract driver's attention
 	offset 1360 bit 28 */
-	bool useFSIO4ForSeriousEngineWarning : 1 {};
+	bool unused444 : 1 {};
 	/**
 	offset 1360 bit 29 */
 	bool launchActivateInverted : 1 {};
@@ -3907,6 +3904,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_i_hold;
 	/**
+	 * Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.
 	us
 	 * offset 2938
 	 */
@@ -4945,4 +4943,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Jul 20 23:08:51 UTC 2022

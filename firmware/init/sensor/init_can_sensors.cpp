@@ -1,5 +1,7 @@
 /**
  * @file	init_can_sensors.cpp
+ * body control unit use-case: inject many sensors from external ECU via ODB-II request/response
+ * this is totally different from Lua "set" sensor method
  *
  * @date March 31, 2020
  * @author Matthew Kennedy, (c) 2020
