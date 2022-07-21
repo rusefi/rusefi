@@ -460,7 +460,7 @@ void initAdcInputs() {
 	portInitAdc();
 
 	// Start the slow ADC thread
-	slowAdcController.Start();
+	slowAdcController.start();
 
 #if EFI_USE_FAST_ADC
 	fastAdc.init();

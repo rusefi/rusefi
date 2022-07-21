@@ -934,10 +934,10 @@ void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
-	communicationsBlinkingTask.Start();
+	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
 
 #if EFI_LCD
-	lcdInstance.Start();
+	lcdInstance.start();
 #endif /* EFI_LCD */
 }

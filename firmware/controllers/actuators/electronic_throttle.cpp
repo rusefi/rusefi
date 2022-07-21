@@ -1008,7 +1008,7 @@ void doInitElectronicThrottle() {
 #endif /* EFI_UNIT_TEST */
 
 #if !EFI_UNIT_TEST
-	etbThread.Start();
+	etbThread.start();
 #endif
 }
 
