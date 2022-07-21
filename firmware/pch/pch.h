@@ -23,6 +23,7 @@
 #include <rusefi/interpolation.h>
 #include <rusefi/isnan.h>
 #include <rusefi/math.h>
+#include <rusefi/pt2001.h>
 
 #include "efifeatures.h"
 #include "rusefi_generated.h"
