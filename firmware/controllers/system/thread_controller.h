@@ -55,7 +55,7 @@ public:
     /**
      * @brief Start the thread.
      */
-    void Start()
+    void start()
     {
 		if (m_isStarted) {
 			warning(CUSTOM_OBD_6003, "Tried to start thread %s but it was already running", m_name);

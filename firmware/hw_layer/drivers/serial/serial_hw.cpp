@@ -85,7 +85,7 @@ void initAuxSerial(void) {
 	startAuxSerialPins();
 
 	if (isSerialRXEnabled)
-		serialRead.Start();
+		serialRead.start();
 }
 
 #endif // EFI_AUX_SERIAL
