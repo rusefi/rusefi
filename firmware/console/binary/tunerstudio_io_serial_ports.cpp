@@ -93,12 +93,12 @@ void startSerialChannels() {
 #if HAS_PRIMARY
 	// todo: invert setting one day?
 	if (!engineConfiguration->disablePrimaryUart) {
-		primaryChannelThread.Start();
+		primaryChannelThread.start();
 	}
 #endif
 
 #if HAS_SECONDARY
-	secondaryChannelThread.Start();
+	secondaryChannelThread.start();
 #endif
 }
 

@@ -209,7 +209,7 @@ bool StepDirectionStepper::step(bool positive) {
 void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 	StepperMotorBase::initialize(hardware, totalSteps);
 
-	Start();
+	start();
 }
 
 void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {

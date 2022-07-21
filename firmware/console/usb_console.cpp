@@ -51,7 +51,7 @@ struct UsbThread : public TunerstudioThread {
 static UsbThread usbConsole;
 
 void startUsbConsole() {
-	usbConsole.Start();
+	usbConsole.start();
 }
 
 #endif // EFI_USB_SERIAL
