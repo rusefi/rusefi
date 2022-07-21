@@ -156,7 +156,7 @@ void initAuxPid() {
 	startVvtControlPins();
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].Start();
+		instances[i].start();
 	}
 }
 

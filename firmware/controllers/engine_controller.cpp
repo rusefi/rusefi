@@ -237,8 +237,8 @@ static void doPeriodicSlowCallback() {
 }
 
 void initPeriodicEvents() {
-	slowController.Start();
-	fastController.Start();
+	slowController.start();
+	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -697,7 +697,7 @@ void initEngineContoller() {
 		return;
 	}
 
-	engineStateBlinkingTask.Start();
+	engineStateBlinkingTask.start();
 
 	initVrPwm();
 
