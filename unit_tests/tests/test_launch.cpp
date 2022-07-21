@@ -7,7 +7,7 @@ TEST(LaunchControl, TpsCondition) {
 
 	LaunchControlBase dut;
 
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 
 	// Should return false with failed sensor
 	Sensor::resetMockValue(SensorType::DriverThrottleIntent);
@@ -103,7 +103,7 @@ TEST(LaunchControl, CombinedCondition) {
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
 
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
@@ -150,7 +150,7 @@ TEST(LaunchControl, CompleteRun) {
     engineConfiguration->launchSpeedThreshold = 30;
 
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 	engineConfiguration->launchControlEnabled = true;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);

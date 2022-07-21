@@ -442,7 +442,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		if (tsChannel->in_sync) {
 			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
 			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
-			/* send error only if previously we where in sync */
+			/* send error only if previously we were in sync */
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		}
 		tsChannel->in_sync = false;
@@ -457,7 +457,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		command = tsChannel->scratchBuffer[0];
 
 		if (received != expectedSize) {
-			/* print and send error as we where in sync */
+			/* print and send error as we were in sync */
 			efiPrintf("Got only %d bytes while expecting %d for command %c", received,
 					expectedSize, command);
 			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
@@ -467,7 +467,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		}
 
 		if (!isKnownCommand(command)) {
-			/* print and send error as we where in sync */
+			/* print and send error as we were in sync */
 			efiPrintf("unexpected command %x", command);
 			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
 			tsChannel->in_sync = false;
@@ -500,7 +500,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 	if (actualCrc != expectedCrc) {
-		/* send error only if previously we where in sync */
+		/* send error only if previously we were in sync */
 		if (tsChannel->in_sync) {
 			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 					actualCrc, expectedCrc);
