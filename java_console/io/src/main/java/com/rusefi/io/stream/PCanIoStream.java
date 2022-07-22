@@ -97,7 +97,9 @@ public class PCanIoStream extends AbstractIoStream {
 
     private void readOnePacket(DataListener listener) {
         // todo: can we reuse instance?
-        TPCANMsg rx = new TPCANMsg();
+        // todo: should be? TPCANMsg rx = new TPCANMsg();
+        // https://github.com/rusefi/rusefi/issues/4370 nasty work-around
+        TPCANMsg rx = new TPCANMsg((byte) 255);
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             if (log.debugEnabled())

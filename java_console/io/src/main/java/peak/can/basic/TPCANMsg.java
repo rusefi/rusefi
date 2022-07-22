@@ -69,6 +69,12 @@ public class TPCANMsg implements Cloneable
         _data = new byte[8];
     }
 
+    // rusEFI custom https://github.com/rusefi/rusefi/issues/4370 workaround
+    public TPCANMsg(byte length)
+    {
+        _data = new byte[length];
+    }
+
     /**
      * Constructs a new message object.
      * @param id the message id
