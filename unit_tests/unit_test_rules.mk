@@ -14,13 +14,11 @@ PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
 
-# User may want to pass in a forced value for SANITIZE
-ifeq ($(SANITIZE),)
-	ifneq ($(OS),Windows_NT)
-		SANITIZE = yes
-	else
-		SANITIZE = no
-	endif
+ifneq ($(OS),Windows_NT)
+# at the moment lib asan breaks JNI library
+	SANITIZE = no
+else
+	SANITIZE = no
 endif
 
 IS_MAC = no
