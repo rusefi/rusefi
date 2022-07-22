@@ -27,6 +27,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - raw voltage gauges for Lua script aux analog inputs #4346
+ - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199 #4230
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
@@ -59,7 +60,6 @@ Release template (copy/paste this for new release):
  - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
  - Maintainability: frequency sensors need a simple event counter in the logs #4173
  - TS bench test commands are now configurable #4192
- - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199
  - microRusEFI can now use more pins for Cam position sensor #3032
  - hard requirement for console version match #4187
 
