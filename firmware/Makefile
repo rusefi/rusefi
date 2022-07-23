@@ -235,6 +235,7 @@ CSRC =  check.c \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
+	$(RUSEFI_LIB_C) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
