@@ -1778,6 +1778,8 @@ cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
 cmd_reset_controller         = "@@TS_IO_TEST_COMMAND_char@@\x00\xbb\x00\x00"
 ; jump to DFU mode
 cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
+; jump to OpenBLT bootloader
+cmd_openblt              = "@@TS_IO_TEST_COMMAND_char@@\x00\xbc\x00\x00"
 
 ; See 'executeTSCommand' in firmware source code
 
@@ -3696,6 +3698,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Write Config", cmd_write_config          
 		commandButton = "Reset ECU", cmd_reset_controller
 		commandButton = "Reset to DFU", cmd_dfu
+		commandButton = "Reset to OpenBLT", cmd_openblt
 		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
 		commandButton = "No flash Burn mode", cmd_burn_without_flash
 
