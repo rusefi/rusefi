@@ -89,7 +89,6 @@ enable2ndByteCanID = false
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
 
 ; CONFIG_DEFINITION_END
-	idleRpmPid_offset = "Constant base value"
 
 [Tuning]
    spotDepth       =   2 ; 0 = no indicators, 1 = Z only, 2 = XYZ indicators.
@@ -1210,6 +1209,14 @@ gaugeCategory = Sensors - Raw
    rawTps1SecondaryGauge  = rawTps1Secondary, "Raw TPS 1 Secondary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawTps2PrimaryGauge  = rawTps2Primary, "Raw TPS 2 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawTps2SecondaryGauge  = rawTps2Secondary, "Raw TPS 2 Secondary", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput1Gauge  = rawAnalogInput1, "Raw Aux 1", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput2Gauge  = rawAnalogInput2, "Raw Aux 2", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput3Gauge  = rawAnalogInput3, "Raw Aux 3", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput4Gauge  = rawAnalogInput4, "Raw Aux 4", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput5Gauge  = rawAnalogInput5, "Raw Aux 5", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput6Gauge  = rawAnalogInput6, "Raw Aux 6", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput7Gauge  = rawAnalogInput7, "Raw Aux 7", "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAnalogInput8Gauge  = rawAnalogInput8, "Raw Aux 8", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsPrimaryGauge   = rawPpsPrimary , "Raw Pedal Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","V",0, 5, 0, 0, 5, 5, 3, 0
    rawCltGauge          = rawClt        , "Raw CLT",           "V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -1390,13 +1397,14 @@ menuDialog = main
 		
 		# Digital outputs
 		subMenu = mainRelayDialog,			"Main relay"
-		subMenu = starterRelay,				"Starter Disable relay"
 		subMenu = fuelPump,					"Fuel pump"
-		subMenu = fanSetting,				"Fan"
+		subMenu = fanSetting,				"Radiator Fan"
 		subMenu = acSettings,				"Air Conditioning"
 		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
+		subMenu = startStopDialog,          "Start Button"
+		subMenu = starterRelay,				"Starter Disable relay"
 
 	menu = "Fuel"
 		# basic
@@ -1770,6 +1778,8 @@ cmd_stop_engine              = "@@TS_IO_TEST_COMMAND_char@@\x00\x79\x00\x00"
 cmd_reset_controller         = "@@TS_IO_TEST_COMMAND_char@@\x00\xbb\x00\x00"
 ; jump to DFU mode
 cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
+; jump to OpenBLT bootloader
+cmd_openblt              = "@@TS_IO_TEST_COMMAND_char@@\x00\xbc\x00\x00"
 
 ; See 'executeTSCommand' in firmware source code
 
@@ -2245,7 +2255,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
-	dialog = tpsSensorLeft, "TPS"
+	dialog = tpsSensorLeft
 		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsNum2
@@ -2275,7 +2285,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
 
-	dialog = tpsSensor, "TPS", border
+	dialog = tpsSensor, "", border
 		panel = tpsSensorLeft, West
 		panel = tpsGauges, East
 
@@ -2312,15 +2322,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Boost voltage",						mc33_hvolt
 
 		field = "Boost current target",					mc33_i_boost
+		field = "Min boost time",						mc33_t_min_boost
 		field = "Max boost time (timeout)",				mc33_t_max_boost
-		field = "Boost -> Peak Bypass Time",			mc33_t_peak_off
 
-		field = "Peak current target",					mc33_i_peak
-		field = "Peak time",							mc33_t_peak_tot
+		field = "Peak phase current target",			mc33_i_peak
+		field = "Peak phase duration",					mc33_t_peak_tot
+		field = "Peak phase loop off time",				mc33_t_peak_off
 		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
 
 		field = "Hold current target",					mc33_i_hold
-		field = "Hold off time",				mc33_t_hold_off
+		field = "Hold phase loop off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
 
 
@@ -2829,7 +2840,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "derivativeFilterLoss",					idle_derivativeFilterLoss
 		field = "antiwindupFreq",						idle_antiwindupFreq
 		field = "D-factor",								idleRpmPid_dFactor
-		field = "Offset",								idleRpmPid_offset
 		field = "Min",									idleRpmPid_minValue
 		field = "Max",									idleRpmPid_maxValue
 		field = "iTerm Min",							idlerpmpid_iTermMin
@@ -3158,7 +3168,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
-		panel = startStopDialog
 
 	dialog = speedSensorAnalog, "Speed sensor"
 		field = "Input pin",			vehicleSpeedSensorInputPin
@@ -3689,6 +3698,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Write Config", cmd_write_config          
 		commandButton = "Reset ECU", cmd_reset_controller
 		commandButton = "Reset to DFU", cmd_dfu
+		commandButton = "Reset to OpenBLT", cmd_openblt
 		commandButton = "F7 nDBANK fix", cmd_nDBANK@@if_ts_show_f7_presets
 		commandButton = "No flash Burn mode", cmd_burn_without_flash
 
@@ -3828,14 +3838,15 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
 		;field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
         ;field = "Boost Solenoid Duty",	                launchBoostDuty,  {launchControlEnabled == 1}
+        field = "TPS Threshold",                        launchTpsThreshold,  {launchControlEnabled == 1}
 		field = "Ignition Retard enable",               enableLaunchRetard,  {launchControlEnabled == 1}
-		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1}
-		field = "Ignition Retard RPM Range",            launchTimingRpmRange,  {launchControlEnabled == 1}
-		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1}
+		field = "Ignition Retard",      				launchTimingRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Ignition Retard RPM Adder",            launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Smooth Retard Mode",                   launchSmoothRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Hard Cut Mode"
 		field = "Ignition Cut",    						launchSparkCutEnable,  {launchControlEnabled == 1}
 		field = "Fuel Cut",	    						launchFuelCutEnable,  {launchControlEnabled == 1}
-		field = "Hard Cut RPM Range",                   hardCutRpmRange,  {launchControlEnabled == 1}
+		field = "Hard Cut RPM Adder",                   hardCutRpmRange,  {launchControlEnabled == 1}
 
 
 	dialog = smLaunchControl, "", border

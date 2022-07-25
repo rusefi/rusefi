@@ -35,7 +35,7 @@ public:
 	/**
 	 * This invokes PeriodicTask() immediately and starts the cycle of invocations and sleeps
 	 */
-	virtual void Start() {
+	virtual void start() {
 #if !EFI_UNIT_TEST
 		chVTObjectInit(&timer);
 #endif // EFI_UNIT_TEST

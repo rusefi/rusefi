@@ -8,6 +8,7 @@
 #pragma once
 
 #include "obd_error_codes.h"
+#include <cstdint>
 
 #ifdef __cplusplus
 extern "C"
@@ -22,7 +23,7 @@ extern "C"
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 
-typedef char critical_msg_t[ERROR_BUFFER_SIZE];
+using critical_msg_t = char[ERROR_BUFFER_SIZE];
 
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
@@ -50,6 +51,14 @@ int getRusEfiVersion(void);
   #define efiAssert(code, condition, message, result) { }
   #define efiAssertVoid(code, condition, message) { }
 #endif /* EFI_ENABLE_ASSERTS */
+
+#if EFI_PROD_CODE
+#include <hal.h>
+
+// If there was an error on the last boot, print out information about it now and reset state.
+void checkLastBootError();
+void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr);
+#endif // EFI_PROD_CODE
 
 #ifdef __cplusplus
 }

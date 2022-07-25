@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
+
 #include "bmw_n73.h"
 
 void setEngineProteusBMW_N73_GDI() {
@@ -68,6 +70,7 @@ E90_GEAR_SELECTOR = 0x192
 E90_DSC_STATUS = 0x19E
 E90_DSC_SPEED = 0x1A0
 E90_COOLANT = 0x1D0
+E90_GEAR_SELECTOR = 0x198
 E90_LOCKING = 0x2FC
 E90_MSA = 0x308
 E90_DASH_ON = 0x332

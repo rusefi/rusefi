@@ -25,7 +25,7 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_impl.h"
+#include "script_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
 #include "main_trigger_callback.h"
@@ -237,8 +237,8 @@ static void doPeriodicSlowCallback() {
 }
 
 void initPeriodicEvents() {
-	slowController.Start();
-	fastController.Start();
+	slowController.start();
+	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -507,8 +507,7 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-	// TODO: rename
-	initFsioImpl();
+	initScriptImpl();
 
 	initGpPwm();
 
@@ -698,7 +697,7 @@ void initEngineContoller() {
 		return;
 	}
 
-	engineStateBlinkingTask.Start();
+	engineStateBlinkingTask.start();
 
 	initVrPwm();
 

@@ -122,7 +122,7 @@ void initMalfunctionIndicator(void) {
 		return;
 	}
 	instance.setPeriod(10 /*ms*/);
-	instance.Start();
+	instance.start();
 
 #if	TEST_MIL_CODE
 	addConsoleAction("testmil", testMil);

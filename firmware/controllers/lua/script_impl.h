@@ -13,7 +13,7 @@
 typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, float, int16_t, int16_t> fsio8_Map3D_f32t;
 typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, int16_t, int16_t> fsio8_Map3D_u8t;
 
-void initFsioImpl();
+void initScriptImpl();
 
 float getCurveValue(int index, float key);
 int getCurveIndexByName(const char *name);

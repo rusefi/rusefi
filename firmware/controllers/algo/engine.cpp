@@ -311,11 +311,16 @@ void Engine::updateSwitchInputs() {
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 		engine->engineState.clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
 	}
-	if (hasAcToggle()) {
-		bool result = getAcToggle();
+	{
+		bool currentState;
+		if (hasAcToggle()) {
+			currentState = getAcToggle();
+		} else {
+			currentState = engine->engineState.lua.acRequestState;
+		}
 		AcController & acController = engine->module<AcController>().unmock();
-		if (acController.acButtonState != result) {
-			acController.acButtonState = result;
+		if (acController.acButtonState != currentState) {
+			acController.acButtonState = currentState;
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}
@@ -348,8 +353,19 @@ void Engine::reset() {
 	 */
 	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
+	resetLua();
 }
 
+void Engine::resetLua() {
+	// todo: https://github.com/rusefi/rusefi/issues/4308
+	engineState.lua = {};
+	engineState.lua.fuelMult = 1;
+#if EFI_BOOST_CONTROL
+	boostController.resetLua();
+#endif // EFI_BOOST_CONTROL
+	ignitionState.luaTimingAdd = 0;
+	ignitionState.luaTimingMult = 1;
+}
 
 /**
  * Here we have a bunch of stuff which should invoked after configuration change
@@ -369,24 +385,20 @@ void Engine::preCalculate() {
 
 #if EFI_SHAFT_POSITION_INPUT
 void Engine::OnTriggerStateDecodingError() {
-	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d/%d expected %d/%d/%d",
+	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d expected %d/%d",
 			triggerCentral.triggerState.currentCycle.eventCount[0],
 			triggerCentral.triggerState.currentCycle.eventCount[1],
-			triggerCentral.triggerState.currentCycle.eventCount[2],
 			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
+			TRIGGER_WAVEFORM(getExpectedEventCount(1)));
 
 	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
 #if EFI_PROD_CODE
-		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
+		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d got %d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
 				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-				TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 				triggerCentral.triggerState.currentCycle.eventCount[0],
-				triggerCentral.triggerState.currentCycle.eventCount[1],
-				triggerCentral.triggerState.currentCycle.eventCount[2]);
+				triggerCentral.triggerState.currentCycle.eventCount[1]);
 #endif /* EFI_PROD_CODE */
 	}
 

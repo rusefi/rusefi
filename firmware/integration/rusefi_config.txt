@@ -214,6 +214,9 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
 #define TRIGGER_COMMENT "#"
+#define TRIGGER_GAPS_COUNT "gapsCount"
+#define TRIGGER_GAP_FROM "gapFrom"
+#define TRIGGER_GAP_TO "gapTo"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -301,7 +304,7 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. Thi
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 1 bits, U08, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
@@ -707,7 +710,7 @@ custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 	float idle_antiwindupFreq;+0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
-	uint16_t unused688
+	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
 	pin_output_mode_e hip9011CsPinMode;
 	output_pin_e tachOutputPin;
 	pin_output_mode_e tachOutputPinMode;
@@ -952,13 +955,13 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     antiLagActivationMode_e antiLagActivationMode;
 
     int launchSpeedThreshold;+Disabled above this speed;"Kph", 1, 0, 0, 300, 0
-    int launchTimingRpmRange;+Range from Launch Rpm for Timing Retard to activate;"RPM", 1, 0, 0, 8000, 0
+    int launchTimingRpmRange;Range from Launch RPM for Timing Retard to activate;"RPM", 1, 0, 0, 8000, 0
     int launchFuelAdded;+Extra Fuel Added;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0
-	int hardCutRpmRange;RPM Range for Hard Cut;"rpm", 1, 0, 0, 3000, 0
-	int launchAdvanceRpmRange;;"rpm", 1, 0, 0, 20000, 0
-	int launchTpsTreshold;;"rpm", 1, 0, 0, 20000, 0
-	float launchActivateDelay;;"rpm", 1, 0, 0, 20000, 0
+	int hardCutRpmRange;Range from Launch RPM to activate Hard Cut;"RPM", 1, 0, 0, 3000, 0
+	int unused962
+	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
+	float launchActivateDelay;;"", 1, 0, 0, 20000, 0
 
 	stft_s stft
 
@@ -1028,8 +1031,8 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
-bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
-bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
+bit unused443
+bit unused444
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
@@ -1408,7 +1411,7 @@ tChargeMode_e tChargeMode;
 	uint16_t mc33_i_boost;;"mA", 1, 0, 1000, 25000, 0
 	uint16_t mc33_i_peak;;"mA", 1, 0, 1000, 20000, 0
 	uint16_t mc33_i_hold;;"mA", 1, 0, 1000, 20000, 0
-	uint16_t mc33_t_max_boost;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_max_boost;Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_off;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_tot;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_bypass;;"us", 1, 0, 0, 10000, 0

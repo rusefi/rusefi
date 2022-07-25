@@ -181,8 +181,7 @@ shallSleep = Timer.new()
 hadIgnitionEvent = false
 
 function onCanRx(bus, id, dlc, data)
-	id11 = id % 2048
-	if id11 == AIRBAG then
+	if id == AIRBAG then
 		-- looks like we have ignition key do not sleep!
 		shallSleep : reset()
 		hadIgnitionEvent = true

@@ -139,11 +139,6 @@ void setTargetIdleRpm(int value) {
 	showIdleInfo();
 }
 
-void setIdleOffset(float value)  {
-	engineConfiguration->idleRpmPid.offset = value;
-	showIdleInfo();
-}
-
 void setIdlePFactor(float value) {
 	engineConfiguration->idleRpmPid.pFactor = value;
 	applyPidSettings();
@@ -213,6 +208,9 @@ static void blipIdle(int idlePosition, int durationMs) {
 }
 
 void startIdleThread() {
+	// Force the idle controller to use 0 offset, as this is handled by the open loop table instead.
+	engineConfiguration->idleRpmPid.offset = 0;
+
 	engine->module<IdleController>().unmock().init();
 
 #if ! EFI_UNIT_TEST

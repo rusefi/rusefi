@@ -67,8 +67,6 @@ extern bool main_loop_started;
 #include "max31855.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
-extern int icuRisingCallbackCounter;
-extern int icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
 
 #if EFI_CJ125
@@ -571,6 +569,13 @@ static void updateRawSensors() {
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
+	for (int i = 0;i<AUX_ANALOG_INPUT_COUNT;i++) {
+		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
+		if (ch != EFI_ADC_NONE) {
+			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", ch);
+		}
+	}
+
 	// TODO: transition AFR to new sensor model
 	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
 }
@@ -853,9 +858,6 @@ void updateTunerStudioState() {
 		break;
 		}
 	case DBG_TRIGGER_COUNTERS:
-#if EFI_PROD_CODE && HAL_USE_ICU == TRUE
-		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
-#endif /* EFI_PROD_CODE */
 
 #if EFI_SHAFT_POSITION_INPUT
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
@@ -932,10 +934,10 @@ void startStatusThreads(void) {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
-	communicationsBlinkingTask.Start();
+	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
 
 #if EFI_LCD
-	lcdInstance.Start();
+	lcdInstance.start();
 #endif /* EFI_LCD */
 }

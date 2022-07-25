@@ -1,4 +1,5 @@
 TESTS_SRC_CPP = \
+	tests/trigger/test_all_triggers.cpp \
 	tests/trigger/test_symmetrical_crank.cpp \
 	tests/trigger/test_trigger_decoder.cpp \
 	tests/trigger/test_trigger_decoder_2.cpp \
@@ -11,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
+	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
@@ -49,7 +51,6 @@ TESTS_SRC_CPP = \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
-	tests/test_scattered_outputs.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_gear_detector.cpp \
@@ -87,7 +88,6 @@ TESTS_SRC_CPP = \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
-	tests/trigger/test_all_triggers.cpp \
 	tests/test_can_rx.cpp \
 	tests/test_can_serial.cpp \
 	tests/test_can_wideband.cpp \

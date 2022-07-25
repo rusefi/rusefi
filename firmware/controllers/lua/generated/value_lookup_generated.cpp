@@ -303,6 +303,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->vssToothCount;
 	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
 		return engineConfiguration->triggerSimulatorFrequency;
+	if (strEqualCaseInsensitive(name, "mc33_t_min_boost"))
+		return engineConfiguration->mc33_t_min_boost;
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 		return engineConfiguration->acIdleExtraOffset;
 	if (strEqualCaseInsensitive(name, "finalGearRatio"))
@@ -499,10 +501,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchBoostDuty;
 	if (strEqualCaseInsensitive(name, "hardCutRpmRange"))
 		return engineConfiguration->hardCutRpmRange;
-	if (strEqualCaseInsensitive(name, "launchAdvanceRpmRange"))
-		return engineConfiguration->launchAdvanceRpmRange;
-	if (strEqualCaseInsensitive(name, "launchTpsTreshold"))
-		return engineConfiguration->launchTpsTreshold;
+	if (strEqualCaseInsensitive(name, "launchTpsThreshold"))
+		return engineConfiguration->launchTpsThreshold;
 	if (strEqualCaseInsensitive(name, "stft.maxIdleRegionRpm"))
 		return engineConfiguration->stft.maxIdleRegionRpm;
 	if (strEqualCaseInsensitive(name, "stft.maxOverrunLoad"))
@@ -575,10 +575,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseD4PullDown;
 	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
 		return engineConfiguration->boardUseD5PullDown;
-	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
-		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
-	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
-		return engineConfiguration->useFSIO4ForSeriousEngineWarning;
 	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
 		return engineConfiguration->launchActivateInverted;
 	if (strEqualCaseInsensitive(name, "twoStroke"))
@@ -1204,6 +1200,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->triggerSimulatorFrequency = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "mc33_t_min_boost"))
+	{
+		engineConfiguration->mc33_t_min_boost = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 	{
 		engineConfiguration->acIdleExtraOffset = (int)value;
@@ -1694,14 +1695,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->hardCutRpmRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchAdvanceRpmRange"))
+	if (strEqualCaseInsensitive(name, "launchTpsThreshold"))
 	{
-		engineConfiguration->launchAdvanceRpmRange = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "launchTpsTreshold"))
-	{
-		engineConfiguration->launchTpsTreshold = (int)value;
+		engineConfiguration->launchTpsThreshold = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "stft.maxIdleRegionRpm"))
@@ -1882,16 +1878,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
 	{
 		engineConfiguration->boardUseD5PullDown = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
-	{
-		engineConfiguration->useFSIO5ForCriticalIssueEngineStop = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
-	{
-		engineConfiguration->useFSIO4ForSeriousEngineWarning = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "launchActivateInverted"))

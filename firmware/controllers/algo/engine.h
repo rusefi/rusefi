@@ -219,10 +219,10 @@ public:
 #endif // EFI_BOOST_CONTROL
 
 	IgnitionState ignitionState;
+	void resetLua();
 
 	FanControl1 fan1;
 	FanControl2 fan2;
-
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
