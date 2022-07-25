@@ -177,7 +177,7 @@ void initMicrosecondTimer() {
 
 	watchDogBuddyCallback(NULL);
 #if EFI_EMULATE_POSITION_SENSORS
-	watchdogControllerInstance.Start();
+	watchdogControllerInstance.start();
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 }
 

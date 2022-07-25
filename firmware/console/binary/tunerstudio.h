@@ -8,7 +8,6 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
-#include "FragmentEntry.h"
 
 typedef struct {
 	int queryCommandCounter;

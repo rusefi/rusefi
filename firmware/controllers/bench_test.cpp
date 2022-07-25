@@ -529,6 +529,14 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		rebootNow();
 #endif /* EFI_PROD_CODE */
 		break;
+
+#if EFI_USE_OPENBLT
+	case 0xbc:
+		/* Jump to OpenBLT if present */
+		jump_to_openblt();
+		break;
+#endif
+
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
@@ -574,7 +582,7 @@ void initBenchTest() {
 
 	addConsoleActionFFFFF("luabench2", luaOutBench2);
 	instance.setPeriod(200 /*ms*/);
-	instance.Start();
+	instance.start();
 	onConfigurationChangeBenchTest();
 }
 

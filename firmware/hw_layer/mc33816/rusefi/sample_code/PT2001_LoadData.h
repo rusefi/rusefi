@@ -48,7 +48,7 @@
 #ifndef PT2001_DATA_H_
 #define PT2001_DATA_H_
 
-extern unsigned short PT2001_code_RAM1[88];    // CODE RAM CH 1
+extern unsigned short PT2001_code_RAM1[108];    // CODE RAM CH 1
 extern unsigned short PT2001_code_RAM2[43];    // CODE RAM CH 2
 extern unsigned short PT2001_data_RAM[128];    // DATA RAM
 extern unsigned short PT2001_main_config[29];  // main configurations

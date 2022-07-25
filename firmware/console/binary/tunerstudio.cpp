@@ -100,6 +100,8 @@ static void printErrorCounters() {
 
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
+/* 10mS when receiving byte by byte */
+#define TS_COMMUNICATION_TIMEOUT_SHORT	TIME_MS2I(10)
 
 static efitimems_t previousWriteReportMs = 0;
 
@@ -404,7 +406,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	tsState.totalCounter++;
 
 	uint8_t firstByte;
-	int received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
+	size_t received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
 #if EFI_SIMULATOR
 		logMsg("received %d\r\n", received);
 #endif
@@ -416,6 +418,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
@@ -424,48 +427,72 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	uint8_t secondByte;
-	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
+	/* second byte should be received within minimal delay */
+	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT_SHORT);
 	if (received != 1) {
 		tunerStudioError(tsChannel, "TS: ERROR: no second byte");
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
+	size_t expectedSize = incomingPacketSize + CRC_VALUE_SIZE;
 
-	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-		efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+	if (incomingPacketSize == 0 || expectedSize > sizeof(tsChannel->scratchBuffer)) {
+		if (tsChannel->in_sync) {
+			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
+			/* send error only if previously we were in sync */
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+		}
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
-	received = tsChannel->readTimeout((uint8_t* )tsChannel->scratchBuffer, 1, TS_COMMUNICATION_TIMEOUT);
-	if (received != 1) {
-		tunerStudioError(tsChannel, "ERROR: did not receive command");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return -1;
-	}
+	char command;
+	if (tsChannel->in_sync) {
+		/* we are in sync state, packet size should be correct so lets receive full packet and then check if command is supported
+		 * otherwise (if abort reception in middle of packet) it will break syncronization and cause error on next packet */
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer), expectedSize, TS_COMMUNICATION_TIMEOUT);
+		command = tsChannel->scratchBuffer[0];
 
-	char command = tsChannel->scratchBuffer[0];
-	if (!isKnownCommand(command)) {
-		efiPrintf("unexpected command %x", command);
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		return -1;
+		if (received != expectedSize) {
+			/* print and send error as we were in sync */
+			efiPrintf("Got only %d bytes while expecting %d for command %c", received,
+					expectedSize, command);
+			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+			tsChannel->in_sync = false;
+			return -1;
+		}
+
+		if (!isKnownCommand(command)) {
+			/* print and send error as we were in sync */
+			efiPrintf("unexpected command %x", command);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+			tsChannel->in_sync = false;
+			return -1;
+		}
+	} else {
+		/* receive only command byte to check if it is supported */
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer), 1, TS_COMMUNICATION_TIMEOUT_SHORT);
+		command = tsChannel->scratchBuffer[0];
+
+		if (!isKnownCommand(command)) {
+			/* do not report any error as we are not in sync */
+			return -1;
+		}
+
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer) + 1, expectedSize - 1, TS_COMMUNICATION_TIMEOUT);
+		if (received != expectedSize - 1) {
+			/* do not report any error as we are not in sync */
+			return -1;
+		}
 	}
 
 #if EFI_SIMULATOR
-		logMsg("command %c\r\n", command);
+	logMsg("command %c\r\n", command);
 #endif
-
-	int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-	received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer + 1), expectedSize, TS_COMMUNICATION_TIMEOUT);
-	if (received != expectedSize) {
-		efiPrintf("Got only %d bytes while expecting %d for command %c", received,
-				expectedSize, command);
-		tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return -1;
-	}
 
 	uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
@@ -473,16 +500,19 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 	if (actualCrc != expectedCrc) {
-		efiPrintf("TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
-				tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
-				tsChannel->scratchBuffer[incomingPacketSize + 3]);
-
-		efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
-				actualCrc, expectedCrc);
-		tunerStudioError(tsChannel, "ERROR: CRC issue");
-		sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+		/* send error only if previously we were in sync */
+		if (tsChannel->in_sync) {
+			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
+					actualCrc, expectedCrc);
+			tunerStudioError(tsChannel, "ERROR: CRC issue");
+			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+			tsChannel->in_sync = false;
+		}
 		return -1;
 	}
+
+	/* we were able to receive known command with correct crc and size! */
+	tsChannel->in_sync = true;
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 

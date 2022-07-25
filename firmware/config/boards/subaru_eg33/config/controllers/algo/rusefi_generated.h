@@ -1554,7 +1554,6 @@
 #define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Always Active(Disabled By Speed)"
 #define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
 #define launchActivationMode_offset 1016
-#define launchAdvanceRpmRange_offset 1040
 #define launchBoostDuty_offset 1032
 #define launchControlEnabled_offset 120
 #define launchFuelAdded_offset 1028
@@ -1565,7 +1564,7 @@
 #define launchSpeedThreshold_offset 1020
 #define launchTimingRetard_offset 352
 #define launchTimingRpmRange_offset 1024
-#define launchTpsTreshold_offset 1044
+#define launchTpsThreshold_offset 1044
 #define LE_COMMAND_LENGTH 200
 #define linear_sensor_s_size 20
 #define LIS302DLCsPin_offset 1570
@@ -1902,7 +1901,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3219858912
+#define SIGNATURE_HASH 2556283208
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2458,7 +2457,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.16.subaru_eg33_f7.3219858912"
+#define TS_SIGNATURE "rusEFI 2022.07.25.subaru_eg33_f7.2556283208"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2506,6 +2505,7 @@
 #define unused443_offset 1360
 #define unused444_offset 1360
 #define unused460_offset 480
+#define unused962_offset 1040
 #define unused_1484_bit_25_offset 1372
 #define unused_1484_bit_26_offset 1372
 #define unused_1484_bit_27_offset 1372

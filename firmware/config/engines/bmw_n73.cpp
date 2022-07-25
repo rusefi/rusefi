@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
+
 #include "bmw_n73.h"
 
 void setEngineProteusBMW_N73_GDI() {

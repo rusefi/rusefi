@@ -979,7 +979,6 @@ const command_f_s commandsF[] = {
 		{"script_curve_2_value", setScriptCurve2Value},
 #if EFI_PROD_CODE
 #if EFI_IDLE_CONTROL
-		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},

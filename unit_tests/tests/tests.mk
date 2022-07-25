@@ -12,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
+	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
@@ -50,7 +51,6 @@ TESTS_SRC_CPP = \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
-	tests/test_scattered_outputs.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_gear_detector.cpp \
