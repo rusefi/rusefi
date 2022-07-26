@@ -23,7 +23,7 @@ jobs:
             hellen72,
             hellen81,
             hellen88bmw,
-            hellen88bmw-avr,
+            hellen88bmw_avr,
             hellen-nb1,
             hellen-gm-e67,
             hellenNA8_96,
@@ -83,7 +83,7 @@ jobs:
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
 
-          - build-target: hellen88bmw-avr
+          - build-target: hellen88bmw_avr
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
 
