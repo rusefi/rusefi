@@ -23,8 +23,9 @@
 
 #include "digital_input_exti.h"
 
-//!!!!!!!!!!
-#define TRIGGER_ADC_DEBUG_LED TRUE
+#ifndef TRIGGER_ADC_DEBUG_LED
+#define TRIGGER_ADC_DEBUG_LED FALSE
+#endif
 //#define DEBUG_OUTPUT_IGN1 TRUE
 //#define TRIGGER_ADC_DUMP_BUF TRUE
 
