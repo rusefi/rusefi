@@ -1033,21 +1033,21 @@ luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0
 testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", -10, {benchTestCount + 10}, -5, 0, {benchTestCount}, {benchTestCount + 5}, 1, 1
 
 gaugeCategory = PIDs
-alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-alternatorStatus_dTermGauge = alternatorStatus_dTerm,"alternatorStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-alternatorStatus_outputGauge = alternatorStatus_output,"alternatorStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-alternatorStatus_errorGauge = alternatorStatus_error,"alternatorStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"alternatorStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
-idleStatus_iTermGauge = idleStatus_iTerm,"idleStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-idleStatus_dTermGauge = idleStatus_dTerm,"idleStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-idleStatus_outputGauge = idleStatus_output,"idleStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-idleStatus_errorGauge = idleStatus_error,"idleStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-idleStatus_resetCounterGauge = idleStatus_resetCounter,"idleStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
-etbStatus_iTermGauge = etbStatus_iTerm,"etbStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-etbStatus_dTermGauge = etbStatus_dTerm,"etbStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-etbStatus_outputGauge = etbStatus_output,"etbStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-etbStatus_errorGauge = etbStatus_error,"etbStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-etbStatus_resetCounterGauge = etbStatus_resetCounter,"etbStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_dTermGauge = alternatorStatus_dTerm,"Alternator PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_outputGauge = alternatorStatus_output,"Alternator PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_errorGauge = alternatorStatus_error,"Alternator PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"Alternator PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_outputGauge = idleStatus_output,"Idle PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_errorGauge = idleStatus_error,"Idle PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_resetCounterGauge = idleStatus_resetCounter,"Idle PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+etbStatus_iTermGauge = etbStatus_iTerm,"ETB 1 PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_dTermGauge = etbStatus_dTerm,"ETB 1 PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_errorGauge = etbStatus_error,"ETB 1 PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_resetCounterGauge = etbStatus_resetCounter,"ETB 1 PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
 canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 canWriteOkGauge = canWriteOk,"canWriteOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 canWriteNotOkGauge = canWriteNotOk,"canWriteNotOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1260,6 +1260,12 @@ gaugeCategory = Knock
 
 gaugeCategory = DynoView
 	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2
+
+gaugeCategory = Outputs
+	gppwmGauge = gppwmOutput1, "GPPWM Output 1", "%", 0, 100, 0, 0, 100, 100, 1, 1
+	gppwmGauge = gppwmOutput2, "GPPWM Output 2", "%", 0, 100, 0, 0, 100, 100, 1, 1
+	gppwmGauge = gppwmOutput3, "GPPWM Output 3", "%", 0, 100, 0, 0, 100, 100, 1, 1
+	gppwmGauge = gppwmOutput4, "GPPWM Output 4", "%", 0, 100, 0, 0, 100, 100, 1, 1
 
 [WueAnalyze]
     
