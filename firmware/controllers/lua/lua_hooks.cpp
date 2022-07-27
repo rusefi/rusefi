@@ -383,7 +383,13 @@ struct LuaSensor final : public StoredValueSensor {
 	LuaSensor(lua_State* l, const char* name)
 		: StoredValueSensor(findSensorByName(l, name), MS2NT(100))
 	{
-		Register();
+		// do a soft collision check to avoid a fatal error from the hard check in Register()
+		if (Sensor::hasSensor(type())) {
+			luaL_error(l, "Tried to create a Lua sensor of type %s, but one was already registered.", getSensorName());
+		} else {
+			Register();
+			efiPrintf("LUA registered sensor of type %s", getSensorName());
+		}
 	}
 
 	void set(float value) {
