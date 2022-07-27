@@ -248,7 +248,7 @@ jobs:
       if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
       run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       if: ${{ env.skip != 'true' }}
       with:
         submodules: recursive
@@ -396,7 +396,7 @@ jobs:
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
     - uses: actions/setup-java@v1
