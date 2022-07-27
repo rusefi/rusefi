@@ -456,7 +456,7 @@ int lua_canRxAdd(lua_State* l) {
 			callback = getLuaFunc(l);
 			break;
 		default:
-			luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
+			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
 	}
 
 	addLuaCanRxFilter(eid, 0x1FFFFFFF, bus, callback);
@@ -506,7 +506,7 @@ int lua_canRxAddMask(lua_State* l) {
 			callback = getLuaFunc(l);
 			break;
 		default:
-			luaL_error(l, "Wrong number of arguments to canRxAddMask. Got %d, expected 2, 3, or 4.");
+			return luaL_error(l, "Wrong number of arguments to canRxAddMask. Got %d, expected 2, 3, or 4.");
 	}
 
 	addLuaCanRxFilter(eid, mask, bus, callback);
