@@ -245,12 +245,13 @@ void Sensor::unregister() {
  * todo: some sort of hashmap in the future?
  */
 SensorType findSensorTypeByName(const char *name) {
-    for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
-    	SensorType type = (SensorType)i;
-    	const char *sensorName = getSensorType(type);
-    	if (strEqualCaseInsensitive(sensorName, name)) {
-    		return type;
-    	}
-    }
-    return SensorType::Invalid;
+	for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+		SensorType type = (SensorType)i;
+		const char *sensorName = getSensorType(type);
+		if (strEqualCaseInsensitive(sensorName, name)) {
+			return type;
+		}
+	}
+
+	return SensorType::Invalid;
 }
