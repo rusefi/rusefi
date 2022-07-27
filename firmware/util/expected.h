@@ -17,13 +17,35 @@
 
 struct unexpected_t {};
 
+enum class UnexpectedCode : char {
+	Unknown = 0,
+
+	// Too much time has passed
+	Timeout,
+
+	// The decoded value was impossibly high/low
+	High,
+	Low,
+
+	// An inconsistency was detected using multiple sources of information
+	Inconsistent,
+
+	// A value is unavailable due to configuration
+	Configuration,
+};
 template <class TValue>
 struct expected {
-	const bool Valid;
-	const TValue Value;
+	bool Valid;
+
+	union {
+		TValue Value;
+		UnexpectedCode Code;
+	};
 
 	// Implicit constructor to construct in the invalid state
-	constexpr expected(const unexpected_t&) : Valid(false), Value{} {}
+	constexpr expected(const unexpected_t&) : Valid(false), Code{UnexpectedCode::Unknown} {}
+
+	constexpr expected(UnexpectedCode code) : Valid(false), Code{code} {}
 
 	// Implicit constructor to convert from TValue (for valid values, so an expected<T> behaves like a T)
 	constexpr expected(TValue validValue)

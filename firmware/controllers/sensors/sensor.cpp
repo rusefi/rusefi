@@ -55,7 +55,7 @@ public:
 		if (s) {
 			// If this sensor says it doesn't exist, return unexpected
 			if (!s->hasSensor()) {
-				return unexpected;
+				return UnexpectedCode::Configuration;
 			}
 
 			// If we found the sensor, ask it for a result.
@@ -63,7 +63,7 @@ public:
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
 	void showInfo(const char* sensorName) const {
@@ -155,7 +155,7 @@ void Sensor::unregister() {
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
 	return entry->get();
