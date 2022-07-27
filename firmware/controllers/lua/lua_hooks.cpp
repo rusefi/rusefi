@@ -416,7 +416,7 @@ static bool isFunction(lua_State* l, int idx) {
 
 int getLuaFunc(lua_State* l) {
 	if (!isFunction(l, 1)) {
-		luaL_error(l, "expected function");
+		return luaL_error(l, "expected function");
 	} else {
 		return luaL_ref(l, LUA_REGISTRYINDEX);
 	}
