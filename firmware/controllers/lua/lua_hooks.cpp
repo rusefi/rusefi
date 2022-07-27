@@ -68,9 +68,19 @@ static int lua_getSensorByIndex(lua_State* l) {
 	return getSensor(l, static_cast<SensorType>(zeroBasedSensorIndex));
 }
 
+static SensorType findSensorByName(lua_State* l, const char* name) {
+	SensorType type = findSensorTypeByName(name);
+
+	if (l && type == SensorType::Invalid) {
+		luaL_error(l, "Invalid sensor type: %s", name);
+	}
+
+	return type;
+}
+
 static int lua_getSensorByName(lua_State* l) {
 	auto sensorName = luaL_checklstring(l, 1, nullptr);
-	SensorType type = findSensorTypeByName(sensorName);
+	SensorType type = findSensorByName(l, sensorName);
 
 	return getSensor(l, type);
 }
@@ -361,16 +371,6 @@ namespace LUAAA_NS {
             return new(mem) TCLASS(state, LuaStack<ARGS>::get(state, Ns + 1)...);
         }
     };
-}
-
-static SensorType findSensorByName(lua_State* l, const char* name) {
-	SensorType type = findSensorTypeByName(name);
-
-	if (l && type == SensorType::Invalid) {
-		luaL_error(l, "Invalid sensor type: %s", name);
-	}
-
-	return type;
 }
 
 struct LuaSensor final : public StoredValueSensor {
