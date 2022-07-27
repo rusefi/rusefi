@@ -3541,6 +3541,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
+		field = "No boost control below RPM",	boostControlMinRpm, { isBoostControlEnabled }
+		field = "No boost control below TPS",	boostControlMinTps, { isBoostControlEnabled }
+		field = "No boost control below MAP",	boostControlMinMap, { isBoostControlEnabled }
 
 	dialog = boostOpenLoopDialog, "", border
 		panel = boostTableTbl, Center
