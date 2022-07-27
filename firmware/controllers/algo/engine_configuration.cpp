@@ -670,7 +670,25 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
+	strncpy(config->luaScript, R"(
+function onTick()
+end
+
+function onrx(bus, id, dlc, data)
+end
+
+function onrx2(bus, id, dlc, data)
+end
+
+canRxAddEx(0x123, 0x456, -1, onrx)
+
+canRxAddEx(0x123, 0x456, -1, onrx)
+
+canRxAddEx(0x123, 0x456, -1, 333)
+
+canRxAddEx(0x222, 0x333, -1)
+
+)", efi::size(config->luaScript));
 }
 
 /**
