@@ -340,15 +340,47 @@ static int lua_setAirmass(lua_State* l) {
 
 #endif // EFI_UNIT_TEST
 
+namespace LUAAA_NS {
+    template<typename TCLASS, typename ...ARGS>
+    struct PlacementConstructorCaller<TCLASS, lua_State*, ARGS...>
+    {
+        // this speciailization passes the Lua state to the constructor as first argument, as it shouldn't
+        // participate in the index generation as it's not a normal parameter passed via the Lua stack.
+
+        static TCLASS * Invoke(lua_State * state, void * mem)
+        {
+            return InvokeImpl(state, mem, typename make_indices<sizeof...(ARGS)>::type());
+        }
+
+    private:
+        template<std::size_t ...Ns>
+        static TCLASS * InvokeImpl(lua_State * state, void * mem, indices<Ns...>)
+        {
+            (void)state;
+            return new(mem) TCLASS(state, LuaStack<ARGS>::get(state, Ns + 1)...);
+        }
+    };
+}
+
+static SensorType findSensorByName(lua_State* l, const char* name) {
+	SensorType type = findSensorTypeByName(name);
+
+	if (l && type == SensorType::Invalid) {
+		luaL_error(l, "Invalid sensor type: %s", name);
+	}
+
+	return type;
+}
+
 struct LuaSensor final : public StoredValueSensor {
-	LuaSensor() : LuaSensor("Invalid") { }
+	LuaSensor() : LuaSensor(nullptr, "Invalid") { }
 
 	~LuaSensor() {
 		unregister();
 	}
 
-	LuaSensor(const char* name)
-		: StoredValueSensor(findSensorTypeByName(name), MS2NT(100))
+	LuaSensor(lua_State* l, const char* name)
+		: StoredValueSensor(findSensorByName(l, name), MS2NT(100))
 	{
 		Register();
 	}
@@ -418,7 +450,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<LuaSensor> luaSensor(l, "Sensor");
 	luaSensor
-		.ctor<const char*>()
+		.ctor<lua_State*, const char*>()
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
 
