@@ -18,11 +18,6 @@ bool AcController::getAcState() {
 		return false;
 	}
 
-	// engineNotRunningLongEnough = engine->engineState.running.timeSinceCrankingInSecs < engineConfiguration->acDelayAfterEngineStart;
-	// if (engineNotRunningLongEnough) {
-	// 	return false;
-	// }
-
 	auto maxRpm = engineConfiguration->maxAcRpm;
 	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
 	if (engineTooFast) {
