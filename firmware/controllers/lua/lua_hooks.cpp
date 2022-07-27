@@ -409,7 +409,6 @@ private:
 	pid_s m_params;
 };
 
-
 static bool isFunction(lua_State* l, int idx) {
 	return lua_type(l, idx) == LUA_TFUNCTION;
 }
@@ -507,7 +506,7 @@ int lua_canRxAddMask(lua_State* l) {
 			callback = getLuaFunc(l);
 			break;
 		default:
-			luaL_error(l, "bad arguments to canRxAddMask");
+			luaL_error(l, "Wrong number of arguments to canRxAddMask. Got %d, expected 2, 3, or 4.");
 	}
 
 	addLuaCanRxFilter(eid, mask, bus, callback);
