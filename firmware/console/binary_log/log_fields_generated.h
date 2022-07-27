@@ -110,4 +110,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.auxLinear2, GAUGE_NAME_AUX_LINEAR_2, "", 2},
 	{engine->outputChannels.boostControllerOutput, GAUGE_NAME_BOOST_OUTPUT, "%", 1},
 	{engine->outputChannels.boostControllerOpenLoopPart, GAUGE_NAME_BOOST_OPEN_LOOP, "%", 1},
+	{engine->outputChannels.gppwmOutput[0], "GPPWM Output 1", "%", 1},
+	{engine->outputChannels.gppwmOutput[1], "GPPWM Output 2", "%", 1},
+	{engine->outputChannels.gppwmOutput[2], "GPPWM Output 3", "%", 1},
+	{engine->outputChannels.gppwmOutput[3], "GPPWM Output 4", "%", 1},
 };
