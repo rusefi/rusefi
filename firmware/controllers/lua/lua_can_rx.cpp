@@ -8,19 +8,20 @@ static constexpr size_t maxFilterCount = 48;
 
 struct Filter {
 	int32_t Id;
+	int32_t Mask;
 
 	int Bus;
 	int Callback;
 };
 
 size_t filterCount = 0;
-Filter filters[maxFilterCount] = {0};
+Filter filters[maxFilterCount];
 
 static Filter* getFilterForFrame(size_t busIndex, const CANRxFrame& frame) {
 	for (size_t i = 0; i < filterCount; i++) {
 		auto& filter = filters[i];
 
-		if (CAN_ID(frame) == filter.Id) {
+		if ((CAN_ID(frame) & filter.Mask) == filter.Id) {
 			if (filter.Bus == -1 || filter.Bus == busIndex) {
 				return &filter;
 			}
@@ -170,17 +171,18 @@ void resetLuaCanRx() {
 
 void addLuaCanRxFilter(int32_t eid, int bus) {
 	// "catch-all" callback has no callback, so pass -1
-	addLuaCanRxFilter(eid, bus, -1);
+	addLuaCanRxFilter(eid, 0xFFFFFFFF, bus, -1);
 }
 
-void addLuaCanRxFilter(int32_t eid, int bus, int callback) {
+void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
 	if (filterCount >= maxFilterCount) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}
 
-	efiPrintf("Added Lua CAN RX filter: %d", eid);
+	efiPrintf("Added Lua CAN RX filter %x with%s custom function", eid, (callback == -1 ? "out" : ""));
 
 	filters[filterCount].Id = eid;
+	filters[filterCount].Mask = mask;
 	filters[filterCount].Bus = bus;
 	filters[filterCount].Callback = callback;
 

@@ -671,8 +671,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "canRxAdd", [](lua_State* l) {
 		auto eid = luaL_checkinteger(l, 1);
 
-		// TODO: add bus parameter to this function
-
 		addLuaCanRxFilter(eid, -1);
 
 		return 0;
@@ -680,11 +678,23 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "canRxAdd2", [](lua_State* l) {
 		auto eid = luaL_checkinteger(l, 1);
-		auto bus = luaL_checkinteger(l, 2);
+		auto mask = luaL_checkinteger(l, 2);
+		auto bus = luaL_checkinteger(l, 3);
 
-		int funcRef = luaL_ref(l, LUA_REGISTRYINDEX);
+		// pop 3 elements from stack, only function (if present) should remain now
+		for (int i = 0; i < 3; i++) {
+			lua_remove(l, 1);
+		}
 
-		addLuaCanRxFilter(eid, bus, funcRef);
+		// If there's a function at the top of the stack, register it as a specific handler for this ID
+		if (lua_type(l, 1) == LUA_TFUNCTION) {
+			int funcRef = luaL_ref(l, LUA_REGISTRYINDEX);
+
+			addLuaCanRxFilter(eid, mask, bus, funcRef);
+		} else {
+			// A function was not passed
+			addLuaCanRxFilter(eid, mask, bus, -1);
+		}
 
 		return 0;
 	});
