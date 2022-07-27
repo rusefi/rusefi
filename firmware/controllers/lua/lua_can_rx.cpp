@@ -169,17 +169,12 @@ void resetLuaCanRx() {
 	filterCount = 0;
 }
 
-void addLuaCanRxFilter(int32_t eid, int bus) {
-	// "catch-all" callback has no callback, so pass -1
-	addLuaCanRxFilter(eid, 0xFFFFFFFF, bus, -1);
-}
-
 void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
 	if (filterCount >= maxFilterCount) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}
 
-	efiPrintf("Added Lua CAN RX filter %x with%s custom function", eid, (callback == -1 ? "out" : ""));
+	efiPrintf("Added Lua CAN RX filter id 0x%x mask 0x%x with%s custom function", eid, mask, (callback == -1 ? "out" : ""));
 
 	filters[filterCount].Id = eid;
 	filters[filterCount].Mask = mask;
