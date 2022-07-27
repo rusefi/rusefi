@@ -384,7 +384,7 @@ struct LuaSensor final : public StoredValueSensor {
 		: StoredValueSensor(findSensorByName(l, name), MS2NT(100))
 	{
 		// do a soft collision check to avoid a fatal error from the hard check in Register()
-		if (Sensor::hasSensor(type())) {
+		if (l && Sensor::hasSensor(type())) {
 			luaL_error(l, "Tried to create a Lua sensor of type %s, but one was already registered.", getSensorName());
 		} else {
 			Register();
