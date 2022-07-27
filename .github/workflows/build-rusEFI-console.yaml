@@ -45,7 +45,7 @@ jobs:
 
       - name: Attach console junit results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: console junit
           path: ./java_console/build/*.txt
