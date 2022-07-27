@@ -421,6 +421,7 @@ int getLuaFunc(lua_State* l) {
 	}
 }
 
+#if EFI_CAN_SUPPORT
 int lua_canRxAdd(lua_State* l) {
 	uint32_t eid;
 
@@ -513,6 +514,7 @@ int lua_canRxAddMask(lua_State* l) {
 
 	return 0;
 }
+#endif // EFI_CAN_SUPPORT
 
 void configureRusefiLuaHooks(lua_State* l) {
 	LuaClass<Timer> luaTimer(l, "Timer");
