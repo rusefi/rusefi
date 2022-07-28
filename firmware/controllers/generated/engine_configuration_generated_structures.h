@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 23:08:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 28 06:53:47 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -932,15 +932,26 @@ struct engine_configuration_s {
 	 */
 	injection_mode_e injectionMode;
 	/**
-	 * need 4 byte alignment
-	units
+	 * Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 	 * offset 386
 	 */
-	uint8_t alignmentFill_at_386[2];
+	uint16_t boostControlMinRpm;
 	/**
+	 * Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 	 * offset 388
 	 */
-	angle_t unusedHere1341234;
+	uint8_t boostControlMinTps;
+	/**
+	 * Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
+	 * offset 389
+	 */
+	uint8_t boostControlMinMap;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 390
+	 */
+	uint8_t alignmentFill_at_390[2];
 	/**
 	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * There is tapering towards running timing advance
@@ -1134,7 +1145,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t failedMapFallback;
 	/**
-	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.
+	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 	%
 	 * offset 486
 	 */
@@ -3138,76 +3149,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1628 bit 8 */
-	bool unusedBit_540_8 : 1 {};
+	bool unusedBit_542_8 : 1 {};
 	/**
 	offset 1628 bit 9 */
-	bool unusedBit_540_9 : 1 {};
+	bool unusedBit_542_9 : 1 {};
 	/**
 	offset 1628 bit 10 */
-	bool unusedBit_540_10 : 1 {};
+	bool unusedBit_542_10 : 1 {};
 	/**
 	offset 1628 bit 11 */
-	bool unusedBit_540_11 : 1 {};
+	bool unusedBit_542_11 : 1 {};
 	/**
 	offset 1628 bit 12 */
-	bool unusedBit_540_12 : 1 {};
+	bool unusedBit_542_12 : 1 {};
 	/**
 	offset 1628 bit 13 */
-	bool unusedBit_540_13 : 1 {};
+	bool unusedBit_542_13 : 1 {};
 	/**
 	offset 1628 bit 14 */
-	bool unusedBit_540_14 : 1 {};
+	bool unusedBit_542_14 : 1 {};
 	/**
 	offset 1628 bit 15 */
-	bool unusedBit_540_15 : 1 {};
+	bool unusedBit_542_15 : 1 {};
 	/**
 	offset 1628 bit 16 */
-	bool unusedBit_540_16 : 1 {};
+	bool unusedBit_542_16 : 1 {};
 	/**
 	offset 1628 bit 17 */
-	bool unusedBit_540_17 : 1 {};
+	bool unusedBit_542_17 : 1 {};
 	/**
 	offset 1628 bit 18 */
-	bool unusedBit_540_18 : 1 {};
+	bool unusedBit_542_18 : 1 {};
 	/**
 	offset 1628 bit 19 */
-	bool unusedBit_540_19 : 1 {};
+	bool unusedBit_542_19 : 1 {};
 	/**
 	offset 1628 bit 20 */
-	bool unusedBit_540_20 : 1 {};
+	bool unusedBit_542_20 : 1 {};
 	/**
 	offset 1628 bit 21 */
-	bool unusedBit_540_21 : 1 {};
+	bool unusedBit_542_21 : 1 {};
 	/**
 	offset 1628 bit 22 */
-	bool unusedBit_540_22 : 1 {};
+	bool unusedBit_542_22 : 1 {};
 	/**
 	offset 1628 bit 23 */
-	bool unusedBit_540_23 : 1 {};
+	bool unusedBit_542_23 : 1 {};
 	/**
 	offset 1628 bit 24 */
-	bool unusedBit_540_24 : 1 {};
+	bool unusedBit_542_24 : 1 {};
 	/**
 	offset 1628 bit 25 */
-	bool unusedBit_540_25 : 1 {};
+	bool unusedBit_542_25 : 1 {};
 	/**
 	offset 1628 bit 26 */
-	bool unusedBit_540_26 : 1 {};
+	bool unusedBit_542_26 : 1 {};
 	/**
 	offset 1628 bit 27 */
-	bool unusedBit_540_27 : 1 {};
+	bool unusedBit_542_27 : 1 {};
 	/**
 	offset 1628 bit 28 */
-	bool unusedBit_540_28 : 1 {};
+	bool unusedBit_542_28 : 1 {};
 	/**
 	offset 1628 bit 29 */
-	bool unusedBit_540_29 : 1 {};
+	bool unusedBit_542_29 : 1 {};
 	/**
 	offset 1628 bit 30 */
-	bool unusedBit_540_30 : 1 {};
+	bool unusedBit_542_30 : 1 {};
 	/**
 	offset 1628 bit 31 */
-	bool unusedBit_540_31 : 1 {};
+	bool unusedBit_542_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -4943,4 +4954,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jul 20 23:08:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 28 06:53:47 UTC 2022
