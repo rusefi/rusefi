@@ -158,7 +158,16 @@ void BoostController::update() {
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
 
-	ClosedLoopController::update();
+	bool rpmTooLow = Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->boostControlMinRpm;
+	bool tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;
+	bool mapTooLow = Sensor::getOrZero(SensorType::Map) < engineConfiguration->boostControlMinMap;
+
+	if (rpmTooLow || tpsTooLow || mapTooLow) {
+		// Passing unexpected will use the safe duty cycle configured by the user
+		setOutput(unexpected);
+	} else {
+		ClosedLoopController::update();
+	}
 }
 
 static bool hasInitBoost = false;
