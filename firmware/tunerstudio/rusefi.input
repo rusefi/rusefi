@@ -1558,7 +1558,7 @@ menuDialog = main
         subMenu = vvtTable2Tbl,             "VVT exhaust target", { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 
 		subMenu = std_separator
-		subMenu = auxInputsDialog,        	"Aux inputs"
+		subMenu = auxInputsDialog,        	"Lua Analog Inputs"
 		subMenu = luaOutputs,			    "Lua Script PWM Outputs"
 		subMenu = scriptSetting,        "Lua Script Settings"
 
@@ -3448,7 +3448,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = scriptSettingDialog, "Script Settings", border
 		panel = scriptSetting,	East
 		
-	dialog = auxInputsDialog, "Aux Analog Inputs"
+	dialog = auxInputsDialog, "Lua Analog Inputs"
 		field = "ADC #1",								auxAnalogInputs1
 		field = "ADC #2",								auxAnalogInputs2
 		field = "ADC #3",								auxAnalogInputs3
