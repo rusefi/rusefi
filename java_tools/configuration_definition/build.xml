@@ -10,7 +10,7 @@
 
     <target name="antlr">
         <echo message="Invoking grammar generator..."/>
-        <java jar="lib/antlr-4.9.3-complete.jar" args="-o src/main/java/com/rusefi/generated src/main/antlr/RusefiConfigGrammar.g4" fork="true" failonerror="true" />
+        <java jar="lib/antlr-4.9.3-complete.jar" args="-o build/generated-src/antlr/main src/main/antlr/RusefiConfigGrammar.g4" fork="true" failonerror="true" />
     </target>
 
     <target name="compile" depends="antlr">
@@ -34,6 +34,7 @@
                 classpath="${console_path}/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.9.3-complete.jar">
             <src path="src/main/java"/>
             <src path="src/test/java"/>
+            <src path="build/generated-src/antlr/main"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/inifile/src/main/java"/>
             <src path="${console_path}/logging/src/main/java"/>
