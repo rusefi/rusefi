@@ -7,7 +7,7 @@
 void FunctionalSensor::postRawValue(float inputValue, efitick_t timestamp) {
 	// If no function is set, this sensor isn't valid.
 	if (!m_function) {
-		invalidate();
+		invalidate(UnexpectedCode::Configuration);
 		return;
 	}
 
@@ -21,6 +21,6 @@ void FunctionalSensor::postRawValue(float inputValue, efitick_t timestamp) {
 	if (r.Valid) {
 		setValidValue(r.Value, timestamp);
 	} else {
-		invalidate();
+		invalidate(r.Code);
 	}
 }
