@@ -62,7 +62,7 @@ private:
 
 		// If the voltage for closed vs. open is very near, something is wrong with your calibration
 		if (split < 0.5f) {
-			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
+			firmwareError(OBD_TPS_Configuration, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
 					cfg.open,
 					cfg.closed);
 			return false;
@@ -105,7 +105,7 @@ public:
 			bool tooCloseOpen = absF(primary.open - secondary.open) < 0.2f;
 
 			if (hasBothSensors && tooCloseClosed && tooCloseOpen) {
-				firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
+				firmwareError(OBD_TPS_Configuration, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
 				return;
 			}
 		}
