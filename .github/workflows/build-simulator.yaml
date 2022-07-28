@@ -50,5 +50,5 @@ jobs:
         path: ./simulator/build/rusefi_simulator
 
     - name: Configuration Definition CI, without pushing new .jar
-      working-directory: ./java_tools/configuration_definition
-      run: ant
+      working-directory: ./android
+      run: ./gradlew :config_definition:shadowJar
