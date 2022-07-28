@@ -145,11 +145,17 @@ void Sensor::unregister() {
 	return &s_sensorRegistry[index];
 }
 
+#if EFI_UNIT_TEST
+// scary nullable return result thus you probably do not need this in production code
 /*static*/ const Sensor *Sensor::getSensorOfType(SensorType type) {
 	auto entry = getEntryForType(type);
 	return entry ? entry->getSensor() : nullptr;
 }
+#endif // EFI_UNIT_TEST
 
+/**
+ * @returns NotNull: sensor result or UnexpectedCode::Configuration if sensor is not registered
+ */
 /*static*/ SensorResult Sensor::get(SensorType type) {
 	const auto entry = getEntryForType(type);
 
