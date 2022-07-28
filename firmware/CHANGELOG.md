@@ -29,6 +29,7 @@ Release template (copy/paste this for new release):
  - raw voltage gauges for Lua script aux analog inputs #4346
  - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199 #4230
  - counter-noise measure for custom skipped trigger wheels #4375
+ - Many more options for Lua CAN rx filters/callbacks #4387
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
