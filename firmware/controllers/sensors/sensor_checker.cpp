@@ -83,9 +83,10 @@ inline const char* describeUnexpected(UnexpectedCode code) {
 		case UnexpectedCode::Low: "input too low";
 		case UnexpectedCode::Inconsistent: "is inconsistent";
 		case UnexpectedCode::Configuration: "is misconfigured";
+		case UnexpectedCode::Unknown:
+		default:
+			return "unknown";
 	}
-
-	return "unknown";
 }
 
 static void check(SensorType type) {
