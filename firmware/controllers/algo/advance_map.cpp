@@ -55,10 +55,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	    engine->module<IdleController>()->isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
-		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
-		if (valid) {
+		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+		if (tps) {
 			// interpolate between idle table and normal (running) table using TPS threshold
-			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps.Value);
 		}
 	}
 
@@ -80,14 +80,14 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 }
 
 angle_t getAdvanceCorrections(int rpm) {
-	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
+	auto iat = Sensor::get(SensorType::Iat);
 
-	if (!iatValid) {
+	if (!iat) {
 		engine->engineState.timingIatCorrection = 0;
 	} else {
 		engine->engineState.timingIatCorrection = interpolate3d(
 			config->ignitionIatCorrTable,
-			config->ignitionIatCorrLoadBins, iat,
+			config->ignitionIatCorrLoadBins, iat.Value,
 			config->ignitionIatCorrRpmBins, rpm
 		);
 	}

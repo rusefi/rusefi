@@ -16,11 +16,15 @@ void LinearFunc::configure(float in1, float out1, float in2, float out2, float m
 SensorResult LinearFunc::convert(float inputValue) const {
 	float result = m_a * inputValue + m_b;
 
-	// Bounds check
-	bool isValid = result <= m_maxOutput && result >= m_minOutput;
+	// Bounds checks
+	// Flipped error codes in case of m_a < 0 so that they indicate whether the input
+	// voltage is high/low, instead of the output high/low
+	if (result > m_maxOutput) {
+		return m_a > 0 ? UnexpectedCode::High : UnexpectedCode::Low;
+	}
 
-	if (!isValid) {
-		return unexpected;
+	if (result < m_minOutput) {
+		return m_a > 0 ? UnexpectedCode::Low : UnexpectedCode::High;
 	}
 
 	return result;

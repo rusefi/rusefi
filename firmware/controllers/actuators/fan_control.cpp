@@ -5,16 +5,16 @@
 #include "bench_test.h"
 
 bool FanController::getState(bool acActive, bool lastState) {
-	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
+	auto clt = Sensor::get(SensorType::Clt);
 
 	cranking = engine->rpmCalculator.isCranking();
 	notRunning = !engine->rpmCalculator.isRunning();
 
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
-	brokenClt = !cltValid;
+	brokenClt = !clt;
 	enabledForAc = enableWithAc() && acActive;
-	hot = clt > getFanOnTemp();
-	cold = clt < getFanOffTemp();
+	hot = clt.Value > getFanOnTemp();
+	cold = clt.Value < getFanOffTemp();
 
 	if (cranking) {
 		// Inhibit while cranking

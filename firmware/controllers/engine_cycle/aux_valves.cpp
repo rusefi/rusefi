@@ -81,17 +81,17 @@ void recalculateAuxValveTiming() {
 		return;
 	}
 
-	auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
-	if (!valid) {
+	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	if (!tps) {
 		// error should be already reported by now
 		return;
 	}
 
-	engine->engineState.auxValveStart = interpolate2d(tps,
+	engine->engineState.auxValveStart = interpolate2d(tps.Value,
 			config->scriptCurve1Bins,
 			config->scriptCurve1);
 
-	engine->engineState.auxValveEnd = interpolate2d(tps,
+	engine->engineState.auxValveEnd = interpolate2d(tps.Value,
 			config->scriptCurve2Bins,
 			config->scriptCurve2);
 
