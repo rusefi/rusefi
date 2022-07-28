@@ -256,6 +256,7 @@ jobs:
     - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
       with:
+        distribution: 'zulu'
         java-version: '8'
 
     - name: Install multilib, mingw, sshpass and mtools
@@ -401,6 +402,7 @@ jobs:
         submodules: recursive
     - uses: actions/setup-java@v3
       with:
+        distribution: 'zulu'
         java-version: '8'
 
     - name: Install multilib, mingw, and sshpass
