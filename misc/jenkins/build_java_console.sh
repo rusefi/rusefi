@@ -5,8 +5,8 @@ java -version
 
 echo "Generating Java (Antlr)"
 cd android
-ant ./gradlew :config_definition:generateGrammarSource
-cd ../..
+./gradlew :config_definition:generateGrammarSource
+cd ..
 
 echo "Building java console"
 pwd
