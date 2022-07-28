@@ -448,6 +448,113 @@ private:
 	pid_s m_params;
 };
 
+static bool isFunction(lua_State* l, int idx) {
+	return lua_type(l, idx) == LUA_TFUNCTION;
+}
+
+int getLuaFunc(lua_State* l) {
+	if (!isFunction(l, 1)) {
+		return luaL_error(l, "expected function");
+	} else {
+		return luaL_ref(l, LUA_REGISTRYINDEX);
+	}
+}
+
+#if EFI_CAN_SUPPORT
+int lua_canRxAdd(lua_State* l) {
+	uint32_t eid;
+
+	// defaults if not passed
+	int bus = -1;
+	int callback = -1;
+
+	switch (lua_gettop(l)) {
+		case 1:
+			// handle canRxAdd(id)
+			eid = luaL_checkinteger(l, 1);
+			break;
+
+		case 2:
+			if (isFunction(l, 2)) {
+				// handle canRxAdd(id, callback)
+				eid = luaL_checkinteger(l, 1);
+				lua_remove(l, 1);
+				callback = getLuaFunc(l);
+			} else {
+				// handle canRxAdd(bus, id)
+				bus = luaL_checkinteger(l, 1);
+				eid = luaL_checkinteger(l, 2);
+			}
+
+			break;
+		case 3:
+			// handle canRxAdd(bus, id, callback)
+			bus = luaL_checkinteger(l, 1);
+			eid = luaL_checkinteger(l, 2);
+			lua_remove(l, 1);
+			lua_remove(l, 1);
+			callback = getLuaFunc(l);
+			break;
+		default:
+			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
+	}
+
+	addLuaCanRxFilter(eid, 0x1FFFFFFF, bus, callback);
+
+	return 0;
+}
+
+int lua_canRxAddMask(lua_State* l) {
+	uint32_t eid;
+	uint32_t mask;
+
+	// defaults if not passed
+	int bus = -1;
+	int callback = -1;
+
+	switch (lua_gettop(l)) {
+		case 2:
+			// handle canRxAddMask(id, mask)
+			eid = luaL_checkinteger(l, 1);
+			mask = luaL_checkinteger(l, 2);
+			break;
+
+		case 3:
+			if (isFunction(l, 3)) {
+				// handle canRxAddMask(id, mask, callback)
+				eid = luaL_checkinteger(l, 1);
+				mask = luaL_checkinteger(l, 2);
+				lua_remove(l, 1);
+				lua_remove(l, 1);
+				callback = getLuaFunc(l);
+			} else {
+				// handle canRxAddMask(bus, id, mask)
+				bus = luaL_checkinteger(l, 1);
+				eid = luaL_checkinteger(l, 2);
+				mask = luaL_checkinteger(l, 3);
+			}
+
+			break;
+		case 4:
+			// handle canRxAddMask(bus, id, mask, callback)
+			bus = luaL_checkinteger(l, 1);
+			eid = luaL_checkinteger(l, 2);
+			mask = luaL_checkinteger(l, 3);
+			lua_remove(l, 1);
+			lua_remove(l, 1);
+			lua_remove(l, 1);
+			callback = getLuaFunc(l);
+			break;
+		default:
+			return luaL_error(l, "Wrong number of arguments to canRxAddMask. Got %d, expected 2, 3, or 4.");
+	}
+
+	addLuaCanRxFilter(eid, mask, bus, callback);
+
+	return 0;
+}
+#endif // EFI_CAN_SUPPORT
+
 void configureRusefiLuaHooks(lua_State* l) {
 	LuaClass<Timer> luaTimer(l, "Timer");
 	luaTimer
@@ -707,12 +814,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 
 #if EFI_CAN_SUPPORT
-	lua_register(l, "canRxAdd", [](lua_State* l) {
-		auto eid = luaL_checkinteger(l, 1);
-		addLuaCanRxFilter(eid);
-
-		return 0;
-	});
+	lua_register(l, "canRxAdd", lua_canRxAdd);
+	lua_register(l, "canRxAddMask", lua_canRxAddMask);
 #endif // EFI_CAN_SUPPORT
 #endif // not EFI_UNIT_TEST
 }
