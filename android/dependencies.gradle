@@ -1,6 +1,7 @@
 ext {
   libs = [
           junit          : "junit:junit:4.13",
+          mockito        : "org.mockito:mockito-all:1.10.19",
           annotations    : "org.jetbrains:annotations:16.0.1",
           javaxJson      : "javax.json:javax.json-api:1.1.4",
           snakeyaml      : "org.yaml:snakeyaml:1.26",
