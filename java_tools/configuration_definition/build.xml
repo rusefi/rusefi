@@ -10,7 +10,7 @@
 
     <target name="antlr">
         <echo message="Invoking grammar generator..."/>
-        <java jar="lib/antlr-4.9.3-complete.jar" args="-o src/main/java/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" failonerror="true" />
+        <java jar="lib/antlr-4.9.3-complete.jar" args="-o src/main/java/com/rusefi/generated src/main/antlr/RusefiConfigGrammar.g4" fork="true" failonerror="true" />
     </target>
 
     <target name="compile" depends="antlr">
