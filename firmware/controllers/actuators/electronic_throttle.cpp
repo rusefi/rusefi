@@ -650,7 +650,7 @@ struct EtbImpl final : public TBase {
 
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
-			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
+			firmwareError(OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
 			TBase::m_isAutocal = false;
 			return;
 		}
