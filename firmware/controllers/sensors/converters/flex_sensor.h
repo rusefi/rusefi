@@ -12,13 +12,17 @@ public:
 	SensorResult convert(float frequency) const override {
 		// Sensor should only report 50-150hz, significantly outside that range indicates a problem
 		// it changes to 200hz+ to indicate methanol "contamination"
-		if (frequency > 45 && frequency < 155) {
-			float flexPct = clampF(0, frequency - 50, 100);
-
-			return m_filter.filter(flexPct);
-		} else {
-			return unexpected;
+		if (frequency < 45) {
+			return UnexpectedCode::Low;
 		}
+
+		if (frequency > 155) {
+			return UnexpectedCode::High;
+		}
+
+		float flexPct = clampF(0, frequency - 50, 100);
+
+		return m_filter.filter(flexPct);
 	}
 
 private:

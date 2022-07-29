@@ -8,11 +8,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v3
       with:
+        distribution: 'zulu'
         java-version: '8'
 
     - name: Install multilib
@@ -43,11 +44,11 @@ jobs:
       run: ./build/rusefi_simulator 10
 
     - name: Upload built simulator
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator
 
     - name: Configuration Definition CI, without pushing new .jar
-      working-directory: ./java_tools/configuration_definition
-      run: ant
+      working-directory: ./android
+      run: ./gradlew :config_definition:shadowJar

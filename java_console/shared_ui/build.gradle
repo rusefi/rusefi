@@ -1,0 +1,14 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+    api project(':ecu_io')
+    api project(':models')
+    api ts_plugin_libs.httpclient
+    api ts_plugin_libs.httpmime
+    api libs.json
+    testImplementation libs.junit
+}

@@ -5,21 +5,21 @@ bool DfcoController::getState() const {
 		return false;
 	}
 
-	const auto [tpsValid, tpsPos] = Sensor::get(SensorType::DriverThrottleIntent);
-	const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
-	const auto [mapValid, map] = Sensor::get(SensorType::Map);
+	const auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	const auto clt = Sensor::get(SensorType::Clt);
+	const auto map = Sensor::get(SensorType::Map);
 
 	// If some sensor is broken, inhibit DFCO
-	if (!tpsValid || !cltValid || !mapValid) {
+	if (!tps || !clt || !map) {
 		return false;
 	}
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	bool mapActivate = map < engineConfiguration->coastingFuelCutMap;
-	bool tpsActivate = tpsPos < engineConfiguration->coastingFuelCutTps;
-	bool cltActivate = clt > engineConfiguration->coastingFuelCutClt;
+	bool mapActivate = map.Value < engineConfiguration->coastingFuelCutMap;
+	bool tpsActivate = tps.Value < engineConfiguration->coastingFuelCutTps;
+	bool cltActivate = clt.Value > engineConfiguration->coastingFuelCutClt;
 	// True if throttle, MAP, and CLT are all acceptable for DFCO to occur
 	bool dfcoAllowed = mapActivate && tpsActivate && cltActivate;
 

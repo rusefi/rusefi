@@ -91,6 +91,12 @@ public:
 	}
 
 	void init(bool isFordTps, RedundantFordTps* fordTps, const TpsConfig& primary, const TpsConfig& secondary) {
+		bool hasFirst = m_pri.init(primary);
+		if (!hasFirst) {
+			// no input if we have no first channel
+			return;
+		}
+
 		{
 			// Check that the primary and secondary aren't too close together - if so, the user may have done
 			// an unsafe thing where they wired a single sensor to both inputs. Don't do that!
@@ -103,8 +109,6 @@ public:
 				return;
 			}
 		}
-
-		m_pri.init(primary);
 
 		bool hasSecond = m_sec.init(secondary);
 

@@ -61,7 +61,8 @@ void initLuaCanRx();
 // Called when the user script is unloaded, resets any CAN rx filters
 void resetLuaCanRx();
 // Adds a frame ID to listen to
-void addLuaCanRxFilter(int32_t eid);
+void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback);
+
 // Called from the Lua loop to process any pending CAN frames
 void doLuaCanRx(LuaHandle& ls);
 // Called from the CAN RX thread to queue a frame for Lua consumption

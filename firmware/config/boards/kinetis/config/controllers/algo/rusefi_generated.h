@@ -198,6 +198,9 @@
 #define boardUseTempPullUp_offset 1360
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
+#define boostControlMinMap_offset 389
+#define boostControlMinRpm_offset 386
+#define boostControlMinTps_offset 388
 #define boostControlPin_offset 980
 #define boostControlPinMode_offset 982
 #define boostControlSafeDutyCycle_offset 486
@@ -422,11 +425,12 @@
 #define cylindersCount_offset 368
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",20="DBG_20",24="DBG_24",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",25="DBG_CJ125",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",2="DBG_GPPWM",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",7="DBG_VVT_1_PID",49="DBG_VVT_2_PID",50="DBG_VVT_3_PID",51="DBG_VVT_4_PID",23="UNUSED23"
+#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",2="DBG_2",20="DBG_20",24="DBG_24",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",25="DBG_CJ125",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",7="DBG_VVT_1_PID",49="DBG_VVT_2_PID",50="DBG_VVT_3_PID",51="DBG_VVT_4_PID",23="UNUSED23"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
 #define debug_mode_e_DBG_16 16
+#define debug_mode_e_DBG_2 2
 #define debug_mode_e_DBG_20 20
 #define debug_mode_e_DBG_24 24
 #define debug_mode_e_DBG_26 26
@@ -451,7 +455,6 @@
 #define debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID 17
 #define debug_mode_e_DBG_ETB_AUTOTUNE 39
 #define debug_mode_e_DBG_EXECUTOR 18
-#define debug_mode_e_DBG_GPPWM 2
 #define debug_mode_e_DBG_INSTANT_RPM 22
 #define debug_mode_e_DBG_ION 30
 #define debug_mode_e_DBG_KNOCK 15
@@ -474,7 +477,7 @@
 #define debug_mode_e_DBG_VVT_2_PID 49
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 856
 #define debugMode_offset 1604
@@ -1921,7 +1924,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2284001661
+#define SIGNATURE_HASH 2937955912
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2476,7 +2479,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.23.kin.2284001661"
+#define TS_SIGNATURE "rusEFI 2022.07.28.kin.2937955912"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2533,31 +2536,30 @@
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_31_offset 1372
 #define unusedBit_45_31_offset 120
-#define unusedBit_543_10_offset 1628
-#define unusedBit_543_11_offset 1628
-#define unusedBit_543_12_offset 1628
-#define unusedBit_543_13_offset 1628
-#define unusedBit_543_14_offset 1628
-#define unusedBit_543_15_offset 1628
-#define unusedBit_543_16_offset 1628
-#define unusedBit_543_17_offset 1628
-#define unusedBit_543_18_offset 1628
-#define unusedBit_543_19_offset 1628
-#define unusedBit_543_20_offset 1628
-#define unusedBit_543_21_offset 1628
-#define unusedBit_543_22_offset 1628
-#define unusedBit_543_23_offset 1628
-#define unusedBit_543_24_offset 1628
-#define unusedBit_543_25_offset 1628
-#define unusedBit_543_26_offset 1628
-#define unusedBit_543_27_offset 1628
-#define unusedBit_543_28_offset 1628
-#define unusedBit_543_29_offset 1628
-#define unusedBit_543_30_offset 1628
-#define unusedBit_543_31_offset 1628
-#define unusedBit_543_8_offset 1628
-#define unusedBit_543_9_offset 1628
-#define unusedHere1341234_offset 388
+#define unusedBit_545_10_offset 1628
+#define unusedBit_545_11_offset 1628
+#define unusedBit_545_12_offset 1628
+#define unusedBit_545_13_offset 1628
+#define unusedBit_545_14_offset 1628
+#define unusedBit_545_15_offset 1628
+#define unusedBit_545_16_offset 1628
+#define unusedBit_545_17_offset 1628
+#define unusedBit_545_18_offset 1628
+#define unusedBit_545_19_offset 1628
+#define unusedBit_545_20_offset 1628
+#define unusedBit_545_21_offset 1628
+#define unusedBit_545_22_offset 1628
+#define unusedBit_545_23_offset 1628
+#define unusedBit_545_24_offset 1628
+#define unusedBit_545_25_offset 1628
+#define unusedBit_545_26_offset 1628
+#define unusedBit_545_27_offset 1628
+#define unusedBit_545_28_offset 1628
+#define unusedBit_545_29_offset 1628
+#define unusedBit_545_30_offset 1628
+#define unusedBit_545_31_offset 1628
+#define unusedBit_545_8_offset 1628
+#define unusedBit_545_9_offset 1628
 #define useAdvanceCorrectionsForCranking_offset 1372
 #define useCicPidForIdle_offset 120
 #define useCltBasedRpmLimit_offset 1372

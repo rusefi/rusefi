@@ -28,3 +28,8 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+// gradlew allDeps 
+subprojects {
+    task allDeps(type: DependencyReportTask) {}
+}

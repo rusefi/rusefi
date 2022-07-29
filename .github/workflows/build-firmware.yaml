@@ -23,6 +23,7 @@ jobs:
             hellen72,
             hellen81,
             hellen88bmw,
+            hellen88bmw_avr,
             hellen-nb1,
             hellen-gm-e67,
             hellenNA8_96,
@@ -79,6 +80,10 @@ jobs:
             ini-file: rusefi_harley81.ini
 
           - build-target: hellen88bmw
+            folder: hellen/hellen88bmw
+            ini-file: rusefi_hellen88bmw.ini
+
+          - build-target: hellen88bmw_avr
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
 
@@ -243,14 +248,15 @@ jobs:
       if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
       run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       if: ${{ env.skip != 'true' }}
       with:
         submodules: recursive
 
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v3
       if: ${{ env.skip != 'true' }}
       with:
+        distribution: 'zulu'
         java-version: '8'
 
     - name: Install multilib, mingw, sshpass and mtools
@@ -347,42 +353,42 @@ jobs:
 
     - name: Upload build elf
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload build bin
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.hex
         path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
@@ -391,11 +397,12 @@ jobs:
   build-primary-bundle:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v3
       with:
+        distribution: 'zulu'
         java-version: '8'
 
     - name: Install multilib, mingw, and sshpass
@@ -448,14 +455,14 @@ jobs:
 
     - name: Attach console junit results
       if: always()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: console primary junit
         path: ./java_console/build/*.txt
 
     - name: Upload primary bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_bundle.zip
         path: ./artifacts/rusefi_bundle.zip

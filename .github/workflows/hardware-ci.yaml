@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{matrix.runs-on}}
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
 
@@ -74,8 +74,8 @@ jobs:
       run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
     - name: Generate Java (Antlr)
-      working-directory: ./java_tools/configuration_definition
-      run: ant antlr
+      working-directory: ./android
+      run: ./gradlew :config_definition:generateGrammarSource
 
     # This both compiles and runs HW CI tests
     - name: Run Hardware CI

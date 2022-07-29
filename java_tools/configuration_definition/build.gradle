@@ -1,8 +1,42 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
+    id 'antlr'
 }
 
 apply from: '../../android/dependencies.gradle'
 
 defaultTasks 'shadowJar'
+
+dependencies {
+    implementation project(':logging')
+    implementation project(':models')
+    implementation project(':enum_to_string')
+    antlr libs.antlr
+}
+
+shadowJar {
+    /*
+     to exclude suffix '-all'
+     in resulting archive file name
+    */
+    archiveBaseName = 'ConfigDefinition'
+    archiveClassifier = ''
+
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+                'Main-Class': 'com.rusefi.ConfigDefinition'
+        )
+    }
+    /*
+     to keep only classes from logging
+     and loggin-api as in build.xml
+    */
+    dependencies {
+        exclude(dependency(libs.jsr305))
+        exclude(dependency(libs.junit))
+        exclude(dependency(libs.annotations))
+        exclude(dependency('com.ibm.icu:icu4j:.*'))
+    }
+}
