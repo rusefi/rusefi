@@ -85,8 +85,8 @@ typedef enum {
 #define CMD_SR				CMD_W(CMD_SR_CODE, 0x03)
 #define CMD_OE_SET			CMD_W(0x1c, 0x02)
 #define CMD_OE_CLR			CMD_W(0x1c, 0x01)
-#define CMD_UNLOCK			CMD_W(0x1e, 0x01)
-#define CMD_LOCK			CMD_W(0x1e, 0x02)
+#define CMD_CHIP_UNLOCK		CMD_W(0x1e, 0x01)
+//#define CMD_CHIP_LOCK		CMD_W(0x1e, 0x02)
 
 /* Diagnostic registers */
 #define REG_DIAG(n)			(0x20 + ((n) & 0x01))
@@ -645,7 +645,7 @@ int Tle8888::chip_init()
 
 	uint16_t tx[] = {
 		/* unlock */
-		CMD_UNLOCK,
+		CMD_CHIP_UNLOCK,
 		/* set INCONFIG - aux input mapping */
 		CMD_INCONFIG(0, InConfig[0]),
 		CMD_INCONFIG(1, InConfig[1]),
