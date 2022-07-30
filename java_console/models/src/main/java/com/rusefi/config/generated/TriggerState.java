@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Jul 30 14:08:00 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Jul 30 15:33:11 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -35,6 +35,7 @@ public class TriggerState {
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ECU_UNLOCK = "unlock";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
@@ -77,7 +78,6 @@ public class TriggerState {
 	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
-	public static final String CMD_UNLOCK = "unlock";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int COMPOSITE_PACKET_COUNT = 1000;
