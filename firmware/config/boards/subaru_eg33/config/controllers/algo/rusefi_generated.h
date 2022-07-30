@@ -394,6 +394,7 @@
 #define CMD_TS_WBO_UPDATE 0x15
 #define CMD_TS_X14 20
 #define CMD_TS_X31 49
+#define CMD_UNLOCK "unlock"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 2096
@@ -1906,7 +1907,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 4201231520
+#define SIGNATURE_HASH 2063273654
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2462,7 +2463,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.30.subaru_eg33_f7.4201231520"
+#define TS_SIGNATURE "rusEFI 2022.07.30.subaru_eg33_f7.2063273654"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
