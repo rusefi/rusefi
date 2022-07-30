@@ -236,7 +236,9 @@ bool isLockedFromUser() {
 void unlockEcu(int password) {
 	if (password != engineConfiguration->tuneHidingKey) {
 		efiPrintf("Nope rebooting...");
+#if EFI_PROD_CODE
 		scheduleReboot();
+#endif // EFI_PROD_CODE
 	} else {
 		efiPrintf("Unlocked! Burning...");
 		engineConfiguration->tuneHidingKey = 0;
