@@ -13,8 +13,8 @@ bool FanController::getState(bool acActive, bool lastState) {
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
 	brokenClt = !clt;
 	enabledForAc = enableWithAc() && acActive;
-	hot = clt.Value > getFanOnTemp();
-	cold = clt.Value < getFanOffTemp();
+	hot = clt.value_or(0) > getFanOnTemp();
+	cold = clt.value_or(0) < getFanOffTemp();
 
 	if (cranking) {
 		// Inhibit while cranking
