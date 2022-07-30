@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jul 30 13:47:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jul 30 15:34:02 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1132,7 +1132,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 480
 	 */
-	int tuneHidingKey;
+	int unused460;
 	/**
 	 * offset 484
 	 */
@@ -4254,10 +4254,14 @@ struct engine_configuration_s {
 	 */
 	float etbMinimumPosition;
 	/**
-	units
 	 * offset 3768
 	 */
-	uint8_t mainUnusedEnd[246];
+	uint16_t tuneHidingKey;
+	/**
+	units
+	 * offset 3770
+	 */
+	uint8_t mainUnusedEnd[244];
 	/**
 	 * need 4 byte alignment
 	units
@@ -4954,4 +4958,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jul 30 13:47:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jul 30 15:34:02 UTC 2022

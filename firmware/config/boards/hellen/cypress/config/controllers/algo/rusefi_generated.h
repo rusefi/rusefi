@@ -342,6 +342,7 @@
 #define CMD_BURNCONFIG "burnconfig"
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
+#define CMD_ECU_UNLOCK "unlock"
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
@@ -384,7 +385,6 @@
 #define CMD_TS_WBO_UPDATE 0x15
 #define CMD_TS_X14 20
 #define CMD_TS_X31 49
-#define CMD_UNLOCK "unlock"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 2096
@@ -1658,7 +1658,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 716
 #define mainRelayPinMode_offset 776
-#define mainUnusedEnd_offset 3768
+#define mainUnusedEnd_offset 3770
 #define malfunctionIndicatorPin_offset 650
 #define malfunctionIndicatorPinMode_offset 652
 #define manIdlePosition_offset 560
@@ -1941,7 +1941,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 885438734
+#define SIGNATURE_HASH 3868207281
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2496,7 +2496,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.30.hellen_cypress.885438734"
+#define TS_SIGNATURE "rusEFI 2022.07.30.hellen_cypress.3868207281"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2516,7 +2516,7 @@
 #define TsCalMode_Tps2Min 9
 #define TsCalMode_Tps2SecondaryMax 10
 #define TsCalMode_Tps2SecondaryMin 11
-#define tuneHidingKey_offset 480
+#define tuneHidingKey_offset 3768
 #define tunerStudioSerialSpeed_offset 740
 #define turboSpeedSensorInputPin_offset 1474
 #define turboSpeedSensorMultiplier_offset 1380
@@ -2544,6 +2544,7 @@
 #define unused4080_offset 3121
 #define unused443_offset 1360
 #define unused444_offset 1360
+#define unused460_offset 480
 #define unused962_offset 1040
 #define unused_1484_bit_25_offset 1372
 #define unused_1484_bit_26_offset 1372

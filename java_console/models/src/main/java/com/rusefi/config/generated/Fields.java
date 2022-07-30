@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 30 14:08:56 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 30 15:34:05 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -334,6 +334,7 @@ public class Fields {
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ECU_UNLOCK = "unlock";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
@@ -376,7 +377,6 @@ public class Fields {
 	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
-	public static final String CMD_UNLOCK = "unlock";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int coastingFuelCutClt_offset = 2096;
@@ -1619,7 +1619,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 716;
 	public static final int mainRelayPinMode_offset = 776;
-	public static final int mainUnusedEnd_offset = 3768;
+	public static final int mainUnusedEnd_offset = 3770;
 	public static final int malfunctionIndicatorPin_offset = 650;
 	public static final int malfunctionIndicatorPinMode_offset = 652;
 	public static final int manIdlePosition_offset = 560;
@@ -1889,7 +1889,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1911224068;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2379,7 +2378,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.30.all.1911224068";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.30.all.2747033275";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2397,7 +2396,7 @@ public class Fields {
 	public static final int TsCalMode_Tps2Min = 9;
 	public static final int TsCalMode_Tps2SecondaryMax = 10;
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
-	public static final int tuneHidingKey_offset = 480;
+	public static final int tuneHidingKey_offset = 3768;
 	public static final int tunerStudioSerialSpeed_offset = 740;
 	public static final int turboSpeedSensorInputPin_offset = 1474;
 	public static final int turboSpeedSensorMultiplier_offset = 1380;
@@ -2424,6 +2423,7 @@ public class Fields {
 	public static final int unused4080_offset = 3121;
 	public static final int unused443_offset = 1360;
 	public static final int unused444_offset = 1360;
+	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_25_offset = 1372;
 	public static final int unused_1484_bit_26_offset = 1372;
@@ -2710,7 +2710,7 @@ public class Fields {
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 468, FieldType.INT, trigger_type_e).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 472, FieldType.INT).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 476, FieldType.INT).setScale(1.0);
-	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 480, FieldType.INT).setScale(1.0);
+	public static final Field UNUSED460 = Field.create("UNUSED460", 480, FieldType.INT).setScale(1.0);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 484, FieldType.INT8).setScale(1.0);
 	public static final Field FAILEDMAPFALLBACK = Field.create("FAILEDMAPFALLBACK", 485, FieldType.INT8).setScale(1.0);
 	public static final Field BOOSTCONTROLSAFEDUTYCYCLE = Field.create("BOOSTCONTROLSAFEDUTYCYCLE", 486, FieldType.INT8).setScale(1.0);
@@ -3800,7 +3800,8 @@ public class Fields {
 	public static final Field TCU_32_SOLENOID_FREQ = Field.create("TCU_32_SOLENOID_FREQ", 3760, FieldType.INT16).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_3762 = Field.create("ALIGNMENTFILL_AT_3762", 3762, FieldType.INT8).setScale(1.0);
 	public static final Field ETBMINIMUMPOSITION = Field.create("ETBMINIMUMPOSITION", 3764, FieldType.FLOAT);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3768, FieldType.INT8).setScale(1.0);
+	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 3768, FieldType.INT16).setScale(1.0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3770, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_4014 = Field.create("ALIGNMENTFILL_AT_4014", 4014, FieldType.INT8).setScale(1.0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4016, FieldType.FLOAT);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4048, FieldType.FLOAT);
@@ -4089,7 +4090,7 @@ public class Fields {
 	TRIGGER_TYPE,
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
-	TUNEHIDINGKEY,
+	UNUSED460,
 	HIP9011SPIDEVICE,
 	FAILEDMAPFALLBACK,
 	BOOSTCONTROLSAFEDUTYCYCLE,
@@ -5158,6 +5159,7 @@ public class Fields {
 	TCU_32_SOLENOID_FREQ,
 	ALIGNMENTFILL_AT_3762,
 	ETBMINIMUMPOSITION,
+	TUNEHIDINGKEY,
 	MAINUNUSEDEND,
 	ALIGNMENTFILL_AT_4014,
 	ETBBIASBINS,
