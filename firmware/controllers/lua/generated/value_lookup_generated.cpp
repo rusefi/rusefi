@@ -289,6 +289,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->trigger.customTotalToothCount;
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
 		return engineConfiguration->trigger.customSkippedToothCount;
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+		return engineConfiguration->tuneHidingKey;
 	if (strEqualCaseInsensitive(name, "failedMapFallback"))
 		return engineConfiguration->failedMapFallback;
 	if (strEqualCaseInsensitive(name, "boostControlSafeDutyCycle"))
@@ -1169,6 +1171,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
 	{
 		engineConfiguration->trigger.customSkippedToothCount = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+	{
+		engineConfiguration->tuneHidingKey = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "failedMapFallback"))
