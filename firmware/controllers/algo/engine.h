@@ -470,6 +470,9 @@ void prepareOutputSignals();
 
 void validateConfiguration();
 void doScheduleStopEngine();
+void scheduleReboot();
+bool isLockedFromUser();
+void unlockEcu(int password);
 
 #define HW_CHECK_RPM 200
 

@@ -30,6 +30,8 @@
 #include "pin_repository.h"
 #endif
 
+#define SCRATCH_BUFFER_PREFIX_SIZE 3
+
 class TsChannelBase {
 public:
 	TsChannelBase(const char *name);

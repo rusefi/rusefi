@@ -328,6 +328,7 @@
 #define CMD_BURNCONFIG "burnconfig"
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
+#define CMD_ECU_UNLOCK "unlock"
 #define CMD_ENABLE "enable"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
@@ -346,6 +347,7 @@
 #define CMD_IGNITION_PIN "set_ignition_pin"
 #define CMD_INJECTION "injection"
 #define CMD_INJECTION_PIN "set_injection_pin"
+#define CMD_KEYPAD 0x17
 #define CMD_LOGIC_PIN "set_logic_input_pin"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
@@ -366,6 +368,7 @@
 #define CMD_TS_BENCH_CATEGORY 22
 #define CMD_TS_LUA_OUTPUT_CATEGORY 33
 #define CMD_TS_SOLENOID_CATEGORY 41
+#define CMD_TS_WBO_UPDATE 0x15
 #define CMD_TS_X14 20
 #define CMD_TS_X31 49
 #define CMD_VSS_PIN "vss_pin"
@@ -1641,7 +1644,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 716
 #define mainRelayPinMode_offset 776
-#define mainUnusedEnd_offset 3740
+#define mainUnusedEnd_offset 3742
 #define malfunctionIndicatorPin_offset 650
 #define malfunctionIndicatorPinMode_offset 652
 #define manIdlePosition_offset 560
@@ -1924,7 +1927,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2937955912
+#define SIGNATURE_HASH 2304348343
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2479,7 +2482,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.07.28.kin.2937955912"
+#define TS_SIGNATURE "rusEFI 2022.07.30.kin.2304348343"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2499,6 +2502,7 @@
 #define TsCalMode_Tps2Min 9
 #define TsCalMode_Tps2SecondaryMax 10
 #define TsCalMode_Tps2SecondaryMin 11
+#define tuneHidingKey_offset 3740
 #define tunerStudioSerialSpeed_offset 740
 #define turboSpeedSensorInputPin_offset 1474
 #define turboSpeedSensorMultiplier_offset 1380
@@ -2522,7 +2526,6 @@
 #define unused1740b0_offset 1628
 #define unused1740b1_offset 1628
 #define unused1740b2_offset 1628
-#define unused234234234_offset 1360
 #define unused4080_offset 3093
 #define unused443_offset 1360
 #define unused444_offset 1360
@@ -2674,3 +2677,4 @@
 #define wwMapBins_offset 3584
 #define wwTauCltValues_offset 3568
 #define wwTauMapValues_offset 3592
+#define yesUnderstandLocking_offset 1360
