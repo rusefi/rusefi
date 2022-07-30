@@ -3906,7 +3906,7 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "I understand ECU Locking",             yesUnderstandLocking
-	    field = tuneHidingKey,                          tuneHidingKey, { yesUnderstandLocking == 1 }
+	    field = "Tune read/write password",             tuneHidingKey, { yesUnderstandLocking == 1 }
 	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
