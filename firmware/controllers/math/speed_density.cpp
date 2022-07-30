@@ -78,7 +78,7 @@ temperature_t getTCharge(int rpm, float tps) {
 		return 0;
 	} else if (!clt && iat) {
 		// Intake temperature will almost always be colder (richer) than CLT - use that
-		return airTemp;
+		return iat.Value;
 	} else if (!iat && clt) {
 		// Without valid intake temperature, assume intake temp is 0C, and interpolate anyway
 		airTemp = 0;
