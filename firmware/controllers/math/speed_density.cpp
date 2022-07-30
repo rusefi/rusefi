@@ -71,7 +71,7 @@ temperature_t getTCharge(int rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 
-	float airTemp = 0;
+	float airTemp;
 
 	// Without either valid, return 0C.  It's wrong, but it'll pretend to be nice and dense, so at least you won't go lean.
 	if (!iat && !clt) {
