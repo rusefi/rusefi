@@ -3828,7 +3828,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControlWest, "Launch Control Settings EXPERIMENTAL"
+	dialog = smLaunchControlWest, "Launch Control Settings"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 
@@ -3905,6 +3905,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
+	    field = tuneHidingKey,                          tuneHidingKey
 	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
