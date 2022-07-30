@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jul 29 14:23:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 30 13:47:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -352,6 +352,7 @@ public class Fields {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
+	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -372,6 +373,7 @@ public class Fields {
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
 	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
+	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
@@ -2375,7 +2377,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.29.all.3027406799";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.30.all.4051193106";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2393,6 +2395,7 @@ public class Fields {
 	public static final int TsCalMode_Tps2Min = 9;
 	public static final int TsCalMode_Tps2SecondaryMax = 10;
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
+	public static final int tuneHidingKey_offset = 480;
 	public static final int tunerStudioSerialSpeed_offset = 740;
 	public static final int turboSpeedSensorInputPin_offset = 1474;
 	public static final int turboSpeedSensorMultiplier_offset = 1380;
@@ -2419,7 +2422,6 @@ public class Fields {
 	public static final int unused4080_offset = 3121;
 	public static final int unused443_offset = 1360;
 	public static final int unused444_offset = 1360;
-	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_25_offset = 1372;
 	public static final int unused_1484_bit_26_offset = 1372;
@@ -2706,7 +2708,7 @@ public class Fields {
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 468, FieldType.INT, trigger_type_e).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 472, FieldType.INT).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 476, FieldType.INT).setScale(1.0);
-	public static final Field UNUSED460 = Field.create("UNUSED460", 480, FieldType.INT).setScale(1.0);
+	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 480, FieldType.INT).setScale(1.0);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 484, FieldType.INT8).setScale(1.0);
 	public static final Field FAILEDMAPFALLBACK = Field.create("FAILEDMAPFALLBACK", 485, FieldType.INT8).setScale(1.0);
 	public static final Field BOOSTCONTROLSAFEDUTYCYCLE = Field.create("BOOSTCONTROLSAFEDUTYCYCLE", 486, FieldType.INT8).setScale(1.0);
@@ -4085,7 +4087,7 @@ public class Fields {
 	TRIGGER_TYPE,
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
-	UNUSED460,
+	TUNEHIDINGKEY,
 	HIP9011SPIDEVICE,
 	FAILEDMAPFALLBACK,
 	BOOSTCONTROLSAFEDUTYCYCLE,
