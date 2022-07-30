@@ -289,8 +289,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->trigger.customTotalToothCount;
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
 		return engineConfiguration->trigger.customSkippedToothCount;
-	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
-		return engineConfiguration->tuneHidingKey;
 	if (strEqualCaseInsensitive(name, "failedMapFallback"))
 		return engineConfiguration->failedMapFallback;
 	if (strEqualCaseInsensitive(name, "boostControlSafeDutyCycle"))
@@ -843,6 +841,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpTargetDecay;
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 		return engineConfiguration->vvtActivationDelayMs;
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+		return engineConfiguration->tuneHidingKey;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -1171,11 +1171,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
 	{
 		engineConfiguration->trigger.customSkippedToothCount = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
-	{
-		engineConfiguration->tuneHidingKey = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "failedMapFallback"))
@@ -2556,6 +2551,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+	{
+		engineConfiguration->tuneHidingKey = (int)value;
 		return;
 	}
 }
