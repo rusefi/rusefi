@@ -3905,7 +3905,8 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
-	    field = tuneHidingKey,                          tuneHidingKey
+	    field = "I understand ECU Locking",             yesUnderstandLocking
+	    field = tuneHidingKey,                          tuneHidingKey, { yesUnderstandLocking == 1 }
 	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
