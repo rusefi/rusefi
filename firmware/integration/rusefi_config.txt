@@ -594,7 +594,7 @@ end_struct
 
 trigger_config_s trigger;
 
-int unused460
+int tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
@@ -1927,8 +1927,10 @@ end_struct
 
 ! todo: replace with ts_command_e_ usages
 #define CMD_TS_X14 20
+#define CMD_TS_WBO_UPDATE 0x15
 ! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
+#define CMD_KEYPAD 0x17
 #define CMD_TS_LUA_OUTPUT_CATEGORY 33
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
