@@ -1012,7 +1012,7 @@ end_struct
 	bit isVerboseIAC;+Print details into rusEFI console\nenable verbose_idle
 	bit boardUseTachPullUp,"12v","5v"
 	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
-	bit unused234234234
+	bit yesUnderstandLocking,"yes","no"
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
 	bit canReadEnabled;enable can_read/disable can_read
