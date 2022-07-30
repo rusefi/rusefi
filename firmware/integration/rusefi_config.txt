@@ -1937,7 +1937,7 @@ end_struct
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
 
-#define CMD_UNLOCK "unlock"
+#define CMD_ECU_UNLOCK "unlock"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"
 #define CMD_IGNITION "ignition"
