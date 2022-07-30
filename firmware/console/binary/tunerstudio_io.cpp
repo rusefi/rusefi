@@ -22,8 +22,6 @@ size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 #define isBigPacket(size) ((size) > BLOCKING_FACTOR + 7)
 
 void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
-	auto scratchBuffer = this->scratchBuffer;
-
 	// don't transmit too large a buffer
 	efiAssertVoid(OBD_PCM_Processor_Fault, !isBigPacket(size), "copyAndWriteSmallCrcPacket tried to transmit too large a packet")
 
@@ -41,7 +39,6 @@ void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8
 void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, !isBigPacket(size), "crcAndWriteBuffer tried to transmit too large a packet")
 
-	auto scratchBuffer = this->scratchBuffer;
 	// Index 0/1 = packet size (big endian)
 	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
 	// Index 2 = response code
