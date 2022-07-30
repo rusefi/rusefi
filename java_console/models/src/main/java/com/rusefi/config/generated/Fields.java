@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 30 15:34:05 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Jul 30 16:12:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1889,6 +1889,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 509221925;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2378,7 +2379,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.30.all.2747033275";
+	public static final String TS_SIGNATURE = "rusEFI 2022.07.30.all.509221925";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2419,7 +2420,6 @@ public class Fields {
 	public static final int unused1740b0_offset = 1628;
 	public static final int unused1740b1_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
-	public static final int unused234234234_offset = 1360;
 	public static final int unused4080_offset = 3121;
 	public static final int unused443_offset = 1360;
 	public static final int unused444_offset = 1360;
@@ -2574,6 +2574,7 @@ public class Fields {
 	public static final int wwMapBins_offset = 3612;
 	public static final int wwTauCltValues_offset = 3596;
 	public static final int wwTauMapValues_offset = 3620;
+	public static final int yesUnderstandLocking_offset = 1360;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT).setScale(1.0);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 4, FieldType.INT16).setScale(1.0);
 	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 6, FieldType.INT16).setScale(1.0);
@@ -3140,7 +3141,7 @@ public class Fields {
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1360, FieldType.BIT, 2);
 	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1360, FieldType.BIT, 3);
 	public static final Field BOARDUSETEMPPULLUP = Field.create("BOARDUSETEMPPULLUP", 1360, FieldType.BIT, 4);
-	public static final Field UNUSED234234234 = Field.create("UNUSED234234234", 1360, FieldType.BIT, 5);
+	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1360, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1360, FieldType.BIT, 6);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1360, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1360, FieldType.BIT, 8);
@@ -4509,7 +4510,7 @@ public class Fields {
 	ISVERBOSEIAC,
 	BOARDUSETACHPULLUP,
 	BOARDUSETEMPPULLUP,
-	UNUSED234234234,
+	YESUNDERSTANDLOCKING,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,
 	CANREADENABLED,
