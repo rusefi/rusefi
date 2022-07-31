@@ -121,6 +121,28 @@ static void check(SensorType type) {
 	}
 }
 
+static obd_code_e getCodeForInjector(int idx, brain_pin_diag_e diag) {
+	if (idx < 0 || idx >= 12) {
+		return OBD_None;
+	}
+
+	// TODO: do something more intelligent with `diag`?
+	UNUSED(diag);
+
+	return (obd_code_e)((int)OBD_Injector_Circuit_1 + idx);
+}
+
+static obd_code_e getCodeForIgnition(int idx, brain_pin_diag_e diag) {
+	if (idx < 0 || idx >= 12) {
+		return OBD_None;
+	}
+
+	// TODO: do something more intelligent with `diag`?
+	UNUSED(diag);
+
+	return (obd_code_e)((int)OBD_Ignition_Circuit_1 + idx);
+}
+
 void SensorChecker::onSlowCallback() {
 	// Don't check when the ignition is off, or when it was just turned on (let things stabilize)
 	// TODO: also inhibit checking if we just did a flash burn, since that blocks the ECU for a few seconds.
@@ -128,6 +150,7 @@ void SensorChecker::onSlowCallback() {
 		return;
 	}
 
+	// Check sensors
 	check(SensorType::Tps1Primary);
 	check(SensorType::Tps1Secondary);
 	check(SensorType::Tps1);
@@ -145,6 +168,47 @@ void SensorChecker::onSlowCallback() {
 	check(SensorType::Iat);
 
 	check(SensorType::FuelEthanolPercent);
+
+// only bother checking these if we have GPIO chips actually capable of reporting an error
+#if BOARD_EXT_GPIOCHIPS > 0
+	// Check injectors
+	for (int i = 0; i < efi::size(enginePins.injectors); i++) {
+		InjectorOutputPin& pin = enginePins.injectors[i];
+
+		// Skip not-configured pins
+		if (!isBrainPinValid(pin.brainPin)) {
+			continue;
+		}
+
+		auto diag = pin.getDiag();
+		if (diag != PIN_OK) {
+			auto code = getCodeForInjector(i + 1, diag);
+
+			char description[32];
+			pinDiag2string(description, efi::size(description), diag);
+			warning(code, "Injector %d fault: %s", i, description);
+		}
+	}
+
+	// Check ignition
+	for (int i = 0; i < efi::size(enginePins.injectors); i++) {
+		IgnitionOutputPin& pin = enginePins.coils[i];
+
+		// Skip not-configured pins
+		if (!isBrainPinValid(pin.brainPin)) {
+			continue;
+		}
+
+		auto diag = pin.getDiag();
+		if (diag != PIN_OK) {
+			auto code = getCodeForIgnition(i + 1, diag);
+
+			char description[32];
+			pinDiag2string(description, efi::size(description), diag);
+			warning(code, "Ignition %d fault: %s", i, description);
+		}
+	}
+#endif // BOARD_EXT_GPIOCHIPS > 0
 }
 
 void SensorChecker::onIgnitionStateChanged(bool ignitionOn) {
