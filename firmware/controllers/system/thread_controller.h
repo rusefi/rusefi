@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "ch.hpp"
-
 /**
  * @brief A base class for a controller that requires its own thread.
  * 
