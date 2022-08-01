@@ -132,7 +132,7 @@ typedef enum {
  * Default open window time is 0b0011 * 3.2 = 12.8 mS */
 #define WWD_PERIOD_MS		(100.8 + (12.8 / 2))
 
-/* DOTO: add irq support */
+/* TODO: add irq support */
 #define DIAG_PERIOD_MS		(7)
 
 const uint8_t tle8888_fwd_responses[16][4] = {
@@ -553,7 +553,7 @@ int Tle8888::update_direct_output(size_t pin, int value)
 	if (pin < 4) {
 		/* OUT1..4 */
 		index = pin;
-	} else if (pin > 24) {
+	} else if (pin >= 24) {
 		/* IGN1..4 */
 		index = (pin - 24) + 4;
 	} else {
@@ -956,14 +956,14 @@ int Tle8888::writePad(unsigned int pin, int value) {
 		chibios_rt::CriticalSectionLocker csl;
 
 		if (value) {
-			o_state |=  (1 << pin);
+			o_state |=  BIT(pin);
 		} else {
-			o_state &= ~(1 << pin);
+			o_state &= ~BIT(pin);
 		}
 	}
 
 	/* direct driven? */
-	if (o_direct_mask & (1 << pin)) {
+	if (o_direct_mask & BIT(pin)) {
 		return update_direct_output(pin, value);
 	} else {
 		return wake_driver();
@@ -977,7 +977,7 @@ int Tle8888::readPad(size_t pin) {
 
 	if (pin < TLE8888_OUTPUTS_REGULAR) {
 		/* return output state */
-		/* DOTO: check that pins is disabled by diagnostic? */
+		/* TODO: check that pins is disabled by diagnostic? */
 		return !!(o_data_cached & BIT(pin));
 	} else if (pin == TLE8888_OUTPUT_MR) {
 		/* Main relay can be enabled by KEY input, so report real state */
@@ -1097,6 +1097,17 @@ int Tle8888::chip_init_data() {
 		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		/* Set some invalid default OUT number...
+		 * Keeping this register default (0) will map one of input signals
+		 * to OUT5 and no control over SPI for this pin will be possible.
+		 * If some other pin is also mapped to OUT5 both inputs should be
+		 * high (logical AND) to enable OUT5.
+		 * Set non-exist output in case no override is provided in config.
+		 * See code below */
+		InConfig[i] = 25 - 1 - 4;
+	}
+
 	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++) {
 		int out = -1;
 		uint32_t mask;
@@ -1113,12 +1124,16 @@ int Tle8888::chip_init_data() {
 			out = cfg->direct_maps[i - 8].output - 1;
 		}
 
-		if ((out < 0) || (cfg->direct_gpio[i].port == NULL))
+		if ((out < 0) || (cfg->direct_gpio[i].port == NULL)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
 			continue;
+		}
 
 		/* TODO: implement PP pin driving throught direct gpio */
-		if ((cfg->stepper) && (out >= 20) && (out <= 23))
+		if ((cfg->stepper) && (out >= 20) && (out <= 23)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
 			continue;
+		}
 
 		/* calculate mask */
 		mask = BIT(out);

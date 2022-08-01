@@ -163,7 +163,7 @@ struct tle8888_config tle8888_cfg = {
 		[1] = {.port = GPIOE,	.pad = 13},
 		[2] = {.port = GPIOE,	.pad = 12},
 		[3] = {.port = GPIOE,	.pad = 11},
-		/* IN5..8 -> IGN1..IGN4 (Ignotors) */
+		/* IN5..8 -> IGN1..IGN4 (Ignitors) */
 		/* Not used */
 		[4] = {.port = NULL,	.pad = 0},
 		[5] = {.port = NULL,	.pad = 0},
@@ -176,10 +176,10 @@ struct tle8888_config tle8888_cfg = {
 		[11] = {.port = GPIOE,	.pad = 7},
 	},
 	.direct_maps = {
-		[0] = {.output =  5},
-		[1] = {.output =  6},
-		[2] = {.output = 21},
-		[3] = {.output = 22},
+		[0] = {.output =  5},	/* MRE: LS2 */
+		[1] = {.output =  6},	/* MRE: LS1 */
+		[2] = {.output = 21},	/* MRE: GP1 - not used when stepper = true */
+		[3] = {.output = 22},	/* MRE: GP2 - not used when stepper = true */
 	},
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},
