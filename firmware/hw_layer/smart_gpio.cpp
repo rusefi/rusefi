@@ -176,10 +176,10 @@ struct tle8888_config tle8888_cfg = {
 		[11] = {.port = GPIOE,	.pad = 7},
 	},
 	.direct_maps = {
-		[0] = {.output =  5},
-		[1] = {.output =  6},
-		[2] = {.output = 21},
-		[3] = {.output = 22},
+		[0] = {.output =  5},	/* MRE: LS2 */
+		[1] = {.output =  6},	/* MRE: LS1 */
+		[2] = {.output = 21},	/* MRE: GP1 - not used when stepper = true */
+		[3] = {.output = 22},	/* MRE: GP2 - not used when stepper = true */
 	},
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},
