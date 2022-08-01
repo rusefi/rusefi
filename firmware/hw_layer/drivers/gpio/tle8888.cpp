@@ -1097,6 +1097,15 @@ int Tle8888::chip_init_data() {
 		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		/* Set some invalid default OUT number...
+		 * Keeping this register default (0) will map one of input signals
+		 * to OUT5 and no control over SPI for this pin will be possible
+		 * Set non-exist output in case no override is provided in config.
+		 * See code below */
+		InConfig[i] = 25 - 1 - 4;
+	}
+
 	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++) {
 		int out = -1;
 		uint32_t mask;
@@ -1113,12 +1122,16 @@ int Tle8888::chip_init_data() {
 			out = cfg->direct_maps[i - 8].output - 1;
 		}
 
-		if ((out < 0) || (cfg->direct_gpio[i].port == NULL))
+		if ((out < 0) || (cfg->direct_gpio[i].port == NULL)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
 			continue;
+		}
 
 		/* TODO: implement PP pin driving throught direct gpio */
-		if ((cfg->stepper) && (out >= 20) && (out <= 23))
+		if ((cfg->stepper) && (out >= 20) && (out <= 23)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
 			continue;
+		}
 
 		/* calculate mask */
 		mask = BIT(out);
