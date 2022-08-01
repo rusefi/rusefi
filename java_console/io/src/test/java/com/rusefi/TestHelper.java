@@ -18,7 +18,6 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
-import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -33,16 +32,13 @@ import static com.rusefi.config.generated.Fields.TS_FILE_VERSION_OFFSET;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static org.junit.Assert.assertTrue;
 
-public class TestHelper {
+public class TestHelper extends MockitoTestHelper {
     private static final Logging log = getLogging(TestHelper.class);
     public static final String TEST_SIGNATURE_1 = "rusEFI 2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
-    public static final Answer<?> NEGATIVE_ANSWER = invocation -> {
-        throw new UnsupportedOperationException("Not mocked " + invocation);
-    };
 
     @NotNull
     public static ScalarIniField createIniField(Field field) {

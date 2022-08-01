@@ -12,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_miata_NA.cpp \
 	tests/trigger/test_real_cranking_miata_na6.cpp \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
+	tests/trigger/test_trigger_skipped_wheel.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
@@ -32,6 +33,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e65.cpp \
+	tests/lua/test_lua_ford.cpp \
 	tests/lua/test_lua_vag.cpp \
 	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \

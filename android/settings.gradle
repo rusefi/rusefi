@@ -1,6 +1,8 @@
 include ':app'
 include ':shared_io'
 project(':shared_io').projectDir = new File('../java_console/shared_io')
+include ':shared_ui'
+project(':shared_ui').projectDir = new File('../java_console/shared_ui')
 include ':ecu_io'
 project(':ecu_io').projectDir = new File('../java_console/io')
 include ':logging'
@@ -23,7 +25,9 @@ include ':enum_to_string'
 project(':enum_to_string').projectDir = new File('../java_tools/enum_to_string')
 include ':bin2header'
 project(':bin2header').projectDir = new File('../java_tools/bin2header')
-// todo: uncomment me once works include ':config_definition'
-// todo: uncomment me once works project(':config_definition').projectDir = new File('../java_tools/configuration_definition')
+include ':config_definition'
+project(':config_definition').projectDir = new File('../java_tools/configuration_definition')
 include ':ts_plugin_launcher'
 project(':ts_plugin_launcher').projectDir = new File('../java_tools/ts_plugin_launcher')
+include ':ts_plugin'
+project(':ts_plugin').projectDir = new File('../java_tools/ts_plugin')

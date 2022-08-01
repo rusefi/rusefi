@@ -263,6 +263,12 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hip9011PrescalerAndSDO;
 	if (strEqualCaseInsensitive(name, "specs.cylindersCount"))
 		return engineConfiguration->specs.cylindersCount;
+	if (strEqualCaseInsensitive(name, "boostControlMinRpm"))
+		return engineConfiguration->boostControlMinRpm;
+	if (strEqualCaseInsensitive(name, "boostControlMinTps"))
+		return engineConfiguration->boostControlMinTps;
+	if (strEqualCaseInsensitive(name, "boostControlMinMap"))
+		return engineConfiguration->boostControlMinMap;
 	if (strEqualCaseInsensitive(name, "gapTrackingLengthOverride"))
 		return engineConfiguration->gapTrackingLengthOverride;
 	if (strEqualCaseInsensitive(name, "maxIdleVss"))
@@ -533,6 +539,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseTachPullUp;
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 		return engineConfiguration->boardUseTempPullUp;
+	if (strEqualCaseInsensitive(name, "yesUnderstandLocking"))
+		return engineConfiguration->yesUnderstandLocking;
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 		return engineConfiguration->silentTriggerError;
 	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
@@ -835,6 +843,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpTargetDecay;
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 		return engineConfiguration->vvtActivationDelayMs;
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+		return engineConfiguration->tuneHidingKey;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -1098,6 +1108,21 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "specs.cylindersCount"))
 	{
 		engineConfiguration->specs.cylindersCount = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boostControlMinRpm"))
+	{
+		engineConfiguration->boostControlMinRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boostControlMinTps"))
+	{
+		engineConfiguration->boostControlMinTps = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boostControlMinMap"))
+	{
+		engineConfiguration->boostControlMinMap = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "gapTrackingLengthOverride"))
@@ -1773,6 +1798,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 	{
 		engineConfiguration->boardUseTempPullUp = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "yesUnderstandLocking"))
+	{
+		engineConfiguration->yesUnderstandLocking = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
@@ -2528,6 +2558,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+	{
+		engineConfiguration->tuneHidingKey = (int)value;
 		return;
 	}
 }

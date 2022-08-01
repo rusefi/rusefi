@@ -15,8 +15,8 @@ void ProxySensor::showInfo(const char* sensorName) const {
 }
 
 void FunctionalSensor::showInfo(const char* sensorName) const {
-	const auto [valid, value] = get();
-	efiPrintf("Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, m_rawValue, boolToString(valid), value);
+	const auto value = get();
+	efiPrintf("Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, m_rawValue, boolToString(value.Valid), value.Value);
 
 	// now print out the underlying function's info
 	if (auto func = m_function) {
@@ -28,8 +28,8 @@ void FunctionalSensor::showInfo(const char* sensorName) const {
 #include "can_sensor.h"
 
 void CanSensorBase::showInfo(const char* sensorName) const {
-	const auto [valid, value] = get();
-	efiPrintf("CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(valid), value);
+	const auto value = get();
+	efiPrintf("CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(value.Valid), value.Value);
 }
 #endif // EFI_CAN_SUPPORT
 
@@ -63,8 +63,8 @@ void Lps25Sensor::showInfo(const char* sensorName) const {
 
 void LinearFunc::showInfo(float testRawValue) const {
 	efiPrintf("    Linear function slope: %.2f offset: %.2f min: %.1f max: %.1f", m_a, m_b, m_minOutput, m_maxOutput);
-	const auto [valid, value] = convert(testRawValue);
-	efiPrintf("      raw value %.2f converts to %.2f valid: %s", testRawValue, value, boolToString(valid));
+	const auto value = convert(testRawValue);
+	efiPrintf("      raw value %.2f converts to %.2f valid: %s", testRawValue, value.Value, boolToString(value.Valid));
 }
 
 void ResistanceFunc::showInfo(float testInputValue) const {
@@ -73,8 +73,8 @@ void ResistanceFunc::showInfo(float testInputValue) const {
 }
 
 void ThermistorFunc::showInfo(float testInputValue) const {
-	const auto [valid, value] = convert(testInputValue);
-	efiPrintf("    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(valid), value);
+	const auto value = convert(testInputValue);
+	efiPrintf("    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(value.Valid), value.Value);
 }
 
 void IdentityFunction::showInfo(float /*testInputValue*/) const {

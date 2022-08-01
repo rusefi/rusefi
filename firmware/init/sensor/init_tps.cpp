@@ -62,7 +62,7 @@ private:
 
 		// If the voltage for closed vs. open is very near, something is wrong with your calibration
 		if (split < 0.5f) {
-			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
+			firmwareError(OBD_TPS_Configuration, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
 					cfg.open,
 					cfg.closed);
 			return false;
@@ -91,6 +91,12 @@ public:
 	}
 
 	void init(bool isFordTps, RedundantFordTps* fordTps, const TpsConfig& primary, const TpsConfig& secondary) {
+		bool hasFirst = m_pri.init(primary);
+		if (!hasFirst) {
+			// no input if we have no first channel
+			return;
+		}
+
 		{
 			// Check that the primary and secondary aren't too close together - if so, the user may have done
 			// an unsafe thing where they wired a single sensor to both inputs. Don't do that!
@@ -99,12 +105,10 @@ public:
 			bool tooCloseOpen = absF(primary.open - secondary.open) < 0.2f;
 
 			if (hasBothSensors && tooCloseClosed && tooCloseOpen) {
-				firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
+				firmwareError(OBD_TPS_Configuration, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
 				return;
 			}
 		}
-
-		m_pri.init(primary);
 
 		bool hasSecond = m_sec.init(secondary);
 

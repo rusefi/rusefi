@@ -48,6 +48,10 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 #endif // EFI_UNIT_TEST
 
 	s->setTriggerSynchronizationGap(skippedCount + 1);
+	if (totalTeethCount > 6 && skippedCount > 0) {
+		// this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise and potentially high rev noise as well
+		s->setSecondTriggerSynchronizationGap(1);
+	}
 	s->shapeWithoutTdc = (totalTeethCount > 1) && (skippedCount == 0);
 	s->isSynchronizationNeeded = (totalTeethCount > 2) && (skippedCount != 0);
 

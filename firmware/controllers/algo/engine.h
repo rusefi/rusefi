@@ -40,6 +40,7 @@
 #include "gear_detector.h"
 #include "advance_map.h"
 #include "fan_control.h"
+#include "sensor_checker.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -192,6 +193,7 @@ public:
 		GearDetector,
 #endif // EFI_VEHICLE_SPEED
 		KnockController,
+		SensorChecker,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -468,6 +470,9 @@ void prepareOutputSignals();
 
 void validateConfiguration();
 void doScheduleStopEngine();
+void scheduleReboot();
+bool isLockedFromUser();
+void unlockEcu(int password);
 
 #define HW_CHECK_RPM 200
 

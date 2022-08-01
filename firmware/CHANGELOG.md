@@ -27,12 +27,19 @@ Release template (copy/paste this for new release):
 
 ### Added
  - raw voltage gauges for Lua script aux analog inputs #4346
+ - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199 #4230
+ - counter-noise measure for custom skipped trigger wheels #4375
+ - Write hard faults to backup ram, print on next boot #4324
+ - Many more options for Lua CAN rx filters/callbacks #4387
+ - Password protection against tune access #4243
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
  - Many drop downs menues are now sorted #4339
  - rusEFI TS plugin launcher fixed
  - Console autoupdate error dialogs #4352
+ - custom skipped wheel could be located on camshaft #4377
+ - it's impossible to receive AcceleratorPedal sensor via CAN/Lua #4369
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639
@@ -59,7 +66,6 @@ Release template (copy/paste this for new release):
  - Advanced Trigger option: require engine phase synchronization in sequential mode #4151
  - Maintainability: frequency sensors need a simple event counter in the logs #4173
  - TS bench test commands are now configurable #4192
- - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199
  - microRusEFI can now use more pins for Cam position sensor #3032
  - hard requirement for console version match #4187
 

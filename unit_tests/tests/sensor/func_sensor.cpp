@@ -64,6 +64,5 @@ TEST_F(SensorConverted, TestInvalid) {
 	{
 		auto s = Sensor::get(SensorType::Clt);
 		EXPECT_FALSE(s.Valid);
-		EXPECT_FLOAT_EQ(s.Value, 0);
 	}
 }

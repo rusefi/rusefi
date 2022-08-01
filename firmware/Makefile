@@ -9,6 +9,10 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
+ifneq ("$(wildcard $(../.git))","")
+$(error ../.git not found. We expect source code to be cloned not downloaded as zip file.")
+endif
+
 include rusefi_rules.mk
 
 # Define project name here
@@ -213,6 +217,7 @@ endif
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
   USE_OPT += -Wl,--defsym=BOOTLOADER=1
+  DDEFS += -DEFI_USE_OPENBLT=TRUE
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
