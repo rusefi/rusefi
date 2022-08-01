@@ -956,14 +956,14 @@ int Tle8888::writePad(unsigned int pin, int value) {
 		chibios_rt::CriticalSectionLocker csl;
 
 		if (value) {
-			o_state |=  (1 << pin);
+			o_state |=  BIT(pin);
 		} else {
-			o_state &= ~(1 << pin);
+			o_state &= ~BIT(pin);
 		}
 	}
 
 	/* direct driven? */
-	if (o_direct_mask & (1 << pin)) {
+	if (o_direct_mask & BIT(pin)) {
 		return update_direct_output(pin, value);
 	} else {
 		return wake_driver();
