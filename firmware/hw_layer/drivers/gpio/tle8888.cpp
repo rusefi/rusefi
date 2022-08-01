@@ -1100,7 +1100,9 @@ int Tle8888::chip_init_data() {
 	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
 		/* Set some invalid default OUT number...
 		 * Keeping this register default (0) will map one of input signals
-		 * to OUT5 and no control over SPI for this pin will be possible
+		 * to OUT5 and no control over SPI for this pin will be possible.
+		 * If some other pin is also mapped to OUT5 both inputs should be
+		 * high (logical AND) to enable OUT5.
 		 * Set non-exist output in case no override is provided in config.
 		 * See code below */
 		InConfig[i] = 25 - 1 - 4;
