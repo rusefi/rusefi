@@ -553,7 +553,7 @@ int Tle8888::update_direct_output(size_t pin, int value)
 	if (pin < 4) {
 		/* OUT1..4 */
 		index = pin;
-	} else if (pin > 24) {
+	} else if (pin >= 24) {
 		/* IGN1..4 */
 		index = (pin - 24) + 4;
 	} else {
