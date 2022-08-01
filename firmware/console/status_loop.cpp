@@ -525,11 +525,11 @@ static void updateLambda() {
 
 static void updateFuelSensors() {
 	// Low pressure is directly in kpa
-	engine->outputChannels.lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).value_or(0);
+	engine->outputChannels.lowFuelPressure = Sensor::getOrZero(SensorType::FuelPressureLow);
 	// High pressure is in bar, aka 100 kpa
-	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).value_or(0));
+	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
-	engine->outputChannels.flexPercent = Sensor::get(SensorType::FuelEthanolPercent).value_or(0);
+	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
@@ -582,10 +582,10 @@ static void updateRawSensors() {
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
-	engine->outputChannels.oilPressure = Sensor::get(SensorType::OilPressure).value_or(0);
+	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
 
-	engine->outputChannels.auxLinear1 = Sensor::get(SensorType::AuxLinear1).value_or(0);
-	engine->outputChannels.auxLinear2 = Sensor::get(SensorType::AuxLinear2).value_or(0);
+	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
+	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
 }
 
 static void updateMiscSensors() {
