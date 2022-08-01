@@ -475,6 +475,14 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
+brain_pin_diag_e OutputPin::getDiag() const {
+#if BOARD_EXT_GPIOCHIPS > 0
+	return gpiochips_getDiag(brainPin);
+#else
+	return PIN_OK;
+#endif
+}
+
 void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
