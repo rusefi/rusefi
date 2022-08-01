@@ -242,18 +242,18 @@ typedef enum {
 	//P0199 Engine Oil Temperature Sensor Intermittent
 	//DTC Codes - P0200-P0299 - Fuel and Air Metering (Injector Circuit)
 	//P0200 Injector Circuit Malfunction
-	//P0201 Injector Circuit Malfunction - Cylinder 1
-	//P0202 Injector Circuit Malfunction - Cylinder 2
-	//P0203 Injector Circuit Malfunction - Cylinder 3
-	//P0204 Injector Circuit Malfunction - Cylinder 4
-	//P0205 Injector Circuit Malfunction - Cylinder 5
-	//P0206 Injector Circuit Malfunction - Cylinder 6
-	//P0207 Injector Circuit Malfunction - Cylinder 7
-	//P0208 Injector Circuit Malfunction - Cylinder 8
-	//P0209 Injector Circuit Malfunction - Cylinder 9
-	//P0210 Injector Circuit Malfunction - Cylinder 10
-	//P0211 Injector Circuit Malfunction - Cylinder 11
-	//P0212 Injector Circuit Malfunction - Cylinder 12
+	OBD_Injector_Circuit_1 = 201,
+	OBD_Injector_Circuit_2 = 202,
+	OBD_Injector_Circuit_3 = 203,
+	OBD_Injector_Circuit_4 = 204,
+	OBD_Injector_Circuit_5 = 205,
+	OBD_Injector_Circuit_6 = 206,
+	OBD_Injector_Circuit_7 = 207,
+	OBD_Injector_Circuit_8 = 208,
+	OBD_Injector_Circuit_9 = 209,
+	OBD_Injector_Circuit_10 = 210,
+	OBD_Injector_Circuit_11 = 211,
+	OBD_Injector_Circuit_12 = 212,
 	//P0213 Cold Start Injector 1 Malfunction
 	//P0214 Cold Start Injector 2 Malfunction
 	//P0215 Engine Shutoff Solenoid Malfunction
@@ -401,18 +401,18 @@ typedef enum {
 	//P0348 Camshaft Position Sensor A Circuit High Input (Bank 2)
 	//P0349 Camshaft Position Sensor A Circuit Intermittent (Bank 2)
 	//P0350 Ignition Coil Primary/Secondary Circuit Malfunction
-	//P0351 Ignition Coil A Primary/Secondary Circuit Malfunction
-	//P0352 Ignition Coil B Primary/Secondary Circuit Malfunction
-	//P0353 Ignition Coil C Primary/Secondary Circuit Malfunction
-	//P0354 Ignition Coil D Primary/Secondary Circuit Malfunction
-	//P0355 Ignition Coil E Primary/Secondary Circuit Malfunction
-	//P0356 Ignition Coil F Primary/Secondary Circuit Malfunction
-	//P0357 Ignition Coil G Primary/Secondary Circuit Malfunction
-	//P0358 Ignition Coil H Primary/Secondary Circuit Malfunction
-	//P0359 Ignition Coil I Primary/Secondary Circuit Malfunction
-	//P0360 Ignition Coil J Primary/Secondary Circuit Malfunction
-	//P0361 Ignition Coil K Primary/Secondary Circuit Malfunction
-	//P0362 Ignition Coil L Primary/Secondary Circuit Malfunction
+	OBD_Ignition_Circuit_1 = 351,
+	OBD_Ignition_Circuit_2 = 352,
+	OBD_Ignition_Circuit_3 = 353,
+	OBD_Ignition_Circuit_4 = 354,
+	OBD_Ignition_Circuit_5 = 355,
+	OBD_Ignition_Circuit_6 = 356,
+	OBD_Ignition_Circuit_7 = 357,
+	OBD_Ignition_Circuit_8 = 358,
+	OBD_Ignition_Circuit_9 = 359,
+	OBD_Ignition_Circuit_10 = 360,
+	OBD_Ignition_Circuit_11 = 361,
+	OBD_Ignition_Circuit_12 = 362,
 	//P0363 Misfire Detected - Fueling Disabled
 	//P0364 Reserved
 	//P0365 Camshaft Position Sensor "B" Circuit (Bank 1)
