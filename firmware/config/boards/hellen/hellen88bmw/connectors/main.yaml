@@ -176,6 +176,11 @@ pins:
     function: Coil 3
     type: ign
 
+  - pin: 56
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 56 - Battery Sense
+
   - pin: 73
     id: EFI_ADC_4
     class: analog_inputs
