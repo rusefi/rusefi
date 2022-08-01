@@ -132,7 +132,7 @@ typedef enum {
  * Default open window time is 0b0011 * 3.2 = 12.8 mS */
 #define WWD_PERIOD_MS		(100.8 + (12.8 / 2))
 
-/* DOTO: add irq support */
+/* TODO: add irq support */
 #define DIAG_PERIOD_MS		(7)
 
 const uint8_t tle8888_fwd_responses[16][4] = {
@@ -977,7 +977,7 @@ int Tle8888::readPad(size_t pin) {
 
 	if (pin < TLE8888_OUTPUTS_REGULAR) {
 		/* return output state */
-		/* DOTO: check that pins is disabled by diagnostic? */
+		/* TODO: check that pins is disabled by diagnostic? */
 		return !!(o_data_cached & BIT(pin));
 	} else if (pin == TLE8888_OUTPUT_MR) {
 		/* Main relay can be enabled by KEY input, so report real state */
