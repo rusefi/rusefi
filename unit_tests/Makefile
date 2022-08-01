@@ -21,6 +21,7 @@ include $(RUSEFI_LIB)/pt2001/pt2001.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC += $(ALLCSRC) \
+	$(RUSEFI_LIB_C) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(TEST_SRC_C)
 
