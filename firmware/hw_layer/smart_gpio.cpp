@@ -18,6 +18,7 @@
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/l9779.h"
+#include "drivers/gpio/tle9104.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
@@ -188,6 +189,33 @@ struct tle8888_config tle8888_cfg = {
 };
 #endif
 
+tle9104_config tle9104_cfg = {
+	.spi_bus = NULL,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 =
+			SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+			SPI_CR1_MSTR |
+			SPI_CR1_CPHA |
+			0,
+		.cr2 = SPI_CR2_16BIT_MODE
+	},
+	.direct_io = {
+		{ GPIOB, 12 },
+		{ GPIOB, 13 },
+		{ GPIOB, 14 },
+		{ GPIOB, 15 }
+	},
+	.resn = Gpio::A3,
+	.en   = Gpio::C9
+};
+
 #if (BOARD_DRV8860_COUNT > 0)
 static OutputPin drv8860Cs;
 struct drv8860_config drv8860 = {
@@ -283,6 +311,12 @@ void initSmartGpio() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 
+	tle9104_cfg.spi_config.ssport = getHwPort("tle9104 CS", Gpio::A8);
+	tle9104_cfg.spi_config.sspad = getHwPin("tle9104 CS", Gpio::A8);
+	tle9104_cfg.spi_bus = getSpiDevice(SPI_DEVICE_1);
+
+	//tle9104_add(Gpio::TLE8888_PIN_1, 0, &tle9104_cfg);
+
 	/* external chip init */
 	gpiochips_init();
 }
@@ -317,7 +351,11 @@ void stopSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+
+	//efiSetPadUnused(Gpio::A8);
 }
+
+OutputPin tle9104cs;
 
 void startSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
@@ -343,6 +381,9 @@ void startSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+
+	//tle9104cs.initPin("9104 cs", Gpio::A8);
+	//tle9104cs.setValue(true);
 }
 
 #endif /* EFI_PROD_CODE */
