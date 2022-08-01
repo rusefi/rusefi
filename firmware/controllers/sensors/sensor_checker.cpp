@@ -170,7 +170,7 @@ void SensorChecker::onSlowCallback() {
 	check(SensorType::FuelEthanolPercent);
 
 // only bother checking these if we have GPIO chips actually capable of reporting an error
-#if BOARD_EXT_GPIOCHIPS > 0
+#if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 	// Check injectors
 	for (int i = 0; i < efi::size(enginePins.injectors); i++) {
 		InjectorOutputPin& pin = enginePins.injectors[i];
