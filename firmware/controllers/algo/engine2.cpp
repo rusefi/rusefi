@@ -17,6 +17,7 @@
 #include "closed_loop_fuel.h"
 #include "launch_control.h"
 #include "injector_model.h"
+#include "tunerstudio.h"
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -221,4 +222,26 @@ trigger_config_s VvtTriggerConfiguration::getType() const {
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return engineConfiguration->verboseVVTDecoding;
+}
+
+bool isLockedFromUser() {
+	int lock = engineConfiguration->tuneHidingKey;
+	bool isLocked = lock > 0;
+	if (isLocked) {
+		firmwareError(OBD_PCM_Processor_Fault, "password protected");
+	}
+	return isLocked;
+}
+
+void unlockEcu(int password) {
+	if (password != engineConfiguration->tuneHidingKey) {
+		efiPrintf("Nope rebooting...");
+#if EFI_PROD_CODE
+		scheduleReboot();
+#endif // EFI_PROD_CODE
+	} else {
+		efiPrintf("Unlocked! Burning...");
+		engineConfiguration->tuneHidingKey = 0;
+		requestBurn();
+	}
 }

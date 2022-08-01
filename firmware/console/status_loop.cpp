@@ -715,7 +715,7 @@ static void updateTpsDebug() {
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_SHAFT_POSITION_INPUT
-	int rpm = Sensor::get(SensorType::Rpm).Value;
+	int rpm = Sensor::get(SensorType::Rpm).value_or(0);
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */

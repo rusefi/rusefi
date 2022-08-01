@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jul 27 09:37:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 30 15:33:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -35,6 +35,7 @@ public class TsOutputs {
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ECU_UNLOCK = "unlock";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
@@ -53,6 +54,7 @@ public class TsOutputs {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
+	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -73,6 +75,7 @@ public class TsOutputs {
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
 	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
+	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";

@@ -211,7 +211,7 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
 
-	efiPrintf("current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
+	efiPrintf("current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.value_or(0));
 }
 
 void printTPSInfo(void) {
@@ -1190,6 +1190,7 @@ void initSettings(void) {
 
 	addConsoleActionSS("set_egt_cs_pin", (VoidCharPtrCharPtr) setEgtCSPin);
 	addConsoleActionI("set_egt_spi", setEgtSpi);
+	addConsoleActionI(CMD_ECU_UNLOCK, unlockEcu);
 
 	addConsoleActionSS("set_trigger_simulator_mode", setTriggerSimulatorMode);
 	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);

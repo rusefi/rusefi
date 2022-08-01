@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 28 06:53:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2459,7 +2459,7 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 1360 bit 5 */
-	bool unused234234234 : 1 {};
+	bool yesUnderstandLocking : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
 	offset 1360 bit 6 */
@@ -4272,10 +4272,14 @@ struct engine_configuration_s {
 	 */
 	float etbMinimumPosition;
 	/**
-	units
 	 * offset 3740
 	 */
-	uint8_t mainUnusedEnd[246];
+	uint16_t tuneHidingKey;
+	/**
+	units
+	 * offset 3742
+	 */
+	uint8_t mainUnusedEnd[244];
 	/**
 	 * need 4 byte alignment
 	units
@@ -4972,4 +4976,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21272);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Jul 28 06:53:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
