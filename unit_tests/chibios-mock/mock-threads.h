@@ -29,6 +29,6 @@ namespace chibios_rt {
 	struct BaseStaticThread {
 		void start(tprio_t) { }
 		virtual void main() = 0;
-		void setName(const char*);
+		void setName(const char*) { }
 	};
 }
