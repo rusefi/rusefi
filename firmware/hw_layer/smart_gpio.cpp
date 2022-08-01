@@ -163,7 +163,7 @@ struct tle8888_config tle8888_cfg = {
 		[1] = {.port = GPIOE,	.pad = 13},
 		[2] = {.port = GPIOE,	.pad = 12},
 		[3] = {.port = GPIOE,	.pad = 11},
-		/* IN5..8 -> IGN1..IGN4 (Ignotors) */
+		/* IN5..8 -> IGN1..IGN4 (Ignitors) */
 		/* Not used */
 		[4] = {.port = NULL,	.pad = 0},
 		[5] = {.port = NULL,	.pad = 0},
