@@ -1,5 +1,7 @@
 #pragma once
 
+#if BOARD_TLE9104_COUNT > 0
+
 struct tle9104_config {
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
@@ -42,3 +44,5 @@ void tle9104_add(Gpio base, int index, const tle9104_config* cfg);
 // 	.resn = Gpio::A3,
 // 	.en   = Gpio::C9
 // };
+
+#endif // BOARD_TLE9104_COUNT > 0

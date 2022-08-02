@@ -2,6 +2,8 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle9104.h"
 
+#if BOARD_TLE9104_COUNT > 0
+
 #define TLE9104_REG_CTRL 0x00
 #define TLE9104_REG_CFG 0x01
 #define TLE9104_REG_OFF_DIAG_CFG 0x02
@@ -227,3 +229,5 @@ void tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 void updatetlediag() {
 	chips[0].updateDiagState();
 }
+
+#endif // BOARD_TLE9104_COUNT > 0
