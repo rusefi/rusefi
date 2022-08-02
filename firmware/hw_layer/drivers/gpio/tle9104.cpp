@@ -80,6 +80,10 @@ int Tle9104::init() {
 
 	for (int i = 0; i < 4; i++) {
 		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, "TLE9104 Direct IO");
+		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
+
+		// Ensure all outputs are off
+		writePad(i, false);
 	}
 
 	// Reset the chip
@@ -115,28 +119,20 @@ int Tle9104::init() {
 	volatile int offdiag = read(0x06);
 	volatile int globalstatus1 = read(0x07);
 
-
 	// set output enable
 	write(0x07, 0x80);
 
-	chThdSleepMilliseconds(200);
-
-	volatile int globalstatus2 = read(0x07);
-	volatile int deviceid = read(0x08);
-
-	if (globalstatus1 != 0) {
-		return -2;
-	}
+	m_en.setValue(true);
 
 	return 0;
 }
 
 int Tle9104::writePad(size_t pin, int value) {
-
+	// Inverted since TLE9104 is active low (falling edge to turn on output)
 	if (value) {
-		palSetPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
-	} else {
 		palClearPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
+	} else {
+		palSetPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
 	}
 
 	return 0;
@@ -187,6 +183,7 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 
 	int result = 0;
 
+	// Decode on-state faults
 	switch (on_diag) {
 		case 2:
 			result |= PIN_SHORT_TO_BAT;
@@ -203,6 +200,7 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 			break;
 	}
 
+	// Decode off-state faults
 	switch (off_diag) {
 		case 2:
 			result |= PIN_OPEN;
