@@ -112,6 +112,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	} else {
 		// Not the main thread.
 		// All hope is now lost.
+
+		// Attempt to break in to the debugger, if attached
+		__asm volatile("BKPT #0\n");
+
 		// Reboot!
 		NVIC_SystemReset();
 	}
