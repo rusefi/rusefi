@@ -399,6 +399,10 @@ int Tle8888::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	uint16_t rxdata;
 	SPIDriver *spi = cfg->spi_bus;
 
+	if (n <= 0) {
+		return -2;
+	}
+
 	/**
 	 * 15.1 SPI Protocol
 	 *
