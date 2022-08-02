@@ -2,6 +2,16 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/tle9104.h"
 
+#define TLE9104_REG_CTRL 0x00
+#define TLE9104_REG_CFG 0x01
+#define TLE9104_REG_OFF_DIAG_CFG 0x02
+#define TLE9104_REG_ON_DIAG_CFG 0x03
+#define TLE9104_REG_DIAG_OUT_1_2_ON 0x04
+#define TLE9104_REG_DIAG_OUT_3_4_ON 0x05
+#define TLE9104_REG_DIAG_OFF 0x06
+#define TLE9104_REG_GLOBAL_STATUS 0x07
+#define TLE9104_REG_ICVID 0x08
+
 struct Tle9104 : public GpioChip {
 	int init() override;
 
@@ -95,7 +105,7 @@ int Tle9104::init() {
 	spiStart(cfg->spi_bus, &cfg->spi_config);
 
 	// read ID register
-	uint16_t id = read(0x08);
+	uint16_t id = read(TLE9104_REG_ICVID);
 
 	// No chip detected if ID is wrong
 	if ((id & 0xFF) != 0xB1) {
@@ -103,25 +113,17 @@ int Tle9104::init() {
 	}
 
 	// disable comms watchdog, enable direct drive on all 4 channels
-	write(0x1, 0x0F);
+	// TODO: should we enable comms watchdog?
+	write(TLE9104_REG_CFG, 0x0F);
 
-	// clear any suprious diag states from startup
-	write(0x4, 0);
-	write(0x5, 0);
-	write(0x6, 0);
+	// clear any suprious diag states from startup: first call resets, second reads true state
+	updateDiagState();
+	updateDiagState();
 
-	volatile int ocr = read(0x00);
-	volatile int cfg = read(0x01);
-	volatile int offDiagCfg = read(0x02);
-	volatile int onDiagCfg = read(0x03);
-	volatile int diag12 = read(0x04);
-	volatile int diag34 = read(0x05);
-	volatile int offdiag = read(0x06);
-	volatile int globalstatus1 = read(0x07);
+	// set output enable, clear all other flags
+	write(TLE9104_REG_GLOBAL_STATUS, 0x80);
 
-	// set output enable
-	write(0x07, 0x80);
-
+	// Set hardware enable
 	m_en.setValue(true);
 
 	return 0;
@@ -141,14 +143,14 @@ int Tle9104::writePad(size_t pin, int value) {
 void Tle9104::updateDiagState() {
 	spiStart(cfg->spi_bus, &cfg->spi_config);
 
-	diag_on12 = read(0x04);
-	diag_on34 = read(0x05);
-	diag_off = read(0x06);
+	diag_on12 = read(TLE9104_REG_DIAG_OUT_1_2_ON);
+	diag_on34 = read(TLE9104_REG_DIAG_OUT_3_4_ON);
+	diag_off = read(TLE9104_REG_DIAG_OFF);
 
 	// clear diag states
-	write(0x4, 0);
-	write(0x5, 0);
-	write(0x6, 0);
+	write(TLE9104_REG_DIAG_OUT_1_2_ON, 0);
+	write(TLE9104_REG_DIAG_OUT_3_4_ON, 0);
+	write(TLE9104_REG_DIAG_OFF, 0);
 }
 
 brain_pin_diag_e Tle9104::getDiag(size_t pin) {
@@ -220,4 +222,8 @@ void tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 
 	chip.cfg = cfg;
 	gpiochip_register(base, "TLE9104", chip, 4);
+}
+
+void updatetlediag() {
+	chips[0].updateDiagState();
 }
