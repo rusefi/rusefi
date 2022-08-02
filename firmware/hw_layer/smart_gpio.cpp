@@ -18,6 +18,7 @@
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/l9779.h"
+#include "drivers/gpio/tle9104.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
@@ -283,6 +284,10 @@ void initSmartGpio() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
+
 	/* external chip init */
 	gpiochips_init();
 }
@@ -317,6 +322,9 @@ void stopSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
 
 void startSmartCsPins() {
@@ -343,6 +351,9 @@ void startSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
 
 #endif /* EFI_PROD_CODE */
