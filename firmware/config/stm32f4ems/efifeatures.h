@@ -171,6 +171,10 @@
 #define BOARD_MC33810_COUNT		0
 #endif
 
+#ifndef BOARD_TLE9104_COUNT
+#define BOARD_TLE9104_COUNT 0
+#endif
+
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855
