@@ -23,3 +23,12 @@ thread_t *chThdCreateStatic(void *wsp, size_t size,
                             tprio_t prio, tfunc_t pf, void *arg);
 
 #define PAL_MODE_OUTPUT_PUSHPULL 0
+
+namespace chibios_rt {
+	template <int N>
+	struct BaseStaticThread {
+		void start(tprio_t) { }
+		virtual void main() = 0;
+		void setName(const char*) { }
+	};
+}
