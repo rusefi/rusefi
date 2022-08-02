@@ -80,6 +80,12 @@ extern uint8_t criticalErrorLedState;
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+#if EFI_PROD_CODE
+	// Attempt to break in to the debugger, if attached
+	__asm volatile("BKPT #0\n");
+#endif
+
+
 	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
@@ -112,9 +118,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	} else {
 		// Not the main thread.
 		// All hope is now lost.
-
-		// Attempt to break in to the debugger, if attached
-		__asm volatile("BKPT #0\n");
 
 		// Reboot!
 		NVIC_SystemReset();
