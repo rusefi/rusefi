@@ -311,11 +311,9 @@ void initSmartGpio() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 
-	tle9104_cfg.spi_config.ssport = getHwPort("tle9104 CS", Gpio::A8);
-	tle9104_cfg.spi_config.sspad = getHwPin("tle9104 CS", Gpio::A8);
-	tle9104_cfg.spi_bus = getSpiDevice(SPI_DEVICE_1);
-
-	//tle9104_add(Gpio::TLE8888_PIN_1, 0, &tle9104_cfg);
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 
 	/* external chip init */
 	gpiochips_init();
@@ -351,11 +349,10 @@ void stopSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
-
-	//efiSetPadUnused(Gpio::A8);
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
-
-OutputPin tle9104cs;
 
 void startSmartCsPins() {
 #if (BOARD_TLE8888_COUNT > 0)
@@ -381,9 +378,9 @@ void startSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
-
-	//tle9104cs.initPin("9104 cs", Gpio::A8);
-	//tle9104cs.setValue(true);
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
 
 #endif /* EFI_PROD_CODE */
