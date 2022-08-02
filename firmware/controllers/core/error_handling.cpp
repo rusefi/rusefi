@@ -85,7 +85,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	__asm volatile("BKPT #0\n");
 #endif
 
-
 	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
