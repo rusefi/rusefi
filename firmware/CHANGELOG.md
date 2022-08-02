@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Write hard faults to backup ram, print on next boot #4324
  - Many more options for Lua CAN rx filters/callbacks #4387
  - Password protection against tune access #4243
+ - Additional CAN messages #4401
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
