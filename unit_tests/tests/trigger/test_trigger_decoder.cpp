@@ -867,7 +867,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 /*
-	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 */
 }
 
@@ -1048,7 +1048,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
 	/*
-	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
 */
 }
 
@@ -1154,8 +1154,8 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #8";
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#SparkReverseOrderBug319";
-	ASSERT_EQ(CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(0).Code) << "warning @0";
-	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1).Code);
+	ASSERT_EQ(CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(0)) << "warning @0";
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
 TEST(big, testMissedSpark299) {
