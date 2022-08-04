@@ -87,7 +87,7 @@ T* cyclic_buffer<T, maxSize>::find(T value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
 			// This function is const with respect to the internal state of the cyclic_buffer,
-			// but not the returned object, so we can cast-away the constness
+			// but not the returned object, so we cast-away the constness to return a non-const pointer
 			return const_cast<T*>(&elements[i]);
 		}
 	}
