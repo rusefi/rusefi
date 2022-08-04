@@ -49,8 +49,7 @@ struct warning_t {
 
 	warning_t() { }
 
-	// allow conversion from obd_code_e -> warning_t
-	warning_t(obd_code_e code)
+	explicit warning_t(obd_code_e code)
 		: Code(code)
 	{
 	}
@@ -58,6 +57,11 @@ struct warning_t {
 	// Equality just checks the code, timer doesn't matter
 	bool operator ==(const warning_t& other) const {
 		return other.Code == Code;
+	}
+
+	// Compare against a plain OBD code
+	bool operator ==(const obd_code_e other) const {
+		return other == Code;
 	}
 };
 

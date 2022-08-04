@@ -32,8 +32,12 @@ class cyclic_buffer
     T maxValue(size_t length) const;
     T minValue(size_t length) const;
     void setSize(size_t size);
-    bool contains(T value) const;
-	T* find(T value) const;
+
+	template <typename TFind>
+    bool contains(TFind value) const;
+
+	template <typename TFind>
+	T* find(TFind value) const;
     int getSize() const;
     int getCount() const;
     void clear();
@@ -78,12 +82,14 @@ T& cyclic_buffer<T, maxSize>::add(T value) {
 }
 
 template<typename T, size_t maxSize>
-bool cyclic_buffer<T, maxSize>::contains(T value) const {
+template<typename TFind>
+bool cyclic_buffer<T, maxSize>::contains(TFind value) const {
 	return find(value) != nullptr;
 }
 
 template<typename T, size_t maxSize>
-T* cyclic_buffer<T, maxSize>::find(T value) const {
+template<typename TFind>
+T* cyclic_buffer<T, maxSize>::find(TFind value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
 			// This function is const with respect to the internal state of the cyclic_buffer,
