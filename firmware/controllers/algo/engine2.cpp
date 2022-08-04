@@ -34,27 +34,49 @@ WarningCodeState::WarningCodeState() {
 void WarningCodeState::clear() {
 	warningCounter = 0;
 	lastErrorCode = 0;
-	timeOfPreviousWarning = DEEP_IN_THE_PAST_SECONDS;
 	recentWarnings.clear();
 }
 
 void WarningCodeState::addWarningCode(obd_code_e code) {
 	warningCounter++;
 	lastErrorCode = code;
-	if (!recentWarnings.contains(code)) {
+
+	warning_t* existing = recentWarnings.find(code);
+
+	if (!existing) {
 		chibios_rt::CriticalSectionLocker csl;
 
-		// We don't bother double checking
-		recentWarnings.add((int)code);
+		// Add the code to the list
+		existing = &recentWarnings.add(code);
 	}
+
+	// Reset the timer on the code to now
+	existing->LastTriggered.reset();
+
+	// Reset the "any warning" timer too
+	timeSinceLastWarning.reset();
 }
 
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
  */
-bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
-	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
-	return absI(now - timeOfPreviousWarning) < period;
+bool WarningCodeState::isWarningNow() const {
+	int period = maxI(3, engineConfiguration->warningPeriod);
+
+	return !timeSinceLastWarning.hasElapsedSec(period);
+}
+
+// Check whether a particular warning is active
+bool WarningCodeState::isWarningNow(obd_code_e code) const {
+	warning_t* warn = recentWarnings.find(code);
+
+	// No warning found at all
+	if (!warn) {
+		return false;
+	}
+
+	// If the warning is old, it is not active
+	return !warn->LastTriggered.hasElapsedSec(maxI(3, engineConfiguration->warningPeriod));
 }
 
 void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {

@@ -26,25 +26,26 @@ class cyclic_buffer
     explicit cyclic_buffer(int size);
 
   public:
-    void add(T value);
+    T& add(T value);
     T get(int index) const;
     T sum(size_t length) const;
     T maxValue(size_t length) const;
     T minValue(size_t length) const;
     void setSize(size_t size);
     bool contains(T value) const;
+	T* find(T value) const;
     int getSize() const;
     int getCount() const;
     void clear();
-    volatile T elements[maxSize];
-    volatile uint16_t currentIndex;
+    T elements[maxSize];
+    uint16_t currentIndex;
 
   protected:
     uint16_t size;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
-    volatile size_t count;
+    size_t count;
 };
 
 template<typename T, size_t maxSize>
@@ -57,12 +58,14 @@ cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
 }
 
 template<typename T, size_t maxSize>
-void cyclic_buffer<T, maxSize>::add(T value) {
+T& cyclic_buffer<T, maxSize>::add(T value) {
 	// Too lazy to make this thread safe, but at the very least let's never let currentIndex
 	// become invalid.  And yes I did see a crash due to an overrun here.
 	uint16_t idx = currentIndex;
 
-	((T &)elements[idx]) = value;
+	T& location = elements[idx];
+
+	location = value;
 
 	if (++idx == size) {
 		idx = 0;
@@ -70,16 +73,26 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 	currentIndex = idx;
 
 	count = count + 1;
+
+	return location;
 }
 
 template<typename T, size_t maxSize>
 bool cyclic_buffer<T, maxSize>::contains(T value) const {
+	return find(value) != nullptr;
+}
+
+template<typename T, size_t maxSize>
+T* cyclic_buffer<T, maxSize>::find(T value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
-			return true;
+			// This function is const with respect to the internal state of the cyclic_buffer,
+			// but not the returned object, so we can cast-away the constness
+			return const_cast<T*>(&elements[i]);
 		}
 	}
-	return false;
+
+	return nullptr;
 }
 
 template<typename T, size_t maxSize>

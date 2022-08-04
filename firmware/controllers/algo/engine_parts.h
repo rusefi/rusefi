@@ -43,17 +43,38 @@ public:
 	gear_e gearSelectorPosition;
 };
 
-typedef cyclic_buffer<int, 8> warningBuffer_t;
+struct warning_t {
+	Timer LastTriggered;
+	obd_code_e Code = OBD_None;
+
+	warning_t() { }
+
+	// allow conversion from obd_code_e -> warning_t
+	warning_t(obd_code_e code)
+		: Code(code)
+	{
+	}
+
+	// Equality just checks the code, timer doesn't matter
+	bool operator ==(const warning_t& other) const {
+		return other.Code == Code;
+	}
+};
+
+typedef cyclic_buffer<warning_t, 8> warningBuffer_t;
 
 class WarningCodeState {
 public:
 	WarningCodeState();
 	void addWarningCode(obd_code_e code);
-	bool isWarningNow(efitimesec_t now, bool forIndicator) const;
+	bool isWarningNow() const;
+	bool isWarningNow(obd_code_e code) const;
 	void clear();
 	int warningCounter;
 	int lastErrorCode;
-	efitimesec_t timeOfPreviousWarning;
+
+	Timer timeSinceLastWarning;
+
 	// todo: we need a way to post multiple recent warnings into TS
 	warningBuffer_t recentWarnings;
 };

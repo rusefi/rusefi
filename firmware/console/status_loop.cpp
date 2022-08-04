@@ -796,7 +796,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->hasCriticalError = hasFirmwareError();
 #endif // HW_CHECK_MODE
 
-	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow(timeSeconds, true);
+	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG
 	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
@@ -817,7 +817,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
 	for (int i = 0; i < 8;i++) {
-		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i);
+		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i).Code;
 	}
 
 	tsOutputChannels->startStopStateToggleCounter = engine->startStopStateToggleCounter;
