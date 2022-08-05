@@ -118,7 +118,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE; // none because handled by Lua!
 
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
