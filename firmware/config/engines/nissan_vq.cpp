@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
+
 #include "nissan_vq.h"
 
 void setHellen121nissanQR() {
