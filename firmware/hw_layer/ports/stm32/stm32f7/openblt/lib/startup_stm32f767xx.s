@@ -80,8 +80,10 @@ Reset_Handler:
   LDR R0, =0x2001FFF0 // End of SRAM for your CPU
   LDR R1, =0xDEADBEEF // magic value
   LDR R2, [R0, #0]
-  STR R0, [R0, #0] // Invalidate
   CMP R2, R1
+  ITT EQ
+  LDREQ R1, =0x00000000
+  STREQ R1, [R0, #0] // Invalidate
   BEQ UseDFU
   // DFU bootloader not needed, continue with OpenBLT
 
