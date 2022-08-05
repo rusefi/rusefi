@@ -7,11 +7,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: '8'
 
       - name: Test Compiler
@@ -24,7 +25,7 @@ jobs:
       - name: Build Native Unit Tests as shared library
         working-directory: ./unit_tests/
         # we have a unit test of JNI thus we need to build shared library
-        run: make -j4
+        run: make -j4 SANITIZE=no build/lib_rusefi_test
 
       - name: Build Android
         env:
@@ -34,19 +35,19 @@ jobs:
           if [ "${{github.event_name}}" == "push" ]; then
             bash ./gradlew build
           else
-            bash ./gradlew bundleDebug
+            bash ./gradlew bundleDebug test
           fi
 
       - name: Upload APK - release
         if: ${{ github.event_name == 'push' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rusEFI-release
           path: ./android/app/build/outputs/apk/release/rusEFI-release.apk
 
       - name: Upload APK - unsigned
         if: ${{ github.event_name != 'push' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: rusEFI-release-unsigned
           path: ./android/app/build/outputs/bundle/debug/rusEFI-debug.aab

@@ -11,7 +11,7 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static com.rusefi.TestHelper.NEGATIVE_ANSWER;
+import static com.rusefi.MockitoTestHelper.NEGATIVE_ANSWER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 

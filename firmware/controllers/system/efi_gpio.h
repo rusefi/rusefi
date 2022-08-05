@@ -60,6 +60,8 @@ public:
 	void toggle();
 	bool getLogicValue() const;
 
+	brain_pin_diag_e getDiag() const;
+
 #if EFI_GPIO_HARDWARE
 	ioportid_t port = 0;
 	uint8_t pin = 0;

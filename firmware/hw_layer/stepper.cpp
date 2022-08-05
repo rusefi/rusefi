@@ -58,7 +58,7 @@ void StepperMotorBase::changeCurrentPosition(bool positive) {
 }
 
 void StepperMotorBase::postCurrentPosition(void) {
-	if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
+	if (engineConfiguration->debugMode == DBG_STEPPER_IDLE_CONTROL) {
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.debugIntField5 = m_currentPosition;
 #endif /* EFI_TUNER_STUDIO */
@@ -209,7 +209,7 @@ bool StepDirectionStepper::step(bool positive) {
 void StepperMotor::initialize(StepperHw *hardware, int totalSteps) {
 	StepperMotorBase::initialize(hardware, totalSteps);
 
-	Start();
+	start();
 }
 
 void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e directionPin, pin_output_mode_e directionPinMode, float reactionTime, brain_pin_e enablePin, pin_output_mode_e enablePinMode) {

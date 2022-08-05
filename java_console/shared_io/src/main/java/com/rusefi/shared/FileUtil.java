@@ -8,6 +8,9 @@ import java.nio.ByteOrder;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Minor mess: we also have FileUtils in io
+ */
 public class FileUtil {
     public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
 

@@ -149,16 +149,14 @@ EngineTestHelper::~EngineTestHelper() {
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
-static CompositeEvent compositeEvents[COMPOSITE_PACKET_COUNT];
-
 void EngineTestHelper::writeEvents(const char *fileName) {
-	int count = copyCompositeEvents(compositeEvents);
-	if (count < 2) {
+	const auto& events = getCompositeEvents();
+	if (events.size() < 2) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
-	printf("Writing %d records to %s\n", count, fileName);
-	writeFile(fileName, compositeEvents, count);
+	printf("Writing %d records to %s\n", events.size(), fileName);
+	writeFile(fileName, events);
 }
 
 /**

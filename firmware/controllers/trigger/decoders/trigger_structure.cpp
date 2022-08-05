@@ -644,14 +644,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_TOOTHED_WHEEL_32_2:
 		setToothedWheelConfiguration(this, 32, 2, triggerOperationMode);
-		// todo: add this second/third into 'setToothedWheelConfiguration' as long as we have enough tooth?
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		// todo: why is this 32/2 asking for third gap while 60/2 is happy with just two gaps?
+		// method above sets second gap, here we add third
+		// this third gap is not required to sync on perfect signal but is needed to handle to reject cranking transition noise
 		setThirdTriggerSynchronizationGap(1);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, triggerOperationMode);
-		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:

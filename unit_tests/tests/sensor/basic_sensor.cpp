@@ -110,4 +110,5 @@ TEST_F(SensorBasic, HasSensorMock) {
 
 TEST_F(SensorBasic, FindByName) {
 	ASSERT_EQ(SensorType::Clt, findSensorTypeByName("Clt"));
+	ASSERT_EQ(SensorType::Clt, findSensorTypeByName("cLT"));
 }

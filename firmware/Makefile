@@ -9,6 +9,10 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
+ifneq ("$(wildcard $(../.git))","")
+$(error ../.git not found. We expect source code to be cloned not downloaded as zip file.")
+endif
+
 include rusefi_rules.mk
 
 # Define project name here
@@ -22,6 +26,10 @@ PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
+
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
 
 include rusefi.mk
 
@@ -209,6 +217,7 @@ endif
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
   USE_OPT += -Wl,--defsym=BOOTLOADER=1
+  DDEFS += -DEFI_USE_OPENBLT=TRUE
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
@@ -241,7 +250,8 @@ CPPSRC = \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(CONSOLE_SRC_CPP) \
-rusefi.cpp \
+	$(RUSEFI_LIB_CPP) \
+	rusefi.cpp \
 	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -266,7 +276,8 @@ TCPPSRC =
 
 # List ASM source files here
 ASMXSRC = $(ALLXASMSRC) \
-	$(RUSEFIASM)
+	$(RUSEFIASM) \
+	main_hardfault_asm.S
 
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders
@@ -279,6 +290,7 @@ INCDIR = \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
+	$(RUSEFI_LIB_INC) \
 	$(CONFDIR) \
 	ext \
 	$(PROJECT_DIR)/hw_layer/mass_storage \

@@ -3,6 +3,8 @@
  *
  * Automotive Engine Control IC
  * MCZ33810
+ * eight channel output driver: four integrated low-side drivers and four low-side gate pre-drivers.
+ *
  *
  * @date Dec 29, 2018
  * @author Andrey Belomutskiy, (c) 2012-2020

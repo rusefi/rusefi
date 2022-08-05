@@ -105,7 +105,6 @@ void setManualIdleValvePosition(int positionPercent);
 void startIdleThread();
 void setDefaultIdleParameters();
 void startIdleBench(void);
-void setIdleOffset(float value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);

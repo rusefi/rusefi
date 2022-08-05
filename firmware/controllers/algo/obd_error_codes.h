@@ -18,6 +18,7 @@ extern "C"
 #endif /* __cplusplus */
 
 typedef enum {
+	OBD_None = 0,
 //P0001 Fuel Volume Regulator Control Circuit/Open
 //P0002 Fuel Volume Regulator Control Circuit Range/Performance
 //P0003 Fuel Volume Regulator Control Circuit Low
@@ -129,30 +130,39 @@ typedef enum {
 	//P0104 Mass or Volume Air Flow Circuit Intermittent
 	OBD_Manifold_Absolute_Pressure_Circuit_Malfunction = 105,
 	//P0106 Manifold Absolute Pressure/Barometric Pressure Circuit Range/Performance Problem
+
+	OBD_Map_Timeout = 106,
+	OBD_Map_Low = 107,
+	OBD_Map_High = 108,
+
 	//P0107 Manifold Absolute Pressure/Barometric Pressure Circuit Low Input
 	//P0108 Manifold Absolute Pressure/Barometric Pressure Circuit High Input
 	//P0109 Manifold Absolute Pressure/Barometric Pressure Circuit Intermittent
-	/**
-	 * We raise intake error code if IAT is calculated below -50C or above +100C
-	 */
-	OBD_Intake_Air_Temperature_Circuit_Malfunction = 110,
+
+	OBD_ThermistorConfig = 111,
+
+	OBD_Iat_Timeout = 110,
+	OBD_Iat_Low = 112,
+	OBD_Iat_High = 113,
+
 	//P0111 Intake Air Temperature Circuit Range/Performance Problem
 	//P0112 Intake Air Temperature Circuit Low Input
 	//P0113 Intake Air Temperature Circuit High Input
 	//P0114 Intake Air Temperature Circuit Intermittent
-	OBD_Engine_Coolant_Temperature_Circuit_Malfunction = 115,
+	OBD_Clt_Timeout = 115,
+	OBD_Clt_Low = 117,
+	OBD_Clt_High = 118,
 	//P0116 Engine Coolant Temperature Circuit Range/Performance Problem
 	//P0117 Engine Coolant Temperature Circuit Low Input
 	//P0118 Engine Coolant Temperature Circuit High Input
 	//P0119 Engine Coolant Temperature Circuit Intermittent
-	/**
-	 * See also tpsErrorDetectionTooLow
-	 */
-	OBD_Throttle_Position_Sensor_Circuit_Malfunction = 120,
-	/**
-	 * See also tpsErrorDetectionTooHigh
-	 */
-	OBD_Throttle_Position_Sensor_Range_Performance_Problem = 121,
+
+	OBD_TPS_Configuration = 121,
+
+	OBD_TPS1_Primary_Timeout = 120,
+	OBD_TPS1_Primary_Low = 122,
+	OBD_TPS1_Primary_High = 123,
+
 	//P0122 Throttle Position Sensor/Switch A Circuit Low Input
 	//P0123 Throttle Position Sensor/Switch A Circuit High Input
 	//P0124 Throttle Position Sensor/Switch A Circuit Intermittent
@@ -201,6 +211,11 @@ typedef enum {
 	//P0173 Fuel Trim Malfunction (Bank 2)
 	//P0174 System too Lean (Bank 2)
 	//P0175 System too Rich (Bank 2)
+
+	OBD_FlexSensor_Timeout = 176,
+	OBD_FlexSensor_Low = 178,
+	OBD_FlexSensor_High = 179,
+
 	//P0176 Fuel Composition Sensor Circuit Malfunction
 	//P0177 Fuel Composition Sensor Circuit Range/Performance
 	//P0178 Fuel Composition Sensor Circuit Low Input
@@ -227,18 +242,18 @@ typedef enum {
 	//P0199 Engine Oil Temperature Sensor Intermittent
 	//DTC Codes - P0200-P0299 - Fuel and Air Metering (Injector Circuit)
 	//P0200 Injector Circuit Malfunction
-	//P0201 Injector Circuit Malfunction - Cylinder 1
-	//P0202 Injector Circuit Malfunction - Cylinder 2
-	//P0203 Injector Circuit Malfunction - Cylinder 3
-	//P0204 Injector Circuit Malfunction - Cylinder 4
-	//P0205 Injector Circuit Malfunction - Cylinder 5
-	//P0206 Injector Circuit Malfunction - Cylinder 6
-	//P0207 Injector Circuit Malfunction - Cylinder 7
-	//P0208 Injector Circuit Malfunction - Cylinder 8
-	//P0209 Injector Circuit Malfunction - Cylinder 9
-	//P0210 Injector Circuit Malfunction - Cylinder 10
-	//P0211 Injector Circuit Malfunction - Cylinder 11
-	//P0212 Injector Circuit Malfunction - Cylinder 12
+	OBD_Injector_Circuit_1 = 201,
+	OBD_Injector_Circuit_2 = 202,
+	OBD_Injector_Circuit_3 = 203,
+	OBD_Injector_Circuit_4 = 204,
+	OBD_Injector_Circuit_5 = 205,
+	OBD_Injector_Circuit_6 = 206,
+	OBD_Injector_Circuit_7 = 207,
+	OBD_Injector_Circuit_8 = 208,
+	OBD_Injector_Circuit_9 = 209,
+	OBD_Injector_Circuit_10 = 210,
+	OBD_Injector_Circuit_11 = 211,
+	OBD_Injector_Circuit_12 = 212,
 	//P0213 Cold Start Injector 1 Malfunction
 	//P0214 Cold Start Injector 2 Malfunction
 	//P0215 Engine Shutoff Solenoid Malfunction
@@ -248,6 +263,15 @@ typedef enum {
 	//P0219 Engine Overspeed Condition
 	//P0220 Throttle/Petal Position Sensor/Switch B Circuit Malfunction
 	//P0221 Throttle/Petal Position Sensor/Switch B Circuit Range/Performance Problem
+
+	OBD_TPS1_Secondary_Timeout = 220,
+	OBD_TPS1_Secondary_Low = 222,
+	OBD_TPS1_Secondary_High = 223,
+
+	OBD_TPS2_Primary_Timeout = 225,
+	OBD_TPS2_Primary_Low = 227,
+	OBD_TPS2_Primary_High = 228,
+
 	//P0222 Throttle/Petal Position Sensor/Switch B Circuit Low Input
 	//P0223 Throttle/Petal Position Sensor/Switch B Circuit High Input
 	//P0224 Throttle/Petal Position Sensor/Switch B Circuit Intermittent
@@ -377,18 +401,18 @@ typedef enum {
 	//P0348 Camshaft Position Sensor A Circuit High Input (Bank 2)
 	//P0349 Camshaft Position Sensor A Circuit Intermittent (Bank 2)
 	//P0350 Ignition Coil Primary/Secondary Circuit Malfunction
-	//P0351 Ignition Coil A Primary/Secondary Circuit Malfunction
-	//P0352 Ignition Coil B Primary/Secondary Circuit Malfunction
-	//P0353 Ignition Coil C Primary/Secondary Circuit Malfunction
-	//P0354 Ignition Coil D Primary/Secondary Circuit Malfunction
-	//P0355 Ignition Coil E Primary/Secondary Circuit Malfunction
-	//P0356 Ignition Coil F Primary/Secondary Circuit Malfunction
-	//P0357 Ignition Coil G Primary/Secondary Circuit Malfunction
-	//P0358 Ignition Coil H Primary/Secondary Circuit Malfunction
-	//P0359 Ignition Coil I Primary/Secondary Circuit Malfunction
-	//P0360 Ignition Coil J Primary/Secondary Circuit Malfunction
-	//P0361 Ignition Coil K Primary/Secondary Circuit Malfunction
-	//P0362 Ignition Coil L Primary/Secondary Circuit Malfunction
+	OBD_Ignition_Circuit_1 = 351,
+	OBD_Ignition_Circuit_2 = 352,
+	OBD_Ignition_Circuit_3 = 353,
+	OBD_Ignition_Circuit_4 = 354,
+	OBD_Ignition_Circuit_5 = 355,
+	OBD_Ignition_Circuit_6 = 356,
+	OBD_Ignition_Circuit_7 = 357,
+	OBD_Ignition_Circuit_8 = 358,
+	OBD_Ignition_Circuit_9 = 359,
+	OBD_Ignition_Circuit_10 = 360,
+	OBD_Ignition_Circuit_11 = 361,
+	OBD_Ignition_Circuit_12 = 362,
 	//P0363 Misfire Detected - Fueling Disabled
 	//P0364 Reserved
 	//P0365 Camshaft Position Sensor "B" Circuit (Bank 1)
@@ -1044,6 +1068,19 @@ typedef enum {
 	//P2117 Throttle/Pedal Pos Sensor F Minimum Stop Perf
 	//P2118 Throttle Actuator Ctrl Motor Current Range/Perf
 	//P2119 Throttle Actuator Ctrl Throttle Body Range/Perf
+
+	OBD_TPS2_Secondary_Timeout = 2120,
+	OBD_TPS2_Secondary_Low = 2122,
+	OBD_TPS2_Secondary_High = 2123,
+
+	OBD_PPS_Primary_Timeout = 2125,
+	OBD_PPS_Primary_Low = 2127,
+	OBD_PPS_Primary_High = 2128,
+
+	OBD_PPS_Secondary_Timeout = 2130,
+	OBD_PPS_Secondary_Low = 2132,
+	OBD_PPS_Secondary_High = 2133,
+
 	//P2120 Throttle/Pedal Pos Sensor/Switch D Circ
 	//P2121 Throttle/Pedal Pos Sensor/Switch D Circ Range/Perf
 	//P2122 Throttle/Pedal Pos Sensor/Switch D Circ Low Input
@@ -1059,6 +1096,9 @@ typedef enum {
 	//P2132 Throttle/Pedal Pos Sensor/Switch F Circ Low Input
 	//P2133 Throttle/Pedal Pos Sensor/Switch F Circ High Input
 	//P2134 Throttle/Pedal Pos Sensor/Switch F Circ Interm
+	OBD_TPS1_Correlation = 2135,
+	OBD_TPS2_Correlation = 2136,
+	OBD_PPS_Correlation = 2136,
 	//P2135 Throttle/Pedal Pos Sensor/Switch A / B Voltage Correlation
 	//P2136 Throttle/Pedal Pos Sensor/Switch A / C Voltage Correlation
 	//P2137 Throttle/Pedal Pos Sensor/Switch B / C Voltage Correlation
@@ -1822,7 +1862,7 @@ typedef enum {
 	CUSTOM_ERR_UNKNOWN_PORT = 6132,
 	CUSTOM_ERR_PIN_ALREADY_USED_1 = 6133,
 	CUSTOM_ERR_PIN_ALREADY_USED_2 = 6134,
-	CUSTOM_ERR_ICU_STATE = 6135,
+	CUSTOM_ERR_6135 = 6135,
 	CUSTOM_ERR_TCHARGE_NOT_READY = 6136,
 	CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG = 6137,
 	CUSTOM_ERR_FUEL_TABLE_NOT_READY = 6138,
@@ -1858,10 +1898,10 @@ typedef enum {
 	CUSTOM_ERR_ADC_USED = 6517,
 	CUSTOM_ERR_ADC_DEPTH_SLOW = 6518,
 	CUSTOM_ERR_ADC_DEPTH_FAST = 6519,
-	CUSTOM_ERR_ICU = 6520,
-	CUSTOM_ERR_ICU_AF = 6521,
-	CUSTOM_ERR_ICU_DRIVER = 6522,
-	CUSTOM_ERR_ICU_PIN = 6523,
+	CUSTOM_ERR_6520 = 6520,
+	CUSTOM_ERR_6521 = 6521,
+	CUSTOM_ERR_6522 = 6522,
+	CUSTOM_ERR_6523 = 6523,
 	CUSTOM_ERR_UNEXPECTED_SPI = 6524,
 	CUSTOM_ERR_EXT_MODE = 6525,
 	CUSTOM_ERR_TIMER_OVERFLOW = 6526,
@@ -1953,8 +1993,8 @@ typedef enum {
 	CUSTOM_ERR_6605 = 6605,
 	CUSTOM_ERR_6606 = 6606,
 	CUSTOM_APPEND_STACK = 6607,
-	CUSTOM_RM_STACK_1 = 6608,
-	CUSTOM_RM_STACK = 6609,
+	CUSTOM_ERR_6608 = 6608,
+	CUSTOM_ERR_6609 = 6609,
 
 	CUSTOM_ERR_6610 = 6610,
 	CUSTOM_ERR_6611 = 6611,
@@ -2024,14 +2064,14 @@ typedef enum {
 
 	CUSTOM_ERR_6670 = 6670,
 	CUSTOM_STACK_ADC_6671 = 6671,
-	CUSTOM_ICU_DRIVER = 6672,
-	CUSTOM_ICU_DRIVER_STATE = 6673,
+	CUSTOM_ERR_6672 = 6672,
+	CUSTOM_ERR_6673 = 6673,
 	CUSTOM_STACK_SPI = 6674,
 	CUSTOM_VVT_SYNC_POSITION = 6675,
 	CUSTOM_STACK_ADC = 6676,
 	CUSTOM_IH_STACK = 6677,
 	CUSTOM_EC_NULL = 6678,
-	CUSTOM_ERROR_ICU = 6679,
+	CUSTOM_ERR6679 = 6679,
 
 	CUSTOM_ERR_ANGLE_CR = 6680,
 	CUSTOM_DELTA_NOT_POSITIVE = 6681,
@@ -2054,7 +2094,7 @@ typedef enum {
 	CUSTOM_PWM_CYCLE_START = 6697,
 	CUSTOM_ERR_ARRAY_IS_FULL = 6698,
 	CUSTOM_ERR_ARRAY_REMOVE_ERROR = 6699,
-	CUSTOM_ERR_INVALID_INPUT_ICU_PIN = 6700,
+	CUSTOM_ERR_6700 = 6700,
 
 	CUSTOM_CJ125_0 = 6700,
 	CUSTOM_CJ125_1 = 6701,

@@ -56,8 +56,11 @@ static const int16_t supportedPids4160[] = {
 	-1
 };
 
-static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
+static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex) {
 	CanTxMessage resp(CanCategory::OBD, OBD_TEST_RESPONSE);
+
+	// Respond on the same bus we got the request from
+	resp.busIndex = busIndex;
 
 	// write number of bytes
 	resp[0] = (uint8_t)(2 + numBytes);
@@ -72,18 +75,18 @@ static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue) {
 
 #define _1_MODE 1
 
-static void obdSendValue(int mode, int PID, int numBytes, float value) {
+static void obdSendValue(int mode, int PID, int numBytes, float value, size_t busIndex) {
 	efiAssertVoid(CUSTOM_ERR_6662, numBytes <= 2, "invalid numBytes");
 	int iValue = (int)efiRound(value, 1.0f);
 	// clamp to uint8_t (0..255) or uint16_t (0..65535)
 	iValue = maxI(minI(iValue, (numBytes == 1) ? 255 : 65535), 0);
-	obdSendPacket(mode, PID, numBytes, iValue);
+	obdSendPacket(mode, PID, numBytes, iValue, busIndex);
 }
 
 
 //#define MOCK_SUPPORTED_PIDS 0xffffffff
 
-static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids) {
+static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, size_t busIndex) {
 	uint32_t value = 0;
 	// gather all 32 bit fields
 	for (int i = 0; i < 32 && supportedPids[i] > 0; i++)
@@ -94,63 +97,63 @@ static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *support
 	value = MOCK_SUPPORTED_PIDS;
 #endif
 
-	obdSendPacket(1, PID, 4, value);
+	obdSendPacket(1, PID, 4, value, busIndex);
 }
 
-static void handleGetDataRequest(const CANRxFrame& rx) {
+static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 	int pid = rx.data8[2];
 	switch (pid) {
 	case PID_SUPPORTED_PIDS_REQUEST_01_20:
-		obdWriteSupportedPids(pid, 1, supportedPids0120);
+		obdWriteSupportedPids(pid, 1, supportedPids0120, busIndex);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_21_40:
-		obdWriteSupportedPids(pid, 21, supportedPids2140);
+		obdWriteSupportedPids(pid, 21, supportedPids2140, busIndex);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_41_60:
-		obdWriteSupportedPids(pid, 41, supportedPids4160);
+		obdWriteSupportedPids(pid, 41, supportedPids4160, busIndex);
 		break;
 	case PID_MONITOR_STATUS:
-		obdSendPacket(1, pid, 4, 0);	// todo: add statuses
+		obdSendPacket(1, pid, 4, 0, busIndex);	// todo: add statuses
 		break;
 	case PID_FUEL_SYSTEM_STATUS:
 		// todo: add statuses
-		obdSendValue(_1_MODE, pid, 2, (2<<8)|(0));	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
+		obdSendValue(_1_MODE, pid, 2, (2<<8)|(0), busIndex);	// 2 = "Closed loop, using oxygen sensor feedback to determine fuel mix"
 		break;
 	case PID_ENGINE_LOAD:
-		obdSendValue(_1_MODE, pid, 1, getFuelingLoad() * ODB_TPS_BYTE_PERCENT);
+		obdSendValue(_1_MODE, pid, 1, getFuelingLoad() * ODB_TPS_BYTE_PERCENT, busIndex);
 		break;
 	case PID_COOLANT_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Clt) + ODB_TEMP_EXTRA);
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Clt) + ODB_TEMP_EXTRA, busIndex);
 		break;
 	case PID_STFT_BANK1:
-		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[0]);
+		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[0], busIndex);
 		break;
 	case PID_STFT_BANK2:
-		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[1]);
+		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[1], busIndex);
 		break;
 	case PID_INTAKE_MAP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Map));
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Map), busIndex);
 		break;
 	case PID_RPM:
-		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
+		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT, busIndex);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
-		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::VehicleSpeed));
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::VehicleSpeed), busIndex);
 		break;
 	case PID_TIMING_ADVANCE: {
 		float timing = engine->engineState.timingAdvance[0];
 		timing = (timing > 360.0f) ? (timing - 720.0f) : timing;
-		obdSendValue(_1_MODE, pid, 1, (timing + 64.0f) * 2.0f);		// angle before TDC.	(A/2)-64
+		obdSendValue(_1_MODE, pid, 1, (timing + 64.0f) * 2.0f, busIndex);		// angle before TDC.	(A/2)-64
 		break;
 		}
 	case PID_INTAKE_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Iat) + ODB_TEMP_EXTRA);
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Iat) + ODB_TEMP_EXTRA, busIndex);
 		break;
 	case PID_INTAKE_MAF:
-		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Maf) * 100.0f);	// grams/sec	(A*256+B)/100
+		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Maf) * 100.0f, busIndex);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
-		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Tps1) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Tps1) * ODB_TPS_BYTE_PERCENT, busIndex);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
 		float lambda = Sensor::getOrZero(SensorType::Lambda1);
@@ -159,13 +162,13 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 
 		uint16_t scaled = phi * 32768;
 
-		obdSendPacket(1, pid, 4, scaled << 16);
+		obdSendPacket(1, pid, 4, scaled << 16, busIndex);
 		break;
 	} case PID_FUEL_RATE: {
 		float gPerSecond = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 		float gPerHour = gPerSecond * 3600;
 		float literPerHour = gPerHour * 0.00139f;
-		obdSendValue(_1_MODE, pid, 2, literPerHour * 20.0f);	//	L/h.	(A*256+B)/20
+		obdSendValue(_1_MODE, pid, 2, literPerHour * 20.0f, busIndex);	//	L/h.	(A*256+B)/20
 		break;
 	} default:
 		// ignore unhandled PIDs
@@ -188,13 +191,13 @@ static void handleDtcRequest(int numCodes, int *dtcCode) {
 }
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(const CANRxFrame& rx) {
+void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex) {
 	if (CAN_SID(rx) != OBD_TEST_REQUEST) {
 		return;
 	}
 
 	if (rx.data8[0] == _OBD_2 && rx.data8[1] == OBD_CURRENT_DATA) {
-		handleGetDataRequest(rx);
+		handleGetDataRequest(rx, busIndex);
 	} else if (rx.data8[0] == 1 && rx.data8[1] == OBD_STORED_DIAGNOSTIC_TROUBLE_CODES) {
 		// todo: implement stored/pending difference?
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);

@@ -37,7 +37,6 @@
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
-#include "gpio_ext.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "rusefi_wideband.h"
@@ -69,7 +68,7 @@ static char pin_error[64];
 
 static void benchOff(OutputPin* output) {
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
-	brain_pin_diag_e diag = gpiochips_getDiag(output->brainPin);
+	brain_pin_diag_e diag = output->getDiag();
 	if (diag == PIN_INVALID) {
 		efiPrintf("No Diag on this pin");
 	} else {
@@ -529,6 +528,14 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		rebootNow();
 #endif /* EFI_PROD_CODE */
 		break;
+
+#if EFI_USE_OPENBLT
+	case 0xbc:
+		/* Jump to OpenBLT if present */
+		jump_to_openblt();
+		break;
+#endif
+
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench subsystem %d %d", subsystem, index);
 	}
@@ -574,7 +581,7 @@ void initBenchTest() {
 
 	addConsoleActionFFFFF("luabench2", luaOutBench2);
 	instance.setPeriod(200 /*ms*/);
-	instance.Start();
+	instance.start();
 	onConfigurationChangeBenchTest();
 }
 

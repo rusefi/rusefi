@@ -149,6 +149,15 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 		return nullptr;
 	}
 
+	lua_atpanic(ls, [](lua_State* l) {
+		firmwareError(OBD_PCM_Processor_Fault, "Lua panic: %s", lua_tostring(l, -1));
+
+		// hang the lua thread
+		while (true) ;
+
+		return 0;
+	});
+
 	// Load Lua's own libraries
 	loadLibraries(ls);
 
@@ -310,7 +319,7 @@ void LuaThread::ThreadTask() {
 		bool wasOk = runOneLua(myAlloc, config->luaScript);
 
 		// Reset any lua adjustments the script made
-		// todo https://github.com/rusefi/rusefi/issues/4308 engine->engineState.luaAdjustments = {};
+		engine->resetLua();
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -343,7 +352,7 @@ void startLua() {
 	initLuaCanRx();
 #endif // EFI_CAN_SUPPORT
 
-	luaThread.Start();
+	luaThread.start();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {

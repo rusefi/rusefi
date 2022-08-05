@@ -98,7 +98,7 @@ void startEthernetConsole() {
 	efiSetPadMode("ethernet", Gpio::G14, PAL_MODE_ALTERNATE(0xb));
 #endif // STM32H7
 
-	ethernetConsole.Start();
+	ethernetConsole.start();
 }
 
 #endif // EFI_ETHERNET

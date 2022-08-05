@@ -12,7 +12,6 @@
 
 #include "pch.h"
 #include "os_access.h"
-#include "crc.h"
 
 #if EFI_UNIT_TEST
 #define PRINT printf
@@ -70,6 +69,9 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 		offset = 3;
 		maxNumBytes = 0;	// no data is sent with 'flow control' frame
 		break;
+	default:
+		// bad frame type
+		return 0;
 	}
 	
 	int numBytes = minI(maxNumBytes, num);
@@ -118,6 +120,9 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
 		// todo: currently we just ignore the FC frame
+		return 0;
+	default:
+		// bad frame type
 		return 0;
 	}
 

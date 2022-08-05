@@ -6,5 +6,6 @@ apply from: '../../android/dependencies.gradle'
 
 dependencies {
     api project(':autoupdate')
-    implementation libs.snakeyaml
+    api project(':inifile')
+    api libs.snakeyaml
 }

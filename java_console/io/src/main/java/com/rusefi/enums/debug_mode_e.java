@@ -6,8 +6,8 @@ package com.rusefi.enums;
 public enum debug_mode_e {
 	DBG_0,
 	DBG_TPS_ACCEL,
-	DBG_GPPWM,
-	DBG_IDLE_CONTROL,
+	DBG_2,
+	DBG_STEPPER_IDLE_CONTROL,
 	DBG_EL_ACCEL,
 	DBG_TRIGGER_COUNTERS,
 	DBG_SOFT_SPARK_CUT,

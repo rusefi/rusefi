@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
+
 #include "hyundai.h"
-#include "map.h"
 
 static void commonGenesisCoupe() {
 	strncpy(config->luaScript, R"(

@@ -71,9 +71,6 @@
 /* To remove futher possible conflict */
 #undef STM32_SPI_SPI6_RX_DMA_STREAM
 
-#undef STM32_ICU_USE_TIM3
-#define STM32_ICU_USE_TIM3				TRUE
-
 #undef STM32_CAN_USE_CAN2
 #define STM32_CAN_USE_CAN2				FALSE
 

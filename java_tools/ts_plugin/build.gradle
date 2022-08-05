@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+    api project(':ecu_io')
+    api project(':shared_ui')
+    api project(':inifile')
+    api project(':ts_plugin_launcher')
+    api project(':ts_plugin_launcher')
+    testImplementation libs.mockito
+    testImplementation testFixtures( project(':ecu_io'))
+    implementation files('../ts_plugin_launcher/lib/TunerStudioPluginAPI.jar')
+}

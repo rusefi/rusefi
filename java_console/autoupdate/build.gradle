@@ -9,17 +9,16 @@ configurations {
 }
 
 dependencies {
-    implementation libs.javaxJson
-    api project(':inifile')
-    implementation project(':logging-api')
-    implementation project(':shared_io')
+    api libs.javaxJson
+    api project(':logging-api')
+    api project(':shared_io')
 
-    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.6.2'
-    implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    api group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
+    api libs.json
+    // not 'api' since Android would use own implementation
+    implementation ts_plugin_libs.httpclient
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testImplementation libs.mockito
 }

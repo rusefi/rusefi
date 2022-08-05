@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.List;
 
 /**
+ * Minor mess: we also have FileUtil in shared_ui
  * Date: 3/8/13
  * Andrey Belomutskiy, (c) 2013-2020
  */

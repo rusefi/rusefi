@@ -343,7 +343,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idle_derivativeFilterLoss = 0.08;
 	engineConfiguration->idle_antiwindupFreq = 0.03;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->idleRpmPid.offset = 9;
 	engineConfiguration->idleRpmPid.minValue = -8;
 	engineConfiguration->idleRpmPid.minValue = 76;
 	engineConfiguration->idlerpmpid_iTermMin = -15;

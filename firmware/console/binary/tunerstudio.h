@@ -8,9 +8,6 @@
 #pragma once
 #include "global.h"
 #include "tunerstudio_io.h"
-#include "electronic_throttle_generated.h"
-#include "knock_controller_generated.h"
-#include "FragmentEntry.h"
 
 typedef struct {
 	int queryCommandCounter;
@@ -44,18 +41,7 @@ void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 
-#if defined __GNUC__
-// GCC
-#define pre_packed
-#define post_packed __attribute__((packed))
-#else
-// IAR
-#define pre_packed __packed
-#define post_packed
-#endif
-
-typedef pre_packed struct
-post_packed {
+typedef struct {
 	short int offset;
 	short int count;
 } TunerStudioWriteChunkRequest;

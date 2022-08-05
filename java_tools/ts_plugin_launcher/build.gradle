@@ -8,16 +8,14 @@ defaultTasks 'shadowJar'
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-  testImplementation libs.junit
   implementation libs.annotations
   implementation ts_plugin_libs.httpcore
   implementation ts_plugin_libs.httpmime
-  implementation ts_plugin_libs.httpclient
-  // to automatically exclude transitive dependencies of these projects
-  shadow project(':autoupdate')
-  shadow project(':shared_io')
+  implementation project(':autoupdate')
   implementation ts_plugin_libs.launcher_api
   implementation libs.commons_logging
+
+  testImplementation libs.junit
 }
 
 def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')

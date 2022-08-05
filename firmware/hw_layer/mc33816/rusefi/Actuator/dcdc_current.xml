@@ -1,0 +1,16 @@
+<Actuator name="DCDC_Current" type="DcdcConverterSolenoid">
+  <Resistance>10</Resistance>
+  <Inductance>10</Inductance>
+  <RSense>10</RSense>
+  <CurrentFeedback>CurFbk4</CurrentFeedback>
+  <FeedBackSource>Form</FeedBackSource>
+  <OutputUsed number="1">
+    <Output>Ls7Command</Output>
+  </OutputUsed>
+  <VoltageLoad>
+    <Voltage>-52</Voltage>
+    <Voltage>13</Voltage>
+  </VoltageLoad>
+  <LinkedActuator>DCDC_Voltage</LinkedActuator>
+  <BoostFeedback>None</BoostFeedback>
+</Actuator>
