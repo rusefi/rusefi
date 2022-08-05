@@ -345,6 +345,8 @@ void jump_to_bootloader() {
 }
 
 void jump_to_openblt() {
+	// will be readed by OpenBLT with SharedParamsReadByIndex(0, ptr);
+	*((unsigned char *)0x2001FFF4) = 0x01; // End of RAM
 	reset_and_jump(0xCAFEBABE);
 }
 #endif /* EFI_PROD_CODE */
