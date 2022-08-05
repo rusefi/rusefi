@@ -16,6 +16,8 @@
 #define OBD_STORED_DIAGNOSTIC_TROUBLE_CODES 3
 #define OBD_PENDING_DIAGNOSTIC_TROUBLE_CODES 7
 
+// https://en.wikipedia.org/wiki/OBD-II_PIDs
+
 #define PID_SUPPORTED_PIDS_REQUEST_01_20 0x00
 #define PID_MONITOR_STATUS 0x01
 #define PID_FUEL_SYSTEM_STATUS 0x03
@@ -36,10 +38,15 @@
 #define PID_FUEL_AIR_RATIO_1 0x24
 
 #define PID_SUPPORTED_PIDS_REQUEST_41_60 0x40
+//todo#define PID_CONTROL_UNIT_VOLTAGE 0x42
+//todo#define PID_ETHANOL 0x52
+//todo#define PID_OIL_TEMPERATURE 0x5C
+//todo#define PID_FUEL_TIMING 0x5D
 #define PID_FUEL_RATE 0x5E
+//todo#define PID_TURBO_RPM 0x74
 
 #if HAL_USE_CAN
-void obdOnCanPacketRx(const CANRxFrame& rx);
+void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex);
 #endif /* HAL_USE_CAN */
 
 #define ODB_RPM_MULT 4

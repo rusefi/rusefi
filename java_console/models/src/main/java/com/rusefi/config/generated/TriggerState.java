@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jun 29 22:51:54 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Jul 30 15:33:11 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -35,6 +35,7 @@ public class TriggerState {
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ECU_UNLOCK = "unlock";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
@@ -53,6 +54,7 @@ public class TriggerState {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
+	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -73,13 +75,12 @@ public class TriggerState {
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
 	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
+	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_DATA_LENGTH = 2500;
-	public static final int COMPOSITE_DATA_LENGTH_HALF = 1250;
-	public static final int COMPOSITE_PACKET_COUNT = 500;
+	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -341,6 +342,9 @@ public class TriggerState {
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final String TRIGGER_COMMENT = "#";
+	public static final String TRIGGER_GAP_FROM = "gapFrom";
+	public static final String TRIGGER_GAP_TO = "gapTo";
+	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
 	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;

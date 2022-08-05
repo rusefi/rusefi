@@ -71,14 +71,14 @@ temperature_t getTCharge(int rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 
-	float airTemp = 0;
+	float airTemp;
 
 	// Without either valid, return 0C.  It's wrong, but it'll pretend to be nice and dense, so at least you won't go lean.
 	if (!iat && !clt) {
 		return 0;
 	} else if (!clt && iat) {
 		// Intake temperature will almost always be colder (richer) than CLT - use that
-		return airTemp;
+		return iat.Value;
 	} else if (!iat && clt) {
 		// Without valid intake temperature, assume intake temp is 0C, and interpolate anyway
 		airTemp = 0;

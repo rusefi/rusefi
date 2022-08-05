@@ -135,6 +135,6 @@ public class AuthTokenPanel {
     }
 
     public static void showError(JComponent parent) {
-        JOptionPane.showMessageDialog(parent, "Does not work without auth token, see below.");
+        JOptionPane.showMessageDialog(parent, "Does not work without auth token, see below.", "Auth Token", JOptionPane.ERROR_MESSAGE);
     }
 }

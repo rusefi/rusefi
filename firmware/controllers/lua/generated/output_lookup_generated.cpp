@@ -395,6 +395,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.injectorFlowPressureRatio;
 	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
 		return engine->outputChannels.injectorFlowPressureDelta;
+	if (strEqualCaseInsensitive(name, "alternatorStatus.pTerm"))
+		return engine->outputChannels.alternatorStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.iTerm"))
 		return engine->outputChannels.alternatorStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.dTerm"))
@@ -405,6 +407,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.alternatorStatus.error;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.resetCounter"))
 		return engine->outputChannels.alternatorStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "idleStatus.pTerm"))
+		return engine->outputChannels.idleStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "idleStatus.iTerm"))
 		return engine->outputChannels.idleStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "idleStatus.dTerm"))
@@ -415,6 +419,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.idleStatus.error;
 	if (strEqualCaseInsensitive(name, "idleStatus.resetCounter"))
 		return engine->outputChannels.idleStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "etbStatus.pTerm"))
+		return engine->outputChannels.etbStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "etbStatus.iTerm"))
 		return engine->outputChannels.etbStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "etbStatus.dTerm"))
@@ -425,6 +431,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.etbStatus.error;
 	if (strEqualCaseInsensitive(name, "etbStatus.resetCounter"))
 		return engine->outputChannels.etbStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "boostStatus.pTerm"))
+		return engine->outputChannels.boostStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "boostStatus.iTerm"))
 		return engine->outputChannels.boostStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "boostStatus.dTerm"))

@@ -139,11 +139,11 @@ public:
 	{
 	}
 
-	void Start(CANDriver* device) {
+	void start(CANDriver* device) {
 		m_device = device;
 
 		if (device) {
-			ThreadController::Start();
+			ThreadController::start();
 		}
 	}
 
@@ -318,12 +318,12 @@ void initCan() {
 
 	// fire up threads, as necessary
 	if (engineConfiguration->canWriteEnabled) {
-		canWrite.Start();
+		canWrite.start();
 	}
 
 	if (engineConfiguration->canReadEnabled) {
-		canRead1.Start(device1);
-		canRead2.Start(device2);
+		canRead1.start(device1);
+		canRead2.start(device2);
 	}
 
 	isCanEnabled = true;

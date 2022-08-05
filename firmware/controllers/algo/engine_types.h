@@ -238,8 +238,8 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
-	DBG_GPPWM = 2,
-	DBG_IDLE_CONTROL = 3,
+	DBG_2 = 2,
+	DBG_STEPPER_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,

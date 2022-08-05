@@ -30,51 +30,55 @@
 class StoredValueSensor : public Sensor {
 public:
 	SensorResult get() const final override {
-		bool valid = m_isValid;
-		float value = m_value;
-
-		if (!valid) {
-			return unexpected;
-		}
+		auto result = m_result;
 
 		// Timeouts are disabled, return last value
 		if (Sensor::s_inhibitSensorTimeouts) {
-			return value;
+			return result;
+		}
+
+		// Result is already failed, return that so that we get the real error code instead of a timeout
+		if (!result) {
+			return result;
 		}
 
 		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
 			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
-				return unexpected;
+				return UnexpectedCode::Timeout;
 			}
 		}
 
-		return value;
+		return result;
 	}
 
 	StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
+		, m_result(unexpected)
 		, m_timeoutPeriod(timeoutNt)
 	{
 	}
 
 	// Invalidate the stored value.
 	void invalidate() {
-		m_isValid = false;
+		m_result = unexpected;
+	}
+
+	// Invalidate the stored value with an error code
+	void invalidate(UnexpectedCode why) {
+		m_result = why;
 	}
 
 	// A new reading is available: set and validate a new value for the sensor.
 	void setValidValue(float value, efitick_t timestamp) {
 		// Set value before valid - so we don't briefly have the valid bit set on an invalid value
-		m_value = value;
-		m_isValid = true;
+		m_result = value;
 		m_lastUpdate = timestamp;
 	}
 
 	void showInfo(const char*) const override { }
 
 private:
-	bool m_isValid = false;
-	float m_value = 0.0f;
+	SensorResult m_result;
 
 	const efitick_t m_timeoutPeriod;
 	efitick_t m_lastUpdate = 0;

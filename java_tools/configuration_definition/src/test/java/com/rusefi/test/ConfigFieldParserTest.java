@@ -753,4 +753,14 @@ public class ConfigFieldParserTest {
                 "\tpid_isForcedInduction = \"Does the vehicle have a turbo or supercharger?\"\n" +
                         "\tpid_enableFan1WithAc = \"Turn on this fan when AC is on.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
+
+    @Test
+    public void testUnquote() {
+        assertEquals("x", ConfigField.unquote("\"x\""));
+        // leave broken opening-only quote!
+        assertEquals("\"x", ConfigField.unquote("\"x"));
+// this does not look great let's document this corner case for now
+        assertEquals("x\"\n" +
+                "\"y", ConfigField.unquote("\"x\"\n\"y\""));
+    }
 }

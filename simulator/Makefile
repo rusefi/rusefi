@@ -129,6 +129,10 @@ PROJECT_DIR = ../firmware
 
 # Imported source files and paths
 
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
+
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
 # Startup files.
@@ -173,6 +177,7 @@ CPPSRC = $(ALLCPPSRC) \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
 	$(TEST_SRC_CPP) \
+	$(RUSEFI_LIB_CPP) \
 	main.cpp
 
 
@@ -186,6 +191,7 @@ INCDIR = . \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
+		  $(RUSEFI_LIB_INC) \
           simulator/can \
           simulator
 

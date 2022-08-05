@@ -160,9 +160,14 @@ void setProteusVwPassatB6() {
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
 MOTOR_1 = 0x280
+MOTOR_3 = 0x380
+GRA = 0x388
 TCU_1 = 0x440
 TCU_2 = 0x540
 BRAKE_2 = 0x5A0
+MOTOR_INFO = 0x580
+MOTOR_5 = 0x480
+MOTOR_6 = 0x488
 MOTOR_7 = 0x588
 
 canRxAdd(AIRBAG)
@@ -181,8 +186,7 @@ shallSleep = Timer.new()
 hadIgnitionEvent = false
 
 function onCanRx(bus, id, dlc, data)
-	id11 = id % 2048
-	if id11 == AIRBAG then
+	if id == AIRBAG then
 		-- looks like we have ignition key do not sleep!
 		shallSleep : reset()
 		hadIgnitionEvent = true
@@ -203,8 +207,9 @@ function xorChecksum(data)
 	return data[1] ~ data[2] ~ data[3] ~ data[4] ~ data[5] ~ data[6] ~ data[7]
 end
 
-canMotor1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-canMotor7 = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
+canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 setTickRate(100)
 

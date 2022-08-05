@@ -6,9 +6,13 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A0: return "P36_IN_O2S";
+		case Gpio::A1: return "P32_IN_O2S2";
+		case Gpio::A2: return "P40_IN_MAP3";
 		case Gpio::A3: return "C24 - PPS1";
 		case Gpio::A4: return "E31 - TPS1";
 		case Gpio::A6: return "E40 - IN_CAM";
+		case Gpio::A7: return "P30_IN_AUX4";
 		case Gpio::A8: return "P18_OUT_PP2";
 		case Gpio::B0: return "E34 - TPS2";
 		case Gpio::B1: return "E37 - Crank Input";
@@ -17,6 +21,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C2: return "E29 - Coolant Temp";
 		case Gpio::C3: return "E45 - IAT";
 		case Gpio::C4: return "C25 - PPS2";
+		case Gpio::C5: return "P41_IN_AUX3";
 		case Gpio::C9: return "P33_PWM5";
 		case Gpio::D10: return "E4 - LS4/VVT";
 		case Gpio::D11: return "E3 - LS3";

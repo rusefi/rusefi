@@ -17,7 +17,7 @@ import javax.swing.*;
  */
 public class TsPluginLauncher implements ApplicationPlugin {
     public static final int BUILD_VERSION = 4;
-    static final String VERSION = "2021.alpha." + BUILD_VERSION;
+    static final String VERSION = "2022.alpha." + BUILD_VERSION;
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
     private final JPanel content = new JPanel(new VerticalFlowLayout());
@@ -99,5 +99,10 @@ public class TsPluginLauncher implements ApplicationPlugin {
     @Override
     public double getRequiredPluginSpec() {
         return PLUGIN_API_VERSION;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + getVersion();
     }
 }

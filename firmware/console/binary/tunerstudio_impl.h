@@ -26,8 +26,12 @@ public:
 	bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
 
 	void cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) override;
+	/**
+	 * this command is part of protocol initialization
+	 */
 	void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 	void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize);
+	// does more or less nothing, we only handle the command to make frontend application happy
 	void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode);
 	void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 			void *content);

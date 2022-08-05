@@ -23,11 +23,32 @@ inj2_start: dfsct hs1 hs2 ls2;                      * Set the 3 shortcuts: VBAT,
             jmpr boost0;                            * Jump to launch phase
 
 * ### Launch phase enable boost ###
+* Row1 - !start: injection ended
+* Row2 - Overcurrent, jump to error case (threshold is reached early)
+* Row3 - Overcurrent, jump to peak phase (threshold is reached on time)
+* Row4 - timer1: Minimum boost time reached - switch to row3 instead of row2 to allow peak phase
+* Row5 - timer2: Boost phase timeout - boost took too long, go to error phase
 boost0:     load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
-            cwer peak0 ocur row2;                   * Jump to peak phase when current is over threshold
+            cwer boost0_err ocur row2;              * On overcurrent, go to boost error case
+            cwer peak0 ocur row3;                   * Jump to peak phase when current is over threshold
+
+            ldcd rst _ofs keep keep Tboost_min c1;  * Start boost counter to switch out of error behavior if threshold reached
+            cwer boost0_mintime tc1 row4;           * On timer timeout, go allow overcurrent without error (ie, end of boost)
+
+            ldcd rst _ofs keep keep Tboost_max c2;  * Start boost counter in case Iboost never reached
+            cwer boost0_err tc2 row5;               * Jump to boost0_err in case boost phase takes too long
+
             stf low b0;                             * set flag0 low to force the DC-DC converter in idle mode
             stos off on on;                         * Turn VBAT off, BOOST on, LS on
-            wait row12;                             * Wait for one of the previously defined conditions
+            wait row1245;                           * Wait for one of the previously defined conditions
+
+* ### Boost phase - minimum time reached ###
+boost0_mintime: wait row135;                        * Minimum time for boost phase has been reached, now wait for !start, overcurrent or timeout
+
+boost0_err: stos off off off;                       * Turn off all drivers
+            stf low b10;                            * Set ch1 error flag (OA_1) to signal MCU
+            stf high b0;                            * set flag0 high to release the DC-DC converter idle mode
+            wait row1;                              * Wait for start signal to go low for the next injection attempt
 
 * ### Peak phase continue on Vbat ###
 peak0:      ldcd rst _ofs keep keep Tpeak_tot c1;   * Load the length of the total peak phase in counter 1
@@ -95,11 +116,33 @@ inj4_start: dfsct hs3 hs4 ls4;                      * Set the 3 shortcuts: VBAT,
             jmpr boost1;                            * Jump to launch phase
 
 * ### Launch phase enable boost ###
+* Row1 - !start: injection ended
+* Row2 - Overcurrent, jump to error case (threshold is reached early)
+* Row3 - Overcurrent, jump to peak phase (threshold is reached on time)
+* Row4 - timer1: Minimum boost time reached - switch to row3 instead of row2 to allow peak phase
+* Row5 - timer2: Boost phase timeout - boost took too long, go to error phase
 boost1:     load Iboost dac_sssc _ofs;              * Load the boost phase current threshold in the current DAC
-            cwer peak1 ocur row2;                   * Jump to peak phase when current is over threshold
+            cwer boost1_err ocur row2;              * On overcurrent, go to boost error case
+            cwer peak1 ocur row3;                   * Jump to peak phase when current is over threshold
+
+            ldcd rst _ofs keep keep Tboost_min c1;  * Start boost counter to switch out of error behavior if threshold reached
+            cwer boost1_mintime tc1 row4;           * On timer timeout, go allow overcurrent without error (ie, end of boost)
+
+            ldcd rst _ofs keep keep Tboost_max c2;  * Start boost counter in case Iboost never reached
+            cwer boost1_err tc2 row5;               * Jump to boost1_err in case boost phase takes too long
+
             stf low b0;                             * set flag0 low to force the DC-DC converter in idle mode
             stos off on on;                         * Turn VBAT off, BOOST on, LS on
-            wait row12;                             * Wait for one of the previously defined conditions
+            wait row1245;                           * Wait for one of the previously defined conditions
+
+* ### Boost phase - minimum time reached ###
+boost1_mintime: wait row135;                        * Minimum time for boost phase has been reached, now wait for !start, overcurrent or timeout
+
+boost1_err: stos off off off;                       * Turn off all drivers
+            stf low b11;                            * Set ch1 error flag (OA_1) to signal MCU
+            stf high b0;                            * set flag0 high to release the DC-DC converter idle mode
+            wait row1;                              * Wait for start signal to go low for the next injection attempt
+
 
 * ### Peak phase continue on Vbat ###
 peak1:      ldcd rst _ofs keep keep Tpeak_tot c1;   * Load the length of the total peak phase in counter 1

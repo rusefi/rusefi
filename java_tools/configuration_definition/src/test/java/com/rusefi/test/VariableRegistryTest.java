@@ -3,6 +3,9 @@ package com.rusefi.test;
 import com.rusefi.VariableRegistry;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static com.rusefi.VariableRegistry.*;
 import static org.junit.Assert.assertEquals;
 
@@ -54,5 +57,15 @@ public class VariableRegistryTest {
         registry.register("key_int", 2);
         assertEquals("1", registry.get("key_int"));
         assertEquals("1", registry.get("key_int" + _HEX_SUFFIX));
+    }
+
+    @Test
+    public void testHumanSorted() {
+        Map<Integer, String> input = new HashMap<>();
+        input.put(0, "NONE");
+        input.put(1, "A");
+        input.put(2, "Z");
+        input.put(3, "N");
+        assertEquals("0=\"NONE\",1=\"A\",3=\"N\",2=\"Z\"", VariableRegistry.getHumanSortedTsKeyValueString(input));
     }
 }

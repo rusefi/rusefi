@@ -217,7 +217,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	} else
 #endif
 	{
-		obdOnCanPacketRx(frame);
+		obdOnCanPacketRx(frame, busIndex);
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE

@@ -14,23 +14,7 @@
 
 #if (EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
-#if (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE)
-
-#if (HAL_USE_ICU == TRUE)
-	void icuTriggerTurnOnInputPins();
-	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
-	void icuTriggerTurnOffInputPin(brain_pin_e brainPin);
-#else
-	#define icuTriggerTurnOnInputPins() ((void)0)
-	int  icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
-		UNUSED(msg);
-		UNUSED(index);
-		UNUSED(isTriggerShaft);
-
-		return -2;
-	}
-	#define icuTriggerTurnOffInputPin(brainPin) ((void)0)
-#endif
+#if (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE)
 
 #if (HAL_TRIGGER_USE_PAL == TRUE)
 	void extiTriggerTurnOnInputPins();
@@ -66,7 +50,6 @@
 
 enum triggerType {
 	TRIGGER_NONE,
-	TRIGGER_ICU,
 	TRIGGER_EXTI,
 	TRIGGER_ADC,
 };
@@ -87,18 +70,6 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	if (!isBrainPinValid(brainPin)) {
 		return 0;
 	}
-
-	/* try ICU first */
-#if EFI_ICU_INPUTS
-	if (icuTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
-		if (isTriggerShaft) {
-			shaftTriggerType[index] = TRIGGER_ICU;
-		} else {
-			camTriggerType[index] = TRIGGER_ICU;
-		}
-		return 0;
-	}
-#endif
 
 	/* ... then ADC */
 #if HAL_TRIGGER_USE_ADC
@@ -132,11 +103,6 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 		activeConfiguration.triggerInputPins[index] : activeConfiguration.camInputs[index];
 
 	if (isTriggerShaft) {
-#if EFI_ICU_INPUTS
-		if (shaftTriggerType[index] == TRIGGER_ICU) {
-			icuTriggerTurnOffInputPin(brainPin);
-		}
-#endif /* EFI_ICU_INPUTS */
 		if (shaftTriggerType[index] == TRIGGER_ADC) {
 			adcTriggerTurnOffInputPin(brainPin);
 		}
@@ -147,11 +113,6 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 
 		shaftTriggerType[index] = TRIGGER_NONE;
 	} else {
-#if EFI_ICU_INPUTS
-		if (camTriggerType[index] == TRIGGER_ICU) {
-			icuTriggerTurnOffInputPin(brainPin);
-		}
-#endif /* EFI_ICU_INPUTS */
 		if (camTriggerType[index] == TRIGGER_ADC) {
 			adcTriggerTurnOffInputPin(brainPin);
 		}
@@ -200,13 +161,12 @@ void startTriggerInputPins() {
 
 void turnOnTriggerInputPins() {
 	/* init all trigger HW available */
-	icuTriggerTurnOnInputPins();
 	extiTriggerTurnOnInputPins();
 
 	applyNewTriggerInputPins();
 }
 
-#endif /* (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE) */
+#endif /* (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE) */
 
 
 void stopTriggerDebugPins() {
