@@ -158,8 +158,7 @@ void setBoardDefaultConfiguration() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
@@ -167,6 +166,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+
+	engineConfiguration->startUpFuelPumpDuration = 4;
+	engineConfiguration->postCrankingFactor = 1.05;
+
+	engineConfiguration->etb.pFactor = 6.1350;
+	engineConfiguration->etb.iFactor = 87.7182;
+	engineConfiguration->etb.dFactor = 0.0702;
 
 	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;
