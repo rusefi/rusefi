@@ -127,6 +127,8 @@ end
 
 	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
 	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
+
+	engineConfiguration->cranking.baseFuel = 35;
 }
 
 void setHellen121nissanAltimaN16() {
