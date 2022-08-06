@@ -141,6 +141,16 @@ void setBoardDefaultConfiguration() {
     // at least this starts
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
+	engineConfiguration->cranking.rpm = 400;
+	engineConfiguration->fanOnTemperature = 85;
+	engineConfiguration->fanOffTemperature = 81;
+
+	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->etbIdleThrottleRange = 10;
+	engineConfiguration->cutFuelOnHardLimit = false;
+	engineConfiguration->idlePidRpmUpperLimit = 300;
+	engineConfiguration->mapErrorDetectionTooLow = 10;
+
 
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;
@@ -148,7 +158,7 @@ void setBoardDefaultConfiguration() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
