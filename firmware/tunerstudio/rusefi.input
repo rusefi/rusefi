@@ -1929,7 +1929,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
 		panel = tchargeCurve, { tChargeMode == 2 }
 
-	dialog = baseInjection, "General"
+	dialog = baseInjection, "Injection"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
@@ -3316,7 +3316,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "  Threshold",							sensorSnifferRpmThreshold
 		field = "Engine Sniffer Threshold", 			engineSnifferRpmThreshold
 		
-	dialog = generalSettings, "General"
+	dialog = generalSettings, "Fuel"
 		field = "!https://rusefi.com/s/fuel"
 		field = "Fuel strategy",						fuelAlgorithm
 		
