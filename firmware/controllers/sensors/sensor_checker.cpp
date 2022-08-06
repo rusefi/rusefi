@@ -200,7 +200,7 @@ void SensorChecker::onSlowCallback() {
 		}
 
 		auto diag = pin.getDiag();
-		if (diag != PIN_OK) {
+		if (diag != PIN_OK && diag != PIN_INVALID) {
 			auto code = getCodeForIgnition(i + 1, diag);
 
 			char description[32];
