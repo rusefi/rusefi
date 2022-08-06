@@ -266,7 +266,7 @@
 						<Field>
 							<Parameters address="0x5200201C" name="FOPTSR_CUR" size="0x4"/>
 							<AssignedBits>
-								<Bit>
+								<!--Bit>
 									<Name>RSS1</Name>
 									<Description/>
 									<BitOffset>0x1A</BitOffset>
@@ -276,13 +276,13 @@
 										<Val value="0x0">No SFI process on going</Val>
 										<Val value="0x1">SFI process started</Val>
 									</Values>
-								</Bit>
+								</Bit-->
 							</AssignedBits>
 						</Field>
 						<Field>
 							<Parameters address="0x52002020" name="FOPTSR_PRG" size="0x4"/>
 							<AssignedBits>
-								<Bit>
+								<!--Bit>
 									<Name>RSS1</Name>
 									<Description/>
 									<BitOffset>0x1A</BitOffset>
@@ -292,7 +292,7 @@
 										<Val value="0x0">No SFI process on going</Val>
 										<Val value="0x1">SFI process started</Val>
 									</Values>
-								</Bit>
+								</Bit-->
 							</AssignedBits>
 						</Field>
 					</Category>
