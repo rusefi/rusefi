@@ -28,13 +28,13 @@ pins:
 
 # Solder pads
   - pin: VIN5
-    id: EFI_ADC_0
-    class: analog_inputs
+    id: [EFI_ADC_0, A0]
+    class: [analog_inputs, switch_inputs]
     ts_name: VIN5
 
   - pin: VIN6
-    id: EFI_ADC_1
-    class: analog_inputs
+    id: [EFI_ADC_1, A1]
+    class: [analog_inputs, switch_inputs]
     ts_name: VIN6
 
 # Normal connector pins
