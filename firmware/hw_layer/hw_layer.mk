@@ -30,9 +30,13 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/rtc_helper.cpp \
 	$(PROJECT_DIR)/hw_layer/cdm_ion_sense.cpp \
 	$(PROJECT_DIR)/hw_layer/debounce.cpp \
-	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp \
+	$(PROJECT_DIR)/hw_layer/adc/mcp3208.cpp
 
-ALLCSRC += $(PROJECT_DIR)/hw_layer/mc33816/rusefi/sample_code/PT2001_LoadData.c
+HW_LAYER_EMS = \
+	$(PROJECT_DIR)/hw_layer/openblt/shared_params.c
+
+ALLCSRC += \
+	$(PROJECT_DIR)/hw_layer/mc33816/rusefi/sample_code/PT2001_LoadData.c
 
 #
 # '-include' is a magic kind of 'include' which would survive if file to be included is not found
