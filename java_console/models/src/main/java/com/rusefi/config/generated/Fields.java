@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 06 13:19:59 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 07 22:12:59 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -253,6 +253,7 @@ public class Fields {
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int can2BaudRate_offset = 1622;
+	public static final int can2OpenBLT_offset = 1628;
 	public static final int can2RxPin_offset = 1638;
 	public static final int can2TxPin_offset = 1636;
 	public static final int can_baudrate_e_B100KBPS = 0;
@@ -281,6 +282,7 @@ public class Fields {
 	public static final int canBaudRate_offset = 1620;
 	public static final int canBroadcastUseChannelTwo_offset = 960;
 	public static final int canNbcType_offset = 432;
+	public static final int canOpenBLT_offset = 1628;
 	public static final int canReadEnabled_offset = 1360;
 	public static final int canRxPin_offset = 722;
 	public static final int canSleepPeriodMs_offset = 436;
@@ -1889,7 +1891,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 235953004;
+	public static final int SIGNATURE_HASH = 893127497;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2379,7 +2381,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.06.all.235953004";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.07.all.893127497";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2417,8 +2419,6 @@ public class Fields {
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
 	public static final int unused1452_offset = 1472;
-	public static final int unused1740b0_offset = 1628;
-	public static final int unused1740b1_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3121;
 	public static final int unused443_offset = 1360;
@@ -3314,8 +3314,8 @@ public class Fields {
 	public static final Field MC33_HPFP_I_HOLD_OFF = Field.create("MC33_HPFP_I_HOLD_OFF", 1626, FieldType.INT8).setScale(1.0);
 	public static final Field MC33_HPFP_MAX_HOLD = Field.create("MC33_HPFP_MAX_HOLD", 1627, FieldType.INT8).setScale(1.0);
 	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 1628, FieldType.BIT, 0);
-	public static final Field UNUSED1740B0 = Field.create("UNUSED1740B0", 1628, FieldType.BIT, 1);
-	public static final Field UNUSED1740B1 = Field.create("UNUSED1740B1", 1628, FieldType.BIT, 2);
+	public static final Field CANOPENBLT = Field.create("CANOPENBLT", 1628, FieldType.BIT, 1);
+	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2);
 	public static final Field UNUSED1740B2 = Field.create("UNUSED1740B2", 1628, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1628, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1628, FieldType.BIT, 5);
@@ -4679,8 +4679,8 @@ public class Fields {
 	MC33_HPFP_I_HOLD_OFF,
 	MC33_HPFP_MAX_HOLD,
 	STEPPERDCINVERTEDPINS,
-	UNUSED1740B0,
-	UNUSED1740B1,
+	CANOPENBLT,
+	CAN2OPENBLT,
 	UNUSED1740B2,
 	UNUSED1127,
 	UNUSED1128,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 07 22:12:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3145,11 +3145,13 @@ struct engine_configuration_s {
 	offset 1628 bit 0 */
 	bool stepperDcInvertedPins : 1 {};
 	/**
+	 * Allow OpenBLT on Primary CAN
 	offset 1628 bit 1 */
-	bool unused1740b0 : 1 {};
+	bool canOpenBLT : 1 {};
 	/**
+	 * Allow OpenBLT on Secondary CAN
 	offset 1628 bit 2 */
-	bool unused1740b1 : 1 {};
+	bool can2OpenBLT : 1 {};
 	/**
 	offset 1628 bit 3 */
 	bool unused1740b2 : 1 {};
@@ -4976,4 +4978,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21272);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 07 22:12:54 UTC 2022
