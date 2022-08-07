@@ -331,7 +331,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 }
 #endif
 
-static void reset_and_jump(uint32_t breadcrumb) {
+static void reset_and_jump(void) {
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
@@ -339,14 +339,16 @@ static void reset_and_jump(uint32_t breadcrumb) {
 		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
 	#endif
 
-	*((unsigned long *)0x2001FFF0) = breadcrumb; // End of RAM
 	// and now reboot
 	NVIC_SystemReset();
 }
 
 void jump_to_bootloader() {
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
-	reset_and_jump(0xDEADBEEF);
+
+	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
+
+	reset_and_jump();
 }
 
 void jump_to_openblt() {
@@ -355,7 +357,7 @@ void jump_to_openblt() {
 	/* Store sing to stay in OpenBLT */
 	SharedParamsWriteByIndex(0, 0x01);
 
-	reset_and_jump(0xCAFEBABE);
+	reset_and_jump();
 }
 #endif /* EFI_PROD_CODE */
 
