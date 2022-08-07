@@ -3,10 +3,13 @@ ENTRY(Reset_Handler)
 
 /* This linker file is for OpenBLT bootloader. It compatible with any STM32F4xx
  * that used in RusEFI project. So no CCM memory is defined. Also Flash is
- * limited by 32K and first 64bytes of RAM are reserved for shared region
+ * limited by 32K and last 16bytes of RAM are reserved for shared region
  * between FW and bootloader */
+
+_OpenBLT_Shared_Params_Size = 16;
+
 /* Highest address of the user mode stack */
-_estack = 0x20020000;    /* end of RAM */
+_estack = 0x20020000 - _OpenBLT_Shared_Params_Size;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200;      /* required amount of heap  */
 _Min_Stack_Size = 0x400; /* required amount of stack */
@@ -14,8 +17,8 @@ _Min_Stack_Size = 0x400; /* required amount of stack */
 /* Specify the memory areas */
 MEMORY
 {
-  SHARED (xrw)    : ORIGIN = 0x20000000, LENGTH = 64
-  RAM (xrw)       : ORIGIN = 0x20000040, LENGTH = 128K - 64
+  SHARED (xrw)    : ORIGIN = 0x20000000, LENGTH = _OpenBLT_Shared_Params_Size
+  RAM (xrw)       : ORIGIN = 0x20000000 + _OpenBLT_Shared_Params_Size, LENGTH = 128K - _OpenBLT_Shared_Params_Size
   FLASH (rx)      : ORIGIN = 0x08000000, LENGTH = 32K
 }
 

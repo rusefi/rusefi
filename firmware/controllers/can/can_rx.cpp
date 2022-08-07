@@ -226,6 +226,14 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		handleWidebandBootloaderAck();
 	}
 #endif
+#if EFI_USE_OPENBLT
+	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
+		/* TODO: gracefull shutdown? */
+		/* TODO: settings option to allow restart on CAN message? */
+		/* TODO: check can interface index? */
+		jump_to_openblt();
+	}
+#endif
 }
 
 #endif // EFI_CAN_SUPPORT
