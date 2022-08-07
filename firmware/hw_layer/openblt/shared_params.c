@@ -204,9 +204,7 @@ static bool SharedParamsVerifyChecksum(void)
   bool result = false;
 
   /* Calculate and verify the checksum. */
-  //if (SharedParamsCalculateChecksum() == sharedParamsBuffer.checksum)
-  /* TODO: fix this */
-  if (1)
+  if (SharedParamsCalculateChecksum() == sharedParamsBuffer.checksum)
   {
     /* Checksum is correct, so update the result value. */
     result = true;
