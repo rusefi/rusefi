@@ -3240,12 +3240,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Bitrate",		canBaudRate
 		field = "RX pin",		canRxPin @@if_ts_show_can_pins
 		field = "TX pin",		canTxPin @@if_ts_show_can_pins
+		field = "Allow OpenBLT",	canOpenBLT
 
 	dialog = canHw2, "Secondary CAN"
 		field = "Verbose Can2", verboseCan2
 		field = "Bitrate",	    can2BaudRate
 		field = "RX pin",		can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",		can2TxPin @@if_ts_show_can_pins
+		field = "Allow OpenBLT",	can2OpenBLT
 
 	dialog = canBus, "CAN Bus"
 		field = "CAN read enabled",						canReadEnabled
