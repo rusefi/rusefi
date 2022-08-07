@@ -19,10 +19,12 @@
 #include "stm32h7xx_hal_flash.h"
 #endif
 
+#if EFI_USE_OPENBLT
 /* communication with OpenBLT that is plain C, not to modify external file */
 extern "C" {
 	#include "openblt/shared_params.h"
 };
+#endif
 
 #define _2_MHZ 2'000'000
 
@@ -352,12 +354,14 @@ void jump_to_bootloader() {
 }
 
 void jump_to_openblt() {
+#if EFI_USE_OPENBLT
 	/* safe to call on already inited shares area */
 	SharedParamsInit();
 	/* Store sing to stay in OpenBLT */
 	SharedParamsWriteByIndex(0, 0x01);
 
 	reset_and_jump();
+#endif
 }
 #endif /* EFI_PROD_CODE */
 
