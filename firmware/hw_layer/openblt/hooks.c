@@ -30,6 +30,7 @@
 * Include files
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
+#include "shared_params.h"                       /* Shared parameters header           */
 #include "led.h"                                 /* LED driver header                  */
 #ifdef STM32F429xx
 #include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
@@ -63,8 +64,14 @@ void BackDoorInitHook(void)
 ****************************************************************************************/
 blt_bool BackDoorEntryHook(void)
 {
-  /* default implementation always activates the bootloader after a reset */
-  return BLT_TRUE;
+  uint8_t value = 0x00;
+  if (SharedParamsReadByIndex(0, &value) &&
+      (value == 0x01)) {
+    /* clear */
+    SharedParamsWriteByIndex(0, 0x00);
+    return BLT_TRUE;
+  }
+  return BLT_FALSE;
 } /*** end of BackDoorEntryHook ***/
 #endif /* BOOT_BACKDOOR_HOOKS_ENABLE > 0 */
 
