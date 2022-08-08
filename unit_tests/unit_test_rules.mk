@@ -119,7 +119,7 @@ else
   TRGT = i686-w64-mingw32-
 endif
 else
-  TRGT = 
+  TRGT = gcc-10
 endif
 
 CC   = $(CCPREFIX) $(TRGT)gcc
