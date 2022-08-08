@@ -9,6 +9,7 @@ import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
 import peak.can.basic.*;
 
@@ -26,6 +27,7 @@ public class PCanIoStream extends AbstractIoStream {
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
     private final IncomingDataBuffer dataBuffer = createDataBuffer("[PCAN] ");
     private final PCANBasic can;
+    private final StatusConsumer statusListener;
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
@@ -48,15 +50,19 @@ public class PCanIoStream extends AbstractIoStream {
 
     @Nullable
     public static PCanIoStream createStream() {
+        return createStream(message -> log.info(message));
+    }
+
+    public static PCanIoStream createStream(StatusConsumer statusListener) {
         PCANBasic can = new PCANBasic();
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            log.info("Error initializing PCAN: " + status);
+            statusListener.append("Error initializing PCAN: " + status);
             return null;
         }
-        log.info("Hello PCAN!");
-        return new PCanIoStream(can);
+        statusListener.append("Hello PCAN!");
+        return new PCanIoStream(can, statusListener);
     }
 
     private void sendCanPacket(byte[] payLoad) {
@@ -70,14 +76,15 @@ public class PCanIoStream extends AbstractIoStream {
                 (byte) payLoad.length, payLoad);
         TPCANStatus status = can.Write(CHANNEL, msg);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            log.info("Unable to write the CAN message: " + status);
+            statusListener.append("Unable to write the CAN message: " + status);
             System.exit(0);
         }
 //        log.info("Send OK! length=" + payLoad.length);
     }
 
-    public PCanIoStream(PCANBasic can) {
+    private PCanIoStream(PCANBasic can, StatusConsumer statusListener) {
         this.can = can;
+        this.statusListener = statusListener;
     }
 
     @Override
