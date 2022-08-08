@@ -84,6 +84,7 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_CAN:
                         flashOpenBltCan();
+                        break;
                     case DFU_ERASE:
                         DfuFlasher.runDfuErase();
                         break;
