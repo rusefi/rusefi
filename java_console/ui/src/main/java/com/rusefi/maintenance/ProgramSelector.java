@@ -30,6 +30,8 @@ public class ProgramSelector {
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
+    public static final String BOOT_COMMANDER_EXE = "BootCommander.exe";
+    public static final String OPENBLT_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "openblt";
 
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox<String> mode = new JComboBox<>();
@@ -100,9 +102,10 @@ public class ProgramSelector {
         StatusWindow wnd = new StatusWindow();
         wnd.showFrame(appendBundleName("OpenBLT via CAN " + Launcher.CONSOLE_VERSION));
         ExecHelper.submitAction(() -> {
-            ExecHelper.executeCommand(Launcher.TOOLS_PATH + File.separator + "openblt",
-                    "BootCommander.exe -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
-                    "BootCommander.exe", wnd, new StringBuffer());
+            ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
+                    OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
+                            " -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
+                    BOOT_COMMANDER_EXE, wnd, new StringBuffer());
             // it's a lengthy operation let's signal end
             Toolkit.getDefaultToolkit().beep();
         }, "OpenBLT via CAN");
