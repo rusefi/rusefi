@@ -19,6 +19,6 @@ TEST(issues, issue898) {
 	ASSERT_EQ(TRUE, engine->triggerCentral.triggerShape.shapeDefinitionError) << "MRE_MIATA_NA6 shapeDefinitionError";
 
 	ASSERT_EQ( 2,  eth.recentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
-	ASSERT_EQ(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, eth.recentWarnings()->get(0));
-	ASSERT_EQ(CUSTOM_ERR_TRIGGER_SYNC, eth.recentWarnings()->get(1));
+	ASSERT_EQ(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, eth.recentWarnings()->get(0).Code);
+	ASSERT_EQ(CUSTOM_ERR_TRIGGER_SYNC, eth.recentWarnings()->get(1).Code);
 }
