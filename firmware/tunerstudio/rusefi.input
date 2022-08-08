@@ -1929,7 +1929,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
 		panel = tchargeCurve, { tChargeMode == 2 }
 
-	dialog = baseInjection, "General"
+	dialog = baseInjection, "Injection"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
@@ -3240,12 +3240,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Bitrate",		canBaudRate
 		field = "RX pin",		canRxPin @@if_ts_show_can_pins
 		field = "TX pin",		canTxPin @@if_ts_show_can_pins
+		field = "Allow OpenBLT",	canOpenBLT
 
 	dialog = canHw2, "Secondary CAN"
 		field = "Verbose Can2", verboseCan2
 		field = "Bitrate",	    can2BaudRate
 		field = "RX pin",		can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",		can2TxPin @@if_ts_show_can_pins
+		field = "Allow OpenBLT",	can2OpenBLT
 
 	dialog = canBus, "CAN Bus"
 		field = "CAN read enabled",						canReadEnabled
@@ -3316,7 +3318,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "  Threshold",							sensorSnifferRpmThreshold
 		field = "Engine Sniffer Threshold", 			engineSnifferRpmThreshold
 		
-	dialog = generalSettings, "General"
+	dialog = generalSettings, "Fuel"
 		field = "!https://rusefi.com/s/fuel"
 		field = "Fuel strategy",						fuelAlgorithm
 		
@@ -3828,7 +3830,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Log recent errors list",				enableLogErrorList
 
 				;			Racing Features->Launch Control
-	dialog = smLaunchControlWest, "Launch Control Settings EXPERIMENTAL"
+	dialog = smLaunchControlWest, "Launch Control Settings"
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 
@@ -3905,6 +3907,8 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
+	    field = "I understand ECU Locking",             yesUnderstandLocking
+	    field = "Tune read/write password",             tuneHidingKey, { yesUnderstandLocking == 1 }
 	    field = verboseQuad,                            verboseQuad
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart

@@ -31,6 +31,8 @@ Release template (copy/paste this for new release):
  - counter-noise measure for custom skipped trigger wheels #4375
  - Write hard faults to backup ram, print on next boot #4324
  - Many more options for Lua CAN rx filters/callbacks #4387
+ - Password protection against tune access #4243
+ - Additional CAN messages #4401
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
@@ -39,6 +41,7 @@ Release template (copy/paste this for new release):
  - Console autoupdate error dialogs #4352
  - custom skipped wheel could be located on camshaft #4377
  - it's impossible to receive AcceleratorPedal sensor via CAN/Lua #4369
+ - MRE stepper disables LS2 control #4381
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639

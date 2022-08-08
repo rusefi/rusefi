@@ -18,6 +18,7 @@
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/l9779.h"
+#include "drivers/gpio/tle9104.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
@@ -163,7 +164,7 @@ struct tle8888_config tle8888_cfg = {
 		[1] = {.port = GPIOE,	.pad = 13},
 		[2] = {.port = GPIOE,	.pad = 12},
 		[3] = {.port = GPIOE,	.pad = 11},
-		/* IN5..8 -> IGN1..IGN4 (Ignotors) */
+		/* IN5..8 -> IGN1..IGN4 (Ignitors) */
 		/* Not used */
 		[4] = {.port = NULL,	.pad = 0},
 		[5] = {.port = NULL,	.pad = 0},
@@ -176,10 +177,10 @@ struct tle8888_config tle8888_cfg = {
 		[11] = {.port = GPIOE,	.pad = 7},
 	},
 	.direct_maps = {
-		[0] = {.output =  5},
-		[1] = {.output =  6},
-		[2] = {.output = 21},
-		[3] = {.output = 22},
+		[0] = {.output =  5},	/* MRE: LS2 */
+		[1] = {.output =  6},	/* MRE: LS1 */
+		[2] = {.output = 21},	/* MRE: GP1 - not used when stepper = true */
+		[3] = {.output = 22},	/* MRE: GP2 - not used when stepper = true */
 	},
 	.ign_en =  {.port = GPIOD,	.pad = 10},
 	.inj_en =  {.port = GPIOD,	.pad = 11},
@@ -283,6 +284,10 @@ void initSmartGpio() {
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
 
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
+
 	/* external chip init */
 	gpiochips_init();
 }
@@ -317,6 +322,9 @@ void stopSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
 
 void startSmartCsPins() {
@@ -343,6 +351,9 @@ void startSmartCsPins() {
 #if (BOARD_MC33810_COUNT > 0)
 	/* none of official boards has this IC */
 #endif /* (BOARD_MC33810_COUNT > 0) */
+#if (BOARD_TLE9104_COUNT > 0)
+	// No official boards have this IC
+#endif
 }
 
 #endif /* EFI_PROD_CODE */

@@ -438,13 +438,11 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 		engine->triggerErrorDetection.add(isDecodingError);
 
 		if (triggerCentral.isTriggerDecoderError()) {
-			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
+			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d got %d/%d",
 					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-					TRIGGER_WAVEFORM(getExpectedEventCount(2)),
 					triggerCentral.triggerState.currentCycle.eventCount[0],
-					triggerCentral.triggerState.currentCycle.eventCount[1],
-					triggerCentral.triggerState.currentCycle.eventCount[2]);
+					triggerCentral.triggerState.currentCycle.eventCount[1]);
 		}
 	}
 

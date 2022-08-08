@@ -539,6 +539,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseTachPullUp;
 	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
 		return engineConfiguration->boardUseTempPullUp;
+	if (strEqualCaseInsensitive(name, "yesUnderstandLocking"))
+		return engineConfiguration->yesUnderstandLocking;
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 		return engineConfiguration->silentTriggerError;
 	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
@@ -715,6 +717,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mc33_hpfp_max_hold;
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
 		return engineConfiguration->stepperDcInvertedPins;
+	if (strEqualCaseInsensitive(name, "canOpenBLT"))
+		return engineConfiguration->canOpenBLT;
+	if (strEqualCaseInsensitive(name, "can2OpenBLT"))
+		return engineConfiguration->can2OpenBLT;
 	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
 		return engineConfiguration->benchTestOffTime;
 	if (strEqualCaseInsensitive(name, "benchTestCount"))
@@ -841,6 +847,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpTargetDecay;
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 		return engineConfiguration->vvtActivationDelayMs;
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+		return engineConfiguration->tuneHidingKey;
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
@@ -1796,6 +1804,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->boardUseTempPullUp = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "yesUnderstandLocking"))
+	{
+		engineConfiguration->yesUnderstandLocking = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
 	{
 		engineConfiguration->silentTriggerError = (int)value;
@@ -2236,6 +2249,16 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stepperDcInvertedPins = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "canOpenBLT"))
+	{
+		engineConfiguration->canOpenBLT = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "can2OpenBLT"))
+	{
+		engineConfiguration->can2OpenBLT = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
@@ -2549,6 +2572,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+	{
+		engineConfiguration->tuneHidingKey = (int)value;
 		return;
 	}
 }

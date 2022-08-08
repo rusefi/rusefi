@@ -37,6 +37,11 @@ public:
 			return result;
 		}
 
+		// Result is already failed, return that so that we get the real error code instead of a timeout
+		if (!result) {
+			return result;
+		}
+
 		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
 			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
 				return UnexpectedCode::Timeout;

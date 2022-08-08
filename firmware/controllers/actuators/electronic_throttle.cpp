@@ -196,7 +196,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 		if (!Sensor::isRedundant(m_positionSensor)) {
 			firmwareError(
-				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
+				OBD_TPS_Configuration,
 				"Use of electronic throttle requires %s to be redundant.",
 				Sensor::getSensorName(m_positionSensor)
 			);
@@ -206,7 +206,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 		if (!Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 			firmwareError(
-				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
+				OBD_TPS_Configuration,
 				"Use of electronic throttle requires accelerator pedal to be redundant."
 			);
 
@@ -650,7 +650,7 @@ struct EtbImpl final : public TBase {
 
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
-			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
+			firmwareError(OBD_TPS_Configuration, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
 			TBase::m_isAutocal = false;
 			return;
 		}

@@ -101,6 +101,7 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		shiftingFrom = getCurrentGear();
 		isShifting = true;
 	}
+
 	switch (getCurrentGear()) {
 	case REVERSE:
 		pcts = &config->tcu_pcValsR;
@@ -136,7 +137,12 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 	case GEAR_4:
 		pcts = &config->tcu_pcVals4;
 		break;
+	default:
+		// TODO: how did we get here?
+		pcPwm.setSimplePwmDutyCycle(0);
+		return;
 	}
+
 	float duty = 0.01f * interpolate2d(engine->engineState.sd.airMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
 	pcPwm.setSimplePwmDutyCycle(duty);
 }

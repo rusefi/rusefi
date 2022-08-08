@@ -9,6 +9,10 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
+ifneq ("$(wildcard $(../.git))","")
+$(error ../.git not found. We expect source code to be cloned not downloaded as zip file.")
+endif
+
 include rusefi_rules.mk
 
 # Define project name here

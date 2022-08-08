@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jul 28 06:53:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Aug 07 22:12:57 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2453,7 +2453,7 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 1360 bit 5 */
-	bool unused234234234 : 1 {};
+	bool yesUnderstandLocking : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
 	offset 1360 bit 6 */
@@ -3127,11 +3127,13 @@ struct engine_configuration_s {
 	offset 1628 bit 0 */
 	bool stepperDcInvertedPins : 1 {};
 	/**
+	 * Allow OpenBLT on Primary CAN
 	offset 1628 bit 1 */
-	bool unused1740b0 : 1 {};
+	bool canOpenBLT : 1 {};
 	/**
+	 * Allow OpenBLT on Secondary CAN
 	offset 1628 bit 2 */
-	bool unused1740b1 : 1 {};
+	bool can2OpenBLT : 1 {};
 	/**
 	offset 1628 bit 3 */
 	bool unused1740b2 : 1 {};
@@ -4254,10 +4256,14 @@ struct engine_configuration_s {
 	 */
 	float etbMinimumPosition;
 	/**
-	units
 	 * offset 3768
 	 */
-	uint8_t mainUnusedEnd[246];
+	uint16_t tuneHidingKey;
+	/**
+	units
+	 * offset 3770
+	 */
+	uint8_t mainUnusedEnd[244];
 	/**
 	 * need 4 byte alignment
 	units
@@ -4954,4 +4960,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Jul 28 06:53:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Aug 07 22:12:57 UTC 2022

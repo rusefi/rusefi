@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 28 13:11:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 07 23:48:03 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -253,6 +253,7 @@ public class Fields {
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int can2BaudRate_offset = 1622;
+	public static final int can2OpenBLT_offset = 1628;
 	public static final int can2RxPin_offset = 1638;
 	public static final int can2TxPin_offset = 1636;
 	public static final int can_baudrate_e_B100KBPS = 0;
@@ -281,6 +282,7 @@ public class Fields {
 	public static final int canBaudRate_offset = 1620;
 	public static final int canBroadcastUseChannelTwo_offset = 960;
 	public static final int canNbcType_offset = 432;
+	public static final int canOpenBLT_offset = 1628;
 	public static final int canReadEnabled_offset = 1360;
 	public static final int canRxPin_offset = 722;
 	public static final int canSleepPeriodMs_offset = 436;
@@ -334,6 +336,7 @@ public class Fields {
 	public static final String CMD_BURNCONFIG = "burnconfig";
 	public static final String CMD_DATE = "date";
 	public static final String CMD_DISABLE = "disable";
+	public static final String CMD_ECU_UNLOCK = "unlock";
 	public static final String CMD_ENABLE = "enable";
 	public static final String CMD_ENGINE_TYPE = "engine_type";
 	public static final String CMD_ENGINESNIFFERRPMTHRESHOLD = "engineSnifferRpmThreshold";
@@ -352,6 +355,7 @@ public class Fields {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
+	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -372,6 +376,7 @@ public class Fields {
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
 	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
+	public static final int CMD_TS_WBO_UPDATE = 0x15;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
@@ -1616,7 +1621,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 716;
 	public static final int mainRelayPinMode_offset = 776;
-	public static final int mainUnusedEnd_offset = 3768;
+	public static final int mainUnusedEnd_offset = 3770;
 	public static final int malfunctionIndicatorPin_offset = 650;
 	public static final int malfunctionIndicatorPinMode_offset = 652;
 	public static final int manIdlePosition_offset = 560;
@@ -1886,6 +1891,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 893127497;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2375,7 +2381,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.07.28.all.3027406799";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.08.all.893127497";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2393,6 +2399,7 @@ public class Fields {
 	public static final int TsCalMode_Tps2Min = 9;
 	public static final int TsCalMode_Tps2SecondaryMax = 10;
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
+	public static final int tuneHidingKey_offset = 3768;
 	public static final int tunerStudioSerialSpeed_offset = 740;
 	public static final int turboSpeedSensorInputPin_offset = 1474;
 	public static final int turboSpeedSensorMultiplier_offset = 1380;
@@ -2412,10 +2419,7 @@ public class Fields {
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
 	public static final int unused1452_offset = 1472;
-	public static final int unused1740b0_offset = 1628;
-	public static final int unused1740b1_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
-	public static final int unused234234234_offset = 1360;
 	public static final int unused4080_offset = 3121;
 	public static final int unused443_offset = 1360;
 	public static final int unused444_offset = 1360;
@@ -2570,6 +2574,7 @@ public class Fields {
 	public static final int wwMapBins_offset = 3612;
 	public static final int wwTauCltValues_offset = 3596;
 	public static final int wwTauMapValues_offset = 3620;
+	public static final int yesUnderstandLocking_offset = 1360;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT).setScale(1.0);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 4, FieldType.INT16).setScale(1.0);
 	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 6, FieldType.INT16).setScale(1.0);
@@ -3136,7 +3141,7 @@ public class Fields {
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1360, FieldType.BIT, 2);
 	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1360, FieldType.BIT, 3);
 	public static final Field BOARDUSETEMPPULLUP = Field.create("BOARDUSETEMPPULLUP", 1360, FieldType.BIT, 4);
-	public static final Field UNUSED234234234 = Field.create("UNUSED234234234", 1360, FieldType.BIT, 5);
+	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1360, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1360, FieldType.BIT, 6);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1360, FieldType.BIT, 7);
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1360, FieldType.BIT, 8);
@@ -3309,8 +3314,8 @@ public class Fields {
 	public static final Field MC33_HPFP_I_HOLD_OFF = Field.create("MC33_HPFP_I_HOLD_OFF", 1626, FieldType.INT8).setScale(1.0);
 	public static final Field MC33_HPFP_MAX_HOLD = Field.create("MC33_HPFP_MAX_HOLD", 1627, FieldType.INT8).setScale(1.0);
 	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 1628, FieldType.BIT, 0);
-	public static final Field UNUSED1740B0 = Field.create("UNUSED1740B0", 1628, FieldType.BIT, 1);
-	public static final Field UNUSED1740B1 = Field.create("UNUSED1740B1", 1628, FieldType.BIT, 2);
+	public static final Field CANOPENBLT = Field.create("CANOPENBLT", 1628, FieldType.BIT, 1);
+	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2);
 	public static final Field UNUSED1740B2 = Field.create("UNUSED1740B2", 1628, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1628, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1628, FieldType.BIT, 5);
@@ -3796,7 +3801,8 @@ public class Fields {
 	public static final Field TCU_32_SOLENOID_FREQ = Field.create("TCU_32_SOLENOID_FREQ", 3760, FieldType.INT16).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_3762 = Field.create("ALIGNMENTFILL_AT_3762", 3762, FieldType.INT8).setScale(1.0);
 	public static final Field ETBMINIMUMPOSITION = Field.create("ETBMINIMUMPOSITION", 3764, FieldType.FLOAT);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3768, FieldType.INT8).setScale(1.0);
+	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 3768, FieldType.INT16).setScale(1.0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3770, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_4014 = Field.create("ALIGNMENTFILL_AT_4014", 4014, FieldType.INT8).setScale(1.0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4016, FieldType.FLOAT);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4048, FieldType.FLOAT);
@@ -4504,7 +4510,7 @@ public class Fields {
 	ISVERBOSEIAC,
 	BOARDUSETACHPULLUP,
 	BOARDUSETEMPPULLUP,
-	UNUSED234234234,
+	YESUNDERSTANDLOCKING,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,
 	CANREADENABLED,
@@ -4673,8 +4679,8 @@ public class Fields {
 	MC33_HPFP_I_HOLD_OFF,
 	MC33_HPFP_MAX_HOLD,
 	STEPPERDCINVERTEDPINS,
-	UNUSED1740B0,
-	UNUSED1740B1,
+	CANOPENBLT,
+	CAN2OPENBLT,
 	UNUSED1740B2,
 	UNUSED1127,
 	UNUSED1128,
@@ -5154,6 +5160,7 @@ public class Fields {
 	TCU_32_SOLENOID_FREQ,
 	ALIGNMENTFILL_AT_3762,
 	ETBMINIMUMPOSITION,
+	TUNEHIDINGKEY,
 	MAINUNUSEDEND,
 	ALIGNMENTFILL_AT_4014,
 	ETBBIASBINS,
