@@ -42,12 +42,6 @@
 // See USF2NT above for when to use MSF2NT
 #define MSF2NT(msTimeFloat) USF2NT(MS2US(msTimeFloat))
 
-/**
- * We use this 'deep in past, before ECU has ever started' value as a way to unify
- * handling of first ever event and an event which has happened after a large pause in engine activity
- */
-#define DEEP_IN_THE_PAST_SECONDS -10
-
 #ifdef __cplusplus
 /**
  * Provide a 62-bit counter from a 32-bit counter source that wraps around.
