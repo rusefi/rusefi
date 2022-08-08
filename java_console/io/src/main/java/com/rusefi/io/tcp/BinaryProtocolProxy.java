@@ -86,7 +86,8 @@ public class BinaryProtocolProxy {
                 controllerResponse = targetEcu.readPacket();
             }
 
-            log.info("Relaying controller response length=" + controllerResponse.getPacket().length);
+            if (log.debugEnabled())
+                log.debug("Relaying controller response length=" + controllerResponse.getPacket().length);
             clientStream.sendPacket(controllerResponse);
         }
     }
@@ -103,7 +104,8 @@ public class BinaryProtocolProxy {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.getPacket()));
         byte command = (byte) dis.read();
 
-        log.info("Relaying client command " + BinaryProtocol.findCommand(command));
+        if (log.debugEnabled())
+            log.debug("Relaying client command " + BinaryProtocol.findCommand(command));
         // sending proxied packet to controller
         targetOutputStream.sendPacket(packet);
     }
