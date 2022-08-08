@@ -639,9 +639,6 @@ void setMiataNB2_MRE_ETB() {
 	setMiataNB2_MRE_common();
 
 	engineConfiguration->useETBforIdleControl = true;
-
-
-	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->throttlePedalUpVoltage = 1;
 	// WAT? that's an interesting value, how come it's above 5v?
 	engineConfiguration->throttlePedalWOTVoltage = 5.47;

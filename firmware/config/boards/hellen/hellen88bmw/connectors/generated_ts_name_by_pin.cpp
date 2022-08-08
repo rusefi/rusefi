@@ -6,6 +6,8 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A0: return "VIN5";
+		case Gpio::A1: return "VIN6";
 		case Gpio::A6: return "17 - CAM";
 		case Gpio::B1: return "16 - CRANK";
 		case Gpio::B8: return "24 - Coil 6";

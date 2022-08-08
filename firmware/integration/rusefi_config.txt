@@ -1209,8 +1209,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t mc33_hpfp_max_hold;+Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
 
 	bit stepperDcInvertedPins;+Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	bit unused1740b0
-	bit unused1740b1
+	bit canOpenBLT; Allow OpenBLT on Primary CAN
+	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
 	bit unused1740b2
 	bit unused1127
 	bit unused1128
