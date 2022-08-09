@@ -26,7 +26,7 @@ public class PCanIoStream extends AbstractIoStream {
     static Logging log = getLogging(PCanIoStream.class);
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
-    private final IncomingDataBuffer dataBuffer = createDataBuffer("[PCAN] ");
+    private final IncomingDataBuffer dataBuffer;
     private final PCANBasic can;
     private final StatusConsumer statusListener;
 
@@ -89,6 +89,7 @@ public class PCanIoStream extends AbstractIoStream {
     private PCanIoStream(PCANBasic can, StatusConsumer statusListener) {
         this.can = can;
         this.statusListener = statusListener;
+        dataBuffer = createDataBuffer("[PCAN] ");
     }
 
     @Override
