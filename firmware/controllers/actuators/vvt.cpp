@@ -71,6 +71,17 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	return 0;
 }
 
+static void shouldInvertVvt(int index) {
+	switch (index) {
+		case 0: return engineConfiguration->invertVvt1;
+		case 1: return engineConfiguration->invertVvt2;
+		case 2: return engineConfiguration->invertVvt3;
+		case 3: return engineConfiguration->invertVvt4;
+	}
+
+	return false;
+}
+
 expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
 	float retVal = m_pid.getOutput(target, observation);
 
@@ -88,7 +99,11 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-	return retVal;
+	if (shouldInvertVvt(index)) {
+		return -retVal;
+	} else {
+		return retVal;
+	}
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
