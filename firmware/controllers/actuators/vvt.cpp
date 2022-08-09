@@ -71,7 +71,7 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	return 0;
 }
 
-static void shouldInvertVvt(int index) {
+static bool shouldInvertVvt(int index) {
 	// grumble grumble, can't do an array of bits in c++
 	switch (index) {
 		case 0: return engineConfiguration->invertVvt1;
