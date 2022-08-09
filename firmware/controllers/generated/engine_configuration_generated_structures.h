@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 16:53:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 17:31:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2531,7 +2531,7 @@ struct engine_configuration_s {
 	bool verboseIsoTp : 1 {};
 	/**
 	offset 1360 bit 28 */
-	bool unused444 : 1 {};
+	bool engineSnifferFocusOnInputs : 1 {};
 	/**
 	offset 1360 bit 29 */
 	bool launchActivateInverted : 1 {};
@@ -4960,4 +4960,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 16:53:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 17:31:04 UTC 2022
