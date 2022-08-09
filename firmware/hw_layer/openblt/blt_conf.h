@@ -109,7 +109,7 @@
  * also be implemented in a way that disables the backdoor entry altogether.
  */
 /** \brief Enable/disable the backdoor override hook functions. */
-#define BOOT_BACKDOOR_HOOKS_ENABLE      (0)
+#define BOOT_BACKDOOR_HOOKS_ENABLE      (1)
 
 
 /****************************************************************************************

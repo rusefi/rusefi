@@ -39,14 +39,14 @@ public class FirmwareFlasher {
         button.addActionListener(event -> doUpdateFirmware(fileName, button));
     }
 
-    public static void doUpdateFirmware(String fileName, JComponent component) {
+    public static void doUpdateFirmware(String fileName, JComponent parent) {
         StatusWindow wnd = new StatusWindow();
-        int dialogResult = JOptionPane.showConfirmDialog(component, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
+        int dialogResult = JOptionPane.showConfirmDialog(parent, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
                 "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
         if (dialogResult != JOptionPane.YES_OPTION)
             return;
 
-        wnd.getFrame().setLocationRelativeTo(component);
+        wnd.getFrame().setLocationRelativeTo(parent);
         wnd.showFrame(TITLE);
 
         ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), FirmwareFlasher.class + " extProcessThread");

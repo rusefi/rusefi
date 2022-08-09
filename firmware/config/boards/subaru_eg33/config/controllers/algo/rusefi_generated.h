@@ -267,6 +267,7 @@
 #define CAMS_PER_BANK 2
 #define CAMS_PER_BANK_padding 0
 #define can2BaudRate_offset 1622
+#define can2OpenBLT_offset 1628
 #define can2RxPin_offset 1638
 #define can2TxPin_offset 1636
 #define can_baudrate_e_auto_enum 0="B100KBPS",3="B1MBPS",1="B250KBPS",2="B500KBPS"
@@ -299,6 +300,7 @@
 #define canBaudRate_offset 1620
 #define canBroadcastUseChannelTwo_offset 960
 #define canNbcType_offset 432
+#define canOpenBLT_offset 1628
 #define canReadEnabled_offset 1360
 #define canRxPin_offset 722
 #define canSleepPeriodMs_offset 436
@@ -687,6 +689,7 @@
 #define engineCode_offset 1124
 #define engineConfiguration_offset 0
 #define engineMake_offset 1092
+#define engineSnifferFocusOnInputs_offset 1360
 #define engineSnifferRpmThreshold_offset 10
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
@@ -1493,6 +1496,8 @@
 #define invertCamVVTSignal_offset 960
 #define invertPrimaryTriggerSignal_offset 1360
 #define invertSecondaryTriggerSignal_offset 1360
+#define invertVvtControlExhaust_offset 1372
+#define invertVvtControlIntake_offset 1372
 #define is_enabled_spi_1_offset 764
 #define is_enabled_spi_2_offset 764
 #define is_enabled_spi_3_offset 764
@@ -1907,7 +1912,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 83993310
+#define SIGNATURE_HASH 1903325343
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2463,7 +2468,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.06.subaru_eg33_f7.83993310"
+#define TS_SIGNATURE "rusEFI 2022.08.09.subaru_eg33_f7.1903325343"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2504,21 +2509,15 @@
 #define unused1129_offset 1628
 #define unused1130_offset 1628
 #define unused1452_offset 1472
-#define unused1740b0_offset 1628
-#define unused1740b1_offset 1628
 #define unused1740b2_offset 1628
 #define unused4080_offset 3121
-#define unused443_offset 1360
-#define unused444_offset 1360
 #define unused460_offset 480
 #define unused962_offset 1040
-#define unused_1484_bit_25_offset 1372
-#define unused_1484_bit_26_offset 1372
 #define unused_1484_bit_27_offset 1372
-#define unused_1484_bit_28_offset 1372
 #define unused_1484_bit_29_offset 1372
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_31_offset 1372
+#define unused_1484_bit_38_offset 1372
 #define unusedBit_45_31_offset 120
 #define unusedBit_542_10_offset 1628
 #define unusedBit_542_11_offset 1628
@@ -2589,6 +2588,7 @@
 #define verboseCan2_offset 960
 #define verboseCan_offset 120
 #define verboseCanBaseAddress_offset 784
+#define verboseIsoTp_offset 1360
 #define verboseQuad_offset 764
 #define verboseTLE8888_offset 764
 #define verboseTriggerSynchDetails_offset 1372

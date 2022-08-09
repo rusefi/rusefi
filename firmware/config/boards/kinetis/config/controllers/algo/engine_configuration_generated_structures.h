@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 09 20:28:09 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2534,10 +2534,10 @@ struct engine_configuration_s {
 	bool boardUseD5PullDown : 1 {};
 	/**
 	offset 1360 bit 27 */
-	bool unused443 : 1 {};
+	bool verboseIsoTp : 1 {};
 	/**
 	offset 1360 bit 28 */
-	bool unused444 : 1 {};
+	bool engineSnifferFocusOnInputs : 1 {};
 	/**
 	offset 1360 bit 29 */
 	bool launchActivateInverted : 1 {};
@@ -2688,17 +2688,19 @@ struct engine_configuration_s {
 	offset 1372 bit 24 */
 	bool forceO2Heating : 1 {};
 	/**
+	 * If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 	offset 1372 bit 25 */
-	bool unused_1484_bit_25 : 1 {};
+	bool invertVvtControlIntake : 1 {};
 	/**
+	 * If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 	offset 1372 bit 26 */
-	bool unused_1484_bit_26 : 1 {};
+	bool invertVvtControlExhaust : 1 {};
 	/**
 	offset 1372 bit 27 */
 	bool unused_1484_bit_27 : 1 {};
 	/**
 	offset 1372 bit 28 */
-	bool unused_1484_bit_28 : 1 {};
+	bool unused_1484_bit_38 : 1 {};
 	/**
 	offset 1372 bit 29 */
 	bool unused_1484_bit_29 : 1 {};
@@ -3145,11 +3147,13 @@ struct engine_configuration_s {
 	offset 1628 bit 0 */
 	bool stepperDcInvertedPins : 1 {};
 	/**
+	 * Allow OpenBLT on Primary CAN
 	offset 1628 bit 1 */
-	bool unused1740b0 : 1 {};
+	bool canOpenBLT : 1 {};
 	/**
+	 * Allow OpenBLT on Secondary CAN
 	offset 1628 bit 2 */
-	bool unused1740b1 : 1 {};
+	bool can2OpenBLT : 1 {};
 	/**
 	offset 1628 bit 3 */
 	bool unused1740b2 : 1 {};
@@ -4706,7 +4710,7 @@ struct persistent_config_s {
 	value
 	 * offset 18136
 	 */
-	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18200
@@ -4721,7 +4725,7 @@ struct persistent_config_s {
 	value
 	 * offset 18232
 	 */
-	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18296
@@ -4976,4 +4980,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21272);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Jul 30 16:11:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 09 20:28:09 UTC 2022

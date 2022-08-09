@@ -132,6 +132,7 @@ PROJECT_DIR = ../firmware
 # Configure libfirmware Paths/Includes
 RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
 
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk

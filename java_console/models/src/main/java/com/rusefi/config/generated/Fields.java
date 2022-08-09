@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 06 13:19:59 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 20:28:13 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -253,6 +253,7 @@ public class Fields {
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int can2BaudRate_offset = 1622;
+	public static final int can2OpenBLT_offset = 1628;
 	public static final int can2RxPin_offset = 1638;
 	public static final int can2TxPin_offset = 1636;
 	public static final int can_baudrate_e_B100KBPS = 0;
@@ -281,6 +282,7 @@ public class Fields {
 	public static final int canBaudRate_offset = 1620;
 	public static final int canBroadcastUseChannelTwo_offset = 960;
 	public static final int canNbcType_offset = 432;
+	public static final int canOpenBLT_offset = 1628;
 	public static final int canReadEnabled_offset = 1360;
 	public static final int canRxPin_offset = 722;
 	public static final int canSleepPeriodMs_offset = 436;
@@ -661,6 +663,7 @@ public class Fields {
 	public static final int engineCode_offset = 1124;
 	public static final int engineConfiguration_offset = 0;
 	public static final int engineMake_offset = 1092;
+	public static final int engineSnifferFocusOnInputs_offset = 1360;
 	public static final int engineSnifferRpmThreshold_offset = 10;
 	public static final int engineType_offset = 0;
 	public static final int ERROR_BUFFER_SIZE = 120;
@@ -1496,6 +1499,8 @@ public class Fields {
 	public static final int invertCamVVTSignal_offset = 960;
 	public static final int invertPrimaryTriggerSignal_offset = 1360;
 	public static final int invertSecondaryTriggerSignal_offset = 1360;
+	public static final int invertVvtControlExhaust_offset = 1372;
+	public static final int invertVvtControlIntake_offset = 1372;
 	public static final int is_enabled_spi_1_offset = 764;
 	public static final int is_enabled_spi_2_offset = 764;
 	public static final int is_enabled_spi_3_offset = 764;
@@ -1889,7 +1894,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 235953004;
+	public static final int SIGNATURE_HASH = 2053343533;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2379,7 +2384,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.06.all.235953004";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.09.all.2053343533";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2417,21 +2422,15 @@ public class Fields {
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
 	public static final int unused1452_offset = 1472;
-	public static final int unused1740b0_offset = 1628;
-	public static final int unused1740b1_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3121;
-	public static final int unused443_offset = 1360;
-	public static final int unused444_offset = 1360;
 	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
-	public static final int unused_1484_bit_25_offset = 1372;
-	public static final int unused_1484_bit_26_offset = 1372;
 	public static final int unused_1484_bit_27_offset = 1372;
-	public static final int unused_1484_bit_28_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
 	public static final int unused_1484_bit_30_offset = 1372;
 	public static final int unused_1484_bit_31_offset = 1372;
+	public static final int unused_1484_bit_38_offset = 1372;
 	public static final int unusedBit_45_31_offset = 120;
 	public static final int unusedBit_542_10_offset = 1628;
 	public static final int unusedBit_542_11_offset = 1628;
@@ -2500,6 +2499,7 @@ public class Fields {
 	public static final int verboseCan2_offset = 960;
 	public static final int verboseCan_offset = 120;
 	public static final int verboseCanBaseAddress_offset = 784;
+	public static final int verboseIsoTp_offset = 1360;
 	public static final int verboseQuad_offset = 764;
 	public static final int verboseTLE8888_offset = 764;
 	public static final int verboseTriggerSynchDetails_offset = 1372;
@@ -3163,8 +3163,8 @@ public class Fields {
 	public static final Field BOARDUSED3PULLDOWN = Field.create("BOARDUSED3PULLDOWN", 1360, FieldType.BIT, 24);
 	public static final Field BOARDUSED4PULLDOWN = Field.create("BOARDUSED4PULLDOWN", 1360, FieldType.BIT, 25);
 	public static final Field BOARDUSED5PULLDOWN = Field.create("BOARDUSED5PULLDOWN", 1360, FieldType.BIT, 26);
-	public static final Field UNUSED443 = Field.create("UNUSED443", 1360, FieldType.BIT, 27);
-	public static final Field UNUSED444 = Field.create("UNUSED444", 1360, FieldType.BIT, 28);
+	public static final Field VERBOSEISOTP = Field.create("VERBOSEISOTP", 1360, FieldType.BIT, 27);
+	public static final Field ENGINESNIFFERFOCUSONINPUTS = Field.create("ENGINESNIFFERFOCUSONINPUTS", 1360, FieldType.BIT, 28);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1360, FieldType.BIT, 29);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1360, FieldType.BIT, 30);
 	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1360, FieldType.BIT, 31);
@@ -3200,10 +3200,10 @@ public class Fields {
 	public static final Field ISPHASESYNCREQUIREDFORIGNITION = Field.create("ISPHASESYNCREQUIREDFORIGNITION", 1372, FieldType.BIT, 22);
 	public static final Field USECLTBASEDRPMLIMIT = Field.create("USECLTBASEDRPMLIMIT", 1372, FieldType.BIT, 23);
 	public static final Field FORCEO2HEATING = Field.create("FORCEO2HEATING", 1372, FieldType.BIT, 24);
-	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1372, FieldType.BIT, 25);
-	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1372, FieldType.BIT, 26);
+	public static final Field INVERTVVTCONTROLINTAKE = Field.create("INVERTVVTCONTROLINTAKE", 1372, FieldType.BIT, 25);
+	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26);
 	public static final Field UNUSED_1484_BIT_27 = Field.create("UNUSED_1484_BIT_27", 1372, FieldType.BIT, 27);
-	public static final Field UNUSED_1484_BIT_28 = Field.create("UNUSED_1484_BIT_28", 1372, FieldType.BIT, 28);
+	public static final Field UNUSED_1484_BIT_38 = Field.create("UNUSED_1484_BIT_38", 1372, FieldType.BIT, 28);
 	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1372, FieldType.BIT, 29);
 	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1372, FieldType.BIT, 30);
 	public static final Field UNUSED_1484_BIT_31 = Field.create("UNUSED_1484_BIT_31", 1372, FieldType.BIT, 31);
@@ -3314,8 +3314,8 @@ public class Fields {
 	public static final Field MC33_HPFP_I_HOLD_OFF = Field.create("MC33_HPFP_I_HOLD_OFF", 1626, FieldType.INT8).setScale(1.0);
 	public static final Field MC33_HPFP_MAX_HOLD = Field.create("MC33_HPFP_MAX_HOLD", 1627, FieldType.INT8).setScale(1.0);
 	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 1628, FieldType.BIT, 0);
-	public static final Field UNUSED1740B0 = Field.create("UNUSED1740B0", 1628, FieldType.BIT, 1);
-	public static final Field UNUSED1740B1 = Field.create("UNUSED1740B1", 1628, FieldType.BIT, 2);
+	public static final Field CANOPENBLT = Field.create("CANOPENBLT", 1628, FieldType.BIT, 1);
+	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2);
 	public static final Field UNUSED1740B2 = Field.create("UNUSED1740B2", 1628, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1628, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1628, FieldType.BIT, 5);
@@ -4532,8 +4532,8 @@ public class Fields {
 	BOARDUSED3PULLDOWN,
 	BOARDUSED4PULLDOWN,
 	BOARDUSED5PULLDOWN,
-	UNUSED443,
-	UNUSED444,
+	VERBOSEISOTP,
+	ENGINESNIFFERFOCUSONINPUTS,
 	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
 	SKIPPEDWHEELONCAM,
@@ -4569,10 +4569,10 @@ public class Fields {
 	ISPHASESYNCREQUIREDFORIGNITION,
 	USECLTBASEDRPMLIMIT,
 	FORCEO2HEATING,
-	UNUSED_1484_BIT_25,
-	UNUSED_1484_BIT_26,
+	INVERTVVTCONTROLINTAKE,
+	INVERTVVTCONTROLEXHAUST,
 	UNUSED_1484_BIT_27,
-	UNUSED_1484_BIT_28,
+	UNUSED_1484_BIT_38,
 	UNUSED_1484_BIT_29,
 	UNUSED_1484_BIT_30,
 	UNUSED_1484_BIT_31,
@@ -4679,8 +4679,8 @@ public class Fields {
 	MC33_HPFP_I_HOLD_OFF,
 	MC33_HPFP_MAX_HOLD,
 	STEPPERDCINVERTEDPINS,
-	UNUSED1740B0,
-	UNUSED1740B1,
+	CANOPENBLT,
+	CAN2OPENBLT,
 	UNUSED1740B2,
 	UNUSED1127,
 	UNUSED1128,

@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - Many more options for Lua CAN rx filters/callbacks #4387
  - Password protection against tune access #4243
  - Additional CAN messages #4401
+ - Option to invert VVT control (exhaust cams, etc) #4424
 
 ### Fixed
  - Lua CAN reception fixed for 11-bit IDs where the frame would be received, but a corrupt ID was passed to the handler function. #4321
@@ -42,6 +43,7 @@ Release template (copy/paste this for new release):
  - custom skipped wheel could be located on camshaft #4377
  - it's impossible to receive AcceleratorPedal sensor via CAN/Lua #4369
  - MRE stepper disables LS2 control #4381
+ - VVT target tables allow negative values #4424
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639

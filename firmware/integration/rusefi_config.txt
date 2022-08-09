@@ -1035,8 +1035,8 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
-bit unused443
-bit unused444
+bit verboseIsoTp
+bit engineSnifferFocusOnInputs
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
@@ -1075,10 +1075,10 @@ bit launchSmoothRetard;+Interpolates the Ignition Retard from 0 to 100% within t
 bit isPhaseSyncRequiredForIgnition;Some engines are OK running semi-random sequential while other engine require phase synchronization
 bit useCltBasedRpmLimit,"yes","no";If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2 sensors. WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
-bit unused_1484_bit_25
-bit unused_1484_bit_26
+bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
+bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit unused_1484_bit_27
-bit unused_1484_bit_28
+bit unused_1484_bit_38
 bit unused_1484_bit_29
 bit unused_1484_bit_30
 bit unused_1484_bit_31
@@ -1209,8 +1209,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t mc33_hpfp_max_hold;+Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
 
 	bit stepperDcInvertedPins;+Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
-	bit unused1740b0
-	bit unused1740b1
+	bit canOpenBLT; Allow OpenBLT on Primary CAN
+	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
 	bit unused1740b2
 	bit unused1127
 	bit unused1128
@@ -1630,11 +1630,11 @@ uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale mapEstimateTable;;"kPa", 0.
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, 0, 255, 0
+int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, -125, 125, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable1RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
+int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, -125, 125, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
