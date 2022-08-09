@@ -1036,7 +1036,7 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
 bit verboseIsoTp
-bit unused444
+bit engineSnifferFocusOnInputs
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
