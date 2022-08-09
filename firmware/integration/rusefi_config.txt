@@ -1035,7 +1035,7 @@ bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
 	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
-bit unused443
+bit verboseIsoTp
 bit unused444
 bit launchActivateInverted
 bit twoStroke,"Two Stroke","Four Stroke"
