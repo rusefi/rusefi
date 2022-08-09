@@ -11,6 +11,7 @@ import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
+import peak.can.MutableInteger;
 import peak.can.basic.*;
 
 import java.io.IOException;
@@ -85,6 +86,47 @@ public class PCanIoStream extends AbstractIoStream {
     private PCanIoStream(PCANBasic can, StatusConsumer statusListener) {
         this.can = can;
         this.statusListener = statusListener;
+        {
+            MutableInteger intBuffer = new MutableInteger(TPCANParameterValue.PCAN_FILTER_CLOSE.getValue());
+            TPCANStatus status = can.SetValue(CHANNEL, TPCANParameter.PCAN_MESSAGE_FILTER, intBuffer, Integer.SIZE);
+            if (status != TPCANStatus.PCAN_ERROR_OK) {
+                statusListener.append("Error SetValue PCAN: " + status);
+                return;
+            }
+        }
+        {
+            MutableInteger buffer = new MutableInteger(0);
+            GetFilterStatus(buffer);
+            if (buffer.value != TPCANParameterValue.PCAN_FILTER_CLOSE.getValue())
+                throw new IllegalStateException("Must be closed");
+        }
+        {
+            TPCANStatus status = can.FilterMessages(CHANNEL, CAN_ECU_SERIAL_TX_ID, CAN_ECU_SERIAL_TX_ID, TPCANMode.PCAN_MODE_STANDARD);
+            if (status != TPCANStatus.PCAN_ERROR_OK) {
+                statusListener.append("Error FilterMessages PCAN: " + status);
+                return;
+            }
+        }
+        {
+            MutableInteger buffer = new MutableInteger(0);
+            GetFilterStatus(buffer);
+            if (buffer.value != TPCANParameterValue.PCAN_FILTER_CUSTOM.getValue())
+                throw new IllegalStateException("Custom filter expected");
+        }
+        System.out.println("Filter applied");
+    }
+
+    // Gets the current status of the PCAN-Basic message filter
+    private void GetFilterStatus(MutableInteger filterStatus) {
+        TPCANStatus status;
+
+        // Tries to get the status of the filter for the current connected hardware
+        status = can.GetValue(CHANNEL, TPCANParameter.PCAN_MESSAGE_FILTER, filterStatus, Integer.SIZE);
+
+        // If it fails, a error message is shown
+        if (status != TPCANStatus.PCAN_ERROR_OK) {
+            throw new IllegalStateException("Error " + status);
+        }
     }
 
     @Override
