@@ -1496,6 +1496,8 @@
 #define invertCamVVTSignal_offset 960
 #define invertPrimaryTriggerSignal_offset 1360
 #define invertSecondaryTriggerSignal_offset 1360
+#define invertVvtControlExhaust_offset 1372
+#define invertVvtControlIntake_offset 1372
 #define is_enabled_spi_1_offset 764
 #define is_enabled_spi_2_offset 764
 #define is_enabled_spi_3_offset 764
@@ -1910,7 +1912,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2962727956
+#define SIGNATURE_HASH 1903325343
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2466,7 +2468,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.09.subaru_eg33_f7.2962727956"
+#define TS_SIGNATURE "rusEFI 2022.08.09.subaru_eg33_f7.1903325343"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2511,13 +2513,11 @@
 #define unused4080_offset 3121
 #define unused460_offset 480
 #define unused962_offset 1040
-#define unused_1484_bit_25_offset 1372
-#define unused_1484_bit_26_offset 1372
 #define unused_1484_bit_27_offset 1372
-#define unused_1484_bit_28_offset 1372
 #define unused_1484_bit_29_offset 1372
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_31_offset 1372
+#define unused_1484_bit_38_offset 1372
 #define unusedBit_45_31_offset 120
 #define unusedBit_542_10_offset 1628
 #define unusedBit_542_11_offset 1628

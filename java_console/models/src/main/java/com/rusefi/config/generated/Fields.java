@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 19:45:33 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 20:28:13 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1499,6 +1499,8 @@ public class Fields {
 	public static final int invertCamVVTSignal_offset = 960;
 	public static final int invertPrimaryTriggerSignal_offset = 1360;
 	public static final int invertSecondaryTriggerSignal_offset = 1360;
+	public static final int invertVvtControlExhaust_offset = 1372;
+	public static final int invertVvtControlIntake_offset = 1372;
 	public static final int is_enabled_spi_1_offset = 764;
 	public static final int is_enabled_spi_2_offset = 764;
 	public static final int is_enabled_spi_3_offset = 764;
@@ -1892,6 +1894,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 2053343533;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2381,7 +2384,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.09.all.3146145190";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.09.all.2053343533";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2423,13 +2426,11 @@ public class Fields {
 	public static final int unused4080_offset = 3121;
 	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
-	public static final int unused_1484_bit_25_offset = 1372;
-	public static final int unused_1484_bit_26_offset = 1372;
 	public static final int unused_1484_bit_27_offset = 1372;
-	public static final int unused_1484_bit_28_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
 	public static final int unused_1484_bit_30_offset = 1372;
 	public static final int unused_1484_bit_31_offset = 1372;
+	public static final int unused_1484_bit_38_offset = 1372;
 	public static final int unusedBit_45_31_offset = 120;
 	public static final int unusedBit_542_10_offset = 1628;
 	public static final int unusedBit_542_11_offset = 1628;
@@ -3199,10 +3200,10 @@ public class Fields {
 	public static final Field ISPHASESYNCREQUIREDFORIGNITION = Field.create("ISPHASESYNCREQUIREDFORIGNITION", 1372, FieldType.BIT, 22);
 	public static final Field USECLTBASEDRPMLIMIT = Field.create("USECLTBASEDRPMLIMIT", 1372, FieldType.BIT, 23);
 	public static final Field FORCEO2HEATING = Field.create("FORCEO2HEATING", 1372, FieldType.BIT, 24);
-	public static final Field UNUSED_1484_BIT_25 = Field.create("UNUSED_1484_BIT_25", 1372, FieldType.BIT, 25);
-	public static final Field UNUSED_1484_BIT_26 = Field.create("UNUSED_1484_BIT_26", 1372, FieldType.BIT, 26);
+	public static final Field INVERTVVTCONTROLINTAKE = Field.create("INVERTVVTCONTROLINTAKE", 1372, FieldType.BIT, 25);
+	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26);
 	public static final Field UNUSED_1484_BIT_27 = Field.create("UNUSED_1484_BIT_27", 1372, FieldType.BIT, 27);
-	public static final Field UNUSED_1484_BIT_28 = Field.create("UNUSED_1484_BIT_28", 1372, FieldType.BIT, 28);
+	public static final Field UNUSED_1484_BIT_38 = Field.create("UNUSED_1484_BIT_38", 1372, FieldType.BIT, 28);
 	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1372, FieldType.BIT, 29);
 	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1372, FieldType.BIT, 30);
 	public static final Field UNUSED_1484_BIT_31 = Field.create("UNUSED_1484_BIT_31", 1372, FieldType.BIT, 31);
@@ -4568,10 +4569,10 @@ public class Fields {
 	ISPHASESYNCREQUIREDFORIGNITION,
 	USECLTBASEDRPMLIMIT,
 	FORCEO2HEATING,
-	UNUSED_1484_BIT_25,
-	UNUSED_1484_BIT_26,
+	INVERTVVTCONTROLINTAKE,
+	INVERTVVTCONTROLEXHAUST,
 	UNUSED_1484_BIT_27,
-	UNUSED_1484_BIT_28,
+	UNUSED_1484_BIT_38,
 	UNUSED_1484_BIT_29,
 	UNUSED_1484_BIT_30,
 	UNUSED_1484_BIT_31,

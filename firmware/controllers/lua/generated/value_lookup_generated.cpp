@@ -645,6 +645,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useCltBasedRpmLimit;
 	if (strEqualCaseInsensitive(name, "forceO2Heating"))
 		return engineConfiguration->forceO2Heating;
+	if (strEqualCaseInsensitive(name, "invertVvtControlIntake"))
+		return engineConfiguration->invertVvtControlIntake;
+	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
+		return engineConfiguration->invertVvtControlExhaust;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -2071,6 +2075,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "forceO2Heating"))
 	{
 		engineConfiguration->forceO2Heating = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "invertVvtControlIntake"))
+	{
+		engineConfiguration->invertVvtControlIntake = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
+	{
+		engineConfiguration->invertVvtControlExhaust = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
