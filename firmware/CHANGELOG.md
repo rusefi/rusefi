@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
  - custom skipped wheel could be located on camshaft #4377
  - it's impossible to receive AcceleratorPedal sensor via CAN/Lua #4369
  - MRE stepper disables LS2 control #4381
+ - VVT target tables allow negative values #4424
 
 ### Removed
  - ICU trigger input logic since it is unused in any current ECU #639
