@@ -20,7 +20,7 @@ public class RateCounterTest {
 
         // cute size effect: FUTURE timestamps are also counted :)
         assertEquals(4, rateCounter.getCurrentRate(0));
-        assertEquals(3, rateCounter.getSizeForUnitTest());
+        assertEquals(4, rateCounter.getSizeForUnitTest());
 
 
         assertEquals(0, rateCounter.getCurrentRate(2 * Timeouts.SECOND));
