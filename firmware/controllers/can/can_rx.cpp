@@ -230,7 +230,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
 		/* TODO: gracefull shutdown? */
 		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
-			((busIndex == 1) && (engineConfiguration->canOpenBLT))) {
+			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
 			jump_to_openblt();
 		}
 	}
