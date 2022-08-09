@@ -229,9 +229,10 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 #if EFI_USE_OPENBLT
 	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
 		/* TODO: gracefull shutdown? */
-		/* TODO: settings option to allow restart on CAN message? */
-		/* TODO: check can interface index? */
-		jump_to_openblt();
+		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
+			((busIndex == 1) && (engineConfiguration->canOpenBLT))) {
+			jump_to_openblt();
+		}
 	}
 #endif
 }
