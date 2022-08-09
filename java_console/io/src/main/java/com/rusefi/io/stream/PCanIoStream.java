@@ -23,6 +23,7 @@ import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
+    private static final int INFO_SKIP_RATE = 3-00;
     static Logging log = getLogging(PCanIoStream.class);
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
@@ -51,6 +52,7 @@ public class PCanIoStream extends AbstractIoStream {
         public void receiveData() {
         }
     };
+    private int logSkipRate;
 
     @Nullable
     public static PCanIoStream createStream() {
@@ -115,14 +117,17 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             totalCounter.add();
-            if (log.debugEnabled())
-                log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
 //                if (log.debugEnabled())
-                log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
-                log.info("Total rate " + totalCounter.getCurrentRate() + ", isotp rate " + isoTpCounter.getCurrentRate());
+                logSkipRate ++;
+                if (logSkipRate % INFO_SKIP_RATE == 0) {
+                    debugPacket(rx);
+                    log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
+                    log.info("Total rate " + totalCounter.getCurrentRate() + ", isotp rate " + isoTpCounter.getCurrentRate());
+                }
                 return;
             }
+            debugPacket(rx);
             isoTpCounter.add();
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
@@ -131,6 +136,11 @@ public class PCanIoStream extends AbstractIoStream {
         } else {
 //                   log.info("Receive " + status);
         }
+    }
+
+    private void debugPacket(TPCANMsg rx) {
+        if (log.debugEnabled())
+            log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
     }
 
     @Override
