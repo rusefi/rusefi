@@ -355,12 +355,20 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 
 	return CAN_MSG_OK;
 }
+static int isoTpPacketCounter = 0;
 
+/**
+ * incoming data main entry point
+ */
 void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
+	// CAN ID filtering happens in base class, by the time we are here we know it's the CAN_ECU_SERIAL_RX_ID packet
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: CanTsListener decodeFrame %d" PRINT_EOL, isoTpPacketCounter++);
+	}
 	if (!rxFifo.put(msg)) {
-		//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 }
 

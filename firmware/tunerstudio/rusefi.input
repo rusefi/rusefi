@@ -2025,6 +2025,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
+	    field = "Focus on inputs in engine sniffer",    engineSnifferFocusOnInputs
 	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
@@ -3257,6 +3258,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "CAN dash type",						canNbcType
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
+	    field = verboseIsoTp,                           verboseIsoTp
 		field = "rusEFI CAN data bus",    canBroadcastUseChannelTwo
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "rusEFI CAN data address type",			rusefiVerbose29b

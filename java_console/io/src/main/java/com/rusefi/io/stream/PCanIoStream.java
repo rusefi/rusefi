@@ -8,6 +8,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.io.serial.RateCounter;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
@@ -22,12 +23,16 @@ import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
+    private static final int INFO_SKIP_RATE = 3-00;
     static Logging log = getLogging(PCanIoStream.class);
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
-    private final IncomingDataBuffer dataBuffer = createDataBuffer("[PCAN] ");
+    private final IncomingDataBuffer dataBuffer;
     private final PCANBasic can;
     private final StatusConsumer statusListener;
+
+    private final RateCounter totalCounter = new RateCounter();
+    private final RateCounter isoTpCounter = new RateCounter();
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
@@ -47,6 +52,7 @@ public class PCanIoStream extends AbstractIoStream {
         public void receiveData() {
         }
     };
+    private int logSkipRate;
 
     @Nullable
     public static PCanIoStream createStream() {
@@ -85,6 +91,7 @@ public class PCanIoStream extends AbstractIoStream {
     private PCanIoStream(PCANBasic can, StatusConsumer statusListener) {
         this.can = can;
         this.statusListener = statusListener;
+        dataBuffer = createDataBuffer("[PCAN] ");
     }
 
     @Override
@@ -109,13 +116,19 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg(Byte.MAX_VALUE);
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            if (log.debugEnabled())
-                log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            totalCounter.add();
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
 //                if (log.debugEnabled())
-                log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
+                logSkipRate ++;
+                if (logSkipRate % INFO_SKIP_RATE == 0) {
+                    debugPacket(rx);
+                    log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
+                    log.info("Total rate " + totalCounter.getCurrentRate() + ", isotp rate " + isoTpCounter.getCurrentRate());
+                }
                 return;
             }
+            debugPacket(rx);
+            isoTpCounter.add();
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
@@ -123,6 +136,11 @@ public class PCanIoStream extends AbstractIoStream {
         } else {
 //                   log.info("Receive " + status);
         }
+    }
+
+    private void debugPacket(TPCANMsg rx) {
+        if (log.debugEnabled())
+            log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
     }
 
     @Override
