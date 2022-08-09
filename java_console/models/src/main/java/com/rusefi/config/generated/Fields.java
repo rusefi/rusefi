@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 03:12:58 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 16:53:37 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1891,6 +1891,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1337534078;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2380,7 +2381,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.09.all.2865853506";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.09.all.1337534078";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1032;
@@ -2420,7 +2421,6 @@ public class Fields {
 	public static final int unused1452_offset = 1472;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3121;
-	public static final int unused443_offset = 1360;
 	public static final int unused444_offset = 1360;
 	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
@@ -2499,6 +2499,7 @@ public class Fields {
 	public static final int verboseCan2_offset = 960;
 	public static final int verboseCan_offset = 120;
 	public static final int verboseCanBaseAddress_offset = 784;
+	public static final int verboseIsoTp_offset = 1360;
 	public static final int verboseQuad_offset = 764;
 	public static final int verboseTLE8888_offset = 764;
 	public static final int verboseTriggerSynchDetails_offset = 1372;
@@ -3162,7 +3163,7 @@ public class Fields {
 	public static final Field BOARDUSED3PULLDOWN = Field.create("BOARDUSED3PULLDOWN", 1360, FieldType.BIT, 24);
 	public static final Field BOARDUSED4PULLDOWN = Field.create("BOARDUSED4PULLDOWN", 1360, FieldType.BIT, 25);
 	public static final Field BOARDUSED5PULLDOWN = Field.create("BOARDUSED5PULLDOWN", 1360, FieldType.BIT, 26);
-	public static final Field UNUSED443 = Field.create("UNUSED443", 1360, FieldType.BIT, 27);
+	public static final Field VERBOSEISOTP = Field.create("VERBOSEISOTP", 1360, FieldType.BIT, 27);
 	public static final Field UNUSED444 = Field.create("UNUSED444", 1360, FieldType.BIT, 28);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1360, FieldType.BIT, 29);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1360, FieldType.BIT, 30);
@@ -4531,7 +4532,7 @@ public class Fields {
 	BOARDUSED3PULLDOWN,
 	BOARDUSED4PULLDOWN,
 	BOARDUSED5PULLDOWN,
-	UNUSED443,
+	VERBOSEISOTP,
 	UNUSED444,
 	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
