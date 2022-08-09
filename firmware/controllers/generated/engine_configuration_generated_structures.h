@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 07 22:12:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 03:12:58 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4690,7 +4690,7 @@ struct persistent_config_s {
 	value
 	 * offset 18164
 	 */
-	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18228
@@ -4705,7 +4705,7 @@ struct persistent_config_s {
 	value
 	 * offset 18260
 	 */
-	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18324
@@ -4960,4 +4960,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 07 22:12:59 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 09 03:12:58 UTC 2022
