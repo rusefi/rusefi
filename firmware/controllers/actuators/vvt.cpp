@@ -74,10 +74,10 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 static bool shouldInvertVvt(int index) {
 	// grumble grumble, can't do an array of bits in c++
 	switch (index) {
-		case 0: return engineConfiguration->invertVvt1;
-		case 1: return engineConfiguration->invertVvt2;
-		case 2: return engineConfiguration->invertVvt3;
-		case 3: return engineConfiguration->invertVvt4;
+		case 0: return engineConfiguration->invertVvtControl1;
+		case 1: return engineConfiguration->invertVvtControl2;
+		case 2: return engineConfiguration->invertVvtControl3;
+		case 3: return engineConfiguration->invertVvtControl4;
 	}
 
 	return false;
@@ -100,6 +100,9 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	}
 #endif /* EFI_TUNER_STUDIO */
 
+	// User labels say "advance" and "retard"
+	// "advance" means that additional solenoid duty makes indicated VVT position more positive
+	// "retard" means that additional solenoid duty makes indicated VVT position more negative
 	if (shouldInvertVvt(index)) {
 		return -retVal;
 	} else {
