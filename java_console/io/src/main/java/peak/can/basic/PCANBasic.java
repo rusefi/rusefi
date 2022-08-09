@@ -1,11 +1,11 @@
 /* SPDX-License-Identifier: LGPL-2.1-only */
 /*
- * $Id: PCANBasic.java 7391 2020-08-10 08:32:30Z Fabrice $
- * @LastChange $Date: 2020-08-10 10:32:30 +0200 (Mon, 10 Aug 2020) $
+ * $Id: PCANBasic.java 12274 2021-08-30 12:20:04Z Fabrice $
+ * @LastChange $Date: 2021-08-30 14:20:04 +0200 (Mon, 30 Aug 2021) $
  * 
  * PCANBasic JAVA Interface.
  *
- * Copyright (C) 2001-2020  PEAK System-Technik GmbH <www.peak-system.com>
+ * Copyright (C) 2001-2021  PEAK System-Technik GmbH <www.peak-system.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -286,6 +286,18 @@ public class PCANBasic {
             TPCANStatus Error,
             short Language,
             StringBuffer Buffer);
+
+    /**
+     * Finds a PCAN-Basic channel that matches with the given parameters
+     *
+     * @param Parameters A comma separated string contained pairs of parameter-name/value to be matched within a PCAN-Basic channel
+     * @param FoundChannel Buffer for returning the PCAN-Basic channel
+     * @param Buffer Buffer for a null terminated char array
+     * @return A TPCANStatus error code
+     */
+    public native TPCANStatus LookUpChannel(
+    		StringBuffer Parameters, 
+    	    MutableTPCANHandle FoundChannel);
 
     /**
      * Sets the handle of the Receive-Event for the Channel. static method
