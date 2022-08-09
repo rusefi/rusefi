@@ -583,6 +583,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseD4PullDown;
 	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
 		return engineConfiguration->boardUseD5PullDown;
+	if (strEqualCaseInsensitive(name, "verboseIsoTp"))
+		return engineConfiguration->verboseIsoTp;
 	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
 		return engineConfiguration->launchActivateInverted;
 	if (strEqualCaseInsensitive(name, "twoStroke"))
@@ -1912,6 +1914,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
 	{
 		engineConfiguration->boardUseD5PullDown = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseIsoTp"))
+	{
+		engineConfiguration->verboseIsoTp = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
