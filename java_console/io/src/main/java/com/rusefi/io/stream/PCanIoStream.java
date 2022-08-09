@@ -8,6 +8,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
+import com.rusefi.io.serial.RateCounter;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.Nullable;
@@ -28,6 +29,9 @@ public class PCanIoStream extends AbstractIoStream {
     private final IncomingDataBuffer dataBuffer = createDataBuffer("[PCAN] ");
     private final PCANBasic can;
     private final StatusConsumer statusListener;
+
+    private final RateCounter totalCounter = new RateCounter();
+    private final RateCounter isoTpCounter = new RateCounter();
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
         @Override
         protected void onTpFirstFrame() {
@@ -109,13 +113,16 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg(Byte.MAX_VALUE);
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
+            totalCounter.add();
             if (log.debugEnabled())
                 log.debug("Got [" + rx + "] id=" + String.format("%X", rx.getID()) + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             if (rx.getID() != CAN_ECU_SERIAL_TX_ID) {
 //                if (log.debugEnabled())
                 log.info("Skipping non " + String.format("%X", CAN_ECU_SERIAL_TX_ID) + " packet: " + String.format("%X", rx.getID()));
+                log.info("Total rate " + totalCounter.getCurrentRate() + ", isotp rate " + isoTpCounter.getCurrentRate());
                 return;
             }
+            isoTpCounter.add();
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
