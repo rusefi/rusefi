@@ -390,7 +390,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
-		vvtSyncCounter++;
+		camResyncCounter++;
 	}
 
 	return totalShift;

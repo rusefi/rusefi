@@ -38,7 +38,7 @@ struct trigger_state_s {
 	/**
 	 * offset 22
 	 */
-	uint8_t vvtSyncCounter = (uint8_t)0;
+	uint8_t camResyncCounter = (uint8_t)0;
 	/**
 	 * offset 23
 	 */
