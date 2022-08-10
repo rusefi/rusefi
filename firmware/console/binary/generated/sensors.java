@@ -290,7 +290,7 @@ triggerSyncGapRatio("Trigger Sync Latest Ratio", SensorCategory.SENSOR_INPUTS, F
 triggerActualSyncGapRatio("triggerActualSyncGapRatio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 932, 1.0, -1.0, -1.0, ""),
 triggerStateIndex("triggerStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 936, 1.0, -1.0, -1.0, ""),
 vvtCounter("vvtCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 937, 1.0, -1.0, -1.0, ""),
-vvtSyncCounter("vvtSyncCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 938, 1.0, -1.0, -1.0, ""),
+camResyncCounter("camResyncCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 938, 1.0, -1.0, -1.0, ""),
 vvtStateIndex("vvtStateIndex", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 939, 1.0, -1.0, -1.0, ""),
 wallFuelCorrection("fuel injection time correction to account for wall wetting effect for current cycle", SensorCategory.SENSOR_INPUTS, FieldType.INT, 940, 1.0, -1.0, -1.0, ""),
 wallFuel("Amount of fuel on the wall, in ms of injector open time for each injector.", SensorCategory.SENSOR_INPUTS, FieldType.INT, 944, 1.0, -1.0, -1.0, ""),
