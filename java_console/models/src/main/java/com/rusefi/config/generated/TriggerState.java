@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Jul 30 15:33:11 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Aug 10 00:43:22 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -402,7 +402,7 @@ public class TriggerState {
 	public static final Field TRIGGERACTUALSYNCGAPRATIO = Field.create("TRIGGERACTUALSYNCGAPRATIO", 16, FieldType.FLOAT);
 	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 20, FieldType.INT8).setScale(1.0);
 	public static final Field VVTCOUNTER = Field.create("VVTCOUNTER", 21, FieldType.INT8).setScale(1.0);
-	public static final Field VVTSYNCCOUNTER = Field.create("VVTSYNCCOUNTER", 22, FieldType.INT8).setScale(1.0);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 22, FieldType.INT8).setScale(1.0);
 	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 23, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	TOTALREVOLUTIONCOUNTER,
@@ -412,7 +412,7 @@ public class TriggerState {
 	TRIGGERACTUALSYNCGAPRATIO,
 	TRIGGERSTATEINDEX,
 	VVTCOUNTER,
-	VVTSYNCCOUNTER,
+	CAMRESYNCCOUNTER,
 	VVTSTATEINDEX,
 	};
 }
