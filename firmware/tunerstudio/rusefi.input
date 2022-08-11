@@ -1220,6 +1220,7 @@ gaugeCategory = Sensors - Raw
    rawPpsPrimaryGauge   = rawPpsPrimary , "Raw Pedal Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawPpsSecondaryGauge = rawPpsSecondary,"Raw Pedal Secondary","V",0, 5, 0, 0, 5, 5, 3, 0
    rawCltGauge          = rawClt        , "Raw CLT",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawBatteryGauge      = rawBattery    , "Raw Battery",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawIatGauge          = rawIat        , "Raw IAT",           "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawOilPressureGauge  = rawOilPressure, "Raw Oil Pressure",  "V", 0, 5, 0, 0, 5, 5, 3, 0
    rawIdlePositionSensorGauge  = rawIdlePositionSensor, "Raw Idle Position",  "V", 0, 5, 0, 0, 5, 5, 3, 0
