@@ -14,9 +14,12 @@ public class CANConnectorStartup {
             throw new IOException("Failed to initialise connector");
 
         String signature = BinaryProtocol.getSignature(tsStream);
-        statusListener.append("Got [" + signature + "] signature via " + tsStream);
-
-        BinaryProtocolProxy.createProxy(tsStream, TcpConnector.DEFAULT_PORT, BinaryProtocolProxy.ClientApplicationActivityListener.VOID);
+        if (signature == null) {
+            statusListener.append("Error: no ECU signature from " + tsStream);
+        } else {
+            statusListener.append("Got [" + signature + "] ECU signature via " + tsStream);
+        }
+        BinaryProtocolProxy.createProxy(tsStream, TcpConnector.DEFAULT_PORT, BinaryProtocolProxy.ClientApplicationActivityListener.VOID, statusListener);
 
     }
 }

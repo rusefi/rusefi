@@ -131,7 +131,7 @@ public class ConsoleTools {
             public void onActivity() {
 
             }
-        });
+        }, StatusConsumer.ANONYMOUS);
 
     }
 

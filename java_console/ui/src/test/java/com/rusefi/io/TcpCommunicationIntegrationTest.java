@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.StatusConsumer;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -94,7 +95,8 @@ public class TcpCommunicationIntegrationTest {
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort);
         final AtomicInteger relayCommandCounter = new AtomicInteger();
-        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet());
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet(),
+                StatusConsumer.ANONYMOUS);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 

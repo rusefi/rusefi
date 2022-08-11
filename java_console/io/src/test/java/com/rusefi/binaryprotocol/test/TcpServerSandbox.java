@@ -8,6 +8,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
+import com.rusefi.ui.StatusConsumer;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -80,6 +81,6 @@ public class TcpServerSandbox {
                         System.out.println("onResult");
 
                     }
-                });
+                }, StatusConsumer.ANONYMOUS);
     }
 }
