@@ -277,7 +277,7 @@ public class rusEFI extends Activity {
                 public void onActivity() {
 
                 }
-            });
+            }, StatusConsumer.ANONYMOUS);
             visibleLogAppend("Running TCP/IP proxy on " + LOCAL_PORT);
         } catch (IOException e) {
             e.printStackTrace();
