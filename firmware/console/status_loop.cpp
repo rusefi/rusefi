@@ -559,6 +559,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
 	engine->outputChannels.rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+	engine->outputChannels.rawBattery = Sensor::getRaw(SensorType::BatteryVoltage);
 	engine->outputChannels.rawClt = Sensor::getRaw(SensorType::Clt);
 	engine->outputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
