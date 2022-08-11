@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 30 15:33:10 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -733,7 +733,8 @@ public class TsOutputs {
 	public static final Field GPPWMOUTPUT2 = Field.create("GPPWMOUTPUT2", 527, FieldType.INT8).setScale(0.5);
 	public static final Field GPPWMOUTPUT3 = Field.create("GPPWMOUTPUT3", 528, FieldType.INT8).setScale(0.5);
 	public static final Field GPPWMOUTPUT4 = Field.create("GPPWMOUTPUT4", 529, FieldType.INT8).setScale(0.5);
-	public static final Field UNUSEDATTHEEND = Field.create("UNUSEDATTHEEND", 530, FieldType.INT8).setScale(1.0);
+	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 530, FieldType.INT16).setScale(0.001);
+	public static final Field UNUSEDATTHEEND = Field.create("UNUSEDATTHEEND", 532, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	ISIGNITIONENABLEDINDICATOR,
@@ -1073,6 +1074,7 @@ public class TsOutputs {
 	GPPWMOUTPUT2,
 	GPPWMOUTPUT3,
 	GPPWMOUTPUT4,
+	RAWBATTERY,
 	UNUSEDATTHEEND,
 	};
 }

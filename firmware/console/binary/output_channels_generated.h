@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jul 27 09:37:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1298,11 +1298,16 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
+	V
 	 * offset 530
 	 */
-	uint8_t unusedAtTheEnd[58];
+	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
+	/**
+	 * offset 532
+	 */
+	uint8_t unusedAtTheEnd[56];
 };
 static_assert(sizeof(output_channels_s) == 588);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jul 27 09:37:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022

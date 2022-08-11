@@ -449,5 +449,7 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.auxSpeed2;
 	if (strEqualCaseInsensitive(name, "ISSValue"))
 		return engine->outputChannels.ISSValue;
+	if (strEqualCaseInsensitive(name, "rawBattery"))
+		return engine->outputChannels.rawBattery;
 	return EFI_ERROR_CODE;
 }
