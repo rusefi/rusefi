@@ -67,7 +67,7 @@ public class PCanIoStream extends AbstractIoStream {
             statusListener.append("Error initializing PCAN: " + status);
             return null;
         }
-        statusListener.append("Hello PCAN!");
+        statusListener.append("Creating PCAN stream...");
         return new PCanIoStream(can, statusListener);
     }
 

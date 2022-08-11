@@ -15,6 +15,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,12 +59,6 @@ public class BinaryProtocolServer {
 
     public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
-    public static final ServerSocketFunction PLAIN_SOCKET_FACTORY = port -> {
-        ServerSocket serverSocket = new ServerSocket(port);
-        log.info("ServerSocket " + port + " created. Feel free to point TS at IP Address 'localhost' port " + port);
-        return serverSocket;
-    };
-
     private final static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 
     public void start(LinkManager linkManager) {
@@ -85,7 +80,7 @@ public class BinaryProtocolServer {
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback);
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
     }
 
     /**
@@ -95,10 +90,15 @@ public class BinaryProtocolServer {
      * @param threadName
      * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
+     * @param statusConsumer
      * @return
      */
-    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
-        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback, StatusConsumer statusConsumer) throws IOException {
+        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, p -> {
+            ServerSocket serverSocket = new ServerSocket(p);
+            statusConsumer.append("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p);
+            return serverSocket;
+        });
     }
 
     public static ServerSocketReference tcpServerSocket(CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
