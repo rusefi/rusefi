@@ -703,6 +703,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
 		engineConfiguration->verboseCan = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseIsoTp")) {
+		engineConfiguration->verboseIsoTp = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
 		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
