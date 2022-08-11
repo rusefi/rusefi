@@ -60,12 +60,12 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (engineConfiguration->verboseCan) {
-		efiPrintf("Sending CAN bus%d message: SID=%x/l=%x %x %x %x %x %x %x %x %x",
+		efiPrintf("Sending CAN bus%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x",
 				busIndex,
 #ifndef STM32H7XX
-				(m_frame.IDE == CAN_IDE_EXT) ? CAN_SID(m_frame) : CAN_EID(m_frame),
+				(m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame),
 #else
-						  m_frame.common.XTD ? CAN_SID(m_frame) : CAN_EID(m_frame),
+						  m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame),
 #endif
 				m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
