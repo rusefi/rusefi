@@ -26,6 +26,14 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+
+### Fixed
+
+### Removed
+
+## August 2022 Release - "Day 170"
+
+### Added
  - raw voltage gauges for Lua script aux analog inputs #4346
  - microRusEFI and Proteus F4 have CAN OpenBLT bootloader #4199 #4230
  - counter-noise measure for custom skipped trigger wheels #4375
