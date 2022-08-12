@@ -79,7 +79,18 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 		return unexpected;
 	}
 
-	return m_syncPointTimer.getElapsedUs(nowNt) / oneDegreeUs;
+	float elapsed;
+	float toothPhase;
+
+	{
+		// under lock to avoid mismatched tooth phase and time
+		chibios_rt::CriticalSectionLocker csl;
+
+		elapsed = m_lastToothTimer.getElapsedUs(nowNt);
+		toothPhase = m_lastToothPhaseFromSyncPoint;
+	}
+
+	return toothPhase + elapsed / oneDegreeUs;
 }
 
 /**
@@ -685,18 +696,25 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		int crankDivider = getCrankDivider(triggerShape.getOperationMode());
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
-		if (triggerIndexForListeners == 0) {
-			m_syncPointTimer.reset(timestamp);
-		}
 
 		reportEventToWaveChart(signal, triggerIndexForListeners);
 
 		// Compute the current engine absolute phase, 0 means currently at #1 TDC
-		auto currentPhase = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
+		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
 		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.currentEnginePhase = currentPhase;
 #endif // EFI_TUNER_STUDIO
+
+		// Record precise time and phase of the engine. This is used for VVT decode.
+		{
+			// under lock to avoid mismatched tooth phase and time
+			chibios_rt::CriticalSectionLocker csl;
+
+			m_lastToothTimer.reset(timestamp);
+			m_lastToothPhaseFromSyncPoint = currentPhaseFromSyncPoint;
+		}
 
 #if TRIGGER_EXTREME_LOGGING
 	efiPrintf("trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
