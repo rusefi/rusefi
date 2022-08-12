@@ -47,11 +47,13 @@ void WarningCodeState::addWarningCode(obd_code_e code) {
 		chibios_rt::CriticalSectionLocker csl;
 
 		// Add the code to the list
-		existing = &recentWarnings.add(warning_t(code));
+		existing = recentWarnings.add(warning_t(code));
 	}
 
-	// Reset the timer on the code to now
-	existing->LastTriggered.reset();
+	if (existing) {
+		// Reset the timer on the code to now
+		existing->LastTriggered.reset();
+	}
 
 	// Reset the "any warning" timer too
 	timeSinceLastWarning.reset();
