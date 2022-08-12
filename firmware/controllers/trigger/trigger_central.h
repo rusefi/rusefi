@@ -140,9 +140,10 @@ public:
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
 
-	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
-	// not TDC point
-	Timer m_syncPointTimer;
+	// Time since the last tooth
+	Timer m_lastToothTimer;
+	// Phase of the last tooth relative to the sync point
+	float m_lastToothPhaseFromSyncPoint;
 };
 
 void triggerInfo(void);
