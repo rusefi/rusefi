@@ -699,8 +699,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		reportEventToWaveChart(signal, triggerIndexForListeners);
 
-		// Compute the current engine absolute phase, 0 means currently at #1 TDC
+		// Look up this tooth's angle from the sync point. If this tooth is the sync point, we'll get 0 here.
 		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
+
+		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
 		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
