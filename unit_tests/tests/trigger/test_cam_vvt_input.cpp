@@ -173,7 +173,7 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US( 30));
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
-	EXPECT_NEAR(288.0f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
+	EXPECT_NEAR(290.5f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 
