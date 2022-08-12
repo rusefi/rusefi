@@ -12,7 +12,7 @@ IDRIVE_ROTARY_INIT = 0x273
 
 brighness = 0
 
-canRxAdd(IDRIVE_ROTARY) -- rotation, I did not get it to work
+canRxAdd(IDRIVE_ROTARY) -- rotation
 canRxAdd(IDRIVE_BUTTONS) -- buttons
 
 setTickRate(5) -- set tick rate to 5hz
