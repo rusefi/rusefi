@@ -12,12 +12,6 @@
 		return checksum \
 	end "
 
-// LSB (Least Significant Byte comes first)
-#define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)        \
-		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
-	end"
-
-
 #define GET_BIT_RANGE "function getBitRange(data, bitIndex, bitWidth)  \
 	byteIndex = bitIndex >> 3  \
 	shift = bitIndex - byteIndex * 8  \
