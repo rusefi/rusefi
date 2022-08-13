@@ -2,12 +2,6 @@
 #include "rusefi_lua.h"
 #include "lua_lib.h"
 
-
-// MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.
-#define TWO_BYTES_MSB "function getTwoBytesMSB(data, offset, factor)        \
-		return (data[offset + 1] * 256 + data[offset + 2]) * factor   \
-	end"
-
 TEST(LuaFordFocusII, PPS_low) {
 	const char* realdata = TWO_BYTES_MSB R"(
 

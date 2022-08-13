@@ -1,0 +1,23 @@
+
+DYNOLOG_BASE = 0x680
+
+setTickRate(5) -- set tick rate to 5hz
+
+protocolPacket = { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+protocolBase1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+function setTwoBytesMsb(data, offset, value)
+	value = math.floor(value)
+	data[offset + 1] = value >> 8
+	data[offset + 2] = value & 0xff
+end
+
+function onTick()
+    local RPM = getSensor("RPM")
+    local MAP = getSensor("MAP")
+    local TPS = getSensor("TPS1")
+    local IAT = getSensor("IAT")
+
+
+    txCan(1, DYNOLOG_BASE + 0, 0, protocolPacket)
+end
