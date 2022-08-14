@@ -81,6 +81,7 @@ Usages:
     java: TriggerCentral.java
     folder: controllers/trigger
     withCDefines: true
+    prepend: integration/rusefi_config.txt
 
   - name: trigger_state
     java: TriggerState.java
