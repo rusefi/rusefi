@@ -18,6 +18,11 @@ function onTick()
     local TPS = getSensor("TPS1")
     local IAT = getSensor("IAT")
 
+    setTwoBytesMsb(protocolBase1, 0, RPM)
+    setTwoBytesMsb(protocolBase1, 2, MAP * 10)
+    setTwoBytesMsb(protocolBase1, 4, TPS * 10)
+    setTwoBytesMsb(protocolBase1, 6, IAT * 100)
 
     txCan(1, DYNOLOG_BASE + 0, 0, protocolPacket)
+    txCan(1, DYNOLOG_BASE + 1, 0, protocolBase1)
 end
