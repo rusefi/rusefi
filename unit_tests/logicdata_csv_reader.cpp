@@ -47,7 +47,7 @@ double CsvReader::readTimestampAndValues(double *v) {
 	double timeStamp = std::stod(timeStampstr);
 
 	for (size_t i = 0; i < m_triggerCount; i++) {
-		char *triggerToken = trim(strtok(NULL, s));
+		char *triggerToken = trim(strtok(nullptr, s));
 		v[i] = std::stod(triggerToken);
 	}
 
@@ -64,12 +64,12 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	bool newVvtState[CAM_INPUTS_COUNT];
 
 	for (size_t i = 0;i<m_triggerCount;i++) {
-		char * triggerToken = trim(strtok(NULL, s));
+		char * triggerToken = trim(strtok(nullptr, s));
 		newState[columnIndeces[i]] = triggerToken[0] == '1';
 	}
 
 	for (size_t i = 0;i<m_vvtCount;i++) {
-		char *vvtToken = trim(strtok(NULL, s));
+		char *vvtToken = trim(strtok(nullptr, s));
 		newVvtState[i] = vvtToken[0] == '1';
 	}
 
