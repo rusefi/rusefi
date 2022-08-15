@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 17:09:24 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1305,9 +1305,9 @@ struct output_channels_s {
 	/**
 	 * offset 532
 	 */
-	uint8_t unusedAtTheEnd[56];
+	uint8_t unusedAtTheEnd[160];
 };
-static_assert(sizeof(output_channels_s) == 588);
+static_assert(sizeof(output_channels_s) == 692);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 17:09:24 UTC 2022
