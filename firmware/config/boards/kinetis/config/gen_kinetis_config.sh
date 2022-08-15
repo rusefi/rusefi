@@ -10,13 +10,6 @@
 
 pwd
 
-# nasty: we have to invoke gen_live_documentation.sh with custom prepend due to CAM_INPUTS_COUNT difference
-java -DSystemOut.name=logs/gen_live_documentation \
- -DUsagesReader.prepend=config/boards/kinetis/config/rusefi_config_kinetis.txt \
- -cp ../java_tools/ConfigDefinition.jar \
- com.rusefi.ldmp.UsagesReader integration/LiveData.yaml
-[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
-
 bash gen_signature.sh kin
 
 source gen_config_common.sh
