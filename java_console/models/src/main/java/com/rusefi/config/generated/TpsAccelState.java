@@ -1,15 +1,11 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Aug 15 19:03:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Aug 15 21:21:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
 
 public class TpsAccelState {
-	public static final int BANKS_COUNT = 1;
-	public static final int CAM_INPUTS_COUNT_padding = 3;
-	public static final int CAMS_PER_BANK = 1;
-	public static final int CAMS_PER_BANK_padding = 1;
 	public static final Field TPSFROM = Field.create("TPSFROM", 0, FieldType.FLOAT);
 	public static final Field TPSTO = Field.create("TPSTO", 4, FieldType.FLOAT);
 	public static final Field DELTATPS = Field.create("DELTATPS", 8, FieldType.FLOAT);

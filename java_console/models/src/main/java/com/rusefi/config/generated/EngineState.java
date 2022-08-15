@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 15 19:03:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 15 21:21:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -12,15 +12,15 @@ public class EngineState {
 	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
 	public static final int AUX_ANALOG_INPUT_COUNT = 8;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
-	public static final int BANKS_COUNT = 1;
+	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int BLOCKING_FACTOR = 500;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
-	public static final int CAM_INPUTS_COUNT = 1;
-	public static final int CAM_INPUTS_COUNT_padding = 3;
-	public static final int CAMS_PER_BANK = 1;
-	public static final int CAMS_PER_BANK_padding = 1;
+	public static final int CAM_INPUTS_COUNT = 4;
+	public static final int CAM_INPUTS_COUNT_padding = 0;
+	public static final int CAMS_PER_BANK = 2;
+	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
