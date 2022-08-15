@@ -148,10 +148,11 @@ public class ScalarLayout extends Layout {
         ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
     }
 
-    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, String name) {
-        name = prefixer.get(name);
-        ps.print(name);
-        //ps.print(" = " + fieldType + ", ");
+    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int idx) {
+        String nameWithoutSpace = prefixer.get(idx > 0 ? (this.name + idx) : this.name);
+        String nameWithSpace = prefixer.get(idx > 0 ? (this.name + " " + idx) : this.name);
+
+        ps.print(nameWithoutSpace);
         ps.print(" = scalar, ");
         ps.print(this.type.tsType);
         ps.print(", ");
@@ -170,9 +171,12 @@ public class ScalarLayout extends Layout {
         }
 
         psDatalog.print("entry = ");
-        psDatalog.print(name);
+        psDatalog.print(nameWithoutSpace);
         psDatalog.print(", \"");
-        writeDatalogName(psDatalog, name, options.comment);
+
+        String commentWithIndex = (idx <= 0 || options.comment.isEmpty()) ? options.comment : options.comment + " " + idx;
+
+        writeDatalogName(psDatalog, nameWithSpace, commentWithIndex);
         psDatalog.print("\", ");
 
         if (this.type.tsType.equals("F32") || this.options.scale != 1) {
@@ -186,7 +190,7 @@ public class ScalarLayout extends Layout {
 
     @Override
     protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, this.name);
+        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, -1);
     }
 
     @Override
@@ -198,7 +202,7 @@ public class ScalarLayout extends Layout {
         int elementOffset = offsetAdd;
 
         for (int i = 0; i < arrayLength[0]; i++) {
-            writeOutputChannelLayout(ps, psDatalog, prefixer, elementOffset, this.name + (i + 1));
+            writeOutputChannelLayout(ps, psDatalog, prefixer, elementOffset, i + 1);
             elementOffset += type.size;
         }
     }

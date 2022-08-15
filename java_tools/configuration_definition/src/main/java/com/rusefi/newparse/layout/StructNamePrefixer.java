@@ -34,6 +34,10 @@ public class StructNamePrefixer {
     }
 
     String get(String name) {
+        if (name == null || name.isEmpty()) {
+            return name;
+        }
+
         // stack has no prefixes, just return the plain name (no join necessary)
         name = String.join("", stack) + name;
 
