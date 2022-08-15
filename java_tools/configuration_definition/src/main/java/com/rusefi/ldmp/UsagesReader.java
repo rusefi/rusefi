@@ -187,7 +187,7 @@ public class UsagesReader {
                             .append(outputNamesArr[i])
                             .append("\n");
 
-                    enumContent.append(enumName + "// " + "_" + outputNamesArr[i] + ",\n");
+                    enumContent.append(enumName + ", // " + "_" + outputNamesArr[i] + "\n");
                 }
             }
         }
