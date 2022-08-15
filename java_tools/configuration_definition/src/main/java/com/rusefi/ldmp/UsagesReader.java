@@ -3,6 +3,10 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.RusefiParseErrorStrategy;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import org.yaml.snakeyaml.Yaml;
 
@@ -32,8 +36,6 @@ public class UsagesReader {
     private final StringBuilder fancyNewMenu = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
-
-    private static final String EXTRA_PREPEND = System.getProperty("UsagesReader.prepend");
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -76,7 +78,7 @@ public class UsagesReader {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        ConfigurationConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputChannelWriter outputChannelWriter = new OutputChannelWriter(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
@@ -89,24 +91,40 @@ public class UsagesReader {
                 log.info("Starting " + name + " at " + startingPosition);
 
                 ReaderState state = new ReaderState();
-                state.setDefinitionInputFile(folder + File.separator + name + ".txt");
+                String definitionInputFile = folder + File.separator + name + ".txt";
+                state.setDefinitionInputFile(definitionInputFile);
                 state.withC_Defines = withCDefines;
 
                 state.addDestination(javaSensorsConsumer,
-                        outputsSections,
                         dataLogConsumer
                 );
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
-                if (EXTRA_PREPEND != null) {
-                    System.out.println("EXTRA_PREPEND=" + EXTRA_PREPEND);
-                    state.addPrepend(EXTRA_PREPEND);
-                }
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
                 state.doJob();
+
+                {
+                    ParseState parseState = new ParseState(state.enumsReader);
+
+                    parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+
+                    if (prepend != null && !prepend.isEmpty()) {
+                        RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prepend);
+                    }
+
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
+
+                    // if (outputNames.length == 0) {
+                        outputChannelWriter.writeOutputChannels(parseState, null);
+                    // } else {
+                    //     for (int i = 0; i < outputNames.length; i++) {
+                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
+                    //     }
+                    // }
+                }
 
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
 
