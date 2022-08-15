@@ -62,6 +62,9 @@ done
 config/boards/kinetis/config/gen_kinetis_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
 
+# nasty: undo effects of custom kinetis generated files
+gen_live_documentation.sh
+
 config/boards/hellen/cypress/config/gen_cypress_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
 
