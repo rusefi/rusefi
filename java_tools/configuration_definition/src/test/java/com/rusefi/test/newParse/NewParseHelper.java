@@ -33,6 +33,23 @@ public class NewParseHelper {
         return baos.toString(utf8);
     }
 
+    public static String parseToDatalogs(String input) throws IOException {
+        ParseState state = parse(input);
+
+        final String utf8 = StandardCharsets.UTF_8.name();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStreamAlwaysUnix(baos, true, utf8);
+
+        ByteArrayOutputStream baosDatalog = new ByteArrayOutputStream();
+        PrintStream psDatalog = new PrintStreamAlwaysUnix(baosDatalog, true, utf8);
+
+        OutputChannelWriter writer = new OutputChannelWriter(ps, psDatalog);
+        writer.writeOutputChannels(state, null);
+
+        return baosDatalog.toString(utf8);
+    }
+
     public static String parseToOutputChannels(String input) throws IOException {
         ParseState state = parse(input);
 

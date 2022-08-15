@@ -5,8 +5,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static com.rusefi.test.newParse.NewParseHelper.parseToOutputChannels;
-import static com.rusefi.test.newParse.NewParseHelper.parseToTs;
+import static com.rusefi.test.newParse.NewParseHelper.*;
 import static org.junit.Assert.assertEquals;
 
 public class LayoutTest {
@@ -24,6 +23,8 @@ public class LayoutTest {
                 "; total TS size = 4\n" +
                 "[SettingContextHelp]\n" +
                 "\txyz = \"comment\"\n", parseToTs(input));
+
+        Assert.assertEquals("entry = xyz, \"comment\", int,    \"%d\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "xyz = scalar, S08, 0, \"units\", 1, 2\n" +
@@ -45,6 +46,9 @@ public class LayoutTest {
                         "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 8\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals("entry = abc, \"abc\", int,    \"%d\"\n" +
+                "entry = xyz, \"xyz\", float,  \"%.3f\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "abc = scalar, S32, 0, \"\", 1, 2\n" +
@@ -68,6 +72,9 @@ public class LayoutTest {
                         "; total TS size = 8\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
 
+        Assert.assertEquals("entry = abc, \"abc\", int,    \"%d\"\n" +
+                "entry = xyz, \"xyz\", float,  \"%.3f\"\n", parseToDatalogs(input));
+
         Assert.assertEquals(
                 "abc = scalar, S32, 0, \"\", 1, 2\n" +
                 "xyz = scalar, S08, 4, \"\", 6, 7\n" +
@@ -89,6 +96,9 @@ public class LayoutTest {
                         "xyz = scalar, S32, 4, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 8\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals("entry = abc, \"abc\", int,    \"%d\"\n" +
+                "entry = xyz, \"xyz\", float,  \"%.3f\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "abc = scalar, S08, 0, \"\", 1, 2\n" +
@@ -114,6 +124,10 @@ public class LayoutTest {
                         "; total TS size = 8\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
 
+        Assert.assertEquals("entry = abc, \"abc\", int,    \"%d\"\n" +
+                "entry = def, \"def\", int,    \"%d\"\n" +
+                "entry = xyz, \"xyz\", int,    \"%d\"\n", parseToDatalogs(input));
+
         Assert.assertEquals(
                 "abc = scalar, S16, 0, \"\", 1, 0\n" +
                 "def = scalar, S08, 2, \"\", 1, 0\n" +
@@ -136,6 +150,19 @@ public class LayoutTest {
                         "xyz = scalar, S32, 12, \"\", 6, 7, 8, 9, 10\n" +
                         "; total TS size = 16\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "entry = abc1, \"abc 1\", int,    \"%d\"\n" +
+                "entry = abc2, \"abc 2\", int,    \"%d\"\n" +
+                "entry = abc3, \"abc 3\", int,    \"%d\"\n" +
+                "entry = abc4, \"abc 4\", int,    \"%d\"\n" +
+                "entry = abc5, \"abc 5\", int,    \"%d\"\n" +
+                "entry = abc6, \"abc 6\", int,    \"%d\"\n" +
+                "entry = abc7, \"abc 7\", int,    \"%d\"\n" +
+                "entry = abc8, \"abc 8\", int,    \"%d\"\n" +
+                "entry = abc9, \"abc 9\", int,    \"%d\"\n" +
+                "entry = abc10, \"abc 10\", int,    \"%d\"\n" +
+                "entry = xyz, \"xyz\", float,  \"%.3f\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "abc1 = scalar, S08, 0, \"\", 1, 2\n" +
@@ -169,15 +196,20 @@ public class LayoutTest {
 
     @Test
     public void structs() throws IOException {
-        String ts = parseToTs(
-                "struct s1\n" +
+        String input =  "struct s1\n" +
                         "int32_t abc\n" +
                         "uint8_t def\n" +
                         "end_struct\n" +
-                "struct_no_prefix rootStruct\n" +
+                        "struct_no_prefix rootStruct\n" +
                         "s1 a\n" +
                         "s1 b\n" +
-                "end_struct");
+                        "end_struct";
+
+        Assert.assertEquals(
+                "entry = a_abc, \"a_abc\", int,    \"%d\"\n" +
+                "entry = a_def, \"a_def\", int,    \"%d\"\n" +
+                "entry = b_abc, \"b_abc\", int,    \"%d\"\n" +
+                "entry = b_def, \"b_def\", int,    \"%d\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "pageSize            = 16\n" +
@@ -189,7 +221,7 @@ public class LayoutTest {
                         "b_def = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\n" +
                         "; unused 3 bytes at offset 13\n" +
                         "; total TS size = 16\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
     }
 
     @Test
@@ -207,6 +239,12 @@ public class LayoutTest {
                         "myArr4 = scalar, S32, 12, \"\", 1, 0, 0, 0, 0\n" +
                         "; total TS size = 16\n" +
                         "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "entry = myArr1, \"myArr 1\", int,    \"%d\"\n" +
+                "entry = myArr2, \"myArr 2\", int,    \"%d\"\n" +
+                "entry = myArr3, \"myArr 3\", int,    \"%d\"\n" +
+                "entry = myArr4, \"myArr 4\", int,    \"%d\"\n", parseToDatalogs(input));
 
         Assert.assertEquals(
                 "myArr1 = scalar, S32, 0, \"\", 1, 0\n" +
