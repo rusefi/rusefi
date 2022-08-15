@@ -184,7 +184,8 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, state.inputFiles);
+        long crc32 = IoUtil2.getCrc32(state.inputFiles);
+        IoUtil2.signatureHash(state, parseState, tsInputFileFolder, crc32);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 

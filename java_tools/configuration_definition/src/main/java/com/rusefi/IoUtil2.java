@@ -33,7 +33,7 @@ public class IoUtil2 {
         }
     }
 
-    static long getCrc32(String fileName) throws IOException {
+    private static long getCrc32(String fileName) throws IOException {
         File file = new File(fileName);
         byte[] fileContent = Files.readAllBytes(file.toPath());
         for (int i = 0; i < fileContent.length; i++) {
@@ -46,7 +46,8 @@ public class IoUtil2 {
         return c.getValue();
     }
 
-    static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputFileNames) throws IOException {
+
+    static long getCrc32(List<String> inputFileNames) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String fileName : inputFileNames) {
@@ -55,6 +56,10 @@ public class IoUtil2 {
             crc32 ^= c;
         }
         SystemOut.println("CRC32 from all input files = " + crc32);
+        return crc32;
+    }
+
+    static void signatureHash(ReaderState state, ParseState parseState, String tsPath, long crc32) {
         // store the CRC32 as a built-in variable
 
         // nasty trick - do not insert signature into live data files
@@ -62,7 +67,5 @@ public class IoUtil2 {
             state.variableRegistry.register(ConfigDefinition.SIGNATURE_HASH, "" + crc32);
             parseState.addDefinition(ConfigDefinition.SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
         }
-
-        return crc32;
     }
 }
