@@ -2,10 +2,8 @@ package com.rusefi.test;
 
 import com.rusefi.BitState;
 import com.rusefi.ReaderState;
-import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.GetOutputValueConsumer;
-import com.rusefi.output.OutputsSectionConsumer;
 import org.junit.Test;
 
 import java.io.IOException;
