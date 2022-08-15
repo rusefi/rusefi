@@ -289,12 +289,10 @@ jobs:
       # todo: we have code duplication with gen_config.sh here :(
       run: |
         if [ "${{ matrix.build-target }}" = "kinetis" ]; then
-          cd config/boards/kinetis/config
-          bash gen_kinetis_config.sh
+          config/boards/kinetis/config/gen_kinetis_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "cypress" ]; then
-          cd config/boards/hellen/cypress/config
-          bash gen_cypress_config.sh
+          config/boards/hellen/cypress/config/gen_cypress_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
           bash config/boards/subaru_eg33/config/gen_subaru_config.sh
