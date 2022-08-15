@@ -46,7 +46,7 @@ for BOARD in \
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
  INI=$(echo "$BOARD" | cut -d " " -f 3)
- bash gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME $INI
+ ./gen_config_board.sh $BOARD_NAME $BOARD_SHORT_NAME $INI
  [ $? -eq 0 ] || { echo "ERROR generating board $BOARD_NAME $BOARD_SHORT_NAME $INI"; exit 1; }
 done
 
@@ -54,23 +54,21 @@ done
 # TODO: it's time to kill the 'default' bundle concept and just live happily with explicit f407-discovery
 # default config should be generated after normal custom boards so that it would be default
 # firmware/controllers/generated/rusefi_generated.h file which would be pushed into VCS
-bash gen_config_default.sh
+./gen_config_default.sh
 [ $? -eq 0 ] || { echo "ERROR generating default"; exit 1; }
 
 
 # todo: we have a bit of code duplication with build-firmware.yaml here :(
-cd config/boards/kinetis/config
-bash gen_kinetis_config.sh
+config/boards/kinetis/config/gen_kinetis_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
 
+# nasty: undo effects of custom kinetis generated files
+gen_live_documentation.sh
 
-cd ../../../..
-cd config/boards/hellen/cypress/config
-bash gen_cypress_config.sh
+config/boards/hellen/cypress/config/gen_cypress_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
-cd ../../../../..
 
-bash config/boards/subaru_eg33/config/gen_subaru_config.sh
+config/boards/subaru_eg33/config/gen_subaru_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
 
 exit 0

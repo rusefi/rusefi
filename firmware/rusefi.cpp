@@ -156,7 +156,7 @@ void rebootNow() {
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
  */
-static void scheduleReboot() {
+void scheduleReboot() {
 	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);

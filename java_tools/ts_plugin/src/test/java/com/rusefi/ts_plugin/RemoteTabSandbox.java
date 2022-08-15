@@ -7,9 +7,6 @@ import com.rusefi.ui.util.FrameHelper;
  */
 public class RemoteTabSandbox {
     public static void main(String[] args) {
-        RemoteTab.Listener listener = () -> {
-
-        };
-        new FrameHelper().showFrame(new RemoteTab(listener).getContent());
+        new FrameHelper().showFrame(new RemoteTab().getContent());
     }
 }

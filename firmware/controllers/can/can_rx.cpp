@@ -226,6 +226,15 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 		handleWidebandBootloaderAck();
 	}
 #endif
+#if EFI_USE_OPENBLT
+	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
+		/* TODO: gracefull shutdown? */
+		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
+			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
+			jump_to_openblt();
+		}
+	}
+#endif
 }
 
 #endif // EFI_CAN_SUPPORT

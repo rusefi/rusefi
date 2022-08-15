@@ -112,7 +112,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[220];
+static NO_CACHE char sdLogBuffer[250];
 static uint64_t binaryLogCount = 0;
 
 void writeLogLine(Writer& buffer) {
@@ -473,33 +473,33 @@ extern HIP9011 instance;
 
 static void updateTempSensors() {
 	SensorResult clt = Sensor::get(SensorType::Clt);
-	engine->outputChannels.coolant = clt.Value;
+	engine->outputChannels.coolant = clt.value_or(0);
 	engine->outputChannels.isCltError = !clt.Valid;
 
 	SensorResult iat = Sensor::get(SensorType::Iat);
-	engine->outputChannels.intake = iat.Value;
+	engine->outputChannels.intake = iat.value_or(0);
 	engine->outputChannels.isIatError = !iat.Valid;
 
 	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
-	engine->outputChannels.auxTemp1 = auxTemp1.Value;
+	engine->outputChannels.auxTemp1 = auxTemp1.value_or(0);
 
 	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
-	engine->outputChannels.auxTemp2 = auxTemp2.Value;
+	engine->outputChannels.auxTemp2 = auxTemp2.value_or(0);
 }
 
 static void updateThrottles() {
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
-	engine->outputChannels.TPSValue = tps1.Value;
+	engine->outputChannels.TPSValue = tps1.value_or(0);
 	engine->outputChannels.isTpsError = !tps1.Valid;
 	engine->outputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
-	engine->outputChannels.TPS2Value = tps2.Value;
+	engine->outputChannels.TPS2Value = tps2.value_or(0);
 	// If we don't have a TPS2 at all, don't turn on the failure light
 	engine->outputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
-	engine->outputChannels.throttlePedalPosition = pedal.Value;
+	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
 	// Only report fail if you have one (many people don't)
 	engine->outputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
@@ -525,11 +525,11 @@ static void updateLambda() {
 
 static void updateFuelSensors() {
 	// Low pressure is directly in kpa
-	engine->outputChannels.lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
+	engine->outputChannels.lowFuelPressure = Sensor::getOrZero(SensorType::FuelPressureLow);
 	// High pressure is in bar, aka 100 kpa
-	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
+	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
-	engine->outputChannels.flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
+	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
@@ -559,6 +559,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
 	engine->outputChannels.rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+	engine->outputChannels.rawBattery = Sensor::getRaw(SensorType::BatteryVoltage);
 	engine->outputChannels.rawClt = Sensor::getRaw(SensorType::Clt);
 	engine->outputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
@@ -582,10 +583,10 @@ static void updateRawSensors() {
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
-	engine->outputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
+	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
 
-	engine->outputChannels.auxLinear1 = Sensor::get(SensorType::AuxLinear1).Value;
-	engine->outputChannels.auxLinear2 = Sensor::get(SensorType::AuxLinear2).Value;
+	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
+	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
 }
 
 static void updateMiscSensors() {
@@ -715,7 +716,7 @@ static void updateTpsDebug() {
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_SHAFT_POSITION_INPUT
-	int rpm = Sensor::get(SensorType::Rpm).Value;
+	int rpm = Sensor::get(SensorType::Rpm).value_or(0);
 #else /* EFI_SHAFT_POSITION_INPUT */
 	int rpm = 0;
 #endif /* EFI_SHAFT_POSITION_INPUT */

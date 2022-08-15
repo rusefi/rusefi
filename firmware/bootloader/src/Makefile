@@ -133,6 +133,7 @@ CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 # Configure libfirmware Paths/Includes
 RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk

@@ -1,5 +1,6 @@
 package com.rusefi.tools;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
@@ -27,6 +28,7 @@ import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
@@ -47,6 +50,14 @@ public class ConsoleTools {
     private static final Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     private static final Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    private static final StatusConsumer statusListener = new StatusConsumer() {
+        final Logging log = getLogging(CANConnectorStartup.class);
+        @Override
+        public void append(String message) {
+            log.info(message);
+        }
+    };
 
     static {
         registerTool("help", args -> printTools(), "Print this help.");
@@ -63,9 +74,13 @@ public class ConsoleTools {
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
         registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
-        registerTool("pcan_connector", strings -> CANConnectorStartup.start(PCanIoStream.createStream()), "Connect your rusEFI ECU using PCAN CAN-bus adapter");
+        registerTool("pcan_connector", strings -> {
+
+            PCanIoStream stream = PCanIoStream.createStream();
+            CANConnectorStartup.start(stream, statusListener);
+        }, "Connect your rusEFI ECU using PCAN CAN-bus adapter");
         if (!FileLog.isWindows()) {
-            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create()), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
+            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create(), statusListener), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
         }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
@@ -116,7 +131,7 @@ public class ConsoleTools {
             public void onActivity() {
 
             }
-        });
+        }, StatusConsumer.ANONYMOUS);
 
     }
 

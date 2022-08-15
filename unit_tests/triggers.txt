@@ -450,12 +450,12 @@ crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 gapsCount=3
-gapFrom.0=0.249750
-gapTo.0=0.416250
-gapFrom.1=0.750000
-gapTo.1=1.250000
-gapFrom.2=2.250000
-gapTo.2=3.750000
+gapFrom.0=0.250000
+gapTo.0=0.500000
+gapFrom.1=0.700000
+gapTo.1=1.500000
+gapFrom.2=2.000000
+gapTo.2=4.000000
 # end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00

@@ -82,6 +82,8 @@ PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/blt_conf.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/hooks.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.h
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)

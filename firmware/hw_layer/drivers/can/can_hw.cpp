@@ -179,10 +179,10 @@ static void canInfo() {
 		return;
 	}
 
-	efiPrintf("CAN1 TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
+	efiPrintf("CAN1 TX %s %s", hwPortname(engineConfiguration->canTxPin), getCan_baudrate_e(engineConfiguration->canBaudRate));
 	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
 
-	efiPrintf("CAN2 TX %s speed %d", hwPortname(engineConfiguration->can2TxPin), engineConfiguration->can2BaudRate);
+	efiPrintf("CAN2 TX %s %s", hwPortname(engineConfiguration->can2TxPin), getCan_baudrate_e(engineConfiguration->can2BaudRate));
 	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
 
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,

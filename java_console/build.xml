@@ -90,11 +90,13 @@
             <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
+            <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
             <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
+            <src path="io/src/testFixtures/java"/>
             <src path="luaformatter/src"/>
             <src path="models/src/main/java"/>
             <src path="models/src/test/java"/>

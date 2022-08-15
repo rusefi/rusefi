@@ -145,7 +145,6 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 	}
 
 	void PeriodicTask() override {
-		counter++;
 #if EFI_SHAFT_POSITION_INPUT
 		bool is_running = engine->rpmCalculator.isRunning();
 #else
@@ -154,14 +153,12 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 
 		if (is_running) {
 			// blink in running mode
-			enginePins.runningLedPin.setValue(counter % 2);
+			enginePins.runningLedPin.toggle();
 		} else {
 			int is_cranking = engine->rpmCalculator.isCranking();
 			enginePins.runningLedPin.setValue(is_cranking);
 		}
 	}
-private:
-	int counter = 0;
 };
 
 static EngineStateBlinkingTask engineStateBlinkingTask;

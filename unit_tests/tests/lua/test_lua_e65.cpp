@@ -12,11 +12,6 @@
 		return checksum \
 	end "
 
-#define TWO_BYTES "function getTwoBytes(data, offset, factor)        \
-		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
-	end"
-
-
 #define GET_BIT_RANGE "function getBitRange(data, bitIndex, bitWidth)  \
 	byteIndex = bitIndex >> 3  \
 	shift = bitIndex - byteIndex * 8  \
@@ -30,23 +25,34 @@ end"
 
 // https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x3B4.md
 TEST(LuaE65, Battery) {
-	const char* realdata = TWO_BYTES R"(
+	const char* realdata = TWO_BYTES_LSB R"(
 
 	function testFunc()
 		data = {0xdc, 0x03, 0x00, 0x53, 0xFE, 0xD3, 0x04, 0x00}
-		return getTwoBytes(data, 0, 0.0147)
+		return getTwoBytesLSB(data, 0, 0.0147)
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 14.5236);
 }
 
+TEST(LuaE65, testTwoBytes) {
+	const char* realdata = TWO_BYTES_LSB R"(
+
+	function testFunc()
+		data = {0xdc, 0x03}
+		return getTwoBytesLSB(data, 0, 1)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x03dc);
+}
+
 // https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x0A8.md
 TEST(LuaE65, extractTorqueFromA8) {
-	const char* realdata = TWO_BYTES R"(
+	const char* realdata = TWO_BYTES_LSB R"(
 
 function testFunc()
 	data = { 0x42, 0x89, 0x10, 0x80, 0x10, 0x0F, 0x00, 0x60 }
-	return 0.5 * (getTwoBytes(data, 1, 1) >> 4)
+	return 0.5 * (getTwoBytesLSB(data, 1, 1) >> 4)
 end
 )";
 			EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x108 / 2);
@@ -54,18 +60,18 @@ end
 
 // http://loopybunny.co.uk/CarPC/can/0AA.html
 TEST(LuaE65, Rpm) {
-	const char* realdata = TWO_BYTES R"(
+	const char* realdata = TWO_BYTES_LSB R"(
 
 	function testFunc()
 		data = {0x5F, 0x59, 0xFF, 0x00, 0x34, 0x0D, 0x80, 0x99}
-		return getTwoBytes(data, 4, 0.25)
+		return getTwoBytesLSB(data, 4, 0.25)
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 845);
 }
 
 TEST(LuaE65, gear) {
-	const char* realdata = TWO_BYTES R"(
+	const char* realdata = R"(
 
 	function testFunc()
 		data = {0x58}
@@ -76,7 +82,7 @@ TEST(LuaE65, gear) {
 }
 
 TEST(LuaE65, repackAA) {
-	const char* realdata = ARRAY_EQUALS TWO_BYTES R"(
+	const char* realdata = ARRAY_EQUALS R"(
 
 	function testFunc()
 rpm = 673.75

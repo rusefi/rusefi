@@ -174,6 +174,10 @@ extern bool rebootForPresetPending;
 void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
+	if (isLockedFromUser()) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
 
@@ -215,6 +219,10 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_
 	UNUSED(mode);
 
 	tsState.writeValueCommandCounter++;
+	if (isLockedFromUser()) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 	tunerStudioDebug(tsChannel, "got W (Write)"); // we can get a lot of these
 
@@ -250,7 +258,14 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_fo
 		return;
 	}
 
-	const uint8_t* addr = getWorkingPageAddr() + offset;
+	uint8_t* addr;
+	if (isLockedFromUser()) {
+		// to have rusEFI console happy just send all zeros within a valid packet
+		addr = (uint8_t*)&tsChannel->scratchBuffer + SCRATCH_BUFFER_PREFIX_SIZE;
+		memset(addr, 0, count);
+	} else {
+		addr = getWorkingPageAddr() + offset;
+	}
 	tsChannel->sendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);

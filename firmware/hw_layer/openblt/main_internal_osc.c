@@ -30,6 +30,7 @@
 * Include files
 ****************************************************************************************/
 #include "boot.h"                                /* bootloader generic header          */
+#include "shared_params.h"                       /* Shared parameters header           */
 #ifdef STM32F429xx
 #include "stm32f4xx.h"                           /* STM32 CPU and HAL header           */
 #endif
@@ -58,6 +59,8 @@ int main(void)
 {
   /* initialize the microcontroller */
   Init();
+  /* initialize the shared parameters module */
+  SharedParamsInit();
   /* initialize the bootloader */
   BootInit();
 

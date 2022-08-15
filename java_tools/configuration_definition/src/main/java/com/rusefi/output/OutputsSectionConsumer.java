@@ -5,6 +5,7 @@ import com.rusefi.ReaderState;
 import java.io.*;
 
 /**
+ * TODO: We have to move either forward or backwards with newparse #4441
  * [OutputChannels]
  */
 public class OutputsSectionConsumer implements ConfigurationConsumer {

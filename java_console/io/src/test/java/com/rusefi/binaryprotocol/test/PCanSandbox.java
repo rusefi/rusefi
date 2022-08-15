@@ -22,7 +22,7 @@ public class PCanSandbox {
     public static void main(String[] args) throws IOException, InterruptedException {
         AbstractIoStream tsStream = PCanIoStream.createStream();
         if (tsStream == null)
-            throw new IOException("No PCAN");
+            throw new IOException("Error creating PCAN stream");
 
 
         for (int i = 0; i < 17; i++) {

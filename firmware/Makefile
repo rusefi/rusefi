@@ -9,6 +9,10 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
+ifneq ("$(wildcard $(../.git))","")
+$(error ../.git not found. We expect source code to be cloned not downloaded as zip file.")
+endif
+
 include rusefi_rules.mk
 
 # Define project name here
@@ -26,6 +30,7 @@ CHIBIOS_CONTRIB = ChibiOS-Contrib
 # Configure libfirmware Paths/Includes
 RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
 
 include rusefi.mk
 
@@ -235,6 +240,7 @@ CSRC =  check.c \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
+	$(RUSEFI_LIB_C) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global

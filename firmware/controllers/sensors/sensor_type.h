@@ -97,6 +97,8 @@ enum class SensorType : unsigned char {
 
 	InputShaftSpeed,
 
+	// nothing for EGT so far. How many channels? why? one day we shall gather requirements
+
 	// Leave me at the end!
 	PlaceholderLast,
 };

@@ -10,6 +10,10 @@
 #include "mpu_util.h"
 #include "map_averaging.h"
 
+#ifdef ADC_MUX_PIN
+#error "ADC mux not yet supported on STM32H7"
+#endif
+
 #ifndef H7_ADC_SPEED
 #define H7_ADC_SPEED (10000)
 #endif

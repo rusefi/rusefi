@@ -1,8 +1,0 @@
-#define Vboost_high 0;
-#define Vboost_low 1;
-#define Isense4_high 2;
-#define Isense4_low 3;
-#define PCV_Ipeak 5;
-#define PCV_Ihold 6;
-#define PCV_Thold_off 7;
-#define PCV_Thold_tot 8;
