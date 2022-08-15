@@ -172,7 +172,7 @@ public class ScalarLayout extends Layout {
         psDatalog.print("entry = ");
         psDatalog.print(name);
         psDatalog.print(", \"");
-        psDatalog.print(options.comment.isEmpty() ? name : options.comment);
+        writeDatalogName(psDatalog, name, options.comment);
         psDatalog.print("\", ");
 
         if (this.type.tsType.equals("F32") || this.options.scale != 1) {

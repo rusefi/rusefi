@@ -87,7 +87,7 @@ public class EnumLayout extends Layout {
         psDatalog.print("entry = ");
         psDatalog.print(name);
         psDatalog.print(", \"");
-        psDatalog.print(options.comment.isEmpty() ? name : options.comment);
+        writeDatalogName(psDatalog, name, options.comment);
         psDatalog.print("\", int,    \"%d\"");
         psDatalog.println();
     }
