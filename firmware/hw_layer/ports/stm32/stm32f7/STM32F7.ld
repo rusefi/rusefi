@@ -28,6 +28,9 @@
  /* TODO: 512k flash limit is a mitigation for https://github.com/rusefi/rusefi/issues/3566 and https://github.com/rusefi/rusefi/issues/3775 */
 flash_size = DEFINED(FLASH_SIZE) ? FLASH_SIZE : 512k;
 
+/* OpenBLT <-> main FW shared area */
+_OpenBLT_Shared_Params_Size = DEFINED(BOOTLOADER) ? 16 : 0;
+
 MEMORY
 {
     bl          : org = 0x08000000, len = 16k       /* bootloader section */
@@ -41,8 +44,8 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
-    ram0   (wx) : org = 0x20020000, len = 384k      /* SRAM1 + SRAM2 */
-    ram1   (wx) : org = 0x20020000, len = 368k      /* SRAM1 */
+    ram0   (wx) : org = 0x20020000 + _OpenBLT_Shared_Params_Size, len = 384k - _OpenBLT_Shared_Params_Size      /* SRAM1 + SRAM2 */
+    ram1   (wx) : org = 0x20020000 + _OpenBLT_Shared_Params_Size, len = 368k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2   (wx) : org = 0x2007C000, len = 16k       /* SRAM2 */
     ram3   (wx) : org = 0x20000000, len = 128k      /* DTCM-RAM */
     ram4   (wx) : org = 0x00000000, len = 16k       /* ITCM-RAM */
@@ -50,6 +53,8 @@ MEMORY
     ram6   (wx) : org = 0x00000000, len = 0
     ram7   (wx) : org = 0x00000000, len = 0
 }
+
+__backup_sram_addr__ = ORIGIN(ram5);
 
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
@@ -131,6 +136,20 @@ SECTIONS
         . = ALIGN(4);
         __eth_end__ = .;
     } > ETH_RAM
+
+  /* shared between main FW and OpenBLT */
+  .shared (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _sshared = .;
+    __shared_start__ = _sshared;
+    *(.shared)
+    *(.shared.*)
+    KEEP(*(.shared))
+    . = ALIGN(4);
+    _eshared = .;
+    __shared_end__ = _eshared;
+  } > shared
 }
 
 /* Code rules inclusion.*/

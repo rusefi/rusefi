@@ -28,29 +28,55 @@ public class AutoupdateUtil {
         return result;
     }
 
-    public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
-        FrameHelper frameHelper = null;
-        final AtomicReference<JProgressBar> jProgressBarAtomicReference = new AtomicReference<>();
-        if (!runHeadless) {
-            frameHelper = new FrameHelper();
+    static class ProgressView {
+        private final FrameHelper frameHelper;
+        private JProgressBar progressBar;
+
+        ProgressView(FrameHelper frameHelper, JProgressBar progressBar) {
+            this.frameHelper = frameHelper;
+            this.progressBar = progressBar;
+        }
+
+        public void dispose() {
+            if (frameHelper != null) {
+                frameHelper.getFrame().dispose();
+            }
+        }
+    }
+
+    private static ProgressView createProgressView(String title) {
+        if (runHeadless) {
+            return new ProgressView(null, null);
+        } else {
+            FrameHelper frameHelper = new FrameHelper();
             JProgressBar jProgressBar = new JProgressBar();
 
             frameHelper.getFrame().setTitle(title);
             jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
-            jProgressBarAtomicReference.set(jProgressBar);
             frameHelper.showFrame(jProgressBar, true);
+            return new ProgressView(frameHelper, jProgressBar);
         }
+    }
 
-        ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
-            if (!runHeadless) {
-                SwingUtilities.invokeLater(() -> jProgressBarAtomicReference.get().setValue(currentProgress));
-            }
-        };
+    public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
+        ProgressView view = createProgressView(title);
 
-        ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
+        try {
+            ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
+                if (!runHeadless) {
+                    SwingUtilities.invokeLater(() -> view.progressBar.setValue(currentProgress));
+                }
+            };
 
-        if (!runHeadless) {
-            frameHelper.getFrame().dispose();
+            ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
+        } catch (IOException e) {
+            if (view.progressBar!=null) {
+                JOptionPane.showMessageDialog(view.progressBar, "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+                throw new ReportedIOException(e);
+            } else
+                throw e;
+        } finally {
+            view.dispose();
         }
     }
 

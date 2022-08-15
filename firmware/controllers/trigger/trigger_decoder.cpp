@@ -255,6 +255,7 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	// Determine where we currently are in the revolution
 	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
 	if (cisnan(currentAngle)) {
+		// todo: huh? dead code? how can we get NAN from eventAngles table?
 		return NOISY_RPM;
 	}
 
@@ -390,7 +391,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	m_hasSynchronizedPhase = true;
 
 	if (totalShift > 0) {
-		vvtSyncCounter++;
+		camResyncCounter++;
 	}
 
 	return totalShift;

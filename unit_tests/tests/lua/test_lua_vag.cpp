@@ -19,6 +19,7 @@ TEST(LuaVag, Checksum) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x60);
 }
 
+// LSB (Least Significant Byte comes first) "Intel"
 TEST(LuaVag, packMotor1) {
 	const char* realdata = ARRAY_EQUALS SET_TWO_BYTES R"(
 

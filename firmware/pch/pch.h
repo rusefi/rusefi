@@ -17,6 +17,14 @@
 #define TRUE (!(FALSE))
 #endif /* TRUE */
 
+#include <rusefi/arrays.h>
+#include <rusefi/crc.h>
+#include <rusefi/fragments.h>
+#include <rusefi/interpolation.h>
+#include <rusefi/isnan.h>
+#include <rusefi/math.h>
+#include <rusefi/pt2001.h>
+
 #include "efifeatures.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"

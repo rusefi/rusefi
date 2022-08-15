@@ -67,7 +67,8 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 		return false;
 	}
 
-	return engineConfiguration->launchTpsTreshold < tps.Value;
+    // todo: should this be 'launchTpsThreshold <= tps.Value' so that nicely calibrated TPS of zero does not prevent launch?
+	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
 /**
@@ -102,8 +103,13 @@ void LaunchControlBase::update() {
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ?
-	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
+	retardThresholdRpm = engineConfiguration->launchRpm
+	/*
+	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
+	or it is supposed to be referencing 'launchTimingRpmRange'?
+	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
+*/
+	         + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer

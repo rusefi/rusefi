@@ -1,6 +1,43 @@
 # https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 
 pins:
+# extension header pins
+  - pin: PPS1
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: PPS1
+
+  - pin: Aux PPS2
+# H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Aux PPS2
+
+  - pin: Aux TPS2
+# H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: Aux TPS2
+
+  - pin: Aux TPS3
+# H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Aux TPS3
+
+# Solder pads
+  - pin: VIN5
+    id: [EFI_ADC_0, A0]
+    class: [analog_inputs, switch_inputs]
+    ts_name: VIN5
+
+  - pin: VIN6
+    id: [EFI_ADC_1, A1]
+    class: [analog_inputs, switch_inputs]
+    ts_name: VIN6
+
+# Normal connector pins
   - pin: 1
     id: G14
     class: outputs
@@ -151,6 +188,11 @@ pins:
     ts_name: 52 - Coil 3
     function: Coil 3
     type: ign
+
+  - pin: 56
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 56 - Battery Sense
 
   - pin: 73
     id: EFI_ADC_4

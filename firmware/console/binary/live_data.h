@@ -1,6 +1,6 @@
 #pragma once
 
-#include "FragmentEntry.h"
+#include <rusefi/fragments.h>
 
 template <typename TStruct>
 const TStruct* getLiveDataAddr();

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Aug 09 20:28:12 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -932,15 +932,26 @@ struct engine_configuration_s {
 	 */
 	injection_mode_e injectionMode;
 	/**
-	 * need 4 byte alignment
-	units
+	 * Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 	 * offset 386
 	 */
-	uint8_t alignmentFill_at_386[2];
+	uint16_t boostControlMinRpm;
 	/**
+	 * Minimum TPS to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 	 * offset 388
 	 */
-	angle_t unusedHere1341234;
+	uint8_t boostControlMinTps;
+	/**
+	 * Minimum MAP to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
+	 * offset 389
+	 */
+	uint8_t boostControlMinMap;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 390
+	 */
+	uint8_t alignmentFill_at_390[2];
 	/**
 	 * Ignition advance angle used during engine cranking, 5-10 degrees will work as a base setting for most engines.
 	 * There is tapering towards running timing advance
@@ -1134,7 +1145,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t failedMapFallback;
 	/**
-	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.
+	 * Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.
 	%
 	 * offset 486
 	 */
@@ -1484,9 +1495,11 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e triggerInputPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.
+	us
 	 * offset 708
 	 */
-	uint16_t unused688;
+	uint16_t mc33_t_min_boost;
 	/**
 	 * offset 710
 	 */
@@ -2278,7 +2291,7 @@ struct engine_configuration_s {
 	 */
 	int launchSpeedThreshold;
 	/**
-	 * Range from Launch Rpm for Timing Retard to activate
+	 * Range from Launch RPM for Timing Retard to activate
 	RPM
 	 * offset 1024
 	 */
@@ -2296,23 +2309,20 @@ struct engine_configuration_s {
 	 */
 	int launchBoostDuty;
 	/**
-	 * RPM Range for Hard Cut
-	rpm
+	 * Range from Launch RPM to activate Hard Cut
+	RPM
 	 * offset 1036
 	 */
 	int hardCutRpmRange;
 	/**
-	rpm
 	 * offset 1040
 	 */
-	int launchAdvanceRpmRange;
+	int unused962;
 	/**
-	rpm
 	 * offset 1044
 	 */
-	int launchTpsTreshold;
+	int launchTpsThreshold;
 	/**
-	rpm
 	 * offset 1048
 	 */
 	float launchActivateDelay;
@@ -2443,7 +2453,7 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 1360 bit 5 */
-	bool unused234234234 : 1 {};
+	bool yesUnderstandLocking : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
 	offset 1360 bit 6 */
@@ -2517,13 +2527,11 @@ struct engine_configuration_s {
 	offset 1360 bit 26 */
 	bool boardUseD5PullDown : 1 {};
 	/**
-	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1360 bit 27 */
-	bool useFSIO5ForCriticalIssueEngineStop : 1 {};
+	bool verboseIsoTp : 1 {};
 	/**
-	 * Sometimes we have to miss injection on purpose to attract driver's attention
 	offset 1360 bit 28 */
-	bool useFSIO4ForSeriousEngineWarning : 1 {};
+	bool engineSnifferFocusOnInputs : 1 {};
 	/**
 	offset 1360 bit 29 */
 	bool launchActivateInverted : 1 {};
@@ -2674,17 +2682,19 @@ struct engine_configuration_s {
 	offset 1372 bit 24 */
 	bool forceO2Heating : 1 {};
 	/**
+	 * If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 	offset 1372 bit 25 */
-	bool unused_1484_bit_25 : 1 {};
+	bool invertVvtControlIntake : 1 {};
 	/**
+	 * If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 	offset 1372 bit 26 */
-	bool unused_1484_bit_26 : 1 {};
+	bool invertVvtControlExhaust : 1 {};
 	/**
 	offset 1372 bit 27 */
 	bool unused_1484_bit_27 : 1 {};
 	/**
 	offset 1372 bit 28 */
-	bool unused_1484_bit_28 : 1 {};
+	bool unused_1484_bit_38 : 1 {};
 	/**
 	offset 1372 bit 29 */
 	bool unused_1484_bit_29 : 1 {};
@@ -3119,11 +3129,13 @@ struct engine_configuration_s {
 	offset 1628 bit 0 */
 	bool stepperDcInvertedPins : 1 {};
 	/**
+	 * Allow OpenBLT on Primary CAN
 	offset 1628 bit 1 */
-	bool unused1740b0 : 1 {};
+	bool canOpenBLT : 1 {};
 	/**
+	 * Allow OpenBLT on Secondary CAN
 	offset 1628 bit 2 */
-	bool unused1740b1 : 1 {};
+	bool can2OpenBLT : 1 {};
 	/**
 	offset 1628 bit 3 */
 	bool unused1740b2 : 1 {};
@@ -3141,76 +3153,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1628 bit 8 */
-	bool unusedBit_540_8 : 1 {};
+	bool unusedBit_542_8 : 1 {};
 	/**
 	offset 1628 bit 9 */
-	bool unusedBit_540_9 : 1 {};
+	bool unusedBit_542_9 : 1 {};
 	/**
 	offset 1628 bit 10 */
-	bool unusedBit_540_10 : 1 {};
+	bool unusedBit_542_10 : 1 {};
 	/**
 	offset 1628 bit 11 */
-	bool unusedBit_540_11 : 1 {};
+	bool unusedBit_542_11 : 1 {};
 	/**
 	offset 1628 bit 12 */
-	bool unusedBit_540_12 : 1 {};
+	bool unusedBit_542_12 : 1 {};
 	/**
 	offset 1628 bit 13 */
-	bool unusedBit_540_13 : 1 {};
+	bool unusedBit_542_13 : 1 {};
 	/**
 	offset 1628 bit 14 */
-	bool unusedBit_540_14 : 1 {};
+	bool unusedBit_542_14 : 1 {};
 	/**
 	offset 1628 bit 15 */
-	bool unusedBit_540_15 : 1 {};
+	bool unusedBit_542_15 : 1 {};
 	/**
 	offset 1628 bit 16 */
-	bool unusedBit_540_16 : 1 {};
+	bool unusedBit_542_16 : 1 {};
 	/**
 	offset 1628 bit 17 */
-	bool unusedBit_540_17 : 1 {};
+	bool unusedBit_542_17 : 1 {};
 	/**
 	offset 1628 bit 18 */
-	bool unusedBit_540_18 : 1 {};
+	bool unusedBit_542_18 : 1 {};
 	/**
 	offset 1628 bit 19 */
-	bool unusedBit_540_19 : 1 {};
+	bool unusedBit_542_19 : 1 {};
 	/**
 	offset 1628 bit 20 */
-	bool unusedBit_540_20 : 1 {};
+	bool unusedBit_542_20 : 1 {};
 	/**
 	offset 1628 bit 21 */
-	bool unusedBit_540_21 : 1 {};
+	bool unusedBit_542_21 : 1 {};
 	/**
 	offset 1628 bit 22 */
-	bool unusedBit_540_22 : 1 {};
+	bool unusedBit_542_22 : 1 {};
 	/**
 	offset 1628 bit 23 */
-	bool unusedBit_540_23 : 1 {};
+	bool unusedBit_542_23 : 1 {};
 	/**
 	offset 1628 bit 24 */
-	bool unusedBit_540_24 : 1 {};
+	bool unusedBit_542_24 : 1 {};
 	/**
 	offset 1628 bit 25 */
-	bool unusedBit_540_25 : 1 {};
+	bool unusedBit_542_25 : 1 {};
 	/**
 	offset 1628 bit 26 */
-	bool unusedBit_540_26 : 1 {};
+	bool unusedBit_542_26 : 1 {};
 	/**
 	offset 1628 bit 27 */
-	bool unusedBit_540_27 : 1 {};
+	bool unusedBit_542_27 : 1 {};
 	/**
 	offset 1628 bit 28 */
-	bool unusedBit_540_28 : 1 {};
+	bool unusedBit_542_28 : 1 {};
 	/**
 	offset 1628 bit 29 */
-	bool unusedBit_540_29 : 1 {};
+	bool unusedBit_542_29 : 1 {};
 	/**
 	offset 1628 bit 30 */
-	bool unusedBit_540_30 : 1 {};
+	bool unusedBit_542_30 : 1 {};
 	/**
 	offset 1628 bit 31 */
-	bool unusedBit_540_31 : 1 {};
+	bool unusedBit_542_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -3907,6 +3919,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_i_hold;
 	/**
+	 * Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.
 	us
 	 * offset 2938
 	 */
@@ -4245,10 +4258,14 @@ struct engine_configuration_s {
 	 */
 	float etbMinimumPosition;
 	/**
-	units
 	 * offset 3768
 	 */
-	uint8_t mainUnusedEnd[246];
+	uint16_t tuneHidingKey;
+	/**
+	units
+	 * offset 3770
+	 */
+	uint8_t mainUnusedEnd[244];
 	/**
 	 * need 4 byte alignment
 	units
@@ -4675,7 +4692,7 @@ struct persistent_config_s {
 	value
 	 * offset 18164
 	 */
-	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18228
@@ -4690,7 +4707,7 @@ struct persistent_config_s {
 	value
 	 * offset 18260
 	 */
-	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 18324
@@ -4945,4 +4962,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Jul 01 10:57:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Aug 09 20:28:12 UTC 2022

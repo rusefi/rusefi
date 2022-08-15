@@ -8,8 +8,6 @@
 # see inside cache.zip for all input files
 #
 
-cd ../../../..
-
 pwd
 
 bash gen_signature.sh kin

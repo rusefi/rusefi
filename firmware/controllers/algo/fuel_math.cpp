@@ -344,30 +344,30 @@ void initFuelMap() {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection() {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	const auto clt = Sensor::get(SensorType::Clt);
 	
-	if (!valid)
+	if (!clt)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d(clt.Value, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection() {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	const auto clt = Sensor::get(SensorType::Clt);
 
-	if (!valid)
+	if (!clt)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt, config->cltTimingBins, config->cltTimingExtra);
+	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
 }
 
 float getIatFuelCorrection() {
-	const auto [valid, iat] = Sensor::get(SensorType::Iat);
+	const auto iat = Sensor::get(SensorType::Iat);
 
-	if (!valid)
+	if (!iat)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr);
+	return interpolate2d(iat.Value, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
 float getBaroCorrection() {

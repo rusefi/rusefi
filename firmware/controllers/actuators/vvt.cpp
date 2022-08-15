@@ -16,7 +16,7 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t>;
+using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16_t>;
 
 static vvt_map_t vvtTable1;
 static vvt_map_t vvtTable2;
@@ -71,6 +71,16 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	return 0;
 }
 
+static bool shouldInvertVvt(int camIndex) {
+	// grumble grumble, can't do an array of bits in c++
+	switch (camIndex) {
+		case 0: return engineConfiguration->invertVvtControlIntake;
+		case 1: return engineConfiguration->invertVvtControlExhaust;
+	}
+
+	return false;
+}
+
 expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
 	float retVal = m_pid.getOutput(target, observation);
 
@@ -88,7 +98,14 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-	return retVal;
+	// User labels say "advance" and "retard"
+	// "advance" means that additional solenoid duty makes indicated VVT position more positive
+	// "retard" means that additional solenoid duty makes indicated VVT position more negative
+	if (shouldInvertVvt(m_cam)) {
+		return -retVal;
+	} else {
+		return retVal;
+	}
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
@@ -156,7 +173,7 @@ void initAuxPid() {
 	startVvtControlPins();
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].Start();
+		instances[i].start();
 	}
 }
 

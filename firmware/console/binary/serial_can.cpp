@@ -12,7 +12,6 @@
 
 #include "pch.h"
 #include "os_access.h"
-#include "crc.h"
 
 #if EFI_UNIT_TEST
 #define PRINT printf
@@ -70,6 +69,9 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 		offset = 3;
 		maxNumBytes = 0;	// no data is sent with 'flow control' frame
 		break;
+	default:
+		// bad frame type
+		return 0;
 	}
 	
 	int numBytes = minI(maxNumBytes, num);
@@ -118,6 +120,9 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		break;
 	case ISO_TP_FRAME_FLOW_CONTROL:
 		// todo: currently we just ignore the FC frame
+		return 0;
+	default:
+		// bad frame type
 		return 0;
 	}
 
@@ -172,9 +177,9 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout) {
 	int offset = 0;
 
-#ifdef SERIAL_CAN_DEBUG
-			PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, numBytes);
-#endif /* SERIAL_CAN_DEBUG */
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, numBytes);
+	}
 
 	if (numBytes < 1)
 		return 0;
@@ -272,9 +277,9 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 	int numBytes = *np;
 	int offset = 0;
 
-#ifdef SERIAL_CAN_DEBUG
-			PRINT("*** INFO: streamAddToTxTimeout adding %d, in buffer %d" PRINT_EOL, numBytes, txFifoBuf.getCount());
-#endif /* SERIAL_CAN_DEBUG */
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: streamAddToTxTimeout adding %d, in buffer %d" PRINT_EOL, numBytes, txFifoBuf.getCount());
+	}
 
 	// we send here only if the TX FIFO buffer is getting overflowed
 	while (numBytes >= txFifoBuf.getSize() - txFifoBuf.getCount()) {
@@ -282,9 +287,9 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 		txFifoBuf.put(txbuf + offset, numBytesToAdd);
 		int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 
-#ifdef SERIAL_CAN_DEBUG
-		PRINT("*** INFO: streamAddToTxTimeout numBytesToAdd %d / numSent %d / numBytes %d" PRINT_EOL, numBytesToAdd, numSent, numBytes);
-#endif /* SERIAL_CAN_DEBUG */
+		if (engineConfiguration->verboseIsoTp) {
+			PRINT("*** INFO: streamAddToTxTimeout numBytesToAdd %d / numSent %d / numBytes %d" PRINT_EOL, numBytesToAdd, numSent, numBytes);
+		}
 
 		if (numSent < 1)
 			break;
@@ -293,17 +298,17 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 		numBytes -= numBytesToAdd;
 	}
 	
-#ifdef SERIAL_CAN_DEBUG
-	PRINT("*** INFO: streamAddToTxTimeout remaining goes to buffer %d" PRINT_EOL, numBytes);
-#endif /* SERIAL_CAN_DEBUG */
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: streamAddToTxTimeout remaining goes to buffer %d" PRINT_EOL, numBytes);
+	}
 
 	// now we put the rest on hold
 	txFifoBuf.put(txbuf + offset, numBytes);
 
 
-#ifdef SERIAL_CAN_DEBUG
-	PRINT("*** INFO: in buffer %d" PRINT_EOL, txFifoBuf.getCount());
-#endif /* SERIAL_CAN_DEBUG */
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: in buffer %d" PRINT_EOL, txFifoBuf.getCount());
+	}
 
 	return CAN_MSG_OK;
 }
@@ -350,12 +355,20 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 
 	return CAN_MSG_OK;
 }
+static int isoTpPacketCounter = 0;
 
+/**
+ * incoming data main entry point
+ */
 void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
+	// CAN ID filtering happens in base class, by the time we are here we know it's the CAN_ECU_SERIAL_RX_ID packet
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
+	if (engineConfiguration->verboseIsoTp) {
+		PRINT("*** INFO: CanTsListener decodeFrame %d" PRINT_EOL, isoTpPacketCounter++);
+	}
 	if (!rxFifo.put(msg)) {
-		//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
+		warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 }
 

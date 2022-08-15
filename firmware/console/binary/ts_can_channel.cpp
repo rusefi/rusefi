@@ -10,7 +10,7 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
-#ifdef EFI_CAN_SERIAL
+#if EFI_CAN_SERIAL
 #include "serial_can.h"
 #include "can_hw.h"
 
@@ -102,8 +102,8 @@ struct CanTsThread : public TunerstudioThread {
 static CanTsThread canTsThread;
 
 void startCanConsole() {
-	canTsThread.Start();
+	canTsThread.start();
 	canStreamInit();
 }
 
-#endif // def EFI_CAN_SERIAL
+#endif // EFI_CAN_SERIAL

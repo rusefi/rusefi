@@ -23,13 +23,13 @@ TEST(realCrankingVQ40, normalCranking) {
 		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 
 		if (vvt1 != 0 && !hasSeenFirstVvt) {
-			EXPECT_NEAR(vvt1, -33.204, 1);
+			EXPECT_NEAR(vvt1, -45.56, 1);
 			hasSeenFirstVvt = true;
 		}
 	}
 
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -46.817, 1e-2);
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -47.411, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -45.67, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -45.47, 1e-2);
 	ASSERT_EQ(241, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?

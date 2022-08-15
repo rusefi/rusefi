@@ -156,7 +156,7 @@ void rebootNow() {
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
  */
-static void scheduleReboot() {
+void scheduleReboot() {
 	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
@@ -170,15 +170,18 @@ void onAssertionFailure() {
 }
 
 void runRusEfiWithConfig();
-void runMainLoop();
+__NO_RETURN void runMainLoop();
 
 void runRusEfi() {
-	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING
 	// Initialize logging system early - we can't log until this is called
 	startLoggingProcessor();
+#endif
+
+#if EFI_PROD_CODE
+	checkLastBootError();
 #endif
 
 #ifdef STM32F7
@@ -308,8 +311,6 @@ void runMainLoop() {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(CUSTOM_RM_STACK, getCurrentRemainingStack() > 128, "stack#1");
-
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own rusEfi console
 		// todo: is this mostly dead code?

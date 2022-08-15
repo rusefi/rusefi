@@ -264,6 +264,11 @@ static void setCommonMazdaNB() {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
+	// set vvt_mode 3
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
+	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
+	engineConfiguration->vvtCamSensorUseRise = true;
+
 	engineConfiguration->ignitionDwellForCrankingMs = 4;
 	// set cranking_fuel 27.5
 	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
@@ -343,7 +348,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->idle_derivativeFilterLoss = 0.08;
 	engineConfiguration->idle_antiwindupFreq = 0.03;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
-	engineConfiguration->idleRpmPid.offset = 9;
 	engineConfiguration->idleRpmPid.minValue = -8;
 	engineConfiguration->idleRpmPid.minValue = 76;
 	engineConfiguration->idlerpmpid_iTermMin = -15;
@@ -386,12 +390,6 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	engineConfiguration->crankingIACposition = 60;
 	engineConfiguration->afterCrankingIACtaperDuration = 250;
-
-
-	engineConfiguration->vvtCamSensorUseRise = true;
-	// set vvt_mode 3
-	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
-	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
 
 	setCommonMazdaNB();
 
@@ -596,9 +594,6 @@ static void setMiataNB2_MRE_common() {
 
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
 
-	engineConfiguration->vvtOffsets[0] = 97;
-
-
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
 	// Gpio::TLE8888_PIN_6:  "7 - Lowside 1"
 	engineConfiguration->vvtPins[0] = Gpio::TLE8888_PIN_6; // VVT solenoid control
@@ -638,9 +633,6 @@ static void setMiataNB2_MRE_common() {
  */
 void setMiataNB2_MRE_ETB() {
 	setMiataNB2_MRE_common();
-
-	engineConfiguration->useETBforIdleControl = true;
-
 
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->throttlePedalUpVoltage = 1;

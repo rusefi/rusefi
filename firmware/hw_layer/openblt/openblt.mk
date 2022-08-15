@@ -82,10 +82,11 @@ PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/blt_conf.h
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/hooks.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.c
 PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/led.h
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.c
+PROJ_FILES += $(PROJECT_DIR)/hw_layer/openblt/shared_params.h
 
 # CPU-dependent sources
 ifeq ($(PROJECT_CPU),ARCH_STM32F4)
-    PROJ_FILES += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f4/openblt/lib/startup_stm32f429xx.s
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/*.c)
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/*.h)
@@ -97,7 +98,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	# Port specific options
 	PORTFLAGS  += -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16
 else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-    PROJ_FILES += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/openblt/lib/startup_stm32f767xx.s
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7/*.c)
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32F7/*.h)
@@ -109,7 +109,6 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	# Port specific options
 	PORTFLAGS   = -mcpu=cortex-m7 -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
-    # todo: do we need startup_stmXX.s here?
 	# Collect bootloader port files
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32H7/*.c)
 	PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM7_STM32H7/*.h)

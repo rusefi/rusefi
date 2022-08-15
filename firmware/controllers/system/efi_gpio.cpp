@@ -323,7 +323,9 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
+	if (!engineConfiguration->engineSnifferFocusOnInputs) {
+		addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
+	}
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -473,6 +475,14 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	assertOMode(mode);
 	this->modePtr = outputMode;
 	setValue(false); // initial state
+}
+
+brain_pin_diag_e OutputPin::getDiag() const {
+#if BOARD_EXT_GPIOCHIPS > 0
+	return gpiochips_getDiag(brainPin);
+#else
+	return PIN_OK;
+#endif
 }
 
 void initOutputPins() {

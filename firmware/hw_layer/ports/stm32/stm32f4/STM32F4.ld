@@ -29,6 +29,9 @@ RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
 /* Only STM32F429I-Discovery has external SDRAM */
 SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
 
+/* OpenBLT <-> main FW shared area */
+_OpenBLT_Shared_Params_Size = DEFINED(BOOTLOADER) ? 16 : 0;
+
 MEMORY
 {
     bl      : org = 0x08000000, len = 16k     /* bootloader section */
@@ -40,8 +43,9 @@ MEMORY
     flash5  : org = 0x00000000, len = 0
     flash6  : org = 0x00000000, len = 0
     flash7  : org = 0x00000000, len = 0
-    ram0    : org = 0x20000000, len = 128k + RAM3_SIZE /* SRAM1 + SRAM2 + SRAM3 (optionally) */
-    ram1    : org = 0x20000000, len = 112k      /* SRAM1 */
+    shared  : org = 0x20000000, len = _OpenBLT_Shared_Params_Size
+    ram0    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 128k + RAM3_SIZE - _OpenBLT_Shared_Params_Size /* SRAM1 + SRAM2 + SRAM3 (optionally) */
+    ram1    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 112k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2    : org = 0x2001C000, len = 16k       /* SRAM2 */
     ram3    : org = 0x20020000, len = RAM3_SIZE /* SRAM3 note: this will be 0 size on F40x devices */
     ram4    : org = 0x10000000, len = 64k       /* CCM SRAM */
@@ -49,6 +53,8 @@ MEMORY
     ram6    : org = 0x00000000, len = 0
     ram7    : org = 0xD0000000, len = SDRAM_SIZE    /* SDRAM */
 }
+
+__backup_sram_addr__ = ORIGIN(ram5);
 
 /* For each data/text section two region are defined, a virtual region
    and a load region (_LMA suffix).*/
@@ -97,16 +103,30 @@ REGION_ALIAS("HEAP_RAM", ram0);
 /* RAM region to be used for SDRAM segment.*/
 REGION_ALIAS("SDRAM_RAM", ram7);
 
-/* Bootloader section */
 SECTIONS
 {
-.bl : ALIGN(4)
+  /* Bootloader section */
+  .bl : ALIGN(4)
     {
         . = ALIGN(4);
         *(.bl)
         *(.bl.*)
         . = ALIGN(4);
     } > bl AT > bl
+
+  /* shared between main FW and OpenBLT */
+  .shared (NOLOAD) :
+  {
+    . = ALIGN(4);
+    _sshared = .;
+    __shared_start__ = _sshared;
+    *(.shared)
+    *(.shared.*)
+    KEEP(*(.shared))
+    . = ALIGN(4);
+    _eshared = .;
+    __shared_end__ = _eshared;
+  } > shared
 }
 
 /* Generic rules inclusion.*/

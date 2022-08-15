@@ -4,18 +4,21 @@ pins:
 #extansion pins
 #Analog inputs (via Test Points)
   - pin: P30
-    id: EFI_ADC_7
-    class: analog_inputs
+    #PA7
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
     ts_name: P30_IN_AUX4
 
   - pin: P32
-    id: EFI_ADC_1
-    class: analog_inputs
+    #PA1
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
     ts_name: P32_IN_O2S2
 
   - pin: P36
-    id: EFI_ADC_0
-    class: analog_inputs
+    #PA0
+    id: [A0, EFI_ADC_0]
+    class: [switch_inputs, analog_inputs]
     ts_name: P36_IN_O2S
 
   - pin: P40
@@ -26,8 +29,8 @@ pins:
 
   - pin: P41
     # H144_IN_AUX3 AIN22 PC5
-    id: EFI_ADC_15
-    class: analog_inputs
+    id: [C5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
     ts_name: P41_IN_AUX3
 
 #Outputs (via Test Points)

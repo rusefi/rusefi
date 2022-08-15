@@ -217,13 +217,22 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	} else
 #endif
 	{
-		obdOnCanPacketRx(frame);
+		obdOnCanPacketRx(frame, busIndex);
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	// Bootloader acks with address 0x727573 aka ascii "rus"
 	if (CAN_EID(frame) == 0x727573) {
 		handleWidebandBootloaderAck();
+	}
+#endif
+#if EFI_USE_OPENBLT
+	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
+		/* TODO: gracefull shutdown? */
+		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
+			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
+			jump_to_openblt();
+		}
 	}
 #endif
 }

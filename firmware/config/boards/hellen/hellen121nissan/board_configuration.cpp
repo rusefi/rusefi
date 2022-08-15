@@ -94,6 +94,11 @@ void setBoardConfigOverrides() {
 	setupVbatt();
 	setHellenSdCardSpi3();
 
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
+	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
+	engineConfiguration->etb_use_two_wires = true;
+
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
@@ -113,7 +118,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE; // none because handled by Lua!
 
 	engineConfiguration->canTxPin = Gpio::D1;
 	engineConfiguration->canRxPin = Gpio::D0;
@@ -126,10 +131,6 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::D15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = Gpio::D14; // out_pwm6
-	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
-	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
 	setCrankOperationMode();
@@ -140,6 +141,16 @@ void setBoardDefaultConfiguration() {
     // at least this starts
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
+	engineConfiguration->cranking.rpm = 400;
+	engineConfiguration->fanOnTemperature = 85;
+	engineConfiguration->fanOffTemperature = 81;
+
+	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->etbIdleThrottleRange = 10;
+	engineConfiguration->cutFuelOnHardLimit = false;
+	engineConfiguration->idlePidRpmUpperLimit = 300;
+	engineConfiguration->mapErrorDetectionTooLow = 10;
+
 
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;
@@ -147,8 +158,7 @@ void setBoardDefaultConfiguration() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
@@ -156,6 +166,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+
+	engineConfiguration->startUpFuelPumpDuration = 4;
+	engineConfiguration->postCrankingFactor = 1.05;
+
+	engineConfiguration->etb.pFactor = 6.1350;
+	engineConfiguration->etb.iFactor = 87.7182;
+	engineConfiguration->etb.dFactor = 0.0702;
 
 	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;

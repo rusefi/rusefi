@@ -69,10 +69,6 @@
 #define EFI_LOGIC_ANALYZER TRUE
 #endif
 
-#ifndef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS FALSE
-#endif
-
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */
@@ -175,6 +171,10 @@
 #define BOARD_MC33810_COUNT		0
 #endif
 
+#ifndef BOARD_TLE9104_COUNT
+#define BOARD_TLE9104_COUNT 0
+#endif
+
 #define EFI_ANALOG_SENSORS TRUE
 
 #ifndef EFI_MAX_31855
@@ -206,6 +206,10 @@
 
 #ifndef EFI_CAN_SUPPORT
 #define EFI_CAN_SUPPORT TRUE
+#endif
+
+#ifndef EFI_CAN_SERIAL
+#define EFI_CAN_SERIAL TRUE
 #endif
 
 #define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE

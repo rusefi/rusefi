@@ -79,7 +79,18 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 		return unexpected;
 	}
 
-	return m_syncPointTimer.getElapsedUs(nowNt) / oneDegreeUs;
+	float elapsed;
+	float toothPhase;
+
+	{
+		// under lock to avoid mismatched tooth phase and time
+		chibios_rt::CriticalSectionLocker csl;
+
+		elapsed = m_lastToothTimer.getElapsedUs(nowNt);
+		toothPhase = m_lastToothPhaseFromSyncPoint;
+	}
+
+	return toothPhase + elapsed / oneDegreeUs;
 }
 
 /**
@@ -685,18 +696,27 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		int crankDivider = getCrankDivider(triggerShape.getOperationMode());
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
-		if (triggerIndexForListeners == 0) {
-			m_syncPointTimer.reset(timestamp);
-		}
 
 		reportEventToWaveChart(signal, triggerIndexForListeners);
 
-		// Compute the current engine absolute phase, 0 means currently at #1 TDC
-		auto currentPhase = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		// Look up this tooth's angle from the sync point. If this tooth is the sync point, we'll get 0 here.
+		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
+
+		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
+		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
 		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.currentEnginePhase = currentPhase;
 #endif // EFI_TUNER_STUDIO
+
+		// Record precise time and phase of the engine. This is used for VVT decode.
+		{
+			// under lock to avoid mismatched tooth phase and time
+			chibios_rt::CriticalSectionLocker csl;
+
+			m_lastToothTimer.reset(timestamp);
+			m_lastToothPhaseFromSyncPoint = currentPhaseFromSyncPoint;
+		}
 
 #if TRIGGER_EXTREME_LOGGING
 	efiPrintf("trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
@@ -757,11 +777,6 @@ static void triggerShapeInfo() {
 extern PwmConfig triggerSignal;
 #endif /* #if EFI_PROD_CODE */
 
-#if HAL_USE_ICU == TRUE
-extern int icuRisingCallbackCounter;
-extern int icuFallingCallbackCounter;
-#endif /* HAL_USE_ICU */
-
 void triggerInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
@@ -771,10 +786,6 @@ void triggerInfo(void) {
 #if (HAL_TRIGGER_USE_PAL == TRUE) && (PAL_USE_CALLBACKS == TRUE)
 		efiPrintf("trigger PAL mode %d", engine->hwTriggerInputEnabled);
 #else
-
-#if HAL_USE_ICU == TRUE
-	efiPrintf("trigger ICU hw: %d %d %d", icuRisingCallbackCounter, icuFallingCallbackCounter, engine->hwTriggerInputEnabled);
-#endif /* HAL_USE_ICU */
 
 #endif /* HAL_TRIGGER_USE_PAL */
 

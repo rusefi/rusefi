@@ -26,7 +26,6 @@ public class MessagesPane {
             return new Dimension(250, size.height);
         }
     };
-    private final JButton fontButton = new JButton("Font");
     private final AnyCommand command;
 
     public MessagesPane(UIContext uiContext, final Node config) {
@@ -44,7 +43,8 @@ public class MessagesPane {
 
         upperPanel.getButtonPanel().add(new RpmLabel(uiContext, 2).getContent());
         topPanel.add(upperPanel.getButtonPanel());
-        topPanel.add(fontButton);
+//        JButton fontButton = new JButton("Font");
+//        topPanel.add(fontButton);
         topPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         content.add(topPanel, BorderLayout.NORTH);
 

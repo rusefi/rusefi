@@ -130,6 +130,11 @@ CHIBIOS = $(PROJECT_DIR)/ChibiOS
 # todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
 CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
+
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
@@ -187,6 +192,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/hw_layer/io_pins.cpp \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
+	$(RUSEFI_LIB_CPP) \
 	src/rusefi_stubs.cpp \
 	src/dfu.cpp \
 	src/main.cpp
@@ -251,6 +257,7 @@ INCDIR = $(ALLINC) \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/controllers/sensors \
 	$(PROJECT_DIR)/init \
+	$(RUSEFI_LIB_INC) \
 	config
 
 BUILDDIR=blbuild
