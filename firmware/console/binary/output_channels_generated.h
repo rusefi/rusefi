@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 17:09:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 18:43:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1305,9 +1305,13 @@ struct output_channels_s {
 	/**
 	 * offset 532
 	 */
+	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
+	/**
+	 * offset 548
+	 */
 	uint8_t unusedAtTheEnd[160];
 };
-static_assert(sizeof(output_channels_s) == 692);
+static_assert(sizeof(output_channels_s) == 708);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 17:09:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 18:43:34 UTC 2022
