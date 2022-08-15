@@ -33,6 +33,8 @@ public class UsagesReader {
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
 
+    private static final String EXTRA_PREPEND = System.getProperty("UsagesReader.prepend");
+
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
             System.err.println("One parameter expected: name of live data yaml input file");
@@ -97,6 +99,10 @@ public class UsagesReader {
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
+                if (EXTRA_PREPEND != null) {
+                    System.out.println("EXTRA_PREPEND=" + EXTRA_PREPEND);
+                    state.addPrepend(EXTRA_PREPEND);
+                }
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
