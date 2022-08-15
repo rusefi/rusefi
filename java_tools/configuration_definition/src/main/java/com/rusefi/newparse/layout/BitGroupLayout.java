@@ -115,7 +115,7 @@ public class BitGroupLayout extends Layout {
             psDatalog.print("entry = ");
             psDatalog.print(name);
             psDatalog.print(", \"");
-            psDatalog.print(bit.comment == null ? name : bit.comment);
+            writeDatalogName(psDatalog, name, bit.comment);
             psDatalog.print("\", int,    \"%d\"");
 
             psDatalog.println();

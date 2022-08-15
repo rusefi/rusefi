@@ -83,4 +83,13 @@ public abstract class Layout {
     protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
+
+    protected static void writeDatalogName(PrintStream ps, String name, String comment) {
+        String text = (comment == null || comment.isEmpty()) ? name : comment;
+
+        // Delete anything after a newline
+        text = text.split("\\\\n")[0];
+
+        ps.print(text);
+    }
 }
