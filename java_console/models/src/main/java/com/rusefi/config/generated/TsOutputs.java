@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 19:03:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 21:21:41 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -12,15 +12,15 @@ public class TsOutputs {
 	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
 	public static final int AUX_ANALOG_INPUT_COUNT = 8;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
-	public static final int BANKS_COUNT = 1;
+	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
 	public static final int BLOCKING_FACTOR = 500;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
-	public static final int CAM_INPUTS_COUNT = 1;
-	public static final int CAM_INPUTS_COUNT_padding = 3;
-	public static final int CAMS_PER_BANK = 1;
-	public static final int CAMS_PER_BANK_padding = 1;
+	public static final int CAM_INPUTS_COUNT = 4;
+	public static final int CAM_INPUTS_COUNT_padding = 0;
+	public static final int CAMS_PER_BANK = 2;
+	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
@@ -734,13 +734,7 @@ public class TsOutputs {
 	public static final Field GPPWMOUTPUT3 = Field.create("GPPWMOUTPUT3", 528, FieldType.INT8).setScale(0.5);
 	public static final Field GPPWMOUTPUT4 = Field.create("GPPWMOUTPUT4", 529, FieldType.INT8).setScale(0.5);
 	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 530, FieldType.INT16).setScale(0.001);
-	public static final Field VVTSTATUS1_PTERM = Field.create("VVTSTATUS1_PTERM", 532, FieldType.FLOAT);
-	public static final Field VVTSTATUS1_ITERM = Field.create("VVTSTATUS1_ITERM", 536, FieldType.INT16).setScale(0.01);
-	public static final Field VVTSTATUS1_DTERM = Field.create("VVTSTATUS1_DTERM", 538, FieldType.INT16).setScale(0.01);
-	public static final Field VVTSTATUS1_OUTPUT = Field.create("VVTSTATUS1_OUTPUT", 540, FieldType.INT16).setScale(0.01);
-	public static final Field VVTSTATUS1_ERROR = Field.create("VVTSTATUS1_ERROR", 542, FieldType.INT16).setScale(0.01);
-	public static final Field VVTSTATUS1_RESETCOUNTER = Field.create("VVTSTATUS1_RESETCOUNTER", 544, FieldType.INT).setScale(1.0);
-	public static final Field UNUSEDATTHEEND = Field.create("UNUSEDATTHEEND", 548, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND = Field.create("UNUSEDATTHEEND", 532, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	ISIGNITIONENABLEDINDICATOR,
@@ -1081,12 +1075,6 @@ public class TsOutputs {
 	GPPWMOUTPUT3,
 	GPPWMOUTPUT4,
 	RAWBATTERY,
-	VVTSTATUS1_PTERM,
-	VVTSTATUS1_ITERM,
-	VVTSTATUS1_DTERM,
-	VVTSTATUS1_OUTPUT,
-	VVTSTATUS1_ERROR,
-	VVTSTATUS1_RESETCOUNTER,
 	UNUSEDATTHEEND,
 	};
 }
