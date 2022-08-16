@@ -43,7 +43,7 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
-java -DSystemOut.name=logs/gen_config_board \
+java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \

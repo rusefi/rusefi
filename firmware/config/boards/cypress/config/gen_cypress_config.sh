@@ -31,7 +31,6 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
- -DSystemOut.name=logs/gen_config_hellen_cypress \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool hellen_cypress_gen_config.bat \
  $COMMON_GEN_CONFIG \
