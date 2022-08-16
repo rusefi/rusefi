@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderState;
 import com.rusefi.output.FragmentDialogConsumer;
+import com.rusefi.test.newParse.NewParseHelper;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ public class FragmentDialogConsumerTest {
 
         FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer("ac_state");
 
-        state.readBufferedReader(outputChannels, fragmentDialogConsumer);
+        NewParseHelper.parseToFragmentDialog(outputChannels, fragmentDialogConsumer);
 
         assertEquals("indicatorPanel = ac_stateIndicatorPanel, 2\n" +
                         "\tindicator = {sd_bit_of_sd}, \"bit_of_sd No\", \"bit_of_sd Yes\"\n" +

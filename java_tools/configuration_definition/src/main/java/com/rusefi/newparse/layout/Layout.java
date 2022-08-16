@@ -1,6 +1,7 @@
 package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 
@@ -68,19 +69,19 @@ public abstract class Layout {
         throw new IllegalStateException("This type can't be in an array!");
     }
 
-    public void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, String prefix, int offsetAdd) {
+    public void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, String prefix, int offsetAdd) {
         StructNamePrefixer prefixer = new StructNamePrefixer();
 
         if (prefix != null) {
             prefixer.push(prefix);
         }
 
-        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd);
+        writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, prefixer, offsetAdd);
     }
 
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) { }
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) { }
 
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         throw new IllegalStateException("This type can't be in an array!");
     }
 

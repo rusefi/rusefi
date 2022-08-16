@@ -4,6 +4,7 @@ import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.EnumField;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.Type;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 
@@ -74,7 +75,7 @@ public class EnumLayout extends Layout {
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) {
         // Output an enum as a scalar, since there's no TS support for enum output channels
         String name = prefixer.get(this.name);
         ps.print(prefixer.get(name));
@@ -91,5 +92,7 @@ public class EnumLayout extends Layout {
         writeDatalogName(psDatalog, name, options.comment);
         psDatalog.print("\", int,    \"%d\"");
         psDatalog.println();
+
+        fragmentDialogConsumer.handleScalar(name);
     }
 }

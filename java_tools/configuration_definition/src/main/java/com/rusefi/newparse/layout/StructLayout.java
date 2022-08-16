@@ -2,6 +2,7 @@ package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.*;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -199,12 +200,12 @@ public class StructLayout extends Layout {
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) {
         if (!this.noPrefix) {
             prefixer.push(this.name);
         }
 
-        this.children.forEach(c -> c.writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd));
+        this.children.forEach(c -> c.writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, prefixer, offsetAdd));
 
         if (!this.noPrefix) {
             prefixer.pop();

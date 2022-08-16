@@ -3,6 +3,7 @@ package com.rusefi.newparse.outputs;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.layout.StructLayout;
 import com.rusefi.newparse.parsing.Struct;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,12 +25,12 @@ public class OutputChannelWriter {
 
     private int cumulativeSize = 0;
 
-    public void writeOutputChannels(ParseState parser, String namePrefix) throws FileNotFoundException {
+    public void writeOutputChannels(ParseState parser, FragmentDialogConsumer fragmentDialogConsumer, String namePrefix) throws FileNotFoundException {
         // Assume the last struct is the one we want...
         Struct s = parser.getStructs().get(parser.getStructs().size() - 1);
 
         StructLayout sl = new StructLayout(0, "root", s);
-        sl.writeOutputChannelLayout(ps, psDatalog, namePrefix, cumulativeSize);
+        sl.writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, namePrefix, cumulativeSize);
 
         cumulativeSize += sl.getSize();
         ps.println("; total TS size = " + cumulativeSize);

@@ -98,7 +98,6 @@ public class UsagesReader {
 
                 state.addDestination(javaSensorsConsumer);
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
-                state.addDestination(fragmentDialogConsumer);
 
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
@@ -117,10 +116,10 @@ public class UsagesReader {
                     RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
 
                     // if (outputNames.length == 0) {
-                        outputChannelWriter.writeOutputChannels(parseState, null);
+                        outputChannelWriter.writeOutputChannels(parseState, fragmentDialogConsumer,null);
                     // } else {
                     //     for (int i = 0; i < outputNames.length; i++) {
-                    //         outputChannelWriter.writeOutputChannels(parseState, outputNames[i]);
+                    //         outputChannelWriter.writeOutputChannels(parseState, fragmentDialogConsumer, outputNames[i]);
                     //     }
                     // }
                 }

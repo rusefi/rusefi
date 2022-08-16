@@ -2,6 +2,7 @@ package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.BitGroup;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -91,7 +92,7 @@ public class BitGroupLayout extends Layout {
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) {
         int actualOffset = this.offset + offsetAdd;
 
         for (int i = 0; i < bits.size(); i++) {
@@ -119,6 +120,8 @@ public class BitGroupLayout extends Layout {
             psDatalog.print("\", int,    \"%d\"");
 
             psDatalog.println();
+
+            fragmentDialogConsumer.handleBit(name, bit.name);
         }
     }
 }

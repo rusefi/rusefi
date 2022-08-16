@@ -5,6 +5,7 @@ import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.FieldOptions;
 import com.rusefi.newparse.parsing.ScalarField;
 import com.rusefi.newparse.parsing.Type;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 
@@ -148,7 +149,7 @@ public class ScalarLayout extends Layout {
         ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
     }
 
-    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int idx) {
+    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd, int idx) {
         String nameWithoutSpace = prefixer.get(idx > 0 ? (this.name + idx) : this.name);
         String nameWithSpace = prefixer.get(idx > 0 ? (this.name + " " + idx) : this.name);
 
@@ -186,15 +187,17 @@ public class ScalarLayout extends Layout {
         }
 
         psDatalog.println();
+
+        fragmentDialogConsumer.handleScalar(nameWithoutSpace);
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, -1);
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) {
+        writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, prefixer, offsetAdd, -1);
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
         if (arrayLength.length != 1) {
             throw new IllegalStateException("Output channels don't support multi dimension arrays");
         }
@@ -202,7 +205,7 @@ public class ScalarLayout extends Layout {
         int elementOffset = offsetAdd;
 
         for (int i = 0; i < arrayLength[0]; i++) {
-            writeOutputChannelLayout(ps, psDatalog, prefixer, elementOffset, i + 1);
+            writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, prefixer, elementOffset, i + 1);
             elementOffset += type.size;
         }
     }
