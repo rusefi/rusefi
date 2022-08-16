@@ -299,7 +299,7 @@ jobs:
           config/boards/kinetis/config/gen_kinetis_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "cypress" ]; then
-          config/boards/hellen/cypress/config/gen_cypress_config.sh
+          config/boards/cypress/config/gen_cypress_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board cypress cypress"; exit 1; }
         elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
           bash config/boards/subaru_eg33/config/gen_subaru_config.sh

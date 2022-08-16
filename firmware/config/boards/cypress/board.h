@@ -10,7 +10,7 @@
 /**
  * @brief	The board name 
  */
-#define BOARD_NAME "Hellen/Cypress"
+#define BOARD_NAME "Cypress"
 
 /*
  * Board voltages.

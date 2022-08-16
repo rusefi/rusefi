@@ -4,7 +4,7 @@
 
 BOARDNAME=cypress
 SHORT_BOARDNAME=cypress
-BOARD_DIR=config/boards/hellen/${BOARDNAME}
+BOARD_DIR=config/boards/${BOARDNAME}
 
 
 
