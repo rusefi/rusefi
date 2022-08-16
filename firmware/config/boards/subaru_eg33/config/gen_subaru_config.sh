@@ -29,7 +29,7 @@ java \
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -enumInputFile ${BOARD_DIR}/rusefi_hw_enums.h \
  -board ${BOARDNAME} \
- -prepend config/boards/${BOARDNAME}/prepend.txt
+ -prepend ${BOARD_DIR}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
