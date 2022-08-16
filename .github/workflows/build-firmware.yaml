@@ -128,7 +128,7 @@ jobs:
 
           - build-target: cypress
             folder: hellen
-            ini-file: rusefi_hellen_cypress.ini
+            ini-file: rusefi_cypress.ini
 
           - build-target: frankenso_na6
             folder: frankenso

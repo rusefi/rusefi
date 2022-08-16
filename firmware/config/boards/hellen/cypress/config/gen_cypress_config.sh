@@ -22,7 +22,7 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool hellen_cypress_gen_config.bat \
  $COMMON_GEN_CONFIG \
- -ts_output_name generated/rusefi_hellen_cypress.ini \
+ -ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
