@@ -12,6 +12,19 @@ BOARD_DIR=config/boards/${BOARDNAME}
 
 
 
+
+
+
+
+
+
+
+
+  INI="rusefi_${SHORT_BOARDNAME}.ini"
+
+
+
+
 bash gen_signature.sh ${SHORT_BOARDNAME}
 
 source gen_config_common.sh
@@ -22,7 +35,7 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool ${BOARD_DIR}/config/gen_subaru_config.sh \
  $COMMON_GEN_CONFIG \
- -ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
+	-ts_output_name generated/${INI} \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
