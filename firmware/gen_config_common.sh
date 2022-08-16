@@ -14,4 +14,6 @@ COMMON_GEN_CONFIG="
  -with_c_defines false \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \
+ -ts_output_name generated/${INI} \
+ -board ${BOARDNAME} \
  -definition integration/rusefi_config.txt"

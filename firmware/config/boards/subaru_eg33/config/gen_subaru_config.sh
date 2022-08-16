@@ -35,13 +35,11 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool ${BOARD_DIR}/config/gen_subaru_config.sh \
  $COMMON_GEN_CONFIG \
-	-ts_output_name generated/${INI} \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -enumInputFile ${BOARD_DIR}/rusefi_hw_enums.h \
- -board ${BOARDNAME} \
  -prepend ${BOARD_DIR}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
