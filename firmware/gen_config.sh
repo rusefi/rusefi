@@ -62,7 +62,7 @@ done
 config/boards/kinetis/config/gen_kinetis_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board kinetis kin"; exit 1; }
 
-config/boards/hellen/cypress/config/gen_cypress_config.sh
+config/boards/cypress/config/gen_cypress_config.sh
 [ $? -eq 0 ] || { echo "ERROR generating board cypress cypress"; exit 1; }
 
 config/boards/subaru_eg33/config/gen_subaru_config.sh

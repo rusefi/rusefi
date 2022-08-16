@@ -17,4 +17,4 @@ export USE_FATFS="no"
 export USE_BOOTLOADER="no"
 export DEBUG_LEVEL_OPT="-O2"
 
-bash ../common_make.sh hellen/cypress cypress
+bash ../common_make.sh cypress cypress
