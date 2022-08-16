@@ -14,6 +14,9 @@ COMMON_GEN_CONFIG="
  -triggerInputFolder ../unit_tests \
  -romraider_input_file integration/rusefi_template.xml \
  -with_c_defines false \
+ -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
+ -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
+ -romraider_destination ../java_console/rusefi.xml \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
