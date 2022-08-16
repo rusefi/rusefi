@@ -27,7 +27,8 @@ echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
 bash gen_signature.sh ${SHORT_BOARDNAME}
 
-PREPEND_FILE=config/boards/${BOARDNAME}/prepend.txt
+BOARD_DIR=config/boards/${BOARDNAME}
+PREPEND_FILE=${BOARD_DIR}/prepend.txt
 
 BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3 | sed -e 's/^"//' -e 's/"$//')
 
@@ -53,7 +54,7 @@ java -DSystemOut.name=logs/gen_config_board \
   -romraider_destination ../java_console/rusefi.xml \
   -c_defines        controllers/generated/rusefi_generated.h \
   -c_destination    controllers/generated/engine_configuration_generated_structures.h \
-	-prepend $PREPEND_FILE
+  -prepend ${BOARD_DIR}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
