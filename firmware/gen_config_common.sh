@@ -11,7 +11,8 @@ COMMON_GEN_CONFIG="
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
  -ts_destination tunerstudio \
  -firing_order controllers/algo/firing_order.h \
- -triggerFolder ../unit_tests \
+ -triggerInputFolder ../unit_tests \
+ -romraider_input_file integration/rusefi_template.xml \
  -with_c_defines false \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \
