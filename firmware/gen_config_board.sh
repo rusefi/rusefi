@@ -53,8 +53,7 @@ java -DSystemOut.name=logs/gen_config_board \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
   -romraider_destination ../java_console/rusefi.xml \
   -c_defines        controllers/generated/rusefi_generated.h \
-  -c_destination    controllers/generated/engine_configuration_generated_structures.h \
-  -prepend ${BOARD_DIR}/prepend.txt
+  -c_destination    controllers/generated/engine_configuration_generated_structures.h
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 
