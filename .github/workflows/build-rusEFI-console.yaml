@@ -51,6 +51,23 @@ jobs:
           name: console junit
           path: ./java_console/build/*.txt
 
+      - name: Configuration Definition CI, without pushing new .jar
+        working-directory: ./android
+        run: ./gradlew :config_definition:shadowJar
+
+      - name: Test everything gradle while we are here
+        # it's a bit of a mess but well
+        working-directory: ./android
+        run: ./gradlew test
+
+      - name: Configuration Definition and other tools CI, without pushing new .jars
+        working-directory: ./android
+        run: ./gradlew shadowJar
+
+      - name: Generate Enums using freshly compiler tool
+        working-directory: ./firmware/
+        run: ./gen_enum_to_string.sh
+
       - name: Upload rusEFI server
         working-directory: .
         run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate java_console_binary/rusefi_server.jar
