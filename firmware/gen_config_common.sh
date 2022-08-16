@@ -14,6 +14,8 @@ COMMON_GEN_CONFIG="
  -with_c_defines false \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \
+ -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
+ -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -ts_output_name generated/${INI} \
  -board ${BOARDNAME} \
  -definition integration/rusefi_config.txt"
