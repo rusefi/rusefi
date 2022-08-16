@@ -2,13 +2,14 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.newparse.layout.ScalarLayout;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
-public class FragmentDialogConsumer implements ConfigurationConsumer {
+public class FragmentDialogConsumer {
     private final StringBuilder graphList = new StringBuilder();
 
     private final StringBuilder indicatorPanel = new StringBuilder();
@@ -22,64 +23,30 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
         this.fragmentName = fragmentName;
     }
 
-    @Override
-    public void startFile() {
+    public void handleScalar(String name) {
+        if (graphLinesCounter == 0)
+            startNewGraph();
+        graphLinesCounter++;
+
+        if (linesInCurrentGraph == 4) {
+            linesInCurrentGraph = 0;
+            startNewGraph();
+        }
+
+        graphList.append("\t\tgraphLine = " + name + "\n");
+        linesInCurrentGraph++;
     }
 
-    @Override
-    public void endFile() throws IOException {
-    }
+    public void handleBit(String name, String displayName) {
+        if (!hasIndicators) {
+            hasIndicators = true;
+            indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
+        }
 
-
-    @Override
-    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        FieldsStrategy fieldsStrategy = new FieldsStrategy() {
-            @Override
-            int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-                ConfigField configField = iterator.cf;
-
-                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
-                    return 0;
-
-                ConfigStructure cs = configField.getStructureType();
-                if (cs != null) {
-                    String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-                    return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
-                }
-
-                if (configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX))
-                    return 0;
-
-                if (configField.isBit()) {
-                    if (!hasIndicators) {
-                        hasIndicators = true;
-                        indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
-                    }
-                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + "}, " +
-                            "\"" + configField.getName() + " No\", " +
-                            "\"" + configField.getName() + " Yes\"" +
-                            "\n");
-                    return 0;
-                }
-
-                if (graphLinesCounter == 0)
-                    startNewGraph();
-                graphLinesCounter++;
-
-                if (linesInCurrentGraph == 4) {
-                    linesInCurrentGraph = 0;
-                    startNewGraph();
-                }
-
-                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + "\n");
-                linesInCurrentGraph++;
-
-
-                return 0;
-            }
-        };
-        fieldsStrategy.run(readerState, structure, 0);
-
+        indicatorPanel.append("\tindicator = {" + name + "}, " +
+                "\"" + displayName + " No\", " +
+                "\"" + displayName + " Yes\"" +
+                "\n");
     }
 
     private void startNewGraph() {
