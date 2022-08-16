@@ -68,7 +68,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 0
-	uint16_t autoscale crankingFuelMs;;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
