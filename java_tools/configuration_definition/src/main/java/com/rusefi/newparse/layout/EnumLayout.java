@@ -76,6 +76,7 @@ public class EnumLayout extends Layout {
     @Override
     protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
         // Output an enum as a scalar, since there's no TS support for enum output channels
+        String name = prefixer.get(this.name);
         ps.print(prefixer.get(name));
         ps.print(" = scalar, ");
         ps.print(this.type.tsType);
