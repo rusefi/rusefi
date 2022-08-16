@@ -137,7 +137,7 @@ jobs:
 
           - build-target: kinetis
             folder: kinetis
-            ini-file: rusefi_kinetis.ini
+            ini-file: rusefi_kin.ini
             skip-rate: 0
 
           - build-target: mre_f4
