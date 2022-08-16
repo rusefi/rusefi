@@ -47,7 +47,6 @@ java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
-  -romraider integration \
   -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
   -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
