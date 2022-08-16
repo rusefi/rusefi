@@ -1,5 +1,6 @@
 
-COMMON_GEN_CONFIG_PREFIX="-jar ../java_tools/ConfigDefinition.jar"
+COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARDNAME} \
+ -jar ../java_tools/ConfigDefinition.jar"
 
 COMMON_GEN_CONFIG="
  -enumInputFile controllers/algo/engine_types.h \

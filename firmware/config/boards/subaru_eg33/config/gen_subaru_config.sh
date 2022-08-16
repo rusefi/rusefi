@@ -31,7 +31,6 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
- -DSystemOut.name=logs/gen_config_subaru_eg33 \
  $COMMON_GEN_CONFIG_PREFIX \
  -tool ${BOARD_DIR}/config/gen_subaru_config.sh \
  $COMMON_GEN_CONFIG \
