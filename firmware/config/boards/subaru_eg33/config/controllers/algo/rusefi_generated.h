@@ -1289,6 +1289,7 @@
 #define hpfpTargetRpmBins_offset 3422
 #define hpfpValvePin_offset 1644
 #define hpfpValvePinMode_offset 1646
+#define HW_EVENT_TYPES 6
 #define HW_MAX_ADC_INDEX 17
 #define IAC_PID_MULT_SIZE 8
 #define iacByTpsTaper_offset 1562
@@ -1912,7 +1913,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2954556755
+#define SIGNATURE_HASH 1385917164
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2468,7 +2469,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.16.subaru_eg33_f7.2954556755"
+#define TS_SIGNATURE "rusEFI 2022.08.17.subaru_eg33_f7.1385917164"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
