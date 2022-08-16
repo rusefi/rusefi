@@ -38,6 +38,6 @@ java \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \
  -enumInputFile controllers/algo/rusefi_hw_enums.h \
- -prepend ${BOARD_DIR}/config/tunerstudio/generated/hellen_cypress_prefix.txt
+ -prepend ${BOARD_DIR}/prepend.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
