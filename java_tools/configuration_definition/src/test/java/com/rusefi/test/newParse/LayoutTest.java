@@ -270,14 +270,25 @@ public class LayoutTest {
 
     @Test
     public void arrayOfStructsIterate() throws IOException {
-        String ts = parseToTs(
+        String input =
                 "struct s1\n" +
                 "uint8_t var1\n" +
                 "uint16_t var2\n" +
                 "end_struct\n" +
                 "struct_no_prefix rootStruct\n" +
                 "s1[4 iterate] arr\n" +
-                "end_struct");
+                "end_struct";
+
+        Assert.assertEquals(
+                "arr1_var1 = scalar, U08, 0, \"\", 1, 0\n" +
+                "arr1_var2 = scalar, U16, 2, \"\", 1, 0\n" +
+                "arr2_var1 = scalar, U08, 4, \"\", 1, 0\n" +
+                "arr2_var2 = scalar, U16, 6, \"\", 1, 0\n" +
+                "arr3_var1 = scalar, U08, 8, \"\", 1, 0\n" +
+                "arr3_var2 = scalar, U16, 10, \"\", 1, 0\n" +
+                "arr4_var1 = scalar, U08, 12, \"\", 1, 0\n" +
+                "arr4_var2 = scalar, U16, 14, \"\", 1, 0\n" +
+                "; total TS size = 16\n", parseToOutputChannels(input));
 
         Assert.assertEquals(
                 "pageSize            = 16\n" +
@@ -295,7 +306,7 @@ public class LayoutTest {
                         "; unused 1 bytes at offset 13\n" +
                         "arr4_var2 = scalar, U16, 14, \"\", 1, 0, 0, 0, 0\n" +
                         "; total TS size = 16\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "[SettingContextHelp]\n", parseToTs(input));
     }
 
     @Test

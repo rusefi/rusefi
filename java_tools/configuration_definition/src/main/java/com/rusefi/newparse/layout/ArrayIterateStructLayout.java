@@ -2,6 +2,7 @@ package com.rusefi.newparse.layout;
 
 import com.rusefi.newparse.outputs.TsMetadata;
 import com.rusefi.newparse.parsing.*;
+import com.rusefi.output.FragmentDialogConsumer;
 
 import java.io.PrintStream;
 
@@ -26,6 +27,16 @@ public class ArrayIterateStructLayout extends ArrayLayout {
 
         for (int i = 0; i < this.length[0]; i++) {
             emitOne(ps, meta, prefixer, this.offset + offsetAdd, i);
+        }
+    }
+
+    @Override
+    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, FragmentDialogConsumer fragmentDialogConsumer, StructNamePrefixer prefixer, int offsetAdd) {
+        for (int i = 0; i < this.length[0]; i++) {
+            // Put a 1-based index on the end of the name to distinguish in TS
+            prefixer.setIndex(i);
+            this.prototypeLayout.writeOutputChannelLayout(ps, psDatalog, fragmentDialogConsumer, prefixer, this.offset + offsetAdd + this.prototypeLayout.getSize() * i);
+            prefixer.clearIndex();
         }
     }
 
