@@ -1,4 +1,4 @@
-#define MAIN_HELP_URL "https://rusefi.com/s/hellenNB1"
+#define MAIN_HELP_URL "https://rusefi.com/s/harley81"
 
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
