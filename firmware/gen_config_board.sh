@@ -27,7 +27,8 @@ echo "BOARDNAME=${BOARDNAME} SHORT_BOARDNAME=${SHORT_BOARDNAME}"
 
 bash gen_signature.sh ${SHORT_BOARDNAME}
 
-PREPEND_FILE=config/boards/${BOARDNAME}/prepend.txt
+BOARD_DIR=config/boards/${BOARDNAME}
+PREPEND_FILE=${BOARD_DIR}/prepend.txt
 
 BOARD_SPECIFIC_URL=$(cat $PREPEND_FILE | grep MAIN_HELP_URL | cut -d " " -f 3 | sed -e 's/^"//' -e 's/"$//')
 
@@ -42,22 +43,13 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
 # in rare cases order of arguments is important - '-tool' should be specified before '-definition'
-java -DSystemOut.name=logs/gen_config_board \
+java \
  $COMMON_GEN_CONFIG_PREFIX \
  	-tool gen_config.sh \
  $COMMON_GEN_CONFIG \
-  -romraider integration \
-  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
-	-board ${BOARDNAME} \
-	-ts_output_name generated/${INI} \
-	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
-	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
-  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
-  -romraider_destination ../java_console/rusefi.xml \
   -c_defines        controllers/generated/rusefi_generated.h \
-  -c_destination    controllers/generated/engine_configuration_generated_structures.h \
-	-prepend $PREPEND_FILE
+  -c_destination    controllers/generated/engine_configuration_generated_structures.h
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
 

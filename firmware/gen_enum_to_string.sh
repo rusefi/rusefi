@@ -48,11 +48,11 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 pwd
 cd config/boards/kinetis/config
-bash kinetis_gen_enum_to_string.sh
+./kinetis_gen_enum_to_string.sh
 cd ../../../..
 
-cd config/boards/hellen/cypress/config
-bash hellen_cypress_gen_enum_to_string.sh
-cd ../../../../..
+cd config/boards/cypress/config
+./hellen_cypress_gen_enum_to_string.sh
+cd ../../../..
 
 bash config/boards/subaru_eg33/config/gen_enum_to_string.sh
