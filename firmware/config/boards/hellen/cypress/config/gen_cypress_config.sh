@@ -28,7 +28,7 @@ java \
  -signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
  -enumInputFile controllers/algo/rusefi_hw_enums.h \
- -board hellen_cypress \
+ -board ${BOARDNAME} \
  -prepend ${BOARD_DIR}/config/tunerstudio/generated/hellen_cypress_prefix.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }
