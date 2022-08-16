@@ -48,8 +48,6 @@ java -DSystemOut.name=logs/gen_config_board \
  $COMMON_GEN_CONFIG \
   -romraider integration \
   -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
-	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
-	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
   -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
   -romraider_destination ../java_console/rusefi.xml \
