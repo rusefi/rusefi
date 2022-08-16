@@ -127,7 +127,7 @@ jobs:
             ini-file: rusefi_hellen154hyundai.ini
 
           - build-target: cypress
-            folder: hellen
+            folder: cypress
             ini-file: rusefi_cypress.ini
 
           - build-target: frankenso_na6
