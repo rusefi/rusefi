@@ -142,6 +142,10 @@ protected:
 		efiPrintf("PT2001 error: %s", why);
 	}
 
+	void sleepMs(size_t ms) override {
+		chThdSleepMilliseconds(ms);
+	}
+
 private:
 	SPIDriver* driver;
 
