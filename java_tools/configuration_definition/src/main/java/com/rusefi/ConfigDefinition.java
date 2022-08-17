@@ -18,9 +18,8 @@ import java.util.*;
 public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
-    private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String KEY_DEFINITION = "-definition";
-    private static final String KEY_ROMRAIDER_INPUT = "-romraider";
+    private static final String KEY_ROMRAIDER_INPUT = "-romraider_input_file";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
@@ -71,7 +70,7 @@ public class ConfigDefinition {
         // we postpone reading so that in case of cache hit we do less work
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
-        String triggersFolder = null;
+        String triggersInputFolder = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
@@ -132,8 +131,8 @@ public class ConfigDefinition {
                     firingEnumFileName = args[i + 1];
                     state.inputFiles.add(firingEnumFileName);
                     break;
-                case "-triggerFolder":
-                    triggersFolder = args[i + 1];
+                case "-triggerInputFolder":
+                    triggersInputFolder = args[i + 1];
                     break;
                 case KEY_ROMRAIDER_DESTINATION:
                     romRaiderDestination = args[i + 1];
@@ -156,8 +155,7 @@ public class ConfigDefinition {
                     state.tsFileOutputName = args[i + 1];
                     break;
                 case KEY_ROMRAIDER_INPUT:
-                    String inputFilePath = args[i + 1];
-                    romRaiderInputFile = inputFilePath + File.separator + ROM_RAIDER_XML_TEMPLATE;
+                    romRaiderInputFile = args[i + 1];
                     state.inputFiles.add(romRaiderInputFile);
                     break;
                 case KEY_BOARD_NAME:
@@ -184,11 +182,12 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, state.inputFiles);
+        long crc32 = IoUtil2.getCrc32(state.inputFiles);
+        IoUtil2.signatureHash(state, parseState, tsInputFileFolder, crc32);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
-        new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
+        new TriggerWheelTSLogic().execute(triggersInputFolder, state.variableRegistry);
 
         if (pinoutLogic != null) {
             pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state, parseState);

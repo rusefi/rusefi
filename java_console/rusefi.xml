@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Wed Jun 29 22:51:56 UTC 2022 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat Wed Aug 17 01:41:47 UTC 2022 -->
 
     <rom>
         <romid>

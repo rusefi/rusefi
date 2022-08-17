@@ -1,5 +1,5 @@
 /**
- * @file boards/hellen/cypress/board_configuration.h
+ * @file boards/cypress/board_configuration.h
  *
  * @brief In this file we can override engine_configuration.cpp.
  *

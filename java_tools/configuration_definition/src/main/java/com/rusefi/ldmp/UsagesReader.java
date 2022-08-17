@@ -1,7 +1,6 @@
 package com.rusefi.ldmp;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
 import com.rusefi.output.*;
 import org.yaml.snakeyaml.Yaml;
@@ -12,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class UsagesReader {
@@ -32,6 +30,8 @@ public class UsagesReader {
     private final StringBuilder fancyNewMenu = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
+
+    private final String extraPrepend = System.getProperty("UsagesReader.extra_prepend");
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -97,6 +97,8 @@ public class UsagesReader {
                 FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name);
                 state.addDestination(fragmentDialogConsumer);
 
+                if (extraPrepend != null)
+                    state.addPrepend(extraPrepend);
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);

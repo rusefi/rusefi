@@ -41,7 +41,7 @@
  * @name    Platform identification
  * @{
  */
-#define PLATFORM_NAME           "Hellen/Cypress"
+#define PLATFORM_NAME           "Cypress"
 /** @} */
 
 /*===========================================================================*/

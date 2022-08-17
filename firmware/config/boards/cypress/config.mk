@@ -6,7 +6,7 @@ CYPRESS_CONTRIB = $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/OS
 
 GENERATED_ENUMS_DIR = $(BOARD_DIR)/config/controllers/algo
 
-EXTRA_PARAMS += -DFIRMWARE_ID=\"cypress\" -DSHORT_BOARD_NAME=hellen_cypress
+EXTRA_PARAMS += -DFIRMWARE_ID=\"cypress\" -DSHORT_BOARD_NAME=cypress
 # -nodefaultlibs -lc -lgcc -ltinyc
 
 # used by USE_SMART_BUILD
