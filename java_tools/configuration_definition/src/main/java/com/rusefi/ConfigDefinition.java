@@ -19,13 +19,11 @@ public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String KEY_DEFINITION = "-definition";
-    private static final String KEY_ROMRAIDER_INPUT = "-romraider_input_file";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
-    private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
     private static final String KEY_SIGNATURE = "-signature";
@@ -66,9 +64,7 @@ public class ConfigDefinition {
 
         String tsInputFileFolder = null;
         String destCDefinesFileName = null;
-        String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
-        String romRaiderInputFile = null;
         String firingEnumFileName = null;
         String triggersInputFolder = null;
         String signatureDestination = null;
@@ -134,9 +130,6 @@ public class ConfigDefinition {
                 case "-triggerInputFolder":
                     triggersInputFolder = args[i + 1];
                     break;
-                case KEY_ROMRAIDER_DESTINATION:
-                    romRaiderDestination = args[i + 1];
-                    break;
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
                     break;
@@ -153,10 +146,6 @@ public class ConfigDefinition {
                     break;
                 case "-ts_output_name":
                     state.tsFileOutputName = args[i + 1];
-                    break;
-                case KEY_ROMRAIDER_INPUT:
-                    romRaiderInputFile = args[i + 1];
-                    state.inputFiles.add(romRaiderInputFile);
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
@@ -246,10 +235,6 @@ public class ConfigDefinition {
 
         if (destCDefinesFileName != null) {
             ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);
-        }
-
-        if (romRaiderDestination != null && romRaiderInputFile != null) {
-            ExtraUtil.processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
         }
     }
 }
