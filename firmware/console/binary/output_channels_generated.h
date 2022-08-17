@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 21:21:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Aug 17 04:29:36 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1269,45 +1269,49 @@ struct output_channels_s {
 	 */
 	pid_status_s boostStatus;
 	/**
+	 * offset 504
+	 */
+	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
+	/**
 	 * aux speed 1
 	s
-	 * offset 504
+	 * offset 568
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * aux speed 2
 	s
-	 * offset 506
+	 * offset 570
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 508
+	 * offset 572
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
 	V
-	 * offset 510
+	 * offset 574
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAnalogInput[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
-	 * offset 526
+	 * offset 590
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
 	V
-	 * offset 530
+	 * offset 594
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
-	 * offset 532
+	 * offset 596
 	 */
 	uint8_t unusedAtTheEnd[160];
 };
-static_assert(sizeof(output_channels_s) == 692);
+static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 15 21:21:41 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Aug 17 04:29:36 UTC 2022
