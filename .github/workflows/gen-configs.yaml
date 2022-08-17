@@ -80,10 +80,6 @@ jobs:
         github_token: ${{ github.token }}
         branch: ${{ steps.extract_branch.outputs.branch }}
 
-    - name: Upload .ini files
-      working-directory: ./firmware/tunerstudio/generated
-      run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
-
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
       working-directory: .
