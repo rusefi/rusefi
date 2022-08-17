@@ -120,12 +120,10 @@ struct_no_prefix engine_configuration_s
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
 #define CAMS_PER_BANK 2
-#define CAMS_PER_BANK_padding 0
 
 #define GEARS_COUNT 8
 
 #define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
-#define CAM_INPUTS_COUNT_padding 0
 
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
@@ -989,7 +987,6 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
     float[CAM_INPUTS_COUNT iterate] vvtOffsets;Angle between cam sensor and VVT zero position\nset vvt_offset X;"value", 1, 0, -720, 1000, 1
-    float[CAM_INPUTS_COUNT_padding] vvtOffsetsPadding;;
 
 struct vr_threshold_s
 	uint8_t[6] autoscale rpmBins;;"rpm", 50, 0, 0, 12000, 0
@@ -1261,7 +1258,6 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 
 
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
-	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale primingDelay;+Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
 	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
