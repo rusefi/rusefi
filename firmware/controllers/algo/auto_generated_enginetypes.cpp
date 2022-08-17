@@ -136,14 +136,8 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VVT_1_PID:
-  return "DBG_VVT_1_PID";
-case DBG_VVT_2_PID:
-  return "DBG_VVT_2_PID";
-case DBG_VVT_3_PID:
-  return "DBG_VVT_3_PID";
-case DBG_VVT_4_PID:
-  return "DBG_VVT_4_PID";
+case DBG_7:
+  return "DBG_7";
 case UNUSED23:
   return "UNUSED23";
   }

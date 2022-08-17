@@ -90,12 +90,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	}
 
 #if EFI_TUNER_STUDIO
-	static constexpr const debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
-
-	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
-		m_pid.postState(&engine->outputChannels);
-		engine->outputChannels.debugIntField3 = (int)(10 * target);
-	}
+	m_pid.postState(engine->outputChannels.vvtStatus[index]);
 #endif /* EFI_TUNER_STUDIO */
 
 	// User labels say "advance" and "retard"
