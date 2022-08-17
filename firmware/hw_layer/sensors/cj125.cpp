@@ -298,9 +298,7 @@ void CJ125::calibrate() {
 		cjPrintData();
 
 #if EFI_TUNER_STUDIO
-		if (engineConfiguration->debugMode == DBG_CJ125) {
-			cjPostState(&engine->outputChannels);
-		}
+			// todo: reimplement as explicit CJ PID status if desired cjPostState(&engine->outputChannels);
 #endif /* EFI_TUNER_STUDIO */
 
 		vUaCal += vUa;

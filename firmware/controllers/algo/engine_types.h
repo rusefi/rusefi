@@ -243,7 +243,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
-	DBG_VVT_1_PID = 7,
+	DBG_7 = 7,
 	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
@@ -299,9 +299,6 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_46 = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
-	DBG_VVT_2_PID = 49,
-	DBG_VVT_3_PID = 50,
-	DBG_VVT_4_PID = 51,
 
 } debug_mode_e;
 
