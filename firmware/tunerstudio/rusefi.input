@@ -1723,8 +1723,6 @@ cmd_test_lua6  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex
 cmd_test_lua7  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x07"
 cmd_test_lua8  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_LUA_OUTPUT_CATEGORY_16_hex@@\x00\x08"
 
-cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
-
 cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
 cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
 cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x03"
@@ -3120,7 +3118,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = vvtPidDialog0, "Configuration"
 	    field = "Activation Delay",                   vvtActivationDelayMs
-		commandButton = "Enable VVT#1 debug mode",      cmd_test_debug_mode_vvt
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2
         field = "VVT solenoid bank 2 intake",                   vvtPins3
