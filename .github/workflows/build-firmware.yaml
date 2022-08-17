@@ -273,6 +273,7 @@ jobs:
         sudo apt-get install dosfstools
 
     - name: Test sshpass
+      if: ${{ env.skip != 'true' }}
       run: sshpass -V
 
     - name: Generate Live Documentation
@@ -358,6 +359,7 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
 
     - name: Upload .ini files
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: ./firmware/tunerstudio/upload_ini.sh ./firmware/tunerstudio/generated/${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
