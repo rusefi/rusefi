@@ -1,4 +1,12 @@
 
+!
+! ******* LOOOOOOOOOOOOOOOOOOOOKS UNUSED ************** looks like something got disconnected at some point?
+! ******* LOOOOOOOOOOOOOOOOOOOOKS UNUSED ************** looks like something got disconnected at some point?
+! ******* LOOOOOOOOOOOOOOOOOOOOKS UNUSED ************** looks like something got disconnected at some point?
+! ********** should this be moved into 'prepend.txt'? not 100% sure
+! the current fancy way is to use connectors folder yaml files
+
+
 ! see "integration/rusefi_config.txt" for more details
 
 ! all these #defines are in priority over the "default" values in rusefi_config.txt
