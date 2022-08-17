@@ -440,7 +440,7 @@
 #define cylindersCount_offset 368
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",2="DBG_2",20="DBG_20",24="DBG_24",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",25="DBG_CJ125",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",7="DBG_VVT_1_PID",49="DBG_VVT_2_PID",50="DBG_VVT_3_PID",51="DBG_VVT_4_PID",23="UNUSED23"
+#define debug_mode_e_auto_enum 0="DBG_0",10="DBG_10",11="DBG_11",16="DBG_16",2="DBG_2",20="DBG_20",24="DBG_24",26="DBG_26",29="DBG_29",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",7="DBG_7",8="DBG_8",9="DBG_9",21="DBG_ANALOG_INPUTS",32="DBG_ANALOG_INPUTS2",19="DBG_BENCH_TEST",25="DBG_CJ125",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",22="DBG_INSTANT_RPM",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",27="DBG_MAP",28="DBG_METRICS",13="DBG_SD_CARD",6="DBG_SOFT_SPARK_CUT",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",1="DBG_TPS_ACCEL",5="DBG_TRIGGER_COUNTERS",12="DBG_UNUSED12",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
@@ -457,6 +457,7 @@
 #define debug_mode_e_DBG_38 38
 #define debug_mode_e_DBG_43 43
 #define debug_mode_e_DBG_46 46
+#define debug_mode_e_DBG_7 7
 #define debug_mode_e_DBG_8 8
 #define debug_mode_e_DBG_9 9
 #define debug_mode_e_DBG_ANALOG_INPUTS 21
@@ -488,11 +489,7 @@
 #define debug_mode_e_DBG_UNUSED12 12
 #define debug_mode_e_DBG_UNUSED41 41
 #define debug_mode_e_DBG_UNUSED_42 42
-#define debug_mode_e_DBG_VVT_1_PID 7
-#define debug_mode_e_DBG_VVT_2_PID 49
-#define debug_mode_e_DBG_VVT_3_PID 50
-#define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 856
 #define debugMode_offset 1604
@@ -1942,7 +1939,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1040272554
+#define SIGNATURE_HASH 558710419
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2497,7 +2494,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.17.kin.1040272554"
+#define TS_SIGNATURE "rusEFI 2022.08.17.kin.558710419"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
