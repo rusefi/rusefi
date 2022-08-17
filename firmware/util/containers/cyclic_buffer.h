@@ -26,30 +26,25 @@ class cyclic_buffer
     explicit cyclic_buffer(int size);
 
   public:
-    T& add(T value);
+    void add(T value);
     T get(int index) const;
     T sum(size_t length) const;
     T maxValue(size_t length) const;
     T minValue(size_t length) const;
     void setSize(size_t size);
-
-	template <typename TFind>
-    bool contains(TFind value) const;
-
-	template <typename TFind>
-	T* find(TFind value) const;
+    bool contains(T value) const;
     int getSize() const;
     int getCount() const;
     void clear();
-    T elements[maxSize];
-    uint16_t currentIndex;
+    volatile T elements[maxSize];
+    volatile uint16_t currentIndex;
 
   protected:
     uint16_t size;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
-    size_t count;
+    volatile size_t count;
 };
 
 template<typename T, size_t maxSize>
@@ -62,14 +57,12 @@ cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
 }
 
 template<typename T, size_t maxSize>
-T& cyclic_buffer<T, maxSize>::add(T value) {
+void cyclic_buffer<T, maxSize>::add(T value) {
 	// Too lazy to make this thread safe, but at the very least let's never let currentIndex
 	// become invalid.  And yes I did see a crash due to an overrun here.
 	uint16_t idx = currentIndex;
 
-	T& location = elements[idx];
-
-	location = value;
+	((T &)elements[idx]) = value;
 
 	if (++idx == size) {
 		idx = 0;
@@ -77,28 +70,16 @@ T& cyclic_buffer<T, maxSize>::add(T value) {
 	currentIndex = idx;
 
 	count = count + 1;
-
-	return location;
 }
 
 template<typename T, size_t maxSize>
-template<typename TFind>
-bool cyclic_buffer<T, maxSize>::contains(TFind value) const {
-	return find(value) != nullptr;
-}
-
-template<typename T, size_t maxSize>
-template<typename TFind>
-T* cyclic_buffer<T, maxSize>::find(TFind value) const {
+bool cyclic_buffer<T, maxSize>::contains(T value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
-			// This function is const with respect to the internal state of the cyclic_buffer,
-			// but not the returned object, so we cast-away the constness to return a non-const pointer
-			return const_cast<T*>(&elements[i]);
+			return true;
 		}
 	}
-
-	return nullptr;
+	return false;
 }
 
 template<typename T, size_t maxSize>
