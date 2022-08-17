@@ -5,8 +5,6 @@ rm gen_live_documentation.log
 if [ -n "$1" ]; then
   echo "With prepend $1"
   EXTRA_PREPEND="-DUsagesReader.extra_prepend=$1"
-else
-
 fi
 
 java -DSystemOut.name=logs/gen_live_documentation \
