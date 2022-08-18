@@ -358,9 +358,6 @@ jobs:
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true'
       working-directory: ./firmware/tunerstudio/generated
       run: |
-        ls -l ..
-        ls -l 
-        echo ${{matrix.ini-file}}
         ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload build elf
