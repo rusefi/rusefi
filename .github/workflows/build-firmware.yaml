@@ -469,6 +469,12 @@ jobs:
         name: console primary junit
         path: ./java_console/build/*.txt
 
+    - name: Upload 'all' .ini files
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
+      working-directory: ./firmware/tunerstudio/generated
+      run: |
+        ../upload_ini.sh all ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+
     - name: Upload primary bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v3

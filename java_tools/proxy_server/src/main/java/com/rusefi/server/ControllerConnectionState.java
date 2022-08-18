@@ -112,7 +112,7 @@ public class ControllerConnectionState {
             throw new IOException("Invalid signature response");
         String localFileName = SignatureHelper.downloadIfNotAvailable(p);
         if (localFileName == null)
-            throw new IOException("Unable to download " + p.second);
+            throw new IOException("Unable to download " + p.second + " from " + p.first);
 //        iniFileModel.readIniFile(localFileName);
 
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
