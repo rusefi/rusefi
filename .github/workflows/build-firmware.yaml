@@ -355,6 +355,7 @@ jobs:
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
 
     - name: Upload .ini files
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true'
       working-directory: ./firmware/tunerstudio/generated
       run: |
         ls -l ..
