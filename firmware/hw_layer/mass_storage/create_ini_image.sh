@@ -35,8 +35,13 @@ echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
 cp hw_layer/mass_storage/filesystem_contents/README.template.txt hw_layer/mass_storage/readme.temp
 echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
 
-# bash >=4.3 magic
-printf -v current_date '%(%Y-%m-%d)T\n' -1
+if [[ $OSTYPE == 'darwin'* ]]; then
+  # Mac OS comes with Bash version 3 which is quite limiting and lack key features
+  current_date='huh-MAC'
+else
+  # bash >=4.3 magic
+  printf -v current_date '%(%Y-%m-%d)T\n' -1
+fi
 
 # Put the zip inside the filesystem
 mcopy -i $IMAGE $ZIP ::
