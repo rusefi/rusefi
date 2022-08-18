@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# file=$1
+fileName=$1
 # user=$2
 # pass=$3
 # host=$4
 
-if [ ! "$1" ]; then
- echo "No file"
+if [ ! "$fileName" ]; then
+ echo "No $fileName"
  exit 1
 fi
 
@@ -19,13 +19,8 @@ pwd
 echo -e "\nUploading .ini files"
 ls -l .
 
-if [ "$1" = "all" ]; then
- echo "Processing default 'all' file"
- sig=$(grep "^ *signature *=" rusefi.ini | cut -f2 -d "=")
-else
- echo "Processing file $1:"
- sig=$(grep "^ *signature *=" $1         | cut -f2 -d "=")
-fi
+echo "Processing file $fileName:"
+sig=$(grep "^ *signature *=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
   if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([0-9]+) ]]; then
@@ -44,7 +39,7 @@ mkdir $year
 mkdir $year/$month
 mkdir $year/$month/$day
 mkdir $year/$month/$day/$board
-put $1 $path
+put $fileName $path
 SSHCMD
     retVal=$?
     if [ $retVal -ne 0 ]; then

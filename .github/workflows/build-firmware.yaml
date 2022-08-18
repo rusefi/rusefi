@@ -473,7 +473,7 @@ jobs:
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       working-directory: ./firmware/tunerstudio/generated
       run: |
-        ../upload_ini.sh all ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        ../upload_ini.sh rusefi.ini ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload primary bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
