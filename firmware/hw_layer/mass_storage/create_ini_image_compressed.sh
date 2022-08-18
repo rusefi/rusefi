@@ -46,7 +46,7 @@ fi
 # Put the zip inside the filesystem
 mcopy -i $IMAGE $FULL_INI ::
 # Put a readme text file in there too
-mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-$(current_date).txt
+mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-${current_date}.txt
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
