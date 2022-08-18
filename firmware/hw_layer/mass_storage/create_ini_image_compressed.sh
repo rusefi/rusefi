@@ -14,6 +14,7 @@ BOARD_SPECIFIC_URL=$5
 
 IMAGE=ramdisk.image
 
+
 echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME [$BOARD_SPECIFIC_URL]"
 
 rm -f $IMAGE $IMAGE.gz
@@ -34,10 +35,13 @@ echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
 cp hw_layer/mass_storage/filesystem_contents/README.nozip.template.txt hw_layer/mass_storage/readme.temp
 echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
 
+# bash >=4.3 magic
+printf -v current_date '%(%Y-%m-%d)T\n' -1
+
 # Put the zip inside the filesystem
 mcopy -i $IMAGE $FULL_INI ::
 # Put a readme text file in there too
-mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README.txt
+mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-$(current_date).txt
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
