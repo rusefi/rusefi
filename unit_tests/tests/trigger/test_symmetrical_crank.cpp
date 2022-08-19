@@ -48,7 +48,7 @@ TEST(engine, testSymmetricalCrank) {
 
 	// this test is not about isFasterEngineSpinUpEnabled so let's disable it to simplify things
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
-
+	engineConfiguration->alwaysInstantRpm = true;
 
 	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode());
 
@@ -67,13 +67,6 @@ TEST(engine, testSymmetricalCrank) {
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
-
-
-
-	for (int i = 0; i < 3; i++) {
-		postFourEvents(&eth, mult);
-		ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
-	}
 
 	postFourEvents(&eth, mult);
 	ASSERT_EQ(2084,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#11";
