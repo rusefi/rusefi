@@ -143,7 +143,6 @@ jobs:
           - build-target: mre_f4
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 50
 
           - build-target: mre_f4_debug
             folder: microrusefi
