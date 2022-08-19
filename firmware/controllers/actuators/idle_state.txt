@@ -33,7 +33,7 @@ bit isVerboseIAC
 int targetRpmByClt;idle: target by CLT
 int targetRpmAcBump;idle: A/C bump
 
-percent_t iacByTpsTaper;idle: iacByTpsTaper portion of idle
+percent_t iacByRpmTaper;idle: iacByRpmTaper portion of idle
 
 ! end of idle_state_s structure definition
 end_struct
