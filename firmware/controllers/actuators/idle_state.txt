@@ -33,8 +33,7 @@ bit isVerboseIAC
 int targetRpmByClt;idle: target by CLT
 int targetRpmAcBump;idle: A/C bump
 
-int airTaperRpmRange;RPM range above upper limit for extra air taper
-    percent_t airByRpmTaper;Extra air taper amount
+percent_t iacByTpsTaper;idle: iacByTpsTaper portion of idle
 
 ! end of idle_state_s structure definition
 end_struct
