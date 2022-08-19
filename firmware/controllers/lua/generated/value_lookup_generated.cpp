@@ -32,6 +32,7 @@ static plain_get_float_s getF_plain[] = {
 	{"fanOffTemperature", &engineConfiguration->fanOffTemperature},
 	{"driveWheelRevPerKm", &engineConfiguration->driveWheelRevPerKm},
 	{"idle_derivativeFilterLoss", &engineConfiguration->idle_derivativeFilterLoss},
+	{"airByRpmTaper", &engineConfiguration->airByRpmTaper},
 	{"globalFuelCorrection", &engineConfiguration->globalFuelCorrection},
 	{"adcVcc", &engineConfiguration->adcVcc},
 	{"mapCamDetectionAnglePosition", &engineConfiguration->mapCamDetectionAnglePosition},
@@ -675,6 +676,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb.minValue;
 	if (strEqualCaseInsensitive(name, "etb.maxValue"))
 		return engineConfiguration->etb.maxValue;
+	if (strEqualCaseInsensitive(name, "airTaperRpmRange"))
+		return engineConfiguration->airTaperRpmRange;
 	if (strEqualCaseInsensitive(name, "tps2Min"))
 		return engineConfiguration->tps2Min;
 	if (strEqualCaseInsensitive(name, "tps2Max"))
@@ -2150,6 +2153,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "etb.maxValue"))
 	{
 		engineConfiguration->etb.maxValue = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "airTaperRpmRange"))
+	{
+		engineConfiguration->airTaperRpmRange = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tps2Min"))
