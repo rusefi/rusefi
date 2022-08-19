@@ -36,6 +36,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 
 TEST(cranking, hardcodedRealCranking) {
 	EngineTestHelper eth(FRANKENSO_MIATA_NA6_VAF);
+	engineConfiguration->alwaysInstantRpm = true;
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
 
@@ -93,9 +94,9 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 43 */ EVENT(/* timestamp*/1.9822455, T_SECONDARY, /*value*/false);
 	EXPECT_EQ(226, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	// Second sync point, should transition to non-instant RPM
+	// Second sync point
 	/* 44 */ EVENT(/* timestamp*/2.001249, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(239, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_EQ(277, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 45 */ EVENT(/* timestamp*/2.0070235, T_SECONDARY, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, T_SECONDARY, /*value*/false);
 	/* 49 */ EVENT(/* timestamp*/2.06135875, T_SECONDARY, /*value*/true);
@@ -107,12 +108,10 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 59 */ EVENT(/* timestamp*/2.1560195, T_SECONDARY, /*value*/true);
 	/* 60 */ EVENT(/* timestamp*/2.18365925, T_PRIMARY, /*value*/true);
 	/* 61 */ EVENT(/* timestamp*/2.188138, T_SECONDARY, /*value*/false);
-
-	// rpm should now only update at sync point
-	EXPECT_EQ(239, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_EQ(571, round(Sensor::getOrZero(SensorType::Rpm)));
 	// Third sync point
 	/* 62 */ EVENT(/* timestamp*/2.20460875, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(590, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_EQ(570, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	/* 63 */ EVENT(/* timestamp*/2.20940075, T_SECONDARY, /*value*/true);
 	/* 64 */ EVENT(/* timestamp*/2.2446445, T_SECONDARY, /*value*/false);
@@ -163,7 +162,7 @@ TEST(cranking, hardcodedRealCranking) {
 
 	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
-	EXPECT_EQ(755,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM at the end";
+	EXPECT_EQ(623,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM at the end";
 }
 
 TEST(cranking, naCrankFromFile) {
@@ -172,11 +171,12 @@ TEST(cranking, naCrankFromFile) {
 	reader.open("tests/trigger/resources/cranking_na_4.csv", indeces);
 
 	EngineTestHelper eth(FRANKENSO_MIATA_NA6_VAF);
+	engineConfiguration->alwaysInstantRpm = true;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	EXPECT_EQ(0, eth.recentWarnings()->getCount());
-	EXPECT_EQ(698, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_EQ(669, round(Sensor::getOrZero(SensorType::Rpm)));
 }

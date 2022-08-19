@@ -9,6 +9,7 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	reader.open("tests/trigger/resources/gm_24x_cranking.csv", indeces);
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->alwaysInstantRpm = true;
 
 	eth.setTriggerType(TT_GM_24x);
 
@@ -19,5 +20,5 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 	}
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ( 128, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ( 139, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
