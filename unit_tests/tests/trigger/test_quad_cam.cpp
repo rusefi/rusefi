@@ -9,6 +9,7 @@ TEST(trigger, testQuadCam) {
 	// setting some weird engine
 	EngineTestHelper eth(FORD_ESCORT_GT);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+	engineConfiguration->alwaysInstantRpm = true;
 
 	setCrankOperationMode();
 
@@ -26,15 +27,16 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
-	for (int i = 0; i < 2;i++) {
-		eth.fireRise(25);
-		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm));
-	}
+
+	eth.fireRise(25);
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm));
+
 	eth.fireRise(25);
 	// first time we have RPM
 	ASSERT_EQ(2400, Sensor::getOrZero(SensorType::Rpm));
 
 	// need to be out of VVT sync to see VVT sync in action
+	eth.fireRise(25);
 	eth.fireRise(25);
 	eth.fireRise(25);
 
