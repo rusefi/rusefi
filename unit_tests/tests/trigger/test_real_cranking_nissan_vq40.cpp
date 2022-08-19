@@ -15,6 +15,7 @@ TEST(realCrankingVQ40, normalCranking) {
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+	engineConfiguration->alwaysInstantRpm = true;
 
 	bool hasSeenFirstVvt = false;
 
@@ -28,9 +29,9 @@ TEST(realCrankingVQ40, normalCranking) {
 		}
 	}
 
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -45.67, 1e-2);
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -45.47, 1e-2);
-	ASSERT_EQ(241, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -45.64, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -45.45, 1e-2);
+	ASSERT_EQ(101, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?
 	ASSERT_EQ(3, eth.recentWarnings()->getCount());
