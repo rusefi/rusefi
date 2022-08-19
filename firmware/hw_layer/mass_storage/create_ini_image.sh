@@ -39,8 +39,10 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   # Mac OS comes with Bash version 3 which is quite limiting and lack key features
   current_date='huh-MAC'
 else
+  bash --version
   # bash >=4.3 magic
   printf -v current_date '%(%Y-%m-%d)T' -1
+  echo [${current_date}]
 fi
 
 # Put the zip inside the filesystem
