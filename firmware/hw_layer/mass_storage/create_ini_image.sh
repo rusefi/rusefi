@@ -40,7 +40,7 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   current_date='huh-MAC'
 else
   # bash >=4.3 magic
-  printf -v current_date '%(%Y-%m-%d)T\n' -1
+  printf -v current_date '%(%Y-%m-%d)T' -1
 fi
 
 # Put the zip inside the filesystem
