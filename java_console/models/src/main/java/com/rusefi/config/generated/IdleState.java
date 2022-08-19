@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Aug 15 21:21:43 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Aug 19 03:07:34 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -45,8 +45,7 @@ public class IdleState {
 	public static final Field UNUSEDBIT_22_31 = Field.create("UNUSEDBIT_22_31", 20, FieldType.BIT, 31);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 24, FieldType.INT).setScale(1.0);
 	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 28, FieldType.INT).setScale(1.0);
-	public static final Field AIRTAPERRPMRANGE = Field.create("AIRTAPERRPMRANGE", 32, FieldType.INT).setScale(1.0);
-	public static final Field AIRBYRPMTAPER = Field.create("AIRBYRPMTAPER", 36, FieldType.FLOAT);
+	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 32, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	IDLESTATE,
 	CURRENTIDLEPOSITION,
@@ -87,7 +86,6 @@ public class IdleState {
 	UNUSEDBIT_22_31,
 	TARGETRPMBYCLT,
 	TARGETRPMACBUMP,
-	AIRTAPERRPMRANGE,
-	AIRBYRPMTAPER,
+	IACBYRPMTAPER,
 	};
 }

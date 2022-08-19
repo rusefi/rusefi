@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Aug 10 05:43:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Aug 19 03:07:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -151,17 +151,12 @@ struct idle_state_s {
 	 */
 	int targetRpmAcBump = (int)0;
 	/**
-	 * RPM range above upper limit for extra air taper
+	 * idle: iacByRpmTaper portion of idle
 	 * offset 32
 	 */
-	int airTaperRpmRange = (int)0;
-	/**
-	 * Extra air taper amount
-	 * offset 36
-	 */
-	percent_t airByRpmTaper = (percent_t)0;
+	percent_t iacByRpmTaper = (percent_t)0;
 };
-static_assert(sizeof(idle_state_s) == 40);
+static_assert(sizeof(idle_state_s) == 36);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Aug 10 05:43:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Aug 19 03:07:34 UTC 2022

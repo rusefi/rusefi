@@ -72,6 +72,8 @@
 #define air_pressure_sensor_type_e_MT_MPXH6400 14
 #define air_pressure_sensor_type_e_MT_SUBY_DENSO 5
 #define air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 8
+#define airByRpmTaper_offset 480
+#define airTaperRpmRange_offset 1472
 #define alignEngineSnifferAtTDC_offset 764
 #define alternatorControl_dFactor_offset 1436
 #define alternatorControl_iFactor_offset 1432
@@ -1939,7 +1941,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1234869343
+#define SIGNATURE_HASH 2178032719
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2494,12 +2496,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.19.all.1234869343"
+#define TS_SIGNATURE "rusEFI 2022.08.19.all.2178032719"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1208
+#define TS_TOTAL_OUTPUT_SIZE 1204
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2534,10 +2536,8 @@
 #define unused1128_offset 1628
 #define unused1129_offset 1628
 #define unused1130_offset 1628
-#define unused1452_offset 1472
 #define unused1740b2_offset 1628
 #define unused4080_offset 3121
-#define unused460_offset 480
 #define unused962_offset 1040
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372

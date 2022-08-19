@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Aug 18 23:36:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 19 03:08:26 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -72,6 +72,8 @@ public class Fields {
 	public static final int air_pressure_sensor_type_e_MT_MPXH6400 = 14;
 	public static final int air_pressure_sensor_type_e_MT_SUBY_DENSO = 5;
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
+	public static final int airByRpmTaper_offset = 480;
+	public static final int airTaperRpmRange_offset = 1472;
 	public static final int alignEngineSnifferAtTDC_offset = 764;
 	public static final int alternatorControl_dFactor_offset = 1436;
 	public static final int alternatorControl_iFactor_offset = 1432;
@@ -1887,7 +1889,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1234869343;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2377,10 +2378,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.19.all.1234869343";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.19.all.2178032719";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1208;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1204;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2414,10 +2415,8 @@ public class Fields {
 	public static final int unused1128_offset = 1628;
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
-	public static final int unused1452_offset = 1472;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3121;
-	public static final int unused460_offset = 480;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
@@ -2702,7 +2701,7 @@ public class Fields {
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 468, FieldType.INT, trigger_type_e).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMTOTALTOOTHCOUNT = Field.create("TRIGGER_CUSTOMTOTALTOOTHCOUNT", 472, FieldType.INT).setScale(1.0);
 	public static final Field TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT = Field.create("TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT", 476, FieldType.INT).setScale(1.0);
-	public static final Field UNUSED460 = Field.create("UNUSED460", 480, FieldType.INT).setScale(1.0);
+	public static final Field AIRBYRPMTAPER = Field.create("AIRBYRPMTAPER", 480, FieldType.FLOAT);
 	public static final Field HIP9011SPIDEVICE = Field.create("HIP9011SPIDEVICE", 484, FieldType.INT8).setScale(1.0);
 	public static final Field FAILEDMAPFALLBACK = Field.create("FAILEDMAPFALLBACK", 485, FieldType.INT8).setScale(1.0);
 	public static final Field BOOSTCONTROLSAFEDUTYCYCLE = Field.create("BOOSTCONTROLSAFEDUTYCYCLE", 486, FieldType.INT8).setScale(1.0);
@@ -3228,7 +3227,7 @@ public class Fields {
 	public static final Field ETB_MAXVALUE = Field.create("ETB_MAXVALUE", 1466, FieldType.INT16).setScale(1.0);
 	public static final Field TRIGGERINPUTDEBUGPINS1 = Field.create("TRIGGERINPUTDEBUGPINS1", 1468, FieldType.INT16, Gpio).setScale(1.0);
 	public static final Field TRIGGERINPUTDEBUGPINS2 = Field.create("TRIGGERINPUTDEBUGPINS2", 1470, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field UNUSED1452 = Field.create("UNUSED1452", 1472, FieldType.INT16).setScale(1.0);
+	public static final Field AIRTAPERRPMRANGE = Field.create("AIRTAPERRPMRANGE", 1472, FieldType.INT16).setScale(1.0);
 	public static final Field TURBOSPEEDSENSORINPUTPIN = Field.create("TURBOSPEEDSENSORINPUTPIN", 1474, FieldType.INT16, brain_input_pin_e).setScale(1.0);
 	public static final Field TPS2MIN = Field.create("TPS2MIN", 1476, FieldType.INT16).setScale(1.0);
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1478, FieldType.INT16).setScale(1.0);
@@ -4078,7 +4077,7 @@ public class Fields {
 	TRIGGER_TYPE,
 	TRIGGER_CUSTOMTOTALTOOTHCOUNT,
 	TRIGGER_CUSTOMSKIPPEDTOOTHCOUNT,
-	UNUSED460,
+	AIRBYRPMTAPER,
 	HIP9011SPIDEVICE,
 	FAILEDMAPFALLBACK,
 	BOOSTCONTROLSAFEDUTYCYCLE,
@@ -4593,7 +4592,7 @@ public class Fields {
 	ETB_MAXVALUE,
 	TRIGGERINPUTDEBUGPINS1,
 	TRIGGERINPUTDEBUGPINS2,
-	UNUSED1452,
+	AIRTAPERRPMRANGE,
 	TURBOSPEEDSENSORINPUTPIN,
 	TPS2MIN,
 	TPS2MAX,

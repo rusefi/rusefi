@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 17 03:01:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 19 03:08:26 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1130,9 +1130,11 @@ struct engine_configuration_s {
 	 */
 	trigger_config_s trigger;
 	/**
+	 * Extra air taper amount
+	%
 	 * offset 480
 	 */
-	int unused460;
+	float airByRpmTaper;
 	/**
 	 * offset 484
 	 */
@@ -2778,9 +2780,10 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
+	 * RPM range above upper limit for extra air taper", 1, 0, 0, 1500, 0
 	 * offset 1472
 	 */
-	uint16_t unused1452;
+	int16_t airTaperRpmRange;
 	/**
 	 * offset 1474
 	 */
@@ -4946,4 +4949,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 17 03:01:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 19 03:08:26 UTC 2022
