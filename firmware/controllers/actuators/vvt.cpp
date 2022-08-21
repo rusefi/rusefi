@@ -82,6 +82,12 @@ static bool shouldInvertVvt(int camIndex) {
 }
 
 expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
+	// User labels say "advance" and "retard"
+	// "advance" means that additional solenoid duty makes indicated VVT position more positive
+	// "retard" means that additional solenoid duty makes indicated VVT position more negative
+	bool isInverted = shouldInvertVvt(m_cam);
+	m_pid.setErrorAmplification(isInverted ? -1.0f : 1.0f);
+	
 	float retVal = m_pid.getOutput(target, observation);
 
 	if (engineConfiguration->isVerboseAuxPid1) {
@@ -93,14 +99,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	m_pid.postState(engine->outputChannels.vvtStatus[index]);
 #endif /* EFI_TUNER_STUDIO */
 
-	// User labels say "advance" and "retard"
-	// "advance" means that additional solenoid duty makes indicated VVT position more positive
-	// "retard" means that additional solenoid duty makes indicated VVT position more negative
-	if (shouldInvertVvt(m_cam)) {
-		return -retVal;
-	} else {
-		return retVal;
-	}
+	return retVal;
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
