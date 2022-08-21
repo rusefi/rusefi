@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Aug 19 03:07:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Aug 21 04:23:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -155,8 +155,13 @@ struct idle_state_s {
 	 * offset 32
 	 */
 	percent_t iacByRpmTaper = (percent_t)0;
+	/**
+	 * idle: Lua Adder
+	 * offset 36
+	 */
+	percent_t luaAdd = (percent_t)0;
 };
-static_assert(sizeof(idle_state_s) == 36);
+static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Fri Aug 19 03:07:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Aug 21 04:23:45 UTC 2022
