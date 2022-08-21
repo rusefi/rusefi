@@ -224,7 +224,7 @@ TEST(misc, testFordAspire) {
 
 }
 
-static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty) {
+static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGapRatio = NAN) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
 	// Some configs use aux valves, which requires this sensor
@@ -236,11 +236,9 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
-}
-
-static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGap) {
-	testTriggerDecoder2(msg, type, synchPointIndex, channel1duty, channel2duty);
-	assertEqualsM2("actual gap ratio", expectedGap, actualSynchGap, 0.001);
+	if (!cisnan(expectedGapRatio)) {
+		assertEqualsM2("actual gap ratio", expectedGapRatio, actualSynchGap, 0.001);
+    }
 }
 
 static void assertREquals(void *expected, void *actual) {
@@ -468,11 +466,11 @@ TEST(trigger, testTriggerDecoder) {
 
 	}
 	testTriggerDecoder2("miata 1990", MRE_MIATA_NA6_VAF, 4, 1 - 0.7015, 1 - 0.3890);
-	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
+	testTriggerDecoder2("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);
 
-	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
+	testTriggerDecoder2("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
 		EngineTestHelper eth(DODGE_NEON_2003_CRANK);
