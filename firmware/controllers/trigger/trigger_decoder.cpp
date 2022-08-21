@@ -104,6 +104,7 @@ PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 bool printTriggerTrace = false;
+// todo: migrate to triggerSyncGapRatio or triggerActualSyncGapRatio?
 float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 

@@ -227,6 +227,7 @@ TEST(misc, testFordAspire) {
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGapRatio = NAN) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
+	actualSynchGap = 0; // global variables are bad, let's at least reset state
 	// Some configs use aux valves, which requires this sensor
 	std::unordered_map<SensorType, float> sensorVals = {{SensorType::DriverThrottleIntent, 0}};
 	EngineTestHelper eth(type, sensorVals);
