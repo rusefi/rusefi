@@ -211,9 +211,7 @@ void startIdleThread() {
 	// Force the idle controller to use 0 offset, as this is handled by the open loop table instead.
 	engineConfiguration->idleRpmPid.offset = 0;
 
-	IdleController *controller = &engine->module<IdleController>().unmock();
-
-	controller->init();
+	engine->module<IdleController>().unmock().init();
 
 #if ! EFI_UNIT_TEST
 	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
@@ -221,9 +219,9 @@ void startIdleThread() {
 	initIdleHardware();
 #endif /* EFI_UNIT_TEST */
 
-	controller->idleState = INIT;
-	controller->baseIdlePosition = -100.0f;
-	controller->currentIdlePosition = -100.0f;
+	engine->module<IdleController>().unmock().idleState = INIT;
+	engine->module<IdleController>().unmock().baseIdlePosition = -100.0f;
+	engine->module<IdleController>().unmock().currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
 
