@@ -1,35 +1,11 @@
 #include "pch.h"
 
+#include "can_filter.h"
+
+
 #if EFI_CAN_SUPPORT
 
 #include "rusefi_lua.h"
-
-static constexpr size_t maxFilterCount = 48;
-
-struct Filter {
-	int32_t Id;
-	int32_t Mask;
-
-	int Bus;
-	int Callback;
-};
-
-size_t filterCount = 0;
-Filter filters[maxFilterCount];
-
-static Filter* getFilterForFrame(size_t busIndex, const CANRxFrame& frame) {
-	for (size_t i = 0; i < filterCount; i++) {
-		auto& filter = filters[i];
-
-		if ((CAN_ID(frame) & filter.Mask) == filter.Id) {
-			if (filter.Bus == -1 || filter.Bus == busIndex) {
-				return &filter;
-			}
-		}
-	}
-
-	return nullptr;
-}
 
 // Stores information about one received CAN frame: which bus, plus the actual frame
 struct CanFrameData {
@@ -46,7 +22,7 @@ chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
-	auto filter = getFilterForFrame(busIndex, frame);
+	auto filter = getFilterForId(busIndex, CAN_ID(frame));
 
 	// Filter the frame if we aren't listening for it
 	if (!filter) {
@@ -162,26 +138,6 @@ void initLuaCanRx() {
 	for (size_t i = 0; i < canFrameCount; i++) {
 		freeBuffers.post(&canFrames[i], TIME_INFINITE);
 	}
-}
-
-void resetLuaCanRx() {
-	// Clear all lua filters - reloading the script will reinit them
-	filterCount = 0;
-}
-
-void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
-	if (filterCount >= maxFilterCount) {
-		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
-	}
-
-	efiPrintf("Added Lua CAN RX filter id 0x%x mask 0x%x with%s custom function", eid, mask, (callback == -1 ? "out" : ""));
-
-	filters[filterCount].Id = eid;
-	filters[filterCount].Mask = mask;
-	filters[filterCount].Bus = bus;
-	filters[filterCount].Callback = callback;
-
-	filterCount++;
 }
 
 #endif // EFI_CAN_SUPPORT

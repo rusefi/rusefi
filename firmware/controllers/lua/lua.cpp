@@ -7,6 +7,7 @@
 
 #include "lua.hpp"
 #include "lua_hooks.h"
+#include "can_filter.h"
 
 #define TAG "LUA "
 

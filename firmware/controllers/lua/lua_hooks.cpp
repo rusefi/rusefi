@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "value_lookup.h"
+#include "can_filter.h"
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
@@ -465,7 +466,7 @@ int lua_canRxAdd(lua_State* l) {
 	uint32_t eid;
 
 	// defaults if not passed
-	int bus = -1;
+	int bus = ANY_BUS;
 	int callback = -1;
 
 	switch (lua_gettop(l)) {
@@ -499,7 +500,7 @@ int lua_canRxAdd(lua_State* l) {
 			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
 	}
 
-	addLuaCanRxFilter(eid, 0x1FFFFFFF, bus, callback);
+	addLuaCanRxFilter(eid, FILTER_SPECIFIC, bus, callback);
 
 	return 0;
 }
@@ -509,7 +510,7 @@ int lua_canRxAddMask(lua_State* l) {
 	uint32_t mask;
 
 	// defaults if not passed
-	int bus = -1;
+	int bus = ANY_BUS;
 	int callback = -1;
 
 	switch (lua_gettop(l)) {
