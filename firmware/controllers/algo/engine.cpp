@@ -365,6 +365,7 @@ void Engine::resetLua() {
 #endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
+	engine->module<IdleController>().unmock().luaAdd = 0;
 }
 
 /**
