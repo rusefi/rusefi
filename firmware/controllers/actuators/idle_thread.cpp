@@ -99,6 +99,8 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
+	running += luaAdd;
+
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
 	iacByTpsTaper = interpolateClamped(
