@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 15:18:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 22:21:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -88,7 +88,7 @@ public class EngineState {
 	public static final int DC_PER_STEPPER = 2;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int DWELL_CURVE_SIZE = 8;
-	public static final int EGT_CHANNEL_COUNT = 8;
+	public static final int EGT_CHANNEL_COUNT = 2;
 	public static final String ENGINE_MAKE_BMW = "BMW";
 	public static final String ENGINE_MAKE_GM = "GM";
 	public static final String ENGINE_MAKE_HONDA = "Honda";
