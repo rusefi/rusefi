@@ -26,6 +26,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Manual electronic throttle synchronization #3680
 
 ### Fixed
  - Inverted vvt control #4464
