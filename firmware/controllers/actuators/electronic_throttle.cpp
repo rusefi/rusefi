@@ -379,9 +379,8 @@ float EtbController::getLuaAdjustment() const {
 	}
 }
 
-percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
-	// TODO: implement me #3680
-	return 0;
+percent_t EtbController2::getThrottleTrim(float rpm, percent_t targetPosition) const {
+	return m_throttle2Trim.getValue(rpm, targetPosition);
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {

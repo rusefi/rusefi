@@ -1713,7 +1713,11 @@ uint8_t[8] tcu_tccUnlockSpeed;;"MPH", 1, 0, 0, 255, 0
 
 uint8_t[8] tcu_32SpeedBins;;"KPH", 1, 0, 0, 255, 0
 uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
-	
+
+int8_t[6 x 6] autoscale throttle2TrimTable;;"%", 0.1, 0, -10, 10, 1
+uint8_t[6] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
+uint8_t[6] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+
 end_struct
 
 ! Pedal Position Sensor
