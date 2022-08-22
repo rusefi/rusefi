@@ -42,7 +42,6 @@ public class ControllerConnectionState {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
     private int outputRoundAroundDuration;
-    private final IniFileModel iniFileModel = new IniFileModel();
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -110,9 +109,10 @@ public class ControllerConnectionState {
         Pair<String, String> p = SignatureHelper.getUrl(sessionDetails.getControllerInfo().getSignature());
         if (p == null)
             throw new IOException("Invalid signature response");
-        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
-        if (localFileName == null)
-            throw new IOException("Unable to download " + p.second + " from " + p.first);
+//        todo: revisit https://github.com/rusefi/rusefi/issues/4462 if ever uncommenting
+//        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
+//        if (localFileName == null)
+//            throw new IOException("Unable to download " + p.second + " from " + p.first);
 //        iniFileModel.readIniFile(localFileName);
 
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
