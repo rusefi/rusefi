@@ -28,6 +28,7 @@ Release template (copy/paste this for new release):
 ### Added
 
 ### Fixed
+ - Inverted vvt control #4464
  - Lua canRxAdd bus parameter handling #4467
 
 ### Removed
