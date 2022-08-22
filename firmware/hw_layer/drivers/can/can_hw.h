@@ -26,4 +26,4 @@ void postCanState();
 
 #endif /* EFI_CAN_SUPPORT */
 
-void assertHwCanBusIndex(const size_t busIndex);
+bool isValidHwCanBusIndex(const size_t busIndex);
