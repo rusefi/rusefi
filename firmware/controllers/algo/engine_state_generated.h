@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 08 04:44:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 15:18:36 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -492,8 +492,16 @@ struct engine_state_s {
 	/**
 	offset 136 bit 31 */
 	bool unusedBit_22_31 : 1 {};
+	/**
+	 * offset 140
+	 */
+	float egt1 = (float)0;
+	/**
+	 * offset 144
+	 */
+	float egt2 = (float)0;
 };
-static_assert(sizeof(engine_state_s) == 140);
+static_assert(sizeof(engine_state_s) == 148);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 08 04:44:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 15:18:36 UTC 2022
