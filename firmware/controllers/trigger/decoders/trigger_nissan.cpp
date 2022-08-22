@@ -59,7 +59,8 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	addPrimaryToothEndingAt(s, offset + 320);
 	addPrimaryToothEndingAt(s, offset + 520);
 
-	s->setTriggerSynchronizationGap(5);
+	s->setTriggerSynchronizationGap2(4, 6);
+	s->setSecondTriggerSynchronizationGap2(0.35f, 0.7f);
 }
 
 void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t totalWheel, size_t missing) {
