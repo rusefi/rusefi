@@ -152,6 +152,7 @@ public:
 	bool useOnlyPrimaryForSync;
 	/**
 	 * Should we use falls or rises for gap ratio detection?
+	 * See also useOnlyRisingEdgeForTrigger
 	 */
 	bool useRiseEdge;
 	/**
