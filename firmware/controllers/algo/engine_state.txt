@@ -103,5 +103,7 @@ running_fuel_s running
     float egt1
     float egt2
 
+    int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
+
 ! engine_state2_s
 end_struct
