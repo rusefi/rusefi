@@ -334,8 +334,3 @@ bool getIsCanEnabled(void) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
-
-bool isValidHwCanBusIndex(const size_t busIndex) {
-    // 'size_t' is an unsigned type so we are never below zero here
-	return (busIndex <= 1);
-}

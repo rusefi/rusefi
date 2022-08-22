@@ -25,5 +25,3 @@ void postCanState();
 #endif /* EFI_TUNER_STUDIO */
 
 #endif /* EFI_CAN_SUPPORT */
-
-bool isValidHwCanBusIndex(const size_t busIndex);
