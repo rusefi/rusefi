@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "can_filter.h"
+#include "can_hw.h"
 
 static constexpr size_t maxFilterCount = 48;
 
@@ -26,6 +27,10 @@ void resetLuaCanRx() {
 }
 
 void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
+    if (bus != ANY_BUS) {
+        assertHwCanBusIndex(bus);
+    }
+
 	if (filterCount >= maxFilterCount) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}
