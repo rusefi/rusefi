@@ -51,5 +51,7 @@ public enum SensorType {
 	AuxSpeed1,
 	AuxSpeed2,
 	InputShaftSpeed,
+	EGT1,
+	EGT2,
 	PlaceholderLast,
 }
