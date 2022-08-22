@@ -467,7 +467,7 @@ int lua_canRxAdd(lua_State* l) {
 
 	// defaults if not passed
 	int bus = ANY_BUS;
-	int callback = -1;
+	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {
 		case 1:
@@ -511,7 +511,7 @@ int lua_canRxAddMask(lua_State* l) {
 
 	// defaults if not passed
 	int bus = ANY_BUS;
-	int callback = -1;
+	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {
 		case 2:

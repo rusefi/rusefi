@@ -4,6 +4,7 @@
 
 #define FILTER_SPECIFIC 0x1FFFFFFF
 #define ANY_BUS -1
+#define NO_CALLBACK -1
 
 struct CanFilter {
 	int32_t Id;
