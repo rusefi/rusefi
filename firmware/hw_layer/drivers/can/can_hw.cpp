@@ -334,3 +334,10 @@ bool getIsCanEnabled(void) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+void assertHwCanBusIndex(const size_t busIndex) {
+    // 'size_t' is an unsigned type so we are never below zero here
+	if (busIndex > 1) {
+  		firmwareError(CUSTOM_OBD_70, "Invalid HW CAN bus index %d", busIndex);
+  	}
+}
