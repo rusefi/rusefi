@@ -27,10 +27,6 @@ void resetLuaCanRx() {
 }
 
 void addLuaCanRxFilter(int32_t eid, uint32_t mask, int bus, int callback) {
-    if (bus != ANY_BUS && !isValidHwCanBusIndex(bus)) {
-		efiPrintf("LUA CAN bus index %d is not valid", bus);
-    }
-
 	if (filterCount >= maxFilterCount) {
 		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
 	}

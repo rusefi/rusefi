@@ -136,10 +136,16 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 }
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-static int lua_txCan(lua_State* l) {
-	auto channel = luaL_checkinteger(l, 1);
+
+static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
+	lua_Integer channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
-	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only channels 1 and 2 currently supported");
+	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only buses 1 and 2 currently supported");
+	return channel - HUMAN_OFFSET;
+}
+
+static int lua_txCan(lua_State* l) {
+	auto bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 
 	auto id = luaL_checkinteger(l, 2);
 	auto ext = luaL_checkinteger(l, 3);
@@ -153,7 +159,7 @@ static int lua_txCan(lua_State* l) {
 
 	// conform ext parameter to true/false
 	CanTxMessage msg(CanCategory::LUA, id, 8, ext == 0 ? false : true);
-	msg.busIndex = channel - HUMAN_OFFSET;
+	msg.busIndex = bus;
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers
@@ -212,6 +218,7 @@ struct P {
 static P luaL_checkPwmIndex(lua_State* l, int pos) {
 	auto channel = luaL_checkinteger(l, pos);
 
+    // todo: what a mess :( CAN buses start at 1 and PWM channels start at 0 :(
 	// Ensure channel is valid
 	if (channel < 0 || channel >= LUA_PWM_COUNT) {
 		luaL_error(l, "setPwmDuty invalid channel %d", channel);
@@ -483,14 +490,14 @@ int lua_canRxAdd(lua_State* l) {
 				callback = getLuaFunc(l);
 			} else {
 				// handle canRxAdd(bus, id)
-				bus = luaL_checkinteger(l, 1);
+				bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 				eid = luaL_checkinteger(l, 2);
 			}
 
 			break;
 		case 3:
 			// handle canRxAdd(bus, id, callback)
-			bus = luaL_checkinteger(l, 1);
+			bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 			eid = luaL_checkinteger(l, 2);
 			lua_remove(l, 1);
 			lua_remove(l, 1);
@@ -530,7 +537,7 @@ int lua_canRxAddMask(lua_State* l) {
 				callback = getLuaFunc(l);
 			} else {
 				// handle canRxAddMask(bus, id, mask)
-				bus = luaL_checkinteger(l, 1);
+		    	bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 				eid = luaL_checkinteger(l, 2);
 				mask = luaL_checkinteger(l, 3);
 			}
@@ -538,7 +545,7 @@ int lua_canRxAddMask(lua_State* l) {
 			break;
 		case 4:
 			// handle canRxAddMask(bus, id, mask, callback)
-			bus = luaL_checkinteger(l, 1);
+			bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 			eid = luaL_checkinteger(l, 2);
 			mask = luaL_checkinteger(l, 3);
 			lua_remove(l, 1);

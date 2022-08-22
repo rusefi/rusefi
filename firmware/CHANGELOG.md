@@ -28,6 +28,7 @@ Release template (copy/paste this for new release):
 ### Added
 
 ### Fixed
+ - Lua canRxAdd bus parameter handling #4467
 
 ### Removed
 
