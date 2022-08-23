@@ -815,3 +815,4 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
