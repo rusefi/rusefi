@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 15:18:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Aug 23 04:18:22 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -525,6 +525,8 @@ public class EngineState {
 	public static final Field UNUSEDBIT_22_31 = Field.create("UNUSEDBIT_22_31", 136, FieldType.BIT, 31);
 	public static final Field EGT1 = Field.create("EGT1", 140, FieldType.FLOAT);
 	public static final Field EGT2 = Field.create("EGT2", 144, FieldType.FLOAT);
+	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 148, FieldType.INT16).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_150 = Field.create("ALIGNMENTFILL_AT_150", 150, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -658,5 +660,7 @@ public class EngineState {
 	UNUSEDBIT_22_31,
 	EGT1,
 	EGT2,
+	DESIREDRPMLIMIT,
+	ALIGNMENTFILL_AT_150,
 	};
 }
