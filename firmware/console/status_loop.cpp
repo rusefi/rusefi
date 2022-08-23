@@ -54,6 +54,7 @@
 #include "buffered_writer.h"
 #include "dynoview.h"
 #include "frequency_sensor.h"
+#include "digital_input_exti.h"
 
 extern bool main_loop_started;
 
@@ -846,6 +847,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
 #endif // EFI_SHAFT_POSITION_INPUT
 
+#if HAL_USE_PAL && EFI_PROD_CODE
+	tsOutputChannels->extiOverflowCount = getExtiOverflowCounter();
+#endif
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_TPS_ACCEL:
