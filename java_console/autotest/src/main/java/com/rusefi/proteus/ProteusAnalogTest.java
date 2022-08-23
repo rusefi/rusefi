@@ -62,7 +62,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
 
     void assertSensorValue(Sensor sensor, double expected) {
         double actual = SensorCentral.getInstance().getValue(sensor);
-        assertEquals(expected, actual, 0.5);
+        assertEquals(sensor.toString(), expected, actual, 0.5);
     }
 
     @Test
