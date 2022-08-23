@@ -846,6 +846,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
 #endif // EFI_SHAFT_POSITION_INPUT
 
+#if HAL_USE_PAL
+	tsOutputChannels->extiOverflowCount = getExtiOverflowCounter();
+#endif
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_TPS_ACCEL:

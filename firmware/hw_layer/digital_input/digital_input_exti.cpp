@@ -161,6 +161,8 @@ private:
 
 static ExtiQueue<ExtiQueueEntry, 32> queue;
 
+static uint8_t overflowCounter = 0;
+
 CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
 
@@ -185,10 +187,16 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 			if (channel.Name) {
 				channel.Callback(channel.CallbackData, timestamp);
 			}
+		} else {
+			overflowCounter++;
 		}
 	}
 
 	OSAL_IRQ_EPILOGUE();
+}
+
+uint8_t getExtiOverflowCounter() {
+	return overflowCounter;
 }
 
 void handleExtiIsr(uint8_t index) {
