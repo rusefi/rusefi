@@ -562,6 +562,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			bool verbose = engine->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
 
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
+			    const char * prefix = verbose ? "[vrb]" : "[err]";
 
 				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
@@ -575,14 +576,17 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
-						efiPrintf("index=%d NaN gap, you have noise issues?",
-								i);
+						efiPrintf("%s index=%d NaN gap, you have noise issues?",
+								i,
+							    prefix
+                        );
 					} else {
 						float ratioTo = triggerShape.syncronizationRatioTo[i];
 
 						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
 
-						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%s %srpm=%d time=%d eventIndex=%d gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
+								prefix,
 								triggerConfiguration.PrintPrefix,
 								(int)Sensor::getOrZero(SensorType::Rpm),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
