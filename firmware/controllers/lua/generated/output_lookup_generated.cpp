@@ -451,5 +451,7 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.ISSValue;
 	if (strEqualCaseInsensitive(name, "rawBattery"))
 		return engine->outputChannels.rawBattery;
+	if (strEqualCaseInsensitive(name, "extiOverflowCount"))
+		return engine->outputChannels.extiOverflowCount;
 	return EFI_ERROR_CODE;
 }
