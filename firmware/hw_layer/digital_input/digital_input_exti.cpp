@@ -259,6 +259,10 @@ void efiExtiInit() {
 void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }
 void efiExtiDisablePin(brain_pin_e) { }
 
+uint8_t getExtiOverflowCounter() {
+	return 0;
+}
+
 #endif
 
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
