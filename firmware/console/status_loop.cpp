@@ -54,6 +54,7 @@
 #include "buffered_writer.h"
 #include "dynoview.h"
 #include "frequency_sensor.h"
+#include "digital_input_exti.h"
 
 extern bool main_loop_started;
 
