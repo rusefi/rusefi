@@ -151,6 +151,7 @@ public class DfuFlasher {
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
             wnd.append("ERROR: does not look like DFU has worked!");
+            wnd.append("Windows " + System.getProperty("os.version"));
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
