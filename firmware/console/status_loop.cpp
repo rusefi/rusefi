@@ -847,7 +847,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
 #endif // EFI_SHAFT_POSITION_INPUT
 
-#if HAL_USE_PAL
+#if HAL_USE_PAL && EFI_PROD_CODE
 	tsOutputChannels->extiOverflowCount = getExtiOverflowCounter();
 #endif
 
