@@ -117,7 +117,6 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowFuel.clear(ClearReason::LaunchCut);
 	}
 
-	
 	// Spark cut if launch control engaged
 	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
 		allowSpark.clear(ClearReason::LaunchCut);
