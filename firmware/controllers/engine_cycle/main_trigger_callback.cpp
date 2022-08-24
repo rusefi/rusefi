@@ -347,8 +347,15 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
 		return true;
 	}
+
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
 		// in rare cases engines do not like random sequential mode
+		return true;
+	}
+
+	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
+	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case
+	if (engineConfiguration->specs.cylindersCount > 1 && engineConfiguration->specs.cylindersCount % 2 == 1) {
 		return true;
 	}
 
