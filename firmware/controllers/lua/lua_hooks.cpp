@@ -208,7 +208,6 @@ AirmassModelBase& getLuaAirmassModel() {
 
 #if !EFI_UNIT_TEST
 static SimplePwm pwms[LUA_PWM_COUNT];
-static OutputPin pins[LUA_PWM_COUNT];
 
 struct P {
 	SimplePwm& pwm;
@@ -237,7 +236,7 @@ static int lua_startPwm(lua_State* l) {
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		engineConfiguration->luaOutputPins[p.idx], &pins[p.idx],
+		engineConfiguration->luaOutputPins[p.idx], &enginePins.luaOutputPins[p.idx],
 		freq, duty
 	);
 
@@ -246,8 +245,8 @@ static int lua_startPwm(lua_State* l) {
 
 void luaDeInitPins() {
 	// Simply de-init all pins - when the script runs again, they will be re-init'd
-	for (size_t i = 0; i < efi::size(pins); i++) {
-		pins[i].deInit();
+	for (size_t i = 0; i < efi::size(enginePins.luaOutputPins); i++) {
+		enginePins.luaOutputPins[i].deInit();
 	}
 }
 

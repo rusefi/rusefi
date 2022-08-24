@@ -186,6 +186,8 @@ public:
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
 	OutputPin o2heater;
+	OutputPin luaOutputPins[LUA_PWM_COUNT];
+
 	/**
 	 * brain board RED LED by default
 	 */
