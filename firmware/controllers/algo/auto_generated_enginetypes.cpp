@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Aug 17 05:06:59 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Aug 24 16:15:05 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -525,8 +525,6 @@ case TS_COMMAND_1:
   return "TS_COMMAND_1";
 case TS_COMMAND_11:
   return "TS_COMMAND_11";
-case TS_LUA_OUTPUT_CATEGORY:
-case TS_SOLENOID_CATEGORY:
 case TS_COMMAND_12:
   return "TS_COMMAND_12";
 case TS_COMMAND_13:
@@ -559,12 +557,14 @@ case TS_IGNITION_CATEGORY:
   return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
+case TS_LUA_OUTPUT_CATEGORY:
+  return "TS_LUA_OUTPUT_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SOLENOID_CATEGORY:
+  return "TS_SOLENOID_CATEGORY";
 case TS_UNUSED_23:
   return "TS_UNUSED_23";
-case TS_UNUSED_25:
-  return "TS_UNUSED_25";
 case TS_UNUSED_26:
   return "TS_UNUSED_26";
 case TS_UNUSED_27:
@@ -573,10 +573,6 @@ case TS_UNUSED_28:
   return "TS_UNUSED_28";
 case TS_UNUSED_29:
   return "TS_UNUSED_29";
-case TS_X30:
-  return "TS_UNUSED_30";
-case TS_X31:
-  return "TS_UNUSED_31";
 case TS_UNUSED_CJ125_CALIB:
   return "TS_UNUSED_CJ125_CALIB";
 case TS_WIDEBAND:
@@ -585,6 +581,10 @@ case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:
   return "TS_X14";
+case TS_X30:
+  return "TS_X30";
+case TS_X31:
+  return "TS_X31";
   }
  return NULL;
 }

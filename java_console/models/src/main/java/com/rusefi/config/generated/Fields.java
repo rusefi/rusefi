@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 23 23:50:22 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 24 16:16:02 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -353,7 +353,6 @@ public class Fields {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
-	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -371,12 +370,6 @@ public class Fields {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
-	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
-	public static final int CMD_TS_WBO_UPDATE = 0x15;
-	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int coastingFuelCutClt_offset = 2096;
@@ -1889,6 +1882,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1969688327;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2332,19 +2326,20 @@ public class Fields {
 	public static final int ts_command_e_TS_GRAB_TPS_WOT = 3;
 	public static final int ts_command_e_TS_IGNITION_CATEGORY = 18;
 	public static final int ts_command_e_TS_INJECTOR_CATEGORY = 19;
+	public static final int ts_command_e_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int ts_command_e_TS_RESET_TLE8888 = 8;
+	public static final int ts_command_e_TS_SOLENOID_CATEGORY = 25;
 	public static final int ts_command_e_TS_UNUSED_23 = 23;
-	public static final int ts_command_e_TS_UNUSED_25 = 25;
 	public static final int ts_command_e_TS_UNUSED_26 = 26;
 	public static final int ts_command_e_TS_UNUSED_27 = 27;
 	public static final int ts_command_e_TS_UNUSED_28 = 28;
 	public static final int ts_command_e_TS_UNUSED_29 = 29;
-	public static final int ts_command_e_TS_UNUSED_30 = 30;
-	public static final int ts_command_e_TS_UNUSED_31 = 31;
 	public static final int ts_command_e_TS_UNUSED_CJ125_CALIB = 24;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WRITE_FLASH = 10;
 	public static final int ts_command_e_TS_X14 = 20;
+	public static final int ts_command_e_TS_X30 = 30;
+	public static final int ts_command_e_TS_X31 = 31;
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
@@ -2378,7 +2373,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.24.all.2730171216";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.24.all.1969688327";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1220;
