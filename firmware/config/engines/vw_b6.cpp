@@ -218,7 +218,7 @@ function onTick()
 	counter = (counter + 1) % 16
 
 	rpm = getSensor("RPM") or 0
-	clt = = getSensor("CLT") or 0
+	clt = getSensor("CLT") or 0
 
 	setTwoBytes(canMotor1, 2, 4 * rpm)
 	txCan(1, MOTOR_1, 0, canMotor1)
