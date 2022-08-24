@@ -294,7 +294,7 @@ INCDIR = \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(RUSEFI_LIB_INC) \
 	$(CONFDIR) \
-	ext\FatFS \
+	ext/FatFS \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
 	$(PROJECT_DIR)/hw_layer/lcd \
