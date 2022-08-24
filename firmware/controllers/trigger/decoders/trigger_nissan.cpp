@@ -64,7 +64,6 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 }
 
 void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t totalWheel, size_t missing) {
-	s->setTriggerSynchronizationGap(0.33);
 
 	auto toothAngle = 360.0f / totalWheel;
 
@@ -83,9 +82,13 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
 
 	s->tdcPosition = 675;
+	s->useRiseEdge = true;
 
 	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
 	makeNissanPattern(s, 3, 36, 2);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2, 4);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6, 1.4);
 }
 
 void initializeNissanMR18crank(TriggerWaveform *s) {
@@ -95,6 +98,7 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 
 	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
 	makeNissanPattern(s, 2, 36, 2);
+	s->setTriggerSynchronizationGap(0.33);
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
