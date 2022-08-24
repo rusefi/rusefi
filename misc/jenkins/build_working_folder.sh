@@ -30,6 +30,7 @@ mkdir $DRIVERS_FOLDER
 mkdir $OPENBLT_FOLDER
 ls -l $FOLDER
 
+# this magic file is created manually using 'make_package2.bat'
 wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
 [ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 

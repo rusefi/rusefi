@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Aug 23 04:18:22 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Aug 24 16:15:07 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -52,7 +52,6 @@ public class EngineState {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
-	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -70,12 +69,6 @@ public class EngineState {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
-	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
-	public static final int CMD_TS_WBO_UPDATE = 0x15;
-	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int COMPOSITE_PACKET_COUNT = 1000;
@@ -494,35 +487,35 @@ public class EngineState {
 	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 136, FieldType.BIT, 0);
 	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 136, FieldType.BIT, 1);
 	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 136, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_22_3 = Field.create("UNUSEDBIT_22_3", 136, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_22_4 = Field.create("UNUSEDBIT_22_4", 136, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_22_5 = Field.create("UNUSEDBIT_22_5", 136, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_22_6 = Field.create("UNUSEDBIT_22_6", 136, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_22_7 = Field.create("UNUSEDBIT_22_7", 136, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_22_8 = Field.create("UNUSEDBIT_22_8", 136, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_22_9 = Field.create("UNUSEDBIT_22_9", 136, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_22_10 = Field.create("UNUSEDBIT_22_10", 136, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_22_11 = Field.create("UNUSEDBIT_22_11", 136, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_22_12 = Field.create("UNUSEDBIT_22_12", 136, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_22_13 = Field.create("UNUSEDBIT_22_13", 136, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_22_14 = Field.create("UNUSEDBIT_22_14", 136, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_22_15 = Field.create("UNUSEDBIT_22_15", 136, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_22_16 = Field.create("UNUSEDBIT_22_16", 136, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_22_17 = Field.create("UNUSEDBIT_22_17", 136, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_22_18 = Field.create("UNUSEDBIT_22_18", 136, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_22_19 = Field.create("UNUSEDBIT_22_19", 136, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_22_20 = Field.create("UNUSEDBIT_22_20", 136, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_22_21 = Field.create("UNUSEDBIT_22_21", 136, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_22_22 = Field.create("UNUSEDBIT_22_22", 136, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_22_23 = Field.create("UNUSEDBIT_22_23", 136, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_22_24 = Field.create("UNUSEDBIT_22_24", 136, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_22_25 = Field.create("UNUSEDBIT_22_25", 136, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_22_26 = Field.create("UNUSEDBIT_22_26", 136, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_22_27 = Field.create("UNUSEDBIT_22_27", 136, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_22_28 = Field.create("UNUSEDBIT_22_28", 136, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_22_29 = Field.create("UNUSEDBIT_22_29", 136, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_22_30 = Field.create("UNUSEDBIT_22_30", 136, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_22_31 = Field.create("UNUSEDBIT_22_31", 136, FieldType.BIT, 31);
+	public static final Field ISSYNCHRONIZEDPHASE = Field.create("ISSYNCHRONIZEDPHASE", 136, FieldType.BIT, 3);
+	public static final Field UNUSEDBIT_23_4 = Field.create("UNUSEDBIT_23_4", 136, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT_23_5 = Field.create("UNUSEDBIT_23_5", 136, FieldType.BIT, 5);
+	public static final Field UNUSEDBIT_23_6 = Field.create("UNUSEDBIT_23_6", 136, FieldType.BIT, 6);
+	public static final Field UNUSEDBIT_23_7 = Field.create("UNUSEDBIT_23_7", 136, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT_23_8 = Field.create("UNUSEDBIT_23_8", 136, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_23_9 = Field.create("UNUSEDBIT_23_9", 136, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_23_10 = Field.create("UNUSEDBIT_23_10", 136, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_23_11 = Field.create("UNUSEDBIT_23_11", 136, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_23_12 = Field.create("UNUSEDBIT_23_12", 136, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_23_13 = Field.create("UNUSEDBIT_23_13", 136, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_23_14 = Field.create("UNUSEDBIT_23_14", 136, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_23_15 = Field.create("UNUSEDBIT_23_15", 136, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_23_16 = Field.create("UNUSEDBIT_23_16", 136, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_23_17 = Field.create("UNUSEDBIT_23_17", 136, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_23_18 = Field.create("UNUSEDBIT_23_18", 136, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_23_19 = Field.create("UNUSEDBIT_23_19", 136, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_23_20 = Field.create("UNUSEDBIT_23_20", 136, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_23_21 = Field.create("UNUSEDBIT_23_21", 136, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_23_22 = Field.create("UNUSEDBIT_23_22", 136, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_23_23 = Field.create("UNUSEDBIT_23_23", 136, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_23_24 = Field.create("UNUSEDBIT_23_24", 136, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_23_25 = Field.create("UNUSEDBIT_23_25", 136, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_23_26 = Field.create("UNUSEDBIT_23_26", 136, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_23_27 = Field.create("UNUSEDBIT_23_27", 136, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_23_28 = Field.create("UNUSEDBIT_23_28", 136, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_23_29 = Field.create("UNUSEDBIT_23_29", 136, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_23_30 = Field.create("UNUSEDBIT_23_30", 136, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_23_31 = Field.create("UNUSEDBIT_23_31", 136, FieldType.BIT, 31);
 	public static final Field EGT1 = Field.create("EGT1", 140, FieldType.FLOAT);
 	public static final Field EGT2 = Field.create("EGT2", 144, FieldType.FLOAT);
 	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 148, FieldType.INT16).setScale(1.0);
@@ -629,35 +622,35 @@ public class EngineState {
 	CLUTCHUPSTATE,
 	CLUTCHDOWNSTATE,
 	BRAKEPEDALSTATE,
-	UNUSEDBIT_22_3,
-	UNUSEDBIT_22_4,
-	UNUSEDBIT_22_5,
-	UNUSEDBIT_22_6,
-	UNUSEDBIT_22_7,
-	UNUSEDBIT_22_8,
-	UNUSEDBIT_22_9,
-	UNUSEDBIT_22_10,
-	UNUSEDBIT_22_11,
-	UNUSEDBIT_22_12,
-	UNUSEDBIT_22_13,
-	UNUSEDBIT_22_14,
-	UNUSEDBIT_22_15,
-	UNUSEDBIT_22_16,
-	UNUSEDBIT_22_17,
-	UNUSEDBIT_22_18,
-	UNUSEDBIT_22_19,
-	UNUSEDBIT_22_20,
-	UNUSEDBIT_22_21,
-	UNUSEDBIT_22_22,
-	UNUSEDBIT_22_23,
-	UNUSEDBIT_22_24,
-	UNUSEDBIT_22_25,
-	UNUSEDBIT_22_26,
-	UNUSEDBIT_22_27,
-	UNUSEDBIT_22_28,
-	UNUSEDBIT_22_29,
-	UNUSEDBIT_22_30,
-	UNUSEDBIT_22_31,
+	ISSYNCHRONIZEDPHASE,
+	UNUSEDBIT_23_4,
+	UNUSEDBIT_23_5,
+	UNUSEDBIT_23_6,
+	UNUSEDBIT_23_7,
+	UNUSEDBIT_23_8,
+	UNUSEDBIT_23_9,
+	UNUSEDBIT_23_10,
+	UNUSEDBIT_23_11,
+	UNUSEDBIT_23_12,
+	UNUSEDBIT_23_13,
+	UNUSEDBIT_23_14,
+	UNUSEDBIT_23_15,
+	UNUSEDBIT_23_16,
+	UNUSEDBIT_23_17,
+	UNUSEDBIT_23_18,
+	UNUSEDBIT_23_19,
+	UNUSEDBIT_23_20,
+	UNUSEDBIT_23_21,
+	UNUSEDBIT_23_22,
+	UNUSEDBIT_23_23,
+	UNUSEDBIT_23_24,
+	UNUSEDBIT_23_25,
+	UNUSEDBIT_23_26,
+	UNUSEDBIT_23_27,
+	UNUSEDBIT_23_28,
+	UNUSEDBIT_23_29,
+	UNUSEDBIT_23_30,
+	UNUSEDBIT_23_31,
 	EGT1,
 	EGT2,
 	DESIREDRPMLIMIT,

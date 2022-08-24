@@ -1920,16 +1920,6 @@ end_struct
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 
-! todo: replace with ts_command_e_ usages
-#define CMD_TS_X14 20
-#define CMD_TS_WBO_UPDATE 0x15
-! 0x16
-#define CMD_TS_BENCH_CATEGORY 22
-#define CMD_KEYPAD 0x17
-#define CMD_TS_LUA_OUTPUT_CATEGORY 33
-#define CMD_TS_X31 49
-#define CMD_TS_SOLENOID_CATEGORY 41
-
 #define CMD_ECU_UNLOCK "unlock"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"

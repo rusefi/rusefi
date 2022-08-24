@@ -1,5 +1,12 @@
 ! units,scale,offset,min,max,digits
 
+!
+! this https://en.wikipedia.org/wiki/God_object is DEPRECATED
+! the dream is to move many or most of the state out into smaller structures/classes
+! See also LiveData.yaml
+!
+
+
 struct_no_prefix output_channels_s
 
 bit sd_present
