@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
  - Inverted vvt control #4464
  - Lua canRxAdd bus parameter handling #4467
  - STM32Bootloader driver install from console requests elevation #4313
+ - VQ trigger gaps improvement #4469
 
 ### Removed
 
