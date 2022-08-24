@@ -540,6 +540,7 @@ typedef enum {
 	TS_IGNITION_CATEGORY = 18,
 	TS_INJECTOR_CATEGORY = 19,
 	TS_X14 = 20,
+	// 0x15
 	TS_WIDEBAND = 21,
 	TS_BENCH_CATEGORY = 22,
 	TS_UNUSED_23 = 23,
@@ -549,9 +550,11 @@ typedef enum {
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
 	TS_UNUSED_29 = 29,
-	TS_UNUSED_30 = 30,
-	TS_UNUSED_31 = 31,
+	TS_X30 = 30,
+	TS_X31 = 31,
 	TS_CRAZY = 32,
+	TS_LUA_OUTPUT_CATEGORY = 33,
+	TS_SOLENOID_CATEGORY = 41,
 } ts_command_e;
 
 typedef enum {

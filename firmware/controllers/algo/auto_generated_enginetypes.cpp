@@ -525,6 +525,8 @@ case TS_COMMAND_1:
   return "TS_COMMAND_1";
 case TS_COMMAND_11:
   return "TS_COMMAND_11";
+case TS_LUA_OUTPUT_CATEGORY:
+case TS_SOLENOID_CATEGORY:
 case TS_COMMAND_12:
   return "TS_COMMAND_12";
 case TS_COMMAND_13:
@@ -571,9 +573,9 @@ case TS_UNUSED_28:
   return "TS_UNUSED_28";
 case TS_UNUSED_29:
   return "TS_UNUSED_29";
-case TS_UNUSED_30:
+case TS_X30:
   return "TS_UNUSED_30";
-case TS_UNUSED_31:
+case TS_X31:
   return "TS_UNUSED_31";
 case TS_UNUSED_CJ125_CALIB:
   return "TS_UNUSED_CJ125_CALIB";
