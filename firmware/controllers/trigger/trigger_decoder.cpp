@@ -93,6 +93,21 @@ void TriggerDecoderBase::resetCurrentCycleState() {
 
 #if EFI_SHAFT_POSITION_INPUT
 
+void PrimaryTriggerDecoder::resetHasFullSync() {
+#if EFI_UNIT_TEST
+	efiAssertVoid(OBD_PCM_Processor_Fault, engine != nullptr, "no engine reference");
+#endif
+	// If this trigger doesn't need disambiguation, we already have phase sync
+	engine->engineState.isSynchronizedPhase = !m_needsDisambiguation;
+}
+
+// Returns true if syncEnginePhase has been called,
+// i.e. if we have enough VVT information to have full sync on
+// an indeterminite crank pattern
+bool PrimaryTriggerDecoder::hasSynchronizedPhase() const {
+	return engine->engineState.isSynchronizedPhase;
+}
+
 PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
 	: TriggerDecoderBase(name)
 	//https://en.cppreference.com/w/cpp/language/zero_initialization
@@ -389,7 +404,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	}
 
 	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
-	m_hasSynchronizedPhase = true;
+	engine->engineState.isSynchronizedPhase = true;
 
 	if (totalShift > 0) {
 		camResyncCounter++;

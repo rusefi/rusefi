@@ -168,10 +168,7 @@ public:
 	PrimaryTriggerDecoder(const char* name);
 	void resetTriggerState() override;
 
-	void resetHasFullSync() {
-		// If this trigger doesn't need disambiguation, we already have phase sync
-		m_hasSynchronizedPhase = !m_needsDisambiguation;
-	}
+	void resetHasFullSync();
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
@@ -208,12 +205,7 @@ public:
 	 */
 	void setLastEventTimeForInstantRpm(efitick_t nowNt);
 
-	// Returns true if syncEnginePhase has been called,
-	// i.e. if we have enough VVT information to have full sync on
-	// an indeterminite crank pattern
-	bool hasSynchronizedPhase() const {
-		return m_hasSynchronizedPhase;
-	}
+	bool hasSynchronizedPhase() const;
 
 	void setNeedsDisambiguation(bool needsDisambiguation) {
 		m_needsDisambiguation = needsDisambiguation;
@@ -232,7 +224,6 @@ private:
 	float m_instantRpmRatio = 0;
 
 	bool m_needsDisambiguation = false;
-	bool m_hasSynchronizedPhase = false;
 };
 
 class VvtTriggerDecoder : public TriggerDecoderBase {
