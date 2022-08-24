@@ -694,7 +694,6 @@ static void updateFlags() {
 	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	// todo: eliminate state copy logic by giving DfcoController it's owm xxx.txt and leveraging LiveData
 	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
-	engine->outputChannels.hasSynchronizedPhase = engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
 #if EFI_LAUNCH_CONTROL
 	engine->outputChannels.launchTriggered = engine->launchController.isLaunchCondition;
