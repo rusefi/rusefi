@@ -18,6 +18,7 @@ public enum live_data_e {
 	LDS_tps_accel_state,
 	LDS_trigger_central,
 	LDS_trigger_state,
+	LDS_trigger_state_primary,
 	LDS_wall_fuel_state,
 	LDS_idle_state,
 	LDS_ignition_state,
