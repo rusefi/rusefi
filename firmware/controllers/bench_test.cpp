@@ -169,14 +169,13 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
+static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-// todo: convert in lua bench test
-//	pinbench(delay, onTime, offTime, count,
-//		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
+	pinbench(delay, onTime, offTime, count,
+		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
 }
 
 /**
