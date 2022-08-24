@@ -99,6 +99,9 @@ running_fuel_s running
     bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
     bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
+
+! would have been nice to have this 'isSynchronizedPhase' on PrimaryTriggerDecoder but that would require
+! new trigger_primary_state.txt and multiple inheritance?
 	bit isSynchronizedPhase
 
     float egt1
