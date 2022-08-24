@@ -545,7 +545,7 @@ typedef enum {
 	TS_BENCH_CATEGORY = 22,
 	TS_UNUSED_23 = 23,
 	TS_UNUSED_CJ125_CALIB = 24,
-	TS_UNUSED_25 = 25,
+	TS_SOLENOID_CATEGORY = 25,
 	TS_UNUSED_26 = 26,
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
@@ -554,7 +554,6 @@ typedef enum {
 	TS_X31 = 31,
 	TS_CRAZY = 32,
 	TS_LUA_OUTPUT_CATEGORY = 33,
-	TS_SOLENOID_CATEGORY = 41,
 } ts_command_e;
 
 typedef enum {
