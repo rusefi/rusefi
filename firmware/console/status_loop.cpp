@@ -692,6 +692,7 @@ static void updateFlags() {
 	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
 	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
+	engine->outputChannels.hasSynchronizedPhase = engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
 #if EFI_LAUNCH_CONTROL
 	engine->outputChannels.launchTriggered = engine->launchController.isLaunchCondition;
