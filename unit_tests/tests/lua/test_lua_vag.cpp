@@ -40,6 +40,17 @@ TEST(LuaVag, packMotor1) {
 
 #define realMotor1Packet "\ndata = { 0x00, 0x027, 0x08A, 0x01A, 0x036, 0x04F, 0x019, 0x038}\n "
 
+TEST(LuaVag, unpackMotor1_engine_torq) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		engineTorque = getBitRange(data, 8, 8) * 0.39
+		return engineTorque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 15.21);
+}
+
 TEST(LuaVag, unpackMotor1_rpm) {
 	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
 	function testFunc()
@@ -61,3 +72,27 @@ TEST(LuaVag, unpackMotor1_tps) {
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 31.6);
 }
+
+TEST(LuaVag, unpackMotor1_torq_loss) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		torqueLoss = getBitRange(data, 48, 8) * 0.39
+		return torqueLoss
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 9.75);
+}
+
+
+TEST(LuaVag, unpackMotor1_torq_req) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		requestedTorque = getBitRange(data, 56, 8) * 0.39
+		return requestedTorque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 21.84);
+}
+
