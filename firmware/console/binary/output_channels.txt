@@ -38,7 +38,6 @@ bit isKnockChipOk;
 bit launchTriggered;
 bit isTps2Error;
 bit isIdleClosedLoop;
-bit isIdleCoasting;
 
 
 uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
