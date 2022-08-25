@@ -110,6 +110,14 @@ percent_t IdleController::getRunningOpenLoop(float rpm, float clt, SensorResult 
 
 	running += iacByTpsTaper;
 
+	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit + engineConfiguration->airTaperRpmRange;
+	iacByRpmTaper = interpolateClamped(
+		engineConfiguration->idlePidRpmUpperLimit, 0,
+		airTaperRpmUpperLimit, engineConfiguration->airByRpmTaper, 
+		rpm);
+
+	running += iacByRpmTaper;
+
 	return clampF(0, running, 100);
 }
 
