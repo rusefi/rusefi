@@ -56,14 +56,14 @@ void DfcoController::update() {
 		m_timeSinceNoCut.reset();
 	}
 
-	m_isDfco = isCut;
+	m_isDfco = newState;
 }
 
 bool DfcoController::cutFuel() const {
 	float cutDelay = engineConfiguration->dfcoDelay;
 
 	// 0 delay means cut immediately, aka timer has always expired
-	bool hasBeenDelay = (cutDelay == 0) || m_timeSinceNoCut.hasElapsedSeconds(cutDelay);
+	bool hasBeenDelay = (cutDelay == 0) || m_timeSinceNoCut.hasElapsedSec(cutDelay);
 
 	return m_isDfco && hasBeenDelay;
 }
