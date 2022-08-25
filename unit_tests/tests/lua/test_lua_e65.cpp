@@ -12,17 +12,6 @@
 		return checksum \
 	end "
 
-#define GET_BIT_RANGE "function getBitRange(data, bitIndex, bitWidth)  \
-	byteIndex = bitIndex >> 3  \
-	shift = bitIndex - byteIndex * 8  \
-	value = data[1 + byteIndex]  \
-	if (shift + bitWidth > 8) then  \
-		value = value + data[2 + byteIndex] * 256  \
-	end  \
-	mask = (1 << bitWidth) - 1  \
-	return (value >> shift) & mask  \
-end"
-
 // https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x3B4.md
 TEST(LuaE65, Battery) {
 	const char* realdata = TWO_BYTES_LSB R"(
@@ -96,7 +85,7 @@ pedal = 50
 }
 
 TEST(LuaE65, gearTorque) {
-	const char* realdata = GET_BIT_RANGE R"(
+	const char* realdata = GET_BIT_RANGE_LSB R"(
 
 	function testFunc()
 		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
@@ -107,7 +96,7 @@ TEST(LuaE65, gearTorque) {
 }
 
 TEST(LuaE65, gearTorque2) {
-	const char* realdata = GET_BIT_RANGE R"(
+	const char* realdata = GET_BIT_RANGE_LSB R"(
 
 	function testFunc()
 		data = {0x9F, 0x01, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
@@ -118,7 +107,7 @@ TEST(LuaE65, gearTorque2) {
 }
 
 TEST(LuaE65, gearTorque3) {
-	const char* realdata = GET_BIT_RANGE R"(
+	const char* realdata = GET_BIT_RANGE_LSB R"(
 
 	function testFunc()
 		data = {0x9F, 0xDF, 0x32, 0x20, 0x23, 0x30, 0xFF, 0x43}
