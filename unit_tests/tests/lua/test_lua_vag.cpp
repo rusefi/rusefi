@@ -62,6 +62,17 @@ TEST(LuaVag, unpackMotor1_rpm) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 1698.5);
 }
 
+TEST(LuaVag, unpackMotor1_inner_torq) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		innerTorqWithoutExt = getBitRange(data, 32, 8) * 0.4
+		return innerTorqWithoutExt
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 21.6);
+}
+
 TEST(LuaVag, unpackMotor1_tps) {
 	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
 	function testFunc()
