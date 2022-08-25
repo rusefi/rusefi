@@ -76,7 +76,10 @@ void endSimultaniousInjection(InjectionEvent *event) {
 }
 
 void InjectorOutputPin::open(efitick_t nowNt) {
+	// per-output counter for error detection
 	overlappingCounter++;
+	// global counter for logging
+	engine->engineState.fuelInjectionCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {

@@ -260,10 +260,6 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-	/**
-	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
-	 */
-	int globalSparkIdCounter = 0;
 
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
@@ -290,6 +286,7 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
+    // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
 	/**
 	 * this is based on engineSnifferRpmThreshold settings and current RPM
@@ -320,6 +317,7 @@ public:
 
 	/**
 	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 * todo: refactor to Timer?
 	 */
 	efitick_t ignitionOnTimeNt = 0;
 
