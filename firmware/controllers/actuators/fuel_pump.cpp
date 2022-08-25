@@ -1,4 +1,8 @@
-
+/**
+ * low pressure fuel pump control
+ * for high-pressure see HpfpController@high_pressure_fuel_pump
+ *
+*/
 #include "pch.h"
 
 #include "fuel_pump.h"

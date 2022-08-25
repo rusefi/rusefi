@@ -2,6 +2,9 @@
  * @file high_pressure_fuel_pump.cpp
  * @brief High Pressure Fuel Pump controller for GDI applications
  *
+ * TL,DR: we have constant displacement mechanical pump driven by camshaft
+ * here we control desired fuel high pressure by controlling relief/strain/spill valve electronically
+ *
  * @date Nov 6, 2021
  * @author Scott Smith, (c) 2021
  */
