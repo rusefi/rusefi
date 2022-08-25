@@ -8,6 +8,7 @@
 #include "pch.h"
 
 #include "bmw_n73.h"
+#include "lua_lib.h"
 
 void setEngineProteusBMW_N73_GDI() {
 
@@ -17,7 +18,7 @@ void setEngineProteusBMW_N73_GDI() {
  * set engine_type 9
  */
 void setEngineProteusGearboxManInTheMiddle() {
-	strncpy(config->luaScript, R"(
+	strncpy(config->luaScript, GET_BIT_RANGE_LSB R"(
 function getTwoBytes(data, offset, factor)
 	return (data[offset + 2] * 256 + data[offset + 1]) * factor
 end
@@ -25,17 +26,6 @@ end
 function setTwoBytes(data, offset, value)
 	data[offset + 1] = value % 255
 	data[offset + 2] = (value >> 8) % 255
-end
-
-function getBitRange(data, bitIndex, bitWidth)
-	byteIndex = bitIndex >> 3
-	shift = bitIndex - byteIndex * 8
-	value = data[1 + byteIndex]
-	if (shift + bitWidth > 8) then
-		value = value + data[2 + byteIndex] * 256
-	end
-	mask = (1 << bitWidth) - 1
-	return (value >> shift) & mask
 end
 
 function bmwChecksum(canID, data, offset, length)
