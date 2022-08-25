@@ -14,4 +14,5 @@ private:
 	bool m_isDfco = false;
 
 	Timer m_timeSinceCut;
+	Timer m_timeSinceNoCut;
 };
