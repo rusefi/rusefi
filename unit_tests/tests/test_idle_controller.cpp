@@ -205,8 +205,31 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(0, 0, 10));
 
 	// Check out of bounds - shouldn't leave the interval [0, 10]
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(0, -5));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(0, 20));
+	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(0, 0, -5));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(0, 0, 20));
+}
+
+TEST(idle_v2, runningOpenLoopRpmTaper) {
+	EngineTestHelper eth(TEST_ENGINE);
+	IdleController dut;
+
+	// Zero out base tempco table
+	setArrayValues(config->cltIdleCorr, 0.0f);
+
+	// Add 50% idle position
+	engineConfiguration->airByRpmTaper = 50;
+	// At 2000 RPM
+	engineConfiguration->airTaperRpmRange = 500;
+	engineConfiguration->idlePidRpmUpperLimit = 1500;
+
+	// Check in-bounds points
+	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(1500, 0, 0));
+	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(1750, 0, 0));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(2000, 0, 0));
+
+	// Check out of bounds - shouldn't leave the interval [1500, 2000]
+	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(200, 0, 0));
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(3000, 0, 0));
 }
 
 struct MockOpenLoopIdler : public IdleController {
