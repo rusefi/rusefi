@@ -113,7 +113,7 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 	return clampF(0, running, 100);
 }
 
-percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
+percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
 	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
 	isCoasting = phase == Phase::Cranking;
@@ -123,10 +123,9 @@ percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, 
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
-	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
 	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting;
 	if (useIacTableForCoasting) {
-		return interpolate2d(clt, config->iacCoastingBins, config->iacCoasting);
+		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
 	}
 
 	percent_t running = getRunningOpenLoop(clt, tps);
@@ -335,7 +334,7 @@ float IdleController::getIdlePosition() {
 			idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
-			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
+			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;

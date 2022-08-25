@@ -26,7 +26,7 @@ struct IIdleController {
 	virtual int getTargetRpm(float clt) = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) = 0;
-	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) = 0;
+	virtual float getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) = 0;
 	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
 	virtual float getCrankingTaperFraction() const = 0;
 	virtual bool isIdlingOrTaper() const = 0;
@@ -51,7 +51,7 @@ public:
 	// OPEN LOOP CORRECTIONS
 	percent_t getCrankingOpenLoop(float clt) const override;
 	percent_t getRunningOpenLoop(float clt, SensorResult tps) override;
-	percent_t getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) override;
+	percent_t getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) override;
 
 	float getIdleTimingAdjustment(int rpm) override;
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);

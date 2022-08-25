@@ -223,7 +223,7 @@ TEST(idle_v2, testOpenLoopCranking) {
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillOnce(Return(44));
 
 	// Should return the value from getCrankingOpenLoop, and ignore running numbers
-	EXPECT_FLOAT_EQ(44, dut.getOpenLoop(ICP::Cranking, 30, 0, 0));
+	EXPECT_FLOAT_EQ(44, dut.getOpenLoop(ICP::Cranking, 0, 30, 0, 0));
 }
 
 TEST(idle_v2, openLoopRunningTaper) {
@@ -234,20 +234,20 @@ TEST(idle_v2, openLoopRunningTaper) {
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
 
 	// 0 cycles - no taper yet, pure cranking value
-	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Running, 30, 0, 0));
-	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 0));
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Running, 0, 30, 0, 0));
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 0));
 
 	// 1/2 taper - half way, 50% each value -> outputs 50
-	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Running, 30, 0, 0.5f));
-	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 0.5f));
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Running, 0, 30, 0, 0.5f));
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 0.5f));
 
 	// 1x taper - fully tapered, should be running value
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 1.0f));
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 1.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 0, 30, 0, 1.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 1.0f));
 
 	// 2x taper - still fully tapered, should be running value
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 2.0f));
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 2.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 0, 30, 0, 2.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 0, 30, 0, 2.0f));
 }
 
 TEST(idle_v2, getCrankingTaperFraction) {
@@ -285,12 +285,12 @@ TEST(idle_v2, openLoopCoastingTable) {
 	// enable & configure feature
 	engineConfiguration->useIacTableForCoasting = true;
 	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		config->iacCoastingBins[i] = 10 * i;
+		config->iacCoastingRpmBins[i] = 100 * i;
 		config->iacCoasting[i] = 5 * i;
 	}
 
-	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0, 2));
-	EXPECT_FLOAT_EQ(20, dut.getOpenLoop(ICP::Coasting, 40, 0, 2));
+	EXPECT_FLOAT_EQ(40, dut.getOpenLoop(ICP::Coasting, 800, 0, 0, 2));
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Coasting, 1500, 0, 0, 2));
 }
 
 extern int timeNowUs;
@@ -353,7 +353,7 @@ TEST(idle_v2, closedLoopDeadzone) {
 struct IntegrationIdleMock : public IdleController {
 	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
 	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
-	MOCK_METHOD(float, getOpenLoop, (ICP phase, float clt, SensorResult tps, float crankingTaperFraction), (override));
+	MOCK_METHOD(float, getOpenLoop, (ICP phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, int rpm, int target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
 };
@@ -367,7 +367,7 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -382,7 +382,7 @@ TEST(idle_v2, IntegrationManual) {
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
-	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps, 0.3f))
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, 950, expectedClt, expectedTps, 0.3f))
 		.WillOnce(Return(13));
 
 	// getClosedLoop() should not be called!
@@ -401,7 +401,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -416,7 +416,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
-	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps, 0.4f))
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, 950, expectedClt, expectedTps, 0.4f))
 		.WillOnce(Return(13));
 
 	// Closed loop should get called
@@ -438,7 +438,7 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -453,7 +453,7 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
-	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, expectedClt, expectedTps, 0.5f))
+	EXPECT_CALL(dut, getOpenLoop(ICP::Idling, 950, expectedClt, expectedTps, 0.5f))
 		.WillOnce(Return(75));
 
 	// Closed loop should get called
