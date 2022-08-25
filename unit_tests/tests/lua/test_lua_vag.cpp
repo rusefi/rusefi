@@ -38,3 +38,26 @@ TEST(LuaVag, packMotor1) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
 }
 
+#define realMotor1Packet "\ndata = { 0x00, 0x027, 0x08A, 0x01A, 0x036, 0x04F, 0x019, 0x038}\n "
+
+TEST(LuaVag, unpackMotor1_rpm) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		rpm = getBitRange(data, 16, 16) * 0.25
+		return rpm
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 1698.5);
+}
+
+TEST(LuaVag, unpackMotor1_tps) {
+	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	function testFunc()
+		tps = getBitRange(data, 40, 8) * 0.4
+		return tps
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 31.6);
+}
