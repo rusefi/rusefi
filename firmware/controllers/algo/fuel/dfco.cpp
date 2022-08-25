@@ -60,7 +60,7 @@ void DfcoController::update() {
 }
 
 bool DfcoController::cutFuel() const {
-	float cutDelay = 0;
+	float cutDelay = engineConfiguration->dfcoDelay;
 
 	// 0 delay means cut immediately, aka timer has always expired
 	bool hasBeenDelay = (cutDelay == 0) || m_timeSinceNoCut.hasElapsedSeconds(cutDelay);

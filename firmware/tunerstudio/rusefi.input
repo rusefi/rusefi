@@ -3885,6 +3885,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Vehicle speed restore below",	coastingFuelCutVssLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+		field = "Fuel cut delay", dfcoDelay, {coastingFuelCutEnabled == 1}
 		field = "Inhibit closed loop fuel after cut", noFuelTrimAfterDfcoTime, {coastingFuelCutEnabled == 1}
 
     dialog = rotaryDialog, "Rotary"
