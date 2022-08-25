@@ -1,3 +1,7 @@
+/**
+ * file lua_lib.h
+ */
+
 #define ARRAY_EQUALS "function equals(data1, data2) \
  \
   local index = 1 \
@@ -38,3 +42,20 @@ end \
 		data[offset + 2] = value & 0xff \
 	end \
 	"
+
+// one day we shall get Preprocessor macros with C++11 raw string literals
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55971
+#define GET_BIT_RANGE_LSB " \
+function getBitRange(data, bitIndex, bitWidth) \
+	byteIndex = bitIndex >> 3 \
+	shift = bitIndex - byteIndex * 8 \
+	value = data[1 + byteIndex] \
+	if (shift + bitWidth > 8) then \
+		value = value + data[2 + byteIndex] * 256 \
+	end \
+	mask = (1 << bitWidth) - 1 \
+	return (value >> shift) & mask \
+end \
+"
+
+
