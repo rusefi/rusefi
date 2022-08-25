@@ -42,6 +42,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_electronic_throttle, ElectronicThrottle.VALUES, "electronic_throttle");
         register(live_data_e.LDS_knock_controller, KnockController.VALUES, "knock_controller");
         register(live_data_e.LDS_wideband_state, WidebandController.VALUES, "AemXSeriesLambda");
+        register(live_data_e.LDS_trigger_state_primary, TriggerStatePrimary.VALUES, "trigger_decoder");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
