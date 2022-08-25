@@ -332,8 +332,13 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
 	if (etbRpmLimit != 0) {
 		auto fullyLimitedRpm = etbRpmLimit + engineConfiguration->etbRevLimitRange;
+
+		float targetPositionBefore = targetPosition;
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
+
+		// rev limit active if the position was changed by rev limiter
+		etbRevLimitActive = absF(targetPosition - targetPositionBefore) > 0.1f;
 	}
 
 	float minPosition = engineConfiguration->etbMinimumPosition;
