@@ -51,8 +51,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isTps2Error;
 	if (strEqualCaseInsensitive(name, "isIdleClosedLoop"))
 		return engine->outputChannels.isIdleClosedLoop;
-	if (strEqualCaseInsensitive(name, "isIdleCoasting"))
-		return engine->outputChannels.isIdleCoasting;
 	if (strEqualCaseInsensitive(name, "RPMValue"))
 		return engine->outputChannels.RPMValue;
 	if (strEqualCaseInsensitive(name, "rpmAcceleration"))

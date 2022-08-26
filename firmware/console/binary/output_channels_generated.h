@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Aug 23 23:49:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Aug 26 00:40:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -121,16 +121,16 @@ struct output_channels_s {
 	bool isIdleClosedLoop : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool isIdleCoasting : 1 {};
+	bool unusedBit_28_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool unusedBit_28_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_28_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_28_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1318,4 +1318,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Aug 23 23:49:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Aug 26 00:40:04 UTC 2022

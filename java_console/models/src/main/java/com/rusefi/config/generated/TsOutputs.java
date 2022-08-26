@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Aug 24 16:15:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Aug 26 00:40:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -414,10 +414,10 @@ public class TsOutputs {
 	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 25);
 	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 26);
 	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 27);
-	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_29_29 = Field.create("UNUSEDBIT_29_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_29_30 = Field.create("UNUSEDBIT_29_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_29_31 = Field.create("UNUSEDBIT_29_31", 0, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_28_28 = Field.create("UNUSEDBIT_28_28", 0, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_28_29 = Field.create("UNUSEDBIT_28_29", 0, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_28_30 = Field.create("UNUSEDBIT_28_30", 0, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_28_31 = Field.create("UNUSEDBIT_28_31", 0, FieldType.BIT, 31);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01);
@@ -938,10 +938,10 @@ public class TsOutputs {
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
-	ISIDLECOASTING,
-	UNUSEDBIT_29_29,
-	UNUSEDBIT_29_30,
-	UNUSEDBIT_29_31,
+	UNUSEDBIT_28_28,
+	UNUSEDBIT_28_29,
+	UNUSEDBIT_28_30,
+	UNUSEDBIT_28_31,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
