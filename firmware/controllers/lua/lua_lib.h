@@ -6,7 +6,7 @@
  \
   local index = 1 \
   while data1[index] ~= nil do \
-	if data1[index] ~= data1[index] then \
+	if data1[index] ~= data2[index] then \
        return -1 - index \
     end \
 	index = index + 1 \
