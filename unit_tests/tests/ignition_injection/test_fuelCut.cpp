@@ -182,7 +182,14 @@ TEST(fuelCut, delay) {
 	EXPECT_NORMAL();
 
 	// Change nothing else, but advance time and update again
-	timeNowUs += 1.1e6;
+	timeNowUs += 0.9e6;
+	eth.engine.periodicFastCallback();
+
+	// too soon, still no cut
+	EXPECT_NORMAL();
+
+	// Change nothing else, but advance time and update again
+	timeNowUs += 0.2e6;
 	eth.engine.periodicFastCallback();
 
 	// Should now be cut!
