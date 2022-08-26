@@ -6,7 +6,7 @@
  \
   local index = 1 \
   while data1[index] ~= nil do \
-	if data1[index] ~= data2[index] then \
+	if math.floor(data1[index]) ~= math.floor(data2[index]) then \
        return -1 - index \
     end \
 	index = index + 1 \
@@ -39,7 +39,7 @@ function arrayToString(arr)  \
 	local str = \"\"   \
 	local index = 1   \
 	while arr[index] ~= nil do  \
-		str = str..\" \"..toHexString(arr[index])  \
+		str = str..\" \"..toHexString(math.floor(arr[index]))  \
 		index = index + 1  \
 	end  \
 	return str  \
