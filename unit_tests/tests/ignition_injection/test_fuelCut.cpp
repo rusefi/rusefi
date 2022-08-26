@@ -11,6 +11,10 @@
 
 using ::testing::_;
 
+// Define some helpers for not-cut and cut
+#define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration)
+#define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->injectionDuration)
+
 TEST(fuelCut, coasting) {
 	EngineTestHelper eth(TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
@@ -48,10 +52,6 @@ TEST(fuelCut, coasting) {
 
 	// process
 	eth.engine.periodicFastCallback();
-
-	// Define some helpers for not-cut and cut
-	#define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration)
-	#define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->injectionDuration)
 
 	// this is normal injection mode (the throttle is opened), no fuel cut-off
 	EXPECT_NORMAL();
@@ -130,3 +130,73 @@ TEST(fuelCut, coasting) {
 	EXPECT_CUT();
 }
 
+TEST(fuelCut, delay) {
+	EngineTestHelper eth(TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	// configure coastingFuelCut
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	// set cranking threshold
+	engineConfiguration->cranking.rpm = 999;
+
+	// delay is 1 second
+	engineConfiguration->dfcoDelay = 1.0f;
+
+	// basic engine setup
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	Sensor::setMockValue(SensorType::Map, 0);
+
+	// mock CLT - just above threshold ('hot engine')
+	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
+	Sensor::setMockValue(SensorType::Clt, hotClt);
+	// mock TPS - throttle is opened
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
+	// set 'running' RPM - just above RpmHigh threshold
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
+	// 'advance' time (amount doesn't matter)
+	eth.moveTimeForwardUs(1000);
+
+	const float normalInjDuration = 1.5f;
+
+	extern int timeNowUs;
+	timeNowUs = 1e6;
+
+	// process
+	eth.engine.periodicFastCallback();
+
+	// this is normal injection mode (the throttle is opened), no fuel cut-off
+	EXPECT_NORMAL();
+
+	// 'releasing' the throttle
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	eth.engine.periodicFastCallback();
+
+	// Shouldn't cut yet, since not enough time has elapsed
+	EXPECT_NORMAL();
+
+	// Change nothing else, but advance time and update again
+	timeNowUs += 0.9e6;
+	eth.engine.periodicFastCallback();
+
+	// too soon, still no cut
+	EXPECT_NORMAL();
+
+	// Change nothing else, but advance time and update again
+	timeNowUs += 0.2e6;
+	eth.engine.periodicFastCallback();
+
+	// Should now be cut!
+	EXPECT_CUT();
+
+	// Put the throtle back, and it should come back instantly
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+}
