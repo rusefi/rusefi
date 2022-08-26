@@ -28,6 +28,7 @@ TEST(LuaVag, packMotor1) {
 		rpm = 1207.1
 		innerTorqWithoutExt = 21.6
 		tps = 31.6
+		torqueLoss = 9.75
 		requestedTorque = 21.84
 
 		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
@@ -35,10 +36,11 @@ TEST(LuaVag, packMotor1) {
 		data[2] = engineTorque / 0.39
 		setTwoBytes(data, 2, rpm / 0.25)
 		data[5] = innerTorqWithoutExt / 0.4
+ 		data[6] = tps / 0.4
 
-print(arrayToString(data))
+		print(arrayToString(data))
 
-		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x00, 0x00, 0x00 }
+		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x00, 0x00 }
 --		print(data)
 		return equals(data, expected)
 	end
