@@ -11,6 +11,11 @@
 static int lua_efi_print(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 
+	// we have somewhat similar debug code at serial_can.cpp
+#if EFI_UNIT_TEST
+	printf("[LUA] %s\n", msg);
+#endif
+
 	efiPrintf("LUA: %s", msg);
 
 	return 0;
