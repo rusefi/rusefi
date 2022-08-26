@@ -21,15 +21,48 @@ TEST(LuaVag, Checksum) {
 
 // LSB (Least Significant Byte comes first) "Intel"
 TEST(LuaVag, packMotor1) {
-	const char* realdata = ARRAY_EQUALS SET_TWO_BYTES R"(
+	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
 
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
 
 	function testFunc()
+		engineTorque = 15.21
 		rpm = 1207.1
+		innerTorqWithoutExt = 21.6
+		tps = 31.6
+		requestedTorque = 21.84
+
 		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
-		setTwoBytes(data, 2, 4 * rpm)
-		expected = { 0x00, 0x00, 0xDC, 0x12, 0x00, 0x00, 0x00, 0x00 }
+		data[2] = engineTorque / 0.39
+		setTwoBytes(data, 2, rpm / 0.25)
+		data[5] = innerTorqWithoutExt / 0.4
+
+print(arrayToString(data))
+
+		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x00, 0x00, 0x00 }
 --		print(data)
 		return equals(data, expected)
 	end
@@ -38,7 +71,7 @@ TEST(LuaVag, packMotor1) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
 }
 
-#define realMotor1Packet "\ndata = { 0x00, 0x027, 0x08A, 0x01A, 0x036, 0x04F, 0x019, 0x038}\n "
+#define realMotor1Packet "\ndata = { 0x00, 0x27, 0x8A, 0x1A, 0x36, 0x4F, 0x19, 0x38}\n "
 
 TEST(LuaVag, unpackMotor1_engine_torq) {
 	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(

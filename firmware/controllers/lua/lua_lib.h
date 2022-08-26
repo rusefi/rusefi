@@ -18,6 +18,11 @@
 end \
 	"
 
+
+#define PRINT_ARRAY "hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, \"A\", \"B\", \"C\", \"D\", \"E\", \"F\" } \
+\
+"
+
 // LSB (Least Significant Byte comes first) "Intel"
 #define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)        \
 		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
