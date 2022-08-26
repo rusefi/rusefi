@@ -23,17 +23,6 @@ TEST(LuaVag, Checksum) {
 TEST(LuaVag, packMotor1) {
 	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
 
-
-function arrayToString(arr)
-	local str = ""
-	local index = 1
-	while arr[index] ~= nil do
-		str = str.." "..toHexString(arr[index])
-		index = index + 1
-	end
-	return str
-end
-
 	function testFunc()
 		engineTorque = 15.21
 		rpm = 1207.1

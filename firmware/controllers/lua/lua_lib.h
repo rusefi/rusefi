@@ -35,7 +35,16 @@ function toHexString(num)  \
 	return result  \
 end   \
 \
-\
+function arrayToString(arr)  \
+	local str = \"\"   \
+	local index = 1   \
+	while arr[index] ~= nil do  \
+		str = str..\" \"..toHexString(arr[index])  \
+		index = index + 1  \
+	end  \
+	return str  \
+end  \
+ \
 \
 "
 
