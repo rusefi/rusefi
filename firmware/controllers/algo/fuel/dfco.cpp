@@ -51,13 +51,21 @@ void DfcoController::update() {
 	// If fuel is cut, reset the timer
 	if (newState) {
 		m_timeSinceCut.reset();
+	} else {
+		// If fuel is not cut, reset the not-cut timer
+		m_timeSinceNoCut.reset();
 	}
 
 	m_isDfco = newState;
 }
 
 bool DfcoController::cutFuel() const {
-	return m_isDfco;
+	float cutDelay = engineConfiguration->dfcoDelay;
+
+	// 0 delay means cut immediately, aka timer has always expired
+	bool hasBeenDelay = (cutDelay == 0) || m_timeSinceNoCut.hasElapsedSec(cutDelay);
+
+	return m_isDfco && hasBeenDelay;
 }
 
 float DfcoController::getTimeSinceCut() const {
