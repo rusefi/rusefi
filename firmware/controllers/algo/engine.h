@@ -435,7 +435,6 @@ public:
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
 #if EFI_UNIT_TEST
-    // todo: refactor into EngineModule to get more consistent with other mocks?
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
 
