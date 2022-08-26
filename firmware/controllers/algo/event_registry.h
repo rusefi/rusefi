@@ -119,7 +119,7 @@ public:
 	event_trigger_position_s dwellPosition{};
 	/**
 	 * Sequential number of currently processed spark event
-	 * @see globalSparkIdCounter
+	 * @see engineState.sparkCounter
 	 */
 	int sparkId = 0;
 	/**

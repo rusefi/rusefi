@@ -260,10 +260,6 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-	/**
-	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
-	 */
-	int globalSparkIdCounter = 0;
 
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
@@ -290,6 +286,7 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
+    // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
 	/**
 	 * this is based on engineSnifferRpmThreshold settings and current RPM
@@ -307,12 +304,6 @@ public:
 
 	bool slowCallBackWasInvoked = false;
 
-	/**
-	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
-	 * todo: looks like there is a bug here? 64 bit storage an 32 bit time logic? anyway this feature is mostly a dream at this point
-	 */
-	efitimems64_t callFromPitStopEndTime = 0;
-
 	RpmCalculator rpmCalculator;
 
 	bool startStopState = false;
@@ -320,6 +311,7 @@ public:
 
 	/**
 	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 * todo: refactor to Timer?
 	 */
 	efitick_t ignitionOnTimeNt = 0;
 
@@ -363,9 +355,6 @@ public:
 	void updateSlowSensors();
 	void updateSwitchInputs();
 	void updateTriggerWaveform();
-
-	bool clutchUpState = false;
-	bool brakePedalState = false;
 
 	bool isRunningPwmTest = false;
 
@@ -445,7 +434,9 @@ public:
 
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
+#if EFI_UNIT_TEST
 	AirmassModelBase* mockAirmassModel = nullptr;
+#endif
 
 	LimpManager limpManager;
 

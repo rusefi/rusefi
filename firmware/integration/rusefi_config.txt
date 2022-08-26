@@ -1429,7 +1429,9 @@ tChargeMode_e tChargeMode;
 
 	uint8_t autoscale maxCamPhaseResolveRpm;Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.;"rpm", 50, 0, 0, 12500, 0
 
-	int8_t[11] unused4080;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
+
+	int8_t[10] unused4080;;"", 1, 0, 0, 0, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"

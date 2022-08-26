@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 24 22:15:40 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 26 01:48:39 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -479,6 +479,7 @@ public class Fields {
 	public static final int debugMapAveraging_offset = 856;
 	public static final int debugMode_offset = 1604;
 	public static final int debugTriggerSync_offset = 678;
+	public static final int dfcoDelay_offset = 3121;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int digitalPotentiometerChipSelect1_offset = 662;
 	public static final int digitalPotentiometerChipSelect2_offset = 664;
@@ -1882,7 +1883,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1913309982;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2373,10 +2373,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.24.all.1913309982";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.26.all.2939755753";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1224;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1236;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2411,7 +2411,7 @@ public class Fields {
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
-	public static final int unused4080_offset = 3121;
+	public static final int unused4080_offset = 3122;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
@@ -3706,7 +3706,8 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDETO17 = Field.create("TRIGGERGAPOVERRIDETO17", 3112, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO18 = Field.create("TRIGGERGAPOVERRIDETO18", 3116, FieldType.FLOAT);
 	public static final Field MAXCAMPHASERESOLVERPM = Field.create("MAXCAMPHASERESOLVERPM", 3120, FieldType.INT8).setScale(50.0);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3121, FieldType.INT8).setScale(1.0);
+	public static final Field DFCODELAY = Field.create("DFCODELAY", 3121, FieldType.INT8).setScale(0.1);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3122, FieldType.INT8).setScale(1.0);
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3132, FieldType.INT8).setScale(1.0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3133, FieldType.INT8, hpfp_cam_e).setScale(1.0);
@@ -5062,6 +5063,7 @@ public class Fields {
 	TRIGGERGAPOVERRIDETO17,
 	TRIGGERGAPOVERRIDETO18,
 	MAXCAMPHASERESOLVERPM,
+	DFCODELAY,
 	UNUSED4080,
 	HPFPCAMLOBES,
 	HPFPCAM,

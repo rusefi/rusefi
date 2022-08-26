@@ -7,11 +7,17 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::A1: return "2N - Temperature Sensor";
+		case Gpio::A3: return "4I - PPS1";
 		case Gpio::A6: return "3G - CAM";
+		case Gpio::A7: return "4G - PPS2 OR TEMPERATURE SENSOR";
+		case Gpio::B0: return "4H - TPS2";
 		case Gpio::B1: return "3E - CRANK";
 		case Gpio::C1: return "2M - Pressure Sensor";
 		case Gpio::C4: return "1V - Clutch Switch";
 		case Gpio::C5: return "1Q AC Switch";
+		case Gpio::C6: return "ETB EN";
+		case Gpio::C7: return "ETB +";
+		case Gpio::C8: return "ETB -";
 		case Gpio::D10: return "3Z - Injector 4";
 		case Gpio::D11: return "3Y - Injector 3";
 		case Gpio::D12: return "Radiator Fan";

@@ -129,7 +129,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
 	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
-			boolToString(engine->clutchUpState));
+			boolToString(engine->engineState.clutchUpState));
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->engineState.clutchDownState));
 
@@ -240,10 +240,6 @@ static void printTemperatureInfo() {
 			hwPortname(engineConfiguration->acRelayPin));
 
 #endif /* EFI_ANALOG_SENSORS */
-}
-
-void setCallFromPitStop(int durationMs) {
-	engine->callFromPitStopEndTime = currentTimeMillis() + durationMs;
 }
 
 static void setCrankingRpm(int value) {
@@ -1011,7 +1007,6 @@ static void setTpsErrorDetectionTooHigh(int v) {
 }
 
 const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
-		{"call_from_pitstop", setCallFromPitStop},
 #if EFI_ENGINE_CONTROL
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},

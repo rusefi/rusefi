@@ -26,6 +26,7 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Time delay before DFCO #4292
 
 ### Fixed
  - Inverted vvt control #4464

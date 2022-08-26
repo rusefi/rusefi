@@ -1362,6 +1362,7 @@ gaugeCategory = Outputs
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
 	indicator = { isPumpOn }, "No Pump", "Pump", white, black, green, black
+	indicator = { etbRevLimitActive }, "", "ETB RPM Limit", white, black, yellow, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
@@ -3885,6 +3886,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Vehicle speed restore below",	coastingFuelCutVssLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+		field = "Fuel cut delay", dfcoDelay, {coastingFuelCutEnabled == 1}
 		field = "Inhibit closed loop fuel after cut", noFuelTrimAfterDfcoTime, {coastingFuelCutEnabled == 1}
 
     dialog = rotaryDialog, "Rotary"
