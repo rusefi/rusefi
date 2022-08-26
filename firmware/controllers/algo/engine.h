@@ -356,9 +356,6 @@ public:
 	void updateSwitchInputs();
 	void updateTriggerWaveform();
 
-	bool clutchUpState = false;
-	bool brakePedalState = false;
-
 	bool isRunningPwmTest = false;
 
 	/**
