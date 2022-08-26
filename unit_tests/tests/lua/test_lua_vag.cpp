@@ -38,10 +38,11 @@ TEST(LuaVag, packMotor1) {
 		data[5] = innerTorqWithoutExt / 0.4
  		data[6] = tps / 0.4
 		data[7] = torqueLoss / 0.39
+		data[8] =                         torqueLoss / 0.39
 
 		print(arrayToString(data))
 
-		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x19, 0x00 }
+		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x19, 0x19 }
 --		print(data)
 		return equals(data, expected)
 	end
