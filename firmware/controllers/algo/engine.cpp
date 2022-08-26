@@ -324,13 +324,13 @@ void Engine::updateSwitchInputs() {
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}
-	engine->clutchUpState = getClutchUpState();
+	engine->engineState.clutchUpState = getClutchUpState();
 
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
-	engine->brakePedalState = getBrakePedalState();
+	engine->engineState.brakePedalState = getBrakePedalState();
 
 #endif // EFI_GPIO_HARDWARE
 }

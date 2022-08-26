@@ -129,7 +129,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
 	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
-			boolToString(engine->clutchUpState));
+			boolToString(engine->engineState.clutchUpState));
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->engineState.clutchDownState));
 
