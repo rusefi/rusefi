@@ -116,15 +116,17 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
 	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
-	isCoasting = phase == Phase::Cranking;
+	isCranking = phase == Phase::Cranking;
+	isIdleCoasting = phase == Phase::Coasting;
+
 	// if we're cranking, nothing more to do.
-	if (isCoasting) {
+	if (isCranking) {
 		return crankingValvePosition;
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
-	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting;
+	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && isIdleCoasting;
 	if (useIacTableForCoasting) {
 		return interpolate2d(clt, config->iacCoastingBins, config->iacCoasting);
 	}
@@ -349,7 +351,6 @@ float IdleController::getIdlePosition() {
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
-		engine->outputChannels.isIdleCoasting = phase == Phase::Coasting;
 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
