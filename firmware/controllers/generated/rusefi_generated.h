@@ -489,6 +489,7 @@
 #define debugMapAveraging_offset 856
 #define debugMode_offset 1604
 #define debugTriggerSync_offset 678
+#define dfcoDelay_offset 3121
 #define DIGIPOT_COUNT 4
 #define digitalPotentiometerChipSelect1_offset 662
 #define digitalPotentiometerChipSelect2_offset 664
@@ -1934,7 +1935,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1676334737
+#define SIGNATURE_HASH 2939755753
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2490,7 +2491,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.26.all.1676334737"
+#define TS_SIGNATURE "rusEFI 2022.08.26.all.2939755753"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2531,7 +2532,7 @@
 #define unused1129_offset 1628
 #define unused1130_offset 1628
 #define unused1740b2_offset 1628
-#define unused4080_offset 3121
+#define unused4080_offset 3122
 #define unused962_offset 1040
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372
