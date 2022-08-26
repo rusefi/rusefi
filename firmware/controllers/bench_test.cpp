@@ -495,13 +495,6 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif /* EFI_CJ125 */
 		break;
 
-	case TS_CRAZY:
-		if (index == 0x3456) {
-			// call to pit
-			setCallFromPitStop(30000);
-		}
-		break;
-
 	case TS_X30:
 		fatalErrorForPresetApply();
 		setEngineType(index);

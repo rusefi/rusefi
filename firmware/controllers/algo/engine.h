@@ -304,12 +304,6 @@ public:
 
 	bool slowCallBackWasInvoked = false;
 
-	/**
-	 * remote telemetry: if not zero, time to stop flashing 'CALL FROM PIT STOP' light
-	 * todo: looks like there is a bug here? 64 bit storage an 32 bit time logic? anyway this feature is mostly a dream at this point
-	 */
-	efitimems64_t callFromPitStopEndTime = 0;
-
 	RpmCalculator rpmCalculator;
 
 	bool startStopState = false;
