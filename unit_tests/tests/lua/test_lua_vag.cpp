@@ -23,19 +23,6 @@ TEST(LuaVag, Checksum) {
 TEST(LuaVag, packMotor1) {
 	const char* realdata = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
 
-function toHexString(num)
-	if num == 0 then
-		return '0'
-	end
-
-	local result = ""
-	while num > 0 do
-		local n = num % 16
-		result = hexstr[n + 1] ..result
-		num = math.floor(num / 16)
-	end
-	return result
-end
 
 function arrayToString(arr)
 	local str = ""
