@@ -89,7 +89,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 	return engineConfiguration->crankingIACposition * mult;
 }
 
-percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
+percent_t IdleController::getRunningOpenLoop(float rpm, float clt, SensorResult tps) {
 	float running =
 		engineConfiguration->manIdlePosition		// Base idle position (slider)
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
@@ -110,10 +110,18 @@ percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) {
 
 	running += iacByTpsTaper;
 
+	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit + engineConfiguration->airTaperRpmRange;
+	iacByRpmTaper = interpolateClamped(
+		engineConfiguration->idlePidRpmUpperLimit, 0,
+		airTaperRpmUpperLimit, engineConfiguration->airByRpmTaper, 
+		rpm);
+
+	running += iacByRpmTaper;
+
 	return clampF(0, running, 100);
 }
 
-percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
+percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
 	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
 	isCranking = phase == Phase::Cranking;
@@ -131,7 +139,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, 
 		return interpolate2d(clt, config->iacCoastingBins, config->iacCoasting);
 	}
 
-	percent_t running = getRunningOpenLoop(clt, tps);
+	percent_t running = getRunningOpenLoop(rpm, clt, tps);
 
 	// Interpolate between cranking and running over a short time
 	// This clamps once you fall off the end, so no explicit check for >1 required
@@ -337,7 +345,7 @@ float IdleController::getIdlePosition() {
 			idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
-			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
+			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
