@@ -1947,6 +1947,10 @@ end_struct
 #define TS_RESPONSE_OUT_OF_RANGE 0x84
 #define TS_RESPONSE_FRAMING_ERROR 0x8D
 
+! we need 3 seconds on single-bank to survive write-to-flash reconnect
+! dual-bank devices can go with 300 for better TS reconnect experience
+#define TS_BLOCK_READ_TIMEOUT 3000
+
 #define MLQ_HEADER_SIZE 22
 #define MLQ_FIELD_HEADER_SIZE 55
 
