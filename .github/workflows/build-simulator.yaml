@@ -16,6 +16,10 @@ jobs:
         distribution: 'zulu'
         java-version: '8'
 
+    - name: Print GCC version
+      working-directory: .
+      run: gcc -v
+
     - name: Install multilib
       run: |
         sudo apt-get update
