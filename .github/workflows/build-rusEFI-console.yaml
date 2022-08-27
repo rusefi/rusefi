@@ -20,7 +20,7 @@ jobs:
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install sshpass
+        run: sudo apt-get install sshpass mtools
 
       - name: Generate Configs to survive meta info change
         working-directory: ./firmware/
