@@ -1053,6 +1053,8 @@ gaugeCategory = PIDs
    etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    etbStatus_errorGauge = etbStatus_error,"ETB 1 PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    etbStatus_resetCounterGauge = etbStatus_resetCounter,"ETB 1 PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+
+gaugeCategory = CAN
    canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
    canWriteOkGauge = canWriteOk,"canWriteOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    canWriteNotOkGauge = canWriteNotOk,"canWriteNotOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
