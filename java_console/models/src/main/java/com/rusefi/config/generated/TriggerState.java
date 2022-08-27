@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Aug 24 16:15:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Aug 27 22:25:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -344,6 +344,7 @@ public class TriggerState {
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
+	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final char TS_COMMAND_F = 'F';
