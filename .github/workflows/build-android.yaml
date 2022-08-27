@@ -15,6 +15,9 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
 
+      - name: Install Tools
+        run: sudo apt-get install mtools
+
       - name: Generate Configs to survive meta info change
         working-directory: ./firmware/
         run: ./gen_config_default.sh
