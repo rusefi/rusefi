@@ -15,6 +15,10 @@ jobs:
           distribution: 'zulu'
           java-version: '8'
 
+      - name: Generate Configs to survive meta info change
+        working-directory: ./firmware/
+        run: ./gen_config_default.sh
+
       - name: Test Compiler
         run: javac -version
 

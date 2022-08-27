@@ -22,6 +22,10 @@ jobs:
       - name: Install Tools
         run: sudo apt-get install sshpass
 
+      - name: Generate Configs to survive meta info change
+        working-directory: ./firmware/
+        run: ./gen_config_default.sh
+
       - name: Generate Java (Antlr)
         working-directory: ./android
         run: ./gradlew :config_definition:generateGrammarSource
@@ -64,7 +68,8 @@ jobs:
         working-directory: ./android
         run: ./gradlew shadowJar
 
-      - name: Generate Enums using freshly compiler tool
+      # this job focuses of tool validation so we do not push fresh enums here
+      - name: Generate Enums using freshly compiled tool
         working-directory: ./firmware/
         run: ./gen_enum_to_string.sh
 
