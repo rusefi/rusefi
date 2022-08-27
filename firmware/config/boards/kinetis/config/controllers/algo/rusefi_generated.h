@@ -1935,7 +1935,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1699996174
+#define SIGNATURE_HASH 2813928190
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2372,6 +2372,7 @@
 #define triggerSimulatorPins2_offset 750
 #define triggerSimulatorPins3_offset 752
 #define TRIM_SIZE 4
+#define TS_BLOCK_READ_TIMEOUT 3000
 #define TS_BURN_COMMAND 'B'
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
@@ -2491,7 +2492,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.27.kin.1699996174"
+#define TS_SIGNATURE "rusEFI 2022.08.27.kin.2813928190"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
