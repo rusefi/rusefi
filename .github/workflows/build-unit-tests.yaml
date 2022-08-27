@@ -33,7 +33,7 @@ jobs:
 
     - name: Generate Configs for unit tests
       working-directory: ./firmware/
-      run: bash gen_config_default.sh
+      run: ./gen_config_default.sh
 
     - name: Generate Enums
       working-directory: ./firmware/
