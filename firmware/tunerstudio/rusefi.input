@@ -1037,17 +1037,21 @@ gaugeCategory = LUA
    luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
    luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 
-gaugeCategory = PIDs
+gaugeCategory = Alternator PID
    alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    alternatorStatus_dTermGauge = alternatorStatus_dTerm,"Alternator PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    alternatorStatus_outputGauge = alternatorStatus_output,"Alternator PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    alternatorStatus_errorGauge = alternatorStatus_error,"Alternator PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"Alternator PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+
+gaugeCategory = IDLE PID
    idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_outputGauge = idleStatus_output,"Idle PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_errorGauge = idleStatus_error,"Idle PID error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_resetCounterGauge = idleStatus_resetCounter,"Idle PID resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+
+gaugeCategory = ETB PID
    etbStatus_iTermGauge = etbStatus_iTerm,"ETB 1 PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    etbStatus_dTermGauge = etbStatus_dTerm,"ETB 1 PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    etbStatus_outputGauge = etbStatus_output,"ETB 1 PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
