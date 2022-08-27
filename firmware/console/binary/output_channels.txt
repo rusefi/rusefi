@@ -14,7 +14,7 @@ bit isIgnitionEnabledIndicator;
 bit isInjectionEnabledIndicator;
 bit sd_logging_internal
 bit unusedb4;
-bit isFuelPumpOn;
+bit unusedb5;
 bit isFanOn;radiator fan
 bit isO2HeaterOn;
 bit checkEngine;

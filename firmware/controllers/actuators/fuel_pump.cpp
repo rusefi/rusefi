@@ -16,13 +16,9 @@ void FuelPumpController::onSlowCallback() {
 	// If there was a trigger event recently, turn on the pump, the engine is running!
 	engineTurnedRecently = engine->triggerCentral.engineMovedRecently();
 
-	isPumpOn = isPrime || engineTurnedRecently;
+	isFuelPumpOn = isPrime || engineTurnedRecently;
 
-	enginePins.fuelPumpRelay.setValue(isPumpOn);
-
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.isFuelPumpOn = isPumpOn;
-#endif
+	enginePins.fuelPumpRelay.setValue(isFuelPumpOn);
 }
 
 void FuelPumpController::onIgnitionStateChanged(bool ignitionOnParam) {
