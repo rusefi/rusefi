@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 28 00:49:10 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 28 12:43:32 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1734,7 +1734,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5624;
 	public static final int pedalToTpsRpmBins_offset = 5632;
 	public static final int pedalToTpsTable_offset = 5560;
-	public static final int persistent_config_s_size = 21300;
+	public static final int persistent_config_s_size = 21348;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1883,6 +1883,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1356260071;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2062,6 +2063,9 @@ public class Fields {
 	public static final int test557pin_offset = 846;
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
+	public static final int throttle2TrimRpmBins_offset = 21342;
+	public static final int throttle2TrimTable_offset = 21300;
+	public static final int throttle2TrimTpsBins_offset = 21336;
 	public static final int throttlePedalPositionAdcChannel_offset = 528;
 	public static final int throttlePedalPositionSecondAdcChannel_offset = 688;
 	public static final int throttlePedalSecondaryUpVoltage_offset = 1612;
@@ -2104,7 +2108,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 3684;
 	public static final int torqueRpmBins_offset = 3672;
 	public static final int torqueTable_offset = 3636;
-	public static final int TOTAL_CONFIG_SIZE = 21300;
+	public static final int TOTAL_CONFIG_SIZE = 21348;
 	public static final int totalGearsCount_offset = 1584;
 	public static final int tps1_1AdcChannel_offset = 456;
 	public static final int tps1_2AdcChannel_offset = 686;
@@ -2374,7 +2378,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.28.all.3480125490";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.28.all.1356260071";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1236;
@@ -3940,6 +3944,9 @@ public class Fields {
 	public static final Field TCU_TCCUNLOCKSPEED = Field.create("TCU_TCCUNLOCKSPEED", 21276, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_32SPEEDBINS = Field.create("TCU_32SPEEDBINS", 21284, FieldType.INT8).setScale(1.0);
 	public static final Field TCU_32VALS = Field.create("TCU_32VALS", 21292, FieldType.INT8).setScale(1.0);
+	public static final Field THROTTLE2TRIMTABLE = Field.create("THROTTLE2TRIMTABLE", 21300, FieldType.INT8).setScale(0.1);
+	public static final Field THROTTLE2TRIMTPSBINS = Field.create("THROTTLE2TRIMTPSBINS", 21336, FieldType.INT8).setScale(1.0);
+	public static final Field THROTTLE2TRIMRPMBINS = Field.create("THROTTLE2TRIMRPMBINS", 21342, FieldType.INT8).setScale(100.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5296,5 +5303,8 @@ public class Fields {
 	TCU_TCCUNLOCKSPEED,
 	TCU_32SPEEDBINS,
 	TCU_32VALS,
+	THROTTLE2TRIMTABLE,
+	THROTTLE2TRIMTPSBINS,
+	THROTTLE2TRIMRPMBINS,
 	};
 }

@@ -1776,7 +1776,7 @@
 #define pedalToTpsRpmBins_offset 5632
 #define pedalToTpsTable_offset 5560
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 21300
+#define persistent_config_s_size 21348
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1935,7 +1935,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3480125490
+#define SIGNATURE_HASH 1356260071
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2121,6 +2121,9 @@
 #define test557pin_offset 846
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
+#define throttle2TrimRpmBins_offset 21342
+#define throttle2TrimTable_offset 21300
+#define throttle2TrimTpsBins_offset 21336
 #define throttlePedalPositionAdcChannel_offset 528
 #define throttlePedalPositionSecondAdcChannel_offset 688
 #define throttlePedalSecondaryUpVoltage_offset 1612
@@ -2165,7 +2168,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 21300
+#define TOTAL_CONFIG_SIZE 21348
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2492,7 +2495,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.28.cypress.3480125490"
+#define TS_SIGNATURE "rusEFI 2022.08.28.cypress.1356260071"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
