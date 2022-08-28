@@ -344,6 +344,7 @@ void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
+		snprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
 
 		cfg.pin = Gpio::Unassigned;
 		cfg.dutyIfError = 0;

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Aug 26 00:40:04 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Aug 27 22:25:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -344,6 +344,7 @@ public class TsOutputs {
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
+	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final char TS_COMMAND_F = 'F';
@@ -391,7 +392,7 @@ public class TsOutputs {
 	public static final Field ISINJECTIONENABLEDINDICATOR = Field.create("ISINJECTIONENABLEDINDICATOR", 0, FieldType.BIT, 2);
 	public static final Field SD_LOGGING_INTERNAL = Field.create("SD_LOGGING_INTERNAL", 0, FieldType.BIT, 3);
 	public static final Field UNUSEDB4 = Field.create("UNUSEDB4", 0, FieldType.BIT, 4);
-	public static final Field ISFUELPUMPON = Field.create("ISFUELPUMPON", 0, FieldType.BIT, 5);
+	public static final Field UNUSEDB5 = Field.create("UNUSEDB5", 0, FieldType.BIT, 5);
 	public static final Field ISFANON = Field.create("ISFANON", 0, FieldType.BIT, 6);
 	public static final Field ISO2HEATERON = Field.create("ISO2HEATERON", 0, FieldType.BIT, 7);
 	public static final Field CHECKENGINE = Field.create("CHECKENGINE", 0, FieldType.BIT, 8);
@@ -915,7 +916,7 @@ public class TsOutputs {
 	ISINJECTIONENABLEDINDICATOR,
 	SD_LOGGING_INTERNAL,
 	UNUSEDB4,
-	ISFUELPUMPON,
+	UNUSEDB5,
 	ISFANON,
 	ISO2HEATERON,
 	CHECKENGINE,
