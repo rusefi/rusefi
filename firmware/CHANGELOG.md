@@ -27,6 +27,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Time delay before DFCO #4292
+ - Idle coasting position table is now RPM-based, instead of CLT-based #4487
 
 ### Fixed
  - Inverted vvt control #4464
