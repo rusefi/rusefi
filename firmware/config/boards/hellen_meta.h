@@ -190,6 +190,7 @@ void detectHellenBoardType();
 #define H_SPI3_SCK Gpio::C10
 #define H_SPI3_CS Gpio::A15
 
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void setHellenSdCardSpi2() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
@@ -207,3 +208,4 @@ static void setHellenSdCardSpi3() {
 	engineConfiguration->sdCardCsPin = H_SPI3_CS;
 	engineConfiguration->is_enabled_spi_3 = true;
 }
+#pragma GCC diagnostic pop

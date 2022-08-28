@@ -27,7 +27,7 @@ using namespace luaaa;
 #endif
 
 static int lua_readpin(lua_State* l) {
-	auto msg = luaL_checkstring(l, 1);
+	auto msg __attribute__((unused)) = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
 	brain_pin_e pin = parseBrainPin(msg);
 	if (!isBrainPinValid(pin)) {
@@ -616,7 +616,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "findCurveIndex", [](lua_State* l) {
 		auto name = luaL_checklstring(l, 1, nullptr);
 		auto result = getCurveIndexByName(name);
-		if (result == EFI_ERROR_CODE) {
+		if (result == (int) EFI_ERROR_CODE) {
 			lua_pushnil(l);
 		} else {
 			// TS counts curve from 1 so convert indexing here
@@ -633,7 +633,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto index = getTableIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (index == (int) EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
 				// TS counts curve from 1 so convert indexing here
@@ -648,7 +648,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 			auto defaultValue = luaL_checknumber(l, 2);
 
 			auto index = getSettingIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (index == (int) EFI_ERROR_CODE) {
 				lua_pushnumber(l, defaultValue);
 			} else {
 				// TS counts curve from 1 so convert indexing here

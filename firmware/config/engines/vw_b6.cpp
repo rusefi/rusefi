@@ -14,6 +14,7 @@
 #include "mre_meta.h"
 #include "proteus_meta.h"
 
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void commonPassatB6() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -127,6 +128,7 @@ static void commonPassatB6() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
+#pragma GCC diagnostic pop
 
 /**
  * set engine_type 39

@@ -11,7 +11,9 @@
 		"system_error": "cpp",
 		"vector": "cpp",
 		"xhash": "cpp",
-		"xtree": "cpp"
+		"xtree": "cpp",
+		"cstring": "cpp",
+		"cstdio": "cpp"
 	},
 	"editor.detectIndentation": false,
 	"editor.insertSpaces": false,

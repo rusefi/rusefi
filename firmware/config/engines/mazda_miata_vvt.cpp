@@ -362,10 +362,12 @@ static void setCommonMazdaNB() {
 	set4EC_AT();
 }
 
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void setMazdaMiataEngineNB1Defaults() {
 	setCommonMazdaNB();
 	strcpy(engineConfiguration->engineCode, "NB1");
 }
+#pragma GCC diagnostic pop
 
 static void setMazdaMiataEngineNB2Defaults() {
 	strcpy(engineConfiguration->engineCode, "NB2");

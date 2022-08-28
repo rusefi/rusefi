@@ -164,7 +164,9 @@ __attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*
  * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion() {
-	engine->globalConfigurationVersion++;
+	//https://www.modernescpp.com/index.php/volatile-and-other-small-improvements-in-c-20
+	//engine->globalConfigurationVersion++;
+	engine->globalConfigurationVersion = engine->globalConfigurationVersion + 1;
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
 #endif /* EFI_DEFAILED_LOGGING */

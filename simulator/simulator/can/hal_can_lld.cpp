@@ -31,6 +31,7 @@
 #include <sys/ioctl.h>
 
 #include <cstring>
+#include <bits/stdc++.h>
 #include <queue>
 
 /*===========================================================================*/
