@@ -43,7 +43,6 @@ TEST(LuaVag, packMotor1) {
 		print(arrayToString(data))
 
 		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x19, 0x38 }
---		print(data)
 		return equals(data, expected)
 	end
 	)";
@@ -54,14 +53,14 @@ TEST(LuaVag, packMotor1) {
 #define realMotor1Packet "\ndata = { 0x00, 0x27, 0x8A, 0x1A, 0x36, 0x4F, 0x19, 0x38}\n "
 
 TEST(LuaVag, unpackMotor1_engine_torq) {
-	const char* realdata = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor1Packet	R"(
 	function testFunc()
 		engineTorque = getBitRange(data, 8, 8) * 0.39
 		return engineTorque
 	end
 	)";
 
-    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 15.21);
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 15.21);
 }
 
 TEST(LuaVag, unpackMotor1_rpm) {
@@ -119,4 +118,64 @@ TEST(LuaVag, unpackMotor1_torq_req) {
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 21.84);
 }
+
+#define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA}\n "
+
+TEST(LuaVag, packMotor3) {
+	const char* script = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
+
+	function testFunc()
+		tps = 100
+		iat = 25.5
+
+		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+ 		data[2] = (iat + 48) / 0.75
+		data[3] = tps / 0.4
+ 		data[8] = tps / 0.4
+
+		print(arrayToString(data))
+
+		expected = { 0x00, 0x62, 0xFA, 0x00, 0x00, 0x00, 0x00, 0xFA }
+		return equals(data, expected)
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+}
+
+
+TEST(LuaVag, unpackMotor3_tps) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
+	function testFunc()
+		tps = getBitRange(data, 56, 8) * 0.40
+		return tps
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 100);
+}
+
+TEST(LuaVag, unpackMotor3_pps) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
+	function testFunc()
+		pps = getBitRange(data, 16, 8) * 0.40
+		return pps
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 100);
+}
+
+TEST(LuaVag, unpackMotor3_iat) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
+	function testFunc()
+		iat = getBitRange(data, 8, 8) * 0.75 - 48
+		return iat
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 25.5);
+}
+
 
