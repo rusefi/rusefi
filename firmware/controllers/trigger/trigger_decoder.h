@@ -11,6 +11,7 @@
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 #include "trigger_state_generated.h"
+#include "trigger_state_primary_generated.h"
 #include "timer.h"
 
 class TriggerDecoderBase;
@@ -163,7 +164,7 @@ private:
 /**
  * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
  */
-class PrimaryTriggerDecoder : public TriggerDecoderBase {
+class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
 public:
 	PrimaryTriggerDecoder(const char* name);
 	void resetTriggerState() override;
@@ -232,7 +233,6 @@ private:
 	float m_instantRpmRatio = 0;
 
 	bool m_needsDisambiguation = false;
-	bool m_hasSynchronizedPhase = false;
 };
 
 class VvtTriggerDecoder : public TriggerDecoderBase {

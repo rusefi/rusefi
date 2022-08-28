@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Aug 23 04:18:22 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Aug 27 22:25:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -52,7 +52,6 @@ public class EngineState {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
-	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -70,12 +69,6 @@ public class EngineState {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
-	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
-	public static final int CMD_TS_WBO_UPDATE = 0x15;
-	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int COMPOSITE_PACKET_COUNT = 1000;
@@ -351,6 +344,7 @@ public class EngineState {
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
+	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final char TS_COMMAND_F = 'F';
@@ -527,6 +521,8 @@ public class EngineState {
 	public static final Field EGT2 = Field.create("EGT2", 144, FieldType.FLOAT);
 	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 148, FieldType.INT16).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_150 = Field.create("ALIGNMENTFILL_AT_150", 150, FieldType.INT8).setScale(1.0);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 152, FieldType.INT).setScale(1.0);
+	public static final Field SPARKCOUNTER = Field.create("SPARKCOUNTER", 156, FieldType.INT).setScale(1.0);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -662,5 +658,7 @@ public class EngineState {
 	EGT2,
 	DESIREDRPMLIMIT,
 	ALIGNMENTFILL_AT_150,
+	FUELINJECTIONCOUNTER,
+	SPARKCOUNTER,
 	};
 }

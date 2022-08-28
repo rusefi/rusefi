@@ -3845,9 +3845,13 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
-gapsCount=1
-gapFrom.0=0.247500
-gapTo.0=0.412500
+gapsCount=3
+gapFrom.0=0.200000
+gapTo.0=0.500000
+gapFrom.1=2.000000
+gapTo.1=4.000000
+gapFrom.2=0.600000
+gapTo.2=1.400000
 # end of meta section
 event 0 0 1 0.00
 event 1 0 0 5.00

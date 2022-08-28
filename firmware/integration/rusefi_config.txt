@@ -1429,7 +1429,9 @@ tChargeMode_e tChargeMode;
 
 	uint8_t autoscale maxCamPhaseResolveRpm;Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.;"rpm", 50, 0, 0, 12500, 0
 
-	int8_t[11] unused4080;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
+
+	int8_t[10] unused4080;;"", 1, 0, 0, 0, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
@@ -1924,16 +1926,6 @@ end_struct
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 
-! todo: replace with ts_command_e_ usages
-#define CMD_TS_X14 20
-#define CMD_TS_WBO_UPDATE 0x15
-! 0x16
-#define CMD_TS_BENCH_CATEGORY 22
-#define CMD_KEYPAD 0x17
-#define CMD_TS_LUA_OUTPUT_CATEGORY 33
-#define CMD_TS_X31 49
-#define CMD_TS_SOLENOID_CATEGORY 41
-
 #define CMD_ECU_UNLOCK "unlock"
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"
@@ -1958,6 +1950,10 @@ end_struct
 #define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
 #define TS_RESPONSE_OUT_OF_RANGE 0x84
 #define TS_RESPONSE_FRAMING_ERROR 0x8D
+
+! we need 3 seconds on single-bank to survive write-to-flash reconnect
+! dual-bank devices can go with 300 for better TS reconnect experience
+#define TS_BLOCK_READ_TIMEOUT 3000
 
 #define MLQ_HEADER_SIZE 22
 #define MLQ_FIELD_HEADER_SIZE 55

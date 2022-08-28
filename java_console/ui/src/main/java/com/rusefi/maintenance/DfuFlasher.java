@@ -144,16 +144,22 @@ public class DfuFlasher {
             wnd.append("Please power cycle device to exit DFU mode");
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            appendWindowsVersion(wnd);
             wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
-            wnd.append("ERROR: does not look like DFU has worked!");
+            appendWindowsVersion(wnd);
+            wnd.append("Windows " + System.getProperty("os.version"));
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
+    }
+
+    private static void appendWindowsVersion(StatusWindow wnd) {
+        wnd.append("ERROR: does not look like DFU has worked!");
     }
 
     private static void appendDeviceReport(StatusWindow wnd) {

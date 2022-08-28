@@ -9,8 +9,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isInjectionEnabledIndicator;
 	if (strEqualCaseInsensitive(name, "sd_logging_internal"))
 		return engine->outputChannels.sd_logging_internal;
-	if (strEqualCaseInsensitive(name, "isFuelPumpOn"))
-		return engine->outputChannels.isFuelPumpOn;
 	if (strEqualCaseInsensitive(name, "isFanOn"))
 		return engine->outputChannels.isFanOn;
 	if (strEqualCaseInsensitive(name, "isO2HeaterOn"))
@@ -51,8 +49,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isTps2Error;
 	if (strEqualCaseInsensitive(name, "isIdleClosedLoop"))
 		return engine->outputChannels.isIdleClosedLoop;
-	if (strEqualCaseInsensitive(name, "isIdleCoasting"))
-		return engine->outputChannels.isIdleCoasting;
 	if (strEqualCaseInsensitive(name, "RPMValue"))
 		return engine->outputChannels.RPMValue;
 	if (strEqualCaseInsensitive(name, "rpmAcceleration"))
@@ -451,5 +447,7 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.ISSValue;
 	if (strEqualCaseInsensitive(name, "rawBattery"))
 		return engine->outputChannels.rawBattery;
+	if (strEqualCaseInsensitive(name, "extiOverflowCount"))
+		return engine->outputChannels.extiOverflowCount;
 	return EFI_ERROR_CODE;
 }

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 23 04:19:27 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 28 00:49:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -353,7 +353,6 @@ public class Fields {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
-	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -371,12 +370,6 @@ public class Fields {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
-	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
-	public static final int CMD_TS_WBO_UPDATE = 0x15;
-	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int coastingFuelCutClt_offset = 2096;
@@ -486,6 +479,7 @@ public class Fields {
 	public static final int debugMapAveraging_offset = 856;
 	public static final int debugMode_offset = 1604;
 	public static final int debugTriggerSync_offset = 678;
+	public static final int dfcoDelay_offset = 3121;
 	public static final int DIGIPOT_COUNT = 4;
 	public static final int digitalPotentiometerChipSelect1_offset = 662;
 	public static final int digitalPotentiometerChipSelect2_offset = 664;
@@ -2310,6 +2304,7 @@ public class Fields {
 	public static final int triggerSimulatorPins2_offset = 750;
 	public static final int triggerSimulatorPins3_offset = 752;
 	public static final int TRIM_SIZE = 4;
+	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
@@ -2332,19 +2327,20 @@ public class Fields {
 	public static final int ts_command_e_TS_GRAB_TPS_WOT = 3;
 	public static final int ts_command_e_TS_IGNITION_CATEGORY = 18;
 	public static final int ts_command_e_TS_INJECTOR_CATEGORY = 19;
+	public static final int ts_command_e_TS_LUA_OUTPUT_CATEGORY = 33;
 	public static final int ts_command_e_TS_RESET_TLE8888 = 8;
+	public static final int ts_command_e_TS_SOLENOID_CATEGORY = 25;
 	public static final int ts_command_e_TS_UNUSED_23 = 23;
-	public static final int ts_command_e_TS_UNUSED_25 = 25;
 	public static final int ts_command_e_TS_UNUSED_26 = 26;
 	public static final int ts_command_e_TS_UNUSED_27 = 27;
 	public static final int ts_command_e_TS_UNUSED_28 = 28;
 	public static final int ts_command_e_TS_UNUSED_29 = 29;
-	public static final int ts_command_e_TS_UNUSED_30 = 30;
-	public static final int ts_command_e_TS_UNUSED_31 = 31;
 	public static final int ts_command_e_TS_UNUSED_CJ125_CALIB = 24;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WRITE_FLASH = 10;
 	public static final int ts_command_e_TS_X14 = 20;
+	public static final int ts_command_e_TS_X30 = 30;
+	public static final int ts_command_e_TS_X31 = 31;
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
@@ -2378,10 +2374,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.23.all.2730171216";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.28.all.3480125490";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1220;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1236;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2416,7 +2412,7 @@ public class Fields {
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
-	public static final int unused4080_offset = 3121;
+	public static final int unused4080_offset = 3122;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
@@ -3711,7 +3707,8 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDETO17 = Field.create("TRIGGERGAPOVERRIDETO17", 3112, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO18 = Field.create("TRIGGERGAPOVERRIDETO18", 3116, FieldType.FLOAT);
 	public static final Field MAXCAMPHASERESOLVERPM = Field.create("MAXCAMPHASERESOLVERPM", 3120, FieldType.INT8).setScale(50.0);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3121, FieldType.INT8).setScale(1.0);
+	public static final Field DFCODELAY = Field.create("DFCODELAY", 3121, FieldType.INT8).setScale(0.1);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3122, FieldType.INT8).setScale(1.0);
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3132, FieldType.INT8).setScale(1.0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3133, FieldType.INT8, hpfp_cam_e).setScale(1.0);
@@ -5067,6 +5064,7 @@ public class Fields {
 	TRIGGERGAPOVERRIDETO17,
 	TRIGGERGAPOVERRIDETO18,
 	MAXCAMPHASERESOLVERPM,
+	DFCODELAY,
 	UNUSED4080,
 	HPFPCAMLOBES,
 	HPFPCAM,

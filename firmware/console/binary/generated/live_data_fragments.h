@@ -18,6 +18,7 @@ getLiveDataAddr<trigger_state_s>(0),	// trg
 // getLiveDataAddr<trigger_state_s>(2),	// vvt1e
 // getLiveDataAddr<trigger_state_s>(3),	// vvt2i
 // getLiveDataAddr<trigger_state_s>(4),	// vvt2e
+getLiveDataAddr<trigger_state_primary_s>(),
 getLiveDataAddr<wall_fuel_state_s>(),
 getLiveDataAddr<idle_state_s>(),
 getLiveDataAddr<ignition_state_s>(),

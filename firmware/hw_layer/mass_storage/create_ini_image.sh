@@ -42,7 +42,7 @@ else
   bash --version
   # bash >=4.3 magic
   printf -v current_date '%(%Y-%m-%d)T' -1
-  echo [${current_date}]
+  echo "create_ini_image.sh says [${current_date}]"
 fi
 
 # Put the zip inside the filesystem
@@ -62,3 +62,4 @@ xxd -i $IMAGE \
     > $H_OUTPUT
 
 rm $ZIP $IMAGE
+exit 0

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Aug 23 04:18:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Aug 27 18:43:19 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -51,7 +51,7 @@ struct output_channels_s {
 	bool unusedb4 : 1 {};
 	/**
 	offset 0 bit 5 */
-	bool isFuelPumpOn : 1 {};
+	bool unusedb5 : 1 {};
 	/**
 	 * radiator fan
 	offset 0 bit 6 */
@@ -121,16 +121,16 @@ struct output_channels_s {
 	bool isIdleClosedLoop : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool isIdleCoasting : 1 {};
+	bool unusedBit_28_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool unusedBit_28_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_28_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_28_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1309,9 +1309,13 @@ struct output_channels_s {
 	/**
 	 * offset 596
 	 */
-	uint8_t unusedAtTheEnd[160];
+	uint8_t extiOverflowCount = (uint8_t)0;
+	/**
+	 * offset 597
+	 */
+	uint8_t unusedAtTheEnd[159];
 };
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Aug 23 04:18:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Aug 27 18:43:19 UTC 2022

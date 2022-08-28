@@ -371,7 +371,6 @@
 #define CMD_IGNITION_PIN "set_ignition_pin"
 #define CMD_INJECTION "injection"
 #define CMD_INJECTION_PIN "set_injection_pin"
-#define CMD_KEYPAD 0x17
 #define CMD_LOGIC_PIN "set_logic_input_pin"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_PINS "pins"
@@ -389,12 +388,6 @@
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
-#define CMD_TS_BENCH_CATEGORY 22
-#define CMD_TS_LUA_OUTPUT_CATEGORY 33
-#define CMD_TS_SOLENOID_CATEGORY 41
-#define CMD_TS_WBO_UPDATE 0x15
-#define CMD_TS_X14 20
-#define CMD_TS_X31 49
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
 #define coastingFuelCutClt_offset 2096
@@ -506,6 +499,7 @@
 #define debugMapAveraging_offset 856
 #define debugMode_offset 1604
 #define debugTriggerSync_offset 678
+#define dfcoDelay_offset 3121
 #define DIGIPOT_COUNT 4
 #define digitalPotentiometerChipSelect1_offset 662
 #define digitalPotentiometerChipSelect2_offset 664
@@ -1907,7 +1901,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3968249064
+#define SIGNATURE_HASH 3060816360
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2345,6 +2339,7 @@
 #define triggerSimulatorPins2_offset 750
 #define triggerSimulatorPins3_offset 752
 #define TRIM_SIZE 4
+#define TS_BLOCK_READ_TIMEOUT 300
 #define TS_BURN_COMMAND 'B'
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
@@ -2369,19 +2364,20 @@
 #define ts_command_e_TS_GRAB_TPS_WOT 3
 #define ts_command_e_TS_IGNITION_CATEGORY 18
 #define ts_command_e_TS_INJECTOR_CATEGORY 19
+#define ts_command_e_TS_LUA_OUTPUT_CATEGORY 33
 #define ts_command_e_TS_RESET_TLE8888 8
+#define ts_command_e_TS_SOLENOID_CATEGORY 25
 #define ts_command_e_TS_UNUSED_23 23
-#define ts_command_e_TS_UNUSED_25 25
 #define ts_command_e_TS_UNUSED_26 26
 #define ts_command_e_TS_UNUSED_27 27
 #define ts_command_e_TS_UNUSED_28 28
 #define ts_command_e_TS_UNUSED_29 29
-#define ts_command_e_TS_UNUSED_30 30
-#define ts_command_e_TS_UNUSED_31 31
 #define ts_command_e_TS_UNUSED_CJ125_CALIB 24
 #define ts_command_e_TS_WIDEBAND 21
 #define ts_command_e_TS_WRITE_FLASH 10
 #define ts_command_e_TS_X14 20
+#define ts_command_e_TS_X30 30
+#define ts_command_e_TS_X31 31
 #define TS_COMMAND_F 'F'
 #define TS_COMMAND_F_char F
 #define TS_COMPOSITE_DISABLE 2
@@ -2463,12 +2459,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.23.subaru_eg33_f7.3968249064"
+#define TS_SIGNATURE "rusEFI 2022.08.28.subaru_eg33_f7.3060816360"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1220
+#define TS_TOTAL_OUTPUT_SIZE 1236
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2504,7 +2500,7 @@
 #define unused1129_offset 1628
 #define unused1130_offset 1628
 #define unused1740b2_offset 1628
-#define unused4080_offset 3121
+#define unused4080_offset 3122
 #define unused962_offset 1040
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372

@@ -76,7 +76,10 @@ void endSimultaniousInjection(InjectionEvent *event) {
 }
 
 void InjectorOutputPin::open(efitick_t nowNt) {
+	// per-output counter for error detection
 	overlappingCounter++;
+	// global counter for logging
+	engine->engineState.fuelInjectionCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
@@ -347,8 +350,15 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
 		return true;
 	}
+
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
 		// in rare cases engines do not like random sequential mode
+		return true;
+	}
+
+	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
+	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case
+	if (engineConfiguration->specs.cylindersCount > 1 && engineConfiguration->specs.cylindersCount % 2 == 1) {
 		return true;
 	}
 

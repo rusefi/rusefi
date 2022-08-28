@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 22:31:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -512,8 +512,16 @@ struct engine_state_s {
 	 * offset 150
 	 */
 	uint8_t alignmentFill_at_150[2];
+	/**
+	 * offset 152
+	 */
+	int fuelInjectionCounter = (int)0;
+	/**
+	 * offset 156
+	 */
+	int sparkCounter = (int)0;
 };
-static_assert(sizeof(engine_state_s) == 152);
+static_assert(sizeof(engine_state_s) == 160);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Aug 22 22:31:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022
