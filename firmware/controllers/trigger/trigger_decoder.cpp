@@ -526,7 +526,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	} else {
 #if !EFI_PROD_CODE
 		if (printTriggerTrace) {
-			printf("%s event %s %d\r\n",
+			printf("%s event %s %lld\r\n",
 					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					getTrigger_event_e(signal),
 					nowNt);
