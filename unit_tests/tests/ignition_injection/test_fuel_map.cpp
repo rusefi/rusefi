@@ -120,7 +120,7 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 
 	ASSERT_EQ( 0,  s->wave.findAngleMatch(53.747 / 720.0)) << "expecting 0";
-	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0));
+	ASSERT_EQ(unexpected, s->wave.findAngleMatch(53 / 720.0)) << "expecting not found";
 	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0));
 
 	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0)) << "expecting 0";
