@@ -287,23 +287,21 @@ void Engine::updateSlowSensors() {
 #endif
 }
 
-static bool getClutchUpState() {
 #if EFI_GPIO_HARDWARE
+static bool getClutchUpState() {
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
-#endif // EFI_GPIO_HARDWARE
 	return engine->engineState.lua.clutchUpState;
 }
 
 static bool getBrakePedalState() {
-#if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
 	return engine->engineState.lua.brakePedalState;
-#endif // EFI_GPIO_HARDWARE
 }
+#endif // EFI_GPIO_HARDWARE
 
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
