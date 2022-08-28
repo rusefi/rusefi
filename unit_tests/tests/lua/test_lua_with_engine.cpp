@@ -24,8 +24,8 @@ TEST(LuaHooks, TestCurve) {
 	strcpy(engineConfiguration->scriptCurveName[3], "hello");
 	setLinearCurve(config->scriptCurve4, 500, 600, 1);
 
-	int index = getCurveIndexByName("helLO");
-	ASSERT_EQ(index, 3);
+	auto index = getCurveIndexByName("helLO");
+	ASSERT_EQ(index.value_or(-1), 3);
 
 	EXPECT_EQ(testLuaReturnsNumberOrNil(curveTestScript).value_or(0), 540);
 }

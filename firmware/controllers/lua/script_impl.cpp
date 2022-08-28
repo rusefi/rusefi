@@ -34,31 +34,34 @@ ValueProvider3D *getscriptTable(int index) {
 /**
  * @return zero-based index of curve with given name
  */
-int getCurveIndexByName(const char *name) {
+expected<int> getCurveIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
 			return i;
 		}
 	}
-	return EFI_ERROR_CODE;
+
+	return unexpected;
 }
 
-int getTableIndexByName(const char *name) {
+expected<int> getTableIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
 			return i;
 		}
 	}
-	return EFI_ERROR_CODE;
+
+	return unexpected;
 }
 
-int getSettingIndexByName(const char *name) {
+expected<int> getSettingIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_SETTING_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptSettingName[i])) {
 			return i;
 		}
 	}
-	return EFI_ERROR_CODE;
+
+	return unexpected;
 }
 
 float getCurveValue(int index, float key) {
