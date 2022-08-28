@@ -94,6 +94,7 @@
 #endif /* ETB_MAX_COUNT */
 
 static pedal2tps_t pedal2tpsMap;
+static Map3D<6, 6, int8_t, uint8_t, uint8_t> throttle2TrimTable;
 
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
@@ -384,9 +385,8 @@ float EtbController::getLuaAdjustment() const {
 	}
 }
 
-percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
-	// TODO: implement me #3680
-	return 0;
+percent_t EtbController2::getThrottleTrim(float rpm, percent_t targetPosition) const {
+	return m_throttle2Trim.getValue(rpm, targetPosition);
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
@@ -614,8 +614,13 @@ void EtbController::autoCalibrateTps() {
  */
 #include "periodic_thread_controller.h"
 
+#include <utility>
+
 template <typename TBase>
 struct EtbImpl final : public TBase {
+	template <typename... TArgs>
+	EtbImpl(TArgs&&... args) : TBase(std::forward<TArgs>(args)...) { }
+
 	void update() override {
 #if EFI_TUNER_STUDIO
 	if (TBase::m_isAutocal) {
@@ -688,7 +693,7 @@ struct EtbImpl final : public TBase {
 
 // real implementation (we mock for some unit tests)
 static EtbImpl<EtbController1> etb1;
-static EtbImpl<EtbController2> etb2;
+static EtbImpl<EtbController2> etb2(throttle2TrimTable);
 
 static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
@@ -961,6 +966,7 @@ void doInitElectronicThrottle() {
 #endif /* EFI_PROD_CODE */
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+	throttle2TrimTable.init(config->throttle2TrimTable, config->throttle2TrimTpsBins, config->throttle2TrimRpmBins);
 
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;

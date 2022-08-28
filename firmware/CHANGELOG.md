@@ -27,6 +27,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Time delay before DFCO #4292
+ - Manual electronic throttle synchronization #3680
 
 ### Fixed
  - Inverted vvt control #4464
