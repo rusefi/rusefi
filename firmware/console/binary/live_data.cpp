@@ -14,7 +14,7 @@ const output_channels_s* getLiveDataAddr() {
 
 template<>
 const knock_controller_s* getLiveDataAddr() {
-	return &engine->module<KnockController>().unmock();
+	return &engine->module<KnockControllerImpl>().unmock();
 }
 
 template<>

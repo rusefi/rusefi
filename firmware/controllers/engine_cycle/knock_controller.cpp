@@ -11,6 +11,12 @@
 
 #include "hip9011.h"
 
+void KnockControllerImpl::onConfigurationChange(engine_configuration_s const * previousConfig) {
+	KnockController::onConfigurationChange(previousConfig);
+
+	m_maxRetardTable.init(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
+}
+
 int getCylinderKnockBank(uint8_t cylinderNumber) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
 	switch (cylinderNumber) {
@@ -77,7 +83,7 @@ bool KnockController::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, e
 			// Adjust knock retard under lock
 			chibios_rt::CriticalSectionLocker csl;
 			auto newRetard = m_knockRetard + retardAmount;
-			m_knockRetard = clampF(0, newRetard, engineConfiguration->knockRetardMaximum);
+			m_knockRetard = clampF(0, newRetard, m_maximumRetard);
 		}
 	}
 
@@ -94,6 +100,7 @@ uint32_t KnockController::getKnockCount() const {
 
 void KnockController::onFastCallback() {
 	m_knockThreshold = getKnockThreshold();
+	m_maximumRetard = getMaximumRetard();
 
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
@@ -116,6 +123,10 @@ float KnockController::getKnockThreshold() const {
 		engineConfiguration->knockNoiseRpmBins,
 		engineConfiguration->knockBaseNoise
 	);
+}
+
+float KnockControllerImpl::getMaximumRetard() const {
+	return m_maxRetardTable.getValue(Sensor::getOrZero(SensorType::Rpm), getIgnitionLoad());
 }
 
 // This callback is to be implemented by the knock sense driver

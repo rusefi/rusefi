@@ -192,7 +192,7 @@ public:
 #if EFI_VEHICLE_SPEED
 		GearDetector,
 #endif // EFI_VEHICLE_SPEED
-		KnockController,
+		KnockControllerImpl,
 		SensorChecker,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;

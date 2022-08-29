@@ -7,6 +7,11 @@ struct MockKnockController : public KnockController {
 		// Knock threshold of 20dBv
 		return 20;
 	}
+
+	float getMaximumRetard() const override {
+		// Maximum 8 degrees retarded
+		return 8;
+	}
 };
 
 TEST(Knock, Retards) {
@@ -14,8 +19,6 @@ TEST(Knock, Retards) {
 
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 10;
-	// Maximum 8 degrees retarded
-	engineConfiguration->knockRetardMaximum = 8;
 
 	MockKnockController dut;
 	dut.onFastCallback();
@@ -52,8 +55,6 @@ TEST(Knock, Reapply) {
 
 	// Aggression of 10%
 	engineConfiguration->knockRetardAggression = 10;
-	// Maximum 8 degrees retarded
-	engineConfiguration->knockRetardMaximum = 8;
 	// Apply 1 degree/second
 	engineConfiguration->knockRetardReapplyRate = 1;
 

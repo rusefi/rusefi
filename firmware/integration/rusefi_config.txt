@@ -647,7 +647,7 @@ end_struct
 
 uint8_t autoscale knockRetardAggression;+Ignition timing to remove when a knock event occurs.;"%", 0.1, 0, 0, 20, 1
 uint8_t autoscale knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
-uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
+uint8_t unused556;;"", 1, 0, 0, 1, 0
 
 	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, 2, 200, 0
 
@@ -1719,6 +1719,10 @@ uint8_t[8] tcu_32Vals;;"%", 1, 0, 0, 255, 0
 int8_t[6 x 6] autoscale throttle2TrimTable;;"%", 0.1, 0, -10, 10, 1
 uint8_t[6] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
 uint8_t[6] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+
+uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
+uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
+uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
 end_struct
 
