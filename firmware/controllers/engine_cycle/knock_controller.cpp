@@ -12,7 +12,7 @@
 #include "hip9011.h"
 
 void KnockController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	KnockController::onConfigurationChange(previousConfig);
+	KnockControllerBase::onConfigurationChange(previousConfig);
 
 	m_maxRetardTable.init(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
 }
