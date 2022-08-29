@@ -196,3 +196,35 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	s->addEvent720(700, T_PRIMARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_RISE);
 }
+
+// https://rusefi.com/forum/viewtopic.php?f=17&t=2417
+// Mazda Skyactiv
+void initializeMazdaMysteryCamShape(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+    // wide
+	s->addEvent360(50, T_PRIMARY, TV_RISE);
+	s->addEvent360(70, T_PRIMARY, TV_FALL);
+    // narrow
+	s->addEvent360(80, T_PRIMARY, TV_RISE);
+	s->addEvent360(90, T_PRIMARY, TV_FALL);
+
+    // wide
+	s->addEvent360(140, T_PRIMARY, TV_RISE);
+	s->addEvent360(160, T_PRIMARY, TV_FALL);
+    // narrow
+	s->addEvent360(170, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
+
+    // wide
+	s->addEvent360(250, T_PRIMARY, TV_RISE);
+	s->addEvent360(270, T_PRIMARY, TV_FALL);
+
+    // wide
+	s->addEvent360(340, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
+
+	s->setTriggerSynchronizationGap(0.43);
+	s->setSecondTriggerSynchronizationGap(0.78);
+	s->setThirdTriggerSynchronizationGap(1.12); // 3rd gap is not required but let's have it for some resiliency
+}
