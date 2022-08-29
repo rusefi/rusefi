@@ -48,7 +48,7 @@ function printPacket(bus, id, dlc, data)
     print('Received ' ..arrayToString(data))
 end
 
-canRxAddMask(1, 0, 0, printPacket)
+canRxAdd(1, BASE_CAN_ID + 4, printPacket)
 protocolPacket = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 function onTick()
