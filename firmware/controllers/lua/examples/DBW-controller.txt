@@ -1,0 +1,31 @@
+-- DBW protocol for legacy standalone systems
+
+BASE_CAN_ID = 256
+
+setTickRate(100)
+
+-- Little-endian System, "Intel"
+function setTwoBytesLsb(data, offset, value)
+	value = math.floor(value)
+	data[offset + 2] = value >> 8
+	data[offset + 1] = value & 0xff
+end
+
+-- MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first
+function setTwoBytesMsb(data, offset, value)
+	value = math.floor(value)
+	data[offset + 1] = value >> 8
+	data[offset + 2] = value & 0xff
+end
+
+protocolPacket = { 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+function onTick()
+	local ppsValue = getSensor("AcceleratorPedal")
+	local TPS = getSensor("TPS1")
+
+	setTwoBytesMsb(protocolPacket, 0, ppsValue / 100 * 1024)
+	setTwoBytesMsb(protocolPacket, 2, TPS / 100 * 1024)
+
+	txCan(1, BASE_CAN_ID + 0, 0, protocolPacket)
+end
