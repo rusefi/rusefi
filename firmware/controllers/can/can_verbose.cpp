@@ -134,7 +134,7 @@ static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
-	msg.knockCount = engine->module<KnockController>()->getKnockCount();
+	msg.knockCount = engine->module<KnockControllerImpl>()->getKnockCount();
 }
 
 struct Fueling2 {
