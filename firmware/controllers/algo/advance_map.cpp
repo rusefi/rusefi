@@ -92,7 +92,9 @@ angle_t getAdvanceCorrections(int rpm) {
 		);
 	}
 
-	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(rpm);
+	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
+	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
 
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;

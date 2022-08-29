@@ -26,7 +26,6 @@ bit badTps
 bit looksLikeRunning
 bit looksLikeCoasting
 bit looksLikeCrankToIdle
-bit useInstantRpmForIdle
 bit isVerboseIAC
 bit isIdleCoasting;idle: coasting
 

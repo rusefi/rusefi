@@ -160,11 +160,6 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		m_timingPid.reset();
 		return 0;
 	}
-#if EFI_SHAFT_POSITION_INPUT
-	if (engineConfiguration->useInstantRpmForIdle) {
-		rpm = engine->triggerCentral.triggerState.getInstantRpm();
-	}
-#endif // EFI_SHAFT_POSITION_INPUT
 
 	// If inside the deadzone, do nothing
 	if (absI(rpm - targetRpm) < engineConfiguration->idleTimingPidDeadZone) {
@@ -304,14 +299,7 @@ float IdleController::getIdlePosition() {
 		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-        // this variable is here to make Live View happier
-        useInstantRpmForIdle = engineConfiguration->useInstantRpmForIdle;
-		float rpm;
-		if (useInstantRpmForIdle) {
-			rpm = engine->triggerCentral.triggerState.getInstantRpm();
-		} else {
-			rpm = Sensor::getOrZero(SensorType::Rpm);
-		}
+		float rpm = engine->triggerCentral.triggerState.getInstantRpm();
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
