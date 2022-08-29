@@ -213,6 +213,8 @@ canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 setTickRate(100)
 
+everySecondTimer = Timer.new()
+canMotorInfoCounter = 0
 
 function onTick()
 	counter = (counter + 1) % 16
@@ -229,6 +231,14 @@ function onTick()
 		-- looks like ignition key was removed
 		mcu_standby()
 	end
+
+    if everySecondTimer:getElapsedSeconds() > 1 then
+        everySecondTimer:reset()
+
+    	canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
+    	canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
+	    txCan(1, MOTOR_INFO, 0, canMotorInfo)
+    end
 end
 
 
