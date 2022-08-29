@@ -16,7 +16,7 @@ typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, int16_t, int16_t> fsio8_M
 void initScriptImpl();
 
 float getCurveValue(int index, float key);
-int getCurveIndexByName(const char *name);
-int getTableIndexByName(const char *name);
-int getSettingIndexByName(const char *name);
+expected<int> getCurveIndexByName(const char *name);
+expected<int> getTableIndexByName(const char *name);
+expected<int> getSettingIndexByName(const char *name);
 ValueProvider3D *getscriptTable(int index);

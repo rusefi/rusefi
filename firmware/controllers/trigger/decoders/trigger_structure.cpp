@@ -286,8 +286,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		return;
 	}
 
-	int exactMatch = wave.findAngleMatch(angle);
-	if (exactMatch != (int)EFI_ERROR_CODE) {
+	if (wave.findAngleMatch(angle)) {
 		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
 		setShapeDefinitionError(true);
 		return;
@@ -688,7 +687,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSubaruEZ30(this);
 		break;
 
-	case UNUSED_13:
+	case TT_VVT_MAZDA_MYSTERY:
+	    initializeMazdaMysteryCamShape(this);
+        break;
+
 	case UNUSED_21:
 	case UNUSED_34:
 	case TT_1_16:

@@ -83,6 +83,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
+	case VVT_MAZDA_MYSTERY:
+	    return TT_VVT_MAZDA_MYSTERY;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:

@@ -40,10 +40,10 @@ int MultiChannelStateSequence::findInsertionAngle(const float angle) const {
 	return 0;
 }
 
-int MultiChannelStateSequence::findAngleMatch(const float angle) const {
+expected<int> MultiChannelStateSequence::findAngleMatch(const float angle) const {
 	for (int i = 0; i < phaseCount; i++) {
 		if (isSameF(getSwitchTime(i), angle))
 			return i;
 	}
-	return EFI_ERROR_CODE;
+	return unexpected;
 }

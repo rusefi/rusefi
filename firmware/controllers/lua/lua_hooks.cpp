@@ -616,11 +616,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "findCurveIndex", [](lua_State* l) {
 		auto name = luaL_checklstring(l, 1, nullptr);
 		auto result = getCurveIndexByName(name);
-		if (result == EFI_ERROR_CODE) {
+		if (!result) {
 			lua_pushnil(l);
 		} else {
 			// TS counts curve from 1 so convert indexing here
-			lua_pushnumber(l, result + HUMAN_OFFSET);
+			lua_pushnumber(l, result.Value + HUMAN_OFFSET);
 		}
 		return 1;
 	});
@@ -633,11 +633,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto index = getTableIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (!index) {
 				lua_pushnil(l);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, index + HUMAN_OFFSET);
+				lua_pushnumber(l, index.Value + HUMAN_OFFSET);
 			}
 			return 1;
 	});
@@ -648,11 +648,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 			auto defaultValue = luaL_checknumber(l, 2);
 
 			auto index = getSettingIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (!index) {
 				lua_pushnumber(l, defaultValue);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
+				lua_pushnumber(l, engineConfiguration->scriptSetting[index.Value]);
 			}
 			return 1;
 	});
