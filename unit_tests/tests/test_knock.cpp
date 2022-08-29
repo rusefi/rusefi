@@ -2,7 +2,7 @@
 
 #include "knock_logic.h"
 
-struct MockKnockController : public KnockController {
+struct MockKnockController : public KnockControllerBase {
 	float getKnockThreshold() const override {
 		// Knock threshold of 20dBv
 		return 20;
