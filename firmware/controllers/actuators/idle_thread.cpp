@@ -279,7 +279,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	return newValue;
 }
 
-float IdleController::getIdlePosition() {
+float IdleController::getIdlePosition(float rpm) {
 #if EFI_SHAFT_POSITION_INPUT
 
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
@@ -298,8 +298,6 @@ float IdleController::getIdlePosition() {
 		// On failed sensor, use 0 deg C - should give a safe highish idle
 		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-
-		float rpm = engine->triggerCentral.triggerState.getInstantRpm();
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
@@ -366,7 +364,7 @@ float IdleController::getIdlePosition() {
 }
 
 void IdleController::onSlowCallback() {
-	float position = getIdlePosition();
+	float position = getIdlePosition(engine->triggerCentral.triggerState.getInstantRpm());
 	applyIACposition(position);
 }
 

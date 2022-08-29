@@ -390,7 +390,6 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -410,7 +409,7 @@ TEST(idle_v2, IntegrationManual) {
 
 	// getClosedLoop() should not be called!
 
-	EXPECT_EQ(13, dut.getIdlePosition());
+	EXPECT_EQ(13, dut.getIdlePosition(950));
 }
 
 TEST(idle_v2, IntegrationAutomatic) {
@@ -424,7 +423,6 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -447,7 +445,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 		.WillOnce(Return(7));
 
 	// Result should be open + closed
-	EXPECT_EQ(13 + 7, dut.getIdlePosition());
+	EXPECT_EQ(13 + 7, dut.getIdlePosition(950));
 }
 
 TEST(idle_v2, IntegrationClamping) {
@@ -461,7 +459,6 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -484,5 +481,5 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(75));
 
 	// Result would be 75 + 75 = 150, but it should clamp to 100
-	EXPECT_EQ(100, dut.getIdlePosition());
+	EXPECT_EQ(100, dut.getIdlePosition(950));
 }

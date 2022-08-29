@@ -39,7 +39,7 @@ public:
 
 	void init();
 
-	float getIdlePosition();
+	float getIdlePosition(float rpm);
 
 	// TARGET DETERMINATION
 	int getTargetRpm(float clt) override;
