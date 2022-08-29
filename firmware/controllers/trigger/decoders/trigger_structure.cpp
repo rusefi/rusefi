@@ -688,6 +688,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_VVT_MAZDA_MYSTERY:
+	    initializeMazdaMysteryCamShape(this);
+        break;
+
 	case UNUSED_21:
 	case UNUSED_34:
 	case TT_1_16:
