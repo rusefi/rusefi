@@ -198,7 +198,8 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 }
 
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
-// Mazda Skyactiv
+// 2014 Mazda 2 Skyactive 1.3
+// P3-VPS Skyactiv-G
 void initializeMazdaMysteryCamShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
