@@ -687,7 +687,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeSubaruEZ30(this);
 		break;
 
-	case UNUSED_13:
+	case TT_VVT_MAZDA_MYSTERY:
 	case UNUSED_21:
 	case UNUSED_34:
 	case TT_1_16:

@@ -500,7 +500,7 @@ typedef enum {
 	TT_GM_24x_2 = 74,
 
 	TT_SUBARU_EZ30 = 12,
-	UNUSED_13 = 13,
+	TT_VVT_MAZDA_MYSTERY = 13,
 	UNUSED_21 = 21,
 	UNUSED_34 = 34,
 
