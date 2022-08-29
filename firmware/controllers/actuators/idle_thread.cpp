@@ -133,10 +133,9 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
-	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
 	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && isIdleCoasting;
 	if (useIacTableForCoasting) {
-		return interpolate2d(clt, config->iacCoastingBins, config->iacCoasting);
+		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
 	}
 
 	percent_t running = getRunningOpenLoop(rpm, clt, tps);
