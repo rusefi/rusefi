@@ -576,6 +576,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->useStepperIdle = false;
 
+	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
+
 	setDefaultGppwmParameters();
 
 #if !EFI_UNIT_TEST

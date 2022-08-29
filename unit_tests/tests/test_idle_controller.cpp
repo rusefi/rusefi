@@ -308,12 +308,12 @@ TEST(idle_v2, openLoopCoastingTable) {
 	// enable & configure feature
 	engineConfiguration->useIacTableForCoasting = true;
 	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		config->iacCoastingBins[i] = 10 * i;
+		config->iacCoastingRpmBins[i] = 100 * i;
 		config->iacCoasting[i] = 5 * i;
 	}
 
-	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 0, 20, 0, 2));
-	EXPECT_FLOAT_EQ(20, dut.getOpenLoop(ICP::Coasting, 0, 40, 0, 2));
+	EXPECT_FLOAT_EQ(40, dut.getOpenLoop(ICP::Coasting, 800, 0, 0, 2));
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Coasting, 1500, 0, 0, 2));
 }
 
 extern int timeNowUs;
@@ -390,7 +390,7 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -424,7 +424,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -461,7 +461,7 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	Sensor::setMockValue(SensorType::Rpm,  950);
+	Sensor::setMockValue(SensorType::Rpm, 950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
