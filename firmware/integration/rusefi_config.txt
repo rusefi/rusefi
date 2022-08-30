@@ -1115,7 +1115,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s alternatorControl;
 	pid_s etb;
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
-	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper", 1, 0, 0, 1500, 0
+	int16_t airTaperRpmRange;RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 	brain_input_pin_e turboSpeedSensorInputPin;
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0

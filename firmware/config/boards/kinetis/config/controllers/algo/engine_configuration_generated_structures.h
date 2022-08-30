@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 29 12:19:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 00:36:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2780,7 +2780,7 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
 	/**
-	 * RPM range above upper limit for extra air taper", 1, 0, 0, 1500, 0
+	 * RPM range above upper limit for extra air taper,"RPM", 1, 0, 0, 1500, 0
 	 * offset 1472
 	 */
 	int16_t airTaperRpmRange;
@@ -4970,4 +4970,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21252);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Aug 29 12:19:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 00:36:40 UTC 2022
