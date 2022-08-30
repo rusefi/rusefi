@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 30 02:29:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 30 06:02:17 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1539,7 +1539,6 @@ public class Fields {
 	public static final int knockDetectionWindowStart_offset = 1396;
 	public static final int knockNoiseRpmBins_offset = 16;
 	public static final int knockRetardAggression_offset = 564;
-	public static final int knockRetardMaximum_offset = 566;
 	public static final int knockRetardReapplyRate_offset = 565;
 	public static final int knockSamplingDuration_offset = 1860;
 	public static final int l9779_cs_offset = 572;
@@ -1655,6 +1654,9 @@ public class Fields {
 	public static final int maxAcTps_offset = 14;
 	public static final int maxCamPhaseResolveRpm_offset = 3120;
 	public static final int maxIdleVss_offset = 398;
+	public static final int maxKnockRetardLoadBins_offset = 21288;
+	public static final int maxKnockRetardRpmBins_offset = 21294;
+	public static final int maxKnockRetardTable_offset = 21252;
 	public static final int mc33816_cs_offset = 2072;
 	public static final int mc33816_driven_offset = 1952;
 	public static final int mc33816_flag0_offset = 1484;
@@ -1734,7 +1736,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5528;
 	public static final int pedalToTpsRpmBins_offset = 5536;
 	public static final int pedalToTpsTable_offset = 5464;
-	public static final int persistent_config_s_size = 21252;
+	public static final int persistent_config_s_size = 21300;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -2107,7 +2109,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 3684;
 	public static final int torqueRpmBins_offset = 3672;
 	public static final int torqueTable_offset = 3636;
-	public static final int TOTAL_CONFIG_SIZE = 21252;
+	public static final int TOTAL_CONFIG_SIZE = 21300;
 	public static final int totalGearsCount_offset = 1584;
 	public static final int tps1_1AdcChannel_offset = 456;
 	public static final int tps1_2AdcChannel_offset = 686;
@@ -2377,10 +2379,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.08.30.all.3830525865";
+	public static final String TS_SIGNATURE = "rusEFI 2022.08.30.all.3329553180";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1236;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1240;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2417,6 +2419,7 @@ public class Fields {
 	public static final int unused120b18_offset = 120;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3122;
+	public static final int unused556_offset = 566;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
@@ -2744,7 +2747,7 @@ public class Fields {
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 560, FieldType.FLOAT);
 	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 564, FieldType.INT8).setScale(0.1);
 	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 565, FieldType.INT8).setScale(0.1);
-	public static final Field KNOCKRETARDMAXIMUM = Field.create("KNOCKRETARDMAXIMUM", 566, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSED556 = Field.create("UNUSED556", 566, FieldType.INT8).setScale(1.0);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 567, FieldType.INT8).setScale(1.0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 568, FieldType.INT16).setScale(0.001);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 570, FieldType.INT8).setScale(1.0);
@@ -3947,6 +3950,9 @@ public class Fields {
 	public static final Field THROTTLE2TRIMTABLE = Field.create("THROTTLE2TRIMTABLE", 21204, FieldType.INT8).setScale(0.1);
 	public static final Field THROTTLE2TRIMTPSBINS = Field.create("THROTTLE2TRIMTPSBINS", 21240, FieldType.INT8).setScale(1.0);
 	public static final Field THROTTLE2TRIMRPMBINS = Field.create("THROTTLE2TRIMRPMBINS", 21246, FieldType.INT8).setScale(100.0);
+	public static final Field MAXKNOCKRETARDTABLE = Field.create("MAXKNOCKRETARDTABLE", 21252, FieldType.INT8).setScale(0.25);
+	public static final Field MAXKNOCKRETARDLOADBINS = Field.create("MAXKNOCKRETARDLOADBINS", 21288, FieldType.INT8).setScale(1.0);
+	public static final Field MAXKNOCKRETARDRPMBINS = Field.create("MAXKNOCKRETARDRPMBINS", 21294, FieldType.INT8).setScale(100.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -4119,7 +4125,7 @@ public class Fields {
 	MANIDLEPOSITION,
 	KNOCKRETARDAGGRESSION,
 	KNOCKRETARDREAPPLYRATE,
-	KNOCKRETARDMAXIMUM,
+	UNUSED556,
 	VSSFILTERRECIPROCAL,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
@@ -5306,5 +5312,8 @@ public class Fields {
 	THROTTLE2TRIMTABLE,
 	THROTTLE2TRIMTPSBINS,
 	THROTTLE2TRIMRPMBINS,
+	MAXKNOCKRETARDTABLE,
+	MAXKNOCKRETARDLOADBINS,
+	MAXKNOCKRETARDRPMBINS,
 	};
 }

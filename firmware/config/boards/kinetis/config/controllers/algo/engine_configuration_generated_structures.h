@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 02:28:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 06:01:24 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1243,11 +1243,9 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> knockRetardReapplyRate;
 	/**
-	 * Maximum amount of knock retard.
-	deg
 	 * offset 566
 	 */
-	uint8_t knockRetardMaximum;
+	uint8_t unused556;
 	/**
 	 * Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
 	 * offset 567
@@ -4966,8 +4964,23 @@ struct persistent_config_s {
 	 * offset 21246
 	 */
 	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[6];
+	/**
+	deg
+	 * offset 21252
+	 */
+	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[6][6];
+	/**
+	%
+	 * offset 21288
+	 */
+	uint8_t maxKnockRetardLoadBins[6];
+	/**
+	RPM
+	 * offset 21294
+	 */
+	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[6];
 };
-static_assert(sizeof(persistent_config_s) == 21252);
+static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 02:28:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 06:01:24 UTC 2022

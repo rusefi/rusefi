@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\knock_controller.txt Fri Apr 29 15:13:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Tue Aug 30 06:01:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -18,8 +18,12 @@ struct knock_controller_s {
 	 * offset 8
 	 */
 	uint32_t m_knockCount = (uint32_t)0;
+	/**
+	 * offset 12
+	 */
+	float m_maximumRetard = (float)0;
 };
-static_assert(sizeof(knock_controller_s) == 12);
+static_assert(sizeof(knock_controller_s) == 16);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\knock_controller.txt Fri Apr 29 15:13:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Tue Aug 30 06:01:23 UTC 2022

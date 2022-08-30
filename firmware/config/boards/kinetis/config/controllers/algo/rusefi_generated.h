@@ -1572,7 +1572,6 @@
 #define knockDetectionWindowStart_offset 1396
 #define knockNoiseRpmBins_offset 16
 #define knockRetardAggression_offset 564
-#define knockRetardMaximum_offset 566
 #define knockRetardReapplyRate_offset 565
 #define knockSamplingDuration_offset 1860
 #define l9779_cs_offset 572
@@ -1694,6 +1693,9 @@
 #define maxAcTps_offset 14
 #define maxCamPhaseResolveRpm_offset 3120
 #define maxIdleVss_offset 398
+#define maxKnockRetardLoadBins_offset 21288
+#define maxKnockRetardRpmBins_offset 21294
+#define maxKnockRetardTable_offset 21252
 #define mc33816_cs_offset 2072
 #define mc33816_driven_offset 1952
 #define mc33816_flag0_offset 1484
@@ -1776,7 +1778,7 @@
 #define pedalToTpsRpmBins_offset 5536
 #define pedalToTpsTable_offset 5464
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 21252
+#define persistent_config_s_size 21300
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1935,7 +1937,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2357628261
+#define SIGNATURE_HASH 2929938896
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2168,7 +2170,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 21252
+#define TOTAL_CONFIG_SIZE 21300
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2495,12 +2497,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.30.kin.2357628261"
+#define TS_SIGNATURE "rusEFI 2022.08.30.kin.2929938896"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1236
+#define TS_TOTAL_OUTPUT_SIZE 1240
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2538,6 +2540,7 @@
 #define unused120b18_offset 120
 #define unused1740b2_offset 1628
 #define unused4080_offset 3122
+#define unused556_offset 566
 #define unused962_offset 1040
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372
