@@ -2,17 +2,27 @@
 #include "rusefi_lua.h"
 #include "lua_lib.h"
 
-#define VAG_CHECKSUM8 "function xorChecksum8(data)        \
-		return data[1] ~ data[2] ~ data[3] ~ data[4] ~ data[5] ~ data[6] ~ data[7]  \
+// XOR of the array, skipping target index
+#define VAG_CHECKSUM "function xorChecksum(data, targetIndex)        \
+	local index = 1 \
+	local result = 0 \
+  while data[index] ~= nil do \
+	if index ~= targetIndex then \
+       result = result ~ data[index] \
+    end \
+	index = index + 1 \
+  end \
+  data[targetIndex] = result \
+		return result  \
 	end"
 
 
 TEST(LuaVag, Checksum) {
-	const char* realdata = VAG_CHECKSUM8 R"(
+	const char* realdata = VAG_CHECKSUM R"(
 
 	function testFunc()
 		data = { 0xE0, 0x20, 0x20, 0x7E, 0xFE, 0xFF, 0xFF, 0x60 }
-		return  xorChecksum8(data)
+		return  xorChecksum(data, 8)
 	end
 	)";
 
@@ -181,16 +191,12 @@ TEST(LuaVag, unpackMotor3_iat) {
 
 #define realMotor6Packet "\ndata = { 0x3D, 0x54, 0x69, 0x7E, 0xFE, 0xFF, 0xFF, 0x80}\n "
 
-#define VAG_CHECKSUM1 "function xorChecksum1(data)        \
-		return data[8] ~ data[2] ~ data[3] ~ data[4] ~ data[5] ~ data[6] ~ data[7]  \
-	end"
-
 
 TEST(LuaVag, ChecksumMotor6) {
-	const char* realdata = VAG_CHECKSUM1 realMotor6Packet R"(
+	const char* realdata = VAG_CHECKSUM realMotor6Packet R"(
 
 	function testFunc()
-		return xorChecksum1(data)
+		return xorChecksum(data, 1)
 	end
 	)";
 
