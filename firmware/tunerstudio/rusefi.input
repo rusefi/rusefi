@@ -958,6 +958,12 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
       zBins       = throttle2TrimTable
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
 
+    table = maxKnockRetardTbl, maxKnockRetardMap,  "Max knock retard",   1
+      xBins       = maxKnockRetardRpmBins,  RPMValue
+      yBins       = maxKnockRetardLoadBins,  TPSValue
+      zBins       = maxKnockRetardTable
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+
 #if LAMBDA
    table = lambdaTableTbl,  lambdaTableMap,  "Target Lambda Table",   1
 #else
@@ -1677,7 +1683,8 @@ menuDialog = main
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
-		subMenu = softwareKnock,			"Software Knock" @@if_ts_show_software_knock
+		subMenu = softwareKnock,			"Software knock" @@if_ts_show_software_knock
+		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 		subMenu = std_separator
 
 		subMenu = smLaunchControl,			"Launch Control"
