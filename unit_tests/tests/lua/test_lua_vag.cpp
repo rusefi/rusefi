@@ -191,6 +191,63 @@ TEST(LuaVag, unpackMotor3_iat) {
 
 #define realMotor6Packet "\ndata = { 0x3D, 0x54, 0x69, 0x7E, 0xFE, 0xFF, 0xFF, 0x80}\n "
 
+TEST(LuaVag, unpackMotor6_actual_torq) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor6Packet	R"(
+	function testFunc()
+		actualTorque = getBitRange(data, 16, 8) * 0.39
+		return actualTorque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 40.95);
+}
+
+TEST(LuaVag, unpackMotor6_target_torq) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor6Packet	R"(
+	function testFunc()
+		targetTorque = getBitRange(data, 8, 8) * 0.39
+		return targetTorque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 32.76);
+}
+
+TEST(LuaVag, unpackMotor6_feedback) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor6Packet	R"(
+	function testFunc()
+		feedbackGearbox = getBitRange(data, 40, 8) * 0.39
+		return feedbackGearbox
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 99.45);
+}
+
+TEST(LuaVag, packMotor6) {
+	const char* script = PRINT_ARRAY ARRAY_EQUALS VAG_CHECKSUM R"(
+
+	function testFunc()
+		actualTorque = 40.95
+		targetTorque = 32.76
+		feedbackGearbox = 99.45
+
+		motor6Data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+ 		motor6Data[2] = math.floor(targetTorque / 0.39)
+		motor6Data[3] = math.floor(actualTorque / 0.39)
+ 		motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+
+		xorChecksum(motor6Data, 1)
+		print(arrayToString(motor6Data))
+
+		expected = { 0xC2, 0x54, 0x69, 0x00, 0x00, 0xFF, 0x00, 0x00 }
+		return equals(motor6Data, expected)
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+}
 
 TEST(LuaVag, ChecksumMotor6) {
 	const char* realdata = VAG_CHECKSUM realMotor6Packet R"(
