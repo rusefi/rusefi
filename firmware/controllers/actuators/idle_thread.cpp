@@ -160,11 +160,6 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		m_timingPid.reset();
 		return 0;
 	}
-#if EFI_SHAFT_POSITION_INPUT
-	if (engineConfiguration->useInstantRpmForIdle) {
-		rpm = engine->triggerCentral.triggerState.getInstantRpm();
-	}
-#endif // EFI_SHAFT_POSITION_INPUT
 
 	// If inside the deadzone, do nothing
 	if (absI(rpm - targetRpm) < engineConfiguration->idleTimingPidDeadZone) {
@@ -284,7 +279,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	return newValue;
 }
 
-float IdleController::getIdlePosition() {
+float IdleController::getIdlePosition(float rpm) {
 #if EFI_SHAFT_POSITION_INPUT
 
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
@@ -303,15 +298,6 @@ float IdleController::getIdlePosition() {
 		// On failed sensor, use 0 deg C - should give a safe highish idle
 		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-
-        // this variable is here to make Live View happier
-        useInstantRpmForIdle = engineConfiguration->useInstantRpmForIdle;
-		float rpm;
-		if (useInstantRpmForIdle) {
-			rpm = engine->triggerCentral.triggerState.getInstantRpm();
-		} else {
-			rpm = Sensor::getOrZero(SensorType::Rpm);
-		}
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
@@ -378,7 +364,7 @@ float IdleController::getIdlePosition() {
 }
 
 void IdleController::onSlowCallback() {
-	float position = getIdlePosition();
+	float position = getIdlePosition(engine->triggerCentral.triggerState.getInstantRpm());
 	applyIACposition(position);
 }
 
