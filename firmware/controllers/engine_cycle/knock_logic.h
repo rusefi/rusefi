@@ -12,9 +12,9 @@
 
 int getCylinderKnockBank(uint8_t cylinderNumber);
 
-class KnockController : public EngineModule, public knock_controller_s {
+class KnockControllerBase : public EngineModule, public knock_controller_s {
 public:
-    KnockController() {
+    KnockControllerBase() {
 	    // start with threshold higher than any possible knock to avoid recording spurious knocks
 	    m_knockThreshold = 100;
     }
@@ -27,10 +27,26 @@ public:
 	float getKnockRetard() const;
 	uint32_t getKnockCount() const;
 
-	virtual float getKnockThreshold() const;
+	virtual float getKnockThreshold() const = 0;
+	virtual float getMaximumRetard() const = 0;
 
 private:
 	using PD = PeakDetect<float, MS2NT(100)>;
 	PD peakDetectors[12];
 	PD allCylinderPeakDetector;
+};
+
+class KnockController : public KnockControllerBase {
+public:
+	KnockController()
+	{
+	}
+
+	void onConfigurationChange(engine_configuration_s const * /*previousConfig*/) override;
+
+	float getKnockThreshold() const override;
+	float getMaximumRetard() const override;
+
+private:
+	Map3D<6, 6, uint8_t, uint8_t, uint8_t> m_maxRetardTable;
 };
