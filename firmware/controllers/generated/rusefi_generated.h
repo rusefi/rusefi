@@ -1935,7 +1935,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1133807540
+#define SIGNATURE_HASH 3830525865
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2495,7 +2495,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.08.30.all.1133807540"
+#define TS_SIGNATURE "rusEFI 2022.08.30.all.3830525865"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2535,6 +2535,7 @@
 #define unused1128_offset 1628
 #define unused1129_offset 1628
 #define unused1130_offset 1628
+#define unused120b18_offset 120
 #define unused1740b2_offset 1628
 #define unused4080_offset 3122
 #define unused962_offset 1040
@@ -2579,7 +2580,6 @@
 #define useIacPidMultTable_offset 1372
 #define useIacTableForCoasting_offset 764
 #define useIdleTimingPidControl_offset 764
-#define useInstantRpmForIdle_offset 120
 #define useLcdScreen_offset 764
 #define useLinearCltSensor_offset 1360
 #define useLinearIatSensor_offset 1360

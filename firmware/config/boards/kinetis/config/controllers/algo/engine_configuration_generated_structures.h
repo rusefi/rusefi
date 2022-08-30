@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 00:36:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 02:28:05 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -761,7 +761,7 @@ struct engine_configuration_s {
 	bool useTLE8888_cranking_hack : 1 {};
 	/**
 	offset 120 bit 18 */
-	bool useInstantRpmForIdle : 1 {};
+	bool unused120b18 : 1 {};
 	/**
 	 * This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 	offset 120 bit 19 */
@@ -4970,4 +4970,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21252);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 00:36:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Aug 30 02:28:05 UTC 2022
