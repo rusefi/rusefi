@@ -19,7 +19,6 @@ static void commonNA8() {
 	 * 94-97 (tan) - #195500-2180
 	 */
 	engineConfiguration->injector.flow = 265;
-	engineConfiguration->useInstantRpmForIdle = true;
 	engineConfiguration->cylinderBore = 83;
 	engineConfiguration->knockBandCustom = 13.81;
 

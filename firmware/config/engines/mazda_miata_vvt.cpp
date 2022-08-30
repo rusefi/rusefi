@@ -276,7 +276,6 @@ static void setCommonMazdaNB() {
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->idle.solenoidFrequency = 500;
 	engineConfiguration->rpmHardLimit = 7200;
-	engineConfiguration->useInstantRpmForIdle = true;
 	engineConfiguration->enableFan1WithAc = true;
 
 	engineConfiguration->isAlternatorControlEnabled = true;

@@ -2882,7 +2882,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Use idle VE table",		useSeparateVeForIdle
 		field = "Use idle tables for cranking taper",		useSeparateIdleTablesForCrankingTaper
 		field = "Use coasting idle table",	useIacTableForCoasting
-		field = useInstantRpmForIdle,					useInstantRpmForIdle
 		field = "Detailed status in console",			isVerboseIAC
 
 	dialog = idleSettings, "", yAxis
