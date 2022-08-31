@@ -32,6 +32,7 @@ static plain_get_float_s getF_plain[] = {
 	{"fanOffTemperature", &engineConfiguration->fanOffTemperature},
 	{"driveWheelRevPerKm", &engineConfiguration->driveWheelRevPerKm},
 	{"idle_derivativeFilterLoss", &engineConfiguration->idle_derivativeFilterLoss},
+	{"airByRpmTaper", &engineConfiguration->airByRpmTaper},
 	{"globalFuelCorrection", &engineConfiguration->globalFuelCorrection},
 	{"adcVcc", &engineConfiguration->adcVcc},
 	{"mapCamDetectionAnglePosition", &engineConfiguration->mapCamDetectionAnglePosition},
@@ -217,8 +218,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useCicPidForIdle;
 	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
 		return engineConfiguration->useTLE8888_cranking_hack;
-	if (strEqualCaseInsensitive(name, "useInstantRpmForIdle"))
-		return engineConfiguration->useInstantRpmForIdle;
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
 		return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
 	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
@@ -299,8 +298,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardAggression;
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 		return engineConfiguration->knockRetardReapplyRate;
-	if (strEqualCaseInsensitive(name, "knockRetardMaximum"))
-		return engineConfiguration->knockRetardMaximum;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -675,6 +672,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb.minValue;
 	if (strEqualCaseInsensitive(name, "etb.maxValue"))
 		return engineConfiguration->etb.maxValue;
+	if (strEqualCaseInsensitive(name, "airTaperRpmRange"))
+		return engineConfiguration->airTaperRpmRange;
 	if (strEqualCaseInsensitive(name, "tps2Min"))
 		return engineConfiguration->tps2Min;
 	if (strEqualCaseInsensitive(name, "tps2Max"))
@@ -835,6 +834,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mc33_t_hold_tot;
 	if (strEqualCaseInsensitive(name, "maxCamPhaseResolveRpm"))
 		return engineConfiguration->maxCamPhaseResolveRpm;
+	if (strEqualCaseInsensitive(name, "dfcoDelay"))
+		return engineConfiguration->dfcoDelay;
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
 		return engineConfiguration->hpfpCamLobes;
 	if (strEqualCaseInsensitive(name, "hpfpPeakPos"))
@@ -1005,11 +1006,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
 	{
 		engineConfiguration->useTLE8888_cranking_hack = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "useInstantRpmForIdle"))
-	{
-		engineConfiguration->useInstantRpmForIdle = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
@@ -1210,11 +1206,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 	{
 		engineConfiguration->knockRetardReapplyRate = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "knockRetardMaximum"))
-	{
-		engineConfiguration->knockRetardMaximum = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
@@ -2152,6 +2143,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->etb.maxValue = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "airTaperRpmRange"))
+	{
+		engineConfiguration->airTaperRpmRange = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "tps2Min"))
 	{
 		engineConfiguration->tps2Min = (int)value;
@@ -2550,6 +2546,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "maxCamPhaseResolveRpm"))
 	{
 		engineConfiguration->maxCamPhaseResolveRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "dfcoDelay"))
+	{
+		engineConfiguration->dfcoDelay = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))

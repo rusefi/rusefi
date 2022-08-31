@@ -26,8 +26,15 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Time delay before DFCO #4292
+ - Idle coasting position table is now RPM-based, instead of CLT-based #4487
+ - Manual electronic throttle synchronization #3680
 
 ### Fixed
+ - Inverted vvt control #4464
+ - Lua canRxAdd bus parameter handling #4467
+ - STM32Bootloader driver install from console requests elevation #4313
+ - VQ trigger gaps improvement #4469
 
 ### Removed
 

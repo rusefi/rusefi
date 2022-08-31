@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Aug 10 05:43:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -54,9 +54,9 @@ struct idle_state_s {
 	offset 20 bit 3 */
 	bool mustResetPid : 1 {};
 	/**
-	 * idle: coasting
+	 * idle: cranking
 	offset 20 bit 4 */
-	bool isCoasting : 1 {};
+	bool isCranking : 1 {};
 	/**
 	offset 20 bit 5 */
 	bool useIacTableForCoasting : 1 {};
@@ -91,10 +91,11 @@ struct idle_state_s {
 	bool looksLikeCrankToIdle : 1 {};
 	/**
 	offset 20 bit 15 */
-	bool useInstantRpmForIdle : 1 {};
-	/**
-	offset 20 bit 16 */
 	bool isVerboseIAC : 1 {};
+	/**
+	 * idle: coasting
+	offset 20 bit 16 */
+	bool isIdleCoasting : 1 {};
 	/**
 	offset 20 bit 17 */
 	bool unusedBit_22_17 : 1 {};
@@ -151,17 +152,17 @@ struct idle_state_s {
 	 */
 	int targetRpmAcBump = (int)0;
 	/**
-	 * RPM range above upper limit for extra air taper
+	 * idle: iacByRpmTaper portion of idle
 	 * offset 32
 	 */
-	int airTaperRpmRange = (int)0;
+	percent_t iacByRpmTaper = (percent_t)0;
 	/**
-	 * Extra air taper amount
+	 * idle: Lua Adder
 	 * offset 36
 	 */
-	percent_t airByRpmTaper = (percent_t)0;
+	percent_t luaAdd = (percent_t)0;
 };
 static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Aug 10 05:43:37 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022

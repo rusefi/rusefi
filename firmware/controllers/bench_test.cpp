@@ -169,14 +169,13 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doRunBenchTestLuaOutput(size_t humanIndex, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
+static void doRunBenchTestLuaOutput(size_t humanIndex, float delay, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > LUA_PWM_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-// todo: convert in lua bench test
-//	pinbench(delay, onTime, offTime, count,
-//		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
+	pinbench(delay, onTime, offTime, count,
+		&enginePins.luaOutputPins[humanIndex - 1], engineConfiguration->luaOutputPins[humanIndex - 1]);
 }
 
 /**
@@ -464,14 +463,14 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-	case CMD_TS_SOLENOID_CATEGORY:
+	case TS_SOLENOID_CATEGORY:
 		if (!running) {
 			doRunSolenoidBench(index, 300.0, 1000.0,
 				1000.0, engineConfiguration->benchTestCount);
 		}
 		break;
 
-	case CMD_TS_LUA_OUTPUT_CATEGORY:
+	case TS_LUA_OUTPUT_CATEGORY:
 		if (!running) {
 			doRunBenchTestLuaOutput(index, 300.0, 4.0,
 				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
@@ -482,11 +481,11 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		handleCommandX14(index);
 		break;
 #if defined(EFI_WIDEBAND_FIRMWARE_UPDATE) && EFI_CAN_SUPPORT
-	case 0x15:
+	case TS_WIDEBAND:
 		setWidebandOffset(index);
 		break;
 #endif // EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
-	case CMD_TS_BENCH_CATEGORY:
+	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
 		break;
 
@@ -496,19 +495,12 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif /* EFI_CJ125 */
 		break;
 
-	case TS_CRAZY:
-		if (index == 0x3456) {
-			// call to pit
-			setCallFromPitStop(30000);
-		}
-		break;
-
-	case 0x30:
+	case TS_X30:
 		fatalErrorForPresetApply();
 		setEngineType(index);
 		break;
 
-	case CMD_TS_X31:
+	case TS_X31:
 		fatalErrorForPresetApply();
 		setEngineType(DEFAULT_ENGINE_TYPE);
 		break;

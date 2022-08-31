@@ -17,7 +17,7 @@ import java.io.File;
  */
 public class DriverInstall {
     private static final String FOLDER = "../drivers";
-    private static final String ARCHIVE = "silent_st_drivers2.exe";
+    private static final String SELF_UNCOMPRESSING_ARCHIVE = "silent_st_drivers2.exe";
     private static final String YES = " -y";
     private static final String UNPACKED_FOLDER = FOLDER + File.separator + "silent_st_drivers";
     private static final String WINDOWS7_BATCH = "silent_install_windows7.bat";
@@ -53,8 +53,8 @@ public class DriverInstall {
             return;
         }
         ExecHelper.executeCommand(FOLDER,
-                FOLDER + File.separator + ARCHIVE + YES,
-                ARCHIVE,
+                FOLDER + File.separator + SELF_UNCOMPRESSING_ARCHIVE + YES,
+                SELF_UNCOMPRESSING_ARCHIVE,
                 wnd);
 
         String batch = isWindows7orBelow() ? WINDOWS7_BATCH : WINDOWS8_BATCH;

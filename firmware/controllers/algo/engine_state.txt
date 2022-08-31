@@ -100,5 +100,13 @@ running_fuel_s running
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
     bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 
+    float egt1
+    float egt2
+
+    int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
+
+int fuelInjectionCounter
+int sparkCounter
+
 ! engine_state2_s
 end_struct

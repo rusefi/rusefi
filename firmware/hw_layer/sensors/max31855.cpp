@@ -101,7 +101,7 @@ static uint32_t readEgtPacket(int egtChannel) {
 
 #define GET_TEMPERATURE_C(x) (((x) >> 18) / 4)
 
-uint16_t getEgtValue(int egtChannel) {
+uint16_t getMax31855EgtValue(int egtChannel) {
 	uint32_t packet = readEgtPacket(egtChannel);
 	max_32855_code code = getResultCode(packet);
 	if (code != MC_OK) {

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 08 04:44:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -492,8 +492,36 @@ struct engine_state_s {
 	/**
 	offset 136 bit 31 */
 	bool unusedBit_22_31 : 1 {};
+	/**
+	 * offset 140
+	 */
+	float egt1 = (float)0;
+	/**
+	 * offset 144
+	 */
+	float egt2 = (float)0;
+	/**
+	 * User-defined RPM hard limit
+	rpm
+	 * offset 148
+	 */
+	int16_t desiredRpmLimit = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 150
+	 */
+	uint8_t alignmentFill_at_150[2];
+	/**
+	 * offset 152
+	 */
+	int fuelInjectionCounter = (int)0;
+	/**
+	 * offset 156
+	 */
+	int sparkCounter = (int)0;
 };
-static_assert(sizeof(engine_state_s) == 140);
+static_assert(sizeof(engine_state_s) == 160);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 08 04:44:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022

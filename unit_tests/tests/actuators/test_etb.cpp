@@ -15,6 +15,7 @@
 
 using ::testing::_;
 using ::testing::Ne;
+using ::testing::Return;
 using ::testing::StrictMock;
 
 TEST(etb, initializationNoPedal) {
@@ -321,6 +322,37 @@ TEST(etb, testSetpointOnlyPedal) {
 	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 95, true);
 	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
+}
+
+TEST(etb, setpointSecondThrottleTrim) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
+	engineConfiguration->useETBforIdleControl = false;
+
+
+	// Mock pedal map that's just passthru pedal -> target
+	StrictMock<MockVp3d> pedalMap;
+	EXPECT_CALL(pedalMap, getValue(_, _))
+		.WillRepeatedly([](float xRpm, float y) {
+			return y;
+		});
+
+	// Should get called with the un-adjusted setpoint
+	StrictMock<MockVp3d> throttleTrimTable;
+	EXPECT_CALL(throttleTrimTable, getValue(0, 47))
+		.WillOnce(Return(4));
+
+	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	EtbController2 etb(throttleTrimTable);
+	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 47, true);
+	EXPECT_EQ(51, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointIdle) {

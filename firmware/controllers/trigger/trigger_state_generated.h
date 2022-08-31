@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun May 08 13:03:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Aug 21 16:42:01 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -24,6 +24,7 @@ struct trigger_state_s {
 	 */
 	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
 	/**
+	 * trigger: unused field?
 	 * offset 16
 	 */
 	float triggerActualSyncGapRatio = (float)0;
@@ -47,4 +48,4 @@ struct trigger_state_s {
 static_assert(sizeof(trigger_state_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun May 08 13:03:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Aug 21 16:42:01 UTC 2022

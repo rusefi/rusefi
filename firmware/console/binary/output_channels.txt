@@ -1,5 +1,12 @@
 ! units,scale,offset,min,max,digits
 
+!
+! this https://en.wikipedia.org/wiki/God_object is DEPRECATED
+! the dream is to move many or most of the state out into smaller structures/classes
+! See also LiveData.yaml
+!
+
+
 struct_no_prefix output_channels_s
 
 bit sd_present
@@ -7,7 +14,7 @@ bit isIgnitionEnabledIndicator;
 bit isInjectionEnabledIndicator;
 bit sd_logging_internal
 bit unusedb4;
-bit isFuelPumpOn;
+bit unusedb5;
 bit isFanOn;radiator fan
 bit isO2HeaterOn;
 bit checkEngine;
@@ -31,7 +38,6 @@ bit isKnockChipOk;
 bit launchTriggered;
 bit isTps2Error;
 bit isIdleClosedLoop;
-bit isIdleCoasting;
 
 
 uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
@@ -331,6 +337,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	pid_status_s etbStatus
 	pid_status_s boostStatus
 
+	pid_status_s[CAM_INPUTS_COUNT iterate] vvtStatus
+
 	uint16_t auxSpeed1;aux speed 1;"s",1, 0, 0, 0, 0
 	uint16_t auxSpeed2;aux speed 2;"s",1, 0, 0, 0, 0
 
@@ -341,6 +349,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	int16_t autoscale rawBattery;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-    pid_status_s[CAM_INPUTS_COUNT iterate] vvtStatus
-	uint8_t[160] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
+
+	uint8_t[159 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

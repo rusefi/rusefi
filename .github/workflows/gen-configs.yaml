@@ -36,7 +36,7 @@ jobs:
       run: |
         git checkout -- ./controllers/generated/engine_configuration_generated_structures.h
         git checkout -- ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java
-        bash ./gen_config_default.sh
+        ./gen_config_default.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh generated headers and TS project
@@ -44,7 +44,7 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         git config --local user.email "action@github.com"
-        git config --local user.name "GitHub build-firmware Action"
+        git config --local user.name "GitHub gen-configs Action"
         git add firmware/tunerstudio/generated
         git add firmware/controllers/generated
         git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
@@ -79,10 +79,6 @@ jobs:
       with:
         github_token: ${{ github.token }}
         branch: ${{ steps.extract_branch.outputs.branch }}
-
-    - name: Upload .ini files
-      working-directory: ./firmware/tunerstudio/generated
-      run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both

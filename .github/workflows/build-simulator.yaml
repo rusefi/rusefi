@@ -16,6 +16,10 @@ jobs:
         distribution: 'zulu'
         java-version: '8'
 
+    - name: Print GCC version
+      working-directory: .
+      run: gcc -v
+
     - name: Install multilib
       run: |
         sudo apt-get update
@@ -23,21 +27,19 @@ jobs:
 
     - name: Generate Configs for simulator
       working-directory: ./firmware/
-      run: |
-        bash gen_config_default.sh
+      run: ./gen_config_default.sh
 
     - name: Generate Enums
       working-directory: ./firmware/
-      run: |
-        bash gen_enum_to_string.sh
+      run: ./gen_enum_to_string.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
+      run: ./gen_live_documentation.sh
 
     - name: Compile Simulator
       working-directory: ./simulator/
-      run: bash compile.sh
+      run: ./compile.sh
 
     - name: Run Simulator (10 seconds)
       working-directory: ./simulator/
@@ -48,7 +50,3 @@ jobs:
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator
-
-    - name: Configuration Definition CI, without pushing new .jar
-      working-directory: ./android
-      run: ./gradlew :config_definition:shadowJar

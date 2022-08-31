@@ -10,5 +10,6 @@ float luaAdjustment
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
     float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 
+	bit etbRevLimitActive
 
 end_struct

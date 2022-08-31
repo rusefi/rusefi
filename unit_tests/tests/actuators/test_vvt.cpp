@@ -41,3 +41,34 @@ TEST(Vvt, openLoop) {
 	// No open loop for now
 	EXPECT_EQ(dut.getOpenLoop(10), 0);
 }
+
+TEST(Vvt, ClosedLoopNotInverted) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	VvtController dut;
+	dut.init(0, 0, 0, nullptr);
+
+	engineConfiguration->auxPid[0].pFactor = 1.5f;
+	engineConfiguration->auxPid[0].iFactor = 0;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 0;
+
+	// Target of 30 with position 20 should yield positive duty, P=1.5 means 15% duty for 10% error
+	EXPECT_EQ(dut.getClosedLoop(30, 20).value_or(0), 15);
+}
+
+TEST(Vvt, ClosedLoopInverted) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	VvtController dut;
+	dut.init(0, 0, 0, nullptr);
+
+	engineConfiguration->invertVvtControlIntake = true;
+	engineConfiguration->auxPid[0].pFactor = 1.5f;
+	engineConfiguration->auxPid[0].iFactor = 0;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 0;
+
+	// Target of -30 with position -20 should yield positive duty, P=1.5 means 15% duty for 10% error
+	EXPECT_EQ(dut.getClosedLoop(-30, -20).value_or(0), 15);
+}

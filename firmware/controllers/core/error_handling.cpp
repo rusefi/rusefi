@@ -144,13 +144,12 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	engine->engineState.warnings.addWarningCode(code);
+	// we just had this same warning, let's not spam
+	if (engine->engineState.warnings.isWarningNow(code) || !warningEnabled) {
+		return true;
+	}
 
-	// todo: move this logic into WarningCodeState?
-	efitimesec_t now = getTimeNowSeconds();
-	if (engine->engineState.warnings.isWarningNow(now, false) || !warningEnabled)
-		return true; // we just had another warning, let's not spam
-	engine->engineState.warnings.timeOfPreviousWarning = now;
+	engine->engineState.warnings.addWarningCode(code);
 
 	va_list ap;
 	va_start(ap, fmt);

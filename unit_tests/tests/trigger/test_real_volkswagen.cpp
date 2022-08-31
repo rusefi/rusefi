@@ -15,6 +15,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 
 	reader.open("tests/trigger/resources/nick_1.csv", indeces);
 	EngineTestHelper eth (VW_ABA);
+	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(TT_60_2_VW);
 
 	while (reader.haveMore()) {
@@ -22,11 +23,12 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	}
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ( 1683, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ( 1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
 TEST(crankingVW, crankingTwiceWithGap) {
 	EngineTestHelper eth (VW_ABA);
+	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(TT_60_2_VW);
 
 	{
@@ -40,7 +42,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-		ASSERT_EQ(1683, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
 	auto now = getTimeNowNt();
@@ -57,7 +59,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount());
-		ASSERT_EQ(1683, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 
 	{
@@ -72,6 +74,6 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount());
-		ASSERT_EQ(1683, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+		ASSERT_EQ(1695, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	}
 }

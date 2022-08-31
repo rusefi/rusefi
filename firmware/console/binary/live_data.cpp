@@ -105,6 +105,15 @@ const trigger_state_s* getLiveDataAddr(size_t idx) {
 }
 
 template<>
+const trigger_state_primary_s* getLiveDataAddr() {
+#if EFI_SHAFT_POSITION_INPUT
+	return &engine->triggerCentral.triggerState;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
 const wall_fuel_state_s* getLiveDataAddr() {
 	return &engine->injectionEvents.elements[0].wallFuel;
 }

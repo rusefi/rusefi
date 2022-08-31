@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 11 14:24:10 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Aug 29 12:19:32 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -18,9 +18,7 @@ public class TsOutputs {
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
 	public static final int CAM_INPUTS_COUNT = 4;
-	public static final int CAM_INPUTS_COUNT_padding = 0;
 	public static final int CAMS_PER_BANK = 2;
-	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int CAN_DEFAULT_BASE = 0x200;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
@@ -54,7 +52,6 @@ public class TsOutputs {
 	public static final String CMD_IGNITION_PIN = "set_ignition_pin";
 	public static final String CMD_INJECTION = "injection";
 	public static final String CMD_INJECTION_PIN = "set_injection_pin";
-	public static final int CMD_KEYPAD = 0x17;
 	public static final String CMD_LOGIC_PIN = "set_logic_input_pin";
 	public static final String CMD_MIL_BENCH = "milbench";
 	public static final String CMD_PINS = "pins";
@@ -72,12 +69,6 @@ public class TsOutputs {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_LUA_OUTPUT_CATEGORY = 33;
-	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
-	public static final int CMD_TS_WBO_UPDATE = 0x15;
-	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
 	public static final int COMPOSITE_PACKET_COUNT = 1000;
@@ -108,7 +99,7 @@ public class TsOutputs {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10013;
+	public static final int FLASH_DATA_VERSION = 10014;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -353,6 +344,7 @@ public class TsOutputs {
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
+	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final char TS_COMMAND_F = 'F';
@@ -400,7 +392,7 @@ public class TsOutputs {
 	public static final Field ISINJECTIONENABLEDINDICATOR = Field.create("ISINJECTIONENABLEDINDICATOR", 0, FieldType.BIT, 2);
 	public static final Field SD_LOGGING_INTERNAL = Field.create("SD_LOGGING_INTERNAL", 0, FieldType.BIT, 3);
 	public static final Field UNUSEDB4 = Field.create("UNUSEDB4", 0, FieldType.BIT, 4);
-	public static final Field ISFUELPUMPON = Field.create("ISFUELPUMPON", 0, FieldType.BIT, 5);
+	public static final Field UNUSEDB5 = Field.create("UNUSEDB5", 0, FieldType.BIT, 5);
 	public static final Field ISFANON = Field.create("ISFANON", 0, FieldType.BIT, 6);
 	public static final Field ISO2HEATERON = Field.create("ISO2HEATERON", 0, FieldType.BIT, 7);
 	public static final Field CHECKENGINE = Field.create("CHECKENGINE", 0, FieldType.BIT, 8);
@@ -423,10 +415,10 @@ public class TsOutputs {
 	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 25);
 	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 26);
 	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 27);
-	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_29_29 = Field.create("UNUSEDBIT_29_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_29_30 = Field.create("UNUSEDBIT_29_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_29_31 = Field.create("UNUSEDBIT_29_31", 0, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_28_28 = Field.create("UNUSEDBIT_28_28", 0, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_28_29 = Field.create("UNUSEDBIT_28_29", 0, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_28_30 = Field.create("UNUSEDBIT_28_30", 0, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_28_31 = Field.create("UNUSEDBIT_28_31", 0, FieldType.BIT, 31);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01);
@@ -718,30 +710,213 @@ public class TsOutputs {
 	public static final Field BOOSTSTATUS_OUTPUT = Field.create("BOOSTSTATUS_OUTPUT", 496, FieldType.INT16).setScale(0.01);
 	public static final Field BOOSTSTATUS_ERROR = Field.create("BOOSTSTATUS_ERROR", 498, FieldType.INT16).setScale(0.01);
 	public static final Field BOOSTSTATUS_RESETCOUNTER = Field.create("BOOSTSTATUS_RESETCOUNTER", 500, FieldType.INT).setScale(1.0);
-	public static final Field AUXSPEED1 = Field.create("AUXSPEED1", 504, FieldType.INT16).setScale(1.0);
-	public static final Field AUXSPEED2 = Field.create("AUXSPEED2", 506, FieldType.INT16).setScale(1.0);
-	public static final Field ISSVALUE = Field.create("ISSVALUE", 508, FieldType.INT16).setScale(1.0);
-	public static final Field RAWANALOGINPUT1 = Field.create("RAWANALOGINPUT1", 510, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT2 = Field.create("RAWANALOGINPUT2", 512, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT3 = Field.create("RAWANALOGINPUT3", 514, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT4 = Field.create("RAWANALOGINPUT4", 516, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT5 = Field.create("RAWANALOGINPUT5", 518, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT6 = Field.create("RAWANALOGINPUT6", 520, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT7 = Field.create("RAWANALOGINPUT7", 522, FieldType.INT16).setScale(0.001);
-	public static final Field RAWANALOGINPUT8 = Field.create("RAWANALOGINPUT8", 524, FieldType.INT16).setScale(0.001);
-	public static final Field GPPWMOUTPUT1 = Field.create("GPPWMOUTPUT1", 526, FieldType.INT8).setScale(0.5);
-	public static final Field GPPWMOUTPUT2 = Field.create("GPPWMOUTPUT2", 527, FieldType.INT8).setScale(0.5);
-	public static final Field GPPWMOUTPUT3 = Field.create("GPPWMOUTPUT3", 528, FieldType.INT8).setScale(0.5);
-	public static final Field GPPWMOUTPUT4 = Field.create("GPPWMOUTPUT4", 529, FieldType.INT8).setScale(0.5);
-	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 530, FieldType.INT16).setScale(0.001);
-	public static final Field UNUSEDATTHEEND = Field.create("UNUSEDATTHEEND", 532, FieldType.INT8).setScale(1.0);
+	public static final Field VVTSTATUS1_PTERM = Field.create("VVTSTATUS1_PTERM", 504, FieldType.FLOAT);
+	public static final Field VVTSTATUS1_ITERM = Field.create("VVTSTATUS1_ITERM", 508, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS1_DTERM = Field.create("VVTSTATUS1_DTERM", 510, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS1_OUTPUT = Field.create("VVTSTATUS1_OUTPUT", 512, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS1_ERROR = Field.create("VVTSTATUS1_ERROR", 514, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS1_RESETCOUNTER = Field.create("VVTSTATUS1_RESETCOUNTER", 516, FieldType.INT).setScale(1.0);
+	public static final Field VVTSTATUS2_PTERM = Field.create("VVTSTATUS2_PTERM", 520, FieldType.FLOAT);
+	public static final Field VVTSTATUS2_ITERM = Field.create("VVTSTATUS2_ITERM", 524, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS2_DTERM = Field.create("VVTSTATUS2_DTERM", 526, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS2_OUTPUT = Field.create("VVTSTATUS2_OUTPUT", 528, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS2_ERROR = Field.create("VVTSTATUS2_ERROR", 530, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS2_RESETCOUNTER = Field.create("VVTSTATUS2_RESETCOUNTER", 532, FieldType.INT).setScale(1.0);
+	public static final Field VVTSTATUS3_PTERM = Field.create("VVTSTATUS3_PTERM", 536, FieldType.FLOAT);
+	public static final Field VVTSTATUS3_ITERM = Field.create("VVTSTATUS3_ITERM", 540, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS3_DTERM = Field.create("VVTSTATUS3_DTERM", 542, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS3_OUTPUT = Field.create("VVTSTATUS3_OUTPUT", 544, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS3_ERROR = Field.create("VVTSTATUS3_ERROR", 546, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS3_RESETCOUNTER = Field.create("VVTSTATUS3_RESETCOUNTER", 548, FieldType.INT).setScale(1.0);
+	public static final Field VVTSTATUS4_PTERM = Field.create("VVTSTATUS4_PTERM", 552, FieldType.FLOAT);
+	public static final Field VVTSTATUS4_ITERM = Field.create("VVTSTATUS4_ITERM", 556, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS4_DTERM = Field.create("VVTSTATUS4_DTERM", 558, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS4_OUTPUT = Field.create("VVTSTATUS4_OUTPUT", 560, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS4_ERROR = Field.create("VVTSTATUS4_ERROR", 562, FieldType.INT16).setScale(0.01);
+	public static final Field VVTSTATUS4_RESETCOUNTER = Field.create("VVTSTATUS4_RESETCOUNTER", 564, FieldType.INT).setScale(1.0);
+	public static final Field AUXSPEED1 = Field.create("AUXSPEED1", 568, FieldType.INT16).setScale(1.0);
+	public static final Field AUXSPEED2 = Field.create("AUXSPEED2", 570, FieldType.INT16).setScale(1.0);
+	public static final Field ISSVALUE = Field.create("ISSVALUE", 572, FieldType.INT16).setScale(1.0);
+	public static final Field RAWANALOGINPUT1 = Field.create("RAWANALOGINPUT1", 574, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT2 = Field.create("RAWANALOGINPUT2", 576, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT3 = Field.create("RAWANALOGINPUT3", 578, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT4 = Field.create("RAWANALOGINPUT4", 580, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT5 = Field.create("RAWANALOGINPUT5", 582, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT6 = Field.create("RAWANALOGINPUT6", 584, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT7 = Field.create("RAWANALOGINPUT7", 586, FieldType.INT16).setScale(0.001);
+	public static final Field RAWANALOGINPUT8 = Field.create("RAWANALOGINPUT8", 588, FieldType.INT16).setScale(0.001);
+	public static final Field GPPWMOUTPUT1 = Field.create("GPPWMOUTPUT1", 590, FieldType.INT8).setScale(0.5);
+	public static final Field GPPWMOUTPUT2 = Field.create("GPPWMOUTPUT2", 591, FieldType.INT8).setScale(0.5);
+	public static final Field GPPWMOUTPUT3 = Field.create("GPPWMOUTPUT3", 592, FieldType.INT8).setScale(0.5);
+	public static final Field GPPWMOUTPUT4 = Field.create("GPPWMOUTPUT4", 593, FieldType.INT8).setScale(0.5);
+	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 594, FieldType.INT16).setScale(0.001);
+	public static final Field EXTIOVERFLOWCOUNT = Field.create("EXTIOVERFLOWCOUNT", 596, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 597, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 598, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND3 = Field.create("UNUSEDATTHEEND3", 599, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND4 = Field.create("UNUSEDATTHEEND4", 600, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND5 = Field.create("UNUSEDATTHEEND5", 601, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND6 = Field.create("UNUSEDATTHEEND6", 602, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND7 = Field.create("UNUSEDATTHEEND7", 603, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND8 = Field.create("UNUSEDATTHEEND8", 604, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND9 = Field.create("UNUSEDATTHEEND9", 605, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND10 = Field.create("UNUSEDATTHEEND10", 606, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND11 = Field.create("UNUSEDATTHEEND11", 607, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND12 = Field.create("UNUSEDATTHEEND12", 608, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND13 = Field.create("UNUSEDATTHEEND13", 609, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND14 = Field.create("UNUSEDATTHEEND14", 610, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND15 = Field.create("UNUSEDATTHEEND15", 611, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND16 = Field.create("UNUSEDATTHEEND16", 612, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND17 = Field.create("UNUSEDATTHEEND17", 613, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND18 = Field.create("UNUSEDATTHEEND18", 614, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND19 = Field.create("UNUSEDATTHEEND19", 615, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND20 = Field.create("UNUSEDATTHEEND20", 616, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND21 = Field.create("UNUSEDATTHEEND21", 617, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND22 = Field.create("UNUSEDATTHEEND22", 618, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND23 = Field.create("UNUSEDATTHEEND23", 619, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND24 = Field.create("UNUSEDATTHEEND24", 620, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND25 = Field.create("UNUSEDATTHEEND25", 621, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND26 = Field.create("UNUSEDATTHEEND26", 622, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND27 = Field.create("UNUSEDATTHEEND27", 623, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND28 = Field.create("UNUSEDATTHEEND28", 624, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND29 = Field.create("UNUSEDATTHEEND29", 625, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND30 = Field.create("UNUSEDATTHEEND30", 626, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND31 = Field.create("UNUSEDATTHEEND31", 627, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND32 = Field.create("UNUSEDATTHEEND32", 628, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND33 = Field.create("UNUSEDATTHEEND33", 629, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND34 = Field.create("UNUSEDATTHEEND34", 630, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND35 = Field.create("UNUSEDATTHEEND35", 631, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND36 = Field.create("UNUSEDATTHEEND36", 632, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND37 = Field.create("UNUSEDATTHEEND37", 633, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND38 = Field.create("UNUSEDATTHEEND38", 634, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND39 = Field.create("UNUSEDATTHEEND39", 635, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND40 = Field.create("UNUSEDATTHEEND40", 636, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND41 = Field.create("UNUSEDATTHEEND41", 637, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND42 = Field.create("UNUSEDATTHEEND42", 638, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND43 = Field.create("UNUSEDATTHEEND43", 639, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND44 = Field.create("UNUSEDATTHEEND44", 640, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND45 = Field.create("UNUSEDATTHEEND45", 641, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND46 = Field.create("UNUSEDATTHEEND46", 642, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND47 = Field.create("UNUSEDATTHEEND47", 643, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND48 = Field.create("UNUSEDATTHEEND48", 644, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND49 = Field.create("UNUSEDATTHEEND49", 645, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND50 = Field.create("UNUSEDATTHEEND50", 646, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND51 = Field.create("UNUSEDATTHEEND51", 647, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND52 = Field.create("UNUSEDATTHEEND52", 648, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND53 = Field.create("UNUSEDATTHEEND53", 649, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND54 = Field.create("UNUSEDATTHEEND54", 650, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND55 = Field.create("UNUSEDATTHEEND55", 651, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND56 = Field.create("UNUSEDATTHEEND56", 652, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND57 = Field.create("UNUSEDATTHEEND57", 653, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND58 = Field.create("UNUSEDATTHEEND58", 654, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND59 = Field.create("UNUSEDATTHEEND59", 655, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND60 = Field.create("UNUSEDATTHEEND60", 656, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND61 = Field.create("UNUSEDATTHEEND61", 657, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND62 = Field.create("UNUSEDATTHEEND62", 658, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND63 = Field.create("UNUSEDATTHEEND63", 659, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND64 = Field.create("UNUSEDATTHEEND64", 660, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND65 = Field.create("UNUSEDATTHEEND65", 661, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND66 = Field.create("UNUSEDATTHEEND66", 662, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND67 = Field.create("UNUSEDATTHEEND67", 663, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND68 = Field.create("UNUSEDATTHEEND68", 664, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND69 = Field.create("UNUSEDATTHEEND69", 665, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND70 = Field.create("UNUSEDATTHEEND70", 666, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND71 = Field.create("UNUSEDATTHEEND71", 667, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND72 = Field.create("UNUSEDATTHEEND72", 668, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND73 = Field.create("UNUSEDATTHEEND73", 669, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND74 = Field.create("UNUSEDATTHEEND74", 670, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND75 = Field.create("UNUSEDATTHEEND75", 671, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND76 = Field.create("UNUSEDATTHEEND76", 672, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND77 = Field.create("UNUSEDATTHEEND77", 673, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND78 = Field.create("UNUSEDATTHEEND78", 674, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND79 = Field.create("UNUSEDATTHEEND79", 675, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND80 = Field.create("UNUSEDATTHEEND80", 676, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND81 = Field.create("UNUSEDATTHEEND81", 677, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND82 = Field.create("UNUSEDATTHEEND82", 678, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND83 = Field.create("UNUSEDATTHEEND83", 679, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND84 = Field.create("UNUSEDATTHEEND84", 680, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND85 = Field.create("UNUSEDATTHEEND85", 681, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND86 = Field.create("UNUSEDATTHEEND86", 682, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND87 = Field.create("UNUSEDATTHEEND87", 683, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND88 = Field.create("UNUSEDATTHEEND88", 684, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND89 = Field.create("UNUSEDATTHEEND89", 685, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND90 = Field.create("UNUSEDATTHEEND90", 686, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND91 = Field.create("UNUSEDATTHEEND91", 687, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND92 = Field.create("UNUSEDATTHEEND92", 688, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND93 = Field.create("UNUSEDATTHEEND93", 689, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND94 = Field.create("UNUSEDATTHEEND94", 690, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND95 = Field.create("UNUSEDATTHEEND95", 691, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND96 = Field.create("UNUSEDATTHEEND96", 692, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND97 = Field.create("UNUSEDATTHEEND97", 693, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND98 = Field.create("UNUSEDATTHEEND98", 694, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND99 = Field.create("UNUSEDATTHEEND99", 695, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND100 = Field.create("UNUSEDATTHEEND100", 696, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND101 = Field.create("UNUSEDATTHEEND101", 697, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND102 = Field.create("UNUSEDATTHEEND102", 698, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND103 = Field.create("UNUSEDATTHEEND103", 699, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND104 = Field.create("UNUSEDATTHEEND104", 700, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND105 = Field.create("UNUSEDATTHEEND105", 701, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND106 = Field.create("UNUSEDATTHEEND106", 702, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND107 = Field.create("UNUSEDATTHEEND107", 703, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND108 = Field.create("UNUSEDATTHEEND108", 704, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND109 = Field.create("UNUSEDATTHEEND109", 705, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND110 = Field.create("UNUSEDATTHEEND110", 706, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND111 = Field.create("UNUSEDATTHEEND111", 707, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND112 = Field.create("UNUSEDATTHEEND112", 708, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND113 = Field.create("UNUSEDATTHEEND113", 709, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND114 = Field.create("UNUSEDATTHEEND114", 710, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND115 = Field.create("UNUSEDATTHEEND115", 711, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND116 = Field.create("UNUSEDATTHEEND116", 712, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND117 = Field.create("UNUSEDATTHEEND117", 713, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND118 = Field.create("UNUSEDATTHEEND118", 714, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND119 = Field.create("UNUSEDATTHEEND119", 715, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND120 = Field.create("UNUSEDATTHEEND120", 716, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND121 = Field.create("UNUSEDATTHEEND121", 717, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND122 = Field.create("UNUSEDATTHEEND122", 718, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND123 = Field.create("UNUSEDATTHEEND123", 719, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND124 = Field.create("UNUSEDATTHEEND124", 720, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND125 = Field.create("UNUSEDATTHEEND125", 721, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND126 = Field.create("UNUSEDATTHEEND126", 722, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND127 = Field.create("UNUSEDATTHEEND127", 723, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND128 = Field.create("UNUSEDATTHEEND128", 724, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND129 = Field.create("UNUSEDATTHEEND129", 725, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND130 = Field.create("UNUSEDATTHEEND130", 726, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND131 = Field.create("UNUSEDATTHEEND131", 727, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND132 = Field.create("UNUSEDATTHEEND132", 728, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND133 = Field.create("UNUSEDATTHEEND133", 729, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND134 = Field.create("UNUSEDATTHEEND134", 730, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND135 = Field.create("UNUSEDATTHEEND135", 731, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND136 = Field.create("UNUSEDATTHEEND136", 732, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND137 = Field.create("UNUSEDATTHEEND137", 733, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND138 = Field.create("UNUSEDATTHEEND138", 734, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND139 = Field.create("UNUSEDATTHEEND139", 735, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND140 = Field.create("UNUSEDATTHEEND140", 736, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND141 = Field.create("UNUSEDATTHEEND141", 737, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND142 = Field.create("UNUSEDATTHEEND142", 738, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND143 = Field.create("UNUSEDATTHEEND143", 739, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND144 = Field.create("UNUSEDATTHEEND144", 740, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND145 = Field.create("UNUSEDATTHEEND145", 741, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND146 = Field.create("UNUSEDATTHEEND146", 742, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND147 = Field.create("UNUSEDATTHEEND147", 743, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND148 = Field.create("UNUSEDATTHEEND148", 744, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND149 = Field.create("UNUSEDATTHEEND149", 745, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND150 = Field.create("UNUSEDATTHEEND150", 746, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND151 = Field.create("UNUSEDATTHEEND151", 747, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND152 = Field.create("UNUSEDATTHEEND152", 748, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND153 = Field.create("UNUSEDATTHEEND153", 749, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND154 = Field.create("UNUSEDATTHEEND154", 750, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND155 = Field.create("UNUSEDATTHEEND155", 751, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND156 = Field.create("UNUSEDATTHEEND156", 752, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND157 = Field.create("UNUSEDATTHEEND157", 753, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND158 = Field.create("UNUSEDATTHEEND158", 754, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND159 = Field.create("UNUSEDATTHEEND159", 755, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	ISIGNITIONENABLEDINDICATOR,
 	ISINJECTIONENABLEDINDICATOR,
 	SD_LOGGING_INTERNAL,
 	UNUSEDB4,
-	ISFUELPUMPON,
+	UNUSEDB5,
 	ISFANON,
 	ISO2HEATERON,
 	CHECKENGINE,
@@ -764,10 +939,10 @@ public class TsOutputs {
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
-	ISIDLECOASTING,
-	UNUSEDBIT_29_29,
-	UNUSEDBIT_29_30,
-	UNUSEDBIT_29_31,
+	UNUSEDBIT_28_28,
+	UNUSEDBIT_28_29,
+	UNUSEDBIT_28_30,
+	UNUSEDBIT_28_31,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
@@ -1059,6 +1234,30 @@ public class TsOutputs {
 	BOOSTSTATUS_OUTPUT,
 	BOOSTSTATUS_ERROR,
 	BOOSTSTATUS_RESETCOUNTER,
+	VVTSTATUS1_PTERM,
+	VVTSTATUS1_ITERM,
+	VVTSTATUS1_DTERM,
+	VVTSTATUS1_OUTPUT,
+	VVTSTATUS1_ERROR,
+	VVTSTATUS1_RESETCOUNTER,
+	VVTSTATUS2_PTERM,
+	VVTSTATUS2_ITERM,
+	VVTSTATUS2_DTERM,
+	VVTSTATUS2_OUTPUT,
+	VVTSTATUS2_ERROR,
+	VVTSTATUS2_RESETCOUNTER,
+	VVTSTATUS3_PTERM,
+	VVTSTATUS3_ITERM,
+	VVTSTATUS3_DTERM,
+	VVTSTATUS3_OUTPUT,
+	VVTSTATUS3_ERROR,
+	VVTSTATUS3_RESETCOUNTER,
+	VVTSTATUS4_PTERM,
+	VVTSTATUS4_ITERM,
+	VVTSTATUS4_DTERM,
+	VVTSTATUS4_OUTPUT,
+	VVTSTATUS4_ERROR,
+	VVTSTATUS4_RESETCOUNTER,
 	AUXSPEED1,
 	AUXSPEED2,
 	ISSVALUE,
@@ -1075,6 +1274,165 @@ public class TsOutputs {
 	GPPWMOUTPUT3,
 	GPPWMOUTPUT4,
 	RAWBATTERY,
-	UNUSEDATTHEEND,
+	EXTIOVERFLOWCOUNT,
+	UNUSEDATTHEEND1,
+	UNUSEDATTHEEND2,
+	UNUSEDATTHEEND3,
+	UNUSEDATTHEEND4,
+	UNUSEDATTHEEND5,
+	UNUSEDATTHEEND6,
+	UNUSEDATTHEEND7,
+	UNUSEDATTHEEND8,
+	UNUSEDATTHEEND9,
+	UNUSEDATTHEEND10,
+	UNUSEDATTHEEND11,
+	UNUSEDATTHEEND12,
+	UNUSEDATTHEEND13,
+	UNUSEDATTHEEND14,
+	UNUSEDATTHEEND15,
+	UNUSEDATTHEEND16,
+	UNUSEDATTHEEND17,
+	UNUSEDATTHEEND18,
+	UNUSEDATTHEEND19,
+	UNUSEDATTHEEND20,
+	UNUSEDATTHEEND21,
+	UNUSEDATTHEEND22,
+	UNUSEDATTHEEND23,
+	UNUSEDATTHEEND24,
+	UNUSEDATTHEEND25,
+	UNUSEDATTHEEND26,
+	UNUSEDATTHEEND27,
+	UNUSEDATTHEEND28,
+	UNUSEDATTHEEND29,
+	UNUSEDATTHEEND30,
+	UNUSEDATTHEEND31,
+	UNUSEDATTHEEND32,
+	UNUSEDATTHEEND33,
+	UNUSEDATTHEEND34,
+	UNUSEDATTHEEND35,
+	UNUSEDATTHEEND36,
+	UNUSEDATTHEEND37,
+	UNUSEDATTHEEND38,
+	UNUSEDATTHEEND39,
+	UNUSEDATTHEEND40,
+	UNUSEDATTHEEND41,
+	UNUSEDATTHEEND42,
+	UNUSEDATTHEEND43,
+	UNUSEDATTHEEND44,
+	UNUSEDATTHEEND45,
+	UNUSEDATTHEEND46,
+	UNUSEDATTHEEND47,
+	UNUSEDATTHEEND48,
+	UNUSEDATTHEEND49,
+	UNUSEDATTHEEND50,
+	UNUSEDATTHEEND51,
+	UNUSEDATTHEEND52,
+	UNUSEDATTHEEND53,
+	UNUSEDATTHEEND54,
+	UNUSEDATTHEEND55,
+	UNUSEDATTHEEND56,
+	UNUSEDATTHEEND57,
+	UNUSEDATTHEEND58,
+	UNUSEDATTHEEND59,
+	UNUSEDATTHEEND60,
+	UNUSEDATTHEEND61,
+	UNUSEDATTHEEND62,
+	UNUSEDATTHEEND63,
+	UNUSEDATTHEEND64,
+	UNUSEDATTHEEND65,
+	UNUSEDATTHEEND66,
+	UNUSEDATTHEEND67,
+	UNUSEDATTHEEND68,
+	UNUSEDATTHEEND69,
+	UNUSEDATTHEEND70,
+	UNUSEDATTHEEND71,
+	UNUSEDATTHEEND72,
+	UNUSEDATTHEEND73,
+	UNUSEDATTHEEND74,
+	UNUSEDATTHEEND75,
+	UNUSEDATTHEEND76,
+	UNUSEDATTHEEND77,
+	UNUSEDATTHEEND78,
+	UNUSEDATTHEEND79,
+	UNUSEDATTHEEND80,
+	UNUSEDATTHEEND81,
+	UNUSEDATTHEEND82,
+	UNUSEDATTHEEND83,
+	UNUSEDATTHEEND84,
+	UNUSEDATTHEEND85,
+	UNUSEDATTHEEND86,
+	UNUSEDATTHEEND87,
+	UNUSEDATTHEEND88,
+	UNUSEDATTHEEND89,
+	UNUSEDATTHEEND90,
+	UNUSEDATTHEEND91,
+	UNUSEDATTHEEND92,
+	UNUSEDATTHEEND93,
+	UNUSEDATTHEEND94,
+	UNUSEDATTHEEND95,
+	UNUSEDATTHEEND96,
+	UNUSEDATTHEEND97,
+	UNUSEDATTHEEND98,
+	UNUSEDATTHEEND99,
+	UNUSEDATTHEEND100,
+	UNUSEDATTHEEND101,
+	UNUSEDATTHEEND102,
+	UNUSEDATTHEEND103,
+	UNUSEDATTHEEND104,
+	UNUSEDATTHEEND105,
+	UNUSEDATTHEEND106,
+	UNUSEDATTHEEND107,
+	UNUSEDATTHEEND108,
+	UNUSEDATTHEEND109,
+	UNUSEDATTHEEND110,
+	UNUSEDATTHEEND111,
+	UNUSEDATTHEEND112,
+	UNUSEDATTHEEND113,
+	UNUSEDATTHEEND114,
+	UNUSEDATTHEEND115,
+	UNUSEDATTHEEND116,
+	UNUSEDATTHEEND117,
+	UNUSEDATTHEEND118,
+	UNUSEDATTHEEND119,
+	UNUSEDATTHEEND120,
+	UNUSEDATTHEEND121,
+	UNUSEDATTHEEND122,
+	UNUSEDATTHEEND123,
+	UNUSEDATTHEEND124,
+	UNUSEDATTHEEND125,
+	UNUSEDATTHEEND126,
+	UNUSEDATTHEEND127,
+	UNUSEDATTHEEND128,
+	UNUSEDATTHEEND129,
+	UNUSEDATTHEEND130,
+	UNUSEDATTHEEND131,
+	UNUSEDATTHEEND132,
+	UNUSEDATTHEEND133,
+	UNUSEDATTHEEND134,
+	UNUSEDATTHEEND135,
+	UNUSEDATTHEEND136,
+	UNUSEDATTHEEND137,
+	UNUSEDATTHEEND138,
+	UNUSEDATTHEEND139,
+	UNUSEDATTHEEND140,
+	UNUSEDATTHEEND141,
+	UNUSEDATTHEEND142,
+	UNUSEDATTHEEND143,
+	UNUSEDATTHEEND144,
+	UNUSEDATTHEEND145,
+	UNUSEDATTHEEND146,
+	UNUSEDATTHEEND147,
+	UNUSEDATTHEEND148,
+	UNUSEDATTHEEND149,
+	UNUSEDATTHEEND150,
+	UNUSEDATTHEEND151,
+	UNUSEDATTHEEND152,
+	UNUSEDATTHEEND153,
+	UNUSEDATTHEEND154,
+	UNUSEDATTHEEND155,
+	UNUSEDATTHEEND156,
+	UNUSEDATTHEEND157,
+	UNUSEDATTHEEND158,
+	UNUSEDATTHEEND159,
 	};
 }

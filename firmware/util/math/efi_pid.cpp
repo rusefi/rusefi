@@ -131,9 +131,6 @@ void Pid::setErrorAmplification(float coef) {
 }
 
 #if EFI_TUNER_STUDIO
-void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) const {
-	postState(tsOutputChannels, 1);
-}
 
 void Pid::postState(pid_status_s& pidStatus) const {
 	pidStatus.output = output;
@@ -141,24 +138,6 @@ void Pid::postState(pid_status_s& pidStatus) const {
 	pidStatus.pTerm = parameters == nullptr ? 0 : parameters->pFactor * previousError;
 	pidStatus.iTerm = iTerm;
 	pidStatus.dTerm = dTerm;
-}
-
-/**
- * see https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
- */
-void Pid::postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const {
-	tsOutputChannels->debugFloatField1 = output;
-	tsOutputChannels->debugFloatField2 = iTerm;
-	tsOutputChannels->debugFloatField3 = getPrevError();
-	tsOutputChannels->debugFloatField4 = getI();
-	tsOutputChannels->debugFloatField5 = getD();
-	tsOutputChannels->debugFloatField6 = dTerm;
-//	tsOutputChannels->debugFloatField6 = parameters->minValue;
-	tsOutputChannels->debugFloatField7 = parameters->maxValue;
-	tsOutputChannels->debugIntField1 = getP() * pMult;
-	tsOutputChannels->debugIntField2 = getOffset();
-	tsOutputChannels->debugIntField3 = resetCounter;
-	tsOutputChannels->debugIntField4 = parameters->periodMs;
 }
 #endif /* EFI_TUNER_STUDIO */
 

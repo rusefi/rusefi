@@ -293,6 +293,70 @@ pins:
     id: EFI_ADC_2
     class: analog_inputs
     ts_name: intMAP (A15)
+    
+  - pin: 4A
+    function: ETB + 
+    
+  - pin: 4B
+    function: ETB +
+  
+  - pin: 4C
+    function: ETB -
+  
+  - pin: 4D
+    function: ETB -
+  
+  - pin: 4E
+    function: GND
+  
+  - pin: 4F
+    function: GND
+  
+  - pin: 4G
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4G - PPS2 OR TEMPERATURE SENSOR
+    function: PPS 
+  
+  - pin: 4H
+    id: [B0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4H - TPS2
+    function: TPS
+      
+  - pin: 4I
+    id: [A3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4I - PPS1
+    
+  - pin: 4J
+    function: TPS
+  
+  - pin: 4K
+    function: +5V
+  
+  - pin: 4L
+    function: +5V
+
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN 
+
+
+
+
+
 
 info:
   title: Hellen Miata NA6

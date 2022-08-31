@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "value_lookup.h"
+#include "can_filter.h"
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
@@ -135,10 +136,16 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 }
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-static int lua_txCan(lua_State* l) {
-	auto channel = luaL_checkinteger(l, 1);
+
+static int validateCanChannelAndConvertFromHumanIntoZeroIndex(lua_State* l) {
+	lua_Integer channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
-	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only channels 1 and 2 currently supported");
+	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only buses 1 and 2 currently supported");
+	return channel - HUMAN_OFFSET;
+}
+
+static int lua_txCan(lua_State* l) {
+	auto bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 
 	auto id = luaL_checkinteger(l, 2);
 	auto ext = luaL_checkinteger(l, 3);
@@ -152,7 +159,7 @@ static int lua_txCan(lua_State* l) {
 
 	// conform ext parameter to true/false
 	CanTxMessage msg(CanCategory::LUA, id, 8, ext == 0 ? false : true);
-	msg.busIndex = channel - HUMAN_OFFSET;
+	msg.busIndex = bus;
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers
@@ -201,7 +208,6 @@ AirmassModelBase& getLuaAirmassModel() {
 
 #if !EFI_UNIT_TEST
 static SimplePwm pwms[LUA_PWM_COUNT];
-static OutputPin pins[LUA_PWM_COUNT];
 
 struct P {
 	SimplePwm& pwm;
@@ -211,6 +217,7 @@ struct P {
 static P luaL_checkPwmIndex(lua_State* l, int pos) {
 	auto channel = luaL_checkinteger(l, pos);
 
+    // todo: what a mess :( CAN buses start at 1 and PWM channels start at 0 :(
 	// Ensure channel is valid
 	if (channel < 0 || channel >= LUA_PWM_COUNT) {
 		luaL_error(l, "setPwmDuty invalid channel %d", channel);
@@ -229,7 +236,7 @@ static int lua_startPwm(lua_State* l) {
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		engineConfiguration->luaOutputPins[p.idx], &pins[p.idx],
+		engineConfiguration->luaOutputPins[p.idx], &enginePins.luaOutputPins[p.idx],
 		freq, duty
 	);
 
@@ -238,8 +245,8 @@ static int lua_startPwm(lua_State* l) {
 
 void luaDeInitPins() {
 	// Simply de-init all pins - when the script runs again, they will be re-init'd
-	for (size_t i = 0; i < efi::size(pins); i++) {
-		pins[i].deInit();
+	for (size_t i = 0; i < efi::size(enginePins.luaOutputPins); i++) {
+		enginePins.luaOutputPins[i].deInit();
 	}
 }
 
@@ -279,8 +286,8 @@ static int lua_getDigital(lua_State* l) {
 
 	switch (idx) {
 		case 0: state = engine->engineState.clutchDownState; break;
-		case 1: state = engine->clutchUpState; break;
-		case 2: state = engine->brakePedalState; break;
+		case 1: state = engine->engineState.clutchUpState; break;
+		case 2: state = engine->engineState.brakePedalState; break;
 		case 3: state = engine->module<AcController>().unmock().acButtonState; break;
 		default:
 			// Return nil to indicate invalid parameter
@@ -465,8 +472,8 @@ int lua_canRxAdd(lua_State* l) {
 	uint32_t eid;
 
 	// defaults if not passed
-	int bus = -1;
-	int callback = -1;
+	int bus = ANY_BUS;
+	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {
 		case 1:
@@ -482,14 +489,14 @@ int lua_canRxAdd(lua_State* l) {
 				callback = getLuaFunc(l);
 			} else {
 				// handle canRxAdd(bus, id)
-				bus = luaL_checkinteger(l, 1);
+				bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 				eid = luaL_checkinteger(l, 2);
 			}
 
 			break;
 		case 3:
 			// handle canRxAdd(bus, id, callback)
-			bus = luaL_checkinteger(l, 1);
+			bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 			eid = luaL_checkinteger(l, 2);
 			lua_remove(l, 1);
 			lua_remove(l, 1);
@@ -499,7 +506,7 @@ int lua_canRxAdd(lua_State* l) {
 			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
 	}
 
-	addLuaCanRxFilter(eid, 0x1FFFFFFF, bus, callback);
+	addLuaCanRxFilter(eid, FILTER_SPECIFIC, bus, callback);
 
 	return 0;
 }
@@ -509,8 +516,8 @@ int lua_canRxAddMask(lua_State* l) {
 	uint32_t mask;
 
 	// defaults if not passed
-	int bus = -1;
-	int callback = -1;
+	int bus = ANY_BUS;
+	int callback = NO_CALLBACK;
 
 	switch (lua_gettop(l)) {
 		case 2:
@@ -529,7 +536,7 @@ int lua_canRxAddMask(lua_State* l) {
 				callback = getLuaFunc(l);
 			} else {
 				// handle canRxAddMask(bus, id, mask)
-				bus = luaL_checkinteger(l, 1);
+		    	bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 				eid = luaL_checkinteger(l, 2);
 				mask = luaL_checkinteger(l, 3);
 			}
@@ -537,7 +544,7 @@ int lua_canRxAddMask(lua_State* l) {
 			break;
 		case 4:
 			// handle canRxAddMask(bus, id, mask, callback)
-			bus = luaL_checkinteger(l, 1);
+			bus = validateCanChannelAndConvertFromHumanIntoZeroIndex(l);
 			eid = luaL_checkinteger(l, 2);
 			mask = luaL_checkinteger(l, 3);
 			lua_remove(l, 1);
@@ -609,11 +616,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "findCurveIndex", [](lua_State* l) {
 		auto name = luaL_checklstring(l, 1, nullptr);
 		auto result = getCurveIndexByName(name);
-		if (result == EFI_ERROR_CODE) {
+		if (!result) {
 			lua_pushnil(l);
 		} else {
 			// TS counts curve from 1 so convert indexing here
-			lua_pushnumber(l, result + HUMAN_OFFSET);
+			lua_pushnumber(l, result.Value + HUMAN_OFFSET);
 		}
 		return 1;
 	});
@@ -626,11 +633,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto index = getTableIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (!index) {
 				lua_pushnil(l);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, index + HUMAN_OFFSET);
+				lua_pushnumber(l, index.Value + HUMAN_OFFSET);
 			}
 			return 1;
 	});
@@ -641,11 +648,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 			auto defaultValue = luaL_checknumber(l, 2);
 
 			auto index = getSettingIndexByName(name);
-			if (index == EFI_ERROR_CODE) {
+			if (!index) {
 				lua_pushnumber(l, defaultValue);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
+				lua_pushnumber(l, engineConfiguration->scriptSetting[index.Value]);
 			}
 			return 1;
 	});
@@ -683,6 +690,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 #endif // EFI_BOOST_CONTROL
+	lua_register(l, "setIdleAdd", [](lua_State* l) {
+		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;

@@ -243,7 +243,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
-	DBG_VVT_1_PID = 7,
+	DBG_7 = 7,
 	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
@@ -299,9 +299,6 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_46 = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
-	DBG_VVT_2_PID = 49,
-	DBG_VVT_3_PID = 50,
-	DBG_VVT_4_PID = 51,
 
 } debug_mode_e;
 
@@ -503,7 +500,7 @@ typedef enum {
 	TT_GM_24x_2 = 74,
 
 	TT_SUBARU_EZ30 = 12,
-	UNUSED_13 = 13,
+	TT_VVT_MAZDA_MYSTERY = 13,
 	UNUSED_21 = 21,
 	UNUSED_34 = 34,
 
@@ -543,18 +540,20 @@ typedef enum {
 	TS_IGNITION_CATEGORY = 18,
 	TS_INJECTOR_CATEGORY = 19,
 	TS_X14 = 20,
+	// 0x15
 	TS_WIDEBAND = 21,
 	TS_BENCH_CATEGORY = 22,
 	TS_UNUSED_23 = 23,
 	TS_UNUSED_CJ125_CALIB = 24,
-	TS_UNUSED_25 = 25,
+	TS_SOLENOID_CATEGORY = 25,
 	TS_UNUSED_26 = 26,
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
 	TS_UNUSED_29 = 29,
-	TS_UNUSED_30 = 30,
-	TS_UNUSED_31 = 31,
+	TS_X30 = 30,
+	TS_X31 = 31,
 	TS_CRAZY = 32,
+	TS_LUA_OUTPUT_CATEGORY = 33,
 } ts_command_e;
 
 typedef enum {

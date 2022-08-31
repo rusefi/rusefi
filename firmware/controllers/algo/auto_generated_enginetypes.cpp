@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Jul 27 09:37:50 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Aug 29 02:17:01 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -74,6 +74,8 @@ case DBG_43:
   return "DBG_43";
 case DBG_46:
   return "DBG_46";
+case DBG_7:
+  return "DBG_7";
 case DBG_8:
   return "DBG_8";
 case DBG_9:
@@ -136,14 +138,6 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VVT_1_PID:
-  return "DBG_VVT_1_PID";
-case DBG_VVT_2_PID:
-  return "DBG_VVT_2_PID";
-case DBG_VVT_3_PID:
-  return "DBG_VVT_3_PID";
-case DBG_VVT_4_PID:
-  return "DBG_VVT_4_PID";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -502,6 +496,8 @@ case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
+case TT_VVT_MAZDA_MYSTERY:
+  return "TT_VVT_MAZDA_MYSTERY";
 case TT_VVT_MIATA_NB:
   return "TT_VVT_MIATA_NB";
 case TT_VVT_MITSUBISHI_3A92:
@@ -512,8 +508,6 @@ case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
 case TT_VVT_TOYOTA_4_1:
   return "TT_VVT_TOYOTA_4_1";
-case UNUSED_13:
-  return "UNUSED_13";
 case UNUSED_21:
   return "UNUSED_21";
 case UNUSED_34:
@@ -563,12 +557,14 @@ case TS_IGNITION_CATEGORY:
   return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
+case TS_LUA_OUTPUT_CATEGORY:
+  return "TS_LUA_OUTPUT_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SOLENOID_CATEGORY:
+  return "TS_SOLENOID_CATEGORY";
 case TS_UNUSED_23:
   return "TS_UNUSED_23";
-case TS_UNUSED_25:
-  return "TS_UNUSED_25";
 case TS_UNUSED_26:
   return "TS_UNUSED_26";
 case TS_UNUSED_27:
@@ -577,10 +573,6 @@ case TS_UNUSED_28:
   return "TS_UNUSED_28";
 case TS_UNUSED_29:
   return "TS_UNUSED_29";
-case TS_UNUSED_30:
-  return "TS_UNUSED_30";
-case TS_UNUSED_31:
-  return "TS_UNUSED_31";
 case TS_UNUSED_CJ125_CALIB:
   return "TS_UNUSED_CJ125_CALIB";
 case TS_WIDEBAND:
@@ -589,6 +581,10 @@ case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:
   return "TS_X14";
+case TS_X30:
+  return "TS_X30";
+case TS_X31:
+  return "TS_X31";
   }
  return NULL;
 }

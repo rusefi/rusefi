@@ -9,6 +9,7 @@ static void doTest(const char* testFile, int expectedRpm) {
 	reader.open(testFile, indeces);
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->alwaysInstantRpm = true;
 
 	eth.setTriggerType(TT_HONDA_K_12_1);
 
@@ -23,9 +24,9 @@ static void doTest(const char* testFile, int expectedRpm) {
 }
 
 TEST(realk24, crankingNoPlugs1) {
-	doTest("tests/trigger/resources/cranking_honda_k24a2_no_plugs.csv", 189);
+	doTest("tests/trigger/resources/cranking_honda_k24a2_no_plugs.csv", 188);
 }
 
 TEST(realk24, crankingNoPlugs2) {
-	doTest("tests/trigger/resources/cranking_honda_k24a2_no_plugs_2.csv", 185);
+	doTest("tests/trigger/resources/cranking_honda_k24a2_no_plugs_2.csv", 186);
 }

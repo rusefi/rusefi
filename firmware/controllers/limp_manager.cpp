@@ -12,6 +12,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
+		// todo: migrate to engineState->desiredRpmLimit to get this variable logged
 		float revLimit = engineConfiguration->useCltBasedRpmLimit
 			? interpolate2d(Sensor::get(SensorType::Clt).value_or(0), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
@@ -116,7 +117,6 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowFuel.clear(ClearReason::LaunchCut);
 	}
 
-	
 	// Spark cut if launch control engaged
 	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
 		allowSpark.clear(ClearReason::LaunchCut);

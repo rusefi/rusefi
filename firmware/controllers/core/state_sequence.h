@@ -47,8 +47,8 @@ public:
 	// Make sure the switch times are in order and end at the very end.
 	void checkSwitchTimes(float scale) const;
 
-	// Find the exact angle, or EFI_ERROR_CODE if it doesn't exist
-	int findAngleMatch(float angle) const;
+	// Find the exact angle, or unexpected if it doesn't exist
+	expected<int> findAngleMatch(float angle) const;
 
 	// returns the index at which given value would need to be inserted into sorted array
 	int findInsertionAngle(float angle) const;

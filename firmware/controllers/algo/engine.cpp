@@ -83,6 +83,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
+	case VVT_MAZDA_MYSTERY:
+	    return TT_VVT_MAZDA_MYSTERY;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:
@@ -287,23 +289,21 @@ void Engine::updateSlowSensors() {
 #endif
 }
 
-static bool getClutchUpState() {
 #if EFI_GPIO_HARDWARE
+static bool getClutchUpState() {
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
-#endif // EFI_GPIO_HARDWARE
 	return engine->engineState.lua.clutchUpState;
 }
 
 static bool getBrakePedalState() {
-#if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
 	return engine->engineState.lua.brakePedalState;
-#endif // EFI_GPIO_HARDWARE
 }
+#endif // EFI_GPIO_HARDWARE
 
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
@@ -324,13 +324,13 @@ void Engine::updateSwitchInputs() {
 			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
 		}
 	}
-	engine->clutchUpState = getClutchUpState();
+	engine->engineState.clutchUpState = getClutchUpState();
 
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
-	engine->brakePedalState = getBrakePedalState();
+	engine->engineState.brakePedalState = getBrakePedalState();
 
 #endif // EFI_GPIO_HARDWARE
 }
@@ -365,6 +365,7 @@ void Engine::resetLua() {
 #endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
+	module<IdleController>().unmock().luaAdd = 0;
 }
 
 /**

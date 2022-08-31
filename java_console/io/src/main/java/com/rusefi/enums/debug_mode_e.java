@@ -11,7 +11,7 @@ public enum debug_mode_e {
 	DBG_EL_ACCEL,
 	DBG_TRIGGER_COUNTERS,
 	DBG_SOFT_SPARK_CUT,
-	DBG_VVT_1_PID,
+	DBG_7,
 	DBG_8,
 	DBG_9,
 	DBG_10,
@@ -53,7 +53,4 @@ public enum debug_mode_e {
 	DBG_46,
 	DBG_TCU,
 	DBG_LUA,
-	DBG_VVT_2_PID,
-	DBG_VVT_3_PID,
-	DBG_VVT_4_PID,
 }

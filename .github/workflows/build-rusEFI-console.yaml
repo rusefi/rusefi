@@ -20,7 +20,15 @@ jobs:
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install sshpass
+        run: sudo apt-get install sshpass mtools
+
+      - name: Generate Configs to survive meta info change
+        working-directory: ./firmware/
+        run: ./gen_config_default.sh
+
+      - name: Generate Live Documentation to survive meta info change
+        working-directory: ./firmware/
+        run: bash gen_live_documentation.sh
 
       - name: Generate Java (Antlr)
         working-directory: ./android
@@ -50,6 +58,24 @@ jobs:
         with:
           name: console junit
           path: ./java_console/build/*.txt
+
+      - name: Configuration Definition CI, without pushing new .jar
+        working-directory: ./android
+        run: ./gradlew :config_definition:shadowJar
+
+      - name: Test everything gradle while we are here
+        # it's a bit of a mess but well
+        working-directory: ./android
+        run: ./gradlew test
+
+      - name: Configuration Definition and other tools CI, without pushing new .jars
+        working-directory: ./android
+        run: ./gradlew shadowJar
+
+      # this job focuses of tool validation so we do not push fresh enums here
+      - name: Generate Enums using freshly compiled tool
+        working-directory: ./firmware/
+        run: ./gen_enum_to_string.sh
 
       - name: Upload rusEFI server
         working-directory: .
