@@ -11,4 +11,5 @@ public:
 private:
 	bool getAcState();
 
+	Timer m_timeSinceNoAc;
 };
