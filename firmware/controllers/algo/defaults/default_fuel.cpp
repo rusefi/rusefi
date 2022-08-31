@@ -271,4 +271,7 @@ void setDefaultFuel() {
 
 	// TPS/TPS AE curve
 	setMazdaMiataNbTpsTps();
+
+	// Some reasonable reference pressure that many vehicles use
+	engineConfiguration->fuelReferencePressure = 300;
 }
