@@ -741,7 +741,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// TODO: is this logic to compute next trigger tooth angle correct?
 		auto nextToothIndex = triggerIndexForListeners;
-		float nextPhase = 0;
+		angle_t nextPhase = 0;
 
 		do {
 			// I don't love this.
