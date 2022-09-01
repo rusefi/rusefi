@@ -383,13 +383,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	}
 #endif // HW_CHECK_MODE
 
-#if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
-		engine->knockLogic(cdmKnockValue);
-	}
-#endif /* EFI_CDM_INTEGRATION */
-
 	int rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking

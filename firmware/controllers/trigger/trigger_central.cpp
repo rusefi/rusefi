@@ -750,6 +750,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentPhase);
 
+
+#if EFI_CDM_INTEGRATION
+	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
+		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+		engine->knockLogic(cdmKnockValue);
+	}
+#endif /* EFI_CDM_INTEGRATION */
+
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
 
