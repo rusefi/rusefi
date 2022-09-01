@@ -705,9 +705,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.currentEnginePhase = currentEngineDecodedPhase;
-#endif // EFI_TUNER_STUDIO
 
 		// Record precise time and phase of the engine. This is used for VVT decode.
 		{
