@@ -4,7 +4,7 @@
 #include "injector_model_generated.h"
 #include "engine_module.h"
 
-struct IInjectorModel : public EngineModule {
+struct IInjectorModel {
 	virtual void prepare() = 0;
 	virtual floatms_t getInjectionDuration(float fuelMassGram) const = 0;
 	virtual float getFuelMassForDuration(floatms_t duration) const = 0;

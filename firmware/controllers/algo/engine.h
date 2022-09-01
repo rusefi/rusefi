@@ -121,8 +121,9 @@ public:
 	// we have pointers mixed with... not pointers (reference?) between different controllers
 	IFuelComputer *fuelComputer = nullptr;
 
+	Mockable<InjectorModel> injectorModel;
+
 	type_list<
-		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
 		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
