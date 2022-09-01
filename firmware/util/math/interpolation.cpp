@@ -12,7 +12,7 @@
 
 #include "pch.h"
 
-#include "interpolation.h"
+#include "efi_interpolation.h"
 
 #define BINARY_PERF true
 

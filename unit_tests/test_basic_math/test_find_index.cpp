@@ -6,7 +6,7 @@
  */
 
 #include "pch.h"
-#include "interpolation.h"
+#include "efi_interpolation.h"
 
 static void testIndex(const int expected, const float array[], int size, float value) {
 	ASSERT_EQ(expected, findIndex(array, size, value));
