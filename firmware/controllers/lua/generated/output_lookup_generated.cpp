@@ -121,8 +121,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.cltCorrection;
 	if (strEqualCaseInsensitive(name, "baroCorrection"))
 		return engine->outputChannels.baroCorrection;
-	if (strEqualCaseInsensitive(name, "currentEnginePhase"))
-		return engine->outputChannels.currentEnginePhase;
 	if (strEqualCaseInsensitive(name, "wallFuelAmount"))
 		return engine->outputChannels.wallFuelAmount;
 	if (strEqualCaseInsensitive(name, "wallFuelCorrection"))

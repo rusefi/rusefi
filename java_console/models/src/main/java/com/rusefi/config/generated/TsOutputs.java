@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 04:52:03 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 14:10:14 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -455,25 +455,25 @@ public class TsOutputs {
 	public static final Field IATCORRECTION = Field.create("IATCORRECTION", 64, FieldType.INT16).setScale(0.01);
 	public static final Field CLTCORRECTION = Field.create("CLTCORRECTION", 66, FieldType.INT16).setScale(0.01);
 	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 68, FieldType.INT16).setScale(0.01);
-	public static final Field CURRENTENGINEPHASE = Field.create("CURRENTENGINEPHASE", 70, FieldType.INT16).setScale(1.0);
-	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 72, FieldType.INT16).setScale(0.01);
-	public static final Field WALLFUELCORRECTION = Field.create("WALLFUELCORRECTION", 74, FieldType.INT16).setScale(0.01);
-	public static final Field REVOLUTIONCOUNTERSINCESTART = Field.create("REVOLUTIONCOUNTERSINCESTART", 76, FieldType.INT16).setScale(1.0);
-	public static final Field DELTATPS = Field.create("DELTATPS", 78, FieldType.INT16).setScale(0.01);
-	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 80, FieldType.INT16).setScale(1.0);
-	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 82, FieldType.INT16).setScale(0.0033333333333333335);
-	public static final Field IGNITIONADVANCE = Field.create("IGNITIONADVANCE", 84, FieldType.INT16).setScale(0.02);
-	public static final Field SPARKDWELLVALUE = Field.create("SPARKDWELLVALUE", 86, FieldType.INT16).setScale(0.0033333333333333335);
-	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 88, FieldType.INT16).setScale(0.01);
-	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 90, FieldType.INT16).setScale(0.01);
-	public static final Field ETBTARGET = Field.create("ETBTARGET", 92, FieldType.INT16).setScale(0.01);
-	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 94, FieldType.INT16).setScale(0.01);
-	public static final Field ETB1ERROR = Field.create("ETB1ERROR", 96, FieldType.INT16).setScale(0.01);
-	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 98, FieldType.INT16).setScale(0.01);
-	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 100, FieldType.INT16).setScale(1.0);
-	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 102, FieldType.INT16).setScale(0.005);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 104, FieldType.INT16).setScale(0.01);
-	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 106, FieldType.INT16).setScale(0.01);
+	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 70, FieldType.INT16).setScale(0.01);
+	public static final Field WALLFUELCORRECTION = Field.create("WALLFUELCORRECTION", 72, FieldType.INT16).setScale(0.01);
+	public static final Field REVOLUTIONCOUNTERSINCESTART = Field.create("REVOLUTIONCOUNTERSINCESTART", 74, FieldType.INT16).setScale(1.0);
+	public static final Field DELTATPS = Field.create("DELTATPS", 76, FieldType.INT16).setScale(0.01);
+	public static final Field CANREADCOUNTER = Field.create("CANREADCOUNTER", 78, FieldType.INT16).setScale(1.0);
+	public static final Field TPSACCELFUEL = Field.create("TPSACCELFUEL", 80, FieldType.INT16).setScale(0.0033333333333333335);
+	public static final Field IGNITIONADVANCE = Field.create("IGNITIONADVANCE", 82, FieldType.INT16).setScale(0.02);
+	public static final Field SPARKDWELLVALUE = Field.create("SPARKDWELLVALUE", 84, FieldType.INT16).setScale(0.0033333333333333335);
+	public static final Field COILDUTYCYCLE = Field.create("COILDUTYCYCLE", 86, FieldType.INT16).setScale(0.01);
+	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 88, FieldType.INT16).setScale(0.01);
+	public static final Field ETBTARGET = Field.create("ETBTARGET", 90, FieldType.INT16).setScale(0.01);
+	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 92, FieldType.INT16).setScale(0.01);
+	public static final Field ETB1ERROR = Field.create("ETB1ERROR", 94, FieldType.INT16).setScale(0.01);
+	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 96, FieldType.INT16).setScale(0.01);
+	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 98, FieldType.INT16).setScale(1.0);
+	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 100, FieldType.INT16).setScale(0.005);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 102, FieldType.INT16).setScale(0.01);
+	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 104, FieldType.INT16).setScale(0.01);
+	public static final Field ALIGNMENTFILL_AT_106 = Field.create("ALIGNMENTFILL_AT_106", 106, FieldType.INT8).setScale(1.0);
 	public static final Field KNOCKLEVEL = Field.create("KNOCKLEVEL", 108, FieldType.FLOAT);
 	public static final Field SECONDS = Field.create("SECONDS", 112, FieldType.INT).setScale(1.0);
 	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 116, FieldType.INT).setScale(1.0);
@@ -979,7 +979,6 @@ public class TsOutputs {
 	IATCORRECTION,
 	CLTCORRECTION,
 	BAROCORRECTION,
-	CURRENTENGINEPHASE,
 	WALLFUELAMOUNT,
 	WALLFUELCORRECTION,
 	REVOLUTIONCOUNTERSINCESTART,
@@ -998,6 +997,7 @@ public class TsOutputs {
 	FUELFLOWRATE,
 	VETABLEYAXIS,
 	AFRTABLEYAXIS,
+	ALIGNMENTFILL_AT_106,
 	KNOCKLEVEL,
 	SECONDS,
 	ENGINEMODE,
