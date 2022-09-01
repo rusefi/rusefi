@@ -342,7 +342,7 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = engine->getOperationMode();
 
 	// V-Twin MAP phase sense needs to always wait for sync
-	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
+	if (vvtMode == VVT_MAP_V_TWIN) {
 		return true;
 	}
 

@@ -77,7 +77,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_HONDA_K:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
-	case VVT_MAP_V_TWIN_ANOTHER:
+	case VVT_MAP_V_TWIN:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
