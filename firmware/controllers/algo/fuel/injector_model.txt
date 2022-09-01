@@ -1,6 +1,6 @@
 struct_no_prefix injector_model_s
 float m_deadtime
-float pressureDelta
-float pressureRatio
+float pressureDelta;fuel: injector pressureDelta;"kPa", 1, 0, -10000, 10000, 1
+float pressureRatio;fuel: injector pressureRatio;"", 1, 0, -10000, 10000, 3
 
 end_struct
