@@ -370,7 +370,7 @@ bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 #if ! HW_CHECK_MODE
