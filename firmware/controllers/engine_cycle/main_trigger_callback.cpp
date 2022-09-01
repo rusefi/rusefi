@@ -55,7 +55,7 @@ void startSimultaneousInjection(void*) {
 	}
 }
 
-static void endSimultaneousInjectionOnlyTogglePins(void* = nullptr) {
+static void endSimultaneousInjectionOnlyTogglePins() {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
@@ -64,7 +64,7 @@ static void endSimultaneousInjectionOnlyTogglePins(void* = nullptr) {
 
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
-	endSimultaneousInjectionOnlyTogglePins(engine);
+	endSimultaneousInjectionOnlyTogglePins();
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
