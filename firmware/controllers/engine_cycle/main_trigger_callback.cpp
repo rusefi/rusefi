@@ -397,10 +397,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		return;
 	}
 
-	LimpState limitedSparkState = engine->limpManager.allowIgnition();
-	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
-	bool limitedSpark = !limitedSparkState.value;
-
 	LimpState limitedFuelState = engine->limpManager.allowInjection();
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
@@ -433,7 +429,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp);
+	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp);
 }
 
 // Check if the engine is not stopped or cylinder cleanup is activated
