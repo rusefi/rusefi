@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 05:32:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 14:10:15 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -38,7 +38,7 @@ struct trigger_central_s {
 	 */
 	uint8_t alignmentFill_at_38[2];
 	/**
-	 * Engine Phase2
+	 * Engine Phase
 	deg
 	 * offset 40
 	 */
@@ -47,4 +47,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 44);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 05:32:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 14:10:15 UTC 2022
