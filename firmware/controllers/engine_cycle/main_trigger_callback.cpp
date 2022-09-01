@@ -48,13 +48,6 @@
 
 #include "backup_ram.h"
 
-// todo: figure out if this even helps?
-//#if defined __GNUC__
-//#define RAM_METHOD_PREFIX __attribute__((section(".ram")))
-//#else
-//#define RAM_METHOD_PREFIX
-//#endif
-
 void startSimultaniousInjection(void*) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
