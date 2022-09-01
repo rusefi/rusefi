@@ -453,7 +453,7 @@ mapVvt_MAP_AT_SPECIAL_POINT("mapVvt_MAP_AT_SPECIAL_POINT", SensorCategory.SENSOR
 mapVvt_MAP_AT_DIFF("mapVvt_MAP_AT_DIFF", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1100, 1.0, -10000.0, 10000.0, ""),
 mapVvt_MAP_AT_CYCLE_COUNT("mapVvt_MAP_AT_CYCLE_COUNT", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1104, 1.0, -10000.0, 10000.0, ""),
 mapVvt_map_peak("mapVvt_map_peak", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1105, 1.0, -10000.0, 10000.0, ""),
-alignmentFill_at_38("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1106, 1.0, -20.0, 100.0, "units"),
+currentEngineDecodedPhase("Engine Phase2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1106, 1.0, 0.0, 0.0, "deg"),
 totalRevolutionCounter("Crank revolution counter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1108, 1.0, -1.0, -1.0, ""),
 vvtSyncGapRatio("vvtSyncGapRatio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1112, 1.0, -10000.0, 10000.0, ""),
 vvtCurrentPosition("vvtCurrentPosition", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1116, 1.0, -10000.0, 10000.0, ""),
