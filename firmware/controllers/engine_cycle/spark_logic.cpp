@@ -36,7 +36,7 @@ int isIgnitionTimingError(void) {
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 	efitick_t nowNt = getTimeNowNt();
-	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
+	engine->outputChannels.mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
 	engine->mostRecentSparkEvent = nowNt;
 
 #if SPARK_EXTREME_LOGGING

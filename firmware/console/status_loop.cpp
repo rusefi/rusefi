@@ -902,8 +902,6 @@ void updateTunerStudioState() {
 			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
 #endif // EFI_SHAFT_POSITION_INPUT
 
-			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
-			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;
 		}
 		break;
 	case DBG_ION:

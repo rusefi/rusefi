@@ -227,9 +227,7 @@ public:
 	FanControl2 fan2;
 
 	efitick_t mostRecentSparkEvent;
-	efitick_t mostRecentTimeBetweenSparkEvents;
 	efitick_t mostRecentIgnitionEvent;
-	efitick_t mostRecentTimeBetweenIgnitionEvents;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 #if CAMS_PER_BANK == 1
