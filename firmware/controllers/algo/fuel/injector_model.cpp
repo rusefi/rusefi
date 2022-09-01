@@ -39,6 +39,14 @@ float InjectorModel::getInjectorFlowRatio() {
 	}
 
 	float referencePressure = engineConfiguration->fuelReferencePressure;
+
+	if (referencePressure < 50) {
+		// impossibly low fuel ref pressure
+		firmwareError(OBD_PCM_Processor_Fault, "Impossible fuel reference pressure: %f", referencePressure);
+
+		return 1.0f;
+	}
+
 	expected<float> absRailPressure = getAbsoluteRailPressure();
 
 	// If sensor failed, best we can do is disable correction
