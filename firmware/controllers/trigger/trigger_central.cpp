@@ -704,8 +704,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
-		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
+		auto currentPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.currentEnginePhase = currentPhase;
 #endif // EFI_TUNER_STUDIO
