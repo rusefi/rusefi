@@ -385,10 +385,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.starterRelayDisable;
 	if (strEqualCaseInsensitive(name, "multiSparkCounter"))
 		return engine->outputChannels.multiSparkCounter;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureRatio"))
-		return engine->outputChannels.injectorFlowPressureRatio;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
-		return engine->outputChannels.injectorFlowPressureDelta;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.pTerm"))
 		return engine->outputChannels.alternatorStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.iTerm"))

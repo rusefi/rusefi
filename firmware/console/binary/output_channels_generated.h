@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 14:10:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 14:38:33 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1246,76 +1246,67 @@ struct output_channels_s {
 	/**
 	 * offset 432
 	 */
-	float injectorFlowPressureRatio = (float)0;
-	/**
-	kPa
-	 * offset 436
-	 */
-	float injectorFlowPressureDelta = (float)0;
-	/**
-	 * offset 440
-	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 456
+	 * offset 448
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 472
+	 * offset 464
 	 */
 	pid_status_s etbStatus;
 	/**
-	 * offset 488
+	 * offset 480
 	 */
 	pid_status_s boostStatus;
 	/**
-	 * offset 504
+	 * offset 496
 	 */
 	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
 	/**
 	 * aux speed 1
 	s
-	 * offset 568
+	 * offset 560
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * aux speed 2
 	s
-	 * offset 570
+	 * offset 562
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 572
+	 * offset 564
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
 	V
-	 * offset 574
+	 * offset 566
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAnalogInput[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
-	 * offset 590
+	 * offset 582
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
 	V
-	 * offset 594
+	 * offset 586
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
-	 * offset 596
+	 * offset 588
 	 */
 	uint8_t extiOverflowCount = (uint8_t)0;
 	/**
-	 * offset 597
+	 * offset 589
 	 */
 	uint8_t unusedAtTheEnd[159];
 };
-static_assert(sizeof(output_channels_s) == 756);
+static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 14:10:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 14:38:33 UTC 2022
