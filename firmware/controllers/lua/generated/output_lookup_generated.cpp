@@ -113,8 +113,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.injectionOffset;
 	if (strEqualCaseInsensitive(name, "tCharge"))
 		return engine->outputChannels.tCharge;
-	if (strEqualCaseInsensitive(name, "injectorLagMs"))
-		return engine->outputChannels.injectorLagMs;
 	if (strEqualCaseInsensitive(name, "iatCorrection"))
 		return engine->outputChannels.iatCorrection;
 	if (strEqualCaseInsensitive(name, "cltCorrection"))
