@@ -703,12 +703,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Look up this tooth's angle from the sync point. If this tooth is the sync point, we'll get 0 here.
 		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
 
-		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
-		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.currentEnginePhase = currentPhase;
-#endif // EFI_TUNER_STUDIO
+		// Adjust so currentPhase is in engine-space angle / TDC angle, not trigger-space angle
+		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
 
 		// Record precise time and phase of the engine. This is used for VVT decode.
 		{
@@ -748,7 +744,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			nextToothIndex = (nextToothIndex + 1) % engine->engineCycleEventCount;
 			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
-		} while (nextPhase == currentPhase);
+		} while (nextPhase == currentEngineDecodedPhase);
 
 
 #if EFI_CDM_INTEGRATION
@@ -759,10 +755,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif /* EFI_CDM_INTEGRATION */
 
 		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
+		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
 
 		// Decode the MAP based "cam" sensor
-		decodeMapCam(timestamp, currentPhase);
+		decodeMapCam(timestamp, currentEngineDecodedPhase);
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0);

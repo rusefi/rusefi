@@ -347,7 +347,7 @@ struct output_channels_s {
 	deg
 	 * offset 70
 	 */
-	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> unusedCurrentEnginePhase = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
