@@ -2,6 +2,7 @@
 
 #include "expected.h"
 #include "injector_model_generated.h"
+#include "engine_module.h"
 
 struct IInjectorModel : public EngineModule {
 	virtual void prepare() = 0;
