@@ -23,6 +23,12 @@ class InjectionEvent {
 public:
 	InjectionEvent();
 
+	// Update the injection start angle
+	bool updateInjectionAngle(int cylinderIndex);
+
+	// Compute the injection start angle, compensating for injection duration and injection phase settings.
+	expected<float> computeInjectionAngle(int cylinderIndex) const;
+
 	// Call this every decoded trigger tooth.  It will schedule any relevant events for this injector.
 	void onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase);
 
