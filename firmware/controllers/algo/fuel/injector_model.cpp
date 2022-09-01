@@ -72,11 +72,6 @@ float InjectorModel::getInjectorFlowRatio() {
 	// todo: live data model?
 	float flowRatio = sqrtf(pressureRatio);
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.injectorFlowPressureDelta = pressureDelta;
-	engine->outputChannels.injectorFlowPressureRatio = pressureRatio;
-#endif // EFI_TUNER_STUDIO
-
 	// TODO: should the flow ratio be clamped?
 	return flowRatio;
 }
