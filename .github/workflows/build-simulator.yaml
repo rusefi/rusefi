@@ -25,17 +25,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
-    - name: Generate Configs for simulator
+    - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
-      run: ./gen_config_default.sh
-
-    - name: Generate Enums
-      working-directory: ./firmware/
-      run: ./gen_enum_to_string.sh
-
-    - name: Generate Live Documentation
-      working-directory: ./firmware/
-      run: ./gen_live_documentation.sh
+      run: ./gen_default_everything.sh
 
     - name: Compile Simulator
       working-directory: ./simulator/

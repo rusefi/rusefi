@@ -35,6 +35,7 @@ jobs:
     - name: Identify Agent
       run: uname -a
 
+# huh? why do we gen_config_default here if we gen_config_board later?
     - name: Generate Configs for HW CI
       working-directory: ./firmware/
       run: ./gen_config_default.sh
