@@ -331,13 +331,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	fs->onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
 }
 
-#if EFI_PROD_CODE
-/**
- * this field is used as an Expression in IAR debugger
- */
-uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
-#endif
-
 bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = engine->getOperationMode();
 
