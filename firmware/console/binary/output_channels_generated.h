@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 04:17:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 04:52:03 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -343,113 +343,113 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
 	/**
+	 * Engine Phase
+	deg
+	 * offset 70
+	 */
+	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
+	/**
 	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
-	 * offset 70
+	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	mg
-	 * offset 72
+	 * offset 74
 	 */
 	scaled_channel<int16_t, 100, 1> wallFuelCorrection = (int16_t)0;
 	/**
-	 * offset 74
+	 * offset 76
 	 */
 	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_ROC@@
 	ratio
-	 * offset 76
+	 * offset 78
 	 */
 	scaled_channel<int16_t, 100, 1> deltaTps = (int16_t)0;
 	/**
-	 * offset 78
+	 * offset 80
 	 */
 	uint16_t canReadCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	ms
-	 * offset 80
+	 * offset 82
 	 */
 	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TIMING_ADVANCE@@
 	deg
-	 * offset 82
+	 * offset 84
 	 */
 	scaled_channel<int16_t, 50, 1> ignitionAdvance = (int16_t)0;
 	/**
 	 * @@GAUGE_COIL_DWELL_TIME@@
 	ms
-	 * offset 84
+	 * offset 86
 	 */
 	scaled_channel<uint16_t, 300, 1> sparkDwellValue = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_DWELL_DUTY@@
 	%
-	 * offset 86
+	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_IAC@@
 	%
-	 * offset 88
+	 * offset 90
 	 */
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
 	 * ETB Target
 	%
-	 * offset 90
+	 * offset 92
 	 */
 	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
-	 * offset 92
+	 * offset 94
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * ETB Error
 	%
-	 * offset 94
+	 * offset 96
 	 */
 	scaled_channel<int16_t, 100, 1> etb1Error = (int16_t)0;
 	/**
 	 * Fuel level
 	%
-	 * offset 96
+	 * offset 98
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
-	 * offset 98
+	 * offset 100
 	 */
 	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
-	 * offset 100
+	 * offset 102
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	%
-	 * offset 102
+	 * offset 104
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
 	%
-	 * offset 104
-	 */
-	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	units
 	 * offset 106
 	 */
-	uint8_t alignmentFill_at_106[2];
+	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	Volts
@@ -1318,4 +1318,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 04:17:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 01 04:52:03 UTC 2022
