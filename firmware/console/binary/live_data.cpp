@@ -6,6 +6,7 @@
 #include "wideband_state_generated.h"
 #include "electronic_throttle_generated.h"
 #include "knock_controller_generated.h"
+#include "fuel_computer.h"
 
 template<>
 const output_channels_s* getLiveDataAddr() {
@@ -52,6 +53,11 @@ const boost_control_s* getLiveDataAddr() {
 template<>
 const ac_control_s* getLiveDataAddr() {
 	return &engine->module<AcController>().unmock();
+}
+
+template<>
+const fuel_computer_s* getLiveDataAddr() {
+	return engine->fuelComputer;
 }
 
 template<>
