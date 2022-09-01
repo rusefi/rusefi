@@ -8,7 +8,7 @@
 #pragma once
 
 #include <math.h>
-#include "interpolation.h"
+#include "efi_interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
 #include "scaled_channel.h"
