@@ -139,7 +139,7 @@ void InjectorOutputPin::close(efitick_t nowNt) {
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-	engine->mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
+	engine->outputChannels.mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
 	engine->mostRecentIgnitionEvent = nowNt;
 
 	event->isScheduled = false;
