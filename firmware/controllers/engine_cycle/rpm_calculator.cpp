@@ -149,7 +149,7 @@ void RpmCalculator::setRpmValue(float value) {
 	}
 #if EFI_ENGINE_CONTROL
 	// This presumably fixes injection mode change for cranking-to-running transition.
-	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
+	// 'isSimultaneous' flag should be updated for events if injection modes differ for cranking and running.
 	if (state != oldState && engineConfiguration->crankingInjectionMode != engineConfiguration->injectionMode) {
 		// Reset the state of all injectors: when we change fueling modes, we could
 		// immediately reschedule an injection that's currently underway.  That will cause
