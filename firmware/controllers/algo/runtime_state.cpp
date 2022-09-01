@@ -25,7 +25,6 @@ extern uint32_t maxPrecisionCallbackDuration;
 #endif /* EFI_PROD_CODE  */
 
 extern uint32_t maxSchedulingPrecisionLoss;
-extern uint32_t *cyccnt;
 
 void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_SHAFT_POSITION_INPUT
