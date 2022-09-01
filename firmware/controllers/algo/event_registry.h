@@ -116,7 +116,9 @@ public:
 	 * this timestamp allows us to measure actual dwell time
 	 */
 	uint32_t actualStartOfDwellNt = 0;
-	event_trigger_position_s dwellPosition{};
+
+	float dwellAngle = 0;
+
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see engineState.sparkCounter
