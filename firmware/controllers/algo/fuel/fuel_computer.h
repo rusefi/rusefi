@@ -3,8 +3,9 @@
 class ValueProvider3D;
 
 #include "rusefi_types.h"
+#include "fuel_computer_generated.h"
 
-struct IFuelComputer {
+struct IFuelComputer : public fuel_computer_s {
 	virtual mass_t getCycleFuel(mass_t airmass, int rpm, float load) const = 0;
 };
 
