@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "globalaccess.h"
+#include "global_shared.h"
 #include "engine_module.h"
 #include "engine_state.h"
 #include "rpm_calculator.h"

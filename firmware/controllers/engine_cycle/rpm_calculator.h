@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "globalaccess.h"
+#include "global_shared.h"
 #include "scheduler.h"
 #include "stored_value_sensor.h"
 #include "timer.h"
