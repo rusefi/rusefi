@@ -642,7 +642,6 @@ static void updateFuelResults() {
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;
-	engine->outputChannels.actualLastInjection = engine->actualLastInjection[0];
 
 	engine->outputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	engine->outputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
