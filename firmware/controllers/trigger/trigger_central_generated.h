@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Aug 16 23:47:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 03:55:33 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -32,13 +32,13 @@ struct trigger_central_s {
 	 */
 	uint8_t mapVvt_map_peak = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	units
+	 * Engine Phase2
+	deg
 	 * offset 38
 	 */
-	uint8_t alignmentFill_at_38[2];
+	scaled_channel<uint16_t, 1, 1> currentEngineDecodedPhase = (uint16_t)0;
 };
 static_assert(sizeof(trigger_central_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Aug 16 23:47:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 03:55:33 UTC 2022
