@@ -113,17 +113,17 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	}
 
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
-	bool isSimultanious = mode == IM_SIMULTANEOUS;
+	bool isSimultaneous = mode == IM_SIMULTANEOUS;
 
 	InjectionEvent *ev = &elements[i];
 
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
-	ev->isSimultanious = isSimultanious;
+	ev->isSimultaneous = isSimultaneous;
 	// Stash the cylinder number so we can select the correct fueling bank later
 	ev->cylinderNumber = injectorIndex;
 
-	if (!isSimultanious && !output->isInitialized()) {
+	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}

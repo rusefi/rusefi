@@ -30,7 +30,7 @@ public:
 	 * This is a performance optimization for IM_SIMULTANEOUS fuel strategy.
 	 * It's more efficient to handle all injectors together if that's the case
 	 */
-	bool isSimultanious = false;
+	bool isSimultaneous = false;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;

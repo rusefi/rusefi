@@ -48,23 +48,23 @@
 
 #include "backup_ram.h"
 
-void startSimultaniousInjection(void*) {
+void startSimultaneousInjection(void*) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].open(nowNt);
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(void* = nullptr) {
+static void endSimultaneousInjectionOnlyTogglePins(void* = nullptr) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
 	}
 }
 
-void endSimultaniousInjection(InjectionEvent *event) {
+void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
-	endSimultaniousInjectionOnlyTogglePins(engine);
+	endSimultaneousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
@@ -266,9 +266,9 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
-	if (isSimultanious) {
-		startAction = startSimultaniousInjection;
-		endAction = { &endSimultaniousInjection, this };
+	if (isSimultaneous) {
+		startAction = startSimultaneousInjection;
+		endAction = { &endSimultaneousInjection, this };
 	} else {
 		// sequential or batch
 		startAction = { &turnInjectionPinHigh, this };
@@ -502,12 +502,12 @@ void PrimeController::onPrimeStart() {
 
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
-	startSimultaniousInjection();
+	startSimultaneousInjection();
 	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
 }
 
 void PrimeController::onPrimeEnd() {
-	endSimultaniousInjectionOnlyTogglePins();
+	endSimultaneousInjectionOnlyTogglePins();
 
 	m_isPriming = false;
 }
