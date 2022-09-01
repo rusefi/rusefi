@@ -535,35 +535,16 @@ floatms_t PrimeController::getPrimeDuration() const {
 }
 
 void updatePrimeInjectionPulseState() {
-#if EFI_PROD_CODE
 	static bool counterWasReset = false;
 	if (counterWasReset)
 		return;
 
 	if (!engine->rpmCalculator.isStopped()) {
+#if EFI_PROD_CODE
 		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
+#endif /* EFI_PROD_CODE */
 		counterWasReset = true;
 	}
-#endif /* EFI_PROD_CODE */
-}
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-#endif
-
-static void showMainInfo(Engine *engine) {
-#if EFI_PROD_CODE
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	float el = getFuelingLoad();
-	efiPrintf("rpm %d engine_load %.2f", rpm, el);
-	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance[0]);
-#endif /* EFI_PROD_CODE */
-}
-
-void initMainEventListener() {
-#if EFI_PROD_CODE
-	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
-#endif
 }
 
 #endif /* EFI_ENGINE_CONTROL */
