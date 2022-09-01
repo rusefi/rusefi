@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate Live Documentation to survive meta info change
         working-directory: ./firmware/
-        run: bash gen_live_documentation.sh
+        run: ./gen_live_documentation.sh
 
       - name: Test Compiler
         run: javac -version

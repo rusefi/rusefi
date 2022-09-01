@@ -28,7 +28,7 @@ jobs:
 
       - name: Generate Live Documentation to survive meta info change
         working-directory: ./firmware/
-        run: bash gen_live_documentation.sh
+        run: ./gen_live_documentation.sh
 
       - name: Generate Java (Antlr)
         working-directory: ./android
