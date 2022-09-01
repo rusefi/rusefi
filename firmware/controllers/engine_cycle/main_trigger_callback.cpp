@@ -207,7 +207,9 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	engine->actualLastInjection[this->cylinderNumber] = injectionDuration;
+	if (this->cylinderNumber == 0) {
+		engine->outputChannels.actualLastInjection = injectionDuration;
+	}
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
