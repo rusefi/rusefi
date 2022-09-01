@@ -5,10 +5,7 @@
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
-	float deadtime = getDeadtime();
-	m_deadtime = deadtime;
-
-	postState(deadtime);
+	m_deadtime = getDeadtime();
 }
 
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
@@ -91,10 +88,6 @@ float InjectorModel::getDeadtime() const {
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
 	);
-}
-
-void InjectorModel::postState(float deadtime) const {
-	engine->engineState.running.injectorLag = deadtime;
 }
 
 float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
