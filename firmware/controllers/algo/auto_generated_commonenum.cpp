@@ -740,8 +740,8 @@ case VVT_HONDA_K:
   return "VVT_HONDA_K";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
-case VVT_MAP_V_TWIN_ANOTHER:
-  return "VVT_MAP_V_TWIN_ANOTHER";
+case VVT_MAP_V_TWIN:
+  return "VVT_MAP_V_TWIN";
 case VVT_MAZDA_SKYACTIV:
   return "VVT_MAZDA_SKYACTIV";
 case VVT_MIATA_NB:

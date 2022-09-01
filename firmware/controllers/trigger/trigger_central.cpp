@@ -119,7 +119,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
-			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER
+			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -161,7 +161,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 	switch (vvtMode) {
 	case VVT_FIRST_HALF:
-	case VVT_MAP_V_TWIN_ANOTHER:
+	case VVT_MAP_V_TWIN:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 	case VVT_NISSAN_VQ:
@@ -604,7 +604,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 
 void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 #if WITH_TS_STATE
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
 			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
 		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 		auto toothAngle360 = currentPhase;
