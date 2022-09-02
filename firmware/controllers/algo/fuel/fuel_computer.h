@@ -14,7 +14,6 @@ class FuelComputerBase : public IFuelComputer {
 public:
 	mass_t getCycleFuel(mass_t airmass, int rpm, float load) const override;
 
-protected:
 	virtual float getStoichiometricRatio() const = 0;
 	virtual float getTargetLambda(int rpm, float load) const = 0;
 	virtual float getTargetLambdaLoadAxis(float defaultLoad) const = 0;
@@ -25,7 +24,6 @@ class FuelComputer final : public FuelComputerBase {
 public:
 	FuelComputer(const ValueProvider3D& lambdaTable);
 
-protected:
 	float getStoichiometricRatio() const override;
 	float getTargetLambda(int rpm, float load) const override;
 	float getTargetLambdaLoadAxis(float defaultLoad) const override;

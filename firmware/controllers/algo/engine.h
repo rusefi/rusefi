@@ -37,6 +37,7 @@
 #include "ignition_controller.h"
 #include "alternator_controller.h"
 #include "dfco.h"
+#include "fuel_computer.h"
 #include "gear_detector.h"
 #include "advance_map.h"
 #include "fan_control.h"
@@ -85,7 +86,7 @@ struct AirmassModelBase;
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
 class IEtbController;
-struct IFuelComputer;
+
 struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
