@@ -9,10 +9,10 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
-	engine->engineState.currentAfrLoad = load;
-	engine->engineState.targetLambda = lambda;
-	engine->engineState.targetAFR = afr;
-	engine->engineState.stoichiometricRatio = stoich;
+	currentAfrLoad = load;
+	targetLambda = lambda;
+	targetAFR = afr;
+	stoichiometricRatio = stoich;
 
 	return airmass / afr;
 }
