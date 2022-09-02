@@ -17,10 +17,12 @@
 #define TRUE (!(FALSE))
 #endif /* TRUE */
 
-#include "pch_util.h"
+#include <rusefi/arrays.h>
 #include <rusefi/crc.h>
 #include <rusefi/fragments.h>
+#include <rusefi/interpolation.h>
 #include <rusefi/isnan.h>
+#include <rusefi/math.h>
 #include <rusefi/pt2001.h>
 
 #include "efifeatures.h"
@@ -30,12 +32,13 @@
 #include "global.h"
 #include "efi_gpio.h"
 #include "tunerstudio_outputs.h"
-// evil god object lives here!
 #include "engine.h"
+#include "engine_configuration.h"
 #include "engine_controller.h"
 #include "engine_math.h"
 #include "pwm_generator_logic.h"
 #include "allsensors.h"
+#include "sensor.h"
 #include "settings.h"
 #include "efi_interpolation.h"
 #include "perf_trace.h"
