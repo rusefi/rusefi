@@ -84,8 +84,6 @@ struct AirmassModelBase;
 #define CLEANUP_MODE_TPS 90
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
-#define CYCLE_ALTERNATION 2
-
 class IEtbController;
 struct IFuelComputer;
 struct IIdleController;
