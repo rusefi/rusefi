@@ -168,6 +168,7 @@ public:
 	PinRepository pinRepository;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	// we have pointers mixed with... not pointers (reference?) between different controllers
 	IFuelComputer *fuelComputer = nullptr;
 
 	type_list<
