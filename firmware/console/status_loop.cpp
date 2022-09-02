@@ -517,11 +517,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
-	engine->outputChannels.AFRValue = lambdaValue * engine->engineState.stoichiometricRatio;
+	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer->stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
-	engine->outputChannels.AFRValue2 = lambda2Value * engine->engineState.stoichiometricRatio;
+	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer->stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -635,7 +635,7 @@ static void updateFuelLoads() {
 	engine->outputChannels.fuelingLoad = getFuelingLoad();
 	engine->outputChannels.ignitionLoad = getIgnitionLoad();
 	engine->outputChannels.veTableYAxis = engine->engineState.currentVeLoad;
-	engine->outputChannels.afrTableYAxis = engine->engineState.currentAfrLoad;
+	engine->outputChannels.afrTableYAxis = engine->fuelComputer->currentAfrLoad;
 }
 
 static void updateFuelResults() {
@@ -660,8 +660,7 @@ static void updateFuelInfo() {
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
-	engine->outputChannels.currentTargetAfr = engine->engineState.targetAFR;
-	engine->outputChannels.targetLambda = engine->engineState.targetLambda;
+	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
 
 	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }
