@@ -34,10 +34,6 @@ end_struct
 
 speed_density_s sd;
 
-
-	float targetAFR
-
-
 float engineCycleDurationMs;
 
 

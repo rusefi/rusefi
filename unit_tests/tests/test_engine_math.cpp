@@ -15,8 +15,8 @@ TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
-	eth.engine.periodicFastCallback();
-	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
+	engine->periodicFastCallback();
+	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer->targetAFR);
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }

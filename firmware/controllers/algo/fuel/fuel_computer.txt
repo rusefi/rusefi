@@ -3,6 +3,6 @@ struct_no_prefix fuel_computer_s
 	float currentAfrLoad
 	float targetLambda
 	float stoichiometricRatio
-	float targetAFR_t
+	float targetAFR
 
 end_struct
