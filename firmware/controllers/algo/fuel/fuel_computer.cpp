@@ -2,7 +2,7 @@
 
 #include "fuel_computer.h"
 
-mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
+mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	load = getTargetLambdaLoadAxis(load);
 	
 	float stoich = getStoichiometricRatio();
