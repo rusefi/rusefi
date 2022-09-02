@@ -49,9 +49,9 @@ static void runChprintfTest() {
 
 
 	ts.eos = 0; // reset
-//	chprintf((BaseSequentialStream*)&ts, "%.2f - %.2f", NAN, 0/0);
-//	ts.buffer[ts.eos] = 0;
-//	assertString(testBuffer, "0.23/239.9320/0.1234");
+	chprintf((BaseSequentialStream*)&ts, "%.2f - %.2f", NAN, NAN);
+	ts.buffer[ts.eos] = 0;
+	assertString(testBuffer, "NaN - NaN");
 
 // it's a very, very long and mostly forgotten story how this became our %.2f precision format
 	ts.eos = 0; // reset
