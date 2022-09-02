@@ -661,7 +661,6 @@ static void updateFuelInfo() {
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
-	engine->outputChannels.targetLambda = engine->fuelComputer->targetLambda;
 
 	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }

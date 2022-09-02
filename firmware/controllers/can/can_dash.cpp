@@ -1239,8 +1239,9 @@ static void populateFrame(Aim5f7& msg) {
 	// We don't handle wheel speed, just set to 0?
 	msg.LambdaErr1 = 0;
 	msg.LambdaErr2 = 0;
-	msg.LambdaTarget1 = engine->engineState.targetLambda;
-	msg.LambdaTarget2 = engine->engineState.targetLambda;
+	// both targets are the same for now
+	msg.LambdaTarget1 = engine->fuelComputer->targetLambda;
+	msg.LambdaTarget2 = engine->fuelComputer->targetLambda;
 }
 
 void canDashboardAim(CanCycle cycle) {
