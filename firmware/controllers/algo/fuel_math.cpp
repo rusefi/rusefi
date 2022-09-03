@@ -174,7 +174,7 @@ static float getBaseFuelMass(int rpm) {
 	// Plop some state for others to read
 	engine->fuelComputer->sdAirMassInOneCylinder = airmass.CylinderAirmass;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
-	engine->engineState.ignitionLoad = getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
+	engine->engineState.ignitionLoad = engine->fuelComputer->getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
 	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
 	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
@@ -398,6 +398,11 @@ float getCrankingFuel(float baseFuel) {
 	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
+/**
+ * Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
+ *
+ * Should we bother caching 'getStandardAirCharge' result or can we afford to run the math every time we calculate fuel?
+ */
 float getStandardAirCharge() {
 	float totalDisplacement = engineConfiguration->specs.displacement;
 	float cylDisplacement = totalDisplacement / engineConfiguration->specs.cylindersCount;
