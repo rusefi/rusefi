@@ -305,8 +305,6 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
-	efiPrintf("baro correction=%.2f", engine->engineState.baroCorrection);
-
 #if EFI_ENGINE_CONTROL
 	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
 	efiPrintf("cranking fuel: %.2f", engine->engineState.cranking.fuel);
@@ -620,10 +618,6 @@ static void updateSensors() {
 }
 
 static void updateFuelCorrections() {
-	engine->outputChannels.baroCorrection = engine->engineState.baroCorrection;
-	engine->outputChannels.iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
-	engine->outputChannels.cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
-
 	engine->outputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
 	engine->outputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 

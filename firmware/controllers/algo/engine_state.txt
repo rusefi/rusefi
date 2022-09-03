@@ -41,7 +41,7 @@ float tpsVoltageBoard
 
 	float currentBaroCorrectedVE;
 	float injectorFlowCorrection;
-float baroCorrection;
+float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
 
 
 struct cranking_fuel_s
@@ -62,8 +62,8 @@ cranking_fuel_s cranking
 
 struct running_fuel_s
 float postCrankingFuelCorrection
-	float intakeTemperatureCoefficient
-	float coolantTemperatureCoefficient
+	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
+	float coolantTemperatureCoefficient@@GAUGE_NAME_FUEL_CLT_CORR@@
 	float timeSinceCrankingInSecs
 
 	floatms_t baseFuel;
