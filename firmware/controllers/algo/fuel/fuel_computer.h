@@ -19,7 +19,7 @@ public:
 	virtual float getTargetLambdaLoadAxis(float defaultLoad) const = 0;
 };
 
-// This class is a usable implemenation of a fuel model that reads real configuration
+// This class is a usable implementation of a fuel model that reads real configuration
 class FuelComputer final : public FuelComputerBase {
 public:
 	FuelComputer(const ValueProvider3D& lambdaTable);
