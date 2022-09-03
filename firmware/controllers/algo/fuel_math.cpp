@@ -136,8 +136,6 @@ float getRunningFuel(float baseFuel) {
 	return runningFuel;
 }
 
-/* DISPLAY_ENDIF */
-
 static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
