@@ -342,8 +342,6 @@ public:
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
-	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
-	float standardAirCharge = 0;
 
 	void periodicFastCallback();
 	void periodicSlowCallback();

@@ -12,6 +12,7 @@ class ValueProvider3D;
 struct IFuelComputer : public fuel_computer_s {
 	virtual mass_t getCycleFuel(mass_t airmass, int rpm, float load) = 0;
 	temperature_t getTCharge(int rpm, float tps);
+	float getLoadOverride(float defaultLoad, load_override_e overrideMode) const;
 private:
 	float getTChargeCoefficient(int rpm, float tps);
 };

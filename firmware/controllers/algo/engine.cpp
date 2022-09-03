@@ -219,8 +219,6 @@ void Engine::periodicSlowCallback() {
 	updateBoostControl();
 #endif // EFI_BOOST_CONTROL
 
-	standardAirCharge = getStandardAirCharge();
-
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888startup();
 #endif
