@@ -1,3 +1,7 @@
+/**
+ * @file fuel_computer.h
+ */
+
 #pragma once
 
 class ValueProvider3D;
@@ -7,6 +11,9 @@ class ValueProvider3D;
 
 struct IFuelComputer : public fuel_computer_s {
 	virtual mass_t getCycleFuel(mass_t airmass, int rpm, float load) = 0;
+	temperature_t getTCharge(int rpm, float tps);
+private:
+	float getTChargeCoefficient(int rpm, float tps);
 };
 
 // This contains the math of the fuel model, but doesn't actually read any configuration

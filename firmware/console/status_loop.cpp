@@ -639,7 +639,8 @@ static void updateFuelLoads() {
 }
 
 static void updateFuelResults() {
-	engine->outputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
+	// todo: kill outputChannel while taking care of gauge name and scale!
+	engine->outputChannels.chargeAirMass = engine->fuelComputer->sdAirMassInOneCylinder;
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;
