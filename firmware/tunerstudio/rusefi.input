@@ -1343,9 +1343,13 @@ gaugeCategory = GPPWM Outputs
    indicator = { isInjectionEnabledIndicator },      "Injection OFF",      "Injection ON", yellow,  black,  white,  black
 
    ; this is required so that the "config error" feature works in TS
-   ; don't change this line - TS is looking for an indicator with particular text/styling
+   ; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
    ; you don't even have to show it by default
-   indicator = { hasCriticalError }, "No config error", "Config error", white, black, red, black
+   ; DO NOT CHANGE THIS LINE
+   ; DO NOT CHANGE THIS LINE
+   indicator = { hasCriticalError }, "Config Error", "Config Error", white, black, red, black
+   ; DO NOT CHANGE THIS LINE
+   ; DO NOT CHANGE THIS LINE
 
    ; minor info
    indicator =                    { isFanOn },             "Fan OFF",            "Fan ON",  white,  black,  green,  black
