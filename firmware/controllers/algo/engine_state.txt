@@ -63,7 +63,7 @@ cranking_fuel_s cranking
 struct running_fuel_s
 float postCrankingFuelCorrection
 	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
-	float coolantTemperatureCoefficient@@GAUGE_NAME_FUEL_CLT_CORR@@
+	float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
 	float timeSinceCrankingInSecs
 
 	floatms_t baseFuel;
