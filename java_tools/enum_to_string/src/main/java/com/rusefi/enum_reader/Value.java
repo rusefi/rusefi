@@ -4,9 +4,6 @@ import com.rusefi.VariableRegistry;
 
 import java.util.Objects;
 
-import static com.rusefi.ToJavaEnum.FORCE_2_BYTES_SIZE;
-import static com.rusefi.ToJavaEnum.FORCE_4_BYTES_SIZE;
-
 public class Value implements Comparable<Value> {
     private final String name;
     private final String value;
@@ -14,10 +11,6 @@ public class Value implements Comparable<Value> {
     public Value(String name, String value) {
         this.name = name;
         this.value = value;
-    }
-
-    public boolean isForceSize() {
-        return getName().startsWith(FORCE_2_BYTES_SIZE) || getName().startsWith(FORCE_4_BYTES_SIZE);
     }
 
     public String getName() {
