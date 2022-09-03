@@ -552,7 +552,7 @@ typedef enum {
 	TS_UNUSED_29 = 29,
 	TS_SET_ENGINE_TYPE = 30,
 	TS_SET_DEFAULT_ENGINE = 31,
-	TS_LUA_OUTPUT_CATEGORY = 33,
+	TS_LUA_OUTPUT_CATEGORY = 32,
 } ts_command_e;
 
 typedef enum {
