@@ -33,6 +33,10 @@ public class EnumToString {
 
     public static void main(String[] args) throws IOException {
         InvokeReader invokeReader = new InvokeReader(args).invoke();
+        handleRequest(invokeReader);
+    }
+
+    public static void handleRequest(InvokeReader invokeReader) throws IOException {
         String outputPath = invokeReader.getOutputPath();
 
         EnumsReader enumsReader = new EnumsReader();
