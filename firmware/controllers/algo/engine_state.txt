@@ -17,14 +17,10 @@ LuaAdjustments lua
 
 struct speed_density_s
 
-bit isTChargeAirModel
-
-float airMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
 
 	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
 	float tChargeK
 
-float Tcharge_coff
 
 floatms_t airFlow
 

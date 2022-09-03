@@ -67,7 +67,7 @@ float getLoadOverride(float defaultLoad, load_override_e overrideMode) {
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
 		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
-		case AFR_CylFilling: return 100 * engine->engineState.sd.airMassInOneCylinder / engine->standardAirCharge;
+		case AFR_CylFilling: return 100 * engine->fuelComputer->sdAirMassInOneCylinder / engine->standardAirCharge;
 		default: return 0;
 	}
 }
