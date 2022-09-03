@@ -705,7 +705,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		auto currentPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
-        // todo: why is local variable needed? is that because generated field type is not proper 'float' but scaled_channel?
+        // todo: local variable is needed because generated field type is not proper 'float' but scaled_channel
+        // todo: what is broken _exactly_?
 		currentEngineDecodedPhase = currentPhase;
 
 		// Record precise time and phase of the engine. This is used for VVT decode.
