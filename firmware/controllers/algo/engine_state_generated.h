@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 07:08:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -167,10 +167,12 @@ struct running_fuel_s {
 	 */
 	float postCrankingFuelCorrection = (float)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_IAT_CORR@@
 	 * offset 4
 	 */
 	float intakeTemperatureCoefficient = (float)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CLT_CORR@@
 	 * offset 8
 	 */
 	float coolantTemperatureCoefficient = (float)0;
@@ -232,6 +234,7 @@ struct engine_state_s {
 	 */
 	float injectorFlowCorrection = (float)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
 	 * offset 52
 	 */
 	float baroCorrection = (float)0;
@@ -408,4 +411,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 140);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 07:08:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022
