@@ -1,6 +1,8 @@
 package com.rusefi.ldmp;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.EnumToString;
+import com.rusefi.InvokeReader;
 import com.rusefi.ReaderState;
 import com.rusefi.output.*;
 import org.yaml.snakeyaml.Yaml;
@@ -10,6 +12,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -174,12 +177,17 @@ public class UsagesReader {
     }
 
     private void writeFiles() throws IOException {
-        try (FileWriter fw = new FileWriter("console/binary/generated/live_data_ids.h")) {
+        String liveDataIdsHeader = "console/binary/generated/live_data_ids.h";
+        try (FileWriter fw = new FileWriter(liveDataIdsHeader)) {
             fw.write(enumContent.toString());
         }
 
         try (FileWriter fw = new FileWriter("console/binary/generated/live_data_fragments.h")) {
             fw.write(fragmentsContent.toString());
         }
+
+        String outputPath = "../java_console/io/src/main/java/com/rusefi/enums";
+        InvokeReader request = new InvokeReader(outputPath, Collections.singletonList(liveDataIdsHeader));
+        EnumToString.handleRequest(request);
     }
 }
