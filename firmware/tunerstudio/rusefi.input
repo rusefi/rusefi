@@ -1789,8 +1789,8 @@ cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14
 cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
 cmd_burn_without_flash       = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_X14_16_hex@@\x00\x15"
 
-cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x00"
-cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@\x00\x15\x00\x01"
+cmd_set_wideband_idx_0       = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x00"
+cmd_set_wideband_idx_1       = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_WIDEBAND_16_hex@@\x00\x01"
 
 cmd_cj125_calibrate          = "@@TS_IO_TEST_COMMAND_char@@\x00\x18\x00\x00"
 cmd_call_from_pit            = "@@TS_IO_TEST_COMMAND_char@@\x00\x20\x34\x56"
@@ -1807,74 +1807,74 @@ cmd_openblt              = "@@TS_IO_TEST_COMMAND_char@@\x00\xbc\x00\x00"
 
 
 ; MRE_MIATA_NB2_MAP = 11
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NB2_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_VW_B6_16_hex@@"
-cmd_set_engine_type_Proteus_VW_B6		    = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
-cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
-cmd_set_engine_type_MRE_SECONDARY_CAN       		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
+cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_VW_B6_16_hex@@"
+cmd_set_engine_type_Proteus_VW_B6		    = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
+cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
+cmd_set_engine_type_MRE_SECONDARY_CAN       		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
 
 
 ; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NA6_VAF_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NA6_VAF_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NA6_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NA6_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_94_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_94_MAP_16_hex@@"
 
 
 ; MRE_MIATA_NB2_MAF = 15
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAF_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_MIATA_NB2_MAF_16_hex@@"
 
-cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
+cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
-cmd_set_engine_type_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
+cmd_set_engine_type_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MRE_M111_16_hex@@"
 
-cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA6_16_hex@@"
-cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA94_16_hex@@"
+cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NA6_16_hex@@"
+cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NA94_16_hex@@"
 
-cmd_set_engine_type_hellen_NB1_36					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NB1_36_16_hex@@"
-cmd_set_engine_type_hellen_NB2_36					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NB2_36_16_hex@@"
+cmd_set_engine_type_hellen_NB1_36					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NB1_36_16_hex@@"
+cmd_set_engine_type_hellen_NB2_36					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_NB2_36_16_hex@@"
 
-cmd_set_engine_type_hellen_nissan_121_4		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_NISSAN_4_CYL_16_hex@@"
-cmd_set_engine_type_hellen_nissan_121_6		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_NISSAN_6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_nissan_121_8		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_NISSAN_8_CYL_16_hex@@"
+cmd_set_engine_type_hellen_nissan_121_4		    	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_NISSAN_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_nissan_121_6		    	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_NISSAN_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_nissan_121_8		    	= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_NISSAN_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_4_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_5_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_V6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_VR6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_8_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_VAG_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_VAG_5_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_VAG_V6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_VAG_VR6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_121_VAG_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
-cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
-cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
-cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
 ; MIATA_NA6_VAF = 57
-cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
 ; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
-cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
-cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
-cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
-cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
-cmd_set_engine_type_PROTEUS_LUA_DEMO 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
-cmd_set_engine_type_PROTEUS_HARLEY	                = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
+cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
+cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
+cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
+cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
+cmd_set_engine_type_PROTEUS_LUA_DEMO 				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
+cmd_set_engine_type_PROTEUS_HARLEY	                = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
-cmd_set_engine_type_etb_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3A"
+cmd_set_engine_type_etb_test				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@\x00\x3A"
 ; ETB_BENCH_ENGINE = 59
-cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
-cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
+cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@\x00\x3B"
+cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_DEFAULT_ENGINE_16_hex@@\x00\x00"
 		
 [UserDefined]
 @@LIVE_DATA_PANELS_FROM_FILE@@

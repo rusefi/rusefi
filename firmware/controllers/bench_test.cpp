@@ -495,12 +495,12 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif /* EFI_CJ125 */
 		break;
 
-	case TS_X30:
+	case TS_SET_ENGINE_TYPE:
 		fatalErrorForPresetApply();
 		setEngineType(index);
 		break;
 
-	case TS_X31:
+	case TS_SET_DEFAULT_ENGINE:
 		fatalErrorForPresetApply();
 		setEngineType(DEFAULT_ENGINE_TYPE);
 		break;
