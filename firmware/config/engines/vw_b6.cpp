@@ -203,12 +203,34 @@ function setTwoBytes(data, offset, value)
 	data[offset + 1] = value & 0xff
 end
 
-function xorChecksum(data)
-	return data[1] ~ data[2] ~ data[3] ~ data[4] ~ data[5] ~ data[6] ~ data[7]
+function xorChecksum(data, targetIndex)
+	local index = 1
+	local result = 0
+	while data[index] ~= nil do
+		if index ~= targetIndex then
+			result = result ~ data[index]
+		end
+		index = index + 1
+	end
+	data[targetIndex] = result
+	return result
+end
+
+function getBitRange(data, bitIndex, bitWidth)
+	byteIndex = bitIndex >> 3
+	shift = bitIndex - byteIndex * 8
+	value = data[1 + byteIndex]
+	if (shift + bitWidth > 8) then
+		value = value + data[2 + byteIndex] * 256
+	end
+	mask = (1 << bitWidth) - 1
+	return (value >> shift) & mask
 end
 
 canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
+canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotor6    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 setTickRate(100)
