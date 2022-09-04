@@ -2,6 +2,7 @@ package com.rusefi.core;
 
 import com.rusefi.config.FieldType;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
 
@@ -107,26 +108,26 @@ public enum Sensor implements BinaryLogEntry {
     lastErrorCode(GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
 
     // Debug
-    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 164, 0, 5),
-    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, 168, 0, 5),
-    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, 172, 0, 5),
-    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, 176, 0, 5),
-    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, 180, 0, 5),
-    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, 184, 0, 5),
-    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, 188, 0, 5),
-    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, 192, 0, 5),
-    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, 196, 0, 5),
-    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 200, 0, 5),
-    debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 204, 0, 5),
-    debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 206, 0, 5),
+    debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD1.getOffset(), 0, 5),
+    debugFloatField2(GAUGE_NAME_DEBUG_F2, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD2.getOffset(), 0, 5),
+    debugFloatField3(GAUGE_NAME_DEBUG_F3, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD3.getOffset(), 0, 5),
+    debugFloatField4(GAUGE_NAME_DEBUG_F4, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD4.getOffset(), 0, 5),
+    debugFloatField5(GAUGE_NAME_DEBUG_F5, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD5.getOffset(), 0, 5),
+    debugFloatField6(GAUGE_NAME_DEBUG_F6, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD6.getOffset(), 0, 5),
+    debugFloatField7(GAUGE_NAME_DEBUG_F7, SensorCategory.DEBUG, FieldType.FLOAT, TsOutputs.DEBUGFLOATFIELD7.getOffset(), 0, 5),
+    debugIntField1(GAUGE_NAME_DEBUG_I1, SensorCategory.DEBUG, FieldType.INT, TsOutputs.DEBUGINTFIELD1.getOffset(), 0, 5),
+    debugIntField2(GAUGE_NAME_DEBUG_I2, SensorCategory.DEBUG, FieldType.INT, TsOutputs.DEBUGINTFIELD2.getOffset(), 0, 5),
+    debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, TsOutputs.DEBUGINTFIELD3.getOffset(), 0, 5),
+    debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, TsOutputs.DEBUGINTFIELD4.getOffset(), 0, 5),
+    debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, TsOutputs.DEBUGINTFIELD5.getOffset(), 0, 5),
     accelerationX(GAUGE_NAME_ACCEL_X, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 212, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
     accelerationY(GAUGE_NAME_ACCEL_Y, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 214, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
 
     tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 244, 0, 5),
 
     // Raw sensors
-    rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, OutputChannelOffsets.rawClt_offset, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-    rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 236, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.RAWCLT.getOffset(), 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.RAWIAT.getOffset(), 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
 
     tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
     flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
