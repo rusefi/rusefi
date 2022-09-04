@@ -239,7 +239,6 @@ public:
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
-	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
 	void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;

@@ -1751,9 +1751,6 @@ typedef enum {
 	CUSTOM_ZERO_DWELL = 6032,
 	CUSTOM_DWELL_TOO_LONG = 6033,
 	CUSTOM_SKIPPING_STROKE = 6034,
-	CUSTOM_OBD_TRG_DECODING = 6035,
-	// todo: looks like following two errors always happen together, it's just timing affects which one is published?
-	CUSTOM_SYNC_ERROR = 6036,
 	CUSTOM_6037 = 6037,
 	/**
 	 * This error happens if some pinout configuration changes were applied but ECU was not reset afterwards.
@@ -2140,7 +2137,13 @@ typedef enum {
 
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
-	CUSTOM_SYNC_COUNT_MISMATCH = 9002,
+
+	CUSTOM_PRIMARY_TOO_MANY_TEETH = 9002,
+	CUSTOM_PRIMARY_NOT_ENOUGH_TEETH = 9003,
+
+	CUSTOM_CAM_TOO_MANY_TEETH = 9004,
+	CUSTOM_CAM_NOT_ENOUGH_TEETH = 9005,
+
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
 	 * Should not happen
