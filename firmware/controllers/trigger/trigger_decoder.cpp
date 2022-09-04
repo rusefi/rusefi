@@ -407,6 +407,30 @@ void PrimaryTriggerDecoder::onTriggerError() {
 	resetHasFullSync();
 }
 
+void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
+	warning(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, "primary trigger error: not enough teeth between sync points: expected %d/%d got %d/%d",
+		TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+		currentCycle.eventCount[0],
+		currentCycle.eventCount[1]);
+}
+
+void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
+	warning(CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
+		TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+		currentCycle.eventCount[0],
+		currentCycle.eventCount[1]);
+}
+
+void VvtTriggerDecoder::onNotEnoughTeeth(int actual, int expected) {
+	warning(CUSTOM_CAM_NOT_ENOUGH_TEETH, "cam %s trigger error: not enough teeth between sync points: actual %d expected %d", name, actual, expected);
+}
+
+void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
+	warning(CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", name, actual, expected);
+}
+
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	bool isDecodingError = false;
@@ -661,6 +685,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			// so we clear the synchronized flag.
 			if (wasSynchronized && isDecodingError) {
 				setTriggerErrorState();
+				onNotEnoughTeeth(currentCycle.current_index, triggerShape.getSize());
 
 				// Something wrong, no longer synchronized
 				setShaftSynchronized(false);
@@ -693,8 +718,8 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 		// let's not show a warning if we are just starting to spin
 		if (Sensor::getOrZero(SensorType::Rpm) != 0) {
-			warning(CUSTOM_SYNC_ERROR, "sync error for %s: index #%d above total size %d", name, currentCycle.current_index, triggerShape.getSize());
 			setTriggerErrorState();
+			onTooManyTeeth(currentCycle.current_index, triggerShape.getSize());
 		}
 
 		onTriggerError();
