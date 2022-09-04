@@ -1904,7 +1904,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2439149198
+#define SIGNATURE_HASH 720148935
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2362,7 +2362,6 @@
 #define ts_command_e_TS_COMMAND_4 4
 #define ts_command_e_TS_COMMAND_5 5
 #define ts_command_e_TS_COMMAND_9 9
-#define ts_command_e_TS_CRAZY 32
 #define ts_command_e_TS_DEBUG_MODE 0
 #define ts_command_e_TS_GRAB_PEDAL_UP 6
 #define ts_command_e_TS_GRAB_PEDAL_WOT 7
@@ -2370,8 +2369,10 @@
 #define ts_command_e_TS_GRAB_TPS_WOT 3
 #define ts_command_e_TS_IGNITION_CATEGORY 18
 #define ts_command_e_TS_INJECTOR_CATEGORY 19
-#define ts_command_e_TS_LUA_OUTPUT_CATEGORY 33
+#define ts_command_e_TS_LUA_OUTPUT_CATEGORY 32
 #define ts_command_e_TS_RESET_TLE8888 8
+#define ts_command_e_TS_SET_DEFAULT_ENGINE 31
+#define ts_command_e_TS_SET_ENGINE_TYPE 30
 #define ts_command_e_TS_SOLENOID_CATEGORY 25
 #define ts_command_e_TS_UNUSED_23 23
 #define ts_command_e_TS_UNUSED_26 26
@@ -2382,8 +2383,6 @@
 #define ts_command_e_TS_WIDEBAND 21
 #define ts_command_e_TS_WRITE_FLASH 10
 #define ts_command_e_TS_X14 20
-#define ts_command_e_TS_X30 30
-#define ts_command_e_TS_X31 31
 #define TS_COMMAND_F 'F'
 #define TS_COMMAND_F_char F
 #define TS_COMPOSITE_DISABLE 2
@@ -2465,7 +2464,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.04.subaru_eg33_f7.2439149198"
+#define TS_SIGNATURE "rusEFI 2022.09.04.subaru_eg33_f7.720148935"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

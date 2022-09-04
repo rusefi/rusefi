@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 04 00:46:54 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 04 13:57:11 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1886,6 +1886,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2086;
 	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1408385053;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2325,7 +2326,6 @@ public class Fields {
 	public static final int ts_command_e_TS_COMMAND_4 = 4;
 	public static final int ts_command_e_TS_COMMAND_5 = 5;
 	public static final int ts_command_e_TS_COMMAND_9 = 9;
-	public static final int ts_command_e_TS_CRAZY = 32;
 	public static final int ts_command_e_TS_DEBUG_MODE = 0;
 	public static final int ts_command_e_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_command_e_TS_GRAB_PEDAL_WOT = 7;
@@ -2333,8 +2333,10 @@ public class Fields {
 	public static final int ts_command_e_TS_GRAB_TPS_WOT = 3;
 	public static final int ts_command_e_TS_IGNITION_CATEGORY = 18;
 	public static final int ts_command_e_TS_INJECTOR_CATEGORY = 19;
-	public static final int ts_command_e_TS_LUA_OUTPUT_CATEGORY = 33;
+	public static final int ts_command_e_TS_LUA_OUTPUT_CATEGORY = 32;
 	public static final int ts_command_e_TS_RESET_TLE8888 = 8;
+	public static final int ts_command_e_TS_SET_DEFAULT_ENGINE = 31;
+	public static final int ts_command_e_TS_SET_ENGINE_TYPE = 30;
 	public static final int ts_command_e_TS_SOLENOID_CATEGORY = 25;
 	public static final int ts_command_e_TS_UNUSED_23 = 23;
 	public static final int ts_command_e_TS_UNUSED_26 = 26;
@@ -2345,8 +2347,6 @@ public class Fields {
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WRITE_FLASH = 10;
 	public static final int ts_command_e_TS_X14 = 20;
-	public static final int ts_command_e_TS_X30 = 30;
-	public static final int ts_command_e_TS_X31 = 31;
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
@@ -2380,7 +2380,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.04.all.3900485460";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.04.all.1408385053";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1240;
