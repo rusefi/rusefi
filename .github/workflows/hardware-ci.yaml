@@ -35,13 +35,14 @@ jobs:
     - name: Identify Agent
       run: uname -a
 
+# huh? why do we gen_config_default here if we gen_config_board later?
     - name: Generate Configs for HW CI
       working-directory: ./firmware/
-      run: bash gen_config_default.sh
+      run: ./gen_config_default.sh
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
+      run: ./gen_enum_to_string.sh
 
     - name: Generate Board config
       working-directory: ./firmware/
@@ -49,7 +50,7 @@ jobs:
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
+      run: ./gen_live_documentation.sh
 
     # Make sure the compiler works
     - name: Test Compiler

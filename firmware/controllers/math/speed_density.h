@@ -9,10 +9,9 @@
 
 #include "airmass.h"
 #include "speed_density_base.h"
+#include "fuel_computer_generated.h"
 
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
-
-temperature_t getTCharge(int rpm, float tps);
 
 void initSpeedDensity();

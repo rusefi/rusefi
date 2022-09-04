@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -115,126 +115,21 @@ static_assert(sizeof(LuaAdjustments) == 12);
 // start of speed_density_s
 struct speed_density_s {
 	/**
-	offset 0 bit 0 */
-	bool isTChargeAirModel : 1 {};
-	/**
-	offset 0 bit 1 */
-	bool unusedBit_1_1 : 1 {};
-	/**
-	offset 0 bit 2 */
-	bool unusedBit_1_2 : 1 {};
-	/**
-	offset 0 bit 3 */
-	bool unusedBit_1_3 : 1 {};
-	/**
-	offset 0 bit 4 */
-	bool unusedBit_1_4 : 1 {};
-	/**
-	offset 0 bit 5 */
-	bool unusedBit_1_5 : 1 {};
-	/**
-	offset 0 bit 6 */
-	bool unusedBit_1_6 : 1 {};
-	/**
-	offset 0 bit 7 */
-	bool unusedBit_1_7 : 1 {};
-	/**
-	offset 0 bit 8 */
-	bool unusedBit_1_8 : 1 {};
-	/**
-	offset 0 bit 9 */
-	bool unusedBit_1_9 : 1 {};
-	/**
-	offset 0 bit 10 */
-	bool unusedBit_1_10 : 1 {};
-	/**
-	offset 0 bit 11 */
-	bool unusedBit_1_11 : 1 {};
-	/**
-	offset 0 bit 12 */
-	bool unusedBit_1_12 : 1 {};
-	/**
-	offset 0 bit 13 */
-	bool unusedBit_1_13 : 1 {};
-	/**
-	offset 0 bit 14 */
-	bool unusedBit_1_14 : 1 {};
-	/**
-	offset 0 bit 15 */
-	bool unusedBit_1_15 : 1 {};
-	/**
-	offset 0 bit 16 */
-	bool unusedBit_1_16 : 1 {};
-	/**
-	offset 0 bit 17 */
-	bool unusedBit_1_17 : 1 {};
-	/**
-	offset 0 bit 18 */
-	bool unusedBit_1_18 : 1 {};
-	/**
-	offset 0 bit 19 */
-	bool unusedBit_1_19 : 1 {};
-	/**
-	offset 0 bit 20 */
-	bool unusedBit_1_20 : 1 {};
-	/**
-	offset 0 bit 21 */
-	bool unusedBit_1_21 : 1 {};
-	/**
-	offset 0 bit 22 */
-	bool unusedBit_1_22 : 1 {};
-	/**
-	offset 0 bit 23 */
-	bool unusedBit_1_23 : 1 {};
-	/**
-	offset 0 bit 24 */
-	bool unusedBit_1_24 : 1 {};
-	/**
-	offset 0 bit 25 */
-	bool unusedBit_1_25 : 1 {};
-	/**
-	offset 0 bit 26 */
-	bool unusedBit_1_26 : 1 {};
-	/**
-	offset 0 bit 27 */
-	bool unusedBit_1_27 : 1 {};
-	/**
-	offset 0 bit 28 */
-	bool unusedBit_1_28 : 1 {};
-	/**
-	offset 0 bit 29 */
-	bool unusedBit_1_29 : 1 {};
-	/**
-	offset 0 bit 30 */
-	bool unusedBit_1_30 : 1 {};
-	/**
-	offset 0 bit 31 */
-	bool unusedBit_1_31 : 1 {};
-	/**
-	 * Speed-density logic: calculated air mass in one cylinder, in grams
-	 * offset 4
-	 */
-	float airMassInOneCylinder = (float)0;
-	/**
 	 * speed density
 	 * Rate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.
-	 * offset 8
+	 * offset 0
 	 */
 	float tCharge = (float)0;
 	/**
-	 * offset 12
+	 * offset 4
 	 */
 	float tChargeK = (float)0;
 	/**
-	 * offset 16
-	 */
-	float Tcharge_coff = (float)0;
-	/**
-	 * offset 20
+	 * offset 8
 	 */
 	floatms_t airFlow = (floatms_t)0;
 };
-static_assert(sizeof(speed_density_s) == 24);
+static_assert(sizeof(speed_density_s) == 12);
 
 // start of cranking_fuel_s
 struct cranking_fuel_s {
@@ -272,10 +167,12 @@ struct running_fuel_s {
 	 */
 	float postCrankingFuelCorrection = (float)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_IAT_CORR@@
 	 * offset 4
 	 */
 	float intakeTemperatureCoefficient = (float)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CLT_CORR@@
 	 * offset 8
 	 */
 	float coolantTemperatureCoefficient = (float)0;
@@ -284,14 +181,7 @@ struct running_fuel_s {
 	 */
 	float timeSinceCrankingInSecs = (float)0;
 	/**
-	 * injectorLag(VBatt)
-	 * this value depends on a slow-changing VBatt value, so
-	 * we update it once in a while
 	 * offset 16
-	 */
-	floatms_t injectorLag = (floatms_t)0;
-	/**
-	 * offset 20
 	 */
 	floatms_t baseFuel = (floatms_t)0;
 	/**
@@ -299,11 +189,11 @@ struct running_fuel_s {
 	 * Without injector lag.
 	 * @see baseFuel
 	 * @see actualLastInjection
-	 * offset 24
+	 * offset 20
 	 */
 	floatms_t fuel = (floatms_t)0;
 };
-static_assert(sizeof(running_fuel_s) == 28);
+static_assert(sizeof(running_fuel_s) == 24);
 
 // start of engine_state_s
 struct engine_state_s {
@@ -316,212 +206,209 @@ struct engine_state_s {
 	 */
 	speed_density_s sd;
 	/**
-	 * offset 36
-	 */
-	float targetAFR = (float)0;
-	/**
-	 * offset 40
+	 * offset 24
 	 */
 	float engineCycleDurationMs = (float)0;
 	/**
-	 * offset 44
+	 * offset 28
 	 */
 	float minRpmKcurrentTPS = (float)0;
 	/**
-	 * offset 48
+	 * offset 32
 	 */
 	int currentTpsAdc = (int)0;
 	/**
-	 * offset 52
+	 * offset 36
 	 */
 	float tpsVoltageMCU = (float)0;
 	/**
-	 * offset 56
+	 * offset 40
 	 */
 	float tpsVoltageBoard = (float)0;
 	/**
-	 * offset 60
+	 * offset 44
 	 */
 	float currentBaroCorrectedVE = (float)0;
 	/**
-	 * offset 64
+	 * offset 48
 	 */
 	float injectorFlowCorrection = (float)0;
 	/**
-	 * offset 68
+	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
+	 * offset 52
 	 */
 	float baroCorrection = (float)0;
 	/**
-	 * offset 72
+	 * offset 56
 	 */
 	cranking_fuel_s cranking;
 	/**
-	 * offset 92
+	 * offset 76
 	 */
 	running_fuel_s running;
 	/**
 	 * ignition dwell duration in ms
 	 * See also dwellAngle
-	 * offset 120
+	 * offset 100
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	 * offset 124
+	 * offset 104
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
 	deg
-	 * offset 128
+	 * offset 108
 	 */
 	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 130
+	 * offset 110
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
 	deg
-	 * offset 132
+	 * offset 112
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
 	/**
 	 * Detected Board ID
 	id
-	 * offset 134
+	 * offset 114
 	 */
 	int16_t hellenBoardId = (int16_t)0;
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_UP@@
-	offset 136 bit 0 */
+	offset 116 bit 0 */
 	bool clutchUpState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 136 bit 1 */
+	offset 116 bit 1 */
 	bool clutchDownState : 1 {};
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
-	offset 136 bit 2 */
+	offset 116 bit 2 */
 	bool brakePedalState : 1 {};
 	/**
-	offset 136 bit 3 */
-	bool unusedBit_22_3 : 1 {};
+	offset 116 bit 3 */
+	bool unusedBit_21_3 : 1 {};
 	/**
-	offset 136 bit 4 */
-	bool unusedBit_22_4 : 1 {};
+	offset 116 bit 4 */
+	bool unusedBit_21_4 : 1 {};
 	/**
-	offset 136 bit 5 */
-	bool unusedBit_22_5 : 1 {};
+	offset 116 bit 5 */
+	bool unusedBit_21_5 : 1 {};
 	/**
-	offset 136 bit 6 */
-	bool unusedBit_22_6 : 1 {};
+	offset 116 bit 6 */
+	bool unusedBit_21_6 : 1 {};
 	/**
-	offset 136 bit 7 */
-	bool unusedBit_22_7 : 1 {};
+	offset 116 bit 7 */
+	bool unusedBit_21_7 : 1 {};
 	/**
-	offset 136 bit 8 */
-	bool unusedBit_22_8 : 1 {};
+	offset 116 bit 8 */
+	bool unusedBit_21_8 : 1 {};
 	/**
-	offset 136 bit 9 */
-	bool unusedBit_22_9 : 1 {};
+	offset 116 bit 9 */
+	bool unusedBit_21_9 : 1 {};
 	/**
-	offset 136 bit 10 */
-	bool unusedBit_22_10 : 1 {};
+	offset 116 bit 10 */
+	bool unusedBit_21_10 : 1 {};
 	/**
-	offset 136 bit 11 */
-	bool unusedBit_22_11 : 1 {};
+	offset 116 bit 11 */
+	bool unusedBit_21_11 : 1 {};
 	/**
-	offset 136 bit 12 */
-	bool unusedBit_22_12 : 1 {};
+	offset 116 bit 12 */
+	bool unusedBit_21_12 : 1 {};
 	/**
-	offset 136 bit 13 */
-	bool unusedBit_22_13 : 1 {};
+	offset 116 bit 13 */
+	bool unusedBit_21_13 : 1 {};
 	/**
-	offset 136 bit 14 */
-	bool unusedBit_22_14 : 1 {};
+	offset 116 bit 14 */
+	bool unusedBit_21_14 : 1 {};
 	/**
-	offset 136 bit 15 */
-	bool unusedBit_22_15 : 1 {};
+	offset 116 bit 15 */
+	bool unusedBit_21_15 : 1 {};
 	/**
-	offset 136 bit 16 */
-	bool unusedBit_22_16 : 1 {};
+	offset 116 bit 16 */
+	bool unusedBit_21_16 : 1 {};
 	/**
-	offset 136 bit 17 */
-	bool unusedBit_22_17 : 1 {};
+	offset 116 bit 17 */
+	bool unusedBit_21_17 : 1 {};
 	/**
-	offset 136 bit 18 */
-	bool unusedBit_22_18 : 1 {};
+	offset 116 bit 18 */
+	bool unusedBit_21_18 : 1 {};
 	/**
-	offset 136 bit 19 */
-	bool unusedBit_22_19 : 1 {};
+	offset 116 bit 19 */
+	bool unusedBit_21_19 : 1 {};
 	/**
-	offset 136 bit 20 */
-	bool unusedBit_22_20 : 1 {};
+	offset 116 bit 20 */
+	bool unusedBit_21_20 : 1 {};
 	/**
-	offset 136 bit 21 */
-	bool unusedBit_22_21 : 1 {};
+	offset 116 bit 21 */
+	bool unusedBit_21_21 : 1 {};
 	/**
-	offset 136 bit 22 */
-	bool unusedBit_22_22 : 1 {};
+	offset 116 bit 22 */
+	bool unusedBit_21_22 : 1 {};
 	/**
-	offset 136 bit 23 */
-	bool unusedBit_22_23 : 1 {};
+	offset 116 bit 23 */
+	bool unusedBit_21_23 : 1 {};
 	/**
-	offset 136 bit 24 */
-	bool unusedBit_22_24 : 1 {};
+	offset 116 bit 24 */
+	bool unusedBit_21_24 : 1 {};
 	/**
-	offset 136 bit 25 */
-	bool unusedBit_22_25 : 1 {};
+	offset 116 bit 25 */
+	bool unusedBit_21_25 : 1 {};
 	/**
-	offset 136 bit 26 */
-	bool unusedBit_22_26 : 1 {};
+	offset 116 bit 26 */
+	bool unusedBit_21_26 : 1 {};
 	/**
-	offset 136 bit 27 */
-	bool unusedBit_22_27 : 1 {};
+	offset 116 bit 27 */
+	bool unusedBit_21_27 : 1 {};
 	/**
-	offset 136 bit 28 */
-	bool unusedBit_22_28 : 1 {};
+	offset 116 bit 28 */
+	bool unusedBit_21_28 : 1 {};
 	/**
-	offset 136 bit 29 */
-	bool unusedBit_22_29 : 1 {};
+	offset 116 bit 29 */
+	bool unusedBit_21_29 : 1 {};
 	/**
-	offset 136 bit 30 */
-	bool unusedBit_22_30 : 1 {};
+	offset 116 bit 30 */
+	bool unusedBit_21_30 : 1 {};
 	/**
-	offset 136 bit 31 */
-	bool unusedBit_22_31 : 1 {};
+	offset 116 bit 31 */
+	bool unusedBit_21_31 : 1 {};
 	/**
-	 * offset 140
+	 * offset 120
 	 */
 	float egt1 = (float)0;
 	/**
-	 * offset 144
+	 * offset 124
 	 */
 	float egt2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
-	 * offset 148
+	 * offset 128
 	 */
 	int16_t desiredRpmLimit = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 150
+	 * offset 130
 	 */
-	uint8_t alignmentFill_at_150[2];
+	uint8_t alignmentFill_at_130[2];
 	/**
-	 * offset 152
+	 * offset 132
 	 */
 	int fuelInjectionCounter = (int)0;
 	/**
-	 * offset 156
+	 * offset 136
 	 */
 	int sparkCounter = (int)0;
 };
-static_assert(sizeof(engine_state_s) == 160);
+static_assert(sizeof(engine_state_s) == 140);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Aug 25 22:49:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022

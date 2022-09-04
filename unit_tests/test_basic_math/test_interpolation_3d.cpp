@@ -9,7 +9,7 @@
 
 #include <stdlib.h>
 
-#include "interpolation.h"
+#include "efi_interpolation.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
 scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 300, 400, 500};

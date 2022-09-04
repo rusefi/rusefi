@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Aug 30 06:01:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Aug 31 23:09:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3985,9 +3985,15 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> dfcoDelay;
 	/**
+	 * Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.
+	sec
 	 * offset 3122
 	 */
-	int8_t unused4080[10];
+	scaled_channel<uint8_t, 10, 1> acDelay;
+	/**
+	 * offset 3123
+	 */
+	int8_t unused4080[9];
 	/**
 	lobes/cam
 	 * offset 3132
@@ -4983,4 +4989,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Aug 30 06:01:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Aug 31 23:09:04 UTC 2022

@@ -50,7 +50,7 @@ public:
 
 	float currentVe = 0;
 	float currentVeLoad = 0;
-	float currentAfrLoad = 0;
+
 
 	float fuelingLoad = 0;
 	float ignitionLoad = 0;
@@ -69,6 +69,4 @@ public:
 
 	multispark_state multispark;
 
-	float targetLambda = 0.0f;
-	float stoichiometricRatio = 0.0f;
 };

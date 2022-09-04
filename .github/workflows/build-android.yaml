@@ -18,13 +18,10 @@ jobs:
       - name: Install Tools
         run: sudo apt-get install mtools
 
-      - name: Generate Configs to survive meta info change
+      - name: Generate Configs, Enums & Live Documentation
         working-directory: ./firmware/
-        run: ./gen_config_default.sh
+        run: ./gen_default_everything.sh
 
-      - name: Generate Live Documentation to survive meta info change
-        working-directory: ./firmware/
-        run: bash gen_live_documentation.sh
 
       - name: Test Compiler
         run: javac -version

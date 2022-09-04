@@ -548,10 +548,6 @@ void commonInitEngineController() {
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (engineConfiguration->isEngineControlEnabled) {
 		initAuxValves();
-		/**
-		 * This method adds trigger listener which actually schedules ignition
-		 */
-		initMainEventListener();
 	}
 #endif /* EFI_ENGINE_CONTROL */
 

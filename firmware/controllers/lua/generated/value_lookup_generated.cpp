@@ -836,6 +836,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->maxCamPhaseResolveRpm;
 	if (strEqualCaseInsensitive(name, "dfcoDelay"))
 		return engineConfiguration->dfcoDelay;
+	if (strEqualCaseInsensitive(name, "acDelay"))
+		return engineConfiguration->acDelay;
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
 		return engineConfiguration->hpfpCamLobes;
 	if (strEqualCaseInsensitive(name, "hpfpPeakPos"))
@@ -2551,6 +2553,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "dfcoDelay"))
 	{
 		engineConfiguration->dfcoDelay = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "acDelay"))
+	{
+		engineConfiguration->acDelay = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))

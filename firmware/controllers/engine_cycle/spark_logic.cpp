@@ -36,7 +36,7 @@ int isIgnitionTimingError(void) {
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 	efitick_t nowNt = getTimeNowNt();
-	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
+	engine->outputChannels.mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
 	engine->mostRecentSparkEvent = nowNt;
 
 #if SPARK_EXTREME_LOGGING
@@ -423,15 +423,17 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp
-		) {
-
+void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
+
+	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
+	bool limitedSpark = !limitedSparkState.value;
 
 	if (!engine->ignitionEvents.isReady) {
 		prepareIgnitionSchedule();

@@ -58,7 +58,20 @@ void AcController::onSlowCallback() {
 
 	m_acEnabled = isEnabled;
 
-	enginePins.acRelay.setValue(isEnabled);
+	if (!isEnabled) {
+		// reset the timer if AC is off
+		m_timeSinceNoAc.reset();
+	}
+
+	float acDelay = engineConfiguration->acDelay;
+	if (acDelay == 0) {
+		// Without delay configured, enable immediately
+		acCompressorState = isEnabled;
+	} else {
+		acCompressorState = isEnabled && m_timeSinceNoAc.hasElapsedSec(acDelay);
+	}
+
+	enginePins.acRelay.setValue(acCompressorState);
 }
 
 bool AcController::isAcEnabled() const {

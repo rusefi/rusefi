@@ -119,7 +119,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
-			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER
+			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -161,7 +161,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 	switch (vvtMode) {
 	case VVT_FIRST_HALF:
-	case VVT_MAP_V_TWIN_ANOTHER:
+	case VVT_MAP_V_TWIN:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 	case VVT_NISSAN_VQ:
@@ -177,7 +177,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:
-	case VVT_MAZDA_MYSTERY:
+	case VVT_MAZDA_SKYACTIV:
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
@@ -604,7 +604,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 
 void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 #if WITH_TS_STATE
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
 			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
 		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 		auto toothAngle360 = currentPhase;
@@ -704,11 +704,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto currentPhaseFromSyncPoint = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners];
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		auto currentPhase = currentPhaseFromSyncPoint - tdcPosition();
-		wrapAngle(currentPhase, "currentEnginePhase", CUSTOM_ERR_6555);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.currentEnginePhase = currentPhase;
-#endif // EFI_TUNER_STUDIO
+		auto currentPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
+        // todo: local variable is needed because generated field type is not proper 'float' but scaled_channel
+        // todo: what is broken _exactly_?
+		currentEngineDecodedPhase = currentPhase;
 
 		// Record precise time and phase of the engine. This is used for VVT decode.
 		{
@@ -741,7 +740,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// TODO: is this logic to compute next trigger tooth angle correct?
 		auto nextToothIndex = triggerIndexForListeners;
-		float nextPhase = 0;
+		angle_t nextPhase = 0;
 
 		do {
 			// I don't love this.
@@ -749,6 +748,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			nextPhase = engine->triggerCentral.triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentPhase);
+
+
+#if EFI_CDM_INTEGRATION
+	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
+		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+		engine->knockLogic(cdmKnockValue);
+	}
+#endif /* EFI_CDM_INTEGRATION */
 
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);

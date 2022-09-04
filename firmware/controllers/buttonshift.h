@@ -8,7 +8,6 @@
 #pragma once
 
 #include "gear_controller.h"
-#include "globalaccess.h"
 #include "debounce.h"
 
 #if EFI_TCU

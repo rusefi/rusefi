@@ -500,7 +500,7 @@ typedef enum {
 	TT_GM_24x_2 = 74,
 
 	TT_SUBARU_EZ30 = 12,
-	TT_VVT_MAZDA_MYSTERY = 13,
+	TT_VVT_MAZDA_SKYACTIV = 13,
 	UNUSED_21 = 21,
 	UNUSED_34 = 34,
 
@@ -550,10 +550,9 @@ typedef enum {
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
 	TS_UNUSED_29 = 29,
-	TS_X30 = 30,
-	TS_X31 = 31,
-	TS_CRAZY = 32,
-	TS_LUA_OUTPUT_CATEGORY = 33,
+	TS_SET_ENGINE_TYPE = 30,
+	TS_SET_DEFAULT_ENGINE = 31,
+	TS_LUA_OUTPUT_CATEGORY = 32,
 } ts_command_e;
 
 typedef enum {

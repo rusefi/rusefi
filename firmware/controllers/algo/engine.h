@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "globalaccess.h"
+#include "global_shared.h"
 #include "engine_module.h"
 #include "engine_state.h"
 #include "rpm_calculator.h"
@@ -37,6 +37,7 @@
 #include "ignition_controller.h"
 #include "alternator_controller.h"
 #include "dfco.h"
+#include "fuel_computer.h"
 #include "gear_detector.h"
 #include "advance_map.h"
 #include "fan_control.h"
@@ -84,10 +85,8 @@ struct AirmassModelBase;
 #define CLEANUP_MODE_TPS 90
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
-#define CYCLE_ALTERNATION 2
-
 class IEtbController;
-struct IFuelComputer;
+
 struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
@@ -168,6 +167,7 @@ public:
 	PinRepository pinRepository;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+	// we have pointers mixed with... not pointers (reference?) between different controllers
 	IFuelComputer *fuelComputer = nullptr;
 
 	type_list<
@@ -227,9 +227,7 @@ public:
 	FanControl2 fan2;
 
 	efitick_t mostRecentSparkEvent;
-	efitick_t mostRecentTimeBetweenSparkEvents;
 	efitick_t mostRecentIgnitionEvent;
-	efitick_t mostRecentTimeBetweenIgnitionEvents;
 
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 #if CAMS_PER_BANK == 1
@@ -241,7 +239,6 @@ public:
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
-	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
 	void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
@@ -344,11 +341,6 @@ public:
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
-	// Stores the actual pulse duration of the last injection for every cylinder
-	floatms_t actualLastInjection[MAX_CYLINDER_COUNT] = {0};
-
-	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
-	float standardAirCharge = 0;
 
 	void periodicFastCallback();
 	void periodicSlowCallback();

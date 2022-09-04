@@ -21,6 +21,9 @@ void setFlatInjectorLag(float value);
 #define fixAngle(angle, msg, code) wrapAngle2(angle, msg, code, engine->engineCycle)
 #define wrapAngle(angle, msg, code) fixAngle(angle, msg, code)
 
+// proper method avoids un-wrapped state of variables
+angle_t wrapAngleMethod(angle_t param, const char *msg, obd_code_e code);
+
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
  * @deprecated use at least Us, maybe even Nt

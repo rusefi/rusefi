@@ -1,18 +1,24 @@
 #include "pch.h"
 
+#include "engine_configuration.h"
+#include "sensor.h"
+#include "error_handling.h"
+#include "efi_interpolation.h"
+#include "table_helper.h"
+#include "fuel_math.h"
 #include "fuel_computer.h"
 
-mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
+mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	load = getTargetLambdaLoadAxis(load);
 	
 	float stoich = getStoichiometricRatio();
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
-	engine->engineState.currentAfrLoad = load;
-	engine->engineState.targetLambda = lambda;
-	engine->engineState.targetAFR = afr;
-	engine->engineState.stoichiometricRatio = stoich;
+	currentAfrLoad = load;
+	targetLambda = lambda;
+	targetAFR = afr;
+	stoichiometricRatio = stoich;
 
 	return airmass / afr;
 }
@@ -59,7 +65,7 @@ float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
 	return getLoadOverride(defaultLoad, engineConfiguration->afrOverrideMode);
 }
 
-float getLoadOverride(float defaultLoad, load_override_e overrideMode) {
+float IFuelComputer::getLoadOverride(float defaultLoad, load_override_e overrideMode) const {
 	switch(overrideMode) {
 		case AFR_None: return defaultLoad;
 		// MAP default to 200kpa - failed MAP goes rich
@@ -67,7 +73,7 @@ float getLoadOverride(float defaultLoad, load_override_e overrideMode) {
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
 		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
-		case AFR_CylFilling: return 100 * engine->engineState.sd.airMassInOneCylinder / engine->standardAirCharge;
+		case AFR_CylFilling: return 100 * engine->fuelComputer->sdAirMassInOneCylinder / getStandardAirCharge();
 		default: return 0;
 	}
 }

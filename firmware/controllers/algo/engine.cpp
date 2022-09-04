@@ -77,14 +77,14 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_HONDA_K:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
-	case VVT_MAP_V_TWIN_ANOTHER:
+	case VVT_MAP_V_TWIN:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
 	case VVT_BARRA_3_PLUS_1:
 		return TT_VVT_BARRA_3_PLUS_1;
-	case VVT_MAZDA_MYSTERY:
-	    return TT_VVT_MAZDA_MYSTERY;
+	case VVT_MAZDA_SKYACTIV:
+	    return TT_VVT_MAZDA_SKYACTIV;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_TOYOTA_4_1:
@@ -218,8 +218,6 @@ void Engine::periodicSlowCallback() {
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
 #endif // EFI_BOOST_CONTROL
-
-	standardAirCharge = getStandardAirCharge();
 
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888startup();
@@ -385,26 +383,6 @@ void Engine::preCalculate() {
 }
 
 #if EFI_SHAFT_POSITION_INPUT
-void Engine::OnTriggerStateDecodingError() {
-	warning(CUSTOM_SYNC_COUNT_MISMATCH, "trigger not happy current %d/%d expected %d/%d",
-			triggerCentral.triggerState.currentCycle.eventCount[0],
-			triggerCentral.triggerState.currentCycle.eventCount[1],
-			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-			TRIGGER_WAVEFORM(getExpectedEventCount(1)));
-
-	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
-#if EFI_PROD_CODE
-		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d got %d/%d",
-				triggerCentral.triggerState.currentCycle.current_index,
-				TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-				TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-				triggerCentral.triggerState.currentCycle.eventCount[0],
-				triggerCentral.triggerState.currentCycle.eventCount[1]);
-#endif /* EFI_PROD_CODE */
-	}
-
-}
-
 void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 	rpmCalculator.setSpinningUp(nowNt);
 }
@@ -433,18 +411,19 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 		// 'triggerStateListener is not null' means we are running a real engine and now just preparing trigger shape
 		// that's a bit of a hack, a sweet OOP solution would be a real callback or at least 'needDecodingErrorLogic' method?
 		if (isDecodingError) {
-			OnTriggerStateDecodingError();
+#if EFI_PROD_CODE
+			if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
+				efiPrintf("error: synchronizationPoint @ index %d expected %d/%d got %d/%d",
+						triggerCentral.triggerState.currentCycle.current_index,
+						TRIGGER_WAVEFORM(getExpectedEventCount(0)),
+						TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+						triggerCentral.triggerState.currentCycle.eventCount[0],
+						triggerCentral.triggerState.currentCycle.eventCount[1]);
+			}
+#endif /* EFI_PROD_CODE */
 		}
 
 		engine->triggerErrorDetection.add(isDecodingError);
-
-		if (triggerCentral.isTriggerDecoderError()) {
-			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d got %d/%d",
-					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-					triggerCentral.triggerState.currentCycle.eventCount[0],
-					triggerCentral.triggerState.currentCycle.eventCount[1]);
-		}
 	}
 
 }

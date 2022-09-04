@@ -40,7 +40,7 @@
 #include "allsensors.h"
 #include "sensor.h"
 #include "settings.h"
-#include "interpolation.h"
+#include "efi_interpolation.h"
 #include "perf_trace.h"
 #include "hardware.h"
 #include "thread_priority.h"

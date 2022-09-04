@@ -10,7 +10,6 @@
  */
 #pragma once
 
-#include "globalaccess.h"
 #include "io_pins.h"
 
 class ButtonDebounce {

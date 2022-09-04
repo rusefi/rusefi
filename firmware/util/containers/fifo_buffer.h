@@ -126,8 +126,8 @@ public:
 	}
 
 	bool get(T &item, int timeout) {
-#if !EFI_UNIT_TEST
 		chSysLock();
+#if !EFI_UNIT_TEST
 		while (fifo_buffer<T, maxSize>::isEmpty()) {
 			msg_t msg = osalThreadEnqueueTimeoutS(&q_waiting, timeout);
 			if (msg != MSG_OK) {
@@ -135,10 +135,10 @@ public:
 				return false;
 			}
 		}
+#endif // EFI_UNIT_TEST
 		item = fifo_buffer<T, maxSize>::get();
 		chSysUnlock();
 		return true;
-#endif // EFI_UNIT_TEST
     }
 
 	void clear() {

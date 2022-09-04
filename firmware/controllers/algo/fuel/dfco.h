@@ -1,4 +1,10 @@
+/**
+ * @file dfco.h
+ */
+
 #pragma once
+#include "engine_module.h"
+#include "timer.h"
 
 // DFCO = deceleration fuel cut off, ie, save gas when your foot is off the pedal
 class DfcoController : public EngineModule {

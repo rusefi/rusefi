@@ -1,5 +1,6 @@
 #include "pch.h"
 
+using ::testing::_;
 using ::testing::StrictMock;
 
 class MockTriggerConfiguration : public TriggerConfiguration {
@@ -32,6 +33,8 @@ struct MockTriggerDecoder : public TriggerDecoderBase {
 	MockTriggerDecoder() : TriggerDecoderBase("mock") { }
 
 	MOCK_METHOD(void, onTriggerError, (), (override));
+	MOCK_METHOD(void, onNotEnoughTeeth, (int actual, int expected), (override));
+	MOCK_METHOD(void, onTooManyTeeth, (int actual, int expected), (override));
 };
 
 static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& config) {
@@ -147,6 +150,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	StrictMock<MockTriggerDecoder> dut;
 	// We expect one call to onTriggerError().
 	EXPECT_CALL(dut, onTriggerError());
+	EXPECT_CALL(dut, onTooManyTeeth(_, _));
 
 	// Fire a few boring evenly spaced teeth
 	t += MS2NT(1);
@@ -188,6 +192,28 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 	EXPECT_EQ(6, dut.currentCycle.current_index);
 	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
 
+	// Fire some normal revolutions to ensure we recover without additional error types.
+	for (size_t i = 0; i < 10; i++) {
+		// Missing tooth, 2x normal length!
+		t += MS2NT(2);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_TRUE(dut.getShaftSynchronized());
+		EXPECT_EQ(0, dut.currentCycle.current_index);
+
+		// normal tooth
+		t += MS2NT(1);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_EQ(2, dut.currentCycle.current_index);
+
+		// normal tooth
+		t += MS2NT(1);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_EQ(4, dut.currentCycle.current_index);
+	}
+
+	// Should now have sync again
+	EXPECT_TRUE(dut.getShaftSynchronized());
+
 	Sensor::resetAllMocks();
 }
 
@@ -202,6 +228,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	StrictMock<MockTriggerDecoder> dut;
 	// We expect one call to onTriggerError().
 	EXPECT_CALL(dut, onTriggerError());
+	EXPECT_CALL(dut, onNotEnoughTeeth(_, _));
 
 	// Fire a few boring evenly spaced teeth
 	t += MS2NT(1);
@@ -222,6 +249,9 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
 
+	// Fake that we have RPM so that all trigger error detection is enabled
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+
 	t += MS2NT(1);
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
@@ -238,6 +268,30 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 	EXPECT_EQ(0, dut.currentCycle.current_index);
 	EXPECT_EQ(1, dut.totalTriggerErrorCounter);
 	EXPECT_TRUE(dut.someSortOfTriggerError());
+
+	// Fire some normal revolutions to ensure we recover without additional error types.
+	for (size_t i = 0; i < 10; i++) {
+		// normal tooth
+		t += MS2NT(1);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_EQ(2, dut.currentCycle.current_index);
+
+		// normal tooth
+		t += MS2NT(1);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_EQ(4, dut.currentCycle.current_index);
+
+		// Missing tooth, 2x normal length!
+		t += MS2NT(2);
+		doTooth(dut, shape, cfg, t);
+		EXPECT_TRUE(dut.getShaftSynchronized());
+		EXPECT_EQ(0, dut.currentCycle.current_index);
+	}
+
+	// Should now have sync again
+	EXPECT_TRUE(dut.getShaftSynchronized());
+
+	Sensor::resetAllMocks();
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {

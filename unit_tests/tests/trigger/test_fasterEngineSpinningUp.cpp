@@ -52,8 +52,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// check real events
-	eth.assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, 97500);
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 100000);
+	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, 97500);
+	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, 100000);
 
 	// skip the rest of the cycle
 	eth.fireFall(200);
@@ -74,8 +74,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
-	eth.assertEvent5("inj start#2", 0, (void*)startSimultaniousInjection, 148375);
-	eth.assertEvent5("inj end#2", 1, (void*)endSimultaniousInjection, 149999);
+	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, 148375);
+	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, 149999);
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);

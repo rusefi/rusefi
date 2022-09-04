@@ -11,6 +11,7 @@ bit noClt;AC no CLT
 bit engineTooHot;AC engine too hot
 bit tpsTooHigh;AC tps too high
 bit isDisabledByLua;AC disabled by Lua
+bit acCompressorState;AC compressor on
 
 int latest_usage_ac_control;AC latest activity
 ! todo: extract some helper which would contain boolean state and most recent toggle time?

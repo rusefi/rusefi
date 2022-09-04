@@ -37,6 +37,7 @@ int getRemainingStack(thread_t*) {
 
 static void assertString(const char*actual, const char *expected) {
 	if (strcmp(actual, expected) != 0) {
+		printf("assertString FAILED\n");
 		firmwareError(OBD_PCM_Processor_Fault, "chprintf test: got %s while %s", actual, expected);
 	}
 }
@@ -46,6 +47,11 @@ static void runChprintfTest() {
 	static char testBuffer[200];
 	msObjectInit(&ts, (uint8_t *) testBuffer, sizeof(testBuffer), 0);
 
+
+	ts.eos = 0; // reset
+	chprintf((BaseSequentialStream*)&ts, "%.2f - %.2f", NAN, NAN);
+	ts.buffer[ts.eos] = 0;
+	assertString(testBuffer, "NaN - NaN");
 
 // it's a very, very long and mostly forgotten story how this became our %.2f precision format
 	ts.eos = 0; // reset

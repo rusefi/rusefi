@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Aug 16 23:47:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Sep 01 05:32:54 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -19,6 +19,7 @@ public class TriggerCentral {
 	public static final Field MAPVVT_MAP_AT_CYCLE_COUNT = Field.create("MAPVVT_MAP_AT_CYCLE_COUNT", 36, FieldType.INT8).setScale(1.0);
 	public static final Field MAPVVT_MAP_PEAK = Field.create("MAPVVT_MAP_PEAK", 37, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0);
+	public static final Field CURRENTENGINEDECODEDPHASE = Field.create("CURRENTENGINEDECODEDPHASE", 40, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	HWEVENTCOUNTERS1,
 	HWEVENTCOUNTERS2,
@@ -32,5 +33,6 @@ public class TriggerCentral {
 	MAPVVT_MAP_AT_CYCLE_COUNT,
 	MAPVVT_MAP_PEAK,
 	ALIGNMENTFILL_AT_38,
+	CURRENTENGINEDECODEDPHASE,
 	};
 }

@@ -115,14 +115,12 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tCharge;
 	if (strEqualCaseInsensitive(name, "injectorLagMs"))
 		return engine->outputChannels.injectorLagMs;
-	if (strEqualCaseInsensitive(name, "iatCorrection"))
-		return engine->outputChannels.iatCorrection;
-	if (strEqualCaseInsensitive(name, "cltCorrection"))
-		return engine->outputChannels.cltCorrection;
-	if (strEqualCaseInsensitive(name, "baroCorrection"))
-		return engine->outputChannels.baroCorrection;
-	if (strEqualCaseInsensitive(name, "currentEnginePhase"))
-		return engine->outputChannels.currentEnginePhase;
+	if (strEqualCaseInsensitive(name, "fuelingLoad"))
+		return engine->outputChannels.fuelingLoad;
+	if (strEqualCaseInsensitive(name, "ignitionLoad"))
+		return engine->outputChannels.ignitionLoad;
+	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
+		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "wallFuelAmount"))
 		return engine->outputChannels.wallFuelAmount;
 	if (strEqualCaseInsensitive(name, "wallFuelCorrection"))
@@ -175,12 +173,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.calibrationMode;
 	if (strEqualCaseInsensitive(name, "idleTargetPosition"))
 		return engine->outputChannels.idleTargetPosition;
-	if (strEqualCaseInsensitive(name, "fuelingLoad"))
-		return engine->outputChannels.fuelingLoad;
-	if (strEqualCaseInsensitive(name, "ignitionLoad"))
-		return engine->outputChannels.ignitionLoad;
-	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
-		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "totalTriggerErrorCounter"))
 		return engine->outputChannels.totalTriggerErrorCounter;
 	if (strEqualCaseInsensitive(name, "orderingErrorCounter"))
@@ -387,10 +379,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.starterRelayDisable;
 	if (strEqualCaseInsensitive(name, "multiSparkCounter"))
 		return engine->outputChannels.multiSparkCounter;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureRatio"))
-		return engine->outputChannels.injectorFlowPressureRatio;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
-		return engine->outputChannels.injectorFlowPressureDelta;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.pTerm"))
 		return engine->outputChannels.alternatorStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.iTerm"))

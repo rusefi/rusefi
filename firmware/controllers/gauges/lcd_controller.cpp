@@ -189,7 +189,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("IAT corr %.2f", getIatFuelCorrection());
 		return;
 	case LL_FUEL_INJECTOR_LAG:
-		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
+		lcdPrintf("ING LAG %.2f", engine->module<InjectorModel>()->m_deadtime);
 		return;
 	case LL_VBATT:
 		lcdPrintf("Battery %.2fv", Sensor::getOrZero(SensorType::BatteryVoltage));

@@ -11,7 +11,6 @@
 #include "io_pins.h"
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
-#include "globalaccess.h"
 #include "timer.h"
 
 #if EFI_TCU

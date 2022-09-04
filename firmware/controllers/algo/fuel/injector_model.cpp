@@ -1,14 +1,17 @@
-#include "pch.h"
+
+// here am flirting with not using pch.h and not including at least Engine
+#include <rusefi/interpolation.h>
+#include <rusefi/arrays.h>
+#include "engine_configuration.h"
+#include "sensor.h"
+#include "error_handling.h"
 
 #include "injector_model.h"
 #include "fuel_computer.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
-	float deadtime = getDeadtime();
-	m_deadtime = deadtime;
-
-	postState(deadtime);
+	m_deadtime = getDeadtime();
 }
 
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
@@ -39,6 +42,14 @@ float InjectorModel::getInjectorFlowRatio() {
 	}
 
 	float referencePressure = engineConfiguration->fuelReferencePressure;
+
+	if (referencePressure < 50) {
+		// impossibly low fuel ref pressure
+		firmwareError(OBD_PCM_Processor_Fault, "Impossible fuel reference pressure: %f", referencePressure);
+
+		return 1.0f;
+	}
+
 	expected<float> absRailPressure = getAbsoluteRailPressure();
 
 	// If sensor failed, best we can do is disable correction
@@ -64,11 +75,6 @@ float InjectorModel::getInjectorFlowRatio() {
 	// todo: live data model?
 	float flowRatio = sqrtf(pressureRatio);
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.injectorFlowPressureDelta = pressureDelta;
-	engine->outputChannels.injectorFlowPressureRatio = pressureRatio;
-#endif // EFI_TUNER_STUDIO
-
 	// TODO: should the flow ratio be clamped?
 	return flowRatio;
 }
@@ -88,10 +94,6 @@ float InjectorModel::getDeadtime() const {
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
 	);
-}
-
-void InjectorModel::postState(float deadtime) const {
-	engine->engineState.running.injectorLag = deadtime;
 }
 
 float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {

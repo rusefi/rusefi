@@ -29,6 +29,7 @@ Release template (copy/paste this for new release):
  - Time delay before DFCO #4292
  - Idle coasting position table is now RPM-based, instead of CLT-based #4487
  - Manual electronic throttle synchronization #3680
+ - Delay before enabling AC compressor #4502
 
 ### Fixed
  - Inverted vvt control #4464

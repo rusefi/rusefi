@@ -48,15 +48,14 @@ static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
 	}
 }
 
-/**
- * @returns false in case of error, true if success
- */
-bool FuelSchedule::addFuelEventsForCylinder(int i ) {
+// Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
+// or unexpected if unable to calculate the start angle due to missing information.
+expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
-		return false;
+		return unexpected;
 	}
 
 	// injection phase may be scheduled by injection end, so we need to step the angle back
@@ -67,11 +66,49 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	floatus_t injectionOffset = engine->engineState.injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
-		return false;
+		return unexpected;
 	}
 
 	angle_t openingAngle = injectionOffset - injectionDurationAngle;
 	assertAngleRange(openingAngle, "openingAngle_r", CUSTOM_ERR_6554);
+
+	// Convert from cylinder-relative to cylinder-1-relative
+	openingAngle += getCylinderAngle(cylinderIndex, cylinderNumber);
+
+	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
+	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
+
+	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->triggerCentral.triggerShape.getOperationMode()));
+
+#if EFI_UNIT_TEST
+	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, cylinderNumber);
+#endif
+
+	return openingAngle;
+}
+
+bool InjectionEvent::updateInjectionAngle(int cylinderIndex) {
+	auto result = computeInjectionAngle(cylinderIndex);
+
+	if (result) {
+		injectionStartAngle = result.Value;
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
+ * @returns false in case of error, true if success
+ */
+bool FuelSchedule::addFuelEventsForCylinder(int i) {
+	InjectionEvent *ev = &elements[i];
+
+	bool updatedAngle = ev->updateInjectionAngle(i);
+
+	if (!updatedAngle) {
+		return false;
+	}
 
 	injection_mode_e mode = engine->getCurrentInjectionMode();
 
@@ -113,38 +150,19 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	}
 
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
-	bool isSimultanious = mode == IM_SIMULTANEOUS;
-
-	InjectionEvent *ev = &elements[i];
+	bool isSimultaneous = mode == IM_SIMULTANEOUS;
 
 	ev->outputs[0] = output;
 	ev->outputs[1] = secondOutput;
-	ev->isSimultanious = isSimultanious;
+	ev->isSimultaneous = isSimultaneous;
 	// Stash the cylinder number so we can select the correct fueling bank later
 	ev->cylinderNumber = injectorIndex;
 
-	if (!isSimultanious && !output->isInitialized()) {
+	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	// Convert from cylinder-relative to cylinder-1-relative
-	openingAngle += getCylinderAngle(i, ev->cylinderNumber);
-
-	if (TRIGGER_WAVEFORM(getSize()) < 1) {
-		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");
-		return false;
-	}
-
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
-	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
-
-	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->triggerCentral.triggerShape.getOperationMode()));
-	ev->injectionStartAngle = openingAngle;
-
-#if EFI_UNIT_TEST
-	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, injectorIndex);
-#endif
 	return true;
 }
 

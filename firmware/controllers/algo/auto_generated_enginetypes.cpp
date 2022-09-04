@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Aug 29 02:17:01 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Sep 04 13:56:17 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -496,8 +496,8 @@ case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MAZDA_MYSTERY:
-  return "TT_VVT_MAZDA_MYSTERY";
+case TT_VVT_MAZDA_SKYACTIV:
+  return "TT_VVT_MAZDA_SKYACTIV";
 case TT_VVT_MIATA_NB:
   return "TT_VVT_MIATA_NB";
 case TT_VVT_MITSUBISHI_3A92:
@@ -541,8 +541,6 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
-case TS_CRAZY:
-  return "TS_CRAZY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
@@ -561,6 +559,10 @@ case TS_LUA_OUTPUT_CATEGORY:
   return "TS_LUA_OUTPUT_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SET_DEFAULT_ENGINE:
+  return "TS_SET_DEFAULT_ENGINE";
+case TS_SET_ENGINE_TYPE:
+  return "TS_SET_ENGINE_TYPE";
 case TS_SOLENOID_CATEGORY:
   return "TS_SOLENOID_CATEGORY";
 case TS_UNUSED_23:
@@ -581,10 +583,6 @@ case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:
   return "TS_X14";
-case TS_X30:
-  return "TS_X30";
-case TS_X31:
-  return "TS_X31";
   }
  return NULL;
 }

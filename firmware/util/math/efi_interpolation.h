@@ -1,5 +1,6 @@
 /**
- * @file    interpolation.h
+ * @file    efi_interpolation.h
+ * See also libfirmware interpolation.h
  *
  * @date Oct 17, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -7,6 +8,7 @@
 
 #pragma once
 
+#include <rusefi/isnan.h>
 #include <math.h>
 #include "datalogging.h"
 #include "obd_error_codes.h"

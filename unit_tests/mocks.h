@@ -101,6 +101,7 @@ public:
 	MOCK_METHOD(void, prepare, (), (override));
 	MOCK_METHOD(floatms_t, getInjectionDuration, (float fuelMassGram), (const, override));
 	MOCK_METHOD(float, getFuelMassForDuration, (floatms_t duration), (const, override));
+	MOCK_METHOD(floatms_t, getDeadtime, (), (const, override));
 };
 
 class MockStepperHardware : public StepperHw {
