@@ -36,10 +36,10 @@ public class GaugesPanel {
             Sensor.MAP,
             Sensor.tCharge,
             Sensor.baseFuel,
-            Sensor.cltCorrection,
-            Sensor.iatCorrection,
-
-            Sensor.injectorLagMs,
+//            Sensor.cltCorrection,
+//            Sensor.iatCorrection,
+//
+//            Sensor.injectorLagMs,
             Sensor.lastErrorCode,
             Sensor.Lambda,
             Sensor.VBATT,
