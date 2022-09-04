@@ -43,19 +43,19 @@ TEST(LuaVag, packMotor1) {
 		torqueLoss = 9.75
 		requestedTorque = 21.84
 
-		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+		canMotor1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
-		data[2] = engineTorque / 0.39
-		setTwoBytes(data, 2, rpm / 0.25)
-		data[5] = innerTorqWithoutExt / 0.4
- 		data[6] = tps / 0.4
-		data[7] = torqueLoss / 0.39
-		data[8] = requestedTorque / 0.39
+		canMotor1[2] = engineTorque / 0.39
+		setTwoBytes(canMotor1, 2, rpm / 0.25)
+		canMotor1[5] = innerTorqWithoutExt / 0.4
+ 		canMotor1[6] = tps / 0.4
+		canMotor1[7] = torqueLoss / 0.39
+		canMotor1[8] = requestedTorque / 0.39
 
-		print(arrayToString(data))
+		print(arrayToString(canMotor1))
 
 		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x19, 0x38 }
-		return equals(data, expected)
+		return equals(canMotor1, expected)
 	end
 	)";
 
@@ -140,17 +140,17 @@ TEST(LuaVag, packMotor3) {
 		tps = 100
 		iat = 25.5
 
-		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+		canMotor3 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
- 		data[2] = (iat + 48) / 0.75
-		data[3] = tps / 0.4
-		data[5] = 0x22 
- 		data[8] = tps / 0.4
+ 		canMotor3[2] = (iat + 48) / 0.75
+		canMotor3[3] = tps / 0.4
+		canMotor3[5] = 0x22
+ 		canMotor3[8] = tps / 0.4
 
-		print(arrayToString(data))
+		print(arrayToString(canMotor3))
 
 		expected = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA }
-		return equals(data, expected)
+		return equals(canMotor3, expected)
 	end
 	)";
 
