@@ -265,27 +265,105 @@ TEST(LuaVag, ChecksumMotor6) {
 
 // Leiderman-Khlystov Coefficients for Estimating Engine Full Load Characteristics and Performance
 TEST(LuaVag, LeidermaKhlystov) {
-	const char* realdata = VAG_CHECKSUM realMotor6Packet R"(
+	const char* magic = VAG_CHECKSUM realMotor6Packet R"(
 
-maxPowerHp = 148
+function pow(x, power)
+	local result = x
+	for i = 2, power, 1
+	do
+		result = result * x
+	end
+	return result
+end
+
+
+Nemaxhp=188.7
+Nn=3643
+Memax=441.5
+nM=2689
+	
+ne=2000
+Nemax=Nemaxhp*0.7355
+
+Mn=Nemax*9549/Nn
+print('Mn ' ..Mn)
+
+Kn=Nn/nM
+print('Kn ' ..Kn)
+
+Km=Memax/Mn
+print('Km ' ..Km)
+
+M3=(Km-1)*100;
+zz=(100*(Kn-1)*(Kn-1));
+print('m3 ' ..M3)
+print('zz ' ..zz)
+
+ax=1-((M3*Kn*(2-Kn))/zz);
+bx=2*((M3*Kn)/zz);
+cx=(M3*Kn*Kn)/zz;
+
+print('ax ' ..ax)
+print('bx ' ..bx)
+print('cx ' ..cx)
+
+xx=ax*((ne/Nn))+(bx*(pow(ne,2)/pow(Nn,2)))-(cx*(pow(ne,3)/pow(Nn,3)));
+print ('xx ' ..xx)
+
+	
+Ne=Nemax*xx;
+
+Me=(9550*Ne)/ne;
+
+print('Me ' .. Me)
+
+currentRpm = 2000
+
+maxPowerHp =188.7
+maxPowerRpm = 3643 
+maxTorqueNm = 441.5
+maxTorqueRpm = 2689
+
 maxPowerKw = maxPowerHp * 0.7355
-maxPowerRpm = 6000 
-maxTorqueNm = 147
-maxTorqueRpm = 3500
 
+
+torqAtMaxPower = maxPowerKw * 9549 / maxPowerRpm
+print('torqAtMaxPower ' ..torqAtMaxPower)
 
 rpmCoef = maxPowerRpm / maxTorqueRpm
-Mn = maxPowerKw * 9549 / maxPowerRpm
-torqCoef = maxPowerKw / Mn
+print('rpmCoef ' ..rpmCoef)
 
-m3 = (torqCoef-1) * 100
-zz = 100 * (rpmCoef-1) * (rpmCoef-1)
+torqCoef = maxTorqueNm / torqAtMaxPower
+print('torqCoef ' ..torqCoef)
 
+M3 =(torqCoef -1) * 100
+zz =(100 *(rpmCoef -1) *(rpmCoef -1))
+print('m3 ' ..M3)
+print('zz ' ..zz)
+
+ax = 1 -((M3 * rpmCoef *(2 - rpmCoef)) / zz)
+bx = 2 *((M3 * rpmCoef) / zz)
+cx =(M3 * rpmCoef * rpmCoef) / zz
+
+print('ax ' ..ax)
+print('bx ' ..bx)
+print('cx ' ..cx)
+
+xx = ax *((currentRpm / maxPowerRpm)) +(bx *(pow(currentRpm, 2) / pow(maxPowerRpm, 2))) -(cx *(pow(currentRpm, 3) / pow(maxPowerRpm, 3)))
+print ('xx ' ..xx)
+
+
+Ne = maxPowerKw * xx
+
+Me =(9550 * Ne) / currentRpm
+
+print('Me ' ..Me)
 
 	function testFunc()
-
+		return Me
 	end
 
 	)";
 
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(magic).value_or(0), 1846.3770);
 }
