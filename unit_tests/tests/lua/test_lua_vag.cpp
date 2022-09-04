@@ -261,3 +261,31 @@ TEST(LuaVag, ChecksumMotor6) {
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x3D);
 }
+
+
+// Leiderman-Khlystov Coefficients for Estimating Engine Full Load Characteristics and Performance
+TEST(LuaVag, LeidermaKhlystov) {
+	const char* realdata = VAG_CHECKSUM realMotor6Packet R"(
+
+maxPowerHp = 148
+maxPowerKw = maxPowerHp * 0.7355
+maxPowerRpm = 6000 
+maxTorqueNm = 147
+maxTorqueRpm = 3500
+
+
+rpmCoef = maxPowerRpm / maxTorqueRpm
+Mn = maxPowerKw * 9549 / maxPowerRpm
+torqCoef = maxPowerKw / Mn
+
+m3 = (torqCoef-1) * 100
+zz = 100 * (rpmCoef-1) * (rpmCoef-1)
+
+
+	function testFunc()
+
+	end
+
+	)";
+
+}
