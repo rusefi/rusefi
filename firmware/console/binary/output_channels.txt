@@ -92,9 +92,13 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 !  Corrections
 ! todo: inline this further to injectorModel deadTime
 	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
-	uint16_t autoscale iatCorrection;@@GAUGE_NAME_FUEL_IAT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale cltCorrection;@@GAUGE_NAME_FUEL_CLT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	uint16_t autoscale fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@;"%",{1/100}, 0, 0, 0, 0
+
+	uint16_t autoscale ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@;"%",{1/100}, 0, 0, 0, 0
+! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
+	uint16_t autoscale engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Wall model AE
 	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
@@ -150,13 +154,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
 	uint8_t autoscale idleTargetPosition;;"", 1, 0, 0, 0, 0
 
-	! Values used for load axes for fuel/ign tables
-	! These may or may not be the same value, depending on mode
-	uint16_t autoscale fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@;"%",{1/100}, 0, 0, 0, 0
-
-	uint16_t autoscale ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@;"%",{1/100}, 0, 0, 0, 0
-! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	uint16_t autoscale engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Errors
 	uint32_t autoscale totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
