@@ -143,6 +143,9 @@ protected:
 	//  - Saw a sync point but the wrong number of events in the cycle
 	virtual void onTriggerError() { }
 
+	virtual void onNotEnoughTeeth(int actual, int expected) { }
+	virtual void onTooManyTeeth(int actual, int expected) { }
+
 private:
 	void resetCurrentCycleState();
 	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
@@ -224,6 +227,9 @@ public:
 
 	void onTriggerError() override;
 
+	void onNotEnoughTeeth(int actual, int expected) override;
+	void onTooManyTeeth(int actual, int expected) override;
+
 private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
@@ -238,6 +244,9 @@ private:
 class VvtTriggerDecoder : public TriggerDecoderBase {
 public:
 	VvtTriggerDecoder(const char* name) : TriggerDecoderBase(name) { }
+
+	void onNotEnoughTeeth(int actual, int expected) override;
+	void onTooManyTeeth(int actual, int expected) override;
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);

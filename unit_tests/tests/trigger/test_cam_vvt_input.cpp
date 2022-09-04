@@ -54,7 +54,7 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireFall(150);
 	}
 	EXPECT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-	EXPECT_EQ(CUSTOM_SYNC_ERROR, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	EXPECT_EQ(CUSTOM_PRIMARY_TOO_MANY_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
 }
 
 TEST(trigger, testNoisyInput) {
@@ -74,7 +74,7 @@ TEST(trigger, testNoisyInput) {
 	ASSERT_EQ(NOISY_RPM,  Sensor::getOrZero(SensorType::Rpm)) << "testNoisyInput RPM should be noisy";
 
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
-	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
+	ASSERT_EQ(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
 	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1).Code) << "@0";
 }
 
