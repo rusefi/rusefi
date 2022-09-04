@@ -100,7 +100,7 @@ public enum Sensor implements BinaryLogEntry {
     TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.SECONDS.getOffset(), 1, 0, 5, ""),
     engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
     FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.FIRMWAREVERSION.getOffset(), 1, 0, 100, "version_f"),
-    TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, TS_FILE_VERSION_OFFSET),
+    TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.TSCONFIGVERSION.getOffset()),
 
     engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
@@ -375,5 +375,10 @@ public enum Sensor implements BinaryLogEntry {
         }
 
         return Double.toString(value);
+    }
+
+    static {
+        if (TS_FILE_VERSION_OFFSET != TsOutputs.TSCONFIGVERSION.getOffset())
+            throw new IllegalStateException("static assert failed TS_FILE_VERSION_OFFSET");
     }
 }
