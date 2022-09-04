@@ -125,8 +125,8 @@ public enum Sensor implements BinaryLogEntry {
     tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 244, 0, 5),
 
     // Raw sensors
-    rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 238, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
-    rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 240, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 234, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+    rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 236, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
 
     tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
     flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
