@@ -69,7 +69,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
 	fprintf(fp, "%s=%s\n", TRIGGER_HARDCODED_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
-	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, shape->knownOperationMode && (shape->getOperationMode() == FOUR_STROKE_CRANK_SENSOR) ? "true" : "false");
+	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, shape->knownOperationMode && (shape->getWheelOperationMode() == FOUR_STROKE_CRANK_SENSOR) ? "true" : "false");
 
 	fprintf(fp, "%s=%s\n", TRIGGER_HAS_SECOND_CHANNEL, shape->needSecondTriggerInput ? "true" : "false");
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
