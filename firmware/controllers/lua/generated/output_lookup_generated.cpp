@@ -161,6 +161,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.engineMode;
 	if (strEqualCaseInsensitive(name, "firmwareVersion"))
 		return engine->outputChannels.firmwareVersion;
+	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
+		return engine->outputChannels.rawIdlePositionSensor;
+	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
+		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "tsConfigVersion"))
 		return engine->outputChannels.tsConfigVersion;
 	if (strEqualCaseInsensitive(name, "calibrationValue"))
@@ -229,10 +233,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tcuDesiredGear;
 	if (strEqualCaseInsensitive(name, "flexPercent"))
 		return engine->outputChannels.flexPercent;
-	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
-		return engine->outputChannels.rawIdlePositionSensor;
-	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
-		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "wastegatePositionSensor"))
 		return engine->outputChannels.wastegatePositionSensor;
 	if (strEqualCaseInsensitive(name, "idlePositionSensor"))

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:43:38 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:55:24 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -463,210 +463,210 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint32_t, 1, 1> firmwareVersion = (uint32_t)0;
 	/**
+	V
 	 * offset 120
 	 */
-	scaled_channel<uint32_t, 1, 1> tsConfigVersion = (uint32_t)0;
+	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
+	/**
+	V
+	 * offset 122
+	 */
+	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
 	/**
 	 * offset 124
 	 */
-	scaled_channel<float, 1, 1> calibrationValue = (float)0;
+	scaled_channel<uint32_t, 1, 1> tsConfigVersion = (uint32_t)0;
 	/**
 	 * offset 128
 	 */
+	scaled_channel<float, 1, 1> calibrationValue = (float)0;
+	/**
+	 * offset 132
+	 */
 	scaled_channel<uint8_t, 1, 1> calibrationMode = (uint8_t)0;
 	/**
-	 * offset 129
+	 * offset 133
 	 */
 	scaled_channel<uint8_t, 1, 1> idleTargetPosition = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 130
+	 * offset 134
 	 */
-	uint8_t alignmentFill_at_130[2];
+	uint8_t alignmentFill_at_134[2];
 	/**
 	 * @@GAUGE_NAME_TRG_ERR@@
 	counter
-	 * offset 132
+	 * offset 136
 	 */
 	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
 	/**
-	 * offset 136
+	 * offset 140
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	count
-	 * offset 140
+	 * offset 144
 	 */
 	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_LAST@@
 	error
-	 * offset 142
+	 * offset 146
 	 */
 	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
 	/**
 	error
-	 * offset 144
+	 * offset 148
 	 */
 	uint16_t recentErrorCode[8];
 	/**
 	val
-	 * offset 160
+	 * offset 164
 	 */
 	scaled_channel<float, 1, 1> debugFloatField1 = (float)0;
 	/**
 	val
-	 * offset 164
+	 * offset 168
 	 */
 	scaled_channel<float, 1, 1> debugFloatField2 = (float)0;
 	/**
 	val
-	 * offset 168
+	 * offset 172
 	 */
 	scaled_channel<float, 1, 1> debugFloatField3 = (float)0;
 	/**
 	val
-	 * offset 172
+	 * offset 176
 	 */
 	scaled_channel<float, 1, 1> debugFloatField4 = (float)0;
 	/**
 	val
-	 * offset 176
+	 * offset 180
 	 */
 	scaled_channel<float, 1, 1> debugFloatField5 = (float)0;
 	/**
 	val
-	 * offset 180
+	 * offset 184
 	 */
 	scaled_channel<float, 1, 1> debugFloatField6 = (float)0;
 	/**
 	val
-	 * offset 184
+	 * offset 188
 	 */
 	scaled_channel<float, 1, 1> debugFloatField7 = (float)0;
 	/**
 	val
-	 * offset 188
+	 * offset 192
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField1 = (uint32_t)0;
 	/**
 	val
-	 * offset 192
+	 * offset 196
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField2 = (uint32_t)0;
 	/**
 	val
-	 * offset 196
+	 * offset 200
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField3 = (uint32_t)0;
 	/**
 	val
-	 * offset 200
+	 * offset 204
 	 */
 	scaled_channel<int16_t, 1, 1> debugIntField4 = (int16_t)0;
 	/**
 	val
-	 * offset 202
+	 * offset 206
 	 */
 	scaled_channel<int16_t, 1, 1> debugIntField5 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_X@@
 	G
-	 * offset 204
+	 * offset 208
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
-	 * offset 206
+	 * offset 210
 	 */
 	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
 	/**
 	deg C
-	 * offset 208
+	 * offset 212
 	 */
 	uint16_t egt[EGT_CHANNEL_COUNT];
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	%
-	 * offset 224
+	 * offset 228
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	V
-	 * offset 226
+	 * offset 230
 	 */
 	scaled_channel<int16_t, 1000, 1> rawTps1Primary = (int16_t)0;
 	/**
 	V
-	 * offset 228
+	 * offset 232
 	 */
 	scaled_channel<int16_t, 1000, 1> rawPpsPrimary = (int16_t)0;
 	/**
 	V
-	 * offset 230
+	 * offset 234
 	 */
 	scaled_channel<int16_t, 1000, 1> rawClt = (int16_t)0;
 	/**
 	V
-	 * offset 232
+	 * offset 236
 	 */
 	scaled_channel<int16_t, 1000, 1> rawIat = (int16_t)0;
 	/**
 	V
-	 * offset 234
+	 * offset 238
 	 */
 	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
-	 * offset 236
+	 * offset 240
 	 */
 	scaled_channel<uint16_t, 1, 1> tuneCrc16 = (uint16_t)0;
 	/**
-	 * offset 238
+	 * offset 242
 	 */
 	scaled_channel<uint8_t, 1, 1> fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_CURRENT_GEAR@@
 	gear
-	 * offset 239
+	 * offset 243
 	 */
 	scaled_channel<int8_t, 1, 1> tcuCurrentGear = (int8_t)0;
 	/**
 	V
-	 * offset 240
+	 * offset 244
 	 */
 	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
 	/**
 	dBv
-	 * offset 242
+	 * offset 246
 	 */
 	scaled_channel<int8_t, 1, 1> knock[12];
 	/**
 	 * @@GAUGE_NAME_DESIRED_GEAR@@
 	gear
-	 * offset 254
+	 * offset 258
 	 */
 	scaled_channel<int8_t, 1, 1> tcuDesiredGear = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_FLEX@@
 	%
-	 * offset 255
+	 * offset 259
 	 */
 	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
-	/**
-	V
-	 * offset 256
-	 */
-	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
-	/**
-	V
-	 * offset 258
-	 */
-	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_WG_POSITION@@
 	%
@@ -1285,4 +1285,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 740);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:43:38 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:55:24 UTC 2022
