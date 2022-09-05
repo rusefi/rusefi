@@ -64,7 +64,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 
 	// injection phase may be scheduled by injection end, so we need to step the angle back
 	// for the duration of the injection
-	angle_t injectionDurationAngle = getInjectionAngleCorrection(engine->injectionDuration, oneDegreeUs);
+	angle_t injectionDurationAngle = getInjectionAngleCorrection(engine->engineState.injectionDuration, oneDegreeUs);
 
 	// User configured offset - degrees after TDC combustion
 	floatus_t injectionOffset = engine->engineState.injectionOffset;

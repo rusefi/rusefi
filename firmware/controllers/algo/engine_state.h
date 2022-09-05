@@ -61,6 +61,13 @@ public:
 	 */
 	floatms_t tpsAccelEnrich = 0;
 
+	/**
+	 * Each individual fuel injection duration for current engine cycle, without wall wetting
+	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
+	 */
+	floatms_t injectionDuration = 0;
+
 	angle_t injectionOffset = 0;
 
 	multispark_state multispark;

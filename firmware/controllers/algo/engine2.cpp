@@ -158,7 +158,7 @@ void EngineState::periodicFastCallback() {
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
+	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
