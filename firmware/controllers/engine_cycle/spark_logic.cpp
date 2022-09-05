@@ -300,7 +300,7 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 
 	float angleOffset = event->dwellAngle - currentPhase;
 	if (angleOffset < 0) {
-		angleOffset += engine->engineCycle;
+		angleOffset += engine->engineState.engineCycle;
 	}
 
 	/**
