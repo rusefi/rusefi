@@ -113,7 +113,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
 	assertAngleRange(dwellStartAngle, "findAngle#a6", CUSTOM_ERR_6550);
-	wrapAngle2(dwellStartAngle, "findAngle#7", CUSTOM_ERR_6550, getEngineCycle(engine->triggerCentral.triggerShape.getOperationMode()))
+	wrapAngle2(dwellStartAngle, "findAngle#7", CUSTOM_ERR_6550, getEngineCycle(engine->getOperationMode()));
 	event->dwellAngle = dwellStartAngle;
 
 #if FUEL_MATH_EXTREME_LOGGING
