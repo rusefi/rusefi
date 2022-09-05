@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - Lua canRxAdd bus parameter handling #4467
  - STM32Bootloader driver install from console requests elevation #4313
  - VQ trigger gaps improvement #4469
+ - Injection Offset for skipped wheel triggers #4536
 
 ### Removed
 
