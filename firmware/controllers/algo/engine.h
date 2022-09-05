@@ -330,12 +330,6 @@ public:
 	TriggerCentral triggerCentral;
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	/**
-	 * Each individual fuel injection duration for current engine cycle, without wall wetting
-	 * including everything including injector lag, both cranking and running
-	 * @see getInjectionDuration()
-	 */
-	floatms_t injectionDuration = 0;
 
 	// Per-injection fuel mass, including TPS accel enrich
 	float injectionMass[MAX_CYLINDER_COUNT] = {0};
