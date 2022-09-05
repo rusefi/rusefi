@@ -118,7 +118,7 @@ angle_t TriggerWaveform::getCycleDuration() const {
 }
 
 bool TriggerWaveform::needsDisambiguation() const {
-	switch (getOperationMode()) {
+	switch (getWheelOperationMode()) {
 		case FOUR_STROKE_CRANK_SENSOR:
 		case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
 		case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
@@ -177,7 +177,11 @@ void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const chann
 	}
 }
 
-operation_mode_e TriggerWaveform::getOperationMode() const {
+/**
+ * See also Engine#getOperationMode which accounts for additional settings which are
+ * needed to resolve precise mode for vague wheels
+ */
+operation_mode_e TriggerWaveform::getWheelOperationMode() const {
 	return operationMode;
 }
 
@@ -410,7 +414,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	// convert engine cycle angle into trigger cycle angle
 	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
-	wrapAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
+	wrapAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getWheelOperationMode()));
 
 	int triggerEventIndex = triggerShape->findAngleIndex(details, angle);
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];

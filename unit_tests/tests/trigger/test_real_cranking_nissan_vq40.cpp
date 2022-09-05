@@ -36,5 +36,5 @@ TEST(realCrankingVQ40, normalCranking) {
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());
 	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0).Code);	// this is from a coil being protected by overdwell protection
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(1).Code);
+	ASSERT_EQ(CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
 }

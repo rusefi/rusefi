@@ -136,8 +136,6 @@ float getRunningFuel(float baseFuel) {
 	return runningFuel;
 }
 
-/* DISPLAY_ENDIF */
-
 static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
@@ -174,9 +172,9 @@ static float getBaseFuelMass(int rpm) {
 	auto airmass = model->getAirmass(rpm);
 
 	// Plop some state for others to read
-	engine->engineState.sd.airMassInOneCylinder = airmass.CylinderAirmass;
+	engine->fuelComputer->sdAirMassInOneCylinder = airmass.CylinderAirmass;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
-	engine->engineState.ignitionLoad = getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
+	engine->engineState.ignitionLoad = engine->fuelComputer->getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
 	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
 	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
@@ -244,7 +242,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 }
 
 float getInjectionModeDurationMultiplier() {
-	injection_mode_e mode = engine->getCurrentInjectionMode();
+	injection_mode_e mode = getCurrentInjectionMode();
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {
@@ -273,7 +271,7 @@ float getInjectionModeDurationMultiplier() {
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm) {
-	floatms_t totalInjectiorAmountPerCycle = engine->injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
+	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
@@ -400,6 +398,11 @@ float getCrankingFuel(float baseFuel) {
 	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
+/**
+ * Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
+ *
+ * Should we bother caching 'getStandardAirCharge' result or can we afford to run the math every time we calculate fuel?
+ */
 float getStandardAirCharge() {
 	float totalDisplacement = engineConfiguration->specs.displacement;
 	float cylDisplacement = totalDisplacement / engineConfiguration->specs.cylindersCount;

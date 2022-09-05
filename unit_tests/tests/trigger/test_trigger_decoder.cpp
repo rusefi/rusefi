@@ -304,7 +304,7 @@ TEST(misc, testRpmCalculator) {
 
 	ASSERT_NEAR(engine->engineState.timingAdvance[0], 707, 0.1f);
 
-	assertEqualsM("fuel #1", 4.5450, engine->injectionDuration);
+	assertEqualsM("fuel #1", 4.5450, engine->engineState.injectionDuration);
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
 	assertEqualsM("injection angle", 499.095, ie0->injectionStartAngle);
 
@@ -312,7 +312,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
 	assertEqualsM("dwell", 4.5, engine->engineState.dwellAngle);
-	assertEqualsM("fuel #2", 4.5450, engine->injectionDuration);
+	assertEqualsM("fuel #2", 4.5450, engine->engineState.injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
 	EXPECT_NEAR(ilist->elements[0].dwellAngle, 8.5f, 1e-3);
@@ -361,7 +361,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 4.3";
 
 	assertEqualsM("dwell", 4.5, eth.engine.engineState.dwellAngle);
-	assertEqualsM("fuel #3", 4.5450, eth.engine.injectionDuration);
+	assertEqualsM("fuel #3", 4.5450, eth.engine.engineState.injectionDuration);
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
 
@@ -612,7 +612,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";
 
-	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
+	assertEqualsM("fuel#1", 1.5, engine->engineState.injectionDuration);
 	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 }
 
@@ -642,7 +642,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	engine->periodicFastCallback();
 
-	engine->injectionDuration = 12.5f;
+	engine->engineState.injectionDuration = 12.5f;
 	// Injection duration of 12.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
@@ -802,7 +802,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	assertInjectionEvent("#2#", &t->elements[2], 0, 1, 135 + 540);
 	assertInjectionEvent("#3#", &t->elements[3], 1, 0, 135);
 
-	engine->injectionDuration = 17.5;
+	engine->engineState.injectionDuration = 17.5;
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
@@ -940,7 +940,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	engine->periodicFastCallback();
 
-	engine->injectionDuration = 17.5f;
+	engine->engineState.injectionDuration = 17.5f;
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
@@ -1008,7 +1008,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	engine->periodicFastCallback();
 
 	// Injection duration of 2ms
-	engine->injectionDuration = 2.0f;
+	engine->engineState.injectionDuration = 2.0f;
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
 	engine->module<InjectorModel>().set(&im2);

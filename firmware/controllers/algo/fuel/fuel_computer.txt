@@ -3,6 +3,12 @@ struct_no_prefix fuel_computer_s
 	float currentAfrLoad
 	float targetLambda
 	float stoichiometricRatio
-	float targetAFR_t
+	float targetAFR
+
+! c'mon, not the whole LiveData spaghetti for SD class?
+float sdTcharge_coff
+float sdAirMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
+bit sdIsTChargeAirModel
+
 
 end_struct

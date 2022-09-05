@@ -30,12 +30,14 @@ Release template (copy/paste this for new release):
  - Idle coasting position table is now RPM-based, instead of CLT-based #4487
  - Manual electronic throttle synchronization #3680
  - Delay before enabling AC compressor #4502
+ - Require full sync for odd cylinder count #4533
 
 ### Fixed
  - Inverted vvt control #4464
  - Lua canRxAdd bus parameter handling #4467
  - STM32Bootloader driver install from console requests elevation #4313
  - VQ trigger gaps improvement #4469
+ - Injection Offset for skipped wheel triggers #4536
 
 ### Removed
 

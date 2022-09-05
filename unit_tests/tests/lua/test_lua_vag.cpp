@@ -3,18 +3,20 @@
 #include "lua_lib.h"
 
 // XOR of the array, skipping target index
-#define VAG_CHECKSUM "function xorChecksum(data, targetIndex)        \
+#define VAG_CHECKSUM " \
+function xorChecksum(data, targetIndex) \
 	local index = 1 \
 	local result = 0 \
-  while data[index] ~= nil do \
-	if index ~= targetIndex then \
-       result = result ~ data[index] \
-    end \
-	index = index + 1 \
-  end \
-  data[targetIndex] = result \
-		return result  \
-	end"
+	while data[index] ~= nil do \
+		if index ~= targetIndex then \
+			result = result ~ data[index] \
+		end \
+		index = index + 1 \
+	end \
+	data[targetIndex] = result \
+	return result \
+end \
+"
 
 
 TEST(LuaVag, Checksum) {
@@ -41,19 +43,19 @@ TEST(LuaVag, packMotor1) {
 		torqueLoss = 9.75
 		requestedTorque = 21.84
 
-		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+		canMotor1 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
-		data[2] = engineTorque / 0.39
-		setTwoBytes(data, 2, rpm / 0.25)
-		data[5] = innerTorqWithoutExt / 0.4
- 		data[6] = tps / 0.4
-		data[7] = torqueLoss / 0.39
-		data[8] = requestedTorque / 0.39
+		canMotor1[2] = engineTorque / 0.39
+		setTwoBytes(canMotor1, 2, rpm / 0.25)
+		canMotor1[5] = innerTorqWithoutExt / 0.4
+ 		canMotor1[6] = tps / 0.4
+		canMotor1[7] = torqueLoss / 0.39
+		canMotor1[8] = requestedTorque / 0.39
 
-		print(arrayToString(data))
+		print(arrayToString(canMotor1))
 
 		expected = { 0x00, 0x27, 0xDC, 0x12, 0x36, 0x4F, 0x19, 0x38 }
-		return equals(data, expected)
+		return equals(canMotor1, expected)
 	end
 	)";
 
@@ -138,17 +140,17 @@ TEST(LuaVag, packMotor3) {
 		tps = 100
 		iat = 25.5
 
-		data = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+		canMotor3 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
- 		data[2] = (iat + 48) / 0.75
-		data[3] = tps / 0.4
-		data[5] = 0x22 
- 		data[8] = tps / 0.4
+ 		canMotor3[2] = (iat + 48) / 0.75
+		canMotor3[3] = tps / 0.4
+		canMotor3[5] = 0x22
+ 		canMotor3[8] = tps / 0.4
 
-		print(arrayToString(data))
+		print(arrayToString(canMotor3))
 
 		expected = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA }
-		return equals(data, expected)
+		return equals(canMotor3, expected)
 	end
 	)";
 
@@ -258,4 +260,110 @@ TEST(LuaVag, ChecksumMotor6) {
 	)";
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x3D);
+}
+
+
+// Leiderman-Khlystov Coefficients for Estimating Engine Full Load Characteristics and Performance
+TEST(LuaVag, LeidermaKhlystov) {
+	const char* magic = VAG_CHECKSUM realMotor6Packet R"(
+
+function pow(x, power)
+	local result = x
+	for i = 2, power, 1
+	do
+		result = result * x
+	end
+	return result
+end
+
+
+Nemaxhp=188.7
+Nn=3643
+Memax=441.5
+nM=2689
+	
+ne=2000
+Nemax=Nemaxhp*0.7355
+
+Mn=Nemax*9549/Nn
+print('Mn ' ..Mn)
+
+Kn=Nn/nM
+print('Kn ' ..Kn)
+
+Km=Memax/Mn
+print('Km ' ..Km)
+
+M3=(Km-1)*100;
+zz=(100*(Kn-1)*(Kn-1));
+print('m3 ' ..M3)
+print('zz ' ..zz)
+
+ax=1-((M3*Kn*(2-Kn))/zz);
+bx=2*((M3*Kn)/zz);
+cx=(M3*Kn*Kn)/zz;
+
+print('ax ' ..ax)
+print('bx ' ..bx)
+print('cx ' ..cx)
+
+xx=ax*((ne/Nn))+(bx*(pow(ne,2)/pow(Nn,2)))-(cx*(pow(ne,3)/pow(Nn,3)));
+print ('xx ' ..xx)
+
+	
+Ne=Nemax*xx;
+
+Me=(9550*Ne)/ne;
+
+print('Me ' .. Me)
+
+currentRpm = 2000
+
+maxPowerHp =188.7
+maxPowerRpm = 3643 
+maxTorqueNm = 441.5
+maxTorqueRpm = 2689
+
+maxPowerKw = maxPowerHp * 0.7355
+
+
+torqAtMaxPower = maxPowerKw * 9549 / maxPowerRpm
+print('torqAtMaxPower ' ..torqAtMaxPower)
+
+rpmCoef = maxPowerRpm / maxTorqueRpm
+print('rpmCoef ' ..rpmCoef)
+
+torqCoef = maxTorqueNm / torqAtMaxPower
+print('torqCoef ' ..torqCoef)
+
+M3 =(torqCoef -1) * 100
+zz =(100 *(rpmCoef -1) *(rpmCoef -1))
+print('m3 ' ..M3)
+print('zz ' ..zz)
+
+ax = 1 -((M3 * rpmCoef *(2 - rpmCoef)) / zz)
+bx = 2 *((M3 * rpmCoef) / zz)
+cx =(M3 * rpmCoef * rpmCoef) / zz
+
+print('ax ' ..ax)
+print('bx ' ..bx)
+print('cx ' ..cx)
+
+xx = ax *((currentRpm / maxPowerRpm)) +(bx *(pow(currentRpm, 2) / pow(maxPowerRpm, 2))) -(cx *(pow(currentRpm, 3) / pow(maxPowerRpm, 3)))
+print ('xx ' ..xx)
+
+
+Ne = maxPowerKw * xx
+
+Me =(9550 * Ne) / currentRpm
+
+print('Me ' ..Me)
+
+	function testFunc()
+		return Me
+	end
+
+	)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(magic).value_or(0), 1846.3770);
 }

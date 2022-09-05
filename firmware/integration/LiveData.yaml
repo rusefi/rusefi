@@ -35,6 +35,7 @@ Usages:
   - name: fuel_computer
     java: FuelComputer.java
     folder: controllers/algo/fuel
+    prepend: integration/rusefi_config.txt
 
   - name: launch_control_state
     java: LaunchControl.java

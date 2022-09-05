@@ -51,15 +51,6 @@ public:
 	float currentVe = 0;
 	float currentVeLoad = 0;
 
-	// fuel computer
-	float currentAfrLoad = 0;
-	float targetLambda = 0.0f;
-	float stoichiometricRatio = 0.0f;
-	// fuel computer end
-
-	float fuelingLoad = 0;
-	float ignitionLoad = 0;
-
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
@@ -69,6 +60,13 @@ public:
 	 * TPS acceleration: extra fuel amount
 	 */
 	floatms_t tpsAccelEnrich = 0;
+
+	/**
+	 * Each individual fuel injection duration for current engine cycle, without wall wetting
+	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
+	 */
+	floatms_t injectionDuration = 0;
 
 	angle_t injectionOffset = 0;
 

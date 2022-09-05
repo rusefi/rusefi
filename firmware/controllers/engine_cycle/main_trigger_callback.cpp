@@ -171,7 +171,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel injectionDuration=%.2fms adjusted=%.2fms\n",
-		  engine->injectionDuration,
+		  engine->engineState.injectionDuration,
 		  injectionDuration);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
@@ -310,34 +310,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
 	fs->onTriggerTooth(rpm, nowNt, currentPhase, nextPhase);
-}
-
-bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
-	auto operationMode = engine->getOperationMode();
-
-	// V-Twin MAP phase sense needs to always wait for sync
-	if (vvtMode == VVT_MAP_V_TWIN) {
-		return true;
-	}
-
-	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
-		// in rare cases engines do not like random sequential mode
-		return true;
-	}
-
-	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
-	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case
-	if (engineConfiguration->specs.cylindersCount > 1 && engineConfiguration->specs.cylindersCount % 2 == 1) {
-		return true;
-	}
-
-	// Symmetrical crank modes require cam sync before firing
-	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
-	// Examples include Nissan MR/VQ, Miata NB, etc
-	return
-		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
-		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
-		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 }
 
 /**

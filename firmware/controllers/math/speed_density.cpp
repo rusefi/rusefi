@@ -7,9 +7,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pch.h"
+#include <rusefi/interpolation.h>
+#include "engine_configuration.h"
+#include "error_handling.h"
+#include "fuel_computer.h"
 #include "speed_density.h"
 #include "fuel_math.h"
+#include "sensor.h"
+#include "efi_interpolation.h"
+#include "table_helper.h"
+#include "engine_math.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -24,8 +31,8 @@ lambda_Map3D_t lambdaMap;
 #define tpMin 0
 #define tpMax 100
 
-static float getTChargeCoefficient(int rpm, float tps) {
-	engine->engineState.sd.isTChargeAirModel = engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP;
+float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
+	sdIsTChargeAirModel = engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP;
 
 	// First, do TPS mode since it doesn't need any of the airflow math.
 	if (engineConfiguration->tChargeMode == TCHARGE_MODE_RPM_TPS) {
@@ -41,7 +48,7 @@ static float getTChargeCoefficient(int rpm, float tps) {
 
 	constexpr floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 	// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-	floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * engineConfiguration->specs.cylindersCount;
+	floatms_t airMassForEngine = sdAirMassInOneCylinder * engineConfiguration->specs.cylindersCount;
 	// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 	// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
 	floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm);
@@ -67,7 +74,7 @@ static float getTChargeCoefficient(int rpm, float tps) {
 
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t getTCharge(int rpm, float tps) {
+temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 
@@ -89,10 +96,9 @@ temperature_t getTCharge(int rpm, float tps) {
 
 	float coolantTemp = clt.Value;
 
-	auto coefficient = getTChargeCoefficient(rpm, tps);
-	engine->engineState.sd.Tcharge_coff = coefficient;
+	sdTcharge_coff = getTChargeCoefficient(rpm, tps);
 
-	if (cisnan(coefficient)) {
+	if (cisnan(sdTcharge_coff)) {
 		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
@@ -100,7 +106,7 @@ temperature_t getTCharge(int rpm, float tps) {
 	// Interpolate between CLT and IAT:
 	// 0.0 coefficient -> use CLT (full heat transfer)
 	// 1.0 coefficient -> use IAT (no heat transfer)
-	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, coefficient);
+	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, sdTcharge_coff);
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail

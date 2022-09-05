@@ -9,7 +9,7 @@
 #include "pch.h"
 #if EFI_CAN_SUPPORT
 
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
 #include "can.h"
 #include "fuel_math.h"
@@ -131,7 +131,7 @@ struct Fueling {
 };
 
 static void populateFrame(Fueling& msg) {
-	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
+	msg.cylAirmass = engine->fuelComputer->sdAirMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = (float)engine->outputChannels.actualLastInjection;
 	msg.knockCount = engine->module<KnockController>()->getKnockCount();

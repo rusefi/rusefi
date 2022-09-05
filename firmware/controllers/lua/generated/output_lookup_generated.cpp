@@ -115,12 +115,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tCharge;
 	if (strEqualCaseInsensitive(name, "injectorLagMs"))
 		return engine->outputChannels.injectorLagMs;
-	if (strEqualCaseInsensitive(name, "iatCorrection"))
-		return engine->outputChannels.iatCorrection;
-	if (strEqualCaseInsensitive(name, "cltCorrection"))
-		return engine->outputChannels.cltCorrection;
-	if (strEqualCaseInsensitive(name, "baroCorrection"))
-		return engine->outputChannels.baroCorrection;
+	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
+		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "wallFuelAmount"))
 		return engine->outputChannels.wallFuelAmount;
 	if (strEqualCaseInsensitive(name, "wallFuelCorrection"))
@@ -165,6 +161,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.engineMode;
 	if (strEqualCaseInsensitive(name, "firmwareVersion"))
 		return engine->outputChannels.firmwareVersion;
+	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
+		return engine->outputChannels.rawIdlePositionSensor;
+	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
+		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "tsConfigVersion"))
 		return engine->outputChannels.tsConfigVersion;
 	if (strEqualCaseInsensitive(name, "calibrationValue"))
@@ -173,12 +173,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.calibrationMode;
 	if (strEqualCaseInsensitive(name, "idleTargetPosition"))
 		return engine->outputChannels.idleTargetPosition;
-	if (strEqualCaseInsensitive(name, "fuelingLoad"))
-		return engine->outputChannels.fuelingLoad;
-	if (strEqualCaseInsensitive(name, "ignitionLoad"))
-		return engine->outputChannels.ignitionLoad;
-	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
-		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "totalTriggerErrorCounter"))
 		return engine->outputChannels.totalTriggerErrorCounter;
 	if (strEqualCaseInsensitive(name, "orderingErrorCounter"))
@@ -239,10 +233,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tcuDesiredGear;
 	if (strEqualCaseInsensitive(name, "flexPercent"))
 		return engine->outputChannels.flexPercent;
-	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
-		return engine->outputChannels.rawIdlePositionSensor;
-	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
-		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "wastegatePositionSensor"))
 		return engine->outputChannels.wastegatePositionSensor;
 	if (strEqualCaseInsensitive(name, "idlePositionSensor"))
@@ -443,5 +433,53 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.rawBattery;
 	if (strEqualCaseInsensitive(name, "extiOverflowCount"))
 		return engine->outputChannels.extiOverflowCount;
+	if (strEqualCaseInsensitive(name, "coilState1"))
+		return engine->outputChannels.coilState1;
+	if (strEqualCaseInsensitive(name, "coilState2"))
+		return engine->outputChannels.coilState2;
+	if (strEqualCaseInsensitive(name, "coilState3"))
+		return engine->outputChannels.coilState3;
+	if (strEqualCaseInsensitive(name, "coilState4"))
+		return engine->outputChannels.coilState4;
+	if (strEqualCaseInsensitive(name, "coilState5"))
+		return engine->outputChannels.coilState5;
+	if (strEqualCaseInsensitive(name, "coilState6"))
+		return engine->outputChannels.coilState6;
+	if (strEqualCaseInsensitive(name, "coilState7"))
+		return engine->outputChannels.coilState7;
+	if (strEqualCaseInsensitive(name, "coilState8"))
+		return engine->outputChannels.coilState8;
+	if (strEqualCaseInsensitive(name, "coilState9"))
+		return engine->outputChannels.coilState9;
+	if (strEqualCaseInsensitive(name, "coilState10"))
+		return engine->outputChannels.coilState10;
+	if (strEqualCaseInsensitive(name, "coilState11"))
+		return engine->outputChannels.coilState11;
+	if (strEqualCaseInsensitive(name, "coilState12"))
+		return engine->outputChannels.coilState12;
+	if (strEqualCaseInsensitive(name, "injectorState1"))
+		return engine->outputChannels.injectorState1;
+	if (strEqualCaseInsensitive(name, "injectorState2"))
+		return engine->outputChannels.injectorState2;
+	if (strEqualCaseInsensitive(name, "injectorState3"))
+		return engine->outputChannels.injectorState3;
+	if (strEqualCaseInsensitive(name, "injectorState4"))
+		return engine->outputChannels.injectorState4;
+	if (strEqualCaseInsensitive(name, "injectorState5"))
+		return engine->outputChannels.injectorState5;
+	if (strEqualCaseInsensitive(name, "injectorState6"))
+		return engine->outputChannels.injectorState6;
+	if (strEqualCaseInsensitive(name, "injectorState7"))
+		return engine->outputChannels.injectorState7;
+	if (strEqualCaseInsensitive(name, "injectorState8"))
+		return engine->outputChannels.injectorState8;
+	if (strEqualCaseInsensitive(name, "injectorState9"))
+		return engine->outputChannels.injectorState9;
+	if (strEqualCaseInsensitive(name, "injectorState10"))
+		return engine->outputChannels.injectorState10;
+	if (strEqualCaseInsensitive(name, "injectorState11"))
+		return engine->outputChannels.injectorState11;
+	if (strEqualCaseInsensitive(name, "injectorState12"))
+		return engine->outputChannels.injectorState12;
 	return EFI_ERROR_CODE;
 }

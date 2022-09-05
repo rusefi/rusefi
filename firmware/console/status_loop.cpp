@@ -305,8 +305,6 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
 
-	efiPrintf("baro correction=%.2f", engine->engineState.baroCorrection);
-
 #if EFI_ENGINE_CONTROL
 	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
 	efiPrintf("cranking fuel: %.2f", engine->engineState.cranking.fuel);
@@ -517,11 +515,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
-	engine->outputChannels.AFRValue = lambdaValue * engine->engineState.stoichiometricRatio;
+	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer->stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
-	engine->outputChannels.AFRValue2 = lambda2Value * engine->engineState.stoichiometricRatio;
+	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer->stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -620,10 +618,6 @@ static void updateSensors() {
 }
 
 static void updateFuelCorrections() {
-	engine->outputChannels.baroCorrection = engine->engineState.baroCorrection;
-	engine->outputChannels.iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
-	engine->outputChannels.cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
-
 	engine->outputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
 	engine->outputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 
@@ -632,14 +626,13 @@ static void updateFuelCorrections() {
 }
 
 static void updateFuelLoads() {
-	engine->outputChannels.fuelingLoad = getFuelingLoad();
-	engine->outputChannels.ignitionLoad = getIgnitionLoad();
 	engine->outputChannels.veTableYAxis = engine->engineState.currentVeLoad;
-	engine->outputChannels.afrTableYAxis = engine->engineState.currentAfrLoad;
+	engine->outputChannels.afrTableYAxis = engine->fuelComputer->currentAfrLoad;
 }
 
 static void updateFuelResults() {
-	engine->outputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
+	// todo: kill outputChannel while taking care of gauge name and scale!
+	engine->outputChannels.chargeAirMass = engine->fuelComputer->sdAirMassInOneCylinder;
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;
@@ -660,8 +653,7 @@ static void updateFuelInfo() {
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
-	engine->outputChannels.currentTargetAfr = engine->engineState.targetAFR;
-	engine->outputChannels.targetLambda = engine->engineState.targetLambda;
+	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
 
 	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }

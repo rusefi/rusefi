@@ -37,10 +37,12 @@
 #include "ignition_controller.h"
 #include "alternator_controller.h"
 #include "dfco.h"
+#include "fuel_computer.h"
 #include "gear_detector.h"
 #include "advance_map.h"
 #include "fan_control.h"
 #include "sensor_checker.h"
+#include "fuel_schedule.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -84,10 +86,8 @@ struct AirmassModelBase;
 #define CLEANUP_MODE_TPS 90
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
-#define CYCLE_ALTERNATION 2
-
 class IEtbController;
-struct IFuelComputer;
+
 struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
@@ -240,14 +240,12 @@ public:
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
-	void OnTriggerStateDecodingError();
 	void OnTriggerStateProperState(efitick_t nowNt) override;
 	void OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError) override;
 	void OnTriggerSynchronizationLost() override;
 #endif
 
 	void setConfig();
-	injection_mode_e getCurrentInjectionMode();
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
@@ -331,20 +329,12 @@ public:
 	TriggerCentral triggerCentral;
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	/**
-	 * Each individual fuel injection duration for current engine cycle, without wall wetting
-	 * including everything including injector lag, both cranking and running
-	 * @see getInjectionDuration()
-	 */
-	floatms_t injectionDuration = 0;
 
 	// Per-injection fuel mass, including TPS accel enrich
 	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
-	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
-	float standardAirCharge = 0;
 
 	void periodicFastCallback();
 	void periodicSlowCallback();

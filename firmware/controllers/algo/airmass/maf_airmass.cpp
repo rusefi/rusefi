@@ -1,6 +1,11 @@
-#include "pch.h"
+
+#include "engine_configuration.h"
+#include "sensor.h"
+#include "error_handling.h"
+
 #include "maf_airmass.h"
 #include "maf.h"
+#include "fuel_math.h"
 
 AirmassResult MafAirmass::getAirmass(int rpm) {
 	float maf = Sensor::getOrZero(SensorType::Maf);
@@ -31,7 +36,7 @@ AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
 	mass_t cylinderAirmass = airPerRevolution / halfCylCount;
 
 	//Create % load for fuel table using relative naturally aspirated cylinder filling
-	float airChargeLoad = 100 * cylinderAirmass / engine->standardAirCharge;
+	float airChargeLoad = 100 * cylinderAirmass / getStandardAirCharge();
 	
 	//Correct air mass by VE table
 	mass_t correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad);

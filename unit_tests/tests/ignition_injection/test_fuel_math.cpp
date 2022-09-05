@@ -174,19 +174,19 @@ TEST(FuelMath, testDifferentInjectionModes) {
 
 	setInjectionMode((int)IM_BATCH);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
+	EXPECT_FLOAT_EQ( 20,  engine->engineState.injectionDuration) << "injection while batch";
 
 	setInjectionMode((int)IM_SIMULTANEOUS);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
+	EXPECT_FLOAT_EQ( 10,  engine->engineState.injectionDuration) << "injection while simultaneous";
 
 	setInjectionMode((int)IM_SEQUENTIAL);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
+	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SEQUENTIAL";
 
 	setInjectionMode((int)IM_SINGLE_POINT);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
+	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SINGLE_POINT";
 	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
@@ -200,14 +200,14 @@ TEST(FuelMath, deadtime) {
 
 	// First test with no deadtime
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration);
+	EXPECT_FLOAT_EQ( 20,  engine->engineState.injectionDuration);
 
 	// Now add some deadtime
 	setArrayValues(engineConfiguration->injector.battLagCorr, 2.0f);
 
 	// Should have deadtime now!
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20 + 2,  engine->injectionDuration);
+	EXPECT_FLOAT_EQ( 20 + 2,  engine->engineState.injectionDuration);
 }
 
 TEST(FuelMath, CylinderFuelTrim) {

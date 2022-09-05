@@ -17,14 +17,10 @@ LuaAdjustments lua
 
 struct speed_density_s
 
-bit isTChargeAirModel
-
-float airMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
 
 	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
 	float tChargeK
 
-float Tcharge_coff
 
 floatms_t airFlow
 
@@ -33,10 +29,6 @@ floatms_t airFlow
 end_struct
 
 speed_density_s sd;
-
-
-	float targetAFR
-
 
 float engineCycleDurationMs;
 
@@ -49,7 +41,7 @@ float tpsVoltageBoard
 
 	float currentBaroCorrectedVE;
 	float injectorFlowCorrection;
-float baroCorrection;
+float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
 
 
 struct cranking_fuel_s
@@ -70,8 +62,8 @@ cranking_fuel_s cranking
 
 struct running_fuel_s
 float postCrankingFuelCorrection
-	float intakeTemperatureCoefficient
-	float coolantTemperatureCoefficient
+	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
+	float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
 	float timeSinceCrankingInSecs
 
 	floatms_t baseFuel;
@@ -105,5 +97,12 @@ running_fuel_s running
 int fuelInjectionCounter
 int sparkCounter
 
-! engine_state2_s
+
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	float fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@
+	float ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@
+
+
+! engine_state_s
 end_struct
