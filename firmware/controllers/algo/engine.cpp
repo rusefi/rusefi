@@ -349,7 +349,7 @@ void Engine::reset() {
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
-	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
+	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 	resetLua();
 }

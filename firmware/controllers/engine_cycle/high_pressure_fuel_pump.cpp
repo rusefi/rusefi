@@ -70,7 +70,7 @@ angle_t HpfpLobe::findNextLobe() {
 // As a percent of the full pump stroke
 float HpfpQuantity::calcFuelPercent(int rpm) {
 	float fuel_requested_cc_per_cycle =
-		engine->injectionMass[0] * (1.f / fuelDensity) * engineConfiguration->specs.cylindersCount;
+		engine->engineState.injectionMass[0] * (1.f / fuelDensity) * engineConfiguration->specs.cylindersCount;
 	float fuel_requested_cc_per_lobe = fuel_requested_cc_per_cycle / engineConfiguration->hpfpCamLobes;
 	return 100.f *
 		fuel_requested_cc_per_lobe / engineConfiguration->hpfpPumpVolume +

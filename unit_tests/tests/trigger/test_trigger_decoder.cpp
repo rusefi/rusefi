@@ -266,7 +266,7 @@ TEST(misc, testRpmCalculator) {
 	IgnitionEventList *ilist = &engine->ignitionEvents;
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
 
-	ASSERT_EQ( 720,  engine->engineCycle) << "engineCycle";
+	ASSERT_EQ( 720,  engine->engineState.engineCycle) << "engineCycle";
 
 	efiAssertVoid(CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 

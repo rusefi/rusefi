@@ -434,7 +434,7 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	engine->engineCycle = getEngineCycle(engine->getOperationMode());
+	engine->engineState.engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
 	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
@@ -463,7 +463,7 @@ void prepareOutputSignals() {
 angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
 	// base = position of this cylinder in the firing order.
 	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
-	auto base = engine->engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
+	auto base = engine->engineState.engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
 
 	// Plus or minus any adjustment if this is an odd-fire engine
 	auto adjustment = engineConfiguration->timing_offset_cylinder[cylinderNumber];

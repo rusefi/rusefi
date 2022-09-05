@@ -180,7 +180,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	}
 
 	// Select fuel mass from the correct cylinder
-	auto injectionMassGrams = engine->injectionMass[this->cylinderNumber];
+	auto injectionMassGrams = engine->engineState.injectionMass[this->cylinderNumber];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -279,7 +279,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	float angleFromNow = eventAngle - currentPhase;
 	if (angleFromNow < 0) {
-		angleFromNow += engine->engineCycle;
+		angleFromNow += engine->engineState.engineCycle;
 	}
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
