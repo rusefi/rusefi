@@ -44,6 +44,8 @@ class RpmCalculator : public StoredValueSensor, public EngineRotationState {
 public:
 	RpmCalculator();
 
+	operation_mode_e getOperationMode() const override;
+
 	void onSlowCallback();
 
 	/**

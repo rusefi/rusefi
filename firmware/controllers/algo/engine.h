@@ -249,7 +249,7 @@ public:
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
-	operation_mode_e getOperationMode();
+	operation_mode_e getOperationMode() const;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
