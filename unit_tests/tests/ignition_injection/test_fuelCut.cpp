@@ -12,8 +12,8 @@
 using ::testing::_;
 
 // Define some helpers for not-cut and cut
-#define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration)
-#define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->injectionDuration)
+#define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->engineState.injectionDuration)
+#define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->engineState.injectionDuration)
 
 TEST(fuelCut, coasting) {
 	EngineTestHelper eth(TEST_ENGINE);
