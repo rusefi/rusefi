@@ -631,3 +631,9 @@ void doScheduleStopEngine() {
 	//backupRamFlush();
 #endif // EFI_PROD_CODE
 }
+
+EngineRotationState * getEngineRotationState() {
+	return &engine->rpmCalculator;
+}
+
+

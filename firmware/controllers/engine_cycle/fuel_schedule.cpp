@@ -55,7 +55,7 @@ InjectionEvent::InjectionEvent() {
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
 expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
-	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
+	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs(); // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?

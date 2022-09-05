@@ -11,6 +11,7 @@
 #include "scheduler.h"
 #include "stored_value_sensor.h"
 #include "timer.h"
+#include "rpm_calculator_api.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -39,7 +40,7 @@ typedef enum {
 /**
  * Most consumers should access value via Sensor framework by SensorType::Rpm key
  */
-class RpmCalculator : public StoredValueSensor {
+class RpmCalculator : public StoredValueSensor, public EngineRotationState {
 public:
 	RpmCalculator();
 
@@ -109,11 +110,16 @@ public:
 	 * this is RPM on previous engine cycle.
 	 */
 	int previousRpmValue = 0;
+
 	/**
 	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
+
+	floatus_t getOneDegreeUs() override {
+		return oneDegreeUs;
+	}
 
 	Timer lastTdcTimer;
 
