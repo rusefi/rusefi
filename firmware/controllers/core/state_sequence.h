@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "rusefi_enums.h"
 #include <stdint.h>
+#include "rusefi_enums.h"
+#include "expected.h"
 
 /**
  * This layer has two primary usages:
