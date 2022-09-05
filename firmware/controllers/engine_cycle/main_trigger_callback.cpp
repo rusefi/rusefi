@@ -114,6 +114,44 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 	}
 }
 
+void InjectorOutputPin::setHigh() {
+    NamedOutputPin::setHigh();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (injectorIndex) {
+	case 0:
+		engine->outputChannels.injectorState1 = true;
+		break;
+	case 1:
+		engine->outputChannels.injectorState2 = true;
+		break;
+	case 2:
+		engine->outputChannels.injectorState3 = true;
+		break;
+	case 3:
+		engine->outputChannels.injectorState4 = true;
+		break;
+	}
+}
+
+void InjectorOutputPin::setLow() {
+    NamedOutputPin::setLow();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (injectorIndex) {
+	case 0:
+		engine->outputChannels.injectorState1 = false;
+		break;
+	case 1:
+		engine->outputChannels.injectorState2 = false;
+		break;
+	case 2:
+		engine->outputChannels.injectorState3 = false;
+		break;
+	case 3:
+		engine->outputChannels.injectorState4 = false;
+		break;
+	}
+}
+
 void InjectorOutputPin::close(efitick_t nowNt) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
