@@ -4,7 +4,7 @@
  * Handles injection scheduling
  */
 
-#include "pch.h"
+#include "global.h"
 #include <rusefi/arrays.h>
 #include <rusefi/isnan.h>
 #include "fuel_schedule.h"
@@ -206,4 +206,4 @@ void FuelSchedule::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, 
 	}
 }
 
-#endif
+#endif // EFI_ENGINE_CONTROL
