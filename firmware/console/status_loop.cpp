@@ -626,8 +626,6 @@ static void updateFuelCorrections() {
 }
 
 static void updateFuelLoads() {
-	engine->outputChannels.fuelingLoad = getFuelingLoad();
-	engine->outputChannels.ignitionLoad = getIgnitionLoad();
 	engine->outputChannels.veTableYAxis = engine->engineState.currentVeLoad;
 	engine->outputChannels.afrTableYAxis = engine->fuelComputer->currentAfrLoad;
 }
