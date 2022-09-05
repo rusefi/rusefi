@@ -242,7 +242,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 }
 
 float getInjectionModeDurationMultiplier() {
-	injection_mode_e mode = engine->getCurrentInjectionMode();
+	injection_mode_e mode = getCurrentInjectionMode();
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {

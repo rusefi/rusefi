@@ -570,8 +570,8 @@ float Engine::getTimeIgnitionSeconds(void) const {
 	return numSeconds;
 }
 
-injection_mode_e Engine::getCurrentInjectionMode() {
-	return rpmCalculator.isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
+injection_mode_e getCurrentInjectionMode() {
+	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag

@@ -246,7 +246,6 @@ public:
 #endif
 
 	void setConfig();
-	injection_mode_e getCurrentInjectionMode();
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
