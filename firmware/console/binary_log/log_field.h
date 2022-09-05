@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include <cstdint>
 #include <cstddef>
 

@@ -24,7 +24,7 @@ using time_t = uint32_t;
 #include "firing_order.h"
 
 #if __cplusplus
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #endif
 
 #define DEFAULT_FUEL_LOAD_COUNT 16

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "stored_value_sensor.h"
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
 #include "obd2.h"
 #include "can.h"

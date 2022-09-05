@@ -11,7 +11,7 @@
 #include "efi_interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
