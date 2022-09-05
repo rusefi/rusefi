@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:55:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 05:32:10 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1278,11 +1278,119 @@ struct output_channels_s {
 	 */
 	uint8_t extiOverflowCount = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	units
 	 * offset 581
 	 */
-	uint8_t unusedAtTheEnd[159];
+	uint8_t alignmentFill_at_581[3];
+	/**
+	offset 584 bit 0 */
+	bool coilState1 : 1 {};
+	/**
+	offset 584 bit 1 */
+	bool coilState2 : 1 {};
+	/**
+	offset 584 bit 2 */
+	bool coilState3 : 1 {};
+	/**
+	offset 584 bit 3 */
+	bool coilState4 : 1 {};
+	/**
+	offset 584 bit 4 */
+	bool coilState5 : 1 {};
+	/**
+	offset 584 bit 5 */
+	bool coilState6 : 1 {};
+	/**
+	offset 584 bit 6 */
+	bool coilState7 : 1 {};
+	/**
+	offset 584 bit 7 */
+	bool coilState8 : 1 {};
+	/**
+	offset 584 bit 8 */
+	bool coilState9 : 1 {};
+	/**
+	offset 584 bit 9 */
+	bool coilState10 : 1 {};
+	/**
+	offset 584 bit 10 */
+	bool coilState11 : 1 {};
+	/**
+	offset 584 bit 11 */
+	bool coilState12 : 1 {};
+	/**
+	offset 584 bit 12 */
+	bool injectorState1 : 1 {};
+	/**
+	offset 584 bit 13 */
+	bool injectorState2 : 1 {};
+	/**
+	offset 584 bit 14 */
+	bool injectorState3 : 1 {};
+	/**
+	offset 584 bit 15 */
+	bool injectorState4 : 1 {};
+	/**
+	offset 584 bit 16 */
+	bool injectorState5 : 1 {};
+	/**
+	offset 584 bit 17 */
+	bool injectorState6 : 1 {};
+	/**
+	offset 584 bit 18 */
+	bool injectorState7 : 1 {};
+	/**
+	offset 584 bit 19 */
+	bool injectorState8 : 1 {};
+	/**
+	offset 584 bit 20 */
+	bool injectorState9 : 1 {};
+	/**
+	offset 584 bit 21 */
+	bool injectorState10 : 1 {};
+	/**
+	offset 584 bit 22 */
+	bool injectorState11 : 1 {};
+	/**
+	offset 584 bit 23 */
+	bool injectorState12 : 1 {};
+	/**
+	offset 584 bit 24 */
+	bool unusedBit_301_24 : 1 {};
+	/**
+	offset 584 bit 25 */
+	bool unusedBit_301_25 : 1 {};
+	/**
+	offset 584 bit 26 */
+	bool unusedBit_301_26 : 1 {};
+	/**
+	offset 584 bit 27 */
+	bool unusedBit_301_27 : 1 {};
+	/**
+	offset 584 bit 28 */
+	bool unusedBit_301_28 : 1 {};
+	/**
+	offset 584 bit 29 */
+	bool unusedBit_301_29 : 1 {};
+	/**
+	offset 584 bit 30 */
+	bool unusedBit_301_30 : 1 {};
+	/**
+	offset 584 bit 31 */
+	bool unusedBit_301_31 : 1 {};
+	/**
+	 * offset 588
+	 */
+	uint8_t unusedAtTheEnd[155];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 743
+	 */
+	uint8_t alignmentFill_at_743[1];
 };
-static_assert(sizeof(output_channels_s) == 740);
+static_assert(sizeof(output_channels_s) == 744);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:55:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 05:32:10 UTC 2022

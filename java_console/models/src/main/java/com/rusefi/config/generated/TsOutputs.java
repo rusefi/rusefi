@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 02:55:24 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 05:32:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -745,165 +745,195 @@ public class TsOutputs {
 	public static final Field GPPWMOUTPUT4 = Field.create("GPPWMOUTPUT4", 577, FieldType.INT8).setScale(0.5);
 	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 578, FieldType.INT16).setScale(0.001);
 	public static final Field EXTIOVERFLOWCOUNT = Field.create("EXTIOVERFLOWCOUNT", 580, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 581, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 582, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND3 = Field.create("UNUSEDATTHEEND3", 583, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND4 = Field.create("UNUSEDATTHEEND4", 584, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND5 = Field.create("UNUSEDATTHEEND5", 585, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND6 = Field.create("UNUSEDATTHEEND6", 586, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND7 = Field.create("UNUSEDATTHEEND7", 587, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND8 = Field.create("UNUSEDATTHEEND8", 588, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND9 = Field.create("UNUSEDATTHEEND9", 589, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND10 = Field.create("UNUSEDATTHEEND10", 590, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND11 = Field.create("UNUSEDATTHEEND11", 591, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND12 = Field.create("UNUSEDATTHEEND12", 592, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND13 = Field.create("UNUSEDATTHEEND13", 593, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND14 = Field.create("UNUSEDATTHEEND14", 594, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND15 = Field.create("UNUSEDATTHEEND15", 595, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND16 = Field.create("UNUSEDATTHEEND16", 596, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND17 = Field.create("UNUSEDATTHEEND17", 597, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND18 = Field.create("UNUSEDATTHEEND18", 598, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND19 = Field.create("UNUSEDATTHEEND19", 599, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND20 = Field.create("UNUSEDATTHEEND20", 600, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND21 = Field.create("UNUSEDATTHEEND21", 601, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND22 = Field.create("UNUSEDATTHEEND22", 602, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND23 = Field.create("UNUSEDATTHEEND23", 603, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND24 = Field.create("UNUSEDATTHEEND24", 604, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND25 = Field.create("UNUSEDATTHEEND25", 605, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND26 = Field.create("UNUSEDATTHEEND26", 606, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND27 = Field.create("UNUSEDATTHEEND27", 607, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND28 = Field.create("UNUSEDATTHEEND28", 608, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND29 = Field.create("UNUSEDATTHEEND29", 609, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND30 = Field.create("UNUSEDATTHEEND30", 610, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND31 = Field.create("UNUSEDATTHEEND31", 611, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND32 = Field.create("UNUSEDATTHEEND32", 612, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND33 = Field.create("UNUSEDATTHEEND33", 613, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND34 = Field.create("UNUSEDATTHEEND34", 614, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND35 = Field.create("UNUSEDATTHEEND35", 615, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND36 = Field.create("UNUSEDATTHEEND36", 616, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND37 = Field.create("UNUSEDATTHEEND37", 617, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND38 = Field.create("UNUSEDATTHEEND38", 618, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND39 = Field.create("UNUSEDATTHEEND39", 619, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND40 = Field.create("UNUSEDATTHEEND40", 620, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND41 = Field.create("UNUSEDATTHEEND41", 621, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND42 = Field.create("UNUSEDATTHEEND42", 622, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND43 = Field.create("UNUSEDATTHEEND43", 623, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND44 = Field.create("UNUSEDATTHEEND44", 624, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND45 = Field.create("UNUSEDATTHEEND45", 625, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND46 = Field.create("UNUSEDATTHEEND46", 626, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND47 = Field.create("UNUSEDATTHEEND47", 627, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND48 = Field.create("UNUSEDATTHEEND48", 628, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND49 = Field.create("UNUSEDATTHEEND49", 629, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND50 = Field.create("UNUSEDATTHEEND50", 630, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND51 = Field.create("UNUSEDATTHEEND51", 631, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND52 = Field.create("UNUSEDATTHEEND52", 632, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND53 = Field.create("UNUSEDATTHEEND53", 633, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND54 = Field.create("UNUSEDATTHEEND54", 634, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND55 = Field.create("UNUSEDATTHEEND55", 635, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND56 = Field.create("UNUSEDATTHEEND56", 636, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND57 = Field.create("UNUSEDATTHEEND57", 637, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND58 = Field.create("UNUSEDATTHEEND58", 638, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND59 = Field.create("UNUSEDATTHEEND59", 639, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND60 = Field.create("UNUSEDATTHEEND60", 640, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND61 = Field.create("UNUSEDATTHEEND61", 641, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND62 = Field.create("UNUSEDATTHEEND62", 642, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND63 = Field.create("UNUSEDATTHEEND63", 643, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND64 = Field.create("UNUSEDATTHEEND64", 644, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND65 = Field.create("UNUSEDATTHEEND65", 645, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND66 = Field.create("UNUSEDATTHEEND66", 646, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND67 = Field.create("UNUSEDATTHEEND67", 647, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND68 = Field.create("UNUSEDATTHEEND68", 648, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND69 = Field.create("UNUSEDATTHEEND69", 649, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND70 = Field.create("UNUSEDATTHEEND70", 650, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND71 = Field.create("UNUSEDATTHEEND71", 651, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND72 = Field.create("UNUSEDATTHEEND72", 652, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND73 = Field.create("UNUSEDATTHEEND73", 653, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND74 = Field.create("UNUSEDATTHEEND74", 654, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND75 = Field.create("UNUSEDATTHEEND75", 655, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND76 = Field.create("UNUSEDATTHEEND76", 656, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND77 = Field.create("UNUSEDATTHEEND77", 657, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND78 = Field.create("UNUSEDATTHEEND78", 658, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND79 = Field.create("UNUSEDATTHEEND79", 659, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND80 = Field.create("UNUSEDATTHEEND80", 660, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND81 = Field.create("UNUSEDATTHEEND81", 661, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND82 = Field.create("UNUSEDATTHEEND82", 662, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND83 = Field.create("UNUSEDATTHEEND83", 663, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND84 = Field.create("UNUSEDATTHEEND84", 664, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND85 = Field.create("UNUSEDATTHEEND85", 665, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND86 = Field.create("UNUSEDATTHEEND86", 666, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND87 = Field.create("UNUSEDATTHEEND87", 667, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND88 = Field.create("UNUSEDATTHEEND88", 668, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND89 = Field.create("UNUSEDATTHEEND89", 669, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND90 = Field.create("UNUSEDATTHEEND90", 670, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND91 = Field.create("UNUSEDATTHEEND91", 671, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND92 = Field.create("UNUSEDATTHEEND92", 672, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND93 = Field.create("UNUSEDATTHEEND93", 673, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND94 = Field.create("UNUSEDATTHEEND94", 674, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND95 = Field.create("UNUSEDATTHEEND95", 675, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND96 = Field.create("UNUSEDATTHEEND96", 676, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND97 = Field.create("UNUSEDATTHEEND97", 677, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND98 = Field.create("UNUSEDATTHEEND98", 678, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND99 = Field.create("UNUSEDATTHEEND99", 679, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND100 = Field.create("UNUSEDATTHEEND100", 680, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND101 = Field.create("UNUSEDATTHEEND101", 681, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND102 = Field.create("UNUSEDATTHEEND102", 682, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND103 = Field.create("UNUSEDATTHEEND103", 683, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND104 = Field.create("UNUSEDATTHEEND104", 684, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND105 = Field.create("UNUSEDATTHEEND105", 685, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND106 = Field.create("UNUSEDATTHEEND106", 686, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND107 = Field.create("UNUSEDATTHEEND107", 687, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND108 = Field.create("UNUSEDATTHEEND108", 688, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND109 = Field.create("UNUSEDATTHEEND109", 689, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND110 = Field.create("UNUSEDATTHEEND110", 690, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND111 = Field.create("UNUSEDATTHEEND111", 691, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND112 = Field.create("UNUSEDATTHEEND112", 692, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND113 = Field.create("UNUSEDATTHEEND113", 693, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND114 = Field.create("UNUSEDATTHEEND114", 694, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND115 = Field.create("UNUSEDATTHEEND115", 695, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND116 = Field.create("UNUSEDATTHEEND116", 696, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND117 = Field.create("UNUSEDATTHEEND117", 697, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND118 = Field.create("UNUSEDATTHEEND118", 698, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND119 = Field.create("UNUSEDATTHEEND119", 699, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND120 = Field.create("UNUSEDATTHEEND120", 700, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND121 = Field.create("UNUSEDATTHEEND121", 701, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND122 = Field.create("UNUSEDATTHEEND122", 702, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND123 = Field.create("UNUSEDATTHEEND123", 703, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND124 = Field.create("UNUSEDATTHEEND124", 704, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND125 = Field.create("UNUSEDATTHEEND125", 705, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND126 = Field.create("UNUSEDATTHEEND126", 706, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND127 = Field.create("UNUSEDATTHEEND127", 707, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND128 = Field.create("UNUSEDATTHEEND128", 708, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND129 = Field.create("UNUSEDATTHEEND129", 709, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND130 = Field.create("UNUSEDATTHEEND130", 710, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND131 = Field.create("UNUSEDATTHEEND131", 711, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND132 = Field.create("UNUSEDATTHEEND132", 712, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND133 = Field.create("UNUSEDATTHEEND133", 713, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND134 = Field.create("UNUSEDATTHEEND134", 714, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND135 = Field.create("UNUSEDATTHEEND135", 715, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND136 = Field.create("UNUSEDATTHEEND136", 716, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND137 = Field.create("UNUSEDATTHEEND137", 717, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND138 = Field.create("UNUSEDATTHEEND138", 718, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND139 = Field.create("UNUSEDATTHEEND139", 719, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND140 = Field.create("UNUSEDATTHEEND140", 720, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND141 = Field.create("UNUSEDATTHEEND141", 721, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND142 = Field.create("UNUSEDATTHEEND142", 722, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND143 = Field.create("UNUSEDATTHEEND143", 723, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND144 = Field.create("UNUSEDATTHEEND144", 724, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND145 = Field.create("UNUSEDATTHEEND145", 725, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND146 = Field.create("UNUSEDATTHEEND146", 726, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND147 = Field.create("UNUSEDATTHEEND147", 727, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND148 = Field.create("UNUSEDATTHEEND148", 728, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND149 = Field.create("UNUSEDATTHEEND149", 729, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND150 = Field.create("UNUSEDATTHEEND150", 730, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND151 = Field.create("UNUSEDATTHEEND151", 731, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND152 = Field.create("UNUSEDATTHEEND152", 732, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND153 = Field.create("UNUSEDATTHEEND153", 733, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND154 = Field.create("UNUSEDATTHEEND154", 734, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND155 = Field.create("UNUSEDATTHEEND155", 735, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND156 = Field.create("UNUSEDATTHEEND156", 736, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND157 = Field.create("UNUSEDATTHEEND157", 737, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND158 = Field.create("UNUSEDATTHEEND158", 738, FieldType.INT8).setScale(1.0);
-	public static final Field UNUSEDATTHEEND159 = Field.create("UNUSEDATTHEEND159", 739, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_581 = Field.create("ALIGNMENTFILL_AT_581", 581, FieldType.INT8).setScale(1.0);
+	public static final Field COILSTATE1 = Field.create("COILSTATE1", 584, FieldType.BIT, 0);
+	public static final Field COILSTATE2 = Field.create("COILSTATE2", 584, FieldType.BIT, 1);
+	public static final Field COILSTATE3 = Field.create("COILSTATE3", 584, FieldType.BIT, 2);
+	public static final Field COILSTATE4 = Field.create("COILSTATE4", 584, FieldType.BIT, 3);
+	public static final Field COILSTATE5 = Field.create("COILSTATE5", 584, FieldType.BIT, 4);
+	public static final Field COILSTATE6 = Field.create("COILSTATE6", 584, FieldType.BIT, 5);
+	public static final Field COILSTATE7 = Field.create("COILSTATE7", 584, FieldType.BIT, 6);
+	public static final Field COILSTATE8 = Field.create("COILSTATE8", 584, FieldType.BIT, 7);
+	public static final Field COILSTATE9 = Field.create("COILSTATE9", 584, FieldType.BIT, 8);
+	public static final Field COILSTATE10 = Field.create("COILSTATE10", 584, FieldType.BIT, 9);
+	public static final Field COILSTATE11 = Field.create("COILSTATE11", 584, FieldType.BIT, 10);
+	public static final Field COILSTATE12 = Field.create("COILSTATE12", 584, FieldType.BIT, 11);
+	public static final Field INJECTORSTATE1 = Field.create("INJECTORSTATE1", 584, FieldType.BIT, 12);
+	public static final Field INJECTORSTATE2 = Field.create("INJECTORSTATE2", 584, FieldType.BIT, 13);
+	public static final Field INJECTORSTATE3 = Field.create("INJECTORSTATE3", 584, FieldType.BIT, 14);
+	public static final Field INJECTORSTATE4 = Field.create("INJECTORSTATE4", 584, FieldType.BIT, 15);
+	public static final Field INJECTORSTATE5 = Field.create("INJECTORSTATE5", 584, FieldType.BIT, 16);
+	public static final Field INJECTORSTATE6 = Field.create("INJECTORSTATE6", 584, FieldType.BIT, 17);
+	public static final Field INJECTORSTATE7 = Field.create("INJECTORSTATE7", 584, FieldType.BIT, 18);
+	public static final Field INJECTORSTATE8 = Field.create("INJECTORSTATE8", 584, FieldType.BIT, 19);
+	public static final Field INJECTORSTATE9 = Field.create("INJECTORSTATE9", 584, FieldType.BIT, 20);
+	public static final Field INJECTORSTATE10 = Field.create("INJECTORSTATE10", 584, FieldType.BIT, 21);
+	public static final Field INJECTORSTATE11 = Field.create("INJECTORSTATE11", 584, FieldType.BIT, 22);
+	public static final Field INJECTORSTATE12 = Field.create("INJECTORSTATE12", 584, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_301_24 = Field.create("UNUSEDBIT_301_24", 584, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_301_25 = Field.create("UNUSEDBIT_301_25", 584, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_301_26 = Field.create("UNUSEDBIT_301_26", 584, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_301_27 = Field.create("UNUSEDBIT_301_27", 584, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_301_28 = Field.create("UNUSEDBIT_301_28", 584, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_301_29 = Field.create("UNUSEDBIT_301_29", 584, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_301_30 = Field.create("UNUSEDBIT_301_30", 584, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_301_31 = Field.create("UNUSEDBIT_301_31", 584, FieldType.BIT, 31);
+	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 588, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 589, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND3 = Field.create("UNUSEDATTHEEND3", 590, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND4 = Field.create("UNUSEDATTHEEND4", 591, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND5 = Field.create("UNUSEDATTHEEND5", 592, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND6 = Field.create("UNUSEDATTHEEND6", 593, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND7 = Field.create("UNUSEDATTHEEND7", 594, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND8 = Field.create("UNUSEDATTHEEND8", 595, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND9 = Field.create("UNUSEDATTHEEND9", 596, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND10 = Field.create("UNUSEDATTHEEND10", 597, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND11 = Field.create("UNUSEDATTHEEND11", 598, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND12 = Field.create("UNUSEDATTHEEND12", 599, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND13 = Field.create("UNUSEDATTHEEND13", 600, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND14 = Field.create("UNUSEDATTHEEND14", 601, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND15 = Field.create("UNUSEDATTHEEND15", 602, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND16 = Field.create("UNUSEDATTHEEND16", 603, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND17 = Field.create("UNUSEDATTHEEND17", 604, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND18 = Field.create("UNUSEDATTHEEND18", 605, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND19 = Field.create("UNUSEDATTHEEND19", 606, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND20 = Field.create("UNUSEDATTHEEND20", 607, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND21 = Field.create("UNUSEDATTHEEND21", 608, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND22 = Field.create("UNUSEDATTHEEND22", 609, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND23 = Field.create("UNUSEDATTHEEND23", 610, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND24 = Field.create("UNUSEDATTHEEND24", 611, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND25 = Field.create("UNUSEDATTHEEND25", 612, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND26 = Field.create("UNUSEDATTHEEND26", 613, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND27 = Field.create("UNUSEDATTHEEND27", 614, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND28 = Field.create("UNUSEDATTHEEND28", 615, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND29 = Field.create("UNUSEDATTHEEND29", 616, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND30 = Field.create("UNUSEDATTHEEND30", 617, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND31 = Field.create("UNUSEDATTHEEND31", 618, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND32 = Field.create("UNUSEDATTHEEND32", 619, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND33 = Field.create("UNUSEDATTHEEND33", 620, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND34 = Field.create("UNUSEDATTHEEND34", 621, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND35 = Field.create("UNUSEDATTHEEND35", 622, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND36 = Field.create("UNUSEDATTHEEND36", 623, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND37 = Field.create("UNUSEDATTHEEND37", 624, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND38 = Field.create("UNUSEDATTHEEND38", 625, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND39 = Field.create("UNUSEDATTHEEND39", 626, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND40 = Field.create("UNUSEDATTHEEND40", 627, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND41 = Field.create("UNUSEDATTHEEND41", 628, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND42 = Field.create("UNUSEDATTHEEND42", 629, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND43 = Field.create("UNUSEDATTHEEND43", 630, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND44 = Field.create("UNUSEDATTHEEND44", 631, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND45 = Field.create("UNUSEDATTHEEND45", 632, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND46 = Field.create("UNUSEDATTHEEND46", 633, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND47 = Field.create("UNUSEDATTHEEND47", 634, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND48 = Field.create("UNUSEDATTHEEND48", 635, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND49 = Field.create("UNUSEDATTHEEND49", 636, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND50 = Field.create("UNUSEDATTHEEND50", 637, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND51 = Field.create("UNUSEDATTHEEND51", 638, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND52 = Field.create("UNUSEDATTHEEND52", 639, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND53 = Field.create("UNUSEDATTHEEND53", 640, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND54 = Field.create("UNUSEDATTHEEND54", 641, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND55 = Field.create("UNUSEDATTHEEND55", 642, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND56 = Field.create("UNUSEDATTHEEND56", 643, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND57 = Field.create("UNUSEDATTHEEND57", 644, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND58 = Field.create("UNUSEDATTHEEND58", 645, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND59 = Field.create("UNUSEDATTHEEND59", 646, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND60 = Field.create("UNUSEDATTHEEND60", 647, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND61 = Field.create("UNUSEDATTHEEND61", 648, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND62 = Field.create("UNUSEDATTHEEND62", 649, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND63 = Field.create("UNUSEDATTHEEND63", 650, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND64 = Field.create("UNUSEDATTHEEND64", 651, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND65 = Field.create("UNUSEDATTHEEND65", 652, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND66 = Field.create("UNUSEDATTHEEND66", 653, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND67 = Field.create("UNUSEDATTHEEND67", 654, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND68 = Field.create("UNUSEDATTHEEND68", 655, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND69 = Field.create("UNUSEDATTHEEND69", 656, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND70 = Field.create("UNUSEDATTHEEND70", 657, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND71 = Field.create("UNUSEDATTHEEND71", 658, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND72 = Field.create("UNUSEDATTHEEND72", 659, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND73 = Field.create("UNUSEDATTHEEND73", 660, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND74 = Field.create("UNUSEDATTHEEND74", 661, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND75 = Field.create("UNUSEDATTHEEND75", 662, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND76 = Field.create("UNUSEDATTHEEND76", 663, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND77 = Field.create("UNUSEDATTHEEND77", 664, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND78 = Field.create("UNUSEDATTHEEND78", 665, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND79 = Field.create("UNUSEDATTHEEND79", 666, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND80 = Field.create("UNUSEDATTHEEND80", 667, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND81 = Field.create("UNUSEDATTHEEND81", 668, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND82 = Field.create("UNUSEDATTHEEND82", 669, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND83 = Field.create("UNUSEDATTHEEND83", 670, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND84 = Field.create("UNUSEDATTHEEND84", 671, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND85 = Field.create("UNUSEDATTHEEND85", 672, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND86 = Field.create("UNUSEDATTHEEND86", 673, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND87 = Field.create("UNUSEDATTHEEND87", 674, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND88 = Field.create("UNUSEDATTHEEND88", 675, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND89 = Field.create("UNUSEDATTHEEND89", 676, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND90 = Field.create("UNUSEDATTHEEND90", 677, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND91 = Field.create("UNUSEDATTHEEND91", 678, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND92 = Field.create("UNUSEDATTHEEND92", 679, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND93 = Field.create("UNUSEDATTHEEND93", 680, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND94 = Field.create("UNUSEDATTHEEND94", 681, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND95 = Field.create("UNUSEDATTHEEND95", 682, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND96 = Field.create("UNUSEDATTHEEND96", 683, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND97 = Field.create("UNUSEDATTHEEND97", 684, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND98 = Field.create("UNUSEDATTHEEND98", 685, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND99 = Field.create("UNUSEDATTHEEND99", 686, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND100 = Field.create("UNUSEDATTHEEND100", 687, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND101 = Field.create("UNUSEDATTHEEND101", 688, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND102 = Field.create("UNUSEDATTHEEND102", 689, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND103 = Field.create("UNUSEDATTHEEND103", 690, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND104 = Field.create("UNUSEDATTHEEND104", 691, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND105 = Field.create("UNUSEDATTHEEND105", 692, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND106 = Field.create("UNUSEDATTHEEND106", 693, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND107 = Field.create("UNUSEDATTHEEND107", 694, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND108 = Field.create("UNUSEDATTHEEND108", 695, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND109 = Field.create("UNUSEDATTHEEND109", 696, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND110 = Field.create("UNUSEDATTHEEND110", 697, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND111 = Field.create("UNUSEDATTHEEND111", 698, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND112 = Field.create("UNUSEDATTHEEND112", 699, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND113 = Field.create("UNUSEDATTHEEND113", 700, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND114 = Field.create("UNUSEDATTHEEND114", 701, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND115 = Field.create("UNUSEDATTHEEND115", 702, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND116 = Field.create("UNUSEDATTHEEND116", 703, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND117 = Field.create("UNUSEDATTHEEND117", 704, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND118 = Field.create("UNUSEDATTHEEND118", 705, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND119 = Field.create("UNUSEDATTHEEND119", 706, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND120 = Field.create("UNUSEDATTHEEND120", 707, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND121 = Field.create("UNUSEDATTHEEND121", 708, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND122 = Field.create("UNUSEDATTHEEND122", 709, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND123 = Field.create("UNUSEDATTHEEND123", 710, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND124 = Field.create("UNUSEDATTHEEND124", 711, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND125 = Field.create("UNUSEDATTHEEND125", 712, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND126 = Field.create("UNUSEDATTHEEND126", 713, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND127 = Field.create("UNUSEDATTHEEND127", 714, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND128 = Field.create("UNUSEDATTHEEND128", 715, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND129 = Field.create("UNUSEDATTHEEND129", 716, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND130 = Field.create("UNUSEDATTHEEND130", 717, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND131 = Field.create("UNUSEDATTHEEND131", 718, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND132 = Field.create("UNUSEDATTHEEND132", 719, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND133 = Field.create("UNUSEDATTHEEND133", 720, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND134 = Field.create("UNUSEDATTHEEND134", 721, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND135 = Field.create("UNUSEDATTHEEND135", 722, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND136 = Field.create("UNUSEDATTHEEND136", 723, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND137 = Field.create("UNUSEDATTHEEND137", 724, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND138 = Field.create("UNUSEDATTHEEND138", 725, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND139 = Field.create("UNUSEDATTHEEND139", 726, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND140 = Field.create("UNUSEDATTHEEND140", 727, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND141 = Field.create("UNUSEDATTHEEND141", 728, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND142 = Field.create("UNUSEDATTHEEND142", 729, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND143 = Field.create("UNUSEDATTHEEND143", 730, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND144 = Field.create("UNUSEDATTHEEND144", 731, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND145 = Field.create("UNUSEDATTHEEND145", 732, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND146 = Field.create("UNUSEDATTHEEND146", 733, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND147 = Field.create("UNUSEDATTHEEND147", 734, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND148 = Field.create("UNUSEDATTHEEND148", 735, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND149 = Field.create("UNUSEDATTHEEND149", 736, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND150 = Field.create("UNUSEDATTHEEND150", 737, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND151 = Field.create("UNUSEDATTHEEND151", 738, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND152 = Field.create("UNUSEDATTHEEND152", 739, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND153 = Field.create("UNUSEDATTHEEND153", 740, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND154 = Field.create("UNUSEDATTHEEND154", 741, FieldType.INT8).setScale(1.0);
+	public static final Field UNUSEDATTHEEND155 = Field.create("UNUSEDATTHEEND155", 742, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_743 = Field.create("ALIGNMENTFILL_AT_743", 743, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	ISIGNITIONENABLEDINDICATOR,
@@ -1263,6 +1293,39 @@ public class TsOutputs {
 	GPPWMOUTPUT4,
 	RAWBATTERY,
 	EXTIOVERFLOWCOUNT,
+	ALIGNMENTFILL_AT_581,
+	COILSTATE1,
+	COILSTATE2,
+	COILSTATE3,
+	COILSTATE4,
+	COILSTATE5,
+	COILSTATE6,
+	COILSTATE7,
+	COILSTATE8,
+	COILSTATE9,
+	COILSTATE10,
+	COILSTATE11,
+	COILSTATE12,
+	INJECTORSTATE1,
+	INJECTORSTATE2,
+	INJECTORSTATE3,
+	INJECTORSTATE4,
+	INJECTORSTATE5,
+	INJECTORSTATE6,
+	INJECTORSTATE7,
+	INJECTORSTATE8,
+	INJECTORSTATE9,
+	INJECTORSTATE10,
+	INJECTORSTATE11,
+	INJECTORSTATE12,
+	UNUSEDBIT_301_24,
+	UNUSEDBIT_301_25,
+	UNUSEDBIT_301_26,
+	UNUSEDBIT_301_27,
+	UNUSEDBIT_301_28,
+	UNUSEDBIT_301_29,
+	UNUSEDBIT_301_30,
+	UNUSEDBIT_301_31,
 	UNUSEDATTHEEND1,
 	UNUSEDATTHEEND2,
 	UNUSEDATTHEEND3,
@@ -1418,9 +1481,6 @@ public class TsOutputs {
 	UNUSEDATTHEEND153,
 	UNUSEDATTHEEND154,
 	UNUSEDATTHEEND155,
-	UNUSEDATTHEEND156,
-	UNUSEDATTHEEND157,
-	UNUSEDATTHEEND158,
-	UNUSEDATTHEEND159,
+	ALIGNMENTFILL_AT_743,
 	};
 }
