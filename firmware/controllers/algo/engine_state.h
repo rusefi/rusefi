@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 class EngineState : public engine_state_s {
@@ -19,6 +18,14 @@ public:
 	void periodicFastCallback();
 	void updateSlowSensors();
 	void updateTChargeK(int rpm, float tps);
+
+	/**
+	 * always 360 or 720, never zero
+	 */
+	angle_t engineCycle;
+
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	FuelConsumptionState fuelConsumption;
 
@@ -73,3 +80,5 @@ public:
 	multispark_state multispark;
 
 };
+
+EngineState * getEngineState();

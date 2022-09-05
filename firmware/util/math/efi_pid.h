@@ -11,6 +11,7 @@
 #pragma once
 
 #include "pid_state_generated.h"
+#include "output_channels_generated.h"
 
 // See PidCic below
 #define PID_AVG_BUF_SIZE_SHIFT 5

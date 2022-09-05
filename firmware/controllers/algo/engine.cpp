@@ -349,7 +349,7 @@ void Engine::reset() {
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
-	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
+	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 	resetLua();
 }
@@ -591,11 +591,16 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	}
 }
 
-operation_mode_e Engine::getOperationMode() {
+operation_mode_e Engine::getOperationMode() const {
+	return rpmCalculator.getOperationMode();
+}
+
+
+operation_mode_e RpmCalculator::getOperationMode() const {
 	// Ignore user-provided setting for well known triggers.
 	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
 		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return triggerCentral.triggerShape.getWheelOperationMode();
+		return engine->triggerCentral.triggerShape.getWheelOperationMode();
 	} else {
 		// For example 36-1, could be on either cam or crank, so we have to ask the user
 		return lookupOperationMode();
@@ -634,6 +639,10 @@ void doScheduleStopEngine() {
 
 EngineRotationState * getEngineRotationState() {
 	return &engine->rpmCalculator;
+}
+
+EngineState * getEngineState() {
+	return &engine->engineState;
 }
 
 

@@ -23,6 +23,11 @@
 
 #include "pch.h"
 
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
+
 #include "os_access.h"
 
 #if EFI_PRINTF_FUEL_DETAILS
@@ -72,7 +77,7 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 	// per-output counter for error detection
 	overlappingCounter++;
 	// global counter for logging
-	engine->engineState.fuelInjectionCounter++;
+	getEngineState()->fuelInjectionCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
@@ -161,7 +166,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	}
 
 	// Select fuel mass from the correct cylinder
-	auto injectionMassGrams = engine->injectionMass[this->cylinderNumber];
+	auto injectionMassGrams = getEngineState()->injectionMass[this->cylinderNumber];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -171,12 +176,12 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel injectionDuration=%.2fms adjusted=%.2fms\n",
-		  engine->engineState.injectionDuration,
+				getEngineState()->injectionDuration,
 		  injectionDuration);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	bool isCranking = engine->rpmCalculator.isCranking();
+	bool isCranking = getEngineRotationState()->isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
@@ -186,7 +191,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
 	}
 
-	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
+	getEngineState()->fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
 	if (this->cylinderNumber == 0) {
 		engine->outputChannels.actualLastInjection = injectionDuration;
@@ -260,7 +265,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	float angleFromNow = eventAngle - currentPhase;
 	if (angleFromNow < 0) {
-		angleFromNow += engine->engineCycle;
+		angleFromNow += engine->engineState.engineCycle;
 	}
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);

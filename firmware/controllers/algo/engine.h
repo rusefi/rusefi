@@ -249,7 +249,7 @@ public:
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
-	operation_mode_e getOperationMode();
+	operation_mode_e getOperationMode() const;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
@@ -318,20 +318,12 @@ public:
 	 */
 	int globalConfigurationVersion = 0;
 
-	/**
-	 * always 360 or 720, never zero
-	 */
-	angle_t engineCycle;
-
 	TpsAccelEnrichment tpsAccelEnrichment;
 
 #if EFI_SHAFT_POSITION_INPUT
 	TriggerCentral triggerCentral;
 #endif // EFI_SHAFT_POSITION_INPUT
 
-
-	// Per-injection fuel mass, including TPS accel enrich
-	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
