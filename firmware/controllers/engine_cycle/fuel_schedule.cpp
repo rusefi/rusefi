@@ -82,7 +82,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
 
-	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->triggerCentral.triggerShape.getWheelOperationMode()));
+	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->getOperationMode()));
 
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, cylinderNumber);
