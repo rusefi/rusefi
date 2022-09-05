@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 class EngineState : public engine_state_s {
@@ -73,3 +72,5 @@ public:
 	multispark_state multispark;
 
 };
+
+EngineState * getEngineState();
