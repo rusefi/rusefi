@@ -42,6 +42,7 @@
 #include "advance_map.h"
 #include "fan_control.h"
 #include "sensor_checker.h"
+#include "fuel_schedule.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
