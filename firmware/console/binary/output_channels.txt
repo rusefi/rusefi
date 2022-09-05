@@ -131,6 +131,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	uint32_t autoscale engineMode;Engine Mode;"em", 1, 0, 0, 0, 0
 	uint32_t autoscale firmwareVersion;@@GAUGE_NAME_VERSION@@;"version_f", 1, 0, 0, 0, 0
 
+	int16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 	uint32_t autoscale tsConfigVersion;;"", 1, 0, 0, 0, 0
@@ -200,9 +203,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	int8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, -1, 10, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
-
-	int16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-	int16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
