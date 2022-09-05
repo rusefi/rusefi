@@ -697,10 +697,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto currentPhaseFromSyncPoint = getTriggerCentral()->triggerFormDetails.eventAngles[triggerIndexForListeners];
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		auto currentPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
+		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
         // todo: local variable is needed because generated field type is not proper 'float' but scaled_channel
         // todo: what is broken _exactly_?
-		currentEngineDecodedPhase = currentPhase;
+
 
 		// Check that the expected next phase (from the last tooth) is close to the actual current phase:
 		// basically, check that the tooth width is correct
@@ -748,7 +748,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
 			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
-		} while (nextPhase == currentPhase);
+		} while (nextPhase == currentEngineDecodedPhase);
 
 		expectedNextPhase = nextPhase + tdcPosition();
 		wrapAngle(expectedNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
@@ -765,10 +765,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 
 		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
+		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
 
 		// Decode the MAP based "cam" sensor
-		decodeMapCam(timestamp, currentPhase);
+		decodeMapCam(timestamp, currentEngineDecodedPhase);
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0, triggerShape.useOnlyRisingEdges);
