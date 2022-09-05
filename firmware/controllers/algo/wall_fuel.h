@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include "wall_fuel_state_generated.h"
 #include "engine_module.h"
 
 /**

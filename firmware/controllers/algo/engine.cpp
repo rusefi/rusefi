@@ -641,4 +641,8 @@ EngineRotationState * getEngineRotationState() {
 	return &engine->rpmCalculator;
 }
 
+EngineState * getEngineState() {
+	return &engine->engineState;
+}
+
 
