@@ -5,8 +5,18 @@
  */
 
 #include "pch.h"
-#include "rpm_calculator_api.h"
+#include <rusefi/arrays.h>
+#include <rusefi/isnan.h>
+#include "fuel_schedule.h"
 #include "event_registry.h"
+#include "fuel_schedule.h"
+#include "trigger_decoder.h"
+#include "engine_math.h"
+
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
 
 #if EFI_ENGINE_CONTROL
 
@@ -65,10 +75,10 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 
 	// injection phase may be scheduled by injection end, so we need to step the angle back
 	// for the duration of the injection
-	angle_t injectionDurationAngle = getInjectionAngleCorrection(engine->engineState.injectionDuration, oneDegreeUs);
+	angle_t injectionDurationAngle = getInjectionAngleCorrection(getEngineState()->injectionDuration, oneDegreeUs);
 
 	// User configured offset - degrees after TDC combustion
-	floatus_t injectionOffset = engine->engineState.injectionOffset;
+	floatus_t injectionOffset = getEngineState()->injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return unexpected;
