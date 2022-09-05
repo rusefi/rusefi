@@ -5,6 +5,7 @@
  */
 
 #include "pch.h"
+#include "rpm_calculator_api.h"
 #include "event_registry.h"
 
 #if EFI_ENGINE_CONTROL
@@ -114,7 +115,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		return false;
 	}
 
-	injection_mode_e mode = engine->getCurrentInjectionMode();
+	injection_mode_e mode = getCurrentInjectionMode();
 
 	// We need two outputs if:
 	// - we are running batch fuel, and have "use two wire batch" enabled
