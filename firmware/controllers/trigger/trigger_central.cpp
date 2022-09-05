@@ -694,7 +694,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 		 * cycle into a four stroke, 720 degrees cycle.
 		 */
-		int crankDivider = getCrankDivider(triggerShape.getOperationMode());
+		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
 		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 

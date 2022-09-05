@@ -595,7 +595,7 @@ operation_mode_e Engine::getOperationMode() {
 	// Ignore user-provided setting for well known triggers.
 	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
 		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return triggerCentral.triggerShape.getOperationMode();
+		return triggerCentral.triggerShape.getWheelOperationMode();
 	} else {
 		// For example 36-1, could be on either cam or crank, so we have to ask the user
 		return lookupOperationMode();
