@@ -19,6 +19,14 @@ public:
 	void updateSlowSensors();
 	void updateTChargeK(int rpm, float tps);
 
+	/**
+	 * always 360 or 720, never zero
+	 */
+	angle_t engineCycle;
+
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
+
 	FuelConsumptionState fuelConsumption;
 
 	Timer crankingTimer;
