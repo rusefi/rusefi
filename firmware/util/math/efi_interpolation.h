@@ -12,6 +12,7 @@
 #include <math.h>
 #include "datalogging.h"
 #include "obd_error_codes.h"
+#include "error_handling.h"
 
 #include <type_traits>
 

@@ -9,6 +9,7 @@
 
 #include "closed_loop_controller.h"
 #include "rusefi_types.h"
+#include "engine_configuration.h"
 
 void initElectronicThrottle();
 void doInitElectronicThrottle();
