@@ -130,6 +130,7 @@ EnginePins::EnginePins() :
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+		enginePins.coils[i].coilIndex = i;
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 
@@ -374,6 +375,44 @@ void InjectorOutputPin::reset() {
 
 IgnitionOutputPin::IgnitionOutputPin() {
 	reset();
+}
+
+void IgnitionOutputPin::setHigh() {
+	NamedOutputPin::setHigh();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = true;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = true;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = true;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = true;
+		break;
+	}
+}
+
+void IgnitionOutputPin::setLow() {
+	NamedOutputPin::setLow();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = false;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = false;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = false;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = false;
+		break;
+	}
 }
 
 void IgnitionOutputPin::reset() {
