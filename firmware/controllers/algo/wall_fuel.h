@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include "engine_module.h"
+
 /**
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
