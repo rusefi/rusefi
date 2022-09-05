@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 05 02:43:39 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -407,8 +407,18 @@ struct engine_state_s {
 	 * offset 136
 	 */
 	int sparkCounter = (int)0;
+	/**
+	 * @@GAUGE_NAME_FUEL_LOAD@@
+	 * offset 140
+	 */
+	float fuelingLoad = (float)0;
+	/**
+	 * @@GAUGE_NAME_IGNITION_LOAD@@
+	 * offset 144
+	 */
+	float ignitionLoad = (float)0;
 };
-static_assert(sizeof(engine_state_s) == 140);
+static_assert(sizeof(engine_state_s) == 148);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 03 21:34:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Sep 05 02:43:39 UTC 2022
