@@ -99,8 +99,8 @@ class NamedOutputPin : public virtual OutputPin {
 public:
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
-	void setHigh();
-	void setLow();
+	virtual void setHigh();
+	virtual void setLow();
 	const char *getName() const;
 	const char *getShortName() const;
 	/**
@@ -122,6 +122,8 @@ public:
 
 	void open(efitick_t nowNt);
 	void close(efitick_t nowNt);
+	void setHigh() override;
+	void setLow() override;
 
 	int8_t getOverlappingCounter() const { return overlappingCounter; }
 
@@ -135,9 +137,12 @@ private:
 class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
+	void setHigh() override;
+	void setLow() override;
 	void reset();
 	int signalFallSparkId;
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
+	int8_t coilIndex;
 };
 
 /**
