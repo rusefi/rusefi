@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 230887881
-#define TS_SIGNATURE "rusEFI 2022.09.05.prometheus_469.230887881"
+#define TS_SIGNATURE "rusEFI 2022.09.06.prometheus_469.230887881"
