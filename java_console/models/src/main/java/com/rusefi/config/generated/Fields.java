@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 06 01:30:27 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 06 20:37:55 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1876,19 +1876,19 @@ public class Fields {
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
-	public static final int SERVO_COUNT = 8;
-	public static final int servoOutputPins1_offset = 2074;
-	public static final int servoOutputPins2_offset = 2076;
-	public static final int servoOutputPins3_offset = 2078;
-	public static final int servoOutputPins4_offset = 2080;
-	public static final int servoOutputPins5_offset = 2082;
-	public static final int servoOutputPins6_offset = 2084;
-	public static final int servoOutputPins7_offset = 2086;
-	public static final int servoOutputPins8_offset = 2088;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 387675106;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
+	public static final int sorryUnused1_offset = 2074;
+	public static final int sorryUnused2_offset = 2076;
+	public static final int sorryUnused3_offset = 2078;
+	public static final int sorryUnused4_offset = 2080;
+	public static final int sorryUnused5_offset = 2082;
+	public static final int sorryUnused6_offset = 2084;
+	public static final int sorryUnused7_offset = 2086;
+	public static final int sorryUnused8_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 4160;
 	public static final int sparkDwellValues_offset = 4176;
 	public static final int specs_offset = 364;
@@ -2379,7 +2379,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.06.all.3269140852";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.06.all.387675106";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
@@ -3507,14 +3507,14 @@ public class Fields {
 	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 2070, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_2071 = Field.create("ALIGNMENTFILL_AT_2071", 2071, FieldType.INT8).setScale(1.0);
 	public static final Field MC33816_CS = Field.create("MC33816_CS", 2072, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 2074, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 2076, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 2078, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS4 = Field.create("SERVOOUTPUTPINS4", 2080, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS5 = Field.create("SERVOOUTPUTPINS5", 2082, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS6 = Field.create("SERVOOUTPUTPINS6", 2084, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS7 = Field.create("SERVOOUTPUTPINS7", 2086, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SERVOOUTPUTPINS8 = Field.create("SERVOOUTPUTPINS8", 2088, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2074, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2076, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2078, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED4 = Field.create("SORRYUNUSED4", 2080, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED5 = Field.create("SORRYUNUSED5", 2082, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED6 = Field.create("SORRYUNUSED6", 2084, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED7 = Field.create("SORRYUNUSED7", 2086, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED8 = Field.create("SORRYUNUSED8", 2088, FieldType.INT16, Gpio).setScale(1.0);
 	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2090, FieldType.INT16).setScale(1.0);
 	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2092, FieldType.INT16).setScale(1.0);
 	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 2094, FieldType.INT16).setScale(1.0);
@@ -4873,14 +4873,14 @@ public class Fields {
 	TLE8888_CSPINMODE,
 	ALIGNMENTFILL_AT_2071,
 	MC33816_CS,
-	SERVOOUTPUTPINS1,
-	SERVOOUTPUTPINS2,
-	SERVOOUTPUTPINS3,
-	SERVOOUTPUTPINS4,
-	SERVOOUTPUTPINS5,
-	SERVOOUTPUTPINS6,
-	SERVOOUTPUTPINS7,
-	SERVOOUTPUTPINS8,
+	SORRYUNUSED1,
+	SORRYUNUSED2,
+	SORRYUNUSED3,
+	SORRYUNUSED4,
+	SORRYUNUSED5,
+	SORRYUNUSED6,
+	SORRYUNUSED7,
+	SORRYUNUSED8,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,
 	COASTINGFUELCUTTPS,

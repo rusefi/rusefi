@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 31 23:09:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 06 20:37:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3641,10 +3641,9 @@ struct engine_configuration_s {
 	 */
 	Gpio mc33816_cs;
 	/**
-	 * todo: more comments
 	 * offset 2074
 	 */
-	Gpio servoOutputPins[SERVO_COUNT];
+	Gpio sorryUnused[8];
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
@@ -4989,4 +4988,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Aug 31 23:09:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 06 20:37:55 UTC 2022

@@ -1926,22 +1926,21 @@
 #define sensor_chart_e_SC_TRIGGER 1
 #define sensorChartMode_offset 955
 #define sensorSnifferRpmThreshold_offset 4
-#define SERVO_COUNT 8
-#define servoOutputPins1_offset 2074
-#define servoOutputPins2_offset 2076
-#define servoOutputPins3_offset 2078
-#define servoOutputPins4_offset 2080
-#define servoOutputPins5_offset 2082
-#define servoOutputPins6_offset 2084
-#define servoOutputPins7_offset 2086
-#define servoOutputPins8_offset 2088
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3269140852
+#define SIGNATURE_HASH 387675106
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
+#define sorryUnused1_offset 2074
+#define sorryUnused2_offset 2076
+#define sorryUnused3_offset 2078
+#define sorryUnused4_offset 2080
+#define sorryUnused5_offset 2082
+#define sorryUnused6_offset 2084
+#define sorryUnused7_offset 2086
+#define sorryUnused8_offset 2088
 #define sparkDwellRpmBins_offset 4160
 #define sparkDwellValues_offset 4176
 #define specs_offset 364
@@ -2497,7 +2496,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.06.all.3269140852"
+#define TS_SIGNATURE "rusEFI 2022.09.06.all.387675106"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
