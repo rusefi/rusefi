@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Delay before enabling AC compressor #4502
  - Require full sync for odd cylinder count #4533
  - Hysteresis on some fuel cuts to avoid engine damage #4541
+ - Engine Sniffer into TS data logs #4535
 
 ### Fixed
  - Inverted vvt control #4464
