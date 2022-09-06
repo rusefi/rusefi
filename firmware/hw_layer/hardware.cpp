@@ -10,7 +10,6 @@
 
 #include "os_access.h"
 #include "trigger_input.h"
-#include "servo.h"
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
@@ -572,10 +571,6 @@ void initHardware() {
 
 #if EFI_UART_GPS
 	initGps();
-#endif
-
-#if EFI_SERVO
-	initServo();
 #endif
 
 #if EFI_AUX_SERIAL
