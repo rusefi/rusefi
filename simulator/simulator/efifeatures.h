@@ -38,8 +38,6 @@
 
 #define EFI_CLOCK_LOCKS FALSE
 
-#define EFI_SERVO FALSE
-
 #define EFI_LCD FALSE
 
 #define TS_UART_MODE FALSE

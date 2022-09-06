@@ -2548,11 +2548,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = allPinsSensors
 
 	dialog = allPins3_2
-		field = "servo#1",								servoOutputPins1
-		field = "servo#2",								servoOutputPins2
-		field = "servo#3",								servoOutputPins3
-		field = "servo#4",								servoOutputPins4
-		field = "servo#5",								servoOutputPins5
 		field = "VVT Pin #1",							vvtPins1
 		field = "VVT Pin #2",							vvtPins2
 		field = "VVT Pin #3",							vvtPins3
