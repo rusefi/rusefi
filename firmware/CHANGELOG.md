@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
  - Manual electronic throttle synchronization #3680
  - Delay before enabling AC compressor #4502
  - Require full sync for odd cylinder count #4533
+ - Hysteresis on some fuel cuts to avoid engine damage #4541
 
 ### Fixed
  - Inverted vvt control #4464
