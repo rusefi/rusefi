@@ -265,64 +265,16 @@ TEST(LuaVag, ChecksumMotor6) {
 
 // Leiderman-Khlystov Coefficients for Estimating Engine Full Load Characteristics and Performance
 TEST(LuaVag, LeidermaKhlystov) {
-	const char* magic = VAG_CHECKSUM realMotor6Packet R"(
+	const char* magic = LUA_POW VAG_CHECKSUM realMotor6Packet R"(
 
-function pow(x, power)
-	local result = x
-	for i = 2, power, 1
-	do
-		result = result * x
-	end
-	return result
-end
-
-
-Nemaxhp=188.7
-Nn=3643
-Memax=441.5
-nM=2689
-	
-ne=2000
-Nemax=Nemaxhp*0.7355
-
-Mn=Nemax*9549/Nn
-print('Mn ' ..Mn)
-
-Kn=Nn/nM
-print('Kn ' ..Kn)
-
-Km=Memax/Mn
-print('Km ' ..Km)
-
-M3=(Km-1)*100;
-zz=(100*(Kn-1)*(Kn-1));
-print('m3 ' ..M3)
-print('zz ' ..zz)
-
-ax=1-((M3*Kn*(2-Kn))/zz);
-bx=2*((M3*Kn)/zz);
-cx=(M3*Kn*Kn)/zz;
-
-print('ax ' ..ax)
-print('bx ' ..bx)
-print('cx ' ..cx)
-
-xx=ax*((ne/Nn))+(bx*(pow(ne,2)/pow(Nn,2)))-(cx*(pow(ne,3)/pow(Nn,3)));
-print ('xx ' ..xx)
-
-	
-Ne=Nemax*xx;
-
-Me=(9550*Ne)/ne;
-
-print('Me ' .. Me)
 
 currentRpm = 2000
 
-maxPowerHp =188.7
-maxPowerRpm = 3643 
-maxTorqueNm = 441.5
-maxTorqueRpm = 2689
+maxPowerHp = 148
+maxPowerRpm = 6000 
+maxTorqueNm = 147
+maxTorqueRpm = 3500
+
 
 maxPowerKw = maxPowerHp * 0.7355
 
@@ -336,34 +288,34 @@ print('rpmCoef ' ..rpmCoef)
 torqCoef = maxTorqueNm / torqAtMaxPower
 print('torqCoef ' ..torqCoef)
 
-M3 =(torqCoef -1) * 100
+torquePotential =(torqCoef -1) * 100
 zz =(100 *(rpmCoef -1) *(rpmCoef -1))
-print('m3 ' ..M3)
+print('torquePotential ' ..torquePotential)
 print('zz ' ..zz)
 
-ax = 1 -((M3 * rpmCoef *(2 - rpmCoef)) / zz)
-bx = 2 *((M3 * rpmCoef) / zz)
-cx =(M3 * rpmCoef * rpmCoef) / zz
+ax = 1 -((torquePotential * rpmCoef *(2 - rpmCoef)) / zz)
+bx = 2 *((torquePotential * rpmCoef) / zz)
+cx =(torquePotential * rpmCoef * rpmCoef) / zz
 
-print('ax ' ..ax)
-print('bx ' ..bx)
-print('cx ' ..cx)
+print('ax ' ..ax .. ', bx ' ..bx .. ', cx ' ..cx)
 
-xx = ax *((currentRpm / maxPowerRpm)) +(bx *(pow(currentRpm, 2) / pow(maxPowerRpm, 2))) -(cx *(pow(currentRpm, 3) / pow(maxPowerRpm, 3)))
-print ('xx ' ..xx)
+rpmRatio = currentRpm / maxPowerRpm
+abcMult = ax * rpmRatio + bx * pow(rpmRatio, 2) - cx * pow(rpmRatio, 3)
+print ('abcMult ' ..abcMult)
 
+print('rpmRatio ' .. rpmRatio)
 
-Ne = maxPowerKw * xx
+LeidermanPower = maxPowerKw * abcMult
+print('LeidermanPower ' .. LeidermanPower)
 
-Me =(9550 * Ne) / currentRpm
-
-print('Me ' ..Me)
+LeidermanTorque = (9550 * LeidermanPower) / currentRpm
+print('LeidermanTorque ' .. LeidermanTorque)
 
 	function testFunc()
-		return Me
+		return LeidermanTorque
 	end
 
 	)";
 
-	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(magic).value_or(0), 1846.3770);
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(magic).value_or(0), 156.463);
 }

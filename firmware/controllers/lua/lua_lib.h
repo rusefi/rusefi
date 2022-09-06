@@ -18,6 +18,16 @@
 end \
 	"
 
+#define LUA_POW " \
+function pow(x, power) \
+	local result = x \
+	for i = 2, power, 1 \
+	do \
+		result = result * x \
+	end \
+	return result \
+end \
+"
 
 #define PRINT_ARRAY "hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, \"A\", \"B\", \"C\", \"D\", \"E\", \"F\" } \
 \
