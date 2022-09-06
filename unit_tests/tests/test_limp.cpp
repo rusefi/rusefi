@@ -106,13 +106,18 @@ TEST(limp, boostCut) {
 	dut.updateState(1000, 0);
 	EXPECT_TRUE(dut.allowInjection());
 
-	// Above threshold, injection cut
-	Sensor::setMockValue(SensorType::Map, 120);
+	// Above rising threshold, injection cut
+	Sensor::setMockValue(SensorType::Map, 105);
 	dut.updateState(1000, 0);
 	EXPECT_FALSE(dut.allowInjection());
 
-	// Below threshold, should recover
-	Sensor::setMockValue(SensorType::Map, 80);
+	// Below rising threshold, but should have hysteresis, so not cut yet
+	Sensor::setMockValue(SensorType::Map, 95);
+	dut.updateState(1000, 0);
+	EXPECT_FALSE(dut.allowInjection());
+
+	// Below falling threshold, fuel restored
+	Sensor::setMockValue(SensorType::Map, 79);
 	dut.updateState(1000, 0);
 	EXPECT_TRUE(dut.allowInjection());
 

@@ -54,6 +54,23 @@ struct LimpState {
 	}
 };
 
+class Hysteresis {
+public:
+	// returns true if value > rising, false if value < falling, previous if falling < value < rising.
+	bool test(float value, float rising, float falling) {
+		if (value > rising) {
+			m_state = true;
+		} else if (value < falling) {
+			m_state = false;
+		}
+
+		return m_state;
+	}
+
+private:
+	bool m_state = false;
+};
+
 class LimpManager {
 public:
 	// This is called from periodicFastCallback to update internal state
@@ -77,6 +94,10 @@ public:
 
 private:
 	void setFaultRevLimit(int limit);
+
+	Hysteresis m_revLimitHysteresis;
+	Hysteresis m_boostCutHysteresis;
+	Hysteresis m_injectorDutyCutHysteresis;
 
 	// Start with no fault rev limit
 	int32_t m_faultRevLimit = INT32_MAX;
