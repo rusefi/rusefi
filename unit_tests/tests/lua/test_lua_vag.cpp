@@ -131,25 +131,27 @@ TEST(LuaVag, unpackMotor1_torq_req) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 21.84);
 }
 
-#define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA}\n "
+#define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA}\n "
 
 TEST(LuaVag, packMotor3) {
-	const char* script = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
+	const char* script = SET_BIT_RANGE_LSB PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
 
 	function testFunc()
 		tps = 100
 		iat = 25.5
+		desired_wheel_torque = 284.7
 
 		canMotor3 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
  		canMotor3[2] = (iat + 48) / 0.75
 		canMotor3[3] = tps / 0.4
-		canMotor3[5] = 0x22
+		canMotor3[5] = 0x20
+		setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
  		canMotor3[8] = tps / 0.4
 
 		print(arrayToString(canMotor3))
 
-		expected = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA }
+		expected = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA }
 		return equals(canMotor3, expected)
 	end
 	)";
@@ -180,6 +182,61 @@ TEST(LuaVag, unpackMotor3_pps) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 100);
 }
 
+TEST(LuaVag, setBitRange) {
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0x34, 0x56, 0x00 }
+			setBitRange(data, 4, 8, 0xAB)
+
+			print(arrayToString(data))
+
+			expected = { 0xB4, 0x5A, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0x00, 0x00, 0x00 }
+			setBitRange(data, 5, 9, 0x1FF)
+
+			print(arrayToString(data))
+
+			expected = { 0xE0, 0x3F, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0xFF, 0xFF, 0x00 }
+			setBitRange(data, 5, 9, 0x0)
+
+			print(arrayToString(data))
+
+			expected = { 0x1F, 0xC0, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+}
+
 TEST(LuaVag, unpackMotor3_iat) {
 	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
 	function testFunc()
@@ -189,6 +246,17 @@ TEST(LuaVag, unpackMotor3_iat) {
 	)";
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 25.5);
+}
+
+TEST(LuaVag, unpackMotor3_desired_wheel_torque) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
+	function testFunc()
+		desired_wheel_torque = getBitRange(data, 24, 12) * 0.39
+		return desired_wheel_torque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 284.7);
 }
 
 #define realMotor6Packet "\ndata = { 0x3D, 0x54, 0x69, 0x7E, 0xFE, 0xFF, 0xFF, 0x80}\n "
