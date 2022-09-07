@@ -22,7 +22,7 @@
 #include "pch.h"
 
 #if HAL_USE_ADC
-#include "os_access.h"
+
 
 #include "adc_subscription.h"
 #include "AdcConfiguration.h"

@@ -24,7 +24,7 @@
 #include "pch.h"
 
 #if EFI_CAN_SUPPORT
-#include "os_access.h"
+
 #include "obd2.h"
 #include "can.h"
 #include "can_msg_tx.h"

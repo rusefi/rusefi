@@ -30,7 +30,7 @@
 #if EFI_MALFUNCTION_INDICATOR
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "os_access.h"
+
 #include "periodic_thread_controller.h"
 
 #define TEST_MIL_CODE FALSE

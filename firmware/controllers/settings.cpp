@@ -9,7 +9,7 @@
 #include "pch.h"
 
 #if !EFI_UNIT_TEST
-#include "os_access.h"
+
 #include "eficonsole.h"
 #include "trigger_decoder.h"
 #include "console_io.h"

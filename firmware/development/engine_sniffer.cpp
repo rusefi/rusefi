@@ -25,7 +25,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 #include "engine_sniffer.h"
 
 #if EFI_ENGINE_SNIFFER

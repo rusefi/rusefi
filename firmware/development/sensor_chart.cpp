@@ -6,7 +6,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 #include "sensor_chart.h"
 
 #if EFI_SENSOR_CHART

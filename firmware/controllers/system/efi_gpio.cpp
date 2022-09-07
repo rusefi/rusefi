@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "drivers/gpio/gpio_ext.h"
 
 #if HW_HELLEN
