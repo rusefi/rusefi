@@ -115,6 +115,9 @@ public:
 	const char *shortName = nullptr;
 };
 
+void startSimultaneousInjection(void* = nullptr);
+void endSimultaneousInjectionOnlyTogglePins();
+
 class InjectorOutputPin final : public NamedOutputPin {
 public:
 	InjectorOutputPin();
