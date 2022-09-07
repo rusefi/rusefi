@@ -345,12 +345,6 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
-InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
-	overlappingCounter = 1; // Force update in reset
-	reset();
-	injectorIndex = -1;
-}
-
 bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
