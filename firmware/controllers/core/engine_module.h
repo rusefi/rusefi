@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "engine_configuration.h"
+
 class EngineModule {
 public:
 	// Called when 'Burn' is invoked
