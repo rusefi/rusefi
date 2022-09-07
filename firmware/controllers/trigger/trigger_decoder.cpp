@@ -212,13 +212,17 @@ int TriggerDecoderBase::getTotalRevolutionCounter() const {
 void PrimaryTriggerDecoder::resetTriggerState() {
 	TriggerDecoderBase::resetTriggerState();
 
-	memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
-	memset(spinningEvents, 0, sizeof(spinningEvents));
-	spinningEventIndex = 0;
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
 
 	resetHasFullSync();
+	resetInstantRpm();
+}
+
+void PrimaryTriggerDecoder::resetInstantRpm() {
+	memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
+	memset(spinningEvents, 0, sizeof(spinningEvents));
+	spinningEventIndex = 0;
 }
 
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
@@ -393,6 +397,10 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 	if (totalShift > 0) {
 		camResyncCounter++;
+
+		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
+		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
+		resetInstantRpm();
 	}
 
 	return totalShift;

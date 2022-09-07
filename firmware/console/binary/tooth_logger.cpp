@@ -196,23 +196,27 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 		return;
 	}
 
-	composite_logger_s* entry = &buffer->buffer[buffer->nextIdx];
+	size_t idx = buffer->nextIdx;
+	auto nextIdx = idx + 1;
+	buffer->nextIdx = nextIdx;
 
-	uint32_t nowUs = NT2US(timestamp);
+	if (idx < efi::size(buffer->buffer)) {
+		composite_logger_s* entry = &buffer->buffer[idx];
 
-	// TS uses big endian, grumble
-	entry->timestamp = SWAP_UINT32(nowUs);
-	entry->priLevel = currentTrigger1;
-	entry->secLevel = currentTrigger2;
-	entry->trigger = currentTdc;
-	entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
-	entry->coil = currentCoilState;
-	entry->injector = currentInjectorState;
+		uint32_t nowUs = NT2US(timestamp);
 
-	buffer->nextIdx++;
+		// TS uses big endian, grumble
+		entry->timestamp = SWAP_UINT32(nowUs);
+		entry->priLevel = currentTrigger1;
+		entry->secLevel = currentTrigger2;
+		entry->trigger = currentTdc;
+		entry->sync = engine->triggerCentral.triggerState.getShaftSynchronized();
+		entry->coil = currentCoilState;
+		entry->injector = currentInjectorState;
+	}
 
 	// if the buffer is full...
-	bool bufferFull = buffer->nextIdx >= efi::size(buffer->buffer);
+	bool bufferFull = nextIdx >= efi::size(buffer->buffer);
 	// ... or it's been too long since the last flush
 	bool bufferTimedOut = buffer->startTime.hasElapsedSec(5);
 
