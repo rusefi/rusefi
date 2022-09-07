@@ -12,7 +12,6 @@
 
 #include "pch.h"
 
-#include "os_access.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
