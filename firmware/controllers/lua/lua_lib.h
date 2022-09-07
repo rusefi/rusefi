@@ -108,7 +108,7 @@ function setBitRange(data, totalBitIndex, bitWidth, value) \
 	if (bitInByteIndex + bitWidth > 8) then \
 		bitsToHandleNow = 8 - bitInByteIndex \
 		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
-		bitWidth = bitsToHandleNow; \
+		bitWidth = bitsToHandleNow \
 	end \
 	mask = (1 << bitWidth) - 1 \
 	data[1 + byteIndex] = data[1 + byteIndex] & (~(mask << bitInByteIndex)) \
