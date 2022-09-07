@@ -352,12 +352,12 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		break;
 	}
 
-	// TODO: configurable, some engines may need to use a different cam for sync resolution
-	int camForEngineSync = 0;
-
 	tc->triggerState.vvtCounter++;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
+
+	// TODO: configurable, some engines may need to use a different cam for sync resolution
+	int camForEngineSync = 0;
 
 	if (index == camForEngineSync) {
 		angle_t crankOffset = adjustCrankPhase(camIndex);
@@ -386,12 +386,15 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
 		}
 	} else {
+		// Not using this cam for engine sync, just wrap the value in to the reasonable range
 		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 	}
 
 	// Only record VVT position if we have full engine sync - may be bogus before that point
 	if (tc->triggerState.hasSynchronizedPhase()) {
 		tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
+	} else {
+		tc->vvtPosition[bankIndex][camIndex] = 0;
 	}
 }
 
