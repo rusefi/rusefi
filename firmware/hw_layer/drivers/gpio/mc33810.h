@@ -14,6 +14,7 @@
 
 #include "efifeatures.h"
 #include <hal.h>
+#include "rusefi_types.h"
 
 #define MC33810_OUTPUTS				8
 #define MC33810_DIRECT_OUTPUTS		8

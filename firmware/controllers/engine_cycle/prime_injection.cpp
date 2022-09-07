@@ -4,7 +4,7 @@
 
 #include "pch.h"
 #include "prime_injection.h"
-#include "efi_gpio.h"
+#include "injection_gpio.h"
 #include "sensor.h"
 
 
