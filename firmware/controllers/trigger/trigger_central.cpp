@@ -352,44 +352,47 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		break;
 	}
 
+	// TODO: configurable, some engines may need to use a different cam for sync resolution
+	int camForEngineSync = 0;
+
 	tc->triggerState.vvtCounter++;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
-	if (index != 0) {
-		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
-		// at the moment we use only primary VVT to sync crank phase
-		return;
+	if (index == camForEngineSync) {
+		angle_t crankOffset = adjustCrankPhase(camIndex);
+		// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
+		// shall adjust vvt position as well
+		vvtPosition -= crankOffset;
+		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
+
+		// this could be just an 'if' but let's have it expandable for future use :)
+		switch(engineConfiguration->vvtMode[camIndex]) {
+		case VVT_HONDA_K:
+			// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+			vvtPosition = wrapVvt(vvtPosition, 180);
+			break;
+		default:
+			// else, do nothing
+			break;
+		}
+
+		if (absF(angleFromPrimarySyncPoint) < 7) {
+			/**
+			 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
+			 * wrong order due to belt flex or else
+			 * https://github.com/rusefi/rusefi/issues/3269
+			 */
+			warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
+		}
+	} else {
+		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 	}
 
-	angle_t crankOffset = adjustCrankPhase(camIndex);
-	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
-	// shall adjust vvt position as well
-	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
-
-	// this could be just an 'if' but let's have it expandable for future use :)
-	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_HONDA_K:
-		// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
-		vvtPosition = wrapVvt(vvtPosition, 180);
-		break;
-	default:
-		// else, do nothing
-		break;
+	// Only record VVT position if we have full engine sync - may be bogus before that point
+	if (tc->triggerState.hasSynchronizedPhase()) {
+		tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 	}
-
-	if (absF(angleFromPrimarySyncPoint) < 7) {
-		/**
-		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
-		 * wrong order due to belt flex or else
-		 * https://github.com/rusefi/rusefi/issues/3269
-		 */
-		warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
-	}
-
-	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
 int triggerReentrant = 0;
