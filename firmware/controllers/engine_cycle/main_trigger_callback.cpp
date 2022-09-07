@@ -28,8 +28,6 @@
 #include "rpm_calculator_api.h"
 // end of injection
 
-#include "os_access.h"
-
 #if EFI_PRINTF_FUEL_DETAILS
 	bool printFuelDebug = false;
 #endif // EFI_PRINTF_FUEL_DETAILS
@@ -47,9 +45,10 @@
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"
+
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
-#endif
+#endif // EFI_LAUNCH_CONTROL
 
 #include "backup_ram.h"
 
