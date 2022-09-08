@@ -259,10 +259,7 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 
 	// Determine where we currently are in the revolution
 	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
-	if (cisnan(currentAngle)) {
-		// todo: huh? dead code? how can we get NAN from eventAngles table?
-		return NOISY_RPM;
-	}
+	efiAssert(OBD_PCM_Processor_Fault, !cisnan(currentAngle), "eventAngles", 0);
 
 	// Hunt for a tooth ~90 degrees ago to compare to the current time
 	angle_t previousAngle = currentAngle - 90;
