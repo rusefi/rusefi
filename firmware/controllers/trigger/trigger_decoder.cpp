@@ -388,7 +388,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 		 * let's increase the trigger event counter, that would adjust the state of
 		 * virtual crank-based trigger
 		 */
-		incrementTotalEventCounter();
+		incrementShaftSynchronizationCounter();
 		totalShift += engineCycle / divider;
 	}
 
@@ -406,7 +406,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	return totalShift;
 }
 
-void TriggerDecoderBase::incrementTotalEventCounter() {
+void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 	totalRevolutionCounter++;
 }
 
@@ -466,7 +466,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 	resetCurrentCycleState();
 
 	if (wasSynchronized) {
-		incrementTotalEventCounter();
+		incrementShaftSynchronizationCounter();
 	} else {
 		// We have just synchronized, this is the zeroth revolution
 		totalRevolutionCounter = 0;
