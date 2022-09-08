@@ -248,7 +248,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
@@ -258,6 +258,9 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
 
+	LimpState limitedFuelState = engine->limpManager.allowInjection();
+	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
+	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
 		return;
 	}
@@ -311,9 +314,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		return;
 	}
 
-	LimpState limitedFuelState = engine->limpManager.allowInjection();
-	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
-	bool limitedFuel = !limitedFuelState.value;
 	
 	if (trgEventIndex == 0) {
 
@@ -332,7 +332,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
+	handleFuel(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, trgEventIndex, edgeTimestamp);
