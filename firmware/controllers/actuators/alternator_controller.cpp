@@ -112,13 +112,4 @@ void initAlternatorCtrl() {
 				engineConfiguration->alternatorPwmFrequency, 0);
 }
 
-// todo: start invoking this method like 'startVvtControlPins'
-void startAlternatorPin(void) {
-
-}
-
-void stopAlternatorPin(void) {
-	// todo: implementation!
-}
-
 #endif /* EFI_ALTERNATOR_CONTROL */
