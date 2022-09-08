@@ -67,3 +67,6 @@ struct ExecutorInterface {
 	virtual void scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) = 0;
 	virtual void cancel(scheduling_s* scheduling) = 0;
 };
+
+ExecutorInterface *getExecutorInterface();
+

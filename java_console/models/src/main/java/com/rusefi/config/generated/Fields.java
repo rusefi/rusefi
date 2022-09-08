@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 06 23:23:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 08 02:51:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1707,7 +1707,6 @@ public class Fields {
 	public static final int oilPressure_v2_offset = 2052;
 	public static final int oilPressure_value1_offset = 2048;
 	public static final int oilPressure_value2_offset = 2056;
-	public static final int onOffAlternatorLogic_offset = 764;
 	public static final int operation_mode_e_FOUR_STROKE_CAM_SENSOR = 2;
 	public static final int operation_mode_e_FOUR_STROKE_CRANK_SENSOR = 1;
 	public static final int operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR = 4;
@@ -1877,7 +1876,6 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 387675106;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2379,7 +2377,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.07.all.387675106";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.08.all.2785459037";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
@@ -2426,6 +2424,7 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1372;
 	public static final int unused_1484_bit_31_offset = 1372;
 	public static final int unused_1484_bit_38_offset = 1372;
+	public static final int unusedAlteOnOff_offset = 764;
 	public static final int unusedBit_45_31_offset = 120;
 	public static final int unusedBit_539_10_offset = 1628;
 	public static final int unusedBit_539_11_offset = 1628;
@@ -2874,7 +2873,7 @@ public class Fields {
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 764, FieldType.BIT, 12);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 764, FieldType.BIT, 13);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 764, FieldType.BIT, 14);
-	public static final Field ONOFFALTERNATORLOGIC = Field.create("ONOFFALTERNATORLOGIC", 764, FieldType.BIT, 15);
+	public static final Field UNUSEDALTEONOFF = Field.create("UNUSEDALTEONOFF", 764, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 764, FieldType.BIT, 16);
 	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 764, FieldType.BIT, 17);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 764, FieldType.BIT, 18);
@@ -4251,7 +4250,7 @@ public class Fields {
 	USELCDSCREEN,
 	VERBOSETLE8888,
 	ENABLEVERBOSECANTX,
-	ONOFFALTERNATORLOGIC,
+	UNUSEDALTEONOFF,
 	ISCJ125ENABLED,
 	VVTCAMSENSORUSERISE,
 	MEASUREMAPONLYINONECYLINDER,

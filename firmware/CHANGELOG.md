@@ -42,6 +42,7 @@ Release template (copy/paste this for new release):
  - Injection Offset for skipped wheel triggers #4536
 
 ### Removed
+ - Alternator on/off mode #4548
 
 ## August 2022 Release - "Day 170"
 

@@ -64,24 +64,6 @@ void AlternatorController::onFastCallback() {
 	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 	float targetVoltage = engineConfiguration->targetVBatt;
 
-	// todo: I am not aware of a SINGLE person to use this onOffAlternatorLogic
-	if (engineConfiguration->onOffAlternatorLogic) {
-		if (!vBatt) {
-			// Somehow battery voltage isn't valid, disable alternator control
-			enginePins.alternatorPin.setValue(false);
-		}
-
-		float h = 0.1;
-		bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
-		enginePins.alternatorPin.setValue(newState);
-		currentPlainOnOffState = newState;
-#if EFI_TUNER_STUDIO
-			engine->outputChannels.alternatorOnOff = newState;
-#endif /* EFI_TUNER_STUDIO */
-
-		return;
-	}
-
 	if (!vBatt) {
 		// Somehow battery voltage isn't valid, disable alternator control
 		alternatorPid.reset();
@@ -123,22 +105,11 @@ void initAlternatorCtrl() {
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 
-	if (!engineConfiguration->onOffAlternatorLogic) {
-		startSimplePwm(&alternatorControl,
+	startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0);
-	}
-}
-
-// todo: start invoking this method like 'startVvtControlPins'
-void startAlternatorPin(void) {
-
-}
-
-void stopAlternatorPin(void) {
-	// todo: implementation!
 }
 
 #endif /* EFI_ALTERNATOR_CONTROL */

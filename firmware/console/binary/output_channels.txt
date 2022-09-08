@@ -22,7 +22,7 @@ bit needBurn;
 
 bit sd_msd
 bit isFan2On
-bit alternatorOnOff;
+bit unusedBitLAtwfs;
 bit toothLogReady;
 bit unused3123
 bit isTpsError;

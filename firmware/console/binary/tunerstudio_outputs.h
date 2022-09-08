@@ -31,3 +31,5 @@
  * see also TS_OUTPUT_SIZE in rusefi_config.txt
  */
 struct TunerStudioOutputChannels : output_channels_s { };
+
+TunerStudioOutputChannels *getTunerStudioOutputChannels();

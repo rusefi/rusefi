@@ -630,7 +630,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 
 			if (diff > 0) {
 				mapVvt_map_peak++;
-				int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+				int revolutionCounter = engine->triggerCentral.triggerState.getCrankSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 
@@ -701,7 +701,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		 * cycle into a four stroke, 720 degrees cycle.
 		 */
 		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
-		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+		int crankInternalIndex = triggerState.getCrankSynchronizationCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 
 		reportEventToWaveChart(signal, triggerIndexForListeners);
@@ -758,7 +758,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 #if EFI_CDM_INTEGRATION
 	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
 #endif /* EFI_CDM_INTEGRATION */
@@ -834,7 +834,7 @@ void triggerInfo(void) {
 			boolToString(engine->triggerCentral.isTriggerDecoderError()),
 			engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter,
-			engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
+			engine->triggerCentral.triggerState.getCrankSynchronizationCounter(),
 			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {

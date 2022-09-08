@@ -36,3 +36,6 @@ private:
 		instance->onPrimeEnd();
 	}
 };
+
+// reset injection switch counter if the engine started spinning
+void updatePrimeInjectionPulseState();

@@ -1746,7 +1746,6 @@
 #define oilPressure_v2_offset 2052
 #define oilPressure_value1_offset 2048
 #define oilPressure_value2_offset 2056
-#define onOffAlternatorLogic_offset 764
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
 #define operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR 4
@@ -1929,7 +1928,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 387675106
+#define SIGNATURE_HASH 2785459037
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2496,7 +2495,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.07.cypress.387675106"
+#define TS_SIGNATURE "rusEFI 2022.09.08.cypress.2785459037"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2546,6 +2545,7 @@
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_31_offset 1372
 #define unused_1484_bit_38_offset 1372
+#define unusedAlteOnOff_offset 764
 #define unusedBit_45_31_offset 120
 #define unusedBit_539_10_offset 1628
 #define unusedBit_539_11_offset 1628

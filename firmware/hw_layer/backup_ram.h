@@ -1,5 +1,5 @@
 /**
- * @file	backup_ram.cpp
+ * @file	backup_ram.h
  * @brief	Non-volatile backup-RAM registers support
  *
  * @date Dec 19, 2017
@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "efi_gpio.h"
 
 #include "error_handling.h"

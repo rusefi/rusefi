@@ -231,13 +231,18 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
-		uint32_t index, efitick_t nowNt) {
+		uint32_t trgEventIndex, efitick_t nowNt) {
 
 	bool alwaysInstantRpm = engineConfiguration->alwaysInstantRpm;
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
-	if (index == 0) {
+	if (trgEventIndex == 0) {
+		if (HAVE_CAM_INPUT()) {
+			engine->triggerCentral.validateCamVvtCounters();
+		}
+
+
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
@@ -278,7 +283,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// it goes into sniffer report into the first position
 	if (engine->sensorChartMode == SC_TRIGGER) {
 		angle_t crankAngle = engine->triggerCentral.getCurrentEnginePhase(nowNt).value_or(0);
-		int signal = 1000 * ckpSignalType + index;
+		int signal = 1000 * ckpSignalType + trgEventIndex;
 		scAddData(crankAngle, signal);
 	}
 #endif /* EFI_SENSOR_CHART */
@@ -286,7 +291,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// Always update instant RPM even when not spinning up
 	engine->triggerCentral.triggerState.updateInstantRpm(
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
-		index, nowNt);
+		trgEventIndex, nowNt);
 
 	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 	if (alwaysInstantRpm) {
@@ -294,7 +299,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	} else if (rpmState->isSpinningUp()) {
 		rpmState->assignRpmValue(instantRpm);
 #if 0
-		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
+		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", trgEventIndex, ckpSignalType, instantRpm);
 #endif
 	}
 }
@@ -330,8 +335,8 @@ static void onTdcCallback(void *) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp) {
-	bool isTriggerSynchronizationPoint = index0 == 0;
+		uint32_t trgEventIndex, efitick_t edgeTimestamp) {
+	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
 	if (isTriggerSynchronizationPoint && engine->isEngineSnifferEnabled) {
 
 #if EFI_UNIT_TEST

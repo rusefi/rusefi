@@ -3163,20 +3163,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Battery Input Divider Coefficient",	vbattDividerCoeff
 	dialog = alternator, "Alternator Settings",	yAxis
 		field = "Enabled",								isAlternatorControlEnabled
-		field = "simple on/off mode",					onOffAlternatorLogic, {isAlternatorControlEnabled == 1}
 		field = "Target",								targetVBatt, {isAlternatorControlEnabled == 1}
 		field = "Pin",									alternatorControlPin, {isAlternatorControlEnabled == 1}
 		field = "Pin Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
-		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
 		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
-		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1}
+		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1}
+		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1}
+		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1}
+		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1}
+		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 	dialog = startStopDialog, "Start/Stop Button"
