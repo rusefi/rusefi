@@ -168,10 +168,10 @@ private:
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp);
+		uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 /**
  * @brief   Initialize RPM calculator
