@@ -671,6 +671,7 @@
 #define engineMake_offset 1092
 #define engineSnifferFocusOnInputs_offset 1360
 #define engineSnifferRpmThreshold_offset 10
+#define engineSyncCam_offset 566
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
 #define ETB_BIAS_CURVE_LENGTH 8
@@ -1928,7 +1929,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3469810065
+#define SIGNATURE_HASH 999181236
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2495,7 +2496,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.08.kin.3469810065"
+#define TS_SIGNATURE "rusEFI 2022.09.08.kin.999181236"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2538,7 +2539,6 @@
 #define unused120b18_offset 120
 #define unused1740b2_offset 1628
 #define unused4080_offset 3123
-#define unused556_offset 566
 #define unused962_offset 1040
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372

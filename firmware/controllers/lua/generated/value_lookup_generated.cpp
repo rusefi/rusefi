@@ -298,6 +298,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardAggression;
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 		return engineConfiguration->knockRetardReapplyRate;
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+		return engineConfiguration->engineSyncCam;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -1206,6 +1208,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 	{
 		engineConfiguration->knockRetardReapplyRate = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+	{
+		engineConfiguration->engineSyncCam = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))

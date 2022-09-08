@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 08 02:51:33 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 08 20:30:22 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -655,6 +655,7 @@ public class Fields {
 	public static final int engineMake_offset = 1092;
 	public static final int engineSnifferFocusOnInputs_offset = 1360;
 	public static final int engineSnifferRpmThreshold_offset = 10;
+	public static final int engineSyncCam_offset = 566;
 	public static final int engineType_offset = 0;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
@@ -1876,6 +1877,7 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1398401400;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2377,7 +2379,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.08.all.2785459037";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.08.all.1398401400";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
@@ -2417,7 +2419,6 @@ public class Fields {
 	public static final int unused120b18_offset = 120;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3123;
-	public static final int unused556_offset = 566;
 	public static final int unused962_offset = 1040;
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
@@ -2746,7 +2747,7 @@ public class Fields {
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 560, FieldType.FLOAT);
 	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 564, FieldType.INT8).setScale(0.1);
 	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 565, FieldType.INT8).setScale(0.1);
-	public static final Field UNUSED556 = Field.create("UNUSED556", 566, FieldType.INT8).setScale(1.0);
+	public static final Field ENGINESYNCCAM = Field.create("ENGINESYNCCAM", 566, FieldType.INT8).setScale(1.0);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 567, FieldType.INT8).setScale(1.0);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 568, FieldType.INT16).setScale(0.001);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 570, FieldType.INT8).setScale(1.0);
@@ -4125,7 +4126,7 @@ public class Fields {
 	MANIDLEPOSITION,
 	KNOCKRETARDAGGRESSION,
 	KNOCKRETARDREAPPLYRATE,
-	UNUSED556,
+	ENGINESYNCCAM,
 	VSSFILTERRECIPROCAL,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
