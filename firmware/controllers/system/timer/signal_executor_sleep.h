@@ -16,5 +16,3 @@ public:
 	void scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) override;
 	void cancel(scheduling_s* s) override;
 };
-
-ExecutorInterface *getExecutorInterface();
