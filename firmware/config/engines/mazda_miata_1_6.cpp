@@ -176,7 +176,6 @@ void miataNAcommonEngineSettings() {
 	copyTable(config->ignitionTable, mapBased16IgnitionTable);
 #endif
 
-	engineConfiguration->silentTriggerError = false;
 
 	engineConfiguration->manIdlePosition = 20;
 
