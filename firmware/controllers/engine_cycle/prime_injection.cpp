@@ -6,7 +6,7 @@
 #include "prime_injection.h"
 #include "injection_gpio.h"
 #include "sensor.h"
-
+#include "backup_ram.h"
 
 void PrimeController::onPrimeEnd() {
 	endSimultaneousInjectionOnlyTogglePins();
@@ -28,3 +28,17 @@ floatms_t PrimeController::getPrimeDuration() const {
 
 	return engine->module<InjectorModel>()->getInjectionDuration(primeMass);
 }
+
+void updatePrimeInjectionPulseState() {
+	static bool counterWasReset = false;
+	if (counterWasReset)
+		return;
+
+	if (!getEngineRotationState()->isStopped()) {
+#if EFI_PROD_CODE
+		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
+#endif /* EFI_PROD_CODE */
+		counterWasReset = true;
+	}
+}
+

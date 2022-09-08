@@ -411,18 +411,4 @@ void PrimeController::onPrimeStart() {
 	getExecutorInterface()->scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
 }
 
-
-void updatePrimeInjectionPulseState() {
-	static bool counterWasReset = false;
-	if (counterWasReset)
-		return;
-
-	if (!getEngineRotationState()->isStopped()) {
-#if EFI_PROD_CODE
-		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
-#endif /* EFI_PROD_CODE */
-		counterWasReset = true;
-	}
-}
-
 #endif /* EFI_ENGINE_CONTROL */
