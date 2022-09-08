@@ -382,7 +382,7 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		auto primeDelayMs = engineConfiguration->primingDelay * 1000;
 
 		auto startTime = getTimeNowNt() + MS2NT(primeDelayMs);
-		engine->executor.scheduleByTimestampNt("prime", &m_start, startTime, { PrimeController::onPrimeStartAdapter, this});
+		getExecutorInterface()->scheduleByTimestampNt("prime", &m_start, startTime, { PrimeController::onPrimeStartAdapter, this});
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
 	}
@@ -408,7 +408,7 @@ void PrimeController::onPrimeStart() {
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
 	startSimultaneousInjection();
-	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
+	getExecutorInterface()->scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
 }
 
 
@@ -417,7 +417,7 @@ void updatePrimeInjectionPulseState() {
 	if (counterWasReset)
 		return;
 
-	if (!engine->rpmCalculator.isStopped()) {
+	if (!getEngineRotationState()->isStopped()) {
 #if EFI_PROD_CODE
 		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
 #endif /* EFI_PROD_CODE */
