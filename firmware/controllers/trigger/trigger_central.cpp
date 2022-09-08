@@ -356,10 +356,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
-	// TODO: configurable, some engines may need to use a different cam for sync resolution
-	int camForEngineSync = 0;
-
-	if (index == camForEngineSync) {
+	// Only do engine sync using one cam, other cams just provide VVT position.
+	if (index == engineConfiguration->engineSyncCam) {
 		angle_t crankOffset = adjustCrankPhase(camIndex);
 		// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 		// shall adjust vvt position as well
