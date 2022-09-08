@@ -84,45 +84,6 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 	}
 }
 
-void InjectorOutputPin::setHigh() {
-    NamedOutputPin::setHigh();
-    TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
-	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
-	switch (injectorIndex) {
-	case 0:
-		state->injectorState1 = true;
-		break;
-	case 1:
-		state->injectorState2 = true;
-		break;
-	case 2:
-		state->injectorState3 = true;
-		break;
-	case 3:
-		state->injectorState4 = true;
-		break;
-	}
-}
-
-void InjectorOutputPin::setLow() {
-    NamedOutputPin::setLow();
-    TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
-	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
-	switch (injectorIndex) {
-	case 0:
-		engine->outputChannels.injectorState1 = false;
-		break;
-	case 1:
-		engine->outputChannels.injectorState2 = false;
-		break;
-	case 2:
-		engine->outputChannels.injectorState3 = false;
-		break;
-	case 3:
-		engine->outputChannels.injectorState4 = false;
-		break;
-	}
-}
 
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
@@ -387,7 +348,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped() {
-	if (!engine->rpmCalculator.isStopped())
+	if (!getEngineRotationState()->isStopped())
 		return true;
 	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
 }
