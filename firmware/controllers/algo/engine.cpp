@@ -649,3 +649,6 @@ TunerStudioOutputChannels *getTunerStudioOutputChannels() {
 	return &engine->outputChannels;
 }
 
+ExecutorInterface *getExecutorInterface() {
+	return &engine->executor;
+}
