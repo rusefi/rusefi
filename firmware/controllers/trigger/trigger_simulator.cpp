@@ -106,7 +106,7 @@ void TriggerStimulatorHelper::assertSyncPosition(
 		feedSimulatedEvent(triggerConfiguration, state, shape, i);
 	}
 
-	int revolutionCounter = state.getTotalRevolutionCounter();
+	int revolutionCounter = state.getCrankSynchronizationCounter();
 	if (revolutionCounter != TEST_REVOLUTIONS) {
 		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
 				getTrigger_type_e(triggerConfiguration.TriggerType.type),

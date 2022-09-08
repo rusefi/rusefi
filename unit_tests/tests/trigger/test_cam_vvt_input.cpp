@@ -142,7 +142,7 @@ TEST(trigger, testNB2CamInput) {
 	// need to be out of VVT sync to see VVT sync in action
 	eth.fireRise(25 * 70 / 180);
 	eth.fireRise(25 * 110 / 180);
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 	ASSERT_TRUE((totalRevolutionCountBeforeVvtSync % SYMMETRICAL_CRANK_SENSOR_DIVIDER) != 0);
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
@@ -164,7 +164,7 @@ TEST(trigger, testNB2CamInput) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
 	// Third gap - long
 
@@ -175,7 +175,7 @@ TEST(trigger, testNB2CamInput) {
 
 	EXPECT_NEAR(290.5f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
 	EXPECT_EQ(40, waveChart.getSize());
 }
