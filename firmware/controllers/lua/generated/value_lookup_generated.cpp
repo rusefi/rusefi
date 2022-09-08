@@ -354,8 +354,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->verboseTLE8888;
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 		return engineConfiguration->enableVerboseCanTx;
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-		return engineConfiguration->onOffAlternatorLogic;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
 	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
@@ -1348,11 +1346,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-	{
-		engineConfiguration->onOffAlternatorLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))

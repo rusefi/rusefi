@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 05:32:10 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 08 02:50:38 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -73,7 +73,7 @@ struct output_channels_s {
 	bool isFan2On : 1 {};
 	/**
 	offset 0 bit 12 */
-	bool alternatorOnOff : 1 {};
+	bool unusedBitLAtwfs : 1 {};
 	/**
 	offset 0 bit 13 */
 	bool toothLogReady : 1 {};
@@ -1393,4 +1393,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 744);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Sep 05 05:32:10 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 08 02:50:38 UTC 2022
