@@ -238,9 +238,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 
-	//!!!!!!!!!!!!!!!!!!!
-	//engineConfiguration->silentTriggerError = true;
-
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
 		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)

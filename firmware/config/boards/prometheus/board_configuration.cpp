@@ -232,9 +232,6 @@ void setBoardDefaultConfiguration() {
 	setPrometheusDefaults();
 #endif
 
-	//!!!!!!!!!!!!!!!!!!!
-	//engineConfiguration->silentTriggerError = true;
-
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = Gpio::A2;
