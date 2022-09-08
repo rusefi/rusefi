@@ -316,9 +316,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	bool limitedFuel = !limitedFuelState.value;
 	
 	if (trgEventIndex == 0) {
-		if (HAVE_CAM_INPUT()) {
-			engine->triggerCentral.validateCamVvtCounters();
-		}
 
 		if (engine->triggerCentral.checkIfTriggerConfigChanged()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
