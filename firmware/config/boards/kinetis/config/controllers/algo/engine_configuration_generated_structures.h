@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Sep 06 20:36:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 08 02:50:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1692,9 +1692,8 @@ struct engine_configuration_s {
 	offset 764 bit 14 */
 	bool enableVerboseCanTx : 1 {};
 	/**
-	 * This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	offset 764 bit 15 */
-	bool onOffAlternatorLogic : 1 {};
+	bool unusedAlteOnOff : 1 {};
 	/**
 	 * enable cj125/disable cj125
 	offset 764 bit 16 */
@@ -4988,4 +4987,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Sep 06 20:36:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 08 02:50:40 UTC 2022

@@ -21,8 +21,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.sd_msd;
 	if (strEqualCaseInsensitive(name, "isFan2On"))
 		return engine->outputChannels.isFan2On;
-	if (strEqualCaseInsensitive(name, "alternatorOnOff"))
-		return engine->outputChannels.alternatorOnOff;
 	if (strEqualCaseInsensitive(name, "toothLogReady"))
 		return engine->outputChannels.toothLogReady;
 	if (strEqualCaseInsensitive(name, "isTpsError"))
