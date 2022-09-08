@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Aug 21 16:42:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Sep 08 02:40:10 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,7 +6,8 @@
 // start of trigger_state_s
 struct trigger_state_s {
 	/**
-	 * Crank revolution counter
+	 * Crank sync counter
+	 * Usually matches crank revolutions
 	 * offset 0
 	 */
 	uint32_t crankSynchronizationCounter = (uint32_t)0;
@@ -48,4 +49,4 @@ struct trigger_state_s {
 static_assert(sizeof(trigger_state_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Aug 21 16:42:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Sep 08 02:40:10 UTC 2022

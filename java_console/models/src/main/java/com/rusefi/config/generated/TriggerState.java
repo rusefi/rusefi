@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Sep 06 20:36:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Sep 08 02:40:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -386,7 +386,7 @@ public class TriggerState {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field TOTALREVOLUTIONCOUNTER = Field.create("TOTALREVOLUTIONCOUNTER", 0, FieldType.INT).setScale(1.0);
+	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0);
 	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT);
 	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 8, FieldType.FLOAT);
 	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 12, FieldType.FLOAT);
@@ -396,7 +396,7 @@ public class TriggerState {
 	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 22, FieldType.INT8).setScale(1.0);
 	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 23, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
-	TOTALREVOLUTIONCOUNTER,
+	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,
 	VVTCURRENTPOSITION,
 	TRIGGERSYNCGAPRATIO,
