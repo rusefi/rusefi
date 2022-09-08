@@ -64,24 +64,6 @@ void AlternatorController::onFastCallback() {
 	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 	float targetVoltage = engineConfiguration->targetVBatt;
 
-	// todo: I am not aware of a SINGLE person to use this onOffAlternatorLogic
-	if (engineConfiguration->onOffAlternatorLogic) {
-		if (!vBatt) {
-			// Somehow battery voltage isn't valid, disable alternator control
-			enginePins.alternatorPin.setValue(false);
-		}
-
-		float h = 0.1;
-		bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
-		enginePins.alternatorPin.setValue(newState);
-		currentPlainOnOffState = newState;
-#if EFI_TUNER_STUDIO
-			engine->outputChannels.alternatorOnOff = newState;
-#endif /* EFI_TUNER_STUDIO */
-
-		return;
-	}
-
 	if (!vBatt) {
 		// Somehow battery voltage isn't valid, disable alternator control
 		alternatorPid.reset();
