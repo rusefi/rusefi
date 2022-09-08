@@ -105,13 +105,11 @@ void initAlternatorCtrl() {
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 
-	if (!engineConfiguration->onOffAlternatorLogic) {
-		startSimplePwm(&alternatorControl,
+	startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0);
-	}
 }
 
 // todo: start invoking this method like 'startVvtControlPins'
