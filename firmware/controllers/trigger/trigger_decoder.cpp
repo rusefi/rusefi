@@ -67,7 +67,7 @@ void TriggerDecoderBase::resetTriggerState() {
 
 	memset(toothDurations, 0, sizeof(toothDurations));
 
-	totalRevolutionCounter = 0;
+	crankSynchronizationCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
 	m_timeSinceDecodeError.init();
@@ -205,8 +205,8 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
-int TriggerDecoderBase::getTotalRevolutionCounter() const {
-	return totalRevolutionCounter;
+int TriggerDecoderBase::getCrankSynchronizationCounter() const {
+	return crankSynchronizationCounter;
 }
 
 void PrimaryTriggerDecoder::resetTriggerState() {
@@ -369,8 +369,8 @@ int TriggerDecoderBase::getCurrentIndex() const {
 }
 
 void TriggerCentral::validateCamVvtCounters() {
-	// micro-optimized 'totalRevolutionCounter % 256'
-	int camVvtValidationIndex = triggerState.getTotalRevolutionCounter() & 0xFF;
+	// micro-optimized 'crankSynchronizationCounter % 256'
+	int camVvtValidationIndex = triggerState.getCrankSynchronizationCounter() & 0xFF;
 	if (camVvtValidationIndex == 0) {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
@@ -382,7 +382,7 @@ void TriggerCentral::validateCamVvtCounters() {
 angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle_t engineCycle) {
 	efiAssert(OBD_PCM_Processor_Fault, remainder < divider, "syncEnginePhase", false);
 	angle_t totalShift = 0;
-	while (getTotalRevolutionCounter() % divider != remainder) {
+	while (getCrankSynchronizationCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
@@ -407,7 +407,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 }
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
-	totalRevolutionCounter++;
+	crankSynchronizationCounter++;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
@@ -469,7 +469,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 		incrementShaftSynchronizationCounter();
 	} else {
 		// We have just synchronized, this is the zeroth revolution
-		totalRevolutionCounter = 0;
+		crankSynchronizationCounter = 0;
 	}
 
 	totalEventCountBase += triggerShape.getSize();
@@ -478,7 +478,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 	if (printTriggerDebug) {
 		printf("onShaftSynchronization index=%d %d\r\n",
 				currentCycle.current_index,
-				totalRevolutionCounter);
+				crankSynchronizationCounter);
 	}
 #endif /* EFI_UNIT_TEST */
 }
@@ -833,7 +833,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 	}
 
 	// Assert that we found the sync point on the very first revolution
-	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
+	efiAssert(CUSTOM_ERR_ASSERT, getCrankSynchronizationCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
