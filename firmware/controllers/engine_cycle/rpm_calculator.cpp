@@ -238,6 +238,11 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
 	if (trgEventIndex == 0) {
+		if (HAVE_CAM_INPUT()) {
+			engine->triggerCentral.validateCamVvtCounters();
+		}
+
+
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
 		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
