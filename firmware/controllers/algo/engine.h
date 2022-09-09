@@ -353,7 +353,7 @@ public:
 
 	void preCalculate();
 
-	void watchdog();
+	void efiWatchdog();
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
