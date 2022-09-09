@@ -156,6 +156,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->specs.displacement = 6.2;
 
 	engineConfiguration->enableSoftwareKnock = true;
 
