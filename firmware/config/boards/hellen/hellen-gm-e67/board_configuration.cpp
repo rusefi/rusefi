@@ -181,4 +181,35 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
+
+    strncpy(config->luaScript, R"(
+
+function getBitRange(data, bitIndex, bitWidth)
+	byteIndex = bitIndex >> 3
+	shift = bitIndex - byteIndex * 8
+	value = data[1 + byteIndex]
+	if (shift + bitWidth > 8) then
+		value = value + data[2 + byteIndex] * 256
+	end
+	mask = (1 << bitWidth) - 1
+	return (value >> shift) & mask
+end
+
+IGN_STATUS = 0x1f1
+
+setTickRate(100)
+
+function canIgnStatus(bus, id, dlc, data)
+    crankingBits = getBitRange(data, 2, 2)
+    local isCranking = (crankingBits == 2)
+    print('crankingBits ' .. crankingBits .. ', isCranking ' .. isCranking)
+end
+
+canRxAdd(IGN_STATUS, canIgnStatus)
+
+
+function onTick()
+end
+
+    )", efi::size(config->luaScript));
 }
