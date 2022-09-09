@@ -32,6 +32,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
+	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_e65.cpp \
 	tests/lua/test_lua_ford.cpp \
 	tests/lua/test_lua_vag.cpp \
