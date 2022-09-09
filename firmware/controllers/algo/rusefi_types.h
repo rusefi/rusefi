@@ -43,8 +43,8 @@ using efitimesec_t = time_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
- * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
- * Please restart your ECU every 46 days? :)
+ * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
+ * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
  * See getTimeNowUs()
  */
 using efitimems_t = uint32_t;
