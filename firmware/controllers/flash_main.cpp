@@ -125,6 +125,7 @@ void writeToFlashIfPending() {
 	// Prevent sensor timeouts while flashing
 	Sensor::inhibitTimeouts(true);
 	writeToFlashNow();
+	// we do not want to allow sensor timeouts right away, we re-enable next time method is invoked
 }
 
 // Erase and write a copy of the configuration at the specified address
