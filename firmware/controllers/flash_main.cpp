@@ -154,6 +154,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 bool burnWithoutFlash = false;
 
 void writeToFlashNow(void) {
+	engine->configBurnTimer.reset();
 	bool isSuccess = false;
 
 	if (burnWithoutFlash) {

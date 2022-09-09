@@ -285,6 +285,8 @@ public:
 	 */
 	efitick_t ignitionOnTimeNt = 0;
 
+	Timer configBurnTimer;
+
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
 	 * tuning software)
