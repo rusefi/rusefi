@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 09 02:11:23 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 09 22:00:03 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1877,7 +1877,6 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1398401400;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2061,7 +2060,7 @@ public class Fields {
 	public static final int tcuSolenoidTable_offset = 17432;
 	public static final int tcuUpshiftButtonPin_offset = 1536;
 	public static final int tcuUpshiftButtonPinMode_offset = 2950;
-	public static final int tempBooleanForVerySpecialCases_offset = 960;
+	public static final int tempBooleanForVerySpecialLogic_offset = 1372;
 	public static final int test557pin_offset = 846;
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
@@ -2379,7 +2378,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.09.all.1398401400";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.09.all.3446064502";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
@@ -2423,7 +2422,6 @@ public class Fields {
 	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
 	public static final int unused_1484_bit_30_offset = 1372;
-	public static final int unused_1484_bit_31_offset = 1372;
 	public static final int unused_1484_bit_38_offset = 1372;
 	public static final int unusedAlteOnOff_offset = 764;
 	public static final int unusedBit_45_31_offset = 120;
@@ -2532,6 +2530,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
 	public static final int vvtActivationDelayMs_offset = 3586;
+	public static final int vvtBooleanForVerySpecialCases_offset = 960;
 	public static final int vvtCamSensorUseRise_offset = 764;
 	public static final int vvtMode1_offset = 1744;
 	public static final int vvtMode2_offset = 1745;
@@ -2997,7 +2996,7 @@ public class Fields {
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 960, FieldType.BIT, 8);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 960, FieldType.BIT, 9);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 960, FieldType.BIT, 10);
-	public static final Field TEMPBOOLEANFORVERYSPECIALCASES = Field.create("TEMPBOOLEANFORVERYSPECIALCASES", 960, FieldType.BIT, 11);
+	public static final Field VVTBOOLEANFORVERYSPECIALCASES = Field.create("VVTBOOLEANFORVERYSPECIALCASES", 960, FieldType.BIT, 11);
 	public static final Field ENABLESOFTWAREKNOCK = Field.create("ENABLESOFTWAREKNOCK", 960, FieldType.BIT, 12);
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 960, FieldType.BIT, 13);
 	public static final Field INVERTCAMVVTSIGNAL = Field.create("INVERTCAMVVTSIGNAL", 960, FieldType.BIT, 14);
@@ -3197,7 +3196,7 @@ public class Fields {
 	public static final Field UNUSED_1484_BIT_38 = Field.create("UNUSED_1484_BIT_38", 1372, FieldType.BIT, 28);
 	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1372, FieldType.BIT, 29);
 	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1372, FieldType.BIT, 30);
-	public static final Field UNUSED_1484_BIT_31 = Field.create("UNUSED_1484_BIT_31", 1372, FieldType.BIT, 31);
+	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1372, FieldType.BIT, 31);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1376, FieldType.INT).setScale(1.0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1380, FieldType.FLOAT);
 	public static final Field CAMINPUTSDEBUG1 = Field.create("CAMINPUTSDEBUG1", 1384, FieldType.INT16, Gpio).setScale(1.0);
@@ -4372,7 +4371,7 @@ public class Fields {
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
 	STFTIGNOREERRORMAGNITUDE,
-	TEMPBOOLEANFORVERYSPECIALCASES,
+	VVTBOOLEANFORVERYSPECIALCASES,
 	ENABLESOFTWAREKNOCK,
 	VERBOSEVVTDECODING,
 	INVERTCAMVVTSIGNAL,
@@ -4570,7 +4569,7 @@ public class Fields {
 	UNUSED_1484_BIT_38,
 	UNUSED_1484_BIT_29,
 	UNUSED_1484_BIT_30,
-	UNUSED_1484_BIT_31,
+	TEMPBOOLEANFORVERYSPECIALLOGIC,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
 	CAMINPUTSDEBUG1,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Sep 08 20:29:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Sep 09 21:59:03 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2695,7 +2695,7 @@ struct engine_configuration_s {
 	bool unused_1484_bit_30 : 1 {};
 	/**
 	offset 1372 bit 31 */
-	bool unused_1484_bit_31 : 1 {};
+	bool tempBooleanForVerySpecialLogic : 1 {};
 	/**
 	count
 	 * offset 1376
@@ -4988,4 +4988,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21300);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Sep 08 20:29:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Sep 09 21:59:03 UTC 2022

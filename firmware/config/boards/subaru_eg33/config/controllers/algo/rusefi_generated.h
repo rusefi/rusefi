@@ -1895,7 +1895,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 709308578
+#define SIGNATURE_HASH 3027770540
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2086,7 +2086,7 @@
 #define tcuSolenoidTable_offset 17432
 #define tcuUpshiftButtonPin_offset 1536
 #define tcuUpshiftButtonPinMode_offset 2950
-#define vvtBooleanForVerySpecialCases_offset 960
+#define tempBooleanForVerySpecialLogic_offset 1372
 #define test557pin_offset 846
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
@@ -2463,7 +2463,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.09.subaru_eg33_f7.709308578"
+#define TS_SIGNATURE "rusEFI 2022.09.09.subaru_eg33_f7.3027770540"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2510,7 +2510,6 @@
 #define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372
 #define unused_1484_bit_30_offset 1372
-#define unused_1484_bit_31_offset 1372
 #define unused_1484_bit_38_offset 1372
 #define unusedAlteOnOff_offset 764
 #define unusedBit_45_31_offset 120
@@ -2624,6 +2623,7 @@
 #define vvt_mode_e_VVT_SECOND_HALF 1
 #define vvt_mode_e_VVT_TOYOTA_4_1 6
 #define vvtActivationDelayMs_offset 3586
+#define vvtBooleanForVerySpecialCases_offset 960
 #define vvtCamSensorUseRise_offset 764
 #define vvtMode1_offset 1744
 #define vvtMode2_offset 1745
