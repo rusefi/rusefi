@@ -908,7 +908,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
-	bit tempBooleanForVerySpecialCases
+	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
@@ -1074,7 +1074,7 @@ bit unused_1484_bit_27
 bit unused_1484_bit_38
 bit unused_1484_bit_29
 bit unused_1484_bit_30
-bit unused_1484_bit_31
+bit tempBooleanForVerySpecialLogic
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 

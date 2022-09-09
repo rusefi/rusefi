@@ -2152,7 +2152,7 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 960 bit 11 */
-	bool tempBooleanForVerySpecialCases : 1 {};
+	bool vvtBooleanForVerySpecialCases : 1 {};
 	/**
 	offset 960 bit 12 */
 	bool enableSoftwareKnock : 1 {};

@@ -2119,7 +2119,7 @@
 #define tcuSolenoidTable_offset 17432
 #define tcuUpshiftButtonPin_offset 1536
 #define tcuUpshiftButtonPinMode_offset 2950
-#define tempBooleanForVerySpecialCases_offset 960
+#define vvtBooleanForVerySpecialCases_offset 960
 #define test557pin_offset 846
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
