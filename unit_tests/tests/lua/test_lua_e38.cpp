@@ -27,7 +27,6 @@ TEST(LuaE38, rpm) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 2629.5);
 }
 
-
 TEST(LuaE38, tps) {
 
 	const char* script = TWO_BYTES_MSB ECMEngineStatus R"(
@@ -37,4 +36,18 @@ TEST(LuaE38, tps) {
 		end
 		)";
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 5.881);
+}
+
+#define ECMEngineCoolantTemp "\ndata = { 0x00, 0xCA, 0x69, 0x3F, 0x6A, 0x00, 0x00, 0x00}\n "
+
+
+TEST(LuaE38, clt) {
+
+EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(TWO_BYTES_MSB ECMEngineCoolantTemp R"(
+                                             		function testFunc()
+                                             			clt = data[3] -40
+                                             			return clt
+                                             		end
+                                             		)"
+                                             		).value_or(0), 65);
 }
