@@ -646,6 +646,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->invertVvtControlIntake;
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 		return engineConfiguration->invertVvtControlExhaust;
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+		return engineConfiguration->tempBooleanForVerySpecialLogic;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -2078,6 +2080,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 	{
 		engineConfiguration->invertVvtControlExhaust = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+	{
+		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
