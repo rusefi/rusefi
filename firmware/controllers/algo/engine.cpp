@@ -198,7 +198,7 @@ void Engine::periodicSlowCallback() {
 		vvtTriggerConfiguration[camIndex].update();
 	}
 
-	watchdog();
+	efiWatchdog();
 	updateSlowSensors();
 	checkShutdown();
 
@@ -442,7 +442,7 @@ void Engine::setConfig() {
 	injectEngineReferences();
 }
 
-void Engine::watchdog() {
+void Engine::efiWatchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
