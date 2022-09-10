@@ -196,6 +196,10 @@ function getBitRange(data, bitIndex, bitWidth)
 end
 
 IGN_STATUS = 0x1f1
+-- 0x514
+VIN_Part1 = 1300
+-- 04E1
+VIN_Part2 = 1249
 
 setTickRate(100)
 
@@ -207,8 +211,12 @@ end
 
 canRxAdd(IGN_STATUS, canIgnStatus)
 
+canVin1    = { 0x47, 0x4E, 0x4C, 0x43, 0x32, 0x45, 0x30, 0x34 }
+canVin2    = { 0x42, 0x52, 0x32, 0x31, 0x36, 0x33, 0x36, 0x36 }
 
 function onTick()
+    txCan(1, VIN_Part1, 0, canVin1)
+    txCan(1, VIN_Part2, 0, canVin2)
 end
 
     )", efi::size(config->luaScript));
