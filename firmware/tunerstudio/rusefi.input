@@ -3940,6 +3940,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
+		field = vinNumber,                              vinNumber
 		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueTableTbl

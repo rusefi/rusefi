@@ -891,6 +891,9 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 ! same length used for critical and soft error messages
 #define ERROR_BUFFER_SIZE 120
 
+#define VIN_NUMBER_SIZE 17
+	custom vin_number_t @@VIN_NUMBER_SIZE@@ string, ASCII, @OFFSET@, @@VIN_NUMBER_SIZE@@
+
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
@@ -1510,7 +1513,10 @@ float etbMinimumPosition;;"%", 1, 0, 0.01, 100, 2
 
 uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
-uint8_t[244] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+
+	vin_number_t vinNumber
+
+uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
