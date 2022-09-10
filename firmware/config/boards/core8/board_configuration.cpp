@@ -122,7 +122,6 @@ void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->canWriteEnabled = true;
