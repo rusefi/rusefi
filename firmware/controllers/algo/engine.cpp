@@ -452,18 +452,18 @@ void Engine::efiWatchdog() {
 	}
 
 	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
-		static float mostRecentSecond = 0;
+		static efitimems_t mostRecentMs = 0;
 
-		float secondsNow = currentTimeMillis();
-		if (mostRecentSecond != 0) {
-			float gapInSeconds = secondsNow - mostRecentSecond;
-			if (gapInSeconds > 500) {
+		float msNow = currentTimeMillis();
+		if (msNow != 0) {
+			float gapInMs = msNow - mostRecentMs;
+			if (gapInMs > 500) {
 				// float has 24 bits in the mantissa, which should allow up to 8 significant figures
 				// we loose precision here after about 1,000,000 seconds which is 11 days
-				firmwareError(WATCH_DOG_SECONDS, "gap in seconds %f %f", secondsNow, gapInSeconds);
+				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%fsec gap=%f", msNow, gapInMs);
 			}
 		}
-		mostRecentSecond = secondsNow;
+		mostRecentMs = msNow;
 	}
 
 	if (!isSpinning) {
