@@ -298,6 +298,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardAggression;
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 		return engineConfiguration->knockRetardReapplyRate;
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+		return engineConfiguration->engineSyncCam;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -354,8 +356,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->verboseTLE8888;
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 		return engineConfiguration->enableVerboseCanTx;
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-		return engineConfiguration->onOffAlternatorLogic;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
 	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
@@ -442,8 +442,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->showHumanReadableWarning;
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 		return engineConfiguration->stftIgnoreErrorMagnitude;
-	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
-		return engineConfiguration->tempBooleanForVerySpecialCases;
+	if (strEqualCaseInsensitive(name, "vvtBooleanForVerySpecialCases"))
+		return engineConfiguration->vvtBooleanForVerySpecialCases;
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 		return engineConfiguration->enableSoftwareKnock;
 	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
@@ -646,6 +646,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->invertVvtControlIntake;
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 		return engineConfiguration->invertVvtControlExhaust;
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+		return engineConfiguration->tempBooleanForVerySpecialLogic;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -1210,6 +1212,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->knockRetardReapplyRate = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+	{
+		engineConfiguration->engineSyncCam = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 	{
 		engineConfiguration->vssFilterReciprocal = (int)value;
@@ -1348,11 +1355,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-	{
-		engineConfiguration->onOffAlternatorLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
@@ -1570,9 +1572,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+	if (strEqualCaseInsensitive(name, "vvtBooleanForVerySpecialCases"))
 	{
-		engineConfiguration->tempBooleanForVerySpecialCases = (int)value;
+		engineConfiguration->vvtBooleanForVerySpecialCases = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
@@ -2078,6 +2080,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 	{
 		engineConfiguration->invertVvtControlExhaust = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+	{
+		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))

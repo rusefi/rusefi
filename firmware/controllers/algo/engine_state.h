@@ -10,7 +10,6 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 class EngineState : public engine_state_s {
@@ -19,6 +18,14 @@ public:
 	void periodicFastCallback();
 	void updateSlowSensors();
 	void updateTChargeK(int rpm, float tps);
+
+	/**
+	 * always 360 or 720, never zero
+	 */
+	angle_t engineCycle;
+
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	FuelConsumptionState fuelConsumption;
 
@@ -51,10 +58,6 @@ public:
 	float currentVe = 0;
 	float currentVeLoad = 0;
 
-
-	float fuelingLoad = 0;
-	float ignitionLoad = 0;
-
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */
@@ -65,8 +68,17 @@ public:
 	 */
 	floatms_t tpsAccelEnrich = 0;
 
+	/**
+	 * Each individual fuel injection duration for current engine cycle, without wall wetting
+	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
+	 */
+	floatms_t injectionDuration = 0;
+
 	angle_t injectionOffset = 0;
 
 	multispark_state multispark;
 
 };
+
+EngineState * getEngineState();

@@ -1098,7 +1098,7 @@ gaugeCategory = Sensors - Extra 2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
-   currentEnginePhaseGauge = currentEnginePhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
+   currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1190,8 +1190,8 @@ gaugeCategory = Fueling
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mg",        0,   100,     0, 0,      100,    100,   3, 1
-   iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
-   cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   iatCorrectionGauge = running_intakeTemperatureCoefficient, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   cltCorrectionGauge = running_coolantTemperatureCoefficient, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",      0,    120,      10,     10,     100,   100,   1,   1
    actualLastInjectionGauge   = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
@@ -2038,6 +2038,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
+		field = "Cam for engine sync resolution",		engineSyncCam
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2548,11 +2549,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = allPinsSensors
 
 	dialog = allPins3_2
-		field = "servo#1",								servoOutputPins1
-		field = "servo#2",								servoOutputPins2
-		field = "servo#3",								servoOutputPins3
-		field = "servo#4",								servoOutputPins4
-		field = "servo#5",								servoOutputPins5
 		field = "VVT Pin #1",							vvtPins1
 		field = "VVT Pin #2",							vvtPins2
 		field = "VVT Pin #3",							vvtPins3
@@ -3020,7 +3016,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = softwareKnockResponseCfg, "Response"
 		field = knockRetardAggression,      knockRetardAggression
 		field = knockRetardReapplyRate,     knockRetardReapplyRate
-		field = knockRetardMaximum,         knockRetardMaximum
 
 	dialog = softwareKnockLeft, ""
 		panel = softwareKnockCfg
@@ -3169,20 +3164,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Battery Input Divider Coefficient",	vbattDividerCoeff
 	dialog = alternator, "Alternator Settings",	yAxis
 		field = "Enabled",								isAlternatorControlEnabled
-		field = "simple on/off mode",					onOffAlternatorLogic, {isAlternatorControlEnabled == 1}
 		field = "Target",								targetVBatt, {isAlternatorControlEnabled == 1}
 		field = "Pin",									alternatorControlPin, {isAlternatorControlEnabled == 1}
 		field = "Pin Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
-		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
 		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
-		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1}
+		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1}
+		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1}
+		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1}
+		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1}
+		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 	dialog = startStopDialog, "Start/Stop Button"
@@ -3935,7 +3929,8 @@ dialog = tcuControls, "Transmission Settings"
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
-		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases
+		field = "vvtBooleanForVerySpecialCases",        vvtBooleanForVerySpecialCases
+		field = tempBooleanForVerySpecialLogic,         tempBooleanForVerySpecialLogic
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
@@ -3945,6 +3940,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
+		field = vinNumber,                              vinNumber
 		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueTableTbl

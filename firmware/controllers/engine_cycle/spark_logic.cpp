@@ -8,7 +8,11 @@
 #include "pch.h"
 
 #include "spark_logic.h"
-#include "os_access.h"
+
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
 
 #include "utlist.h"
 #include "event_queue.h"
@@ -75,7 +79,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	const angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
-		- engine->engineState.timingAdvance[event->cylinderNumber]
+		- getEngineState()->timingAdvance[event->cylinderNumber]
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard

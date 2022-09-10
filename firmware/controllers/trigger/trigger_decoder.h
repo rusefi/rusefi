@@ -68,11 +68,11 @@ public:
 	 * current trigger processing index, between zero and #size
 	 */
 	int getCurrentIndex() const;
-	int getTotalRevolutionCounter() const;
+	int getCrankSynchronizationCounter() const;
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
-	void incrementTotalEventCounter();
+	void incrementShaftSynchronizationCounter();
 
 	efitime_t getTotalEventCounter() const;
 
@@ -234,6 +234,8 @@ private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 		uint32_t index, efitick_t nowNt);
+
+	void resetInstantRpm();
 
 	float m_instantRpm = 0;
 	float m_instantRpmRatio = 0;

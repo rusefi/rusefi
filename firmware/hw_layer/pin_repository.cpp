@@ -108,7 +108,7 @@ PinRepository::PinRepository() {
 }
 
 #if EFI_PROD_CODE
-#include "os_access.h"
+
 #include "eficonsole.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "smart_gpio.h"

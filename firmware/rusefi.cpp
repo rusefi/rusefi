@@ -117,7 +117,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 #include "trigger_structure.h"
 #include "hardware.h"
 

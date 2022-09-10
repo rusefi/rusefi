@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "advance_map.h"
@@ -158,7 +158,7 @@ void EngineState::periodicFastCallback() {
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
+	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
@@ -179,7 +179,7 @@ void EngineState::periodicFastCallback() {
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 
 		// Apply both per-bank and per-cylinder trims
-		engine->injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
+		engine->engineState.injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
 
 		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}

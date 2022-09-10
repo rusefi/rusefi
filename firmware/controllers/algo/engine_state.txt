@@ -97,5 +97,12 @@ running_fuel_s running
 int fuelInjectionCounter
 int sparkCounter
 
-! engine_state2_s
+
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	float fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@
+	float ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@
+
+
+! engine_state_s
 end_struct

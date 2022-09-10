@@ -7,7 +7,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 
 #if EFI_USB_SERIAL
 

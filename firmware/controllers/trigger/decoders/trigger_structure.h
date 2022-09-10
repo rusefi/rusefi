@@ -223,7 +223,7 @@ public:
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
-	operation_mode_e getOperationMode() const;
+	operation_mode_e getWheelOperationMode() const;
 
 	void initialize(operation_mode_e operationMode);
 	void setTriggerSynchronizationGap(float syncRatio);

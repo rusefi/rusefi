@@ -39,7 +39,7 @@ static void commonNA8() {
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->useIdleTimingPidControl = true;
 	engineConfiguration->engineChartSize = 300;
-	engineConfiguration->silentTriggerError = true;
+
 	engineConfiguration->wwaeTau = 0.1;
 	engineConfiguration->targetVBatt = 14.2;
 	engineConfiguration->crankingIACposition = 36;

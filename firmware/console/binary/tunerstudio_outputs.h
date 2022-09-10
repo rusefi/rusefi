@@ -11,7 +11,7 @@
 #pragma once
 
 #include "rusefi_types.h"
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include "output_channels_generated.h"
 
 #ifndef WITH_TS_STATE
@@ -31,3 +31,5 @@
  * see also TS_OUTPUT_SIZE in rusefi_config.txt
  */
 struct TunerStudioOutputChannels : output_channels_s { };
+
+TunerStudioOutputChannels *getTunerStudioOutputChannels();

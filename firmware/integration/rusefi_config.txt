@@ -128,8 +128,6 @@ struct_no_prefix engine_configuration_s
 ! https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
 #define GAP_TRACKING_LENGTH 18
 
-#define SERVO_COUNT 8
-
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 
@@ -586,8 +584,8 @@ struct trigger_config_s @brief Trigger wheel(s) configuration
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
-	int customTotalToothCount;;"number", 1, 0, 0, 500, 0
-	int customSkippedToothCount;;"number", 1, 0, 0, 500, 0
+	int customTotalToothCount;;"number", 1, 0, 1, 300, 0
+	int customSkippedToothCount;;"number", 1, 0, 0, 300, 0
 end_struct
 
 trigger_config_s trigger;
@@ -647,7 +645,7 @@ end_struct
 
 uint8_t autoscale knockRetardAggression;+Ignition timing to remove when a knock event occurs.;"%", 0.1, 0, 0, 20, 1
 uint8_t autoscale knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
-uint8_t unused556;;"", 1, 0, 0, 1, 0
+uint8_t engineSyncCam;Select which cam is used for engine sync. Other cams will be used only for VVT measurement, but not engine sync.;"", 1, 0, 0, 3, 0
 
 	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, 2, 200, 0
 
@@ -761,7 +759,7 @@ bit is_enabled_spi_2
 	bit useLcdScreen
 	bit verboseTLE8888
 	bit enableVerboseCanTx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
-	bit onOffAlternatorLogic;+This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
+	bit unusedAlteOnOff
 	bit isCJ125Enabled;enable cj125/disable cj125
 	bit vvtCamSensorUseRise,"Rising","Falling";+Use rise or fall signal front\nget vvtCamSensorUseRise
 	bit measureMapOnlyInOneCylinder;+Useful for individual intakes
@@ -893,6 +891,9 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 ! same length used for critical and soft error messages
 #define ERROR_BUFFER_SIZE 120
 
+#define VIN_NUMBER_SIZE 17
+	custom vin_number_t @@VIN_NUMBER_SIZE@@ string, ASCII, @OFFSET@, @@VIN_NUMBER_SIZE@@
+
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
@@ -910,7 +911,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
-	bit tempBooleanForVerySpecialCases
+	bit vvtBooleanForVerySpecialCases
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
@@ -1076,7 +1077,7 @@ bit unused_1484_bit_27
 bit unused_1484_bit_38
 bit unused_1484_bit_29
 bit unused_1484_bit_30
-bit unused_1484_bit_31
+bit tempBooleanForVerySpecialLogic
 
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
@@ -1333,7 +1334,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pin_output_mode_e tle8888_csPinMode;
 	Gpio mc33816_cs;
 
-	Gpio[SERVO_COUNT iterate] servoOutputPins;todo: more comments
+	Gpio[8 iterate] sorryUnused
 
 	int16_t coastingFuelCutRpmHigh;+This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;+This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
@@ -1512,7 +1513,10 @@ float etbMinimumPosition;;"%", 1, 0, 0.01, 100, 2
 
 uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
-uint8_t[244] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+
+	vin_number_t vinNumber
+
+uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

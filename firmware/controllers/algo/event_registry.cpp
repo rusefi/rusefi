@@ -24,10 +24,6 @@
 
 #include "event_registry.h"
 
-InjectionEvent::InjectionEvent() {
-	memset(outputs, 0, sizeof(outputs));
-}
-
 IgnitionEvent::IgnitionEvent() {
 	memset(outputs, 0, sizeof(outputs));
 }

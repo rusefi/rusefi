@@ -1,5 +1,5 @@
 /*
- * @file	scaled_channel.h
+ * @file	efi_scaled_channel.h
  * @brief	Scaled channel storage for binary formats
  *
  * Storage of values (floating point, usually) scaled in integer storage, for transmission over the wire.

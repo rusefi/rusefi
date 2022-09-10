@@ -5,6 +5,9 @@
 #define ARRAY_EQUALS "function equals(data1, data2) \
  \
   local index = 1 \
+  if data1 == nil then \
+     return -666 \
+  end \
   while data1[index] ~= nil do \
 	if math.floor(data1[index]) ~= math.floor(data2[index]) then \
        return -1 - index \
@@ -18,6 +21,16 @@
 end \
 	"
 
+#define LUA_POW " \
+function pow(x, power) \
+	local result = x \
+	for i = 2, power, 1 \
+	do \
+		result = result * x \
+	end \
+	return result \
+end \
+"
 
 #define PRINT_ARRAY "hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, \"A\", \"B\", \"C\", \"D\", \"E\", \"F\" } \
 \
@@ -85,6 +98,23 @@ function getBitRange(data, bitIndex, bitWidth) \
 	end \
 	mask = (1 << bitWidth) - 1 \
 	return (value >> shift) & mask \
+end \
+"
+
+#define SET_BIT_RANGE_LSB " \
+function setBitRange(data, totalBitIndex, bitWidth, value) \
+	local byteIndex = totalBitIndex >> 3 \
+	local bitInByteIndex = totalBitIndex - byteIndex * 8 \
+	if (bitInByteIndex + bitWidth > 8) then \
+		bitsToHandleNow = 8 - bitInByteIndex \
+		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) \
+		bitWidth = bitsToHandleNow \
+	end \
+	mask = (1 << bitWidth) - 1 \
+	data[1 + byteIndex] = data[1 + byteIndex] & (~(mask << bitInByteIndex)) \
+	maskedValue = value & mask \
+	shiftedValue = maskedValue << bitInByteIndex \
+	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue \
 end \
 "
 

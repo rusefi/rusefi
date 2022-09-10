@@ -10,7 +10,7 @@
 #include "pch.h"
 
 #if EFI_PROD_CODE
-#include "os_access.h"
+
 #include "drivers/gpio/gpio_ext.h"
 
 #include "status_loop.h"

@@ -9,7 +9,7 @@
 #include "pch.h"
 #if EFI_CAN_SUPPORT
 
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
 #include "can.h"
 #include "fuel_math.h"

@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "trigger_central.h"
 #include "script_impl.h"
 #include "idle_thread.h"
@@ -164,7 +164,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
 /**
- * 32 bit return type overflows in 23 days. I think we do not expect rusEFI to run for 23 days straight days any time soon?
+ * 32 bit return type overflows in 23(or46?) days. tag#4554. I think we do not expect rusEFI to run for 23 days straight days any time soon?
  */
 efitimems_t currentTimeMillis(void) {
 	return US2MS(getTimeNowUs());

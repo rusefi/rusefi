@@ -42,6 +42,8 @@
 #include "advance_map.h"
 #include "fan_control.h"
 #include "sensor_checker.h"
+#include "fuel_schedule.h"
+#include "prime_injection.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -110,34 +112,6 @@ protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
-};
-
-class PrimeController : public EngineModule {
-public:
-	void onIgnitionStateChanged(bool ignitionOn) override;
-
-	floatms_t getPrimeDuration() const;
-
-	void onPrimeStart();
-	void onPrimeEnd();
-
-	bool isPriming() const {
-		return m_isPriming;
-	}
-
-private:
-	scheduling_s m_start;
-	scheduling_s m_end;
-
-	bool m_isPriming = false;
-
-	static void onPrimeStartAdapter(PrimeController* instance) {
-		instance->onPrimeStart();
-	}
-
-	static void onPrimeEndAdapter(PrimeController* instance) {
-		instance->onPrimeEnd();
-	}
 };
 
 class Engine final : public TriggerStateListener {
@@ -245,11 +219,10 @@ public:
 #endif
 
 	void setConfig();
-	injection_mode_e getCurrentInjectionMode();
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
-	operation_mode_e getOperationMode();
+	operation_mode_e getOperationMode() const;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
@@ -312,16 +285,13 @@ public:
 	 */
 	efitick_t ignitionOnTimeNt = 0;
 
+	Timer configBurnTimer;
+
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
 	 * tuning software)
 	 */
 	int globalConfigurationVersion = 0;
-
-	/**
-	 * always 360 or 720, never zero
-	 */
-	angle_t engineCycle;
 
 	TpsAccelEnrichment tpsAccelEnrichment;
 
@@ -329,15 +299,6 @@ public:
 	TriggerCentral triggerCentral;
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	/**
-	 * Each individual fuel injection duration for current engine cycle, without wall wetting
-	 * including everything including injector lag, both cranking and running
-	 * @see getInjectionDuration()
-	 */
-	floatms_t injectionDuration = 0;
-
-	// Per-injection fuel mass, including TPS accel enrich
-	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
@@ -394,7 +355,7 @@ public:
 
 	void preCalculate();
 
-	void watchdog();
+	void efiWatchdog();
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.

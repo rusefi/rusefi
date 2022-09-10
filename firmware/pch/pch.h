@@ -9,14 +9,6 @@
  * this file.
  */
 
-#ifndef FALSE
-#define FALSE (0)
-#endif /* FALSE */
-
-#ifndef TRUE
-#define TRUE (!(FALSE))
-#endif /* TRUE */
-
 #include <rusefi/arrays.h>
 #include <rusefi/crc.h>
 #include <rusefi/fragments.h>
@@ -25,11 +17,11 @@
 #include <rusefi/math.h>
 #include <rusefi/pt2001.h>
 
+#include "global.h"
 #include "efifeatures.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"
 #include "error_handling.h"
-#include "global.h"
 #include "efi_gpio.h"
 #include "tunerstudio_outputs.h"
 #include "engine.h"
@@ -51,4 +43,6 @@
 #include "mocks.h"
 #include "engine_test_helper.h"
 #include "mock/mock_sensor.h"
+#else
+#include "chprintf.h"
 #endif

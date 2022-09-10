@@ -7,7 +7,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 
 #include "trigger_central.h"
 #include "trigger_decoder.h"
@@ -180,7 +180,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAZDA_SKYACTIV:
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
-		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
+		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K:
 		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
 		return 0;
@@ -356,40 +356,44 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
-	if (index != 0) {
-		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
-		// at the moment we use only primary VVT to sync crank phase
-		return;
+	// Only do engine sync using one cam, other cams just provide VVT position.
+	if (index == engineConfiguration->engineSyncCam) {
+		angle_t crankOffset = adjustCrankPhase(camIndex);
+		// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
+		// shall adjust vvt position as well
+		vvtPosition -= crankOffset;
+		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
+
+		// this could be just an 'if' but let's have it expandable for future use :)
+		switch(engineConfiguration->vvtMode[camIndex]) {
+		case VVT_HONDA_K:
+			// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+			vvtPosition = wrapVvt(vvtPosition, 180);
+			break;
+		default:
+			// else, do nothing
+			break;
+		}
+
+		if (absF(angleFromPrimarySyncPoint) < 7) {
+			/**
+			 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
+			 * wrong order due to belt flex or else
+			 * https://github.com/rusefi/rusefi/issues/3269
+			 */
+			warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
+		}
+	} else {
+		// Not using this cam for engine sync, just wrap the value in to the reasonable range
+		vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 	}
 
-	angle_t crankOffset = adjustCrankPhase(camIndex);
-	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
-	// shall adjust vvt position as well
-	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
-
-	// this could be just an 'if' but let's have it expandable for future use :)
-	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_HONDA_K:
-		// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
-		vvtPosition = wrapVvt(vvtPosition, 180);
-		break;
-	default:
-		// else, do nothing
-		break;
+	// Only record VVT position if we have full engine sync - may be bogus before that point
+	if (tc->triggerState.hasSynchronizedPhase()) {
+		tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
+	} else {
+		tc->vvtPosition[bankIndex][camIndex] = 0;
 	}
-
-	if (absF(angleFromPrimarySyncPoint) < 7) {
-		/**
-		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
-		 * wrong order due to belt flex or else
-		 * https://github.com/rusefi/rusefi/issues/3269
-		 */
-		warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
-	}
-
-	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
 int triggerReentrant = 0;
@@ -624,7 +628,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 
 			if (diff > 0) {
 				mapVvt_map_peak++;
-				int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+				int revolutionCounter = engine->triggerCentral.triggerState.getCrankSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 
@@ -694,8 +698,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 		 * cycle into a four stroke, 720 degrees cycle.
 		 */
-		int crankDivider = getCrankDivider(triggerShape.getOperationMode());
-		int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
+		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
+		int crankInternalIndex = triggerState.getCrankSynchronizationCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 
 		reportEventToWaveChart(signal, triggerIndexForListeners);
@@ -752,7 +756,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 #if EFI_CDM_INTEGRATION
 	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
 #endif /* EFI_CDM_INTEGRATION */
@@ -828,7 +832,7 @@ void triggerInfo(void) {
 			boolToString(engine->triggerCentral.isTriggerDecoderError()),
 			engine->triggerCentral.triggerState.totalTriggerErrorCounter,
 			engine->triggerCentral.triggerState.orderingErrorCounter,
-			engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
+			engine->triggerCentral.triggerState.getCrankSynchronizationCounter(),
 			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {

@@ -24,7 +24,7 @@ using time_t = uint32_t;
 #include "firing_order.h"
 
 #if __cplusplus
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #endif
 
 #define DEFAULT_FUEL_LOAD_COUNT 16
@@ -43,8 +43,8 @@ using efitimesec_t = time_t;
 
 /**
  * integer time in milliseconds (1/1_000 of a second)
- * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
- * Please restart your ECU every 46 days? :)
+ * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
+ * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
  * See getTimeNowUs()
  */
 using efitimems_t = uint32_t;
@@ -99,6 +99,8 @@ using lua_script_t = char[LUA_SCRIPT_SIZE];
 using error_message_t = char[ERROR_BUFFER_SIZE];
 
 using vehicle_info_t = char[VEHICLE_INFO_SIZE];
+
+using vin_number_t = char[VIN_NUMBER_SIZE];
 
 using gppwm_note_t = char[GPPWM_NOTE_SIZE];
 

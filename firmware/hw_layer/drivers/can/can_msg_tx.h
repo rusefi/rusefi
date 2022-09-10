@@ -12,7 +12,7 @@
 #include <cstdint>
 #include <cstddef>
 
-#include "os_access.h"
+
 #include "can.h"
 
 enum class CanCategory : uint16_t {

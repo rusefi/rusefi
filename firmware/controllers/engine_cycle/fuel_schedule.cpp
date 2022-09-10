@@ -4,8 +4,19 @@
  * Handles injection scheduling
  */
 
-#include "pch.h"
+#include "global.h"
+#include <rusefi/arrays.h>
+#include <rusefi/isnan.h>
+#include "fuel_schedule.h"
 #include "event_registry.h"
+#include "fuel_schedule.h"
+#include "trigger_decoder.h"
+#include "engine_math.h"
+
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
 
 #if EFI_ENGINE_CONTROL
 
@@ -48,10 +59,14 @@ static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
 	}
 }
 
+InjectionEvent::InjectionEvent() {
+	memset(outputs, 0, sizeof(outputs));
+}
+
 // Returns the start angle of this injector in engine coordinates (0-720 for a 4 stroke),
 // or unexpected if unable to calculate the start angle due to missing information.
 expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
-	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
+	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs(); // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
@@ -60,10 +75,10 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 
 	// injection phase may be scheduled by injection end, so we need to step the angle back
 	// for the duration of the injection
-	angle_t injectionDurationAngle = getInjectionAngleCorrection(engine->injectionDuration, oneDegreeUs);
+	angle_t injectionDurationAngle = getInjectionAngleCorrection(getEngineState()->injectionDuration, oneDegreeUs);
 
 	// User configured offset - degrees after TDC combustion
-	floatus_t injectionOffset = engine->engineState.injectionOffset;
+	floatus_t injectionOffset = getEngineState()->injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return unexpected;
@@ -78,7 +93,7 @@ expected<float> InjectionEvent::computeInjectionAngle(int cylinderIndex) const {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", CUSTOM_ERR_6544);
 
-	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(engine->triggerCentral.triggerShape.getOperationMode()));
+	wrapAngle2(openingAngle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(getEngineRotationState()->getOperationMode()));
 
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent openingAngle=%.2f inj %d\r\n", openingAngle, cylinderNumber);
@@ -110,7 +125,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i) {
 		return false;
 	}
 
-	injection_mode_e mode = engine->getCurrentInjectionMode();
+	injection_mode_e mode = getCurrentInjectionMode();
 
 	// We need two outputs if:
 	// - we are running batch fuel, and have "use two wire batch" enabled
@@ -191,4 +206,4 @@ void FuelSchedule::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, 
 	}
 }
 
-#endif
+#endif // EFI_ENGINE_CONTROL

@@ -6,6 +6,34 @@
 
 #define CLEANUP_MODE_TPS 90
 
+static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+	auto operationMode = engine->getOperationMode();
+
+	// V-Twin MAP phase sense needs to always wait for sync
+	if (vvtMode == VVT_MAP_V_TWIN) {
+		return true;
+	}
+
+	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
+		// in rare cases engines do not like random sequential mode
+		return true;
+	}
+
+	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
+	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case
+	if (engineConfiguration->specs.cylindersCount > 1 && engineConfiguration->specs.cylindersCount % 2 == 1) {
+		return true;
+	}
+
+	// Symmetrical crank modes require cam sync before firing
+	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
+	// Examples include Nissan MR/VQ, Miata NB, etc
+	return
+		operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
+		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
+}
+
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
@@ -17,7 +45,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 			? interpolate2d(Sensor::get(SensorType::Clt).value_or(0), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
 
-		if (rpm > revLimit) {
+		// Require 50 rpm drop before resuming
+		if (m_revLimitHysteresis.test(rpm, revLimit, revLimit - 50)) {
 			if (engineConfiguration->cutFuelOnHardLimit) {
 				allowFuel.clear(ClearReason::HardLimit);
 			}
@@ -44,8 +73,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
-	if (engineConfiguration->boostCutPressure != 0) {
-		if (Sensor::getOrZero(SensorType::Map) > engineConfiguration->boostCutPressure) {
+	float mapCut = engineConfiguration->boostCutPressure;
+	if (mapCut != 0) {
+		// require drop of 20kPa to resume fuel
+		if (m_boostCutHysteresis.test(Sensor::getOrZero(SensorType::Map), mapCut, mapCut - 20)) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
@@ -90,7 +121,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 	// If duty cycle is high, impose a fuel cut rev limiter.
 	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
-	if (getInjectorDutyCycle(rpm) > 96.0f) {
+	// only reset once below 20% duty to force the driver to lift
+	if (m_injectorDutyCutHysteresis.test(getInjectorDutyCycle(rpm), 96, 20)) {
 		allowFuel.clear(ClearReason::InjectorDutyCycle);
 	}
 

@@ -16,7 +16,7 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "os_access.h"
+
 #include "aux_valves.h"
 #include "map_averaging.h"
 #include "perf_trace.h"
@@ -198,7 +198,7 @@ void Engine::periodicSlowCallback() {
 		vvtTriggerConfiguration[camIndex].update();
 	}
 
-	watchdog();
+	efiWatchdog();
 	updateSlowSensors();
 	checkShutdown();
 
@@ -349,7 +349,7 @@ void Engine::reset() {
 	/**
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
-	engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
+	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
 	memset(&ignitionPin, 0, sizeof(ignitionPin));
 	resetLua();
 }
@@ -442,13 +442,28 @@ void Engine::setConfig() {
 	injectEngineReferences();
 }
 
-void Engine::watchdog() {
+void Engine::efiWatchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
 
 	if (module<PrimeController>()->isPriming()) {
 		return;
+	}
+
+	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
+		static efitimems_t mostRecentMs = 0;
+
+		float msNow = currentTimeMillis();
+		if (msNow != 0) {
+			float gapInMs = msNow - mostRecentMs;
+			if (gapInMs > 500) {
+				// float has 24 bits in the mantissa, which should allow up to 8 significant figures
+				// we loose precision here after about 1,000,000 seconds which is 11 days
+				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%fsec gap=%f", msNow, gapInMs);
+			}
+		}
+		mostRecentMs = msNow;
 	}
 
 	if (!isSpinning) {
@@ -570,8 +585,8 @@ float Engine::getTimeIgnitionSeconds(void) const {
 	return numSeconds;
 }
 
-injection_mode_e Engine::getCurrentInjectionMode() {
-	return rpmCalculator.isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
+injection_mode_e getCurrentInjectionMode() {
+	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
@@ -591,11 +606,16 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	}
 }
 
-operation_mode_e Engine::getOperationMode() {
+operation_mode_e Engine::getOperationMode() const {
+	return rpmCalculator.getOperationMode();
+}
+
+
+operation_mode_e RpmCalculator::getOperationMode() const {
 	// Ignore user-provided setting for well known triggers.
 	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
 		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return triggerCentral.triggerShape.getOperationMode();
+		return engine->triggerCentral.triggerShape.getWheelOperationMode();
 	} else {
 		// For example 36-1, could be on either cam or crank, so we have to ask the user
 		return lookupOperationMode();
@@ -630,4 +650,20 @@ void doScheduleStopEngine() {
 	//todo: FIX kinetis build with this line
 	//backupRamFlush();
 #endif // EFI_PROD_CODE
+}
+
+EngineRotationState * getEngineRotationState() {
+	return &engine->rpmCalculator;
+}
+
+EngineState * getEngineState() {
+	return &engine->engineState;
+}
+
+TunerStudioOutputChannels *getTunerStudioOutputChannels() {
+	return &engine->outputChannels;
+}
+
+ExecutorInterface *getExecutorInterface() {
+	return &engine->executor;
 }

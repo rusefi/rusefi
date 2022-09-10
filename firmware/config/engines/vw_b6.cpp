@@ -54,7 +54,6 @@ static void commonPassatB6() {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
-	engineConfiguration->verboseVVTDecoding = true;
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
@@ -159,12 +158,14 @@ void setProteusVwPassatB6() {
 
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
-MOTOR_1 = 0x280
-MOTOR_3 = 0x380
 GRA = 0x388
 TCU_1 = 0x440
 TCU_2 = 0x540
 BRAKE_2 = 0x5A0
+
+
+MOTOR_1 = 0x280
+MOTOR_3 = 0x380
 MOTOR_INFO = 0x580
 MOTOR_5 = 0x480
 MOTOR_6 = 0x488
