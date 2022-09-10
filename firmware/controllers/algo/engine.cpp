@@ -460,7 +460,7 @@ void Engine::efiWatchdog() {
 			if (gapInMs > 500) {
 				// float has 24 bits in the mantissa, which should allow up to 8 significant figures
 				// we loose precision here after about 1,000,000 seconds which is 11 days
-				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%fsec gap=%f", msNow, gapInMs);
+				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%fms gap=%fms", msNow, gapInMs);
 			}
 		}
 		mostRecentMs = msNow;
