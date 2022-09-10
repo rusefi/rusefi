@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Tue Sep 06 20:36:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sat Sep 10 05:09:22 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -383,6 +383,7 @@ public class TriggerStatePrimary {
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int VEHICLE_INFO_SIZE = 32;
+	public static final int VIN_NUMBER_SIZE = 17;
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
