@@ -195,6 +195,9 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
+STARTER_OUTPUT_INDEX = 0
+startPwm(STARTER_OUTPUT_INDEX, 100, 0)
+
 IGN_STATUS = 0x1f1
 -- 0x514
 VIN_Part1 = 1300
@@ -205,18 +208,25 @@ setTickRate(100)
 
 function canIgnStatus(bus, id, dlc, data)
     crankingBits = getBitRange(data, 2, 2)
-    local isCranking = (crankingBits == 2)
+    isCranking = (crankingBits == 2)
     print('crankingBits ' .. crankingBits .. ', isCranking ' .. isCranking)
 end
 
 canRxAdd(IGN_STATUS, canIgnStatus)
 
+-- todo: take VIN from configuration? encode VIN?
 canVin1    = { 0x47, 0x4E, 0x4C, 0x43, 0x32, 0x45, 0x30, 0x34 }
 canVin2    = { 0x42, 0x52, 0x32, 0x31, 0x36, 0x33, 0x36, 0x36 }
 
 function onTick()
     txCan(1, VIN_Part1, 0, canVin1)
     txCan(1, VIN_Part2, 0, canVin2)
+
+    if isCranking then
+        setPwmDuty(STARTER_OUTPUT_INDEX, 1)
+    else
+        setPwmDuty(STARTER_OUTPUT_INDEX, 0)
+    end
 end
 
     )", efi::size(config->luaScript));
