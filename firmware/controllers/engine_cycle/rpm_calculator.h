@@ -12,6 +12,7 @@
 #include "stored_value_sensor.h"
 #include "timer.h"
 #include "rpm_calculator_api.h"
+#include "trigger_decoder.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1

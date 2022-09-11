@@ -267,7 +267,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	efiPrintf("%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
+	efiPrintf("%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
