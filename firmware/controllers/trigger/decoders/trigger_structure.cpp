@@ -268,7 +268,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, T
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
-					getTrigger_wheel_e(channelIndex),
+					getTriggerWheel(channelIndex),
 					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
@@ -807,16 +807,4 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #endif
 	}
-
-
-}
-
-const char *getTriggerWheel(TriggerWheel value){
-switch(value) {
-case TriggerWheel::T_PRIMARY:
-  return "T_PRIMARY";
-case TriggerWheel::T_SECONDARY:
-  return "T_SECONDARY";
-  }
- return NULL;
 }
