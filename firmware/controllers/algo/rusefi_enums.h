@@ -41,7 +41,6 @@ typedef enum __attribute__ ((__packed__))
 typedef enum {
 	T_PRIMARY = 0,
 	T_SECONDARY = 1,
-	T_NONE = 15
 } trigger_wheel_e;
 
 typedef enum  __attribute__ ((__packed__)) {

@@ -659,8 +659,6 @@ case TL_SEMI_AUTO:
 
 const char *getTrigger_wheel_e(trigger_wheel_e value){
 switch(value) {
-case T_NONE:
-  return "T_NONE";
 case T_PRIMARY:
   return "T_PRIMARY";
 case T_SECONDARY:
