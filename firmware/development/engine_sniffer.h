@@ -8,14 +8,24 @@
 
 #pragma once
 
-#include "global.h"
+#include "rusefi_enums.h"
 
 #if EFI_ENGINE_SNIFFER
 #include "datalogging.h"
 
+enum class FrontDirection : uint8_t {
+	UP,
+	DOWN
+};
+
 void addEngineSnifferTdcEvent(int rpm);
-void addEngineSnifferCrankEvent(int signalType, int index, int isUp);
-void addEngineSnifferVvtEvent(int vvtType, int isUp);
+void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirection);
+/**
+ * @param wheelIndex 0 or 1
+ * @triggerEventIndex index from sync point, from 0 to number of teeth in engine cycle
+ */
+void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection);
+void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection);
 void addEngineSnifferOutputPinEvent(int outputPinType, int isUp);
 
 /**

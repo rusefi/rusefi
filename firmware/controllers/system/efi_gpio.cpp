@@ -44,6 +44,12 @@ const char *vvtNames[] = {
 		PROTOCOL_VVT3_NAME,
 		PROTOCOL_VVT4_NAME};
 
+const char *laNames[] = {
+		PROTOCOL_WA_CHANNEL_1,
+		PROTOCOL_WA_CHANNEL_2,
+		PROTOCOL_WA_CHANNEL_3,
+		PROTOCOL_WA_CHANNEL_4};
+
 // these short names are part of engine sniffer protocol
 static const char* const sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
