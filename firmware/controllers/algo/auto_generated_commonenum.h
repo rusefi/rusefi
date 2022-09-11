@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jun 27 00:08:52 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 11 07:52:24 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -19,6 +19,9 @@ const char *getSelectedGear(SelectedGear value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTransmissionControllerMode(TransmissionControllerMode value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getTriggerWheel(TriggerWheel value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getTsCalMode(TsCalMode value);
@@ -58,8 +61,6 @@ const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value);
 const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
-
-const char *getTrigger_wheel_e(TriggerWheel value);
 const char *getUart_device_e(uart_device_e value);
 const char *getVe_override_e(ve_override_e value);
 const char *getVvt_mode_e(vvt_mode_e value);

@@ -2275,8 +2275,6 @@
 #define trigger_type_offset 468
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 12 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
-#define trigger_wheel_e_T_PRIMARY 0
-#define trigger_wheel_e_T_SECONDARY 1
 #define triggerCompCenterVolt_offset 2536
 #define triggerCompHystMax_offset 2538
 #define triggerCompHystMin_offset 2537
@@ -2331,6 +2329,8 @@
 #define triggerSimulatorPins1_offset 748
 #define triggerSimulatorPins2_offset 750
 #define triggerSimulatorPins3_offset 752
+#define TriggerWheel_T_PRIMARY 0
+#define TriggerWheel_T_SECONDARY 1
 #define TRIM_SIZE 4
 #define TS_BLOCK_READ_TIMEOUT 300
 #define TS_BURN_COMMAND 'B'
