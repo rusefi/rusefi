@@ -12,8 +12,10 @@
 #include "efifeatures.h"
 #include "rusefi_types.h"
 
+#if EFI_PROD_CODE
 // for US_TO_NT_MULTIPLIER which is port-specific
 #include "port_mpu_util.h"
+#endif
 
 #define MS_PER_SECOND 1000
 #define US_PER_SECOND 1000000
