@@ -25,24 +25,56 @@
 
 #define CHART_RESET_DELAY 1
 
-#if EFI_ENGINE_SNIFFER
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
-
 /**
  * Difference between current 1st trigger event and previous 1st trigger event.
  */
 static volatile uint32_t engineCycleDurationUs;
 static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
-static WaveReader readers[4];
+class WaveReader {
+public:
+	void onFallEvent();
+
+	ioline_t line = 0;
+
+	int laIndex;
+	volatile int fallEventCounter = 0;
+	volatile int riseEventCounter = 0;
+
+	int currentRevolutionCounter = 0;
+
+	/**
+	 * Total ON time during last engine cycle
+	 */
+	efitimeus_t prevTotalOnTimeUs = 0;
+
+	efitimeus_t totalOnTimeAccumulatorUs = 0;
+
+	volatile efitimeus_t lastActivityTimeUs = 0; // timestamp in microseconds ticks
+	/**
+	 * time of signal fall event, in microseconds
+	 */
+	volatile efitimeus_t periodEventTimeUs = 0;
+	volatile efitimeus_t widthEventTimeUs = 0; // time of signal rise in microseconds
+
+	volatile efitimeus_t signalPeriodUs = 0; // period between two signal rises in microseconds
+
+	/**
+	 * offset from engine cycle start in microseconds
+	 */
+	volatile efitimeus_t waveOffsetUs = 0;
+	volatile efitimeus_t last_wave_low_widthUs = 0; // time period in systimer ticks
+	volatile efitimeus_t last_wave_high_widthUs = 0; // time period in systimer ticks
+};
+
+static WaveReader readers[LOGIC_ANALYZER_CHANNEL_COUNT];
 
 static void riseCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSnifferEvent(reader->name, PROTOCOL_ES_UP);
+	addEngineSnifferLogicAnalyzerEvent(reader->laIndex, FrontDirection::UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -56,7 +88,7 @@ void WaveReader::onFallEvent() {
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSnifferEvent(name, PROTOCOL_ES_DOWN);
+	addEngineSnifferLogicAnalyzerEvent(laIndex, FrontDirection::DOWN);
 
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
@@ -87,14 +119,14 @@ void logicAnalyzerCallback(void* arg, efitick_t stamp) {
 
 	bool rise = palReadLine(instance->line) == PAL_HIGH;
 
-	if(rise) {
+	if (rise) {
 		riseCallback(instance);
 	} else {
 		instance->onFallEvent();
 	}
 }
 
-static void initWave(const char *name, int index) {
+static void initWave(int index) {
 	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
 	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
@@ -109,7 +141,7 @@ static void initWave(const char *name, int index) {
 		return;
 	}
 
-	reader->name = name;
+	reader->laIndex = index;
 
 	reader->line = PAL_LINE(getHwPort("logic", brainPin), getHwPin("logic", brainPin));
 
@@ -210,10 +242,9 @@ void initWaveAnalyzer() {
 }
 
 void startLogicAnalyzerPins() {
-	initWave(PROTOCOL_WA_CHANNEL_1, 0);
-	initWave(PROTOCOL_WA_CHANNEL_2, 1);
-	initWave(PROTOCOL_WA_CHANNEL_3, 2);
-	initWave(PROTOCOL_WA_CHANNEL_4, 3);
+	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
+		initWave(index);
+	}
 }
 
 void stopLogicAnalyzerPins() {

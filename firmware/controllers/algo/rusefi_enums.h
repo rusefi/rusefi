@@ -36,6 +36,8 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
+// this header is part of firmware public API it gets consumed by code generator
+// and values are available to java todo: pull this adc_channel_mode_e enum into a not-public-api header
 typedef enum __attribute__ ((__packed__)) {
 	ADC_OFF = 0,
 	ADC_SLOW = 1,
@@ -43,6 +45,8 @@ typedef enum __attribute__ ((__packed__)) {
 
 } adc_channel_mode_e;
 
+// this header is part of firmware public API it gets consumed by code generator
+// and values are available to java todo: pull this trigger_value_e enum into a not-public-api header
 typedef enum {
 	TV_FALL = 0,
 	TV_RISE = 1
@@ -531,6 +535,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 } idle_state_e;
 
+// todo: should this be just a boolean?
 typedef enum __attribute__ ((__packed__)) {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
