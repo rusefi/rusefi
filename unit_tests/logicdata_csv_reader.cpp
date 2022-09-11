@@ -101,7 +101,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		}
 
 		efitick_t nowNt = getTimeNowNt();
-		trigger_value_e event = newVvtState[vvtIndex] ^ engineConfiguration->invertCamVVTSignal ? TV_RISE : TV_FALL;
+		TriggerValue event = newVvtState[vvtIndex] ^ engineConfiguration->invertCamVVTSignal ? TriggerValue::RISE : TriggerValue::FALL;
 		// todo: configurable selection of vvt mode - dual bank or dual cam single bank
 		int bankIndex = vvtIndex;
 		int camIndex = 0;

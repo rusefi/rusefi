@@ -339,7 +339,7 @@ bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const
 }
 
 static trigger_wheel_e eventIndex[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
-static trigger_value_e eventType[4] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE };
+static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, TriggerValue::FALL, TriggerValue::RISE };
 
 #if EFI_UNIT_TEST
 #define PRINT_INC_INDEX 		if (printTriggerTrace) {\
@@ -358,8 +358,8 @@ static trigger_value_e eventType[4] = { TV_FALL, TV_RISE, TV_FALL, TV_RISE };
 
 #define considerEventForGap() (!triggerShape.useOnlyPrimaryForSync || isPrimary)
 
-#define needToSkipFall(type) ((!triggerShape.gapBothDirections) && (( triggerShape.useRiseEdge) && (type != TV_RISE)))
-#define needToSkipRise(type) ((!triggerShape.gapBothDirections) && ((!triggerShape.useRiseEdge) && (type != TV_FALL)))
+#define needToSkipFall(type) ((!triggerShape.gapBothDirections) && (( triggerShape.useRiseEdge) && (type != TriggerValue::RISE)))
+#define needToSkipRise(type) ((!triggerShape.gapBothDirections) && ((!triggerShape.useRiseEdge) && (type != TriggerValue::FALL)))
 
 int TriggerDecoderBase::getCurrentIndex() const {
 	return currentCycle.current_index;
@@ -441,12 +441,12 @@ case SHAFT_SECONDARY_RISING:
   }
  return NULL;
 }
-const char *getTrigger_value_e(trigger_value_e value){
+const char *getTrigger_value_e(TriggerValue value){
 switch(value) {
-case TV_FALL:
-  return "TV_FALL";
-case TV_RISE:
-  return "TV_RISE";
+case TriggerValue::FALL:
+  return "TriggerValue::FALL";
+case TriggerValue::RISE:
+  return "TriggerValue::RISE";
   }
  return NULL;
 }
@@ -536,7 +536,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
 	trigger_wheel_e triggerWheel = eventIndex[signal];
-	trigger_value_e type = eventType[signal];
+	TriggerValue type = eventType[signal];
 
 	// Check that we didn't get the same edge twice in a row - that should be impossible
 	if (!useOnlyRisingEdgeForTrigger && prevSignal == signal) {
