@@ -234,16 +234,6 @@ void TriggerWaveform::addEventAngle(angle_t angle, TriggerWheel const channelInd
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
-const char *getTrigger_wheel_e(TriggerWheel value){
-switch(value) {
-case TriggerWheel::T_PRIMARY:
-  return "T_PRIMARY";
-case TriggerWheel::T_SECONDARY:
-  return "T_SECONDARY";
-  }
- return NULL;
-}
-
 void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
