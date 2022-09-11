@@ -546,14 +546,14 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 		trigger_event_e signal) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[4] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING };
-	static const trigger_wheel_e triggerIdx[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
+	static const TriggerWheel triggerIdx[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
 	// we process all trigger channels independently
-	trigger_wheel_e ti = triggerIdx[signal];
+	TriggerWheel ti = triggerIdx[signal];
 	// falling is opposite to rising, and vise versa
 	trigger_event_e os = opposite[signal];
 	
 	// todo: currently only primary channel is filtered, because there are some weird trigger types on other channels
-	if (ti != T_PRIMARY)
+	if (ti != TriggerWheel::T_PRIMARY)
 		return true;
 	
 	// update period accumulator: for rising signal, we update '0' accumulator, and for falling - '1'
@@ -569,7 +569,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 
 	// but first check if we're expecting a gap
 	bool isGapExpected = TRIGGER_WAVEFORM(isSynchronizationNeeded) && triggerState->getShaftSynchronized() &&
-			(triggerState->currentCycle.eventCount[ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
+			(triggerState->currentCycle.eventCount[(int)ti] + 1) == TRIGGER_WAVEFORM(getExpectedEventCount(ti));
 	
 	if (isGapExpected) {
 		// usually we need to extend the period for gaps, based on the trigger info
@@ -810,10 +810,9 @@ void triggerInfo(void) {
 		efiPrintf("trigger#2 event counters up=%d/down=%d", engine->triggerCentral.getHwEventCounter(2),
 				engine->triggerCentral.getHwEventCounter(3));
 	}
-	efiPrintf("expected cycle events %d/%d/%d",
-			TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-			TRIGGER_WAVEFORM(getExpectedEventCount(1)),
-			TRIGGER_WAVEFORM(getExpectedEventCount(2)));
+	efiPrintf("expected cycle events %d/%d",
+			TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
+			TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)));
 
 	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));
