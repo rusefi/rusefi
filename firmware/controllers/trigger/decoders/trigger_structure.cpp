@@ -810,3 +810,13 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 
 }
+
+const char *getTriggerWheel(TriggerWheel value){
+switch(value) {
+case TriggerWheel::T_PRIMARY:
+  return "T_PRIMARY";
+case TriggerWheel::T_SECONDARY:
+  return "T_SECONDARY";
+  }
+ return NULL;
+}
