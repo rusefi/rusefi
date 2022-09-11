@@ -451,7 +451,7 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
+	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
 		static efitimems_t mostRecentMs = 0;
 
 		efitimems_t msNow = getTimeNowMs();
