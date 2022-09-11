@@ -454,7 +454,7 @@ void Engine::efiWatchdog() {
 	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
 		static efitimems_t mostRecentMs = 0;
 
-		efitimems_t msNow = currentTimeMillis();
+		efitimems_t msNow = getTimeNowMs();
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			if (gapInMs > 500) {
