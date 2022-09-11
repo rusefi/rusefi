@@ -575,15 +575,6 @@ bool Engine::isMainRelayEnabled() const {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
-
-float Engine::getTimeIgnitionSeconds(void) const {
-	// return negative if the ignition is turned off
-	if (ignitionOnTimeNt == 0)
-		return -1;
-	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / US_PER_SECOND_F;
-	return numSeconds;
-}
-
 injection_mode_e getCurrentInjectionMode() {
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
