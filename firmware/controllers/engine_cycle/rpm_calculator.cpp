@@ -26,12 +26,7 @@
 #include "sensor_chart.h"
 #endif
 
-
-
-#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 // See RpmCalculator::checkIfSpinning()
 #ifndef NO_RPM_EVENTS_TIMEOUT_SECS
