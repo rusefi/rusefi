@@ -25,7 +25,7 @@ CanWrite::CanWrite()
 {
 }
 
-void CanWrite::PeriodicTask(efitime_t nowNt) {
+void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
 	CanCycle cycle(cycleCount);
