@@ -28,7 +28,7 @@ void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, i
 	scheduleByTimestamp("test", scheduling, getTimeNowUs() + delayUs, action);
 }
 
-int TestExecutor::executeAll(efitime_t now) {
+int TestExecutor::executeAll(efitick_t now) {
 	return schedulingQueue.executeAll(now);
 }
 

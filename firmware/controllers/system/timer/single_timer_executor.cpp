@@ -63,7 +63,7 @@ void SingleTimerExecutor::scheduleByTimestamp(const char *msg, scheduling_s *sch
 	scheduleByTimestampNt(msg, scheduling, US2NT(timeUs), action);
 }
 
-void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitime_t nt, action_s action) {
+void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS

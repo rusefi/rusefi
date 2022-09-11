@@ -170,7 +170,7 @@ static float getSignalOnTime(int index) {
 	return reader.last_wave_high_widthUs / 1000.0f;
 }
 
-static efitime_t getWaveOffset(int index) {
+static efitimeus_t getWaveOffset(int index) {
 	return readers[index].waveOffsetUs;
 }
 
@@ -211,7 +211,7 @@ static void reportWave(Logging *logging, int index) {
 	logging->appendFloat(periodMs, 2);
 	logging->appendPrintf("%s", LOG_DELIMITER);
 
-	uint32_t offsetUs = getWaveOffset(index);
+	efitimeus_t offsetUs = getWaveOffset(index);
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm != 0) {
 		float oneDegreeUs = getOneDegreeTimeUs(rpm);

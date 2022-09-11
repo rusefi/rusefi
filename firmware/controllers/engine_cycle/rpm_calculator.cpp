@@ -376,7 +376,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);
-	efitime_t delayedTime = edgeTimestamp + delayNt;
+	efitick_t delayedTime = edgeTimestamp + delayNt;
 
 	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
 

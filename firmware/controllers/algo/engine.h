@@ -280,7 +280,7 @@ public:
 	int startStopStateToggleCounter = 0;
 
 	/**
-	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 * this is needed by and checkShutdown()
 	 * todo: refactor to Timer?
 	 */
 	efitick_t ignitionOnTimeNt = 0;
@@ -377,13 +377,6 @@ public:
 	 * Needed by the stepper motor code to detect if it works.
 	 */
 	bool isMainRelayEnabled() const;
-
-	/**
-	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
-	 * This method returns the number of seconds since the ignition voltage is present.
-	 * The return value is float for more FSIO flexibility.
-	 */
-	float getTimeIgnitionSeconds(void) const;
 
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
