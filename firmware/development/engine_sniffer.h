@@ -13,6 +13,11 @@
 #if EFI_ENGINE_SNIFFER
 #include "datalogging.h"
 
+void addEngineSnifferTdcEvent(int rpm);
+void addEngineSnifferCrankEvent(int signalType, int index, int isUp);
+void addEngineSnifferVvtEvent(int vvtType, int isUp);
+void addEngineSnifferOutputPinEvent(int outputPinType, int isUp);
+
 /**
  * @brief	rusEfi console sniffer data buffer
  */

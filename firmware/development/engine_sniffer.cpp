@@ -34,6 +34,7 @@
 #include "status_loop.h"
 
 #define CHART_DELIMETER	'!'
+extern WaveChart waveChart;
 
 extern uint32_t maxLockedDuration;
 
@@ -140,6 +141,15 @@ void WaveChart::publish() {
 	if (engine->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
+}
+
+void addEngineSnifferTdcEvent(int rpm) {
+	static char rpmBuffer[_MAX_FILLER];
+	itoa10(rpmBuffer, rpm);
+#if EFI_ENGINE_SNIFFER
+	waveChart.startDataCollection();
+#endif
+	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 }
 
 /**
