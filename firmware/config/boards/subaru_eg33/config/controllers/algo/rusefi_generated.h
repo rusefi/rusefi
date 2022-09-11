@@ -45,7 +45,6 @@
 #define adc_channel_mode_e_ADC_FAST 2
 #define adc_channel_mode_e_ADC_OFF 0
 #define adc_channel_mode_e_ADC_SLOW 1
-#define adc_channel_mode_e_auto_enum 0="ADC_OFF",2="ADC_FAST",1="ADC_SLOW"
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 492
 #define afr_hwChannel_offset 508
@@ -1783,7 +1782,6 @@
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
-#define PROTOCOL_CRANK3 "t3"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
@@ -1895,7 +1893,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 2881379132
+#define SIGNATURE_HASH 2679803047
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2463,7 +2461,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.11.subaru_eg33_f7.2881379132"
+#define TS_SIGNATURE "rusEFI 2022.09.11.subaru_eg33_f7.2679803047"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

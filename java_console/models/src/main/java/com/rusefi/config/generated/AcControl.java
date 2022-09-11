@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Sep 10 05:09:22 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Sep 11 05:06:58 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -291,7 +291,6 @@ public class AcControl {
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
 	public static final String PROTOCOL_CRANK1 = "t1";
 	public static final String PROTOCOL_CRANK2 = "t2";
-	public static final String PROTOCOL_CRANK3 = "t3";
 	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
