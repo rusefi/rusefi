@@ -15,7 +15,7 @@
 #include "timer.h"
 
 const char *getTrigger_event_e(trigger_event_e value);
-const char *getTrigger_value_e(trigger_value_e value);
+const char *getTrigger_value_e(TriggerValue value);
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT

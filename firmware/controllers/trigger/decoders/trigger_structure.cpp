@@ -168,7 +168,7 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	return cycleStartAngle + positionWithinCycle;
 }
 
-void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
+void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
 #if EFI_UNIT_TEST
 //		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
@@ -212,7 +212,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	}
 
 // todo: move the following logic from below here
-	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TriggerValue::RISE) {
 //		expectedEventCount[channelIndex]++;
 //	}
 
@@ -221,20 +221,20 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 /**
  * Deprecated! many usages should be replaced by addEvent360
  */
-void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, TriggerValue const state) {
 	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
-void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
-void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, TriggerValue const state) {
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == T_SECONDARY) {
@@ -257,7 +257,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 	// todo: see calculateExpectedEventCounts
 	// related calculation should be done once trigger is initialized outside of trigger shape scope
-	if (!useOnlyRisingEdgeForTriggerTemp || state == TV_RISE) {
+	if (!useOnlyRisingEdgeForTriggerTemp || state == TriggerValue::RISE) {
 		expectedEventCount[channelIndex]++;
 	}
 
@@ -284,7 +284,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
-		isRiseEvent[0] = TV_RISE == state;
+		isRiseEvent[0] = TriggerValue::RISE == state;
 		wave.setSwitchTime(0, angle);
 		wave.setChannelState(channelIndex, /* channelIndex */ 0, /* value */ state);
 		return;
@@ -311,7 +311,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isRiseEvent[index] = TV_RISE == state;
+	isRiseEvent[index] = TriggerValue::RISE == state;
 
 	if ((unsigned)index != wave.phaseCount) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");

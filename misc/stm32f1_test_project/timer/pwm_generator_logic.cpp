@@ -316,8 +316,8 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->seq.setSwitchTime(0, dutyCycle);
 	state->seq.setSwitchTime(1, 1);
-	state->seq.setChannelState(0, 0, TV_FALL);
-	state->seq.setChannelState(0, 1, TV_RISE);
+	state->seq.setChannelState(0, 0, TriggerValue::FALL);
+	state->seq.setChannelState(0, 1, TriggerValue::RISE);
 
 	state->outputPins[0] = output;
 

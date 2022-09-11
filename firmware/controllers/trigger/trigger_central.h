@@ -149,7 +149,7 @@ private:
 void triggerInfo(void);
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index);
+void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
 
 void validateTriggerInputs();
 

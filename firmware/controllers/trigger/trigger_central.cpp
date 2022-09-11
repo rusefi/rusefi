@@ -234,7 +234,7 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	}
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
+void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	if (engine->directSelfStimulation || !engine->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
 		return;
@@ -243,7 +243,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
-	if (front == TV_RISE) {
+	if (front == TriggerValue::RISE) {
 		tc->vvtEventRiseCounter[index]++;
 	} else {
 		tc->vvtEventFallCounter[index]++;
@@ -269,18 +269,18 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// todo: migrate injector_pressure_type_e to class enum, maybe merge with FrontDirection?
-		addEngineSnifferVvtEvent(index, front == TV_RISE ? FrontDirection::UP : FrontDirection::DOWN);
+		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
 // todo: we need to start logging different VVT channels differently!!!
-		trigger_event_e tooth = front == TV_RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
+		trigger_event_e tooth = front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
 
 		LogTriggerTooth(tooth, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
 
-	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TV_FALL));
+	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TriggerValue::FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
 	if (!isVvtWithRealDecoder && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
@@ -302,7 +302,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			tc->vvtShape[camIndex],
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
-			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
 		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
 		tc->triggerState.vvtStateIndex = vvtDecoder.currentCycle.current_index;
@@ -623,8 +623,8 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 
-				hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
-				hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
+				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
 #if EFI_UNIT_TEST
 				// hack? feature? existing unit test relies on VVT phase available right away
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth

@@ -110,7 +110,7 @@ TEST(trigger, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
+		hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
 		eth.moveTimeForwardUs(MS2US(40));
 		eth.firePrimaryTriggerRise();
 	}
@@ -147,21 +147,21 @@ TEST(trigger, testNB2CamInput) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
 	// first gap - long
 
 	eth.moveTimeForwardUs(MS2US(130));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US( 30));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
 	// second gap - short
 
 	eth.moveTimeForwardUs(MS2US(10));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US(10));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
@@ -169,9 +169,9 @@ TEST(trigger, testNB2CamInput) {
 	// Third gap - long
 
 	eth.moveTimeForwardUs(MS2US(130));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US( 30));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
 	EXPECT_NEAR(290.5f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
