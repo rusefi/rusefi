@@ -139,17 +139,7 @@ case TsCalMode::Tps2SecondaryMin:
   }
  return NULL;
 }
-const char *getAdc_channel_mode_e(adc_channel_mode_e value){
-switch(value) {
-case ADC_FAST:
-  return "ADC_FAST";
-case ADC_OFF:
-  return "ADC_OFF";
-case ADC_SLOW:
-  return "ADC_SLOW";
-  }
- return NULL;
-}
+
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value){
 switch(value) {
 case MT_BOSCH_2_5:
@@ -665,28 +655,8 @@ case TL_SEMI_AUTO:
   }
  return NULL;
 }
-const char *getTrigger_event_e(trigger_event_e value){
-switch(value) {
-case SHAFT_PRIMARY_FALLING:
-  return "SHAFT_PRIMARY_FALLING";
-case SHAFT_PRIMARY_RISING:
-  return "SHAFT_PRIMARY_RISING";
-case SHAFT_SECONDARY_FALLING:
-  return "SHAFT_SECONDARY_FALLING";
-case SHAFT_SECONDARY_RISING:
-  return "SHAFT_SECONDARY_RISING";
-  }
- return NULL;
-}
-const char *getTrigger_value_e(trigger_value_e value){
-switch(value) {
-case TV_FALL:
-  return "TV_FALL";
-case TV_RISE:
-  return "TV_RISE";
-  }
- return NULL;
-}
+
+
 const char *getTrigger_wheel_e(trigger_wheel_e value){
 switch(value) {
 case T_NONE:

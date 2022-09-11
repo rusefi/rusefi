@@ -14,7 +14,8 @@
 #include "trigger_state_primary_generated.h"
 #include "timer.h"
 
-class TriggerDecoderBase;
+const char *getTrigger_event_e(trigger_event_e value);
+const char *getTrigger_value_e(trigger_value_e value);
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
@@ -252,8 +253,6 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-
-class Engine;
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,

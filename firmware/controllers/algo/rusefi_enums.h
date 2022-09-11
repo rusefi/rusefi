@@ -36,22 +36,6 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
-// this header is part of firmware public API it gets consumed by code generator
-// and values are available to java todo: pull this adc_channel_mode_e enum into a not-public-api header
-typedef enum __attribute__ ((__packed__)) {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
-
-} adc_channel_mode_e;
-
-// this header is part of firmware public API it gets consumed by code generator
-// and values are available to java todo: pull this trigger_value_e enum into a not-public-api header
-typedef enum {
-	TV_FALL = 0,
-	TV_RISE = 1
-} trigger_value_e;
-
 // see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
 typedef enum {
@@ -59,14 +43,6 @@ typedef enum {
 	T_SECONDARY = 1,
 	T_NONE = 15
 } trigger_wheel_e;
-
-// see also 'HW_EVENT_TYPES'
-typedef enum {
-	SHAFT_PRIMARY_FALLING = 0,
-	SHAFT_PRIMARY_RISING = 1,
-	SHAFT_SECONDARY_FALLING = 2,
-	SHAFT_SECONDARY_RISING = 3,
-} trigger_event_e;
 
 typedef enum  __attribute__ ((__packed__)) {
 	/**
