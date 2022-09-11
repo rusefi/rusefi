@@ -75,7 +75,7 @@ public:
 	 */
 	void incrementShaftSynchronizationCounter();
 
-	efitime_t getTotalEventCounter() const;
+	int64_t getTotalEventCounter() const;
 
 	expected<TriggerDecodeResult> decodeTriggerEvent(
 			const char *msg,
@@ -83,7 +83,7 @@ public:
 			TriggerStateListener* triggerStateListener,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_event_e signal,
-			const efitime_t nowUs);
+			const efitick_t nowNt);
 
 	void onShaftSynchronization(
 			bool wasSynchronized,

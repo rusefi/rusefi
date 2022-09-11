@@ -451,7 +451,7 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
-	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
+	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
 		static efitimems_t mostRecentMs = 0;
 
 		efitimems_t msNow = getTimeNowMs();
@@ -573,15 +573,6 @@ bool Engine::isMainRelayEnabled() const {
 	// if no main relay control, we assume it's always turned on
 	return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
-}
-
-
-float Engine::getTimeIgnitionSeconds(void) const {
-	// return negative if the ignition is turned off
-	if (ignitionOnTimeNt == 0)
-		return -1;
-	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / US_PER_SECOND_F;
-	return numSeconds;
 }
 
 injection_mode_e getCurrentInjectionMode() {

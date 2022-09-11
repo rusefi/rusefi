@@ -42,14 +42,6 @@ using time_t = uint32_t;
 using efitimesec_t = time_t;
 
 /**
- * integer time in milliseconds (1/1_000 of a second)
- * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
- * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
- * See getTimeNowUs()
- */
-using efitimems_t = uint32_t;
-
-/**
  * We use a signed type here so that subtraction result is a proper negative value.
  * A typical use-case negative result is when we do 'timeNow() - timeOfEvent' where timeOfEvent
  * is actually after timeNow() due to interrupt context switches
@@ -58,24 +50,30 @@ using efitimems_t = uint32_t;
  * See US2NT
  * See MS2US
  */
-using efitime_t = int64_t;
+
+/**
+ * platform-dependent tick since boot
+ * in case of stm32f4 that's 32-bit timer ticks (SCHEDULER_TIMER_DEVICE == TIM5) extended to 64 bits
+ */
+using efitick_t = int64_t;
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot
  */
-using efitimeus_t = efitime_t;
+using efitimeus_t = int64_t;
 
 /**
  * 64 bit time in milliseconds (1/1_000 of a second), since boot
  */
-using efitimems64_t = efitime_t;
-
+using efitimems64_t = int64_t;
 
 /**
- * platform-dependent tick since boot
- * in case of stm32f4 that's a CPU tick
+ * integer time in milliseconds (1/1_000 of a second)
+ * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
+ * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
+ * See getTimeNowUs()
  */
-using efitick_t = efitime_t;
+using efitimems_t = uint32_t;
 
 using angle_t = float;
 

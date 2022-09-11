@@ -25,7 +25,7 @@ extern bool verboseMode;
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
 
 #if EFI_UNIT_TEST
@@ -128,7 +128,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-expected<efitime_t> EventQueue::getNextEventTime(efitime_t nowX) const {
+expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 	if (head != NULL) {
 		if (head->momentX <= nowX) {
 			/**
@@ -157,7 +157,7 @@ uint32_t maxEventCallbackDuration = 0;
  * Invoke all pending actions prior to specified timestamp
  * @return number of executed actions
  */
-int EventQueue::executeAll(efitime_t now) {
+int EventQueue::executeAll(efitick_t now) {
 	ScopePerf perf(PE::EventQueueExecuteAll);
 
 	int executionCounter = 0;
@@ -175,7 +175,7 @@ int EventQueue::executeAll(efitime_t now) {
 	return executionCounter;
 }
 
-bool EventQueue::executeOne(efitime_t now) {
+bool EventQueue::executeOne(efitick_t now) {
 	// Read the head every time - a previously executed event could
 	// have inserted something new at the head
 	scheduling_s* current = head;
