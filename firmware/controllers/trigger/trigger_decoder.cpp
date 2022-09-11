@@ -338,7 +338,7 @@ bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const
 	return currentCycle.current_index < triggerShape.getSize();
 }
 
-static trigger_wheel_e eventIndex[4] = { T_PRIMARY, T_PRIMARY, T_SECONDARY, T_SECONDARY };
+static TriggerWheel eventIndex[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
 static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, TriggerValue::FALL, TriggerValue::RISE };
 
 #if EFI_UNIT_TEST
@@ -414,16 +414,16 @@ void PrimaryTriggerDecoder::onTriggerError() {
 
 void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
 	warning(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, "primary trigger error: not enough teeth between sync points: expected %d/%d got %d/%d",
-		TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-		TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)),
 		currentCycle.eventCount[0],
 		currentCycle.eventCount[1]);
 }
 
 void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
 	warning(CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
-		TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-		TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
+		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)),
 		currentCycle.eventCount[0],
 		currentCycle.eventCount[1]);
 }
@@ -463,14 +463,14 @@ bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerSha
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	bool isDecodingError = false;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount(i));
+		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
 	}
 
 #if EFI_UNIT_TEST
 	printf("validateEventCounters: isDecodingError=%d\n", isDecodingError);
 	if (isDecodingError) {
 		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-			printf("count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount(i));
+			printf("count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount((TriggerWheel)i));
 		}
 	}
 #endif /* EFI_UNIT_TEST */
@@ -535,7 +535,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
-	trigger_wheel_e triggerWheel = eventIndex[signal];
+	TriggerWheel triggerWheel = eventIndex[signal];
 	TriggerValue type = eventType[signal];
 
 	// Check that we didn't get the same edge twice in a row - that should be impossible
@@ -545,7 +545,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 	prevSignal = signal;
 
-	currentCycle.eventCount[triggerWheel]++;
+	currentCycle.eventCount[(int)triggerWheel]++;
 
 	if (toothed_previous_time > nowNt) {
 		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
@@ -560,7 +560,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	toothDurations[0] =
 			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
-	bool isPrimary = triggerWheel == T_PRIMARY;
+	bool isPrimary = triggerWheel == TriggerWheel::T_PRIMARY;
 
 	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
 #if EFI_UNIT_TEST

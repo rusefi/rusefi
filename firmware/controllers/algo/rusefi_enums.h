@@ -38,10 +38,10 @@ typedef enum __attribute__ ((__packed__))
 
 // see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
-typedef enum {
+enum class TriggerWheel : uint8_t {
 	T_PRIMARY = 0,
 	T_SECONDARY = 1,
-} trigger_wheel_e;
+};
 
 typedef enum  __attribute__ ((__packed__)) {
 	/**

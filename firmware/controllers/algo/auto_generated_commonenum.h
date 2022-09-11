@@ -59,7 +59,7 @@ const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
 
-const char *getTrigger_wheel_e(trigger_wheel_e value);
+const char *getTrigger_wheel_e(TriggerWheel value);
 const char *getUart_device_e(uart_device_e value);
 const char *getVe_override_e(ve_override_e value);
 const char *getVvt_mode_e(vvt_mode_e value);
