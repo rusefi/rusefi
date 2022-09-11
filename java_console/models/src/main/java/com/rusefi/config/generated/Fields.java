@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 11 06:32:25 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 11 06:42:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2241,7 +2241,6 @@ public class Fields {
 	public static final int trigger_type_e_UNUSED_21 = 21;
 	public static final int trigger_type_e_UNUSED_34 = 34;
 	public static final int trigger_type_offset = 468;
-	public static final int trigger_wheel_e_T_NONE = 15;
 	public static final int trigger_wheel_e_T_PRIMARY = 0;
 	public static final int trigger_wheel_e_T_SECONDARY = 1;
 	public static final int triggerCompCenterVolt_offset = 2536;
