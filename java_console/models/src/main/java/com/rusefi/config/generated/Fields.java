@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 11 05:07:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 11 06:32:25 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -35,9 +35,6 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_ERROR = 50;
 	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 17;
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
-	public static final int adc_channel_mode_e_ADC_FAST = 2;
-	public static final int adc_channel_mode_e_ADC_OFF = 0;
-	public static final int adc_channel_mode_e_ADC_SLOW = 1;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 492;
 	public static final int afr_hwChannel_offset = 508;
@@ -2156,10 +2153,6 @@ public class Fields {
 	public static final int trigger_config_s_size = 12;
 	public static final int trigger_customSkippedToothCount_offset = 476;
 	public static final int trigger_customTotalToothCount_offset = 472;
-	public static final int trigger_event_e_SHAFT_PRIMARY_FALLING = 0;
-	public static final int trigger_event_e_SHAFT_PRIMARY_RISING = 1;
-	public static final int trigger_event_e_SHAFT_SECONDARY_FALLING = 2;
-	public static final int trigger_event_e_SHAFT_SECONDARY_RISING = 3;
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
 	public static final String TRIGGER_GAP_TO = "gapTo";
 	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
@@ -2248,8 +2241,6 @@ public class Fields {
 	public static final int trigger_type_e_UNUSED_21 = 21;
 	public static final int trigger_type_e_UNUSED_34 = 34;
 	public static final int trigger_type_offset = 468;
-	public static final int trigger_value_e_TV_FALL = 0;
-	public static final int trigger_value_e_TV_RISE = 1;
 	public static final int trigger_wheel_e_T_NONE = 15;
 	public static final int trigger_wheel_e_T_PRIMARY = 0;
 	public static final int trigger_wheel_e_T_SECONDARY = 1;

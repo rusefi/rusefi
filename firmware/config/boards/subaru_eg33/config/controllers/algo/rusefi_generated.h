@@ -42,9 +42,6 @@
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_enum 0="NONE",7="A02 - VBat",15="A03 - Coolant t Ain",10="A04 - EGR t Ain",16="A06 - Oxyg 1 Ain",9="A06 - Oxyg 2 Ain",12="A18 - AUX0 Ain",1="AUX0_18 - MAP Ain",6="AUX0_19 - IAT Ain",13="B02 - TPS Ain",4="B05 - MAF Ain"
 #define adc_channel_e_fullenum "NONE","AUX0_18 - MAP Ain","INVALID","INVALID","B05 - MAF Ain","INVALID","AUX0_19 - IAT Ain","A02 - VBat","INVALID","A06 - Oxyg 2 Ain","A04 - EGR t Ain","INVALID","A18 - AUX0 Ain","B02 - TPS Ain","INVALID","A03 - Coolant t Ain","A06 - Oxyg 1 Ain"
-#define adc_channel_mode_e_ADC_FAST 2
-#define adc_channel_mode_e_ADC_OFF 0
-#define adc_channel_mode_e_ADC_SLOW 1
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 492
 #define afr_hwChannel_offset 508
@@ -2186,10 +2183,6 @@
 #define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71 || trigger_type == 74
 #define trigger_customSkippedToothCount_offset 476
 #define trigger_customTotalToothCount_offset 472
-#define trigger_event_e_SHAFT_PRIMARY_FALLING 0
-#define trigger_event_e_SHAFT_PRIMARY_RISING 1
-#define trigger_event_e_SHAFT_SECONDARY_FALLING 2
-#define trigger_event_e_SHAFT_SECONDARY_RISING 3
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_GAPS_COUNT "gapsCount"
@@ -2282,8 +2275,6 @@
 #define trigger_type_offset 468
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 12 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
-#define trigger_value_e_TV_FALL 0
-#define trigger_value_e_TV_RISE 1
 #define trigger_wheel_e_T_NONE 15
 #define trigger_wheel_e_T_PRIMARY 0
 #define trigger_wheel_e_T_SECONDARY 1
