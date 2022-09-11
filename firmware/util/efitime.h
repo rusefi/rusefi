@@ -103,7 +103,7 @@ efitimems_t getTimeNowMs();
 /**
  * @brief   Current system time in seconds.
  */
-efitimesec_t getTimeNowSeconds();
+efitimesec_t getTimeNowS();
 
 // Get a monotonically increasing (but wrapping) 32-bit timer value
 uint32_t getTimeNowLowerNt();

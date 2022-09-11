@@ -342,7 +342,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowS());
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);

@@ -263,7 +263,7 @@ static int rtcStartTime;
 #include "chrtclib.h"
 
 static void timeInfo() {
-	efiPrintf("chTimeNow as seconds = %d", getTimeNowSeconds());
+	efiPrintf("chTimeNow as seconds = %d", getTimeNowS());
 	efiPrintf("hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
 
 #if EFI_RTC

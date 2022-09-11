@@ -158,7 +158,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
-			getTimeNowSeconds());
+			getTimeNowS());
 }
 
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)
@@ -270,7 +270,7 @@ void updateDevConsoleState(void) {
 	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
 
-	systime_t nowSeconds = getTimeNowSeconds();
+	systime_t nowSeconds = getTimeNowS();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int currentCkpEventCounter = engine->triggerCentral.triggerState.getTotalEventCounter();
@@ -761,7 +761,7 @@ void updateTunerStudioState() {
 #endif
 
 	// 224
-	efitimesec_t timeSeconds = getTimeNowSeconds();
+	efitimesec_t timeSeconds = getTimeNowS();
 	tsOutputChannels->seconds = timeSeconds;
 
 	// 252
