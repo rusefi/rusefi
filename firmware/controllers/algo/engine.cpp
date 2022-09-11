@@ -236,7 +236,7 @@ void Engine::periodicSlowCallback() {
 
 #if ANALOG_HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
-	efitimesec_t secondsNow = getTimeNowSeconds();
+	efitimesec_t secondsNow = getTimeNowS();
 
 #if ! HW_CHECK_ALWAYS_STIMULATE
 	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
@@ -454,7 +454,7 @@ void Engine::efiWatchdog() {
 	if (engine->configBurnTimer.hasElapsedSec(5) && engineConfiguration->tempBooleanForVerySpecialLogic) {
 		static efitimems_t mostRecentMs = 0;
 
-		efitimems_t msNow = currentTimeMillis();
+		efitimems_t msNow = getTimeNowMs();
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			if (gapInMs > 500) {

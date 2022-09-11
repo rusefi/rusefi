@@ -46,7 +46,7 @@ static void printGpsInfo() {
 
 	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
-	float sec = currentTimeMillis() / 1000.0;
+	float sec = getTimeNowMs() / 1000.0;
 	efiPrintf("communication speed: %.2f", gpsMesagesCount / sec);
 
 	print("GPS latitude = %.2f\r\n", GPSdata.latitude);

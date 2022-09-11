@@ -641,7 +641,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 								prefix,
 								triggerConfiguration.PrintPrefix,
 								(int)Sensor::getOrZero(SensorType::Rpm),
-							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
+							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowS(),
 							currentCycle.current_index,
 							i,
 							gapOk ? "Y" : "n",

@@ -10,7 +10,7 @@
 
 efitimems_t mockTimeMs = 0;
 
-efitimems_t currentTimeMillis(void) {
+efitimems_t getTimeNowMs(void) {
 	return mockTimeMs;
 }
 

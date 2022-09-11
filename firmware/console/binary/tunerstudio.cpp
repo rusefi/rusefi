@@ -230,7 +230,7 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_
 		return;
 	}
 
-	efitimems_t nowMs = currentTimeMillis();
+	efitimems_t nowMs = getTimeNowMs();
 	if (nowMs - previousWriteReportMs > 5) {
 		previousWriteReportMs = nowMs;
 		efiPrintf("offset %d: value=%d", offset, value);
@@ -294,7 +294,7 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
  * 'Burn' command is a command to commit the changes
  */
 static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
-	efitimems_t nowMs = currentTimeMillis();
+	efitimems_t nowMs = getTimeNowMs();
 	tsState.burnCommandCounter++;
 
 	efiPrintf("got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
@@ -305,7 +305,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mod
 	}
 
 	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
-	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
+	efiPrintf("BURN in %dms", getTimeNowMs() - nowMs);
 }
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
@@ -342,7 +342,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowS());
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
