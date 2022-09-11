@@ -76,6 +76,13 @@ private:
 };
 
 /**
+ * Get a monotonically increasing (but wrapping) 32-bit timer value
+ * Implemented at port level, based on timer or CPU tick counter
+ * Main source of EFI clock, SW-extended to 64bits
+ */
+uint32_t getTimeNowLowerNt();
+
+/**
  * 64-bit counter CPU/timer cycles since MCU reset
  *
  * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
@@ -104,9 +111,6 @@ efitimems_t getTimeNowMs();
  * @brief   Current system time in seconds.
  */
 efitimesec_t getTimeNowS();
-
-// Get a monotonically increasing (but wrapping) 32-bit timer value
-uint32_t getTimeNowLowerNt();
 
 #endif /* __cplusplus */
 
