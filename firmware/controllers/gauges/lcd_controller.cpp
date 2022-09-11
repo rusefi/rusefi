@@ -143,7 +143,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_RPM:
 	{
-		int seconds = minI(9999, getTimeNowSeconds());
+		int seconds = minI(9999, getTimeNowS());
 		lcdPrintf("RPM %d %d ", (int)Sensor::getOrZero(SensorType::Rpm), seconds);
 	}
 #if EFI_FILE_LOGGING
@@ -326,7 +326,7 @@ void updateHD44780lcd(void) {
 //		return;
 //	}
 //
-//	int index = (getTimeNowSeconds() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
+//	int index = (getTimeNowS() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
 //
 //	prepareCurrentSecondLine(engine, index);
 //	buffer[LCD_WIDTH] = 0;

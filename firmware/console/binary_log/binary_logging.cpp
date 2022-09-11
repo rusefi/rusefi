@@ -87,7 +87,7 @@ size_t writeBlock(char* buffer) {
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
 
-	packedTime = currentTimeMillis() * 1.0 / TIME_PRECISION;
+	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
 	// Offset 4 = field data
 	const char* dataBlockStart = buffer + 4;

@@ -106,7 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
-				engine->getGlobalConfigurationVersion(), currentTimeMillis());
+				engine->getGlobalConfigurationVersion(), getTimeNowMs());
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;

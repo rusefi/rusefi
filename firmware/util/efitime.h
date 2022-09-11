@@ -12,6 +12,9 @@
 #include "efifeatures.h"
 #include "rusefi_types.h"
 
+// for US_TO_NT_MULTIPLIER which is port-specific
+#include "port_mpu_util.h"
+
 #define MS_PER_SECOND 1000
 #define US_PER_SECOND 1000000
 #define US_PER_SECOND_F 1000000.0
@@ -30,7 +33,6 @@
 // If converting a floating point time period, use this macro to avoid
 // the expensive conversions from int64 <-> float
 #define USF2NT(us_float) ((us_float) * US_TO_NT_MULTIPLIER)
-
 #define USF2MS(us_float) (0.001f * (us_float))
 
 // And back
@@ -73,6 +75,21 @@ private:
 	volatile uint32_t m_upper = 0;
 };
 
+/**
+ * Get a monotonically increasing (but wrapping) 32-bit timer value
+ * Implemented at port level, based on timer or CPU tick counter
+ * Main source of EFI clock, SW-extended to 64bits
+ */
+uint32_t getTimeNowLowerNt();
+
+/**
+ * 64-bit counter CPU/timer cycles since MCU reset
+ *
+ * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
+ * Lower 32 bits are enough if all we need is to measure relatively short time durations
+ * (BTW 2^32 cpu cycles at 168MHz is 25.59 seconds)
+ */
+efitick_t getTimeNowNt();
 
 /**
  * 64-bit counter of microseconds (1/1 000 000 of a second) since MCU reset
@@ -86,26 +103,14 @@ private:
 efitimeus_t getTimeNowUs();
 
 /**
- * 64-bit counter CPU cycles since MCU reset
- *
- * See getTimeNowLowerNt for a quicker version which returns only lower 32 bits
- * Lower 32 bits are enough if all we need is to measure relatively short time durations
- * (BTW 2^32 cpu cycles at 168MHz is 25.59 seconds)
- */
-efitick_t getTimeNowNt();
-
-/**
  * @brief   Returns the number of milliseconds since the board initialization.
  */
-efitimems_t currentTimeMillis();
+efitimems_t getTimeNowMs();
 
 /**
  * @brief   Current system time in seconds.
  */
-efitimesec_t getTimeNowSeconds();
-
-// Get a monotonically increasing (but wrapping) 32-bit timer value
-uint32_t getTimeNowLowerNt();
+efitimesec_t getTimeNowS();
 
 #endif /* __cplusplus */
 
