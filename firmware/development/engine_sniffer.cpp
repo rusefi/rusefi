@@ -28,6 +28,9 @@
 
 #include "engine_sniffer.h"
 
+// a bit weird because of conditional compilation
+static char shaft_signal_msg_index[15];
+
 #if EFI_ENGINE_SNIFFER
 
 #include "eficonsole.h"
@@ -143,40 +146,6 @@ void WaveChart::publish() {
 	}
 }
 
-void addEngineSnifferTdcEvent(int rpm) {
-	static char rpmBuffer[_MAX_FILLER];
-	itoa10(rpmBuffer, rpm);
-#if EFI_ENGINE_SNIFFER
-	waveChart.startDataCollection();
-#endif
-	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
-}
-
-void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirection) {
-	extern const char *laNames[];
-	const char *name = laNames[laIndex];
-
-	addEngineSnifferEvent(name, frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
-}
-
-static char shaft_signal_msg_index[15];
-void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection) {
-	static const char *crankName[2] = { PROTOCOL_CRANK1, PROTOCOL_CRANK2 };
-
-	shaft_signal_msg_index[0] = frontDirection == FrontDirection::UP ? 'u' : 'd';
-	// shaft_signal_msg_index[1] is assigned once and forever in the init method below
-	itoa10(&shaft_signal_msg_index[2], triggerEventIndex);
-
-	addEngineSnifferEvent(crankName[wheelIndex], (char* ) shaft_signal_msg_index);
-}
-
-void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection) {
-	extern const char *vvtNames[];
-	const char *vvtName = vvtNames[vvtIndex];
-
-	addEngineSnifferEvent(vvtName, frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
-}
-
 /**
  * @brief	Register an event for digital sniffer
  */
@@ -272,3 +241,36 @@ void initWaveChart(WaveChart *chart) {
 }
 
 #endif /* EFI_ENGINE_SNIFFER */
+
+void addEngineSnifferTdcEvent(int rpm) {
+	static char rpmBuffer[_MAX_FILLER];
+	itoa10(rpmBuffer, rpm);
+#if EFI_ENGINE_SNIFFER
+	waveChart.startDataCollection();
+#endif
+	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+}
+
+void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirection) {
+	extern const char *laNames[];
+	const char *name = laNames[laIndex];
+
+	addEngineSnifferEvent(name, frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+}
+
+void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection) {
+	static const char *crankName[2] = { PROTOCOL_CRANK1, PROTOCOL_CRANK2 };
+
+	shaft_signal_msg_index[0] = frontDirection == FrontDirection::UP ? 'u' : 'd';
+	// shaft_signal_msg_index[1] is assigned once and forever in the init method below
+	itoa10(&shaft_signal_msg_index[2], triggerEventIndex);
+
+	addEngineSnifferEvent(crankName[wheelIndex], (char* ) shaft_signal_msg_index);
+}
+
+void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection) {
+	extern const char *vvtNames[];
+	const char *vvtName = vvtNames[vvtIndex];
+
+	addEngineSnifferEvent(vvtName, frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+}

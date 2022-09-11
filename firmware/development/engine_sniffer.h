@@ -10,7 +10,6 @@
 
 #include "rusefi_enums.h"
 
-#if EFI_ENGINE_SNIFFER
 #include "datalogging.h"
 
 enum class FrontDirection : uint8_t {
@@ -27,6 +26,8 @@ void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirecti
 void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection);
 void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection);
 void addEngineSnifferOutputPinEvent(int outputPinType, int isUp);
+
+#if EFI_ENGINE_SNIFFER
 
 /**
  * @brief	rusEfi console sniffer data buffer

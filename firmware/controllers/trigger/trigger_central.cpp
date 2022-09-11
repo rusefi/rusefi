@@ -8,7 +8,6 @@
 
 #include "pch.h"
 
-
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
@@ -25,13 +24,13 @@
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
 #include "status_loop.h"
+#include "engine_sniffer.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif /* EFI_TUNER_STUDIO */
 
 #if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
@@ -206,9 +205,6 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 }
 
 static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
-	extern const char *vvtNames[];
-	const char *vvtName = vvtNames[index];
-
 	if (isImportantFront && engineConfiguration->camInputsDebug[index] != Gpio::Unassigned) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
@@ -224,16 +220,16 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+			addEngineSnifferVvtEvent(index, FrontDirection::UP);
+			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
 		} else {
 #if EFI_TOOTH_LOGGER
 			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
 			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
+			addEngineSnifferVvtEvent(index, FrontDirection::UP);
 		}
 	}
 }
@@ -252,8 +248,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	} else {
 		tc->vvtEventFallCounter[index]++;
 	}
-	extern const char *vvtNames[];
-	const char *vvtName = vvtNames[index];
 	if (engineConfiguration->vvtMode[camIndex] == VVT_INACTIVE) {
 		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
@@ -274,7 +268,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 #endif // VR_HW_CHECK_MODE
 
 	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
-		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+		// todo: migrate injector_pressure_type_e to class enum, maybe merge with FrontDirection?
+		addEngineSnifferVvtEvent(index, front == TV_RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
 // todo: we need to start logging different VVT channels differently!!!
@@ -520,26 +515,22 @@ void TriggerCentral::resetCounters() {
 	memset(hwEventCounters, 0, sizeof(hwEventCounters));
 }
 
-static char shaft_signal_msg_index[15];
+static const bool isUpEvent[4] = { false, true, false, true };
+static const int wheelIndeces[4] = { 0, 0, 1, 1};
 
-static const bool isUpEvent[6] = { false, true, false, true, false, true };
-static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
-
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex) {
 	if (!engine->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineSnifferEnabled
 	}
 
+	int wheelIndex = wheelIndeces[(int )ckpSignalType];
 
-	itoa10(&shaft_signal_msg_index[2], index);
 	bool isUp = isUpEvent[(int) ckpSignalType];
-	shaft_signal_msg_index[0] = isUp ? 'u' : 'd';
 
-	addEngineSnifferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+	addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::UP : FrontDirection::DOWN);
 	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
 		// let's add the opposite event right away
-		shaft_signal_msg_index[0] = isUp ? 'd' : 'u';
-		addEngineSnifferEvent(eventId[(int )ckpSignalType], (char* ) shaft_signal_msg_index);
+		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::DOWN : FrontDirection::UP);
 	}
 }
 
@@ -972,7 +963,6 @@ void validateTriggerInputs() {
 }
 
 void initTriggerCentral() {
-	strcpy((char*) shaft_signal_msg_index, "x_");
 
 #if EFI_ENGINE_SNIFFER
 	initWaveChart(&waveChart);
