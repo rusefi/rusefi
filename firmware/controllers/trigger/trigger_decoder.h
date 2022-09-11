@@ -144,8 +144,8 @@ protected:
 	//  - Saw a sync point but the wrong number of events in the cycle
 	virtual void onTriggerError() { }
 
-	virtual void onNotEnoughTeeth(int actual, int expected) { }
-	virtual void onTooManyTeeth(int actual, int expected) { }
+	virtual void onNotEnoughTeeth(int, int) { }
+	virtual void onTooManyTeeth(int, int) { }
 
 private:
 	void resetCurrentCycleState();
