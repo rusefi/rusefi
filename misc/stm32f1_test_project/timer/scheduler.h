@@ -47,7 +47,7 @@ struct scheduling_s {
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
-	volatile efitime_t momentX = 0;
+	volatile efitick_t momentX = 0;
 
 	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.
@@ -63,7 +63,7 @@ struct ExecutorInterface {
 	 * see also scheduleByAngle
 	 */
 	virtual void scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
-	virtual void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitime_t timeUs, action_s action) = 0;
+	virtual void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) = 0;
 	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
 	virtual void cancel(scheduling_s* scheduling) = 0;
 };
