@@ -696,8 +696,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	Gpio mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
-
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
 	adc_channel_e tps2_2AdcChannel;Second throttle body, second sensor.
@@ -1982,7 +1980,6 @@ end_struct
 ! Engine Sniffer channel names
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
-#define PROTOCOL_CRANK3 "t3"
 
 #define PROTOCOL_VVT1_NAME "VVT1"
 #define PROTOCOL_VVT2_NAME "VVT2"
