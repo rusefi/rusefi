@@ -428,6 +428,29 @@ void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
 		currentCycle.eventCount[1]);
 }
 
+const char *getTrigger_event_e(trigger_event_e value){
+switch(value) {
+case SHAFT_PRIMARY_FALLING:
+  return "SHAFT_PRIMARY_FALLING";
+case SHAFT_PRIMARY_RISING:
+  return "SHAFT_PRIMARY_RISING";
+case SHAFT_SECONDARY_FALLING:
+  return "SHAFT_SECONDARY_FALLING";
+case SHAFT_SECONDARY_RISING:
+  return "SHAFT_SECONDARY_RISING";
+  }
+ return NULL;
+}
+const char *getTrigger_value_e(trigger_value_e value){
+switch(value) {
+case TV_FALL:
+  return "TV_FALL";
+case TV_RISE:
+  return "TV_RISE";
+  }
+ return NULL;
+}
+
 void VvtTriggerDecoder::onNotEnoughTeeth(int actual, int expected) {
 	warning(CUSTOM_CAM_NOT_ENOUGH_TEETH, "cam %s trigger error: not enough teeth between sync points: actual %d expected %d", name, actual, expected);
 }

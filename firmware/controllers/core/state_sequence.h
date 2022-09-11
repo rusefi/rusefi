@@ -11,6 +11,19 @@
 #include "rusefi_enums.h"
 #include "expected.h"
 
+typedef enum {
+	TV_FALL = 0,
+	TV_RISE = 1
+} trigger_value_e;
+
+// see also 'HW_EVENT_TYPES'
+typedef enum {
+	SHAFT_PRIMARY_FALLING = 0,
+	SHAFT_PRIMARY_RISING = 1,
+	SHAFT_SECONDARY_FALLING = 2,
+	SHAFT_SECONDARY_RISING = 3,
+} trigger_event_e;
+
 /**
  * This layer has two primary usages:
  * 1) 'simple' PWM generation is used to produce actuator square control wave

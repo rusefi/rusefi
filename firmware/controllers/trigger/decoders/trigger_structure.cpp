@@ -267,9 +267,9 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
-			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %d: new=%.2f/%f and prev=%.2f/%f, size=%d",
+			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
 					getTrigger_wheel_e(channelIndex),
-					state,
+					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
 					wave.phaseCount);
