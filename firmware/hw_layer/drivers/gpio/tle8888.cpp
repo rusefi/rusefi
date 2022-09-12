@@ -164,13 +164,6 @@ const uint8_t tle8888_fwd_responses[16][4] = {
 /* Driver local variables and types.										*/
 /*==========================================================================*/
 
-// todo: much of state is currently global while technically it should be per-chip. but we
-// are lazy and in reality it's usually one chip per board
-
-static int lowVoltageResetCounter = 0;
-
-float vBattForTle8888 = 0;
-
 /* Driver private data */
 struct Tle8888 : public GpioChip {
 	int init() override;
@@ -299,7 +292,7 @@ void tle8888PostState() {
 	engine->outputChannels.debugIntField5 = chip->init_cnt;
 
 	engine->outputChannels.debugFloatField3 = chip->OpStat[1];
-	engine->outputChannels.debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000 + lowVoltageResetCounter;
+	engine->outputChannels.debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000;
 	engine->outputChannels.debugFloatField5 = 0;
 	engine->outputChannels.debugFloatField6 = 0;
 }
@@ -841,19 +834,6 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 
 		/* default polling interval */
 		poll_interval = TIME_MS2I(DIAG_PERIOD_MS);
-
-#if 0
-		if (vBattForTle8888 < LOW_VBATT) {
-			// we assume TLE8888 is down and we should not bother with SPI communication
-			if (!needInitialSpi) {
-				needInitialSpi = true;
-				lowVoltageResetCounter++;
-			}
-			continue; // we should not bother communicating with TLE8888 until we have +12
-		}
-#endif
-		// todo: super-lazy implementation with only first chip!
-		//watchdogLogic(&chips[0]);
 
 		if ((chip->cfg == NULL) ||
 			(chip->drv_state == TLE8888_DISABLED) ||
