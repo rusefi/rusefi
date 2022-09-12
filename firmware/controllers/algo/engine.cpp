@@ -260,11 +260,6 @@ void Engine::periodicSlowCallback() {
 #endif // ANALOG_HW_CHECK_MODE
 }
 
-
-#if (BOARD_TLE8888_COUNT > 0)
-extern float vBattForTle8888;
-#endif /* BOARD_TLE8888_COUNT */
-
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  * See also periodicFastCallback
@@ -278,12 +273,6 @@ void Engine::updateSlowSensors() {
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
-
-#if (BOARD_TLE8888_COUNT > 0)
-	// nasty value injection into C driver which would not be able to access Engine class
-	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
-#endif /* BOARD_TLE8888_COUNT */
-
 #endif
 }
 
