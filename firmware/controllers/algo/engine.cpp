@@ -451,8 +451,8 @@ void Engine::efiWatchdog() {
 		return;
 	}
 
+	static efitimems_t mostRecentMs = 0;
 	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
-		static efitimems_t mostRecentMs = 0;
 
 		efitimems_t msNow = getTimeNowMs();
 		if (mostRecentMs != 0) {
@@ -462,8 +462,8 @@ void Engine::efiWatchdog() {
 					msNow, mostRecentMs, gapInMs);
 			}
 		}
-		mostRecentMs = msNow;
 	}
+	mostRecentMs = msNow;
 
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
