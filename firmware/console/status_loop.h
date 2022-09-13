@@ -14,5 +14,5 @@ void startStatusThreads(void);
 void initStatusLoop(void);
 
 struct Writer;
-void writeLogLine(Writer& buffer);
+
 void printOverallStatus();

@@ -8,6 +8,7 @@
 #include "binary_logging.h"
 #include "log_field.h"
 #include "buffered_writer.h"
+#include "tunerstudio.h"
 
 #define TIME_PRECISION 1000
 
@@ -28,9 +29,35 @@ static constexpr uint16_t computeFieldsRecordLength() {
 	return recLength;
 }
 
+#if EFI_FILE_LOGGING
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static NO_CACHE char sdLogBuffer[250];
+static uint64_t binaryLogCount = 0;
+
+extern bool main_loop_started;
+
+void writeSdLogLine(Writer& buffer) {
+	if (!main_loop_started)
+		return;
+
+	if (binaryLogCount == 0) {
+		writeFileHeader(buffer);
+	} else {
+		updateTunerStudioState();
+		size_t length = writeBlock(sdLogBuffer);
+		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
+		buffer.write(sdLogBuffer, length);
+	}
+
+	binaryLogCount++;
+}
+
+#endif /* EFI_FILE_LOGGING */
+
+
 static constexpr uint16_t recordLength = computeFieldsRecordLength();
 
-void writeHeader(Writer& outBuffer) {
+void writeFileHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
