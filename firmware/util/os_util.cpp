@@ -25,18 +25,9 @@
 #include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
-	syssts_t sts = chSysGetStatusAndLockX();
-
-	/**
-	 * todo: this could be simplified once we migrate to ChibiOS 3.0
-	 * See http://www.chibios.org/dokuwiki/doku.php?id=chibios:howtos:porting_from_2_to_3
-	 */
-	if (chVTIsArmedI(vtp)) {
-		chVTResetI(vtp);
-	}
+	chibios_rt::CriticalSectionLocker csl;
 
 	chVTSetI(vtp, time, vtfunc, par);
-	chSysRestoreStatusX(sts);
 }
 
 #endif /* EFI_UNIT_TEST */
