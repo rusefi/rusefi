@@ -69,7 +69,7 @@ endif
 
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
-  USE_COPT = -std=gnu99
+  USE_COPT = -std=gnu17
 endif
 
 # C++ specific options here (added to USE_OPT).
