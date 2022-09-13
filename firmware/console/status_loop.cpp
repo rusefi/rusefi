@@ -804,7 +804,7 @@ void updateTunerStudioState() {
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
-		tsOutputChannels->maxLockedDuration = maxLockedDuration;
+		tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
 		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
