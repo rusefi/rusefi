@@ -218,6 +218,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useCicPidForIdle;
 	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
 		return engineConfiguration->useTLE8888_cranking_hack;
+	if (strEqualCaseInsensitive(name, "kickStartCranking"))
+		return engineConfiguration->kickStartCranking;
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
 		return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
 	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
@@ -1010,6 +1012,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
 	{
 		engineConfiguration->useTLE8888_cranking_hack = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "kickStartCranking"))
+	{
+		engineConfiguration->kickStartCranking = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))

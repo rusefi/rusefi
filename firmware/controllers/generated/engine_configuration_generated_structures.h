@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 10 05:10:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 13 06:33:14 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -761,7 +761,7 @@ struct engine_configuration_s {
 	bool useTLE8888_cranking_hack : 1 {};
 	/**
 	offset 120 bit 18 */
-	bool unused120b18 : 1 {};
+	bool kickStartCranking : 1 {};
 	/**
 	 * This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 	offset 120 bit 19 */
@@ -4992,4 +4992,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 21296);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 10 05:10:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 13 06:33:14 UTC 2022

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 13 00:18:05 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Sep 13 06:33:14 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1520,6 +1520,7 @@ public class Fields {
 	public static final int joystickCenterPin_offset = 944;
 	public static final int joystickCPin_offset = 950;
 	public static final int joystickDPin_offset = 952;
+	public static final int kickStartCranking_offset = 120;
 	public static final int knockBandCustom_offset = 360;
 	public static final int knockBankCyl10_offset = 960;
 	public static final int knockBankCyl11_offset = 960;
@@ -1873,7 +1874,7 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 527076642;
+	public static final int SIGNATURE_HASH = 836482369;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2368,7 +2369,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.13.all.527076642";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.13.all.836482369";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1252;
@@ -2405,7 +2406,6 @@ public class Fields {
 	public static final int unused1128_offset = 1628;
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
-	public static final int unused120b18_offset = 120;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3123;
 	public static final int unused962_offset = 1040;
@@ -2593,7 +2593,7 @@ public class Fields {
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 120, FieldType.BIT, 15);
 	public static final Field USECICPIDFORIDLE = Field.create("USECICPIDFORIDLE", 120, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 120, FieldType.BIT, 17);
-	public static final Field UNUSED120B18 = Field.create("UNUSED120B18", 120, FieldType.BIT, 18);
+	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 120, FieldType.BIT, 18);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 120, FieldType.BIT, 19);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 120, FieldType.BIT, 20);
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 120, FieldType.BIT, 21);
@@ -3981,7 +3981,7 @@ public class Fields {
 	CJ125ISURDIVIDED,
 	USECICPIDFORIDLE,
 	USETLE8888_CRANKING_HACK,
-	UNUSED120B18,
+	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
 	ROLLINGLAUNCHENABLED,

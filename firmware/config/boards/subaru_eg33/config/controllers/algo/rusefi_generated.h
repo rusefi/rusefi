@@ -1516,6 +1516,7 @@
 #define joystickCenterPin_offset 944
 #define joystickCPin_offset 950
 #define joystickDPin_offset 952
+#define kickStartCranking_offset 120
 #define knockBandCustom_offset 360
 #define knockBankCyl10_offset 960
 #define knockBankCyl11_offset 960
@@ -1890,7 +1891,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1718899960
+#define SIGNATURE_HASH 1220897947
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2451,7 +2452,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.13.subaru_eg33_f7.1718899960"
+#define TS_SIGNATURE "rusEFI 2022.09.13.subaru_eg33_f7.1220897947"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2491,7 +2492,6 @@
 #define unused1128_offset 1628
 #define unused1129_offset 1628
 #define unused1130_offset 1628
-#define unused120b18_offset 120
 #define unused1740b2_offset 1628
 #define unused4080_offset 3123
 #define unused962_offset 1040
