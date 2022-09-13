@@ -102,6 +102,8 @@ void writeFileHeader(Writer& outBuffer) {
 
 static uint8_t blockRollCounter = 0;
 
+//static efitimeus_t prevSdCardLineTime = 0;
+
 size_t writeBlock(char* buffer) {
 	// Offset 0 = Block type, standard data block in this case
 	buffer[0] = 0;
@@ -110,9 +112,13 @@ size_t writeBlock(char* buffer) {
 	buffer[1] = blockRollCounter++;
 
 	// Offset 2, size 2 = Timestamp at 10us resolution
-	uint16_t timestamp = getTimeNowUs() / 10;
+	efitimeus_t nowUs = getTimeNowUs();
+	uint16_t timestamp = nowUs / 10;
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
+
+	// todo: add a log field for SD card period
+//	prevSdCardLineTime = nowUs;
 
 	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
