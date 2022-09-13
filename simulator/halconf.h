@@ -51,14 +51,14 @@
  * @brief   Enables the CAN subsystem.
  */
 #if !defined(HAL_USE_CAN) || defined(__DOXYGEN__)
-#define HAL_USE_CAN                         TRUE
+#define HAL_USE_CAN                 !EFI_SIM_IS_WINDOWS
 #endif
 
 /**
  * @brief   Enables the cryptographic subsystem.
  */
 #if !defined(HAL_USE_CRY) || defined(__DOXYGEN__)
-#define HAL_USE_CRY                         FALSE /*!EFI_SIM_IS_WINDOWS*/
+#define HAL_USE_CRY                         FALSE
 #endif
 
 /**
