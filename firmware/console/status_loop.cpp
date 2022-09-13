@@ -111,29 +111,6 @@ static void setWarningEnabled(int value) {
 	warningEnabled = value;
 }
 
-#if EFI_FILE_LOGGING
-// this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[250];
-static uint64_t binaryLogCount = 0;
-
-void writeLogLine(Writer& buffer) {
-	if (!main_loop_started)
-		return;
-
-	if (binaryLogCount == 0) {
-		writeHeader(buffer);
-	} else {
-		updateTunerStudioState();
-		size_t length = writeBlock(sdLogBuffer);
-		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-		buffer.write(sdLogBuffer, length);
-	}
-
-	binaryLogCount++;
-}
-
-#endif /* EFI_FILE_LOGGING */
-
 /**
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
