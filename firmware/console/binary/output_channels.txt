@@ -302,8 +302,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
     uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
     uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
 
-    uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
-    uint16_t maxTriggerReentrant;;"", 1, 0, -10000, 10000, 3
+    uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
+    uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
     uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
