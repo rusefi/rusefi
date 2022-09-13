@@ -17,8 +17,8 @@ extern uint32_t hipLastExecutionCount;
 extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
 extern uint32_t triggerMaxDuration;
-extern int perSecondIrqDuration;
-extern int perSecondIrqCounter;
+
+extern int maxTriggerReentrant;
 
 #if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
@@ -47,10 +47,6 @@ void printRuntimeStats(void) {
 
 #if EFI_CLOCK_LOCKS
 	efiPrintf("maxLockedDuration=%d / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
-
-	efiPrintf("perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
-	efiPrintf("IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);
-
 #endif /* EFI_CLOCK_LOCKS */
 
 	efiPrintf("maxEventCallbackDuration=%d", maxEventCallbackDuration);
