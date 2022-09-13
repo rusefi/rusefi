@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 00:17:09 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 18:11:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -666,7 +666,8 @@ public class TsOutputs {
 	public static final Field MOSTRECENTTIMEBETWEENSPARKEVENTS = Field.create("MOSTRECENTTIMEBETWEENSPARKEVENTS", 384, FieldType.INT16).setScale(1.0);
 	public static final Field MOSTRECENTTIMEBETWEENIGNITIONEVENTS = Field.create("MOSTRECENTTIMEBETWEENIGNITIONEVENTS", 386, FieldType.INT16).setScale(1.0);
 	public static final Field MAXLOCKEDDURATION = Field.create("MAXLOCKEDDURATION", 388, FieldType.INT16).setScale(1.0);
-	public static final Field MAXTRIGGERREENTRANT = Field.create("MAXTRIGGERREENTRANT", 390, FieldType.INT16).setScale(1.0);
+	public static final Field MAXTRIGGERREENTRANT = Field.create("MAXTRIGGERREENTRANT", 390, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_391 = Field.create("ALIGNMENTFILL_AT_391", 391, FieldType.INT8).setScale(1.0);
 	public static final Field CANWRITEOK = Field.create("CANWRITEOK", 392, FieldType.INT16).setScale(1.0);
 	public static final Field CANWRITENOTOK = Field.create("CANWRITENOTOK", 394, FieldType.INT16).setScale(1.0);
 	public static final Field TRIGGERPRIMARYFALL = Field.create("TRIGGERPRIMARYFALL", 396, FieldType.INT).setScale(1.0);
@@ -769,14 +770,14 @@ public class TsOutputs {
 	public static final Field INJECTORSTATE10 = Field.create("INJECTORSTATE10", 584, FieldType.BIT, 21);
 	public static final Field INJECTORSTATE11 = Field.create("INJECTORSTATE11", 584, FieldType.BIT, 22);
 	public static final Field INJECTORSTATE12 = Field.create("INJECTORSTATE12", 584, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_301_24 = Field.create("UNUSEDBIT_301_24", 584, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_301_25 = Field.create("UNUSEDBIT_301_25", 584, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_301_26 = Field.create("UNUSEDBIT_301_26", 584, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_301_27 = Field.create("UNUSEDBIT_301_27", 584, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_301_28 = Field.create("UNUSEDBIT_301_28", 584, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_301_29 = Field.create("UNUSEDBIT_301_29", 584, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_301_30 = Field.create("UNUSEDBIT_301_30", 584, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_301_31 = Field.create("UNUSEDBIT_301_31", 584, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_302_24 = Field.create("UNUSEDBIT_302_24", 584, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_302_25 = Field.create("UNUSEDBIT_302_25", 584, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_302_26 = Field.create("UNUSEDBIT_302_26", 584, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_302_27 = Field.create("UNUSEDBIT_302_27", 584, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_302_28 = Field.create("UNUSEDBIT_302_28", 584, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_302_29 = Field.create("UNUSEDBIT_302_29", 584, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_302_30 = Field.create("UNUSEDBIT_302_30", 584, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_302_31 = Field.create("UNUSEDBIT_302_31", 584, FieldType.BIT, 31);
 	public static final Field OUTPUTREQUESTPERIOD = Field.create("OUTPUTREQUESTPERIOD", 588, FieldType.INT).setScale(1.0);
 	public static final Field UNUSEDATTHEEND1 = Field.create("UNUSEDATTHEEND1", 592, FieldType.INT8).setScale(1.0);
 	public static final Field UNUSEDATTHEEND2 = Field.create("UNUSEDATTHEEND2", 593, FieldType.INT8).setScale(1.0);
@@ -1215,6 +1216,7 @@ public class TsOutputs {
 	MOSTRECENTTIMEBETWEENIGNITIONEVENTS,
 	MAXLOCKEDDURATION,
 	MAXTRIGGERREENTRANT,
+	ALIGNMENTFILL_AT_391,
 	CANWRITEOK,
 	CANWRITENOTOK,
 	TRIGGERPRIMARYFALL,
@@ -1317,14 +1319,14 @@ public class TsOutputs {
 	INJECTORSTATE10,
 	INJECTORSTATE11,
 	INJECTORSTATE12,
-	UNUSEDBIT_301_24,
-	UNUSEDBIT_301_25,
-	UNUSEDBIT_301_26,
-	UNUSEDBIT_301_27,
-	UNUSEDBIT_301_28,
-	UNUSEDBIT_301_29,
-	UNUSEDBIT_301_30,
-	UNUSEDBIT_301_31,
+	UNUSEDBIT_302_24,
+	UNUSEDBIT_302_25,
+	UNUSEDBIT_302_26,
+	UNUSEDBIT_302_27,
+	UNUSEDBIT_302_28,
+	UNUSEDBIT_302_29,
+	UNUSEDBIT_302_30,
+	UNUSEDBIT_302_31,
 	OUTPUTREQUESTPERIOD,
 	UNUSEDATTHEEND1,
 	UNUSEDATTHEEND2,

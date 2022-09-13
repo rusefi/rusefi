@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 00:17:09 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 18:11:43 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1164,13 +1164,20 @@ struct output_channels_s {
 	 */
 	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
 	/**
+	us
 	 * offset 388
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
 	 * offset 390
 	 */
-	uint16_t maxTriggerReentrant = (uint16_t)0;
+	uint8_t maxTriggerReentrant = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 391
+	 */
+	uint8_t alignmentFill_at_391[1];
 	/**
 	 * offset 392
 	 */
@@ -1357,28 +1364,28 @@ struct output_channels_s {
 	bool injectorState12 : 1 {};
 	/**
 	offset 584 bit 24 */
-	bool unusedBit_301_24 : 1 {};
+	bool unusedBit_302_24 : 1 {};
 	/**
 	offset 584 bit 25 */
-	bool unusedBit_301_25 : 1 {};
+	bool unusedBit_302_25 : 1 {};
 	/**
 	offset 584 bit 26 */
-	bool unusedBit_301_26 : 1 {};
+	bool unusedBit_302_26 : 1 {};
 	/**
 	offset 584 bit 27 */
-	bool unusedBit_301_27 : 1 {};
+	bool unusedBit_302_27 : 1 {};
 	/**
 	offset 584 bit 28 */
-	bool unusedBit_301_28 : 1 {};
+	bool unusedBit_302_28 : 1 {};
 	/**
 	offset 584 bit 29 */
-	bool unusedBit_301_29 : 1 {};
+	bool unusedBit_302_29 : 1 {};
 	/**
 	offset 584 bit 30 */
-	bool unusedBit_301_30 : 1 {};
+	bool unusedBit_302_30 : 1 {};
 	/**
 	offset 584 bit 31 */
-	bool unusedBit_301_31 : 1 {};
+	bool unusedBit_302_31 : 1 {};
 	/**
 	 * offset 588
 	 */
@@ -1397,4 +1404,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 00:17:09 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 18:11:43 UTC 2022
