@@ -31,7 +31,25 @@
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_7_0_
 
-#define CHPRINTF_USE_FLOAT          	TRUE
+/*===========================================================================*/
+/**
+ * @name System settings
+ * @{
+ */
+/*===========================================================================*/
+
+/**
+ * @brief   Handling of instances.
+ * @note    If enabled then threads assigned to various instances can
+ *          interact each other using the same synchronization objects.
+ *          If disabled then each OS instance is a separate world, no
+ *          direct interactions are handled by the OS.
+ */
+#if !defined(CH_CFG_SMP_MODE)
+#define CH_CFG_SMP_MODE                     FALSE
+#endif
+
+/** @} */
 
 /**
  * @brief   Handling of instances.
@@ -148,22 +166,7 @@
  *          must be set to zero in that case.
  */
 #if !defined(CH_CFG_TIME_QUANTUM)
-#define CH_CFG_TIME_QUANTUM                 20
-#endif
-
-/**
- * @brief   Managed RAM size.
- * @details Size of the RAM area to be managed by the OS. If set to zero
- *          then the whole available RAM is used. The core memory is made
- *          available to the heap allocator and/or can be used directly through
- *          the simplified core memory allocator.
- *
- * @note    In order to let the OS manage the whole RAM the linker script must
- *          provide the @p __heap_base__ and @p __heap_end__ symbols.
- * @note    Requires @p CH_CFG_USE_MEMCORE.
- */
-#if !defined(CH_CFG_MEMCORE_SIZE)
-#define CH_CFG_MEMCORE_SIZE                 0x20000
+#define CH_CFG_TIME_QUANTUM                 0
 #endif
 
 /**
@@ -228,7 +231,17 @@
  * @note    The default is @p TRUE.
  */
 #if !defined(CH_CFG_USE_TM)
-#define CH_CFG_USE_TM                       FALSE
+#define CH_CFG_USE_TM                       TRUE
+#endif
+
+/**
+ * @brief   Time Stamps APIs.
+ * @details If enabled then the time stamps APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_TIMESTAMP)
+#define CH_CFG_USE_TIMESTAMP                TRUE
 #endif
 
 /**
@@ -387,7 +400,7 @@
  * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
  */
 #if !defined(CH_CFG_USE_DYNAMIC)
-#define CH_CFG_USE_DYNAMIC                  FALSE
+#define CH_CFG_USE_DYNAMIC                  TRUE
 #endif
 
 /** @} */
@@ -422,6 +435,16 @@
 #endif
 
 /**
+ * @brief   Memory checks APIs.
+ * @details If enabled then the memory checks APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_MEMCHECKS)
+#define CH_CFG_USE_MEMCHECKS                TRUE
+#endif
+
+/**
  * @brief   Core Memory Manager APIs.
  * @details If enabled then the core memory manager APIs are included
  *          in the kernel.
@@ -430,6 +453,21 @@
  */
 #if !defined(CH_CFG_USE_MEMCORE)
 #define CH_CFG_USE_MEMCORE                  TRUE
+#endif
+
+/**
+ * @brief   Managed RAM size.
+ * @details Size of the RAM area to be managed by the OS. If set to zero
+ *          then the whole available RAM is used. The core memory is made
+ *          available to the heap allocator and/or can be used directly through
+ *          the simplified core memory allocator.
+ *
+ * @note    In order to let the OS manage the whole RAM the linker script must
+ *          provide the @p __heap_base__ and @p __heap_end__ symbols.
+ * @note    Requires @p CH_CFG_USE_MEMCORE.
+ */
+#if !defined(CH_CFG_MEMCORE_SIZE)
+#define CH_CFG_MEMCORE_SIZE                 0x20000
 #endif
 
 /**
@@ -458,7 +496,7 @@
 #endif
 
 /**
- * @brief  Objects FIFOs APIs.
+ * @brief   Objects FIFOs APIs.
  * @details If enabled then the objects FIFOs APIs are included
  *          in the kernel.
  *
@@ -510,19 +548,6 @@
  */
 #if !defined(CH_CFG_USE_JOBS)
 #define CH_CFG_USE_JOBS                     FALSE
-#endif
-
-/**
- * @brief   Dynamic Threads APIs.
- * @details If enabled then the dynamic threads creation APIs are included
- *          in the kernel.
- *
- * @note    The default is @p TRUE.
- * @note    Requires @p CH_CFG_USE_WAITEXIT.
- * @note    Requires @p CH_CFG_USE_HEAP and/or @p CH_CFG_USE_MEMPOOLS.
- */
-#if !defined(CH_CFG_USE_DYNAMIC)
-#define CH_CFG_USE_DYNAMIC                  TRUE
 #endif
 
 /** @} */
@@ -723,7 +748,7 @@
  * @details User fields added to the end of the @p ch_system_t structure.
  */
 #define CH_CFG_SYSTEM_EXTRA_FIELDS                                          \
-  /* Add threads custom fields here.*/
+  /* Add system custom fields here.*/
 
 /**
  * @brief   OS instance structure extension.
@@ -896,6 +921,12 @@
 /*===========================================================================*/
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
+
+/**
+ * @brief   Sleep at idle.
+ * @details This option enables call to __WFI() from idle thread to save power.
+ */
+#define CORTEX_ENABLE_WFI_IDLE TRUE
 
 #endif  /* CHCONF_H */
 
