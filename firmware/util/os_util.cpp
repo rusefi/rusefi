@@ -25,10 +25,9 @@
 #include "os_util.h"
 
 void chVTSetAny(virtual_timer_t *vtp, systime_t time, vtfunc_t vtfunc, void *par) {
-	syssts_t sts = chSysGetStatusAndLockX();
+	chibios_rt::CriticalSectionLocker csl;
 
 	chVTSetI(vtp, time, vtfunc, par);
-	chSysRestoreStatusX(sts);
 }
 
 #endif /* EFI_UNIT_TEST */
