@@ -118,7 +118,27 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
 			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
-	}
+	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
+	    //ETB1
+	    // PWM pin
+	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	    // DIR pin
+		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+	   	// Disable pin
+	   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
+	   	// Unused
+	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+
+	    //ETB2
+	    // PWM pin
+	    engineConfiguration->etbIo[1].controlPin = H144_OUT_PWM4;
+	    // DIR pin
+		engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM5;
+	   	// Disable pin
+	   	engineConfiguration->etbIo[1].disablePin = H144_OUT_IO13;
+	   	// Unused
+	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
+}
 }
 
 /**
