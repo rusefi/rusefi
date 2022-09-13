@@ -3941,6 +3941,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
 		field = vinNumber,                              vinNumber
+		field = "TODO KS mode 4569",                    kickStartCranking
 		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueTableTbl
