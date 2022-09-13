@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2017 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2020 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 /**
- * @file    templates/chconf.h
+ * @file    rt/templates/chconf.h
  * @brief   Configuration file template.
  * @details A copy of this file must be placed in each project directory, it
  *          contains the application specific kernel settings.
@@ -29,19 +29,27 @@
 #define CHCONF_H
 
 #define _CHIBIOS_RT_CONF_
+#define _CHIBIOS_RT_CONF_VER_7_0_
 
-/*
- * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
- * rusEfi do not override these defaults.
- *
- * http://www.chibios.com/forum/viewtopic.php?t=309
- * "__main_stack_size__ is the size of INTERRUPTS stack"
- * "__process_stack_size__ is the stack of the C-runtime, in ChibiOS the "main" thread uses the C-runtime stack."
- *
+/*===========================================================================*/
+/**
+ * @name System settings
+ * @{
  */
+/*===========================================================================*/
 
+/**
+ * @brief   Handling of instances.
+ * @note    If enabled then threads assigned to various instances can
+ *          interact each other using the same synchronization objects.
+ *          If disabled then each OS instance is a separate world, no
+ *          direct interactions are handled by the OS.
+ */
+#if !defined(CH_CFG_SMP_MODE)
+#define CH_CFG_SMP_MODE                     FALSE
+#endif
 
-#include "chconf_common.h"
+/** @} */
 
 /*===========================================================================*/
 /**
@@ -64,7 +72,7 @@
  *          setting also defines the system tick time unit.
  */
 #if !defined(CH_CFG_ST_FREQUENCY)
-#define CH_CFG_ST_FREQUENCY                 1000
+#define CH_CFG_ST_FREQUENCY                 10000
 #endif
 
 /**
@@ -91,11 +99,6 @@
  *          The value one is not valid, timeouts are rounded up to
  *          this value.
  */
-// rusEfi currently uses tick mode, see CH_CFG_ST_FREQUENCY
-// ST requires TIM2 or another 32 bit timer and we currently use it for ICU
-// but! there is no reason to use it for ICU as we've recently realized
-// so todo: migrate trigger to EXTI and try tick-less mode
-// see also CH_CFG_TIME_QUANTUM
 #if !defined(CH_CFG_ST_TIMEDELTA)
 #define CH_CFG_ST_TIMEDELTA                 0
 #endif
@@ -134,6 +137,19 @@
  */
 #if !defined(CH_CFG_NO_IDLE_THREAD)
 #define CH_CFG_NO_IDLE_THREAD               FALSE
+#endif
+
+/**
+ * @brief   Kernel hardening level.
+ * @details This option is the level of functional-safety checks enabled
+ *          in the kerkel. The meaning is:
+ *          - 0: No checks, maximum performance.
+ *          - 1: Reasonable checks.
+ *          - 2: All checks.
+ *          .
+ */
+#if !defined(CH_CFG_HARDENING_LEVEL)
+#define CH_CFG_HARDENING_LEVEL              0
 #endif
 
 /** @} */
@@ -175,6 +191,16 @@
  */
 #if !defined(CH_CFG_USE_TM)
 #define CH_CFG_USE_TM                       TRUE
+#endif
+
+/**
+ * @brief   Time Stamps APIs.
+ * @details If enabled then the time stamps APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_TIMESTAMP)
+#define CH_CFG_USE_TIMESTAMP                TRUE
 #endif
 
 /**
@@ -348,12 +374,14 @@
 #endif
 
 /**
- * @brief   I/O Queues APIs.
- * @details If enabled then the I/O queues APIs are included in the kernel.
+ * @brief   Memory checks APIs.
+ * @details If enabled then the memory checks APIs are included in the kernel.
  *
  * @note    The default is @p TRUE.
  */
-#define CH_CFG_USE_QUEUES                   FALSE
+#if !defined(CH_CFG_USE_MEMCHECKS)
+#define CH_CFG_USE_MEMCHECKS                TRUE
+#endif
 
 /**
  * @brief   Core Memory Manager APIs.
@@ -625,7 +653,6 @@
  *
  * @note    The default is @p FALSE.
  */
-// see also CH_DBG_STACK_FILL_VALUE
 #if !defined(CH_DBG_FILL_THREADS)
 #define CH_DBG_FILL_THREADS                 TRUE
 #endif
@@ -657,7 +684,7 @@
  * @details User fields added to the end of the @p ch_system_t structure.
  */
 #define CH_CFG_SYSTEM_EXTRA_FIELDS                                          \
-  /* Add threads custom fields here.*/
+  /* Add system custom fields here.*/
 
 /**
  * @brief   System initialization hook.
@@ -665,15 +692,78 @@
  *          just before interrupts are enabled globally.
  */
 #define CH_CFG_SYSTEM_INIT_HOOK() {                                         \
+  /* Add system initialization code here.*/                                 \
+}
+
+/**
+ * @brief   OS instance structure extension.
+ * @details User fields added to the end of the @p os_instance_t structure.
+ */
+#define CH_CFG_OS_INSTANCE_EXTRA_FIELDS                                     \
+  /* Add OS instance custom fields here.*/
+
+/**
+ * @brief   OS instance initialization hook.
+ *
+ * @param[in] oip       pointer to the @p os_instance_t structure
+ */
+#define CH_CFG_OS_INSTANCE_INIT_HOOK(oip) {                                 \
+  /* Add OS instance initialization code here.*/                            \
+}
+
+/**
+ * @brief   Threads descriptor structure extension.
+ * @details User fields added to the end of the @p thread_t structure.
+ */
+#define CH_CFG_THREAD_EXTRA_FIELDS                                          \
+  /* Add threads custom fields here.*/
+
+/**
+ * @brief   Threads initialization hook.
+ * @details User initialization code added to the @p _thread_init() function.
+ *
+ * @note    It is invoked from within @p _thread_init() and implicitly from all
+ *          the threads creation APIs.
+ *
+ * @param[in] tp        pointer to the @p thread_t structure
+ */
+#define CH_CFG_THREAD_INIT_HOOK(tp) {                                       \
   /* Add threads initialization code here.*/                                \
 }
 
 /**
  * @brief   Threads finalization hook.
  * @details User finalization code added to the @p chThdExit() API.
+ *
+ * @param[in] tp        pointer to the @p thread_t structure
  */
 #define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
+}
+
+/**
+ * @brief   Context switch hook.
+ * @details This hook is invoked just before switching between threads.
+ *
+ * @param[in] ntp       thread being switched in
+ * @param[in] otp       thread being switched out
+ */
+#define CH_CFG_CONTEXT_SWITCH_HOOK(ntp, otp) {                              \
+  /* Context switch code here.*/                                            \
+}
+
+/**
+ * @brief   ISR enter hook.
+ */
+#define CH_CFG_IRQ_PROLOGUE_HOOK() {                                        \
+  /* IRQ prologue code here.*/                                              \
+}
+
+/**
+ * @brief   ISR exit hook.
+ */
+#define CH_CFG_IRQ_EPILOGUE_HOOK() {                                        \
+  /* IRQ epilogue code here.*/                                              \
 }
 
 /**
@@ -730,6 +820,14 @@
  */
 #define CH_CFG_TRACE_HOOK(tep) {                                            \
   /* Trace code here.*/                                                     \
+}
+
+/**
+ * @brief   Runtime Faults Collection Unit hook.
+ * @details This hook is invoked each time new faults are collected and stored.
+ */
+#define CH_CFG_RUNTIME_FAULTS_HOOK(mask) {                                  \
+  /* Faults handling code here.*/                                           \
 }
 
 /** @} */
