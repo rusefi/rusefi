@@ -1,5 +1,5 @@
 /*
-    ChibiOS - Copyright (C) 2006..2017 Giovanni Di Sirio
+    ChibiOS - Copyright (C) 2006..2020 Giovanni Di Sirio
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 */
 
 /**
- * @file    templates/chconf.h
+ * @file    rt/templates/chconf.h
  * @brief   Configuration file template.
  * @details A copy of this file must be placed in each project directory, it
  *          contains the application specific kernel settings.
@@ -123,6 +123,19 @@
 #define CH_CFG_NO_IDLE_THREAD               FALSE
 #endif
 
+/**
+ * @brief   Kernel hardening level.
+ * @details This option is the level of functional-safety checks enabled
+ *          in the kerkel. The meaning is:
+ *          - 0: No checks, maximum performance.
+ *          - 1: Reasonable checks.
+ *          - 2: All checks.
+ *          .
+ */
+#if !defined(CH_CFG_HARDENING_LEVEL)
+#define CH_CFG_HARDENING_LEVEL              0
+#endif
+
 /** @} */
 
 /*===========================================================================*/
@@ -162,6 +175,16 @@
  */
 #if !defined(CH_CFG_USE_TM)
 #define CH_CFG_USE_TM                       TRUE
+#endif
+
+/**
+ * @brief   Time Stamps APIs.
+ * @details If enabled then the time stamps APIs are included in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_TIMESTAMP)
+#define CH_CFG_USE_TIMESTAMP                TRUE
 #endif
 
 /**
@@ -612,7 +635,6 @@
  *
  * @note    The default is @p FALSE.
  */
-// see also CH_DBG_STACK_FILL_VALUE
 #if !defined(CH_DBG_FILL_THREADS)
 #define CH_DBG_FILL_THREADS                 TRUE
 #endif
@@ -644,7 +666,7 @@
  * @details User fields added to the end of the @p ch_system_t structure.
  */
 #define CH_CFG_SYSTEM_EXTRA_FIELDS                                          \
-  /* Add threads custom fields here.*/
+  /* Add system custom fields here.*/
 
 /**
  * @brief   System initialization hook.
@@ -658,6 +680,8 @@
 /**
  * @brief   Threads finalization hook.
  * @details User finalization code added to the @p chThdExit() API.
+ *
+ * @param[in] tp        pointer to the @p thread_t structure
  */
 #define CH_CFG_THREAD_EXIT_HOOK(tp) {                                       \
   /* Add threads finalization code here.*/                                  \
