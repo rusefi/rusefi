@@ -18,6 +18,8 @@ extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
 extern uint32_t triggerMaxDuration;
 
+extern int maxTriggerReentrant;
+
 #if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
 #endif /* EFI_PROD_CODE  */
