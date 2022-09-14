@@ -605,3 +605,7 @@ TunerStudioOutputChannels *getTunerStudioOutputChannels() {
 ExecutorInterface *getExecutorInterface() {
 	return &engine->executor;
 }
+
+TriggerCentral * getTriggerCentral() {
+	return &engine->triggerCentral;
+}

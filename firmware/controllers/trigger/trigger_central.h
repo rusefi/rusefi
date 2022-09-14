@@ -52,6 +52,15 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
+	bool directSelfStimulation = false;
+
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 #if CAMS_PER_BANK == 1
 	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
@@ -169,3 +178,5 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
+
+TriggerCentral * getTriggerCentral();

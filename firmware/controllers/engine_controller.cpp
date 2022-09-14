@@ -180,7 +180,7 @@ static void doPeriodicSlowCallback() {
 
 	engine->rpmCalculator.onSlowCallback();
 
-	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
+	if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
