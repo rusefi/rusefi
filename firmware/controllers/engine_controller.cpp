@@ -464,8 +464,10 @@ void commonInitEngineController() {
 	 * This has to go after 'enginePins.startPins()' in order to
 	 * properly detect un-assigned output pins
 	 */
-	prepareShapes();
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+	prepareOutputSignals();
+
+	engine->injectionEvents.addFuelEvents();
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_SENSOR_CHART
 	initSensorChart();

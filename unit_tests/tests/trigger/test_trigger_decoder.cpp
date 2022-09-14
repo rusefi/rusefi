@@ -480,7 +480,8 @@ TEST(trigger, testTriggerDecoder) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 		applyNonPersistentConfiguration();
-		prepareShapes();
+		prepareOutputSignals();
+
 	}
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
