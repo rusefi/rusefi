@@ -740,7 +740,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		do {
 			// I don't love this.
-			nextToothIndex = (nextToothIndex + 1) % engine->engineCycleEventCount;
+			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
 			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentPhase);
@@ -983,7 +983,7 @@ void initTriggerCentral() {
  * @return TRUE is something is wrong with trigger decoding
  */
 bool TriggerCentral::isTriggerDecoderError() {
-	return engine->triggerErrorDetection.sum(6) > 4;
+	return triggerErrorDetection.sum(6) > 4;
 }
 
 #endif // EFI_SHAFT_POSITION_INPUT

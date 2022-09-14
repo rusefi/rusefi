@@ -277,8 +277,4 @@ public:
 
 angle_t getEngineCycle(operation_mode_e operationMode);
 
-void calculateTriggerSynchPoint(
-	TriggerWaveform& shape,
-	TriggerDecoderBase& state);
-
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);

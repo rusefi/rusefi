@@ -147,10 +147,11 @@ void Engine::updateTriggerWaveform() {
 	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
+		calculateTriggerSynchPoint(&engine->triggerCentral,
+				engine->triggerCentral.triggerShape,
 				initState);
 
-		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
+		engine->triggerCentral.engineCycleEventCount = engine->triggerCentral.triggerShape.getLength();
 	}
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
@@ -400,7 +401,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 #endif /* EFI_PROD_CODE */
 		}
 
-		engine->triggerErrorDetection.add(isDecodingError);
+		engine->triggerCentral.triggerErrorDetection.add(isDecodingError);
 	}
 
 }

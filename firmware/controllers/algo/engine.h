@@ -156,8 +156,6 @@ public:
 		return engineModules.get<get_t>();
 	}
 
-	cyclic_buffer<int> triggerErrorDetection;
-
 #if EFI_TCU
 	GearControllerBase *gearController;
 #endif
@@ -296,11 +294,6 @@ public:
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
 
-	/**
-	 * value of 'triggerShape.getLength()'
-	 * pre-calculating this value is a performance optimization
-	 */
-	uint32_t engineCycleEventCount = 0;
 
 	void preCalculate();
 
