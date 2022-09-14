@@ -197,10 +197,6 @@ public:
 #endif /* EFI_UNIT_TEST */
 
 
-	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
-	// GND input pins instead of leaving them floating
-	bool hwTriggerInputEnabled = true;
-
 	int getGlobalConfigurationVersion(void) const;
 
 
@@ -282,11 +278,6 @@ public:
 	 * some areas
 	 */
 	bool isFunctionalTestMode = false;
-
-	/**
-	 * See also triggerSimulatorFrequency
-	 */
-	bool directSelfStimulation = false;
 
 	void resetEngineSnifferIfInTestMode();
 

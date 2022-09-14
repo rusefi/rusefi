@@ -123,7 +123,7 @@ static bool hasInitTriggerEmulator = false;
 # if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	if (engine->directSelfStimulation) {
+	if (engine->triggerCentral.directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
@@ -158,16 +158,16 @@ static void initTriggerPwm() {
 
 void enableTriggerStimulator() {
 	initTriggerPwm();
-	engine->directSelfStimulation = true;
+	engine->triggerCentral.directSelfStimulation = true;
 }
 
 void enableExternalTriggerStimulator() {
 	initTriggerPwm();
-	engine->directSelfStimulation = false;
+	engine->triggerCentral.directSelfStimulation = false;
 }
 
 void disableTriggerStimulator() {
-	engine->directSelfStimulation = false;
+	engine->triggerCentral.directSelfStimulation = false;
 	triggerSignal.stop();
 	hasInitTriggerEmulator = false;
 }
