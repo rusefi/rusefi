@@ -284,10 +284,6 @@ public:
 	 */
 	int ignitionPin[MAX_CYLINDER_COUNT];
 
-	/**
-	 * this is invoked each time we register a trigger tooth signal
-	 */
-	void onTriggerSignalEvent();
 	EngineState engineState;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
@@ -340,13 +336,6 @@ public:
 	LimpManager limpManager;
 
 private:
-	/**
-	 * By the way:
-	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
-	 * 'running' means RPM are above crankingRpm
-	 * 'spinning' means the engine is not stopped
-	 */
-	bool isSpinning = false;
 	void reset();
 
 	void injectEngineReferences();

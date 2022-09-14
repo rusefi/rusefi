@@ -666,7 +666,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		}
 	}
 
-	engine->onTriggerSignalEvent();
+	isSpinningJustForWatchdog = true;
 
 	m_lastEventTimer.reset(timestamp);
 
@@ -886,7 +886,7 @@ void triggerInfo(void) {
 
 static void resetRunningTriggerCounters() {
 #if !EFI_UNIT_TEST
-	engine->triggerCentral.resetCounters();
+	getTriggerCentral()->resetCounters();
 	triggerInfo();
 #endif
 }
