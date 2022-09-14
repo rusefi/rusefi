@@ -53,6 +53,8 @@ public:
 	WallFuel wallFuel;
 };
 
+void turnInjectionPinHigh(InjectionEvent *event);
+
 
 /**
  * This class knows about when to inject fuel

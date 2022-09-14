@@ -53,20 +53,6 @@
 
 #include "backup_ram.h"
 
-void startSimultaneousInjection(void*) {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		enginePins.injectors[i].open(nowNt);
-	}
-}
-
-void endSimultaneousInjectionOnlyTogglePins() {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		enginePins.injectors[i].close(nowNt);
-	}
-}
-
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
