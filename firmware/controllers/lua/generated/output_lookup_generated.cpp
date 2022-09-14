@@ -341,10 +341,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.detectedGear;
 	if (strEqualCaseInsensitive(name, "instantMAPValue"))
 		return engine->outputChannels.instantMAPValue;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenSparkEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenSparkEvents;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenIgnitionEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenIgnitionEvents;
 	if (strEqualCaseInsensitive(name, "maxLockedDuration"))
 		return engine->outputChannels.maxLockedDuration;
 	if (strEqualCaseInsensitive(name, "maxTriggerReentrant"))
