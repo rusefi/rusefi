@@ -40,14 +40,14 @@ TEST(LuaE38, tps) {
 
 #define ECMEngineCoolantTemp "\ndata = { 0x00, 0xCA, 0x69, 0x3F, 0x6A, 0x00, 0x00, 0x00}\n "
 
-
 TEST(LuaE38, clt) {
 
-EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(TWO_BYTES_MSB ECMEngineCoolantTemp R"(
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(TWO_BYTES_MSB ECMEngineCoolantTemp R"(
                                              		function testFunc()
                                              			clt = data[3] -40
                                              			return clt
                                              		end
                                              		)"
-                                             		).value_or(0), 65);
+			).value_or(0), 65);
 }
+
