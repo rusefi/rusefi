@@ -200,9 +200,6 @@ public:
 	FanControl1 fan1;
 	FanControl2 fan2;
 
-	efitick_t mostRecentSparkEvent;
-	efitick_t mostRecentIgnitionEvent;
-
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
 #if CAMS_PER_BANK == 1
 	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
