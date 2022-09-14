@@ -50,7 +50,7 @@ ignition_mode_e getCurrentIgnitionMode();
  * This lightweight method is invoked in case of a configuration change or initialization.
  * But also it's used for "Spinning-up to Cranking" transition.
  */
-void prepareIgnitionPinIndices(ignition_mode_e ignitionMode);
+void prepareIgnitionPinIndices();
 
 size_t getCylinderId(size_t index);
 size_t getNextFiringCylinderId(size_t prevCylinderId);

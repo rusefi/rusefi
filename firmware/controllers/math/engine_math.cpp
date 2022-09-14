@@ -399,8 +399,7 @@ static int getIgnitionPinForIndex(int cylinderIndex) {
 	}
 }
 
-void prepareIgnitionPinIndices(ignition_mode_e ignitionMode) {
-	(void)ignitionMode;
+void prepareIgnitionPinIndices() {
 #if EFI_ENGINE_CONTROL
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
 		engine->ignitionPin[cylinderIndex] = getIgnitionPinForIndex(cylinderIndex);
@@ -452,7 +451,7 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
+	prepareIgnitionPinIndices();
 
 	TRIGGER_WAVEFORM(prepareShape(engine->triggerCentral.triggerFormDetails));
 
