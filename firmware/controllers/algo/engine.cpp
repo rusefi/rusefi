@@ -314,10 +314,6 @@ void Engine::updateSwitchInputs() {
 #endif // EFI_GPIO_HARDWARE
 }
 
-void Engine::onTriggerSignalEvent() {
-	isSpinning = true;
-}
-
 Engine::Engine() {
 	reset();
 }
@@ -446,7 +442,7 @@ void Engine::efiWatchdog() {
 	}
 	mostRecentMs = msNow;
 
-	if (!isSpinning) {
+	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run
 			warning(CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
@@ -462,7 +458,7 @@ void Engine::efiWatchdog() {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}
-	isSpinning = false;
+	getTriggerCentral()->isSpinningJustForWatchdog = false;
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("engine has STOPPED");

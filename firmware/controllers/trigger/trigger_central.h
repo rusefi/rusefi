@@ -70,6 +70,18 @@ public:
 
 	LocalVersionHolder triggerVersion;
 
+	/**
+	 * By the way:
+	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
+	 * 'running' means RPM are above crankingRpm
+	 * 'spinning' means the engine is not stopped
+	 */
+	// todo: combine with other RpmCalculator fields?
+	/**
+	 * this is set to true each time we register a trigger tooth signal
+	 */
+	bool isSpinningJustForWatchdog = false;
+
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
