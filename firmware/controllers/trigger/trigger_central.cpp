@@ -938,6 +938,71 @@ void onConfigurationChangeTriggerCallback() {
 	engine->triggerCentral.triggerConfigChanged = engine->triggerCentral.triggerConfigChanged || changed;
 }
 
+static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
+	shape.initializeSyncPoint(initState, config);
+}
+
+void TriggerCentral::updateWaveform() {
+	static TriggerDecoderBase initState("init");
+
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		vvtTriggerConfiguration[camIndex].update();
+	}
+
+	triggerShape.initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration);
+
+	/**
+	 * this is only useful while troubleshooting a new trigger shape in the field
+	 * in very VERY rare circumstances
+	 */
+	if (engineConfiguration->overrideTriggerGaps) {
+		int gapIndex = 0;
+
+		// copy however many the user wants
+		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
+			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
+			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
+		}
+
+		// fill the remainder with the default gaps
+		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
+			triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
+			triggerShape.syncronizationRatioTo[gapIndex] = NAN;
+		}
+	}
+
+	if (!triggerShape.shapeDefinitionError) {
+		/**
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
+	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
+	 	 */
+		calculateTriggerSynchPoint(this,
+				triggerShape,
+				initState);
+
+		engineCycleEventCount = triggerShape.getLength();
+	}
+
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
+		// todo: should 'vvtWithRealDecoder' be used here?
+		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
+			initVvtShape(
+				vvtShape[camIndex],
+				vvtTriggerConfiguration[camIndex],
+				initState
+			);
+		}
+	}
+
+	// This is not the right place for this, but further refactoring has to happen before it can get moved.
+	triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
+
+}
+
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
