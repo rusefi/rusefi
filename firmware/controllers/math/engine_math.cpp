@@ -435,15 +435,6 @@ ignition_mode_e getCurrentIgnitionMode() {
 void prepareOutputSignals() {
 	getEngineState()->engineCycle = getEngineCycle(engine->getOperationMode());
 
-	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
-	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
-	for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
-		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
-			maxTimingCorrMap = maxF(maxTimingCorrMap, config->ignitionIatCorrTable[l][rpmIndex]);
-			maxTimingMap = maxF(maxTimingMap, config->ignitionTable[l][rpmIndex]);
-		}
-	}
-
 #if EFI_UNIT_TEST
 	if (verboseMode) {
 		printf("prepareOutputSignals %d onlyEdge=%s %s\r\n", engineConfiguration->trigger.type, boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
