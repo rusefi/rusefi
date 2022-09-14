@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen121nissan/board_configuration.cpp
+ * @file boards/hellen/hellen154hyundai/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen121nissan board
+ * @brief Configuration defaults for the hellen154hyundai board
  *
- * See https://rusefi.com/s/hellen121nissan
+ * See https://rusefi.com/s/hellen154hyundai
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -106,6 +106,12 @@ void setBoardConfigOverrides() {
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
 	if (engine->engineState.hellenBoardId == -1) {
+		// control pins are inverted since overall ECU pinout seems to be inverted
+		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
+		engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
+		engineConfiguration->etb_use_two_wires = true;
+
 		// first revision of did not have Hellen Board ID
 		// https://github.com/rusefi/hellen154hyundai/issues/55
 		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
@@ -129,6 +135,7 @@ void setBoardConfigOverrides() {
 	   	// Unused
 	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
+		// wastegate DC motor
 	    //ETB2
 	    // PWM pin
 	    engineConfiguration->etbIo[1].controlPin = H144_OUT_PWM4;
@@ -138,7 +145,7 @@ void setBoardConfigOverrides() {
 	   	engineConfiguration->etbIo[1].disablePin = H144_OUT_IO13;
 	   	// Unused
 	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
-}
+    }
 }
 
 /**
@@ -174,17 +181,6 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	// control pins are inverted since overall ECU pinout seems to be inverted
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
-	engineConfiguration->etb_use_two_wires = true;
-
-	// wastegate DC motor
-	engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM4;
-	engineConfiguration->etbIo[1].directionPin2 = H144_OUT_PWM5;
-	engineConfiguration->etbIo[1].controlPin = H144_OUT_IO13;
-	engineConfiguration->etb_use_two_wires = true;
 	engineConfiguration->etbFunctions[1] = ETB_Wastegate;
 
 	// Some sensible defaults for other options
