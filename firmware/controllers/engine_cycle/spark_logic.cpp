@@ -406,7 +406,7 @@ static void prepareIgnitionSchedule() {
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 	 */
-	operation_mode_e operationMode = engine->getOperationMode();
+	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
 	float maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
@@ -498,7 +498,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  */
 percent_t getCoilDutyCycle(int rpm) {
 	floatms_t totalPerCycle = engine->engineState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
-	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
 

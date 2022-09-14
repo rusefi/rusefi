@@ -7,7 +7,7 @@
 #define CLEANUP_MODE_TPS 90
 
 static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
-	auto operationMode = engine->getOperationMode();
+	auto operationMode = getEngineRotationState()->getOperationMode();
 
 	// V-Twin MAP phase sense needs to always wait for sync
 	if (vvtMode == VVT_MAP_V_TWIN) {

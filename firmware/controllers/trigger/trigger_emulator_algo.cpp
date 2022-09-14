@@ -93,7 +93,7 @@ void setTriggerEmulatorRPM(int rpm) {
 	if (rpm == 0) {
 		triggerSignal.setFrequency(NAN);
 	} else {
-		float rpmM = getRpmMultiplier(engine->getOperationMode());
+		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.setFrequency(rPerSecond);
 	}

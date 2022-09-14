@@ -124,7 +124,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 }
 
 static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
-	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
+	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
 	return tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
 }
@@ -155,7 +155,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	}
 
 	TriggerCentral *tc = &engine->triggerCentral;
-	operation_mode_e operationMode = engine->getOperationMode();
+	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
 
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 	switch (vvtMode) {

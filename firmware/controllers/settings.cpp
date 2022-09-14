@@ -95,7 +95,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
 	efiPrintf("rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
-			engine->getOperationMode());
+			getEngineRotationState()->getOperationMode());
 
 	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 

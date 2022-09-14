@@ -585,22 +585,6 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	}
 }
 
-operation_mode_e Engine::getOperationMode() const {
-	return rpmCalculator.getOperationMode();
-}
-
-
-operation_mode_e RpmCalculator::getOperationMode() const {
-	// Ignore user-provided setting for well known triggers.
-	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
-		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return engine->triggerCentral.triggerShape.getWheelOperationMode();
-	} else {
-		// For example 36-1, could be on either cam or crank, so we have to ask the user
-		return lookupOperationMode();
-	}
-}
-
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.

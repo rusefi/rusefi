@@ -35,7 +35,7 @@ angle_t wrapAngleMethod(angle_t param, const char *msg, obd_code_e code) {
 }
 
 floatms_t getEngineCycleDuration(int rpm) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
+	return getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 }
 
 /**
@@ -433,7 +433,7 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	getEngineState()->engineCycle = getEngineCycle(engine->getOperationMode());
+	getEngineState()->engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
