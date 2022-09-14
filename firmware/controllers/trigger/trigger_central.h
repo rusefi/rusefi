@@ -52,6 +52,13 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+#if CAMS_PER_BANK == 1
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
+#else
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
+#endif
+
 	LocalVersionHolder triggerVersion;
 
 	angle_t mapCamPrevToothAngle = -1;

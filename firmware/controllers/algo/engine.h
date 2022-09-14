@@ -91,29 +91,6 @@ class IEtbController;
 
 struct IIdleController;
 
-class PrimaryTriggerConfiguration final : public TriggerConfiguration {
-public:
-	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
-
-protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
-	trigger_config_s getType() const override;
-};
-
-class VvtTriggerConfiguration final : public TriggerConfiguration {
-public:
-	const int index;
-
-	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
-	}
-
-protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
-	trigger_config_s getType() const override;
-};
-
 class Engine final : public TriggerStateListener {
 public:
 	Engine();
@@ -199,13 +176,6 @@ public:
 
 	FanControl1 fan1;
 	FanControl2 fan2;
-
-	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-#if CAMS_PER_BANK == 1
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
-#else
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
-#endif
 
 	efitick_t startStopStateLastPushTime = 0;
 

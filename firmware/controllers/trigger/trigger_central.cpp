@@ -209,7 +209,7 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		getExecutorInterface()->scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 	if (engineConfiguration->displayLogicLevelsInEngineSniffer && isImportantFront) {
@@ -301,7 +301,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
-			engine->vvtTriggerConfiguration[camIndex],
+			engine->triggerCentral.vvtTriggerConfiguration[camIndex],
 			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
 		tc->triggerState.vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
@@ -471,7 +471,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!engineConfiguration->useNoiselessTriggerDecoder) {
-		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, engine->triggerCentral.primaryTriggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -660,7 +660,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
 			return;
 		}
-		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, primaryTriggerConfiguration)) {
 			return;
 		}
 	}
@@ -678,7 +678,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			"trigger",
 			triggerShape,
 			engine,
-			engine->primaryTriggerConfiguration,
+			primaryTriggerConfiguration,
 			signal, timestamp);
 
 	// Don't propagate state if we don't know where we are
