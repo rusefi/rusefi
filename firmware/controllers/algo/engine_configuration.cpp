@@ -1119,16 +1119,6 @@ void applyNonPersistentConfiguration() {
 #endif // EFI_ENGINE_CONTROL
 }
 
-#if EFI_ENGINE_CONTROL
-
-void prepareShapes() {
-	prepareOutputSignals();
-
-	engine->injectionEvents.addFuelEvents();
-}
-
-#endif
-
 void setTwoStrokeOperationMode() {
 	engineConfiguration->twoStroke = true;
 }
