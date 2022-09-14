@@ -125,7 +125,7 @@ void calculateTriggerSynchPoint(
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
 	engine->triggerErrorDetection.clear();
-	shape.initializeSyncPoint(state, engine->primaryTriggerConfiguration);
+	shape.initializeSyncPoint(state, engine->triggerCentral.primaryTriggerConfiguration);
 
 	int length = shape.getLength();
 	engine->engineCycleEventCount = length;

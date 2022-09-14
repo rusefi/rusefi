@@ -41,6 +41,29 @@ protected:
 	virtual trigger_config_s getType() const = 0;
 };
 
+class PrimaryTriggerConfiguration final : public TriggerConfiguration {
+public:
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_config_s getType() const override;
+};
+
+class VvtTriggerConfiguration final : public TriggerConfiguration {
+public:
+	const int index;
+
+	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
+	}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_config_s getType() const override;
+};
+
 typedef struct {
 	/**
 	 * index within trigger revolution, from 0 to trigger event count

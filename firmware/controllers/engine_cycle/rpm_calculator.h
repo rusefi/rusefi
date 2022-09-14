@@ -178,6 +178,7 @@ void tdcMarkCallback(
  * @brief   Initialize RPM calculator
  */
 void initRpmCalculator();
+operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 

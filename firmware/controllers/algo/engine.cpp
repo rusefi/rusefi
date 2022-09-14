@@ -100,14 +100,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static operation_mode_e lookupOperationMode() {
-	if (engineConfiguration->twoStroke) {
-		return TWO_STROKE;
-	} else {
-		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
-	}
-}
-
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
 	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
 
@@ -118,16 +110,16 @@ void Engine::updateTriggerWaveform() {
 	static TriggerDecoderBase initState("init");
 
 	// Re-read config in case it's changed
-	primaryTriggerConfiguration.update();
+	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
+		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
+	triggerCentral.triggerShape.initializeTriggerWaveform(lookupOperationMode(), triggerCentral.primaryTriggerConfiguration);
 
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
@@ -166,7 +158,7 @@ void Engine::updateTriggerWaveform() {
 		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
 			initVvtShape(
 				triggerCentral.vvtShape[camIndex],
-				vvtTriggerConfiguration[camIndex],
+				triggerCentral.vvtTriggerConfiguration[camIndex],
 				initState
 			);
 		}
@@ -193,9 +185,9 @@ void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
 	// Re-read config in case it's changed
-	primaryTriggerConfiguration.update();
+	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
+		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 
 	efiWatchdog();
@@ -419,9 +411,9 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 #endif
 
 void Engine::injectEngineReferences() {
-	primaryTriggerConfiguration.update();
+	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
+		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 }
 
@@ -566,23 +558,6 @@ bool Engine::isMainRelayEnabled() const {
 
 injection_mode_e getCurrentInjectionMode() {
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
-}
-
-// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
-// this is related to 'knownOperationMode' flag
-static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	switch (type) {
-		case TT_TOOTHED_WHEEL:
-		case TT_ONE:
-		case TT_3_1_CAM:
-		case TT_36_2_2_2:	// TODO: should this one be in this list?
-		case TT_TOOTHED_WHEEL_60_2:
-		case TT_TOOTHED_WHEEL_36_1:
-			// These modes could be either cam or crank speed
-			return false;
-		default:
-			return true;
-	}
 }
 
 /**
