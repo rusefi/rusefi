@@ -142,7 +142,14 @@ void PwmConfig::handleCycleStart() {
 		pwmCycleCallback(this);
 	}
 		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
-		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
+		uint32_t iterationLimitInt32 = (0xFFFFFFFF / periodNt) - 2;
+
+		// Maximum number of iterations that don't lose precision due to 32b float (~7 decimal significant figures)
+		// We want at least 0.01% timing precision (aka 1/10000 cycle, 0.072 degree for trigger stimulator), which
+		// means we can't do any more than 2^23 / 10000 cycles = 838 iterations before a reset
+		uint32_t iterationLimitFloat = 838;
+
+		uint32_t iterationLimit = minI(iterationLimitInt32, iterationLimitFloat);
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
