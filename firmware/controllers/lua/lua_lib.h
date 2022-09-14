@@ -77,7 +77,8 @@ end  \
 // MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.
 #define TWO_BYTES_MSB "function getTwoBytesMSB(data, offset, factor)        \
 		return (data[offset + 1] * 256 + data[offset + 2]) * factor   \
-	end"
+	end \
+"
 
 #define SET_TWO_BYTES_MSB "	function setTwoBytesMsb(data, offset, value) \
 		value = math.floor(value) \
