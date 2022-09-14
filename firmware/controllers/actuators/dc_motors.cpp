@@ -123,6 +123,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,
+		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins,
 		&engine->executor,
 		engineConfiguration->etbFreq

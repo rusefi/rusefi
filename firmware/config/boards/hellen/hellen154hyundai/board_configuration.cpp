@@ -125,6 +125,9 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
 	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
+		// todo You would not believe how you invert TLE9201 #4579
+		engineConfiguration->stepperDcInvertedPins = true;
+
 	    //ETB1
 	    // PWM pin
 	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
@@ -190,6 +193,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
+	engineConfiguration->etb.pFactor = 8.8944;
+	engineConfiguration->etb.iFactor = 70.2307;
+	engineConfiguration->etb.dFactor = 0.1855;
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
@@ -204,10 +210,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	// very similar to Nissan?
-	engineConfiguration->tpsMin = 100;
-	engineConfiguration->tpsMax = 914;
+	engineConfiguration->tpsMin = 98;
+	engineConfiguration->tpsMax = 926;
 
-	engineConfiguration->tps1SecondaryMin = 880;
-	engineConfiguration->tps1SecondaryMax = 68;
+	engineConfiguration->tps1SecondaryMin = 891;
+	engineConfiguration->tps1SecondaryMax = 69;
 }
