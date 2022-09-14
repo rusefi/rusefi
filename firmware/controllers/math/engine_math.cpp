@@ -49,11 +49,11 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 }
 
 float getFuelingLoad() {
-	return engine->engineState.fuelingLoad;
+	return getEngineState()->fuelingLoad;
 }
 
 float getIgnitionLoad() {
-	return engine->engineState.ignitionLoad;
+	return getEngineState()->ignitionLoad;
 }
 
 /**
@@ -434,7 +434,7 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	engine->engineState.engineCycle = getEngineCycle(engine->getOperationMode());
+	getEngineState()->engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
 	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
