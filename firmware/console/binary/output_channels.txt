@@ -299,9 +299,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
-    uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
-    uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
-
     uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
     uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
