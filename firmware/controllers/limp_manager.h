@@ -115,3 +115,7 @@ private:
 
 	Timer m_engineStopTimer;
 };
+
+LimpManager * getLimpManager();
+
+

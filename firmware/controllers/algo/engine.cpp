@@ -261,7 +261,7 @@ void Engine::updateSlowSensors() {
 
 #if EFI_ENGINE_CONTROL
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
+	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
@@ -608,4 +608,8 @@ ExecutorInterface *getExecutorInterface() {
 
 TriggerCentral * getTriggerCentral() {
 	return &engine->triggerCentral;
+}
+
+LimpManager * getLimpManager() {
+	return &engine->limpManager;
 }

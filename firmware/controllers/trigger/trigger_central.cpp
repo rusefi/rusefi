@@ -451,7 +451,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	}
 
 	// Don't accept trigger input in case of some problems
-	if (!engine->limpManager.allowTriggerInput()) {
+	if (!getLimpManager()->allowTriggerInput()) {
 		return;
 	}
 
@@ -520,8 +520,8 @@ static const bool isUpEvent[4] = { false, true, false, true };
 static const int wheelIndeces[4] = { 0, 0, 1, 1};
 
 static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex) {
-	if (!engine->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
-		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineSnifferEnabled
+	if (!getTriggerCentral()->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
+		return; // engineSnifferRpmThreshold is accounted for inside getTriggerCentral()->isEngineSnifferEnabled
 	}
 
 	int wheelIndex = wheelIndeces[(int )ckpSignalType];
@@ -631,7 +631,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
 				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				efitick_t nowNt = getTimeNowNt();
-				engine->limpManager.updateState(rpm, nowNt);
+				getLimpManager()->updateState(rpm, nowNt);
 #endif // EFI_UNIT_TEST
 			}
 

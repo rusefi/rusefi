@@ -220,10 +220,6 @@ public:
 
     // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
-	/**
-	 * this is based on engineSnifferRpmThreshold settings and current RPM
-	 */
-	bool isEngineSnifferEnabled = false;
 
 #if EFI_UNIT_TEST
 	bool tdcMarkEnabled = true;
