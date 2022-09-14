@@ -14,9 +14,4 @@
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase);
 
 void endSimultaneousInjection(InjectionEvent *event);
-void turnInjectionPinHigh(InjectionEvent *event);
 void turnInjectionPinLow(InjectionEvent *event);
-
-// Internal use only - exposed for tests
-void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
-		int rpm, efitick_t nowNt);
