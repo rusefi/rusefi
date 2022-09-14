@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 18:11:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 14 04:38:33 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1156,252 +1156,244 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
-	 * offset 384
-	 */
-	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
-	/**
-	 * offset 386
-	 */
-	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
-	/**
 	us
-	 * offset 388
+	 * offset 384
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 390
+	 * offset 386
 	 */
 	uint8_t maxTriggerReentrant = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 391
+	 * offset 387
 	 */
-	uint8_t alignmentFill_at_391[1];
+	uint8_t alignmentFill_at_387[1];
 	/**
-	 * offset 392
+	 * offset 388
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 394
+	 * offset 390
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
-	 * offset 396
+	 * offset 392
 	 */
 	int triggerPrimaryFall = (int)0;
 	/**
-	 * offset 400
+	 * offset 396
 	 */
 	int triggerPrimaryRise = (int)0;
 	/**
-	 * offset 404
+	 * offset 400
 	 */
 	int triggerSecondaryFall = (int)0;
 	/**
-	 * offset 408
+	 * offset 404
 	 */
 	int triggerSecondaryRise = (int)0;
 	/**
-	 * offset 412
+	 * offset 408
 	 */
 	int triggerVvtFall = (int)0;
 	/**
-	 * offset 416
+	 * offset 412
 	 */
 	int triggerVvtRise = (int)0;
 	/**
-	 * offset 420
+	 * offset 416
 	 */
 	uint8_t startStopStateToggleCounter = (uint8_t)0;
 	/**
-	 * offset 421
+	 * offset 417
 	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 422
+	 * offset 418
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
-	 * offset 423
+	 * offset 419
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 424
+	 * offset 420
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 440
+	 * offset 436
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 456
+	 * offset 452
 	 */
 	pid_status_s etbStatus;
 	/**
-	 * offset 472
+	 * offset 468
 	 */
 	pid_status_s boostStatus;
 	/**
-	 * offset 488
+	 * offset 484
 	 */
 	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
 	/**
 	 * aux speed 1
 	s
-	 * offset 552
+	 * offset 548
 	 */
 	uint16_t auxSpeed1 = (uint16_t)0;
 	/**
 	 * aux speed 2
 	s
-	 * offset 554
+	 * offset 550
 	 */
 	uint16_t auxSpeed2 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ISS@@
 	RPM
-	 * offset 556
+	 * offset 552
 	 */
 	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
 	/**
 	V
-	 * offset 558
+	 * offset 554
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAnalogInput[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * GPPWM Output
 	%
-	 * offset 574
+	 * offset 570
 	 */
 	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
 	/**
 	V
-	 * offset 578
+	 * offset 574
 	 */
 	scaled_channel<int16_t, 1000, 1> rawBattery = (int16_t)0;
 	/**
-	 * offset 580
+	 * offset 576
 	 */
 	uint8_t extiOverflowCount = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 581
+	 * offset 577
 	 */
-	uint8_t alignmentFill_at_581[3];
+	uint8_t alignmentFill_at_577[3];
 	/**
-	offset 584 bit 0 */
+	offset 580 bit 0 */
 	bool coilState1 : 1 {};
 	/**
-	offset 584 bit 1 */
+	offset 580 bit 1 */
 	bool coilState2 : 1 {};
 	/**
-	offset 584 bit 2 */
+	offset 580 bit 2 */
 	bool coilState3 : 1 {};
 	/**
-	offset 584 bit 3 */
+	offset 580 bit 3 */
 	bool coilState4 : 1 {};
 	/**
-	offset 584 bit 4 */
+	offset 580 bit 4 */
 	bool coilState5 : 1 {};
 	/**
-	offset 584 bit 5 */
+	offset 580 bit 5 */
 	bool coilState6 : 1 {};
 	/**
-	offset 584 bit 6 */
+	offset 580 bit 6 */
 	bool coilState7 : 1 {};
 	/**
-	offset 584 bit 7 */
+	offset 580 bit 7 */
 	bool coilState8 : 1 {};
 	/**
-	offset 584 bit 8 */
+	offset 580 bit 8 */
 	bool coilState9 : 1 {};
 	/**
-	offset 584 bit 9 */
+	offset 580 bit 9 */
 	bool coilState10 : 1 {};
 	/**
-	offset 584 bit 10 */
+	offset 580 bit 10 */
 	bool coilState11 : 1 {};
 	/**
-	offset 584 bit 11 */
+	offset 580 bit 11 */
 	bool coilState12 : 1 {};
 	/**
-	offset 584 bit 12 */
+	offset 580 bit 12 */
 	bool injectorState1 : 1 {};
 	/**
-	offset 584 bit 13 */
+	offset 580 bit 13 */
 	bool injectorState2 : 1 {};
 	/**
-	offset 584 bit 14 */
+	offset 580 bit 14 */
 	bool injectorState3 : 1 {};
 	/**
-	offset 584 bit 15 */
+	offset 580 bit 15 */
 	bool injectorState4 : 1 {};
 	/**
-	offset 584 bit 16 */
+	offset 580 bit 16 */
 	bool injectorState5 : 1 {};
 	/**
-	offset 584 bit 17 */
+	offset 580 bit 17 */
 	bool injectorState6 : 1 {};
 	/**
-	offset 584 bit 18 */
+	offset 580 bit 18 */
 	bool injectorState7 : 1 {};
 	/**
-	offset 584 bit 19 */
+	offset 580 bit 19 */
 	bool injectorState8 : 1 {};
 	/**
-	offset 584 bit 20 */
+	offset 580 bit 20 */
 	bool injectorState9 : 1 {};
 	/**
-	offset 584 bit 21 */
+	offset 580 bit 21 */
 	bool injectorState10 : 1 {};
 	/**
-	offset 584 bit 22 */
+	offset 580 bit 22 */
 	bool injectorState11 : 1 {};
 	/**
-	offset 584 bit 23 */
+	offset 580 bit 23 */
 	bool injectorState12 : 1 {};
 	/**
-	offset 584 bit 24 */
-	bool unusedBit_302_24 : 1 {};
+	offset 580 bit 24 */
+	bool unusedBit_300_24 : 1 {};
 	/**
-	offset 584 bit 25 */
-	bool unusedBit_302_25 : 1 {};
+	offset 580 bit 25 */
+	bool unusedBit_300_25 : 1 {};
 	/**
-	offset 584 bit 26 */
-	bool unusedBit_302_26 : 1 {};
+	offset 580 bit 26 */
+	bool unusedBit_300_26 : 1 {};
 	/**
-	offset 584 bit 27 */
-	bool unusedBit_302_27 : 1 {};
+	offset 580 bit 27 */
+	bool unusedBit_300_27 : 1 {};
 	/**
-	offset 584 bit 28 */
-	bool unusedBit_302_28 : 1 {};
+	offset 580 bit 28 */
+	bool unusedBit_300_28 : 1 {};
 	/**
-	offset 584 bit 29 */
-	bool unusedBit_302_29 : 1 {};
+	offset 580 bit 29 */
+	bool unusedBit_300_29 : 1 {};
 	/**
-	offset 584 bit 30 */
-	bool unusedBit_302_30 : 1 {};
+	offset 580 bit 30 */
+	bool unusedBit_300_30 : 1 {};
 	/**
-	offset 584 bit 31 */
-	bool unusedBit_302_31 : 1 {};
+	offset 580 bit 31 */
+	bool unusedBit_300_31 : 1 {};
 	/**
-	 * offset 588
+	 * offset 584
 	 */
 	int outputRequestPeriod = (int)0;
 	/**
-	 * offset 592
+	 * offset 588
 	 */
 	uint8_t unusedAtTheEnd[154];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 746
+	 * offset 742
 	 */
-	uint8_t alignmentFill_at_746[2];
+	uint8_t alignmentFill_at_742[2];
 };
-static_assert(sizeof(output_channels_s) == 748);
+static_assert(sizeof(output_channels_s) == 744);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 13 18:11:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 14 04:38:33 UTC 2022
