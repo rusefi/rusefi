@@ -117,6 +117,7 @@ void TriggerWaveform::initializeSyncPoint(TriggerDecoderBase& state,
  * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerDecoderBase *state'
  */
 void calculateTriggerSynchPoint(
+		TriggerCentral *triggerCentral,
 		TriggerWaveform& shape,
 		TriggerDecoderBase& state) {
 	state.resetTriggerState();
@@ -124,11 +125,11 @@ void calculateTriggerSynchPoint(
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
-	engine->triggerErrorDetection.clear();
-	shape.initializeSyncPoint(state, engine->triggerCentral.primaryTriggerConfiguration);
+	triggerCentral->triggerErrorDetection.clear();
+	shape.initializeSyncPoint(state, triggerCentral->primaryTriggerConfiguration);
 
 	int length = shape.getLength();
-	engine->engineCycleEventCount = length;
+	triggerCentral->engineCycleEventCount = length;
 
 	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
@@ -161,7 +162,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 	size_t triggerShapeLength = shape->getSize();
 
 	assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
-	efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
+	efiAssertVoid(CUSTOM_TRIGGER_CYCLE, getTriggerCentral()->engineCycleEventCount != 0, "zero engineCycleEventCount");
 
 	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
 		if (eventIndex == 0) {

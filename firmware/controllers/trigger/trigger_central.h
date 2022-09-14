@@ -56,6 +56,8 @@ public:
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
 
+	cyclic_buffer<int> triggerErrorDetection;
+
 	/**
 	 * See also triggerSimulatorFrequency
 	 */
@@ -86,6 +88,11 @@ public:
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
 
+	/**
+	 * value of 'triggerShape.getLength()'
+	 * pre-calculating this value is a performance optimization
+	 */
+	uint32_t engineCycleEventCount = 0;
 	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
 	 * we have not adjusted for yet
@@ -195,5 +202,10 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
+
+void calculateTriggerSynchPoint(
+		TriggerCentral *triggerCentral,
+	TriggerWaveform& shape,
+	TriggerDecoderBase& state);
 
 TriggerCentral * getTriggerCentral();
