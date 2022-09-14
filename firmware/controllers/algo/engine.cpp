@@ -100,75 +100,17 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
-
-	shape.initializeSyncPoint(initState, config);
-}
-
 void Engine::updateTriggerWaveform() {
-	static TriggerDecoderBase initState("init");
 
-	// Re-read config in case it's changed
-	triggerCentral.primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		triggerCentral.vvtTriggerConfiguration[camIndex].update();
-	}
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	triggerCentral.triggerShape.initializeTriggerWaveform(lookupOperationMode(), triggerCentral.primaryTriggerConfiguration);
+	engine->triggerCentral.updateWaveform();
 
-	/**
-	 * this is only useful while troubleshooting a new trigger shape in the field
-	 * in very VERY rare circumstances
-	 */
-	if (engineConfiguration->overrideTriggerGaps) {
-		int gapIndex = 0;
 
-		// copy however many the user wants
-		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
-			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
-			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
-		}
-
-		// fill the remainder with the default gaps
-		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
-			engine->triggerCentral.triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
-			engine->triggerCentral.triggerShape.syncronizationRatioTo[gapIndex] = NAN;
-		}
-	}
-
-	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
-		/**
-	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
-	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
-	 	 */
-		calculateTriggerSynchPoint(&engine->triggerCentral,
-				engine->triggerCentral.triggerShape,
-				initState);
-
-		engine->triggerCentral.engineCycleEventCount = engine->triggerCentral.triggerShape.getLength();
-	}
-
-	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-		// todo: should 'vvtWithRealDecoder' be used here?
-		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
-			initVvtShape(
-				triggerCentral.vvtShape[camIndex],
-				triggerCentral.vvtTriggerConfiguration[camIndex],
-				initState
-			);
-		}
-	}
-
-	// This is not the right place for this, but further refactoring has to happen before it can get moved.
-	engine->triggerCentral.triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
-
-	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
+	if (!engine->triggerCentral.triggerShape.shapeDefinitionError) {
 		prepareOutputSignals();
 	}
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */

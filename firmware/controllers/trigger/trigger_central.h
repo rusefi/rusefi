@@ -51,6 +51,7 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+	void updateWaveform();
 
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
