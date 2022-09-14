@@ -153,6 +153,11 @@ public:
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
 
+	/**
+	 * this is based on engineSnifferRpmThreshold settings and current RPM
+	 */
+	bool isEngineSnifferEnabled = false;
+
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
 

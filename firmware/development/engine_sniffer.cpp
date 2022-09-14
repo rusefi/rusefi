@@ -114,7 +114,7 @@ int WaveChart::getSize() {
 
 #if ! EFI_UNIT_TEST
 static void printStatus() {
-	efiPrintf("engine sniffer: %s", boolToString(engine->isEngineSnifferEnabled));
+	efiPrintf("engine sniffer: %s", boolToString(getTriggerCentral()->isEngineSnifferEnabled));
 	efiPrintf("engine sniffer size=%d", engineConfiguration->engineChartSize);
 }
 
@@ -141,7 +141,7 @@ void WaveChart::publish() {
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
-	if (engine->isEngineSnifferEnabled) {
+	if (getTriggerCentral()->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
 }
@@ -157,7 +157,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (nowNt < pauseEngineSnifferUntilNt) {
 		return;
 	}
-	if (!engine->isEngineSnifferEnabled) {
+	if (!getTriggerCentral()->isEngineSnifferEnabled) {
 		return;
 	}
 	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)

@@ -365,7 +365,7 @@ static void onTdcCallback(void *) {
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
-	if (isTriggerSynchronizationPoint && engine->isEngineSnifferEnabled) {
+	if (isTriggerSynchronizationPoint && getTriggerCentral()->isEngineSnifferEnabled) {
 
 #if EFI_UNIT_TEST
 		if (!engine->tdcMarkEnabled) {
