@@ -20,6 +20,17 @@
 
 #if EFI_ENGINE_CONTROL
 
+void turnInjectionPinHigh(InjectionEvent *event) {
+	efitick_t nowNt = getTimeNowNt();
+	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
+		InjectorOutputPin *output = event->outputs[i];
+
+		if (output) {
+			output->open(nowNt);
+		}
+	}
+}
+
 FuelSchedule::FuelSchedule() {
 	for (int cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
 		elements[cylinderIndex].ownIndex = cylinderIndex;
