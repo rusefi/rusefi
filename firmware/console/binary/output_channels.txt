@@ -363,5 +363,6 @@ bit injectorState11
 bit injectorState12
 
 int outputRequestPeriod
-	uint8_t[154 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+float mapFast
+	uint8_t[150 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

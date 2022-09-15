@@ -167,7 +167,6 @@ static void applyMapMinBufferLength() {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */

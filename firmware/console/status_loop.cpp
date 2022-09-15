@@ -798,6 +798,9 @@ void updateTunerStudioState() {
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
 	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
 
+	tsOutputChannels->mapFast = Sensor::getOrZero(SensorType::MapFast);
+
+
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
 		postCanState();
