@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 14 04:38:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 15 18:59:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1385,7 +1385,11 @@ struct output_channels_s {
 	/**
 	 * offset 588
 	 */
-	uint8_t unusedAtTheEnd[154];
+	float mapFast = (float)0;
+	/**
+	 * offset 592
+	 */
+	uint8_t unusedAtTheEnd[150];
 	/**
 	 * need 4 byte alignment
 	units
@@ -1396,4 +1400,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 744);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Sep 14 04:38:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 15 18:59:53 UTC 2022
