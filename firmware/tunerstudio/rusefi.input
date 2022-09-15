@@ -2029,6 +2029,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ; todo: https://github.com/rusefi/rusefi/issues/2077
 
 	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+   		field = "MAP readout angle",                    mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
@@ -3911,9 +3912,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Trailing Pin 3",						trailingCoilPins3
 		field = "Trailing Pin 4",						trailingCoilPins4
 
-    dialog = mapCamDialog, "Engine Phase by MAP sensor"
-		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
-
 	dialog = fancyHardwareDialog, "Fancy Boards"
 	    field = "Tachometer Output",                    boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
@@ -3942,7 +3940,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Always use instant RPM",				alwaysInstantRpm
 		field = vinNumber,                              vinNumber
 		field = "TODO KS mode 4569",                    kickStartCranking
-		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueTableTbl
 
