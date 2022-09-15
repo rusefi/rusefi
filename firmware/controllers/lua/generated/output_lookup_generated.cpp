@@ -477,5 +477,7 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.injectorState12;
 	if (strEqualCaseInsensitive(name, "outputRequestPeriod"))
 		return engine->outputChannels.outputRequestPeriod;
+	if (strEqualCaseInsensitive(name, "mapFast"))
+		return engine->outputChannels.mapFast;
 	return EFI_ERROR_CODE;
 }
