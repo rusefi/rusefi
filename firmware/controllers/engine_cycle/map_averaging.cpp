@@ -104,7 +104,12 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
-	float instantMap = convertMap(instantVoltage).value_or(0);
+	SensorResult mapResult = convertMap(instantVoltage);
+	if (!mapResult) {
+		// hopefully this warning is not too much CPU consumption for fast ADC callback
+		warning(CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+	}
+	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
