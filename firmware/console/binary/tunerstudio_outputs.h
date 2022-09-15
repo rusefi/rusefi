@@ -14,10 +14,6 @@
 #include "efi_scaled_channel.h"
 #include "output_channels_generated.h"
 
-#ifndef WITH_TS_STATE
-// do we ever see a case of compiling without TSOutputChannels? Shall we wipe out all '#if EFI_TUNER_STUDIO' or replace with '#if WITH_TS_STATE'
-#define WITH_TS_STATE TRUE
-#endif
 
 /**
  * todo https://github.com/rusefi/rusefi/issues/197
