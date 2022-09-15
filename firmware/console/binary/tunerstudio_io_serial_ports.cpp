@@ -15,6 +15,7 @@
 #endif // HW_HELLEN
 
 // These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
+class UARTDriver;
 class UartDmaTsChannel;
 class UartTsChannel;
 class SerialTsChannel;

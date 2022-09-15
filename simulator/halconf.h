@@ -51,7 +51,7 @@
  * @brief   Enables the CAN subsystem.
  */
 #if !defined(HAL_USE_CAN) || defined(__DOXYGEN__)
-#define HAL_USE_CAN                 !EFI_SIM_IS_WINDOWS
+#define HAL_USE_CAN                         TRUE /* !EFI_SIM_IS_WINDOWS */
 #endif
 
 /**
@@ -174,13 +174,6 @@
 #endif
 
 /**
- * @brief   Enables the TRNG subsystem.
- */
-#if !defined(HAL_USE_TRNG) || defined(__DOXYGEN__)
-#define HAL_USE_TRNG                        FALSE
-#endif
-
-/**
  * @brief   Enables the UART subsystem.
  */
 #if !defined(HAL_USE_UART) || defined(__DOXYGEN__)
@@ -257,55 +250,6 @@
  */
 #if !defined(CAN_USE_SLEEP_MODE) || defined(__DOXYGEN__)
 #define CAN_USE_SLEEP_MODE                  FALSE
-#endif
-
-/**
- * @brief   Enforces the driver to use direct callbacks rather than OSAL events.
- */
-#if !defined(CAN_ENFORCE_USE_CALLBACKS) || defined(__DOXYGEN__)
-#define CAN_ENFORCE_USE_CALLBACKS           FALSE
-#endif
-
-/*===========================================================================*/
-/* CRY driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables the SW fall-back of the cryptographic driver.
- * @details When enabled, this option, activates a fall-back software
- *          implementation for algorithms not supported by the underlying
- *          hardware.
- * @note    Fall-back implementations may not be present for all algorithms.
- */
-#if !defined(HAL_CRY_USE_FALLBACK) || defined(__DOXYGEN__)
-#define HAL_CRY_USE_FALLBACK                FALSE
-#endif
-
-/**
- * @brief   Makes the driver forcibly use the fall-back implementations.
- */
-#if !defined(HAL_CRY_ENFORCE_FALLBACK) || defined(__DOXYGEN__)
-#define HAL_CRY_ENFORCE_FALLBACK            FALSE
-#endif
-
-/*===========================================================================*/
-/* DAC driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Enables synchronous APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(DAC_USE_WAIT) || defined(__DOXYGEN__)
-#define DAC_USE_WAIT                        FALSE
-#endif
-
-/**
- * @brief   Enables the @p dacAcquireBus() and @p dacReleaseBus() APIs.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(DAC_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
-#define DAC_USE_MUTUAL_EXCLUSION            FALSE
 #endif
 
 /**
@@ -447,20 +391,6 @@
 #define SDC_INIT_OCR                        0x80100000U
 #endif
 
-/**
- * @brief   OCR initialization constant for V20 cards.
- */
-#if !defined(SDC_INIT_OCR_V20) || defined(__DOXYGEN__)
-#define SDC_INIT_OCR_V20                    0x50FF8000U
-#endif
-
-/**
- * @brief   OCR initialization constant for non-V20 cards.
- */
-#if !defined(SDC_INIT_OCR) || defined(__DOXYGEN__)
-#define SDC_INIT_OCR                        0x80100000U
-#endif
-
 /*===========================================================================*/
 /* SERIAL driver related settings.                                           */
 /*===========================================================================*/
@@ -529,49 +459,6 @@
 #endif
 
 /*===========================================================================*/
-/* SIO driver related settings.                                              */
-/*===========================================================================*/
-
-/**
- * @brief   Default bit rate.
- * @details Configuration parameter, this is the baud rate selected for the
- *          default configuration.
- */
-#if !defined(SIO_DEFAULT_BITRATE) || defined(__DOXYGEN__)
-#define SIO_DEFAULT_BITRATE                 38400
-#endif
-
-/**
- * @brief   Support for thread synchronization API.
- */
-#if !defined(SIO_USE_SYNCHRONIZATION) || defined(__DOXYGEN__)
-#define SIO_USE_SYNCHRONIZATION             FALSE
-#endif
-
-/*===========================================================================*/
-/* SERIAL_USB driver related setting.                                        */
-/*===========================================================================*/
-
-/**
- * @brief   Serial over USB buffers size.
- * @details Configuration parameter, the buffer size must be a multiple of
- *          the USB data endpoint maximum packet size.
- * @note    The default is 256 bytes for both the transmission and receive
- *          buffers.
- */
-#if !defined(SERIAL_USB_BUFFERS_SIZE) || defined(__DOXYGEN__)
-#define SERIAL_USB_BUFFERS_SIZE             256
-#endif
-
-/**
- * @brief   Serial over USB number of buffers.
- * @note    The default is 2 buffers.
- */
-#if !defined(SERIAL_USB_BUFFERS_NUMBER) || defined(__DOXYGEN__)
-#define SERIAL_USB_BUFFERS_NUMBER           2
-#endif
-
-/*===========================================================================*/
 /* SPI driver related settings.                                              */
 /*===========================================================================*/
 
@@ -591,26 +478,11 @@
 #endif
 
 /**
- * @brief   Inserts an assertion on function errors before returning.
- */
-#if !defined(SPI_USE_ASSERT_ON_ERROR) || defined(__DOXYGEN__)
-#define SPI_USE_ASSERT_ON_ERROR             TRUE
-#endif
-
-/**
  * @brief   Enables the @p spiAcquireBus() and @p spiReleaseBus() APIs.
  * @note    Disabling this option saves both code and data space.
  */
 #if !defined(SPI_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
 #define SPI_USE_MUTUAL_EXCLUSION            TRUE
-#endif
-
-/**
- * @brief   Handling method for SPI CS line.
- * @note    Disabling this option saves both code and data space.
- */
-#if !defined(SPI_SELECT_MODE) || defined(__DOXYGEN__)
-#define SPI_SELECT_MODE                     SPI_SELECT_MODE_PAD
 #endif
 
 /**

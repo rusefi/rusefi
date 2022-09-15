@@ -51,27 +51,6 @@
 
 /** @} */
 
-/**
- * @brief   Handling of instances.
- * @note    If enabled then threads assigned to various instances can
- *          interact each other using the same synchronization objects.
- *          If disabled then each OS instance is a separate world, no
- *          direct interactions are handled by the OS.
- */
-#if !defined(CH_CFG_SMP_MODE)
-#define CH_CFG_SMP_MODE                     FALSE
-#endif
-
-/**
- * @brief   Time Stamps APIs.
- * @details If enabled then the time stamps APIs are included in the kernel.
- *
- * @note    The default is @p TRUE.
- */
-#if !defined(CH_CFG_USE_TIMESTAMP)
-#define CH_CFG_USE_TIMESTAMP                TRUE
-#endif
-
 /*===========================================================================*/
 /**
  * @name System timers settings
@@ -610,9 +589,6 @@
 #define CH_DBG_SYSTEM_STATE_CHECK           TRUE
 #endif
 
-  #define ON_LOCK_HOOK
-  #define ON_UNLOCK_HOOK
-
 /**
  * @brief   Debug option, parameters checks.
  * @details If enabled then the checks on the API functions input
@@ -711,13 +687,6 @@
   /* Add system custom fields here.*/
 
 /**
- * @brief   OS instance structure extension.
- * @details User fields added to the end of the @p os_instance_t structure.
- */
-#define CH_CFG_OS_INSTANCE_EXTRA_FIELDS                                     \
-  /* Add OS instance custom fields here.*/
-
-/**
  * @brief   System initialization hook.
  * @details User initialization code added to the @p chSysInit() function
  *          just before interrupts are enabled globally.
@@ -732,15 +701,6 @@
  */
 #define CH_CFG_OS_INSTANCE_EXTRA_FIELDS                                     \
   /* Add OS instance custom fields here.*/
-
-/**
- * @brief   OS instance initialization hook.
- *
- * @param[in] oip       pointer to the @p os_instance_t structure
- */
-#define CH_CFG_OS_INSTANCE_INIT_HOOK(oip) {                                 \
-  /* Add OS instance initialization code here.*/                            \
-}
 
 /**
  * @brief   OS instance initialization hook.
@@ -857,7 +817,6 @@
   /* System halt code here.*/                                               \
   printf("chSysHalt: %s\r\n", reason);                                      \
 	exit(-1);                                                                 \
-  /* chDbgPanic3(reason, __FILE__, __LINE__); */                            \
 }
 
 /**
