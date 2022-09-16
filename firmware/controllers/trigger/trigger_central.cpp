@@ -751,6 +751,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 #endif /* EFI_CDM_INTEGRATION */
 
+	if (engine->rpmCalculator.getCachedRpm() > 0 && triggerIndexForListeners == 0) {
+		engine->tpsAccelEnrichment.onEngineCycleTps();
+	}
+
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
 
