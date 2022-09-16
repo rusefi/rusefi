@@ -933,7 +933,7 @@ void onConfigurationChangeTriggerCallback() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	getTriggerCentral()->triggerConfigChanged = getTriggerCentral()->triggerConfigChanged || changed;
+	getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange = getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange || changed;
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
@@ -1005,14 +1005,17 @@ void TriggerCentral::updateWaveform() {
  * @returns true if configuration just changed, and if that change has affected trigger
  */
 bool TriggerCentral::checkIfTriggerConfigChanged() {
-	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && triggerConfigChanged;
-	triggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+	// we want to make sure that configuration has changed AND that change has changed trigger specifically
+	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && triggerConfigChangedOnLastConfigurationChange;
+	triggerConfigChangedOnLastConfigurationChange = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
+#if EFI_UNIT_TEST
 bool TriggerCentral::isTriggerConfigChanged() {
-	return triggerConfigChanged;
+	return triggerConfigChangedOnLastConfigurationChange;
 }
+#endif // EFI_UNIT_TEST
 
 void validateTriggerInputs() {
 	if (engineConfiguration->triggerInputPins[0] == Gpio::Unassigned && engineConfiguration->triggerInputPins[1] != Gpio::Unassigned) {

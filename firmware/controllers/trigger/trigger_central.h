@@ -99,10 +99,12 @@ public:
 	 * true if a recent configuration change has changed any of the trigger settings which
 	 * we have not adjusted for yet
 	 */
-	bool triggerConfigChanged = false;
+	bool triggerConfigChangedOnLastConfigurationChange = false;
 
 	bool checkIfTriggerConfigChanged();
+#if EFI_UNIT_TEST
 	bool isTriggerConfigChanged();
+#endif // EFI_UNIT_TEST
 
 	bool isTriggerDecoderError();
 
