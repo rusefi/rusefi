@@ -83,3 +83,5 @@ public:
 	InjectionEvent elements[MAX_CYLINDER_COUNT];
 	bool isReady = false;
 };
+
+FuelSchedule * getFuelSchedule();

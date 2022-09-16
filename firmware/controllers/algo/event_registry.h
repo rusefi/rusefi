@@ -82,3 +82,6 @@ public:
 	AngleBasedEvent open;
 	AngleBasedEvent close;
 };
+
+
+IgnitionEventList *getIgnitionEvents();
