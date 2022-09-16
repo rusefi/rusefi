@@ -27,31 +27,21 @@
 #include <rusefi/isnan.h>
 #include <rusefi/math.h>
 
-#include "global.h"
-#include "efifeatures.h"
-#include "rusefi_generated.h"
+#include "global_shared.h"
 #include "loggingcentral.h"
 #include "error_handling.h"
 #include "efi_gpio.h"
-#include "tunerstudio_outputs.h"
-#include "engine.h"
 #include "engine_configuration.h"
-#include "engine_controller.h"
-#include "engine_math.h"
 #include "perf_trace.h"
-
 
 #include <rusefi/math.h>
 #include "trigger_central.h"
 #include "trigger_decoder.h"
-#include "global.h"
 #include "sensor.h"
 #include "engine_state.h"
 #include "engine_math.h"
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
-#include "cyclic_buffer.h"
-#include "trigger_central.h"
 #include "trigger_simulator.h"
 
 #if EFI_SENSOR_CHART
