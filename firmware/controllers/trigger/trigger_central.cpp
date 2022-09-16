@@ -925,7 +925,7 @@ void onConfigurationChangeTriggerCallback() {
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
 		engine->updateTriggerWaveform();
-		engine->triggerCentral.noiseFilter.resetAccumSignalData();
+		getTriggerCentral()->noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
@@ -933,7 +933,7 @@ void onConfigurationChangeTriggerCallback() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	engine->triggerCentral.triggerConfigChanged = engine->triggerCentral.triggerConfigChanged || changed;
+	getTriggerCentral()->triggerConfigChanged = getTriggerCentral()->triggerConfigChanged || changed;
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
