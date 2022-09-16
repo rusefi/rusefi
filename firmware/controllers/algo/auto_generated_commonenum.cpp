@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 11 07:52:24 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Sep 16 20:09:28 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -356,12 +356,18 @@ const char *getGppwm_channel_e(gppwm_channel_e value){
 switch(value) {
 case GPPWM_AccelPedal:
   return "GPPWM_AccelPedal";
+case GPPWM_AuxLinear1:
+  return "GPPWM_AuxLinear1";
+case GPPWM_AuxLinear2:
+  return "GPPWM_AuxLinear2";
 case GPPWM_AuxTemp1:
   return "GPPWM_AuxTemp1";
 case GPPWM_AuxTemp2:
   return "GPPWM_AuxTemp2";
 case GPPWM_Clt:
   return "GPPWM_Clt";
+case GPPWM_EthanolPercent:
+  return "GPPWM_EthanolPercent";
 case GPPWM_FuelLoad:
   return "GPPWM_FuelLoad";
 case GPPWM_Iat:
@@ -372,6 +378,14 @@ case GPPWM_Map:
   return "GPPWM_Map";
 case GPPWM_Tps:
   return "GPPWM_Tps";
+case GPPWM_VVT_1E:
+  return "GPPWM_VVT_1E";
+case GPPWM_VVT_1I:
+  return "GPPWM_VVT_1I";
+case GPPWM_VVT_2E:
+  return "GPPWM_VVT_2E";
+case GPPWM_VVT_2I:
+  return "GPPWM_VVT_2I";
 case GPPWM_Vbatt:
   return "GPPWM_Vbatt";
 case GPPWM_Zero:
