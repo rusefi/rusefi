@@ -12,6 +12,7 @@
 
 #include "state_sequence.h"
 #include "engine_configuration_generated_structures.h"
+#include <rusefi/isnan.h>
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -308,6 +309,6 @@ void findTriggerPosition(
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
-#define TRIGGER_WAVEFORM(x) engine->triggerCentral.triggerShape.x
+#define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
 
 #define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)
