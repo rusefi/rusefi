@@ -223,10 +223,6 @@ public:
 	bool tdcMarkEnabled = true;
 #endif // EFI_UNIT_TEST
 
-	/**
-	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
-	 */
-	sensor_chart_e sensorChartMode = SC_OFF;
 
 	bool slowCallBackWasInvoked = false;
 
