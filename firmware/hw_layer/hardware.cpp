@@ -180,7 +180,7 @@ void onFastAdcComplete(adcsample_t*) {
 	efiAssertVoid(CUSTOM_STACK_ADC, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-	if (engine->sensorChartMode == SC_AUX_FAST1) {
+	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}

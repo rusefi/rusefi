@@ -24,10 +24,38 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "pch.h"
+#include <rusefi/arrays.h>
+#include <rusefi/crc.h>
+#include <rusefi/fragments.h>
+#include <rusefi/interpolation.h>
+#include <rusefi/isnan.h>
+#include <rusefi/math.h>
+#include <rusefi/pt2001.h>
+
+#include "global.h"
+#include "efifeatures.h"
+#include "rusefi_generated.h"
+#include "loggingcentral.h"
+#include "error_handling.h"
+#include "efi_gpio.h"
+#include "tunerstudio_outputs.h"
+#include "engine.h"
+#include "engine_configuration.h"
+#include "engine_controller.h"
+#include "engine_math.h"
+#include "pwm_generator_logic.h"
+#include "perf_trace.h"
 
 
-
+#include <rusefi/math.h>
+#include "trigger_central.h"
+#include "trigger_decoder.h"
+#include "global.h"
+#include "sensor.h"
+#include "error_handling.h"
+#include "engine_state.h"
+#include "engine_math.h"
+#include "loggingcentral.h"
 #include "obd_error_codes.h"
 #include "trigger_decoder.h"
 #include "cyclic_buffer.h"
@@ -324,7 +352,7 @@ void PrimaryTriggerDecoder::updateInstantRpm(
 
 
 #if EFI_SENSOR_CHART
-	if (engine->sensorChartMode == SC_RPM_ACCEL || engine->sensorChartMode == SC_DETAILED_RPM) {
+	if (getEngineState()->sensorChartMode == SC_RPM_ACCEL || getEngineState()->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
 		if (engineConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 			scAddData(currentAngle, m_instantRpm);
@@ -415,16 +443,16 @@ void PrimaryTriggerDecoder::onTriggerError() {
 
 void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {
 	warning(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, "primary trigger error: not enough teeth between sync points: expected %d/%d got %d/%d",
-		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
-		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)),
+			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
+			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_SECONDARY),
 		currentCycle.eventCount[0],
 		currentCycle.eventCount[1]);
 }
 
 void PrimaryTriggerDecoder::onTooManyTeeth(int /*actual*/, int /*expected*/) {
 	warning(CUSTOM_PRIMARY_TOO_MANY_TEETH, "primary trigger error: too many teeth between sync points: expected %d/%d got %d/%d",
-		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
-		TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)),
+			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
+			getTriggerCentral()->triggerShape.getExpectedEventCount(TriggerWheel::T_SECONDARY),
 		currentCycle.eventCount[0],
 		currentCycle.eventCount[1]);
 }
