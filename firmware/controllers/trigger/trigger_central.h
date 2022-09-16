@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "pin_repository.h"
 #include "local_version_holder.h"
+#include "cyclic_buffer.h"
 
 #define MAP_CAM_BUFFER 64
 
