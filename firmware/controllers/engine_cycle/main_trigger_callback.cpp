@@ -199,12 +199,12 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	float angleFromNow = eventAngle - currentPhase;
 	if (angleFromNow < 0) {
-		angleFromNow += engine->engineState.engineCycle;
+		angleFromNow += getEngineState()->engineCycle;
 	}
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
+	getExecutorInterface()->scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", angleFromNow, NT2US(startTime - nowNt), injectionDuration);
@@ -288,7 +288,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	
 	if (trgEventIndex == 0) {
 
-		if (engine->triggerCentral.checkIfTriggerConfigChanged()) {
+		if (getTriggerCentral()->checkIfTriggerConfigChanged()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
