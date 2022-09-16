@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 16 01:34:30 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 16 20:10:35 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -718,7 +718,7 @@ public class Fields {
 	public static final int firingOrder_offset = 372;
 	public static final int fixedModeTiming_offset = 404;
 	public static final int fixedTiming_offset = 1684;
-	public static final int FLASH_DATA_VERSION = 10014;
+	public static final int FLASH_DATA_VERSION = 10015;
 	public static final int flexCranking_offset = 1372;
 	public static final int flexSensorPin_offset = 844;
 	public static final int forceO2Heating_offset = 1372;
@@ -1212,16 +1212,23 @@ public class Fields {
 	public static final int gppwm4_rpmBins_offset = 2858;
 	public static final int gppwm4_table_offset = 2866;
 	public static final int gppwm_channel_e_GPPWM_AccelPedal = 9;
-	public static final int gppwm_channel_e_GPPWM_AuxTemp1 = 6;
-	public static final int gppwm_channel_e_GPPWM_AuxTemp2 = 7;
-	public static final int gppwm_channel_e_GPPWM_Clt = 2;
-	public static final int gppwm_channel_e_GPPWM_FuelLoad = 4;
-	public static final int gppwm_channel_e_GPPWM_Iat = 3;
-	public static final int gppwm_channel_e_GPPWM_IgnLoad = 5;
-	public static final int gppwm_channel_e_GPPWM_Map = 1;
-	public static final int gppwm_channel_e_GPPWM_Tps = 0;
+	public static final int gppwm_channel_e_GPPWM_AuxLinear1 = 16;
+	public static final int gppwm_channel_e_GPPWM_AuxLinear2 = 17;
+	public static final int gppwm_channel_e_GPPWM_AuxTemp1 = 7;
+	public static final int gppwm_channel_e_GPPWM_AuxTemp2 = 8;
+	public static final int gppwm_channel_e_GPPWM_Clt = 3;
+	public static final int gppwm_channel_e_GPPWM_EthanolPercent = 15;
+	public static final int gppwm_channel_e_GPPWM_FuelLoad = 5;
+	public static final int gppwm_channel_e_GPPWM_Iat = 4;
+	public static final int gppwm_channel_e_GPPWM_IgnLoad = 6;
+	public static final int gppwm_channel_e_GPPWM_Map = 2;
+	public static final int gppwm_channel_e_GPPWM_Tps = 1;
 	public static final int gppwm_channel_e_GPPWM_Vbatt = 10;
-	public static final int gppwm_channel_e_GPPWM_Zero = 8;
+	public static final int gppwm_channel_e_GPPWM_VVT_1E = 12;
+	public static final int gppwm_channel_e_GPPWM_VVT_1I = 11;
+	public static final int gppwm_channel_e_GPPWM_VVT_2E = 14;
+	public static final int gppwm_channel_e_GPPWM_VVT_2I = 13;
+	public static final int gppwm_channel_e_GPPWM_Zero = 0;
 	public static final int gppwm_channel_size = 92;
 	public static final int GPPWM_CHANNELS = 4;
 	public static final int gppwm_compare_mode_e_GPPWM_GreaterThan = 0;
@@ -1874,7 +1881,6 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1743871579;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2369,7 +2375,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.16.all.1743871579";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.16.all.2388932933";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
@@ -3605,7 +3611,7 @@ public class Fields {
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 2568, FieldType.INT16).setScale(1.0);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 2570, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 2571, FieldType.INT8).setScale(1.0);
-	public static final String[] gppwm_channel_e = {"TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"};
+	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2572, FieldType.INT8, gppwm_channel_e).setScale(1.0);
 	public static final Field GPPWM1_ALIGNMENTFILL_MAP = Field.create("GPPWM1_ALIGNMENTFILL_MAP", 2573, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2574, FieldType.INT8).setScale(1.0);

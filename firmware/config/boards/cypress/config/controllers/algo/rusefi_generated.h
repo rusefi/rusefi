@@ -734,7 +734,7 @@
 #define firingOrder_offset 372
 #define fixedModeTiming_offset 404
 #define fixedTiming_offset 1684
-#define FLASH_DATA_VERSION 10014
+#define FLASH_DATA_VERSION 10015
 #define flexCranking_offset 1372
 #define flexSensorPin_offset 844
 #define forceO2Heating_offset 1372
@@ -1231,19 +1231,26 @@
 #define gppwm4_pwmFrequency_offset 2844
 #define gppwm4_rpmBins_offset 2858
 #define gppwm4_table_offset 2866
-#define gppwm_channel_e_auto_enum 0="GPPWM_Tps",9="GPPWM_AccelPedal",6="GPPWM_AuxTemp1",7="GPPWM_AuxTemp2",2="GPPWM_Clt",4="GPPWM_FuelLoad",3="GPPWM_Iat",5="GPPWM_IgnLoad",1="GPPWM_Map",10="GPPWM_Vbatt",8="GPPWM_Zero"
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
+#define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",3="GPPWM_Clt",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",4="GPPWM_Iat",6="GPPWM_IgnLoad",2="GPPWM_Map",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt"
+#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2"
 #define gppwm_channel_e_GPPWM_AccelPedal 9
-#define gppwm_channel_e_GPPWM_AuxTemp1 6
-#define gppwm_channel_e_GPPWM_AuxTemp2 7
-#define gppwm_channel_e_GPPWM_Clt 2
-#define gppwm_channel_e_GPPWM_FuelLoad 4
-#define gppwm_channel_e_GPPWM_Iat 3
-#define gppwm_channel_e_GPPWM_IgnLoad 5
-#define gppwm_channel_e_GPPWM_Map 1
-#define gppwm_channel_e_GPPWM_Tps 0
+#define gppwm_channel_e_GPPWM_AuxLinear1 16
+#define gppwm_channel_e_GPPWM_AuxLinear2 17
+#define gppwm_channel_e_GPPWM_AuxTemp1 7
+#define gppwm_channel_e_GPPWM_AuxTemp2 8
+#define gppwm_channel_e_GPPWM_Clt 3
+#define gppwm_channel_e_GPPWM_EthanolPercent 15
+#define gppwm_channel_e_GPPWM_FuelLoad 5
+#define gppwm_channel_e_GPPWM_Iat 4
+#define gppwm_channel_e_GPPWM_IgnLoad 6
+#define gppwm_channel_e_GPPWM_Map 2
+#define gppwm_channel_e_GPPWM_Tps 1
 #define gppwm_channel_e_GPPWM_Vbatt 10
-#define gppwm_channel_e_GPPWM_Zero 8
+#define gppwm_channel_e_GPPWM_VVT_1E 12
+#define gppwm_channel_e_GPPWM_VVT_1I 11
+#define gppwm_channel_e_GPPWM_VVT_2E 14
+#define gppwm_channel_e_GPPWM_VVT_2I 13
+#define gppwm_channel_e_GPPWM_Zero 0
 #define gppwm_channel_size 92
 #define GPPWM_CHANNELS 4
 #define gppwm_compare_mode_e_GPPWM_GreaterThan 0
@@ -1925,7 +1932,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1743871579
+#define SIGNATURE_HASH 2388932933
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2485,7 +2492,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.16.cypress.1743871579"
+#define TS_SIGNATURE "rusEFI 2022.09.16.cypress.2388932933"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
