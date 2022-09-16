@@ -697,6 +697,34 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins = tcu_32SpeedBins, vehicleSpeedKph
 		yBins = tcu_32Vals
 
+	curve = ignAdder1Bias, "Ignition adder 1 bias"
+		columnLabel = "param", "deg"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends1_blendBins
+		yBins = ignBlends1_blendValues
+
+	curve = ignAdder2Bias, "Ignition adder 2 bias"
+		columnLabel = "param", "deg"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends2_blendBins
+		yBins = ignBlends2_blendValues
+
+	curve = ignAdder3Bias, "Ignition adder 3 bias"
+		columnLabel = "param", "deg"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends3_blendBins
+		yBins = ignBlends3_blendValues
+
+	curve = ignAdder4Bias, "Ignition adder 4 bias"
+		columnLabel = "param", "deg"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends4_blendBins
+		yBins = ignBlends4_blendValues
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -765,6 +793,30 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = ignAdder1Table, ignAdder1Map, "Ignition adder 1", 1
+      xBins       = ignBlends1_rpmBins, RPMValue
+      yBins       = ignBlends1_loadBins, ignitionLoad
+      zBins       = ignBlends1_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder2Table, ignAdder2Map, "Ignition adder 2", 1
+      xBins       = ignBlends2_rpmBins, RPMValue
+      yBins       = ignBlends2_loadBins, ignitionLoad
+      zBins       = ignBlends2_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder3Table, ignAdder3Map, "Ignition adder 3", 1
+      xBins       = ignBlends3_rpmBins, RPMValue
+      yBins       = ignBlends3_loadBins, ignitionLoad
+      zBins       = ignBlends3_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder4Table, ignAdder4Map, "Ignition adder 4", 1
+      xBins       = ignBlends4_rpmBins, RPMValue
+      yBins       = ignBlends4_loadBins, ignitionLoad
+      zBins       = ignBlends4_table
+      gridOrient  = 250, 0, 340
 
    table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
       ;       constant, variable
@@ -1490,6 +1542,16 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
+
+		groupMenu = "Ignition Adders"
+		groupChildMenu = ignAdder1Cfg,			"Adder 1 bias"
+		groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { ignBlends1_blendParameter != 0 }
+		groupChildMenu = ignAdder2Cfg,			"Adder 2 bias"
+		groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { ignBlends2_blendParameter != 0 }
+		groupChildMenu = ignAdder3Cfg,			"Adder 3 bias"
+		groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { ignBlends3_blendParameter != 0 }
+		groupChildMenu = ignAdder4Cfg,			"Adder 4 bias"
+		groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { ignBlends4_blendParameter != 0 }
 
 		groupMenu = "Cylinder ign trims"
 		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
@@ -2219,6 +2281,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable multiple sparks",				multisparkEnable
 		panel = multisparkMain
 		panel = multisparkDwellParams
+
+	dialog = ignAdder1Cfg, "Ignition adder 1 config"
+		field = "Blend parameter", ignBlends1_blendParameter
+		panel = ignAdder1Bias
+
+	dialog = ignAdder2Cfg, "Ignition adder 2 config"
+		field = "Blend parameter", ignBlends2_blendParameter
+		panel = ignAdder2Bias
+
+	dialog = ignAdder3Cfg, "Ignition adder 3 config"
+		field = "Blend parameter", ignBlends3_blendParameter
+		panel = ignAdder3Bias
+
+	dialog = ignAdder4Cfg, "Ignition adder 4 config"
+		field = "Blend parameter", ignBlends4_blendParameter
+		panel = ignAdder4Bias
 
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection
