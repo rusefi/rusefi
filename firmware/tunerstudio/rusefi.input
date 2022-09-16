@@ -698,28 +698,28 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		yBins = tcu_32Vals
 
 	curve = ignAdder1Bias, "Ignition adder 1 bias"
-		columnLabel = "param", "deg"
+		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
 		xBins = ignBlends1_blendBins
 		yBins = ignBlends1_blendValues
 
 	curve = ignAdder2Bias, "Ignition adder 2 bias"
-		columnLabel = "param", "deg"
+		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
 		xBins = ignBlends2_blendBins
 		yBins = ignBlends2_blendValues
 
 	curve = ignAdder3Bias, "Ignition adder 3 bias"
-		columnLabel = "param", "deg"
+		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
 		xBins = ignBlends3_blendBins
 		yBins = ignBlends3_blendValues
 
 	curve = ignAdder4Bias, "Ignition adder 4 bias"
-		columnLabel = "param", "deg"
+		columnLabel = "param", "bias"
 		xAxis = 0, 100, 11
 		yAxis = 0, 100, 5
 		xBins = ignBlends4_blendBins
