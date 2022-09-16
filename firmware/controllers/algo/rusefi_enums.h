@@ -529,17 +529,24 @@ typedef enum __attribute__ ((__packed__)) {
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	GPPWM_Tps = 0,
-	GPPWM_Map = 1,
-	GPPWM_Clt = 2,
-	GPPWM_Iat = 3,
-	GPPWM_FuelLoad = 4,
-	GPPWM_IgnLoad = 5,
-	GPPWM_AuxTemp1 = 6,
-	GPPWM_AuxTemp2 = 7,
-	GPPWM_Zero = 8,
+	GPPWM_Zero = 0,
+	GPPWM_Tps = 1,
+	GPPWM_Map = 2,
+	GPPWM_Clt = 3,
+	GPPWM_Iat = 4,
+	GPPWM_FuelLoad = 5,
+	GPPWM_IgnLoad = 6,
+	GPPWM_AuxTemp1 = 7,
+	GPPWM_AuxTemp2 = 8,
 	GPPWM_AccelPedal = 9,
 	GPPWM_Vbatt = 10,
+	GPPWM_VVT_1I = 11,
+	GPPWM_VVT_1E = 12,
+	GPPWM_VVT_2I = 13,
+	GPPWM_VVT_2E = 14,
+	GPPWM_EthanolPercent = 15,
+	GPPWM_AuxLinear1 = 16,
+	GPPWM_AuxLinear2 = 17,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
