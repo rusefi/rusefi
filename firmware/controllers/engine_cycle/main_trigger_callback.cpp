@@ -56,7 +56,7 @@
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
+	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
@@ -69,7 +69,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
+	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
 static bool isPhaseInRange(float test, float current, float next) {
@@ -229,7 +229,7 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
 
-	LimpState limitedFuelState = engine->limpManager.allowInjection();
+	LimpState limitedFuelState = getLimpManager()->allowInjection();
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
@@ -240,7 +240,7 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 	 * Injection events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = &engine->injectionEvents;
+	FuelSchedule *fs = getFuelSchedule();
 	if (!fs->isReady) {
 		fs->addFuelEvents();
 	}
@@ -289,8 +289,8 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	if (trgEventIndex == 0) {
 
 		if (getTriggerCentral()->checkIfTriggerConfigChanged()) {
-			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
-			engine->injectionEvents.isReady = false;
+			getIgnitionEvents()->isReady = false; // we need to rebuild complete ignition schedule
+			getFuelSchedule()->isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
 			// see updateTriggerWaveform() -> prepareOutputSignals()
 

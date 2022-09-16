@@ -552,3 +552,11 @@ TriggerCentral * getTriggerCentral() {
 LimpManager * getLimpManager() {
 	return &engine->limpManager;
 }
+
+FuelSchedule *getFuelSchedule() {
+	return &engine->injectionEvents;
+}
+
+IgnitionEventList *getIgnitionEvents() {
+	return &engine->ignitionEvents;
+}
