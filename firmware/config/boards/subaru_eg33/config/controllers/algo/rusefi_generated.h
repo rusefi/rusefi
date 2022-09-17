@@ -201,6 +201,7 @@
 #define benchTestOnTime_offset 1634
 #define binarySerialRxPin_offset 1530
 #define binarySerialTxPin_offset 1528
+#define blend_table_s_size 188
 #define BLOCKING_FACTOR 500
 #define boardUse2stepPullDown_offset 1360
 #define boardUseCamPullDown_offset 1360
@@ -1367,8 +1368,37 @@
 #define idleVeLoadBins_offset 5648
 #define idleVeRpmBins_offset 5644
 #define idleVeTable_offset 5652
+#define IGN_BLEND_COUNT 4
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
+#define ignBlends1_blendBins_offset 21458
+#define ignBlends1_blendParameter_offset 21456
+#define ignBlends1_blendValues_offset 21474
+#define ignBlends1_loadBins_offset 21424
+#define ignBlends1_offset 21296
+#define ignBlends1_rpmBins_offset 21440
+#define ignBlends1_table_offset 21296
+#define ignBlends2_blendBins_offset 21646
+#define ignBlends2_blendParameter_offset 21644
+#define ignBlends2_blendValues_offset 21662
+#define ignBlends2_loadBins_offset 21612
+#define ignBlends2_offset 21484
+#define ignBlends2_rpmBins_offset 21628
+#define ignBlends2_table_offset 21484
+#define ignBlends3_blendBins_offset 21834
+#define ignBlends3_blendParameter_offset 21832
+#define ignBlends3_blendValues_offset 21850
+#define ignBlends3_loadBins_offset 21800
+#define ignBlends3_offset 21672
+#define ignBlends3_rpmBins_offset 21816
+#define ignBlends3_table_offset 21672
+#define ignBlends4_blendBins_offset 22022
+#define ignBlends4_blendParameter_offset 22020
+#define ignBlends4_blendValues_offset 22038
+#define ignBlends4_loadBins_offset 21988
+#define ignBlends4_offset 21860
+#define ignBlends4_rpmBins_offset 22004
+#define ignBlends4_table_offset 21860
 #define ignition_mode_e_auto_enum 0="IM_ONE_COIL",1="IM_INDIVIDUAL_COILS",3="IM_TWO_COILS",2="IM_WASTED_SPARK"
 #define ignition_mode_e_IM_INDIVIDUAL_COILS 1
 #define ignition_mode_e_IM_ONE_COIL 0
@@ -1748,7 +1778,7 @@
 #define pedalToTpsRpmBins_offset 5532
 #define pedalToTpsTable_offset 5460
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 21296
+#define persistent_config_s_size 22048
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1898,7 +1928,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 4152025247
+#define SIGNATURE_HASH 1807026860
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2140,7 +2170,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 21296
+#define TOTAL_CONFIG_SIZE 22048
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2459,12 +2489,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.16.subaru_eg33_f7.4152025247"
+#define TS_SIGNATURE "rusEFI 2022.09.17.subaru_eg33_f7.1807026860"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1248
+#define TS_TOTAL_OUTPUT_SIZE 1260
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3

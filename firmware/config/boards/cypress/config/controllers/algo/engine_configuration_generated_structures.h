@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 13 06:32:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Sep 17 00:15:44 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4284,6 +4284,50 @@ struct cyl_trim_s {
 };
 static_assert(sizeof(cyl_trim_s) == 16);
 
+// start of blend_table_s
+struct blend_table_s {
+	/**
+	 * offset 0
+	 */
+	scaled_channel<int16_t, 10, 1> table[8][8];
+	/**
+	Load
+	 * offset 128
+	 */
+	uint16_t loadBins[8];
+	/**
+	RPM
+	 * offset 144
+	 */
+	uint16_t rpmBins[8];
+	/**
+	 * offset 160
+	 */
+	gppwm_channel_e blendParameter;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 161
+	 */
+	uint8_t alignmentFill_at_161[1];
+	/**
+	 * offset 162
+	 */
+	scaled_channel<int16_t, 10, 1> blendBins[8];
+	/**
+	%
+	 * offset 178
+	 */
+	scaled_channel<uint8_t, 2, 1> blendValues[8];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 186
+	 */
+	uint8_t alignmentFill_at_186[2];
+};
+static_assert(sizeof(blend_table_s) == 188);
+
 // start of persistent_config_s
 struct persistent_config_s {
 	/**
@@ -4988,8 +5032,12 @@ struct persistent_config_s {
 	 * offset 21290
 	 */
 	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[6];
+	/**
+	 * offset 21296
+	 */
+	blend_table_s ignBlends[IGN_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 21296);
+static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Sep 13 06:32:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Sep 17 00:15:44 UTC 2022

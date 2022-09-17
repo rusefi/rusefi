@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 16 20:10:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 17 00:16:47 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -191,6 +191,7 @@ public class Fields {
 	public static final int benchTestOnTime_offset = 1634;
 	public static final int binarySerialRxPin_offset = 1530;
 	public static final int binarySerialTxPin_offset = 1528;
+	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 500;
 	public static final int boardUse2stepPullDown_offset = 1360;
 	public static final int boardUseCamPullDown_offset = 1360;
@@ -1378,8 +1379,37 @@ public class Fields {
 	public static final int idleVeLoadBins_offset = 5648;
 	public static final int idleVeRpmBins_offset = 5644;
 	public static final int idleVeTable_offset = 5652;
+	public static final int IGN_BLEND_COUNT = 4;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
+	public static final int ignBlends1_blendBins_offset = 21458;
+	public static final int ignBlends1_blendParameter_offset = 21456;
+	public static final int ignBlends1_blendValues_offset = 21474;
+	public static final int ignBlends1_loadBins_offset = 21424;
+	public static final int ignBlends1_offset = 21296;
+	public static final int ignBlends1_rpmBins_offset = 21440;
+	public static final int ignBlends1_table_offset = 21296;
+	public static final int ignBlends2_blendBins_offset = 21646;
+	public static final int ignBlends2_blendParameter_offset = 21644;
+	public static final int ignBlends2_blendValues_offset = 21662;
+	public static final int ignBlends2_loadBins_offset = 21612;
+	public static final int ignBlends2_offset = 21484;
+	public static final int ignBlends2_rpmBins_offset = 21628;
+	public static final int ignBlends2_table_offset = 21484;
+	public static final int ignBlends3_blendBins_offset = 21834;
+	public static final int ignBlends3_blendParameter_offset = 21832;
+	public static final int ignBlends3_blendValues_offset = 21850;
+	public static final int ignBlends3_loadBins_offset = 21800;
+	public static final int ignBlends3_offset = 21672;
+	public static final int ignBlends3_rpmBins_offset = 21816;
+	public static final int ignBlends3_table_offset = 21672;
+	public static final int ignBlends4_blendBins_offset = 22022;
+	public static final int ignBlends4_blendParameter_offset = 22020;
+	public static final int ignBlends4_blendValues_offset = 22038;
+	public static final int ignBlends4_loadBins_offset = 21988;
+	public static final int ignBlends4_offset = 21860;
+	public static final int ignBlends4_rpmBins_offset = 22004;
+	public static final int ignBlends4_table_offset = 21860;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
@@ -1742,7 +1772,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5524;
 	public static final int pedalToTpsRpmBins_offset = 5532;
 	public static final int pedalToTpsTable_offset = 5460;
-	public static final int persistent_config_s_size = 21296;
+	public static final int persistent_config_s_size = 22048;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1881,6 +1911,7 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 313250678;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2113,7 +2144,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 3684;
 	public static final int torqueRpmBins_offset = 3672;
 	public static final int torqueTable_offset = 3636;
-	public static final int TOTAL_CONFIG_SIZE = 21296;
+	public static final int TOTAL_CONFIG_SIZE = 22048;
 	public static final int totalGearsCount_offset = 1584;
 	public static final int tps1_1AdcChannel_offset = 456;
 	public static final int tps1_2AdcChannel_offset = 686;
@@ -2375,10 +2406,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.16.all.2388932933";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.17.all.313250678";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -3952,6 +3983,38 @@ public class Fields {
 	public static final Field MAXKNOCKRETARDTABLE = Field.create("MAXKNOCKRETARDTABLE", 21248, FieldType.INT8).setScale(0.25);
 	public static final Field MAXKNOCKRETARDLOADBINS = Field.create("MAXKNOCKRETARDLOADBINS", 21284, FieldType.INT8).setScale(1.0);
 	public static final Field MAXKNOCKRETARDRPMBINS = Field.create("MAXKNOCKRETARDRPMBINS", 21290, FieldType.INT8).setScale(100.0);
+	public static final Field IGNBLENDS1_TABLE = Field.create("IGNBLENDS1_TABLE", 21296, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS1_LOADBINS = Field.create("IGNBLENDS1_LOADBINS", 21424, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS1_RPMBINS = Field.create("IGNBLENDS1_RPMBINS", 21440, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS1_BLENDPARAMETER = Field.create("IGNBLENDS1_BLENDPARAMETER", 21456, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS1_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS1_ALIGNMENTFILL_AT_161", 21457, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS1_BLENDBINS = Field.create("IGNBLENDS1_BLENDBINS", 21458, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS1_BLENDVALUES = Field.create("IGNBLENDS1_BLENDVALUES", 21474, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS1_ALIGNMENTFILL_AT_186", 21482, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS2_TABLE = Field.create("IGNBLENDS2_TABLE", 21484, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS2_LOADBINS = Field.create("IGNBLENDS2_LOADBINS", 21612, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS2_RPMBINS = Field.create("IGNBLENDS2_RPMBINS", 21628, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS2_BLENDPARAMETER = Field.create("IGNBLENDS2_BLENDPARAMETER", 21644, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS2_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS2_ALIGNMENTFILL_AT_161", 21645, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS2_BLENDBINS = Field.create("IGNBLENDS2_BLENDBINS", 21646, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS2_BLENDVALUES = Field.create("IGNBLENDS2_BLENDVALUES", 21662, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS2_ALIGNMENTFILL_AT_186", 21670, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS3_TABLE = Field.create("IGNBLENDS3_TABLE", 21672, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS3_LOADBINS = Field.create("IGNBLENDS3_LOADBINS", 21800, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS3_RPMBINS = Field.create("IGNBLENDS3_RPMBINS", 21816, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS3_BLENDPARAMETER = Field.create("IGNBLENDS3_BLENDPARAMETER", 21832, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS3_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS3_ALIGNMENTFILL_AT_161", 21833, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS3_BLENDBINS = Field.create("IGNBLENDS3_BLENDBINS", 21834, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS3_BLENDVALUES = Field.create("IGNBLENDS3_BLENDVALUES", 21850, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS3_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS3_ALIGNMENTFILL_AT_186", 21858, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS4_TABLE = Field.create("IGNBLENDS4_TABLE", 21860, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS4_LOADBINS = Field.create("IGNBLENDS4_LOADBINS", 21988, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS4_RPMBINS = Field.create("IGNBLENDS4_RPMBINS", 22004, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS4_BLENDPARAMETER = Field.create("IGNBLENDS4_BLENDPARAMETER", 22020, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS4_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS4_ALIGNMENTFILL_AT_161", 22021, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS4_BLENDBINS = Field.create("IGNBLENDS4_BLENDBINS", 22022, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS4_BLENDVALUES = Field.create("IGNBLENDS4_BLENDVALUES", 22038, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS4_ALIGNMENTFILL_AT_186", 22046, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5316,5 +5379,37 @@ public class Fields {
 	MAXKNOCKRETARDTABLE,
 	MAXKNOCKRETARDLOADBINS,
 	MAXKNOCKRETARDRPMBINS,
+	IGNBLENDS1_TABLE,
+	IGNBLENDS1_LOADBINS,
+	IGNBLENDS1_RPMBINS,
+	IGNBLENDS1_BLENDPARAMETER,
+	IGNBLENDS1_ALIGNMENTFILL_AT_161,
+	IGNBLENDS1_BLENDBINS,
+	IGNBLENDS1_BLENDVALUES,
+	IGNBLENDS1_ALIGNMENTFILL_AT_186,
+	IGNBLENDS2_TABLE,
+	IGNBLENDS2_LOADBINS,
+	IGNBLENDS2_RPMBINS,
+	IGNBLENDS2_BLENDPARAMETER,
+	IGNBLENDS2_ALIGNMENTFILL_AT_161,
+	IGNBLENDS2_BLENDBINS,
+	IGNBLENDS2_BLENDVALUES,
+	IGNBLENDS2_ALIGNMENTFILL_AT_186,
+	IGNBLENDS3_TABLE,
+	IGNBLENDS3_LOADBINS,
+	IGNBLENDS3_RPMBINS,
+	IGNBLENDS3_BLENDPARAMETER,
+	IGNBLENDS3_ALIGNMENTFILL_AT_161,
+	IGNBLENDS3_BLENDBINS,
+	IGNBLENDS3_BLENDVALUES,
+	IGNBLENDS3_ALIGNMENTFILL_AT_186,
+	IGNBLENDS4_TABLE,
+	IGNBLENDS4_LOADBINS,
+	IGNBLENDS4_RPMBINS,
+	IGNBLENDS4_BLENDPARAMETER,
+	IGNBLENDS4_ALIGNMENTFILL_AT_161,
+	IGNBLENDS4_BLENDBINS,
+	IGNBLENDS4_BLENDVALUES,
+	IGNBLENDS4_ALIGNMENTFILL_AT_186,
 	};
 }

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Fri Sep 16 20:09:31 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Sep 17 00:15:40 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -249,6 +249,7 @@ public class TriggerState {
 	public static final int IAT_CURVE_SIZE = 16;
 	public static final int IDLE_ADVANCE_CURVE_SIZE = 8;
 	public static final int IDLE_VE_SIZE = 4;
+	public static final int IGN_BLEND_COUNT = 4;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
