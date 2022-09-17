@@ -25,6 +25,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Flexible ignition adder/trim tables #4586
+
 ## September 2022 Release - "Day 203"
 
 ### Added
