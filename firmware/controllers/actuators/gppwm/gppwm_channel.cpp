@@ -84,6 +84,7 @@ float GppwmChannel::setOutput(float result) {
 
 		m_output->setValue(m_state);
 
+		// Return the actual output value with hysteresis
 		return m_state ? 100 : 0;
 	}
 }
