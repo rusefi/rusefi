@@ -337,6 +337,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
+	uint8_t[IGN_BLEND_COUNT iterate] autoscale ignBlendBias;;"%", 0.5, 0, 0, 100, 1
+	uint16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2
+
 bit coilState1
 bit coilState2
 bit coilState3
