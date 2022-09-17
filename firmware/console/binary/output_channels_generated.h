@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 15 18:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Sep 17 00:15:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1277,127 +1277,143 @@ struct output_channels_s {
 	 */
 	uint8_t extiOverflowCount = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	units
+	%
 	 * offset 577
 	 */
-	uint8_t alignmentFill_at_577[3];
+	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 	/**
-	offset 580 bit 0 */
+	 * need 4 byte alignment
+	units
+	 * offset 581
+	 */
+	uint8_t alignmentFill_at_581[1];
+	/**
+	deg
+	 * offset 582
+	 */
+	scaled_channel<uint16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 590
+	 */
+	uint8_t alignmentFill_at_590[2];
+	/**
+	offset 592 bit 0 */
 	bool coilState1 : 1 {};
 	/**
-	offset 580 bit 1 */
+	offset 592 bit 1 */
 	bool coilState2 : 1 {};
 	/**
-	offset 580 bit 2 */
+	offset 592 bit 2 */
 	bool coilState3 : 1 {};
 	/**
-	offset 580 bit 3 */
+	offset 592 bit 3 */
 	bool coilState4 : 1 {};
 	/**
-	offset 580 bit 4 */
+	offset 592 bit 4 */
 	bool coilState5 : 1 {};
 	/**
-	offset 580 bit 5 */
+	offset 592 bit 5 */
 	bool coilState6 : 1 {};
 	/**
-	offset 580 bit 6 */
+	offset 592 bit 6 */
 	bool coilState7 : 1 {};
 	/**
-	offset 580 bit 7 */
+	offset 592 bit 7 */
 	bool coilState8 : 1 {};
 	/**
-	offset 580 bit 8 */
+	offset 592 bit 8 */
 	bool coilState9 : 1 {};
 	/**
-	offset 580 bit 9 */
+	offset 592 bit 9 */
 	bool coilState10 : 1 {};
 	/**
-	offset 580 bit 10 */
+	offset 592 bit 10 */
 	bool coilState11 : 1 {};
 	/**
-	offset 580 bit 11 */
+	offset 592 bit 11 */
 	bool coilState12 : 1 {};
 	/**
-	offset 580 bit 12 */
+	offset 592 bit 12 */
 	bool injectorState1 : 1 {};
 	/**
-	offset 580 bit 13 */
+	offset 592 bit 13 */
 	bool injectorState2 : 1 {};
 	/**
-	offset 580 bit 14 */
+	offset 592 bit 14 */
 	bool injectorState3 : 1 {};
 	/**
-	offset 580 bit 15 */
+	offset 592 bit 15 */
 	bool injectorState4 : 1 {};
 	/**
-	offset 580 bit 16 */
+	offset 592 bit 16 */
 	bool injectorState5 : 1 {};
 	/**
-	offset 580 bit 17 */
+	offset 592 bit 17 */
 	bool injectorState6 : 1 {};
 	/**
-	offset 580 bit 18 */
+	offset 592 bit 18 */
 	bool injectorState7 : 1 {};
 	/**
-	offset 580 bit 19 */
+	offset 592 bit 19 */
 	bool injectorState8 : 1 {};
 	/**
-	offset 580 bit 20 */
+	offset 592 bit 20 */
 	bool injectorState9 : 1 {};
 	/**
-	offset 580 bit 21 */
+	offset 592 bit 21 */
 	bool injectorState10 : 1 {};
 	/**
-	offset 580 bit 22 */
+	offset 592 bit 22 */
 	bool injectorState11 : 1 {};
 	/**
-	offset 580 bit 23 */
+	offset 592 bit 23 */
 	bool injectorState12 : 1 {};
 	/**
-	offset 580 bit 24 */
-	bool unusedBit_300_24 : 1 {};
+	offset 592 bit 24 */
+	bool unusedBit_303_24 : 1 {};
 	/**
-	offset 580 bit 25 */
-	bool unusedBit_300_25 : 1 {};
+	offset 592 bit 25 */
+	bool unusedBit_303_25 : 1 {};
 	/**
-	offset 580 bit 26 */
-	bool unusedBit_300_26 : 1 {};
+	offset 592 bit 26 */
+	bool unusedBit_303_26 : 1 {};
 	/**
-	offset 580 bit 27 */
-	bool unusedBit_300_27 : 1 {};
+	offset 592 bit 27 */
+	bool unusedBit_303_27 : 1 {};
 	/**
-	offset 580 bit 28 */
-	bool unusedBit_300_28 : 1 {};
+	offset 592 bit 28 */
+	bool unusedBit_303_28 : 1 {};
 	/**
-	offset 580 bit 29 */
-	bool unusedBit_300_29 : 1 {};
+	offset 592 bit 29 */
+	bool unusedBit_303_29 : 1 {};
 	/**
-	offset 580 bit 30 */
-	bool unusedBit_300_30 : 1 {};
+	offset 592 bit 30 */
+	bool unusedBit_303_30 : 1 {};
 	/**
-	offset 580 bit 31 */
-	bool unusedBit_300_31 : 1 {};
+	offset 592 bit 31 */
+	bool unusedBit_303_31 : 1 {};
 	/**
-	 * offset 584
+	 * offset 596
 	 */
 	int outputRequestPeriod = (int)0;
 	/**
-	 * offset 588
+	 * offset 600
 	 */
 	float mapFast = (float)0;
 	/**
-	 * offset 592
+	 * offset 604
 	 */
 	uint8_t unusedAtTheEnd[150];
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 742
+	 * offset 754
 	 */
-	uint8_t alignmentFill_at_742[2];
+	uint8_t alignmentFill_at_754[2];
 };
-static_assert(sizeof(output_channels_s) == 744);
+static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Sep 15 18:59:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Sep 17 00:15:40 UTC 2022
