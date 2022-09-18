@@ -32,7 +32,11 @@ static void commonPassatB6() {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
-	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
+//	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
+
+	engineConfiguration->enableAemXSeries = true;
+	engineConfiguration->afr.hwChannel = EFI_ADC_4;
+
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -178,6 +182,22 @@ canRxAdd(BRAKE_2)
 
 fuelCounter = 0
 
+function setBitRange(data, totalBitIndex, bitWidth, value) 
+	local byteIndex = totalBitIndex >> 3 
+	local bitInByteIndex = totalBitIndex - byteIndex * 8 
+	if (bitInByteIndex + bitWidth > 8) then 
+		bitsToHandleNow = 8 - bitInByteIndex 
+		setBitRange(data, totalBitIndex + bitsToHandleNow, bitWidth - bitsToHandleNow, value >> bitsToHandleNow) 
+		bitWidth = bitsToHandleNow 
+	end 
+	mask = (1 << bitWidth) - 1 
+	data[1 + byteIndex] = data[1 + byteIndex] & (~(mask << bitInByteIndex)) 
+	maskedValue = value & mask 
+	shiftedValue = maskedValue << bitInByteIndex 
+	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue 
+end 
+
+
 function setTwoBytes(data, offset, value)
 	data[offset + 1] = value % 255
 	data[offset + 2] = (value >> 8) % 255
@@ -242,6 +262,8 @@ setTickRate(100)
 everySecondTimer = Timer.new()
 canMotorInfoCounter = 0
 
+counter = 0
+
 function onTick()
 	counter = (counter + 1) % 16
 
@@ -250,9 +272,9 @@ function onTick()
 	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
 
-    fakeTorque = interpolate(0, 6, 100, 60, tps)
+	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
-    engineTorque = fakeTorque
+	engineTorque = fakeTorque
 	innerTorqWithoutExt = fakeTorque
 	torqueLoss = 10
 	requestedTorque = fakeTorque
@@ -284,17 +306,16 @@ function onTick()
 		mcu_standby()
 	end
 
-    if everySecondTimer:getElapsedSeconds() > 1 then
-        everySecondTimer:reset()
+	if everySecondTimer : getElapsedSeconds() > 1 then
+		everySecondTimer : reset()
 
 		fuelCounter = fuelCounter + 20
 
-    	canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
-    	canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
-	    txCan(1, MOTOR_INFO, 0, canMotorInfo)
-    end
+		canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
+		canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
+		txCan(1, MOTOR_INFO, 0, canMotorInfo)
+	end
 end
-
 
 )", efi::size(config->luaScript));
 
