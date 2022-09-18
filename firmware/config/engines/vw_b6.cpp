@@ -176,6 +176,8 @@ canRxAdd(TCU_1)
 canRxAdd(TCU_2)
 canRxAdd(BRAKE_2)
 
+fuelCounter = 0
+
 function setTwoBytes(data, offset, value)
 	data[offset + 1] = value % 255
 	data[offset + 2] = (value >> 8) % 255
@@ -231,6 +233,7 @@ end
 canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
 canMotor6    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
@@ -244,9 +247,35 @@ function onTick()
 
 	rpm = getSensor("RPM") or 0
 	clt = getSensor("CLT") or 0
+	iat = getSensor("IAT") or 0
+	tps = getSensor("TPS1") or 0
 
+    fakeTorque = interpolate(0, 6, 100, 60, tps)
+
+    engineTorque = fakeTorque
+	innerTorqWithoutExt = fakeTorque
+	torqueLoss = 10
+	requestedTorque = fakeTorque
+
+	canMotor1[2] = engineTorque / 0.39
+	canMotor1[5] = innerTorqWithoutExt / 0.4
+	canMotor1[6] = tps / 0.4
+	canMotor1[7] = torqueLoss / 0.39
+	canMotor1[8] = requestedTorque / 0.39
 	setTwoBytes(canMotor1, 2, 4 * rpm)
 	txCan(1, MOTOR_1, 0, canMotor1)
+
+	desired_wheel_torque = fakeTorque
+	canMotor3[2] = (iat + 48) / 0.75
+	canMotor3[3] = tps / 0.4
+	canMotor3[5] = 0x20
+	setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
+	canMotor3[8] = tps / 0.4
+	txCan(1, MOTOR_3, 0, canMotor3)
+
+	setBitRange(motor5Data, 5, 9, fuelCounter)
+	xorChecksum(motor5Data, 8)
+	txCan(1, MOTOR_5, 0, motor5Data)
 
 	txCan(1, MOTOR_7, 0, canMotor7)
 
@@ -257,6 +286,8 @@ function onTick()
 
     if everySecondTimer:getElapsedSeconds() > 1 then
         everySecondTimer:reset()
+
+		fuelCounter = fuelCounter + 20
 
     	canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
     	canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
