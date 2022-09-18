@@ -20,6 +20,10 @@ static void commonPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+	engineConfiguration->etbIdleThrottleRange = 10;
+	engineConfiguration->idlePidRpmDeadZone = 500;
+	engineConfiguration->idleMode = IM_AUTO;
+
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
