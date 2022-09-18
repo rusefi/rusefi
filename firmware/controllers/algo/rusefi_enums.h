@@ -547,6 +547,10 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_EthanolPercent = 15,
 	GPPWM_AuxLinear1 = 16,
 	GPPWM_AuxLinear2 = 17,
+	GPPWM_GppwmOutput1 = 18,
+	GPPWM_GppwmOutput2 = 19,
+	GPPWM_GppwmOutput3 = 20,
+	GPPWM_GppwmOutput4 = 21,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
