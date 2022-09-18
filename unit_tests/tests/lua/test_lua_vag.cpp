@@ -24,7 +24,7 @@ TEST(LuaVag, Checksum) {
 
 	function testFunc()
 		data = { 0xE0, 0x20, 0x20, 0x7E, 0xFE, 0xFF, 0xFF, 0x60 }
-		return  xorChecksum(data, 8)
+		return xorChecksum(data, 8)
 	end
 	)";
 
@@ -328,4 +328,28 @@ TEST(LuaVag, ChecksumMotor6) {
 	)";
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x3D);
+}
+
+#define realMotor5Packet "\ndata = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x06, 0xAD}\n "
+
+TEST(LuaVag, ChecksumMotor5) {
+	const char* realdata = VAG_CHECKSUM realMotor5Packet R"(
+
+	function testFunc()
+		return xorChecksum(data, 8)
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xAD);
+}
+
+TEST(LuaVag, unpackMotor5_fuel) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor5Packet	R"(
+	function testFunc()
+		fuelConsumption = getBitRange(data, 16, 15)
+		return fuelConsumption
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 22003);
 }
