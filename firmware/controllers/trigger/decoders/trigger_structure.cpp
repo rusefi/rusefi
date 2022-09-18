@@ -168,7 +168,7 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	return cycleStartAngle + positionWithinCycle;
 }
 
-void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
+void TriggerWaveform::addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
 #if EFI_UNIT_TEST
 //		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
@@ -189,20 +189,20 @@ operation_mode_e TriggerWaveform::getWheelOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-size_t TriggerWaveform::getExpectedEventCount(int channelIndex) const {
-	return expectedEventCount[channelIndex];
+size_t TriggerWaveform::getExpectedEventCount(TriggerWheel channelIndex) const {
+	return expectedEventCount[(int)channelIndex];
 }
 
 void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
-			if (getExpectedEventCount(i) % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount(i));
+			if (getExpectedEventCount((TriggerWheel)i) % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount((TriggerWheel)i));
 			}
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(TriggerWheel::T_PRIMARY) == 1 : getExpectedEventCount(TriggerWheel::T_PRIMARY) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "shapeWithoutTdc isSynchronizationNeeded isSingleToothOnPrimaryChannel constraint violation");
@@ -212,7 +212,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	}
 
 // todo: move the following logic from below here
-	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TV_RISE) {
+	//	if (!useOnlyRisingEdgeForTrigger || stateParam == TriggerValue::RISE) {
 //		expectedEventCount[channelIndex]++;
 //	}
 
@@ -221,23 +221,23 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 /**
  * Deprecated! many usages should be replaced by addEvent360
  */
-void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent720(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
-void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent360(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
-void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
-	if (channelIndex == T_SECONDARY) {
+	if (channelIndex == TriggerWheel:: T_SECONDARY) {
 		needSecondTriggerInput = true;
 	}
 
@@ -257,8 +257,8 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 	// todo: see calculateExpectedEventCounts
 	// related calculation should be done once trigger is initialized outside of trigger shape scope
-	if (!useOnlyRisingEdgeForTriggerTemp || state == TV_RISE) {
-		expectedEventCount[channelIndex]++;
+	if (!useOnlyRisingEdgeForTriggerTemp || state == TriggerValue::RISE) {
+		expectedEventCount[(int)channelIndex]++;
 	}
 
 	if (angle <= 0 || angle > 1) {
@@ -268,7 +268,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
-					getTrigger_wheel_e(channelIndex),
+					getTriggerWheel(channelIndex),
 					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
@@ -284,9 +284,9 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
-		isRiseEvent[0] = TV_RISE == state;
+		isRiseEvent[0] = TriggerValue::RISE == state;
 		wave.setSwitchTime(0, angle);
-		wave.setChannelState(channelIndex, /* channelIndex */ 0, /* value */ state);
+		wave.setChannelState((int)channelIndex, /* channelIndex */ 0, /* value */ state);
 		return;
 	}
 
@@ -311,7 +311,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isRiseEvent[index] = TV_RISE == state;
+	isRiseEvent[index] = TriggerValue::RISE == state;
 
 	if ((unsigned)index != wave.phaseCount) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
@@ -324,7 +324,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		wave.setChannelState(i, index, value);
 	}
 	wave.setSwitchTime(index, angle);
-	wave.setChannelState(channelIndex, index, state);
+	wave.setChannelState((int)channelIndex, index, state);
 }
 
 angle_t TriggerWaveform::getSwitchAngle(int index) const {
@@ -807,6 +807,4 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #endif
 	}
-
-
 }

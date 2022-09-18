@@ -26,12 +26,7 @@
 #include "sensor_chart.h"
 #endif
 
-
-
-#if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 // See RpmCalculator::checkIfSpinning()
 #ifndef NO_RPM_EVENTS_TIMEOUT_SECS
@@ -104,6 +99,43 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	}
 
 	return true;
+}
+
+// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+// this is related to 'knownOperationMode' flag
+static bool doesTriggerImplyOperationMode(trigger_type_e type) {
+	switch (type) {
+		case TT_TOOTHED_WHEEL:
+		case TT_ONE:
+		case TT_3_1_CAM:
+		case TT_36_2_2_2:	// TODO: should this one be in this list?
+		case TT_TOOTHED_WHEEL_60_2:
+		case TT_TOOTHED_WHEEL_36_1:
+			// These modes could be either cam or crank speed
+			return false;
+		default:
+			return true;
+	}
+}
+
+operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
+// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
+operation_mode_e RpmCalculator::getOperationMode() const {
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return engine->triggerCentral.triggerShape.getWheelOperationMode();
+	} else {
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
 }
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
@@ -220,7 +252,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	/**
 	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
 	 */
-	prepareIgnitionPinIndices(getCurrentIgnitionMode());
+	prepareIgnitionPinIndices();
 }
 
 /**
@@ -260,7 +292,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 					rpmState->setRpmValue(NOISY_RPM);
 					rpmState->rpmRate = 0;
 				} else {
-					int mult = (int)getEngineCycle(engine->getOperationMode()) / 360;
+					int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
 					float rpm = 60 * mult / periodSeconds;
 
 					auto rpmDelta = rpm - rpmState->previousRpmValue;
@@ -281,7 +313,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
-	if (engine->sensorChartMode == SC_TRIGGER) {
+	if (getEngineState()->sensorChartMode == SC_TRIGGER) {
 		angle_t crankAngle = engine->triggerCentral.getCurrentEnginePhase(nowNt).value_or(0);
 		int signal = 1000 * ckpSignalType + trgEventIndex;
 		scAddData(crankAngle, signal);
@@ -308,7 +340,6 @@ float RpmCalculator::getSecondsSinceEngineStart(efitick_t nowNt) const {
 	return engineStartTimer.getElapsedSeconds(nowNt);
 }
 
-static char rpmBuffer[_MAX_FILLER];
 
 /**
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
@@ -321,11 +352,8 @@ static void onTdcCallback(void *) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	itoa10(rpmBuffer, Sensor::getOrZero(SensorType::Rpm));
-#if EFI_ENGINE_SNIFFER
-	waveChart.startDataCollection();
-#endif
-	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	addEngineSnifferTdcEvent(rpm);
 #if EFI_TOOTH_LOGGER
 	LogTriggerTopDeadCenter(getTimeNowNt());
 #endif /* EFI_TOOTH_LOGGER */
@@ -337,7 +365,7 @@ static void onTdcCallback(void *) {
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
-	if (isTriggerSynchronizationPoint && engine->isEngineSnifferEnabled) {
+	if (isTriggerSynchronizationPoint && getTriggerCentral()->isEngineSnifferEnabled) {
 
 #if EFI_UNIT_TEST
 		if (!engine->tdcMarkEnabled) {
@@ -385,7 +413,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);
-	efitime_t delayedTime = edgeTimestamp + delayNt;
+	efitick_t delayedTime = edgeTimestamp + delayNt;
 
 	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
 

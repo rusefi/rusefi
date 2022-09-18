@@ -111,29 +111,6 @@ static void setWarningEnabled(int value) {
 	warningEnabled = value;
 }
 
-#if EFI_FILE_LOGGING
-// this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[250];
-static uint64_t binaryLogCount = 0;
-
-void writeLogLine(Writer& buffer) {
-	if (!main_loop_started)
-		return;
-
-	if (binaryLogCount == 0) {
-		writeHeader(buffer);
-	} else {
-		updateTunerStudioState();
-		size_t length = writeBlock(sdLogBuffer);
-		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-		buffer.write(sdLogBuffer, length);
-	}
-
-	binaryLogCount++;
-}
-
-#endif /* EFI_FILE_LOGGING */
-
 /**
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
@@ -158,7 +135,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
-			getTimeNowSeconds());
+			getTimeNowS());
 }
 
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)
@@ -270,7 +247,7 @@ void updateDevConsoleState(void) {
 	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
 
-	systime_t nowSeconds = getTimeNowSeconds();
+	systime_t nowSeconds = getTimeNowS();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	int currentCkpEventCounter = engine->triggerCentral.triggerState.getTotalEventCounter();
@@ -761,7 +738,7 @@ void updateTunerStudioState() {
 #endif
 
 	// 224
-	efitimesec_t timeSeconds = getTimeNowSeconds();
+	efitimesec_t timeSeconds = getTimeNowS();
 	tsOutputChannels->seconds = timeSeconds;
 
 	// 252
@@ -821,13 +798,16 @@ void updateTunerStudioState() {
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
 	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
 
+	tsOutputChannels->mapFast = Sensor::getOrZero(SensorType::MapFast);
+
+
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
 		postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
-		tsOutputChannels->maxLockedDuration = maxLockedDuration;
+		tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
 		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 

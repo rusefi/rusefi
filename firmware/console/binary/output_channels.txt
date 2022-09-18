@@ -299,11 +299,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
-    uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
-    uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
-
-    uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
-    uint16_t maxTriggerReentrant;;"", 1, 0, -10000, 10000, 3
+    uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
+    uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
     uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
@@ -340,6 +337,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
+	uint8_t[IGN_BLEND_COUNT iterate] autoscale ignBlendBias;;"%", 0.5, 0, 0, 100, 1
+	uint16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2
+
 bit coilState1
 bit coilState2
 bit coilState3
@@ -365,5 +365,7 @@ bit injectorState10
 bit injectorState11
 bit injectorState12
 
-	uint8_t[155 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+int outputRequestPeriod
+float mapFast
+	uint8_t[150 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

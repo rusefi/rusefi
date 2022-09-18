@@ -10,9 +10,9 @@
 #include "trigger_gm.h"
 
 static float addTooth(float offset, TriggerWaveform *s) {
-	s->addEventAngle(offset, T_SECONDARY, TV_RISE);
+	s->addEventAngle(offset, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
 	offset += CRANK_MODE_MULTIPLIER * 3;
-	s->addEventAngle(offset, T_SECONDARY, TV_FALL);
+	s->addEventAngle(offset, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 	offset += CRANK_MODE_MULTIPLIER * 3;
 	return offset;
 }
@@ -52,11 +52,11 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	}
 
 
-	s->addEventAngle(m * (360 - 6), T_PRIMARY, TV_RISE);
+	s->addEventAngle(m * (360 - 6), TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
 	offset = addTooth(offset, s);
 
-	s->addEventAngle(m * (360), T_PRIMARY, TV_FALL);
+	s->addEventAngle(m * (360), TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 }
 
@@ -65,26 +65,26 @@ void configureGmTriggerWaveform(TriggerWaveform *s) {
 
 	float w = 5;
 
-	s->addEvent360(60 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(60, T_PRIMARY, TV_FALL);
+	s->addEvent360(60 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(60, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(120 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(120.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(120 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(120.0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(180 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(180, T_PRIMARY, TV_FALL);
+	s->addEvent360(180 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(240 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(240.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(240 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(240.0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(300 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(300.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(300 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(300.0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(350 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(350.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(350 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(350.0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
-	s->addEvent360(360.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(360 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(360.0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 	s->setTriggerSynchronizationGap(6);
 }
@@ -94,8 +94,8 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
 	int window = (isShortLong ? shortToothWidth : (15 - shortToothWidth)) * mult;
 	int end = startAngle + mult * 15;
 
-	s->addEvent720(startAngle + window, T_PRIMARY, TV_RISE);
-	s->addEvent720(end, T_PRIMARY, TV_FALL);
+	s->addEvent720(startAngle + window, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(end, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 	return end;
 }

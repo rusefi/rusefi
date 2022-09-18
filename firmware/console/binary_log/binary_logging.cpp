@@ -8,6 +8,7 @@
 #include "binary_logging.h"
 #include "log_field.h"
 #include "buffered_writer.h"
+#include "tunerstudio.h"
 
 #define TIME_PRECISION 1000
 
@@ -28,9 +29,35 @@ static constexpr uint16_t computeFieldsRecordLength() {
 	return recLength;
 }
 
+#if EFI_FILE_LOGGING
+// this one needs to be in main ram so that SD card SPI DMA works fine
+static NO_CACHE char sdLogBuffer[250];
+static uint64_t binaryLogCount = 0;
+
+extern bool main_loop_started;
+
+void writeSdLogLine(Writer& buffer) {
+	if (!main_loop_started)
+		return;
+
+	if (binaryLogCount == 0) {
+		writeFileHeader(buffer);
+	} else {
+		updateTunerStudioState();
+		size_t length = writeBlock(sdLogBuffer);
+		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
+		buffer.write(sdLogBuffer, length);
+	}
+
+	binaryLogCount++;
+}
+
+#endif /* EFI_FILE_LOGGING */
+
+
 static constexpr uint16_t recordLength = computeFieldsRecordLength();
 
-void writeHeader(Writer& outBuffer) {
+void writeFileHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
@@ -75,6 +102,8 @@ void writeHeader(Writer& outBuffer) {
 
 static uint8_t blockRollCounter = 0;
 
+//static efitimeus_t prevSdCardLineTime = 0;
+
 size_t writeBlock(char* buffer) {
 	// Offset 0 = Block type, standard data block in this case
 	buffer[0] = 0;
@@ -83,11 +112,15 @@ size_t writeBlock(char* buffer) {
 	buffer[1] = blockRollCounter++;
 
 	// Offset 2, size 2 = Timestamp at 10us resolution
-	uint16_t timestamp = getTimeNowUs() / 10;
+	efitimeus_t nowUs = getTimeNowUs();
+	uint16_t timestamp = nowUs / 10;
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
 
-	packedTime = currentTimeMillis() * 1.0 / TIME_PRECISION;
+	// todo: add a log field for SD card period
+//	prevSdCardLineTime = nowUs;
+
+	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
 	// Offset 4 = field data
 	const char* dataBlockStart = buffer + 4;

@@ -26,32 +26,32 @@ void initializeRoverK(TriggerWaveform *s) {
 	float base = 0;
 
 	for (int i = 0; i < 2; i++) {
-		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEvent720(base + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 2; i++) {
-		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEvent720(base + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 14; i++) {
-		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEvent720(base + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 3; i++) {
-		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEvent720(base + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		base += tooth;
 	}
 	base += tooth;
 	for (int i = 0; i < 11; i++) {
-		s->addEvent720(base + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + tooth, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEvent720(base + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		base += tooth;
 	}
 

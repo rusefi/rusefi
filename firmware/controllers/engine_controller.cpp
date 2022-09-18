@@ -163,21 +163,6 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
-/**
- * 32 bit return type overflows in 23(or46?) days. tag#4554. I think we do not expect rusEFI to run for 23 days straight days any time soon?
- */
-efitimems_t currentTimeMillis(void) {
-	return US2MS(getTimeNowUs());
-}
-
-/**
- * Integer number of seconds since ECU boot.
- * 31,710 years - would not overflow during our life span.
- */
-efitimesec_t getTimeNowSeconds(void) {
-	return getTimeNowUs() / US_PER_SECOND;
-}
-
 static void resetAccel() {
 	engine->tpsAccelEnrichment.resetAE();
 
@@ -195,7 +180,7 @@ static void doPeriodicSlowCallback() {
 
 	engine->rpmCalculator.onSlowCallback();
 
-	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
+	if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
@@ -267,7 +252,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	efiPrintf("%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
+	efiPrintf("%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
@@ -479,8 +464,10 @@ void commonInitEngineController() {
 	 * This has to go after 'enginePins.startPins()' in order to
 	 * properly detect un-assigned output pins
 	 */
-	prepareShapes();
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+	prepareOutputSignals();
+
+	engine->injectionEvents.addFuelEvents();
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_SENSOR_CHART
 	initSensorChart();

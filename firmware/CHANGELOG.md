@@ -26,6 +26,11 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Flexible ignition adder/trim tables #4586
+
+## September 2022 Release - "Day 203"
+
+### Added
  - Time delay before DFCO #4292
  - Idle coasting position table is now RPM-based, instead of CLT-based #4487
  - Manual electronic throttle synchronization #3680
@@ -40,6 +45,7 @@ Release template (copy/paste this for new release):
  - STM32Bootloader driver install from console requests elevation #4313
  - VQ trigger gaps improvement #4469
  - Injection Offset for skipped wheel triggers #4536
+ - Randomly hanging for a complete second #4557
 
 ### Removed
  - Alternator on/off mode #4548

@@ -14,7 +14,8 @@
 #include "trigger_state_primary_generated.h"
 #include "timer.h"
 
-class TriggerDecoderBase;
+const char *getTrigger_event_e(trigger_event_e value);
+const char *getTrigger_value_e(TriggerValue value);
 
 struct TriggerStateListener {
 #if EFI_SHAFT_POSITION_INPUT
@@ -38,6 +39,29 @@ protected:
 	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
 	virtual trigger_config_s getType() const = 0;
+};
+
+class PrimaryTriggerConfiguration final : public TriggerConfiguration {
+public:
+	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_config_s getType() const override;
+};
+
+class VvtTriggerConfiguration final : public TriggerConfiguration {
+public:
+	const int index;
+
+	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
+	}
+
+protected:
+	bool isUseOnlyRisingEdgeForTrigger() const override;
+	bool isVerboseTriggerSynchDetails() const override;
+	trigger_config_s getType() const override;
 };
 
 typedef struct {
@@ -74,7 +98,7 @@ public:
 	 */
 	void incrementShaftSynchronizationCounter();
 
-	efitime_t getTotalEventCounter() const;
+	int64_t getTotalEventCounter() const;
 
 	expected<TriggerDecodeResult> decodeTriggerEvent(
 			const char *msg,
@@ -82,7 +106,7 @@ public:
 			TriggerStateListener* triggerStateListener,
 			const TriggerConfiguration& triggerConfiguration,
 			const trigger_event_e signal,
-			const efitime_t nowUs);
+			const efitick_t nowNt);
 
 	void onShaftSynchronization(
 			bool wasSynchronized,
@@ -143,8 +167,8 @@ protected:
 	//  - Saw a sync point but the wrong number of events in the cycle
 	virtual void onTriggerError() { }
 
-	virtual void onNotEnoughTeeth(int actual, int expected) { }
-	virtual void onTooManyTeeth(int actual, int expected) { }
+	virtual void onNotEnoughTeeth(int, int) { }
+	virtual void onTooManyTeeth(int, int) { }
 
 private:
 	void resetCurrentCycleState();
@@ -252,11 +276,5 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-
-class Engine;
-
-void calculateTriggerSynchPoint(
-	TriggerWaveform& shape,
-	TriggerDecoderBase& state);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);

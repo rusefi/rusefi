@@ -12,6 +12,7 @@
 
 #include "state_sequence.h"
 #include "engine_configuration_generated_structures.h"
+#include <rusefi/isnan.h>
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -164,7 +165,7 @@ public:
 
 	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
-	size_t getExpectedEventCount(int channelIndex) const;
+	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
 
 	/**
 	 * This is used for signal validation
@@ -175,8 +176,8 @@ public:
 	/**
 	 * These signals are used for trigger export only
 	 */
-	int triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
-	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
+	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
+	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
 	// see also 'doesTriggerImplyOperationMode'
 	bool knownOperationMode = true;
 #endif
@@ -199,16 +200,16 @@ public:
 	bool useOnlyRisingEdgeForTriggerTemp;
 
 	/* (0..1] angle range */
-	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 	/* (0..720] angle range
 	 * Deprecated! many usages should be replaced by addEvent360
 	 */
-	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent720(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 
 	/**
 	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
 	 */
-	void addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent360(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
@@ -217,12 +218,12 @@ public:
 	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
 	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
 	 */
-	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 
 	/* (0..720] angle range
 	 * Deprecated?
 	 */
-	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
+	void addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
 
 	void initialize(operation_mode_e operationMode);
@@ -308,6 +309,6 @@ void findTriggerPosition(
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
-#define TRIGGER_WAVEFORM(x) engine->triggerCentral.triggerShape.x
+#define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
 
 #define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)

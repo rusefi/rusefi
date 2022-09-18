@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 10 05:10:15 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 18 01:43:57 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -35,9 +35,6 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_ERROR = 50;
 	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 17;
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
-	public static final int adc_channel_mode_e_ADC_FAST = 2;
-	public static final int adc_channel_mode_e_ADC_OFF = 0;
-	public static final int adc_channel_mode_e_ADC_SLOW = 1;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int adcVcc_offset = 492;
 	public static final int afr_hwChannel_offset = 508;
@@ -194,6 +191,7 @@ public class Fields {
 	public static final int benchTestOnTime_offset = 1634;
 	public static final int binarySerialRxPin_offset = 1530;
 	public static final int binarySerialTxPin_offset = 1528;
+	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 500;
 	public static final int boardUse2stepPullDown_offset = 1360;
 	public static final int boardUseCamPullDown_offset = 1360;
@@ -721,7 +719,7 @@ public class Fields {
 	public static final int firingOrder_offset = 372;
 	public static final int fixedModeTiming_offset = 404;
 	public static final int fixedTiming_offset = 1684;
-	public static final int FLASH_DATA_VERSION = 10014;
+	public static final int FLASH_DATA_VERSION = 10015;
 	public static final int flexCranking_offset = 1372;
 	public static final int flexSensorPin_offset = 844;
 	public static final int forceO2Heating_offset = 1372;
@@ -1215,16 +1213,27 @@ public class Fields {
 	public static final int gppwm4_rpmBins_offset = 2858;
 	public static final int gppwm4_table_offset = 2866;
 	public static final int gppwm_channel_e_GPPWM_AccelPedal = 9;
-	public static final int gppwm_channel_e_GPPWM_AuxTemp1 = 6;
-	public static final int gppwm_channel_e_GPPWM_AuxTemp2 = 7;
-	public static final int gppwm_channel_e_GPPWM_Clt = 2;
-	public static final int gppwm_channel_e_GPPWM_FuelLoad = 4;
-	public static final int gppwm_channel_e_GPPWM_Iat = 3;
-	public static final int gppwm_channel_e_GPPWM_IgnLoad = 5;
-	public static final int gppwm_channel_e_GPPWM_Map = 1;
-	public static final int gppwm_channel_e_GPPWM_Tps = 0;
+	public static final int gppwm_channel_e_GPPWM_AuxLinear1 = 16;
+	public static final int gppwm_channel_e_GPPWM_AuxLinear2 = 17;
+	public static final int gppwm_channel_e_GPPWM_AuxTemp1 = 7;
+	public static final int gppwm_channel_e_GPPWM_AuxTemp2 = 8;
+	public static final int gppwm_channel_e_GPPWM_Clt = 3;
+	public static final int gppwm_channel_e_GPPWM_EthanolPercent = 15;
+	public static final int gppwm_channel_e_GPPWM_FuelLoad = 5;
+	public static final int gppwm_channel_e_GPPWM_GppwmOutput1 = 18;
+	public static final int gppwm_channel_e_GPPWM_GppwmOutput2 = 19;
+	public static final int gppwm_channel_e_GPPWM_GppwmOutput3 = 20;
+	public static final int gppwm_channel_e_GPPWM_GppwmOutput4 = 21;
+	public static final int gppwm_channel_e_GPPWM_Iat = 4;
+	public static final int gppwm_channel_e_GPPWM_IgnLoad = 6;
+	public static final int gppwm_channel_e_GPPWM_Map = 2;
+	public static final int gppwm_channel_e_GPPWM_Tps = 1;
 	public static final int gppwm_channel_e_GPPWM_Vbatt = 10;
-	public static final int gppwm_channel_e_GPPWM_Zero = 8;
+	public static final int gppwm_channel_e_GPPWM_VVT_1E = 12;
+	public static final int gppwm_channel_e_GPPWM_VVT_1I = 11;
+	public static final int gppwm_channel_e_GPPWM_VVT_2E = 14;
+	public static final int gppwm_channel_e_GPPWM_VVT_2I = 13;
+	public static final int gppwm_channel_e_GPPWM_Zero = 0;
 	public static final int gppwm_channel_size = 92;
 	public static final int GPPWM_CHANNELS = 4;
 	public static final int gppwm_compare_mode_e_GPPWM_GreaterThan = 0;
@@ -1374,8 +1383,37 @@ public class Fields {
 	public static final int idleVeLoadBins_offset = 5648;
 	public static final int idleVeRpmBins_offset = 5644;
 	public static final int idleVeTable_offset = 5652;
+	public static final int IGN_BLEND_COUNT = 4;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
+	public static final int ignBlends1_blendBins_offset = 21458;
+	public static final int ignBlends1_blendParameter_offset = 21456;
+	public static final int ignBlends1_blendValues_offset = 21474;
+	public static final int ignBlends1_loadBins_offset = 21424;
+	public static final int ignBlends1_offset = 21296;
+	public static final int ignBlends1_rpmBins_offset = 21440;
+	public static final int ignBlends1_table_offset = 21296;
+	public static final int ignBlends2_blendBins_offset = 21646;
+	public static final int ignBlends2_blendParameter_offset = 21644;
+	public static final int ignBlends2_blendValues_offset = 21662;
+	public static final int ignBlends2_loadBins_offset = 21612;
+	public static final int ignBlends2_offset = 21484;
+	public static final int ignBlends2_rpmBins_offset = 21628;
+	public static final int ignBlends2_table_offset = 21484;
+	public static final int ignBlends3_blendBins_offset = 21834;
+	public static final int ignBlends3_blendParameter_offset = 21832;
+	public static final int ignBlends3_blendValues_offset = 21850;
+	public static final int ignBlends3_loadBins_offset = 21800;
+	public static final int ignBlends3_offset = 21672;
+	public static final int ignBlends3_rpmBins_offset = 21816;
+	public static final int ignBlends3_table_offset = 21672;
+	public static final int ignBlends4_blendBins_offset = 22022;
+	public static final int ignBlends4_blendParameter_offset = 22020;
+	public static final int ignBlends4_blendValues_offset = 22038;
+	public static final int ignBlends4_loadBins_offset = 21988;
+	public static final int ignBlends4_offset = 21860;
+	public static final int ignBlends4_rpmBins_offset = 22004;
+	public static final int ignBlends4_table_offset = 21860;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
@@ -1523,6 +1561,7 @@ public class Fields {
 	public static final int joystickCenterPin_offset = 944;
 	public static final int joystickCPin_offset = 950;
 	public static final int joystickDPin_offset = 952;
+	public static final int kickStartCranking_offset = 120;
 	public static final int knockBandCustom_offset = 360;
 	public static final int knockBankCyl10_offset = 960;
 	public static final int knockBankCyl11_offset = 960;
@@ -1737,7 +1776,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5524;
 	public static final int pedalToTpsRpmBins_offset = 5532;
 	public static final int pedalToTpsTable_offset = 5460;
-	public static final int persistent_config_s_size = 21296;
+	public static final int persistent_config_s_size = 22048;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1770,7 +1809,6 @@ public class Fields {
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
 	public static final String PROTOCOL_CRANK1 = "t1";
 	public static final String PROTOCOL_CRANK2 = "t2";
-	public static final String PROTOCOL_CRANK3 = "t3";
 	public static final String PROTOCOL_ENGINE_SNIFFER = "wave_chart";
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
@@ -1877,6 +1915,7 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
+	public static final int SIGNATURE_HASH = 1437932482;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2109,7 +2148,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 3684;
 	public static final int torqueRpmBins_offset = 3672;
 	public static final int torqueTable_offset = 3636;
-	public static final int TOTAL_CONFIG_SIZE = 21296;
+	public static final int TOTAL_CONFIG_SIZE = 22048;
 	public static final int totalGearsCount_offset = 1584;
 	public static final int tps1_1AdcChannel_offset = 456;
 	public static final int tps1_2AdcChannel_offset = 686;
@@ -2157,10 +2196,6 @@ public class Fields {
 	public static final int trigger_config_s_size = 12;
 	public static final int trigger_customSkippedToothCount_offset = 476;
 	public static final int trigger_customTotalToothCount_offset = 472;
-	public static final int trigger_event_e_SHAFT_PRIMARY_FALLING = 0;
-	public static final int trigger_event_e_SHAFT_PRIMARY_RISING = 1;
-	public static final int trigger_event_e_SHAFT_SECONDARY_FALLING = 2;
-	public static final int trigger_event_e_SHAFT_SECONDARY_RISING = 3;
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
 	public static final String TRIGGER_GAP_TO = "gapTo";
 	public static final String TRIGGER_GAPS_COUNT = "gapsCount";
@@ -2249,11 +2284,6 @@ public class Fields {
 	public static final int trigger_type_e_UNUSED_21 = 21;
 	public static final int trigger_type_e_UNUSED_34 = 34;
 	public static final int trigger_type_offset = 468;
-	public static final int trigger_value_e_TV_FALL = 0;
-	public static final int trigger_value_e_TV_RISE = 1;
-	public static final int trigger_wheel_e_T_NONE = 15;
-	public static final int trigger_wheel_e_T_PRIMARY = 0;
-	public static final int trigger_wheel_e_T_SECONDARY = 1;
 	public static final int triggerCompCenterVolt_offset = 2536;
 	public static final int triggerCompHystMax_offset = 2538;
 	public static final int triggerCompHystMin_offset = 2537;
@@ -2308,6 +2338,8 @@ public class Fields {
 	public static final int triggerSimulatorPins1_offset = 748;
 	public static final int triggerSimulatorPins2_offset = 750;
 	public static final int triggerSimulatorPins3_offset = 752;
+	public static final int TriggerWheel_T_PRIMARY = 0;
+	public static final int TriggerWheel_T_SECONDARY = 1;
 	public static final int TRIM_SIZE = 4;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
 	public static final char TS_BURN_COMMAND = 'B';
@@ -2378,10 +2410,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.10.all.3533734630";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.18.all.1437932482";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1248;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2415,7 +2447,6 @@ public class Fields {
 	public static final int unused1128_offset = 1628;
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
-	public static final int unused120b18_offset = 120;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3123;
 	public static final int unused962_offset = 1040;
@@ -2603,7 +2634,7 @@ public class Fields {
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 120, FieldType.BIT, 15);
 	public static final Field USECICPIDFORIDLE = Field.create("USECICPIDFORIDLE", 120, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 120, FieldType.BIT, 17);
-	public static final Field UNUSED120B18 = Field.create("UNUSED120B18", 120, FieldType.BIT, 18);
+	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 120, FieldType.BIT, 18);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 120, FieldType.BIT, 19);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 120, FieldType.BIT, 20);
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 120, FieldType.BIT, 21);
@@ -3615,7 +3646,7 @@ public class Fields {
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 2568, FieldType.INT16).setScale(1.0);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 2570, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 2571, FieldType.INT8).setScale(1.0);
-	public static final String[] gppwm_channel_e = {"TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"};
+	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2572, FieldType.INT8, gppwm_channel_e).setScale(1.0);
 	public static final Field GPPWM1_ALIGNMENTFILL_MAP = Field.create("GPPWM1_ALIGNMENTFILL_MAP", 2573, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2574, FieldType.INT8).setScale(1.0);
@@ -3956,6 +3987,38 @@ public class Fields {
 	public static final Field MAXKNOCKRETARDTABLE = Field.create("MAXKNOCKRETARDTABLE", 21248, FieldType.INT8).setScale(0.25);
 	public static final Field MAXKNOCKRETARDLOADBINS = Field.create("MAXKNOCKRETARDLOADBINS", 21284, FieldType.INT8).setScale(1.0);
 	public static final Field MAXKNOCKRETARDRPMBINS = Field.create("MAXKNOCKRETARDRPMBINS", 21290, FieldType.INT8).setScale(100.0);
+	public static final Field IGNBLENDS1_TABLE = Field.create("IGNBLENDS1_TABLE", 21296, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS1_LOADBINS = Field.create("IGNBLENDS1_LOADBINS", 21424, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS1_RPMBINS = Field.create("IGNBLENDS1_RPMBINS", 21440, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS1_BLENDPARAMETER = Field.create("IGNBLENDS1_BLENDPARAMETER", 21456, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS1_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS1_ALIGNMENTFILL_AT_161", 21457, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS1_BLENDBINS = Field.create("IGNBLENDS1_BLENDBINS", 21458, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS1_BLENDVALUES = Field.create("IGNBLENDS1_BLENDVALUES", 21474, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS1_ALIGNMENTFILL_AT_186", 21482, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS2_TABLE = Field.create("IGNBLENDS2_TABLE", 21484, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS2_LOADBINS = Field.create("IGNBLENDS2_LOADBINS", 21612, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS2_RPMBINS = Field.create("IGNBLENDS2_RPMBINS", 21628, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS2_BLENDPARAMETER = Field.create("IGNBLENDS2_BLENDPARAMETER", 21644, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS2_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS2_ALIGNMENTFILL_AT_161", 21645, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS2_BLENDBINS = Field.create("IGNBLENDS2_BLENDBINS", 21646, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS2_BLENDVALUES = Field.create("IGNBLENDS2_BLENDVALUES", 21662, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS2_ALIGNMENTFILL_AT_186", 21670, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS3_TABLE = Field.create("IGNBLENDS3_TABLE", 21672, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS3_LOADBINS = Field.create("IGNBLENDS3_LOADBINS", 21800, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS3_RPMBINS = Field.create("IGNBLENDS3_RPMBINS", 21816, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS3_BLENDPARAMETER = Field.create("IGNBLENDS3_BLENDPARAMETER", 21832, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS3_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS3_ALIGNMENTFILL_AT_161", 21833, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS3_BLENDBINS = Field.create("IGNBLENDS3_BLENDBINS", 21834, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS3_BLENDVALUES = Field.create("IGNBLENDS3_BLENDVALUES", 21850, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS3_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS3_ALIGNMENTFILL_AT_186", 21858, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS4_TABLE = Field.create("IGNBLENDS4_TABLE", 21860, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS4_LOADBINS = Field.create("IGNBLENDS4_LOADBINS", 21988, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS4_RPMBINS = Field.create("IGNBLENDS4_RPMBINS", 22004, FieldType.INT16).setScale(1.0);
+	public static final Field IGNBLENDS4_BLENDPARAMETER = Field.create("IGNBLENDS4_BLENDPARAMETER", 22020, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field IGNBLENDS4_ALIGNMENTFILL_AT_161 = Field.create("IGNBLENDS4_ALIGNMENTFILL_AT_161", 22021, FieldType.INT8).setScale(1.0);
+	public static final Field IGNBLENDS4_BLENDBINS = Field.create("IGNBLENDS4_BLENDBINS", 22022, FieldType.INT16).setScale(0.1);
+	public static final Field IGNBLENDS4_BLENDVALUES = Field.create("IGNBLENDS4_BLENDVALUES", 22038, FieldType.INT8).setScale(0.5);
+	public static final Field IGNBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS4_ALIGNMENTFILL_AT_186", 22046, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -3991,7 +4054,7 @@ public class Fields {
 	CJ125ISURDIVIDED,
 	USECICPIDFORIDLE,
 	USETLE8888_CRANKING_HACK,
-	UNUSED120B18,
+	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
 	ROLLINGLAUNCHENABLED,
@@ -5320,5 +5383,37 @@ public class Fields {
 	MAXKNOCKRETARDTABLE,
 	MAXKNOCKRETARDLOADBINS,
 	MAXKNOCKRETARDRPMBINS,
+	IGNBLENDS1_TABLE,
+	IGNBLENDS1_LOADBINS,
+	IGNBLENDS1_RPMBINS,
+	IGNBLENDS1_BLENDPARAMETER,
+	IGNBLENDS1_ALIGNMENTFILL_AT_161,
+	IGNBLENDS1_BLENDBINS,
+	IGNBLENDS1_BLENDVALUES,
+	IGNBLENDS1_ALIGNMENTFILL_AT_186,
+	IGNBLENDS2_TABLE,
+	IGNBLENDS2_LOADBINS,
+	IGNBLENDS2_RPMBINS,
+	IGNBLENDS2_BLENDPARAMETER,
+	IGNBLENDS2_ALIGNMENTFILL_AT_161,
+	IGNBLENDS2_BLENDBINS,
+	IGNBLENDS2_BLENDVALUES,
+	IGNBLENDS2_ALIGNMENTFILL_AT_186,
+	IGNBLENDS3_TABLE,
+	IGNBLENDS3_LOADBINS,
+	IGNBLENDS3_RPMBINS,
+	IGNBLENDS3_BLENDPARAMETER,
+	IGNBLENDS3_ALIGNMENTFILL_AT_161,
+	IGNBLENDS3_BLENDBINS,
+	IGNBLENDS3_BLENDVALUES,
+	IGNBLENDS3_ALIGNMENTFILL_AT_186,
+	IGNBLENDS4_TABLE,
+	IGNBLENDS4_LOADBINS,
+	IGNBLENDS4_RPMBINS,
+	IGNBLENDS4_BLENDPARAMETER,
+	IGNBLENDS4_ALIGNMENTFILL_AT_161,
+	IGNBLENDS4_BLENDBINS,
+	IGNBLENDS4_BLENDVALUES,
+	IGNBLENDS4_ALIGNMENTFILL_AT_186,
 	};
 }

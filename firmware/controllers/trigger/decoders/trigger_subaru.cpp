@@ -23,26 +23,26 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
 	float base = 0;
 
 	for (int i = 0; i < firstCount; i++) {
-		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_FALL);
-		s->addEvent720(base + narrow, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + narrow / 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEvent720(base + narrow, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 		base += narrow;
 	}
 
-	s->addEvent720(base + wide / 2, T_PRIMARY, TV_FALL);
-	s->addEvent720(base + wide, T_PRIMARY, TV_RISE);
+	s->addEvent720(base + wide / 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(base + wide, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	base += wide;
 
 	for (int i = 0; i < secondCount; i++) {
-		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_FALL);
-		s->addEvent720(base + narrow, T_PRIMARY, TV_RISE);
+		s->addEvent720(base + narrow / 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEvent720(base + narrow, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 		base += narrow;
 	}
 
-	s->addEvent720(720 - wide - wide / 2, T_PRIMARY, TV_FALL);
-	s->addEvent720(720 - wide, T_PRIMARY, TV_RISE);
+	s->addEvent720(720 - wide - wide / 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(720 - wide, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
-	s->addEvent720(720 - wide / 2, T_PRIMARY, TV_FALL);
-	s->addEvent720(720, T_PRIMARY, TV_RISE);
+	s->addEvent720(720 - wide / 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	s->useOnlyPrimaryForSync = true;
 }
 
@@ -86,22 +86,22 @@ static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
 	/* 97 degrees BTDC, but we have 20 degrees shift:
 	 * 180 - 97 - 20 = 63 */
 	#define SUBARU76_CRANK_PULSE0(cycle) \
-		s->addEvent720((180 * (cycle)) + 63 - width, T_SECONDARY, TV_RISE);	\
-		s->addEvent720((180 * (cycle)) + 63, T_SECONDARY, TV_FALL)
+		s->addEvent720((180 * (cycle)) + 63 - width, TriggerWheel::T_SECONDARY, TriggerValue::RISE);	\
+		s->addEvent720((180 * (cycle)) + 63, TriggerWheel::T_SECONDARY, TriggerValue::FALL)
 	/* 65 degrees BTDC, but we have 20 degrees shift:
 	 * 180 - 65 - 20 = 95 */
 	#define SUBARU76_CRANK_PULSE1(cycle) \
-		s->addEvent720((180 * (cycle)) + 95 - width, T_SECONDARY, TV_RISE);	\
-		s->addEvent720((180 * (cycle)) + 95, T_SECONDARY, TV_FALL)
+		s->addEvent720((180 * (cycle)) + 95 - width, TriggerWheel::T_SECONDARY, TriggerValue::RISE);	\
+		s->addEvent720((180 * (cycle)) + 95, TriggerWheel::T_SECONDARY, TriggerValue::FALL)
 	/* 10 degrees BTDC, but we have 20 degrees shift:
 	 * 180 - 10 - 20 = 150 */
 	#define SUBARU76_CRANK_PULSE2(cycle) \
-		s->addEvent720((180 * (cycle)) + 150 - width, T_SECONDARY, TV_RISE);	\
-		s->addEvent720((180 * (cycle)) + 150, T_SECONDARY, TV_FALL)
+		s->addEvent720((180 * (cycle)) + 150 - width, TriggerWheel::T_SECONDARY, TriggerValue::RISE);	\
+		s->addEvent720((180 * (cycle)) + 150, TriggerWheel::T_SECONDARY, TriggerValue::FALL)
 
 	#define SUBARU76_CAM_PULSE(cycle, offset) \
-		s->addEvent720((180 * (cycle)) + (offset) - width, T_PRIMARY, TV_RISE);	\
-		s->addEvent720((180 * (cycle)) + (offset), T_PRIMARY, TV_FALL)
+		s->addEvent720((180 * (cycle)) + (offset) - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);	\
+		s->addEvent720((180 * (cycle)) + (offset), TriggerWheel::T_PRIMARY, TriggerValue::FALL)
 
 	/* (TDC#2 + 20) + 15 */
 	SUBARU76_CAM_PULSE(0, +15);
@@ -191,25 +191,25 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 
 	/* T_CHANNEL_3 currently not supported, to keep trigger decode happy
 	 * set cam second as primary, so logic will be able to sync
-	 * Crank angle sensor #1 = T_SECONDARY
+	 * Crank angle sensor #1 = TriggerWheel:: T_SECONDARY
 	 * Crank andle sensor #2 = T_CHANNEL_3 - not supported yet
 	 * Cam angle sensor = T_PRIMARY */
-#define SVX_CRANK_1			T_SECONDARY
+#define SVX_CRANK_1			TriggerWheel::T_SECONDARY
 //#define SVX_CRANK_2			T_CHANNEL_3
-#define SVX_CAM				T_PRIMARY
+#define SVX_CAM				TriggerWheel::T_PRIMARY
 
 #define CRANK_1_FALL(n)		(20.0 + offset + 30.0 * (n))
 #define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
 
 #define SUBARU_SVX_CRANK1_PULSE(n) \
-	s->addEventAngle(20 + (30 * (n)) + offset - width, SVX_CRANK_1, TV_RISE);	\
-	s->addEventAngle(20 + (30 * (n)) + offset, SVX_CRANK_1, TV_FALL)
+	s->addEventAngle(20 + (30 * (n)) + offset - width, SVX_CRANK_1, TriggerValue::RISE);	\
+	s->addEventAngle(20 + (30 * (n)) + offset, SVX_CRANK_1, TriggerValue::FALL)
 
 	/* cam falling edge offset from preceding Cr #1 falling edge */
 	float cam_offset = (10.0 + 30.0 + 30.0 + 30.0) - 90.0;
 #define SUBARU_SVX_CAM_PULSE(n) \
-	s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TV_RISE);	\
-	s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TV_FALL)
+	s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TriggerValue::RISE);	\
+	s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TriggerValue::FALL)
 
 #ifdef SVX_CRANK_2
 	/* Cr #2 signle tooth falling edge is (55 + 1) BTDC
@@ -217,8 +217,8 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	float crank_2_offset = (10.0 + 30.0 + 30.0) - (55.0 + 1.0);
 
 	#define SUBARU_SVX_CRANK2_PULSE(n) \
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE); \
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL)
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TriggerValue::RISE); \
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TriggerValue::FALL)
 #else
 	#define SUBARU_SVX_CRANK2_PULSE(n)	(void)(n)
 #endif

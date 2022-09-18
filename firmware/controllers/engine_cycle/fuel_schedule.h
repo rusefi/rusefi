@@ -53,6 +53,8 @@ public:
 	WallFuel wallFuel;
 };
 
+void turnInjectionPinHigh(InjectionEvent *event);
+
 
 /**
  * This class knows about when to inject fuel
@@ -81,3 +83,5 @@ public:
 	InjectionEvent elements[MAX_CYLINDER_COUNT];
 	bool isReady = false;
 };
+
+FuelSchedule * getFuelSchedule();

@@ -39,7 +39,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 
 	initDataStructures();
 
-	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
+	const auto& triggerConfiguration = engine->triggerCentral.primaryTriggerConfiguration;
 
 	TriggerWaveform& shape = eth.engine.triggerCentral.triggerShape;
 	return eth.engine.triggerCentral.triggerState.findTriggerZeroEventIndex(shape, triggerConfiguration);
@@ -114,7 +114,7 @@ TEST(trigger, testSomethingWeird) {
 	TriggerDecoderBase state_("test");
 	TriggerDecoderBase *sta = &state_;
 
-	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
+	const auto& triggerConfiguration = engine->triggerCentral.primaryTriggerConfiguration;
 
 
 	ASSERT_FALSE(sta->shaft_is_synchronized) << "shaft_is_synchronized";
@@ -480,7 +480,8 @@ TEST(trigger, testTriggerDecoder) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 		applyNonPersistentConfiguration();
-		prepareShapes();
+		prepareOutputSignals();
+
 	}
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);

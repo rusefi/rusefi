@@ -8,6 +8,9 @@
 #pragma once
 
 #include <stdint.h>
+#ifdef __cplusplus
+#include <rusefi/arrays.h>
+#endif
 
 #define _MAX_FILLER 11
 

@@ -14,6 +14,8 @@ void proteusHarley() {
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
+	engineConfiguration->mapCamDetectionAnglePosition = 50;
+
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(

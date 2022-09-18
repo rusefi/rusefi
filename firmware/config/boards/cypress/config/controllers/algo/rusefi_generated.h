@@ -33,10 +33,6 @@
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 17
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
-#define adc_channel_mode_e_ADC_FAST 2
-#define adc_channel_mode_e_ADC_OFF 0
-#define adc_channel_mode_e_ADC_SLOW 1
-#define adc_channel_mode_e_auto_enum 0="ADC_OFF",2="ADC_FAST",1="ADC_SLOW"
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 492
 #define afr_hwChannel_offset 508
@@ -196,6 +192,7 @@
 #define benchTestOnTime_offset 1634
 #define binarySerialRxPin_offset 1530
 #define binarySerialTxPin_offset 1528
+#define blend_table_s_size 188
 #define BLOCKING_FACTOR 500
 #define boardUse2stepPullDown_offset 1360
 #define boardUseCamPullDown_offset 1360
@@ -738,7 +735,7 @@
 #define firingOrder_offset 372
 #define fixedModeTiming_offset 404
 #define fixedTiming_offset 1684
-#define FLASH_DATA_VERSION 10014
+#define FLASH_DATA_VERSION 10015
 #define flexCranking_offset 1372
 #define flexSensorPin_offset 844
 #define forceO2Heating_offset 1372
@@ -1235,19 +1232,30 @@
 #define gppwm4_pwmFrequency_offset 2844
 #define gppwm4_rpmBins_offset 2858
 #define gppwm4_table_offset 2866
-#define gppwm_channel_e_auto_enum 0="GPPWM_Tps",9="GPPWM_AccelPedal",6="GPPWM_AuxTemp1",7="GPPWM_AuxTemp2",2="GPPWM_Clt",4="GPPWM_FuelLoad",3="GPPWM_Iat",5="GPPWM_IgnLoad",1="GPPWM_Map",10="GPPWM_Vbatt",8="GPPWM_Zero"
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
+#define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",3="GPPWM_Clt",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",18="GPPWM_GppwmOutput1",19="GPPWM_GppwmOutput2",20="GPPWM_GppwmOutput3",21="GPPWM_GppwmOutput4",4="GPPWM_Iat",6="GPPWM_IgnLoad",2="GPPWM_Map",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt"
+#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"
 #define gppwm_channel_e_GPPWM_AccelPedal 9
-#define gppwm_channel_e_GPPWM_AuxTemp1 6
-#define gppwm_channel_e_GPPWM_AuxTemp2 7
-#define gppwm_channel_e_GPPWM_Clt 2
-#define gppwm_channel_e_GPPWM_FuelLoad 4
-#define gppwm_channel_e_GPPWM_Iat 3
-#define gppwm_channel_e_GPPWM_IgnLoad 5
-#define gppwm_channel_e_GPPWM_Map 1
-#define gppwm_channel_e_GPPWM_Tps 0
+#define gppwm_channel_e_GPPWM_AuxLinear1 16
+#define gppwm_channel_e_GPPWM_AuxLinear2 17
+#define gppwm_channel_e_GPPWM_AuxTemp1 7
+#define gppwm_channel_e_GPPWM_AuxTemp2 8
+#define gppwm_channel_e_GPPWM_Clt 3
+#define gppwm_channel_e_GPPWM_EthanolPercent 15
+#define gppwm_channel_e_GPPWM_FuelLoad 5
+#define gppwm_channel_e_GPPWM_GppwmOutput1 18
+#define gppwm_channel_e_GPPWM_GppwmOutput2 19
+#define gppwm_channel_e_GPPWM_GppwmOutput3 20
+#define gppwm_channel_e_GPPWM_GppwmOutput4 21
+#define gppwm_channel_e_GPPWM_Iat 4
+#define gppwm_channel_e_GPPWM_IgnLoad 6
+#define gppwm_channel_e_GPPWM_Map 2
+#define gppwm_channel_e_GPPWM_Tps 1
 #define gppwm_channel_e_GPPWM_Vbatt 10
-#define gppwm_channel_e_GPPWM_Zero 8
+#define gppwm_channel_e_GPPWM_VVT_1E 12
+#define gppwm_channel_e_GPPWM_VVT_1I 11
+#define gppwm_channel_e_GPPWM_VVT_2E 14
+#define gppwm_channel_e_GPPWM_VVT_2I 13
+#define gppwm_channel_e_GPPWM_Zero 0
 #define gppwm_channel_size 92
 #define GPPWM_CHANNELS 4
 #define gppwm_compare_mode_e_GPPWM_GreaterThan 0
@@ -1400,8 +1408,37 @@
 #define idleVeLoadBins_offset 5648
 #define idleVeRpmBins_offset 5644
 #define idleVeTable_offset 5652
+#define IGN_BLEND_COUNT 4
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
+#define ignBlends1_blendBins_offset 21458
+#define ignBlends1_blendParameter_offset 21456
+#define ignBlends1_blendValues_offset 21474
+#define ignBlends1_loadBins_offset 21424
+#define ignBlends1_offset 21296
+#define ignBlends1_rpmBins_offset 21440
+#define ignBlends1_table_offset 21296
+#define ignBlends2_blendBins_offset 21646
+#define ignBlends2_blendParameter_offset 21644
+#define ignBlends2_blendValues_offset 21662
+#define ignBlends2_loadBins_offset 21612
+#define ignBlends2_offset 21484
+#define ignBlends2_rpmBins_offset 21628
+#define ignBlends2_table_offset 21484
+#define ignBlends3_blendBins_offset 21834
+#define ignBlends3_blendParameter_offset 21832
+#define ignBlends3_blendValues_offset 21850
+#define ignBlends3_loadBins_offset 21800
+#define ignBlends3_offset 21672
+#define ignBlends3_rpmBins_offset 21816
+#define ignBlends3_table_offset 21672
+#define ignBlends4_blendBins_offset 22022
+#define ignBlends4_blendParameter_offset 22020
+#define ignBlends4_blendValues_offset 22038
+#define ignBlends4_loadBins_offset 21988
+#define ignBlends4_offset 21860
+#define ignBlends4_rpmBins_offset 22004
+#define ignBlends4_table_offset 21860
 #define ignition_mode_e_auto_enum 0="IM_ONE_COIL",1="IM_INDIVIDUAL_COILS",3="IM_TWO_COILS",2="IM_WASTED_SPARK"
 #define ignition_mode_e_IM_INDIVIDUAL_COILS 1
 #define ignition_mode_e_IM_ONE_COIL 0
@@ -1556,6 +1593,7 @@
 #define joystickCenterPin_offset 944
 #define joystickCPin_offset 950
 #define joystickDPin_offset 952
+#define kickStartCranking_offset 120
 #define knockBandCustom_offset 360
 #define knockBankCyl10_offset 960
 #define knockBankCyl11_offset 960
@@ -1779,7 +1817,7 @@
 #define pedalToTpsRpmBins_offset 5532
 #define pedalToTpsTable_offset 5460
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 21296
+#define persistent_config_s_size 22048
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1818,7 +1856,6 @@
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
-#define PROTOCOL_CRANK3 "t3"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
 #define PROTOCOL_ES_DOWN "d"
 #define PROTOCOL_ES_UP "u"
@@ -1929,7 +1966,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3533734630
+#define SIGNATURE_HASH 1437932482
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2170,7 +2207,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 21296
+#define TOTAL_CONFIG_SIZE 22048
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2221,10 +2258,6 @@
 #define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71 || trigger_type == 74
 #define trigger_customSkippedToothCount_offset 476
 #define trigger_customTotalToothCount_offset 472
-#define trigger_event_e_SHAFT_PRIMARY_FALLING 0
-#define trigger_event_e_SHAFT_PRIMARY_RISING 1
-#define trigger_event_e_SHAFT_SECONDARY_FALLING 2
-#define trigger_event_e_SHAFT_SECONDARY_RISING 3
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
 #define TRIGGER_GAPS_COUNT "gapsCount"
@@ -2317,11 +2350,6 @@
 #define trigger_type_offset 468
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
 #define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 12 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
-#define trigger_value_e_TV_FALL 0
-#define trigger_value_e_TV_RISE 1
-#define trigger_wheel_e_T_NONE 15
-#define trigger_wheel_e_T_PRIMARY 0
-#define trigger_wheel_e_T_SECONDARY 1
 #define triggerCompCenterVolt_offset 2536
 #define triggerCompHystMax_offset 2538
 #define triggerCompHystMin_offset 2537
@@ -2376,6 +2404,8 @@
 #define triggerSimulatorPins1_offset 748
 #define triggerSimulatorPins2_offset 750
 #define triggerSimulatorPins3_offset 752
+#define TriggerWheel_T_PRIMARY 0
+#define TriggerWheel_T_SECONDARY 1
 #define TRIM_SIZE 4
 #define TS_BLOCK_READ_TIMEOUT 3000
 #define TS_BURN_COMMAND 'B'
@@ -2496,12 +2526,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.10.cypress.3533734630"
+#define TS_SIGNATURE "rusEFI 2022.09.18.cypress.1437932482"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1248
+#define TS_TOTAL_OUTPUT_SIZE 1260
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2536,7 +2566,6 @@
 #define unused1128_offset 1628
 #define unused1129_offset 1628
 #define unused1130_offset 1628
-#define unused120b18_offset 120
 #define unused1740b2_offset 1628
 #define unused4080_offset 3123
 #define unused962_offset 1040

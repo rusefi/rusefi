@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "pin_repository.h"
 #include "local_version_holder.h"
+#include "cyclic_buffer.h"
 
 #define MAP_CAM_BUFFER 64
 
@@ -51,21 +52,59 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+	void updateWaveform();
+
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
+	cyclic_buffer<int> triggerErrorDetection;
+
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
+	bool directSelfStimulation = false;
+
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+#if CAMS_PER_BANK == 1
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
+#else
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
+#endif
 
 	LocalVersionHolder triggerVersion;
+
+	/**
+	 * By the way:
+	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
+	 * 'running' means RPM are above crankingRpm
+	 * 'spinning' means the engine is not stopped
+	 */
+	// todo: combine with other RpmCalculator fields?
+	/**
+	 * this is set to true each time we register a trigger tooth signal
+	 */
+	bool isSpinningJustForWatchdog = false;
 
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
 
 	/**
+	 * value of 'triggerShape.getLength()'
+	 * pre-calculating this value is a performance optimization
+	 */
+	uint32_t engineCycleEventCount = 0;
+	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
 	 * we have not adjusted for yet
 	 */
-	bool triggerConfigChanged = false;
+	bool triggerConfigChangedOnLastConfigurationChange = false;
 
 	bool checkIfTriggerConfigChanged();
+#if EFI_UNIT_TEST
 	bool isTriggerConfigChanged();
+#endif // EFI_UNIT_TEST
 
 	bool isTriggerDecoderError();
 
@@ -137,6 +176,11 @@ public:
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
 
+	/**
+	 * this is based on engineSnifferRpmThreshold settings and current RPM
+	 */
+	bool isEngineSnifferEnabled = false;
+
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
 
@@ -149,7 +193,7 @@ private:
 void triggerInfo(void);
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index);
+void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
 
 void validateTriggerInputs();
 
@@ -162,3 +206,10 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
+
+void calculateTriggerSynchPoint(
+		TriggerCentral *triggerCentral,
+	TriggerWaveform& shape,
+	TriggerDecoderBase& state);
+
+TriggerCentral * getTriggerCentral();

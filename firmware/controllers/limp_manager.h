@@ -18,6 +18,7 @@ enum class ClearReason : uint8_t {
 	InjectorDutyCycle, // 10
 	FloodClear, // 11
 	EnginePhase, // 12
+	KickStart,
 };
 
 // Only allows clearing the value, but never resetting it.
@@ -114,3 +115,7 @@ private:
 
 	Timer m_engineStopTimer;
 };
+
+LimpManager * getLimpManager();
+
+

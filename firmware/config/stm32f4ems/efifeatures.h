@@ -60,6 +60,8 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
+#define EFI_CLOCK_LOCKS TRUE
+
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
 /**

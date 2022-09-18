@@ -93,7 +93,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10014
+#define FLASH_DATA_VERSION 10015
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -347,8 +347,8 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
-custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:3], @@gppwm_channel_e_enum@@
+#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"
+custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:4], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
 	output_pin_e pin;+Select a pin to use for PWM or on-off output.;
@@ -459,7 +459,7 @@ bit useEeprom
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
-bit unused120b18;
+bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;+This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
@@ -695,8 +695,6 @@ switch_input_pin_e clutchDownPin;+Some cars have a switch to indicate that clutc
 spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stock ECU stimulation code
 	Gpio mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
-
-custom adc_channel_mode_e 1 bits, U08, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
@@ -1729,6 +1727,20 @@ uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
 uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
 uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
+struct blend_table_s
+	int16_t[8 x 8] autoscale table;;"", 0.1, 0, -100, 100, 1
+	uint16_t[8] loadBins;;"Load", 1, 0, 0, 500, 0
+	uint16_t[8] rpmBins;;"RPM", 1, 0, 0, 18000, 0
+
+	gppwm_channel_e blendParameter
+
+	int16_t[8] autoscale blendBins;;"", 0.1, 0, -1000, 1000, 1
+	uint8_t[8] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
+end_struct
+
+#define IGN_BLEND_COUNT 4
+blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
+
 end_struct
 
 ! Pedal Position Sensor
@@ -1982,7 +1994,6 @@ end_struct
 ! Engine Sniffer channel names
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
-#define PROTOCOL_CRANK3 "t3"
 
 #define PROTOCOL_VVT1_NAME "VVT1"
 #define PROTOCOL_VVT2_NAME "VVT2"

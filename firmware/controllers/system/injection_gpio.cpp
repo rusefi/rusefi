@@ -6,8 +6,24 @@
 #include "engine_state.h"
 #include "tooth_logger.h"
 #include "tunerstudio_outputs.h"
+#include "engine_configuration.h"
+#include "efi_gpio.h"
 
 extern bool printFuelDebug;
+
+void startSimultaneousInjection(void*) {
+	efitick_t nowNt = getTimeNowNt();
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		enginePins.injectors[i].open(nowNt);
+	}
+}
+
+void endSimultaneousInjectionOnlyTogglePins() {
+	efitick_t nowNt = getTimeNowNt();
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		enginePins.injectors[i].close(nowNt);
+	}
+}
 
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	overlappingCounter = 1; // Force update in reset

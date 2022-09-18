@@ -49,7 +49,7 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 /*
  * todo: shall we? same for milliseconds?
 	lua_register(l, "getNowSeconds", [](lua_State* l) -> int {
-		int result = getTimeNowSeconds();
+		int result = getTimeNowS();
 		lua_pushnumber(l, result);
 		return 1;
 	});

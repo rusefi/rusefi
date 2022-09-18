@@ -142,7 +142,14 @@ void PwmConfig::handleCycleStart() {
 		pwmCycleCallback(this);
 	}
 		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
-		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
+		uint32_t iterationLimitInt32 = (0xFFFFFFFF / periodNt) - 2;
+
+		// Maximum number of iterations that don't lose precision due to 32b float (~7 decimal significant figures)
+		// We want at least 0.01% timing precision (aka 1/10000 cycle, 0.072 degree for trigger stimulator), which
+		// means we can't do any more than 2^23 / 10000 cycles = 838 iterations before a reset
+		uint32_t iterationLimitFloat = 838;
+
+		uint32_t iterationLimit = minI(iterationLimitInt32, iterationLimitFloat);
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
@@ -316,8 +323,8 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->seq.setSwitchTime(0, dutyCycle);
 	state->seq.setSwitchTime(1, 1);
-	state->seq.setChannelState(0, 0, TV_FALL);
-	state->seq.setChannelState(0, 1, TV_RISE);
+	state->seq.setChannelState(0, 0, TriggerValue::FALL);
+	state->seq.setChannelState(0, 1, TriggerValue::RISE);
 
 	state->outputPins[0] = output;
 
@@ -376,7 +383,7 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
 	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 		OutputPin *output = state->outputPins[channelIndex];
-		int value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
-		output->setValue(value);
+		TriggerValue value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
+		output->setValue(value == TriggerValue::RISE);
 	}
 }

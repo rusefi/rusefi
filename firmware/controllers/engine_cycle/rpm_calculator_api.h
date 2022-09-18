@@ -15,6 +15,7 @@ public:
 	 */
 	virtual bool isStopped() const = 0;
 
+	// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
 	virtual operation_mode_e getOperationMode() const = 0;
 };
 

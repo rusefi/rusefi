@@ -29,8 +29,8 @@ TEST(sensors, test2jz) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
 	// currentPosition
 	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition[0][0], EPS3D);

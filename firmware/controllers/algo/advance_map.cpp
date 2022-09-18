@@ -23,11 +23,38 @@
 #include "advance_map.h"
 #include "idle_thread.h"
 #include "launch_control.h"
+#include "gppwm_channel.h"
 
 #if EFI_ENGINE_CONTROL
 
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
+
+struct BlendResult {
+	// Bias in percent (0-100%)
+	float Bias;
+
+	// Result value (bias * table value)
+	float Value;
+};
+
+BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
+	auto value = readGppwmChannel(cfg.blendParameter);
+
+	if (!value) {
+		return { 0, 0 };
+	}
+
+	float tableValue = interpolate3d(
+		cfg.table,
+		cfg.loadBins, load,
+		cfg.rpmBins, rpm
+	);
+
+	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
+
+	return { blendFactor, 0.01f * blendFactor * tableValue };
+}
 
 /**
  * @return ignition timing angle advance before TDC
@@ -44,11 +71,22 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
+	// compute base ignition angle from main table
 	float advanceAngle = interpolate3d(
 		config->ignitionTable,
 		config->ignitionLoadBins, engineLoad,
 		config->ignitionRpmBins, rpm
 	);
+
+	// Add any adjustments if configured
+	for (size_t i = 0; i < efi::size(config->ignBlends); i++) {
+		auto result = calculateBlend(config->ignBlends[i], rpm, engineLoad);
+
+		engine->outputChannels.ignBlendBias[i] = result.Bias;
+		engine->outputChannels.ignBlendOutput[i] = result.Value;
+
+		advanceAngle += result.Value;
+	}
 
 	// get advance from the separate table for Idle
 	if (engineConfiguration->useSeparateAdvanceForIdle &&

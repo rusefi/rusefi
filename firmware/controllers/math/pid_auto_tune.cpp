@@ -139,7 +139,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 
 	this->logger = logger; // a bit lazy but good enough
   // check ready for new input
-  unsigned long now = currentTimeMillis();
+  unsigned long now = getTimeNowMs();
 
   if (state == AUTOTUNER_OFF)
   {
