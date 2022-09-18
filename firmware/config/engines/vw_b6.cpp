@@ -275,6 +275,7 @@ function onTick()
 	clt = getSensor("CLT") or 0
 	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
+	vbat = getSensor("BatteryVoltage") or 0
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
@@ -305,7 +306,10 @@ function onTick()
 
 	txCan(1, MOTOR_7, 0, canMotor7)
 
-	if hadIgnitionEvent and shallSleep : getElapsedSeconds() > 3 then
+    local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
+    local connectedToUsb = vbat < 4
+
+	if hadIgnitionEvent and timeToTurnOff then
 		-- looks like ignition key was removed
 		mcu_standby()
 	end
