@@ -1443,7 +1443,7 @@ gaugeCategory = GPPWM Outputs
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
 
-   indicator = { faultCode }, "", { AFR0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+   indicator = { enableAemXSeries && faultCode }, "", { AFR0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
