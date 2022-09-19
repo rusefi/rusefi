@@ -230,6 +230,8 @@ enable2ndByteCanID = false
     debugFieldI4List = bits,   U08,   [0:7], "Alt: Period",             "",                   "",          "Idle: State",                    "Idle di4",            "Cycle Cnt 1",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di4",               "executor",          "",           "di4",          "di4",           "22di4",          "",        "24:di4",      "",              "",          "",             "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 4 State",  "",               "",                       "",                       ""
     debugFieldI5List = bits,   U08,   [0:7], "",                        "",                   "",          "",                               "Idle di5",            "Cycle Cnt 2",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "di5",        "di5",               "ETB di5",               "max executor",      "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",          "",       "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 5 State",  "",               "",                       "",                       ""
 
+	wboFaultCodeList = bits, U08, [0:3], "Ok", "Unk", "Unk", "WBO failed to heat", "WBO overheat", "WBO underheat", "WBO no supply"
+
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
      ; the constant not yet being initialized. This is primarily important if the
@@ -1440,6 +1442,9 @@ gaugeCategory = GPPWM Outputs
    indicator =        { sd_logging_internal },       "No SD logging",        "SD logging",  white,  black,  green,  black
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
+
+   indicator = { faultCode }, "", { AFR0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
 [KeyActions]
