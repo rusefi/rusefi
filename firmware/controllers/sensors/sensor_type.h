@@ -69,14 +69,15 @@ enum class SensorType : unsigned char {
 
 	FuelLevel,
 
-	Aux1,
-	Aux2,
-	Aux3,
-	Aux4,
-	Aux5,
-	Aux6,
-	Aux7,
-	Aux8,
+	// auxiliary analog voltage inputs for Lua
+	AuxAnalog1,
+	AuxAnalog2,
+	AuxAnalog3,
+	AuxAnalog4,
+	AuxAnalog5,
+	AuxAnalog6,
+	AuxAnalog7,
+	AuxAnalog8,
 
 	VehicleSpeed,
 
