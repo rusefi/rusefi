@@ -33,7 +33,13 @@ pins:
   - pin: 1G
     id: I8
     class: outputs
-    ts_name: 1G - Ignition 1 & 4
+    ts_name: 1G - Ignition 1 & 4 (rev C)
+    type: ign
+    
+  - pin: 1G
+    id: C13
+    class: outputs
+    ts_name: 1G - Ignition 1 & 4 (rev D)
     type: ign
  
   - pin: 1H
@@ -200,7 +206,13 @@ pins:
   - pin: 3I
     id: I0
     class: outputs
-    ts_name: Tachometer
+    ts_name: Tachometer (rev C)
+    function: tachometer
+    
+  - pin: 3I
+    id: G12
+    class: outputs
+    ts_name: Tachometer (rev D)
     function: tachometer
     
   - pin: 3K
