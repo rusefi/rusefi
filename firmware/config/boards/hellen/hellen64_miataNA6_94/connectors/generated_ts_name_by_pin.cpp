@@ -13,6 +13,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B0: return "4H - TPS2";
 		case Gpio::B1: return "3E - CRANK";
 		case Gpio::C1: return "2M - Pressure Sensor";
+		case Gpio::C13: return "1G - Ignition 1 & 4 (rev D)";
 		case Gpio::C4: return "1V - Clutch Switch";
 		case Gpio::C5: return "1Q AC Switch";
 		case Gpio::C6: return "ETB EN";
@@ -28,13 +29,14 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F12: return "2J - Boost Control";
 		case Gpio::F14: return "2I - VVT";
 		case Gpio::F3: return "2L - Flex Fuel";
+		case Gpio::G12: return "Tachometer (rev D)";
 		case Gpio::G2: return "Fuel Pump Relay";
 		case Gpio::G7: return "3U - Injector 1";
 		case Gpio::G8: return "3V - Injector 2";
 		case Gpio::G9: return "1E - Check Engine Light";
 		case Gpio::H15: return "1J - AC Relay";
-		case Gpio::I0: return "Tachometer";
-		case Gpio::I8: return "1G - Ignition 1 & 4";
+		case Gpio::I0: return "Tachometer (rev C)";
+		case Gpio::I8: return "1G - Ignition 1 & 4 (rev C)";
 		default: return nullptr;
 	}
 	return nullptr;
