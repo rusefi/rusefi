@@ -199,6 +199,8 @@ enable2ndByteCanID = false
 	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
 	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
 
+	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
+
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
 
@@ -230,7 +232,7 @@ enable2ndByteCanID = false
     debugFieldI4List = bits,   U08,   [0:7], "Alt: Period",             "",                   "",          "Idle: State",                    "Idle di4",            "Cycle Cnt 1",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di4",               "executor",          "",           "di4",          "di4",           "22di4",          "",        "24:di4",      "",              "",          "",             "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 4 State",  "",               "",                       "",                       ""
     debugFieldI5List = bits,   U08,   [0:7], "",                        "",                   "",          "",                               "Idle di5",            "Cycle Cnt 2",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "di5",        "di5",               "ETB di5",               "max executor",      "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",          "",       "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 5 State",  "",               "",                       "",                       ""
 
-	wboFaultCodeList = bits, U08, [0:3], "Ok", "Unk", "Unk", "WBO failed to heat", "WBO overheat", "WBO underheat", "WBO no supply"
+	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -1443,7 +1445,7 @@ gaugeCategory = GPPWM Outputs
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
 
-   indicator = { enableAemXSeries && faultCode }, "", { AFR0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+   indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
 
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
