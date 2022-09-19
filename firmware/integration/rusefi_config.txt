@@ -958,7 +958,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     int launchFuelAdded;+Extra Fuel Added;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0
 	int hardCutRpmRange;Range from Launch RPM to activate Hard Cut;"RPM", 1, 0, 0, 3000, 0
-	int unused962
+	float turbochargerFilter
 	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
 	float launchActivateDelay;;"", 1, 0, 0, 20000, 0
 
