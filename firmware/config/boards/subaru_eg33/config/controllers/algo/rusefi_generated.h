@@ -116,6 +116,7 @@
 #define auxAnalogInputs7_offset 1754
 #define auxAnalogInputs8_offset 1755
 #define auxFastSensor1_adcChannel_offset 685
+#define auxFrequencyFilter_offset 2076
 #define auxLinear1_hwChannel_offset 3700
 #define auxLinear1_offset 3700
 #define auxLinear1_v1_offset 3704
@@ -388,12 +389,12 @@
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
-#define coastingFuelCutClt_offset 2096
+#define coastingFuelCutClt_offset 2098
 #define coastingFuelCutEnabled_offset 764
-#define coastingFuelCutMap_offset 2100
-#define coastingFuelCutRpmHigh_offset 2090
-#define coastingFuelCutRpmLow_offset 2092
-#define coastingFuelCutTps_offset 2094
+#define coastingFuelCutMap_offset 2102
+#define coastingFuelCutRpmHigh_offset 2092
+#define coastingFuelCutRpmLow_offset 2094
+#define coastingFuelCutTps_offset 2096
 #define coastingFuelCutVssHigh_offset 1574
 #define coastingFuelCutVssLow_offset 1573
 #define communicationLedPin_offset 1524
@@ -1794,7 +1795,7 @@
 #define PidAutoTune_Peak_MAXIMUM 1
 #define PidAutoTune_Peak_MINIMUM -1
 #define PidAutoTune_Peak_NOT_A_PEAK 0
-#define pidExtraForLowRpm_offset 2098
+#define pidExtraForLowRpm_offset 2100
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
 #define pin_input_mode_e_PI_DEFAULT 0
@@ -1932,18 +1933,16 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3714054674
+#define SIGNATURE_HASH 2709994176
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
-#define sorryUnused1_offset 2074
-#define sorryUnused2_offset 2076
-#define sorryUnused3_offset 2078
-#define sorryUnused4_offset 2080
-#define sorryUnused5_offset 2082
-#define sorryUnused6_offset 2084
-#define sorryUnused7_offset 2086
-#define sorryUnused8_offset 2088
+#define sorryUnused1_offset 2080
+#define sorryUnused2_offset 2082
+#define sorryUnused3_offset 2084
+#define sorryUnused4_offset 2086
+#define sorryUnused5_offset 2088
+#define sorryUnused6_offset 2090
 #define sparkDwellRpmBins_offset 4156
 #define sparkDwellValues_offset 4172
 #define specs_offset 364
@@ -2493,7 +2492,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.19.subaru_eg33_f7.3714054674"
+#define TS_SIGNATURE "rusEFI 2022.09.19.subaru_eg33_f7.2709994176"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2515,6 +2514,7 @@
 #define TsCalMode_Tps2SecondaryMin 11
 #define tuneHidingKey_offset 3768
 #define tunerStudioSerialSpeed_offset 740
+#define turbochargerFilter_offset 1040
 #define turboSpeedSensorInputPin_offset 1474
 #define turboSpeedSensorMultiplier_offset 1380
 #define twoStroke_offset 1360
@@ -2535,8 +2535,6 @@
 #define unused1130_offset 1628
 #define unused1740b2_offset 1628
 #define unused4080_offset 3123
-#define unused962_offset 1040
-#define unused_1484_bit_27_offset 1372
 #define unused_1484_bit_29_offset 1372
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_38_offset 1372
@@ -2567,6 +2565,7 @@
 #define unusedBit_539_8_offset 1628
 #define unusedBit_539_9_offset 1628
 #define useAdvanceCorrectionsForCranking_offset 1372
+#define useBiQuadOnAuxSpeedSensors_offset 1372
 #define useCicPidForIdle_offset 120
 #define useCltBasedRpmLimit_offset 1372
 #define useEeprom_offset 120

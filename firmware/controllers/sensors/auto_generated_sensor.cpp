@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Aug 22 14:53:02 UTC 2022
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Sep 19 16:21:55 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -14,21 +14,21 @@ case SensorType::AcceleratorPedalPrimary:
 case SensorType::AcceleratorPedalSecondary:
   return "AcceleratorPedalSecondary";
 case SensorType::AuxAnalog1:
-  return "Aux1";
+  return "AuxAnalog1";
 case SensorType::AuxAnalog2:
-  return "Aux2";
+  return "AuxAnalog2";
 case SensorType::AuxAnalog3:
-  return "Aux3";
+  return "AuxAnalog3";
 case SensorType::AuxAnalog4:
-  return "Aux4";
+  return "AuxAnalog4";
 case SensorType::AuxAnalog5:
-  return "Aux5";
+  return "AuxAnalog5";
 case SensorType::AuxAnalog6:
-  return "Aux6";
+  return "AuxAnalog6";
 case SensorType::AuxAnalog7:
-  return "Aux7";
+  return "AuxAnalog7";
 case SensorType::AuxAnalog8:
-  return "Aux8";
+  return "AuxAnalog8";
 case SensorType::AuxLinear1:
   return "AuxLinear1";
 case SensorType::AuxLinear2:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Sep 17 00:15:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 19 16:22:00 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2313,7 +2313,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1040
 	 */
-	int unused962;
+	float turbochargerFilter;
 	/**
 	 * offset 1044
 	 */
@@ -2683,7 +2683,7 @@ struct engine_configuration_s {
 	bool invertVvtControlExhaust : 1 {};
 	/**
 	offset 1372 bit 27 */
-	bool unused_1484_bit_27 : 1 {};
+	bool useBiQuadOnAuxSpeedSensors : 1 {};
 	/**
 	offset 1372 bit 28 */
 	bool unused_1484_bit_38 : 1 {};
@@ -3641,51 +3641,55 @@ struct engine_configuration_s {
 	 */
 	Gpio mc33816_cs;
 	/**
+	 * need 4 byte alignment
+	units
 	 * offset 2074
 	 */
-	Gpio sorryUnused[8];
+	uint8_t alignmentFill_at_2074[2];
+	/**
+	 * offset 2076
+	 */
+	float auxFrequencyFilter;
+	/**
+	 * offset 2080
+	 */
+	Gpio sorryUnused[6];
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
-	 * offset 2090
+	 * offset 2092
 	 */
 	int16_t coastingFuelCutRpmHigh;
 	/**
 	 * This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle
 	rpm
-	 * offset 2092
+	 * offset 2094
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
 	 * Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
 	%
-	 * offset 2094
+	 * offset 2096
 	 */
 	int16_t coastingFuelCutTps;
 	/**
 	 * Fuel cutoff is disabled when the engine is cold.
 	C
-	 * offset 2096
+	 * offset 2098
 	 */
 	int16_t coastingFuelCutClt;
 	/**
 	 * Increases PID reaction for RPM<target by adding extra percent to PID-error
 	%
-	 * offset 2098
+	 * offset 2100
 	 */
 	int16_t pidExtraForLowRpm;
 	/**
 	 * MAP value above which fuel injection is re-enabled.
 	kPa
-	 * offset 2100
-	 */
-	int16_t coastingFuelCutMap;
-	/**
-	 * need 4 byte alignment
-	units
 	 * offset 2102
 	 */
-	uint8_t alignmentFill_at_2102[2];
+	int16_t coastingFuelCutMap;
 	/**
 	 * offset 2104
 	 */
@@ -5040,4 +5044,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Sep 17 00:15:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 19 16:22:00 UTC 2022
