@@ -58,7 +58,7 @@ static int lua_getAuxAnalog(lua_State* l) {
 	// todo: shall we use HUMAN_INDEX since UI goes from 1 and Lua loves going from 1?
 	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	auto type = static_cast<SensorType>(zeroBasedSensorIndex + static_cast<int>(SensorType::Aux1));
+	auto type = static_cast<SensorType>(zeroBasedSensorIndex + static_cast<int>(SensorType::AuxAnalog1));
 
 	return getSensor(l, type);
 }
