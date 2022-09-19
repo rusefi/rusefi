@@ -7,6 +7,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -39,26 +40,28 @@ public class PortHolder {
         this.ioStreamFactory = ioStreamFactory;
     }
 
-    boolean connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
+    /**
+     * @return true if OK, false if error
+     */
+    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported
-            return false;
+            return;
         }
         synchronized (portLock) {
             bp = new BinaryProtocol(linkManager, stream);
             portLock.notifyAll();
         }
 
-        boolean result = bp.connectAndReadConfiguration( arguments, dataListener);
+        String errorMessage = bp.connectAndReadConfiguration(arguments, dataListener);
         if (listener != null) {
-            if (result) {
+            if (errorMessage == null) {
                 listener.onConnectionEstablished();
             } else {
-                listener.onConnectionFailed();
+                listener.onConnectionFailed(errorMessage);
             }
         }
-        return result;
     }
 
     public void close() {
@@ -84,11 +87,13 @@ public class PortHolder {
      */
     public void packAndSend(final String command, boolean fireEvent) throws InterruptedException {
         if (bp == null) {
-            Window[] windows = JDialog.getWindows();
-            Window window = windows.length == 0 ? null : windows[0];
-            JOptionPane.showMessageDialog(window, "No connectivity",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-            System.exit(-1);
+            SwingUtilities.invokeLater(() -> {
+                Window[] windows = JDialog.getWindows();
+                Window window = windows.length == 0 ? null : windows[0];
+                JOptionPane.showMessageDialog(window, "No connectivity, will close",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                IoUtils.exit("No connectivity, will close",-1);
+            });
         }
 
         bp.doSend(command, fireEvent);

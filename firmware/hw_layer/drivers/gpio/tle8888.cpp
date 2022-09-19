@@ -38,7 +38,8 @@
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
-#include "os_util.h"
+
+static Timer diagResponse;
 
 /*
  * TODO list:
@@ -84,8 +85,8 @@ typedef enum {
 #define CMD_SR				CMD_W(CMD_SR_CODE, 0x03)
 #define CMD_OE_SET			CMD_W(0x1c, 0x02)
 #define CMD_OE_CLR			CMD_W(0x1c, 0x01)
-#define CMD_UNLOCK			CMD_W(0x1e, 0x01)
-#define CMD_LOCK			CMD_W(0x1e, 0x02)
+#define CMD_CHIP_UNLOCK		CMD_W(0x1e, 0x01)
+//#define CMD_CHIP_LOCK		CMD_W(0x1e, 0x02)
 
 /* Diagnostic registers */
 #define REG_DIAG(n)			(0x20 + ((n) & 0x01))
@@ -131,7 +132,7 @@ typedef enum {
  * Default open window time is 0b0011 * 3.2 = 12.8 mS */
 #define WWD_PERIOD_MS		(100.8 + (12.8 / 2))
 
-/* DOTO: add irq support */
+/* TODO: add irq support */
 #define DIAG_PERIOD_MS		(7)
 
 const uint8_t tle8888_fwd_responses[16][4] = {
@@ -162,13 +163,6 @@ const uint8_t tle8888_fwd_responses[16][4] = {
 /*==========================================================================*/
 /* Driver local variables and types.										*/
 /*==========================================================================*/
-
-// todo: much of state is currently global while technically it should be per-chip. but we
-// are lazy and in reality it's usually one chip per board
-
-static int lowVoltageResetCounter = 0;
-
-float vBattForTle8888 = 0;
 
 /* Driver private data */
 struct Tle8888 : public GpioChip {
@@ -286,21 +280,21 @@ static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 
 #if EFI_TUNER_STUDIO
 // set debug_mode 31
-void tle8888PostState(TsDebugChannels *debugChannels) {
+void tle8888PostState() {
 	Tle8888 *chip = &chips[0];
 
-	debugChannels->debugIntField1 = chip->wwd_err_cnt;
-	debugChannels->debugIntField2 = chip->fwd_err_cnt;
-	debugChannels->debugIntField3 = chip->tot_err_cnt;
-	//debugChannels->debugIntField1 = chip->spi_cnt;
-	//debugChannels->debugIntField2 = chip->tx;
-	//debugChannels->debugIntField3 = chip->rx;
-	debugChannels->debugIntField5 = chip->init_cnt;
+	engine->outputChannels.debugIntField1 = chip->wwd_err_cnt;
+	engine->outputChannels.debugIntField2 = chip->fwd_err_cnt;
+	engine->outputChannels.debugIntField3 = chip->tot_err_cnt;
+	//engine->outputChannels.debugIntField1 = chip->spi_cnt;
+	//engine->outputChannels.debugIntField2 = chip->tx;
+	//engine->outputChannels.debugIntField3 = chip->rx;
+	engine->outputChannels.debugIntField5 = chip->init_cnt;
 
-	debugChannels->debugFloatField3 = chip->OpStat[1];
-	debugChannels->debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000 + lowVoltageResetCounter;
-	debugChannels->debugFloatField5 = 0;
-	debugChannels->debugFloatField6 = 0;
+	engine->outputChannels.debugFloatField3 = chip->OpStat[1];
+	engine->outputChannels.debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000;
+	engine->outputChannels.debugFloatField5 = 0;
+	engine->outputChannels.debugFloatField6 = 0;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -397,6 +391,10 @@ int Tle8888::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	int ret;
 	uint16_t rxdata;
 	SPIDriver *spi = cfg->spi_bus;
+
+	if (n <= 0) {
+		return -2;
+	}
 
 	/**
 	 * 15.1 SPI Protocol
@@ -552,7 +550,7 @@ int Tle8888::update_direct_output(size_t pin, int value)
 	if (pin < 4) {
 		/* OUT1..4 */
 		index = pin;
-	} else if (pin > 24) {
+	} else if (pin >= 24) {
 		/* IGN1..4 */
 		index = (pin - 24) + 4;
 	} else {
@@ -644,7 +642,7 @@ int Tle8888::chip_init()
 
 	uint16_t tx[] = {
 		/* unlock */
-		CMD_UNLOCK,
+		CMD_CHIP_UNLOCK,
 		/* set INCONFIG - aux input mapping */
 		CMD_INCONFIG(0, InConfig[0]),
 		CMD_INCONFIG(1, InConfig[1]),
@@ -837,19 +835,6 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 		/* default polling interval */
 		poll_interval = TIME_MS2I(DIAG_PERIOD_MS);
 
-#if 0
-		if (vBattForTle8888 < LOW_VBATT) {
-			// we assume TLE8888 is down and we should not bother with SPI communication
-			if (!needInitialSpi) {
-				needInitialSpi = true;
-				lowVoltageResetCounter++;
-			}
-			continue; // we should not bother communicating with TLE8888 until we have +12
-		}
-#endif
-		// todo: super-lazy implementation with only first chip!
-		//watchdogLogic(&chips[0]);
-
 		if ((chip->cfg == NULL) ||
 			(chip->drv_state == TLE8888_DISABLED) ||
 			(chip->drv_state == TLE8888_FAILED))
@@ -889,6 +874,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			ret = chip->update_status_and_diag();
 			if (ret) {
 				/* set state to TLE8888_FAILED or force reinit? */
+			} else {
+				diagResponse.reset();
 			}
 			/* TODO:
 			 * Procedure to switch on after failure condition occurred:
@@ -953,14 +940,14 @@ int Tle8888::writePad(unsigned int pin, int value) {
 		chibios_rt::CriticalSectionLocker csl;
 
 		if (value) {
-			o_state |=  (1 << pin);
+			o_state |=  BIT(pin);
 		} else {
-			o_state &= ~(1 << pin);
+			o_state &= ~BIT(pin);
 		}
 	}
 
 	/* direct driven? */
-	if (o_direct_mask & (1 << pin)) {
+	if (o_direct_mask & BIT(pin)) {
 		return update_direct_output(pin, value);
 	} else {
 		return wake_driver();
@@ -974,7 +961,7 @@ int Tle8888::readPad(size_t pin) {
 
 	if (pin < TLE8888_OUTPUTS_REGULAR) {
 		/* return output state */
-		/* DOTO: check that pins is disabled by diagnostic? */
+		/* TODO: check that pins is disabled by diagnostic? */
 		return !!(o_data_cached & BIT(pin));
 	} else if (pin == TLE8888_OUTPUT_MR) {
 		/* Main relay can be enabled by KEY input, so report real state */
@@ -989,8 +976,11 @@ int Tle8888::readPad(size_t pin) {
 	return -1;
 }
 
-brain_pin_diag_e Tle8888::getOutputDiag(size_t pin)
-{
+brain_pin_diag_e Tle8888::getOutputDiag(size_t pin) {
+	if (diagResponse.hasElapsedMs(500)) {
+		// has been to long since we've recieved diagnostics
+		return PIN_DRIVER_OFF;
+	}
 	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
 		return tle8888_2b_to_diag_with_temp((OutDiag[0] >> ((pin - 0) * 2)) & 0x03);
@@ -1091,6 +1081,17 @@ int Tle8888::chip_init_data() {
 		palClearPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
+	for (i = 0; i < TLE8888_DIRECT_MISC; i++) {
+		/* Set some invalid default OUT number...
+		 * Keeping this register default (0) will map one of input signals
+		 * to OUT5 and no control over SPI for this pin will be possible.
+		 * If some other pin is also mapped to OUT5 both inputs should be
+		 * high (logical AND) to enable OUT5.
+		 * Set non-exist output in case no override is provided in config.
+		 * See code below */
+		InConfig[i] = 25 - 1 - 4;
+	}
+
 	for (i = 0; i < TLE8888_DIRECT_OUTPUTS; i++) {
 		int out = -1;
 		uint32_t mask;
@@ -1107,8 +1108,16 @@ int Tle8888::chip_init_data() {
 			out = cfg->direct_maps[i - 8].output - 1;
 		}
 
-		if ((out < 0) || (cfg->direct_gpio[i].port == NULL))
+		if ((out < 0) || (cfg->direct_gpio[i].port == NULL)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
 			continue;
+		}
+
+		/* TODO: implement PP pin driving throught direct gpio */
+		if ((cfg->stepper) && (out >= 20) && (out <= 23)) {
+			/* now this is safe, InConfig[] is inited with some non-exist output */
+			continue;
+		}
 
 		/* calculate mask */
 		mask = BIT(out);

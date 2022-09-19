@@ -18,8 +18,11 @@ void setFlatInjectorLag(float value);
  * TODO: replace all usages of fixAngle with wrapAngle?
  * Should we make this a nice method instead of that off macro which changes parameter value?
  */
-#define fixAngle(angle, msg, code) wrapAngle2(angle, msg, code, engine->engineCycle)
+#define fixAngle(angle, msg, code) wrapAngle2(angle, msg, code, getEngineState()->engineCycle)
 #define wrapAngle(angle, msg, code) fixAngle(angle, msg, code)
+
+// proper method avoids un-wrapped state of variables
+angle_t wrapAngleMethod(angle_t param, const char *msg, obd_code_e code);
 
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
@@ -47,10 +50,10 @@ ignition_mode_e getCurrentIgnitionMode();
  * This lightweight method is invoked in case of a configuration change or initialization.
  * But also it's used for "Spinning-up to Cranking" transition.
  */
-void prepareIgnitionPinIndices(ignition_mode_e ignitionMode);
+void prepareIgnitionPinIndices();
 
-int getCylinderId(int index);
-int getNextFiringCylinderId(int prevCylinderId);
+size_t getCylinderId(size_t index);
+size_t getNextFiringCylinderId(size_t prevCylinderId);
 
 void setTimingRpmBin(float from, float to);
 void setTimingLoadBin(float from, float to);

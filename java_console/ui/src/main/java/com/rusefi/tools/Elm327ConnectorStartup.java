@@ -7,6 +7,7 @@ import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.StatusConsumer;
 
 import java.io.IOException;
 
@@ -31,7 +32,7 @@ public class Elm327ConnectorStartup {
                 System.out.println("onActivity");
                 Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
             }
-        });
+        }, StatusConsumer.ANONYMOUS);
 
         log.info("Running Elm327 connector for " + autoDetectedPort);
     }

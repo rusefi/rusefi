@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/fuel_pump.txt Sun Jan 02 01:15:50 EST 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/fuel_pump_control.txt Sat Aug 27 18:43:20 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -8,7 +8,7 @@ import com.rusefi.config.*;
 public class FuelPump {
 	public static final Field ISPRIME = Field.create("ISPRIME", 0, FieldType.BIT, 0);
 	public static final Field ENGINETURNEDRECENTLY = Field.create("ENGINETURNEDRECENTLY", 0, FieldType.BIT, 1);
-	public static final Field ISPUMPON = Field.create("ISPUMPON", 0, FieldType.BIT, 2);
+	public static final Field ISFUELPUMPON = Field.create("ISFUELPUMPON", 0, FieldType.BIT, 2);
 	public static final Field IGNITIONON = Field.create("IGNITIONON", 0, FieldType.BIT, 3);
 	public static final Field UNUSEDBIT_4_4 = Field.create("UNUSEDBIT_4_4", 0, FieldType.BIT, 4);
 	public static final Field UNUSEDBIT_4_5 = Field.create("UNUSEDBIT_4_5", 0, FieldType.BIT, 5);
@@ -41,7 +41,7 @@ public class FuelPump {
 	public static final Field[] VALUES = {
 	ISPRIME,
 	ENGINETURNEDRECENTLY,
-	ISPUMPON,
+	ISFUELPUMPON,
 	IGNITIONON,
 	UNUSEDBIT_4_4,
 	UNUSEDBIT_4_5,

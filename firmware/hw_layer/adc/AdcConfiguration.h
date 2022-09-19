@@ -13,6 +13,14 @@
 #define ADC_MAX_CHANNELS_COUNT 16
 #endif /* ADC_MAX_CHANNELS_COUNT */
 
+#ifndef SLOW_ADC_CHANNEL_COUNT
+#ifdef ADC_MUX_PIN
+#define SLOW_ADC_CHANNEL_COUNT 32
+#else // not ADC_MUX_PIN
+#define SLOW_ADC_CHANNEL_COUNT 16
+#endif // def ADC_MUX_PIN
+#endif // SLOW_ADC_CHANNEL_COUNT
+
 // this structure contains one multi-channel ADC state snapshot
 typedef struct {
 	volatile adcsample_t adc_data[ADC_MAX_CHANNELS_COUNT];

@@ -10,7 +10,7 @@
 #include "pch.h"
 
 #if EFI_PROD_CODE
-#include "os_access.h"
+
 #include "drivers/gpio/gpio_ext.h"
 
 #include "status_loop.h"
@@ -111,19 +111,6 @@ iomode_t getInputMode(pin_input_mode_e mode) {
 		return PAL_MODE_INPUT;
 	}
 }
-
-#if HAL_USE_ICU
-static char icuError[30];
-
-void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
-	if (icup->state != ICU_STOP && icup->state != ICU_READY) {
-		chsnprintf(icuError, sizeof(icuError), "ICU already used %s", msg);
-		firmwareError(CUSTOM_ERROR_ICU, icuError);
-		return;
-	}
-	icuStart(icup, config);
-}
-#endif /* HAL_USE_ICU */
 
 void writePad(const char *msg, brain_pin_e pin, int bit) {
 	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);

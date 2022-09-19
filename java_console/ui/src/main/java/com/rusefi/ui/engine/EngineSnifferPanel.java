@@ -1,6 +1,6 @@
 package com.rusefi.ui.engine;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
@@ -24,6 +24,8 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
  * <p/>
@@ -35,6 +37,7 @@ import java.util.List;
  * @see com.rusefi.ui.test.WavePanelSandbox
  */
 public class EngineSnifferPanel {
+    private static final Logging log = getLogging(EngineSnifferPanel.class);
     private static final int EFI_DEFAULT_CHART_SIZE = 180;
     public static final Comparator<String> INSTANCE = new ImageOrderComparator();
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Digital_Chart";
@@ -58,13 +61,12 @@ public class EngineSnifferPanel {
         public Dimension getPreferredSize() {
             Dimension d = chartPanel.getSize();
             Dimension s = super.getPreferredSize();
-            Dimension dimension = new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
-            return dimension;
+            return new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
         }
     };
 
     private final ZoomControl zoomControl = new ZoomControl();
-    private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
+    private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel();
     private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
     private AnyCommand command;
@@ -114,12 +116,7 @@ public class EngineSnifferPanel {
 
         upperPanel.add(zoomControl);
 
-        scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.ChartRepositoryListener() {
-            @Override
-            public void onDigitalChart(String chart) {
-                displayChart(chart);
-            }
-        });
+        scrollControl = ChartRepository.getInstance().createControls(chart -> displayChart(chart));
         if (uiContext.getLinkManager().isLogViewer())
             upperPanel.add(scrollControl.getContent());
 
@@ -132,7 +129,7 @@ public class EngineSnifferPanel {
             lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
@@ -145,15 +142,12 @@ public class EngineSnifferPanel {
         chartPanel.add(pane, BorderLayout.CENTER);
         chartPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        zoomControl.listener = new ZoomControl.ZoomControlListener() {
-            @Override
-            public void onZoomChange() {
-                System.out.println("onZoomChange");
-                /**
-                 * We have scroll pane size which depends on zoom, that's a long chain of dependencies
-                 */
-                UiUtils.trueLayout(imagePanel.getParent());
-            }
+        zoomControl.listener = () -> {
+            System.out.println("onZoomChange");
+            /**
+             * We have scroll pane size which depends on zoom, that's a long chain of dependencies
+             */
+            UiUtils.trueLayout(imagePanel.getParent());
         };
 
         resetImagePanel();
@@ -180,7 +174,7 @@ public class EngineSnifferPanel {
         engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                String pinInfo[] = value.split("@");
+                String[] pinInfo = value.split("@");
                 if (pinInfo.length != 2)
                     return;
                 String channel = pinInfo[0];
@@ -200,18 +194,18 @@ public class EngineSnifferPanel {
     }
 
     public void displayChart(String value) {
-        EngineChart map = EngineChartParser.unpackToMap(value, FileLog.LOGGER);
+        EngineChart map = EngineChartParser.unpackToMap(value);
 
         StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
 
         statusPanel.setRevolutions(revolutions);
 
-        /**
-         * First let's create images for new keys
-         */
-        for (String imageName : map.getMap().keySet())
+        // Create images for any new keys
+        for (String imageName : map.getMap().keySet()) {
             createSecondaryImage(imageName);
+        }
 
+        // Update existing images
         for (String imageName : images.keySet()) {
             UpDownImage image = images.get(imageName);
             if (image == null)
@@ -226,10 +220,8 @@ public class EngineSnifferPanel {
             image.setWaveReport(wr, revolutions);
         }
 
-        /**
-         * this is to fix the UI glitch when images tab shows a tiny square
-         */
-        UiUtils.trueLayout(chartPanel.getParent());
+        // Repaint now that we've updated state
+        SwingUtilities.invokeLater(() -> UiUtils.trueRepaint(imagePanel));
     }
 
     public JPanel getPanel() {
@@ -237,12 +229,19 @@ public class EngineSnifferPanel {
     }
 
     private void createSecondaryImage(String name) {
-        if (images.containsKey(name) || Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name))
+        if (images.containsKey(name)) {
+            // already created, skip
             return;
+        }
+
+        // Don't render a row for the TDC mark
+        if (Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name)) {
+            return;
+        }
 
         int index = getInsertIndex(name, images.keySet());
 
-        FileLog.MAIN.logLine("Registering " + name + "@" + index);
+        log.info("Engine sniffer register channel " + name + " at idx " + index);
 
         UpDownImage image = createImage(name);
         images.put(name, image);
@@ -267,7 +266,7 @@ public class EngineSnifferPanel {
     private void saveImage() {
         int rpm = RpmModel.getInstance().getValue();
         double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
-        String fileName = Logger.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
+        String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
 
         UiUtils.saveImageWithPrompt(fileName, mainPanel, imagePanel);
     }
@@ -275,6 +274,7 @@ public class EngineSnifferPanel {
     private UpDownImage createImage(final String name) {
         Color signalBody = Color.lightGray;
         Color signalBorder = Color.blue;
+
         if (name.startsWith("tach") || name.startsWith("dizzy")) {
             signalBody = Color.yellow;
         } else if (name.startsWith("t")) {

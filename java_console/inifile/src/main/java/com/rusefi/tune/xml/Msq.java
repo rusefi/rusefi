@@ -75,7 +75,7 @@ public class Msq {
         versionInfo.validate();
         Page page = findPage();
         if (page.constant.isEmpty())
-            throw new IllegalStateException("No data?");
+            throw new IllegalStateException("Empty Msq file");
         XmlUtil.writeXml(this, Msq.class, outputXmlFileName);
     }
 

@@ -1,6 +1,5 @@
 package com.rusefi.ui.livedocs;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.enums.live_data_e;
 
 /**

@@ -42,7 +42,6 @@
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "os_util.h"
 #endif
 
 #if EFI_HIP_9011
@@ -448,7 +447,7 @@ static msg_t hipThread(void *arg) {
 		msg_t msg;
 
 		/* load new/updated settings */
-		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		instance.handleSettings(Sensor::getOrZero(SensorType::Rpm) DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 		/* in advanced more driver will set channel while reading integrator value */
 		if (!instance.adv_mode) {
 			/* switch input channel */
@@ -501,7 +500,7 @@ static msg_t hipThread(void *arg) {
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
 				// TODO: convert knock level to dBv
-				engine->knockController.onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
+				engine->module<KnockController>()->onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
 				#if EFI_HIP_9011_DEBUG
 					/* debug */

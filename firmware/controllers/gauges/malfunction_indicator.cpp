@@ -30,7 +30,7 @@
 #if EFI_MALFUNCTION_INDICATOR
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "os_access.h"
+
 #include "periodic_thread_controller.h"
 
 #define TEST_MIL_CODE FALSE
@@ -85,7 +85,7 @@ private:
 		UNUSED(nowNt);
 
 		validateStack("MIL", STACK_USAGE_MIL, 128);
-
+#if EFI_SHAFT_POSITION_INPUT
 		if (nowNt - engine->triggerCentral.triggerState.mostRecentSyncTime < MS2NT(500)) {
 			enginePins.checkEnginePin.setValue(1);
 			chThdSleepMilliseconds(500);
@@ -100,6 +100,7 @@ private:
 			int code = localErrorCopy.error_codes[p];
 			DisplayErrorCode(DigitLength(code), code);
 		}
+#endif // EFI_SHAFT_POSITION_INPUT
 	}
 };
 
@@ -121,7 +122,7 @@ void initMalfunctionIndicator(void) {
 		return;
 	}
 	instance.setPeriod(10 /*ms*/);
-	instance.Start();
+	instance.start();
 
 #if	TEST_MIL_CODE
 	addConsoleAction("testmil", testMil);

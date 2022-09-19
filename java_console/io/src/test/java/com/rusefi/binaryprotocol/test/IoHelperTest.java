@@ -17,7 +17,7 @@ public class IoHelperTest {
 
     @Test
     public void testSwap16() throws IOException {
-        byte packet[] = {-12, 0};
+        byte[] packet = {-12, 0};
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet));
         short a = dis.readShort();
         int x = IoHelper.swap16(a);

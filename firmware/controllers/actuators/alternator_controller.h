@@ -11,8 +11,7 @@
 #pragma once
 
 void initAlternatorCtrl();
-void startAlternatorPin(void);
-void stopAlternatorPin(void);
+
 void setAltPFactor(float p);
 void setAltIFactor(float p);
 void setAltDFactor(float p);

@@ -35,6 +35,7 @@ class HpfpController;
 
 class HpfpQuantity {
 public:
+// todo: shall we move into high_pressure_fuel_pump.txt and reduce OOP elegance or create a separate live data just for these ones?
 	float m_I_sum_percent = 0;
 	float m_pressureTarget_kPa = 0;
 

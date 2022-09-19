@@ -83,22 +83,22 @@ static EthernetThread ethernetConsole;
 void startEthernetConsole() {
 #ifndef STM32H7
 	// TODO: why does this break H7? I thought the pins were the same?
-	efiSetPadMode("ethernet", GPIOA_1, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOA_2, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOA_7, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
 
-	efiSetPadMode("ethernet", GPIOC_1, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOC_4, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOC_5, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::C1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::C4, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::C5, PAL_MODE_ALTERNATE(0xb));
 
-	efiSetPadMode("ethernet", GPIOD_5, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet",  Gpio::D5, PAL_MODE_ALTERNATE(0xb));
 
-	efiSetPadMode("ethernet", GPIOG_11, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOG_13, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ethernet", GPIOG_14, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", Gpio::G11, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", Gpio::G13, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", Gpio::G14, PAL_MODE_ALTERNATE(0xb));
 #endif // STM32H7
 
-	ethernetConsole.Start();
+	ethernetConsole.start();
 }
 
 #endif // EFI_ETHERNET

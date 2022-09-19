@@ -18,7 +18,9 @@ import org.apache.logging.log4j.core.LoggerContext;
 import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.apache.logging.log4j.core.appender.rolling.SizeBasedTriggeringPolicy;
+import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.apache.logging.log4j.core.config.NullConfiguration;
 import org.apache.logging.log4j.core.filter.ThresholdFilter;
 import org.apache.logging.log4j.core.layout.AbstractStringLayout;
@@ -54,7 +56,7 @@ class Log4j2Logging extends DefaultLogging {
 		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
 		if (ctx.getConfiguration().getConfigurationSource() != NULL_SOURCE)
 			return Collections.emptyMap(); // do nothing since log4j2 was already configured
-		return configureLogFile(getProperty(Logging.LOG_FILE_PROPERTY, null));
+		return configureLogFileAndConsole(getProperty(Logging.LOG_FILE_PROPERTY, null));
 	}
 
 	private static Map<String, Exception> reconfigure(String logFile) {
@@ -73,7 +75,7 @@ class Log4j2Logging extends DefaultLogging {
 		Appender appender = null;
 		if (logFile != null) {
 			try {
-				appender = createFileAppender("common", logFile, Logging.LOG_MAX_FILE_SIZE_PROPERTY, errors);
+				appender = createFileAppender("common-file", logFile, Logging.LOG_MAX_FILE_SIZE_PROPERTY, errors);
 			} catch (Exception e) {
 				errors.put(logFile, e);
 			}
@@ -123,6 +125,30 @@ class Log4j2Logging extends DefaultLogging {
 		builder.withPolicy(SizeBasedTriggeringPolicy.createPolicy(Integer.toString(limit)));
 
 		return builder.build();
+	}
+
+	@Override
+	Map<String, Exception> configureLogFileAndConsole(String logFile) {
+		Map<String, Exception> result = reconfigure(logFile);
+
+		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+		Configuration config = ctx.getConfiguration();
+
+		Appender appender = ConsoleAppender.newBuilder()
+				.withName("common-console")
+				.withLayout(getDetailedLayout())
+				.setTarget(ConsoleAppender.Target.SYSTEM_OUT)
+				.build();
+		appender.start();
+		// broken stuff :( while this adds console appender this also kills file appender :( todo: find a way to have both
+		config.addAppender(appender);
+		AppenderRef[] refs = new AppenderRef[] { AppenderRef.createAppenderRef(appender.getName(), null, null) };
+		LoggerConfig loggerConfig = LoggerConfig.createLogger("true", org.apache.logging.log4j.Level.ALL, "logger-console", "true", refs, null, config, null);
+		loggerConfig.addAppender(appender, null, null);
+		config.addLogger(LogManager.ROOT_LOGGER_NAME, loggerConfig);
+		config.getRootLogger().addAppender(appender, DEBUG, null);
+		ctx.updateLoggers();
+		return result;
 	}
 
 	@Override

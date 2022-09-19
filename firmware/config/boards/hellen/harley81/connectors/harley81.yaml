@@ -1,0 +1,601 @@
+pins:
+  - pin: auxMain
+  #H144_OUT_IO7
+    id: G3
+    class: outputs
+    ts_name: auxMain
+
+  - pin: auxWastegate
+    #H176_OUT_PWM3
+    id: C7
+    class: outputs
+    ts_name: auxWastegate
+
+  - pin: 1
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    function: Right Oil Cooling Fan
+    ts_name: 1 Right Oil Cooling
+
+  - pin: 2
+    type: gnd
+    function: Power Ground
+
+  - pin: 3
+    type: gnd
+    function: Power Ground
+
+  - pin: 4
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    function: Left Oil Cooling Fan
+    ts_name: 4 Left Oil Fan
+
+  - pin: 5
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: 5 Battery Sense
+    type: 12v
+
+  - pin: 6
+    # H144_LS_1
+    id: G7
+    class: outputs
+    function: Front Injector
+    ts_name: 6 Front Injector
+
+  - pin: 7
+    # H144_LS_2
+    id: G8
+    class: outputs
+    function: Rear Injector
+    ts_name: 7 Rear Injector
+
+  - pin: 8
+    # H144_OUT_IO6
+    id: G11
+    class: outputs
+    function: Rear ACR
+    ts_name: 8 Rear ACR
+
+  - pin: 11
+# H144_IN_SENS4
+    id: F6
+    class: event_inputs
+    function: Crank Sensor VR- Negative Input
+    ts_name: 11 Crank VR-
+
+  - pin: 20
+    class: outputs
+    ts_name: 20 ETB_OUT-
+    function: -ETB_OUT
+
+  - pin: 21
+    class: outputs
+    ts_name: 21 ETB_OUT+
+    function: +ETB_OUT
+
+  - pin: 24
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    ts_name: 24 Front Coil
+    function: Front Coil
+    type: ign
+
+  - pin: 25
+# H144_OUT_IO5
+    id: D2
+    class: outputs
+    ts_name: 25 Front ACR
+    function: Front ACR
+
+  - pin: 27
+# H144_IN_O2S2
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: 27 - TPS 2
+    function: TPS 2 sensor input
+
+  - pin: 29
+    type: gnd
+    function: Sensor Ground
+
+  - pin: 30
+    function: Crank Sensor VR+ Negative Input
+    ts_name: 30 Crank VR+
+
+  - pin: 32
+#  H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 32 Oil Pressure
+    function: Oil Pressure input
+
+  - pin: 34
+# H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: 34 Kickstand Position Sensor
+    function: Kickstand Position Sensor
+
+  - pin: 36
+    ts_name: Front Knock +
+    function: Front Knock sense pos
+
+  - pin: 37
+    ts_name: Front Knock -
+    function: Front Knock sense neg
+
+  - pin: 38
+    function: CAN bus low
+    type: can
+
+  - pin: 39
+    function: CAN bus high
+    type: can
+
+  - pin: 41
+# H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 41 - PPS 1
+    function: PPS 1 sensor input
+
+  - pin: 42
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: 42 - PPS 2
+    function: PPS 2 sensor input
+
+  - pin: 43
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    ts_name: 43 Rear Coil
+    function: Rear Coil
+    type: ign
+
+  - pin: 44
+    class: outputs
+    function: Chassis Cooling Fan
+    ts_name: 44 Chassis Cooling
+
+  - pin: 45
+    ts_name: Rear Knock +
+    function: Rear Knock sense pos
+
+  - pin: 46
+    ts_name: Rear Knock -
+    function: Rear Knock sense neg
+
+  - pin: 49
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 49 CLT
+    function: CLT sensor
+
+  - pin: 51
+    # H144_IN_VSS
+    id: F11
+    class: event_inputs
+    ts_name: 51 - VSS
+    function: VSS in
+
+  - pin: 52
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 52 - TPS 1
+    function: TPS 1 sensor input
+
+  - pin: 53
+# H144_IN_MAP1
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 53 - MAP
+    function: Map
+
+  - pin: 55
+  #H144_IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: 55 Engine Temperature
+    function: Engine Temperature
+
+  - pin: 61
+# low6 huh?
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: 61 Reverse Gear
+    function: Reverse Gear
+
+  - pin: 63
+    # low7 huh?
+    # H144_OUT_IO4
+    id: G5
+    class: outputs
+    ts_name: 63 Cooling Pump
+    function: Cooling Pump
+
+  - pin: 66
+    function: Sensor +5V
+
+  - pin: 67
+    function: Constant Battery Power
+    ts_name: 67 Constant Battery Power
+    type: 12v
+
+  - pin: 70
+    function: Sensor +5V
+
+  - pin: 72
+    # H144_IN_IAT
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 72 IAT
+    function: Intake Air Temperature
+
+  - pin: 74
+    type: gnd
+    function: Sensor Ground
+
+  - pin: 78
+    class: analog_inputs
+    ts_name: 78 Gear Position
+    function: Gear Position
+
+  - pin: 79
+    class: switch_inputs
+    function: Rider Cooling Switch
+    ts_name: 79 Rider Cooling Switch
+
+info:
+  title: Hellen Harley 81
+  name: Hellen Harley 81
+  board_url: https://rusefi.com/s/harley81
+  image:
+    file: harley81.jpg
+  pins:
+    - pin: 1
+      x: 206
+      y: 407
+
+    - pin: 2
+      x: 306
+      y: 407
+
+    - pin: 3
+      x: 261
+      y: 322
+
+    - pin: 4
+      x: 206
+      y: 236
+
+    - pin: 5
+      x: 306
+      y: 236
+
+#
+# 45.22222 between pins
+#
+    - pin: 6
+      x: 1254
+      y: 221
+
+    - pin: 7
+      x: 1209
+      y: 221
+
+    - pin: 8
+      x: 1164
+      y: 221
+
+    - pin: 9
+      x: 1118
+      y: 221
+
+    - pin: 10
+      x: 1073
+      y: 221
+
+    - pin: 11
+      x: 1028
+      y: 221
+
+    - pin: 12
+      x: 983
+      y: 221
+
+    - pin: 13
+      x: 937
+      y: 221
+
+    - pin: 14
+      x: 892
+      y: 221
+
+    - pin: 15
+      x: 847
+      y: 221
+
+    - pin: 16
+      x: 802
+      y: 221
+
+    - pin: 17
+      x: 757
+      y: 221
+
+    - pin: 18
+      x: 711
+      y: 221
+
+    - pin: 19
+      x: 666
+      y: 221
+
+    - pin: 20
+      x: 621
+      y: 221
+
+    - pin: 21
+      x: 576
+      y: 221
+
+    - pin: 22
+      x: 530
+      y: 221
+
+    - pin: 23
+      x: 485
+      y: 221
+
+    - pin: 24
+      x: 440
+      y: 221
+
+#
+#
+#
+    - pin: 25
+      x: 1254
+      y: 278
+
+    - pin: 26
+      x: 1209
+      y: 278
+
+    - pin: 27
+      x: 1164
+      y: 278
+
+    - pin: 28
+      x: 1118
+      y: 278
+
+    - pin: 29
+      x: 1073
+      y: 278
+
+    - pin: 30
+      x: 1028
+      y: 278
+
+    - pin: 31
+      x: 983
+      y: 278
+
+    - pin: 32
+      x: 937
+      y: 278
+
+    - pin: 33
+      x: 892
+      y: 278
+
+    - pin: 34
+      x: 847
+      y: 278
+
+    - pin: 35
+      x: 802
+      y: 278
+
+    - pin: 36
+      x: 757
+      y: 278
+
+    - pin: 37
+      x: 711
+      y: 278
+
+    - pin: 38
+      x: 666
+      y: 278
+
+    - pin: 39
+      x: 621
+      y: 278
+
+    - pin: 40
+      x: 576
+      y: 278
+
+    - pin: 41
+      x: 530
+      y: 278
+
+    - pin: 42
+      x: 485
+      y: 278
+
+    - pin: 43
+      x: 440
+      y: 278
+
+    #
+    #
+    #
+    - pin: 44
+      x: 1254
+      y: 358
+
+    - pin: 45
+      x: 1209
+      y: 358
+
+    - pin: 46
+      x: 1164
+      y: 358
+
+    - pin: 47
+      x: 1118
+      y: 358
+
+    - pin: 48
+      x: 1073
+      y: 358
+
+    - pin: 49
+      x: 1028
+      y: 358
+
+    - pin: 50
+      x: 983
+      y: 358
+
+    - pin: 51
+      x: 937
+      y: 358
+
+    - pin: 52
+      x: 892
+      y: 358
+
+    - pin: 53
+      x: 847
+      y: 358
+
+    - pin: 54
+      x: 802
+      y: 358
+
+    - pin: 55
+      x: 757
+      y: 358
+
+    - pin: 56
+      x: 711
+      y: 358
+
+    - pin: 57
+      x: 666
+      y: 358
+
+    - pin: 58
+      x: 621
+      y: 358
+
+    - pin: 59
+      x: 576
+      y: 358
+
+    - pin: 60
+      x: 530
+      y: 358
+
+    - pin: 61
+      x: 485
+      y: 358
+
+    - pin: 62
+      x: 440
+      y: 358
+
+
+    #
+    #
+    #
+    - pin: 63
+      x: 1254
+      y: 407
+
+    - pin: 64
+      x: 1209
+      y: 407
+
+    - pin: 65
+      x: 1164
+      y: 407
+
+    - pin: 66
+      x: 1118
+      y: 407
+
+    - pin: 67
+      x: 1073
+      y: 407
+
+    - pin: 68
+      x: 1028
+      y: 407
+
+    - pin: 69
+      x: 983
+      y: 407
+
+    - pin: 70
+      x: 937
+      y: 407
+
+    - pin: 71
+      x: 892
+      y: 407
+
+    - pin: 72
+      x: 847
+      y: 407
+
+    - pin: 73
+      x: 802
+      y: 407
+
+    - pin: 74
+      x: 757
+      y: 407
+
+    - pin: 75
+      x: 711
+      y: 407
+
+    - pin: 76
+      x: 666
+      y: 407
+
+    - pin: 77
+      x: 621
+      y: 407
+
+    - pin: 78
+      x: 576
+      y: 407
+
+    - pin: 79
+      x: 530
+      y: 407
+
+    - pin: 80
+      x: 485
+      y: 407
+
+    - pin: 81
+      x: 440
+      y: 407

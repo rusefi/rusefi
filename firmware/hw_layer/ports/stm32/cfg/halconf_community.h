@@ -126,8 +126,13 @@
 /* EEProm driver related settings.                                           */
 /*===========================================================================*/
 
-#define EEPROM_USE_EE24XX FALSE
-#define EEPROM_USE_EE25XX TRUE
+#ifndef EEPROM_USE_EE24XX
+#define EEPROM_USE_EE24XX TRUE
+#endif
+
+#ifndef EEPROM_USE_EE25XX
+#define EEPROM_USE_EE25XX FALSE
+#endif
 
 
 

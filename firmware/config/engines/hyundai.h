@@ -7,8 +7,5 @@
 
 #pragma once
 
-#include "engine_configuration.h"
-
 void setGenesisCoupeBK1();
-
 void setGenesisCoupeBK2();

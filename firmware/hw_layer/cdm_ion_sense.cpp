@@ -68,7 +68,7 @@ static void extIonCallback(void *arg) {
         UNUSED(arg);
         instance.totalCdmEvents++;
 
-        int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+        int currentRevolution = engine->triggerCentral.triggerState.getCrankSynchronizationCounter();
         instance.onNewSignal(currentRevolution);
 }
 

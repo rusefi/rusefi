@@ -14,11 +14,11 @@ import java.util.List;
  * 4/15/2016.
  */
 public class SensorLogger {
-    protected static Sensor[] SENSORS = {Sensor.RPM,
+    protected static Sensor[] SENSORS = {Sensor.RPMValue,
             Sensor.TIME_SECONDS,
             Sensor.INT_TEMP,
 
-            Sensor.engineMode,
+//            Sensor.engineMode,
             Sensor.CLT,
             Sensor.TPS,
             Sensor.VBATT,
@@ -30,37 +30,37 @@ public class SensorLogger {
 
             Sensor.PPS,
             Sensor.ETB_CONTROL_QUALITY,
-            Sensor.etb1DutyCycle,
-
-            Sensor.idlePosition,
+//            Sensor.etb1DutyCycle,
+//
+//            Sensor.idlePosition,
 
             Sensor.TARGET_AFR,
-            Sensor.tCharge,
+//            Sensor.tCharge,
             Sensor.veValue,
 
-            Sensor.DWELL,
-
-            Sensor.baseFuel,
-            Sensor.actualLastInjection,
-            Sensor.ignitionAdvance,
-
-            Sensor.deltaTps,
-            Sensor.tpsAccelFuel,
-            Sensor.engineLoadAccelDelta,
-            Sensor.injectorDutyCycle,
-            Sensor.coilDutyCycle,
-
-            Sensor.wallFuelAmount,
-            Sensor.wallFuelCorrection,
-
-            Sensor.iatCorrection,
-            Sensor.cltCorrection,
-
-            Sensor.CHARGE_AIR_MASS,
+//            Sensor.DWELL,
+//
+//            Sensor.baseFuel,
+//            Sensor.actualLastInjection,
+//            Sensor.ignitionAdvance,
+//
+//            Sensor.deltaTps,
+//            Sensor.tpsAccelFuel,
+//            Sensor.engineLoadAccelDelta,
+//            Sensor.injectorDutyCycle,
+//            Sensor.coilDutyCycle,
+//
+//            Sensor.wallFuelAmount,
+//            Sensor.wallFuelCorrection,
+//
+//            Sensor.iatCorrection,
+//            Sensor.cltCorrection,
+//
+//            Sensor.CHARGE_AIR_MASS,
             Sensor.runningFuel,
-            Sensor.injectorLagMs,
-
-            Sensor.vvtPositionB1I,
+//            Sensor.injectorLagMs,
+//
+//            Sensor.vvtPositionB1I,
             Sensor.vvtPositionB1E,
             Sensor.vvtPositionB2I,
             Sensor.vvtPositionB2E,
@@ -70,15 +70,15 @@ public class SensorLogger {
             Sensor.vvtTargetB2I,
             Sensor.vvtTargetB2E,
 
-            Sensor.VSS,
-            Sensor.SPEED2RPM,
+//            Sensor.vehicleSpeedKph,
+//            Sensor.speedToRpmRatio,
             Sensor.turboSpeed,
 
-            Sensor.accelerationX,
-            Sensor.accelerationY,
-            Sensor.accelerationZ,
-            Sensor.accelerationRoll,
-            Sensor.accelerationYaw,
+//            Sensor.accelerationX,
+//            Sensor.accelerationY,
+//            Sensor.accelerationZ,
+//            Sensor.accelerationRoll,
+//            Sensor.accelerationYaw,
 
             Sensor.debugFloatField1,
             Sensor.debugFloatField2,
@@ -93,18 +93,18 @@ public class SensorLogger {
             Sensor.debugIntField4,
             Sensor.debugIntField5,
 
-            Sensor.knockLevel,
+//            Sensor.knockLevel,
             Sensor.wastegatePosition,
             Sensor.idlePositionSensor,
-            Sensor.airFuelRatio,
-            Sensor.airFuelRatio2,
+//            Sensor.airFuelRatio,
+//            Sensor.airFuelRatio2,
             Sensor.lowFuelPressure,
             Sensor.highFuelPressure,
 
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
 
-            Sensor.engineMakeCodeNameCrc16,
+//            Sensor.engineMakeCodeNameCrc16,
             Sensor.tuneCrc16,
     };
 

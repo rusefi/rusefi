@@ -18,6 +18,8 @@ void setDefaultCranking() {
 	engineConfiguration->crankingIACposition = 50;
 	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+
 	// After start enrichment
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test
@@ -26,8 +28,8 @@ void setDefaultCranking() {
 
 	engineConfiguration->postCrankingDurationSec = 10;
 
-	setLinearCurve(engineConfiguration->crankingTpsCoef, /*from*/1, /*to*/1, 1);
-	setLinearCurve(engineConfiguration->crankingTpsBins, 0, 100, 1);
+	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/1, 1);
+	setLinearCurve(config->crankingTpsBins, 0, 100, 1);
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
 	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
@@ -43,7 +45,8 @@ void setDefaultCranking() {
 		1.0,
 		1.0
 	};
-	copyArray(config->crankingFuelCoef, crankingCoef);
+	copyArray(config->crankingFuelCoef,     crankingCoef);
+	copyArray(config->crankingFuelCoefE100, crankingCoef);
 
 	// Deg C
 	static const float crankingBins[] = {
@@ -71,11 +74,10 @@ void setDefaultCranking() {
 	}
 
 	// Cranking ignition timing
-	static const float advanceValues[] = { 0, 0, 0, 0 };
-	copyArray(engineConfiguration->crankingAdvance, advanceValues);
+	setArrayValues(config->crankingAdvance, 0);
 
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
-	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
+	copyArray(config->crankingAdvanceBins, advanceBins);
 
 	engineConfiguration->useTLE8888_cranking_hack = true;
 }

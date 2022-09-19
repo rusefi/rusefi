@@ -32,8 +32,8 @@ static void multisparkCfg() {
 	engineConfiguration->multisparkMaxExtraSparkCount = 10;
 
 	// 3ms period (spark + dwell)
-	engineConfiguration->multisparkDwell = 2000;
-	engineConfiguration->multisparkSparkDuration = 1000;
+	engineConfiguration->multisparkDwell = 2;
+	engineConfiguration->multisparkSparkDuration = 1;
 }
 
 TEST(Multispark, EnabledNoMaxRpm) {

@@ -1,7 +1,7 @@
 #include "pch.h"
 
 #include "event_queue.h"
-#include "os_access.h"
+
 
 bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
        assertNotInListMethodBody(AngleBasedEvent, head, element, nextToothEvent)
@@ -64,6 +64,7 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 				return false;
 			}
 		}
+		engine->outputChannels.systemEventReuse++; // not atomic/not volatile but good enough for just debugging
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d",
 			  trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
@@ -76,9 +77,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 							   uint32_t trgEventIndex,
 							   efitick_t edgeTimestamp) {
 
-	// Not sure why we check ignitionEnabled; it's left over from when this code lived in
-	// spark_logic.cpp, but I think it should be removed.
-	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
+	if (!isValidRpm(rpm)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
@@ -89,7 +88,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
-		keephead =m_angleBasedEventsHead;
+		keephead = m_angleBasedEventsHead;
 		m_angleBasedEventsHead = nullptr;
 	}
 

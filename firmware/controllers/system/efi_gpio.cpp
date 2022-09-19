@@ -8,8 +8,12 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "drivers/gpio/gpio_ext.h"
+
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -39,6 +43,12 @@ const char *vvtNames[] = {
 		PROTOCOL_VVT2_NAME,
 		PROTOCOL_VVT3_NAME,
 		PROTOCOL_VVT4_NAME};
+
+const char *laNames[] = {
+		PROTOCOL_WA_CHANNEL_1,
+		PROTOCOL_WA_CHANNEL_2,
+		PROTOCOL_WA_CHANNEL_3,
+		PROTOCOL_WA_CHANNEL_4};
 
 // these short names are part of engine sniffer protocol
 static const char* const sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
@@ -126,6 +136,7 @@ EnginePins::EnginePins() :
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+		enginePins.coils[i].coilIndex = i;
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 
@@ -319,7 +330,9 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
+	if (!engineConfiguration->engineSnifferFocusOnInputs) {
+		addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
+	}
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -336,12 +349,6 @@ void NamedOutputPin::setLow() {
 #if EFI_ENGINE_SNIFFER
 	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
-}
-
-InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
-	overlappingCounter = 1; // Force update in reset
-	reset();
-	injectorIndex = -1;
 }
 
 bool NamedOutputPin::stop() {
@@ -368,6 +375,44 @@ void InjectorOutputPin::reset() {
 
 IgnitionOutputPin::IgnitionOutputPin() {
 	reset();
+}
+
+void IgnitionOutputPin::setHigh() {
+	NamedOutputPin::setHigh();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = true;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = true;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = true;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = true;
+		break;
+	}
+}
+
+void IgnitionOutputPin::setLow() {
+	NamedOutputPin::setLow();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = false;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = false;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = false;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = false;
+		break;
+	}
 }
 
 void IgnitionOutputPin::reset() {
@@ -404,6 +449,11 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
+	if (brainPin == Gpio::Unassigned || brainPin == Gpio::Invalid) {
+	    // todo: make 'setOnchipValue' or 'reportsetOnchipValueError' virtual and override for NamedOutputPin?
+		warning(CUSTOM_ERR_6586, "attempting to change unassigned pin");
+		return;
+	}
 	palWritePad(port, pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
@@ -415,6 +465,8 @@ void OutputPin::setValue(int logicValue) {
 #endif // ENABLE_PERF_TRACE
 
 #if EFI_UNIT_TEST
+	unitTestTurnedOnCounter++;
+
 	if (verboseMode) {
 		efiPrintf("pin goes %d", logicValue);
 	}
@@ -464,6 +516,14 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
+brain_pin_diag_e OutputPin::getDiag() const {
+#if BOARD_EXT_GPIOCHIPS > 0
+	return gpiochips_getDiag(brainPin);
+#else
+	return PIN_OK;
+#endif
+}
+
 void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
@@ -486,6 +546,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
+#if EFI_UNIT_TEST
+	unitTestTurnedOnCounter = 0;
+#endif
+
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
@@ -593,7 +657,7 @@ void OutputPin::deInit() {
 #endif /* EFI_GPIO_HARDWARE */
 
 	// Clear the pin so that it won't get set any more
-	brainPin = GPIO_UNASSIGNED;
+	brainPin = Gpio::Unassigned;
 }
 
 #if EFI_GPIO_HARDWARE

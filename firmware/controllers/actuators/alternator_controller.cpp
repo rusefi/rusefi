@@ -11,7 +11,7 @@
 
 #if EFI_ALTERNATOR_CONTROL
 #include "alternator_controller.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
 
@@ -46,11 +46,10 @@ void AlternatorController::onFastCallback() {
 	// this block could be executed even in on/off alternator control mode
 	// but at least we would reflect latest state
 #if EFI_TUNER_STUDIO
-	alternatorPid.postState(&engine->outputChannels.alternatorStatus);
+	alternatorPid.postState(engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
-	// todo: migrate this to FSIO
-	bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
+	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
 		// we need to avoid accumulating iTerm while engine is not running
@@ -64,24 +63,6 @@ void AlternatorController::onFastCallback() {
 
 	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 	float targetVoltage = engineConfiguration->targetVBatt;
-
-	// todo: I am not aware of a SINGLE person to use this onOffAlternatorLogic
-	if (engineConfiguration->onOffAlternatorLogic) {
-		if (!vBatt) {
-			// Somehow battery voltage isn't valid, disable alternator control
-			enginePins.alternatorPin.setValue(false);
-		}
-
-		float h = 0.1;
-		bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
-		enginePins.alternatorPin.setValue(newState);
-		currentPlainOnOffState = newState;
-#if EFI_TUNER_STUDIO
-			engine->outputChannels.alternatorOnOff = newState;
-#endif /* EFI_TUNER_STUDIO */
-
-		return;
-	}
 
 	if (!vBatt) {
 		// Somehow battery voltage isn't valid, disable alternator control
@@ -124,22 +105,11 @@ void initAlternatorCtrl() {
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 
-	if (!engineConfiguration->onOffAlternatorLogic) {
-		startSimplePwm(&alternatorControl,
+	startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0);
-	}
-}
-
-// todo: start invoking this method like 'startVvtControlPins'
-void startAlternatorPin(void) {
-
-}
-
-void stopAlternatorPin(void) {
-	// todo: implementation!
 }
 
 #endif /* EFI_ALTERNATOR_CONTROL */

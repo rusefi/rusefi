@@ -10,9 +10,8 @@
 
 #pragma once
 
-#include "global.h"
-
 void initBenchTest();
+void onConfigurationChangeBenchTest();
 
 bool isRunningBenchTest(void);
 

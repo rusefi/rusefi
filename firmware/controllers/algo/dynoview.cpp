@@ -95,8 +95,8 @@ void DynoView::updateHP() {
         engineForce = engineConfiguration->vehicleWeight * acceleration;
         enginePower = engineForce * (vss / 3.6);
         engineHP = enginePower / 746;
-        if (isValidRpm(GET_RPM())) { 
-            engineTorque = ((engineHP * 5252) / GET_RPM());  
+        if (Sensor::getOrZero(SensorType::Rpm) > 0) {
+            engineTorque = ((engineHP * 5252) / Sensor::getOrZero(SensorType::Rpm));
         }
     } else {
         //we should calculate static power

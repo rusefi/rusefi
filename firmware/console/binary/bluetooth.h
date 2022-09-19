@@ -21,7 +21,11 @@
 typedef enum {
 	BLUETOOTH_HC_05,
 	BLUETOOTH_HC_06,
-	BLUETOOTH_SPP,
+	/**
+	 * See https://rusefi.com/forum/viewtopic.php?f=13&t=1999
+	 */
+	BLUETOOTH_BK3231,
+	BLUETOOTH_JDY_3x,
 } bluetooth_module_e;
 
 /**
@@ -31,7 +35,7 @@ typedef enum {
  * - send AT-commands to the module;
  * - restore connection to PC.
  */
-void bluetoothStart(SerialTsChannelBase *btChannel, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
+void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
 
 /**
  * Cancel Bluetooth procedure

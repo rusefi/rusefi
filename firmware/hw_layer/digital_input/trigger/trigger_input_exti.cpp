@@ -21,16 +21,11 @@
 	#error "PAL_USE_CALLBACKS should be enabled to use HAL_TRIGGER_USE_PAL"
 #endif
 
-static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
+static ioline_t shaftLines[TRIGGER_INPUT_PIN_COUNT];
 static ioline_t camLines[CAM_INPUTS_COUNT];
 
 static void shaft_callback(void *arg, efitick_t stamp) {
 	// do the time sensitive things as early as possible!
-	TRIGGER_BAIL_IF_DISABLED
-//#if HW_CHECK_MODE
-//	TRIGGER_BAIL_IF_SELF_STIM
-//#endif
-
 	int index = (int)arg;
 	ioline_t pal_line = shaftLines[index];
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
@@ -42,20 +37,15 @@ static void shaft_callback(void *arg, efitick_t stamp) {
 }
 
 static void cam_callback(void *arg, efitick_t stamp) {
-	TRIGGER_BAIL_IF_DISABLED
-//#if HW_CHECK_MODE
-//	TRIGGER_BAIL_IF_SELF_STIM
-//#endif
-
 	int index = (int)arg;
 	ioline_t pal_line = camLines[index];
 
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
 	if (rise ^ engineConfiguration->invertCamVVTSignal) {
-		hwHandleVvtCamSignal(TV_RISE, stamp, index);
+		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL, stamp, index);
+		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
 	}
 }
 

@@ -1,26 +1,74 @@
 # https://docs.google.com/spreadsheets/d/1x9pB8oRpY1ISkrGYIsa5j2MrnQVA644REb9Ebl41tcw
 
 pins:
+#extansion pins
+#Analog inputs (via Test Points)
+  - pin: P30
+    #PA7
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: P30_IN_AUX4
+
+  - pin: P32
+    #PA1
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: P32_IN_O2S2
+
+  - pin: P36
+    #PA0
+    id: [A0, EFI_ADC_0]
+    class: [switch_inputs, analog_inputs]
+    ts_name: P36_IN_O2S
+
+  - pin: P40
+    # H144_IN_MAP3 AIN15 A15 PA2
+    id: [A2, EFI_ADC_2]
+    class: [switch_inputs, analog_inputs]
+    ts_name: P40_IN_MAP3
+
+  - pin: P41
+    # H144_IN_AUX3 AIN22 PC5
+    id: [C5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: P41_IN_AUX3
+
+#Outputs (via Test Points)
   - pin: P19
     # LOW11 IO9
-    id: GPIOI_1
+    id: I1
     class: outputs
-    ts_name: Aux P19
+    ts_name: P19_OUT_LOW11
     type: ls
 
   - pin: P34
 # LOW8 IO6
-    id: GPIOH_15
+    id: H15
     class: outputs
-    ts_name: Aux P34
+    ts_name: P34_OUT_LOW8
 
   - pin: P35
 # LOW12 IO10
-    id: GPIOI_0
+    id: I0
     class: outputs
-    ts_name: Aux P35
+    ts_name: P35_OUT_LOW9
     type: ls
 
+  - pin: P33
+# SOLENOID_B2 PWM5
+    id: C9
+    class: outputs
+    ts_name: P33_PWM5
+    type: ls
+
+  - pin: P18
+# OUT_PP2 OUT_IO12
+    id: A8
+    class: outputs
+    ts_name: P18_OUT_PP2
+    type: ls
+
+#ECU car connector pins
   - pin: A1
     function: NC
     type:
@@ -43,7 +91,7 @@ pins:
     function: NC
     
   - pin: A6
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: A6 - Fan Control
     function: low side control
@@ -131,7 +179,7 @@ pins:
     function: NC
     
   - pin: C21
-    id: GPIOH_14
+    id: H14
     class: outputs
     ts_name: C21 - Evap Purge Control
     function: low side solenoid control
@@ -146,13 +194,13 @@ pins:
     type: gnd
 
   - pin: C24
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [A3, EFI_ADC_3]
     class: [event_inputs, analog_inputs]
     ts_name: C24 - PPS1
     function: PPS1 analog input
     
   - pin: C25
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [event_inputs, analog_inputs]
     ts_name: C25 - PPS2
     function: PPS2 analog input
@@ -169,7 +217,7 @@ pins:
     function: NC
 
   - pin: C29
-    id: GPIOD_15
+    id: D15
     class: outputs
     ts_name: C29 - Fuel Pump
     function: low side relay control
@@ -179,22 +227,19 @@ pins:
     function: NC
 
   - pin: C31
-    id: EFI_ADC_0
-    class: analog_inputs
-    ts_name: C31 - O2S
-    function: Front O2 Sensor Signal
+    function: NC
 
   - pin: C32
-    function: NC
+    function: Test Point P37
 
   - pin: C33
-    function: NC
+    function: Test Point P38
 
   - pin: C34
-    function: NC
+    function: Test Point P39
 
   - pin: C35
-    function: proto via
+    function: Test Point P1
 
   - pin: C36
     function: NC
@@ -203,30 +248,23 @@ pins:
     function: NC
 
   - pin: C38
-    function: proto via
+    function: Test Point P2
 
   - pin: C39
-    function: NC K line
+    function: K-line/Lin
  
   - pin: C40
-    id: [GPIOF_10]
+    id: [F10]
     class: [switch_inputs]
-    ts_name: C40 start button
+    ts_name: C40 - start button
     function: Start button
     type: din
 
   - pin: D1
-    function: NC
+    function: External Boot Mode Select
 
   - pin: D2
-    function: proto via
-
-  - pin: D3
-    id: GPIOI_0
-    class: outputs
-    ts_name: D3 - Starter Enable
-    function: low side relay control
-    type: ls
+    function: Test Point P4
 
   - pin: D4
     function: NC
@@ -241,18 +279,10 @@ pins:
     function: NC
 
   - pin: D8
-    id:
-    class:
-    ts_name: D8 - WBO
-    function: analog input WBO
-    type: av
+    function: Test Point P6
 
   - pin: D9
-    id:
-    class:
-    ts_name:
-    function: analog input WBO
-    type: av
+    function: Test Point P7
 
   - pin: D10
     function: NC
@@ -269,7 +299,7 @@ pins:
     function: NC
 
   - pin: D14
-    function: proto via
+    function: Test Point P8
 
   - pin: D15
     function: NC
@@ -284,65 +314,65 @@ pins:
     function: NC
 
   - pin: D19
-    function: proto via
+    function: Test Point P9
 
   - pin: D20
-    function: proto via
+    function: Test Point P10
 
   - pin: D21
-    function: proto via
+    function: Test Point P11
 
   - pin: D22
-    function: proto via
+    function: Test Point P12
 
   - pin: D23
-    function: proto via
+    function: Test Point P13
 
   - pin: D24
-    function: proto via
+    function: Test Point P14
     
   - pin: E1
-    id: GPIOG_7
+    id: G7
     class: outputs
-    ts_name: E1 - INJ 1
-    function: injector output 1
+    ts_name: E1 - LS1
+    function: Low-Side Switch 1
     type: inj
 
   - pin: E2
-    id: GPIOG_8
+    id: G8
     class: outputs
-    ts_name: E2- INJ 2
-    function: injector output 2
+    ts_name: E2- LS2
+    function: Low-Side Switch 2
     type: inj
 
   - pin: E3
-    id: GPIOD_11
+    id: D11
     class: outputs
-    ts_name: E3 - INJ 3
-    function: injector output 3
+    ts_name: E3 - LS3
+    function: Low-Side Switch 3
     type: inj
 
   - pin: E4
-    id: GPIOD_10
+    id: D10
     class: outputs
-    ts_name: E4 - INJ_4/VVT
-    function: "230: 1.5A low side VVT solenoid / 430 injector output 4"
+    ts_name: E4 - LS4/VVT
+    function: "Low-Side Switch 4/ VVT control"
     type: inj
 
   - pin: E5
     function: NC
 
   - pin: E6
-    function: NC
+    function: USB_GND
 
   - pin: E7
-    function: NC
+    function: USB+
 
   - pin: E8
-    function: NC
+    function: USB-
 
   - pin: E9
-    function: NC
+    function: VBUS
 
   - pin: E10
     function: NC
@@ -351,30 +381,30 @@ pins:
     function: NC
 
   - pin: E12
-    function: NC
+    function: Test Point P42
 
   - pin: E13
-    id: GPIOD_9
+    id: D9
     class: outputs
-    ts_name: E13 - INJ 5
-    function: injector output 5
+    ts_name: E13 - INJ 4
+    function: injector output 4
     type: inj
 
   - pin: E14
-    id: GPIOF_12
+    id: F12
     class: outputs
-    ts_name: E14 - INJ 6
-    function: injector output 6
+    ts_name: E14 - INJ 2
+    function: injector output 2
     type: inj
 
   - pin: E15
-    function: proto via
+    function: Test Point P15
 
   - pin: E16
-    function: proto via
+    function: Test Point P16
 
   - pin: E17
-    function: proto via
+    function: Test Point P17
 
   - pin: E18
     function: NC
@@ -393,7 +423,7 @@ pins:
     type: 5v
 
   - pin: E23
-    id: [GPIOC_1, EFI_ADC_11]
+    id: [C1, EFI_ADC_11]
     class: [event_inputs, analog_inputs]
     ts_name: E23 - MAP
     function: analog input MAP
@@ -405,18 +435,18 @@ pins:
 
   - pin: E25
 # H144_LS_7
-    id: GPIOF_13
+    id: F13
     class: outputs
-    ts_name: INJ E25
-    function: injector output E25
+    ts_name: E25 - INJ 1
+    function: injector output 1
     type: inj
 
   - pin: E26
 # H144_LS_8
-    id: GPIOF_14
+    id: F14
     class: outputs
-    ts_name: INJ E26
-    function: injector output E26
+    ts_name: E26 - INJ 3
+    function: injector output 3
     type: inj
 
   - pin: E27
@@ -427,7 +457,7 @@ pins:
     type: gnd
 
   - pin: E29
-    id: [GPIOC_2, EFI_ADC_12]
+    id: [C2, EFI_ADC_12]
     class: [event_inputs, analog_inputs]
     ts_name: E29 - Coolant Temp
     function: analog input CLT
@@ -437,7 +467,7 @@ pins:
     function: NC
 
   - pin: E31
-    id: [GPIOA_4, EFI_ADC_4]
+    id: [A4, EFI_ADC_4]
     class: [event_inputs, analog_inputs]
     ts_name: E31 - TPS1
     function: analog input TPS1
@@ -452,7 +482,7 @@ pins:
     type: 5v
 
   - pin: E34
-    id: [GPIOB_0, EFI_ADC_8]
+    id: [B0, EFI_ADC_8]
     class: [event_inputs, analog_inputs]
     ts_name: E34 - TPS2
     function: analog input TPS2
@@ -465,7 +495,7 @@ pins:
     function: NC
 
   - pin: E37
-    id: [GPIOB_1, EFI_ADC_9]
+    id: [B1, EFI_ADC_9]
     class: [event_inputs, analog_inputs]
     ts_name: E37 - Crank Input
     function: VR-
@@ -480,28 +510,29 @@ pins:
     type: gnd
 
   - pin: E40
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [event_inputs, analog_inputs]
     ts_name: E40 - IN_CAM
-    function: digital input CAM input
+    function: digital input CAM input (Hall)
     type: vr
 
   - pin: E41
-    function: knock sensor GND
+    function: knock1 sensor GND
     type: gnd
     
   - pin: E42    
-    ts_name: E42 - KNOCK
-    function: knock sensor signal
+    ts_name: E42 - KNOCK1
+    function: knock1 sensor signal
 
   - pin: E43
-    function: NC
+    function: knock2 sensor GND
 
   - pin: E44
-    function: NC
+    ts_name: E44 - KNOCK2
+    function: knock2 sensor signal
 
   - pin: E45
-    id: [GPIOC_3, EFI_ADC_13]
+    id: [C3, EFI_ADC_13]
     class: [event_inputs, analog_inputs]
     ts_name: E45 - IAT
     function: analog input IAT
@@ -512,10 +543,10 @@ pins:
     type: 5v
 
   - pin: E47
-    id: [GPIOC_0, EFI_ADC_10]
+    id: [C0, EFI_ADC_10]
     class: [event_inputs, analog_inputs]
     ts_name: E47 - MAF
-    function: analog input + proto via
+    function: analog input
     type: av
 
   - pin: E48
@@ -534,20 +565,20 @@ pins:
     function: NC
 
   - pin: F4
-    id: GPIOE_2
+    id: E2
     class: outputs 
     ts_name: F4 - IGN 5
-    function: igniter
+    function: igniter 
     type: ign
 
   - pin: F5
-    function: igniter
+    function: igniter 
     type: ign
 
   - pin: F6
 # OUT_IGN3 Q5
 # used as Coil#2 on M104
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: F6 - IGN 3
     function: igniter
@@ -562,7 +593,7 @@ pins:
     type: gnd
 
   - pin: F9
-    id: GPIOI_6
+    id: I6
     class: outputs
     ts_name: F9 - IGN 7
     function: igniter
@@ -573,7 +604,7 @@ pins:
     type: ign
 
   - pin: F11
-    id: GPIOI_7
+    id: I7
     class: outputs
     ts_name: F11 - IGN 8
     function: igniter
@@ -587,7 +618,7 @@ pins:
 # OUT_IGN4 Q3
 # CLK230
 # used as Coil#1 on M104 https://github.com/rusefi/rusefi/wiki/1997-e320
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: F13 - IGN 4
     function: igniter
@@ -602,14 +633,14 @@ pins:
     type: gnd
 
   - pin: F16
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: F16 - IGN 2
     function: igniter
     type: ign
 
   - pin: F17
-    id: GPIOI_5
+    id: I5
     class: outputs
     ts_name: F17 - IGN 6
     function: igniter
@@ -627,7 +658,7 @@ pins:
 # OUT_IGN1 Q1
 # CLK230
 # Used as coil#3 on M104
-    id: GPIOI_8
+    id: I8
     class: outputs
     ts_name: F20 - IGN 1
     function: igniter
@@ -638,18 +669,10 @@ pins:
     function: igniter
     type: ign
 
-  - pin: P30
-    id: EFI_ADC_7
-    class: analog_inputs
-    ts_name: P30_IN_AUX4
-
-  - pin: P32
-    id: EFI_ADC_1
-    class: analog_inputs
-    ts_name: P31_IN_O2S2
-
 info:
   title: Hellen 128 Mercedes
+  name: Hellen 128 Mercedes
+  board_url: https://rusefi.com/s/hellen128merc
   image:
     file: main.jpg
   pins:

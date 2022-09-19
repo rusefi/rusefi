@@ -11,15 +11,15 @@ bool verboseMode = false;
 
 int timeNowUs = 0;
 
-efitimeus_t getTimeNowUs(void) {
+efitimeus_t getTimeNowUs() {
 	return timeNowUs;
 }
 
-efitimesec_t getTimeNowSeconds(void) {
+efitimesec_t getTimeNowS() {
 	return getTimeNowUs() / 1000 / 1000;
 }
 
-efitick_t getTimeNowNt(void) {
+efitick_t getTimeNowNt() {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }
 

@@ -1,6 +1,6 @@
 pins:
   - pin: MR
-    id: GPIOI_2
+    id: I2
     class: outputs
     ts_name: Main Relay
     function: OUT_MAIN
@@ -22,13 +22,13 @@ pins:
     function: LSU Heat -    
     
   - pin: 7a
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 7 - IGN_2
     type: ign
     
   - pin: 8a
-    id: GPIOI_6
+    id: I6
     class: outputs
     ts_name: 8 - IGN_7
     type: ign  
@@ -40,13 +40,13 @@ pins:
     function: O2 sensor signal
     
   - pin: 18a
-    id: GPIOC_9
+    id: C9
     class: outputs
     ts_name: 18 - VVT2 B1
     function: OUT_VVT2_B1
     
   - pin: 19a
-    id: GPIOF_13
+    id: F13
     class: outputs
     ts_name: 19 - INJ 7
     function: OUT_INJ7
@@ -56,7 +56,7 @@ pins:
     function: Main relay A
    
   - pin: 22a
-    id: GPIOI_0
+    id: I0
     class: outputs
     ts_name: 22 - VVT1 1
     function: OUT_VVT1_1
@@ -65,17 +65,18 @@ pins:
     function: Main relay B
 
   - pin: 24a
-    id: GPIOF_14
+    id: F14
     class: outputs
     ts_name: 24 - INJ 8
     function: OUT_INJ8
     type: inj
 
-  - pin: 26a
-    id: EFI_ADC_13
-    class: analog_inputs
-    ts_name: 26 - IAT
-    function: IAT sensor
+# something wird same IAT on pin 85? figure this out one day
+#  - pin: 26a
+#    id: EFI_ADC_13
+#    class: analog_inputs
+#    ts_name: 26 - IAT
+#    function: IAT sensor
 
   - pin: 27a
     function: GNDA
@@ -108,26 +109,26 @@ pins:
     function: GNDA
     
   - pin: 37
-    id: GPIOD_13
+    id: D13
     class: outputs
     ts_name: 37 - TACH
     function: Tach Out
     type: ls
     
   - pin: 38
-    id: [GPIOF_9, ADC3_CHANNEL_7]
-    class: [switch_inputs, analog_inputs]
+    id: [F9]
+    class: [switch_inputs]
     ts_name: 48 - IN RES1
     function: IN_RES1
 
   - pin: 39
-    id: [GPIOF_10]
+    id: [F10]
     class: [switch_inputs]
     ts_name: 39 - IN RES2
     function: IN_RES2
     
   - pin: 47a
-    id: GPIOG_4
+    id: G4
     class: outputs
     ts_name: 47 - CEL
     function: MIL Control
@@ -146,19 +147,20 @@ pins:
     function: Sensor +5V
     
   - pin: 54a
-    id: GPIOF_11
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: 54 - VSS
     function: VSS in
     
   - pin: 55a
-    id: GPIOE_12
+    id: E12
     ts_name: In D1
     class: switch_inputs
     function: IN_D1
   
   - pin: 57a
-    id: GPIOE_13
+    id: E13
     ts_name: In D2
     class: switch_inputs
     function: IN_D2
@@ -172,7 +174,7 @@ pins:
     type: can
 
   - pin: 65a
-    id: GPIOH_14
+    id: H14
     class: outputs
     ts_name: 65 - Fuel Pump
     function: Fuel Pump Relay
@@ -185,25 +187,25 @@ pins:
     function: LSU_CALIBR_RES
     
   - pin: 75a
-    id: GPIOE_14
+    id: E14
     ts_name: In D3
     class: switch_inputs
     function: IN_D3
   
   - pin: 76a
-    id: GPIOE_15
+    id: E15
     ts_name: In D4
     class: switch_inputs
     function: IN_D4
   
   - pin: 81a
-    id: GPIOD_15
+    id: D15
     class: outputs
     function: OUT_FUEL_CONSUMPTION
     
   - pin: 82a
     function: Crank Sensor
-    id: [GPIOB_1]
+    id: [B1]
     class: [event_inputs]
     ts_name: 82 - VR
 
@@ -224,26 +226,26 @@ pins:
     function: IAT sensor
   
   - pin: 86a
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [event_inputs, analog_inputs]
     ts_name: 86 - CAM1
     function: Camshaft Sensor 1
     
   - pin: 87a
-    id: [GPIOA_7, EFI_ADC_7]
+    id: [A7, EFI_ADC_7]
     class: [event_inputs, analog_inputs]
     ts_name: 87 - CAM2
     function: Camshaft Sensor 2
     
   - pin: 88a
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: 88 - INJ_4
     function: Injector #4
     type: inj
 
   - pin: 89a
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: 89 - INJ_2
     function: Injector #2
@@ -268,26 +270,26 @@ pins:
     function: CLT sensor   
   
   - pin: 94a
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: 94 - IGN_4
     type: ign
   
   - pin: 95a
-    id: GPIOI_7
+    id: I7
     class: outputs
     ts_name: 95 - IGN_8
     type: ign
   
   - pin: 96a
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: 96 - INJ_1
     function: Injector #1
     type: inj
   
   - pin: 97a
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: 97 - INJ_3
     function: Injector #3
@@ -300,34 +302,45 @@ pins:
     function: GNDA
     
   - pin: 101a
-    id: [GPIOC_1, EFI_ADC_11]
+    id: [C1, EFI_ADC_11]
     class: [outputs, analog_inputs]
     ts_name: 101 - MAP2
     function: Map2    
    
   - pin: 102a
-    id: GPIOI_8
+    id: I8
     class: outputs
     ts_name: 102 - IGN_1
     function: Coil #1
     type: ign
   
   - pin: 103a
-    id: GPIOE_2
+    id: E2
     class: outputs
     ts_name: 103 - IGN_5
     type: ign
   
   - pin: 104a
-    id: GPIOA_9
+    id: A9
     class: outputs
     ts_name: 104 Wastegate
     function: OUT_WASTEGATE
-  
-  - pin: 105a
-    id: GPIOD_14
+
+    #
+    # rev A and B used H144_OUT_PWM6 D14
+    # rev C uses H144_OUT_IO4 G5
+    #
+  - pin: 105a_legacy
+    id: D14
     class: outputs
-    ts_name: 105 - IDLE
+    ts_name: 105 - IDLE rev A,B
+    function: IAC
+    type: ls
+
+  - pin: 105a
+    id: G5
+    class: outputs
+    ts_name: 105 - IDLE rev C+
     function: IAC
     type: ls
   
@@ -344,51 +357,51 @@ pins:
     function: GNDA
     
   - pin: 110a
-    id: GPIOI_5
+    id: I5
     class: outputs
     ts_name: 110 - IGN_6
     type: ign
   
   - pin: 111a
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: 111 - IGN_3
     type: ign
     
   - pin: 112a
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: 112 INJ 6
     function: INJ_6
     type: inj
   
   - pin: 113a
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: 113 INJ 5
     function: INJ_5
     type: inj
   
   - pin: 115a
-    id: GPIOG_3
+    id: G3
     class: outputs
     ts_name: 115 - VVT1_2
     function: OUT_VVT1_2
   
   - pin: 117a
-    id: GPIOC_6
+    id: C6
     class: outputs
     ts_name: 117 ETB_OUT+
     function: +ETB_OUT
   
   - pin: 118a
-    id: GPIOC_7
+    id: C7
     class: outputs
     ts_name: 118 ETB_OUT-
     function: -ETB_OUT     
    
   - pin: 120a
-    id: GPIOC_8
+    id: C8
     class: outputs
     ts_name: 120 - VVT2 B2
     function: OUT_VVT2_B2
@@ -399,8 +412,10 @@ pins:
     
 info:
   title: Hellen 121 VAG
+  name: Hellen 121 VAG
+  board_url: https://github.com/rusefi/rusefi/wiki/Hellen121VAG
   image:
-    file: main.jpg
+    file: 121pin.jpg
   pins:
     - pin: 1a
       x: 286
@@ -861,6 +876,10 @@ info:
     - pin: 113a
       x: 3282
       y: 258
+
+    - pin: 114a
+      x: 3516
+      y: 585
 
     - pin: 115a
       x: 3700

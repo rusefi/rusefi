@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 
 #if EFI_MAP_AVERAGING
 
@@ -36,6 +36,8 @@
 
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer
+ *
+ * todo: we can kind of add real physical pin just for a very narrow case of troubleshooting but only if we ever need it :)
  */
 static NamedOutputPin mapAveragingPin("map");
 
@@ -92,7 +94,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 }
 
 #if HAL_USE_ADC
-static int fastMapCounter = 0;
 
 /**
  * This method is invoked from ADC callback.
@@ -103,7 +104,12 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
-	float instantMap = convertMap(instantVoltage).value_or(0);
+	SensorResult mapResult = convertMap(instantVoltage);
+	if (!mapResult) {
+		// hopefully this warning is not too much CPU consumption for fast ADC callback
+		warning(CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+	}
+	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
@@ -166,13 +172,12 @@ static void applyMapMinBufferLength() {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
 
 void refreshMapAveragingPreCalc() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
@@ -182,7 +187,7 @@ void refreshMapAveragingPreCalc() {
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
+			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
@@ -211,7 +216,7 @@ void mapAveragingTriggerCallback(
 	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
 
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (!isValidRpm(rpm)) {
 		return;
 	}

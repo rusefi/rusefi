@@ -13,9 +13,17 @@
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8
 
+#ifdef ADC_MUX_PIN
+static OutputPin muxControl;
+#endif // ADC_MUX_PIN
+
 void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
+
+#ifdef ADC_MUX_PIN
+	muxControl.initPin("ADC Mux", ADC_MUX_PIN);
+#endif //ADC_MUX_PIN
 
 #if EFI_USE_FAST_ADC
 	// Init fast ADC (MAP sensor)
@@ -108,14 +116,14 @@ float getMcuTemperature() {
 #define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 
-// Slow ADC has 16 channels we can sample
-constexpr size_t slowChannelCount = 16;
+// Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
+constexpr size_t adcChannelCount = 16;
 
 // Conversion group for slow channels
 // This simply samples every channel in sequence
 static constexpr ADCConversionGroup convGroupSlow = {
 	.circular			= FALSE,
-	.num_channels		= slowChannelCount,
+	.num_channels		= adcChannelCount,
 	.end_cb				= nullptr,
 	.error_cb			= nullptr,
 	/* HW dependent part.*/
@@ -148,9 +156,9 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.sqr3	= ADC_SQR3_SQ1_N(0)   | ADC_SQR3_SQ2_N(1)   | ADC_SQR3_SQ3_N(2)   |  ADC_SQR3_SQ4_N(3)  |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
-static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * slowChannelCount];
+static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 
-bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+bool readBatch(adcsample_t* convertedSamples, size_t start) {
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
@@ -159,19 +167,34 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	}
 
 	// Average samples to get some noise filtering and oversampling
-	for (size_t i = 0; i < slowChannelCount; i++) {
+	for (size_t i = 0; i < adcChannelCount; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
 			sum += slowSampleBuffer[index];
-			index += slowChannelCount;
+			index += adcChannelCount;
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
-		convertedSamples[i] = value;
+		convertedSamples[start + i] = value;
 	}
 
 	return true;
+}
+
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	bool result = true;
+
+	result &= readBatch(convertedSamples, 0);
+
+#ifdef ADC_MUX_PIN
+	muxControl.setValue(1);
+	// read the second batch, starting where we left off
+	result &= readBatch(convertedSamples, adcChannelCount);
+	muxControl.setValue(0);
+#endif
+
+	return result;
 }
 
 #if EFI_USE_FAST_ADC

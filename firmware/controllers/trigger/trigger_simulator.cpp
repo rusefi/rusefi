@@ -37,9 +37,8 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
 }
 
 void TriggerStimulatorHelper::feedSimulatedEvent(
-		const TriggerStateCallback triggerCycleCallback,
 		const TriggerConfiguration& triggerConfiguration,
-		TriggerState& state,
+		TriggerDecoderBase& state,
 		const TriggerWaveform& shape,
 		int i
 		) {
@@ -71,31 +70,29 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
-	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
-	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
-
+	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING };
+	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING };
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
-			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
+			trigger_event_e event = (currentValue == TriggerValue::RISE ? riseEvents : fallEvents)[i];
 			if (isUsefulSignal(event, triggerConfiguration)) {
-				state.decodeTriggerEvent(shape,
-					triggerCycleCallback,
+				state.decodeTriggerEvent(
+					"sim",
+						shape,
 					/* override */ nullptr,
 					triggerConfiguration,
 					event, time);
 			}
 		}
 	}
-
 }
 
-void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
-		const TriggerStateCallback triggerCycleCallback,
+void TriggerStimulatorHelper::assertSyncPosition(
 		const TriggerConfiguration& triggerConfiguration,
 		const uint32_t syncIndex,
-		TriggerState& state,
+		TriggerDecoderBase& state,
 		TriggerWaveform& shape
 		) {
 
@@ -106,14 +103,13 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 	 * let's feed two more cycles to validate shape definition
 	 */
 	for (uint32_t i = syncIndex + 1; i <= syncIndex + TEST_REVOLUTIONS * shape.getSize(); i++) {
-		feedSimulatedEvent(triggerCycleCallback,
-				triggerConfiguration,
-				state, shape, i);
+		feedSimulatedEvent(triggerConfiguration, state, shape, i);
 	}
-	int revolutionCounter = state.getTotalRevolutionCounter();
+
+	int revolutionCounter = state.getCrankSynchronizationCounter();
 	if (revolutionCounter != TEST_REVOLUTIONS) {
 		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
-				getTrigger_type_e(triggerConfiguration.TriggerType),
+				getTrigger_type_e(triggerConfiguration.TriggerType.type),
 				revolutionCounter);
 		shape.setShapeDefinitionError(true);
 		return;
@@ -122,15 +118,10 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("Happy %s revolutionCounter=%d\r\n",
-					getTrigger_type_e(triggerConfiguration.TriggerType),
+					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					revolutionCounter);
 		}
 #endif /* EFI_UNIT_TEST */
-
-
-	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		shape.expectedDutyCycle[i] = 1.0 * state.expectedTotalTime[i] / SIMULATION_CYCLE_PERIOD;
-	}
 }
 
 /**
@@ -139,11 +130,9 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 		TriggerWaveform& shape,
 		const TriggerConfiguration& triggerConfiguration,
-		TriggerState& state) {
+		TriggerDecoderBase& state) {
 	for (int i = 0; i < 4 * PWM_PHASE_MAX_COUNT; i++) {
-		feedSimulatedEvent(nullptr,
-				triggerConfiguration,
-				state, shape, i);
+		feedSimulatedEvent(triggerConfiguration, state, shape, i);
 
 		if (state.getShaftSynchronized()) {
 			return i;

@@ -1,6 +1,7 @@
 /**
  * @file boards/hellen/hellen121nissan/board_configuration.cpp
  *
+ * All fabricated boards use 144 pin MCU
  *
  * @brief Configuration defaults for the hellen121nissan board
  *
@@ -11,13 +12,8 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
-
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -29,7 +25,7 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
@@ -45,7 +41,7 @@ static void setIgnitionPins() {
 	
 	// disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -68,8 +64,7 @@ static void setupVbatt() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	// todo: remove from default since 4 cylinder does not use it
@@ -82,7 +77,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -94,26 +89,19 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+	setHellenSdCardSpi3();
+
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM7;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM6;
+	engineConfiguration->etbIo[0].controlPin = Gpio::D13; // ETB_EN out_pwm1
+	engineConfiguration->etb_use_two_wires = true;
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
-
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
-}
-
 
 /**
  * @brief   Board-specific configuration defaults.
@@ -122,7 +110,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -130,30 +118,38 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->enableSoftwareKnock = true;
-	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE; // none because handled by Lua!
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
 
-	engineConfiguration->fuelPumpPin = GPIOD_12;	// OUT_IO9 // 113 Fuel Pump Relay
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-//	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
+	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
+//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
-	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
+//	setAlgorithm(LM_SPEED_DENSITY);
+    // at least this starts
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+
+	engineConfiguration->cranking.rpm = 400;
+	engineConfiguration->fanOnTemperature = 85;
+	engineConfiguration->fanOffTemperature = 81;
+
+	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->etbIdleThrottleRange = 10;
+	engineConfiguration->cutFuelOnHardLimit = false;
+	engineConfiguration->idlePidRpmUpperLimit = 300;
+	engineConfiguration->mapErrorDetectionTooLow = 10;
 
 
 	// Bosch VQ40 VR56 VK56 0280158007
@@ -162,15 +158,21 @@ void setBoardDefaultConfiguration(void) {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
 
 	engineConfiguration->throttlePedalUpVoltage = 0.75;
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+
+	engineConfiguration->startUpFuelPumpDuration = 4;
+	engineConfiguration->postCrankingFactor = 1.05;
+
+	engineConfiguration->etb.pFactor = 6.1350;
+	engineConfiguration->etb.iFactor = 87.7182;
+	engineConfiguration->etb.dFactor = 0.0702;
 
 	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;
@@ -179,23 +181,4 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->tps1SecondaryMin = 891;
 	engineConfiguration->tps1SecondaryMax = 102;
 	hellenWbo();
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
-
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	engineConfiguration->is_enabled_spi_3 = true;
 }

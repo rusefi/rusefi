@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Launcher socketcan_connector" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
+    <module name="ui" />
+    <option name="PROGRAM_PARAMETERS" value="elm327_connector" />
+    <option name="VM_PARAMETERS" value="-Dini_file_path=../firmware/tunerstudio -Dshow_etb_pane=true -Dhigh_speed_logger_rpm=10000" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

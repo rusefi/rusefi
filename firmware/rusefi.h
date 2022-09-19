@@ -7,5 +7,5 @@
 
 #pragma once
 
-void runRusEfi();
-void rebootNow();
+__NO_RETURN void runRusEfi();
+__NO_RETURN void rebootNow();

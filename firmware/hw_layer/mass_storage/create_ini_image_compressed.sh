@@ -14,11 +14,12 @@ BOARD_SPECIFIC_URL=$5
 
 IMAGE=ramdisk.image
 
+
 echo "create_ini_image_compressed: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME [$BOARD_SPECIFIC_URL]"
 
 rm -f $IMAGE $IMAGE.gz
 
-# copy *count*KB of zeroes
+# copy *FS_SIZE*KB of zeroes
 dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
 
 # create a FAT filesystem inside, name it RUSEFI
@@ -34,10 +35,20 @@ echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
 cp hw_layer/mass_storage/filesystem_contents/README.nozip.template.txt hw_layer/mass_storage/readme.temp
 echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
 
+if [[ $OSTYPE == 'darwin'* ]]; then
+  # Mac OS comes with Bash version 3 which is quite limiting and lack key features
+  current_date='huh-MAC'
+else
+  bash --version
+  # bash >=4.3 magic
+  printf -v current_date '%(%Y-%m-%d)T' -1
+  echo "create_ini_image_compressed.sh says [${current_date}]"
+fi
+
 # Put the zip inside the filesystem
 mcopy -i $IMAGE $FULL_INI ::
 # Put a readme text file in there too
-mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README.txt
+mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-${current_date}.txt
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARDNAME}\ Wiki.url
@@ -51,3 +62,4 @@ xxd -i $IMAGE.gz \
     > $H_OUTPUT
 
 rm $IMAGE.gz
+exit 0

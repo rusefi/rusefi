@@ -13,6 +13,7 @@ import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.tools.online.ProxyClient;
+import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +52,7 @@ public class LocalApplicationProxyTest {
         ServerSocketReference mockBackend = BinaryProtocolServer.tcpServerSocket(context.serverPortForRemoteApplications(), "localAppTest", socket -> () -> {
             sleep(Timeouts.SECOND);
             close(socket);
-        }, parameter -> backendCreated.countDown());
+        }, parameter -> backendCreated.countDown(), StatusConsumer.ANONYMOUS);
         assertLatch(backendCreated);
 
         SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
@@ -91,10 +92,14 @@ public class LocalApplicationProxyTest {
                 applicationConnection.getDataBuffer().read(protocolResponse);
                 assertArrayEquals(protocolResponse, TS_PROTOCOL.getBytes());
 
-                byte[] commandPacket = GetOutputsCommand.createRequest();
+                // TODO: why is this logic duplicated from BinaryProtocol?
+                byte[] commandPacket = new byte[5];
+                commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+                System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
                 applicationConnection.sendPacket(commandPacket);
                 BinaryProtocolServer.Packet response = applicationConnection.readPacket();
-                assertEquals(Fields.TS_OUTPUT_SIZE + 1, response.getPacket().length);
+                assertEquals(Fields.TS_TOTAL_OUTPUT_SIZE + 1, response.getPacket().length);
             }
         }
     }
@@ -158,7 +163,7 @@ public class LocalApplicationProxyTest {
                 throw new IllegalStateException(e);
             }
 
-        }, parameter -> backendCreated.countDown());
+        }, parameter -> backendCreated.countDown(), StatusConsumer.ANONYMOUS);
 
         assertLatch(backendCreated);
         return mockBackend;

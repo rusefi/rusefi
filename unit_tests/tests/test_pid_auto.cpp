@@ -10,7 +10,7 @@
 
 efitimems_t mockTimeMs = 0;
 
-efitimems_t currentTimeMillis(void) {
+efitimems_t getTimeNowMs(void) {
 	return mockTimeMs;
 }
 
@@ -211,7 +211,7 @@ TEST(pidAutoTune, delayLine) {
 	ASSERT_TRUE(result) << "should be true#5";
 }
 
-TEST(misc, testPidAuto) {
+TEST(pidAutoTune, testPidAuto) {
 	printf("*************************************************** testPidAuto\r\n");
 
 	testPidAutoZigZagStable();

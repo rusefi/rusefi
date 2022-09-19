@@ -7,4 +7,5 @@
 
 #pragma once
 
-void setVwPassatB6();
+void setMreVwPassatB6();
+void setProteusVwPassatB6();

@@ -1,19 +1,21 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.output.ConfigStructure;
-import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.*;
+import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
+import static com.rusefi.ConfigField.unquote;
+import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
  * We keep state here as we read configuration definition
@@ -22,6 +24,11 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 12/19/18
  */
 public class ReaderState {
+    // used to update other files
+    public List<String> inputFiles = new ArrayList<>();
+
+    private static final Logging log = getLogging(ReaderState.class);
+
     public static final String BIT = "bit";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
@@ -31,6 +38,13 @@ public class ReaderState {
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
+    public String headerMessage;
+    // well, technically those should be a builder for state, not this state class itself
+    public String tsFileOutputName = "rusefi.ini";
+    String definitionInputFile = null;
+    public boolean withC_Defines = true;
+    List<String> prependFiles = new ArrayList<>();
+    List<ConfigurationConsumer> destinations = new ArrayList<>();
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -50,6 +64,10 @@ public class ReaderState {
         }
         String[] bitNameParts = bitName.split(",");
 
+        if (log.debugEnabled())
+            log.debug("Need to align before bit " + bitName);
+        state.stack.peek().addAlignmentFill(state, 4);
+
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
@@ -58,6 +76,19 @@ public class ReaderState {
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
         structure.addBitField(bitField);
+    }
+
+    public void doJob() throws IOException {
+        for (String prependFile : prependFiles)
+            variableRegistry.readPrependValues(prependFile);
+
+        /*
+         * this is the most important invocation - here we read the primary input file and generated code into all
+         * the destinations/writers
+         */
+        SystemOut.println("Reading definition from " + this.definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.definitionInputFile), IoUtils.CHARSET.name()));
+        readBufferedReader(definitionReader, this.destinations);
     }
 
     public void read(Reader reader) throws IOException {
@@ -90,7 +121,7 @@ public class ReaderState {
 
         String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
-            variableRegistry.register(name + "_auto_enum", autoEnumOptions);
+            variableRegistry.register(name + VariableRegistry.AUTO_ENUM_SUFFIX, autoEnumOptions);
         }
 
         line = line.substring(index).trim();
@@ -103,11 +134,13 @@ public class ReaderState {
         tsCustomSize.put(name, size);
 
         RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
+        //boolean isKeyValueForm = tunerStudioLine.contains("=\"");
         if (rawLine.getTokens()[0].equals("bits")) {
             EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);
-            if (enums.size() > totalCount)
+            // at the moment we read 0=NONE as two tokens, thus enums.size() is divided by two
+            if (enums.size() / 2 > totalCount)
                 throw new IllegalStateException(name + ": Too many options in " + tunerStudioLine + " capacity=" + totalCount + "/size=" + enums.size());
 /*
     this does not work right now since smt32 and kinetis enum sizes could be different but same .txt file
@@ -115,8 +148,6 @@ public class ReaderState {
             if (enums.size() <= totalCount / 2)
                 throw new IllegalStateException("Too many bits allocated for " + enums + " capacity=" + totalCount + "/size=" + enums.size());
 */
-            for (int i = enums.size(); i < totalCount; i++)
-                tunerStudioLine += ", \"INVALID\"";
         }
 
         tsCustomLine.put(name, tunerStudioLine);
@@ -150,8 +181,9 @@ public class ReaderState {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
-        structure.addAlignmentFill(this);
+        if (log.debugEnabled())
+            log.debug("Ending structure " + structure.getName());
+        structure.addAlignmentFill(this, 4);
 
         structures.put(structure.getName(), structure);
 
@@ -159,8 +191,8 @@ public class ReaderState {
             consumer.handleEndStruct(this, structure);
     }
 
-    public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
-        readBufferedReader(new BufferedReader(new StringReader(inputString)), consumers);
+    public void readBufferedReader(String inputString, ConfigurationConsumer... consumers) throws IOException {
+        readBufferedReader(new BufferedReader(new StringReader(inputString)), Arrays.asList(consumers));
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
@@ -232,7 +264,8 @@ public class ReaderState {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
-        SystemOut.println("Starting structure " + structure.getName());
+        if (log.debugEnabled())
+            log.debug("Starting structure " + structure.getName());
     }
 
     private static void processField(ReaderState state, String line) {
@@ -254,19 +287,24 @@ public class ReaderState {
         ConfigStructure structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
-        if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
-            SystemOut.println("Need to align before " + cf.getName());
-            structure.addAlignmentFill(state);
-        } else {
-            // adding a structure instance - had to be aligned
-            // todo?           structure.addAlignmentFill(state);
+        Integer customTypeSize = state.tsCustomSize.get(cf.getType());
+        if (getPrimitiveSize != null && getPrimitiveSize > 1) {
+            if (log.debugEnabled())
+                log.debug("Need to align before " + cf.getName());
+            structure.addAlignmentFill(state, getPrimitiveSize);
+        } else if (state.structures.containsKey(cf.getType())) {
+            // we are here for struct members
+            structure.addAlignmentFill(state, 4);
+        } else if (customTypeSize != null) {
+            structure.addAlignmentFill(state, customTypeSize % 8);
         }
 
         if (cf.isIterate()) {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
-                ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), new int[0], cf.getTsInfo(), false, false, false, null, null);
+                String commentWithIndex = getCommentWithIndex(cf, i);
+                ConfigField element = new ConfigField(state, cf.getName() + i, commentWithIndex, null,
+                        cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
                 element.isFromIterate(true);
                 structure.addTs(element);
             }
@@ -277,4 +315,43 @@ public class ReaderState {
         }
     }
 
+    @NotNull
+    private static String getCommentWithIndex(ConfigField cf, int i) {
+        String unquoted = unquote(cf.getCommentOrName());
+        String string = unquoted + " " + i;
+        return quote(string);
+    }
+
+    public String getHeader() {
+        if (headerMessage == null)
+            throw new NullPointerException("No header message yet");
+        return headerMessage;
+    }
+
+    public void setDefinitionInputFile(String definitionInputFile) {
+        this.definitionInputFile = definitionInputFile;
+        headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
+        inputFiles.add(definitionInputFile);
+    }
+
+    public void addCHeaderDestination(String cHeader) {
+        destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
+    }
+
+    public void addJavaDestination(String fileName) {
+        destinations.add(new FileJavaFieldsConsumer(this, fileName));
+    }
+
+    public void addPrepend(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            // see UsagesReader use-case with dynamic prepend usage
+            return;
+        }
+        prependFiles.add(fileName);
+        inputFiles.add(fileName);
+    }
+
+    public void addDestination(ConfigurationConsumer... consumers) {
+        destinations.addAll(Arrays.asList(consumers));
+    }
 }

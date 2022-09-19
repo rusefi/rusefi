@@ -27,6 +27,8 @@ typedef enum {
 	TWO_INTS_PARAMETER,
 	TWO_INTS_PARAMETER_P,
 	FLOAT_FLOAT_PARAMETER,
+	FLOAT_FLOAT_FLOAT_PARAMETER,
+	FLOAT_FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER,
 	FLOAT_FLOAT_PARAMETER_P,
 	INT_FLOAT_PARAMETER,
 } action_type_e;
@@ -40,6 +42,9 @@ typedef struct {
 
 
 int tokenLength(const char *msgp);
+int findEndOfToken(const char *line);
+char *unquote(char *line);
+
 
 #ifdef __cplusplus
 extern "C"
@@ -51,9 +56,6 @@ void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic();
 void handleConsoleLine(char *line);
-int findEndOfToken(const char *line);
-char *unquote(char *line);
-
 void addConsoleAction(const char *token, Void callback);
 void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 
@@ -69,6 +71,8 @@ void addConsoleActionF(const char *token, VoidFloat callback);
 void addConsoleActionNANF(const char *token, VoidFloat callback);
 
 void addConsoleActionFF(const char *token, VoidFloatFloat callback);
+void addConsoleActionFFF(const char *token, VoidFloatFloatFloat callback);
+void addConsoleActionFFFFF(const char *token, VoidFloatFloatFloatFloatFloat callback);
 void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param);
 
 void addConsoleActionS(const char *token, VoidCharPtr callback);

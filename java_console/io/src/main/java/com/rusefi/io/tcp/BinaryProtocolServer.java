@@ -6,26 +6,27 @@ import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
-import com.rusefi.binaryprotocol.*;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolState;
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.server.rusEFISSLContext;
+import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.swap16;
@@ -50,17 +51,15 @@ public class BinaryProtocolServer {
     private static final int SD_STATUS_OFFSET = 246;
     private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
+    static {
+        log.configureDebugEnabled(false);
+    }
+
     public AtomicInteger unknownCommands = new AtomicInteger();
 
     public static final ServerSocketFunction SECURE_SOCKET_FACTORY = rusEFISSLContext::getSSLServerSocket;
 
-    public static final ServerSocketFunction PLAIN_SOCKET_FACTORY = port -> {
-        ServerSocket serverSocket = new ServerSocket(port);
-        log.info("ServerSocket " + port + " created");
-        return serverSocket;
-    };
-
-    private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 
     public void start(LinkManager linkManager) {
         try {
@@ -81,7 +80,7 @@ public class BinaryProtocolServer {
             }
         };
 
-        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback);
+        tcpServerSocket(port, "BinaryProtocolServer", clientSocketRunnableFactory, serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
     }
 
     /**
@@ -91,10 +90,15 @@ public class BinaryProtocolServer {
      * @param threadName
      * @param socketRunnableFactory        method to invoke on a new thread for each new client connection
      * @param serverSocketCreationCallback this callback is invoked once we open the server socket
+     * @param statusConsumer
      * @return
      */
-    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback) throws IOException {
-        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, PLAIN_SOCKET_FACTORY);
+    public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback, StatusConsumer statusConsumer) throws IOException {
+        return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, p -> {
+            ServerSocket serverSocket = new ServerSocket(p);
+            statusConsumer.append("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p);
+            return serverSocket;
+        });
     }
 
     public static ServerSocketReference tcpServerSocket(CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory, int port, String threadName, Listener serverSocketCreationCallback, ServerSocketFunction nonSecureSocketFunction) throws IOException {
@@ -117,7 +121,9 @@ public class BinaryProtocolServer {
                     continue;
                 }
                 log.info("Accepting binary protocol proxy port connection on " + port);
-                threadFactory.newThread(clientSocketRunnableFactory.apply(clientSocket)).start();
+                Runnable clientRunnable = clientSocketRunnableFactory.apply(clientSocket);
+                Objects.requireNonNull(clientRunnable, "Runnable for " + clientSocket);
+                threadFactory.newThread(clientRunnable).start();
             }
         };
         threadFactory.newThread(runnable).start();
@@ -143,25 +149,11 @@ public class BinaryProtocolServer {
         IncomingDataBuffer in = stream.getDataBuffer();
 
         while (true) {
-            AtomicBoolean handled = new AtomicBoolean();
-            Handler protocolCommandHandler = () -> {
-                handleProtocolCommand(clientSocket);
-                handled.set(true);
-            };
-
-            int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
-            if (handled.get()) {
+            Integer length = getPendingPacketLengthOrHandleProtocolCommand(clientSocket, context, in);
+            if (length == null)
                 continue;
-            }
 
-            if (log.debugEnabled())
-                log.debug("Got [" + length + "] length promise");
-
-            Packet packet = readPromisedBytes(in, length);
-            byte[] payload = packet.getPacket();
-
-            if (payload.length == 0)
-                throw new IOException("Empty packet");
+            byte[] payload = getPacketContent(in, length);
 
             byte command = payload[0];
 
@@ -169,7 +161,7 @@ public class BinaryProtocolServer {
 
             if (command == Fields.TS_HELLO_COMMAND) {
                 new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
-            } else if (command == Fields.TS_COMMAND_F) {
+            } else if (command == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
@@ -216,6 +208,37 @@ public class BinaryProtocolServer {
         }
     }
 
+    @NotNull
+    public static byte[] getPacketContent(IncomingDataBuffer in, Integer length) throws IOException {
+        if (log.debugEnabled())
+            log.debug("Got [" + length + "] length promise");
+
+        Packet packet = readPromisedBytes(in, length);
+        byte[] payload = packet.getPacket();
+
+        if (payload.length == 0)
+            throw new IOException("Empty packet");
+        return payload;
+    }
+
+    /**
+     * @return null if we have handled GET_PROTOCOL_VERSION_COMMAND command
+     */
+    @Nullable
+    public static Integer getPendingPacketLengthOrHandleProtocolCommand(Socket clientSocket, Context context, IncomingDataBuffer in) throws IOException {
+        AtomicBoolean handled = new AtomicBoolean();
+        Handler protocolCommandHandler = () -> {
+            handleProtocolCommand(clientSocket);
+            handled.set(true);
+        };
+
+        int length = getPacketLength(in, protocolCommandHandler, context.getTimeout());
+        if (handled.get()) {
+            return null;
+        }
+        return length;
+    }
+
     private static void sendOkResponse(TcpIoStream stream) throws IOException {
         byte[] response = new byte[1];
         response[0] = TS_RESPONSE_OK;
@@ -228,7 +251,7 @@ public class BinaryProtocolServer {
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
         byte first = in.readByte(ioTimeout);
-        if (first == Fields.TS_COMMAND_F) {
+        if (first == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
             protocolCommandHandler.handle();
             return 0;
         }
@@ -267,7 +290,8 @@ public class BinaryProtocolServer {
     }
 
     public static void handleProtocolCommand(Socket clientSocket) throws IOException {
-        log.info("Got plain F command");
+        if (log.debugEnabled())
+            log.debug("Got plain GetProtocol F command");
         OutputStream outputStream = clientSocket.getOutputStream();
         outputStream.write(TS_PROTOCOL.getBytes());
         outputStream.flush();

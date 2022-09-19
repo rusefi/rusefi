@@ -2,6 +2,7 @@
 #include "fuel_math.h"
 #include "alphan_airmass.h"
 #include "maf_airmass.h"
+#include "speed_density_airmass.h"
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
@@ -132,30 +133,60 @@ TEST(AirmassModes, VeOverride) {
 	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 30.0f);
 }
 
+TEST(AirmassModes, FallbackMap) {
+	StrictMock<MockVp3d> veTable;
+	StrictMock<MockVp3d> mapFallback;
+
+	// Failed map -> use 75
+	EXPECT_CALL(mapFallback, getValue(5678, 20)).WillOnce(Return(75));
+
+	EngineTestHelper eth(TEST_ENGINE);
+
+	SpeedDensityAirmass dut(veTable, mapFallback);
+
+	// TPS at 20%
+	Sensor::setMockValue(SensorType::Tps1, 20);
+
+	// Working MAP sensor at 40 kPa
+	Sensor::setMockValue(SensorType::Map, 40);
+	EXPECT_FLOAT_EQ(dut.getMap(1234), 40);
+
+	// Failed MAP sensor, should use fixed value
+	Sensor::resetMockValue(SensorType::Map);
+	engineConfiguration->enableMapEstimationTableFallback = false;
+	engineConfiguration->failedMapFallback = 33;
+	EXPECT_FLOAT_EQ(dut.getMap(2345), 33);
+
+	// Failed MAP sensor, should use table
+	Sensor::resetMockValue(SensorType::Map);
+	engineConfiguration->enableMapEstimationTableFallback = true;
+	EXPECT_FLOAT_EQ(dut.getMap(5678), 75);
+}
+
 void setInjectionMode(int value);
 
 TEST(FuelMath, testDifferentInjectionModes) {
 	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	setInjectionMode((int)IM_BATCH);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
+	EXPECT_FLOAT_EQ( 20,  engine->engineState.injectionDuration) << "injection while batch";
 
 	setInjectionMode((int)IM_SIMULTANEOUS);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
+	EXPECT_FLOAT_EQ( 10,  engine->engineState.injectionDuration) << "injection while simultaneous";
 
 	setInjectionMode((int)IM_SEQUENTIAL);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
+	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SEQUENTIAL";
 
 	setInjectionMode((int)IM_SINGLE_POINT);
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
+	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SINGLE_POINT";
 	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
 
@@ -164,25 +195,25 @@ TEST(FuelMath, deadtime) {
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	// First test with no deadtime
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration);
+	EXPECT_FLOAT_EQ( 20,  engine->engineState.injectionDuration);
 
 	// Now add some deadtime
 	setArrayValues(engineConfiguration->injector.battLagCorr, 2.0f);
 
 	// Should have deadtime now!
 	engine->periodicFastCallback();
-	EXPECT_FLOAT_EQ( 20 + 2,  engine->injectionDuration);
+	EXPECT_FLOAT_EQ( 20 + 2,  engine->engineState.injectionDuration);
 }
 
 TEST(FuelMath, CylinderFuelTrim) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1, 50.0f}));
 
 	setTable(config->fuelTrims[0].table, -4);
@@ -195,8 +226,55 @@ TEST(FuelMath, CylinderFuelTrim) {
 
 	// Check that each cylinder gets the expected amount of fuel
 	float unadjusted = 0.072142f;
-	EXPECT_NEAR(engine->injectionMass[0], unadjusted * 0.96, EPS4D);
-	EXPECT_NEAR(engine->injectionMass[1], unadjusted * 0.98, EPS4D);
-	EXPECT_NEAR(engine->injectionMass[2], unadjusted * 1.02, EPS4D);
-	EXPECT_NEAR(engine->injectionMass[3], unadjusted * 1.04, EPS4D);
+	EXPECT_NEAR(engine->engineState.injectionMass[0], unadjusted * 0.96, EPS4D);
+	EXPECT_NEAR(engine->engineState.injectionMass[1], unadjusted * 0.98, EPS4D);
+	EXPECT_NEAR(engine->engineState.injectionMass[2], unadjusted * 1.02, EPS4D);
+	EXPECT_NEAR(engine->engineState.injectionMass[3], unadjusted * 1.04, EPS4D);
+}
+
+struct MockIdle : public MockIdleController {
+	bool isIdling = false;
+
+	bool isIdlingOrTaper() const override {
+		return isIdling;
+	}
+};
+
+TEST(FuelMath, IdleVeTable) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	MockAirmass dut;
+
+	// Install mock idle controller
+	MockIdle idler;
+	engine->engineModules.get<IdleController>().set(&idler);
+
+	// Main VE table returns 50
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+
+	// Idle VE table returns 40
+	setTable(config->idleVeTable, 40);
+
+	// Enable separate idle VE table
+	engineConfiguration->useSeparateVeForIdle = true;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
+
+	// Set TPS so this works
+	Sensor::setMockValue(SensorType::Tps1, 0);
+
+	// Gets normal VE table
+	idler.isIdling = false;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.5f);
+
+	// Gets idle VE table
+	idler.isIdling = true;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+
+	// As TPS approaches idle threshold, phase-out the idle VE table
+	Sensor::setMockValue(SensorType::Tps1, 2.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.425f);
+	Sensor::setMockValue(SensorType::Tps1, 5.0f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.45f);
+	Sensor::setMockValue(SensorType::Tps1, 7.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.475f);
 }

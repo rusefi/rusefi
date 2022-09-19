@@ -53,11 +53,6 @@ void updateGppwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		float result = channels[i].update();
 
-#ifdef EFI_TUNER_STUDIO
-		if (engineConfiguration->debugMode == DBG_GPPWM) {
-			scaled_channel<float>* debugFloats = &engine->outputChannels.debugFloatField1;
-			debugFloats[i] = result;
-		}
-#endif
+		engine->outputChannels.gppwmOutput[i] = result;
 	}
 }

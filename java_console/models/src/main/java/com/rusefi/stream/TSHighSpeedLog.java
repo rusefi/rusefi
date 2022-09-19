@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TSHighSpeedLog extends StreamFile {
     private final String fileName;
-    private int prevTime = 0;
+    private long prevTime = 0;
 
     public TSHighSpeedLog(String fileName) {
         this.fileName = fileName;
@@ -29,7 +29,7 @@ public class TSHighSpeedLog extends StreamFile {
             }
             for (CompositeEvent event : events) {
                 writer.write(event.isPrimaryTriggerAsInt() + "," + event.isSecondaryTriggerAsInt() + "," + event.isTrgAsInt() + "," + event.isSyncAsInt() + ",");
-                int delta = event.getTimestamp() - prevTime;
+                long delta = event.getTimestamp() - prevTime;
                 writer.write(event.getTimestamp() / 1000.0 + "," + delta / 1000.0);
 
                 writer.write("," + event.isCoil() + "," + event.isInjector());

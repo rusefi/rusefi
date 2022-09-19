@@ -67,4 +67,10 @@ typedef enum {
 #ifdef __cplusplus
 void stm32_stop();
 void stm32_standby();
+
+// Called just before the MCU is put in stop mode
+void boardPrepareForStop();
+
+// Called just before the MCU is put in standby mode
+void boardPrepareForStandby();
 #endif

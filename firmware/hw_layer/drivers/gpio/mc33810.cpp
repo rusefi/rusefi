@@ -3,6 +3,8 @@
  *
  * Automotive Engine Control IC
  * MCZ33810
+ * eight channel output driver: four integrated low-side drivers and four low-side gate pre-drivers.
+ *
  *
  * @date Dec 29, 2018
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -14,7 +16,6 @@
 #include "pch.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
-#include "os_util.h"
 
 #if (BOARD_MC33810_COUNT > 0)
 

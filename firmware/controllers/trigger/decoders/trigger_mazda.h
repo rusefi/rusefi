@@ -7,10 +7,9 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s);
-void initializeMazdaMiataNb1Shape(TriggerWaveform *s);
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s);
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s);
 void configureMazdaProtegeSOHC(TriggerWaveform *s);
@@ -24,3 +23,5 @@ void configureMazdaProtegeLx(TriggerWaveform *s);
  * same decoder is used for VVT processing
  */
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s);
+
+void initializeMazdaSkyactivCam(TriggerWaveform *s);

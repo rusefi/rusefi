@@ -10,6 +10,9 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
 
 // These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
 class UARTDriver;
@@ -40,8 +43,10 @@ class SerialTsChannel;
 
 		TsChannelBase* setupChannel() {
 #if EFI_PROD_CODE
-			efiSetPadMode("Primary Channel RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-			efiSetPadMode("Primary Channel TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+			// historically the idea was that primary UART has to be very hard-coded as the last line of reliability defense
+			// as of 2022 it looks like sometimes we just need the GPIO on MRE for instance more than we need UART
+			efiSetPadMode("Primary UART RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+			efiSetPadMode("Primary UART TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 #endif /* EFI_PROD_CODE */
 
 			primaryChannel.start(engineConfiguration->uartConsoleSerialSpeed);
@@ -71,11 +76,11 @@ class SerialTsChannel;
 
 		TsChannelBase* setupChannel() {
 #if EFI_PROD_CODE
-			efiSetPadMode("Secondary Channel RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-			efiSetPadMode("Secondary Channel TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			efiSetPadMode("Secondary UART RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			efiSetPadMode("Secondary UART TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 #endif /* EFI_PROD_CODE */
 
-			secondaryChannel.start(engineConfiguration->uartConsoleSerialSpeed);
+			secondaryChannel.start(engineConfiguration->tunerStudioSerialSpeed);
 
 			return &secondaryChannel;
 		}
@@ -86,11 +91,14 @@ class SerialTsChannel;
 
 void startSerialChannels() {
 #if HAS_PRIMARY
-	primaryChannelThread.Start();
+	// todo: invert setting one day?
+	if (!engineConfiguration->disablePrimaryUart) {
+		primaryChannelThread.start();
+	}
 #endif
 
 #if HAS_SECONDARY
-	secondaryChannelThread.Start();
+	secondaryChannelThread.start();
 #endif
 }
 

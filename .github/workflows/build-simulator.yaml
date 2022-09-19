@@ -8,46 +8,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
-    - uses: actions/setup-java@v1
+    - uses: actions/setup-java@v3
       with:
+        distribution: 'zulu'
         java-version: '8'
+
+    - name: Print GCC version
+      working-directory: .
+      run: gcc -v
 
     - name: Install multilib
       run: |
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
-    - name: Generate Configs for simulator
+    - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
-      run: |
-        bash gen_config_default.sh
-
-    - name: Generate Enums
-      working-directory: ./firmware/
-      run: |
-        bash gen_enum_to_string.sh
-
-    - name: Generate Live Documentation
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
+      run: ./gen_default_everything.sh
 
     - name: Compile Simulator
       working-directory: ./simulator/
-      run: bash compile.sh
+      run: ./compile.sh
 
     - name: Run Simulator (10 seconds)
       working-directory: ./simulator/
       run: ./build/rusefi_simulator 10
 
     - name: Upload built simulator
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator
-
-    - name: Configuration Definition CI, without pushing new .jar
-      working-directory: ./java_tools/configuration_definition
-      run: ant

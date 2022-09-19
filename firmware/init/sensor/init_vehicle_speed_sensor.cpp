@@ -4,21 +4,20 @@
 #include "frequency_sensor.h"
 #include "vehicle_speed_converter.h"
 
-static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
+// 0.05 filter parameter means averaging over ~20 sensor teeth
+FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;
 
 void initVehicleSpeedSensor() {
+	int parameter = engineConfiguration->vssFilterReciprocal;
 
-	auto pin = engineConfiguration->vehicleSpeedSensorInputPin;
-
-	// Nothing to do if no sensor configured
-	if (!isBrainPinValid(pin)) {
-		return;
+	if (parameter < 3 || parameter > 200) {
+		parameter = 3;
 	}
 
-	vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
-	vehicleSpeedSensor.init(pin);
-	vehicleSpeedSensor.Register();
+	float filterParameter = 1.0f / parameter;
+
+	vehicleSpeedSensor.initIfValid(engineConfiguration->vehicleSpeedSensorInputPin, vehicleSpeedConverter, filterParameter);
 }
 
 void deInitVehicleSpeedSensor() {

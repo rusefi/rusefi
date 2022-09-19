@@ -23,7 +23,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 #include "scheduler.h"
 #include "main_trigger_callback.h"
 
@@ -34,7 +34,7 @@ bool printSchedulerDebug = true;
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
 void SleepExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
+	scheduleForLater(msg, scheduling, timeUs - getTimeNowUs(), action);
 }
 
 void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
@@ -87,7 +87,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
 }
 
-void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+void SleepExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
 	doScheduleForLater(scheduling, delayUs, action);
 }
 

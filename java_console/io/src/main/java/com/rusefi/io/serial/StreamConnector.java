@@ -19,7 +19,6 @@ public class StreamConnector implements LinkConnector {
 
     private final PortHolder portHolder;
     private final LinkManager linkManager;
-    private BinaryProtocol.Arguments arguments;
 
     public StreamConnector(LinkManager linkManager, Callable<IoStream> ioStreamCallable) {
         this.linkManager = linkManager;
@@ -29,7 +28,6 @@ public class StreamConnector implements LinkConnector {
 
     @Override
     public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
-        this.arguments = arguments;
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;
         log.info("scheduleOpening");
@@ -47,15 +45,6 @@ public class StreamConnector implements LinkConnector {
     @Override
     public void stop() {
         portHolder.close();
-    }
-
-    @Override
-    public void restart() {
-        linkManager.execute(() -> {
-            linkManager.messageListener.postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
-            portHolder.close();
-            portHolder.connectAndReadConfiguration(arguments);
-        });
     }
 
     @Override

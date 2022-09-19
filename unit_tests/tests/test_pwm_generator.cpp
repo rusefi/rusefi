@@ -2,7 +2,7 @@
  * test_pwm_generator.cpp
  *
  *  @date Dec 8, 2018
- *      Author: user
+ * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "pch.h"
@@ -92,7 +92,7 @@ static void testSwitchToNanPeriod() {
 	assertNextEvent("exec3@NAN", LOW_VALUE, &executor, pin);
 }
 
-TEST(misc, testPwmGenerator) {
+TEST(PWM, testPwmGenerator) {
 	test100dutyCycle();
 	testSwitchToNanPeriod();
 

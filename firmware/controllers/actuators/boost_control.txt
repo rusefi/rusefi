@@ -6,8 +6,12 @@ bit isBelowClosedLoopThreshold;
 bit isNotClosedLoop;
 bit isZeroRpm
 
+float luaTargetAdd
+float luaTargetMult
+
 float openLoopPart;
-float closedLoopPart;
+	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5, 0, -50, 50, 1
+    int16_t autoscale boostControlTarget;@@GAUGE_NAME_BOOST_TARGET@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
 
 end_struct

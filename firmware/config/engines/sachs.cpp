@@ -18,7 +18,7 @@ void setSachs() {
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 
-	setOperationMode(engineConfiguration, TWO_STROKE);
+	setTwoStrokeOperationMode();
 	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
@@ -30,8 +30,6 @@ void setSachs() {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 50;
 	engineConfiguration->trigger.customSkippedToothCount = 2;
-
-	engineConfiguration->useSerialPort = false;
 
 	// Frankenstein analog input #1: PA1 adc1 MAP
 	// Frankenstein analog input #2: PA3 adc3 TPS
@@ -70,12 +68,12 @@ void setSachs() {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
-	engineConfiguration->injectionPins[0] = GPIOC_15;
+	engineConfiguration->injectionPins[0] = Gpio::C15;
 
-	engineConfiguration->fuelPumpPin = GPIOE_6;
+	engineConfiguration->fuelPumpPin = Gpio::E6;
 
 	// todo: extract a method? figure out something smarter
 	setTimingRpmBin(800, 15000);

@@ -8,8 +8,7 @@
 #pragma once
 
 #include "stored_value_sensor.h"
-#include "scaled_channel.h"
-#include "hal.h"
+#include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
 #include "obd2.h"
 #include "can.h"
@@ -54,6 +53,8 @@ private:
 	const uint8_t m_offset;
 };
 
+#if EFI_PROD_CODE
+
 template <int Size, int Offset>
 class ObdCanSensor: public CanSensorBase {
 public:
@@ -81,7 +82,7 @@ public:
 
 	CanListener* request() override {
 		{
-			CanTxMessage msg(OBD_TEST_REQUEST);
+			CanTxMessage msg(CanCategory::OBD, OBD_TEST_REQUEST);
 			msg[0] = _OBD_2;
 			msg[1] = OBD_CURRENT_DATA;
 			msg[2] = PID;
@@ -95,3 +96,5 @@ public:
 	int PID;
 	float Scale;
 };
+
+#endif // EFI_PROD_CODE

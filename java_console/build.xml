@@ -3,7 +3,38 @@
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
-    <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar:../java_tools/configuration_definition/lib/antlr-4.5-complete.jar"/>
+
+    <resources id="libs">
+        <string>lib/mockito-all-1.10.19.jar</string>
+        <string>../java_tools/configuration_definition/lib/snakeyaml.jar</string>
+        <string>lib/log4j-api-2.13.3.jar</string>
+        <string>lib/log4j-core-2.13.3.jar</string>
+        <string>lib/jsr305-2.0.1.jar</string>
+        <string>lib/dfu/dfu_java.jar</string>
+        <string>lib/dfu/IntelHexParser.jar</string>
+        <string>lib/json-simple-1.1.1.jar</string>
+        <string>lib/server/javax.json.jar</string>
+        <string>lib/server/cactoos.jar</string>
+        <string>lib/server/takes.jar</string>
+        <string>lib/json-simple-1.1.1.jar</string>
+        <string>lib/jaxb-api.jar</string>
+        <string>lib/httpclient.jar</string>
+        <string>lib/httpmime.jar</string>
+        <string>lib/httpcore.jar</string>
+        <string>lib/jSerialComm.jar</string>
+        <string>lib/jcip-annotations-1.0.jar</string>
+        <string>lib/swing-layout-1.0.jar</string>
+        <string>lib/jep.jar</string>
+        <string>lib/log4j.jar</string>
+        <string>lib/junit.jar</string>
+        <string>lib/SteelSeries-3.9.30.jar</string>
+        <string>lib/annotations.jar</string>
+        <string>lib/miglayout-4.0.jar</string>
+        <string>lib/surfaceplotter-2.0.1.jar</string>
+        <string>../java_tools/configuration_definition/lib/antlr-4.9.3-complete.jar</string>
+        <string>lib/javacan-core.jar</string>
+    </resources>
+    <pathconvert property="lib_list" refid="libs" pathsep=":" />
 
     <target name="clean">
         <delete dir="build"/>
@@ -59,11 +90,13 @@
             <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
+            <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
             <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
+            <src path="io/src/testFixtures/java"/>
             <src path="luaformatter/src"/>
             <src path="models/src/main/java"/>
             <src path="models/src/test/java"/>
@@ -75,7 +108,6 @@
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
-            <src path="romraider/src/main/java"/>
             <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src/main/java"/>
@@ -88,14 +120,19 @@
         </javac>
     </target>
 
+    <target name="native_header">
+        <javah classpath="io/src/main/java" destdir="../unit_tests/native" class="com.rusefi.native_.EngineLogic"/>
+    </target>
+
     <target name="test" depends="compile, copy_c_sources">
-        <junit fork="no"
+        <junit fork="yes"
                maxmemory="512m"
                printsummary="yes"
                haltonfailure="yes">
 
             <jvmarg value="-ea"/>
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <sysproperty key="java.library.path" value="../unit_tests/build"/>
             <formatter type="brief"/>
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
@@ -107,7 +144,6 @@
                 <fileset dir="inifile/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
-                <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
@@ -137,10 +173,11 @@
     <target name="copy_c_sources">
         <copy todir="build/classes/c_sources" flatten="true">
             <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+            <fileset dir="../firmware/console" includes="**/*.cpp"/>
         </copy>
     </target>
 
-    <target name="jar" depends="compile, copy_c_sources, autoupdate_jar">
+    <target name="jar" depends="compile, native_header, copy_c_sources, autoupdate_jar">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>
@@ -149,7 +186,6 @@
             <fileset dir="ui/resources" includes="**/*.gif"/>
             <fileset dir="ui/resources" includes="**/*.png"/>
             <fileset dir="ui/resources" includes="**/*.jpg"/>
-            <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
         <tstamp>
@@ -170,10 +206,14 @@
             <zipfileset src="lib/jep.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpclient.jar" includes="**/*.class"/>
             <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>
+            <zipfileset src="lib/javacan-core.jar" includes="**/*.class"/>
+            <zipfileset src="lib/javacan-core-x86_64.jar" includes="**/*.class **/*.xml **/*.properties **/*.so"/>
+            <zipfileset src="lib/slf4j-api.jar" includes="**/*.class"/>
+            <zipfileset src="lib/slf4j-simple.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
-            <zipfileset src="../java_tools/configuration_definition/lib/antlr-4.5-complete.jar" includes="**/*.class"/>
+            <zipfileset src="../java_tools/configuration_definition/lib/antlr-4.9.3-complete.jar" includes="**/*.class"/>
             <zipfileset src="lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-aarch64.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-arm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>

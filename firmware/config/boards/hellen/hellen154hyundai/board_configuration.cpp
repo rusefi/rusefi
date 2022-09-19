@@ -1,17 +1,16 @@
 /**
- * @file boards/hellen/hellen121nissan/board_configuration.cpp
+ * @file boards/hellen/hellen154hyundai/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen121nissan board
+ * @brief Configuration defaults for the hellen154hyundai board
  *
- * See https://rusefi.com/s/hellen121nissan
+ * See https://rusefi.com/s/hellen154hyundai
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
@@ -24,21 +23,21 @@ static void setInjectorPins() {
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOC_13;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
+	engineConfiguration->ignitionPins[0] = Gpio::C13;
+	engineConfiguration->ignitionPins[1] = Gpio::E5;
+	engineConfiguration->ignitionPins[2] = Gpio::E4;
+	engineConfiguration->ignitionPins[3] = Gpio::E3;
 	
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -61,8 +60,7 @@ static void setupVbatt() {
 static void setupDefaultSensorInputs() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
@@ -96,26 +94,62 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+static bool isFirstInvocation = true;
+
+void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
-}
 
-void setPinConfigurationOverrides(void) {
-}
+	if (engine->engineState.hellenBoardId == -1) {
+		// control pins are inverted since overall ECU pinout seems to be inverted
+		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
+		engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
+		engineConfiguration->etb_use_two_wires = true;
 
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
-}
+		// first revision of did not have Hellen Board ID
+		// https://github.com/rusefi/hellen154hyundai/issues/55
+		engineConfiguration->etbIo[1].directionPin1 = Gpio::Unassigned;
+		engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
+		engineConfiguration->etbIo[1].controlPin = Gpio::Unassigned;
 
+		if (isFirstInvocation) {
+			isFirstInvocation = false;
+			efiSetPadMode("ETB FIX0", H144_OUT_PWM4, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX1", H144_OUT_PWM5, PAL_MODE_INPUT_ANALOG);
+			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
+		}
+	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
+		// todo You would not believe how you invert TLE9201 #4579
+		engineConfiguration->stepperDcInvertedPins = true;
+
+	    //ETB1
+	    // PWM pin
+	    engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
+	    // DIR pin
+		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+	   	// Disable pin
+	   	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO12;
+	   	// Unused
+	 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
+
+		// wastegate DC motor
+	    //ETB2
+	    // PWM pin
+	    engineConfiguration->etbIo[1].controlPin = H144_OUT_PWM4;
+	    // DIR pin
+		engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM5;
+	   	// Disable pin
+	   	engineConfiguration->etbIo[1].disablePin = H144_OUT_IO13;
+	   	// Unused
+	 	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
+    }
+}
 
 /**
  * @brief   Board-specific configuration defaults.
@@ -124,7 +158,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -138,9 +172,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
 	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
-//	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-//	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+//	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+//	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::G14;	// pin: 111a, OUT_IO3
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
 
 	engineConfiguration->brakePedalPin = H144_IN_RES3;
@@ -150,26 +184,18 @@ void setBoardDefaultConfiguration(void) {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	// control pins are inverted since overall ECU pinout seems to be inverted
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
-	engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
-	engineConfiguration->etb_use_two_wires = true;
-
-	// wastegate DC motor
-	engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM4;
-	engineConfiguration->etbIo[1].directionPin2 = H144_OUT_PWM5;
-	engineConfiguration->etbIo[1].controlPin = H144_OUT_IO13;
-	engineConfiguration->etb_use_two_wires = true;
 	engineConfiguration->etbFunctions[1] = ETB_Wastegate;
 
 	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
+	engineConfiguration->etb.pFactor = 8.8944;
+	engineConfiguration->etb.iFactor = 70.2307;
+	engineConfiguration->etb.dFactor = 0.1855;
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
@@ -184,24 +210,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	// very similar to Nissan?
-	engineConfiguration->tpsMin = 100;
-	engineConfiguration->tpsMax = 914;
+	engineConfiguration->tpsMin = 98;
+	engineConfiguration->tpsMax = 926;
 
-	engineConfiguration->tps1SecondaryMin = 880;
-	engineConfiguration->tps1SecondaryMax = 68;
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
-
-	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
-	engineConfiguration->spi2misoPin = H_SPI2_MISO;
-	engineConfiguration->spi2sckPin = H_SPI2_SCK;
-	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->tps1SecondaryMin = 891;
+	engineConfiguration->tps1SecondaryMax = 69;
 }

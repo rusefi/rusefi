@@ -8,13 +8,11 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "trigger_input.h"
-#include "servo.h"
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
-#include "os_util.h"
 #include "bench_test.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
@@ -27,6 +25,7 @@
 #include "sensor_chart.h"
 #include "serial_hw.h"
 #include "idle_thread.h"
+#include "odometer.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -181,7 +180,7 @@ void onFastAdcComplete(adcsample_t*) {
 	efiAssertVoid(CUSTOM_STACK_ADC, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-	if (engine->sensorChartMode == SC_AUX_FAST1) {
+	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}
@@ -301,7 +300,9 @@ void applyNewHardwareSettings() {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	stopTriggerDebugPins();
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	enginePins.unregisterPins();
 
@@ -428,6 +429,11 @@ void initHardwareNoConfig() {
 #if EFI_FILE_LOGGING
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
+
+#if HAL_USE_PAL && EFI_PROD_CODE
+	// this should be initialized before detectBoardType()
+	efiExtiInit();
+#endif // HAL_USE_PAL
 }
 
 void stopHardware() {
@@ -458,9 +464,12 @@ void startHardware() {
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
+#if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
 
 	startTriggerDebugPins();
+
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	startPedalPins();
 
@@ -469,11 +478,20 @@ void startHardware() {
 #endif /* EFI_CAN_SUPPORT */
 }
 
-void initHardware() {
-#if HAL_USE_PAL && EFI_PROD_CODE
-	efiExtiInit();
-#endif // HAL_USE_PAL
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardInitHardware() { }
 
+__attribute__((weak)) void setPinConfigurationOverrides() { }
+
+#if HAL_USE_I2C
+const I2CConfig i2cfg = {
+    OPMODE_I2C,
+    400000,
+    FAST_DUTY_CYCLE_2,
+};
+#endif
+
+void initHardware() {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
@@ -486,6 +504,14 @@ void initHardware() {
 	if (hasFirmwareError()) {
 		return;
 	}
+
+#if STM32_I2C_USE_I2C3
+	if (engineConfiguration->useEeprom) {
+	    i2cStart(&EE_U2CD, &i2cfg);
+	}
+#endif // STM32_I2C_USE_I2C3
+
+	boardInitHardware();
 
 #if HAL_USE_ADC
 	initAdcInputs();
@@ -545,10 +571,6 @@ void initHardware() {
 
 #if EFI_UART_GPS
 	initGps();
-#endif
-
-#if EFI_SERVO
-	initServo();
 #endif
 
 #if EFI_AUX_SERIAL

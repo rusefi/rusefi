@@ -1,111 +1,111 @@
 pins:
   - pin: 1
-    id: GPIOA_8
+    id: A8
     function: output
     class: outputs
     ts_name: Highside 2
     type: hs
 
   - pin: 2
-    id: GPIOA_9
+    id: A9
     function: output
     class: outputs
     ts_name: Highside 1
     type: hs
 
   - pin: 3
-    id: GPIOD_7
+    id: D7
     function: "Injector #1"
     class: outputs
     ts_name: Lowside 1
     type: ls
 
   - pin: 4
-    id: GPIOG_10
+    id: G10
     function: "Injector #3"
     class: outputs
     ts_name: Lowside 3
     type: ls
 
   - pin: 5
-    id: GPIOG_12
+    id: G12
     function: "Injector #5"
     class: outputs
     ts_name: Lowside 5
     type: ls
 
   - pin: 6
-    id: GPIOG_13
+    id: G13
     function: "Injector #6"
     class: outputs
     ts_name: Lowside 6
     type: ls
 
   - pin: 7
-    id: GPIOG_14
+    id: G14
     function: "Injector #7"
     class: outputs
     ts_name: Lowside 7
     type: ls
 
   - pin: 8
-    id: GPIOB_5
+    id: B5
     function: "Injector #9"
     class: outputs
     ts_name: Lowside 9
     type: ls
 
   - pin: 9
-    id: GPIOB_7
+    id: B7
     function: "Injector #11"
     class: outputs
     ts_name: Lowside 11
     type: ls
 
   - pin: 10
-    id: GPIOB_9
+    id: B9
     function: main relay
     class: outputs
     ts_name: Lowside 13
     type: ls
 
   - pin: 11
-    id: GPIOE_0
+    id: E0
     function: Lowside output
     class: outputs
     ts_name: Lowside 14
     type: ls
 
   - pin: 12
-    id: GPIOE_1
+    id: E1
     function: radiator fan relay
     class: outputs
     ts_name: Lowside 15
     type: ls
 
   - pin: 13
-    id: GPIOD_15
+    id: D15
     function: output
     class: outputs
     ts_name: Highside 3
     type: hs
 
   - pin: 14
-    id: GPIOD_14
+    id: D14
     function: output
     class: outputs
     ts_name: Highside 4
     type: hs
 
   - pin: 15
-    id: GPIOG_9
+    id: G9
     function: "Injector #2"
     class: outputs
     ts_name: Lowside 2
     type: ls
 
   - pin: 16
-    id: GPIOG_11
+    id: G11
     function: "Injector #4"
     class: outputs
     ts_name: Lowside 4
@@ -120,35 +120,35 @@ pins:
     type: gnd
 
   - pin: 19
-    id: GPIOB_4
+    id: B4
     function: "Injector #8"
     class: outputs
     ts_name: Lowside 8
     type: ls
 
   - pin: 20
-    id: GPIOB_6
+    id: B6
     function: "Injector #10"
     class: outputs
     ts_name: Lowside 10
     type: ls
 
   - pin: 21
-    id: GPIOB_8
+    id: B8
     function: "Injector #12"
     class: outputs
     ts_name: Lowside 12
     type: ls
 
   - pin: 22
-    id: GPIOC_9
+    id: C9
     function: Ignition cylinder 3
     class: outputs
     ts_name: Ign 3
     type: hl
 
   - pin: 23
-    id: GPIOE_2
+    id: E2
     function: Fuel Pump
     class: outputs
     ts_name: Lowside 16
@@ -159,77 +159,77 @@ pins:
     type: gnd
 
   - pin: 25
-    id: GPIOG_2
+    id: G2
     function: Ignition cylinder 12
     class: outputs
     ts_name: Ign 12
     type: hl
 
   - pin: 26
-    id: GPIOG_3
+    id: G3
     function: Ignition cylinder 11
     class: outputs
     ts_name: Ign 11
     type: hl
 
   - pin: 27
-    id: GPIOG_4
+    id: G4
     function: Ignition cylinder 10
     class: outputs
     ts_name: Ign 10
     type: hl
 
   - pin: 28
-    id: GPIOG_5
+    id: G5
     function: Ignition cylinder 9
     class: outputs
     ts_name: Ign 9
     type: hl
 
   - pin: 29
-    id: GPIOG_6
+    id: G6
     function: Ignition cylinder 8
     class: outputs
     ts_name: Ign 8
     type: hl
 
   - pin: 30
-    id: GPIOG_7
+    id: G7
     function: Ignition cylinder 7
     class: outputs
     ts_name: Ign 7
     type: hl
 
   - pin: 31
-    id: GPIOG_8
+    id: G8
     function: Ignition cylinder 6
     class: outputs
     ts_name: Ign 6
     type: hl
 
   - pin: 32
-    id: GPIOC_7
+    id: C7
     function: Ignition cylinder 5
     class: outputs
     ts_name: Ign 5
     type: hl
 
   - pin: 33
-    id: GPIOC_8
+    id: C8
     function: Ignition cylinder 4
     class: outputs
     ts_name: Ign 4
     type: hl
 
   - pin: 34
-    id: GPIOD_3
+    id: D3
     function: Ignition cylinder 2
     class: outputs
     ts_name: Ign 2
     type: hl
 
   - pin: 35
-    id: GPIOD_4
+    id: D4
     function: Ignition cylinder 1
     class: outputs
     ts_name: Ign 1

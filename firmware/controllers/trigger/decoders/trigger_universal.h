@@ -12,7 +12,7 @@
 #define NO_LEFT_FILTER -1
 #define NO_RIGHT_FILTER 1000
 
-void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s,
+void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s,
 		int totalTeethCount, int skippedCount,
 		float toothWidth,
 		float offset, float engineCycle, float filterLeft, float filterRight);
@@ -29,3 +29,6 @@ void configureQuickStartSenderWheel(TriggerWaveform *s);
 
 // TT_KAWA_KX450F
 void configureKawaKX450F(TriggerWaveform *s);
+
+// TT_12_TOOTH_CRANK
+void configure12ToothCrank(TriggerWaveform*);

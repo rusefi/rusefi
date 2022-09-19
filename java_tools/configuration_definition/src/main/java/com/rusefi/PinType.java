@@ -1,10 +1,12 @@
 package com.rusefi;
 
+import static com.rusefi.VariableRegistry.ENUM_SUFFIX;
+
 public enum PinType {
-    OUTPUTS("output_pin_e_enum", "brain_pin_e", "GPIO_UNASSIGNED"),
-    ANALOG_INPUTS("adc_channel_e_enum", "adc_channel_e", "EFI_ADC_NONE"),
-    EVENT_INPUTS("brain_input_pin_e_enum", "brain_pin_e", "GPIO_UNASSIGNED"),
-    SWITCH_INPUTS("switch_input_pin_e_enum", "brain_pin_e", "GPIO_UNASSIGNED");
+    OUTPUTS("output_pin_e", "Gpio", "Unassigned"),
+    ANALOG_INPUTS("adc_channel_e", "adc_channel_e", "EFI_ADC_NONE"),
+    EVENT_INPUTS("brain_input_pin_e", "Gpio", "Unassigned"),
+    SWITCH_INPUTS("switch_input_pin_e", "Gpio", "Unassigned");
 
 
     private final String outputEnumName;

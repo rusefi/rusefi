@@ -100,6 +100,10 @@
   border-color: sienna;
 }
 
+#board-link {
+ font-size: 24px;
+}
+
 .pin-marker:hover {
   transform: scale(2);
   z-index: 2;
@@ -214,6 +218,14 @@ table th {
   table tr:hover {
     background-color: #f15a24;
   }
+
+  a {
+    color: #71b7ff;
+  }
+
+  a:visited {
+    color: #71b7ff;
+  }
 }
 
 @media print {
@@ -270,5 +282,8 @@ table th {
   }
   table, tbody, tr {
     display: block;
+  }
+  #board-link {
+    display: none;
   }
 }

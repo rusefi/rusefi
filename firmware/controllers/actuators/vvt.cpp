@@ -10,15 +10,13 @@
 #include "local_version_holder.h"
 #include "vvt.h"
 
-#include "fsio_impl.h"
-
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t>;
+using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16_t>;
 
 static vvt_map_t vvtTable1;
 static vvt_map_t vvtTable2;
@@ -48,11 +46,15 @@ void VvtController::PeriodicTask() {
 }
 
 expected<angle_t> VvtController::observePlant() const {
+#if EFI_SHAFT_POSITION_INPUT
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
+#else
+	return unexpected;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 expected<angle_t> VvtController::getSetpoint() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
@@ -69,7 +71,23 @@ expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	return 0;
 }
 
+static bool shouldInvertVvt(int camIndex) {
+	// grumble grumble, can't do an array of bits in c++
+	switch (camIndex) {
+		case 0: return engineConfiguration->invertVvtControlIntake;
+		case 1: return engineConfiguration->invertVvtControlExhaust;
+	}
+
+	return false;
+}
+
 expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observation) {
+	// User labels say "advance" and "retard"
+	// "advance" means that additional solenoid duty makes indicated VVT position more positive
+	// "retard" means that additional solenoid duty makes indicated VVT position more negative
+	bool isInverted = shouldInvertVvt(m_cam);
+	m_pid.setErrorAmplification(isInverted ? -1.0f : 1.0f);
+	
 	float retVal = m_pid.getOutput(target, observation);
 
 	if (engineConfiguration->isVerboseAuxPid1) {
@@ -78,24 +96,20 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	}
 
 #if EFI_TUNER_STUDIO
-	static debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
-
-	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
-		m_pid.postState(&engine->outputChannels);
-		engine->outputChannels.debugIntField3 = (int)(10 * target);
-	}
+	m_pid.postState(engine->outputChannels.vvtStatus[index]);
 #endif /* EFI_TUNER_STUDIO */
 
 	return retVal;
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+#if EFI_SHAFT_POSITION_INPUT
+	bool enabled = rpm > engineConfiguration->cranking.rpm /* todo: make this configurable? */
+			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
+			 ;
 
-	// todo: make this configurable?
-	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
-
-	if (outputValue && enabledAtCurrentRpm) {
+	if (outputValue && enabled) {
 		m_pwm.setSimplePwmDutyCycle(PERCENT_TO_DUTY(outputValue.Value));
 	} else {
 		m_pwm.setSimplePwmDutyCycle(0);
@@ -103,6 +117,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 		// we need to avoid accumulating iTerm while engine is not running
 		m_pid.reset();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 #if EFI_AUX_PID
@@ -152,7 +167,7 @@ void initAuxPid() {
 	startVvtControlPins();
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].Start();
+		instances[i].start();
 	}
 }
 

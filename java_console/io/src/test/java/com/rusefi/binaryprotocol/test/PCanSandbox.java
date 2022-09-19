@@ -5,11 +5,13 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.stream.PCanIoStream;
 
 import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.Timeouts.SECOND;
 
 /**
  * @see Elm327Sandbox
@@ -18,11 +20,11 @@ public class PCanSandbox {
     private static final Logging log = getLogging(PCanSandbox.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        PCanIoStream tsStream = PCanIoStream.getPCANIoStream();
+        AbstractIoStream tsStream = PCanIoStream.createStream();
         if (tsStream == null)
-            throw new IOException("No PCAN");
+            throw new IOException("Error creating PCAN stream");
 
-/*
+
         for (int i = 0; i < 17; i++) {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Got " + i + " " + signature + " signature via PCAN");
@@ -32,7 +34,6 @@ public class PCanSandbox {
         log.info("****************************************");
         log.info("*********  PCAN LOOKS GREAT  ***********");
         log.info("****************************************");
-*/
         LinkManager linkManager = new LinkManager();
 /*
         for (int i = 0; i < 4; i++) {
@@ -41,19 +42,19 @@ public class PCanSandbox {
 */
 
         BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
-        linkManager.submit(new Runnable() {
-            @Override
-            public void run() {
-                boolean response = bp.requestOutputChannels();
-                log.info("requestOutputChannels " + response);
-            }
+        linkManager.submit(() -> {
+            boolean response = bp.requestOutputChannels();
+            log.info("requestOutputChannels " + response);
         });
 
+        long start = System.currentTimeMillis();
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
-        log.info("Got ConfigurationImage " + ci);
+        log.info("Got ConfigurationImage " + ci + " in " + (System.currentTimeMillis() - start) + "ms");
 
-//        System.out.println("We are done");
-//        System.exit(0);
+        Thread.sleep(5 * SECOND);
+
+        System.out.println("We are done");
+        System.exit(0);
     }
 }
 

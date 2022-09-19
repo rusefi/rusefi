@@ -35,40 +35,19 @@ uint8_t* getWorkingPageAddr();
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-
-#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
-
-/**
- * handle non CRC wrapped command
- */
-bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
-
-/**
- * this command is part of protocol initialization
- */
-void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
-
 void updateTunerStudioState();
-void printTsStats(void);
+
 void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
 
-#if defined __GNUC__
-// GCC
-#define pre_packed
-#define post_packed __attribute__((packed))
-#else
-// IAR
-#define pre_packed __packed
-#define post_packed
-#endif
-
-typedef pre_packed struct
-post_packed {
+typedef struct {
 	short int offset;
 	short int count;
 } TunerStudioWriteChunkRequest;
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
 
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
@@ -81,9 +60,8 @@ public:
 	virtual TsChannelBase* setupChannel() = 0;
 
 	void ThreadTask() override;
+
 };
+#endif
 
 #endif /* EFI_TUNER_STUDIO */
-
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content);
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode);

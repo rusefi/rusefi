@@ -33,10 +33,9 @@ public class TcpIoStream extends AbstractIoStream {
         if (socket == null)
             throw new NullPointerException("socket");
         this.socket = socket;
-        InputStream input = new BufferedInputStream(socket.getInputStream());
-        this.output = new BufferedOutputStream(socket.getOutputStream());
-        this.input = input;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
+        input = new BufferedInputStream(socket.getInputStream());
+        output = new BufferedOutputStream(socket.getOutputStream());
+        dataBuffer = createDataBuffer(loggingPrefix);
     }
 
     @NotNull

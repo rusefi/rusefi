@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #else
 // IAR
-typedef unsigned int time_t;
+using time_t = uint32_t;
 #endif
 
 #include "rusefi_generated.h"
@@ -24,7 +24,7 @@ typedef unsigned int time_t;
 #include "firing_order.h"
 
 #if __cplusplus
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #endif
 
 #define DEFAULT_FUEL_LOAD_COUNT 16
@@ -35,17 +35,11 @@ typedef unsigned int time_t;
 
 // gasoline E0
 #define STOICH_RATIO				14.7f
+#define CONST_PI           3.14159265358979323846
+
 
 // time in seconds
-typedef time_t efitimesec_t;
-
-/**
- * integer time in milliseconds (1/1_000 of a second)
- * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 46 days.
- * Please restart your ECU every 46 days? :)
- * See getTimeNowUs()
- */
-typedef uint32_t efitimems_t;
+using efitimesec_t = time_t;
 
 /**
  * We use a signed type here so that subtraction result is a proper negative value.
@@ -56,61 +50,71 @@ typedef uint32_t efitimems_t;
  * See US2NT
  * See MS2US
  */
-typedef int64_t efitime_t;
+
+/**
+ * platform-dependent tick since boot
+ * in case of stm32f4 that's 32-bit timer ticks (SCHEDULER_TIMER_DEVICE == TIM5) extended to 64 bits
+ */
+using efitick_t = int64_t;
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot
  */
-typedef efitime_t efitimeus_t;
+using efitimeus_t = int64_t;
 
 /**
  * 64 bit time in milliseconds (1/1_000 of a second), since boot
  */
-typedef efitime_t efitimems64_t;
-
+using efitimems64_t = int64_t;
 
 /**
- * platform-dependent tick since boot
- * in case of stm32f4 that's a CPU tick
+ * integer time in milliseconds (1/1_000 of a second)
+ * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
+ * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
+ * See getTimeNowUs()
  */
-typedef efitime_t efitick_t;
+using efitimems_t = uint32_t;
 
-typedef float angle_t;
+using angle_t = float;
 
 // mass in grams
-typedef float mass_t;
+using mass_t = float;
 
 // temperature, in Celsius
-typedef float temperature_t;
-typedef float floatms_t;
-typedef float floatus_t;
+using temperature_t = float;
+using floatms_t = float;
+using floatus_t = float;
 
 /**
  * numeric value from 0 to 100
  */
-typedef float percent_t;
+using percent_t = float;
 
 typedef void (*Void)(void);
 
-typedef char lua_script_t[LUA_SCRIPT_SIZE];
+using lua_script_t = char[LUA_SCRIPT_SIZE];
 
-typedef char error_message_t[ERROR_BUFFER_SIZE];
+using error_message_t = char[ERROR_BUFFER_SIZE];
 
-typedef char vehicle_info_t[VEHICLE_INFO_SIZE];
+using vehicle_info_t = char[VEHICLE_INFO_SIZE];
 
-typedef char gppwm_note_t[GPPWM_NOTE_SIZE];
+using vin_number_t = char[VIN_NUMBER_SIZE];
 
-typedef char le_formula_t[LE_COMMAND_LENGTH];
+using gppwm_note_t = char[GPPWM_NOTE_SIZE];
 
-typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
+using le_formula_t = char[LE_COMMAND_LENGTH];
 
+using brain_pin_e = Gpio;
 
-typedef int16_t pwm_freq_t;
+using egt_cs_array_t = brain_pin_e[EGT_CHANNEL_COUNT];
 
-typedef float script_setting_t;
+using pwm_freq_t = int16_t;
 
-typedef brain_pin_e brain_input_pin_e;
-typedef brain_pin_e switch_input_pin_e;
+using script_setting_t = float;
+
+using brain_input_pin_e = brain_pin_e;
+using switch_input_pin_e = brain_pin_e;
+using output_pin_e = brain_pin_e;
 
 typedef void (*VoidPtr)(void*);
 
@@ -118,6 +122,8 @@ typedef void (*VoidInt)(int);
 typedef void (*VoidIntVoidPtr)(int, void*);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
+typedef void (*VoidFloatFloatFloat)(float, float, float);
+typedef void (*VoidFloatFloatFloatFloatFloat)(float, float, float, float, float);
 typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
 typedef void (*VoidIntIntVoidPtr)(int, int, void*);

@@ -8,19 +8,15 @@
 
 #pragma once
 
-#include "globalaccess.h"
 #include "scheduler.h"
 #include "stored_value_sensor.h"
 #include "timer.h"
+#include "rpm_calculator_api.h"
+#include "trigger_decoder.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000
-
-#ifndef RPM_LOW_THRESHOLD
-// no idea what is the best value, 25 is as good as any other guess
-#define RPM_LOW_THRESHOLD 25
-#endif
 
 typedef enum {
 	/**
@@ -42,12 +38,14 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
-class RpmCalculator : public StoredValueSensor {
+/**
+ * Most consumers should access value via Sensor framework by SensorType::Rpm key
+ */
+class RpmCalculator : public StoredValueSensor, public EngineRotationState {
 public:
-#if !EFI_PROD_CODE
-	int mockRpm;
-#endif /* EFI_PROD_CODE */
 	RpmCalculator();
+
+	operation_mode_e getOperationMode() const override;
 
 	void onSlowCallback();
 
@@ -85,10 +83,11 @@ public:
 	void setStopSpinning();
 
 	/**
-	 * Just a getter for rpmValue
-	 * Also handles mockRpm if not EFI_PROD_CODE
+	 * Just a quick getter for rpmValue
+	 * Should be same exact value as Sensor::get(SensorType::Rpm).Value just quicker.
+	 * Open question if we have any cases where this opimization is needed.
 	 */
-	int getRpm() const;
+	float getCachedRpm() const;
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -107,18 +106,23 @@ public:
 	 */
 	float getRpmAcceleration() const;
 
-	// Get elapsed time (seconds) since the engine transitioned to the running state.
-	float getTimeSinceEngineStart(efitick_t nowNt) const;
+	// Get elapsed time since the engine transitioned to the running state.
+	float getSecondsSinceEngineStart(efitick_t nowNt) const;
 
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
 	int previousRpmValue = 0;
+
 	/**
 	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
+
+	floatus_t getOneDegreeUs() override {
+		return oneDegreeUs;
+	}
 
 	Timer lastTdcTimer;
 
@@ -131,10 +135,11 @@ protected:
 
 private:
 	/**
-	 * Sometimes we cannot afford to call isRunning() and the value is good enough
-	 * Zero if engine is not running
+	 * At this point this value is same exact value as in private m_value variable
+	 * At this point all this is performance optimization?
+	 * Open question is when do we need it for performance reasons.
 	 */
-	 int rpmValue = 0;
+	 float cachedRpmValue = 0;
 
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
@@ -162,25 +167,23 @@ private:
 	Timer engineStartTimer;
 };
 
-// Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( engine->rpmCalculator.getRpm() )
-
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp);
+		uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 /**
  * @brief   Initialize RPM calculator
  */
 void initRpmCalculator();
+operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { if (engine->isEngineChartEnabled) { waveChart.addEvent3((name), (msg)); } }
+#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

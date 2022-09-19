@@ -31,7 +31,7 @@ pins:
     type: av
 
   - pin: 5
-    id: GPIOH_7
+    id: H7
     class: outputs
     function: Self Shutdown
     ts_name: D05 - Self Shutdown

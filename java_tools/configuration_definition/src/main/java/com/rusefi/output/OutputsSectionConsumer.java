@@ -4,32 +4,34 @@ import com.rusefi.ReaderState;
 
 import java.io.*;
 
-public class OutputsSectionConsumer extends AbstractConfigurationConsumer {
+/**
+ * TODO: We have to move either forward or backwards with newparse #4441
+ * [OutputChannels]
+ */
+public class OutputsSectionConsumer implements ConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
-    private final ReaderState state;
-    private final CharArrayWriter tsWriter = new CharArrayWriter();
+    private int sensorTsPosition;
 
-    public OutputsSectionConsumer(String tsOutputsSectionFileName, ReaderState state) {
+    public OutputsSectionConsumer(String tsOutputsSectionFileName) {
         this.tsOutputsSectionFileName = tsOutputsSectionFileName;
-        tsOutput = new TsOutput(state, false);
-        this.state = state;
+        tsOutput = new TsOutput(false, false);
     }
 
-    public CharArrayWriter getTsWriter() {
-        return tsWriter;
+    public String getContent() {
+        return tsOutput.getContent();
     }
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
-        if (state.stack.isEmpty()) {
-            tsOutput.writeTunerStudio(structure, "", tsWriter, 0);
+        sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition);
 
+        if (readerState.stack.isEmpty()) {
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
-                fos.write(tsWriter.toCharArray());
+                fos.write(tsOutput.getContent());
                 fos.close();
             }
         }

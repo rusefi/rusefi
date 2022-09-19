@@ -22,8 +22,6 @@ static volatile size_t sampleCount = 0;
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
 static void completionCallback(ADCDriver* adcp) {
-	palClearPad(GPIOD, 2);
-
 	if (adcp->state == ADC_COMPLETE) {
 		knockNeedsProcess = true;
 
@@ -152,7 +150,7 @@ void initSoftwareKnock() {
 #if KNOCK_HAS_CH2		
 		efiSetPadMode("knock ch2", KNOCK_PIN_CH2, PAL_MODE_INPUT_ANALOG);
 #endif
-		kt.Start();
+		kt.start();
 	}
 }
 
@@ -201,7 +199,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->knockController.onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
+	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

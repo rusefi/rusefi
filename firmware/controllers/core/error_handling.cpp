@@ -6,7 +6,8 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
+#include "backup_ram.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -22,29 +23,68 @@ bool hasFirmwareErrorFlag = false;
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-const char* getFirmwareError(void) {
+const char* getCriticalErrorMessage(void) {
 	return criticalErrorMessageBuffer;
 }
 
 #if EFI_PROD_CODE
+void checkLastBootError() {
+	auto sramState = getBackupSram();
+	
+	switch (sramState->Cookie) {
+	case ErrorCookie::FirmwareError:
+		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
+		break;
+	case ErrorCookie::HardFault: {
+		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+
+		// Print out the context as a sequence of uintptr
+		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);
+		for (size_t i = 0; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
+			efiPrintf("Fault ctx %d: %x", i, data[i]);
+		}
+
+		break;
+	}
+	default:
+		// No cookie stored or invalid cookie (ie, backup RAM contains random garbage)
+		break;
+	}
+
+	// Reset cookie so we don't print it again.
+	sramState->Cookie = ErrorCookie::None;
+
+	if (sramState->BootCountCookie != 0xdeadbeef) {
+		sramState->BootCountCookie = 0xdeadbeef;
+		sramState->BootCount = 0;
+	}
+
+	efiPrintf("Power cycle count: %d", sramState->BootCount);
+	sramState->BootCount++;
+}
+
+void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
+	auto sramState = getBackupSram();
+	sramState->Cookie = ErrorCookie::HardFault;
+	sramState->FaultType = type;
+	sramState->FaultAddress = faultAddress;
+	sramState->Csfr = csfr;
+	memcpy(&sramState->FaultCtx, ctx, sizeof(port_extctx));
+}
 
 extern ioportid_t criticalErrorLedPort;
 extern ioportmask_t criticalErrorLedPin;
 extern uint8_t criticalErrorLedState;
-
-/**
- * low-level function is used here to reduce stack usage
- */
-
-#define ON_CRITICAL_ERROR() \
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
-		turnAllPinsOff(); \
-		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+#if EFI_PROD_CODE
+	// Attempt to break in to the debugger, if attached
+	__asm volatile("BKPT #0\n");
+#endif
+
 	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
@@ -53,12 +93,10 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	ch.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
-#if EFI_PROD_CODE
-	ON_CRITICAL_ERROR();
-#else
+#if !EFI_PROD_CODE
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
-#endif
+#else // EFI_PROD_CODE
 
 #if EFI_HD44780_LCD
 	lcdShowPanicMessage((char *) msg);
@@ -66,20 +104,25 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 	firmwareError(OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
 
-	// Force unlock, since we may be throwing-under-lock
-	chSysUnconditionalUnlock();
-
-	// there was a port_disable in chSysHalt, reenable interrupts so USB works
-	port_enable();
-
 	// If on the main thread, longjmp back to the init process so we can keep USB alive
 	if (chThdGetSelfX()->threadId == 0) {
-		void onAssertionFailure();
+		// Force unlock, since we may be throwing-under-lock
+		chSysUnconditionalUnlock();
+
+		// there was a port_disable in chSysHalt, reenable interrupts so USB works
+		port_enable();
+
+		__NO_RETURN void onAssertionFailure();
 		onAssertionFailure();
 	} else {
-		// Not the main thread, simply try to terminate ourselves and let other threads continue living (so the user can diagnose, etc)
-		chThdTerminate(chThdGetSelfX());
+		// Not the main thread.
+		// All hope is now lost.
+
+		// Reboot!
+		NVIC_SystemReset();
 	}
+
+#endif // EFI_PROD_CODE
 }
 
 #else
@@ -101,13 +144,12 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	engine->engineState.warnings.addWarningCode(code);
+	// we just had this same warning, let's not spam
+	if (engine->engineState.warnings.isWarningNow(code) || !warningEnabled) {
+		return true;
+	}
 
-	// todo: move this logic into WarningCodeState?
-	efitimesec_t now = getTimeNowSeconds();
-	if (engine->engineState.warnings.isWarningNow(now, false) || !warningEnabled)
-		return true; // we just had another warning, let's not spam
-	engine->engineState.warnings.timeOfPreviousWarning = now;
+	engine->engineState.warnings.addWarningCode(code);
 
 	va_list ap;
 	va_start(ap, fmt);
@@ -201,8 +243,10 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 #endif
-	ON_CRITICAL_ERROR()
-	;
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState);
+	turnAllPinsOff();
+	enginePins.communicationLedPin.setValue(1);
+
 	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {
 		/**
@@ -218,14 +262,17 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 		va_end(ap);
 	}
 
-	int size = strlen((char*)criticalErrorMessageBuffer);
+	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), " %d@%s", getRusEfiVersion(), FIRMWARE_ID);
 
-	if (size + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
-		strcpy((char*)(criticalErrorMessageBuffer) + size, versionBuffer);
+	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
+		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
 
+	auto sramState = getBackupSram();
+	strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
+	sramState->Cookie = ErrorCookie::FirmwareError;
 #else
 
 	char errorBuffer[200];
@@ -242,4 +289,3 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 #endif
 }
-

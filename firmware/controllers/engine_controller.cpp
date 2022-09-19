@@ -23,16 +23,14 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "trigger_central.h"
-#include "fsio_core.h"
-#include "fsio_impl.h"
+#include "script_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"
-#include "os_util.h"
 #include "electronic_throttle.h"
 #include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
@@ -147,7 +145,6 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 	}
 
 	void PeriodicTask() override {
-		counter++;
 #if EFI_SHAFT_POSITION_INPUT
 		bool is_running = engine->rpmCalculator.isRunning();
 #else
@@ -156,32 +153,15 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 
 		if (is_running) {
 			// blink in running mode
-			enginePins.runningLedPin.setValue(counter % 2);
+			enginePins.runningLedPin.toggle();
 		} else {
 			int is_cranking = engine->rpmCalculator.isCranking();
 			enginePins.runningLedPin.setValue(is_cranking);
 		}
 	}
-private:
-	int counter = 0;
 };
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
-
-/**
- * 32 bit return type overflows in 23 days. I think we do not expect rusEFI to run for 23 days straight days any time soon?
- */
-efitimems_t currentTimeMillis(void) {
-	return US2MS(getTimeNowUs());
-}
-
-/**
- * Integer number of seconds since ECU boot.
- * 31,710 years - would not overflow during our life span.
- */
-efitimesec_t getTimeNowSeconds(void) {
-	return getTimeNowUs() / US_PER_SECOND;
-}
 
 static void resetAccel() {
 	engine->tpsAccelEnrichment.resetAE();
@@ -200,7 +180,7 @@ static void doPeriodicSlowCallback() {
 
 	engine->rpmCalculator.onSlowCallback();
 
-	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
+	if (engine->triggerCentral.directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
@@ -225,14 +205,22 @@ static void doPeriodicSlowCallback() {
 	engine->periodicSlowCallback();
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
-	if (engineConfiguration->tcuEnabled) {
+#if EFI_TCU
+	if (engineConfiguration->tcuEnabled && engineConfiguration->gearControllerMode != GearControllerMode::None) {
+		if (engine->gearController == NULL) {
+			initGearController();
+		} else if (engine->gearController->getMode() != engineConfiguration->gearControllerMode) {
+			initGearController();
+		}
 		engine->gearController->update();
 	}
+#endif
+
 }
 
 void initPeriodicEvents() {
-	slowController.Start();
-	fastController.Start();
+	slowController.start();
+	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
@@ -264,7 +252,7 @@ static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel,
 	}
 
 	float voltage = adcVoltage * dividerCoeff;
-	efiPrintf("%s ADC%d %s %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdc_channel_mode_e(getAdcMode(hwChannel)),
+	efiPrintf("%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
 			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
 #endif /* HAL_USE_ADC */
 }
@@ -337,10 +325,6 @@ static void getByte(int offset) {
 	efiPrintf("byte%s%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, value);
 }
 
-static void onConfigurationChanged() {
-	incrementGlobalConfigurationVersion();
-}
-
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
 	if (absI(offset) == absI(ERROR_CODE)) {
@@ -366,7 +350,7 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 	 * this response is part of rusEfi console API
 	 */
 	efiPrintf("bit%s%d/%d is %d", CONSOLE_DATA_PROTOCOL_TAG, offset, bit, value);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setShort(const int offset, const int value) {
@@ -375,7 +359,7 @@ static void setShort(const int offset, const int value) {
 	uint16_t *ptr = (uint16_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint16_t) value;
 	getShort(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void setByte(const int offset, const int value) {
@@ -384,7 +368,7 @@ static void setByte(const int offset, const int value) {
 	uint8_t *ptr = (uint8_t *) (&((char *) engineConfiguration)[offset]);
 	*ptr = (uint8_t) value;
 	getByte(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getBit(int offset, int bit) {
@@ -415,7 +399,7 @@ static void setInt(const int offset, const int value) {
 	int *ptr = (int *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getInt(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void getFloat(int offset) {
@@ -445,7 +429,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	float *ptr = (float *) (&((char *) engineConfiguration)[offset]);
 	*ptr = value;
 	getFloat(offset);
-	onConfigurationChanged();
+	incrementGlobalConfigurationVersion();
 }
 
 static void initConfigActions() {
@@ -480,8 +464,10 @@ void commonInitEngineController() {
 	 * This has to go after 'enginePins.startPins()' in order to
 	 * properly detect un-assigned output pins
 	 */
-	prepareShapes();
-#endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
+	prepareOutputSignals();
+
+	engine->injectionEvents.addFuelEvents();
+#endif // EFI_ENGINE_CONTROL
 
 #if EFI_SENSOR_CHART
 	initSensorChart();
@@ -505,9 +491,7 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-#if EFI_FSIO
-	initFsioImpl();
-#endif /* EFI_FSIO */
+	initScriptImpl();
 
 	initGpPwm();
 
@@ -515,7 +499,9 @@ void commonInitEngineController() {
 	startIdleThread();
 #endif /* EFI_IDLE_CONTROL */
 
-	initButtonShift();
+#if EFI_TCU
+	initGearController();
+#endif
 
 	initButtonDebounce();
 	initStartStopButton();
@@ -549,10 +535,6 @@ void commonInitEngineController() {
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (engineConfiguration->isEngineControlEnabled) {
 		initAuxValves();
-		/**
-		 * This method adds trigger listener which actually schedules ignition
-		 */
-		initMainEventListener();
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -586,58 +568,58 @@ bool validateConfig() {
 
 	// Ignition
 	{
-		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
+		ensureArrayIsAscending("Dwell RPM", config->sparkDwellRpmBins);
 
 		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
 		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
 
-		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
+		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
 
 		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
 		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
 	}
 
-	if (config->mapEstimateTpsBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
-	}
+	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);
+	ensureArrayIsAscendingOrDefault("Map estimate RPM", config->mapEstimateRpmBins);
 
-	if (config->mapEstimateRpmBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
-	}
+	ensureArrayIsAscendingOrDefault("Script Curve 1", config->scriptCurve1Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 2", config->scriptCurve2Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 3", config->scriptCurve3Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 4", config->scriptCurve4Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 5", config->scriptCurve5Bins);
+	ensureArrayIsAscendingOrDefault("Script Curve 6", config->scriptCurve6Bins);
+
+// todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
 	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
 
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
 	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
-	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
+	ensureArrayIsAscending("Cranking TPS", config->crankingTpsBins);
 
 	// Idle tables
-	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
+	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
-	}
-	if (config->idleVeBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE", config->idleVeBins);
-	}
-	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
-	}
+	ensureArrayIsAscendingOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
+	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
+	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
+	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);
 
 	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
 		auto& cfg = engineConfiguration->vrThreshold[index];
 
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
-		ensureArrayIsAscending("VR values", cfg.values);
 	}
 
+#if EFI_BOOST_CONTROL
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+#endif // EFI_BOOST_CONTROL
 
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
@@ -645,19 +627,20 @@ bool validateConfig() {
 
 	if (engineConfiguration->hpfpCamLobes > 0) {
 		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP deadtime", engineConfiguration->hpfpDeadtimeVoltsBins);
 		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
 		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
 		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
 	}
 
 	// VVT
-	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[1] != Gpio::Unassigned) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}
@@ -694,7 +677,7 @@ void initEngineContoller() {
 		return;
 	}
 
-	engineStateBlinkingTask.Start();
+	engineStateBlinkingTask.start();
 
 	initVrPwm();
 

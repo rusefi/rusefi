@@ -22,19 +22,20 @@
 #include "pch.h"
 
 #if HAL_USE_ADC
-#include "os_access.h"
+
 
 #include "adc_subscription.h"
 #include "AdcConfiguration.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
+#include "protected_gpio.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #ifndef ADC_BUF_DEPTH_FAST
 #define ADC_BUF_DEPTH_FAST      4
 #endif
 
-static NO_CACHE adcsample_t slowAdcSamples[ADC_MAX_CHANNELS_COUNT];
+static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
@@ -185,11 +186,13 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		warning(CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
 		return -1;
 	}
-#if EFI_ENABLE_MOCK_ADC
-	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
-		return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
 
-#endif /* EFI_ENABLE_MOCK_ADC */
+#if USE_ADC3_VBATT_HACK
+	if (hwChannel == EFI_ADC_7) {
+		extern adcsample_t vbattSampleProteus;
+		return vbattSampleProteus;
+	}
+#endif // USE_ADC3_VBATT_HACK
 
 #if EFI_USE_FAST_ADC
 	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
@@ -385,6 +388,8 @@ public:
 			slowAdcCounter++;
 
 			AdcSubscription::UpdateSubscribers(nowNt);
+
+			protectedGpio_check(nowNt);
 		}
 	}
 };
@@ -455,7 +460,7 @@ void initAdcInputs() {
 	portInitAdc();
 
 	// Start the slow ADC thread
-	slowAdcController.Start();
+	slowAdcController.start();
 
 #if EFI_USE_FAST_ADC
 	fastAdc.init();

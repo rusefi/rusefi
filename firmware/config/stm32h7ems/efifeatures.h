@@ -15,17 +15,19 @@
 #undef BOARD_TLE6240_COUNT
 #undef BOARD_MC33972_COUNT
 #undef BOARD_TLE8888_COUNT
+#undef BOARD_L9779_COUNT
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_L9779_COUNT 0
 
 #undef EFI_MAX_31855
 #define EFI_MAX_31855 FALSE
 
-#undef BOARD_EXT_GPIOCHIPS
-#define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT + BOARD_DRV8860_COUNT + BOARD_MC33810_COUNT)
-
 #define EFI_USE_COMPRESSED_INI_MSD
+
+#undef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD TRUE
 
 // H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
@@ -36,16 +38,5 @@
 // H7 runs faster "slow" ADC to make up for reduced oversampling
 #define SLOW_ADC_RATE 1000
 
-#undef EFI_ICU_INPUTS
-#define EFI_ICU_INPUTS FALSE
-
-#undef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL TRUE
-
-#undef EFI_LOGIC_ANALYZER
-#define EFI_LOGIC_ANALYZER FALSE
-
 #undef LUA_USER_HEAP
 #define LUA_USER_HEAP 100000
-#undef LUA_SYSTEM_HEAP
-#define LUA_SYSTEM_HEAP 100000

@@ -62,7 +62,8 @@ echo Done installing ST-Link silently
 pwd
 
 cd DFU_Driver
-STM32Bootloader.bat
+echo "Now installing stm32bootloader driver"
+install_elevated_STM32Bootloader.bat
 cd ..
 
 exit

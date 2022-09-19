@@ -5,6 +5,9 @@ int retardThresholdRpm
 bit combinedConditions
 bit launchActivatePinState
 bit isLaunchCondition
+bit isSwitchActivated
+bit isClutchActivated
+bit isValidInputPin
 
 bit     activateSwitchCondition;
 bit     rpmCondition;

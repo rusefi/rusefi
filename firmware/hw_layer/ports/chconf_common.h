@@ -46,8 +46,6 @@ extern "C" {
 #endif
   void boardInit(void);
   void setPinConfigurationOverrides(void);
-  void setSerialConfigurationOverrides(void);
-  void setSdCardConfigurationOverrides(void);
   void setAdcChannelOverrides(void);
 #ifdef __cplusplus
 }

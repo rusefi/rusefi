@@ -1,10 +1,9 @@
 package com.rusefi.newparse.layout;
 
 import java.util.Stack;
-import java.util.stream.Collectors;
 
 public class StructNamePrefixer {
-    private Stack<String> stack = new Stack<>();
+    private final Stack<String> stack = new Stack<>();
     private int idx = -1;
 
     public void pop() {
@@ -36,7 +35,7 @@ public class StructNamePrefixer {
 
     String get(String name) {
         // stack has no prefixes, just return the plain name (no join necessary)
-        name = stack.stream().collect(Collectors.joining()) + name;
+        name = String.join("", stack) + name;
 
         // Append the array index if necessary (for iterated arrays)
         if (this.idx != -1) {

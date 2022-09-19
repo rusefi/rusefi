@@ -10,7 +10,6 @@
  */
 #pragma once
 
-#include "globalaccess.h"
 #include "io_pins.h"
 
 class ButtonDebounce {
@@ -29,7 +28,7 @@ private:
     efitick_t m_threshold;
     efitick_t timeLast;
     brain_pin_e *m_pin;
-    brain_pin_e active_pin = GPIO_UNASSIGNED;
+    brain_pin_e active_pin = Gpio::Unassigned;
     pin_input_mode_e *m_mode;
     pin_input_mode_e active_mode = PI_DEFAULT;
     bool storedValue = false;

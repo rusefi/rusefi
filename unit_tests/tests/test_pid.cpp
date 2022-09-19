@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#include "pid.h"
+#include "efi_pid.h"
 
 TEST(util, pid) {
 	pid_s pidS;

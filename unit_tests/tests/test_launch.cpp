@@ -7,7 +7,7 @@ TEST(LaunchControl, TpsCondition) {
 
 	LaunchControlBase dut;
 
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 
 	// Should return false with failed sensor
 	Sensor::resetMockValue(SensorType::DriverThrottleIntent);
@@ -63,7 +63,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//active by switch
 	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
-	engineConfiguration->launchActivatePin = GPIOG_1;
+	engineConfiguration->launchActivatePin = Gpio::G1;
 	setMockState(engineConfiguration->launchActivatePin, true);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
@@ -72,7 +72,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//by clutch
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->clutchDownPin = GPIOG_2;
+	engineConfiguration->clutchDownPin = Gpio::G2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
 	engine->updateSwitchInputs();
@@ -103,16 +103,16 @@ TEST(LaunchControl, CombinedCondition) {
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
 
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::Rpm,  1200);
 
     EXPECT_FALSE(dut.isLaunchConditionMet(1200));
 
-	engine->rpmCalculator.mockRpm = 3200;
+    Sensor::setMockValue(SensorType::Rpm,  3200);
 	EXPECT_TRUE(dut.isLaunchConditionMet(3200));
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
@@ -150,13 +150,13 @@ TEST(LaunchControl, CompleteRun) {
     engineConfiguration->launchSpeedThreshold = 30;
 
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 	engineConfiguration->launchControlEnabled = true;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::Rpm, 1200);
 
 	engine->launchController.update();
 
@@ -166,7 +166,7 @@ TEST(LaunchControl, CompleteRun) {
 	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 
-	engine->rpmCalculator.mockRpm = 3510;
+	Sensor::setMockValue(SensorType::Rpm, 3510);
 	//update condition check
 	engine->launchController.update();
 

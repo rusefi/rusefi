@@ -3,19 +3,19 @@
 pins:
   - pin: P66
     # LOW3 IO1
-    id: GPIOD_3
+    id: D3
     class: outputs
     ts_name: Aux P66
 
   - pin: P67
     # LOW4 IO2
-    id: GPIOA_9
+    id: A9
     class: outputs
     ts_name: Aux P67
 
   - pin: P68
     # LOW6 IO4
-    id: GPIOG_5
+    id: G5
     class: outputs
     ts_name: Aux P68
 
@@ -45,7 +45,11 @@ pins:
     function: 12v perm
 
   - pin: K10
-    function: presure sensor
+    function: K10 presure sensor
+    # IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: K10 Sensor
 
   - pin: K11
     function: Analog Ground
@@ -62,7 +66,7 @@ pins:
 
   - pin: K15
 # cam2  IN_AUX4
-    id: [GPIOA_7]
+    id: [A7]
     function: Cam Sensor
     class: [event_inputs]
     ts_name: Cam - K15
@@ -74,39 +78,43 @@ pins:
   - pin: K17
     function: Crank Sensor
     # IN_CRANK AIN24 A24
-    id: [GPIOB_1]
+    id: [B1]
     class: [event_inputs]
     ts_name: Crank - K17
 
   - pin: K21
-    ts_name: Ambient Temperature
+    # H144_IN_O2S
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: K21 Ambient Temperature
+    function: Ambient Temperature
 
   - pin: K22
     ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: INJ_1 k25
     function: Injector 1
     type: inj
 
   - pin: K26
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: INJ_2 k26
     function: Injector 2
     type: inj
 
   - pin: K27
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: INJ_3 k27
     function: Injector 3
     type: inj
 
   - pin: K28
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: INJ_4 k28
     function: Injector 4
@@ -158,7 +166,8 @@ pins:
     function: Analog Ground
 
   - pin: K40
-    id: GPIOF_11
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: K40 VSS
     function: Vehicle Speed Sensor
@@ -172,7 +181,7 @@ pins:
 
   - pin: K47
     # H144_LS_7
-    id: GPIOF_13
+    id: F13
     class: outputs
     ts_name: K48 BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
@@ -189,8 +198,9 @@ pins:
 
   - pin: K58
 # IN_O2S2 AIN12 PA1 EFI_ADC_1
+    id: EFI_ADC_1
     class: analog_inputs
-    ts_name: Oil Temp
+    ts_name: K58 Oil Temp
     function: Oil Temperature
 
   - pin: K59
@@ -205,7 +215,7 @@ pins:
 
   - pin: K62
 # cam1 IN_CAM
-    id: [GPIOA_6]
+    id: [A6]
     function: Cam Sensor
     class: [event_inputs]
     ts_name: Cam - K62
@@ -216,7 +226,7 @@ pins:
 
   - pin: K64
 # H144_OUT_IO3
-    id: GPIOG_14
+    id: G14
     class: outputs
     ts_name: Main Relay K64
     function: Main relay control
@@ -224,21 +234,21 @@ pins:
 
   - pin: K65
     # H144_OUT_IO7
-    id: GPIOG_3
+    id: G3
     class: outputs
     ts_name: Fan Relay Low
     function: Fan relay low
 
   - pin: K65
     # H144_LS_5
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: VVT1
     function: VVT1
 
   - pin: K68
     # H144_LS_6
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: VVT2
     function: VVT2
@@ -246,7 +256,7 @@ pins:
 
   - pin: K70
 # H144_OUT_IO9
-    id: GPIOG_13
+    id: G13
     class: outputs
     ts_name: Fuel Pump K70
     function: Fuel Pump Relay
@@ -289,14 +299,14 @@ pins:
 
   - pin: K86
     # H144_OUT_PWM7
-    id: GPIOD_15
+    id: D15
     class: outputs
     ts_name: Tacho
     function: Tachometer
 
   - pin: K87
     # H144_OUT_IO10
-    id: GPIOG_12
+    id: G12
     class: outputs
     ts_name: K87 AC Relay
     function: A/C Relay
@@ -304,20 +314,20 @@ pins:
 
   - pin: K88
     # H144_OUT_IO8
-    id: GPIOG_4
+    id: G4
     class: outputs
     ts_name: Fan Relay HI
     function: Fan relay high
 
   - pin: K92
     # H144_OUT_PWM8
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: MIL
     function: Check Engine Light
 
   - pin: A1
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: Coil 4
     function: Coil 4
@@ -330,7 +340,7 @@ pins:
     function: Ground
 
   - pin: A16
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: Coil 2
     function: Coil 2
@@ -338,14 +348,14 @@ pins:
 
   - pin: A29
     # H144_IN_RES3
-    id: GPIOF_8
+    id: F8
     class: switch_inputs
     ts_name: A29 Brake Input
     function: Brake Switch
 
 
   - pin: A31
-    id: GPIOC_13
+    id: C13
     class: outputs
     ts_name: Coil 1
     function: Coil 1
@@ -353,7 +363,7 @@ pins:
 
   - pin: A43
 # H144_IN_RES2
-    id: GPIOF_10
+    id: F10
     class: switch_inputs
     ts_name: A43 Clutch Input
     function: Clutch Input
@@ -362,7 +372,7 @@ pins:
     function: BK2 DC Wastegate Pos
 
   - pin: A46
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: Coil 3
     function: Coil 3
@@ -370,7 +380,7 @@ pins:
 
   - pin: A57
     # H144_IN_RES1
-    id: GPIOF_9
+    id: F9
     class: switch_inputs
     ts_name: A57 AC Request
     function: AC Request Switch

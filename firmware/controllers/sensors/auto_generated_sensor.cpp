@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Wed Oct 20 21:25:07 EDT 2021
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Sep 19 16:21:55 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -13,22 +13,30 @@ case SensorType::AcceleratorPedalPrimary:
   return "AcceleratorPedalPrimary";
 case SensorType::AcceleratorPedalSecondary:
   return "AcceleratorPedalSecondary";
-case SensorType::Aux1:
-  return "Aux1";
-case SensorType::Aux2:
-  return "Aux2";
-case SensorType::Aux3:
-  return "Aux3";
-case SensorType::Aux4:
-  return "Aux4";
-case SensorType::Aux5:
-  return "Aux5";
-case SensorType::Aux6:
-  return "Aux6";
-case SensorType::Aux7:
-  return "Aux7";
-case SensorType::Aux8:
-  return "Aux8";
+case SensorType::AuxAnalog1:
+  return "AuxAnalog1";
+case SensorType::AuxAnalog2:
+  return "AuxAnalog2";
+case SensorType::AuxAnalog3:
+  return "AuxAnalog3";
+case SensorType::AuxAnalog4:
+  return "AuxAnalog4";
+case SensorType::AuxAnalog5:
+  return "AuxAnalog5";
+case SensorType::AuxAnalog6:
+  return "AuxAnalog6";
+case SensorType::AuxAnalog7:
+  return "AuxAnalog7";
+case SensorType::AuxAnalog8:
+  return "AuxAnalog8";
+case SensorType::AuxLinear1:
+  return "AuxLinear1";
+case SensorType::AuxLinear2:
+  return "AuxLinear2";
+case SensorType::AuxSpeed1:
+  return "AuxSpeed1";
+case SensorType::AuxSpeed2:
+  return "AuxSpeed2";
 case SensorType::AuxTemp1:
   return "AuxTemp1";
 case SensorType::AuxTemp2:
@@ -41,6 +49,10 @@ case SensorType::Clt:
   return "Clt";
 case SensorType::DriverThrottleIntent:
   return "DriverThrottleIntent";
+case SensorType::EGT1:
+  return "EGT1";
+case SensorType::EGT2:
+  return "EGT2";
 case SensorType::FuelEthanolPercent:
   return "FuelEthanolPercent";
 case SensorType::FuelLevel:
@@ -55,6 +67,8 @@ case SensorType::Iat:
   return "Iat";
 case SensorType::IdlePosition:
   return "IdlePosition";
+case SensorType::InputShaftSpeed:
+  return "InputShaftSpeed";
 case SensorType::Invalid:
   return "Invalid";
 case SensorType::Lambda1:

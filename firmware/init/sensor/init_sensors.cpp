@@ -33,7 +33,6 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 
 static void initOldAnalogInputs() {
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
-	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
 	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
@@ -41,14 +40,13 @@ static void initOldAnalogInputs() {
 
 static void deInitOldAnalogInputs() {
 	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
-	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
 	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
 	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
 void initNewSensors() {
-#if EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
 
@@ -63,6 +61,8 @@ void initNewSensors() {
 	initAuxSensors();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
+	initAuxSpeedSensors();
+	initInputShaftSpeedSensor();
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel();
@@ -85,7 +85,9 @@ void stopSensors() {
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
+	deinitAuxSpeedSensors();
 	deinitMap();
+	deinitInputShaftSpeedSensor();
 }
 
 void reconfigureSensors() {
@@ -97,6 +99,7 @@ void reconfigureSensors() {
 	initFlexSensor();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
+	initInputShaftSpeedSensor();
 
 	initOldAnalogInputs();
 }

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "global.h"
+#include "tunerstudio_outputs.h"
 
 class CdmState {
 public:

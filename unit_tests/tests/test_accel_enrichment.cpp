@@ -42,22 +42,29 @@ TEST(fuel, testTpsAccelEnrichmentMath) {
 TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	EngineTestHelper eth(FORD_ASPIRE_1996);
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelLookback = 2;
 
 	eth.setTriggerType(TT_ONE);
 
+
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	engine->periodicSlowCallback();
 	Sensor::setMockValue(SensorType::Tps1, 7);
+	engine->periodicSlowCallback();
 
 	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
-	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
+	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
 	int expectedInvocationCounter = 1;
 	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
 
 	Sensor::setMockValue(SensorType::Tps1, 70);
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
 
-	float expectedAEValue = 29.2;
+	float expectedAEValue = 7;
 	// it does not matter how many times we invoke 'getTpsEnrichment' - state does not change
 	for (int i = 0; i <20;i++) {
 		ASSERT_NEAR(expectedAEValue, engine->tpsAccelEnrichment.getTpsEnrichment(), EPS4D);
@@ -95,6 +102,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 
 	// setup
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelLookback = 2;
 
 	// fill tps2tps map (todo: there should be a better way?)
 	static const float tpsTpsConst = 1.0f;

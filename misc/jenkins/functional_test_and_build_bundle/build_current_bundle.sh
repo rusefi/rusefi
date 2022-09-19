@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # This script would compile firmware, dev console and win32 simulator into a single bundle file
-# This script depends on Cygwin tools: zip
+# This script depends on: zip
 
 SCRIPT_NAME="build_current_bundle"
 ROOT_FOLDER=$(pwd)
 echo "$SCRIPT_NAME Entering ROOT_FOLDER=$ROOT_FOLDER"
 
-echo "$SCRIPT_NAME.sh: Hello rusEfi build full bundle"
+echo "$SCRIPT_NAME.sh: Hello rusEFI build full bundle"
 date "+%a %D %T.%2S"
 
 export BUNDLE_NAME="default"

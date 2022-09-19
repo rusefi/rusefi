@@ -10,39 +10,36 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "pid.h"
 #include "engine_state_generated.h"
 
-struct LuaAdjustments {
-	float ignitionTimingAdd = 0;
-	float ignitionTimingMult = 1;
-	float fuelAdd = 0;
-	float fuelMult = 1;
-	float etbTargetPositionAdd = 0;
-	bool clutchUpState = false;
-	bool brakePedalState = false;
-};
-
-class EngineState : public engine_state2_s {
+class EngineState : public engine_state_s {
 public:
 	EngineState();
 	void periodicFastCallback();
 	void updateSlowSensors();
 	void updateTChargeK(int rpm, float tps);
 
+	/**
+	 * always 360 or 720, never zero
+	 */
+	angle_t engineCycle;
+
+	/**
+	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
+	 */
+	sensor_chart_e sensorChartMode = SC_OFF;
+
+	// Per-injection fuel mass, including TPS accel enrich
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
+
 	FuelConsumptionState fuelConsumption;
 
-	efitick_t crankingTime = 0;
-	efitick_t timeSinceCranking = 0;
+	Timer crankingTimer;
 
 	WarningCodeState warnings;
 
-	/**
-	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
-	 */
-	float airFlow = 0;
-
-	float knockThreshold = 0;
+	// Estimated airflow based on whatever airmass model is active
+	float airflowEstimate = 0;
 
 	float auxValveStart = 0;
 	float auxValveEnd = 0;
@@ -61,18 +58,10 @@ public:
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;
 
-	// fuel-related;
-	float fuelCutoffCorrection = 0;
-	efitick_t coastingFuelCutStartTime = 0;
-
 	efitick_t timeSinceLastTChargeK;
 
 	float currentVe = 0;
 	float currentVeLoad = 0;
-	float currentAfrLoad = 0;
-
-	float fuelingLoad = 0;
-	float ignitionLoad = 0;
 
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
@@ -84,16 +73,17 @@ public:
 	 */
 	floatms_t tpsAccelEnrich = 0;
 
-	angle_t injectionOffset = 0;
+	/**
+	 * Each individual fuel injection duration for current engine cycle, without wall wetting
+	 * including everything including injector lag, both cranking and running
+	 * @see getInjectionDuration()
+	 */
+	floatms_t injectionDuration = 0;
 
-#if EFI_ENABLE_MOCK_ADC
-	MockAdcState mockAdcState;
-#endif /* EFI_ENABLE_MOCK_ADC */
+	angle_t injectionOffset = 0;
 
 	multispark_state multispark;
 
-	float targetLambda = 0.0f;
-	float stoichiometricRatio = 0.0f;
-
-	LuaAdjustments luaAdjustments;
 };
+
+EngineState * getEngineState();

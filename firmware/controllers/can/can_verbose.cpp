@@ -9,7 +9,7 @@
 #include "pch.h"
 #if EFI_CAN_SUPPORT
 
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include "can_msg_tx.h"
 #include "can.h"
 #include "fuel_math.h"
@@ -36,7 +36,7 @@ static void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
 
-	msg.revLimit = GET_RPM() > engineConfiguration->rpmHardLimit;
+	msg.revLimit = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->rpmHardLimit;
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
@@ -49,11 +49,11 @@ struct Speeds {
 	scaled_channel<uint8_t, 2> injDuty;
 	scaled_channel<uint8_t, 2> coilDuty;
 	scaled_channel<uint8_t> vssKph;
-	uint8_t pad[1];
+	uint8_t EthanolPercent;
 };
 
 static void populateFrame(Speeds& msg) {
-	auto rpm = GET_RPM();
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 	msg.rpm = rpm;
 
 	auto timing = engine->engineState.timingAdvance[0];
@@ -63,6 +63,8 @@ static void populateFrame(Speeds& msg) {
 	msg.coilDuty = getCoilDutyCycle(rpm);
 
 	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+
+	msg.EthanolPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
 }
 
 struct PedalAndTps {
@@ -98,21 +100,26 @@ static void populateFrame(Sensors1& msg) {
 	msg.aux1 = Sensor::getOrZero(SensorType::AuxTemp1) + PACK_ADD_TEMPERATURE;
 	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
 
+#if	HAL_USE_ADC
 	msg.mcuTemp = getMCUInternalTemperature();
+#endif
+
 	msg.fuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
 
 struct Sensors2 {
-	scaled_afr afr;
+	scaled_afr afr; // deprecated
 	scaled_pressure oilPressure;
-	scaled_angle vvtPos;
+	scaled_angle vvtPos;	// deprecated
 	scaled_voltage vbatt;
 };
 
 static void populateFrame(Sensors2& msg) {
 	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
+#if EFI_SHAFT_POSITION_INPUT
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
+#endif // EFI_SHAFT_POSITION_INPUT
 	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
@@ -120,13 +127,14 @@ struct Fueling {
 	scaled_channel<uint16_t, 1000> cylAirmass;
 	scaled_channel<uint16_t, 100> estAirflow;
 	scaled_ms fuel_pulse;
-	uint16_t pad;
+	uint16_t knockCount;
 };
 
 static void populateFrame(Fueling& msg) {
-	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
-	msg.estAirflow = engine->engineState.airFlow;
-	msg.fuel_pulse = engine->actualLastInjection[0];
+	msg.cylAirmass = engine->fuelComputer->sdAirMassInOneCylinder;
+	msg.estAirflow = engine->engineState.airflowEstimate;
+	msg.fuel_pulse = (float)engine->outputChannels.actualLastInjection;
+	msg.knockCount = engine->module<KnockController>()->getKnockCount();
 }
 
 struct Fueling2 {
@@ -144,17 +152,57 @@ static void populateFrame(Fueling2& msg) {
 	}
 }
 
+struct Fueling3 {
+	scaled_channel<uint16_t, 10000> Lambda;
+	scaled_channel<uint16_t, 10000> Lambda2;
+	scaled_channel<int16_t, 30> FuelPressureLow;
+	scaled_channel<int16_t, 10> FuelPressureHigh;
+};
+
+static void populateFrame(Fueling3& msg) {
+	msg.Lambda = Sensor::getOrZero(SensorType::Lambda1);
+	msg.Lambda2 = Sensor::getOrZero(SensorType::Lambda2);
+	msg.FuelPressureLow = Sensor::getOrZero(SensorType::FuelPressureLow);
+	msg.FuelPressureHigh = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
+}
+
+struct Cams {
+	int8_t Bank1IntakeActual;
+	int8_t Bank1IntakeTarget;
+	int8_t Bank1ExhaustActual;
+	int8_t Bank1ExhaustTarget;
+	int8_t Bank2IntakeActual;
+	int8_t Bank2IntakeTarget;
+	int8_t Bank2ExhaustActual;
+	int8_t Bank2ExhaustTarget;
+};
+
+static void populateFrame(Cams& msg) {
+	msg.Bank1IntakeActual  = engine->triggerCentral.getVVTPosition(0, 0);
+	msg.Bank1ExhaustActual = engine->triggerCentral.getVVTPosition(0, 1);
+	msg.Bank2IntakeActual  = engine->triggerCentral.getVVTPosition(1, 0);
+	msg.Bank2ExhaustActual = engine->triggerCentral.getVVTPosition(1, 1);
+	
+	// TODO: maybe don't rely on outputChannels here
+	msg.Bank1IntakeTarget = engine->outputChannels.vvtTargets[0];
+	msg.Bank1ExhaustTarget = engine->outputChannels.vvtTargets[1];
+	msg.Bank2IntakeTarget = engine->outputChannels.vvtTargets[2];
+	msg.Bank2ExhaustTarget = engine->outputChannels.vvtTargets[3];
+}
+
 void sendCanVerbose() {
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
 
-	transmitStruct<Status>	  (base + 0, isExt);
-	transmitStruct<Speeds>	  (base + 1, isExt);
-	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET, isExt);
-	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET, isExt);
-	transmitStruct<Sensors2>	(base + 4, isExt);
-	transmitStruct<Fueling>	 (base + 5, isExt);
-	transmitStruct<Fueling2>	(base + 6, isExt);
+	transmitStruct<Status>	    (CanCategory::VERBOSE, base + 0, isExt);
+	transmitStruct<Speeds>	    (CanCategory::VERBOSE, base + 1, isExt);
+	transmitStruct<PedalAndTps> (CanCategory::VERBOSE, base + CAN_PEDAL_TPS_OFFSET, isExt);
+	transmitStruct<Sensors1>	(CanCategory::VERBOSE, base + CAN_SENSOR_1_OFFSET, isExt);
+	transmitStruct<Sensors2>	(CanCategory::VERBOSE, base + 4, isExt);
+	transmitStruct<Fueling>	    (CanCategory::VERBOSE, base + 5, isExt);
+	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt);
+	transmitStruct<Fueling3>	(CanCategory::VERBOSE, base + 7, isExt);
+	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt);
 }
 
 #endif // EFI_CAN_SUPPORT

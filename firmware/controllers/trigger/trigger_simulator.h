@@ -20,20 +20,19 @@ public:
 	uint32_t findTriggerSyncPoint(
 			TriggerWaveform& shape,
 			const TriggerConfiguration& triggerConfiguration,
-			TriggerState& state);
+			TriggerDecoderBase& state);
 
-	void assertSyncPositionAndSetDutyCycle(
-			const TriggerStateCallback triggerCycleCallback,
+	void assertSyncPosition(
 			const TriggerConfiguration& triggerConfiguration,
 			const uint32_t index,
-			TriggerState& state,
+			TriggerDecoderBase& state,
 			TriggerWaveform& shape
 			);
 
 	// send next event so that we can see how state reacts
-	void feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
+	void feedSimulatedEvent(
 			const TriggerConfiguration& triggerConfiguration,
-			TriggerState& state,
+			TriggerDecoderBase& state,
 			const TriggerWaveform& shape,
 			int i);
 };

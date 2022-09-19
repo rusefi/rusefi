@@ -19,6 +19,13 @@
 #include "stm32h7xx_hal_flash.h"
 #endif
 
+#if EFI_USE_OPENBLT
+/* communication with OpenBLT that is plain C, not to modify external file */
+extern "C" {
+	#include "openblt/shared_params.h"
+};
+#endif
+
 #define _2_MHZ 2'000'000
 
 #if EFI_PROD_CODE
@@ -51,78 +58,78 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:
-		return GPIOA_0;
+		return Gpio::A0;
 	case EFI_ADC_1:
-		return GPIOA_1;
+		return Gpio::A1;
 	case EFI_ADC_2:
-		return GPIOA_2;
+		return Gpio::A2;
 	case EFI_ADC_3:
-		return GPIOA_3;
+		return Gpio::A3;
 	case EFI_ADC_4:
-		return GPIOA_4;
+		return Gpio::A4;
 	case EFI_ADC_5:
-		return GPIOA_5;
+		return Gpio::A5;
 	case EFI_ADC_6:
-		return GPIOA_6;
+		return Gpio::A6;
 	case EFI_ADC_7:
-		return GPIOA_7;
+		return Gpio::A7;
 	case EFI_ADC_8:
-		return GPIOB_0;
+		return Gpio::B0;
 	case EFI_ADC_9:
-		return GPIOB_1;
+		return Gpio::B1;
 	case EFI_ADC_10:
-		return GPIOC_0;
+		return Gpio::C0;
 	case EFI_ADC_11:
-		return GPIOC_1;
+		return Gpio::C1;
 	case EFI_ADC_12:
-		return GPIOC_2;
+		return Gpio::C2;
 	case EFI_ADC_13:
-		return GPIOC_3;
+		return Gpio::C3;
 	case EFI_ADC_14:
-		return GPIOC_4;
+		return Gpio::C4;
 	case EFI_ADC_15:
-		return GPIOC_5;
+		return Gpio::C5;
 	default:
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
 	switch (pin) {
-	case GPIOA_0:
+	case Gpio::A0:
 		return EFI_ADC_0;
-	case GPIOA_1:
+	case Gpio::A1:
 		return EFI_ADC_1;
-	case GPIOA_2:
+	case Gpio::A2:
 		return EFI_ADC_2;
-	case GPIOA_3:
+	case Gpio::A3:
 		return EFI_ADC_3;
-	case GPIOA_4:
+	case Gpio::A4:
 		return EFI_ADC_4;
-	case GPIOA_5:
+	case Gpio::A5:
 		return EFI_ADC_5;
-	case GPIOA_6:
+	case Gpio::A6:
 		return EFI_ADC_6;
-	case GPIOA_7:
+	case Gpio::A7:
 		return EFI_ADC_7;
-	case GPIOB_0:
+	case Gpio::B0:
 		return EFI_ADC_8;
-	case GPIOB_1:
+	case Gpio::B1:
 		return EFI_ADC_9;
-	case GPIOC_0:
+	case Gpio::C0:
 		return EFI_ADC_10;
-	case GPIOC_1:
+	case Gpio::C1:
 		return EFI_ADC_11;
-	case GPIOC_2:
+	case Gpio::C2:
 		return EFI_ADC_12;
-	case GPIOC_3:
+	case Gpio::C3:
 		return EFI_ADC_13;
-	case GPIOC_4:
+	case Gpio::C4:
 		return EFI_ADC_14;
-	case GPIOC_5:
+	case Gpio::C5:
 		return EFI_ADC_15;
-	case GPIO_UNASSIGNED:
+	case Gpio::Unassigned:
 		return EFI_ADC_NONE;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getAdcChannel %d", pin);
@@ -226,59 +233,73 @@ private:
 static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	switch (pin) {
 #if STM32_PWM_USE_TIM1
-	case GPIOA_8: return stm32_pwm_config{&PWMD1, 0, 1};
-	case GPIOA_9: return stm32_pwm_config{&PWMD1, 1, 1};
-	case GPIOA_10: return stm32_pwm_config{&PWMD1, 2, 1};
-	case GPIOA_11: return stm32_pwm_config{&PWMD1, 3, 1};
+	case Gpio::A8:  return stm32_pwm_config{&PWMD1, 0, 1};
+	case Gpio::A9:  return stm32_pwm_config{&PWMD1, 1, 1};
+	case Gpio::A10: return stm32_pwm_config{&PWMD1, 2, 1};
+	case Gpio::A11: return stm32_pwm_config{&PWMD1, 3, 1};
 
-	case GPIOE_9: return stm32_pwm_config{&PWMD1, 0, 1};
-	case GPIOE_11: return stm32_pwm_config{&PWMD1, 1, 1};
-	case GPIOE_13: return stm32_pwm_config{&PWMD1, 2, 1};
-	case GPIOE_14: return stm32_pwm_config{&PWMD1, 3, 1};
+	case Gpio::E9:  return stm32_pwm_config{&PWMD1, 0, 1};
+	case Gpio::E11: return stm32_pwm_config{&PWMD1, 1, 1};
+	case Gpio::E13: return stm32_pwm_config{&PWMD1, 2, 1};
+	case Gpio::E14: return stm32_pwm_config{&PWMD1, 3, 1};
 #endif
 #if STM32_PWM_USE_TIM2
-	case GPIOA_15: return stm32_pwm_config{&PWMD2, 0, 1};
-	case GPIOB_3: return stm32_pwm_config{&PWMD2, 1, 1};
-	case GPIOB_10: return stm32_pwm_config{&PWMD2, 2, 1};
-	case GPIOB_11: return stm32_pwm_config{&PWMD2, 3, 1};
+	case Gpio::A15: return stm32_pwm_config{&PWMD2, 0, 1};
+	case Gpio::B3:  return stm32_pwm_config{&PWMD2, 1, 1};
+	case Gpio::B10: return stm32_pwm_config{&PWMD2, 2, 1};
+	case Gpio::B11: return stm32_pwm_config{&PWMD2, 3, 1};
 #endif
 #if STM32_PWM_USE_TIM3
-	case GPIOB_4: return stm32_pwm_config{&PWMD3, 0, 2};
-	case GPIOB_5: return stm32_pwm_config{&PWMD3, 1, 2};
+	case Gpio::B4:  return stm32_pwm_config{&PWMD3, 0, 2};
+	case Gpio::B5:  return stm32_pwm_config{&PWMD3, 1, 2};
+
+	case Gpio::C6:  return stm32_pwm_config{&PWMD3, 0, 2};
+	case Gpio::C7:  return stm32_pwm_config{&PWMD3, 1, 2};
 #endif
 #if STM32_PWM_USE_TIM4
-	case GPIOB_6: return stm32_pwm_config{&PWMD4, 0, 2};
-	case GPIOB_7: return stm32_pwm_config{&PWMD4, 1, 2};
-	case GPIOB_8: return stm32_pwm_config{&PWMD4, 2, 2};
-	case GPIOB_9: return stm32_pwm_config{&PWMD4, 3, 2};
+	case Gpio::B6:  return stm32_pwm_config{&PWMD4, 0, 2};
+	case Gpio::B7:  return stm32_pwm_config{&PWMD4, 1, 2};
+	case Gpio::B8:  return stm32_pwm_config{&PWMD4, 2, 2};
+	case Gpio::B9:  return stm32_pwm_config{&PWMD4, 3, 2};
 
-	case GPIOD_12: return stm32_pwm_config{&PWMD4, 0, 2};
-	case GPIOD_13: return stm32_pwm_config{&PWMD4, 1, 2};
-	case GPIOD_14: return stm32_pwm_config{&PWMD4, 2, 2};
-	case GPIOD_15: return stm32_pwm_config{&PWMD4, 3, 2};
+	case Gpio::D12: return stm32_pwm_config{&PWMD4, 0, 2};
+	case Gpio::D13: return stm32_pwm_config{&PWMD4, 1, 2};
+	case Gpio::D14: return stm32_pwm_config{&PWMD4, 2, 2};
+	case Gpio::D15: return stm32_pwm_config{&PWMD4, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM5
-	case GPIOA_0: return stm32_pwm_config{&PWMD5, 0, 2};
-	case GPIOA_1: return stm32_pwm_config{&PWMD5, 1, 2};
-	case GPIOA_2: return stm32_pwm_config{&PWMD5, 2, 2};
-	case GPIOA_3: return stm32_pwm_config{&PWMD5, 3, 2};
+	case Gpio::A0:  return stm32_pwm_config{&PWMD5, 0, 2};
+	case Gpio::A1:  return stm32_pwm_config{&PWMD5, 1, 2};
+	case Gpio::A2:  return stm32_pwm_config{&PWMD5, 2, 2};
+	case Gpio::A3:  return stm32_pwm_config{&PWMD5, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM8
-	case GPIOC_6: return stm32_pwm_config{&PWMD8, 0, 3};
-	case GPIOC_7: return stm32_pwm_config{&PWMD8, 1, 3};
-	case GPIOC_8: return stm32_pwm_config{&PWMD8, 2, 3};
-	case GPIOC_9: return stm32_pwm_config{&PWMD8, 3, 3};
+
+#if !STM32_PWM_USE_TIM3
+	// If TIM3 is not used, put these pins on TIM8 instead..
+	// See https://github.com/rusefi/rusefi/issues/639
+	// See https://github.com/rusefi/rusefi/pull/3032
+	case Gpio::C6:  return stm32_pwm_config{&PWMD8, 0, 3};
+	case Gpio::C7:  return stm32_pwm_config{&PWMD8, 1, 3};
+#endif
+
+	case Gpio::C8:  return stm32_pwm_config{&PWMD8, 2, 3};
+	case Gpio::C9:  return stm32_pwm_config{&PWMD8, 3, 3};
+#endif
+#if STM32_PWM_USE_TIM9
+	case Gpio::E5:  return stm32_pwm_config{&PWMD9, 0, 3};
+	case Gpio::E6:  return stm32_pwm_config{&PWMD9, 1, 3};
 #endif
 	default: return unexpected;
 	}
 };
 
-stm32_hardware_pwm pwms[5];
+static stm32_hardware_pwm hardPwms[5];
 
 stm32_hardware_pwm* getNextPwmDevice() {
-	for (size_t i = 0; i < efi::size(pwms); i++) {
-		if (!pwms[i].hasInit()) {
-			return &pwms[i];
+	for (size_t i = 0; i < efi::size(hardPwms); i++) {
+		if (!hardPwms[i].hasInit()) {
+			return &hardPwms[i];
 		}
 	}
 
@@ -312,7 +333,7 @@ stm32_hardware_pwm* getNextPwmDevice() {
 }
 #endif
 
-void jump_to_bootloader() {
+static void reset_and_jump(void) {
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
@@ -320,21 +341,38 @@ void jump_to_bootloader() {
 		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
 	#endif
 
-	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
-	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 	// and now reboot
 	NVIC_SystemReset();
+}
+
+void jump_to_bootloader() {
+	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
+
+	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
+
+	reset_and_jump();
+}
+
+void jump_to_openblt() {
+#if EFI_USE_OPENBLT
+	/* safe to call on already inited shares area */
+	SharedParamsInit();
+	/* Store sing to stay in OpenBLT */
+	SharedParamsWriteByIndex(0, 0x01);
+
+	reset_and_jump();
+#endif
 }
 #endif /* EFI_PROD_CODE */
 
 #if EFI_AUX_SERIAL
 
 static bool isValidUART6TxPin(brain_pin_e pin) {
-	return pin == GPIOC_6 || pin == GPIOG_14;
+	return pin == Gpio::C6 || pin == Gpio::G14;
 }
 
 static bool isValidUART6RxPin(brain_pin_e pin) {
-	return pin == GPIOC_7 || pin == GPIOG_9;
+	return pin == Gpio::C7 || pin == Gpio::G9;
 }
 
 bool isValidSerialTxPin(brain_pin_e pin) {
@@ -392,19 +430,11 @@ void baseMCUInit(void) {
 	BOR_Set(BOR_Level_1); // one step above default value
 }
 
-
-extern "C" {
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress);
-}
-
 extern uint32_t __main_stack_base__;
-
-#define GET_CFSR() (*((volatile uint32_t *) (0xE000ED28)))
 
 typedef struct port_intctx intctx_t;
 
 EXTERNC int getRemainingStack(thread_t *otp) {
-
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
 	// coverity[uninit_use]
@@ -424,135 +454,6 @@ EXTERNC int getRemainingStack(thread_t *otp) {
 	UNUSED(otp);
 	return 99999;
 #endif /* CH_DBG_ENABLE_STACK_CHECK */
-}
-
-void _unhandled_exception(void) {
-/*lint -restore*/
-
-  chDbgPanic3("_unhandled_exception", __FILE__, __LINE__);
-  while (true) {
-  }
-}
-
-void DebugMonitorVector(void) {
-	chDbgPanic3("DebugMonitorVector", __FILE__, __LINE__);
-	while (TRUE)
-		;
-}
-
-void UsageFaultVector(void) {
-	chDbgPanic3("UsageFaultVector", __FILE__, __LINE__);
-	while (TRUE)
-		;
-}
-
-void BusFaultVector(void) {
-	chDbgPanic3("BusFaultVector", __FILE__, __LINE__);
-	while (TRUE) {
-	}
-}
-
-/**
- + * @brief   Register values for postmortem debugging.
- + */
-volatile uint32_t postmortem_r0;
-volatile uint32_t postmortem_r1;
-volatile uint32_t postmortem_r2;
-volatile uint32_t postmortem_r3;
-volatile uint32_t postmortem_r12;
-volatile uint32_t postmortem_lr; /* Link register. */
-volatile uint32_t postmortem_pc; /* Program counter. */
-volatile uint32_t postmortem_psr;/* Program status register. */
-volatile uint32_t postmortem_CFSR;
-volatile uint32_t postmortem_HFSR;
-volatile uint32_t postmortem_DFSR;
-volatile uint32_t postmortem_AFSR;
-volatile uint32_t postmortem_BFAR;
-volatile uint32_t postmortem_MMAR;
-volatile uint32_t postmortem_SCB_SHCSR;
-
-/**
- * @brief   Evaluates to TRUE if system runs under debugger control.
- * @note    This bit resets only by power reset.
- */
-#define is_under_debugger() (((CoreDebug)->DHCSR) & \
-                            CoreDebug_DHCSR_C_DEBUGEN_Msk)
-
-/**
- *
- */
-void prvGetRegistersFromStack(uint32_t *pulFaultStackAddress) {
-
-	postmortem_r0 = pulFaultStackAddress[0];
-	postmortem_r1 = pulFaultStackAddress[1];
-	postmortem_r2 = pulFaultStackAddress[2];
-	postmortem_r3 = pulFaultStackAddress[3];
-	postmortem_r12 = pulFaultStackAddress[4];
-	postmortem_lr = pulFaultStackAddress[5];
-	postmortem_pc = pulFaultStackAddress[6];
-	postmortem_psr = pulFaultStackAddress[7];
-
-	/* Configurable Fault Status Register. Consists of MMSR, BFSR and UFSR */
-	postmortem_CFSR = GET_CFSR();
-
-	/* Hard Fault Status Register */
-	postmortem_HFSR = (*((volatile uint32_t *) (0xE000ED2C)));
-
-	/* Debug Fault Status Register */
-	postmortem_DFSR = (*((volatile uint32_t *) (0xE000ED30)));
-
-	/* Auxiliary Fault Status Register */
-	postmortem_AFSR = (*((volatile uint32_t *) (0xE000ED3C)));
-
-	/* Read the Fault Address Registers. These may not contain valid values.
-	 Check BFARVALID/MMARVALID to see if they are valid values
-	 MemManage Fault Address Register */
-	postmortem_MMAR = (*((volatile uint32_t *) (0xE000ED34)));
-	/* Bus Fault Address Register */
-	postmortem_BFAR = (*((volatile uint32_t *) (0xE000ED38)));
-
-	postmortem_SCB_SHCSR = SCB->SHCSR;
-
-	if (is_under_debugger()) {
-		__asm("BKPT #0\n");
-		// Break into the debugger
-	}
-
-	/* harmless infinite loop */
-	while (1) {
-		;
-	}
-}
-
-void HardFaultVector(void) {
-#if 0 && defined __GNUC__
-	__asm volatile (
-			" tst lr, #4                                                \n"
-			" ite eq                                                    \n"
-			" mrseq r0, msp                                             \n"
-			" mrsne r0, psp                                             \n"
-			" ldr r1, [r0, #24]                                         \n"
-			" ldr r2, handler2_address_const                            \n"
-			" bx r2                                                     \n"
-			" handler2_address_const: .word prvGetRegistersFromStack    \n"
-	);
-
-#else
-#endif /* 0 && defined __GNUC__ */
-
-	int cfsr = GET_CFSR();
-	if (cfsr & 0x1) {
-		chDbgPanic3("H IACCVIOL", __FILE__, __LINE__);
-	} else if (cfsr & 0x100) {
-		chDbgPanic3("H IBUSERR", __FILE__, __LINE__);
-	} else if (cfsr & 0x20000) {
-		chDbgPanic3("H INVSTATE", __FILE__, __LINE__);
-	} else {
-		chDbgPanic3("HardFaultVector", __FILE__, __LINE__);
-	}
-
-	while (TRUE) {
-	}
 }
 
 #if HAL_USE_SPI
@@ -588,7 +489,7 @@ brain_pin_e getMisoPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getMosiPin(spi_device_e device) {
@@ -602,7 +503,7 @@ brain_pin_e getMosiPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getSckPin(spi_device_e device) {
@@ -616,7 +517,7 @@ brain_pin_e getSckPin(spi_device_e device) {
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 void turnOnSpi(spi_device_e device) {
@@ -660,7 +561,7 @@ void turnOnSpi(spi_device_e device) {
 	if (device == SPI_DEVICE_4) {
 #if STM32_SPI_USE_SPI4
 //		scheduleMsg(&logging, "Turning on SPI4 pins");
-		/* there is no cofiguration fields for SPI4 in engineConfiguration, rely on board init code
+		/* there are no configuration fields for SPI4 in engineConfiguration, rely on board init code
 		 * it should set proper functions for SPI4 pins */
 #endif /* STM32_SPI_USE_SPI4 */
 	}
@@ -755,19 +656,19 @@ SPIConfig mmc_ls_spicfg = {
 #if EFI_CAN_SUPPORT
 
 static bool isValidCan1RxPin(brain_pin_e pin) {
-	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+	return pin == Gpio::A11 || pin == Gpio::B8 || pin == Gpio::D0;
 }
 
 static bool isValidCan1TxPin(brain_pin_e pin) {
-	return pin == GPIOA_12 || pin == GPIOB_9 || pin == GPIOD_1;
+	return pin == Gpio::A12 || pin == Gpio::B9 || pin == Gpio::D1;
 }
 
 static bool isValidCan2RxPin(brain_pin_e pin) {
-	return pin == GPIOB_5 || pin == GPIOB_12;
+	return pin == Gpio::B5 || pin == Gpio::B12;
 }
 
 static bool isValidCan2TxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOB_13;
+	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
 bool isValidCanTxPin(brain_pin_e pin) {
@@ -779,7 +680,7 @@ bool isValidCanRxPin(brain_pin_e pin) {
 }
 
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
-	if (pinRx == GPIO_UNASSIGNED && pinTx == GPIO_UNASSIGNED) {
+	if (pinRx == Gpio::Unassigned && pinTx == Gpio::Unassigned) {
 		return nullptr;
 	}
 #if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
@@ -795,5 +696,97 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+
+#define HWREG(x)                                                              \
+        (*((volatile unsigned long *)(x)))
+
+#define NVIC_FAULT_STAT         0xE000ED28  // Configurable Fault Status
+#define NVIC_FAULT_STAT_BFARV   0x00008000  // Bus Fault Address Register Valid
+#define NVIC_CFG_CTRL_BFHFNMIGN 0x00000100  // Ignore Bus Fault in NMI and
+                                            // Fault
+#define NVIC_CFG_CTRL           0xE000ED14  // Configuration and Control
+
+
+/**
+ * @brief Probe an address to see if can be read without generating a bus fault
+ * @details This function must be called with the processor in privileged mode.
+ *          It:
+ *          - Clear any previous indication of a bus fault in the BFARV bit
+ *          - Temporarily sets the processor to Ignore Bus Faults with all interrupts and fault handlers disabled
+ *          - Attempt to read from read_address, ignoring the result
+ *          - Checks to see if the read caused a bus fault, by checking the BFARV bit is set
+ *          - Re-enables Bus Faults and all interrupts and fault handlers
+ * @param[in] read_address The address to try reading a byte from
+ * @return Returns true if no bus fault occurred reading from read_address, or false if a bus fault occurred.
+ */
+bool ramReadProbe(volatile const char *read_address) {
+    bool address_readable = true;
+
+    /* Clear any existing indication of a bus fault - BFARV is write one to clear */
+    HWREG (NVIC_FAULT_STAT) |= NVIC_FAULT_STAT_BFARV;
+
+    HWREG (NVIC_CFG_CTRL) |= NVIC_CFG_CTRL_BFHFNMIGN;
+    asm volatile ("  CPSID f;");
+    *read_address;
+    if ((HWREG (NVIC_FAULT_STAT) & NVIC_FAULT_STAT_BFARV) != 0)
+    {
+        address_readable = false;
+    }
+    asm volatile ("  CPSIE f;");
+    HWREG (NVIC_CFG_CTRL) &= ~NVIC_CFG_CTRL_BFHFNMIGN;
+
+    return address_readable;
+}
+
+#endif
+
+#if defined(STM32F4)
+bool isStm32F42x() {
+	// really it's enough to just check 0x20020010
+	return ramReadProbe((const char *)0x20000010) && ramReadProbe((const char *)0x20020010) && !ramReadProbe((const char *)0x20070010);
+}
+
+#endif
+
+
+// Stubs for per-board low power helpers
+__attribute__((weak)) void boardPrepareForStop() {
+	// Default implementation - wake up on PA0 - boards should override this
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
+
+/**
+ Standby uses special low power hardware - it always wakes on rising edge
+*/
+
+void boardPreparePA0ForStandby() {
+#ifdef STM32F4XX
+	//Enable Wakeup Pin for PA0
+	PWR->CSR |= PWR_CSR_EWUP;
+
+	// Clear wakeup flag - it may be set if PA0 is already
+	// high when we enable it as a wake source
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32F7XX
+	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
+	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32H7XX
+	// Wake on wakeup pin 0 - PA0
+	PWR->WKUPEPR = PWR_WKUPEPR_WKUPEN1;
+
+	// clear all possible wakeup bits
+	PWR->WKUPCR = 0xFFFFFFFF;
+#endif
+}
+
+__attribute__((weak)) void boardPrepareForStandby() {
+	boardPreparePA0ForStandby();
+}
 
 #endif // EFI_PROD_CODE

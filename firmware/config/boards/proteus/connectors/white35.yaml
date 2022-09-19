@@ -48,56 +48,56 @@ pins:
     type: 12v
 
   - pin: 13
-    id: [GPIOC_0, EFI_ADC_10]
+    id: [C0, EFI_ADC_10]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 1
     function: "Analog Voltage Input #1 MAP"
     type: av
 
   - pin: 14
-    id: [GPIOC_2, EFI_ADC_12]
+    id: [C2, EFI_ADC_12]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 3
-    function: "Analog Voltage Input #3"
+    function: "Analog Voltage Input #3 TPS1_2"
     type: av
 
   - pin: 15
-    id: [GPIOA_0, EFI_ADC_0]
+    id: [A0, EFI_ADC_0]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 5
     function: "Analog Voltage Input #5"
     type: av
 
   - pin: 16
-    id: [GPIOA_2, EFI_ADC_2]
+    id: [A2, EFI_ADC_2]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 7
-    function: "Analog Voltage Input #7"
+    function: "Analog Voltage Input #7 (PPS2)"
     type: av
 
   - pin: 17
-    id: [GPIOA_4, EFI_ADC_4]
+    id: [A4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 9
-    function: "Analog Voltage Input #9"
+    function: "Analog Voltage Input #9 (PPS)"
     type: av
 
   - pin: 18
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 11
     function: "Analog Voltage Input #11"
     type: av
 
   - pin: 19
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 1
     function: "Analog Thermistor Input #1"
     type: at
 
   - pin: 20
-    id: [GPIOB_0, EFI_ADC_8]
+    id: [B0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 3
     function: "Analog Thermistor Input #3 (CLT)"
@@ -116,35 +116,35 @@ pins:
     type: sgnd
 
   - pin: 24
-    id: [GPIOC_1, EFI_ADC_11]
+    id: [C1, EFI_ADC_11]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 2
     function: "Analog Voltage Input #2 TPS"
     type: av
 
   - pin: 25
-    id: [GPIOC_3, EFI_ADC_13]
+    id: [C3, EFI_ADC_13]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 4
     function: "Analog Voltage Input #4"
     type: av
 
   - pin: 26
-    id: [GPIOA_1, EFI_ADC_1]
+    id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 6
     function: "Analog Voltage Input #6"
     type: av
 
   - pin: 27
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 8
     function: "Analog Voltage Input #8"
     type: av
 
   - pin: 28
-    id: [GPIOA_5, EFI_ADC_5]
+    id: [A5, EFI_ADC_5]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 10
     function: "Analog Voltage Input #10"
@@ -155,14 +155,14 @@ pins:
     type: sgnd
 
   - pin: 30
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 2
     function: Intake air temperature IAT
     type: at
 
   - pin: 31
-    id: [GPIOB_1, EFI_ADC_9]
+    id: [B1, EFI_ADC_9]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 4
     function: "Analog Thermistor Input #4"

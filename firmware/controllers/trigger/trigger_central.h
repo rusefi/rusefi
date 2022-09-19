@@ -14,8 +14,14 @@
 #include "timer.h"
 #include "pin_repository.h"
 #include "local_version_holder.h"
+#include "cyclic_buffer.h"
 
 #define MAP_CAM_BUFFER 64
+
+#ifndef RPM_LOW_THRESHOLD
+// no idea what is the best value, 25 is as good as any other guess
+#define RPM_LOW_THRESHOLD 25
+#endif
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
@@ -26,7 +32,7 @@ class TriggerNoiseFilter {
 public:
 	void resetAccumSignalData();
 	bool noiseFilter(efitick_t nowNt,
-			TriggerState * triggerState,
+			TriggerDecoderBase* triggerState,
 			trigger_event_e signal);
 
 	efitick_t lastSignalTimes[HW_EVENT_TYPES];
@@ -46,35 +52,83 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+	void updateWaveform();
+
+	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
+	// GND input pins instead of leaving them floating
+	bool hwTriggerInputEnabled = true;
+
+	cyclic_buffer<int> triggerErrorDetection;
+
+	/**
+	 * See also triggerSimulatorFrequency
+	 */
+	bool directSelfStimulation = false;
+
+	PrimaryTriggerConfiguration primaryTriggerConfiguration;
+#if CAMS_PER_BANK == 1
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
+#else
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
+#endif
 
 	LocalVersionHolder triggerVersion;
+
+	/**
+	 * By the way:
+	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
+	 * 'running' means RPM are above crankingRpm
+	 * 'spinning' means the engine is not stopped
+	 */
+	// todo: combine with other RpmCalculator fields?
+	/**
+	 * this is set to true each time we register a trigger tooth signal
+	 */
+	bool isSpinningJustForWatchdog = false;
 
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
 
 	/**
+	 * value of 'triggerShape.getLength()'
+	 * pre-calculating this value is a performance optimization
+	 */
+	uint32_t engineCycleEventCount = 0;
+	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
 	 * we have not adjusted for yet
 	 */
-	bool triggerConfigChanged = false;
+	bool triggerConfigChangedOnLastConfigurationChange = false;
 
 	bool checkIfTriggerConfigChanged();
+#if EFI_UNIT_TEST
 	bool isTriggerConfigChanged();
+#endif // EFI_UNIT_TEST
 
 	bool isTriggerDecoderError();
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
-	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+	float getSecondsSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
+	bool engineMovedRecently(efitick_t nowNt) const {
+		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
+		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
+
+		// Some triggers may have long gaps (with many teeth), don't count that as stopped!
+		auto maxAllowedGap = maxAverageToothTime * 10;
+
+		// Clamp between 0.1 seconds ("instant" for a human) and worst case of one engine cycle on low tooth count wheel
+		maxAllowedGap = clampF(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
+
+		return getSecondsSinceTriggerEvent(nowNt) < maxAllowedGap;
+	}
+
 	bool engineMovedRecently() const {
-		// Trigger event some time in the past second = engine moving
-		// distributor single tooth, large engines crank at close to 120 RPM
-		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+		return engineMovedRecently(getTimeNowNt());
 	}
 
 	TriggerNoiseFilter noiseFilter;
@@ -92,10 +146,29 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
-	TriggerStateWithRunningStatistics triggerState;
+#if EFI_SHAFT_POSITION_INPUT
+	PrimaryTriggerDecoder triggerState;
+#endif //EFI_SHAFT_POSITION_INPUT
+
 	TriggerWaveform triggerShape;
 
-	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	VvtTriggerDecoder vvtState[BANKS_COUNT][CAMS_PER_BANK] = {
+		{
+			"VVT B1 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		},
+#if BANKS_COUNT >= 2
+		{
+			"VVT B2 Int",
+#if CAMS_PER_BANK >= 2
+			"VVT B1 Exh"
+#endif
+		}
+#endif
+	};
+
 	TriggerWaveform vvtShape[CAMS_PER_BANK];
 
 	TriggerFormDetails triggerFormDetails;
@@ -103,16 +176,24 @@ public:
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
 
+	/**
+	 * this is based on engineSnifferRpmThreshold settings and current RPM
+	 */
+	bool isEngineSnifferEnabled = false;
+
 private:
-	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
-	// not TDC point
-	Timer m_syncPointTimer;
+	void decodeMapCam(efitick_t nowNt, float currentPhase);
+
+	// Time since the last tooth
+	Timer m_lastToothTimer;
+	// Phase of the last tooth relative to the sync point
+	float m_lastToothPhaseFromSyncPoint;
 };
 
 void triggerInfo(void);
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
 void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp);
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t timestamp, int index);
+void hwHandleVvtCamSignal(TriggerValue front, efitick_t timestamp, int index);
 
 void validateTriggerInputs();
 
@@ -124,3 +205,11 @@ void onConfigurationChangeTriggerCallback();
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
+#define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
+
+void calculateTriggerSynchPoint(
+		TriggerCentral *triggerCentral,
+	TriggerWaveform& shape,
+	TriggerDecoderBase& state);
+
+TriggerCentral * getTriggerCentral();

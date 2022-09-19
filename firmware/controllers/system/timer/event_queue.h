@@ -44,18 +44,18 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	EventQueue(efitime_t lateDelay = 0) : lateDelay(lateDelay) {}
+	EventQueue(efitick_t lateDelay = 0) : lateDelay(lateDelay) {}
 
 	/**
 	 * O(size) - linear search in sorted linked list
 	 */
-	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
+	bool insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action);
 	void remove(scheduling_s* scheduling);
 
-	int executeAll(efitime_t now);
-	bool executeOne(efitime_t now);
+	int executeAll(efitick_t now);
+	bool executeOne(efitick_t now);
 
-	expected<efitime_t> getNextEventTime(efitime_t nowUs) const;
+	expected<efitick_t> getNextEventTime(efitick_t nowUs) const;
 	void clear(void);
 	int size(void) const;
 	scheduling_s *getElementAtIndexForUnitText(int index);
@@ -66,6 +66,6 @@ private:
 	 * this list is sorted
 	 */
 	scheduling_s *head = nullptr;
-	const efitime_t lateDelay;
+	const efitick_t lateDelay;
 };
 

@@ -22,10 +22,10 @@ class BinaryProtocolServerSandbox {
 
         BinaryProtocolState state = new BinaryProtocolState();
         ConfigurationImage controller = new ConfigurationImage(new byte[Fields.TOTAL_CONFIG_SIZE]);
-        ScalarIniField iniField = TestHelper.createIniField(Fields.AMBIGUOUSOPERATIONMODE);
+        ScalarIniField iniField = TestHelper.createIniField(Fields.TWOSTROKE);
         iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
         state.setController(controller);
-        state.setCurrentOutputs(new byte[1 + Fields.TS_OUTPUT_SIZE]);
+        state.setCurrentOutputs(new byte[1 + Fields.TS_TOTAL_OUTPUT_SIZE]);
 
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));

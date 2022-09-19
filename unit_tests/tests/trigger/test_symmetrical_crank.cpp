@@ -48,16 +48,16 @@ TEST(engine, testSymmetricalCrank) {
 
 	// this test is not about isFasterEngineSpinUpEnabled so let's disable it to simplify things
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+	engineConfiguration->alwaysInstantRpm = true;
 
-
-	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode());
+	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, getEngineRotationState()->getOperationMode());
 
 	float mult = 0.02;
 
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
 
 	eth.fireFall(mult * 394);
 	eth.fireRise(mult * 16);
@@ -66,21 +66,14 @@ TEST(engine, testSymmetricalCrank) {
 	eth.fireRise(mult * 16);
 	ASSERT_TRUE(engine->triggerCentral.triggerState.getShaftSynchronized());
 
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
-
-
-
-	for (int i = 0; i < 3; i++) {
-		postFourEvents(&eth, mult);
-		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
-	}
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#0";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#11";
 
 	postFourEvents(&eth, mult);
-	ASSERT_EQ(2084,  GET_RPM()) << "RPM#11";
+	ASSERT_EQ(2084,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#11";
 }

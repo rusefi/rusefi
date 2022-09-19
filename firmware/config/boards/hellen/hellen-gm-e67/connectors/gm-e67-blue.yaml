@@ -1,0 +1,116 @@
+pins:
+  - pin: 7
+#H144_IN_RES2
+    id: F10
+    class: switch_inputs
+    ts_name: C1-7 Stop/Brake Pedal
+    function: Stop/Brake Pedal switch input
+    type: din
+
+  - pin: 12
+    # H144_OUT_IO11
+    id: G2
+    class: outputs
+    function: MIL Check Engine
+    type: hs
+    ts_name: C1-12 Check Engine
+
+  - pin: 13
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Fuel Pump Relay Output
+    type: hs
+    ts_name: C1-13 - Fuel Pump
+
+  - pin: 14
+    function: stm32 BOOT
+
+  - pin: 19
+# H144_IN_VBATT
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: C1-19 Battery Sense
+    type: 12v
+
+  - pin: 25
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    function: Tachometer Output
+    type: hs
+    ts_name: C1-25 Tach
+
+  - pin: 26
+    # H144_OUT_IO6
+    id: G11
+    class: outputs
+    ts_name: C1-26 - Starter Relay
+    function: Starter Relay
+    type: ls
+    color: purple
+
+  - pin: 39
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    ts_name: C1-39 - VSS Output
+    function: VSS Output
+    type: hs
+    color: purple
+
+  - pin: 40
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: C1-40 - MAIN
+    function: Main relay control
+    type: ls
+    color: purple
+
+  - pin: 44
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: Primary Fuel Level
+    ts_name: C1-44 Primary Fuel Level
+
+  - pin: 45
+    # H144_IN_CAM_ANALOG
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: Secondary Fuel Level
+    ts_name: C1-45 Secondary Fuel Level
+
+  - pin: 46
+    # H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Vac Sense
+    ts_name: C1-46 Vac Sense
+
+  - pin: 47
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: C1-47 - PPS1
+    function: PPS1 analog input
+    type: av
+
+  - pin: 49
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: C1-49 - PPS2
+    function: PPS2 analog input
+    type: av
+
+  - pin: 56
+    # H144_OUT_IO8
+    id: G4
+    class: outputs
+    ts_name: C1-56 - Starter Enable
+    function: Starter Enable
+    type: ls
+    color: purple

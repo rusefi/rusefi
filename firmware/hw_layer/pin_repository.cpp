@@ -22,9 +22,8 @@ const char* & getBrainUsedPin(unsigned int idx) {
 }
 
 /* Common for firmware and unit tests */
-bool isBrainPinValid(brain_pin_e brainPin)
-{
-	if ((brainPin == GPIO_UNASSIGNED) || (brainPin == GPIO_INVALID))
+bool isBrainPinValid(brain_pin_e brainPin) {
+	if ((brainPin == Gpio::Unassigned) || (brainPin == Gpio::Invalid))
 		return false;
 
 	if (brainPin > BRAIN_PIN_LAST)
@@ -37,10 +36,10 @@ bool isBrainPinValid(brain_pin_e brainPin)
 int brainPin_to_index(brain_pin_e brainPin) {
 	unsigned int i;
 
-	if (brainPin < GPIOA_0)
+	if (brainPin < Gpio::A0)
 		return -1;
 
-	i = brainPin - GPIOA_0;
+	i = brainPin - Gpio::A0;
 
 	if (i >= getBrainPinTotalNum())
 		return -1;
@@ -55,7 +54,7 @@ int brainPin_to_index(brain_pin_e brainPin) {
 
 bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 #if ! EFI_BOOTLOADER
-	efiPrintf("%s on %s", msg, hwPortname(brainPin));
+	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
 #endif
 
 	int index = brainPin_to_index(brainPin);
@@ -82,6 +81,9 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
+#if ! EFI_BOOTLOADER
+	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
+#endif
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;
@@ -106,18 +108,35 @@ PinRepository::PinRepository() {
 }
 
 #if EFI_PROD_CODE
-#include "os_access.h"
+
 #include "eficonsole.h"
 #include "drivers/gpio/gpio_ext.h"
 #include "smart_gpio.h"
 #include "hardware.h"
 
+void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
+	/* use autogeneraged helpers here? */
+	if (pin_diag == PIN_OK) {
+		chsnprintf(buffer, size, "Ok");
+	} else if (pin_diag != PIN_INVALID) {
+		chsnprintf(buffer, size, "%s%s%s%s%s%s",
+			pin_diag & PIN_DRIVER_OFF ? "driver_off " : "",
+			pin_diag & PIN_OPEN ? "open_load " : "",
+			pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
+			pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
+			pin_diag & PIN_OVERLOAD ? "overload " : "",
+			pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
+	} else {
+		chsnprintf(buffer, size, "INVALID");
+	}
+}
+
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
-		return (brain_pin_e)((int)GPIOA_0 + i);;
+		return Gpio::A0 + i;
 
-	return GPIO_INVALID;
+	return Gpio::Invalid;
 }
 
 static void reportPins() {
@@ -137,28 +156,13 @@ static void reportPins() {
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		for (unsigned int i = getBrainPinOnchipNum() ; i < getBrainPinTotalNum(); i++) {
 			static char pin_error[64];
-			const char *pin_name;
-			const char *pin_user;
-			brain_pin_diag_e pin_diag;
 			brain_pin_e brainPin = index_to_brainPin(i);
 
-			pin_name = gpiochips_getPinName(brainPin);
-			pin_user = getBrainUsedPin(i);
-			pin_diag = gpiochips_getDiag(brainPin);
+			const char *pin_name = gpiochips_getPinName(brainPin);
+			const char *pin_user = getBrainUsedPin(i);
+			brain_pin_diag_e pin_diag = gpiochips_getDiag(brainPin);
 
-			/* use autogeneraged helpers here? */
-			if (pin_diag == PIN_OK) {
-				chsnprintf(pin_error, sizeof(pin_error), "Ok");
-			} else if (pin_diag != PIN_INVALID) {
-				chsnprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
-					pin_diag & PIN_OPEN ? "open_load " : "",
-					pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
-					pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
-					pin_diag & PIN_OVERLOAD ? "overload " : "",
-					pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
-			} else {
-				chsnprintf(pin_error, sizeof(pin_error), "INVALID");
-			}
+			pinDiag2string(pin_error, sizeof(pin_error), pin_diag);
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {
@@ -187,13 +191,22 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 #endif // HAL_USE_SPI
 }
 
+__attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPin*/) {
+	return nullptr;
+}
+
 const char *hwPortname(brain_pin_e brainPin) {
-	if (brainPin == GPIO_INVALID) {
+	if (brainPin == Gpio::Invalid) {
 		return "INVALID";
 	}
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (brainPin == Gpio::Unassigned) {
 		return "NONE";
 	}
+	const char * boardSpecificPinName = getBoardSpecificPinName(brainPin);
+	if (boardSpecificPinName != nullptr) {
+		return boardSpecificPinName;
+	}
+
 	portNameStream.eos = 0; // reset
 	if (brain_pin_is_onchip(brainPin)) {
 
@@ -238,7 +251,7 @@ void initPinRepository(void) {
 
 bool brain_pin_is_onchip(brain_pin_e brainPin)
 {
-	if ((brainPin < GPIOA_0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
+	if ((brainPin < Gpio::A0) || (brainPin > BRAIN_PIN_ONCHIP_LAST))
 		return false;
 
 	return true;

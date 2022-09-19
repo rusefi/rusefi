@@ -78,3 +78,8 @@ void backupRamFlush(void) {
 	// but if there is, at least try to reinitialize...
 	wasLoaded = false;
 }
+
+// TODO: implement me!
+BackupSramData* getBackupSram() {
+	return nullptr;
+}

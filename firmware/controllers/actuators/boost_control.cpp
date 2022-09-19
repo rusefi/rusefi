@@ -28,6 +28,12 @@ void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const 
 	m_closedLoopTargetMap = closedLoopTargetMap;
 
 	m_pid.initPidClass(pidParams);
+	resetLua();
+}
+
+void BoostController::resetLua() {
+	luaTargetAdd = 0;
+	luaTargetMult = 1;
 }
 
 void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -45,11 +51,11 @@ expected<float> BoostController::getSetpoint() {
 	// Open loop needs to work even in case of invalid closed loop config
 	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
 	if (isNotClosedLoop) {
-		closedLoopPart = 0;
-		return closedLoopPart;
+		boostControllerClosedLoopPart = 0;
+		return (float)boostControllerClosedLoopPart;
 	}
 
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 	isTpsInvalid = !tps.Valid;
@@ -60,14 +66,14 @@ expected<float> BoostController::getSetpoint() {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
-	return m_closedLoopTargetMap->getValue(rpm, tps.Value);
+    return m_closedLoopTargetMap->getValue(rpm, tps.Value) * luaTargetMult + luaTargetAdd;
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
 	// Boost control open loop doesn't care about target - only TPS/RPM
 	UNUSED(target);
 
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 	isTpsInvalid = !tps.Valid;
@@ -101,7 +107,7 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	}
 
 	// If the engine isn't running, don't correct.
-	isZeroRpm = GET_RPM() == 0;
+	isZeroRpm = Sensor::getOrZero(SensorType::Rpm) == 0;
 	if (isZeroRpm) {
 		m_pid.reset();
 		return 0;
@@ -111,27 +117,29 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	if (isBelowClosedLoopThreshold) {
 		// We're below the CL threshold, inhibit CL for now
 		m_pid.reset();
-		closedLoopPart = 0;
-		return closedLoopPart;
+		return 0;
 	}
 
-	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
-	return closedLoopPart;
+	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
-	auto closedLoop = getClosedLoopImpl(target, manifoldPressure);
+	boostControllerClosedLoopPart = getClosedLoopImpl(target, manifoldPressure);
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.boostControlTarget = target;
-#endif /* EFI_TUNER_STUDIO */
+	m_pid.postState(engine->outputChannels.boostStatus);
 
-	return closedLoop;
+	boostControlTarget = target;
+
+	return (float)boostControllerClosedLoopPart;
 }
 
 void BoostController::setOutput(expected<float> output) {
 	percent_t percent = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
+
+	if (!engineConfiguration->isBoostControlEnabled) {
+		// If not enabled, force 0% output
+		percent = 0;
+	}
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.boostControllerOutput = percent;
@@ -150,7 +158,16 @@ void BoostController::update() {
 	m_pid.iTermMin = -50;
 	m_pid.iTermMax = 50;
 
-	ClosedLoopController::update();
+	bool rpmTooLow = Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->boostControlMinRpm;
+	bool tpsTooLow = Sensor::getOrZero(SensorType::Tps1) < engineConfiguration->boostControlMinTps;
+	bool mapTooLow = Sensor::getOrZero(SensorType::Map) < engineConfiguration->boostControlMinMap;
+
+	if (rpmTooLow || tpsTooLow || mapTooLow) {
+		// Passing unexpected will use the safe duty cycle configured by the user
+		setOutput(unexpected);
+	} else {
+		ClosedLoopController::update();
+	}
 }
 
 static bool hasInitBoost = false;
@@ -168,7 +185,6 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostPid.iFactor = 0.3;
 	engineConfiguration->boostPid.maxValue = 20;
 	engineConfiguration->boostPid.minValue = -20;
-	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setLinearCurve(config->boostRpmBins, 0, 8000, 1);
@@ -190,7 +206,7 @@ void setDefaultBoostParameters() {
 void startBoostPin() {
 #if !EFI_UNIT_TEST
 	// Only init if a pin is set, no need to start PWM without a pin
-	if (!isBrainPinValid(engineConfiguration->boostControlPin)) {
+	if (!engineConfiguration->isBoostControlEnabled || !isBrainPinValid(engineConfiguration->boostControlPin)) {
 		return;
 	}
 
@@ -200,7 +216,7 @@ void startBoostPin() {
 		&engine->executor,
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
-		0.5f
+		0
 	);
 #endif /* EFI_UNIT_TEST */
 }

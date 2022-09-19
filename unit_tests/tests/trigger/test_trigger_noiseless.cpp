@@ -98,7 +98,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// check if we're imitating the 60-2 signal correctly
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 	// check rpm (60secs / (1000us * 60teeth)) = 1000rpm
-	ASSERT_EQ( 1000,  GET_RPM()) << "testNoiselessDecoder RPM";
+	ASSERT_EQ( 1000,  Sensor::getOrZero(SensorType::Rpm)) << "testNoiselessDecoder RPM";
 
 	// add noise1 - 1 spike in the middle of the 2nd rising pulse
 	fireNoisyCycle60_2(&eth, 2, 1000, 2, 10, 500, 1);
@@ -156,10 +156,9 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// but still we're close to 33% signal-noise ratio threshold - not bad!
 	// so here's an error anyway!
 	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter) << "testNoiselessDecoder noise#7_fail_test";
-
 }
 
-TEST(big, testNoiselessDecoder) {
+TEST(trigger, noiselessDecoder) {
 	printf("====================================================================================== testNoiselessDecoder\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -171,7 +170,7 @@ TEST(big, testNoiselessDecoder) {
 	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2);
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ( 0,  GET_RPM()) << "testNoiselessDecoder RPM";
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "testNoiselessDecoder RPM";
 
 	//printTriggerDebug = true;
 

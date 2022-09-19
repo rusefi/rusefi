@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
+import com.rusefi.FileLog;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
 import com.rusefi.ui.util.UiUtils;
@@ -40,7 +40,7 @@ public class ChartHelper {
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = Logger.getDate() + "_3d.png";
+                String fileName = FileLog.getDate() + "_3d.png";
 
                 UiUtils.saveImageWithPrompt(fileName, result, jsp);
             }

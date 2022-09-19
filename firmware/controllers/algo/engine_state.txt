@@ -1,17 +1,26 @@
 
 
-struct_no_prefix engine_state2_s
+struct_no_prefix engine_state_s
 
-struct_no_prefix speed_density_s
+struct LuaAdjustments
+	float fuelAdd
+	float fuelMult
 
-bit isTChargeAirModel
+	bit clutchUpState
+	bit brakePedalState
+    bit acRequestState
 
-float airMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
+end_struct
+
+LuaAdjustments lua
+
+
+struct speed_density_s
+
 
 	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
 	float tChargeK
 
-float Tcharge_coff
 
 floatms_t airFlow
 
@@ -20,10 +29,6 @@ floatms_t airFlow
 end_struct
 
 speed_density_s sd;
-
-
-	float targetAFR
-
 
 float engineCycleDurationMs;
 
@@ -36,7 +41,7 @@ float tpsVoltageBoard
 
 	float currentBaroCorrectedVE;
 	float injectorFlowCorrection;
-float baroCorrection;
+float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
 
 
 struct cranking_fuel_s
@@ -57,12 +62,9 @@ cranking_fuel_s cranking
 
 struct running_fuel_s
 float postCrankingFuelCorrection
-	float intakeTemperatureCoefficient
-	float coolantTemperatureCoefficient
+	float intakeTemperatureCoefficient;@@GAUGE_NAME_FUEL_IAT_CORR@@
+	float coolantTemperatureCoefficient;@@GAUGE_NAME_FUEL_CLT_CORR@@
 	float timeSinceCrankingInSecs
-	
-
-	floatms_t injectorLag;injectorLag(VBatt)\nthis value depends on a slow-changing VBatt value, so\nwe update it once in a while
 
 	floatms_t baseFuel;
 	floatms_t fuel;Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
@@ -72,16 +74,35 @@ end_struct
 ! actually define a member of 'running_fuel_s' type
 running_fuel_s running
 
-custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
-
-percent_t etbFeedForward;
-
-	percent_t targetFromTable
+	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
 	! spark-related
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
 	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
-	angle_t cltTimingCorrection
+	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 
-! engine_state2_s
+    int16_t hellenBoardId;Detected Board ID;"id", 1, 0, 0, 3000, 0
+
+    bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
+    bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
+    bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
+
+    float egt1
+    float egt2
+
+    int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
+
+int fuelInjectionCounter
+int sparkCounter
+
+
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	float fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@
+	float ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@
+
+
+! engine_state_s
 end_struct

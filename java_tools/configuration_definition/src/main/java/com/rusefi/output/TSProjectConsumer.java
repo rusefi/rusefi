@@ -7,9 +7,11 @@ import com.rusefi.util.SystemOut;
 
 import java.io.*;
 
-import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.util.IoUtils.CHARSET;
 
+/**
+ * [Constants]
+ */
 public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
@@ -17,18 +19,15 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_CONDITION = "@@if_";
     public static final String SETTING_CONTEXT_HELP_END = "SettingContextHelpEnd";
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
-    public static String TS_FILE_OUTPUT_NAME = "rusefi.ini";
 
-    private final CharArrayWriter tsWriter;
     private final String tsPath;
     private final ReaderState state;
     private int totalTsSize;
     private final TsOutput tsOutput;
 
-    public TSProjectConsumer(CharArrayWriter tsWriter, String tsPath, ReaderState state) {
-        this.tsWriter = tsWriter;
+    public TSProjectConsumer(String tsPath, ReaderState state) {
         this.tsPath = tsPath;
-        tsOutput = new TsOutput(state, true);
+        tsOutput = new TsOutput(true, true);
         this.state = state;
     }
 
@@ -51,7 +50,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ToolUtil.EOL);
-        tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ToolUtil.EOL + ToolUtil.EOL);
+        tsHeader.write("; this section " + state.getHeader() + ToolUtil.EOL + ToolUtil.EOL);
         tsHeader.write("pageSize            = " + totalTsSize + ToolUtil.EOL);
         tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
@@ -130,8 +129,8 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         return token;
     }
 
-    public static String getTsFileOutputName(String tsPath) {
-        return tsPath + File.separator + TS_FILE_OUTPUT_NAME;
+    private String getTsFileOutputName(String tsPath) {
+        return tsPath + File.separator + state.tsFileOutputName;
     }
 
     public static String getTsFileInputName(String tsPath) {
@@ -139,21 +138,21 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() {
-    }
-
-    @Override
     public void endFile() throws IOException {
-        writeTunerStudioFile(tsPath, tsWriter.toString());
+        writeTunerStudioFile(tsPath, getContent());
     }
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
+        totalTsSize = tsOutput.run(readerState, structure, 0);
+
         if (state.stack.isEmpty()) {
-            totalTsSize = tsOutput.writeTunerStudio(structure, "", tsWriter, 0);
-            tsWriter.write("; total TS size = " + totalTsSize + EOL);
             state.variableRegistry.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
+    }
+
+    public String getContent() {
+        return tsOutput.getContent();
     }
 }

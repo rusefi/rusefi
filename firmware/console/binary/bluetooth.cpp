@@ -12,7 +12,6 @@
 
 #include "pch.h"
 
-#include "os_access.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
@@ -26,11 +25,12 @@ static const char *commands[5];
 static int numCommands = 0;
 static int setBaudIdx = -1;
 
-static char cmdHello[5];
+static char cmdHello[30];
 static char cmdBaud[25];
 static char cmdName[30];
 static char cmdPin[16];
 
+// JDY-33 has 9: 128000 which we do not
 static const int baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200, -1 };
 static const int baudRateIndexList[] = { 4 /*9600*/, 6 /*38400*/, 8 /*115200*/, 7, 5, 3, 2, 1, -1 };
 static const int btModuleTimeout = TIME_MS2I(1000);
@@ -51,6 +51,7 @@ static void runCommands() {
 	if (!btProcessIsStarted)
 		return;
 	
+	efiPrintf("Sleeping...");
 	chThdSleepMilliseconds(1000);	// safety
 
 	// Store current serial port speed - we're going to change it
@@ -80,25 +81,34 @@ static void runCommands() {
 			// change the port speed
 			engineConfiguration->tunerStudioSerialSpeed = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
+			efiPrintf("Restarting at %d", engineConfiguration->tunerStudioSerialSpeed);
+
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
+		} else {
+			efiPrintf("Running at %d", engineConfiguration->tunerStudioSerialSpeed);
 		}
 
 		// exit if all commands were sent
 		if (restoreAndExit)
 			break;
 
+		const char * command = commands[cmdIdx];
+		efiPrintf("Sending %s", command);
+
 		// send current command
-		tsChannel->write((uint8_t*)commands[cmdIdx], strlen(commands[cmdIdx]));
+		tsChannel->write((uint8_t*)command, strlen(command));
 		
 		// waiting for an answer
 		bool wasAnswer = false;
-		if (tsChannel->readTimeout(buffer, 2, btModuleTimeout) == 2) {
+		int received = tsChannel->readTimeout(buffer, 2, btModuleTimeout);
+		if (received == 2) {
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
 		}
+		efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
@@ -123,10 +133,11 @@ static void runCommands() {
 	}
 
 	// the connection is already restored to the current baud rate, so print the result
-	if (cmdIdx == numCommands)
+	if (cmdIdx == numCommands) {
 		efiPrintf("SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
-	else
+	} else {
 		efiPrintf("FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
+	}
 }
 
 static THD_FUNCTION(btThreadEntryPoint, arg) {
@@ -158,14 +169,13 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
-	tsChannel = btChan;
-	
-	// if a binary protocol uses USB, we cannot init the bluetooth module!
-	if (!engineConfiguration->useSerialPort) {
-		efiPrintf("Failed! Serial Port connection is disabled!");
+	tsChannel = getBluetoothChannel();
+
+	if (tsChannel == nullptr) {
+		efiPrintf("No Bluetooth channel configured! Check your board config.");
 		return;
 	}
 
@@ -239,8 +249,14 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
 		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
 		break;
-	case BLUETOOTH_SPP:
+	case BLUETOOTH_BK3231:
 		chsnprintf(cmdHello, sizeof(cmdHello), "AT\r\n");
+		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c\r\n", '0' + setBaudIdx);
+		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
+		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
+		break;
+	case BLUETOOTH_JDY_3x:
+		chsnprintf(cmdHello, sizeof(cmdHello), "AT+VERSION\r\n");
 		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c\r\n", '0' + setBaudIdx);
 		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
 		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);

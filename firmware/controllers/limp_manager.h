@@ -4,22 +4,72 @@
 
 #include <cstdint>
 
+enum class ClearReason : uint8_t {
+	None, // 0
+	Fatal,
+	Settings,
+	HardLimit, // 3
+	FaultRevLimit,
+	BoostCut, // 5
+	OilPressure,
+	StopRequested, // 7
+	EtbProblem, // 8
+	LaunchCut, // 9
+	InjectorDutyCycle, // 10
+	FloodClear, // 11
+	EnginePhase, // 12
+	KickStart,
+};
+
 // Only allows clearing the value, but never resetting it.
 class Clearable {
 public:
 	Clearable() : m_value(true) {}
-	Clearable(bool value) : m_value(value) {}
+	Clearable(bool value) : m_value(value) {
+		if (!m_value) {
+			clearReason = ClearReason::Settings;
+		}
+	}
 
-	void clear() {
+	void clear(ClearReason clearReason) {
 		m_value = false;
+		this->clearReason = clearReason;
 	}
 
 	operator bool() const {
 		return m_value;
 	}
 
+	ClearReason clearReason = ClearReason::None;
 private:
 	bool m_value = true;
+};
+
+struct LimpState {
+	const bool value;
+	const ClearReason reason;
+
+	// Implicit conversion operator to bool, so you can do things like if (myResult) { ... }
+	constexpr explicit operator bool() const {
+		return value;
+	}
+};
+
+class Hysteresis {
+public:
+	// returns true if value > rising, false if value < falling, previous if falling < value < rising.
+	bool test(float value, float rising, float falling) {
+		if (value > rising) {
+			m_state = true;
+		} else if (value < falling) {
+			m_state = false;
+		}
+
+		return m_state;
+	}
+
+private:
+	bool m_state = false;
 };
 
 class LimpManager {
@@ -30,17 +80,25 @@ public:
 	// Other subsystems call these APIs to determine their behavior
 	bool allowElectronicThrottle() const;
 
-	bool allowInjection() const;
-	bool allowIgnition() const;
+	LimpState allowInjection() const;
+	LimpState allowIgnition() const;
 
 	bool allowTriggerInput() const;
 
 	// Other subsystems call these APIs to indicate a problem has occured
 	void etbProblem();
 	void fatalError();
+	void stopEngine();
+
+	bool isEngineStop(efitick_t nowNt) const;
+	float getTimeSinceEngineStop(efitick_t nowNt) const;
 
 private:
 	void setFaultRevLimit(int limit);
+
+	Hysteresis m_revLimitHysteresis;
+	Hysteresis m_boostCutHysteresis;
+	Hysteresis m_injectorDutyCutHysteresis;
 
 	// Start with no fault rev limit
 	int32_t m_faultRevLimit = INT32_MAX;
@@ -50,8 +108,14 @@ private:
 	Clearable m_allowIgnition;
 	Clearable m_allowTriggerInput;
 
-	bool m_transientAllowInjection = true;
-	bool m_transientAllowIgnition = true;
+	Clearable m_transientAllowInjection = true;
+	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
+
+	Timer m_engineStopTimer;
 };
+
+LimpManager * getLimpManager();
+
+

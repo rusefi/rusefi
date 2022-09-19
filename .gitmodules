@@ -4,7 +4,8 @@
 	branch = stable_20.3.x.rusefi
 [submodule "firmware/ChibiOS-Contrib"]
 	path = firmware/ChibiOS-Contrib
-	url = https://github.com/ChibiOS/ChibiOS-Contrib.git
+	url = https://github.com/rusefi/ChibiOS-Contrib.git
+	branch = rusefi-20.3.x
 [submodule "unit_tests/googletest"]
 	path = unit_tests/googletest
 	url = https://github.com/google/googletest.git
@@ -21,7 +22,6 @@
 [submodule "firmware/controllers/can/wideband_firmware"]
 	path = firmware/controllers/can/wideband_firmware
 	url = https://github.com/mck1117/wideband
-	branch = master
 [submodule "firmware/ext/uzlib"]
 	path = firmware/ext/uzlib
 	url = https://github.com/pfalcon/uzlib
@@ -45,3 +45,6 @@
 	path = java_console/luaformatter
 	url = https://github.com/rusefi/luaformatter
 	branch = prod
+[submodule "firmware/libfirmware"]
+	path = firmware/libfirmware
+	url = https://github.com/rusefi/libfirmware.git

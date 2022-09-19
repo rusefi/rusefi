@@ -21,6 +21,9 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class SandboxCommon {
     private static final Logging log = getLogging(SandboxCommon.class);
+    static {
+        log.configureDebugEnabled(false);
+    }
 
     static ConfigurationImage readImage(IoStream tsStream, LinkManager linkManager) throws InterruptedException {
         AtomicReference<ConfigurationImage> configurationImageAtomicReference = new AtomicReference<>();
@@ -45,14 +48,14 @@ public class SandboxCommon {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 log.info("onConnectionFailed");
             }
         });
 
         imageLatch.await(1, TimeUnit.MINUTES);
         ConfigurationImage ci = configurationImageAtomicReference.get();
-        log.info("Got ConfigurationImage " + ci + ", " + ci.getSize());
+        log.info("Got ConfigurationImage " + ci + ", size=" + ci.getSize());
         return ci;
     }
 
@@ -76,14 +79,15 @@ public class SandboxCommon {
             throw new IllegalStateException("Unexpected S " + signature);
     }
 
-    static void runFcommand(String prefix, IoStream tsStream) throws IOException {
+    static void runGetProtocolCommand(String prefix, IoStream tsStream) throws IOException {
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        tsStream.write(new byte[]{Fields.TS_COMMAND_F});
+        tsStream.write(new byte[]{Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F});
         tsStream.flush();
         byte[] fResponse = new byte[3];
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
         dataBuffer.getData(fResponse);
-        log.info(prefix + " Got F response " + IoStream.printByteArray(fResponse));
+        if (log.debugEnabled())
+            log.debug(prefix + " Got GetProtocol F response " + IoStream.printByteArray(fResponse));
         if (fResponse[0] != '0' || fResponse[1] != '0' || fResponse[2] != '1')
             throw new IllegalStateException("Unexpected TS_COMMAND_F response " + Arrays.toString(fResponse));
     }

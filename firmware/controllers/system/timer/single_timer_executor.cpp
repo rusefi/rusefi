@@ -22,7 +22,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "single_timer_executor.h"
 #include "efitime.h"
 
@@ -45,8 +45,8 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
-	scheduleByTimestamp("scheduleForLater", scheduling, getTimeNowUs() + delayUs, action);
+void SingleTimerExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
+	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
@@ -63,15 +63,16 @@ void SingleTimerExecutor::scheduleByTimestamp(const char *msg, scheduling_s *sch
 	scheduleByTimestampNt(msg, scheduling, US2NT(timeUs), action);
 }
 
-void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitime_t nt, action_s action) {
+void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
-	int32_t deltaTimeNt = (int32_t)nt - getTimeNowLowerNt();
+	efitick_t deltaTimeNt = nt - getTimeNowNt();
 
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", deltaTimeNt, msg);
+		int32_t intDeltaTimeNt = (int32_t)deltaTimeNt;
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", intDeltaTimeNt, msg);
 		return;
 	}
 #endif

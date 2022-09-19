@@ -1,7 +1,7 @@
 package com.rusefi.composite;
 
 public class CompositeEvent {
-    private final int timestamp;
+    private final long timestamp;
     private final boolean primaryTrigger;
     private final boolean secondaryTrigger;
     private final boolean trg;
@@ -9,7 +9,7 @@ public class CompositeEvent {
     private final boolean coil;
     private final boolean injector;
 
-    public CompositeEvent(int timestamp, boolean primaryTrigger, boolean secondaryTrigger, boolean trg, boolean sync, boolean coil, boolean injector) {
+    public CompositeEvent(long timestamp, boolean primaryTrigger, boolean secondaryTrigger, boolean trg, boolean sync, boolean coil, boolean injector) {
         this.timestamp = timestamp;
         this.primaryTrigger = primaryTrigger;
         this.secondaryTrigger = secondaryTrigger;
@@ -19,7 +19,7 @@ public class CompositeEvent {
         this.injector = injector;
     }
 
-    public int getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 

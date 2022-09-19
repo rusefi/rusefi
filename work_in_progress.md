@@ -1,3 +1,13 @@
+Jan, 11 2022 status 
+* AndreyB works on data point logging and live view https://github.com/rusefi/rusefi/issues/3614 as part of rusEFI usability improvements
+* AndreyB is trying to push https://github.com/mck1117/wideband/issues/28 forward as part of Hellen fabrication improvements
+* AndreyB is working on GDI4 https://github.com/rusefi/rusefi-hardware/issues?q=is%3Aissue+label%3AGDI as part of BMW 760 epic
+* Mark is working on STM32 sleep / CAN wake up as part of Harley Hellen
+* Anyone to pick up https://github.com/rusefi/rusefi/issues/936?
+* Anyone to pick up https://github.com/rusefi/rusefi/issues/3771?
+* Anyone to pick up https://github.com/rusefi/rusefi/labels/ADC-shortage?
+
+
 Sept, 23 2021 status
 * two Hellen-Mercedes driving
 * Hellen-Nissan started!

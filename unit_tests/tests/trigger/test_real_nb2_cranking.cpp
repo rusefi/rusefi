@@ -14,22 +14,25 @@ TEST(realCrankingNB2, normalCranking) {
 
 	reader.open("tests/trigger/resources/nb2-cranking-good.csv", indeces);
 	EngineTestHelper eth (HELLEN_NB2);
+	engineConfiguration->alwaysInstantRpm = true;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	// VVT position nearly zero!
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 3.6569f, 1e-4);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 4.2627f, 1e-4);
 
 	// Check the number of times VVT information was used to adjust crank phase
 	// This should happen exactly once: once we sync, we shouldn't lose it.
-	EXPECT_EQ(engine->outputChannels.vvtSyncCounter, 1);
+	EXPECT_EQ(engine->triggerCentral.triggerState.camResyncCounter, 2);
 
-	ASSERT_EQ(942, GET_RPM());
+	ASSERT_EQ(876, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	// TODO: why warnings?
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+	EXPECT_EQ(3, eth.recentWarnings()->getCount());
+	EXPECT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0).Code);
+	EXPECT_EQ(CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
+	EXPECT_EQ(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(2).Code);
 }
 
 TEST(realCrankingNB2, crankingMissingInjector) {
@@ -38,16 +41,20 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 
 	reader.open("tests/trigger/resources/nb2-cranking-good-missing-injector-1.csv", indeces);
 	EngineTestHelper eth (HELLEN_NB2);
+	engineConfiguration->alwaysInstantRpm = true;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	// VVT position nearly zero!
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -7.1926f, 1e-4);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -2.5231f, 1e-4);
 
-	ASSERT_EQ(668, GET_RPM());
+	ASSERT_EQ(316, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	// TODO: why warnings?
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+	EXPECT_EQ(4, eth.recentWarnings()->getCount());
+	EXPECT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(0).Code);
+	EXPECT_EQ(CUSTOM_CAM_TOO_MANY_TEETH, eth.recentWarnings()->get(1).Code);
+	EXPECT_EQ(CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, eth.recentWarnings()->get(2).Code);
+	EXPECT_EQ(CUSTOM_PRIMARY_TOO_MANY_TEETH, eth.recentWarnings()->get(3).Code);
 }

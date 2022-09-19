@@ -10,6 +10,7 @@ import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.proxy.NetworkConnector;
+import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -21,6 +22,9 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.shared.FileUtil.close;
 
+/**
+ * Takes any IoStream and exposes it as local TCP/IP server socket
+ */
 public class BinaryProtocolProxy {
     private static final Logging log = getLogging(BinaryProtocolProxy.class);
     /**
@@ -30,18 +34,21 @@ public class BinaryProtocolProxy {
      */
     public static final int USER_IO_TIMEOUT = 10 * Timeouts.MINUTE;
 
-    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, ClientApplicationActivityListener clientApplicationActivityListener) throws IOException {
+    /**
+     * @return starts a thread and returns a reference to ServerSocketReference
+     */
+    public static ServerSocketReference createProxy(IoStream targetEcuSocket, int serverProxyPort, ClientApplicationActivityListener clientApplicationActivityListener, StatusConsumer statusConsumer) throws IOException {
         CompatibleFunction<Socket, Runnable> clientSocketRunnableFactory = clientSocket -> () -> {
             TcpIoStream clientStream = null;
             try {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
                 runProxy(targetEcuSocket, clientStream, clientApplicationActivityListener, USER_IO_TIMEOUT);
             } catch (IOException e) {
-                log.error("BinaryProtocolProxy::run " + e);
+                statusConsumer.append("ERROR BinaryProtocolProxy::run " + e);
                 close(clientStream);
             }
         };
-        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty());
+        return BinaryProtocolServer.tcpServerSocket(serverProxyPort, "proxy", clientSocketRunnableFactory, Listener.empty(), statusConsumer);
     }
 
     public interface ClientApplicationActivityListener {
@@ -57,7 +64,8 @@ public class BinaryProtocolProxy {
          */
         while (!targetEcu.isClosed()) {
             byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
-            if (firstByte == Fields.TS_COMMAND_F) {
+            if (firstByte == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
+                log.info("Responding to GET_PROTOCOL_VERSION with " + TS_PROTOCOL);
                 clientStream.write(TS_PROTOCOL.getBytes());
                 clientStream.flush();
                 continue;
@@ -79,7 +87,8 @@ public class BinaryProtocolProxy {
                 controllerResponse = targetEcu.readPacket();
             }
 
-            log.info("Relaying controller response length=" + controllerResponse.getPacket().length);
+            if (log.debugEnabled())
+                log.debug("Relaying controller response length=" + controllerResponse.getPacket().length);
             clientStream.sendPacket(controllerResponse);
         }
     }
@@ -96,7 +105,8 @@ public class BinaryProtocolProxy {
         DataInputStream dis = new DataInputStream(new ByteArrayInputStream(packet.getPacket()));
         byte command = (byte) dis.read();
 
-        log.info("Relaying client command " + BinaryProtocol.findCommand(command));
+        if (log.debugEnabled())
+            log.debug("Relaying client command " + BinaryProtocol.findCommand(command));
         // sending proxied packet to controller
         targetOutputStream.sendPacket(packet);
     }

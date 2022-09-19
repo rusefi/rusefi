@@ -23,8 +23,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f\n",
-			map);
+	printf("getSpeedDensityAirmass map=%.2f\n", map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {
@@ -34,22 +33,17 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 }
 
 float SpeedDensityAirmass::getMap(int rpm) const {
-	SensorResult map = Sensor::get(SensorType::Map);
-	if (map) {
-		return map.Value;
+	float fallbackMap;
+	if (engineConfiguration->enableMapEstimationTableFallback) {
+	// if the map estimation table is enabled, estimate map based on the TPS and RPM
+		fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 	} else {
-		float fallbackMap;
-		if (engineConfiguration->enableMapEstimationTableFallback) {
-		// if the map estimation table is enabled, estimate map based on the TPS and RPM
-			fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
-		} else {
-			fallbackMap = engineConfiguration->failedMapFallback;
-		}
+		fallbackMap = engineConfiguration->failedMapFallback;
+	}
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fallbackMap = fallbackMap;
 #endif // EFI_TUNER_STUDIO
 
-		return fallbackMap;
-	}
+	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }

@@ -123,9 +123,27 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,
+		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins,
 		&engine->executor,
 		engineConfiguration->etbFreq
+	);
+
+	return &hw.dcMotor;
+}
+
+DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
+	auto& hw = dcHardware[index];
+
+	hw.start(
+		true, /* useTwoWires */
+		Gpio::Unassigned, /* pinEnable */
+		coil_p,
+		coil_m,
+		Gpio::Unassigned, /* pinDisable */
+		engineConfiguration->stepperDcInvertedPins,
+		&engine->executor,
+		engineConfiguration->etbFreq /* same in case of stepper? */
 	);
 
 	return &hw.dcMotor;

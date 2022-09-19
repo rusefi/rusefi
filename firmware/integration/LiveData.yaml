@@ -1,11 +1,122 @@
-Destination: "../java_console"
-
+#
+# Here we facilitate monitoring by exposing model/transfer object of each individual controller. While some entries are only
+# useful for monitoring the big idea is to bring calculation and monitoring as close to each other as possible by exposing
+# many calculation fields directly
+#
+# here we have LiveData configuration file
+# entry format, where 'key' is a unique ID:
+# key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
+# Naming convention: top level struct in .txt file should be called key_s
+# at the moment new line would need to be added into StateDictionary.java manually todo: Add code generation of StateDictionary.java
+#
+# see gen_live_documentation.sh which is the main generation script
+# todo: what is sequence of events in terms of 'live_data_e' code generation?
+#
 Usages:
-  - "controllers/actuators/idle_thread.cpp"
-  - "controllers/trigger/trigger_decoder.cpp"
-  - "controllers/sensors/thermistors.cpp"
-  - "controllers/sensors/tps.cpp"
-  - "controllers/math/speed_density.cpp"
-  - "controllers/algo/fuel_math.cpp"
-  - "controllers/actuators/electronic_throttle.cpp"
-  - "controllers/algo/accel_enrichment.cpp"
+  - name: output_channels
+    java: TsOutputs.java
+    folder: console/binary
+    prepend: integration/rusefi_config.txt
+
+  - name: knock_controller
+    java: KnockController.java
+    folder: controllers/engine_cycle
+    output_name: knock
+
+  - name: high_pressure_fuel_pump
+    java: HighPressureFuelPump.java
+    folder: controllers/engine_cycle
+    output_name: hpfp
+
+  - name: injector_model
+    java: InjectorModel.java
+    folder: controllers/algo/fuel
+
+  - name: fuel_computer
+    java: FuelComputer.java
+    folder: controllers/algo/fuel
+    prepend: integration/rusefi_config.txt
+
+  - name: launch_control_state
+    java: LaunchControl.java
+    folder: controllers/algo
+
+  - name: boost_control
+    java: BoostControl.java
+    folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
+    output_name: boost
+
+  - name: ac_control
+    java: AcControl.java
+    folder: controllers/actuators
+    prepend: integration/rusefi_config.txt
+    output_name: ac
+
+  - name: fan_control
+    java: FanControl.java
+    folder: controllers/actuators
+    output_name: [ "fan1", "fan2" ]
+
+  - name: fuel_pump_control
+    java: FuelPump.java
+    folder: controllers/actuators
+    output_name: fuelPump
+
+  - name: main_relay
+    java: MainRelay.java
+    folder: controllers/actuators
+    output_name: mainRelay
+
+  #todo: handle ETB pid and Idle pid which point at same pid_state.txt
+  # - name: pid_state
+  #   java: PidState.java
+  #   folder: util/math
+
+  - name: engine_state
+    java: EngineState.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config.txt
+
+  - name: tps_accel_state
+    java: TpsAccelState.java
+    folder: controllers/algo
+
+  - name: trigger_central
+    java: TriggerCentral.java
+    folder: controllers/trigger
+    withCDefines: true
+
+  - name: trigger_state
+    java: TriggerState.java
+    folder: controllers/trigger
+    prepend: integration/rusefi_config.txt
+    output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
+
+  - name: trigger_state_primary
+    java: TriggerStatePrimary.java
+    folder: controllers/trigger
+    prepend: integration/rusefi_config.txt
+
+  - name: wall_fuel_state
+    java: WallFuelState.java
+    folder: controllers/algo
+
+  - name: idle_state
+    java: IdleState.java
+    folder: controllers/actuators
+    output_name: idle
+
+  - name: ignition_state
+    java: IgnitionState.java
+    folder: controllers/algo
+
+  - name: electronic_throttle
+    java: ElectronicThrottle.java
+    folder: controllers/actuators
+    output_name: [ "etb1", "etb2" ]
+
+  - name: wideband_state
+    java: WidebandController.java
+    folder: controllers/sensors/
+    output_name: [ "wb1", "wb2" ]

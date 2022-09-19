@@ -36,7 +36,7 @@ public class SystemOut {
             @Override
             public void run() {
                 close();
-                System.out.println("SystemOut Hook done!");
+                System.out.println("SystemOut Hook done for " + fileName);
             }
         }));
     }

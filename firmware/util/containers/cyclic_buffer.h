@@ -69,7 +69,7 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 	}
 	currentIndex = idx;
 
-	++count;
+	count = count + 1;
 }
 
 template<typename T, size_t maxSize>

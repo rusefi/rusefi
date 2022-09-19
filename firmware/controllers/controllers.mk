@@ -40,8 +40,9 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/high_pressure_fuel_pump.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/rpm_calculator.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/spark_logic.cpp \
-	$(CONTROLLERS_DIR)/engine_cycle/knock_logic.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/knock_controller.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/prime_injection.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
@@ -63,6 +64,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/start_stop.cpp \
 	$(CONTROLLERS_DIR)/simple_tcu.cpp \
+	$(CONTROLLERS_DIR)/tc_4l6x.cpp \
 	$(CONTROLLERS_DIR)/limp_manager.cpp \
 
 CONTROLLERS_INC=\

@@ -44,14 +44,14 @@ pins:
     type: av
 
   - pin: 7
-    id: GPIOH_12
+    id: H12
     class: event_inputs
     function: Cam VR+
     ts_name: A07 - Cam VR+
     type: vr
 
   - pin: 8
-    id: GPIOE_9
+    id: E9
     class: event_inputs
     function: Crank 2 VR+
     ts_name: A08 - Crank 2 VR+
@@ -89,10 +89,10 @@ pins:
     type: 12V
 
   - pin: 16
-    id: EFI_ADC3_10
-    class: analog_inputs
+#    id: EFI_ADC3_10
+#    class: analog_inputs
     function: Atm Pressure Sensor output to TCU
-    ts_name: (BUG!) A16 - Atm Pressure Sensor Ain
+#    ts_name: (BUG!) A16 - Atm Pressure Sensor Ain
     type: av
 
   - pin: 17

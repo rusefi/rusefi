@@ -8,7 +8,11 @@
 #include "pch.h"
 
 #include "spark_logic.h"
-#include "os_access.h"
+
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
 
 #include "utlist.h"
 #include "event_queue.h"
@@ -36,8 +40,6 @@ int isIgnitionTimingError(void) {
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 	efitick_t nowNt = getTimeNowNt();
-	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
-	engine->mostRecentSparkEvent = nowNt;
 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
@@ -75,13 +77,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	const angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
-		- engine->engineState.timingAdvance[event->cylinderNumber]
+		- getEngineState()->timingAdvance[event->cylinderNumber]
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
-		+ engine->knockController.getKnockRetard();
-
-	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
+		+ engine->module<KnockController>()->getKnockRetard();
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
 	const int index = engine->ignitionPin[event->cylinderIndex];
@@ -89,7 +89,12 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 	IgnitionOutputPin *secondOutput;
-	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && engineConfiguration->twoWireBatchIgnition) {
+
+	// We need two outputs if:
+	//  - we are running wasted spark, and have "two wire" mode enabled
+	//  - We are running sequential mode, but we're cranking, so we should run in two wire wasted mode (not one wire wasted)
+	bool isTwoWireWasted = engineConfiguration->twoWireBatchIgnition || (engineConfiguration->ignitionMode == IM_INDIVIDUAL_COILS);
+	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && isTwoWireWasted) {
 		int secondIndex = index + engineConfiguration->specs.cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
@@ -230,7 +235,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
-	if (GET_RPM() > 2 * engineConfiguration->cranking.rpm) {
+	if (Sensor::getOrZero(SensorType::Rpm) > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode() != IM_ONE_COIL) {
 			warning(CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
@@ -306,7 +311,10 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 		return;
 	}
 
-	event->sparkId = engine->globalSparkIdCounter++;
+	/**
+	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
+	 */
+	event->sparkId = engine->engineState.sparkCounter++;
 
 	efitick_t chargeTime = 0;
 
@@ -398,7 +406,7 @@ static void prepareIgnitionSchedule() {
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 	 */
-	operation_mode_e operationMode = engine->getOperationMode();
+	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
 	float maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
@@ -417,15 +425,17 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp
-		) {
-
+void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
+
+	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
+	bool limitedSpark = !limitedSparkState.value;
 
 	if (!engine->ignitionEvents.isReady) {
 		prepareIgnitionSchedule();
@@ -449,7 +459,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
-				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
+				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.sparkCounter);
 				continue;
 			}
 #if EFI_LAUNCH_CONTROL
@@ -488,7 +498,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  */
 percent_t getCoilDutyCycle(int rpm) {
 	floatms_t totalPerCycle = engine->engineState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
-	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
 

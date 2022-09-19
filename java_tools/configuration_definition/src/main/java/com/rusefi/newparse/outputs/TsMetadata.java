@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TsMetadata {
-    private List<String> comments = new ArrayList<>();
+    private final List<String> comments = new ArrayList<>();
     public void addComment(String name, String comment) {
         if (comment == null) {
             return;
@@ -27,6 +27,6 @@ public class TsMetadata {
     }
 
     public void writeComments(PrintStream ps) {
-        this.comments.stream().forEach(ps::println);
+        this.comments.forEach(ps::println);
     }
 }

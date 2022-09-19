@@ -1,6 +1,5 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
 import com.rusefi.ToolUtil;
 import com.rusefi.util.LazyFile;
@@ -29,7 +28,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
     @Override
     public void startFile() {
         javaFields.write("package " + JAVA_PACKAGE + ";" + ToolUtil.EOL + ToolUtil.EOL);
-        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ToolUtil.EOL + EOL);
+        javaFields.write("// this file " + state.getHeader() + ToolUtil.EOL + EOL);
         javaFields.write("// by " + getClass() + EOL);
         javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
         javaFields.write("public class " + className + " {" + ToolUtil.EOL);
@@ -38,7 +37,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
     @Override
     public void endFile() throws IOException {
         javaFields.write(state.variableRegistry.getJavaConstants());
-        javaFields.write(getJavaFieldsWriter());
+        javaFields.write(getContent());
 
         allFields.append("\t};" + EOL);
         javaFields.write(allFields.toString());

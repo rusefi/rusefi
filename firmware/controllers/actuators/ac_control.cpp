@@ -9,7 +9,7 @@ static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
 bool AcController::getAcState() {
-	latest_usage_ac_control = getTimeNowSeconds();
+	latest_usage_ac_control = getTimeNowS();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	engineTooSlow = rpm < 500;
@@ -45,8 +45,10 @@ bool AcController::getAcState() {
 	if (tpsTooHigh) {
 			return false;
 	}
+	if (isDisabledByLua) {
+		return false;
+	}
 
-	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
 	return acButtonState;
 }
@@ -56,12 +58,20 @@ void AcController::onSlowCallback() {
 
 	m_acEnabled = isEnabled;
 
-	enginePins.acRelay.setValue(isEnabled);
+	if (!isEnabled) {
+		// reset the timer if AC is off
+		m_timeSinceNoAc.reset();
+	}
 
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.acSwitchState = engine->acSwitchState;
-	engine->outputChannels.acState = isEnabled;
-#endif // EFI_TUNER_STUDIO
+	float acDelay = engineConfiguration->acDelay;
+	if (acDelay == 0) {
+		// Without delay configured, enable immediately
+		acCompressorState = isEnabled;
+	} else {
+		acCompressorState = isEnabled && m_timeSinceNoAc.hasElapsedSec(acDelay);
+	}
+
+	enginePins.acRelay.setValue(acCompressorState);
 }
 
 bool AcController::isAcEnabled() const {

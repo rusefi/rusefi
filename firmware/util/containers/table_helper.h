@@ -8,10 +8,11 @@
 #pragma once
 
 #include <math.h>
-#include "interpolation.h"
+#include "efi_interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
+#include <rusefi/interpolation.h>
 
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
@@ -164,6 +165,17 @@ constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], flo
 			dest[n][m] = source[n][m] * multiply;
 		}
 	}
+}
+
+// specialization that can use memcpy when src and dest types match
+template <typename TDest, size_t N, size_t M>
+constexpr void copyTable(scaled_channel<TDest, 1, 1> (&dest)[N][M], const TDest (&source)[N][M]) {
+	memcpy(dest, source, N * M * sizeof(TDest));
+}
+
+template <typename TDest, size_t N, size_t M>
+constexpr void copyTable(TDest (&dest)[N][M], const TDest (&source)[N][M]) {
+	memcpy(dest, source, N * M * sizeof(TDest));
 }
 
 template<typename kType>

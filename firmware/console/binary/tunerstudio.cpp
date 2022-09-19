@@ -60,7 +60,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 
 #include "tunerstudio.h"
 #include "tunerstudio_impl.h"
@@ -71,7 +71,6 @@
 #include "tunerstudio_io.h"
 #include "malfunction_central.h"
 #include "console_io.h"
-#include "crc.h"
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
@@ -101,8 +100,8 @@ static void printErrorCounters() {
 
 /* 1S */
 #define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
-
-extern persistent_config_container_s persistentState;
+/* 10mS when receiving byte by byte */
+#define TS_COMMUNICATION_TIMEOUT_SHORT	TIME_MS2I(10)
 
 static efitimems_t previousWriteReportMs = 0;
 
@@ -110,11 +109,11 @@ static void resetTs() {
 	memset(&tsState, 0, sizeof(tsState));
 }
 
-void printTsStats(void) {
+static void printTsStats(void) {
 #if EFI_PROD_CODE
 #ifdef EFI_CONSOLE_RX_BRAIN_PIN
-	efiPrintf("Primary Channel RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
-	efiPrintf("Primary Channel TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
+	efiPrintf("Primary UART RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
+	efiPrintf("Primary UART TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
 #endif
 
 	if (false) {
@@ -134,24 +133,6 @@ static void setTsSpeed(int value) {
 	printTsStats();
 }
 
-#if EFI_BLUETOOTH_SETUP
-
-// Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
-}
-
-// Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
-}
-
-// Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
-}
-#endif  /* EFI_BLUETOOTH_SETUP */
-
 #endif // EFI_TUNER_STUDIO
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
@@ -164,15 +145,11 @@ uint8_t* getWorkingPageAddr() {
 	return (uint8_t*)engineConfiguration;
 }
 
-static constexpr size_t getTunerStudioPageSize() {
-	return TOTAL_CONFIG_SIZE;
-}
-
 void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsChannel->sendResponse(mode, NULL, 0);
 }
 
-static void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
+void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
 	tsChannel->writeCrcPacket(code, nullptr, 0);
 }
 
@@ -180,95 +157,27 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
 	::sendErrorCode(tsChannel, code);
 }
 
-static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
+void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
 	tsState.pageCommandCounter++;
 
 	sendOkResponse(tsChannel, mode);
 }
 
-#if EFI_TUNER_STUDIO
+bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
-static const void * getStructAddr(live_data_e structId) {
-	switch (structId) {
-	case LDS_ENGINE:
-		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_FUEL_TRIM:
-		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_TRIGGER_CENTRAL:
-		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_TRIGGER_STATE:
-		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-	case LDS_AC_CONTROL:
-		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_FUEL_PUMP:
-		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_PID:
-		return engine->etbControllers[0]->getPidState();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#ifndef EFI_IDLE_CONTROL
-	case LDS_IDLE_PID:
-		return static_cast<pid_state_s*>(getIdlePid());
-#endif /* EFI_IDLE_CONTROL */
-	case LDS_IDLE:
-		return static_cast<idle_state_s*>(&engine->idle);
-	case LDS_TPS_ACCEL:
-		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-	case LDS_MAIN_RELAY:
-		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
-#if EFI_BOOST_CONTROL
-	case LDS_BOOST_CONTROL:
-		return static_cast<boost_control_s*>(&engine->boostController);
-#endif // EFI_BOOST_CONTROL
-	default:
-		return nullptr;
-	}
-}
-
-/**
- * Read internal structure for Live Doc
- * This is somewhat similar to read page and somewhat similar to read outputs
- * We can later consider combining this functionality
- */
-static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int size) {
-	tsState.readPageCommandsCounter++;
-
-	const void *addr = getStructAddr((live_data_e)structId);
-	if (addr == nullptr) {
-		// todo: add warning code - unexpected structId
-		return;
-	}
-	tsChannel->sendResponse(TS_CRC, (const uint8_t *)addr, size);
-}
-
-#endif // EFI_TUNER_STUDIO
-
-// Validate whether the specified offset and count would cause an overrun in the tune.
-// Returns true if an overrun would occur.
-static bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
-	if (offset + count > getTunerStudioPageSize()) {
-		efiPrintf("TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
-		tunerStudioError(tsChannel, "ERROR: out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return true;
-	}
-
-	return false;
-}
-
-// This is used to prevent TS from reading/writing when we have just applied a preset, to prevent TS getting confused.
-// At the same time an ECU reboot is forced by triggering a fatal error, informing the user to please restart
-// the ECU.  Forcing a reboot will force TS to re-read the tune CRC, 
-bool rebootForPresetPending = false;
+extern bool rebootForPresetPending;
 
 /**
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
+	if (isLockedFromUser()) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
 
@@ -287,7 +196,7 @@ void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode
 
 #if EFI_TUNER_STUDIO
 
-static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -305,11 +214,15 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
+void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
 	UNUSED(tsChannel);
 	UNUSED(mode);
 
 	tsState.writeValueCommandCounter++;
+	if (isLockedFromUser()) {
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		return;
+	}
 
 	tunerStudioDebug(tsChannel, "got W (Write)"); // we can get a lot of these
 
@@ -317,7 +230,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 		return;
 	}
 
-	efitimems_t nowMs = currentTimeMillis();
+	efitimems_t nowMs = getTimeNowMs();
 	if (nowMs - previousWriteReportMs > 5) {
 		previousWriteReportMs = nowMs;
 		efiPrintf("offset %d: value=%d", offset, value);
@@ -329,7 +242,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	}
 }
 
-static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
 	if (rebootForPresetPending) {
@@ -345,7 +258,14 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 		return;
 	}
 
-	const uint8_t* addr = getWorkingPageAddr() + offset;
+	uint8_t* addr;
+	if (isLockedFromUser()) {
+		// to have rusEFI console happy just send all zeros within a valid packet
+		addr = (uint8_t*)&tsChannel->scratchBuffer + SCRATCH_BUFFER_PREFIX_SIZE;
+		memset(addr, 0, count);
+	} else {
+		addr = getWorkingPageAddr() + offset;
+	}
 	tsChannel->sendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
@@ -373,8 +293,8 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
-	efitimems_t nowMs = currentTimeMillis();
+static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+	efitimems_t nowMs = getTimeNowMs();
 	tsState.burnCommandCounter++;
 
 	efiPrintf("got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
@@ -385,17 +305,16 @@ void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	}
 
 	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
-	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
+	efiPrintf("BURN in %dms", getTimeNowMs() - nowMs);
 }
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
-			|| command == TS_GET_STRUCT
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
@@ -405,6 +324,88 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
 			|| command == TS_GET_CONFIG_ERROR;
+}
+
+/**
+ * rusEfi own test command
+ */
+static void handleTestCommand(TsChannelBase* tsChannel) {
+	tsState.testCommandCounter++;
+	char testOutputBuffer[64];
+	/**
+	 * this is NOT a standard TunerStudio command, this is my own
+	 * extension of the protocol to simplify troubleshooting
+	 */
+	tunerStudioDebug(tsChannel, "got T (Test)");
+	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowS());
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+
+	if (hasFirmwareError()) {
+		const char* error = getCriticalErrorMessage();
+		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
+		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
+	}
+	tsChannel->flush();
+}
+
+/**
+ * this command is part of protocol initialization
+ *
+ * Query with CRC takes place while re-establishing connection
+ * Query without CRC takes place on TunerStudio startup
+ */
+void TunerStudio::handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+	tsState.queryCommandCounter++;
+#if EFI_TUNER_STUDIO_VERBOSE
+	efiPrintf("got S/H (queryCommand) mode=%d", mode);
+	printTsStats();
+#endif
+	const char *signature = getTsSignature();
+	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
+}
+
+/**
+ * handle non CRC wrapped command
+ *
+ * @return true if legacy command was processed, false otherwise
+ */
+bool TunerStudio::handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
+	// Bail fast if guaranteed not to be a plain command
+	if (command == 0) {
+		return false;
+	} else if (command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND) {
+		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
+		efiPrintf("Got naked Query command");
+		handleQueryCommand(tsChannel, TS_PLAIN);
+		return true;
+	} else if (command == TS_TEST_COMMAND || command == 'T') {
+		handleTestCommand(tsChannel);
+		return true;
+	} else if (command == TS_COMMAND_F) {
+		/**
+		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
+		 * Response from TS support: This is an optional command		 *
+		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
+		 * If you are able to just make your firmware ignore the command that would work.
+		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
+		 */
+
+		tunerStudioDebug(tsChannel, "not ignoring F");
+		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->flush();
+		return true;
+	} else {
+		// This wasn't a valid command
+		return false;
+	}
 }
 
 TunerStudio tsInstance;
@@ -420,7 +421,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	tsState.totalCounter++;
 
 	uint8_t firstByte;
-	int received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
+	size_t received = tsChannel->readTimeout(&firstByte, 1, TS_COMMUNICATION_TIMEOUT);
 #if EFI_SIMULATOR
 		logMsg("received %d\r\n", received);
 #endif
@@ -432,56 +433,81 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
-	if (handlePlainCommand(tsChannel, firstByte)) {
+	if (tsInstance.handlePlainCommand(tsChannel, firstByte)) {
 		return -1;
 	}
 
 	uint8_t secondByte;
-	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
+	/* second byte should be received within minimal delay */
+	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT_SHORT);
 	if (received != 1) {
 		tunerStudioError(tsChannel, "TS: ERROR: no second byte");
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
+	size_t expectedSize = incomingPacketSize + CRC_VALUE_SIZE;
 
-	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-		efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+	if (incomingPacketSize == 0 || expectedSize > sizeof(tsChannel->scratchBuffer)) {
+		if (tsChannel->in_sync) {
+			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
+			/* send error only if previously we were in sync */
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+		}
+		tsChannel->in_sync = false;
 		return -1;
 	}
 
-	received = tsChannel->readTimeout((uint8_t* )tsChannel->scratchBuffer, 1, TS_COMMUNICATION_TIMEOUT);
-	if (received != 1) {
-		tunerStudioError(tsChannel, "ERROR: did not receive command");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return -1;
-	}
+	char command;
+	if (tsChannel->in_sync) {
+		/* we are in sync state, packet size should be correct so lets receive full packet and then check if command is supported
+		 * otherwise (if abort reception in middle of packet) it will break syncronization and cause error on next packet */
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer), expectedSize, TS_COMMUNICATION_TIMEOUT);
+		command = tsChannel->scratchBuffer[0];
 
-	char command = tsChannel->scratchBuffer[0];
-	if (!isKnownCommand(command)) {
-		efiPrintf("unexpected command %x", command);
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		return -1;
+		if (received != expectedSize) {
+			/* print and send error as we were in sync */
+			efiPrintf("Got only %d bytes while expecting %d for command %c", received,
+					expectedSize, command);
+			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+			tsChannel->in_sync = false;
+			return -1;
+		}
+
+		if (!isKnownCommand(command)) {
+			/* print and send error as we were in sync */
+			efiPrintf("unexpected command %x", command);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+			tsChannel->in_sync = false;
+			return -1;
+		}
+	} else {
+		/* receive only command byte to check if it is supported */
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer), 1, TS_COMMUNICATION_TIMEOUT_SHORT);
+		command = tsChannel->scratchBuffer[0];
+
+		if (!isKnownCommand(command)) {
+			/* do not report any error as we are not in sync */
+			return -1;
+		}
+
+		received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer) + 1, expectedSize - 1, TS_COMMUNICATION_TIMEOUT);
+		if (received != expectedSize - 1) {
+			/* do not report any error as we are not in sync */
+			return -1;
+		}
 	}
 
 #if EFI_SIMULATOR
-		logMsg("command %c\r\n", command);
+	logMsg("command %c\r\n", command);
 #endif
-
-	int expectedSize = incomingPacketSize + CRC_VALUE_SIZE - 1;
-	received = tsChannel->readTimeout((uint8_t*)(tsChannel->scratchBuffer + 1), expectedSize, TS_COMMUNICATION_TIMEOUT);
-	if (received != expectedSize) {
-		efiPrintf("Got only %d bytes while expecting %d for command %c", received,
-				expectedSize, command);
-		tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
-		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
-		return -1;
-	}
 
 	uint32_t expectedCrc = *(uint32_t*) (tsChannel->scratchBuffer + incomingPacketSize);
 
@@ -489,16 +515,19 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	uint32_t actualCrc = crc32(tsChannel->scratchBuffer, incomingPacketSize);
 	if (actualCrc != expectedCrc) {
-		efiPrintf("TunerStudio: CRC %x %x %x %x", tsChannel->scratchBuffer[incomingPacketSize + 0],
-				tsChannel->scratchBuffer[incomingPacketSize + 1], tsChannel->scratchBuffer[incomingPacketSize + 2],
-				tsChannel->scratchBuffer[incomingPacketSize + 3]);
-
-		efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
-				actualCrc, expectedCrc);
-		tunerStudioError(tsChannel, "ERROR: CRC issue");
-		sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+		/* send error only if previously we were in sync */
+		if (tsChannel->in_sync) {
+			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
+					actualCrc, expectedCrc);
+			tunerStudioError(tsChannel, "ERROR: CRC issue");
+			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+			tsChannel->in_sync = false;
+		}
 		return -1;
 	}
+
+	/* we were able to receive known command with correct crc and size! */
+	tsChannel->in_sync = true;
 
 	int success = tsInstance.handleCrcCommand(tsChannel, tsChannel->scratchBuffer, incomingPacketSize);
 
@@ -540,49 +569,7 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 
 #if EFI_TUNER_STUDIO
 
-/**
- * Query with CRC takes place while re-establishing connection
- * Query without CRC takes place on TunerStudio startup
- */
-void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
-	tsState.queryCommandCounter++;
-#if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("got S/H (queryCommand) mode=%d", mode);
-	printTsStats();
-#endif
-	const char *signature = getTsSignature();
-	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
-}
-
-/**
- * rusEfi own test command
- */
-static void handleTestCommand(TsChannelBase* tsChannel) {
-	tsState.testCommandCounter++;
-	char testOutputBuffer[64];
-	/**
-	 * this is NOT a standard TunerStudio command, this is my own
-	 * extension of the protocol to simplify troubleshooting
-	 */
-	tunerStudioDebug(tsChannel, "got T (Test)");
-	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
-	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-
-	if (hasFirmwareError()) {
-		const char* error = getFirmwareError();
-		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
-		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
-	}
-	tsChannel->flush();
-}
+#if EFI_PROD_CODE || EFI_SIMULATOR
 
 extern CommandHandler console_line_callback;
 
@@ -596,7 +583,7 @@ static void handleGetVersion(TsChannelBase* tsChannel) {
 static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
-	printOverallStatus(getTimeNowSeconds());
+	printOverallStatus();
 
 	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
@@ -604,14 +591,14 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
 }
 #endif // EFI_TEXT_LOGGING
 
-static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	data[incomingPacketSize] = 0;
 	char *trimmed = efiTrim(data);
 #if EFI_SIMULATOR
@@ -622,43 +609,7 @@ static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incom
 	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, nullptr, 0);
 }
 
-/**
- * @return true if legacy command was processed, false otherwise
- */
-bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
-	// Bail fast if guaranteed not to be a plain command
-	if (command == 0) {
-		return false;
-	} else if (command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND) {
-		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
-		efiPrintf("Got naked Query command");
-		handleQueryCommand(tsChannel, TS_PLAIN);
-		return true;
-	} else if (command == TS_TEST_COMMAND || command == 'T') {
-		handleTestCommand(tsChannel);
-		return true;
-	} else if (command == TS_COMMAND_F) {
-		/**
-		 * http://www.msextra.com/forums/viewtopic.php?f=122&t=48327
-		 * Response from TS support: This is an optional command		 *
-		 * "The F command is used to find what ini. file needs to be loaded in TunerStudio to match the controller.
-		 * If you are able to just make your firmware ignore the command that would work.
-		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
-		 */
-
-		tunerStudioDebug(tsChannel, "not ignoring F");
-		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
-		tsChannel->flush();
-		return true;
-	} else {
-		// This wasn't a valid command
-		return false;
-	}
-}
-
-static int transmitted = 0;
-
-int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
@@ -691,9 +642,6 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		break;
 	case TS_PAGE_COMMAND:
 		handlePageSelectCommand(tsChannel, TS_CRC);
-		break;
-	case TS_GET_STRUCT:
-		handleGetStructContent(tsChannel, offset, count);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
 		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
@@ -752,41 +700,19 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		sendOkResponse(tsChannel, TS_CRC);
 
 		break;
-		case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-
-		{
-			EnableToothLoggerIfNotEnabled();
-			const uint8_t* const buffer = GetToothLoggerBuffer().Buffer;
-
-			const uint8_t* const start = buffer + COMPOSITE_PACKET_SIZE * transmitted;
-
-			int currentEnd = getCompositeRecordCount();
-
-			// set debug_mode 40
-			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
-				engine->outputChannels.debugIntField1 = currentEnd;
-				engine->outputChannels.debugIntField2 = transmitted;
-
-			}
-
-			if (currentEnd > transmitted) {
-				// more normal case - tail after head
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
-				transmitted = currentEnd;
-			} else if (currentEnd == transmitted) {
-				tsChannel->sendResponse(TS_CRC, start, 0);
-			} else {
-				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
-				// sending end of the buffer, next transmission would take care of the rest
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
-				transmitted = 0;
-			}
-		}
-		break;
+	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		EnableToothLoggerIfNotEnabled();
+		// falls through
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
+
+			if (toothBuffer) {
+				tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+			} else {
+				// TS asked for a tooth logger buffer, but we don't have one to give it.
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			}
 		}
 
 		break;
@@ -799,20 +725,20 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size);
+			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size, true);
 		}
 
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = getFirmwareError();
+		const char* configError = getCriticalErrorMessage();
 #if HW_CHECK_MODE
 		// analog input errors are returned as firmware error in QC mode
 		if (!hasFirmwareError()) {
 			strcpy((char*)configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
 		}
 #endif // HW_CHECK_MODE
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
+		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
 	default:
@@ -824,12 +750,15 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	return true;
 }
 
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
+
 void startTunerStudioConnectivity(void) {
 	// Assert tune & output channel struct sizes
 	static_assert(sizeof(persistent_config_s) == TOTAL_CONFIG_SIZE, "TS datapage size mismatch");
-	static_assert(sizeof(TunerStudioOutputChannels) == TS_OUTPUT_SIZE, "TS output channels size mismatch");
 // useful trick if you need to know how far off is the static_assert
 //	char (*__kaboom)[sizeof(persistent_config_s)] = 1;
+// another useful trick
+//  static_assert(offsetof (engine_configuration_s,HD44780_e) == 700);
 
 	memset(&tsState, 0, sizeof(tsState));
 
@@ -838,11 +767,22 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 	
 #if EFI_BLUETOOTH_SETUP
+	// module initialization start (it waits for disconnect and then communicates to the module)
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
-	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
-	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
-	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
+	// bluetooth_jdy 115200 alphax 1234
+	addConsoleActionSSS("bluetooth_hc05", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_HC_05, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_hc06", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_HC_06, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_bk", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_BK3231, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
+	});
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 }

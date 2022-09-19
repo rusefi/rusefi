@@ -61,21 +61,41 @@ float getCrankingFuel3(
 	 * Cranking fuel is different depending on engine coolant temperature
 	 * If the sensor is failed, use 20 deg C
 	 */
-	auto clt = Sensor::get(SensorType::Clt);
-	engine->engineState.cranking.coolantTemperatureCoefficient =
-		interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
+	auto clt = Sensor::get(SensorType::Clt).value_or(20);
+	auto e0Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoef);
+
+	bool alreadyWarned = false;
+	if (e0Mult <= 0.1f) {
+		warning(CUSTOM_ERR_ZERO_E0_MULT, "zero e0 multiplier");
+		alreadyWarned = true;
+	}
+
+	if (engineConfiguration->flexCranking && Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
+		auto e85Mult = interpolate2d(clt, config->crankingFuelBins, config->crankingFuelCoefE100);
+
+		if (e85Mult <= 0.1f) {
+			warning(CUSTOM_ERR_ZERO_E85_MULT, "zero e85 multiplier");
+			alreadyWarned = true;
+		}
+
+		// If failed flex sensor, default to 50% E
+		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
+
+		engine->engineState.cranking.coolantTemperatureCoefficient =
+			interpolateClamped(
+				0, e0Mult,
+				85, e85Mult,
+				flex
+			);
+	} else {
+		engine->engineState.cranking.coolantTemperatureCoefficient = e0Mult;
+	}
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-
-	engine->engineState.cranking.tpsCoefficient = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
-			engineConfiguration->crankingTpsCoef);
-
-
-	/*
 	engine->engineState.cranking.tpsCoefficient =
-		tps.Valid 
-		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
-		: 1; // in case of failed TPS, don't correct.*/
+		tps.Valid
+		? interpolate2d(tps.Value, config->crankingTpsBins, config->crankingTpsCoef)
+		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
@@ -84,7 +104,8 @@ float getCrankingFuel3(
 
 	engine->engineState.cranking.fuel = crankingFuel * 1000;
 
-	if (crankingFuel <= 0) {
+	// don't re-warn for zero fuel when we already warned for a more specific problem
+	if (!alreadyWarned && crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
 	}
 	return crankingFuel;
@@ -114,8 +135,6 @@ float getRunningFuel(float baseFuel) {
 
 	return runningFuel;
 }
-
-/* DISPLAY_ENDIF */
 
 static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
@@ -153,9 +172,15 @@ static float getBaseFuelMass(int rpm) {
 	auto airmass = model->getAirmass(rpm);
 
 	// Plop some state for others to read
-	engine->engineState.sd.airMassInOneCylinder = airmass.CylinderAirmass;
+	engine->fuelComputer->sdAirMassInOneCylinder = airmass.CylinderAirmass;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
-	engine->engineState.ignitionLoad = getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
+	engine->engineState.ignitionLoad = engine->fuelComputer->getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
+	
+	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
+	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
+
+	// convert g/s -> kg/h
+	engine->engineState.airflowEstimate = gramPerMs * 3600000 /* milliseconds per hour */ / 1000 /* grams per kg */;;
 
 	float baseFuelMass = engine->fuelComputer->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
@@ -192,7 +217,7 @@ angle_t getInjectionOffset(float rpm, float load) {
 		return 0;
 	}
 
-	angle_t result = value + engineConfiguration->extraInjectionOffset;
+	angle_t result = value;
 	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
 	return result;
 }
@@ -217,7 +242,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 }
 
 float getInjectionModeDurationMultiplier() {
-	injection_mode_e mode = engine->getCurrentInjectionMode();
+	injection_mode_e mode = getCurrentInjectionMode();
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {
@@ -246,7 +271,7 @@ float getInjectionModeDurationMultiplier() {
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm) {
-	floatms_t totalInjectiorAmountPerCycle = engine->injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
+	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
@@ -274,8 +299,10 @@ float getInjectionMass(int rpm) {
 	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
-	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	cycleFuelMass *= engine->engineState.fuelCutoffCorrection;
+	if (engine->module<DfcoController>()->cutFuel()) {
+		// If decel fuel cut, zero out fuel
+		cycleFuelMass = 0;
+	}
 
 	float durationMultiplier = getInjectionModeDurationMultiplier();
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
@@ -315,81 +342,30 @@ void initFuelMap() {
  * @brief Engine warm-up fuel correction.
  */
 float getCltFuelCorrection() {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	const auto clt = Sensor::get(SensorType::Clt);
 	
-	if (!valid)
+	if (!clt)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr);
+	return interpolate2d(clt.Value, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
 angle_t getCltTimingCorrection() {
-	const auto [valid, clt] = Sensor::get(SensorType::Clt);
+	const auto clt = Sensor::get(SensorType::Clt);
 
-	if (!valid)
+	if (!clt)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
+	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
 }
 
 float getIatFuelCorrection() {
-	const auto [valid, iat] = Sensor::get(SensorType::Iat);
+	const auto iat = Sensor::get(SensorType::Iat);
 
-	if (!valid)
+	if (!iat)
 		return 1; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr);
-}
-
-/**
- * @brief	Called from EngineState::periodicFastCallback to update the state.
- * @note The returned value is float, not boolean - to implement taper (smoothed correction).
- * @return	Fuel duration correction for fuel cut-off control (ex. if coasting). No correction if 1.0
- */
-float getFuelCutOffCorrection(efitick_t nowNt, int rpm) {
-	// no corrections by default
-	float fuelCorr = 1.0f;
-
-	// coasting fuel cut-off correction
-	if (engineConfiguration->coastingFuelCutEnabled) {
-		auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
-		if (!tpsValid) {
-			return 1.0f;
-		}
-
-		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
-		if (!cltValid) {
-			return 1.0f;
-		}
-
-		const auto [mapValid, map] = Sensor::get(SensorType::Map);
-		if (!mapValid) {
-			return 1.0f;
-		}
-
-		// gather events
-		bool mapDeactivate = (map >= engineConfiguration->coastingFuelCutMap);
-		bool tpsDeactivate = (tpsPos >= engineConfiguration->coastingFuelCutTps);
-		// If no CLT sensor (or broken), don't allow DFCO
-		bool cltDeactivate = clt < (float)engineConfiguration->coastingFuelCutClt;
-		bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
-		bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
-		
-		// state machine (coastingFuelCutStartTime is also used as a flag)
-		if (!mapDeactivate && !tpsDeactivate && !cltDeactivate && rpmActivate) {
-			engine->engineState.coastingFuelCutStartTime = nowNt;
-		} else if (mapDeactivate || tpsDeactivate || rpmDeactivate || cltDeactivate) {
-			engine->engineState.coastingFuelCutStartTime = 0;
-		}
-		// enable fuelcut?
-		if (engine->engineState.coastingFuelCutStartTime != 0) {
-			// todo: add taper - interpolate using (nowNt - coastingFuelCutStartTime)?
-			fuelCorr = 0.0f;
-		}
-	}
-	
-	// todo: add other fuel cut-off checks here (possibly cutFuelOnHardLimit?)
-	return fuelCorr;
+	return interpolate2d(iat.Value, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
 float getBaroCorrection() {
@@ -398,9 +374,9 @@ float getBaroCorrection() {
 		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 
 		float correction = interpolate3d(
-			engineConfiguration->baroCorrTable,
-			engineConfiguration->baroCorrPressureBins, pressure,
-			engineConfiguration->baroCorrRpmBins, GET_RPM()
+			config->baroCorrTable,
+			config->baroCorrPressureBins, pressure,
+			config->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
 		);
 
 		if (cisnan(correction) || correction < 0.01) {
@@ -422,6 +398,11 @@ float getCrankingFuel(float baseFuel) {
 	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
+/**
+ * Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
+ *
+ * Should we bother caching 'getStandardAirCharge' result or can we afford to run the math every time we calculate fuel?
+ */
 float getStandardAirCharge() {
 	float totalDisplacement = engineConfiguration->specs.displacement;
 	float cylDisplacement = totalDisplacement / engineConfiguration->specs.cylindersCount;

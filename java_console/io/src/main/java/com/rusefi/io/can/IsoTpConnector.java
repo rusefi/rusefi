@@ -2,6 +2,7 @@ package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @see IsoTpCanDecoder
@@ -39,15 +40,23 @@ public abstract class IsoTpConnector {
         }
     }
 
-    public void sendCanFrame(int hdr0, byte[] data, int offset, int len) {
-        sendCanData(new byte[]{(byte) hdr0}, data, offset, len);
+    @NotNull
+    public static byte[] combineArrays(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+        byte[] total = new byte[hdr.length + dataLength];
+        System.arraycopy(hdr, 0, total, 0, hdr.length);
+        System.arraycopy(data, dataOffset, total, hdr.length, dataLength);
+        return total;
     }
 
-    public void sendCanFrame(int hdr0, int hdr1, byte[] data, int offset, int len) {
-        sendCanData(new byte[]{(byte) hdr0, (byte) hdr1}, data, offset, len);
+    public void sendCanFrame(int hdr0, byte[] data, int offset, int dataLength) {
+        sendCanData(new byte[]{(byte) hdr0}, data, offset, dataLength);
     }
 
-    public abstract void sendCanData(byte[] hdr, byte[] data, int offset, int len);
+    public void sendCanFrame(int hdr0, int hdr1, byte[] data, int dataOffset, int dataLength) {
+        sendCanData(new byte[]{(byte) hdr0, (byte) hdr1}, data, dataOffset, dataLength);
+    }
+
+    public abstract void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength);
 
     public abstract void receiveData();
 }

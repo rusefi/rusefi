@@ -12,8 +12,7 @@
 #endif // HW_HELLEN
 
 static void common() {
-	setHellenDefaultVrThresholds();
-	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
+
 }
 
 void setHellenMercedes128_4_cyl() {
@@ -23,10 +22,10 @@ void setHellenMercedes128_4_cyl() {
 	engineConfiguration->injectionPins[1] = H176_LS_6;
 	engineConfiguration->injectionPins[2] = H176_LS_8;
 	engineConfiguration->injectionPins[3] = H176_LS_5;
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[6] = Gpio::Unassigned;
+	engineConfiguration->injectionPins[7] = Gpio::Unassigned;
 #endif // HW_HELLEN
 }
 

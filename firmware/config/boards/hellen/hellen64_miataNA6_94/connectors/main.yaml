@@ -24,20 +24,20 @@ pins:
     type: can
 
   - pin: 1E
-    id: GPIOG_9
+    id: G9
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
     type: ls
 
   - pin: 1G
-    id: GPIOI_8
+    id: I8
     class: outputs
     ts_name: 1G - Ignition 1 & 4
     type: ign
  
   - pin: 1H
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 1H - Ignition 2 & 3
     type: ign
@@ -47,21 +47,22 @@ pins:
     type: gnd
 
   - pin: 1J
-    id: GPIOH_15
+    id: H15
     class: outputs
     ts_name: 1J - AC Relay
     function: A/C Relay
     type: ls
 
   - pin: 1L
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: Radiator Fan
     function: Radiator Fan Relay
     type: ls
 
   - pin: 1M
-    id: GPIOF_11
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: 1M - VSS
     function: VSS IN
@@ -71,7 +72,7 @@ pins:
     function: Sensor +5V
 
   - pin: 1Q
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: 1Q AC Switch
     function: A/C switch input
@@ -89,7 +90,7 @@ pins:
     function: EGR Solenoid
 
   - pin: 1V
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 1V - Clutch Switch
     function: Clutch switch input
@@ -120,10 +121,14 @@ pins:
     function: WBO Vs  
   
   - pin: 2I
+    id: F14
+    class: outputs
+    ts_name: 2I - VVT
     function: VVT Output
+    type: ls
     
   - pin: 2J
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: 2J - Boost Control
     function: Boost Control Solenoid
@@ -132,19 +137,19 @@ pins:
     function: GND
   
   - pin: 2L
-    id: GPIOF_3
+    id: F3
     class: event_inputs
     ts_name: 2L - Flex Fuel
     function: Flex Fuel Input
   
   - pin: 2M
-    id: [GPIOC_1, EFI_ADC_11]
+    id: [C1, EFI_ADC_11]
     class: [switch_inputs, analog_inputs] 
     ts_name: 2M - Pressure Sensor
     function: pressure input 
     
   - pin: 2N 
-    id: [GPIOA_1, EFI_ADC_1]
+    id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     ts_name: 2N - Temperature Sensor
     function: temp input
@@ -176,7 +181,7 @@ pins:
     color: white
 
   - pin: 3E
-    id: GPIOB_1
+    id: B1
     class: event_inputs
     ts_name: 3E - CRANK
     function: Crankshaft Sensor
@@ -187,13 +192,13 @@ pins:
     color: white
 
   - pin: 3G
-    id: GPIOA_6
+    id: A6
     class: event_inputs
     ts_name: 3G - CAM
     function: Camshaft Sensor
     
   - pin: 3I
-    id: GPIOI_0
+    id: I0
     class: outputs
     ts_name: Tachometer
     function: tachometer
@@ -225,13 +230,13 @@ pins:
     function: IAT sensor
             
   - pin: 3S
-    id: GPIOD_9  
+    id: D9  
     class: outputs
     ts_name: 3S - A/C Fan 94-95
     function: A/C Fan
 
   - pin: 3T
-    id: GPIOG_2
+    id: G2
     class: outputs
     ts_name: Fuel Pump Relay
     function: Fuel Pump Relay
@@ -250,35 +255,35 @@ pins:
     function: CLT sensor
 
   - pin: 3U
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: 3U - Injector 1
     function: Injector #1
     type: inj
 
   - pin: 3V
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: 3V - Injector 2
     function: Injector #2
     type: inj
 
   - pin: 3W
-    id: GPIOD_14
+    id: D14
     class: outputs
     ts_name: 3W - IDLE
     function: IAC idle
     type: ls
 
   - pin: 3Y
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: 3Y - Injector 3
     function: Injector #3
     type: inj
 
   - pin: 3Z
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: 3Z - Injector 4
     function: Injector #4
@@ -288,6 +293,70 @@ pins:
     id: EFI_ADC_2
     class: analog_inputs
     ts_name: intMAP (A15)
+    
+  - pin: 4A
+    function: ETB + 
+    
+  - pin: 4B
+    function: ETB +
+  
+  - pin: 4C
+    function: ETB -
+  
+  - pin: 4D
+    function: ETB -
+  
+  - pin: 4E
+    function: GND
+  
+  - pin: 4F
+    function: GND
+  
+  - pin: 4G
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4G - PPS2 OR TEMPERATURE SENSOR
+    function: PPS 
+  
+  - pin: 4H
+    id: [B0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4H - TPS2
+    function: TPS
+      
+  - pin: 4I
+    id: [A3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4I - PPS1
+    
+  - pin: 4J
+    function: TPS
+  
+  - pin: 4K
+    function: +5V
+  
+  - pin: 4L
+    function: +5V
+
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN 
+
+
+
+
+
 
 info:
   title: Hellen Miata NA6

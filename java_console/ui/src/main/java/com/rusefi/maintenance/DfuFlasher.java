@@ -14,10 +14,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,7 +35,7 @@ public class DfuFlasher {
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
+            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
             return;
         }
         String port = selectedItem.toString();
@@ -114,9 +112,13 @@ public class DfuFlasher {
 
     public static void runDfuErase() {
         StatusWindow wnd = createStatusWindow();
-        submitAction(() -> ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuEraseCommand(),
-                DFU_BINARY, wnd, new StringBuffer()));
+        submitAction(() -> {
+            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuEraseCommand(),
+                    DFU_BINARY, wnd, new StringBuffer());
+            // it's a lengthy operation let's signal end
+            Toolkit.getDefaultToolkit().beep();
+        });
     }
 
     public static void runDfuProgramming() {
@@ -126,25 +128,38 @@ public class DfuFlasher {
 
     private static void executeDFU(StatusWindow wnd) {
         StringBuffer stdout = new StringBuffer();
-        String errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuWriteCommand(),
-                DFU_BINARY, wnd, stdout);
+        String errorResponse;
+        try {
+            errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuWriteCommand(),
+                    DFU_BINARY, wnd, stdout);
+        } catch (FileNotFoundException e) {
+            wnd.append("ERROR: " + e);
+            wnd.setErrorState(true);
+            return;
+        }
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.append("SUCCESS!");
             wnd.append("Please power cycle device to exit DFU mode");
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            appendWindowsVersion(wnd);
             wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
-            wnd.append("ERROR: does not look like DFU has worked!");
+            appendWindowsVersion(wnd);
+            wnd.append("Windows " + System.getProperty("os.version"));
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
+    }
+
+    private static void appendWindowsVersion(StatusWindow wnd) {
+        wnd.append("ERROR: does not look like DFU has worked!");
     }
 
     private static void appendDeviceReport(StatusWindow wnd) {
@@ -168,13 +183,20 @@ public class DfuFlasher {
         }
     }
 
-    private static String getDfuWriteCommand() {
-        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".hex");
-        if (hexFileName == null)
-            return "File not found";
-        String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
+    private static String getDfuWriteCommand() throws FileNotFoundException {
+        String prefix = "rusefi";
+        String suffix = ".bin";
+        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
+        if (fileName == null)
+            throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
+        // we need quotes in case if absolute path contains spaces
+        String hexAbsolutePath = quote(new File(fileName).getAbsolutePath());
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " 0x08000000 -v -s";
+    }
+
+    private static String quote(String absolutePath) {
+        return "\"" + absolutePath + "\"";
     }
 
     private static String getDfuEraseCommand() {

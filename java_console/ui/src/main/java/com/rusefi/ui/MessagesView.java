@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
+import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessagesView {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Logger.DATE_PATTERN);
-    private static final int MAX_SIZE = 50000;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(FileLog.DATE_PATTERN);
 
     private final Style bold;
     private final Style italic;

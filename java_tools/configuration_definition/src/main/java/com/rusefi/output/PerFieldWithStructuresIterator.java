@@ -5,6 +5,10 @@ import com.rusefi.ReaderState;
 
 import java.util.List;
 
+/**
+ * @see FieldsStrategy
+ * @see FieldIterator is there a duplication?
+ */
 class PerFieldWithStructuresIterator extends FieldIterator {
     private final ReaderState state;
     private final String prefix;

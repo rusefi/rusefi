@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 public class LazyFile implements Output {
     public static final String LAZY_FILE_TAG = "was generated automatically by rusEFI tool ";
     public static final String LAZY_FILE_TAG_LOWER = LAZY_FILE_TAG.toLowerCase();
-    private static boolean isLazyCheckEnabled = true;
 
     private final String filename;
 
@@ -38,7 +37,7 @@ public class LazyFile implements Output {
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString());
 
-        if (fileContent.equals(newContent) && LazyFile.isLazyCheckEnabled()) {
+        if (fileContent.equals(newContent)) {
             SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
             return;
         }
@@ -55,14 +54,6 @@ public class LazyFile implements Output {
         Writer fw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(filename), IoUtils.CHARSET));
         fw.write(content.toString());
         fw.close();
-    }
-
-    public static void setLazyFileEnabled(boolean isEnabled) {
-        LazyFile.isLazyCheckEnabled = isEnabled;
-    }
-
-    public static boolean isLazyCheckEnabled() {
-        return LazyFile.isLazyCheckEnabled;
     }
 
     public static String unifySpaces(String line) {

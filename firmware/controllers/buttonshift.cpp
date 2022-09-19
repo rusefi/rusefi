@@ -10,8 +10,8 @@
 
 #include "buttonshift.h"
 
+#if EFI_TCU
 ButtonShiftController buttonShiftController;
-
 
 ButtonShiftController::ButtonShiftController() :
 		debounceUp("gear_up"),
@@ -81,8 +81,7 @@ void ButtonShiftController::update() {
 	GearControllerBase::update();
 }
 
-
-void initButtonShift() {
-    buttonShiftController.init();
-    engine->gearController = &buttonShiftController;
+ButtonShiftController* getButtonShiftController() {
+	return &buttonShiftController;
 }
+#endif // EFI_TCU

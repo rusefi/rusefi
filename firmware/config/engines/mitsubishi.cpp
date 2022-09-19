@@ -11,7 +11,6 @@
 
 #include "pch.h"
 
-#include "fsio_impl.h"
 #include "mitsubishi.h"
 
 void setMitsubishiConfiguration() {
@@ -29,8 +28,6 @@ void setMitsubishiConfiguration() {
 	// set global_trigger_offset_angle 671
 	engineConfiguration->globalTriggerAngleOffset = 671;
 
-	// set_cranking_rpm 550
-	engineConfiguration->cranking.rpm = 550;
 	// set cranking_timing_angle 715
 	engineConfiguration->crankingTimingAngle = -715;
 
@@ -56,19 +53,19 @@ void setMitsubishiConfiguration() {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	engineConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = GPIOE_3; // Frankenstein: low side - out #8
-	engineConfiguration->injectionPins[3] = GPIOE_5; // Frankenstein: low side - out #6
+	engineConfiguration->injectionPins[0] = Gpio::B9; // Frankenstein: low side - out #12
+	engineConfiguration->injectionPins[1] = Gpio::B8; // Frankenstein: low side - out #11
+	engineConfiguration->injectionPins[2] = Gpio::E3; // Frankenstein: low side - out #8
+	engineConfiguration->injectionPins[3] = Gpio::E5; // Frankenstein: low side - out #6
 
 
 	// Frankenstein: high side #1: PE8
 	// Frankenstein: high side #2: PE10
 
-	engineConfiguration->ignitionPins[0] = GPIOE_8; // Frankenstein: high side #1
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[2] = GPIOE_10; // // Frankenstein: high side #2
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[0] = Gpio::E8; // Frankenstein: high side #1
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
+	engineConfiguration->ignitionPins[2] = Gpio::E10; // // Frankenstein: high side #2
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
 
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;

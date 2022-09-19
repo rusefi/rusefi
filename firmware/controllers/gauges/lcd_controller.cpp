@@ -19,7 +19,7 @@
 #include "pch.h"
 
 #if EFI_HD44780_LCD
-#include "os_access.h"
+
 
 #include "lcd_controller.h"
 #include "HD44780.h"
@@ -143,8 +143,8 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_RPM:
 	{
-		int seconds = minI(9999, getTimeNowSeconds());
-		lcdPrintf("RPM %d %d ", GET_RPM(), seconds);
+		int seconds = minI(9999, getTimeNowS());
+		lcdPrintf("RPM %d %d ", (int)Sensor::getOrZero(SensorType::Rpm), seconds);
 	}
 #if EFI_FILE_LOGGING
 		{
@@ -189,7 +189,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("IAT corr %.2f", getIatFuelCorrection());
 		return;
 	case LL_FUEL_INJECTOR_LAG:
-		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
+		lcdPrintf("ING LAG %.2f", engine->module<InjectorModel>()->m_deadtime);
 		return;
 	case LL_VBATT:
 		lcdPrintf("Battery %.2fv", Sensor::getOrZero(SensorType::BatteryVoltage));
@@ -198,7 +198,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
 		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
-			lcdPrintf("Baro: %.2f", getBaroPressure());
+			lcdPrintf("Baro: %.2f", Sensor::getOrZero(SensorType::BarometricPressure));
 		} else {
 			lcdPrintf("Baro: none");
 		}
@@ -281,7 +281,7 @@ void updateHD44780lcd(void) {
 	}
 
 
-	const char * message = hasFirmwareErrorFlag ? getFirmwareError() : getWarningMessage();
+	const char * message = hasFirmwareErrorFlag ? getCriticalErrorMessage() : getWarningMessage();
 	memcpy(buffer, message, engineConfiguration->HD44780width);
 	buffer[engineConfiguration->HD44780width] = 0;
 	lcd_HD44780_set_position(engineConfiguration->HD44780height - 1, 0);
@@ -300,7 +300,7 @@ void updateHD44780lcd(void) {
 //	}
 //	lcd_HD44780_set_position(0, 10);
 //
-//	char * ptr = itoa10(buffer, GET_RPM());
+//	char * ptr = itoa10(buffer, Sensor::getOrZero(SensorType::Rpm));
 //	ptr[0] = 0;
 //	int len = ptr - buffer;
 //	for (int i = 0; i < 6 - len; i++) {
@@ -309,7 +309,7 @@ void updateHD44780lcd(void) {
 //	lcd_HD44780_print_string(buffer);
 //
 //	if (hasFirmwareError()) {
-//		memcpy(buffer, getFirmwareError(), LCD_WIDTH);
+//		memcpy(buffer, getCriticalErrorMessage(), LCD_WIDTH);
 //		buffer[LCD_WIDTH] = 0;
 //		lcd_HD44780_set_position(1, 0);
 //		lcd_HD44780_print_string(buffer);
@@ -326,7 +326,7 @@ void updateHD44780lcd(void) {
 //		return;
 //	}
 //
-//	int index = (getTimeNowSeconds() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
+//	int index = (getTimeNowS() / 2) % (NUMBER_OF_DIFFERENT_LINES / 2);
 //
 //	prepareCurrentSecondLine(engine, index);
 //	buffer[LCD_WIDTH] = 0;

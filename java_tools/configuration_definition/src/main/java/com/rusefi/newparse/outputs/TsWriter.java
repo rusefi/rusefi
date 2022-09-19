@@ -14,9 +14,15 @@ public class TsWriter {
 
     private static final Pattern OPTIONAL_LINE = Pattern.compile("@@if_([a-zA-Z0-9_]+)");
 
-    public void writeTunerstudio(ParseState parser, String inputFile, String outputFile) throws FileNotFoundException, IOException {
+    // TODO: We have to move either forward or backwards with newparse #4441
+    public void writeTunerstudio(ParseState parser, String inputFile, String outputFile) throws IOException {
+        PrintStream ps = new PrintStreamAlwaysUnix(new FileOutputStream(outputFile));
+        writeTunerstudio(parser, inputFile, ps);
+        ps.close();
+    }
+
+    public void writeTunerstudio(ParseState parser, String inputFile, PrintStream ps) throws IOException {
         BufferedReader is = new BufferedReader(new FileReader(inputFile));
-        PrintStream ps = new PrintStream(new FileOutputStream(outputFile));
 
         while (is.ready()) {
             String line = is.readLine();
@@ -77,10 +83,9 @@ public class TsWriter {
         }
 
         is.close();
-        ps.close();
     }
 
-    private void writeLayoutAndComments(ParseState parser, PrintStream ps) {
+    public void writeLayoutAndComments(ParseState parser, PrintStream ps) {
         StructLayout root = new StructLayout(0, "root", parser.getLastStruct());
         TsMetadata meta = new TsMetadata();
 

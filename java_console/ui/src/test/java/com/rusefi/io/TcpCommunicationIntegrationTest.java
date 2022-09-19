@@ -1,7 +1,6 @@
 package com.rusefi.io;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -9,6 +8,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.StatusConsumer;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -20,8 +20,6 @@ import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
 
 public class TcpCommunicationIntegrationTest {
-    private static final Logger LOGGER = Logger.CONSOLE;
-
     // todo: implement & test TCP connector restart!
     @Test
     public void testConnectionFailed() throws InterruptedException {
@@ -37,7 +35,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("onConnectionFailed");
                 failedCountDownLatch.countDown();
             }
@@ -67,7 +65,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("Failed");
             }
         });
@@ -97,7 +95,8 @@ public class TcpCommunicationIntegrationTest {
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort);
         final AtomicInteger relayCommandCounter = new AtomicInteger();
-        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet());
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet(),
+                StatusConsumer.ANONYMOUS);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
@@ -110,7 +109,7 @@ public class TcpCommunicationIntegrationTest {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
                 System.out.println("Failed");
             }
         });

@@ -22,8 +22,7 @@ public:
 	void SetUp() override {
 		// If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
 		// At least we must init FlexSensor somehow
-		dut.init(GPIO_INVALID);
-		dut.setFunction(identityFunc);
+		dut.initIfValid(Gpio::A0, identityFunc, 0.1f);
 	}
 
 	/*
@@ -32,7 +31,7 @@ public:
 	 *  (as Sensor works by falling edge)
 	 */
 	void generatePwm(EngineTestHelper &eth, float freqHz) {
-		constexpr auto periods = 50;
+		constexpr auto periods = 1000;
 		auto period = (1 / freqHz);
 
 		std::cout << "PERIOD: " << period << std::endl;
@@ -65,6 +64,6 @@ TEST_F(FrequencySensorTest, testValidWithPwm) {
 	{
 		auto s = Sensor::get(SensorType::FuelEthanolPercent);
 		EXPECT_TRUE(s.Valid);
-		EXPECT_FLOAT_EQ(s.Value, 10);
+		EXPECT_NEAR(s.Value, 10, 1e-3);
 	}
 }

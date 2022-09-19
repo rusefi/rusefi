@@ -27,8 +27,8 @@ static ADCConversionGroup adcConvGroup = { FALSE, 1, nullptr, nullptr,
 static NO_CACHE adcsample_t samples[8];
 
 // we use this as a hook to run near the rest of ADC init...
-void setAdcChannelOverrides(void) {
-	efiSetPadMode("adc input", GPIOF_3, PAL_MODE_INPUT_ANALOG);
+void setAdcChannelOverrides() {
+	efiSetPadMode("adc input", Gpio::F3, PAL_MODE_INPUT_ANALOG);
 
 	adcStart(&ADCD3, nullptr);
 }

@@ -24,7 +24,6 @@
 
 #include "gpio/gpio_ext.h"
 #include "gpio/tle6240.h"
-#include "os_util.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 

@@ -11,16 +11,26 @@
 #include "io_pins.h"
 #include "persistent_configuration.h"
 #include "engine_configuration_generated_structures.h"
-#include "globalaccess.h"
+#include "timer.h"
 
+#if EFI_TCU
 class TransmissionControllerBase {
-public:
-    void update(gear_e);
-    void init();
-    gear_e getCurrentGear() const;
 private:
-    gear_e currentGear = NEUTRAL;
+	Timer m_shiftTimer;
+	bool m_shiftTime;
+	gear_e m_shiftTimeGear;
+public:
+	virtual void update(gear_e);
+	virtual void init();
+	virtual gear_e getCurrentGear() const;
+	virtual TransmissionControllerMode getMode() const {
+		return TransmissionControllerMode::None;
+	}
 protected:
-    gear_e setCurrentGear(gear_e);
-    void postState();
+	gear_e currentGear = NEUTRAL;
+	virtual gear_e setCurrentGear(gear_e);
+	void postState();
+	void measureShiftTime(gear_e);
+	float isShiftCompleted();
 };
+#endif // EFI_TCU

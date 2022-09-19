@@ -9,7 +9,7 @@
 
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
-#include "pid.h"
+#include "efi_pid.h"
 
 typedef enum {
 	CJ125_LSU_42 = 0,

@@ -11,23 +11,12 @@
 #include "maf.h"
 #include "advance_map.h"
 
-TEST(misc, structSize) {
-	ASSERT_EQ(1, sizeof(adc_channel_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(pin_input_mode_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(brain_pin_e)) << "small enum size";
-	ASSERT_EQ(16, sizeof(air_pressure_sensor_config_s));
-/* no longer the case at least for Proteus
-	ASSERT_EQ(20000, sizeof(persistent_config_s));
-*/
-}
-
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
-	eth.engine.periodicFastCallback();
-	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
+	engine->periodicFastCallback();
+	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer->targetAFR);
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }
@@ -35,23 +24,27 @@ TEST(misc, testIgnitionPlanning) {
 TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
+	// todo: let's see if we can make 'engine' unneeded in this test?
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+    setCamOperationMode();
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";
 
+	IFuelComputer *fuelComputer = engine->fuelComputer;
+
 	Sensor::setMockValue(SensorType::Clt, 300);
 	Sensor::setMockValue(SensorType::Iat, 350);
-	ASSERT_FLOAT_EQ(312.5, getTCharge(1000, 0));
-	ASSERT_FLOAT_EQ(313.5833, getTCharge(1000, 50));
-	ASSERT_FLOAT_EQ(314.6667, getTCharge(1000, 100));
+	ASSERT_FLOAT_EQ(312.5, fuelComputer->getTCharge(1000, 0));
+	ASSERT_FLOAT_EQ(313.5833, fuelComputer->getTCharge(1000, 50));
+	ASSERT_FLOAT_EQ(314.6667, fuelComputer->getTCharge(1000, 100));
 
 
-	ASSERT_FLOAT_EQ(312.5, getTCharge(4000, 0));
-	ASSERT_FLOAT_EQ(320.0833, getTCharge(4000, 50));
-	ASSERT_FLOAT_EQ(327.6667, getTCharge(4000, 100));
+	ASSERT_FLOAT_EQ(312.5, fuelComputer->getTCharge(4000, 0));
+	ASSERT_FLOAT_EQ(320.0833, fuelComputer->getTCharge(4000, 50));
+	ASSERT_FLOAT_EQ(327.6667, fuelComputer->getTCharge(4000, 100));
 
 	// test Air Interpolation mode
 	engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
@@ -59,15 +52,68 @@ TEST(misc, testEngineMath) {
 	engineConfiguration->tChargeAirCoefMax = 0.902f;
 	engineConfiguration->tChargeAirFlowMax = 153.6f;
 	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
-	engine->engineState.sd.airMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
-	ASSERT_NEAR(0.5464f, engine->engineState.sd.airMassInOneCylinder, EPS4D);
+	fuelComputer->sdAirMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
+	ASSERT_NEAR(0.5464f, fuelComputer->sdAirMassInOneCylinder, EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 20);
+	Sensor::setMockValue(SensorType::Map, 100);
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+
 	// calc. airFlow using airMass, and find tCharge
-	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0));
-	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
+	engine->periodicFastCallback();
+	ASSERT_NEAR(59.1175f, engine->engineState.sd.tCharge, EPS4D);
+	ASSERT_NEAR(56.9762f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
+
+typedef enum {
+    CS_OPEN = 0,
+    CS_CLOSED = 1,
+    CS_SWIRL_TUMBLE = 2,
+
+} chamber_style_e;
+
+/**
+ * @param octane gas octane number
+ * @param bore in mm
+ */
+static float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore) {
+    int octaneCorrection;
+    if ( octane <= 90) {
+        octaneCorrection = -2;
+    } else if (octane < 94) {
+        octaneCorrection = -1;
+    } else {
+        octaneCorrection = 0;
+    }
+
+    int compressionCorrection;
+    if (compression <= 9) {
+        compressionCorrection = 2;
+    } else if (compression <= 10) {
+        compressionCorrection = 1;
+    } else if (compression <= 11) {
+        compressionCorrection = 0;
+    } else {
+        // compression ratio above 11
+        compressionCorrection = -2;
+    }
+    int base;
+    if (style == CS_OPEN) {
+    	base = 33;
+    } else if (style == CS_CLOSED) {
+    	base = 28;
+    } else {
+    	// CS_SWIRL_TUMBLE
+    	base = 22;
+    }
+
+    float boreCorrection = (bore - 4 * 25.4) / 25.4 * 6;
+    float result = base + octaneCorrection + compressionCorrection + boreCorrection;
+    return ((int)(result * 10)) / 10.0;
+}
+
 
 TEST(misc, testIgnitionMapGenerator) {
 	printf("*************************************************** testIgnitionMapGenerator\r\n");

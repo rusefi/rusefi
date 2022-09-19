@@ -1,7 +1,8 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.SystemOut;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
@@ -14,14 +15,21 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * 3/30/2015
  */
-public class VariableRegistry  {
+public class VariableRegistry {
+    public static final String AUTO_ENUM_SUFFIX = "_auto_enum";
+    public static final String INVALID = "INVALID";
+    private static final Logging log = getLogging(VariableRegistry.class);
+
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
     public static final String CHAR_SUFFIX = "_char";
     public static final String ENUM_SUFFIX = "_enum";
+    public static final String FULL_JAVA_ENUM = "_fullenum";
     public static final char MULT_TOKEN = '*';
     public static final String DEFINE = "#define";
     private static final String HEX_PREFIX = "0x";
@@ -34,6 +42,7 @@ public class VariableRegistry  {
     public Map<String, Integer> intValues = new HashMap<>();
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    // todo: move thid logic to JavaFieldsConsumer since that's the consumer?
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public void readPrependValues(String prependFile) throws IOException {
@@ -82,14 +91,11 @@ public class VariableRegistry  {
      * @return value>name map for specified enum name.
      */
     @Nullable
-    public TreeMap<Integer, String> resolveEnumValues(EnumsReader enumsReader, String enumName) {
+    private TreeMap<Integer, String> resolveEnumValues(@NotNull EnumsReader.EnumState stringValueMap) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
-        EnumsReader.EnumState stringValueMap = enumsReader.getEnums().get(enumName);
-        if (stringValueMap == null)
-            return null;
         for (Value value : stringValueMap.values()) {
-            if (value.getValue().contains("ENUM_32_BITS"))
+            if (value.isForceSize())
                 continue;
 
             if (isNumeric(value.getValue())) {
@@ -105,20 +111,44 @@ public class VariableRegistry  {
         return valueNameById;
     }
 
+    private static void appendCommaIfNeeded(StringBuilder sb) {
+        if (sb.length() > 0)
+            sb.append(",");
+    }
+
     public String getEnumOptionsForTunerStudio(EnumsReader enumsReader, String enumName) {
-        TreeMap<Integer, String> valueNameById = resolveEnumValues(enumsReader, enumName);
+        EnumsReader.EnumState stringValueMap = enumsReader.getEnums().get(enumName);
+        if (stringValueMap == null)
+            return null;
+
+        TreeMap<Integer, String> valueNameById = resolveEnumValues(stringValueMap);
         if (valueNameById == null)
             return null;
 
-        int maxValue = valueNameById.lastKey();
+        return getHumanSortedTsKeyValueString(valueNameById);
+    }
+
+    private static String quote(String string) {
+        return "\"" + string + "\"";
+    }
+
+    @NotNull
+    public static String getHumanSortedTsKeyValueString(Map<Integer, String> valueNameById) {
+        TreeMap<Integer, String> humanDropDownSorted = new TreeMap<>((o1, o2) -> {
+            if (o1.intValue() == o2)
+                return 0;
+            if (o1.intValue() == 0)
+                return -1; // "None" always go first
+            if (o2.intValue()==0)
+                return 1;
+            return valueNameById.get(o1).compareTo(valueNameById.get(o2));
+        });
+        humanDropDownSorted.putAll(valueNameById);
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i <= maxValue; i++) {
-            if (sb.length() > 0)
-                sb.append(", ");
-
-            String value = valueNameById.getOrDefault(i, "INVALID");
-            sb.append("\"" + value + "\"");
+        for (Map.Entry<Integer, String> e : humanDropDownSorted.entrySet()) {
+            appendCommaIfNeeded(sb);
+            sb.append(e.getKey() + "=" + quote(e.getValue()));
         }
         return sb.toString();
     }
@@ -126,6 +156,7 @@ public class VariableRegistry  {
     /**
      * This method replaces variables references like @@var@@ with actual values
      * An exception is thrown if we do not have such variable
+     *
      * @return string with variable values inlined
      */
     public String applyVariables(String line) {
@@ -145,27 +176,33 @@ public class VariableRegistry  {
     }
 
     public void register(String var, String param) {
-        String value = doRegister(var, param);
-        if (value == null)
-            return;
-        tryToRegisterAsInteger(var, value);
+        try {
+            String value = doRegister(var, param);
+            if (value == null)
+                return;
+            tryToRegisterAsInteger(var, value);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While [" + var + "][" + param + "]", e);
+        }
     }
 
     @Nullable
     private String doRegister(String var, String value) {
         if (data.containsKey(var)) {
-            SystemOut.println("Not redefining " + var);
+            if (log.debugEnabled())
+                log.debug("Not redefining " + var);
             return null;
         }
         value = applyVariables(value);
         int multPosition = value.indexOf(MULT_TOKEN);
-        if (!isQuoted(value, '"') && multPosition != -1) {
+        if (!value.contains("\n") && !isQuoted(value, '"') && multPosition != -1) {
             Integer first = Integer.valueOf(value.substring(0, multPosition).trim());
             Integer second = Integer.valueOf(value.substring(multPosition + 1).trim());
             value = String.valueOf(first * second);
         }
 
-        SystemOut.println("Registering " + var + " as " + value);
+        if (log.debugEnabled())
+            log.debug("Registering " + var + " as " + value);
         data.put(var, value);
 
         if (!value.contains("\n")) {
@@ -197,15 +234,17 @@ public class VariableRegistry  {
 
         try {
             int intValue = Integer.parseInt(value);
-            SystemOut.println("key [" + var + "] value: " + intValue);
+            if (log.debugEnabled())
+                log.debug("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
             if (!var.endsWith(_HEX_SUFFIX)) {
                 javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + ToolUtil.EOL);
             }
         } catch (NumberFormatException e) {
-            SystemOut.println("Not an integer: " + value);
+            //SystemOut.println("Not an integer: " + value);
 
-            if (!var.trim().endsWith(ENUM_SUFFIX)) {
+            if (!var.trim().endsWith(ENUM_SUFFIX) &&
+                    !var.trim().endsWith(FULL_JAVA_ENUM)) {
                 if (isQuoted(value, '"')) {
                     // quoted and not with enum suffix means plain string define statement
                     javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + ToolUtil.EOL);

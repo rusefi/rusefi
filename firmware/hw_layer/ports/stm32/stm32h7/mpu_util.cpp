@@ -5,6 +5,8 @@
  * @author Matthew Kennedy, (c) 2021
  */
 
+#include "pch.h"
+
 #include "flash_int.h"
 
 bool allowFlashWhileRunning() {

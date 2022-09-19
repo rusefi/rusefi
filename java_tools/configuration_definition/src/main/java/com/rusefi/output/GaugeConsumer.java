@@ -10,21 +10,19 @@ import java.io.IOException;
 import static com.rusefi.output.DataLogConsumer.getComment;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class GaugeConsumer extends AbstractConfigurationConsumer {
+public class GaugeConsumer implements ConfigurationConsumer {
     private final String fileName;
-    private final ReaderState state;
-    private final CharArrayWriter charArrayWriter = new CharArrayWriter();
+    private final StringBuilder charArrayWriter = new StringBuilder();
 
-    public GaugeConsumer(String fileName, ReaderState state) {
+    public GaugeConsumer(String fileName) {
         this.fileName = fileName;
-        this.state = state;
     }
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
-                    (state, configField, prefix) -> handle(configField, prefix));
+        if (readerState.stack.isEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
+                    (state, configField, prefix) -> handle(readerState, configField, prefix));
             iterator.loop();
             String content = iterator.getContent();
             charArrayWriter.append(content);
@@ -32,13 +30,13 @@ public class GaugeConsumer extends AbstractConfigurationConsumer {
 
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
-            fw.write(charArrayWriter.toCharArray());
+            fw.write(charArrayWriter.toString());
             fw.close();
         }
     }
 
-    private String handle(ConfigField configField, String prefix) {
-        String comment = getComment("", configField, state.variableRegistry);
+    private String handle(ReaderState readerState, ConfigField configField, String prefix) {
+        String comment = getComment("", configField, readerState.variableRegistry);
         comment = ConfigField.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;
@@ -60,7 +58,7 @@ public class GaugeConsumer extends AbstractConfigurationConsumer {
                 "\n";
     }
 
-    public CharArrayWriter getTsWriter() {
-        return charArrayWriter;
+    public String getContent() {
+        return charArrayWriter.toString();
     }
 }

@@ -138,7 +138,7 @@ public:
 	 * Get a friendly name for the sensor.
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
-	const char* getSensorName() { return getSensorName(m_type); }
+	const char* getSensorName() const { return getSensorName(m_type); }
 	static const char* getSensorName(SensorType type);
 
 	// Retrieve the current reading from the sensor.
@@ -169,6 +169,10 @@ public:
 	}
 
 	void unregister();
+
+	SensorType type() const {
+		return m_type;
+	}
 
 protected:
 	// Protected constructor - only subclasses call this

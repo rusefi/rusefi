@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "thread_controller.h"
 
 template <size_t TBufferSize>
@@ -160,7 +160,7 @@ void startLoggingProcessor() {
 	}
 
 	// Start processing used buffers
-	lbf.Start();
+	lbf.start();
 }
 
 #endif // EFI_PROD_CODE

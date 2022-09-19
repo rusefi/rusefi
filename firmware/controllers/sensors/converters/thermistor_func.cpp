@@ -12,7 +12,7 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 	// This resistance should have already been validated - only
 	// thing we can check is that it's non-negative
 	if (ohms <= 0) {
-		return unexpected;
+		return UnexpectedCode::Low;
 	}
 
 	float lnR = logf(ohms);
@@ -26,9 +26,14 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 	float celsius = convertKelvinToCelcius(kelvin);
 
 	// bounds check result - please don't try to run rusEfi when colder than -50C
-	// high end limit is required as this could be an oil temp sensor
-	if (celsius < -50 || celsius > 250) {
-		return unexpected;
+	// high end limit is required as this could be an oil temp sensor on an
+	// air cooled engine
+	if (celsius < -50) {
+		return UnexpectedCode::Low;
+	}
+
+	if (celsius > 250) {
+		return UnexpectedCode::High;
 	}
 
 	return celsius;

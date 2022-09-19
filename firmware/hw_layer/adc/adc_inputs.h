@@ -32,6 +32,12 @@ static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
+typedef enum {
+	ADC_OFF = 0,
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
+} adc_channel_mode_e;
+
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 

@@ -2,11 +2,13 @@
 
 #include "expected.h"
 #include "injector_model_generated.h"
+#include "engine_module.h"
 
 struct IInjectorModel : public EngineModule {
 	virtual void prepare() = 0;
 	virtual floatms_t getInjectionDuration(float fuelMassGram) const = 0;
 	virtual float getFuelMassForDuration(floatms_t duration) const = 0;
+	virtual floatms_t getDeadtime() const = 0;
 };
 
 class InjectorModelBase : public IInjectorModel, public injector_model_s {
@@ -15,13 +17,10 @@ public:
 	floatms_t getInjectionDuration(float fuelMassGram) const override;
 	float getFuelMassForDuration(floatms_t duration) const override;
 
-	virtual floatms_t getDeadtime() const = 0;
 	virtual float getInjectorMassFlowRate() = 0;
 	virtual float getInjectorFlowRatio() = 0;
 	virtual expected<float> getAbsoluteRailPressure() const = 0;
 	virtual float correctShortPulse(float baseDuration) const = 0;
-
-	virtual void postState(float deadTime) const { (void)deadTime; };
 
 private:
 	float m_massFlowRate = 0;
@@ -29,7 +28,7 @@ private:
 
 class InjectorModel : public InjectorModelBase {
 public:
-	void postState(float deadtime) const override;
+
 	floatms_t getDeadtime() const override;
 	float getInjectorMassFlowRate() override;
 	float getInjectorFlowRatio() override;

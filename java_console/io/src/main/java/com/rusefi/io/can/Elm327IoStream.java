@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class Elm327IoStream extends AbstractIoStream {
     private final Elm327Connector con;
-    private final DisconnectListener disconnectListener;
     @NotNull
     private final IncomingDataBuffer dataBuffer;
     private DataListener dataListener;
@@ -32,15 +31,9 @@ public class Elm327IoStream extends AbstractIoStream {
 
 	private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
 
-
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix) {
-        this(con, loggingPrefix, DisconnectListener.VOID);
-    }
-
-    private Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
+    public Elm327IoStream(Elm327Connector con) {
         this.con = con;
-        this.disconnectListener = disconnectListener;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
+        dataBuffer = createDataBuffer("elm327Stream");
 
 //        ByteBuffer inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
         outBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
@@ -52,7 +45,6 @@ public class Elm327IoStream extends AbstractIoStream {
         synchronized (this) {
             if (!isClosed()) {
                 super.close();
-                disconnectListener.onDisconnect("on close");
             }
         }
     }
@@ -126,12 +118,5 @@ public class Elm327IoStream extends AbstractIoStream {
     	byte [] rawData = canDecoder.decodePacket(data);
         if (rawData.length != 0)
             sendDataToClient(rawData);
-    }
-
-    public interface DisconnectListener {
-        DisconnectListener VOID = (String message) -> {
-
-        };
-        void onDisconnect(String message);
     }
 }

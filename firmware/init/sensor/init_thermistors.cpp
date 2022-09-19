@@ -26,7 +26,7 @@ static FuncPair fclt, fiat, faux1, faux2;
 static void validateThermistorConfig(const char *msg, thermistor_conf_s& cfg) {
 	if (cfg.tempC_1 >= cfg.tempC_2 ||
 		cfg.tempC_2 >= cfg.tempC_3) {
-		firmwareError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction, "Invalid thermistor %s configuration: please check that temperatures are in the ascending order %f %f %f",
+		firmwareError(OBD_ThermistorConfig, "Invalid thermistor %s configuration: please check that temperatures are in the ascending order %f %f %f",
 				msg,
 				cfg.tempC_1,
 				cfg.tempC_2,

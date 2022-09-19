@@ -7,8 +7,9 @@
 #pragma once
 
 #include "sensor_converter_func.h"
-#include "interpolation.h"
 #include "efi_ratio.h"
+
+#include <rusefi/interpolation.h>
 
 template <class TBin, class TValue, int TSize, typename TOutputScale = efi::ratio<1>>
 class TableFunc final : public SensorConverter {

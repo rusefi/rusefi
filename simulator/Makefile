@@ -39,17 +39,16 @@ endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# this config if debugging is needed, but the binary is about 50M
-#  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
-# this config producec a smaller binary file
-# 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
-# see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2 -g -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+	USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+
+#	If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
+	USE_OPT += -O2
+#	USE_OPT += -O0 -g
 
 	ifeq ($(OS),Windows_NT)
+		USE_OPT += -DEFI_SIM_IS_WINDOWS=1
 	else
- 	 USE_OPT +=  -m32
+		USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
 	endif
 endif
 
@@ -130,6 +129,11 @@ PROJECT_DIR = ../firmware
 
 # Imported source files and paths
 
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
+
 # Licensing files.
 include $(CHIBIOS)/os/license/license.mk
 # Startup files.
@@ -152,56 +156,30 @@ endif
 
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-        $(SYSTEMSRC) \
-        $(CONSOLESRC) \
-        $(CONTROLLERS_ALGO_SRC) \
-        $(CONTROLLERS_CORE_SRC) \
-        $(CONTROLLERS_SENSORS_SRC) \
-        $(ENGINES_SRC) \
-        $(UTILSRC) \
-        main.c
+
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
-        $(UTILSRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
-	$(HW_LAYER_EMS_CPP) \
-	$(HW_SENSORS_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(INIT_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
-	$(ENGINES_SRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
+	simulator/can/hal_can_lld.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
-	$(TEST_SRC_CPP)
+	$(TEST_SRC_CPP) \
+	$(RUSEFI_LIB_CPP) \
+	main.cpp
 
 
 # List ASM source files here
@@ -211,22 +189,11 @@ INCDIR = . \
           $(PCH_DIR) \
           $(ALLINC) \
           $(CHIBIOS)/os/various/cpp_wrappers \
-          $(UTIL_INC) \
-          $(PROJECT_DIR)/init \
-          $(CONSOLE_INC) \
-          $(PROJECT_DIR)/config/engines \
-		  $(PROJECT_DIR)/config/boards/ \
-          $(PROJECT_DIR)/ext_algo \
-          $(HW_LAYER_DRIVERS_INC) \
-          $(HW_LAYER_INC) \
-	  $(HW_SENSORS_INC) \
-          $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
-          $(HW_SENSORS_INC) \
-          $(DEVELOPMENT_DIR) \
-          $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
+		  $(RUSEFI_LIB_INC) \
+          simulator/can \
           simulator
 
 # List ASM source files here
@@ -285,6 +252,8 @@ CPPWARN = -Wall -Wextra -Wundef
 
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
+DDEFS += -DFIRMWARE_ID=\"simulator\"
+
 
 # Define ASM defines here
 UADEFS =

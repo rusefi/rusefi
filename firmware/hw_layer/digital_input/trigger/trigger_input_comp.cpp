@@ -14,7 +14,6 @@
 #include "hal_comp.h"
 
 #include "trigger_input.h"
-#include "digital_input_icu.h"
 
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
@@ -73,9 +72,9 @@ static void comp_cam_callback(COMPDriver *comp) {
 	efitick_t stamp = getTimeNowNt();
 
 	if (isRising) {
-		hwHandleVvtCamSignal(TV_RISE, stamp, index);
+		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL, stamp, index);
+		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
 	}
 }
 #endif
@@ -151,7 +150,7 @@ void stopTriggerInputPins(void) {
 	compDisable(EFI_COMP_PRIMARY_DEVICE);
 	isCompEnabled = false;
 #if 0
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}

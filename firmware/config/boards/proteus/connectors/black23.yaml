@@ -1,22 +1,22 @@
 pins:
   - pin: 1
-    id: [GPIOE_11, GPIOE_11]
+    id: [E11, E11]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance Hall type CAM
     ts_name: Digital 2
     type: din
 
   - pin: 2
-    id: [GPIOE_12, GPIOE_12]
+    id: [E12, E12]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance VSS
     ts_name: Digital 3
     type: din
 
   - pin: 3
-    id: [GPIOE_14, GPIOE_14]
+    id: [E14, E14]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance Start Button
     ts_name: Digital 4
     type: din
 
@@ -24,7 +24,7 @@ pins:
     function: "Variable Reluctance #2 positive"
     type: vr
 
-  - id: GPIOE_8
+  - id: E8
     class: event_inputs
     ts_name: VR 2
 
@@ -32,7 +32,7 @@ pins:
     function: "Variable Reluctance #1 positive"
     type: vr
 
-  - id: GPIOE_7
+  - id: E7
     class: event_inputs
     ts_name: VR 1
 
@@ -49,21 +49,21 @@ pins:
     type: etb
 
   - pin: 9
-    id: [GPIOE_13, GPIOE_13]
+    id: [E13, E13]
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 5
     type: din    
 
   - pin: 10
-    id: [GPIOC_6, GPIOC_6]
+    id: [C6, C6]
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 1
     type: din
 
   - pin: 11
-    id: [GPIOE_15, GPIOE_15]
+    id: [E15, E15]
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 6
@@ -119,38 +119,39 @@ pins:
     type: 12v
 
   - pin: PD8
-    id: GPIOD_8
+    id: D8
     class: outputs
     ts_name: STM32 PD8
 
   - pin: PD9
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: STM32 PD9
 
   - pin: PD10
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: STM32 PD10
 
   - pin: PD11
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: STM32 PD11
 
   - pin: PD12
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: STM32 PD12
 
   - pin: PD13
-    id: GPIOD_13
+    id: D13
     class: outputs
     ts_name: STM32 PD13
 
 info:
   title: Proteus
   name: Black23
+  board_url: "https://wiki.rusefi.com/Hardware/Proteus/Proteus/"
   id: black23
   image:
     file: black23.jpg

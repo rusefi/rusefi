@@ -372,7 +372,7 @@ static void writeChannelDataFooter() {
 	write(numChannels);
 }
 
-static int getChannelState(int ch, CompositeEvent *event) {
+static int getChannelState(int ch, const CompositeEvent* event) {
 	switch (ch) {
 	case 0:
 		return event->primaryTrigger;
@@ -390,7 +390,8 @@ static int getChannelState(int ch, CompositeEvent *event) {
 	return -1;
 }
 
-static void writeEvents(CompositeEvent *events, int count) {
+static void writeEvents(const std::vector<CompositeEvent>& events) {
+	int count = events.size();
 	// we need at least 2 records
 	if (count < 2)
 		return;
@@ -411,7 +412,7 @@ static void writeEvents(CompositeEvent *events, int count) {
 		int deltaCount = 0;
 
 		for (int i = 0; i < count; i++) {
-			CompositeEvent *event = &events[i];
+			const CompositeEvent* event = &events[i];
 
 			int chState = getChannelState(ch, event);
 			int ts = event->timestamp;
@@ -487,12 +488,12 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(const char * fileName, CompositeEvent *events, int count) {
+void writeFile(const char * fileName, const std::vector<CompositeEvent>& events) {
 
 	ptr = fopen(fileName, "wb");
 
 	writeHeader();
-	writeEvents(events, count);
+	writeEvents(events);
 	writeFooter();
 
 	fclose(ptr);

@@ -10,7 +10,7 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
-#ifdef EFI_CAN_SERIAL
+#if EFI_CAN_SERIAL
 #include "serial_can.h"
 #include "can_hw.h"
 
@@ -34,7 +34,7 @@ public:
 	void stop() override;
 
 	// Special override for writeCrcPacket for small packets
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) override;
+	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false) override;
 };
 
 
@@ -52,7 +52,7 @@ void CanTsChannel::start() {
 void CanTsChannel::stop() {
 }
 
-void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
 #ifdef TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
 	// a special case for short packets: we can send them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
@@ -67,7 +67,7 @@ void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 #endif /* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
 	// Packet too large, use default implementation
-	TsChannelBase::writeCrcPacket(responseCode, buf, size);
+	TsChannelBase::writeCrcPacket(responseCode, buf, size, allowLongPackets);
 }
 
 void CanTsChannel::write(const uint8_t* buffer, size_t size, bool) {
@@ -102,8 +102,8 @@ struct CanTsThread : public TunerstudioThread {
 static CanTsThread canTsThread;
 
 void startCanConsole() {
-	canTsThread.Start();
+	canTsThread.start();
 	canStreamInit();
 }
 
-#endif // def EFI_CAN_SERIAL
+#endif // EFI_CAN_SERIAL

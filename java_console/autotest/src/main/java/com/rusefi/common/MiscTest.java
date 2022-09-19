@@ -7,6 +7,7 @@ import com.rusefi.core.SensorCentral;
 import org.junit.Test;
 
 import static com.devexperts.util.TimeUtil.SECOND;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MiscTest extends RusefiTestBase {
@@ -27,6 +28,8 @@ public class MiscTest extends RusefiTestBase {
         }
 
         System.out.println("MCU temperature is " + mcuTemp + " deg C");
+        BinaryProtocol bp = ecu.getLinkManager().getCurrentStreamState();
+        assertTrue("Happy OutputChannels expected", bp.isGoodOutputChannels);
 
         // You are probably indoors and not on fire
         String message = "mcuTemp is " + mcuTemp;

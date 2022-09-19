@@ -18,6 +18,7 @@
 
 #include "buffered_writer.h"
 #include "status_loop.h"
+#include "binary_logging.h"
 
 static bool fs_ready = false;
 
@@ -518,7 +519,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
-#if EFI_PROD_CODE
+		// Don't do this check at all if using SDMMC interface instead of SPI
+#if EFI_PROD_CODE && !defined(EFI_SDC_DEVICE)
 		if (engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 			return;
 		}
@@ -531,7 +533,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			engine->outputChannels.debugIntField4 = fileCreatedCounter;
 		}
 
-		writeLogLine(logBuffer);
+		writeSdLogLine(logBuffer);
 
 		// Something went wrong (already handled), so cancel further writes
 		if (logBuffer.failed) {

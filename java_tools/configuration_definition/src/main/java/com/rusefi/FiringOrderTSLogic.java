@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,15 +9,19 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Andrey Belomutskiy, (c) 2012-2016
  * 7/20/2016
  */
 public class FiringOrderTSLogic {
+    private static final Logging log = getLogging(FiringOrderTSLogic.class);
 
     private static final String FIRING_ORDER_PREFIX = "FO_";
 
     public static void main(String[] args) throws IOException {
+        // sandbox code
         invoke("../firmware/controllers/algo/firing_order.h");
     }
 
@@ -39,7 +45,8 @@ public class FiringOrderTSLogic {
         while ((line = br.readLine()) != null) {
             int index = line.indexOf(FIRING_ORDER_PREFIX);
             if (index == -1) {
-                System.out.println("Skipping [" + line);
+                if (log.debugEnabled())
+                    log.debug("Skipping [" + line);
                 continue;
             }
             line = line.substring(index + FIRING_ORDER_PREFIX.length());
@@ -50,13 +57,15 @@ public class FiringOrderTSLogic {
     public static void parseLine(String line, State state) {
         line = line.replaceAll("[\\s]*\\,.*", "");
         line = line.replaceAll("[\\s\\,]", "");
-        System.out.println("Processing " + line);
+        if (log.debugEnabled())
+            log.debug("Processing " + line);
 
         String s[] = line.split("\\=");
         String order[] = s[0].split("_");
         int ordinal = Integer.parseInt(s[1]);
 
-        System.out.println("order " + Arrays.toString(order) + ": " + ordinal);
+        if (log.debugEnabled())
+            log.debug("order " + Arrays.toString(order) + ": " + ordinal);
 
         state.maxOrdinal = Math.max(ordinal, state.maxOrdinal);
         state.ordinal2order.put(ordinal, order);

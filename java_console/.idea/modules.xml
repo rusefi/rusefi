@@ -13,7 +13,6 @@
       <module fileurl="file://$PROJECT_DIR$/luaformatter_module/luaformatter.iml" filepath="$PROJECT_DIR$/luaformatter_module/luaformatter.iml" />
       <module fileurl="file://$PROJECT_DIR$/models/models.iml" filepath="$PROJECT_DIR$/models/models.iml" />
       <module fileurl="file://$PROJECT_DIR$/../java_tools/proxy_server/proxy_server.iml" filepath="$PROJECT_DIR$/../java_tools/proxy_server/proxy_server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/romraider/romraider.iml" filepath="$PROJECT_DIR$/romraider/romraider.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared_io/shared_io.iml" filepath="$PROJECT_DIR$/shared_io/shared_io.iml" />
       <module fileurl="file://$PROJECT_DIR$/shared_ui/shared_ui.iml" filepath="$PROJECT_DIR$/shared_ui/shared_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/tools/tools.iml" filepath="$PROJECT_DIR$/tools/tools.iml" />

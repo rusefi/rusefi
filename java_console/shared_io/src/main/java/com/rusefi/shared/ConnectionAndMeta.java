@@ -15,7 +15,7 @@ public class ConnectionAndMeta {
     public static final String BASE_URL_LATEST = "https://rusefi.com/build_server/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
-    public static final int STEPS = 1000;
+    public static final int CENTUM = 100;
     private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
@@ -42,15 +42,13 @@ public class ConnectionAndMeta {
             downloadedFileSize += newDataSize;
 
             // calculate progress
-            final int currentProgress = (int) ((((double) downloadedFileSize) / ((double) completeFileSize)) * STEPS);
-
-            int currentPercentage = (int) (100L * downloadedFileSize / completeFileSize);
+            int currentPercentage = (int) (CENTUM * downloadedFileSize / completeFileSize);
             if (currentPercentage > printedPercentage + 5) {
                 System.out.println("Downloaded " + currentPercentage + "%");
                 printedPercentage = currentPercentage;
+                listener.onPercentage(currentPercentage);
             }
 
-            listener.onPercentage(currentProgress);
 
             bout.write(data, 0, newDataSize);
         }
@@ -71,10 +69,15 @@ public class ConnectionAndMeta {
         return lastModified;
     }
 
-    public ConnectionAndMeta invoke(String baseUrl) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+    public ConnectionAndMeta invoke(String baseUrl) throws IOException {
         // user can have java with expired certificates or funny proxy, we shall accept any certificate :(
-        SSLContext ctx = SSLContext.getInstance("TLS");
-        ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        SSLContext ctx = null;
+        try {
+            ctx = SSLContext.getInstance("TLS");
+            ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new IOException("TLS exception", e);
+        }
 
         URL url = new URL(baseUrl + zipFileName);
         System.out.println("Connecting to " + url);
@@ -86,7 +89,7 @@ public class ConnectionAndMeta {
     }
 
     public interface DownloadProgressListener {
-        void onPercentage(int currentProgress);
+        void onPercentage(int currentPercentage);
     }
 
     private static class AcceptAnyCertificateTrustManager implements X509TrustManager {

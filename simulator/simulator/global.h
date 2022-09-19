@@ -22,6 +22,7 @@
 #include "chprintf.h"
 #include "cli_registry.h"
 #include "eficonsole.h"
+#include <ch.hpp>
 #endif /* __cplusplus */
 
 #define hasOsPanicError() (FALSE)

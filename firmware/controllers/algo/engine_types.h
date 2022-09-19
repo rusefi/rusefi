@@ -13,7 +13,7 @@
 /**
  * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DEFAULT_FRANKENSO = 0,
 
 	MIATA_PROTEUS_TCU = 1,
@@ -51,7 +51,7 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	UNUSED_19 = 19,
+	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
@@ -61,12 +61,7 @@ typedef enum {
 
 	MITSU_4G93 = 16,
 
-	/**
-	 * a version of HONDA_ACCORD_CD which only uses two of three trigger input sensors
-	 */
-	HONDA_ACCORD_CD_TWO_WIRES = 17,
-
-	UNUSED18 = 18,
+	TEST_33816 = 18,
 
 
 	SUBARU_2003_WRX = 22,
@@ -93,7 +88,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	UNUSED30 = 30,
+	PROTEUS_ANALOG_PWM_TEST = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
@@ -111,7 +106,7 @@ typedef enum {
 
 	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
-	UNUSED39 = 39,
+	PROTEUS_VW_B6 = 39,
 
 	FRANKENSO_BMW_M73_F = 40,
 
@@ -134,9 +129,9 @@ typedef enum {
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	UNUSED_50 = 50,
+	BMW_M73_MRE = 50,
 
-	UNUSED_51 = 51,
+	BMW_M73_MRE_SLAVE = 51,
 
 
 	TEST_ISSUE_366_BOTH = 52,
@@ -158,13 +153,11 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	UNUSED60 = 60,
+	L9779_BENCH_ENGINE = 60,
 
-	UNUSED61 = 61,
+	EEPROM_BENCH_ENGINE = 61,
 
-	PROTEUS_ANALOG_PWM_TEST = 106,
-
-	VW_B6 = 62,
+	MRE_VW_B6 = 62,
 
 	PROTEUS_BMW_M73 = 63,
 
@@ -223,41 +216,34 @@ typedef enum {
     ET_UNUSED96 = 96,
     ET_UNUSED97 = 97,
     ET_UNUSED98 = 98,
+	ET_UNUSED_17 = 17,
 
 	/**
 	 * this configuration has as few pins configured as possible
 	 */
 	MINIMAL_PINS = 99,
-	UNUSED100 = 100,
-	UNUSED101 = 101,
-	VAG_18_TURBO = 102,
 
-	TEST_33816 = 103,
+	TEST_100 = 100,
+	TEST_101 = 101,
+	TEST_102 = 102,
 
-	BMW_M73_MRE = 104,
-	BMW_M73_MRE_SLAVE = 105,
-
-	TEST_ROTARY = 107,
-
-	TEST_108 = 108,
-	TEST_109 = 109,
-	TEST_110 = 110,
-
-	Force_4_bytes_size_engine_type = ENUM_32_BITS,
+    // java code generator handles this value in a special way
+    // also looks like 2 enums are either 1 byte or 4 bytes
+	Force_4_bytes_size_engine_type = 70000,
 } engine_type_e;
 
 /**
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
-	DBG_GPPWM = 2,
-	DBG_IDLE_CONTROL = 3,
+	DBG_2 = 2,
+	DBG_STEPPER_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
-	DBG_VVT_1_PID = 7,
+	DBG_7 = 7,
 	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
@@ -285,7 +271,7 @@ typedef enum {
 
 	DBG_INSTANT_RPM = 22,
 	UNUSED23 = 23,
-	DBG_STATUS = 24,
+	DBG_24 = 24,
 	DBG_CJ125 = 25,
 	DBG_26 = 26,
 	DBG_MAP = 27,
@@ -310,14 +296,10 @@ typedef enum {
 	DBG_43 = 43,
 	DBG_DYNO_VIEW = 44,
 	DBG_LOGIC_ANALYZER = 45,
-	DBG_RUSEFI_WIDEBAND = 46,
+	DBG_46 = 46,
 	DBG_TCU = 47,
 	DBG_LUA = 48,
-	DBG_VVT_2_PID = 49,
-	DBG_VVT_3_PID = 50,
-	DBG_VVT_4_PID = 51,
 
-	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
 
 /**
@@ -352,11 +334,6 @@ typedef enum {
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
 
-	// this makes sense because mechanical spark distribution does not require synchronization
-	TT_HONDA_4_24 = 12,
-
-	TT_HONDA_1_4_24 = 13,
-
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
 
@@ -368,7 +345,7 @@ typedef enum {
 	 * see also TT_ONE a bit below
 	 */
 	TT_ONE_PLUS_ONE = 16,
-	// VVT for 2JZ
+	// VVT for 2JZ, see VVT_2JZ
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
@@ -378,8 +355,6 @@ typedef enum {
 	 * It looks like this is the VR shape if you have your wires flipped
 	 */
 	TT_60_2_VW = 20,
-
-	TT_HONDA_1_24 = 21,
 
 	TT_DODGE_STRATUS = 22,
 
@@ -392,15 +367,12 @@ typedef enum {
 	/**
 	 * only the 4 tooth signal, without the 360 signal
 	 * 8,2,2,2 Nissan pattern
-	 * See also TT_NISSAN_SR20VE_360
 	 */
 	TT_NISSAN_SR20VE = 24,
 
 	TT_2JZ_3_34 = 25,
 
 	TT_ROVER_K = 26,
-
-	TT_GM_LS_24 = 27,
 
 	TT_HONDA_CBR_600 = 28,
 
@@ -422,12 +394,6 @@ typedef enum {
 	TT_MIATA_VVT = 33,
 
 	/**
-	 * This is a different version of TT_HONDA_ACCORD_1_24
-	 * See https://sourceforge.net/p/rusefi/tickets/319/
-	 */
-	TT_HONDA_ACCORD_1_24_SHIFTED = 34,
-
-	/**
 	 * a version of NB1 with shifted CAM, useful for VVT testing & development
 	 */
 	TT_MAZDA_MIATA_VVT_TEST = 35,
@@ -437,10 +403,7 @@ typedef enum {
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
 	TT_JEEP_18_2_2_2 = 37,
 
-	/*
-	 * See also TT_NISSAN_SR20VE
-	 */
-	TT_NISSAN_SR20VE_360 = 38,
+	TT_12_TOOTH_CRANK = 38,
 
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
@@ -456,7 +419,7 @@ typedef enum {
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
-	TT_VVT_MIATA_NB2 = 43,
+	TT_VVT_MIATA_NB = 43,
 
 	TT_RENIX_44_2_2 = 44,
 
@@ -503,7 +466,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_UNUSED_62 = 62,
+	TT_VVT_MITSUBISHI_3A92 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 
@@ -519,6 +482,27 @@ typedef enum {
 
 	TT_TOOTHED_WHEEL_32_2 = 69,
 
+	// Mitsubishi 4B11 would be this with half moon camshaft
+	TT_36_2_1 = 70,
+
+	// Mitsubishi 3 cyl and 6 cyl
+	TT_36_2_1_1 = 71,
+
+
+    TT_VVT_MITSUBISHI_6G75 = 72,
+
+	TT_VVT_TOYOTA_4_1 = 73,
+
+	// GM 24x with 5/10 degree gaps
+	TT_GM_24x = 27,
+
+	// GM 24x with 3/12 degree gaps
+	TT_GM_24x_2 = 74,
+
+	TT_SUBARU_EZ30 = 12,
+	TT_VVT_MAZDA_SKYACTIV = 13,
+	UNUSED_21 = 21,
+	UNUSED_34 = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -526,10 +510,11 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 70, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 75, // this is used if we want to iterate over all trigger types
 
-	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
-	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
+    // java code generator handles this value in a special way
+    // also looks like 2 enums are either 1 byte or 4 bytes
+	Force_4_bytes_size_trigger_type = 70000,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
 
@@ -555,18 +540,19 @@ typedef enum {
 	TS_IGNITION_CATEGORY = 18,
 	TS_INJECTOR_CATEGORY = 19,
 	TS_X14 = 20,
+	// 0x15
 	TS_WIDEBAND = 21,
 	TS_BENCH_CATEGORY = 22,
 	TS_UNUSED_23 = 23,
 	TS_UNUSED_CJ125_CALIB = 24,
-	TS_UNUSED_25 = 25,
+	TS_SOLENOID_CATEGORY = 25,
 	TS_UNUSED_26 = 26,
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
 	TS_UNUSED_29 = 29,
-	TS_UNUSED_30 = 30,
-	TS_UNUSED_31 = 31,
-	TS_CRAZY = 32,
+	TS_SET_ENGINE_TYPE = 30,
+	TS_SET_DEFAULT_ENGINE = 31,
+	TS_LUA_OUTPUT_CATEGORY = 32,
 } ts_command_e;
 
 typedef enum {

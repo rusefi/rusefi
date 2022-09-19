@@ -20,14 +20,14 @@ pins:
     function: USB -
     
   - pin: 10a
-    id: GPIOF_13
+    id: F13
     ts_name: 10 - VTC Left
     class: outputs
     function: Intake VTC solenoid Bank 2
  # OUT_C-IVC_L OUT_INJ7 
 
   - pin: 11a
-    id: GPIOF_14
+    id: F14
     ts_name: 11 - VTC Right
     class: outputs
     function: Intake VTC solenoid Bank 1
@@ -36,20 +36,20 @@ pins:
   - pin: 13a
     function: Crank Sensor
 # IN_CRANK AIN24 A24
-    id: [GPIOB_1]
+    id: [B1]
     class: [event_inputs]
     ts_name: 13 - Crank
 
   - pin: 14a
     function: Cam Sensor Left
 # IN_CAM_L IN_CAM AIN19 A19
-    id: [GPIOA_6]
+    id: [A6]
     class: [event_inputs]
     ts_name: 14 - Cam Left
 
   - pin: 21a
 # Q307
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: 21 - INJ_5
     function: Injector 5
@@ -57,7 +57,7 @@ pins:
 
   - pin: 22a
 # Q309
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: 22 - INJ_3
     function: Injector 3
@@ -65,14 +65,14 @@ pins:
 
   - pin: 23a
 # Q312
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: 23 - INJ_1
     function: Injector 1
     type: inj
     
   - pin: 29a
-    id: GPIOD_3
+    id: D3
     ts_name: 29 - VIAS
     class: outputs
     function: VIAS control Solenoid
@@ -80,7 +80,7 @@ pins:
   - pin: 33a
     function: Cam Sensor Right
 # IN_CAM_R IN_AUX4 AIN20 A20
-    id: [GPIOA_7]
+    id: [A7]
     class: [event_inputs]
     ts_name: 33 - Cam Right
     
@@ -92,7 +92,7 @@ pins:
 
   - pin: 40a
 # Q311
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: 40 - INJ_6
     function: Injector 6
@@ -100,7 +100,7 @@ pins:
 
   - pin: 41a
 # Q310
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: 41 - INJ_4
     function: Injector 4
@@ -108,7 +108,7 @@ pins:
 
   - pin: 42a
 # Q305
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: 42 - INJ_2
     function: Injector 2
@@ -129,21 +129,22 @@ pins:
     function: TPS 1 sensor input  
 
   - pin: 60a
-    id: GPIOE_2
+    id: E2
     class: outputs
     ts_name: 60 - Coil 5
     function: Coil 5
     type: ign
 
   - pin: 61a
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: 61 - Coil 3
     function: Coil 3
     type: ign
 
   - pin: 62a
-    id: GPIOC_13
+    # H144_IGN_1
+    id: C13
     class: outputs
     ts_name: 62 - Coil 1
     function: Coil 1
@@ -163,6 +164,24 @@ pins:
     ts_name: 69 - TPS 2
     function: TPS 2 sensor input  
 
+  - pin: P66
+    # IN_MAP1 AIN9 PC0
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: Aux P66
+
+  - pin: P67
+    # AIN10 PC1
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Aux P67
+
+  - pin: P68
+    # H144_IN_MAP3 AIN15 A15 PA2
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: Aux P68
+
   - pin: 73a
     id: EFI_ADC_12
     class: analog_inputs
@@ -173,21 +192,21 @@ pins:
     function: GNDA
 
   - pin: 79a
-    id: GPIOB_8
+    id: B8
     class: outputs
     ts_name: 79 - Coil 6
     function: Coil 6
     type: ign
 
   - pin: 80a
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: 80 - Coil 4
     function: Coil 4
     type: ign
 
   - pin: 81a
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 81 - Coil 2
     function: Coil 2
@@ -224,20 +243,20 @@ pins:
     function: PPS 2 sensor input 
     
   - pin: 101a
-    id: GPIOF_9
+    id: F9
     class: switch_inputs
     ts_name: 101 - Brake Input
     function: Brake Switch
 
   - pin: 102a
-    id: GPIOF_10
+    id: F10
     class: switch_inputs
     ts_name: 102 - Power Steering Input
     function: Power Steering Switch
 
   - pin: 104a
 # LOW6_DIODE _IO4
-    id: GPIOG_5
+    id: G5
     class: outputs
     ts_name: 104 ETB Relay
     function: ETB relay control
@@ -260,7 +279,7 @@ pins:
 
   - pin: 111a
 # OUT_IO3
-    id: GPIOG_14
+    id: G14
     class: outputs
     ts_name: 111 Main Relay
     function: Main relay control
@@ -268,7 +287,7 @@ pins:
 
   - pin: 113a
 # OUT_PWM8
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: 113 Fuel Pump Relay
     function: Fuel Pump control
@@ -294,8 +313,10 @@ pins:
 
 info:
   title: Hellen 121 Nissan
+  name: Hellen 121 Nissan
+  board_url: https://github.com/rusefi/rusefi/wiki/Hellen-121-Nissan
   image:
-    file: main.jpg
+    file: 121pin.jpg
   pins:
     - pin: 1a
       x: 286
@@ -756,6 +777,10 @@ info:
     - pin: 113a
       x: 3282
       y: 258
+
+    - pin: 114a
+      x: 3516
+      y: 585
 
     - pin: 115a
       x: 3700

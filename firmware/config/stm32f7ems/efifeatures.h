@@ -9,6 +9,12 @@
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
+
+// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
+// See STM32F7.ld for more info
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+#endif
  
 #include "../stm32f4ems/efifeatures.h"
 
@@ -40,17 +46,17 @@
 #ifndef TS_NO_PRIMARY
 #define TS_NO_PRIMARY 1
 #endif
+#ifndef TS_NO_SECONDARY
 #define TS_NO_SECONDARY 1
+#endif
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-// todo: start using consoleSerialTxPin? Not sure
 #undef EFI_CONSOLE_TX_BRAIN_PIN
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOD_8
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
 
-// todo: start using consoleSerialRxPin? Not sure
 #undef EFI_CONSOLE_RX_BRAIN_PIN
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOD_9
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 
 #define EFI_USE_COMPRESSED_INI_MSD
 
@@ -62,5 +68,3 @@
 
 #undef LUA_USER_HEAP
 #define LUA_USER_HEAP 100000
-#undef LUA_SYSTEM_HEAP
-#define LUA_SYSTEM_HEAP 100000

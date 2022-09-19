@@ -4,17 +4,25 @@
 #
 
 pins:
+  - pin: p18_p22
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Aux P18/P22
+    type: hs
+    ts_name: P18/P22
+
   - pin: 1A
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: 1A - ECF
     function: Engine Radiator Fan   
     type: ls
   
   - pin: 1B
-    id: GPIOA_9
+    id: A9
     class: outputs
-    ts_name: 1B AC Fan Relay
+    ts_name: 1B - AC Fan Relay
     function: AC Fan Relay
 
   - pin: 1C
@@ -22,14 +30,14 @@ pins:
     type: can
          
   - pin: 1E
-    id: GPIOG_4
+    id: G4
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
     type: ls
       
   - pin: 1G
-    id: GPIOG_11
+    id: G11
     class: outputs
     ts_name: 1G - AC Relay
     function: A/C Relay
@@ -40,19 +48,20 @@ pins:
     type: ls
     
   - pin: 1K
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: 1K - AC Switch
     function: A/C Pressure In
     
   - pin: 1L
-    id: GPIOE_13
+    id: E13
     class: switch_inputs
     ts_name: 1L - Clutch
     function: Clutch Switch
     
   - pin: 1M
-    id: GPIOF_11
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: 1M - VSS
     function: VSS in
@@ -61,26 +70,26 @@ pins:
     function: GND
    
   - pin: 1Q
-    id: [GPIOF_9, ADC3_CHANNEL_7]
-    class: [switch_inputs, analog_inputs]
+    id: [F9]
+    class: [switch_inputs]
     ts_name: 1Q - Brake/RES1
     function: Brake Switch
     
   - pin: 1S
-    id: GPIOF_7
-    class: analog_inputs
-    ts_name: 2M - KNOCK
+#    id: F7
+#    class: analog_inputs
+#    ts_name: 2M - KNOCK
     function: Knock sens. in
     
   - pin: 1U
-    id: GPIOG_2
+    id: G2
     class: outputs
-    ts_name: 1U
+    ts_name: 1U - Fuel Pump
     function: Fuel Pump Relay
     type: ls
     
   - pin: 2A
-    id: [GPIOB_0, EFI_ADC_8]
+    id: [B0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: 2A - Pressure Input
     function: FTP input
@@ -98,12 +107,13 @@ pins:
     function: Front O2 Sensor Signal
     
   - pin: 2D
-    id: GPIOF_3
+    id: F3
     class: switch_inputs
     ts_name: 2D - O2S2
     function: Rear O2 Sensor Signal
         
   - pin: 2F
+# H144_IN_TPS
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 2F - TPS
@@ -131,7 +141,11 @@ pins:
     function: GND
     
   - pin: 3B
-    function: +12V
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 3B - Battery Sense
+    function: ECU power in start & run
+    type: 12V
     
   - pin: 3C
     function: GND
@@ -140,89 +154,90 @@ pins:
     function: GND
     
   - pin: int_map
+# H144_IN_MAP3
     id: EFI_ADC_2
     class: analog_inputs
     ts_name: intMAP
     
   - pin: 3F
-    id: [GPIOB_1, EFI_ADC_9]
+    id: [B1, EFI_ADC_9]
     class: [event_inputs, analog_inputs]
     ts_name: 3F - CRANK
     function: Crankshaft Sensor
     
   - pin: 3G
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [event_inputs, analog_inputs]
-    ts_name: 2H - CAM
+    ts_name: 3G - CAM
     function: Camshaft Sensor
     
   - pin: 3I    
     function: +12V
     
   - pin: 3L
-    id: GPIOD_13
+    id: D13
     class: outputs
     ts_name: 3L - TACH
     function: Tach Out
     type: ls
     
   - pin: 3N
-    id: GPIOC_13
+    id: C13
     class: outputs
     ts_name: 3N - IGN_1 (1&4)
     function: Coil #1
     type: ign
     
   - pin: 3Q
-    id: GPIOD_14
+    id: D14
     class: outputs
     ts_name: 3Q - IDLE
     function: IAC (negative), with diode
     type: ls
     
   - pin: 3R
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 3R - IGN_2 (2&3)
     function: Coil #2
     type: ign
     
   - pin: 3S
-    id: [GPIOA_7, EFI_ADC_7]
+    id: [A7, EFI_ADC_7]
     class: [switch_inputs, analog_inputs]
     ts_name: 3S - EGR BOOST IN
     function: EGR BOOST
     
   - pin: 3U
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: 3U - INJ_1
     function: Injector #1
     type: inj
     
   - pin: 3V
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: 3V - INJ_2
     function: Injector #2
     type: inj 
   
   - pin: 3W
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: 3W - INJ_3
     function: Injector #3
     type: inj
     
   - pin: 3X
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: 3X - INJ_4
     function: Injector #4
     type: inj
     
   - pin: 3Z
-    id: GPIOG_13
+    id: G13
     class: outputs
     ts_name: 3Z - O2H2
     function: Rear O2 sensor heater
@@ -232,26 +247,26 @@ pins:
     function: GND   
     
   - pin: 4B
-    id: GPIOE_12
+    id: E12
     class: event_inputs
     ts_name: 4B - DIGITAL/FLEX
     function: DIGITAL
     
   - pin: 4C
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 4C - IN TEMP/PPS2
     function: TEMP OR PPS2
     
   - pin: 4D
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: 4D - BOOST OUT
     function: BOOST OUT
     type: inj
        
   - pin: 4E
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: 4E - VVT
     function: VVT Oil Control Valve neg.
@@ -279,29 +294,29 @@ pins:
     function: WBO
     
   - pin: int_pps1
-    id: [GPIOA_3, EFI_ADC_3]
+    id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
     ts_name: PPS1
     
   - pin: int_tps2
-    id: [GPIOA_1, EFI_ADC_1]
+    id: [A1, EFI_ADC_1]
     class: [switch_inputs, analog_inputs]
     ts_name: TPS1
     
   - pin: int_etb+
-    id: GPIOC_7
+    id: C7
     class: outputs
     ts_name: ETB +
     
   - pin: int_etb-
-    id: GPIOC_8
+    id: C8
     class: outputs
-    ts_name: ETB +
+    ts_name: ETB -
     
   - pin: int_etb_EN
-    id: GPIOC_6
+    id: C6
     class: outputs
-    ts_name: ETB +
+    ts_name: ETB EN
  
 
 info:

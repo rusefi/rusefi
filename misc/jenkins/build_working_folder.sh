@@ -23,10 +23,14 @@ echo $BUNDLE_FULL_NAME > $FOLDER/bundle_name.txt
 
 CONSOLE_FOLDER="$FOLDER/console"
 DRIVERS_FOLDER="$FOLDER/drivers"
+OPENBLT_FOLDER="$CONSOLE_FOLDER/openblt"
+
 mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
+mkdir $OPENBLT_FOLDER
 ls -l $FOLDER
 
+# this magic file is created manually using 'make_package2.bat'
 wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
 [ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
@@ -56,6 +60,8 @@ cp misc/console_launcher/rusefi_*.exe     $CONSOLE_FOLDER
 cp java_console/*.dll                     $CONSOLE_FOLDER
 cp java_console/rusefi.xml                $CONSOLE_FOLDER
 cp -r java_console/bin                    $FOLDER
+cp firmware/ext/openblt/Host/BootCommander.exe $OPENBLT_FOLDER
+cp firmware/ext/openblt/Host/libopenblt.dll    $OPENBLT_FOLDER
 
 cp misc/console_launcher/readme.html      $FOLDER
 

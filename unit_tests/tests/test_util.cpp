@@ -18,8 +18,13 @@
 #include "nmea.h"
 #include "mmc_card.h"
 #include "lcd_menu_tree.h"
-#include "crc.h"
 #include "fl_stack.h"
+
+TEST(util, testitoa) {
+	char buffer[12];
+	itoa10(buffer, 239);
+	ASSERT_TRUE(strEqual(buffer, "239"));
+}
 
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
@@ -42,7 +47,6 @@ TEST(util, crc) {
 
 	const char * A = "A";
 
-	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
 	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32 1", 0xd3d99e8b, c);
@@ -136,15 +140,15 @@ static void testMalfunctionCentralRemoveNonExistent() {
 	clearWarnings();
 
 	// this should not crash
-	removeError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	removeError(OBD_TPS1_Correlation);
 }
 
 static void testMalfunctionCentralSameElementAgain() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
-	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	addError(OBD_TPS1_Correlation);
+	addError(OBD_TPS1_Correlation);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(1, localCopy.count);
 }
@@ -153,10 +157,10 @@ static void testMalfunctionCentralRemoveFirstElement() {
 	clearWarnings();
 	error_codes_set_s localCopy;
 
-	obd_code_e firstElement = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
+	obd_code_e firstElement = OBD_TPS1_Correlation;
 	addError(firstElement);
 
-	obd_code_e secondElement = OBD_Intake_Air_Temperature_Circuit_Malfunction;
+	obd_code_e secondElement = OBD_TPS2_Correlation;
 	addError(secondElement);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(2, localCopy.count);
@@ -182,7 +186,7 @@ TEST(misc, testMalfunctionCentral) {
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(0, localCopy.count);
 
-	obd_code_e code = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
+	obd_code_e code = OBD_TPS1_Correlation;
 	// let's add one error and validate
 	addError(code);
 
@@ -196,7 +200,7 @@ TEST(misc, testMalfunctionCentral) {
 	ASSERT_EQ(1, localCopy.count);
 	ASSERT_EQ(code, localCopy.error_codes[0]);
 
-	code = OBD_Intake_Air_Temperature_Circuit_Malfunction;
+	code = OBD_TPS2_Correlation;
 	addError(code);
 	getErrorCodes(&localCopy);
 	// todo:	ASSERT_EQ(2, localCopy.count);
@@ -231,6 +235,16 @@ static const char *lastThird = NULL;
 static void testEchoSSS(const char *first, const char *second, const char *third) {
 	lastFirst = first;
 	lastThird = third;
+}
+
+static float fFirst;
+static float fSecond;
+static float fThird;
+
+static void testEchoFFF(float first, float second, float third) {
+	fFirst = first;
+	fSecond = second;
+	fThird = third;
 }
 
 #define UNKNOWN_COMMAND "dfadasdasd"
@@ -355,6 +369,15 @@ TEST(misc, testConsoleLogic) {
 	handleConsoleLine(buffer);
 	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
 
+	printf("\r\addConsoleActionFFF\r\n");
+	addConsoleActionFFF("echofff", testEchoFFF);
+	strcpy(buffer, "echofff 1.0 2 00003.0");
+	handleConsoleLine(buffer);
+
+	ASSERT_EQ(1.0, fFirst);
+	ASSERT_EQ(2.0, fSecond);
+	ASSERT_EQ(3.0, fThird);
+
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
@@ -473,16 +496,7 @@ TEST(misc, testMenuTree) {
 }
 
 int getRusEfiVersion(void) {
-	return 776655;
-}
-
-TEST(util, datalogging) {
-	char LOGGING_BUFFER[1000];
-	Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
-	printCurrentState(&logger, 239, "DEFAULT_FRANKENSO", "ID");
-//	printf("Got [%s]\r\n", LOGGING_BUFFER);
-//	ASSERT_STREQ("rusEfiVersion,776655@321ID DEFAULT_FRANKENSO 239,", LOGGING_BUFFER);
+	return TS_FILE_VERSION;
 }
 
 TEST(util, PeakDetect) {

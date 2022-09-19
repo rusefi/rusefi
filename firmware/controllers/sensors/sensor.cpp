@@ -55,7 +55,7 @@ public:
 		if (s) {
 			// If this sensor says it doesn't exist, return unexpected
 			if (!s->hasSensor()) {
-				return unexpected;
+				return UnexpectedCode::Configuration;
 			}
 
 			// If we found the sensor, ask it for a result.
@@ -63,7 +63,7 @@ public:
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
 	void showInfo(const char* sensorName) const {
@@ -145,17 +145,23 @@ void Sensor::unregister() {
 	return &s_sensorRegistry[index];
 }
 
+#if EFI_UNIT_TEST
+// scary nullable return result thus you probably do not need this in production code
 /*static*/ const Sensor *Sensor::getSensorOfType(SensorType type) {
 	auto entry = getEntryForType(type);
 	return entry ? entry->getSensor() : nullptr;
 }
+#endif // EFI_UNIT_TEST
 
+/**
+ * @returns NotNull: sensor result or UnexpectedCode::Configuration if sensor is not registered
+ */
 /*static*/ SensorResult Sensor::get(SensorType type) {
 	const auto entry = getEntryForType(type);
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
 	return entry->get();
@@ -245,12 +251,13 @@ void Sensor::unregister() {
  * todo: some sort of hashmap in the future?
  */
 SensorType findSensorTypeByName(const char *name) {
-    for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
-    	SensorType type = (SensorType)i;
-    	const char *sensorName = getSensorType(type);
-    	if (strEqualCaseInsensitive(sensorName, name)) {
-    		return type;
-    	}
-    }
-    return SensorType::Invalid;
+	for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+		SensorType type = (SensorType)i;
+		const char *sensorName = getSensorType(type);
+		if (strEqualCaseInsensitive(sensorName, name)) {
+			return type;
+		}
+	}
+
+	return SensorType::Invalid;
 }

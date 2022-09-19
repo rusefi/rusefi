@@ -4,7 +4,7 @@
 pins:
   - pin: 1
     function: Ignition 2 Output
-    id: GPIOE_5
+    id: E5
     class: outputs
     ts_name: 1 - IGN_2
     type: ign
@@ -12,7 +12,7 @@ pins:
 
   - pin: 2
     function: Ignition 3 (2+3) Output
-    id: GPIOE_4
+    id: E4
     class: outputs
     ts_name: 2 - IGN_3
     type: ign
@@ -25,7 +25,7 @@ pins:
 
   - pin: 4
     function: Ignition 4 Output
-    id: GPIOE_3
+    id: E3
     class: outputs
     ts_name: 4 - IGN_4
     type: ign
@@ -33,7 +33,7 @@ pins:
 
   - pin: 5
     function: Ignition 1 (1+4) Output
-    id: GPIOI_8
+    id: I8
     class: outputs
     ts_name: 5 - IGN_1
     type: ign
@@ -41,7 +41,7 @@ pins:
 
   - pin: 6
     function: Injector 2 Output
-    id: GPIOG_8
+    id: G8
     class: outputs
     ts_name: 6 - INJ_2
     type: inj
@@ -49,7 +49,7 @@ pins:
 
   - pin: 7
     function: Injector 3 Output
-    id: GPIOD_11
+    id: D11
     class: outputs
     ts_name: 7 - INJ_3
     type: inj
@@ -57,28 +57,28 @@ pins:
 
   - pin: 8
     function: Engine Speed (Tachometer) Signal Output (push-pull)
-    id: GPIOD_14
+    id: D14
     class: outputs
     ts_name: 8 - OUT_TACH
     color: green
 
   - pin: 9
     function: Fuel Level / CLT Analog Input
-    id: GPIOF_5
-    class: analog_inputs
-    ts_name: 9 - IN_SENS3
+#    id: F5
+#    class: analog_inputs
+#    ts_name: 9 - IN_SENS3
     color: white
 
   - pin: 10
     function: Fuel consumption Output (push-pull) / CLT?
-    id: GPIOD_15
+    id: D15
     class: outputs
     ts_name: 10 - OUT_FUEL
     color: green
 
   - pin: 11
     function: Reserved High-side Output (high)
-    id: GPIOH_13
+    id: H13
     class: outputs
     ts_name: 11 - OUT_HIGH
     type: gp_high
@@ -98,7 +98,7 @@ pins:
 
   - pin: 14
     function: Main Relay Output
-    id: GPIOI_2
+    id: I2
     class: outputs
     ts_name: 14 - OUT_MAIN
     type: ls
@@ -106,7 +106,7 @@ pins:
 
   - pin: 15
     function: Crankshaft Sensor (+) Input
-    id: [GPIOB_1, EFI_ADC_9]
+    id: [B1, EFI_ADC_9]
     class: [event_inputs, analog_inputs]
     ts_name: 15 - IN_CRANK (A24)
     color: white
@@ -140,7 +140,7 @@ pins:
 
   - pin: 21
     function: Ignition 8 Output
-    id: GPIOE_6
+    id: E6
     class: outputs
     ts_name: 21 - IGN_8
     type: ign
@@ -148,7 +148,7 @@ pins:
 
   - pin: 22
     function: Ignition 7 Output
-    id: GPIOB_9
+    id: B9
     class: outputs
     ts_name: 22 - IGN_7
     type: ign
@@ -156,7 +156,7 @@ pins:
 
   - pin: 23
     function: Ignition 6 Output
-    id: GPIOB_8
+    id: B8
     class: outputs
     ts_name: 23 - IGN_6
     type: ign
@@ -164,7 +164,7 @@ pins:
 
   - pin: 24
     function: Ignition 5 Output
-    id: GPIOE_2
+    id: E2
     class: outputs
     ts_name: 24 - IGN_5
     type: ign
@@ -172,7 +172,7 @@ pins:
 
   - pin: 25
     function: Injector 6 Output
-    id: GPIOF_12
+    id: F12
     class: outputs
     ts_name: 25 - INJ_6
     type: inj
@@ -184,7 +184,7 @@ pins:
 
   - pin: 27
     function: Injector 1 Output
-    id: GPIOG_7
+    id: G7
     class: outputs
     ts_name: 27 - INJ_1
     type: inj
@@ -192,7 +192,7 @@ pins:
 
   - pin: 28
     function: Oxygen Sensor 2 Heating Output (low)
-    id: GPIOA_9
+    id: A9
     class: outputs
     ts_name: 28 - OUT_O2H2
     type: ls
@@ -204,7 +204,7 @@ pins:
 
   - pin: 30
     function: Injector 5 Output
-    id: GPIOD_9
+    id: D9
     class: outputs
     ts_name: 30 - INJ_5
     type: inj
@@ -212,7 +212,7 @@ pins:
 
   - pin: 31
     function: CheckEngine Lamp Output (low)
-    id: GPIOG_4
+    id: G4
     class: outputs
     ts_name: 31 - OUT_CE
     type: ls
@@ -293,7 +293,7 @@ pins:
 
   - pin: 46
     function: Canister Purge Valve Output (low)
-    id: GPIOG_3
+    id: G3
     class: outputs
     ts_name: 46 - OUT_CANIST
     type: ls
@@ -301,7 +301,7 @@ pins:
 
   - pin: 47
     function: Injector 4 Output
-    id: GPIOD_10
+    id: D10
     class: outputs
     ts_name: 47 - INJ_4
     type: inj
@@ -309,7 +309,7 @@ pins:
 
   - pin: 48
     function: O2 LSF Heating Output (low)
-    id: GPIOH_14
+    id: H14
     class: outputs
     ts_name: 48 - OUT_O2H
     type: ls
@@ -317,7 +317,7 @@ pins:
 
   - pin: 49
     function: Canister heater Output (low)
-    id: GPIOI_1
+    id: I1
     class: outputs
     ts_name: 49 - OUT_HEATER
     type: ls
@@ -325,7 +325,7 @@ pins:
 
   - pin: 50
     function: Starter Relay Output (low) / HOTLamp / Idle2(Mikas)
-    id: GPIOI_0
+    id: I0
     class: outputs
     ts_name: 50 - OUT_STARTER
     type: ls
@@ -365,14 +365,15 @@ pins:
 
   - pin: 59
     function: Vehicle Speed Sensor (VSS) digital input
-    id: GPIOF_11
+    # H144_IN_VSS
+    id: F11
     class: event_inputs
     ts_name: 59 - IN_VSS
     color: white
 
   - pin: 60
     function: Reserved Push-Pull Output (push-pull)
-    id: GPIOD_13
+    id: D13
     class: outputs
     ts_name: 60 - OUT_IO
     color: green
@@ -391,35 +392,35 @@ pins:
 
   - pin: 64
     function: Solenoid B2 output (push-pull) / Stepper A (or D)
-    id: GPIOC_9
+    id: C9
     class: outputs
     ts_name: 64 - OUT_COIL_B2
     color: green
 
   - pin: 65
     function: Solenoid B1 output (push-pull) / Stepper D (or C)
-    id: GPIOC_8
+    id: C8
     class: outputs
     ts_name: 65 - OUT_COIL_B1
     color: green
 
   - pin: 66
     function: Solenoid A2 output (push-pull) / Stepper C (or B)
-    id: GPIOC_7
+    id: C7
     class: outputs
     ts_name: 66 - OUT_COIL_A2
     color: green
 
   - pin: 67
     function: Solenoid A1 output (push-pull) / Stepper B (or A)
-    id: GPIOC_6
+    id: C6
     class: outputs
     ts_name: 67 - OUT_COIL_A1
     color: green
 
   - pin: 68
     function: Electric Cooling Fan (ECF) Relay Output (low)
-    id: GPIOD_12
+    id: D12
     class: outputs
     ts_name: 68 - OUT_ECF
     type: ls
@@ -427,7 +428,7 @@ pins:
 
   - pin: 69
     function: A/C Relay Output (low)
-    id: GPIOH_15
+    id: H15
     class: outputs
     ts_name: 69 - OUT_AC
     type: ls
@@ -435,7 +436,7 @@ pins:
 
   - pin: 70
     function: Fuel Pump Relay Output (low)
-    id: GPIOG_2
+    id: G2
     class: outputs
     ts_name: 70 - OUT_PUMP
     type: ls
@@ -446,7 +447,7 @@ pins:
 
   - pin: 72
     function: Injector 7 Output
-    id: GPIOF_13
+    id: F13
     class: outputs
     ts_name: 72 - INJ_7
     type: inj
@@ -454,7 +455,7 @@ pins:
 
   - pin: 73
     function: Injector 8 Output
-    id: GPIOF_14
+    id: F14
     class: outputs
     ts_name: 73 - INJ_8
     type: inj
@@ -462,28 +463,28 @@ pins:
 
   - pin: 74
     function: Inertia switch (crash detect) Input
-    id: [GPIOB_0, EFI_ADC_8]
+    id: [B0, EFI_ADC_8]
     class: [event_inputs, analog_inputs]
     ts_name: 74 - IN_AUX1
     color: white
 
   - pin: 75
     function: A/C Switch Input
-    id: [GPIOC_4, EFI_ADC_14]
+    id: [C4, EFI_ADC_14]
     class: [event_inputs, analog_inputs]
     ts_name: 75 - IN_AUX2
     color: white
 
   - pin: 76
     function: Power Steering Input
-    id: [GPIOC_5, EFI_ADC_15]
+    id: [C5, EFI_ADC_15]
     class: [event_inputs, analog_inputs]
     ts_name: 76 - IN_AUX3
     color: white
 
   - pin: 77
     function: Clutch switch Input
-    id: [GPIOA_7, EFI_ADC_7]
+    id: [A7, EFI_ADC_7]
     class: [event_inputs, analog_inputs]
     ts_name: 77 - IN_AUX4
     color: white
@@ -497,7 +498,7 @@ pins:
 
   - pin: 79
     function: Cam/Phase Sensor Input
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [A6, EFI_ADC_6]
     class: [event_inputs, analog_inputs]
     ts_name: 79 - IN_CAM
     color: white

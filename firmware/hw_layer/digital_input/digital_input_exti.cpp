@@ -28,8 +28,7 @@ struct ExtiChannel
 	ExtiCallback Callback = nullptr;
 	void* CallbackData;
 
-	efitick_t Timestamp = 0;
-
+	// Name is also used as an enable bit
 	const char* Name = nullptr;
 };
 
@@ -37,11 +36,13 @@ static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiCallback cb, void *cb_data) {
-	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of Gpio::Unassigned getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, msg, "efiExtiEnablePin msg must not be null");
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL) {
@@ -68,10 +69,9 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 		return;
 	}
 
-	channel.Name = msg;
 	channel.Callback = cb;
 	channel.CallbackData = cb_data;
-	channel.Timestamp = 0;
+	channel.Name = msg;
 
 	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
@@ -79,7 +79,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 
 void efiExtiDisablePin(brain_pin_e brainPin)
 {
-	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
+	/* paranoid check, in case of Gpio::Unassigned getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin))
 		return;
@@ -102,46 +102,101 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	palDisableLineEvent(line);
 
 	/* mark unused */
-	channel.Timestamp = 0;
 	channel.Name = nullptr;
 	channel.Callback = nullptr;
 	channel.CallbackData = nullptr;
 }
-
-digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) {
-	return nullptr;
-}
-
-#if ! EFI_ICU_INPUTS
-digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
-	return startDigitalCaptureExti(msg, brainPin);
-}
-#endif // EFI_ICU_INPUTS
 
 static inline void triggerInterrupt() {
 	// Manually fire the I2C1_EV interrupt, it will be queued after this interrupt returns
 	NVIC->STIR = I2C1_EV_IRQn;
 }
 
+struct ExtiQueueEntry {
+	efitick_t Timestamp;
+	uint8_t Channel;
+};
+
+template <typename T, size_t TSize>
+class ExtiQueue {
+public:
+	void push(const T& val) {
+		if ((m_write == m_read - 1) || (m_write == TSize - 1 && m_read == 0)) {
+			// queue full, drop
+			return;
+		}
+
+		arr[m_write] = val;
+		m_write++;
+
+		// wrap end of list
+		if (m_write == TSize) {
+			m_write = 0;
+		}
+	}
+
+	expected<T> pop() {
+		if (m_read == m_write) {
+			// Queue empty
+			return unexpected;
+		}
+
+		T value = arr[m_read];
+		m_read++;
+
+		// wrap end of list
+		if (m_read == TSize) {
+			m_read = 0;
+		}
+
+		return value;
+	}
+
+private:
+	T arr[TSize];
+
+	uint8_t m_read = 0;
+	uint8_t m_write = 0;
+};
+
+static ExtiQueue<ExtiQueueEntry, 32> queue;
+
+static uint8_t overflowCounter = 0;
+
 CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
 
-	for (size_t i = 0; i < 16; i++) {
-		auto& channel = channels[i];
-
+	while (true) {
 		// get the timestamp out under lock
 		// todo: lock freeeeee!
 		__disable_irq();
-		auto timestamp = channel.Timestamp;
-		channel.Timestamp = 0;
+		auto result = queue.pop();
 		__enable_irq();
 
+		// Queue empty, we're done here.
+		if (!result) {
+			break;
+		}
+
+		auto& entry = result.Value;
+		auto& timestamp = entry.Timestamp;
+
 		if (timestamp != 0) {
-			channel.Callback(channel.CallbackData, timestamp);
+			auto& channel = channels[entry.Channel];
+
+			if (channel.Callback) {
+				channel.Callback(channel.CallbackData, timestamp);
+			}
+		} else {
+			overflowCounter++;
 		}
 	}
 
 	OSAL_IRQ_EPILOGUE();
+}
+
+uint8_t getExtiOverflowCounter() {
+	return overflowCounter;
 }
 
 void handleExtiIsr(uint8_t index) {
@@ -151,11 +206,7 @@ void handleExtiIsr(uint8_t index) {
 	extiGetAndClearGroup1(1U << index, pr);
 
 	if (pr & (1 << index)) {
-		auto& timestamp = channels[index].Timestamp;
-
-		if (timestamp == 0) {
-			timestamp = getTimeNowNt();
-		}
+		queue.push({getTimeNowNt(), index});
 
 		triggerInterrupt();
 	}
@@ -207,6 +258,10 @@ void efiExtiInit() {
 
 void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }
 void efiExtiDisablePin(brain_pin_e) { }
+
+uint8_t getExtiOverflowCounter() {
+	return 0;
+}
 
 #endif
 

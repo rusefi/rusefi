@@ -1,11 +1,16 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'java-test-fixtures'
 }
 
 apply from: '../../android/dependencies.gradle'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
+}
+
+tasks.withType(Test) {
+    systemProperty "java.library.path", "../../unit_tests/build"
 }
 
 dependencies {
@@ -17,13 +22,13 @@ dependencies {
     implementation project(':shared_io')
     implementation project(':logging')
 
-    implementation libs.annotations
-    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.6.2'
+    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
+    implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
     implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
-    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+    implementation libs.json
+    implementation ts_plugin_libs.httpclient
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testFixturesImplementation libs.mockito
 }

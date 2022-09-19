@@ -2,8 +2,16 @@
 
 #include "timer.h"
 
+Timer::Timer() {
+	init();
+}
+
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();
+}
+
+void Timer::init() {
+	m_lastReset = INT64_MIN / 8;
 }
 
 void Timer::reset(efitick_t nowNt) {

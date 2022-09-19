@@ -7,110 +7,43 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
 
 /**
  * 8,2,2,2 Nissan pattern
  */
-static void initializeNissanSR20VE_4_optional_360(TriggerWaveform *s, bool with2nd) {
+void initializeNissanSR20VE_4(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->gapBothDirections = true;
 	s->useOnlyPrimaryForSync = true;
 
 	s->tdcPosition = 630;
 
-	float width = 4;
 	s->setTriggerSynchronizationGap2(9.67 * 0.75, 16);
 
-	float left = 0;
-	float right;
+	float width = 4;
 
-	int total = 360; // 360 on cam, over 720 crank degree
+	s->addEvent720(1 * 180 - 4 * width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(1 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	float base = 180;
-	right = base - 4 * width;
+	s->addEvent720(2 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(2 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
+	s->addEvent720(3 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(3 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	// was is the the one with 360 opto sensor?
-
-	base += 180;
-
-	left = right;
-	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	base += 180;
-	left = right;
-	right = base - width;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-
-	left = right;
-	right = base;
-	if (with2nd) {
-//		addSkippedToothTriggerEvents(T_SECONDARY, s, total, 0, 0.5, 0, 720,
-//				left, right);
-	}
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-
-	base += 180;
-	left = right;
-	right = base - width;
-
-	s->addEvent720(right, T_PRIMARY, TV_RISE);
-	left = right;
-	right = base;
-	s->addEvent720(right, T_PRIMARY, TV_FALL);
-}
-
-
-/**
- * Nissan Primera p11 year 1995-2002
- */
-
-void initializeNissanSR20VE_4(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, false);
-}
-
-void initializeNissanSR20VE_4_360(TriggerWaveform *s) {
-	initializeNissanSR20VE_4_optional_360(s, true);
+	s->addEvent720(4 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(4 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
 static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
 	int vvtWidth = 20;
 
-	s->addEventAngle(fallAngle - vvtWidth, T_PRIMARY, TV_RISE);
-	s->addEventAngle(fallAngle, T_PRIMARY, TV_FALL);
+	s->addEventAngle(fallAngle - vvtWidth, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEventAngle(fallAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 }
 
@@ -126,11 +59,11 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	addPrimaryToothEndingAt(s, offset + 320);
 	addPrimaryToothEndingAt(s, offset + 520);
 
-	s->setTriggerSynchronizationGap(5);
+	s->setTriggerSynchronizationGap2(4, 6);
+	s->setSecondTriggerSynchronizationGap2(0.35f, 0.7f);
 }
 
 void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t totalWheel, size_t missing) {
-	s->setTriggerSynchronizationGap(0.33);
 
 	auto toothAngle = 360.0f / totalWheel;
 
@@ -138,10 +71,10 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 	auto toothCount = patternTeeth - missing;
 	
 	float currentAngle = missing * toothAngle;
-	for (int i = 0; i < toothCount; i++) {
+	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
-		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle - 5, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEventAngle(currentAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 	}
 }
 
@@ -149,9 +82,13 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
 
 	s->tdcPosition = 675;
+	s->useRiseEdge = true;
 
 	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
 	makeNissanPattern(s, 3, 36, 2);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.2, 0.5);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 2, 4);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 0.6, 1.4);
 }
 
 void initializeNissanMR18crank(TriggerWaveform *s) {
@@ -161,6 +98,7 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 
 	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
 	makeNissanPattern(s, 2, 36, 2);
+	s->setTriggerSynchronizationGap(0.33);
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
@@ -173,20 +111,22 @@ void initializeNissanQR25crank(TriggerWaveform *s) {
 	float currentAngle = 20;
 	for (int i = 0;i < 16;i++) {
 		currentAngle += 10;
-		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle - 5, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEventAngle(currentAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 	}
 }
 
 static void addvq30tooth(TriggerWaveform *s, float angle) {
-	s->addEvent360(angle - 4, T_PRIMARY, TV_RISE);
-	s->addEvent360(angle, T_PRIMARY, TV_FALL);
+	s->addEvent360(angle - 4, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(angle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
+// yes, this is CAM shaft shape NOT crank shaft shape!
+// we will add crank shape once Pavel makes progress
 void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->tdcPosition = 00;
+	s->tdcPosition = 120;
 
 	int x = 360 + 52;
 

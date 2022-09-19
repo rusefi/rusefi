@@ -1,40 +1,35 @@
 #include "pch.h"
 
+#include "can_filter.h"
+
+
 #if EFI_CAN_SUPPORT
 
 #include "rusefi_lua.h"
-#include "can.h"
 
-static constexpr size_t maxFilterCount = 48;
-
-size_t filterCount = 0;
-int32_t luaCanRxIds[maxFilterCount] = {0};
-
-static bool shouldRxCanFrame(const CANRxFrame& frame) {
-	for (size_t i = 0; i < filterCount; i++) {
-		int32_t id = luaCanRxIds[i];
-		if (CAN_SID(frame) == id || CAN_EID(frame) == id) {
-			return true;
-		}
-	}
-
-	return false;
-}
+// Stores information about one received CAN frame: which bus, plus the actual frame
+struct CanFrameData {
+	uint8_t BusIndex;
+	int Callback;
+	CANRxFrame Frame;
+};
 
 constexpr size_t canFrameCount = 32;
-static CANRxFrame canFrames[canFrameCount];
+static CanFrameData canFrames[canFrameCount];
 // CAN frame buffers that are not in use
-chibios_rt::Mailbox<CANRxFrame*, canFrameCount> freeBuffers;
+chibios_rt::Mailbox<CanFrameData*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
-chibios_rt::Mailbox<CANRxFrame*, canFrameCount> filledBuffers;
+chibios_rt::Mailbox<CanFrameData*, canFrameCount> filledBuffers;
 
 void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
+	auto filter = getFilterForId(busIndex, CAN_ID(frame));
+
 	// Filter the frame if we aren't listening for it
-	if (!shouldRxCanFrame(frame)) {
+	if (!filter) {
 		return;
 	}
 
-	CANRxFrame* frameBuffer;
+	CanFrameData* frameBuffer;
 	msg_t msg;
 
 	{
@@ -50,7 +45,9 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	}
 
 	// Copy the frame in to the buffer
-	*frameBuffer = frame;
+	frameBuffer->BusIndex = busIndex;
+	frameBuffer->Frame = frame;
+	frameBuffer->Callback = filter->Callback;
 
 	{
 		// Push the frame in to the queue under lock
@@ -59,8 +56,15 @@ void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	}
 }
 
-static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
-	lua_getglobal(ls, "onCanRx");
+static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
+	if (data->Callback == NO_CALLBACK) {
+		// No callback, use catch-all function
+		lua_getglobal(ls, "onCanRx");
+	} else {
+		// Push the specified callback on to the stack
+		lua_rawgeti(ls, LUA_REGISTRYINDEX, data->Callback);
+	}
+
 	if (lua_isnil(ls, -1)) {
 		// no rx function, ignore
 		efiPrintf("LUA CAN rx missing function onCanRx");
@@ -68,17 +72,17 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 		return;
 	}
 
-	auto dlc = frame->DLC;
+	auto dlc = data->Frame.DLC;
 
 	// Push bus, ID and DLC
-	lua_pushinteger(ls, 1);	// TODO: support multiple busses!
-	lua_pushinteger(ls, CAN_EID(*frame));
+	lua_pushinteger(ls, data->BusIndex);	// TODO: support multiple busses!
+	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 
 	// Build table for data
 	lua_newtable(ls);
 	for (size_t i = 0; i < dlc; i++) {
-		lua_pushinteger(ls, frame->data8[i]);
+		lua_pushinteger(ls, data->Frame.data8[i]);
 
 		// index is i+1 because Lua "arrays" (tables) are 1-indexed
 		lua_rawseti(ls, -2, i + 1);
@@ -98,9 +102,9 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 }
 
 bool doOneLuaCanRx(LuaHandle& ls) {
-	CANRxFrame* frame;
+	CanFrameData* data;
 
-	msg_t msg = filledBuffers.fetch(&frame, TIME_IMMEDIATE);
+	msg_t msg = filledBuffers.fetch(&data, TIME_IMMEDIATE);
 
 	if (msg == MSG_TIMEOUT) {
 		// No new CAN messages rx'd, nothing more to do.
@@ -114,10 +118,10 @@ bool doOneLuaCanRx(LuaHandle& ls) {
 	}
 
 	// We've accepted the frame, process it in Lua.
-	handleCanFrame(ls, frame);
+	handleCanFrame(ls, data);
 
 	// We're done, return this frame to the free list
-	msg = freeBuffers.post(frame, TIME_IMMEDIATE);
+	msg = freeBuffers.post(data, TIME_IMMEDIATE);
 	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
 
 	// We processed a frame so we should check again
@@ -134,23 +138,6 @@ void initLuaCanRx() {
 	for (size_t i = 0; i < canFrameCount; i++) {
 		freeBuffers.post(&canFrames[i], TIME_INFINITE);
 	}
-}
-
-void resetLuaCanRx() {
-	// Clear all lua filters - reloading the script will reinit them
-	memset(luaCanRxIds, 0, sizeof(luaCanRxIds));
-	filterCount = 0;
-}
-
-void addLuaCanRxFilter(int32_t eid) {
-	if (filterCount >= maxFilterCount) {
-		firmwareError(OBD_PCM_Processor_Fault, "Too many Lua CAN RX filters");
-	}
-
-	efiPrintf("Added Lua CAN RX filter: %d", eid);
-
-	luaCanRxIds[filterCount] = eid;
-	filterCount++;
 }
 
 #endif // EFI_CAN_SUPPORT

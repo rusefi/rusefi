@@ -18,22 +18,21 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
-#include "fsio_impl.h"
 
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];
 //extern const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT];
 
-const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700.0, 820.0, 950.0, 1100.0,
-		1300.0, 1550.0, 1800.0, 2150.0,
-		2500.0, 3000.0, 3500.0, 4150.0,
-		4900.0, 5800.0, 6800.0, 8000.0}
+const uint16_t mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700, 820, 950, 1100,
+		1300, 1550, 1800, 2150,
+		2500, 3000, 3500, 4150,
+		4900, 5800, 6800, 8000}
 ;
 
-const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT] = {20.0, 25.0, 30.0, 35.0,
-		40.0, 46.0, 54.0, 63.0,
-		73.0, 85.0, 99.0, 116.0,
-		135.0, 158.0, 185.0, 220.0}
+const uint8_t mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT] = {20, 25, 30, 35,
+		40, 46, 54, 63,
+		73, 85, 99, 116,
+		135, 158, 185, 220}
 ;
 
 static uint8_t const SCRIPT_TABLE_dyno[SCRIPT_TABLE_8][SCRIPT_TABLE_8] = {
@@ -70,16 +69,16 @@ static const uint8_t mapBased18vvtVeTable_NA_fuel_rail[16][16] = {
 };
 #endif
 
-static const  float mazda_miata_nb2_targetLambdaRpmBins[FUEL_RPM_COUNT] = {650.0, 800.0, 1050.0, 1300.0,
-		1550.0, 1800.0, 2050.0, 2300.0,
-		2550.0, 2800.0, 3050.0, 3300.0,
-		3550.0, 3800.0, 4050.0, 6400.0}
+static const uint16_t mazda_miata_nb2_targetLambdaRpmBins[FUEL_RPM_COUNT] = {650, 800, 1050, 1300,
+		1550, 1800, 2050, 2300,
+		2550, 2800, 3050, 3300,
+		3550, 3800, 4050, 6400}
 ;
 
-static const float mazda_miata_nb2_targetLambdaLoadBins[FUEL_LOAD_COUNT] = {10.0, 20.0, 30.0, 40.0,
-		50.0, 60.0, 70.0, 80.0,
-		90.0, 100.0, 110.0, 120.0,
-		130.0, 140.0, 150.0, 160.0};
+static const uint8_t mazda_miata_nb2_targetLambdaLoadBins[FUEL_LOAD_COUNT] = {10, 20, 30, 40,
+		50, 60, 70, 80,
+		90, 100, 110, 120,
+		130, 140, 150, 160};
 
 void setMazdaMiata2003EngineConfigurationNaFuelRail() {
 	setMazdaMiata2003EngineConfiguration();
@@ -95,7 +94,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail() {
 	copyArray(config->lambdaRpmBins, mazda_miata_nb2_targetLambdaRpmBins);
 	copyArray(config->lambdaLoadBins, mazda_miata_nb2_targetLambdaLoadBins);
 
-	engineConfiguration->ignitionPins[2] = GPIOC_7;
+	engineConfiguration->ignitionPins[2] = Gpio::C7;
 
 	// Frankenso analog #7 pin 3J, W48 top <>W48 bottom jumper, not OEM
 	engineConfiguration->afr.hwChannel = EFI_ADC_3; // PA3

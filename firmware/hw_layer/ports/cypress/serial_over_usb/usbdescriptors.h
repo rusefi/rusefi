@@ -159,9 +159,9 @@ const uint8_t au8ConfigDescriptor[53] =
                 0x00    ///bIntervall: Polling Intervall
 };
 
-const uint8_t au8ReportDescriptor0[1]; // Not used
-const uint8_t au8ReportDescriptor1[1]; // Not used
-const uint8_t au8ReportDescriptor2[1]; // Not used
+const uint8_t au8ReportDescriptor0[1] = { 0 }; // Not used
+const uint8_t au8ReportDescriptor1[1] = { 0 }; // Not used
+const uint8_t au8ReportDescriptor2[1] = { 0 }; // Not used
 
 
 const stc_usbdevice_stringdescriptor_t pstcStringDescriptors[] =

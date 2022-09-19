@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "advance_map.h"
@@ -17,6 +17,7 @@
 #include "closed_loop_fuel.h"
 #include "launch_control.h"
 #include "injector_model.h"
+#include "tunerstudio.h"
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -33,42 +34,52 @@ WarningCodeState::WarningCodeState() {
 void WarningCodeState::clear() {
 	warningCounter = 0;
 	lastErrorCode = 0;
-	timeOfPreviousWarning = DEEP_IN_THE_PAST_SECONDS;
 	recentWarnings.clear();
 }
 
 void WarningCodeState::addWarningCode(obd_code_e code) {
 	warningCounter++;
 	lastErrorCode = code;
-	if (!recentWarnings.contains(code)) {
+
+	warning_t* existing = recentWarnings.find(code);
+
+	if (!existing) {
 		chibios_rt::CriticalSectionLocker csl;
 
-		// We don't bother double checking
-		recentWarnings.add((int)code);
+		// Add the code to the list
+		existing = recentWarnings.add(warning_t(code));
 	}
+
+	if (existing) {
+		// Reset the timer on the code to now
+		existing->LastTriggered.reset();
+	}
+
+	// Reset the "any warning" timer too
+	timeSinceLastWarning.reset();
 }
 
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
  */
-bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
-	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
-	return absI(now - timeOfPreviousWarning) < period;
+bool WarningCodeState::isWarningNow() const {
+	int period = maxI(3, engineConfiguration->warningPeriod);
+
+	return !timeSinceLastWarning.hasElapsedSec(period);
 }
 
-MockAdcState::MockAdcState() {
-	memset(hasMockAdc, 0, sizeof(hasMockAdc));
-}
+// Check whether a particular warning is active
+bool WarningCodeState::isWarningNow(obd_code_e code) const {
+	warning_t* warn = recentWarnings.find(code);
 
-#if EFI_ENABLE_MOCK_ADC
-void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
+	// No warning found at all
+	if (!warn) {
+		return false;
+	}
 
-	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
-	hasMockAdc[hwChannel] = true;
+	// If the warning is old, it is not active
+	return !warn->LastTriggered.hasElapsedSec(maxI(3, engineConfiguration->warningPeriod));
 }
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedGrams += grams;
@@ -106,16 +117,17 @@ void EngineState::periodicFastCallback() {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
+	
 	if (engine->rpmCalculator.isCranking()) {
-		crankingTime = nowNt;
-		timeSinceCranking = 0.0f;
-	} else {
-		timeSinceCranking = nowNt - crankingTime;
+		crankingTimer.reset(nowNt);
 	}
+
+	running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
+
 	recalculateAuxValveTiming();
 
-	int rpm = engine->rpmCalculator.getRpm();
-	sparkDwell = getSparkDwell(rpm);
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	sparkDwell = engine->ignitionState.getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
@@ -123,14 +135,11 @@ void EngineState::periodicFastCallback() {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
-	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm);
+	engine->module<DfcoController>()->update();
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	if (engineConfiguration->postCrankingFactor > 1.0f) {
-		// convert to microsecs and then to seconds
-		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / US_PER_SECOND_F;
 		// use interpolation for correction taper
 		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
 			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
@@ -139,9 +148,6 @@ void EngineState::periodicFastCallback() {
 	}
 
 	cltTimingCorrection = getCltTimingCorrection();
-
-	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
-					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection();
 
@@ -152,13 +158,13 @@ void EngineState::periodicFastCallback() {
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	engine->injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
+	engine->engineState.injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
-	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float advance = getAdvance(rpm, ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
@@ -173,7 +179,7 @@ void EngineState::periodicFastCallback() {
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 
 		// Apply both per-bank and per-cylinder trims
-		engine->injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
+		engine->engineState.injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
 
 		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}
@@ -194,7 +200,7 @@ void EngineState::periodicFastCallback() {
 
 void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
-	float newTCharge = getTCharge(rpm, tps);
+	float newTCharge = engine->fuelComputer->getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
@@ -207,61 +213,9 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 #endif
 }
 
-SensorsState::SensorsState() {
-}
-
-int MockAdcState::getMockAdcValue(int hwChannel) const {
-	efiAssert(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds", -1);
-	return fakeAdcValues[hwChannel];
-}
-
-StartupFuelPumping::StartupFuelPumping() {
-	isTpsAbove50 = false;
-	pumpsCounter = 0;
-}
-
-void StartupFuelPumping::setPumpsCounter(int newValue) {
-	if (pumpsCounter != newValue) {
-		pumpsCounter = newValue;
-
-		if (pumpsCounter == PUMPS_TO_PRIME) {
-			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
-			pumpsCounter = 0;
-		} else {
-			efiPrintf("setPumpsCounter %d", pumpsCounter);
-		}
-	}
-}
-
-void StartupFuelPumping::update() {
-	if (GET_RPM() == 0) {
-		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
-
-		if (this->isTpsAbove50 != isTpsAbove50) {
-			setPumpsCounter(pumpsCounter + 1);
-		}
-
-	} else {
-		/**
-		 * Engine is not stopped - not priming pumping mode
-		 */
-		setPumpsCounter(0);
-		isTpsAbove50 = false;
-	}
-}
-
 #if EFI_SIMULATOR
 #define VCS_VERSION "123"
 #endif
-
-void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	logging->appendPrintf(PROTOCOL_VERSION_TAG LOG_DELIMITER "%d@%s %s %s %d" LOG_DELIMITER,
-			getRusEfiVersion(), VCS_VERSION,
-			firmwareBuildId,
-			engineTypeName,
-			seconds);
-}
 
 void TriggerConfiguration::update() {
 	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
@@ -273,8 +227,8 @@ bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engineConfiguration->useOnlyRisingEdgeForTrigger;
 }
 
-trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return engineConfiguration->trigger.type;
+trigger_config_s PrimaryTriggerConfiguration::getType() const {
+	return engineConfiguration->trigger;
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
@@ -285,11 +239,33 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 	return engineConfiguration->vvtCamSensorUseRise;
 }
 
-trigger_type_e VvtTriggerConfiguration::getType() const {
-	// Convert from VVT type to trigger type
-	return getVvtTriggerType(engineConfiguration->vvtMode[index]);
+trigger_config_s VvtTriggerConfiguration::getType() const {
+	// Convert from VVT type to trigger_config_s
+	return { getVvtTriggerType(engineConfiguration->vvtMode[index]), 0, 0 };
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
 	return engineConfiguration->verboseVVTDecoding;
+}
+
+bool isLockedFromUser() {
+	int lock = engineConfiguration->tuneHidingKey;
+	bool isLocked = lock > 0;
+	if (isLocked) {
+		firmwareError(OBD_PCM_Processor_Fault, "password protected");
+	}
+	return isLocked;
+}
+
+void unlockEcu(int password) {
+	if (password != engineConfiguration->tuneHidingKey) {
+		efiPrintf("Nope rebooting...");
+#if EFI_PROD_CODE
+		scheduleReboot();
+#endif // EFI_PROD_CODE
+	} else {
+		efiPrintf("Unlocked! Burning...");
+		engineConfiguration->tuneHidingKey = 0;
+		requestBurn();
+	}
 }

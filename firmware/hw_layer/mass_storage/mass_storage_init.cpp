@@ -10,13 +10,9 @@
 	#ifdef EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
 		#include "ramdisk_image_compressed.h"
-
-		static CompressedBlockDevice cbd;
 	#else
 		#include "ramdisk.h"
 		#include "ramdisk_image.h"
-
-		static RamDisk ramdisk;
 	#endif
 
 	// If the ramdisk image told us not to use it, don't use it.
@@ -26,10 +22,20 @@
 	#endif
 #endif
 
-#if STM32_USB_USE_OTG2
+#if EFI_EMBED_INI_MSD
+	#ifdef EFI_USE_COMPRESSED_INI_MSD
+		static CompressedBlockDevice cbd;
+	#else
+		static RamDisk ramdisk;
+	#endif
+#endif
+
+#if STM32_USB_USE_OTG1
+  USBDriver *usb_driver = &USBD1;
+#elif STM32_USB_USE_OTG2
   USBDriver *usb_driver = &USBD2;
 #else
-  USBDriver *usb_driver = &USBD1;
+  #error MSD needs OTG1 or OTG2 to be enabled
 #endif
 
 // One block buffer per LUN
@@ -111,7 +117,7 @@ void initUsbMsd() {
 	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, &sdCardInquiry, nullptr);
 
 	// start the mass storage thread
-	msd.Start();
+	msd.start();
 }
 
 #endif // HAL_USE_USB_MSD

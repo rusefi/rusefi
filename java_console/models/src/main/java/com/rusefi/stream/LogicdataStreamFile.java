@@ -85,10 +85,11 @@ public class LogicdataStreamFile extends StreamFile {
     	// we need at least 2 records
     	if (events == null || events.size() < 2)
     		return;
-		int firstRecordTs = events.get(1).getTimestamp();
-		int lastRecordTs = events.get(events.size() - 1).getTimestamp();
+		long firstRecordTs = events.get(1).getTimestamp();
+		long lastRecordTs = events.get(events.size() - 1).getTimestamp();
 	    // we don't know the total duration, so we create a margin after the last record which equals to the duration of the first event
-	    realDurationInSamples = lastRecordTs + firstRecordTs;
+		// TODO: why do we jump from timestamps to samples?
+	    realDurationInSamples = (int)(lastRecordTs + firstRecordTs);
     	scaledDurationInSamples = realDurationInSamples / 4;
 
 		writeChannelDataHeader();
@@ -98,10 +99,10 @@ public class LogicdataStreamFile extends StreamFile {
     	for (int ch = 0; ch < numChannels; ch++) {
 			List<Long> chDeltas = new ArrayList<>();
 			int chPrevState = -1;
-			int prevTs = 0;
+			long prevTs = 0;
         	for (CompositeEvent event : events) {
         		int chState = getChannelState(ch, event);
-        		int ts = event.getTimestamp();
+        		long ts = event.getTimestamp();
 
         		if (chPrevState == -1) {
         			chPrevState = chState;
@@ -122,7 +123,8 @@ public class LogicdataStreamFile extends StreamFile {
 				}
 			}
 
-			writeChannelData(ch, chDeltas, chPrevState, prevTs, useLongDeltas);
+        	// TODO: why do we pass a timestamp as a record index?
+			writeChannelData(ch, chDeltas, chPrevState, (int)prevTs, useLongDeltas);
         }
 
         writeChannelDataFooter();
@@ -238,7 +240,7 @@ public class LogicdataStreamFile extends StreamFile {
 		writeId(0, 0);
 
 		write(BLOCK);
-		write(new int[]{ realDurationInSamples, realDurationInSamples, realDurationInSamples });
+		write(new int[]{ (int)realDurationInSamples, (int)realDurationInSamples, (int)realDurationInSamples });
 		write(0);
 		write(SUB);
 		write(0);
@@ -284,7 +286,8 @@ public class LogicdataStreamFile extends StreamFile {
 		write(1);
 		write(lastRecord);
 
-		int numSamplesLeft = realDurationInSamples - lastRecord;
+		// todo: why do we convert from
+		int numSamplesLeft = (int)(realDurationInSamples - lastRecord);
 		write(numSamplesLeft);
 
 		write(chLastState);

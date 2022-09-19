@@ -9,33 +9,27 @@
 
 #include "pch.h"
 
-static void runRpmTest(operation_mode_e mode, int expected) {
+static void runRpmTest(bool isTwoStroke, bool isCam, int expected) {
 	EngineTestHelper eth(TEST_ENGINE);
-	engineConfiguration->ambiguousOperationMode = mode;
+	engineConfiguration->twoStroke = isTwoStroke;
+	engineConfiguration->skippedWheelOnCam = isCam;
 	eth.setTriggerType(TT_ONE);
 
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
-	ASSERT_EQ(expected, GET_RPM());
+	ASSERT_EQ(expected, Sensor::getOrZero(SensorType::Rpm));
 }
 
 // todo: google test profiles one day?
 
 TEST(engine, testRpmOfCamSensor) {
-	runRpmTest(FOUR_STROKE_CAM_SENSOR, 1500);
-}
-
-TEST(engine, testRpmOfSymmetricalCrank) {
-	runRpmTest(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, 375);
+	runRpmTest(false, true, 1500);
 }
 
 TEST(engine, testRpmOfTwoStroke) {
-	runRpmTest(TWO_STROKE, 750);
+	runRpmTest(true, false, 750);
 }
 
 TEST(engine, testRpmOfCrankOnly) {
-	runRpmTest(FOUR_STROKE_CRANK_SENSOR, 750);
+	runRpmTest(false, false, 750);
 }
 
-TEST(engine, testRpmOfThreeTimesCrank) {
-	runRpmTest(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, 250);
-}

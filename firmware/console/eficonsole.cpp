@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "eficonsole.h"
 #include "console_io.h"
 #include "svnversion.h"
@@ -37,11 +37,14 @@ static void myerror() {
 }
 
 static void sayHello() {
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2022. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
+#if USE_OPENBLT
+	efiPrintf(PROTOCOL_HELLO_PREFIX " with OPENBLT");
+#endif
 
 #ifdef ENABLE_AUTO_DETECT_HSE
 	extern float hseFrequencyMhz;
@@ -49,9 +52,19 @@ static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
 #endif /* ENABLE_AUTO_DETECT_HSE */
 
+	efiPrintf("hellenBoardId=%d", engine->engineState.hellenBoardId);
+
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
+
+	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
+	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
+	efiPrintf("can read 0x20070010 %d", ramReadProbe((const char *)0x20070010));
+
+#if defined(STM32F4)
+	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
+#endif // STM32F4
 
 #define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
 #define MCU_REVISION_MASK  0xfff

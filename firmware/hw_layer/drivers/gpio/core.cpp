@@ -128,12 +128,12 @@ int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, si
 		return -1;
 
 	/* outside? */
-	if (((size_t)base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
+	if ((base + size - 1 > BRAIN_PIN_LAST) || (base <= BRAIN_PIN_ONCHIP_LAST))
 		return -1;
 
 	/* check for overlap with other chips */
 	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
-		if (chips[i].base != 0) {
+		if (chips[i].base != Gpio::Unassigned) {
 			#define in_range(a, b, c)	(((a) > (b)) && ((a) < (c)))
 			if (in_range(base, chips[i].base, chips[i].base + chips[i].size))
 				return -1;
@@ -146,7 +146,7 @@ int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, si
 
 	/* find free gpiochip struct */
 	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
-		if (chips[i].base == 0) {
+		if (chips[i].base == Gpio::Unassigned) {
 			chip = &chips[i];
 			break;
 		}
@@ -164,7 +164,8 @@ int gpiochip_register(brain_pin_e base, const char *name, GpioChip& gpioChip, si
 	chip->size = size;
 	chip->gpio_names = nullptr;
 
-	return base;
+	// TODO: this cast seems wrong?
+	return (int)base;
 }
 
 
@@ -188,7 +189,7 @@ int gpiochip_unregister(brain_pin_e base)
 	/* unregister chip */
 	chip->name = nullptr;
 	chip->chip = nullptr;
-	chip->base = GPIO_UNASSIGNED;
+	chip->base = Gpio::Unassigned;
 	chip->size = 0;
 	chip->gpio_names = nullptr;
 
@@ -226,13 +227,13 @@ int gpiochips_init(void)
 	for (int i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		gpiochip *chip = &chips[i];
 
-		if (!chip->base)
+		if (chip->base == Gpio::Unassigned)
 			continue;
 
 		if (chip->chip->init() < 0) {
 			/* remove chip if it fails to init */
 			/* TODO: we will have a gap, is it ok? */
-			chip->base = GPIO_UNASSIGNED;
+			chip->base = Gpio::Unassigned;
 		} else {
 			pins_added += chip->size;
 		}
@@ -298,7 +299,7 @@ int gpiochips_readPad(brain_pin_e pin)
 
 /**
  * @brief Get diagnostic for given gpio
- * @details actual output value depent on gpiochip capabilities
+ * @details actual output value depend on gpiochip capabilities
  * returns -1 in case of pin not belong to any gpio chip
  * returns PIN_OK in case of chip does not support getting diagnostic
  * else return brain_pin_diag_e from gpiochip driver;
@@ -328,7 +329,7 @@ int gpiochips_get_total_pins(void)
 	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
 		gpiochip *chip = &chips[i];
 
-		if (!chip->base)
+		if (chip->base == Gpio::Unassigned)
 			continue;
 
 		cnt += chip->size;

@@ -43,14 +43,15 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
-
+#if EFI_SHAFT_POSITION_INPUT
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
-			handleShaftSignal(i, currentValue, stamp);
+			handleShaftSignal(i, currentValue == TriggerValue::RISE, stamp);
 		}
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 PwmConfig triggerSignal;
@@ -71,12 +72,15 @@ static float getRpmMultiplier(operation_mode_e mode) {
 		return SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR) {
 		return SYMMETRICAL_CRANK_SENSOR_DIVIDER / 2;
+	} else if (mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR) {
+		return SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER / 2;
 	} else if (mode == FOUR_STROKE_CAM_SENSOR) {
 		return 0.5;
 	} else if (mode == FOUR_STROKE_CRANK_SENSOR) {
 		// unit test coverage still runs if the value below is changed to '2' not a great sign!
 		return 1;
 	}
+
 	return 1;
 }
 
@@ -89,7 +93,7 @@ void setTriggerEmulatorRPM(int rpm) {
 	if (rpm == 0) {
 		triggerSignal.setFrequency(NAN);
 	} else {
-		float rpmM = getRpmMultiplier(engine->getOperationMode());
+		float rpmM = getRpmMultiplier(getEngineRotationState()->getOperationMode());
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.setFrequency(rPerSecond);
 	}
@@ -102,7 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
-				engine->getGlobalConfigurationVersion(), currentTimeMillis());
+				engine->getGlobalConfigurationVersion(), getTimeNowMs());
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
@@ -119,7 +123,7 @@ static bool hasInitTriggerEmulator = false;
 # if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
-	if (engine->directSelfStimulation) {
+	if (engine->triggerCentral.directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
@@ -154,16 +158,16 @@ static void initTriggerPwm() {
 
 void enableTriggerStimulator() {
 	initTriggerPwm();
-	engine->directSelfStimulation = true;
+	engine->triggerCentral.directSelfStimulation = true;
 }
 
 void enableExternalTriggerStimulator() {
 	initTriggerPwm();
-	engine->directSelfStimulation = false;
+	engine->triggerCentral.directSelfStimulation = false;
 }
 
 void disableTriggerStimulator() {
-	engine->directSelfStimulation = false;
+	engine->triggerCentral.directSelfStimulation = false;
 	triggerSignal.stop();
 	hasInitTriggerEmulator = false;
 }

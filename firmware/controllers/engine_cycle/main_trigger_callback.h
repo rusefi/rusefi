@@ -11,18 +11,7 @@
 
 #include "event_registry.h"
 
-void initMainEventListener();
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase);
 
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp);
-
-void startSimultaniousInjection(void* = nullptr);
-void endSimultaniousInjection(InjectionEvent *event);
-void turnInjectionPinHigh(InjectionEvent *event);
+void endSimultaneousInjection(InjectionEvent *event);
 void turnInjectionPinLow(InjectionEvent *event);
-
-// reset injection switch counter if the engine started spinning
-void updatePrimeInjectionPulseState();
-
-// Internal use only - exposed for tests
-void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
-		int rpm, efitick_t nowNt);

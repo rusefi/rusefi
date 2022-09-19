@@ -1,5 +1,5 @@
 /**
- * @file	backup_ram.cpp
+ * @file	backup_ram.h
  * @brief	Non-volatile backup-RAM registers support
  *
  * @date Dec 19, 2017
@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "global.h"
 #include "efi_gpio.h"
+
+#include "error_handling.h"
 
 typedef enum {
 	/**
@@ -47,3 +48,26 @@ void backupRamSave(backup_ram_e idx, uint32_t value);
 // make sure that all changes are saved before we shutdown the MCU
 void backupRamFlush(void);
 
+// These use very specific values to avoid interpreting random garbage memory as a real value
+enum class ErrorCookie : uint32_t {
+	None = 0,
+	FirmwareError = 0xcafebabe,
+	HardFault = 0xdeadbeef,
+};
+
+#if EFI_PROD_CODE
+struct BackupSramData {
+	ErrorCookie Cookie;
+
+	critical_msg_t ErrorString;
+	port_extctx FaultCtx;
+	uint32_t FaultType;
+	uint32_t FaultAddress;
+	uint32_t Csfr;
+
+	uint32_t BootCount;
+	uint32_t BootCountCookie;
+};
+
+BackupSramData* getBackupSram();
+#endif // EFI_PROD_CODE

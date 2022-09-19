@@ -46,6 +46,7 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 }
 
 static bool shouldCorrect() {
+#if EFI_SHAFT_POSITION_INPUT
 	const auto& cfg = engineConfiguration->stft;
 
 	// User disable bit
@@ -71,6 +72,9 @@ static bool shouldCorrect() {
 
 	// If all was well, then we're enabled!
 	return true;
+#else
+	return false;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {
@@ -79,7 +83,13 @@ bool shouldUpdateCorrection(SensorType sensor) {
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
 	auto afr = Sensor::get(sensor).value_or(0) * STOICH_RATIO;
-	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
+	if (!afr || afr < cfg.minAfr || afr > cfg.maxAfr) {
+		return false;
+	}
+
+	// Pause correction if DFCO was active recently
+	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
+	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {
 		return false;
 	}
 
@@ -91,7 +101,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
+	size_t binIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;
@@ -108,7 +118,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		cell.configure(&engineConfiguration->stft.cellCfgs[binIdx], sensor);
 
 		if (shouldUpdateCorrection(sensor)) {
-			cell.update(engineConfiguration->stft.deadband * 0.001f, engineConfiguration->stftIgnoreErrorMagnitude);
+			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
 		}
 
 		result.banks[i] = cell.getAdjustment();

@@ -16,6 +16,7 @@ import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
+import com.rusefi.ui.StatusConsumer;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -34,7 +35,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.BINARY_IO_TIMEOUT;
-import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 /**
@@ -113,9 +113,13 @@ public class LocalApplicationProxy implements Closeable {
                 while (true) {
                     sleep(context.gaugePokingPeriod());
                     if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
-                        byte[] commandPacket = GetOutputsCommand.createRequest();
+                        // TODO: why is this logic duplicated from BinaryProtocol?
+                        byte[] commandPacket = new byte[5];
+                        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+                        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
                         // we do not really need the data, we just need to take response from the socket
-                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
+                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker");
                     }
 
                     if (isTimeForApplicationToConnect(lastActivity.get(), context.startUpIdle())) {
@@ -132,7 +136,7 @@ public class LocalApplicationProxy implements Closeable {
         }).start();
 
 
-        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, context.authenticatorPort(), clientApplicationActivityListener);
+        ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(authenticatorToProxyStream, context.authenticatorPort(), clientApplicationActivityListener, StatusConsumer.ANONYMOUS);
         LocalApplicationProxy localApplicationProxy = new LocalApplicationProxy(applicationRequest, serverHolder, authenticatorToProxyStream);
         connectionListener.onConnected(localApplicationProxy, authenticatorToProxyStream);
         return serverHolder;

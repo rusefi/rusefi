@@ -24,13 +24,12 @@ static void func(TriggerCallback *callback) {
 	Engine *engine = callback->engine;
 
 
-	int value = callback->form->wave.getChannelState(0, formIndex);
+	TriggerValue value = callback->form->wave.getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
-		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
+		hwHandleVvtCamSignal(value, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
-		handleShaftSignal(0, value, nowNt);
+		handleShaftSignal(0, value == TriggerValue::RISE, nowNt);
 	}
 }
 
@@ -73,6 +72,7 @@ TEST(nissan, vq_vvt) {
 	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
 
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 
@@ -115,10 +115,10 @@ TEST(nissan, vq_vvt) {
 	}
 
 	eth.executeUntil(1473000);
-	ASSERT_EQ(167, GET_RPM());
+	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	eth.executeUntil(1475000);
-	ASSERT_EQ(167, GET_RPM());
+	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 	TriggerCentral *tc = &engine->triggerCentral;
 
 	eth.executeUntil(3593000);

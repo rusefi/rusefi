@@ -15,20 +15,20 @@ TestExecutor::~TestExecutor() {
 	clear();
 }
 
-void TestExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
+void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
 	if (debugSignalExecutor) {
 		printf("scheduleTask %d\r\n", delayUs);
 	}
 
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleForLater(scheduling, delayUs, action);
+		m_mockExecutor->scheduleForLater(msg, scheduling, delayUs, action);
 		return;
 	}
 
 	scheduleByTimestamp("test", scheduling, getTimeNowUs() + delayUs, action);
 }
 
-int TestExecutor::executeAll(efitime_t now) {
+int TestExecutor::executeAll(efitick_t now) {
 	return schedulingQueue.executeAll(now);
 }
 

@@ -33,7 +33,7 @@ static void complexCallback(TestPwm *testPwm) {
 			{ complexCallback, testPwm });
 }
 
-TEST(misc, testSignalExecutor2) {
+TEST(EventQueue, testSignalExecutor2) {
 	EventQueue eq;
 	TestPwm p1(&eq);
 	TestPwm p2(&eq);

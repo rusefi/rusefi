@@ -17,3 +17,47 @@ protected:
 };
 
 void updateFans(bool acActive);
+
+struct FanControl1 : public FanController {
+	OutputPin& getPin() {
+		return enginePins.fanRelay;
+	}
+
+	float getFanOnTemp() {
+		return engineConfiguration->fanOnTemperature;
+	}
+
+	float getFanOffTemp() {
+		return engineConfiguration->fanOffTemperature;
+	}
+
+	bool enableWithAc() {
+		return engineConfiguration->enableFan1WithAc;
+	}
+
+	bool disableWhenStopped() {
+		return engineConfiguration->disableFan1WhenStopped;
+	}
+};
+
+struct FanControl2 : public FanController {
+	OutputPin& getPin() {
+		return enginePins.fanRelay2;
+	}
+
+	float getFanOnTemp() {
+		return engineConfiguration->fan2OnTemperature;
+	}
+
+	float getFanOffTemp() {
+		return engineConfiguration->fan2OffTemperature;
+	}
+
+	bool enableWithAc() {
+		return engineConfiguration->enableFan2WithAc;
+	}
+
+	bool disableWhenStopped() {
+		return engineConfiguration->disableFan2WhenStopped;
+	}
+};

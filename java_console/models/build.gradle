@@ -1,17 +1,11 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-    implementation project(':inifile')
-    implementation project(':logging-api')
-    implementation project(':autoupdate')
-    implementation project(':shared_io')
-    implementation project(':inifile')
-    implementation libs.annotations
-    implementation libs.snakeyaml
-
-    testImplementation libs.junit
+    api project(':autoupdate')
+    api project(':inifile')
+    api libs.snakeyaml
 }

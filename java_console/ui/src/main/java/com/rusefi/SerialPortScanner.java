@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static com.rusefi.FileLog.isLinux;
+
 /**
  * @author Andrey Belomutskiy
  */
@@ -18,6 +20,7 @@ public enum SerialPortScanner {
     private volatile boolean isRunning = true;
 
     private static final boolean SHOW_PCAN = Boolean.parseBoolean(System.getenv().get("RUSEFI_PCAN"));
+    private static final boolean SHOW_SOCKETCAN = isLinux();
 
     static final String AUTO_SERIAL = "Auto Serial";
     @NotNull
@@ -38,6 +41,8 @@ public enum SerialPortScanner {
             ports.addAll(TcpConnector.getAvailablePorts());
         if (SHOW_PCAN)
             ports.add(LinkManager.PCAN);
+        if (SHOW_SOCKETCAN)
+            ports.add(LinkManager.SOCKET_CAN);
 
         boolean isListUpdated;
         synchronized (knownPorts) {

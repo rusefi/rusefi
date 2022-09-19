@@ -4,7 +4,7 @@
  * @date Jul 27, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-
+#include "pch.h"
 #include "flash_int.h"
 
 bool allowFlashWhileRunning() {
@@ -30,40 +30,54 @@ uintptr_t getFlashAddrFirstCopy() {
 uintptr_t getFlashAddrSecondCopy() {
 	return 0x080C0000;
 }
-
+/*
+STOP mode for F7 is needed for wakeup from multiple EXTI pins. For example PD0, which is CAN rx.
+However, for F40X & F42X this may be useless. STOP in itself eats more current than standby. 
+With F4 only having PA0 available for wakeup, this negates its need.
+*/
 void stm32_stop() {
-	SysTick->CTRL = 0;
+	// Don't get bothered by interrupts
 	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
 
-	// configure mode bits
+	SysTick->CTRL = 0;
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	enginePins.errorLedPin.setValue(0);
+	enginePins.runningLedPin.setValue(0);
+	enginePins.communicationLedPin.setValue(0);
+	enginePins.warningLedPin.setValue(0);
+
 	PWR->CR &= ~PWR_CR_PDDS;	// cleared PDDS means stop mode (not standby) 
-	PWR->CR |= PWR_CR_FPDS;		// turn off flash in stop mode
-	PWR->CR |= PWR_CR_LPDS;		// regulator in low power mode
+	PWR->CR |= PWR_CR_FPDS;	// turn off flash in stop mode
+	#ifdef STM32F429xx //F40X Does not have these regulators available.
+	PWR->CR |= PWR_CR_UDEN;	// regulator underdrive in stop mode *
+	PWR->CR |= PWR_CR_LPUDS;	// low power regulator in under drive mode
+	#endif
+	PWR->CR |= PWR_CR_LPDS;	// regulator in low power mode
+
+	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
+	boardPrepareForStop();
 
 	// enable Deepsleep mode
-	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	// Wait for event - this will return when stop mode is done
-	__WFE();
+	__WFI();
 
 	// Lastly, reboot
 	NVIC_SystemReset();
 }
-
+/* 
+ * Standby for both F4 & F7 works perfectly, with very little current consumption.
+ * Downside is that there is a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
+*/
 void stm32_standby() {
-	SysTick->CTRL = 0;
+	// Don't get bothered by interrupts
 	__disable_irq();
 
-	// configure mode bits
-	PWR->CR |= PWR_CR_PDDS;		// PDDS = use standby mode (not stop mode)
-
-	// enable Deepsleep mode
+	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	PWR->CR |= PWR_CR_PDDS;	// PDDS = use standby mode (not stop mode)
+	PWR->CR |= PWR_CR_CSBF;	// Clear standby flag
 
-	// Wait for event - this should never return as it kills the chip until a reset
-	__WFE();
+	// Do anything the board wants to prepare for standby mode - enabling wakeup sources!
+	boardPrepareForStandby();
 
-	// Lastly, reboot
-	NVIC_SystemReset();
+	__WFI();
 }

@@ -9,7 +9,6 @@
 
 #include "pch.h"
 
-#include "os_util.h"
 
 #ifndef ENABLE_PERF_TRACE
 #error ENABLE_PERF_TRACE must be defined!

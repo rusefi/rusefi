@@ -16,7 +16,6 @@ class AirmassVeModelBase : public AirmassModelBase {
 public:
 	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
 
-protected:
 	// Retrieve the user-calibrated volumetric efficiency from the table
 	float getVe(int rpm, percent_t load) const;
 

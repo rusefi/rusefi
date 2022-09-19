@@ -26,13 +26,13 @@ SensorResult RedundantSensor::get() const {
 
 	// If either result is invalid, return invalid.
 	if (!result1.Valid || !result2.Valid) {
-		return unexpected;
+		return UnexpectedCode::Inconsistent;
 	}
 
 	// If both are valid, check that they're near one another
 	float delta = absF(result1.Value - result2.Value);
 	if (delta > m_maxDifference) {
-		return unexpected;
+		return UnexpectedCode::Inconsistent;
 	}
 
 	// Both sensors are valid, and their readings are close. All is well.

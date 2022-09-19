@@ -14,10 +14,13 @@ PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
 
-ifneq ($(OS),Windows_NT)
-	SANITIZE = yes
-else
-	SANITIZE = no
+# User may want to pass in a forced value for SANITIZE
+ifeq ($(SANITIZE),)
+	ifneq ($(OS),Windows_NT)
+		SANITIZE = yes
+	else
+		SANITIZE = no
+	endif
 endif
 
 IS_MAC = no
@@ -83,11 +86,6 @@ ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
-# If enabled, this option allows to compile the application in THUMB mode.
-ifeq ($(USE_THUMB),)
-  USE_THUMB = no
-endif
-
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
@@ -98,12 +96,6 @@ ACSRC =
 
 # C++ sources to be compiled in ARM mode regardless of the global setting.
 ACPPSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-TCSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-TCPPSRC =
 
 # List ASM source files here
 ASMSRC =
@@ -143,11 +135,26 @@ OD   = $(TRGT)objdump
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 
-# ARM-specific options here
-AOPT =
+ifndef JAVA_HOME
+$(error JAVA_HOME is undefined - due to JNI integration unit tests depend on JAVA_HOME)
+endif
 
-# THUMB-specific options here
-TOPT = -mthumb -DTHUMB
+ifneq (1,$(words [$(JAVA_HOME)]))
+$(error JAVA_HOME $(JAVA_HOME) seems to contain spaces this would not work well. please use folder name without space often progra~1)
+endif
+
+AOPT = -fPIC -I$(JAVA_HOME)/include
+
+ifeq ($(OS),Windows_NT)
+# TODO: add validation to assert that we do not have Windows slash in JAVA_HOME variable
+ AOPT += -I$(JAVA_HOME)/include/win32
+else
+ ifeq ($(IS_MAC),yes)
+  AOPT += -I$(JAVA_HOME)/include/darwin
+ else
+  AOPT += -I$(JAVA_HOME)/include/linux
+ endif
+endif
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition

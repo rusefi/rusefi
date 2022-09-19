@@ -1,10 +1,247 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jul 12 21:09:56 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:49 UTC 2022
 // see also gen_config_and_enums.bat
 
 
 
+const char *getGpio(Gpio value){
+switch(value) {
+case Gpio::A0:
+  return "A0";
+case Gpio::A1:
+  return "A1";
+case Gpio::A10:
+  return "A10";
+case Gpio::A11:
+  return "A11";
+case Gpio::A12:
+  return "A12";
+case Gpio::A13:
+  return "A13";
+case Gpio::A14:
+  return "A14";
+case Gpio::A15:
+  return "A15";
+case Gpio::A16:
+  return "A16";
+case Gpio::A17:
+  return "A17";
+case Gpio::A2:
+  return "A2";
+case Gpio::A3:
+  return "A3";
+case Gpio::A4:
+  return "A4";
+case Gpio::A5:
+  return "A5";
+case Gpio::A6:
+  return "A6";
+case Gpio::A7:
+  return "A7";
+case Gpio::A8:
+  return "A8";
+case Gpio::A9:
+  return "A9";
+case Gpio::B0:
+  return "B0";
+case Gpio::B1:
+  return "B1";
+case Gpio::B10:
+  return "B10";
+case Gpio::B11:
+  return "B11";
+case Gpio::B12:
+  return "B12";
+case Gpio::B13:
+  return "B13";
+case Gpio::B14:
+  return "B14";
+case Gpio::B15:
+  return "B15";
+case Gpio::B16:
+  return "B16";
+case Gpio::B17:
+  return "B17";
+case Gpio::B2:
+  return "B2";
+case Gpio::B3:
+  return "B3";
+case Gpio::B4:
+  return "B4";
+case Gpio::B5:
+  return "B5";
+case Gpio::B6:
+  return "B6";
+case Gpio::B7:
+  return "B7";
+case Gpio::B8:
+  return "B8";
+case Gpio::B9:
+  return "B9";
+case Gpio::C0:
+  return "C0";
+case Gpio::C1:
+  return "C1";
+case Gpio::C10:
+  return "C10";
+case Gpio::C11:
+  return "C11";
+case Gpio::C12:
+  return "C12";
+case Gpio::C13:
+  return "C13";
+case Gpio::C14:
+  return "C14";
+case Gpio::C15:
+  return "C15";
+case Gpio::C16:
+  return "C16";
+case Gpio::C17:
+  return "C17";
+case Gpio::C2:
+  return "C2";
+case Gpio::C3:
+  return "C3";
+case Gpio::C4:
+  return "C4";
+case Gpio::C5:
+  return "C5";
+case Gpio::C6:
+  return "C6";
+case Gpio::C7:
+  return "C7";
+case Gpio::C8:
+  return "C8";
+case Gpio::C9:
+  return "C9";
+case Gpio::CAN_PIN_0:
+  return "CAN_PIN_0";
+case Gpio::CAN_PIN_1:
+  return "CAN_PIN_1";
+case Gpio::CAN_PIN_2:
+  return "CAN_PIN_2";
+case Gpio::CAN_PIN_3:
+  return "CAN_PIN_3";
+case Gpio::CAN_PIN_4:
+  return "CAN_PIN_4";
+case Gpio::CAN_PIN_5:
+  return "CAN_PIN_5";
+case Gpio::CAN_PIN_6:
+  return "CAN_PIN_6";
+case Gpio::CAN_PIN_7:
+  return "CAN_PIN_7";
+case Gpio::D0:
+  return "D0";
+case Gpio::D1:
+  return "D1";
+case Gpio::D10:
+  return "D10";
+case Gpio::D11:
+  return "D11";
+case Gpio::D12:
+  return "D12";
+case Gpio::D13:
+  return "D13";
+case Gpio::D14:
+  return "D14";
+case Gpio::D15:
+  return "D15";
+case Gpio::D16:
+  return "D16";
+case Gpio::D17:
+  return "D17";
+case Gpio::D2:
+  return "D2";
+case Gpio::D3:
+  return "D3";
+case Gpio::D4:
+  return "D4";
+case Gpio::D5:
+  return "D5";
+case Gpio::D6:
+  return "D6";
+case Gpio::D7:
+  return "D7";
+case Gpio::D8:
+  return "D8";
+case Gpio::D9:
+  return "D9";
+case Gpio::E0:
+  return "E0";
+case Gpio::E1:
+  return "E1";
+case Gpio::E10:
+  return "E10";
+case Gpio::E11:
+  return "E11";
+case Gpio::E12:
+  return "E12";
+case Gpio::E13:
+  return "E13";
+case Gpio::E14:
+  return "E14";
+case Gpio::E15:
+  return "E15";
+case Gpio::E16:
+  return "E16";
+case Gpio::E17:
+  return "E17";
+case Gpio::E2:
+  return "E2";
+case Gpio::E3:
+  return "E3";
+case Gpio::E4:
+  return "E4";
+case Gpio::E5:
+  return "E5";
+case Gpio::E6:
+  return "E6";
+case Gpio::E7:
+  return "E7";
+case Gpio::E8:
+  return "E8";
+case Gpio::E9:
+  return "E9";
+case Gpio::Invalid:
+  return "Invalid";
+case Gpio::TLE6240_PIN_1:
+  return "TLE6240_PIN_1";
+case Gpio::TLE6240_PIN_10:
+  return "TLE6240_PIN_10";
+case Gpio::TLE6240_PIN_11:
+  return "TLE6240_PIN_11";
+case Gpio::TLE6240_PIN_12:
+  return "TLE6240_PIN_12";
+case Gpio::TLE6240_PIN_13:
+  return "TLE6240_PIN_13";
+case Gpio::TLE6240_PIN_14:
+  return "TLE6240_PIN_14";
+case Gpio::TLE6240_PIN_15:
+  return "TLE6240_PIN_15";
+case Gpio::TLE6240_PIN_16:
+  return "TLE6240_PIN_16";
+case Gpio::TLE6240_PIN_2:
+  return "TLE6240_PIN_2";
+case Gpio::TLE6240_PIN_3:
+  return "TLE6240_PIN_3";
+case Gpio::TLE6240_PIN_4:
+  return "TLE6240_PIN_4";
+case Gpio::TLE6240_PIN_5:
+  return "TLE6240_PIN_5";
+case Gpio::TLE6240_PIN_6:
+  return "TLE6240_PIN_6";
+case Gpio::TLE6240_PIN_7:
+  return "TLE6240_PIN_7";
+case Gpio::TLE6240_PIN_8:
+  return "TLE6240_PIN_8";
+case Gpio::TLE6240_PIN_9:
+  return "TLE6240_PIN_9";
+case Gpio::Unassigned:
+  return "Unassigned";
+  }
+ return NULL;
+}
 const char *getAdc_channel_e(adc_channel_e value){
 switch(value) {
 case EFI_ADC_0:
@@ -45,246 +282,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-  }
- return NULL;
-}
-const char *getBrain_pin_diag_e(brain_pin_diag_e value){
-switch(value) {
-case PIN_DRIVER_OVERTEMP:
-  return "PIN_DRIVER_OVERTEMP";
-case PIN_INVALID:
-  return "PIN_INVALID";
-case PIN_OK:
-  return "PIN_OK";
-case PIN_OPEN:
-  return "PIN_OPEN";
-case PIN_OVERLOAD:
-  return "PIN_OVERLOAD";
-case PIN_SHORT_TO_BAT:
-  return "PIN_SHORT_TO_BAT";
-case PIN_SHORT_TO_GND:
-  return "PIN_SHORT_TO_GND";
-  }
- return NULL;
-}
-const char *getBrain_pin_e(brain_pin_e value){
-switch(value) {
-case GPIOA_0:
-  return "GPIOA_0";
-case GPIOA_1:
-  return "GPIOA_1";
-case GPIOA_10:
-  return "GPIOA_10";
-case GPIOA_11:
-  return "GPIOA_11";
-case GPIOA_12:
-  return "GPIOA_12";
-case GPIOA_13:
-  return "GPIOA_13";
-case GPIOA_14:
-  return "GPIOA_14";
-case GPIOA_15:
-  return "GPIOA_15";
-case GPIOA_16:
-  return "GPIOA_16";
-case GPIOA_17:
-  return "GPIOA_17";
-case GPIOA_2:
-  return "GPIOA_2";
-case GPIOA_3:
-  return "GPIOA_3";
-case GPIOA_4:
-  return "GPIOA_4";
-case GPIOA_5:
-  return "GPIOA_5";
-case GPIOA_6:
-  return "GPIOA_6";
-case GPIOA_7:
-  return "GPIOA_7";
-case GPIOA_8:
-  return "GPIOA_8";
-case GPIOA_9:
-  return "GPIOA_9";
-case GPIOB_0:
-  return "GPIOB_0";
-case GPIOB_1:
-  return "GPIOB_1";
-case GPIOB_10:
-  return "GPIOB_10";
-case GPIOB_11:
-  return "GPIOB_11";
-case GPIOB_12:
-  return "GPIOB_12";
-case GPIOB_13:
-  return "GPIOB_13";
-case GPIOB_14:
-  return "GPIOB_14";
-case GPIOB_15:
-  return "GPIOB_15";
-case GPIOB_16:
-  return "GPIOB_16";
-case GPIOB_17:
-  return "GPIOB_17";
-case GPIOB_2:
-  return "GPIOB_2";
-case GPIOB_3:
-  return "GPIOB_3";
-case GPIOB_4:
-  return "GPIOB_4";
-case GPIOB_5:
-  return "GPIOB_5";
-case GPIOB_6:
-  return "GPIOB_6";
-case GPIOB_7:
-  return "GPIOB_7";
-case GPIOB_8:
-  return "GPIOB_8";
-case GPIOB_9:
-  return "GPIOB_9";
-case GPIOC_0:
-  return "GPIOC_0";
-case GPIOC_1:
-  return "GPIOC_1";
-case GPIOC_10:
-  return "GPIOC_10";
-case GPIOC_11:
-  return "GPIOC_11";
-case GPIOC_12:
-  return "GPIOC_12";
-case GPIOC_13:
-  return "GPIOC_13";
-case GPIOC_14:
-  return "GPIOC_14";
-case GPIOC_15:
-  return "GPIOC_15";
-case GPIOC_16:
-  return "GPIOC_16";
-case GPIOC_17:
-  return "GPIOC_17";
-case GPIOC_2:
-  return "GPIOC_2";
-case GPIOC_3:
-  return "GPIOC_3";
-case GPIOC_4:
-  return "GPIOC_4";
-case GPIOC_5:
-  return "GPIOC_5";
-case GPIOC_6:
-  return "GPIOC_6";
-case GPIOC_7:
-  return "GPIOC_7";
-case GPIOC_8:
-  return "GPIOC_8";
-case GPIOC_9:
-  return "GPIOC_9";
-case GPIOD_0:
-  return "GPIOD_0";
-case GPIOD_1:
-  return "GPIOD_1";
-case GPIOD_10:
-  return "GPIOD_10";
-case GPIOD_11:
-  return "GPIOD_11";
-case GPIOD_12:
-  return "GPIOD_12";
-case GPIOD_13:
-  return "GPIOD_13";
-case GPIOD_14:
-  return "GPIOD_14";
-case GPIOD_15:
-  return "GPIOD_15";
-case GPIOD_16:
-  return "GPIOD_16";
-case GPIOD_17:
-  return "GPIOD_17";
-case GPIOD_2:
-  return "GPIOD_2";
-case GPIOD_3:
-  return "GPIOD_3";
-case GPIOD_4:
-  return "GPIOD_4";
-case GPIOD_5:
-  return "GPIOD_5";
-case GPIOD_6:
-  return "GPIOD_6";
-case GPIOD_7:
-  return "GPIOD_7";
-case GPIOD_8:
-  return "GPIOD_8";
-case GPIOD_9:
-  return "GPIOD_9";
-case GPIOE_0:
-  return "GPIOE_0";
-case GPIOE_1:
-  return "GPIOE_1";
-case GPIOE_10:
-  return "GPIOE_10";
-case GPIOE_11:
-  return "GPIOE_11";
-case GPIOE_12:
-  return "GPIOE_12";
-case GPIOE_13:
-  return "GPIOE_13";
-case GPIOE_14:
-  return "GPIOE_14";
-case GPIOE_15:
-  return "GPIOE_15";
-case GPIOE_16:
-  return "GPIOE_16";
-case GPIOE_17:
-  return "GPIOE_17";
-case GPIOE_2:
-  return "GPIOE_2";
-case GPIOE_3:
-  return "GPIOE_3";
-case GPIOE_4:
-  return "GPIOE_4";
-case GPIOE_5:
-  return "GPIOE_5";
-case GPIOE_6:
-  return "GPIOE_6";
-case GPIOE_7:
-  return "GPIOE_7";
-case GPIOE_8:
-  return "GPIOE_8";
-case GPIOE_9:
-  return "GPIOE_9";
-case GPIO_INVALID:
-  return "GPIO_INVALID";
-case GPIO_UNASSIGNED:
-  return "GPIO_UNASSIGNED";
-case TLE6240_PIN_1:
-  return "TLE6240_PIN_1";
-case TLE6240_PIN_10:
-  return "TLE6240_PIN_10";
-case TLE6240_PIN_11:
-  return "TLE6240_PIN_11";
-case TLE6240_PIN_12:
-  return "TLE6240_PIN_12";
-case TLE6240_PIN_13:
-  return "TLE6240_PIN_13";
-case TLE6240_PIN_14:
-  return "TLE6240_PIN_14";
-case TLE6240_PIN_15:
-  return "TLE6240_PIN_15";
-case TLE6240_PIN_16:
-  return "TLE6240_PIN_16";
-case TLE6240_PIN_2:
-  return "TLE6240_PIN_2";
-case TLE6240_PIN_3:
-  return "TLE6240_PIN_3";
-case TLE6240_PIN_4:
-  return "TLE6240_PIN_4";
-case TLE6240_PIN_5:
-  return "TLE6240_PIN_5";
-case TLE6240_PIN_6:
-  return "TLE6240_PIN_6";
-case TLE6240_PIN_7:
-  return "TLE6240_PIN_7";
-case TLE6240_PIN_8:
-  return "TLE6240_PIN_8";
-case TLE6240_PIN_9:
-  return "TLE6240_PIN_9";
   }
  return NULL;
 }

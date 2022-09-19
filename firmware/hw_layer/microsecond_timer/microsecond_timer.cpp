@@ -132,7 +132,7 @@ static void watchDogBuddyCallback(void*) {
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
 	 * without any PWM or input pins
 	 */
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(1000), watchDogBuddyCallback);
+	engine->executor.scheduleForLater("watch", &watchDogBuddy, MS2US(1000), watchDogBuddyCallback);
 }
 
 static volatile bool testSchedulingHappened = false;
@@ -140,7 +140,7 @@ static efitimems_t testSchedulingStart;
 
 static void timerValidationCallback(void*) {
 	testSchedulingHappened = true;
-	efitimems_t actualTimeSinceScheduling = (currentTimeMillis() - testSchedulingStart);
+	efitimems_t actualTimeSinceScheduling = (getTimeNowMs() - testSchedulingStart);
 	
 	if (absI(actualTimeSinceScheduling - TEST_CALLBACK_DELAY) > TEST_CALLBACK_DELAY * TIMER_PRECISION_THRESHOLD) {
 		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision: %ld ms", actualTimeSinceScheduling);
@@ -155,10 +155,10 @@ static void validateHardwareTimer() {
 	if (hasFirmwareError()) {
 		return;
 	}
-	testSchedulingStart = currentTimeMillis();
+	testSchedulingStart = getTimeNowMs();
 
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
-	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
+	engine->executor.scheduleForLater("hw-validate", &watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
 	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 2);
 	if (!testSchedulingHappened) {
@@ -177,7 +177,7 @@ void initMicrosecondTimer() {
 
 	watchDogBuddyCallback(NULL);
 #if EFI_EMULATE_POSITION_SENSORS
-	watchdogControllerInstance.Start();
+	watchdogControllerInstance.start();
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 }
 

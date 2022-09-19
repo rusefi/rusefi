@@ -84,16 +84,26 @@
  * 2.777ms, so we schedule spark firing at '2.777ms after the 690 position sensor event', thus combining trigger events
  * with time-based offset.
  *
- * @section config Persistent Configuration
- * engine_configuration_s structure is kept in the internal flash memory, it has all the settings. Currently rusefi.ini has a direct mapping of this structure.
+ * @section tunerstudio Getting Data To and From Tunerstudio
  *
+ * Contains the enum with values to be output to Tunerstudio.
+ * console/binary/output_channels.txt
+ *
+ * [Changing gauge limits](http://www.tunerstudio.com/index.php/manuals/63-changing-gauge-limits)
+ *
+ * Definition of the Tunerstudio configuration interface, gauges, and indicators
+ * tunerstudio/rusefi.input
+ *
+ * @section config Persistent Configuration
+ *
+ * Definition of configuration data structure:  
+ * integration/rusefi_config.txt  
+ * This file has a lot of information and instructions in its comment header.
+ * in order to use CONFIG macro you need EXTERN_CONFIG and include engine_configuration.h
  * Please note that due to TunerStudio protocol it's important to have the total structure size in synch between the firmware and TS .ini file -
  * just to make sure that this is not forgotten the size of the structure is hard-coded as PAGE_0_SIZE constant. There is always some 'unused' fields added in advance so that
  * one can add some fields without the pain of increasing the total configuration page size.
  * <br>See flash_main.cpp
- *
- *
- * todo: merge https://github.com/rusefi/rusefi/wiki/Dev-Tips into here
  *
  * @section sec_fuel_injection Fuel Injection
  *
@@ -102,12 +112,12 @@
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic
- * <BR>See rpm_calculator.cpp for details on how getRpm() is calculated
+ * <BR>See rpm_calculator.cpp for details on how RPM is calculated
  *
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 #include "trigger_structure.h"
 #include "hardware.h"
 
@@ -146,7 +156,7 @@ void rebootNow() {
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
  */
-static void scheduleReboot() {
+void scheduleReboot() {
 	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
@@ -160,15 +170,18 @@ void onAssertionFailure() {
 }
 
 void runRusEfiWithConfig();
-void runMainLoop();
+__NO_RETURN void runMainLoop();
 
 void runRusEfi() {
-	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING
 	// Initialize logging system early - we can't log until this is called
 	startLoggingProcessor();
+#endif
+
+#if EFI_PROD_CODE
+	checkLastBootError();
 #endif
 
 #ifdef STM32F7
@@ -191,6 +204,8 @@ void runRusEfi() {
 
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
+
+	detectBoardType();
 
 #if EFI_ETHERNET
 	startEthernetConsole();
@@ -256,6 +271,7 @@ void runRusEfiWithConfig() {
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
+	engineConfiguration->triggerSimulatorFrequency = HW_CHECK_RPM;
 	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
 
@@ -295,8 +311,6 @@ void runMainLoop() {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-		efiAssertVoid(CUSTOM_RM_STACK, getCurrentRemainingStack() > 128, "stack#1");
-
 #if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
 		// sensor state + all pending messages for our own rusEfi console
 		// todo: is this mostly dead code?

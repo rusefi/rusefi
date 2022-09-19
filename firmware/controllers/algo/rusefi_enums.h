@@ -21,38 +21,27 @@
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
 
-typedef enum {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
-
-	Force_4_bytes_size_adc_channel_mode = ENUM_32_BITS,
-} adc_channel_mode_e;
-
-typedef enum {
-	TV_FALL = 0,
-	TV_RISE = 1
-} trigger_value_e;
+/* diagnostic for brain pins
+ * can be combination of few bits
+ * defined as bit mask */
+typedef enum __attribute__ ((__packed__))
+{
+	PIN_OK = 0,
+	PIN_OPEN = 0x01,
+	PIN_SHORT_TO_GND = 0x02,
+	PIN_SHORT_TO_BAT = 0x04,
+	PIN_OVERLOAD =	0x08,
+	PIN_DRIVER_OVERTEMP = 0x10,
+	PIN_DRIVER_OFF = 0x20,
+	PIN_INVALID = 0x80
+} brain_pin_diag_e;
 
 // see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
-typedef enum {
+enum class TriggerWheel : uint8_t {
 	T_PRIMARY = 0,
 	T_SECONDARY = 1,
-	// todo: I really do not want to call this 'tertiary'. maybe we should rename all of these?
-	T_CHANNEL_3 = 2,
-	T_NONE = 15
-} trigger_wheel_e;
-
-// see also 'HW_EVENT_TYPES'
-typedef enum {
-	SHAFT_PRIMARY_FALLING = 0,
-	SHAFT_PRIMARY_RISING = 1,
-	SHAFT_SECONDARY_FALLING = 2,
-	SHAFT_SECONDARY_RISING = 3,
-	SHAFT_3RD_FALLING = 4,
-	SHAFT_3RD_RISING = 5,
-} trigger_event_e;
+};
 
 typedef enum  __attribute__ ((__packed__)) {
 	/**
@@ -70,9 +59,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_2JZ = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
-	 * @see TT_VVT_MIATA_NB2
+	 * @see TT_VVT_MIATA_NB
 	 */
-	VVT_MIATA_NB2 = 3,
+	VVT_MIATA_NB = 3,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
@@ -86,7 +75,6 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 * 4 minus one
-	 * looks abandoned and unfinished?
 	 */
 	VVT_TOYOTA_4_1 = 6,
 
@@ -103,16 +91,20 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_NISSAN_MR = 11,
 
-	VVT_12 = 12,
+	VVT_MITSUBISHI_3A92 = 12,
 
-	VVT_MAP_V_TWIN_ANOTHER = 13,
+	VVT_MAP_V_TWIN = 13,
+
+	VVT_MITSUBISHI_6G75 = 14,
+
+	VVT_MAZDA_SKYACTIV = 15,
 
 } vvt_mode_e;
 
 /**
  * This enum is used to select your desired Engine Load calculation algorithm
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * Speed Density algorithm - Engine Load is a function of MAP, VE and target AFR
 	 * http://articles.sae.org/8539/
@@ -131,15 +123,13 @@ typedef enum {
 	// This mode is for unit testing only, so that tests don't have to rely on a particular real airmass mode
 	LM_MOCK = 100,
 
-	Force_4_bytes_size_engine_load_mode = ENUM_32_BITS,
 } engine_load_mode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	DM_NONE = 0,
 	DM_HD44780 = 1,
 	DM_HD44780_OVER_PCF8574 = 2,
 
-	Force_4_bytes_size_display_mode = ENUM_32_BITS,
 
 } display_mode_e;
 
@@ -151,19 +141,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
 } tle8888_mode_e;
 
-
-typedef enum {
-	LF_NATIVE = 0,
-	/**
-	 * http://www.efianalytics.com/MegaLogViewer/
-	 * log example: http://svn.code.sf.net/p/rusefi/code/trunk/misc/ms_logs/
-	 */
-	LM_MLV = 1,
-
-	Force_4_bytes_size_log_format = ENUM_32_BITS,
-} log_format_e;
-
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * In auto mode we currently have some pid-like-but-not really PID logic which is trying
 	 * to get idle RPM to desired value by dynamically adjusting idle valve position.
@@ -175,7 +153,7 @@ typedef enum {
 	 * which could be adjusted according to current CLT
 	 */
 	IM_MANUAL = 1,
-	Force_4_bytes_size_idle_mode = ENUM_32_BITS,
+
 } idle_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -235,13 +213,17 @@ typedef enum {
 	 */
 	FOUR_STROKE_THREE_TIMES_CRANK_SENSOR = 5,
 
-	Force_4_bytes_size_operation_mode_e = ENUM_32_BITS,
+	// Same pattern TWELVE TIMES on the crank wheel!
+	// This usually means Honda, which often has a 12 tooth crank wheel or 24 tooth cam wheel
+	// without a missing tooth, plus a single tooth cam channel to resolve the engine phase.
+	FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR = 6,
+
 } operation_mode_e;
 
 /**
  * @brief Ignition Mode
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * in this mode only SPARKOUT_1_OUTPUT is used
 	 */
@@ -257,13 +239,12 @@ typedef enum {
 	 */
 	IM_TWO_COILS = 3,
 
-	Force_4_bytes_size_ignition_mode = ENUM_32_BITS,
 } ignition_mode_e;
 
 /**
  * @see getNumberOfInjections
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * each cylinder has it's own injector but they all works in parallel
 	 */
@@ -284,20 +265,7 @@ typedef enum {
 	 */
 	IM_SINGLE_POINT = 3,
 
-
-	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
 } injection_mode_e;
-
-/**
- * @brief Ignition Mode while cranking
- */
-typedef enum {
-	CIM_DEFAULT = 0,
-	CIM_FIXED_ANGLE = 1,
-
-	// todo: make this a one byte enum
-	Force_4_bytes_size_cranking_ignition_mode = ENUM_32_BITS,
-} cranking_ignition_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	UART_NONE = 0,
@@ -327,17 +295,17 @@ typedef enum __attribute__ ((__packed__)) {
 	SPI_DEVICE_4 = 4,
 } spi_device_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	BMW_e46 = 0,
 	W202 = 1,
-	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
+
 } can_vss_nbc_e;
 
 /**
  * inertia measurement unit, yawn accelerometer
  * By the way both kinds of BOSCH use Housing : TE 1-967640-1, pins 144969-1 seal 967056-1 plug 967067-2
  */
-typedef enum  __attribute__ ((__packed__)) {
+typedef enum __attribute__ ((__packed__)) {
 	IMU_NONE = 0,
 	IMU_VAG = 1,
 	/**
@@ -347,9 +315,14 @@ typedef enum  __attribute__ ((__packed__)) {
 	IMU_MM5_10 = 2,
 	IMU_TYPE_3 = 3,
 	IMU_TYPE_4 = 4,
+	/**
+	 * Mercedes pn: A 006 542 26 18
+	 * Almost the same as BOSCH above, but XY only and different CAN IDs
+	 */
+	IMU_TYPE_MB_A0065422618 = 5,
 } imu_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	ES_BPSX_D1 = 0,
 	/**
 	 * same as innovate LC2
@@ -371,12 +344,9 @@ typedef enum {
 
 	ES_AEM = 6,
 
-	Force_4_bytes_size_ego_sensor = ENUM_32_BITS,
 } ego_sensor_e;
 
-typedef brain_pin_e output_pin_e;
-
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	MT_CUSTOM = 0,
 	MT_DENSO183 = 1,
 	/**
@@ -433,12 +403,15 @@ typedef enum {
 
 	MT_GM_1_BAR = 13,
 
+	/**
+	 * 4 bar
+	 */
 	MT_MPXH6400 = 14,
 
-	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
+
 } air_pressure_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SC_OFF = 0,
 	/**
 	 * You would use this value if you want to see a detailed graph of your trigger events
@@ -449,7 +422,6 @@ typedef enum {
 	SC_DETAILED_RPM = 4,
 	SC_AUX_FAST1 = 5,
 
-	Internal_ForceMyEnumIntSize_sensor_chart = ENUM_32_BITS,
 } sensor_chart_e;
 
 typedef enum {
@@ -462,15 +434,15 @@ typedef enum {
 
 } gear_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CUSTOM = 0,
 	Bosch0280218037 = 1,
 	Bosch0280218004 = 2,
 	DensoTODO = 3,
-	Internal_ForceMyEnumIntSize_maf_sensor = ENUM_32_BITS,
+
 } maf_sensor_type_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	/**
 	 * This is the default mode in which ECU controls timing dynamically
 	 */
@@ -481,21 +453,12 @@ typedef enum {
 	 */
 	TM_FIXED = 1,
 
-	Internal_ForceMyEnumIntSize_timing_mode = ENUM_32_BITS,
 } timing_mode_e;
-
-typedef enum {
-    CS_OPEN = 0,
-    CS_CLOSED = 1,
-    CS_SWIRL_TUMBLE = 2,
-
-	Internal_ForceMyEnumIntSize_chamber_stype = ENUM_32_BITS,
-} chamber_style_e;
 
 /**
  * Net Body Computer types
  */
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_NBC_NONE = 0,
 	CAN_BUS_NBC_FIAT = 1,
 	CAN_BUS_NBC_VAG = 2,
@@ -510,13 +473,13 @@ typedef enum {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 
-	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
-	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
+	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
+
 } tChargeMode_e;
 
 // peak type
@@ -537,50 +500,57 @@ typedef enum {
   FAILED = 128
 } PidAutoTune_AutoTunerState;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	INIT = 0,
 	TPS_THRESHOLD = 1,
 	RPM_DEAD_ZONE = 2,
 	PID_VALUE = 4,
 	PID_UPPER = 16,
 	BLIP = 64,
-	/**
-	 * Live Docs reads 4 byte value so we want 4 byte enum
-	 */
-	Force_4bytes_size_idle_state_e = ENUM_32_BITS,
+
 } idle_state_e;
 
-typedef enum {
+// todo: should this be just a boolean?
+typedef enum __attribute__ ((__packed__)) {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
-	Force_4bytes_size_boostType_e = ENUM_32_BITS,
+
 } boostType_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_LAUNCH = 0,
 	CLUTCH_INPUT_LAUNCH = 1,
 	ALWAYS_ACTIVE_LAUNCH = 2,
-	Force_4bytes_size_launchActivationMode_e = ENUM_32_BITS,
 } launchActivationMode_e;
 
-typedef enum {
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
 	ALWAYS_ON_ANTILAG = 1,
-	Force_4bytes_size_antiLagActivationMode_e = ENUM_32_BITS,
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	GPPWM_Tps = 0,
-	GPPWM_Map = 1,
-	GPPWM_Clt = 2,
-	GPPWM_Iat = 3,
-	GPPWM_FuelLoad = 4,
-	GPPWM_IgnLoad = 5,
-	GPPWM_AuxTemp1 = 6,
-	GPPWM_AuxTemp2 = 7,
-	GPPWM_Zero = 8,
+	GPPWM_Zero = 0,
+	GPPWM_Tps = 1,
+	GPPWM_Map = 2,
+	GPPWM_Clt = 3,
+	GPPWM_Iat = 4,
+	GPPWM_FuelLoad = 5,
+	GPPWM_IgnLoad = 6,
+	GPPWM_AuxTemp1 = 7,
+	GPPWM_AuxTemp2 = 8,
 	GPPWM_AccelPedal = 9,
 	GPPWM_Vbatt = 10,
+	GPPWM_VVT_1I = 11,
+	GPPWM_VVT_1E = 12,
+	GPPWM_VVT_2I = 13,
+	GPPWM_VVT_2E = 14,
+	GPPWM_EthanolPercent = 15,
+	GPPWM_AuxLinear1 = 16,
+	GPPWM_AuxLinear2 = 17,
+	GPPWM_GppwmOutput1 = 18,
+	GPPWM_GppwmOutput2 = 19,
+	GPPWM_GppwmOutput3 = 20,
+	GPPWM_GppwmOutput4 = 21,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
@@ -649,3 +619,58 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_IN2 = 3,
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
+
+#if __cplusplus
+#include <cstdint>
+
+enum class TsCalMode : uint8_t {
+	None = 0,
+	Tps1Max = 1,
+	Tps1Min = 2,
+	EtbKp = 3,
+	EtbKi = 4,
+	EtbKd = 5,
+	Tps1SecondaryMax = 6,
+	Tps1SecondaryMin = 7,
+	Tps2Max = 8,
+	Tps2Min = 9,
+	Tps2SecondaryMax = 10,
+	Tps2SecondaryMin = 11,
+	PedalMin = 12,
+	PedalMax = 13,
+};
+
+enum class GearControllerMode : uint8_t {
+	None = 0,
+	ButtonShift = 1,
+	Generic = 2,
+};
+
+enum class TransmissionControllerMode : uint8_t {
+	None = 0,
+	SimpleTransmissionController = 1,
+	Gm4l6x = 2,
+};
+
+enum class InjectionTimingMode : uint8_t {
+	End = 0,
+	Start = 1,
+	Center = 2,
+};
+
+enum class SelectedGear : uint8_t {
+	Invalid = 0,
+	ManualPlus = 1,
+	ManualMinus = 2,
+	Park = 3,
+	Reverse = 4,
+	Neutral = 5,
+	Drive = 6,
+	Manual = 7,
+	Manual3 = 8,
+	Manual2 = 9,
+	Manual1 = 10,
+	Low = 11,
+};
+
+#endif // __cplusplus

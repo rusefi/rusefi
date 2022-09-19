@@ -14,9 +14,9 @@
 #define BOARD_NAME                  "Subaru EG33/STM32F765 for RusEFI"
 
 #define EFI_USB_AF					10U
-//#define EFI_USB_SERIAL_ID			GPIOA_10
-#define EFI_USB_SERIAL_DM			GPIOA_11
-#define EFI_USB_SERIAL_DP			GPIOA_12
+//#define EFI_USB_SERIAL_ID			Gpio::A10
+#define EFI_USB_SERIAL_DM			Gpio::A11
+#define EFI_USB_SERIAL_DP			Gpio::A12
 
 /*
  * Board oscillators-related settings.

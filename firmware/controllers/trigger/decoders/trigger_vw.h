@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void setVwConfiguration(TriggerWaveform *s);
 /**

@@ -1,0 +1,254 @@
+pins:
+  - pin: J4_4
+    # H144_OUT_PWM5
+    id: C9
+    class: outputs
+    ts_name: J4_4 Wastegate Solenoid
+    function: Wastegate Solenoid
+
+  - pin: J4_4
+    # H144_OUT_IO1
+    id: D3
+    class: outputs
+    ts_name: J4_5 Error Light
+    function: Error Light Output
+
+  - pin: J7_1
+    # H_SPI3_MOSI
+    id: C12
+    class: outputs
+    ts_name: J7_1 AUX
+    function: J7_1 AUX
+
+  - pin: J7_2
+    # H_SPI3_MISO
+    id: C11
+    class: outputs
+    ts_name: J7_2 AUX
+    function: J7_2 AUX
+
+  - pin: J7_3
+    # H_SPI3_SCK
+    id: C10
+    class: outputs
+    ts_name: J7_3 AUX
+    function: J7_3 AUX
+
+  - pin: J7_4
+    # H_SPI3_CS
+    id: A15
+    class: outputs
+    ts_name: J7_4 AUX
+    function: J7_4 AUX
+
+  - pin: J7_5
+    # H144_UART2_TX
+    id: D5
+    class: outputs
+    ts_name: J7_5 AUX
+    function: J7_5 AUX
+
+  - pin: J7_6
+    # H144_UART2_RX
+    id: D6
+    class: outputs
+    ts_name: J7_6 AUX
+    function: J7_6 AUX
+
+  - pin: J7_7
+    # H144_UART1_RX
+    id: E0
+    class: outputs
+    ts_name: J7_7 AUX
+    function: J7_7 AUX
+
+  - pin: J7_8
+    # H144_UART1_TX
+    id: E1
+    class: outputs
+    ts_name: J7_8 AUX
+    function: J7_8 AUX
+
+  - pin: 1
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    type: ign
+    ts_name: C2-1 - IGN 1
+    function: Coil 1
+
+
+
+  - pin: 16
+    # H144_LS_3
+    id: D11
+    class: outputs
+    ts_name: C2-16 INJ 3
+    function: injector output 3
+    type: inj
+
+  - pin: 17
+    # H144_IGN_8
+    id: E6
+    class: outputs
+    ts_name: C2-17 - IGN 8
+    function: igniter
+    type: ign
+
+  - pin: 18
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    ts_name: C2-18 - IGN 4
+    function: igniter
+    type: ign
+
+  - pin: 32
+    # H144_LS_2
+    id: G8
+    class: outputs
+    ts_name: C2-32 INJ 2
+    function: injector output 2
+    type: inj
+
+  - pin: 33
+    # H144_IGN_7
+    id: B9
+    class: outputs
+    ts_name: C2-33 - IGN 7
+    function: igniter
+    type: ign
+
+  - pin: 34
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    ts_name: C2-34 - IGN 5
+    function: igniter
+    type: ign
+
+  - pin: 48
+    # H144_LS_8
+    id: F14
+    class: outputs
+    ts_name: C2-48 INJ 8
+    function: injector output 8
+    type: inj
+
+  - pin: 49
+    # H144_LS_5
+    id: D9
+    class: outputs
+    ts_name: C2-49 INJ 5
+    function: injector output 5
+    type: inj
+
+  - pin: 52
+    # H144_LS_6
+    id: F12
+    class: outputs
+    ts_name: C2-52 INJ 6
+    function: injector output 6
+    type: inj
+
+  - pin: 53
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    ts_name: C2-53 - IGN 2
+    function: igniter
+    type: ign
+
+  - pin: 54
+    # H144_IGN_6
+    id: B8
+    class: outputs
+    ts_name: C2-54 - IGN 6
+    function: igniter
+    type: ign
+
+  - pin: 55
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    ts_name: C2-55 - IGN 3
+    function: igniter
+    type: ign
+
+  - pin: 59
+    # H144_IN_SENS4
+    id: F6
+    class: event_inputs
+    ts_name: C2-59 - Cam
+    function: Cam Sensor Input
+    type: ls
+    color: purple
+
+  - pin: 60
+    # H144_IN_O2S2
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: C2-60 - Oil Pressure
+    function: Oil Pressure
+    type: av
+    color: purple
+
+  - pin: 63
+    # H144_IN_SENS2
+    id: F4
+    class: event_inputs
+    ts_name: C2-63 - Crank
+    function: Crank Input
+    type: ls
+    color: purple
+
+  - pin: 64
+    # H144_IN_TPS
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: C2-64 - TPS1
+    function: TPS1
+    type: av
+    color: purple
+
+  - pin: 65
+    # H144_IN_MAP1
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: C2-65 - Trans Fluids
+    function: Trans Fluids Temperature
+    type: av
+    color: purple
+
+  - pin: 66
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: C2-66 - TPS2
+    function: TPS2
+    type: av
+    color: purple
+
+  - pin: 70
+    # H144_LS_4
+    id: D10
+    class: outputs
+    ts_name: C2-70 INJ 4
+    function: injector output 4
+    type: inj
+
+  - pin: 71
+    # H144_LS_7
+    id: F13
+    class: outputs
+    ts_name: C2-71 INJ 7
+    function: injector output 7
+    type: inj
+
+  - pin: 72
+    # H144_LS_1
+    id: G7
+    class: outputs
+    ts_name: C2-72 INJ 1
+    function: injectpr output 1
+    type: inj

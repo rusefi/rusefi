@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "error_handling.h"
+
 template<typename T, int MAXSIZE>
 class FLStack {
 public:

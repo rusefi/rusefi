@@ -7,23 +7,37 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: '8'
 
       - name: Test Compiler
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install sshpass
+        run: sudo apt-get install sshpass mtools
+
+      - name: Generate Configs, Enums & Live Documentation
+        working-directory: ./firmware/
+        run: ./gen_default_everything.sh
 
       - name: Generate Java (Antlr)
-        working-directory: ./java_tools/configuration_definition
-        run: ant antlr
+        working-directory: ./android
+        run: ./gradlew :config_definition:generateGrammarSource
+
+      - name: Print GCC version
+        working-directory: .
+        run: gcc -v
+
+      - name: Build Native Unit Tests as shared library
+        working-directory: ./unit_tests/
+        # we have a unit test of JNI thus we need to build shared library
+        run: make -j4 SANITIZE=no build/lib_rusefi_test
 
       - name: Test console
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
@@ -36,10 +50,28 @@ jobs:
 
       - name: Attach console junit results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: console junit
           path: ./java_console/build/*.txt
+
+      - name: Configuration Definition CI, without pushing new .jar
+        working-directory: ./android
+        run: ./gradlew :config_definition:shadowJar
+
+      - name: Test everything gradle while we are here
+        # it's a bit of a mess but well
+        working-directory: ./android
+        run: ./gradlew test
+
+      - name: Configuration Definition and other tools CI, without pushing new .jars
+        working-directory: ./android
+        run: ./gradlew shadowJar
+
+      # this job focuses of tool validation so we do not push fresh enums here
+      - name: Generate Enums using freshly compiled tool
+        working-directory: ./firmware/
+        run: ./gen_enum_to_string.sh
 
       - name: Upload rusEFI server
         working-directory: .

@@ -20,8 +20,6 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_misc.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_universal.cpp
 
-TRIGGER_SRC =
-
 TRIGGER_SRC_CPP = \
 	$(CONTROLLERS_DIR)/trigger/trigger_emulator_algo.cpp \
 	$(CONTROLLERS_DIR)/trigger/trigger_central.cpp

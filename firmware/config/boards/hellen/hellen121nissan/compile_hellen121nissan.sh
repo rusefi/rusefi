@@ -1,8 +1,6 @@
 #!/bin/bash
 
-export PROJECT_BOARD=hellen/hellen121nissan
-export PROJECT_CPU=ARCH_STM32F4
-export EXTRA_PARAMS="-DSHORT_BOARD_NAME=hellen121nissan"
+export USE_OPENBLT=yes
 
 cd ..
-bash ../common_make.sh
+bash ../common_make.sh hellen/hellen121nissan ARCH_STM32F4

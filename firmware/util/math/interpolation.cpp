@@ -12,7 +12,7 @@
 
 #include "pch.h"
 
-#include "interpolation.h"
+#include "efi_interpolation.h"
 
 #define BINARY_PERF true
 
@@ -59,27 +59,6 @@ static void testBinary() {
 }
 
 #endif
-
-FastInterpolation::FastInterpolation() {
-	init(0, 0, 1, 1);
-}
-
-FastInterpolation::FastInterpolation(float x1, float y1, float x2, float y2) {
-	init(x1, y1, x2, y2);
-}
-
-void FastInterpolation::init(float x1, float y1, float x2, float y2) {
-	if (x1 == x2) {
-		firmwareError(CUSTOM_ERR_INTERPOLATE, "init: Same x1 and x2 in interpolate: %.2f/%.2f", x1, x2);
-		return;
-	}
-	a = INTERPOLATION_A(x1, y1, x2, y2);
-	b = y1 - a * x1;
-}
-
-float FastInterpolation::getValue(float x) const {
-	return a * x + b;
-}
 
 /** @brief	Linear interpolation by two points
  *
@@ -176,5 +155,4 @@ void initInterpolation() {
 #if BINARY_PERF && ! EFI_UNIT_TEST
 	addConsoleAction("binarytest", testBinary);
 #endif
-
 }

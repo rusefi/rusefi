@@ -52,7 +52,7 @@ enum class SensorType : unsigned char {
 	// This maps to the pedal if we have one, and Tps1 if not.
 	DriverThrottleIntent,
 
-	AuxTemp1,
+	AuxTemp1, // 20
 	AuxTemp2,
 
 	Lambda1,
@@ -69,15 +69,6 @@ enum class SensorType : unsigned char {
 
 	FuelLevel,
 
-	Aux1,
-	Aux2,
-	Aux3,
-	Aux4,
-	Aux5,
-	Aux6,
-	Aux7,
-	Aux8,
-
 	VehicleSpeed,
 
 	TurbochargerSpeed,
@@ -87,6 +78,30 @@ enum class SensorType : unsigned char {
 	// Slow MAP is asynchronous - not synced to anything, normal analog sampling
 	// MAP decoding happens only that often thus this is NOT raw MAP as flows from ADC
 	MapSlow,
+
+	InputShaftSpeed,
+
+	EGT1,
+	EGT2,
+
+	// analog voltage inputs for Lua
+	AuxAnalog1,
+	AuxAnalog2,
+	AuxAnalog3,
+	AuxAnalog4,
+	AuxAnalog5,
+	AuxAnalog6,
+	AuxAnalog7,
+	AuxAnalog8,
+
+	AuxLinear1,
+	AuxLinear2,
+
+	// frequency sensors
+	AuxSpeed1,
+	AuxSpeed2,
+
+	// Let's always have all auxiliary sensors at the end - please add specific sensors above auxiliary
 
 	// Leave me at the end!
 	PlaceholderLast,

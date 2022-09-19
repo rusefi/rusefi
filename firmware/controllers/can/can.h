@@ -7,10 +7,9 @@
 
 #pragma once
 
-#if ! EFI_PROD_CODE
+#if EFI_UNIT_TEST || !EFI_CAN_SUPPORT
 #include "can_mocks.h"
 #endif // EFI_PROD_CODE
-
 
 #if !EFI_UNIT_TEST
 #include "hal.h"
@@ -55,7 +54,7 @@ void registerCanSensor(CanSensorBase& sensor);
 class CanWrite final : public PeriodicController<512> {
 public:
 	CanWrite();
-	void PeriodicTask(efitime_t nowNt) override;
+	void PeriodicTask(efitick_t nowNt) override;
 };
 
 // allow using shorthand CI

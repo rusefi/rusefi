@@ -17,7 +17,7 @@ public class MafCommand extends JPanel {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(new JLabel("MAF: "));
-        final JSpinner maf = new JSpinner(new SpinnerNumberModel(Double.valueOf(1.5), null, null, Double.valueOf(0.11))) {
+        final JSpinner maf = new JSpinner(new SpinnerNumberModel(1.5, null, null, 0.11)) {
             @Override
             public Dimension getPreferredSize() {
                 Dimension size = super.getPreferredSize();

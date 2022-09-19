@@ -7,18 +7,8 @@
 #include "function_pointer_sensor.h"
 #include "identity_func.h"
 
-struct GetBaroWrapper {
-	float getBaro() {
-		return ::getBaroPressure();
-	}
-};
-
-static GetBaroWrapper baroWrapper;
-
-static FunctionPointerSensor baroSensor(SensorType::BarometricPressure,
-[]() {
-	return baroWrapper.getBaro();
-});
+static LinearFunc baroConverter;
+static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));
 
 // This converter is shared between both fast and slow: the only difference is
 // how the *voltage* is determined, not how its converted to a pressure.
@@ -51,8 +41,7 @@ struct MapCfg {
 	float map2;
 };
 
-static MapCfg getMapCfg() {
-	auto sensorType = engineConfiguration->map.sensor.type;
+static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType) {
 	switch (sensorType) {
 	case MT_DENSO183:
 		return {0, -6.64, 5, 182.78};
@@ -97,10 +86,10 @@ static MapCfg getMapCfg() {
 	}}
 }
 
-void configureMapFunction() {
-	auto cfg = getMapCfg();
+void configureMapFunction(LinearFunc& converter, air_pressure_sensor_type_e sensorType) {
+	auto cfg = getMapCfg(sensorType);
 
-	mapConverter.configure(
+	converter.configure(
 		cfg.v1,
 		cfg.map1,
 		cfg.v2,
@@ -111,12 +100,10 @@ void configureMapFunction() {
 }
 
 void initMap() {
-
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;
-
 	if (isAdcChannelValid(mapChannel)) {
 		// Set up the conversion function
-		configureMapFunction();
+		configureMapFunction(mapConverter, engineConfiguration->map.sensor.type);
 
 		slowMapSensor.setFunction(mapConverter);
 		fastMapSensor.setFunction(identityFunction);
@@ -129,12 +116,18 @@ void initMap() {
 		AdcSubscription::SubscribeSensor(slowMapSensor, mapChannel, 100);
 	}
 
-	// Only register if configured
-	if (isAdcChannelValid(engineConfiguration->baroSensor.hwChannel)) {
+	auto baroChannel = engineConfiguration->baroSensor.hwChannel;
+	if (isAdcChannelValid(baroChannel)) {
+		configureMapFunction(baroConverter, engineConfiguration->baroSensor.type);
+
+		baroSensor.setFunction(baroConverter);
 		baroSensor.Register();
+
+		AdcSubscription::SubscribeSensor(baroSensor, baroChannel, 10);
 	}
 }
 
 void deinitMap() {
 	AdcSubscription::UnsubscribeSensor(slowMapSensor);
+	AdcSubscription::UnsubscribeSensor(baroSensor);
 }

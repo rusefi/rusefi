@@ -51,6 +51,12 @@ function addRow(table, pin, cid) {
 }
 
 function clickPin(table, pin, cid) {
+  var container;
+  for (var elem = table; elem && elem !== document; elem = elem.parentNode) {
+    if (elem.matches(".container")) {
+      container = elem;
+    };
+  }
   table.parentElement.style.display = "table";
   table.innerHTML = "";
   addRow(table, pin, cid);
@@ -75,6 +81,7 @@ function clickPin(table, pin, cid) {
     url.search = "";
     window.history.pushState({}, "", url)
   }
+  container.scrollIntoView()
 }
 function checkparams() {
   var params = new URLSearchParams(window.location.search);
@@ -193,6 +200,10 @@ window.addEventListener('load', function() {
     img.src = connector.info.image.file;
     if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
       document.title = connector.info.title;
+    }
+    if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
+      document.getElementById("board-link").innerText = document.title;
+      document.getElementById("board-link").href = connector.info.board_url;
     }
     if (typeof(connector.info.name) != "undefined") {
       sdiv.querySelector(".connector-name").innerText = connector.info.name;

@@ -34,7 +34,7 @@ pins:
     type: sgnd
 
   - pin: 7
-    id: GPIO_UNASSIGNED
+    id: Unassigned
     class: switch_inputs
     function: Power Steering Switch
     ts_name: B07 - Power Steering Switch
@@ -62,7 +62,7 @@ pins:
     type: av
 
   - pin: 11
-    id: GPIOD_14
+    id: D14
     class: event_inputs
     function: Speed Din
     ts_name: B11 - Speed Din

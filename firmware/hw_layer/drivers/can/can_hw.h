@@ -9,7 +9,7 @@
 
 #include "efifeatures.h"
 
-void initCan(void);
+void initCan();
 void setCanType(int type);
 void setCanVss(int type);
 
@@ -19,7 +19,9 @@ void stopCanPins();
 void startCanPins();
 void enableFrankensoCan();
 bool getIsCanEnabled(void);
+
 #if EFI_TUNER_STUDIO
 void postCanState();
 #endif /* EFI_TUNER_STUDIO */
+
 #endif /* EFI_CAN_SUPPORT */

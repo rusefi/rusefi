@@ -8,13 +8,13 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include "expected.h"
+#include "trigger_structure.h"
 
 #if EFI_UNIT_TEST
 #include "logicdata.h"
-int copyCompositeEvents(CompositeEvent *events);
+const std::vector<CompositeEvent>& getCompositeEvents();
 #endif // EFI_UNIT_TEST
-
-int getCompositeRecordCount();
 
 void EnableToothLoggerIfNotEnabled();
 
@@ -40,4 +40,5 @@ struct ToothLoggerBuffer
 };
 
 // Get a reference to the buffer
-ToothLoggerBuffer GetToothLoggerBuffer();
+// Returns unexpected if no buffer is available
+expected<ToothLoggerBuffer> GetToothLoggerBuffer();

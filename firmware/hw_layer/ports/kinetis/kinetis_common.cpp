@@ -33,76 +33,76 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:
-		return GPIOA_2;
+		return Gpio::A2;
 	case EFI_ADC_1:
-		return GPIOA_3;
+		return Gpio::A3;
 	case EFI_ADC_2:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_3:
-		return GPIOD_3;
+		return Gpio::D3;
 	case EFI_ADC_4:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_5:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_6:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_7:
-		return GPIOB_12;
+		return Gpio::B12;
 	case EFI_ADC_8:
-		return GPIOB_13;
+		return Gpio::B13;
 	case EFI_ADC_9:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_10:
-		return GPIOE_2;
+		return Gpio::E2;
 	case EFI_ADC_11:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_12:
-		return GPIOC_14;
+		return Gpio::C14;
 	case EFI_ADC_13:
-		return GPIOC_15;
+		return Gpio::C15;
 	case EFI_ADC_14:
-		return GPIOC_16;
+		return Gpio::C16;
 	case EFI_ADC_15:
-		return GPIOC_17;
+		return Gpio::C17;
 	default:
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
 	switch (pin) {
-	case GPIOA_2:
+	case Gpio::A2:
 		return EFI_ADC_0;
-	case GPIOA_3:
+	case Gpio::A3:
 		return EFI_ADC_1;
-	//case GPIOA_2:
+	//case Gpio::A2:
 	//	return EFI_ADC_2;
-	case GPIOD_3:
+	case Gpio::D3:
 		return EFI_ADC_3;
-	//case GPIOA_4:
+	//case Gpio::A4:
 	//	return EFI_ADC_4;
-	//case GPIOA_5:
+	//case Gpio::A5:
 	//	return EFI_ADC_5;
-	//case GPIOA_6:
+	//case Gpio::A6:
 	//	return EFI_ADC_6;
-	case GPIOB_12:
+	case Gpio::B12:
 		return EFI_ADC_7;
-	case GPIOB_13:
+	case Gpio::B13:
 		return EFI_ADC_8;
-	//case GPIOB_1:
+	//case Gpio::B1:
 	//	return EFI_ADC_9;
-	case GPIOE_2:
+	case Gpio::E2:
 		return EFI_ADC_10;
-	//case GPIOC_1:
+	//case Gpio::C1:
 	//	return EFI_ADC_11;
-	case GPIOC_14:
+	case Gpio::C14:
 		return EFI_ADC_12;
-	case GPIOC_15:
+	case Gpio::C15:
 		return EFI_ADC_13;
-	case GPIOC_16:
+	case Gpio::C16:
 		return EFI_ADC_14;
-	case GPIOC_17:
+	case Gpio::C17:
 		return EFI_ADC_15;
 	default:
 		return EFI_ADC_ERROR;

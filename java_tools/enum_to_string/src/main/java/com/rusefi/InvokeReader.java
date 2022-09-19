@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class InvokeReader {
+public class InvokeReader {
     private final static String KEY_INPUT_PATH = "-enumInputPath";
     private final static String KEY_OUTPUT = "-outputPath";
     private final static String KEY_OUTPUT_FILE = "-generatedFile";
@@ -32,6 +32,11 @@ class InvokeReader {
         this.args = args;
     }
 
+    public InvokeReader(String outputPath, List<String> inputFiles) {
+        this.outputPath = outputPath;
+        this.inputFiles = inputFiles;
+    }
+
     public String getInputPath() {
         return inputPath;
     }
@@ -48,7 +53,7 @@ class InvokeReader {
         return inputFiles;
     }
 
-    public InvokeReader invoke() throws IOException {
+    public InvokeReader invoke() {
         outputPath = null;
         for (int i = 0; i < args.length - 1; i += 2) {
             String key = args[i];

@@ -20,6 +20,7 @@ import com.rusefi.ui.livedocs.RefreshActions;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -39,7 +40,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
-    {
+    static {
 //        log.configureDebugEnabled(true);
     }
 
@@ -66,6 +67,8 @@ public class LiveDataParserPanel {
                 Field field = Field.findFieldOrNull(Fields.VALUES, "", setting.getText());
                 if (field == null)
                     continue;
+                if (field.getType().isString())
+                    continue;
                 Number value = field.getValue(ci);
                 Rectangle r;
                 try {
@@ -73,20 +76,20 @@ public class LiveDataParserPanel {
                 } catch (BadLocationException e) {
                     throw new IllegalStateException(e);
                 }
+                if (r == null)
+                    return; // when would this happen?
                 g.drawString(value.toString(), r.x, r.y);
-
-
             }
-
-
         }
     };
     private final VariableValueSource valueSource;
+    private final String fileName;
     private String sourceCode;
 
     public LiveDataParserPanel(UIContext uiContext, VariableValueSource valueSource, String fileName) {
         this.uiContext = uiContext;
         this.valueSource = valueSource;
+        this.fileName = fileName;
 
         JScrollPane rightScrollPane = new JScrollPane(text,
                 VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -103,10 +106,27 @@ public class LiveDataParserPanel {
         }
     }
 
+    public ParseResult getParseResult() {
+        return parseResult;
+    }
+
+    public JTextPane getText() {
+        return text;
+    }
+
+    @NotNull
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
+        String contentOrNull = getContentOrNull(clazz, fileName);
+        if (contentOrNull == null)
+            return fileName + " getResourceAsStream not found";
+        return contentOrNull;
+    }
+
+    @Nullable
+    public static String getContentOrNull(Class<?> clazz, String fileName) throws IOException {
         InputStream cpp = clazz.getResourceAsStream("/c_sources/" + fileName);
         if (cpp == null)
-            return fileName + " getResourceAsStream not found";
+            return null;
         String line;
 
         StringBuilder result = new StringBuilder();
@@ -139,35 +159,42 @@ public class LiveDataParserPanel {
 
         StyleContext sc = StyleContext.getDefaultStyleContext();
 
-        StyledDocument styledDocument = text.getStyledDocument();
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        DefaultStyledDocument styledDocument = new DefaultStyledDocument();
+        try {
+            styledDocument.insertString(0, sourceCode, attributes);
+        } catch (BadLocationException e) {
+            throw new IllegalStateException(e);
+        }
+
         AttributeSet oldSet = styledDocument.getCharacterElement(0).getAttributes();
         styledDocument.setCharacterAttributes(0, sourceCode.length(), sc.getEmptySet(), true);
 
         // todo: technically we do not need to do the complete re-compile on fresh data arrival just repaint!
         // todo: split compilation and painting/repainting
-        parseResult = CodeWalkthrough.applyVariables(valueSource, sourceCode, new SourceCodePainter() {
-            @Override
-            public void paintBackground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
-            }
+        try {
+            parseResult = CodeWalkthrough.applyVariables(valueSource, sourceCode, new SourceCodePainter() {
+                @Override
+                public void paintBackground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
 
-            @Override
-            public void paintForeground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
-            }
-        }, tree);
+                @Override
+                public void paintForeground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
+            }, tree);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While " + fileName, e);
+        }
+
+        text.setDocument(styledDocument);
     }
 
     @NotNull
-    public static JPanel createLiveDataParserContent(UIContext uiContext, LiveDataView view) {
-        LiveDataParserPanel panel = createLiveDataParserPanel(uiContext, view.getLiveDataE(), view.getValues(), view.getFileName());
-        return panel.getContent();
-    }
-
-    @NotNull
-    private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
+    public static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
         LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, name -> {
@@ -179,7 +206,7 @@ public class LiveDataParserPanel {
                 //log.error("BAD condition, should be variable: " + name);
                 return null;
             }
-            double number = f.getValue(new ConfigurationImage(bytes)).doubleValue();
+            double number = f.getValue(new ConfigurationImage(bytes));
             if (log.debugEnabled()) {
                 log.debug("getValue(" + name + "): " + number);
             }

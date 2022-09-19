@@ -17,10 +17,6 @@ void setNissanPrimeraEngineConfiguration() {
 
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
 
-	engineConfiguration->auxValves[0] = GPIOE_14;
-	engineConfiguration->auxValves[1] = GPIOE_12;
-}
-
-void setNissanPrimeraEngineConfiguration_360() {
-	engineConfiguration->trigger.type = TT_NISSAN_SR20VE_360;
+	engineConfiguration->auxValves[0] = Gpio::E14;
+	engineConfiguration->auxValves[1] = Gpio::E12;
 }

@@ -22,13 +22,13 @@
 
 #include "pch.h"
 
-#include "os_access.h"
-#include "fsio_impl.h"
+
 #include "speed_density.h"
 #include "advance_map.h"
 #include "flash_main.h"
 
 #include "hip9011_logic.h"
+#include "bench_test.h"
 
 #if EFI_MEMS
 #include "accelerometer.h"
@@ -49,7 +49,6 @@
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
-#include "honda_accord.h"
 #include "honda_k_dbc.h"
 #include "honda_600.h"
 #include "hyundai.h"
@@ -62,13 +61,11 @@
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_na8.h"
-#include "mazda_miata_nb.h"
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
 #include "mercedes.h"
 #include "mitsubishi.h"
-#include "me7pnp.h"
 
 #include "subaru.h"
 #include "test_engine.h"
@@ -156,6 +153,9 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion();
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
@@ -170,6 +170,8 @@ void incrementGlobalConfigurationVersion() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	applyNewHardwareSettings();
+
+	boardOnConfigurationChange(&activeConfiguration);
 
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
@@ -186,16 +188,16 @@ void incrementGlobalConfigurationVersion() {
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+	onConfigurationChangeBenchTest();
+#endif
+
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 #if EFI_EMULATE_POSITION_SENSORS && ! EFI_UNIT_TEST
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_FSIO
-	onConfigurationChangeFsioCallback(&activeConfiguration);
-#endif /* EFI_FSIO */
 
 	engine->engineModules.apply_all([](auto & m) {
 			m.onConfigurationChange(&activeConfiguration);
@@ -209,9 +211,9 @@ void incrementGlobalConfigurationVersion() {
  */
 void setConstantDwell(floatms_t dwellMs) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
+		config->sparkDwellRpmBins[i] = 1000 * i;
 	}
-	setArrayValues(engineConfiguration->sparkDwellValues, dwellMs);
+	setArrayValues(config->sparkDwellValues, dwellMs);
 }
 
 void setWholeIgnitionIatCorr(float value) {
@@ -255,19 +257,19 @@ void setDefaultBasePins() {
 #ifdef EFI_WARNING_PIN
 	engineConfiguration->warningLedPin = EFI_WARNING_PIN;
 #else
-	engineConfiguration->warningLedPin = GPIOD_13; // orange LED on discovery
+	engineConfiguration->warningLedPin = Gpio::D13; // orange LED on discovery
 #endif
 
 
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
-	engineConfiguration->communicationLedPin = GPIOD_15; // blue LED on discovery
+	engineConfiguration->communicationLedPin = Gpio::D15; // blue LED on discovery
 #endif
 #ifdef EFI_RUNNING_PIN
 	engineConfiguration->runningLedPin = EFI_RUNNING_PIN;
 #else
-	engineConfiguration->runningLedPin = GPIOD_12; // green LED on discovery
+	engineConfiguration->runningLedPin = Gpio::D12; // green LED on discovery
 #endif
 
 #if EFI_PROD_CODE
@@ -278,30 +280,16 @@ void setDefaultBasePins() {
 
 	// set UART pads configuration based on the board
 // needed also by bootloader code
-	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOC_10;
-	engineConfiguration->binarySerialRxPin = GPIOC_11;
+	engineConfiguration->binarySerialTxPin = Gpio::C10;
+	engineConfiguration->binarySerialRxPin = Gpio::C11;
 	engineConfiguration->tunerStudioSerialSpeed = TS_DEFAULT_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = 115200;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific serial configuration setup, if needed (for custom boards only)
-	setSerialConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 // needed also by bootloader code
 // at the moment bootloader does NOT really need SD card, this is a step towards future bootloader SD card usage
 void setDefaultSdCardParameters() {
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOD_4;
 	engineConfiguration->isSdCardEnabled = true;
-
-#if EFI_PROD_CODE
-	// call overrided board-specific SD card configuration setup, if needed (for custom boards only)
-	setSdCardConfigurationOverrides();
-#endif /* EFI_PROD_CODE */
 }
 
 static void setDefaultWarmupIdleCorrection() {
@@ -327,52 +315,38 @@ static void setDefaultWarmupIdleCorrection() {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget() {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
-
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -20, 1300);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -10, 1200);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 0, 1150);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 10, 1100);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 20, 1050);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 30, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 40, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 50, 950);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 60, 950);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 70, 930);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 80, 900);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 90, 900);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 100, 1000);
-	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
+	copyArray(config->cltIdleRpmBins, {  -30, - 20,  -10,    0,   10,   20,   30,   40,   50,  60,  70,  80,  90, 100 , 110,  120 });
+	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
 }
 
 static void setDefaultFrankensoStepperIdleParameters() {
-	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
-	engineConfiguration->idle.stepperStepPin = GPIOE_12;
-	engineConfiguration->stepperEnablePin = GPIOE_14;
+	engineConfiguration->idle.stepperDirectionPin = Gpio::E10;
+	engineConfiguration->idle.stepperStepPin = Gpio::E12;
+	engineConfiguration->stepperEnablePin = Gpio::E14;
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->idleStepperTotalSteps = 150;
 }
 
 static void setCanFrankensoDefaults() {
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
+	engineConfiguration->canTxPin = Gpio::B6;
+	engineConfiguration->canRxPin = Gpio::B12;
 }
 
 /**
  * see also setDefaultIdleSpeedTarget()
  */
 void setTargetRpmCurve(int rpm) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
-	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
+	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
+	setLinearCurve(config->cltIdleRpm, rpm, rpm, 10);
 }
 
 void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
+		snprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
 
-		cfg.pin = GPIO_UNASSIGNED;
+		cfg.pin = Gpio::Unassigned;
 		cfg.dutyIfError = 0;
 		cfg.onAboveDuty = 60;
 		cfg.offBelowDuty = 50;
@@ -400,21 +374,14 @@ static void setDefaultEngineNoiseTable() {
 
 	engineConfiguration->knockSamplingDuration = 45;
 
-	engineConfiguration->knockNoise[0] = 2; // 800
-	engineConfiguration->knockNoise[1] = 2; // 1700
-	engineConfiguration->knockNoise[2] = 2; // 2600
-	engineConfiguration->knockNoise[3] = 2; // 3400
-	engineConfiguration->knockNoise[4] = 2; // 4300
-	engineConfiguration->knockNoise[5] = 2; // 5200
-	engineConfiguration->knockNoise[6] = 2; // 6100
-	engineConfiguration->knockNoise[7] = 2; // 7000
+	setArrayValues(engineConfiguration->knockBaseNoise, -20);
 }
 
 static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
 	 */
-	//	engineConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
+	//	engineConfiguration->hip9011CsPin = Gpio::D0; // rev 0.1
 
 	engineConfiguration->isHip9011Enabled = true;
 	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
@@ -424,11 +391,11 @@ static void setHip9011FrankensoPinout() {
 #ifdef EFI_HIP_CS_PIN
 	engineConfiguration->hip9011CsPin = EFI_HIP_CS_PIN;
 #else
-	engineConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
+	engineConfiguration->hip9011CsPin = Gpio::B0; // rev 0.4
 #endif
 	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
 
-	engineConfiguration->hip9011IntHoldPin = GPIOB_11;
+	engineConfiguration->hip9011IntHoldPin = Gpio::B11;
 	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 
 	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
@@ -501,6 +468,7 @@ static void setDefaultEngineConfiguration() {
 
     // OBD-II default rate is 500kbps
     engineConfiguration->canBaudRate = B500KBPS;
+    engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
@@ -515,10 +483,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->sdCardPeriodMs = 50;
 
 	engineConfiguration->mapMinBufferLength = 1;
+	engineConfiguration->vvtActivationDelayMs = 6000;
 	
 	engineConfiguration->startCrankingDuration = 3;
-
-	engineConfiguration->idlePidRpmDeadZone = 50;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -529,19 +496,19 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
-	engineConfiguration->alternatorControl.minValue = 10;
+	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve1, 0, 100, 1);
+	setLinearCurve(config->scriptCurve1Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve1, 0, 100, 1);
 
-	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve2, 30, 170, 1);
+	setLinearCurve(config->scriptCurve2Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve2, 30, 170, 1);
 
-	setLinearCurve(engineConfiguration->scriptCurve3Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve4Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve5Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->scriptCurve6Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve3Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve4Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
+	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();
@@ -609,6 +576,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->useStepperIdle = false;
 
+	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
+
 	setDefaultGppwmParameters();
 
 #if !EFI_UNIT_TEST
@@ -647,6 +616,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->cylinderBore = 87.5;
 
+	setBoschHDEV_5_injectors();
+
 	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;
@@ -658,16 +629,12 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->baroSensor.lowValue = 0;
 	engineConfiguration->baroSensor.highValue = 500;
 
-	engineConfiguration->isEngineChartEnabled = true;
-
 #if EFI_PROD_CODE
 	engineConfiguration->engineChartSize = 300;
 #else
 	// need more events for automated test
 	engineConfiguration->engineChartSize = 400;
 #endif
-
-	engineConfiguration->primingSquirtDurationMs = 5;
 
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
@@ -696,7 +663,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vssToothCount = 21;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
-	engineConfiguration->mapErrorDetectionTooHigh = 250;
+	// todo: default limits should be hard-coded for each sensor type
+	// https://github.com/rusefi/rusefi/issues/4030
+	engineConfiguration->mapErrorDetectionTooHigh = 410;
 
 	engineConfiguration->useLcdScreen = true;
 
@@ -723,33 +692,33 @@ void setDefaultFrankensoConfiguration() {
 	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 
-//	engineConfiguration->gps_rx_pin = GPIOB_7;
-//	engineConfiguration->gps_tx_pin = GPIOB_6;
+//	engineConfiguration->gps_rx_pin = Gpio::B7;
+//	engineConfiguration->gps_tx_pin = Gpio::B6;
 
-	engineConfiguration->triggerSimulatorPins[0] = GPIOD_1;
-	engineConfiguration->triggerSimulatorPins[1] = GPIOD_2;
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
 
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->triggerInputPins[1] = GPIOA_5;
+	engineConfiguration->triggerInputPins[0] = Gpio::C6;
+	engineConfiguration->triggerInputPins[1] = Gpio::A5;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->digitalPotentiometerChipSelect[0] = GPIOD_7;
-	engineConfiguration->digitalPotentiometerChipSelect[1] = GPIO_UNASSIGNED;
-	engineConfiguration->digitalPotentiometerChipSelect[2] = GPIOD_5;
-	engineConfiguration->digitalPotentiometerChipSelect[3] = GPIO_UNASSIGNED;
+	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::D7;
+	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
+	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::D5;
+	engineConfiguration->digitalPotentiometerChipSelect[3] = Gpio::Unassigned;
 
-	engineConfiguration->spi1mosiPin = GPIOB_5;
-	engineConfiguration->spi1misoPin = GPIOB_4;
-	engineConfiguration->spi1sckPin = GPIOB_3; // please note that this pin is also SWO/SWD - Single Wire debug Output
+	engineConfiguration->spi1mosiPin = Gpio::B5;
+	engineConfiguration->spi1misoPin = Gpio::B4;
+	engineConfiguration->spi1sckPin = Gpio::B3; // please note that this pin is also SWO/SWD - Single Wire debug Output
 
-	engineConfiguration->spi2mosiPin = GPIOB_15;
-	engineConfiguration->spi2misoPin = GPIOB_14;
-	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->spi2mosiPin = Gpio::B15;
+	engineConfiguration->spi2misoPin = Gpio::B14;
+	engineConfiguration->spi2sckPin = Gpio::B13;
 
-	engineConfiguration->spi3mosiPin = GPIOB_5;
-	engineConfiguration->spi3misoPin = GPIOB_4;
-	engineConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->spi3mosiPin = Gpio::B5;
+	engineConfiguration->spi3misoPin = Gpio::B4;
+	engineConfiguration->spi3sckPin = Gpio::B3;
 	
 	// set optional subsystem configs
 #if EFI_MEMS
@@ -839,10 +808,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case UNUSED60:
-// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case UNUSED61:
-	case UNUSED100:
+	case HELLEN72_ETB:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -865,8 +831,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
-	case VW_B6:
-		setVwPassatB6();
+	case MRE_VW_B6:
+		setMreVwPassatB6();
 		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
@@ -874,11 +840,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_SECONDARY_CAN:
 		mreSecondaryCan();
 		break;
-	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case UNUSED30:
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
 		break;
@@ -909,6 +873,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+	case PROTEUS_VW_B6:
+		setProteusVwPassatB6();
+		break;
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest();
 		break;
@@ -929,6 +896,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();
+		break;
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
 		break;
 	case PROTEUS_VAG_80_18T:
 	case PROTEUS_N73:
@@ -957,12 +927,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36();
 		break;
-	case HELLEN_NB1:
 	case HELLEN_NA8_96:
-		setHellenNB1();
+		setHellenMiata96();
 		break;
-	case HELLEN72_ETB:
-		setHellen72etb();
+	case HELLEN_NB1:
+		setHellenNB1();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
@@ -1020,7 +989,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration();
 		break;
-	case UNUSED39:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration();
 		break;
@@ -1036,16 +1004,20 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration();
 		break;
+	case L9779_BENCH_ENGINE:
+		setL9779TestConfiguration();
+		break;
+	case EEPROM_BENCH_ENGINE:
+#if EFI_PROD_CODE
+		setEepromTestConfiguration();
+#endif
+		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
 		break;
 	case FRANKENSO_MAZDA_MIATA_NA8:
-		setMazdaMiataNA8Configuration();
+		setFrankensoMazdaMiataNA8Configuration();
 		break;
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		setHondaAccordConfiguration1_24();
-		break;
-	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
 		break;
@@ -1058,13 +1030,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600();
 		break;
-	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
-		setEngineProteusGearboxManInTheMiddle();
-		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case UNUSED_19:
 	case MIATA_1996:
 		setFrankensteinMiata1996();
 		break;
@@ -1104,17 +1072,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration();
 		break;
-	case VAG_18_TURBO:
-		vag_18_Turbo();
-		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
-	case TEST_108:
-		setVrThresholdTest();
-		break;
-	case TEST_109:
-	case TEST_110:
+	case TEST_100:
+	case TEST_101:
+	case TEST_102:
 	case TEST_ROTARY:
 		setRotary();
 		break;
@@ -1143,14 +1106,6 @@ void validateConfiguration() {
 		engineConfiguration->adcVcc = 3.0f;
 	}
 	engine->preCalculate();
-
-	/**
-	 * TunerStudio text tune files convert negative zero into positive zero so to keep things consistent we should avoid
-	 * negative zeros altogether. Unfortunately default configuration had one and here we are mitigating that.
-	 */
-	for (int i = 0;i < CLT_CURVE_SIZE;i++) {
-		engineConfiguration->cltIdleRpmBins[i] = fixNegativeZero(engineConfiguration->cltIdleRpmBins[i]);
-	}
 }
 
 void applyNonPersistentConfiguration() {
@@ -1160,22 +1115,20 @@ void applyNonPersistentConfiguration() {
 #endif
 
 #if EFI_ENGINE_CONTROL
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
 
-#if EFI_ENGINE_CONTROL
-
-void prepareShapes() {
-	prepareOutputSignals();
-
-	engine->injectionEvents.addFuelEvents();
+void setTwoStrokeOperationMode() {
+	engineConfiguration->twoStroke = true;
 }
 
-#endif
+void setCamOperationMode() {
+	engineConfiguration->skippedWheelOnCam = true;
+}
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
-	engineConfiguration->ambiguousOperationMode = mode;
+void setCrankOperationMode() {
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
@@ -1187,13 +1140,13 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {
 
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 	
-	engineConfiguration->joystickCenterPin = GPIOC_8;
-	engineConfiguration->joystickAPin = GPIOD_10;
-	engineConfiguration->joystickBPin = GPIO_UNASSIGNED;
-	engineConfiguration->joystickCPin = GPIO_UNASSIGNED;
-	engineConfiguration->joystickDPin = GPIOD_11;
+	engineConfiguration->joystickCenterPin = Gpio::C8;
+	engineConfiguration->joystickAPin = Gpio::D10;
+	engineConfiguration->joystickBPin = Gpio::Unassigned;
+	engineConfiguration->joystickCPin = Gpio::Unassigned;
+	engineConfiguration->joystickDPin = Gpio::D11;
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them
-__attribute__((weak)) void setBoardDefaultConfiguration(void) { }
-__attribute__((weak)) void setBoardConfigOverrides(void) { }
+__attribute__((weak)) void setBoardDefaultConfiguration() { }
+__attribute__((weak)) void setBoardConfigOverrides() { }

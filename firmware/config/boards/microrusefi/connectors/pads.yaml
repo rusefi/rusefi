@@ -1,23 +1,19 @@
 pins:
-  - pin: J6
-    id: GPIOE_0
-    class: outputs
-    ts_name: AUX J6 PE0
 
   - pin: J10
-    id: GPIOE_6
+    id: E6
     class: outputs
     function: TIM9_CH2
     ts_name: AUX J10 PE6
 
   - pin: J11
-    id: GPIOE_5
+    id: E5
     class: outputs
     function: TIM9_CH1
     ts_name: AUX J11 PE5
 
   - pin: J18
-    id: GPIOB_7
+    id: B7
     class: outputs
     ts_name: AUX J18 PB7
 

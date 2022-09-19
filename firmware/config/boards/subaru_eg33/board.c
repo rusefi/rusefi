@@ -8,7 +8,6 @@
 #include "hal.h"
 #include "stm32_gpio.h"
 #include "efilib.h"
-#include "rusefi_hw_enums.h"
 
 #include "board_io.h"
 
@@ -177,20 +176,3 @@ bool mmc_lld_is_write_protected(MMCDriver *mmcp)
 	return false;
 }
 #endif
-
-#define STATUS_LED_PIN	8
-#define STATUS_LED_PORT	GPIOG
-
-void BLIIINK(int t) {
-	int i, j;
-	palSetPadMode(STATUS_LED_PORT, STATUS_LED_PIN, PAL_MODE_OUTPUT_PUSHPULL);
-	//while (true) {
-	for (j = 0; j < 2; j++) {
-		palClearPad(STATUS_LED_PORT, STATUS_LED_PIN);
-		for (i = 0; i < 2 * t; i++) {
-			palTogglePad(STATUS_LED_PORT, STATUS_LED_PIN);
-			chThdSleepMilliseconds(250);
-		}
-		chThdSleepMilliseconds(1000);
-	}
-}

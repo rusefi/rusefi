@@ -5,16 +5,16 @@
 #include "bench_test.h"
 
 bool FanController::getState(bool acActive, bool lastState) {
-	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
+	auto clt = Sensor::get(SensorType::Clt);
 
 	cranking = engine->rpmCalculator.isCranking();
 	notRunning = !engine->rpmCalculator.isRunning();
 
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
-	brokenClt = !cltValid;
+	brokenClt = !clt;
 	enabledForAc = enableWithAc() && acActive;
-	hot = clt > getFanOnTemp();
-	cold = clt < getFanOffTemp();
+	hot = clt.value_or(0) > getFanOnTemp();
+	cold = clt.value_or(0) < getFanOffTemp();
 
 	if (cranking) {
 		// Inhibit while cranking
@@ -47,53 +47,6 @@ void FanController::update(bool acActive) {
 	pin.setValue(result);
 }
 
-struct FanControl1 : public FanController {
-	OutputPin& getPin() {
-		return enginePins.fanRelay;
-	}
-
-	float getFanOnTemp() {
-		return engineConfiguration->fanOnTemperature;
-	}
-
-	float getFanOffTemp() {
-		return engineConfiguration->fanOffTemperature;
-	}
-
-	bool enableWithAc() {
-		return engineConfiguration->enableFan1WithAc;
-	}
-
-	bool disableWhenStopped() {
-		return engineConfiguration->disableFan1WhenStopped;
-	}
-};
-
-struct FanControl2 : public FanController {
-	OutputPin& getPin() {
-		return enginePins.fanRelay2;
-	}
-
-	float getFanOnTemp() {
-		return engineConfiguration->fan2OnTemperature;
-	}
-
-	float getFanOffTemp() {
-		return engineConfiguration->fan2OffTemperature;
-	}
-
-	bool enableWithAc() {
-		return engineConfiguration->enableFan2WithAc;
-	}
-
-	bool disableWhenStopped() {
-		return engineConfiguration->disableFan2WhenStopped;
-	}
-};
-
-static FanControl1 fan1;
-static FanControl2 fan2;
-
 void updateFans(bool acActive) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
@@ -101,6 +54,6 @@ void updateFans(bool acActive) {
 	}
 #endif
 
-	fan1.update(acActive);
-	fan2.update(acActive);
+	engine->fan1.update(acActive);
+	engine->fan2.update(acActive);
 }

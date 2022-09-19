@@ -1,13 +1,17 @@
 package com.rusefi.ui.lua;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
@@ -26,6 +30,7 @@ public class TextEditor {
     private final JPanel area = new JPanel(new BorderLayout());
     private final JTextArea textArea = new JTextArea();
     private final JLabel sizeLabel = new JLabel();
+    private final JLabel locationLabel = new JLabel();
 
     public TextEditor() {
         textArea.setTabSize(2);
@@ -49,11 +54,24 @@ public class TextEditor {
             }
         });
 
+        textArea.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(CaretEvent e) {
+                int offset = textArea.getCaretPosition();
+                try {
+                    int line = textArea.getLineOfOffset(offset);
+                    locationLabel.setText(Integer.toString(line + 1));
+                } catch (BadLocationException ignored) {
+                }
+            }
+        });
+
         JScrollPane textAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         area.add(textAreaScroll, BorderLayout.CENTER);
-        JPanel bottomArea = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomArea = new JPanel(new BorderLayout());
         area.add(bottomArea, BorderLayout.SOUTH);
-        bottomArea.add(sizeLabel);
+        bottomArea.add(locationLabel, BorderLayout.WEST);
+        bottomArea.add(sizeLabel, BorderLayout.EAST);
 
         installUndoRedoKeystrokes();
         UiUtils.installPopupMenu(createPopupMenu(), textArea);

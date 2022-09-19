@@ -21,24 +21,24 @@
  * In case we are dependent on VSS we just return true.
  */
 bool LaunchControlBase::isInsideSwitchCondition() {
-	switch (engineConfiguration->launchActivationMode) {
-	case SWITCH_INPUT_LAUNCH:
+	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
+	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
+
+
+	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
-			//todo: we should take into consideration if this sw is pulled high or low!
-			launchActivatePinState = efiReadPin(engineConfiguration->launchActivatePin);
+			launchActivatePinState = engineConfiguration->launchActivateInverted ^ efiReadPin(engineConfiguration->launchActivatePin);
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
-
-	case CLUTCH_INPUT_LAUNCH:
+	} else if (isClutchActivated) {
 		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-			return engine->clutchDownState;
+			return engine->engineState.clutchDownState;
 		} else {
 			return false;
 		}
-		
-	default:
+	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
@@ -67,7 +67,8 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 		return false;
 	}
 
-	return engineConfiguration->launchTpsTreshold < tps.Value;
+    // todo: should this be 'launchTpsThreshold <= tps.Value' so that nicely calibrated TPS of zero does not prevent launch?
+	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
 /**
@@ -85,14 +86,6 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
-#if EFI_TUNER_STUDIO
-	// todo: implement fancy logging of all live data
-	engine->outputChannels.launchSpeedCondition = speedCondition;
-	engine->outputChannels.launchRpmCondition = rpmCondition;
-	engine->outputChannels.launchTpsCondition = tpsCondition;
-	engine->outputChannels.launchActivateSwitchCondition = activateSwitchCondition;
-#endif /* EFI_TUNER_STUDIO */
-
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
@@ -106,12 +99,17 @@ void LaunchControlBase::update() {
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
-	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
+	retardThresholdRpm = engineConfiguration->launchRpm
+	/*
+	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
+	or it is supposed to be referencing 'launchTimingRpmRange'?
+	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
+*/
+	         + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -121,17 +119,10 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
-
-#if EFI_TUNER_STUDIO
-	engine->outputChannels.clutchDownState = engine->clutchDownState;
-	engine->outputChannels.launchActivatePinState = launchActivatePinState;
-	engine->outputChannels.launchIsLaunchCondition = isLaunchCondition;
-	engine->outputChannels.launchCombinedConditions = combinedConditions;
-#endif /* EFI_TUNER_STUDIO */
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return isLaunchCondition && (retardThresholdRpm < GET_RPM());
+	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {

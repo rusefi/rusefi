@@ -116,7 +116,7 @@ public class ConnectPanel {
                     });
                 }
 
-                public void onConnectionFailed() {
+                public void onConnectionFailed(String message) {
                 }
             });
         }

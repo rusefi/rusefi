@@ -49,9 +49,9 @@ void stopAuxSerialPins() {
 }
 
 void startAuxSerialPins() {
-	if (engineConfiguration->auxSerialTxPin)
+	if (isBrainPinValid(engineConfiguration->auxSerialTxPin))
 		efiSetPadMode("AuxSerial TX", engineConfiguration->auxSerialTxPin, PAL_MODE_ALTERNATE(8));
-	if (engineConfiguration->auxSerialRxPin)
+	if (isBrainPinValid(engineConfiguration->auxSerialRxPin))
 		efiSetPadMode("AuxSerial RX", engineConfiguration->auxSerialRxPin, PAL_MODE_ALTERNATE(8));
 
 	enableAuxSerial();
@@ -60,12 +60,12 @@ void startAuxSerialPins() {
 void initAuxSerial(void) {
 	addConsoleAction("auxinfo", auxInfo);
 
-	isSerialEnabled =
-		(engineConfiguration->auxSerialTxPin) || // we need at least one pin set
-		(engineConfiguration->auxSerialRxPin);
+	isSerialRXEnabled = isBrainPinValid(engineConfiguration->auxSerialRxPin);
+	isSerialTXEnabled = isBrainPinValid(engineConfiguration->auxSerialTxPin);
 
-	isSerialRXEnabled = engineConfiguration->auxSerialRxPin;
-	isSerialTXEnabled = engineConfiguration->auxSerialTxPin;
+	isSerialEnabled =
+		isSerialRXEnabled || // we need at least one pin set
+		isSerialTXEnabled;
 
 	// exit if no pin is configured
 	if (!isSerialEnabled)
@@ -85,7 +85,7 @@ void initAuxSerial(void) {
 	startAuxSerialPins();
 
 	if (isSerialRXEnabled)
-		serialRead.Start();
+		serialRead.start();
 }
 
 #endif // EFI_AUX_SERIAL

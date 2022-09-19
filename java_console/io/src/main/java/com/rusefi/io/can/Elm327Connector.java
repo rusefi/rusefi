@@ -51,7 +51,7 @@ public class Elm327Connector implements Closeable {
 	public Elm327Connector(IoStream underlyingStream) {
 		this.underlyingStream = underlyingStream;
 		underlyingStream.setInputListener(listener);
-		tsStream = new Elm327IoStream(this, "elm327Stream");
+		tsStream = new Elm327IoStream(this);
 	}
 
 	/**
@@ -151,8 +151,9 @@ public class Elm327Connector implements Closeable {
 
 	private final IsoTpConnector connector = new IsoTpConnector() {
 		@Override
-		public void sendCanData(byte[] hdr, byte[] data, int offset, int len) {
-			Elm327Connector.this.sendCanData(hdr, data, offset, len);
+		public void sendCanData(byte[] hdr, byte[] data, int dataOffset, int dataLength) {
+			byte[] total = combineArrays(hdr, data, dataOffset, dataLength);
+			Elm327Connector.this.sendCanData(total);
 		}
 
 		@Override
@@ -216,14 +217,13 @@ public class Elm327Connector implements Closeable {
         return null;
     }
 
-    private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
+    private void sendCanData(byte [] data) {
         if (log.debugEnabled()) {
-            log.debug("sendCanData header  " + IoStream.printByteArray(hdr));
-            log.debug("sendCanData payload " + IoStream.printByteArray(data) + " len=" + len + " from offset=" + offset);
+            log.debug("sendCanData total  " + IoStream.printByteArray(data));
         }
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
-		byte[] hexData = byteToString(hdr, data, offset, len);
+		byte[] hexData = byteToString(data);
 
    		//log.info("* Elm327.data: " + (new String(hexData)));
 
@@ -235,16 +235,16 @@ public class Elm327Connector implements Closeable {
     }
 
 	@NotNull
-	public static byte[] byteToString(byte[] hdr, byte[] data, int offset, int payloadLength) {
-		int totalLength = hdr.length + payloadLength;
-		byte[] hexData = new byte[totalLength * 2 + 1];
-		for (int i = 0; i < totalLength; i++) {
+	public static byte[] byteToString(byte[] data) {
+		int length = data.length;
+		byte[] hexData = new byte[length * 2 + 1];
+		for (int i = 0; i < length; i++) {
 			int j = i * 2;
-			int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
+			int v = data[i] & 0xFF;
 			hexData[j] = HEX_ARRAY[v >>> 4];
 			hexData[j + 1] = HEX_ARRAY[v & 0x0F];
 		}
-		hexData[totalLength * 2] = '\r';
+		hexData[length * 2] = '\r';
 		return hexData;
 	}
 

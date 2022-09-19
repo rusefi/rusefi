@@ -20,6 +20,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ConfigStructure {
     public static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
+    public static final String UNUSED_BIT_PREFIX = "unusedBit_";
 
     public final String name;
     public final String comment;
@@ -53,7 +54,9 @@ public class ConfigStructure {
         return name;
     }
 
-    public void addAlignmentFill(ReaderState state) {
+    public void addAlignmentFill(ReaderState state, int alignment) {
+        if (alignment == 0)
+            return;
         /**
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
@@ -68,19 +71,21 @@ public class ConfigStructure {
         iterator.loop();
 
         totalSize = iterator.currentOffset;
-        int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
+        int fillSize = totalSize % alignment == 0 ? 0 : alignment - (totalSize % alignment);
+        if (fillSize > 3)
+            throw new IllegalStateException("Fill size does not look right: " + fillSize);
 
         if (fillSize != 0) {
-	    int[] fillSizeArray;
-	    if (fillSize != 1) {
-		fillSizeArray = new int[1];
-		fillSizeArray[0] = fillSize;
-	    } else {
-		fillSizeArray = new int[0];
-	    }
+            int[] fillSizeArray;
+            if (fillSize != 1) {
+                fillSizeArray = new int[1];
+                fillSizeArray[0] = fillSize;
+            } else {
+                fillSizeArray = new int[0];
+            }
             ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-		    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
+                    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
@@ -114,7 +119,7 @@ public class ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
+            ConfigField bitField = new ConfigField(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();

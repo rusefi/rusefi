@@ -1,5 +1,5 @@
 /**
- * @file    usbconsole.c
+ * @file    usbconsole.cpp
  * @brief	USB-over-serial configuration
  *
  * @date Oct 14, 2013
@@ -7,7 +7,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 
 #if EFI_USB_SERIAL
 
@@ -20,7 +20,7 @@ static bool isUsbSerialInitialized = false;
 /**
  * start USB serial using hard-coded communications pins (see comments inside the code)
  */
-void usb_serial_start(void) {
+void usb_serial_start() {
 	usbPopulateSerialNumber(MCU_SERIAL_NUMBER_LOCATION, MCU_SERIAL_NUMBER_BYTES);
 
 	efiSetPadMode("USB DM", EFI_USB_SERIAL_DM, PAL_MODE_ALTERNATE(EFI_USB_AF));
@@ -48,12 +48,12 @@ void usb_serial_start(void) {
 	isUsbSerialInitialized = true;
 }
 
-bool is_usb_serial_ready(void) {
+bool is_usb_serial_ready() {
 	return isUsbSerialInitialized && SDU1.config->usbp->state == USB_ACTIVE;
 }
 
 #else
-bool is_usb_serial_ready(void) {
+bool is_usb_serial_ready() {
 	return false;
 }
 

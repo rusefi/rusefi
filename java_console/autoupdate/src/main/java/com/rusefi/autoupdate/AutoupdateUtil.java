@@ -22,34 +22,61 @@ public class AutoupdateUtil {
     private static final String APPICON = "/appicon.png";
 
     public static JComponent wrap(JComponent component) {
+        AutoupdateUtil.assertAwtThread();
         JPanel result = new JPanel();
         result.add(component);
         return result;
     }
 
-    public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
-        FrameHelper frameHelper = null;
-        final AtomicReference<JProgressBar> jProgressBarAtomicReference = new AtomicReference<>();
-        if (!runHeadless) {
-            frameHelper = new FrameHelper();
+    static class ProgressView {
+        private final FrameHelper frameHelper;
+        private JProgressBar progressBar;
+
+        ProgressView(FrameHelper frameHelper, JProgressBar progressBar) {
+            this.frameHelper = frameHelper;
+            this.progressBar = progressBar;
+        }
+
+        public void dispose() {
+            if (frameHelper != null) {
+                frameHelper.getFrame().dispose();
+            }
+        }
+    }
+
+    private static ProgressView createProgressView(String title) {
+        if (runHeadless) {
+            return new ProgressView(null, null);
+        } else {
+            FrameHelper frameHelper = new FrameHelper();
             JProgressBar jProgressBar = new JProgressBar();
 
             frameHelper.getFrame().setTitle(title);
-            jProgressBar.setMaximum(ConnectionAndMeta.STEPS);
-            jProgressBarAtomicReference.set(jProgressBar);
+            jProgressBar.setMaximum(ConnectionAndMeta.CENTUM);
             frameHelper.showFrame(jProgressBar, true);
+            return new ProgressView(frameHelper, jProgressBar);
         }
+    }
 
-        ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
-            if (!runHeadless) {
-                SwingUtilities.invokeLater(() -> jProgressBarAtomicReference.get().setValue(currentProgress));
-            }
-        };
+    public static void downloadAutoupdateFile(String localZipFileName, ConnectionAndMeta connectionAndMeta, String title) throws IOException {
+        ProgressView view = createProgressView(title);
 
-        ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
+        try {
+            ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
+                if (!runHeadless) {
+                    SwingUtilities.invokeLater(() -> view.progressBar.setValue(currentProgress));
+                }
+            };
 
-        if (!runHeadless) {
-            frameHelper.getFrame().dispose();
+            ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
+        } catch (IOException e) {
+            if (view.progressBar!=null) {
+                JOptionPane.showMessageDialog(view.progressBar, "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+                throw new ReportedIOException(e);
+            } else
+                throw e;
+        } finally {
+            view.dispose();
         }
     }
 
@@ -93,11 +120,40 @@ public class AutoupdateUtil {
     }
 
     public static void trueLayout(Component component) {
+        assertAwtThread();
         if (component == null)
             return;
         component.invalidate();
         component.validate();
         component.repaint();
+    }
+
+    private static Window getSelectedWindow(Window[] windows) {
+        for (Window window : windows) {
+            if (window.isActive()) {
+                return window;
+            } else {
+                Window[] ownedWindows = window.getOwnedWindows();
+                if (ownedWindows != null) {
+                    return getSelectedWindow(ownedWindows);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void assertAwtThread() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            Exception e = new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
+
+            StringBuilder trace = new StringBuilder(e + "\n");
+            for(StackTraceElement element : e.getStackTrace())
+                trace.append(element.toString()).append("\n");
+            SwingUtilities.invokeLater(() -> {
+                Window w = getSelectedWindow(Window.getWindows());
+                JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
+            });
+        }
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {

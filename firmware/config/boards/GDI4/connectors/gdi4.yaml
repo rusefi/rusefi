@@ -1,0 +1,605 @@
+pins:
+  - pin: 1a
+    function: Power Ground
+    color: black
+
+  - pin: 2a
+    function: Power Ground
+    color: black
+
+  - pin: 4a
+    function: +12v power
+    color: red
+
+  - pin: 6a
+    function: Aux Analog 0
+    color: orange
+
+  - pin: 44a
+    function: Injector Control 1
+    color: blue
+
+  - pin: 45a
+    function: Injector Control 2
+    color: blue
+
+  - pin: 46a
+    function: Injector Control 3
+    color: blue
+
+  - pin: 47a
+    function: Injector Control 4
+    color: blue
+
+  - pin: 52a
+    function: CAN High
+    color: yellow
+
+  - pin: 53a
+    function: CAN Low
+    color: yellow
+
+  - pin: 90a
+    function: Injector Output 3 Negative
+    color: blue
+
+  - pin: 91a
+    function: Injector Output 3 Negative
+    color: blue
+
+  - pin: 92a
+    function: Injector Output 4 Negative
+    color: blue
+
+  - pin: 93a
+    function: Injector Output 4 Negative
+    color: blue
+
+  - pin: 94a
+    function: Injector Output 3 Positive
+    color: blue
+
+  - pin: 95a
+    function: Injector Output 3 Positive
+    color: blue
+
+  - pin: 96a
+    function: Injector Output 4 Positive
+    color: blue
+
+  - pin: 97a
+    function: Injector Output 4 Positive
+    color: blue
+
+  - pin: 114a
+    function: Injector Output 1 Negative
+    color: blue
+
+  - pin: 115a
+    function: Injector Output 6 Negative
+    color: green
+
+  - pin: 116a
+    function: Injector Output 5 Positive
+    color: yellow
+
+  - pin: 117a
+    function: Injector Output 5 Negative
+    color: yellow
+
+  - pin: 118a
+    function: Injector Output 1 Positive
+    color: blue
+
+  - pin: 119a
+    function: Injector Output 2 Negative
+    color: blue
+
+  - pin: 120a
+    function: Injector Output 6 Positive
+    color: green
+
+  - pin: 121a
+    function: Injector Output 2 Positive
+    color: blue
+
+
+info:
+  title: GDI4
+  name: GDI4
+  board_url: https://rusefi.com/s/gdi4
+  image:
+    file: 121pin.jpg
+#copy-paste of firmware/config/boards/hellen/hellen121vag/connectors/ yaml file
+  pins:
+    - pin: 1a
+      x: 286
+      y: 582
+
+    - pin: 2a
+      x: 456
+      y: 582
+
+    - pin: 3a
+      x: 375
+      y: 405
+
+    - pin: 4a
+      x: 286
+      y: 250
+
+    - pin: 5a
+      x: 456
+      y: 250
+
+    # 6-24 segment
+    - pin: 6a
+      x: 2193
+      y: 250
+
+    - pin: 7a
+      x: 2113
+      y: 250
+
+    - pin: 8a
+      x: 2033
+      y: 250
+
+    - pin: 9a
+      x: 1953
+      y: 250
+
+    - pin: 10a
+      x: 1873
+      y: 250
+
+    - pin: 11a
+      x: 1793
+      y: 250
+
+    - pin: 12a
+      x: 1713
+      y: 250
+
+    - pin: 13a
+      x: 1633
+      y: 250
+
+    - pin: 14a
+      x: 1553
+      y: 250
+
+    - pin: 15a
+      x: 1473
+      y: 250
+
+    - pin: 16a
+      x: 1393
+      y: 250
+
+    - pin: 17a
+      x: 1313
+      y: 250
+
+    - pin: 18a
+      x: 1233
+      y: 250
+
+    - pin: 19a
+      x: 1153
+      y: 250
+
+    - pin: 20a
+      x: 1073
+      y: 250
+
+    - pin: 21a
+      x: 993
+      y: 250
+
+    - pin: 22a
+      x: 913
+      y: 250
+
+    - pin: 23a
+      x: 833
+      y: 250
+
+    - pin: 24a
+      x: 753
+      y: 250
+
+    # 25-43 segment
+    - pin: 25a
+      x: 2193
+      y: 330
+
+    - pin: 26a
+      x: 2113
+      y: 330
+
+    - pin: 27a
+      x: 2033
+      y: 330
+
+    - pin: 28a
+      x: 1953
+      y: 330
+
+    - pin: 29a
+      x: 1873
+      y: 330
+
+    - pin: 30a
+      x: 1793
+      y: 330
+
+    - pin: 31a
+      x: 1713
+      y: 330
+
+    - pin: 32a
+      x: 1633
+      y: 330
+
+    - pin: 33a
+      x: 1553
+      y: 330
+
+    - pin: 34a
+      x: 1473
+      y: 330
+
+    - pin: 35a
+      x: 1393
+      y: 330
+
+    - pin: 36a
+      x: 1313
+      y: 330
+
+    - pin: 37a
+      x: 1233
+      y: 330
+
+    - pin: 38a
+      x: 1153
+      y: 330
+
+    - pin: 39a
+      x: 1073
+      y: 330
+
+    - pin: 40a
+      x: 993
+      y: 330
+
+    - pin: 41a
+      x: 913
+      y: 330
+
+    - pin: 42a
+      x: 833
+      y: 330
+
+    - pin: 43a
+      x: 753
+      y: 330
+
+    # 44-62 segment
+    - pin: 44a
+      x: 2193
+      y: 495
+
+    - pin: 45a
+      x: 2113
+      y: 495
+
+    - pin: 46a
+      x: 2033
+      y: 495
+
+    - pin: 47a
+      x: 1953
+      y: 495
+
+    - pin: 48a
+      x: 1873
+      y: 495
+
+    - pin: 49a
+      x: 1793
+      y: 495
+
+    - pin: 50a
+      x: 1713
+      y: 495
+
+    - pin: 51a
+      x: 1633
+      y: 495
+
+    - pin: 52a
+      x: 1553
+      y: 495
+
+    - pin: 53a
+      x: 1473
+      y: 495
+
+    - pin: 54a
+      x: 1393
+      y: 495
+
+    - pin: 55a
+      x: 1313
+      y: 495
+
+    - pin: 56a
+      x: 1233
+      y: 495
+
+    - pin: 57a
+      x: 1153
+      y: 495
+
+    - pin: 58a
+      x: 1073
+      y: 495
+
+    - pin: 59a
+      x: 993
+      y: 495
+
+    - pin: 60a
+      x: 913
+      y: 495
+
+    - pin: 61a
+      x: 833
+      y: 495
+
+    - pin: 62a
+      x: 732
+      y: 495
+
+    # 63-81 segment
+    - pin: 63a
+      x: 2193
+      y: 579
+
+    - pin: 64a
+      x: 2113
+      y: 579
+
+    - pin: 65a
+      x: 2033
+      y: 579
+
+    - pin: 66a
+      x: 1953
+      y: 579
+
+    - pin: 67a
+      x: 1873
+      y: 579
+
+    - pin: 68a
+      x: 1793
+      y: 579
+
+    - pin: 69a
+      x: 1713
+      y: 579
+
+    - pin: 70a
+      x: 1633
+      y: 579
+
+    - pin: 71a
+      x: 1553
+      y: 579
+
+    - pin: 72a
+      x: 1473
+      y: 579
+
+    - pin: 73a
+      x: 1393
+      y: 579
+
+    - pin: 74a
+      x: 1313
+      y: 579
+
+    - pin: 75a
+      x: 1233
+      y: 579
+
+    - pin: 76a
+      x: 1153
+      y: 579
+
+    - pin: 77a
+      x: 1073
+      y: 579
+
+    - pin: 78a
+      x: 993
+      y: 579
+
+    - pin: 79a
+      x: 913
+      y: 579
+
+    - pin: 80a
+      x: 833
+      y: 579
+
+    - pin: 81a
+      x: 732
+      y: 579
+
+    # 82-89 segment
+    - pin: 82a
+      x: 2724
+      y: 585
+
+    - pin: 83a
+      x: 2802
+      y: 585
+
+    - pin: 84a
+      x: 2877
+      y: 585
+
+    - pin: 85a
+      x: 2958
+      y: 585
+
+    - pin: 86a
+      x: 3048
+      y: 585
+
+    - pin: 87a
+      x: 3123
+      y: 585
+
+    - pin: 88a
+      x: 3201
+      y: 585
+
+    - pin: 89a
+      x: 3282
+      y: 585
+
+    # 90-97 segment
+    - pin: 90a
+      x: 2724
+      y: 507
+
+    - pin: 91a
+      x: 2802
+      y: 507
+
+    - pin: 92a
+      x: 2877
+      y: 507
+
+    - pin: 93a
+      x: 2958
+      y: 507
+
+    - pin: 94a
+      x: 3048
+      y: 507
+
+    - pin: 95a
+      x: 3123
+      y: 507
+
+    - pin: 96a
+      x: 3201
+      y: 507
+
+    - pin: 97a
+      x: 3282
+      y: 507
+
+    # 98-105 segment
+    - pin: 98a
+      x: 2724
+      y: 336
+
+    - pin: 99a
+      x: 2802
+      y: 336
+
+    - pin: 100a
+      x: 2877
+      y: 336
+
+    - pin: 101a
+      x: 2958
+      y: 336
+
+    - pin: 102a
+      x: 3048
+      y: 336
+
+    - pin: 103a
+      x: 3123
+      y: 336
+
+    - pin: 104a
+      x: 3201
+      y: 336
+
+    - pin: 105a
+      x: 3282
+      y: 336
+
+    # 106-113 segment
+    - pin: 106a
+      x: 2724
+      y: 258
+
+    - pin: 107a
+      x: 2802
+      y: 258
+
+    - pin: 108a
+      x: 2877
+      y: 258
+
+    - pin: 109a
+      x: 2958
+      y: 258
+
+    - pin: 110a
+      x: 3048
+      y: 258
+
+    - pin: 111a
+      x: 3123
+      y: 258
+
+    - pin: 112a
+      x: 3201
+      y: 258
+
+    - pin: 114a
+      x: 3516
+      y: 585
+
+    - pin: 113a
+      x: 3282
+      y: 258
+
+    - pin: 115a
+      x: 3700
+      y: 585
+
+    - pin: 116a
+      x: 3882
+      y: 585
+
+    - pin: 117a
+      x: 3615
+      y: 414
+
+    - pin: 118a
+      x: 3780
+      y: 414
+
+    - pin: 119a
+      x: 3516
+      y: 261
+
+    - pin: 120a
+      x: 3700
+      y: 261
+
+    - pin: 121a
+      x: 3882
+      y: 261

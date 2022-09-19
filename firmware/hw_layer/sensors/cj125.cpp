@@ -298,9 +298,7 @@ void CJ125::calibrate() {
 		cjPrintData();
 
 #if EFI_TUNER_STUDIO
-		if (engineConfiguration->debugMode == DBG_CJ125) {
-			cjPostState(&engine->outputChannels);
-		}
+			// todo: reimplement as explicit CJ PID status if desired cjPostState(&engine->outputChannels);
 #endif /* EFI_TUNER_STUDIO */
 
 		vUaCal += vUa;
@@ -647,19 +645,19 @@ void initCJ125() {
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
-//	engineConfiguration->cj125CsPin = GPIOA_15;
+//	engineConfiguration->cj125CsPin = Gpio::A15;
 //	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
 
 void cj125defaultPinout() {
 	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
 	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
-	engineConfiguration->wboHeaterPin = GPIOC_13;
+	engineConfiguration->wboHeaterPin = Gpio::C13;
 
-	engineConfiguration->spi2mosiPin = GPIOB_15;
-	engineConfiguration->spi2misoPin = GPIOB_14;
-	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->spi2mosiPin = Gpio::B15;
+	engineConfiguration->spi2misoPin = Gpio::B14;
+	engineConfiguration->spi2sckPin = Gpio::B13;
 
-	engineConfiguration->cj125CsPin = GPIOB_0;
+	engineConfiguration->cj125CsPin = Gpio::B0;
 	engineConfiguration->isCJ125Enabled = true;
 	engineConfiguration->is_enabled_spi_2 = true;
 	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;

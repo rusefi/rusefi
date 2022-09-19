@@ -9,6 +9,10 @@ CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
 
+ifneq ("$(wildcard $(../.git))","")
+$(error ../.git not found. We expect source code to be cloned not downloaded as zip file.")
+endif
+
 include rusefi_rules.mk
 
 # Define project name here
@@ -22,6 +26,11 @@ PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
+
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
 
 include rusefi.mk
 
@@ -46,8 +55,10 @@ endif
 
 
 # Compiler options here.
+# yes we have two kinds of EXTRA_*PARAMS so that we can define those in two different places independently
+#
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
+  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
 endif
 
 # EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
@@ -189,20 +200,11 @@ endif
 #Now include RusEFI mk files
 include console/binary/tunerstudio.mk
 ifeq ($(USE_FATFS),yes)
-include $(PROJECT_DIR)/ext/fatfs.mk
+include $(PROJECT_DIR)/ext/FatFS/fatfs.mk
 endif
 
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
@@ -216,6 +218,7 @@ endif
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
   USE_OPT += -Wl,--defsym=BOOTLOADER=1
+  DDEFS += -DEFI_USE_OPENBLT=TRUE
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
@@ -228,48 +231,28 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 # check.c goes first to throw error as soon as possible
 CSRC =  check.c \
 	$(ALLCSRC) \
-	$(CHIBIOS)/os/various/syscalls.c \
+	$(BOARDSRC) \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
-	$(TRIGGER_SRC) \
-	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
 	$(BOOTLOADERSRC) \
 	${HW_MASS_STORAGE_SRC_C} \
-	$(UTILSRC) \
-	$(SYSTEMSRC) \
-	$(ENGINES_SRC) \
-	$(CONSOLESRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
-	$(CONTROLLERSSRC) \
-	$(CONTROLLERS_ALGO_SRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
+	$(RUSEFI_LIB_C) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(ALLCPPSRC) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
+CPPSRC = \
+    $(ALLCPPSRC) \
+    $(BOARDCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(UTILSRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(ENGINES_SRC_CPP) \
-	$(HW_LAYER_EMS_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
-	$(HW_SENSORS_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
-	$(INIT_SRC_CPP) \
+	$(RUSEFI_LIB_CPP) \
 	rusefi.cpp \
 	main.cpp
 
@@ -295,38 +278,30 @@ TCPPSRC =
 
 # List ASM source files here
 ASMXSRC = $(ALLXASMSRC) \
-	$(RUSEFIASM)
+	$(RUSEFIASM) \
+	main_hardfault_asm.S
 
+#
+# WARNING! order of variables is important here - for instance cypress own folders should go before default folders
+#
 INCDIR = \
 	$(PCH_DIR) \
+	$(BOARDINC) \
 	$(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
+	$(RUSEFI_LIB_INC) \
 	$(CONFDIR) \
-	config/engines \
-	config/boards \
-	config \
-	ext \
-	ext_algo \
-	console_util \
-	$(CONSOLE_INC) \
-	$(HW_LAYER_INC) \
+	ext/FatFS \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
-	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(HW_SENSORS_INC) \
 	$(HW_INC) \
-	$(HW_LAYER_DRIVERS_INC) \
-	$(UTIL_INC) \
-	init \
-	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC) \
 	$(CHIBIOS_CONTRIB)/os/various
 	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
@@ -337,10 +312,6 @@ INCDIR = \
 ##############################################################################
 # Compiler settings
 #
-
-ifeq ($(MCU),)
-	MCU = cortex-m4
-endif
 
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-
@@ -406,10 +377,10 @@ ULIBS = -lm --specs=nano.specs
 include $(RULESFILE)
 
 openblt:
-	make -f $(PROJECT_DIR)/openblt.mk
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk
 
 openblt_clean:
-	make -f $(PROJECT_DIR)/openblt.mk clean
+	make -f $(PROJECT_DIR)/hw_layer/openblt/openblt.mk clean
 
 # Enable precompiled header
 include rusefi_pch.mk

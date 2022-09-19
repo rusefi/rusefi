@@ -10,6 +10,7 @@ import java.util.Arrays;
  * @see IsoTpConnector
  */
 public class IsoTpCanDecoder {
+    public static final byte[] FLOW_CONTROL = {0x30, 0, 0, 0, 0, 0, 0, 0};
     private static final Logging log = Logging.getLogging(IsoTpCanDecoder.class);
 
     static {

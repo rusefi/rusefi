@@ -1,21 +1,35 @@
 buildscript {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.2.2'
     }
 }
+
+apply from: 'dependencies.gradle'
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
+    }
+
+    plugins.withType(JavaPlugin) {
+        dependencies {
+            implementation libs.annotations
+            testImplementation libs.junit
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+// gradlew allDeps 
+subprojects {
+    task allDeps(type: DependencyReportTask) {}
 }

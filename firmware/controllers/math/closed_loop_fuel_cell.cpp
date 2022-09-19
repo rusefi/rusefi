@@ -53,7 +53,7 @@ float ClosedLoopFuelCellImpl::getLambdaError() const {
 		return 0;
 	}
 
-	return lambda.Value - engine->engineState.targetLambda;
+	return lambda.Value - engine->fuelComputer->targetLambda;
 }
 
 #define MAX_ADJ (0.25f)
@@ -86,10 +86,8 @@ float ClosedLoopFuelCellImpl::getIntegratorGain() const {
 		return 0.0f;
 	}
 
-	float timeConstant = m_config->timeConstant * 0.1f;
-
 	// Clamp to reasonable limits - 100ms to 100s
-	timeConstant = maxF(0.1f, minF(timeConstant, 100));
+	float timeConstant = maxF(0.1f, minF(m_config->timeConstant, 100));
 
 	return 1 / timeConstant;
 }

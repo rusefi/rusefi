@@ -23,11 +23,38 @@
 #include "advance_map.h"
 #include "idle_thread.h"
 #include "launch_control.h"
+#include "gppwm_channel.h"
 
 #if EFI_ENGINE_CONTROL
 
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
+
+struct BlendResult {
+	// Bias in percent (0-100%)
+	float Bias;
+
+	// Result value (bias * table value)
+	float Value;
+};
+
+BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
+	auto value = readGppwmChannel(cfg.blendParameter);
+
+	if (!value) {
+		return { 0, 0 };
+	}
+
+	float tableValue = interpolate3d(
+		cfg.table,
+		cfg.loadBins, load,
+		cfg.rpmBins, rpm
+	);
+
+	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
+
+	return { blendFactor, 0.01f * blendFactor * tableValue };
+}
 
 /**
  * @return ignition timing angle advance before TDC
@@ -44,21 +71,32 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
+	// compute base ignition angle from main table
 	float advanceAngle = interpolate3d(
 		config->ignitionTable,
 		config->ignitionLoadBins, engineLoad,
 		config->ignitionRpmBins, rpm
 	);
 
+	// Add any adjustments if configured
+	for (size_t i = 0; i < efi::size(config->ignBlends); i++) {
+		auto result = calculateBlend(config->ignBlends[i], rpm, engineLoad);
+
+		engine->outputChannels.ignBlendBias[i] = result.Bias;
+		engine->outputChannels.ignBlendOutput[i] = result.Value;
+
+		advanceAngle += result.Value;
+	}
+
 	// get advance from the separate table for Idle
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
-	    engine->module<IdleController>().unmock().isIdlingOrTaper()) {
+	    engine->module<IdleController>()->isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
-		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
-		if (valid) {
+		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+		if (tps) {
 			// interpolate between idle table and normal (running) table using TPS threshold
-			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps.Value);
 		}
 	}
 
@@ -66,10 +104,10 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
         if (engineConfiguration->launchSmoothRetard) {
        	    float launchAngle = engineConfiguration->launchTimingRetard;
-	        int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
 	        int launchRpm = engineConfiguration->launchRpm;
+	        int launchRpmWithTimingRange = launchRpm + engineConfiguration->launchTimingRpmRange;
 			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
-			return interpolateClamped(launchRpm, advanceAngle, (launchRpm + launchAdvanceRpmRange), launchAngle, rpm);
+			return interpolateClamped(launchRpm, advanceAngle, launchRpmWithTimingRange, launchAngle, rpm);
 		} else {
 			return engineConfiguration->launchTimingRetard;
         }
@@ -80,32 +118,29 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 }
 
 angle_t getAdvanceCorrections(int rpm) {
-	float iatCorrection;
+	auto iat = Sensor::get(SensorType::Iat);
 
-	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
-
-	if (!iatValid) {
-		iatCorrection = 0;
+	if (!iat) {
+		engine->engineState.timingIatCorrection = 0;
 	} else {
-		iatCorrection = interpolate3d(
+		engine->engineState.timingIatCorrection = interpolate3d(
 			config->ignitionIatCorrTable,
-			config->ignitionIatCorrLoadBins, iat,
+			config->ignitionIatCorrLoadBins, iat.Value,
 			config->ignitionIatCorrRpmBins, rpm
 		);
 	}
 
-	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
+	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
+	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
 
 #if EFI_TUNER_STUDIO
-		engine->outputChannels.timingIatCorrection = iatCorrection;
-		engine->outputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
-		engine->outputChannels.timingPidCorrection = pidTimingCorrection;
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
-	return iatCorrection
+	return engine->engineState.timingIatCorrection
 		+ engine->engineState.cltTimingCorrection
-		+ pidTimingCorrection;
+		+ engine->engineState.timingPidCorrection;
 }
 
 /**
@@ -114,7 +149,7 @@ angle_t getAdvanceCorrections(int rpm) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (engineConfiguration->useSeparateAdvanceForCranking) {
-		return interpolate2d(rpm, engineConfiguration->crankingAdvanceBins, engineConfiguration->crankingAdvance);
+		return interpolate2d(rpm, config->crankingAdvanceBins, config->crankingAdvance);
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
@@ -186,10 +221,10 @@ size_t getMultiSparkCount(int rpm) {
 			return 0;
 		}
 
-		floatus_t multiDelay = engineConfiguration->multisparkSparkDuration;
-		floatus_t multiDwell = engineConfiguration->multisparkDwell;
+		floatus_t multiDelay = 1000.0f * engineConfiguration->multisparkSparkDuration;
+		floatus_t multiDwell = 1000.0f * engineConfiguration->multisparkDwell;
 
-        // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
+		// dwell times are below 10 seconds here so we use 32 bit type for performance reasons
 		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
 		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
 
@@ -212,46 +247,6 @@ size_t getMultiSparkCount(int rpm) {
 	} else {
 		return 0;
 	}
-}
-
-/**
- * @param octane gas octane number
- * @param bore in mm
- */
-float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore) {
-    int octaneCorrection;
-    if ( octane <= 90) {
-        octaneCorrection = -2;
-    } else if (octane < 94) {
-        octaneCorrection = -1;
-    } else {
-        octaneCorrection = 0;
-    }
-
-    int compressionCorrection;
-    if (compression <= 9) {
-        compressionCorrection = 2;
-    } else if (compression <= 10) {
-        compressionCorrection = 1;
-    } else if (compression <= 11) {
-        compressionCorrection = 0;
-    } else {
-        // compression ratio above 11
-        compressionCorrection = -2;
-    }
-    int base;
-    if (style == CS_OPEN) {
-    	base = 33;
-    } else if (style == CS_CLOSED) {
-    	base = 28;
-    } else {
-    	// CS_SWIRL_TUMBLE
-    	base = 22;
-    }
-
-    float boreCorrection = (bore - 4 * 25.4) / 25.4 * 6;
-    float result = base + octaneCorrection + compressionCorrection + boreCorrection;
-    return ((int)(result * 10)) / 10.0;
 }
 
 #endif // EFI_ENGINE_CONTROL

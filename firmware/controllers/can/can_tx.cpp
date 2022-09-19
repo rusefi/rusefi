@@ -25,7 +25,7 @@ CanWrite::CanWrite()
 {
 }
 
-void CanWrite::PeriodicTask(efitime_t nowNt) {
+void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
 	CanCycle cycle(cycleCount);
@@ -52,13 +52,13 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 		cycleCount = 0;
 	}
 
-#ifndef DISABLE_CAN_UPDATE_DASH
 	updateDash(cycle);
-#endif /* DISABLE_CAN_UPDATE_DASH */
 
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms)) {
 		sendWidebandInfo();
 	}
+#endif
 
 	cycleCount++;
 }

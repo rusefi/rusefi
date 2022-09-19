@@ -7,8 +7,22 @@
 
 #pragma once
 
-#include "rusefi_enums.h"
 #include <stdint.h>
+#include "rusefi_enums.h"
+#include "expected.h"
+
+enum class TriggerValue : uint8_t {
+	FALL = 0,
+	RISE = 1
+};
+
+// see also 'HW_EVENT_TYPES'
+typedef enum {
+	SHAFT_PRIMARY_FALLING = 0,
+	SHAFT_PRIMARY_RISING = 1,
+	SHAFT_SECONDARY_FALLING = 2,
+	SHAFT_SECONDARY_RISING = 3,
+} trigger_event_e;
 
 /**
  * This layer has two primary usages:
@@ -24,9 +38,9 @@
 // todo https://github.com/rusefi/rusefi/issues/3003
 #define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
-#define PWM_PHASE_MAX_WAVE_PER_PWM 3
+#define PWM_PHASE_MAX_WAVE_PER_PWM 2
 
-typedef trigger_value_e pin_state_t;
+typedef TriggerValue pin_state_t;
 
 /**
  * This class represents multi-channel logical signals with shared time axis
@@ -47,8 +61,8 @@ public:
 	// Make sure the switch times are in order and end at the very end.
 	void checkSwitchTimes(float scale) const;
 
-	// Find the exact angle, or EFI_ERROR_CODE if it doesn't exist
-	int findAngleMatch(float angle) const;
+	// Find the exact angle, or unexpected if it doesn't exist
+	expected<int> findAngleMatch(float angle) const;
 
 	// returns the index at which given value would need to be inserted into sorted array
 	int findInsertionAngle(float angle) const;
@@ -69,7 +83,7 @@ public:
 			// todo: would be nice to get this asserting working
 			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 		}
-		return ((waveForm[phaseIndex] >> channelIndex) & 1) ? TV_RISE : TV_FALL;
+		return ((waveForm[phaseIndex] >> channelIndex) & 1) ? TriggerValue::RISE : TriggerValue::FALL;
 	}
 
 	void reset() {
@@ -86,7 +100,7 @@ public:
 			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 		}
 		uint8_t & ref = waveForm[phaseIndex];
-		ref = (ref & ~(1U << channelIndex)) | ((state == TV_RISE ? 1 : 0) << channelIndex);
+		ref = (ref & ~(1U << channelIndex)) | ((state == TriggerValue::RISE ? 1 : 0) << channelIndex);
 	}
 
 private:

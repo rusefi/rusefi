@@ -1,14 +1,26 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.SystemOut;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 public class EnumsReader {
+    private static final Logging log = getLogging(EnumsReader.class);
     private static final String ENUMCLASS_PREFIX = "enumclass";
 
     protected final Map<String, EnumState> enums = new TreeMap<>();
@@ -55,14 +67,16 @@ public class EnumsReader {
 
             line = line.replaceAll("//.+", "");
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
-                SystemOut.println("  EnumsReader: Entering legacy enum");
+                if (log.debugEnabled())
+                    log.debug("  EnumsReader: Entering legacy enum");
                 currentValues.clear();
                 withAutoValue = false;
                 isInsideEnum = true;
                 enumName = null;
                 isEnumClass = false;
             } else if (line.startsWith(ENUMCLASS_PREFIX)) {
-                SystemOut.println("  EnumsReader: Entering fancy enum class");
+                if (log.debugEnabled())
+                    log.debug("  EnumsReader: Entering fancy enum class");
                 currentValues.clear();
                 withAutoValue = false;
                 isInsideEnum = true;
@@ -75,7 +89,8 @@ public class EnumsReader {
                 isInsideEnum = false;
                 if (enumName == null)
                     enumName = line.substring(1, line.length() - 1);
-                SystemOut.println("  EnumsReader: Ending enum " + enumName + " found " + currentValues.size() + " values");
+                if (log.debugEnabled())
+                    log.debug("  EnumsReader: Ending enum " + enumName + " found " + currentValues.size() + " values");
                 if (withAutoValue)
                     validateValues(currentValues);
 
@@ -93,10 +108,12 @@ public class EnumsReader {
                             value = Integer.toString(currentValues.size());
                             withAutoValue = true;
                         }
-                        SystemOut.println("    EnumsReader: Line " + line);
+                        if (log.debugEnabled())
+                            log.debug("    EnumsReader: Line " + line);
                         currentValues.put(line, new Value(line, value));
                     } else {
-                        SystemOut.println("    EnumsReader: Skipping Line " + line);
+                        if (log.debugEnabled())
+                            log.debug("    EnumsReader: Skipping Line " + line);
                     }
                 }
             }
@@ -121,7 +138,7 @@ public class EnumsReader {
     }
 
     public static class EnumState {
-        public Map<String, Value> values;
+        public final Map<String, Value> values;
         public final String enumName;
         public final boolean isEnumClass;
 

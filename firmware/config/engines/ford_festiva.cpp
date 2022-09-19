@@ -14,7 +14,6 @@
 #include "pch.h"
 
 #include "ford_festiva.h"
-#include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "custom_engine.h"
 
@@ -78,7 +77,7 @@ void setFordEscortGt() {
 	engineConfiguration->specs.displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	static const float veRpmBins[] = 
+	static const uint16_t veRpmBins[] = 
 	{
 		800,
 		1200,
@@ -103,16 +102,16 @@ void setFordEscortGt() {
 
 	copyTable(config->veTable, racingFestivaVeTable);
 
-//	engineConfiguration->triggerInputPins[0] = GPIOC_6; // 2G YEL/BLU
-//	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+//	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU
+//	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
 
 	// in case of SOHC distributor we only have one signal
-//	engineConfiguration->triggerInputPins[0] = GPIOA_5; // 2E White CKP
-//	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+//	engineConfiguration->triggerInputPins[0] = Gpio::A5; // 2E White CKP
+//	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
 	// in case of DOHC distributor we have two signals
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->triggerInputPins[1] = GPIOA_5; // 2E White CKP
+	engineConfiguration->triggerInputPins[0] = Gpio::C6;
+	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
 
 	// Denso 195500-2180
 	engineConfiguration->injector.flow = 265;
@@ -156,10 +155,10 @@ void setFordEscortGt() {
 	// W12 PE8
 	// W13 PE12
 
-	engineConfiguration->ignitionPins[0] = GPIOC_9;
-	engineConfiguration->ignitionPins[1] = GPIOC_7;
-	engineConfiguration->ignitionPins[2] = GPIOE_8;
-	engineConfiguration->ignitionPins[3] = GPIOE_12;
+	engineConfiguration->ignitionPins[0] = Gpio::C9;
+	engineConfiguration->ignitionPins[1] = Gpio::C7;
+	engineConfiguration->ignitionPins[2] = Gpio::E8;
+	engineConfiguration->ignitionPins[3] = Gpio::E12;
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -180,15 +179,15 @@ void setFordEscortGt() {
 	// Frankenso low out #11: PB8
 	// Frankenso low out #12: PB7
 
-	engineConfiguration->injectionPins[0] = GPIOD_3;
-	engineConfiguration->injectionPins[1] = GPIOE_2;
+	engineConfiguration->injectionPins[0] = Gpio::D3;
+	engineConfiguration->injectionPins[1] = Gpio::E2;
 
 
 	// 40% idle is good default
 	engineConfiguration->idle.solenoidFrequency = 300;
-	engineConfiguration->idle.solenoidPin = GPIOB_9;
+	engineConfiguration->idle.solenoidPin = Gpio::B9;
 
-	engineConfiguration->malfunctionIndicatorPin = GPIOE_5;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::E5;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
@@ -211,7 +210,7 @@ void setFordEscortGt() {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
-	static const float ignitionRpmBins[] =
+	static const uint16_t ignitionRpmBins[] =
 	{
 		800,
 		1200,
@@ -240,11 +239,5 @@ void setFordEscortGt() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
 	engineConfiguration->isSdCardEnabled = true;
-
-//	engineConfiguration->useFSIO16ForTimingAdjustment = true;
-//  we wanted to have a timinig table adjustment switch here
-//	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
-
-	// end of Ford Escort GT config
 }
 

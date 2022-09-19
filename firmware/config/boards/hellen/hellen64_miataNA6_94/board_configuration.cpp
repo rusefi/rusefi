@@ -11,43 +11,42 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
+	engineConfiguration->injectionPins[1] = Gpio::G8;
+	engineConfiguration->injectionPins[2] = Gpio::D11;
+	engineConfiguration->injectionPins[3] = Gpio::D10;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
+	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
+	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
-	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
+	engineConfiguration->ignitionPins[0] = Gpio::I8; // 3F - IGN_1 (1&4)
+	engineConfiguration->ignitionPins[1] = Gpio::Unassigned ; // Gpio::E4
+	engineConfiguration->ignitionPins[2] = Gpio::E5; // 3I - IGN_2 (2&3)
+	engineConfiguration->ignitionPins[3] = Gpio::Unassigned; // Gpio::E3
 
-	//engineConfiguration->ignitionPins[4] = GPIOE_2;
-	//engineConfiguration->ignitionPins[5] = GPIOI_5;
-	//engineConfiguration->ignitionPins[6] = GPIOI_6;
-	//engineConfiguration->ignitionPins[7] = GPIOI_7;
+	//engineConfiguration->ignitionPins[4] = Gpio::E2;
+	//engineConfiguration->ignitionPins[5] = Gpio::I5;
+	//engineConfiguration->ignitionPins[6] = Gpio::I6;
+	//engineConfiguration->ignitionPins[7] = Gpio::I7;
 	
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
@@ -69,10 +68,9 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::A6;
+	engineConfiguration->triggerInputPins[1] = Gpio::B1;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -82,18 +80,19 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
-	setSdCardConfigurationOverrides();
+
+	setHellenSdCardSpi2();
 
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
@@ -102,18 +101,6 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
@@ -121,7 +108,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -130,24 +117,18 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->enableSoftwareKnock = true;
 
 	// these stm32 pins do not match hellen_meta, is that because hellenNA6 is not using latest MCU version?
-	engineConfiguration->acRelayPin = GPIOH_15; // 1J - AC Relay
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-	engineConfiguration->tachOutputPin = GPIOI_0;
-	engineConfiguration->malfunctionIndicatorPin = GPIOG_9;
+	engineConfiguration->acRelayPin = Gpio::H15; // 1J - AC Relay
+	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
+	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5
+	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = Gpio::I2;	// OUT_LOW3
+	engineConfiguration->tachOutputPin = Gpio::I0;
+	engineConfiguration->malfunctionIndicatorPin = Gpio::G9;
 
 	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
-
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -155,23 +136,4 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
-}
-
-/**
- * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
- * @todo    Add your board-specific code, if any.
- */
-void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
-
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	engineConfiguration->is_enabled_spi_3 = true;
 }

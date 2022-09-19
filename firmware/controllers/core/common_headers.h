@@ -9,6 +9,14 @@
 
 #pragma once
 
+#ifndef FALSE
+#define FALSE (0)
+#endif /* FALSE */
+
+#ifndef TRUE
+#define TRUE (!(FALSE))
+#endif /* TRUE */
+
 #ifdef __cplusplus
 #define EXTERNC extern "C"
 #else
@@ -31,7 +39,3 @@
 #include "datalogging.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */
-
-#ifndef FIRMWARE_ID
-#define FIRMWARE_ID "source"
-#endif

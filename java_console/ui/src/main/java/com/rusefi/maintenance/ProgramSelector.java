@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.Launcher;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
@@ -10,9 +11,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static com.rusefi.StartupFrame.appendBundleName;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class ProgramSelector {
@@ -22,9 +25,13 @@ public class ProgramSelector {
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String ST_LINK = "ST-LINK Update";
+    private static final String OPENBLT_CAN = "OpenBLT via CAN";
+
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
+    public static final String BOOT_COMMANDER_EXE = "BootCommander.exe";
+    public static final String OPENBLT_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "openblt";
 
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox<String> mode = new JComboBox<>();
@@ -38,6 +45,7 @@ public class ProgramSelector {
             mode.addItem(MANUAL_DFU);
             mode.addItem(DFU_ERASE);
             mode.addItem(ST_LINK);
+            mode.addItem(OPENBLT_CAN);
         }
         mode.addItem(DFU_SWITCH);
 
@@ -76,6 +84,9 @@ public class ProgramSelector {
                         String port = selected == null ? PortDetector.AUTO : selected.toString();
                         DfuFlasher.rebootToDfu(comboPorts, port, wnd);
                         break;
+                    case OPENBLT_CAN:
+                        flashOpenBltCan();
+                        break;
                     case DFU_ERASE:
                         DfuFlasher.runDfuErase();
                         break;
@@ -85,6 +96,19 @@ public class ProgramSelector {
             }
         });
 
+    }
+
+    private void flashOpenBltCan() {
+        StatusWindow wnd = new StatusWindow();
+        wnd.showFrame(appendBundleName("OpenBLT via CAN " + Launcher.CONSOLE_VERSION));
+        ExecHelper.submitAction(() -> {
+            ExecHelper.executeCommand(OPENBLT_BINARY_LOCATION,
+                    OPENBLT_BINARY_LOCATION + "/" + BOOT_COMMANDER_EXE +
+                            " -s=xcp -t=xcp_can -d=peak_pcanusb -t1=1000 -t3=2000 -t4=10000 -t5=1000 -t7=2000 ../../rusefi_update.srec",
+                    BOOT_COMMANDER_EXE, wnd, new StringBuffer());
+            // it's a lengthy operation let's signal end
+            Toolkit.getDefaultToolkit().beep();
+        }, "OpenBLT via CAN");
     }
 
     @NotNull

@@ -11,7 +11,7 @@ jobs:
         os: [ubuntu-20.04, macos-latest]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
         fetch-depth: 0
@@ -31,17 +31,9 @@ jobs:
       run: |
         brew install mtools zip dosfstools
 
-    - name: Generate Configs for unit tests
+    - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
-      run: bash gen_config_default.sh
-
-    - name: Generate Enums
-      working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
-
-    - name: Generate Live Documentation
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
+      run: ./gen_default_everything.sh
 
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
@@ -55,6 +47,16 @@ jobs:
     - name: Run Tests
       working-directory: ./unit_tests/
       run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
+
+    - name: Set FTP variables
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
+        fi
 
     - name: Generate Code Coverage
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}

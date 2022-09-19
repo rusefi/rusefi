@@ -17,8 +17,10 @@
 #include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-static StepDirectionStepper iacStepperHw CCM_OPTIONAL;
-static DualHBridgeStepper iacHbridgeHw CCM_OPTIONAL;
+/* Storing two following structs in CCM memory cause HardFault (at least on F4)
+ * This need deep debuging. Until it is moved out of CMM. */
+static StepDirectionStepper iacStepperHw /*CCM_OPTIONAL*/;
+static DualHBridgeStepper iacHbridgeHw /*CCM_OPTIONAL*/;
 StepperMotor iacMotor CCM_OPTIONAL;
 #endif /* EFI_UNIT_TEST */
 
@@ -74,7 +76,12 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(useStepperIdle) ||
 			isConfigurationChanged(useETBforIdleControl) ||
 			isConfigurationChanged(idle.solenoidPin) ||
-			isConfigurationChanged(secondSolenoidPin);
+			isConfigurationChanged(secondSolenoidPin) ||
+			isConfigurationChanged(useRawOutputToDriveIdleStepper) ||
+			isConfigurationChanged(stepper_raw_output[0])  ||
+			isConfigurationChanged(stepper_raw_output[1])  ||
+			isConfigurationChanged(stepper_raw_output[2])  ||
+			isConfigurationChanged(stepper_raw_output[3]);
 }
 
 bool isIdleMotorBusy() {
@@ -89,9 +96,26 @@ void initIdleHardware() {
 	if (engineConfiguration->useStepperIdle) {
 		StepperHw* hw;
 
-		if (engineConfiguration->useHbridgesToDriveIdleStepper) {
-			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true);
-			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true);
+		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
+			auto motorA = initDcMotor(engineConfiguration->stepper_raw_output[0],
+				engineConfiguration->stepper_raw_output[1], ETB_COUNT + 0);
+			auto motorB = initDcMotor(engineConfiguration->stepper_raw_output[2],
+				engineConfiguration->stepper_raw_output[3], ETB_COUNT + 1);
+
+			if (motorA && motorB) {
+				iacHbridgeHw.initialize(
+					motorA,
+					motorB,
+					engineConfiguration->idleStepperReactionTime
+				);
+			}
+
+			hw = &iacHbridgeHw;
+		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
+			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0],
+				ETB_COUNT + 0, /*useTwoWires*/ true);
+			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1],
+				ETB_COUNT + 1, /*useTwoWires*/ true);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(

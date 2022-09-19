@@ -58,7 +58,6 @@ TEST(misc, testFuelMap) {
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
@@ -67,8 +66,6 @@ TEST(misc, testFuelMap) {
 	// Check that runningFuel corrects appropriately
 	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
-
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	engineConfiguration->cranking.baseFuel = 4000;
 
@@ -91,40 +88,40 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyRisingEdgeForTriggerTemp = false;
 
-	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
-	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
-	s->addEvent720(232.76, T_SECONDARY, TV_RISE);
-	s->addEvent720(300.54, T_SECONDARY, TV_FALL);
-	s->addEvent720(360, T_PRIMARY, TV_RISE);
+	s->addEvent720(53.747, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(121.90, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(232.76, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(300.54, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(360, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
-	s->addEvent720(409.8412, T_SECONDARY, TV_RISE);
-	s->addEvent720(478.6505, T_SECONDARY, TV_FALL);
-	s->addEvent720(588.045, T_SECONDARY, TV_RISE);
-	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
-	s->addEvent720(720, T_PRIMARY, TV_FALL);
+	s->addEvent720(409.8412, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(478.6505, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(588.045, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(657.03, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 1)) << "@1";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 1)) << "@1";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 1)) << "@1";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 1)) << "@1";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 2)) << "@2";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 2)) << "@2";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 2)) << "@2";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 2)) << "@2";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 3)) << "@3";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 3)) << "@3";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 3)) << "@3";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 3)) << "@3";
 
-	ASSERT_EQ( 1,  s->wave.getChannelState(0, 4)) << "@4";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 5)) << "@5";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 8)) << "@8";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 4)) << "@4";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 5)) << "@5";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 8)) << "@8";
 	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
 	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 
-	ASSERT_EQ( 0,  s->wave.findAngleMatch(53.747 / 720.0)) << "expecting 0";
-	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0));
-	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0));
+	ASSERT_EQ(0, s->wave.findAngleMatch(53.747 / 720.0).value_or(-1)) << "expecting 0";
+	ASSERT_FALSE(s->wave.findAngleMatch(53 / 720.0).Valid) << "expecting not found";
+	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0).value_or(-1));
 
 	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0)) << "expecting 0";
 	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747 / 720.0)) << "expecting 1";
@@ -139,7 +136,7 @@ TEST(misc, testAngleResolver) {
 
 	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 
 	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));

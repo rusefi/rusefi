@@ -14,15 +14,10 @@
     limitations under the License.
 */
 
-#ifndef USBCFG_H
-#define USBCFG_H
+#pragma once
 
 extern const USBConfig usbcfg;
-extern SerialUSBConfig serusbcfg;
+extern const SerialUSBConfig serusbcfg;
 extern SerialUSBDriver SDU1;
 
-EXTERNC void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes);
-
-#endif  /* USBCFG_H */
-
-/** @} */
+void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes);

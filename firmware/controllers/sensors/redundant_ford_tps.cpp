@@ -23,7 +23,7 @@ SensorResult RedundantFordTps::get() const {
 
 	// If either result is invalid, return invalid.
 	if (!tps1 || !tps2) {
-		return unexpected;
+		return UnexpectedCode::Inconsistent;
 	}
 
 	// The "actual" position resolved by the second throttle - this tops out at m_secondaryMaximum instead of 100%
@@ -37,7 +37,7 @@ SensorResult RedundantFordTps::get() const {
 		// Check that the resolved positions are close
 		float delta = absF(tps1.Value - tps2Actual);
 		if (delta > m_maxDifference) {
-			return unexpected;
+			return UnexpectedCode::Inconsistent;
 		}
 
 		return (tps1.Value + tps2Actual) / 2;
@@ -49,5 +49,5 @@ SensorResult RedundantFordTps::get() const {
 	}
 
 	// Any other condition indicates an mismatch, and therefore an error
-	return unexpected;
+	return UnexpectedCode::Inconsistent;
 }

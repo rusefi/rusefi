@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "value_lookup.h"
 float getOutputValueByName(const char *name) {
 	if (strEqualCaseInsensitive(name, "sd_present"))
 		return engine->outputChannels.sd_present;
@@ -8,10 +9,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isInjectionEnabledIndicator;
 	if (strEqualCaseInsensitive(name, "sd_logging_internal"))
 		return engine->outputChannels.sd_logging_internal;
-	if (strEqualCaseInsensitive(name, "isCylinderCleanupActivated"))
-		return engine->outputChannels.isCylinderCleanupActivated;
-	if (strEqualCaseInsensitive(name, "isFuelPumpOn"))
-		return engine->outputChannels.isFuelPumpOn;
 	if (strEqualCaseInsensitive(name, "isFanOn"))
 		return engine->outputChannels.isFanOn;
 	if (strEqualCaseInsensitive(name, "isO2HeaterOn"))
@@ -22,20 +19,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.needBurn;
 	if (strEqualCaseInsensitive(name, "sd_msd"))
 		return engine->outputChannels.sd_msd;
-	if (strEqualCaseInsensitive(name, "clutchUpState"))
-		return engine->outputChannels.clutchUpState;
-	if (strEqualCaseInsensitive(name, "clutchDownState"))
-		return engine->outputChannels.clutchDownState;
 	if (strEqualCaseInsensitive(name, "isFan2On"))
 		return engine->outputChannels.isFan2On;
-	if (strEqualCaseInsensitive(name, "alternatorOnOff"))
-		return engine->outputChannels.alternatorOnOff;
-	if (strEqualCaseInsensitive(name, "brakePedalState"))
-		return engine->outputChannels.brakePedalState;
 	if (strEqualCaseInsensitive(name, "toothLogReady"))
 		return engine->outputChannels.toothLogReady;
-	if (strEqualCaseInsensitive(name, "acSwitchState"))
-		return engine->outputChannels.acSwitchState;
 	if (strEqualCaseInsensitive(name, "isTpsError"))
 		return engine->outputChannels.isTpsError;
 	if (strEqualCaseInsensitive(name, "isCltError"))
@@ -44,8 +31,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isMapError;
 	if (strEqualCaseInsensitive(name, "isIatError"))
 		return engine->outputChannels.isIatError;
-	if (strEqualCaseInsensitive(name, "acState"))
-		return engine->outputChannels.acState;
 	if (strEqualCaseInsensitive(name, "isTriggerError"))
 		return engine->outputChannels.isTriggerError;
 	if (strEqualCaseInsensitive(name, "hasCriticalError"))
@@ -62,8 +47,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isTps2Error;
 	if (strEqualCaseInsensitive(name, "isIdleClosedLoop"))
 		return engine->outputChannels.isIdleClosedLoop;
-	if (strEqualCaseInsensitive(name, "isIdleCoasting"))
-		return engine->outputChannels.isIdleCoasting;
 	if (strEqualCaseInsensitive(name, "RPMValue"))
 		return engine->outputChannels.RPMValue;
 	if (strEqualCaseInsensitive(name, "rpmAcceleration"))
@@ -88,10 +71,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.throttlePedalPosition;
 	if (strEqualCaseInsensitive(name, "tpsADC"))
 		return engine->outputChannels.tpsADC;
-	if (strEqualCaseInsensitive(name, "MAFValue"))
-		return engine->outputChannels.MAFValue;
-	if (strEqualCaseInsensitive(name, "massAirFlowValue"))
-		return engine->outputChannels.massAirFlowValue;
+	if (strEqualCaseInsensitive(name, "rawMaf"))
+		return engine->outputChannels.rawMaf;
+	if (strEqualCaseInsensitive(name, "mafMeasured"))
+		return engine->outputChannels.mafMeasured;
 	if (strEqualCaseInsensitive(name, "MAPValue"))
 		return engine->outputChannels.MAPValue;
 	if (strEqualCaseInsensitive(name, "baroPressure"))
@@ -130,14 +113,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tCharge;
 	if (strEqualCaseInsensitive(name, "injectorLagMs"))
 		return engine->outputChannels.injectorLagMs;
-	if (strEqualCaseInsensitive(name, "iatCorrection"))
-		return engine->outputChannels.iatCorrection;
-	if (strEqualCaseInsensitive(name, "cltCorrection"))
-		return engine->outputChannels.cltCorrection;
-	if (strEqualCaseInsensitive(name, "baroCorrection"))
-		return engine->outputChannels.baroCorrection;
-	if (strEqualCaseInsensitive(name, "currentEnginePhase"))
-		return engine->outputChannels.currentEnginePhase;
+	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
+		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "wallFuelAmount"))
 		return engine->outputChannels.wallFuelAmount;
 	if (strEqualCaseInsensitive(name, "wallFuelCorrection"))
@@ -182,6 +159,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.engineMode;
 	if (strEqualCaseInsensitive(name, "firmwareVersion"))
 		return engine->outputChannels.firmwareVersion;
+	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
+		return engine->outputChannels.rawIdlePositionSensor;
+	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
+		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "tsConfigVersion"))
 		return engine->outputChannels.tsConfigVersion;
 	if (strEqualCaseInsensitive(name, "calibrationValue"))
@@ -190,12 +171,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.calibrationMode;
 	if (strEqualCaseInsensitive(name, "idleTargetPosition"))
 		return engine->outputChannels.idleTargetPosition;
-	if (strEqualCaseInsensitive(name, "fuelingLoad"))
-		return engine->outputChannels.fuelingLoad;
-	if (strEqualCaseInsensitive(name, "ignitionLoad"))
-		return engine->outputChannels.ignitionLoad;
-	if (strEqualCaseInsensitive(name, "engineMakeCodeNameCrc16"))
-		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "totalTriggerErrorCounter"))
 		return engine->outputChannels.totalTriggerErrorCounter;
 	if (strEqualCaseInsensitive(name, "orderingErrorCounter"))
@@ -256,10 +231,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tcuDesiredGear;
 	if (strEqualCaseInsensitive(name, "flexPercent"))
 		return engine->outputChannels.flexPercent;
-	if (strEqualCaseInsensitive(name, "rawIdlePositionSensor"))
-		return engine->outputChannels.rawIdlePositionSensor;
-	if (strEqualCaseInsensitive(name, "rawWastegatePosition"))
-		return engine->outputChannels.rawWastegatePosition;
 	if (strEqualCaseInsensitive(name, "wastegatePositionSensor"))
 		return engine->outputChannels.wastegatePositionSensor;
 	if (strEqualCaseInsensitive(name, "idlePositionSensor"))
@@ -312,80 +283,64 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tps12Split;
 	if (strEqualCaseInsensitive(name, "accPedalSplit"))
 		return engine->outputChannels.accPedalSplit;
-	if (strEqualCaseInsensitive(name, "m_requested_pump"))
-		return engine->outputChannels.m_requested_pump;
-	if (strEqualCaseInsensitive(name, "boostControlTarget"))
-		return engine->outputChannels.boostControlTarget;
-	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
-		return engine->outputChannels.fuel_requested_percent;
-	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))
-		return engine->outputChannels.fuel_requested_percent_pi;
-	if (strEqualCaseInsensitive(name, "m_I_sum_percent"))
-		return engine->outputChannels.m_I_sum_percent;
-	if (strEqualCaseInsensitive(name, "m_pressureTarget_kPa"))
-		return engine->outputChannels.m_pressureTarget_kPa;
-	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
-		return engine->outputChannels.launchSpeedCondition;
-	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
-		return engine->outputChannels.launchRpmCondition;
-	if (strEqualCaseInsensitive(name, "launchTpsCondition"))
-		return engine->outputChannels.launchTpsCondition;
-	if (strEqualCaseInsensitive(name, "launchActivateSwitchCondition"))
-		return engine->outputChannels.launchActivateSwitchCondition;
-	if (strEqualCaseInsensitive(name, "launchIsLaunchCondition"))
-		return engine->outputChannels.launchIsLaunchCondition;
-	if (strEqualCaseInsensitive(name, "launchCombinedConditions"))
-		return engine->outputChannels.launchCombinedConditions;
-	if (strEqualCaseInsensitive(name, "launchActivatePinState"))
-		return engine->outputChannels.launchActivatePinState;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
+	if (strEqualCaseInsensitive(name, "sparkCutReason"))
+		return engine->outputChannels.sparkCutReason;
+	if (strEqualCaseInsensitive(name, "fuelCutReason"))
+		return engine->outputChannels.fuelCutReason;
+	if (strEqualCaseInsensitive(name, "mafEstimate"))
+		return engine->outputChannels.mafEstimate;
+	if (strEqualCaseInsensitive(name, "instantRpm"))
+		return engine->outputChannels.instantRpm;
+	if (strEqualCaseInsensitive(name, "systemEventReuse"))
+		return engine->outputChannels.systemEventReuse;
+	if (strEqualCaseInsensitive(name, "rawMap"))
+		return engine->outputChannels.rawMap;
+	if (strEqualCaseInsensitive(name, "rawAfr"))
+		return engine->outputChannels.rawAfr;
+	if (strEqualCaseInsensitive(name, "tpsAccelFrom"))
+		return engine->outputChannels.tpsAccelFrom;
+	if (strEqualCaseInsensitive(name, "tpsAccelTo"))
+		return engine->outputChannels.tpsAccelTo;
+	if (strEqualCaseInsensitive(name, "calibrationValue2"))
+		return engine->outputChannels.calibrationValue2;
+	if (strEqualCaseInsensitive(name, "isMainRelayOn"))
+		return engine->outputChannels.isMainRelayOn;
+	if (strEqualCaseInsensitive(name, "isUsbConnected"))
+		return engine->outputChannels.isUsbConnected;
+	if (strEqualCaseInsensitive(name, "luaInvocationCounter"))
+		return engine->outputChannels.luaInvocationCounter;
+	if (strEqualCaseInsensitive(name, "luaLastCycleDuration"))
+		return engine->outputChannels.luaLastCycleDuration;
+	if (strEqualCaseInsensitive(name, "testBenchIter"))
+		return engine->outputChannels.testBenchIter;
+	if (strEqualCaseInsensitive(name, "tcu_currentRange"))
+		return engine->outputChannels.tcu_currentRange;
+	if (strEqualCaseInsensitive(name, "tcRatio"))
+		return engine->outputChannels.tcRatio;
+	if (strEqualCaseInsensitive(name, "lastShiftTime"))
+		return engine->outputChannels.lastShiftTime;
+	if (strEqualCaseInsensitive(name, "vssEdgeCounter"))
+		return engine->outputChannels.vssEdgeCounter;
+	if (strEqualCaseInsensitive(name, "issEdgeCounter"))
+		return engine->outputChannels.issEdgeCounter;
+	if (strEqualCaseInsensitive(name, "auxLinear1"))
+		return engine->outputChannels.auxLinear1;
+	if (strEqualCaseInsensitive(name, "auxLinear2"))
+		return engine->outputChannels.auxLinear2;
+	if (strEqualCaseInsensitive(name, "dfcoActive"))
+		return engine->outputChannels.dfcoActive;
+	if (strEqualCaseInsensitive(name, "tpsAccelActive"))
+		return engine->outputChannels.tpsAccelActive;
 	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
 		return engine->outputChannels.boostControllerOutput;
-	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
-		return engine->outputChannels.boostControllerClosedLoopPart;
 	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
 		return engine->outputChannels.boostControllerOpenLoopPart;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_DIFF"))
-		return engine->outputChannels.TEMPLOG_MAP_AT_DIFF;
-	if (strEqualCaseInsensitive(name, "vvtSyncGapRatio"))
-		return engine->outputChannels.vvtSyncGapRatio;
-	if (strEqualCaseInsensitive(name, "vvtCurrentPosition"))
-		return engine->outputChannels.vvtCurrentPosition;
-	if (strEqualCaseInsensitive(name, "triggerSyncGapRatio"))
-		return engine->outputChannels.triggerSyncGapRatio;
-	if (strEqualCaseInsensitive(name, "triggerStateIndex"))
-		return engine->outputChannels.triggerStateIndex;
-	if (strEqualCaseInsensitive(name, "vvtCounter"))
-		return engine->outputChannels.vvtCounter;
-	if (strEqualCaseInsensitive(name, "vvtSyncCounter"))
-		return engine->outputChannels.vvtSyncCounter;
-	if (strEqualCaseInsensitive(name, "vvtStateIndex"))
-		return engine->outputChannels.vvtStateIndex;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_INSTANT_AVERAGE"))
-		return engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE;
 	if (strEqualCaseInsensitive(name, "fallbackMap"))
 		return engine->outputChannels.fallbackMap;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_map_peak"))
-		return engine->outputChannels.TEMPLOG_map_peak;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_map_length"))
-		return engine->outputChannels.TEMPLOG_map_length;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_mapIndex"))
-		return engine->outputChannels.TEMPLOG_mapIndex;
-	if (strEqualCaseInsensitive(name, "timingCltCorrection"))
-		return engine->outputChannels.timingCltCorrection;
-	if (strEqualCaseInsensitive(name, "timingIatCorrection"))
-		return engine->outputChannels.timingIatCorrection;
-	if (strEqualCaseInsensitive(name, "timingPidCorrection"))
-		return engine->outputChannels.timingPidCorrection;
+	if (strEqualCaseInsensitive(name, "detectedGear"))
+		return engine->outputChannels.detectedGear;
 	if (strEqualCaseInsensitive(name, "instantMAPValue"))
 		return engine->outputChannels.instantMAPValue;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenSparkEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenSparkEvents;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenIgnitionEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenIgnitionEvents;
 	if (strEqualCaseInsensitive(name, "maxLockedDuration"))
 		return engine->outputChannels.maxLockedDuration;
 	if (strEqualCaseInsensitive(name, "maxTriggerReentrant"))
@@ -414,18 +369,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.starterRelayDisable;
 	if (strEqualCaseInsensitive(name, "multiSparkCounter"))
 		return engine->outputChannels.multiSparkCounter;
-	if (strEqualCaseInsensitive(name, "idleState"))
-		return engine->outputChannels.idleState;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureRatio"))
-		return engine->outputChannels.injectorFlowPressureRatio;
-	if (strEqualCaseInsensitive(name, "injectorFlowPressureDelta"))
-		return engine->outputChannels.injectorFlowPressureDelta;
-	if (strEqualCaseInsensitive(name, "etbFeedForward"))
-		return engine->outputChannels.etbFeedForward;
-	if (strEqualCaseInsensitive(name, "etbIntegralError"))
-		return engine->outputChannels.etbIntegralError;
-	if (strEqualCaseInsensitive(name, "etbCurrentTarget"))
-		return engine->outputChannels.etbCurrentTarget;
+	if (strEqualCaseInsensitive(name, "alternatorStatus.pTerm"))
+		return engine->outputChannels.alternatorStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.iTerm"))
 		return engine->outputChannels.alternatorStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.dTerm"))
@@ -436,6 +381,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.alternatorStatus.error;
 	if (strEqualCaseInsensitive(name, "alternatorStatus.resetCounter"))
 		return engine->outputChannels.alternatorStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "idleStatus.pTerm"))
+		return engine->outputChannels.idleStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "idleStatus.iTerm"))
 		return engine->outputChannels.idleStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "idleStatus.dTerm"))
@@ -446,6 +393,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.idleStatus.error;
 	if (strEqualCaseInsensitive(name, "idleStatus.resetCounter"))
 		return engine->outputChannels.idleStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "etbStatus.pTerm"))
+		return engine->outputChannels.etbStatus.pTerm;
 	if (strEqualCaseInsensitive(name, "etbStatus.iTerm"))
 		return engine->outputChannels.etbStatus.iTerm;
 	if (strEqualCaseInsensitive(name, "etbStatus.dTerm"))
@@ -456,5 +405,79 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.etbStatus.error;
 	if (strEqualCaseInsensitive(name, "etbStatus.resetCounter"))
 		return engine->outputChannels.etbStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "boostStatus.pTerm"))
+		return engine->outputChannels.boostStatus.pTerm;
+	if (strEqualCaseInsensitive(name, "boostStatus.iTerm"))
+		return engine->outputChannels.boostStatus.iTerm;
+	if (strEqualCaseInsensitive(name, "boostStatus.dTerm"))
+		return engine->outputChannels.boostStatus.dTerm;
+	if (strEqualCaseInsensitive(name, "boostStatus.output"))
+		return engine->outputChannels.boostStatus.output;
+	if (strEqualCaseInsensitive(name, "boostStatus.error"))
+		return engine->outputChannels.boostStatus.error;
+	if (strEqualCaseInsensitive(name, "boostStatus.resetCounter"))
+		return engine->outputChannels.boostStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "auxSpeed1"))
+		return engine->outputChannels.auxSpeed1;
+	if (strEqualCaseInsensitive(name, "auxSpeed2"))
+		return engine->outputChannels.auxSpeed2;
+	if (strEqualCaseInsensitive(name, "ISSValue"))
+		return engine->outputChannels.ISSValue;
+	if (strEqualCaseInsensitive(name, "rawBattery"))
+		return engine->outputChannels.rawBattery;
+	if (strEqualCaseInsensitive(name, "extiOverflowCount"))
+		return engine->outputChannels.extiOverflowCount;
+	if (strEqualCaseInsensitive(name, "coilState1"))
+		return engine->outputChannels.coilState1;
+	if (strEqualCaseInsensitive(name, "coilState2"))
+		return engine->outputChannels.coilState2;
+	if (strEqualCaseInsensitive(name, "coilState3"))
+		return engine->outputChannels.coilState3;
+	if (strEqualCaseInsensitive(name, "coilState4"))
+		return engine->outputChannels.coilState4;
+	if (strEqualCaseInsensitive(name, "coilState5"))
+		return engine->outputChannels.coilState5;
+	if (strEqualCaseInsensitive(name, "coilState6"))
+		return engine->outputChannels.coilState6;
+	if (strEqualCaseInsensitive(name, "coilState7"))
+		return engine->outputChannels.coilState7;
+	if (strEqualCaseInsensitive(name, "coilState8"))
+		return engine->outputChannels.coilState8;
+	if (strEqualCaseInsensitive(name, "coilState9"))
+		return engine->outputChannels.coilState9;
+	if (strEqualCaseInsensitive(name, "coilState10"))
+		return engine->outputChannels.coilState10;
+	if (strEqualCaseInsensitive(name, "coilState11"))
+		return engine->outputChannels.coilState11;
+	if (strEqualCaseInsensitive(name, "coilState12"))
+		return engine->outputChannels.coilState12;
+	if (strEqualCaseInsensitive(name, "injectorState1"))
+		return engine->outputChannels.injectorState1;
+	if (strEqualCaseInsensitive(name, "injectorState2"))
+		return engine->outputChannels.injectorState2;
+	if (strEqualCaseInsensitive(name, "injectorState3"))
+		return engine->outputChannels.injectorState3;
+	if (strEqualCaseInsensitive(name, "injectorState4"))
+		return engine->outputChannels.injectorState4;
+	if (strEqualCaseInsensitive(name, "injectorState5"))
+		return engine->outputChannels.injectorState5;
+	if (strEqualCaseInsensitive(name, "injectorState6"))
+		return engine->outputChannels.injectorState6;
+	if (strEqualCaseInsensitive(name, "injectorState7"))
+		return engine->outputChannels.injectorState7;
+	if (strEqualCaseInsensitive(name, "injectorState8"))
+		return engine->outputChannels.injectorState8;
+	if (strEqualCaseInsensitive(name, "injectorState9"))
+		return engine->outputChannels.injectorState9;
+	if (strEqualCaseInsensitive(name, "injectorState10"))
+		return engine->outputChannels.injectorState10;
+	if (strEqualCaseInsensitive(name, "injectorState11"))
+		return engine->outputChannels.injectorState11;
+	if (strEqualCaseInsensitive(name, "injectorState12"))
+		return engine->outputChannels.injectorState12;
+	if (strEqualCaseInsensitive(name, "outputRequestPeriod"))
+		return engine->outputChannels.outputRequestPeriod;
+	if (strEqualCaseInsensitive(name, "mapFast"))
+		return engine->outputChannels.mapFast;
 	return EFI_ERROR_CODE;
 }

@@ -9,12 +9,14 @@
 
 #include "closed_loop_controller.h"
 #include "rusefi_types.h"
+#include "engine_configuration.h"
 
 void initElectronicThrottle();
 void doInitElectronicThrottle();
 
 void setEtbIdlePosition(percent_t pos);
 void setEtbWastegatePosition(percent_t pos);
+void setEtbLuaAdjustment(percent_t adjustment);
 void setHitachiEtbCalibration();
 
 // these two sensors use same plug but have different calibrations and even rotate in different directions
@@ -54,4 +56,6 @@ public:
 	virtual void autoCalibrateTps() = 0;
 
 	virtual const pid_state_s* getPidState() const = 0;
+
+	virtual void setLuaAdjustment(percent_t adjustment) = 0;
 };

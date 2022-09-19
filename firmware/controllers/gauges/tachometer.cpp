@@ -43,7 +43,7 @@ void tachSignalCallback() {
 	}
 
 	// What is the angle per tach output period?
-	float cycleTimeMs = 60000.0f / GET_RPM();
+	float cycleTimeMs = 60000.0f / Sensor::getOrZero(SensorType::Rpm);
 	float periodTimeMs = cycleTimeMs / periods;
 	tachFreq = 1000.0f / periodTimeMs;
 	
