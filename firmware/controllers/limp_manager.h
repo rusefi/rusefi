@@ -4,6 +4,7 @@
 
 #include <cstdint>
 
+// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 enum class ClearReason : uint8_t {
 	None, // 0
 	Fatal,
@@ -18,7 +19,9 @@ enum class ClearReason : uint8_t {
 	InjectorDutyCycle, // 10
 	FloodClear, // 11
 	EnginePhase, // 12
-	KickStart,
+	KickStart, // 13
+
+	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 };
 
 // Only allows clearing the value, but never resetting it.
@@ -32,8 +35,10 @@ public:
 	}
 
 	void clear(ClearReason clearReason) {
-		m_value = false;
-		this->clearReason = clearReason;
+		if (m_value) {
+			m_value = false;
+			this->clearReason = clearReason;
+		}
 	}
 
 	operator bool() const {

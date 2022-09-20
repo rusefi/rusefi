@@ -226,6 +226,8 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < getTriggerCentral()->engineCycleEventCount, "handleFuel/event index");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
+
+	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
