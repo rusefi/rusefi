@@ -15,25 +15,25 @@
 #include <sys/time.h>
 
 #if EFI_RTC
-static RTCDateTime timespec;
-
 extern bool rtcWorks;
 
 #endif /* EFI_RTC */
 
-void date_set_tm(struct tm *timp) {
+void date_set_tm(tm *timp) {
 	(void)timp;
 #if EFI_RTC
-        rtcConvertStructTmToDateTime(timp, 0, &timespec);
+	RTCDateTime timespec;
+	rtcConvertStructTmToDateTime(timp, 0, &timespec);
 	rtcSetTime(&RTCD1, &timespec);
 #endif /* EFI_RTC */
 }
 
-void date_get_tm(struct tm *timp) {
+void date_get_tm(tm *timp) {
 	(void)timp;
 #if EFI_RTC
+	RTCDateTime timespec;
 	rtcGetTime(&RTCD1, &timespec);
-        rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
+	rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
 #endif /* EFI_RTC */
 }
 
@@ -47,7 +47,8 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 
 #if EFI_RTC
 static time_t GetTimeUnixSec() {
-  struct tm tim;
+  tm tim;
+  RTCDateTime timespec;
 
   rtcGetTime(&RTCD1, &timespec);
   rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
@@ -55,21 +56,22 @@ static time_t GetTimeUnixSec() {
 }
 
 static void SetTimeUnixSec(time_t unix_time) {
-  struct tm tim;
+  tm tim;
 
 #if defined __GNUC__
-  struct tm *canary;
-  /* If the conversion is successful the function returns a pointer
-     to the object the result was written into.*/
-  canary = localtime_r(&unix_time, &tim);
-  osalDbgCheck(&tim == canary);
+	tm *canary;
+	/* If the conversion is successful the function returns a pointer
+		to the object the result was written into.*/
+	canary = localtime_r(&unix_time, &tim);
+	osalDbgCheck(&tim == canary);
 #else
-  struct tm *t = localtime(&unix_time);
-  memcpy(&tim, t, sizeof(struct tm));
+	tm *t = localtime(&unix_time);
+	memcpy(&tim, t, sizeof(tm));
 #endif
 
-  rtcConvertStructTmToDateTime(&tim, 0, &timespec);
-  rtcSetTime(&RTCD1, &timespec);
+	RTCDateTime timespec;
+	rtcConvertStructTmToDateTime(&tim, 0, &timespec);
+	rtcSetTime(&RTCD1, &timespec);
 }
 
 static void put2(int offset, char *lcd_str, int value) {
@@ -90,7 +92,7 @@ static void put2(int offset, char *lcd_str, int value) {
  */
 bool dateToStringShort(char *lcd_str) {
 	strcpy(lcd_str, "000000_000000\0");
-	struct tm timp;
+	tm timp;
 	date_get_tm(&timp);
 	if (timp.tm_year < 116 || timp.tm_year > 130) {
 		// 2016 to 2030 is the valid range
@@ -98,13 +100,13 @@ bool dateToStringShort(char *lcd_str) {
 		return false;
 	}
 
-	put2(0, lcd_str, timp.tm_year % 100); // Years since 1900 - format as just the last two digits
-	put2(2, lcd_str, timp.tm_mon + 1);     // months since January	0-11
-	put2(4, lcd_str, timp.tm_mday);        // day of the month	1-31
+	put2(0, lcd_str, timp.tm_year % 100);	// Years since 1900 - format as just the last two digits
+	put2(2, lcd_str, timp.tm_mon + 1);		// months since January	0-11
+	put2(4, lcd_str, timp.tm_mday);			// day of the month	1-31
 
-	put2(7, lcd_str, timp.tm_hour);        // hours since midnight	0-23
-	put2(9, lcd_str, timp.tm_min);        // Minutes
-	put2(11, lcd_str, timp.tm_sec);        // seconds
+	put2(7, lcd_str, timp.tm_hour);			// hours since midnight	0-23
+	put2(9, lcd_str, timp.tm_min);			// Minutes
+	put2(11, lcd_str, timp.tm_sec);			// seconds
 
 	return true;
 }
@@ -116,7 +118,7 @@ void dateToString(char *lcd_str) {
 	// this would require a temporary mem stream - see datalogging and other existing usages
 
 	strcpy(lcd_str, "00/00 00:00:00\0");
-	struct tm timp;
+	tm timp;
 	date_get_tm(&timp);			// get RTC date/time
 	
 	put2(0, lcd_str, timp.tm_mon + 1);
@@ -127,10 +129,9 @@ void dateToString(char *lcd_str) {
 }
 
 void printDateTime(void) {
-	static time_t unix_time;
-	struct tm timp;
-	
-	unix_time = GetTimeUnixSec();
+	tm timp;
+
+	time_t unix_time = GetTimeUnixSec();
 	if (unix_time == -1) {
 		efiPrintf("incorrect time in RTC cell");
 	} else {
