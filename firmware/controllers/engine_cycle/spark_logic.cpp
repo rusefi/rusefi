@@ -288,7 +288,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 }
 
 static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
-		int rpm, efitick_t edgeTimestamp) {
+		int rpm, efitick_t edgeTimestamp, float currentPhase) {
 
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = engine->engineState.sparkDwell;
@@ -425,7 +425,7 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp) {
+void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
@@ -468,7 +468,7 @@ void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTim
 			}
 #endif // EFI_LAUNCH_CONTROL
 
-			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
+			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp, currentPhase);
 		}
 	}
 }

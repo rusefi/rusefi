@@ -86,6 +86,8 @@ bool strEqual(const char *str1, const char *str2);
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
 
+bool isPhaseInRange(float test, float current, float next);
+
 #ifdef __cplusplus
 }
 
