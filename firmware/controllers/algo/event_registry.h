@@ -52,7 +52,7 @@ public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
-	AngleBasedEventOld sparkEvent;
+	AngleBasedEventNew sparkEvent;
 
 	scheduling_s trailingSparkCharge;
 	scheduling_s trailingSparkFire;
