@@ -35,8 +35,10 @@ public:
 	}
 
 	void clear(ClearReason clearReason) {
-		m_value = false;
-		this->clearReason = clearReason;
+		if (m_value) {
+			m_value = false;
+			this->clearReason = clearReason;
+		}
 	}
 
 	operator bool() const {
