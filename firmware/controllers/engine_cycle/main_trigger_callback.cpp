@@ -72,25 +72,6 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
-static bool isPhaseInRange(float test, float current, float next) {
-	bool afterCurrent = test >= current;
-	bool beforeNext = test < next;
-
-	if (next > current) {
-		// we're not near the end of the cycle, comparison is simple
-		// 0            |------------------------|       720
-		//            next                    current
-		return afterCurrent && beforeNext;
-	} else {
-		// we're near the end of the cycle so we have to check the wraparound
-		// 0 -----------|                        |------ 720
-		//            next                    current
-		// Check whether test is after current (ie, between current tooth and end of cycle)
-		// or if test if before next (ie, between start of cycle and next tooth)
-		return afterCurrent || beforeNext;
-	}
-}
-
 void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	auto eventAngle = injectionStartAngle;
 
@@ -309,7 +290,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp);
+	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 }
 
 #endif /* EFI_ENGINE_CONTROL */
