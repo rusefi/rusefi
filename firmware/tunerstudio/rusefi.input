@@ -234,6 +234,8 @@ enable2ndByteCanID = false
 
 	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart"
+
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
      ; the constant not yet being initialized. This is primarily important if the
@@ -1400,8 +1402,8 @@ gaugeCategory = GPPWM Outputs
    indicator =                   { isWarnNow },        "No warnings",           "Warning",  white,  black, yellow,  black
    indicator =                 { checkEngine },    "No Check Engine",      "Check Engine",  white,  black,    red,  black
    indicator =               { isTriggerError},         "Trigger OK",       "Trigger ERR",  white,  black,    red,  black
-   indicator =  { isIgnitionEnabledIndicator },       "Ignition cut",       "Ignition OK", yellow,  black,  white,  black
-   indicator = { isInjectionEnabledIndicator },      "Injection cut",      "Injection OK", yellow,  black,  white,  black
+   indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
+   indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
 
    ; this is required so that the "config error" feature works in TS
    ; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
@@ -1416,7 +1418,6 @@ gaugeCategory = GPPWM Outputs
    indicator =                    { isFanOn },             "Fan off",            "Fan on",  white,  black,  green,  black
    indicator =                   { isFan2On },           "Fan 2 off",          "Fan 2 on",  white,  black,  green,  black
    indicator =              { isMainRelayOn },      "Main relay off",     "Main relay on",  white,  black,  green,  black
-   indicator =        { fuelCutReason == 11 },          "No cleanup",       "Cyl cleanup",  white,  black, yellow,  black
    ; Line 2
    ;         =                     expression,             off-label,            on-label, off-bg, off-fg,  on-bg,  on-fg
    indicator =               { isFuelPumpOn },       "Fuel pump off",      "Fuel pump on",  white,  black,  green,  black
