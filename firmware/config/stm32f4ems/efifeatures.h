@@ -60,6 +60,8 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
+#define EFI_CLOCK_LOCKS TRUE
+
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
 /**
@@ -317,8 +319,6 @@
  * Do we need GPS logic?
  */
 #define EFI_UART_GPS FALSE
-
-#define EFI_SERVO FALSE
 
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 //#define EFI_ELECTRONIC_THROTTLE_BODY FALSE

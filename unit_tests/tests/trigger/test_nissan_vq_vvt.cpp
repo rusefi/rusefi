@@ -24,13 +24,12 @@ static void func(TriggerCallback *callback) {
 	Engine *engine = callback->engine;
 
 
-	int value = callback->form->wave.getChannelState(0, formIndex);
+	TriggerValue value = callback->form->wave.getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
-		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
+		hwHandleVvtCamSignal(value, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
-		handleShaftSignal(0, value, nowNt);
+		handleShaftSignal(0, value == TriggerValue::RISE, nowNt);
 	}
 }
 

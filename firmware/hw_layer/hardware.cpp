@@ -8,9 +8,8 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "trigger_input.h"
-#include "servo.h"
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
@@ -181,7 +180,7 @@ void onFastAdcComplete(adcsample_t*) {
 	efiAssertVoid(CUSTOM_STACK_ADC, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-	if (engine->sensorChartMode == SC_AUX_FAST1) {
+	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}
@@ -572,10 +571,6 @@ void initHardware() {
 
 #if EFI_UART_GPS
 	initGps();
-#endif
-
-#if EFI_SERVO
-	initServo();
 #endif
 
 #if EFI_AUX_SERIAL

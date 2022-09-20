@@ -12,7 +12,6 @@
 
 #include "pch.h"
 
-#include "os_access.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
@@ -174,6 +173,11 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = getBluetoothChannel();
+
+	if (tsChannel == nullptr) {
+		efiPrintf("No Bluetooth channel configured! Check your board config.");
+		return;
+	}
 
 	if (btProcessIsStarted) {
 		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");

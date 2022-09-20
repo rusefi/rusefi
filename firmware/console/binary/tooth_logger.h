@@ -8,6 +8,8 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include "expected.h"
+#include "trigger_structure.h"
 
 #if EFI_UNIT_TEST
 #include "logicdata.h"

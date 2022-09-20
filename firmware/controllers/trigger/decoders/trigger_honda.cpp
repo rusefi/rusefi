@@ -19,36 +19,36 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	int totalTeethCount = 24;
 	int skippedCount = 0;
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	0, 349);
 
-	s->addEvent720(350.0f, T_PRIMARY, TV_FALL);
-	s->addEvent720(360.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(350.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(360.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
-	s->addEvent720(360 + 0.2, T_SECONDARY, TV_FALL);
+	s->addEvent720(360 + 0.2, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	361, 649);
 
 
 
-	s->addEvent720(650.0f, T_PRIMARY, TV_FALL);
-	s->addEvent720(660.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(650.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(660.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
-	s->addEvent720(660 + 0.2, T_SECONDARY, TV_FALL);
+	s->addEvent720(660 + 0.2, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, skippedCount, 0.5, 0, 720,
 	661, 709);
 
 
 //	exit(-1);
 
-	s->addEvent720(710.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(710.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent720(720.0f - 1, T_SECONDARY, TV_FALL);
+	s->addEvent720(720.0f - 1, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 
-	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
+	s->addEvent720(720.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 }
 
 void configureOnePlus16(TriggerWaveform *s) {
@@ -58,12 +58,12 @@ void configureOnePlus16(TriggerWaveform *s) {
 	float tooth = s->getCycleDuration() / count;
 	float width = tooth / 2; // for VR we only handle rises so width does not matter much
 
-	s->addEventAngle(1, T_PRIMARY, TV_RISE);
-	s->addEventAngle(5, T_PRIMARY, TV_FALL);
+	s->addEventAngle(1, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEventAngle(5, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 	for (int i = 1; i <= count; i++) {
-		s->addEventAngle(tooth * i - width, T_SECONDARY, TV_RISE);
-		s->addEventAngle(tooth * i,         T_SECONDARY, TV_FALL);
+		s->addEventAngle(tooth * i - width, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+		s->addEventAngle(tooth * i,         TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 	}
 
 	s->isSynchronizationNeeded = false;
@@ -71,8 +71,8 @@ void configureOnePlus16(TriggerWaveform *s) {
 
 static void kseriesTooth(TriggerWaveform* s, float end) {
 	// for VR we only handle rises so width does not matter much
-	s->addEvent360(end - 4, T_PRIMARY, TV_RISE);
-	s->addEvent360(end    , T_PRIMARY, TV_FALL);
+	s->addEvent360(end - 4, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(end    , TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
 // TT_HONDA_K_12_1
@@ -107,18 +107,18 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 
 	angle_t start = 55.5;
 	angle_t end = 70.5;
-	s->addEvent360(start + 90 * 0, T_PRIMARY, TV_RISE);
-	s->addEvent360(end + 90 * 0, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 0, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(end + 90 * 0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(start + 90 * 1, T_PRIMARY, TV_RISE);
-	s->addEvent360(end + 90 * 1, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 1, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(end + 90 * 1, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(start + 90 * 2, T_PRIMARY, TV_RISE);
-	s->addEvent360(end + 90 * 2, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(end + 90 * 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(start + 90 * 3, T_PRIMARY, TV_RISE);
-	s->addEvent360(end + 90 * 3, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 3, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(end + 90 * 3, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent360(353, T_PRIMARY, TV_RISE);
-	s->addEvent360(360, T_PRIMARY, TV_FALL);
+	s->addEvent360(353, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(360, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }

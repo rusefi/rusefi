@@ -20,7 +20,7 @@ public:
 	void cancel(scheduling_s* scheduling) override;
 
 	void clear();
-	int executeAll(efitime_t now);
+	int executeAll(efitick_t now);
 	int size();
 	scheduling_s * getHead();
 	scheduling_s * getForUnitTest(int index);

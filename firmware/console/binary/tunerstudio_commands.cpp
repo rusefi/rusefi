@@ -35,6 +35,8 @@ bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) 
 // the ECU.  Forcing a reboot will force TS to re-read the tune CRC,
 bool rebootForPresetPending = false;
 
+static efitick_t prevRequestTimeNt = 0;
+
 /**
  * @brief 'Output' command sends out a snapshot of current values
  * Gauges refresh
@@ -45,6 +47,12 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
+	}
+
+	if (offset < BLOCKING_FACTOR) {
+		efitick_t nowNt = getTimeNowNt();
+		engine->outputChannels.outputRequestPeriod = nowNt - prevRequestTimeNt;
+		prevRequestTimeNt = nowNt;
 	}
 
 	tsState.outputChannelsCommandCounter++;

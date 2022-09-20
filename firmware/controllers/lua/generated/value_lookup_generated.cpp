@@ -48,6 +48,7 @@ static plain_get_float_s getF_plain[] = {
 	{"boostPid.pFactor", &engineConfiguration->boostPid.pFactor},
 	{"boostPid.iFactor", &engineConfiguration->boostPid.iFactor},
 	{"boostPid.dFactor", &engineConfiguration->boostPid.dFactor},
+	{"turbochargerFilter", &engineConfiguration->turbochargerFilter},
 	{"launchActivateDelay", &engineConfiguration->launchActivateDelay},
 	{"turboSpeedSensorMultiplier", &engineConfiguration->turboSpeedSensorMultiplier},
 	{"knockDetectionWindowStart", &engineConfiguration->knockDetectionWindowStart},
@@ -112,6 +113,7 @@ static plain_get_float_s getF_plain[] = {
 	{"oilPressure.value1", &engineConfiguration->oilPressure.value1},
 	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
 	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
+	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
 	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
 	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
 	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
@@ -218,6 +220,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useCicPidForIdle;
 	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
 		return engineConfiguration->useTLE8888_cranking_hack;
+	if (strEqualCaseInsensitive(name, "kickStartCranking"))
+		return engineConfiguration->kickStartCranking;
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
 		return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
 	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
@@ -298,6 +302,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardAggression;
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 		return engineConfiguration->knockRetardReapplyRate;
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+		return engineConfiguration->engineSyncCam;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -354,8 +360,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->verboseTLE8888;
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 		return engineConfiguration->enableVerboseCanTx;
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-		return engineConfiguration->onOffAlternatorLogic;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
 	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
@@ -442,8 +446,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->showHumanReadableWarning;
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 		return engineConfiguration->stftIgnoreErrorMagnitude;
-	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
-		return engineConfiguration->tempBooleanForVerySpecialCases;
+	if (strEqualCaseInsensitive(name, "vvtBooleanForVerySpecialCases"))
+		return engineConfiguration->vvtBooleanForVerySpecialCases;
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 		return engineConfiguration->enableSoftwareKnock;
 	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
@@ -646,6 +650,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->invertVvtControlIntake;
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 		return engineConfiguration->invertVvtControlExhaust;
+	if (strEqualCaseInsensitive(name, "useBiQuadOnAuxSpeedSensors"))
+		return engineConfiguration->useBiQuadOnAuxSpeedSensors;
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+		return engineConfiguration->tempBooleanForVerySpecialLogic;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
@@ -1010,6 +1018,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useTLE8888_cranking_hack = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "kickStartCranking"))
+	{
+		engineConfiguration->kickStartCranking = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
 	{
 		engineConfiguration->useSeparateIdleTablesForCrankingTaper = (int)value;
@@ -1210,6 +1223,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->knockRetardReapplyRate = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "engineSyncCam"))
+	{
+		engineConfiguration->engineSyncCam = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 	{
 		engineConfiguration->vssFilterReciprocal = (int)value;
@@ -1348,11 +1366,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
-	{
-		engineConfiguration->onOffAlternatorLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
@@ -1570,9 +1583,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+	if (strEqualCaseInsensitive(name, "vvtBooleanForVerySpecialCases"))
 	{
-		engineConfiguration->tempBooleanForVerySpecialCases = (int)value;
+		engineConfiguration->vvtBooleanForVerySpecialCases = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
@@ -2078,6 +2091,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 	{
 		engineConfiguration->invertVvtControlExhaust = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useBiQuadOnAuxSpeedSensors"))
+	{
+		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+	{
+		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))

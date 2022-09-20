@@ -26,24 +26,24 @@ void initializeNissanSR20VE_4(TriggerWaveform *s) {
 
 	float width = 4;
 
-	s->addEvent720(1 * 180 - 4 * width, T_PRIMARY, TV_RISE);
-	s->addEvent720(1 * 180, T_PRIMARY, TV_FALL);
+	s->addEvent720(1 * 180 - 4 * width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(1 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent720(2 * 180 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(2 * 180, T_PRIMARY, TV_FALL);
+	s->addEvent720(2 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(2 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent720(3 * 180 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(3 * 180, T_PRIMARY, TV_FALL);
+	s->addEvent720(3 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(3 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
-	s->addEvent720(4 * 180 - width, T_PRIMARY, TV_RISE);
-	s->addEvent720(4 * 180, T_PRIMARY, TV_FALL);
+	s->addEvent720(4 * 180 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(4 * 180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
 static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
 	int vvtWidth = 20;
 
-	s->addEventAngle(fallAngle - vvtWidth, T_PRIMARY, TV_RISE);
-	s->addEventAngle(fallAngle, T_PRIMARY, TV_FALL);
+	s->addEventAngle(fallAngle - vvtWidth, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEventAngle(fallAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 }
 
@@ -73,8 +73,8 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 	float currentAngle = missing * toothAngle;
 	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
-		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle - 5, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEventAngle(currentAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 	}
 }
 
@@ -111,14 +111,14 @@ void initializeNissanQR25crank(TriggerWaveform *s) {
 	float currentAngle = 20;
 	for (int i = 0;i < 16;i++) {
 		currentAngle += 10;
-		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle - 5, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEventAngle(currentAngle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 	}
 }
 
 static void addvq30tooth(TriggerWaveform *s, float angle) {
-	s->addEvent360(angle - 4, T_PRIMARY, TV_RISE);
-	s->addEvent360(angle, T_PRIMARY, TV_FALL);
+	s->addEvent360(angle - 4, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent360(angle, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
 // yes, this is CAM shaft shape NOT crank shaft shape!

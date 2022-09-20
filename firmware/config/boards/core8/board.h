@@ -9,9 +9,6 @@
 #ifndef BOARD_IO_H
 #define BOARD_IO_H
 
-#undef EFI_RTC
-#define EFI_RTC TRUE
-
 #undef EFI_USB_SERIAL
 #define EFI_USB_SERIAL TRUE
 

@@ -184,7 +184,7 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 		if (timestamp != 0) {
 			auto& channel = channels[entry.Channel];
 
-			if (channel.Name) {
+			if (channel.Callback) {
 				channel.Callback(channel.CallbackData, timestamp);
 			}
 		} else {

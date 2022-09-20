@@ -24,7 +24,7 @@ TEST(LuaVag, Checksum) {
 
 	function testFunc()
 		data = { 0xE0, 0x20, 0x20, 0x7E, 0xFE, 0xFF, 0xFF, 0x60 }
-		return  xorChecksum(data, 8)
+		return xorChecksum(data, 8)
 	end
 	)";
 
@@ -131,25 +131,27 @@ TEST(LuaVag, unpackMotor1_torq_req) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 21.84);
 }
 
-#define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA}\n "
+#define realMotor3Packet "\ndata = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA}\n "
 
 TEST(LuaVag, packMotor3) {
-	const char* script = PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
+	const char* script = SET_BIT_RANGE_LSB PRINT_ARRAY ARRAY_EQUALS SET_TWO_BYTES R"(
 
 	function testFunc()
 		tps = 100
 		iat = 25.5
+		desired_wheel_torque = 284.7
 
 		canMotor3 = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
  		canMotor3[2] = (iat + 48) / 0.75
 		canMotor3[3] = tps / 0.4
-		canMotor3[5] = 0x22
+		canMotor3[5] = 0x20
+		setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
  		canMotor3[8] = tps / 0.4
 
 		print(arrayToString(canMotor3))
 
-		expected = { 0x00, 0x62, 0xFA, 0x00, 0x22, 0x00, 0x00, 0xFA }
+		expected = { 0x00, 0x62, 0xFA, 0xDA, 0x22, 0x00, 0x00, 0xFA }
 		return equals(canMotor3, expected)
 	end
 	)";
@@ -180,6 +182,61 @@ TEST(LuaVag, unpackMotor3_pps) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 100);
 }
 
+TEST(LuaVag, setBitRange) {
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0x34, 0x56, 0x00 }
+			setBitRange(data, 4, 8, 0xAB)
+
+			print(arrayToString(data))
+
+			expected = { 0xB4, 0x5A, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0x00, 0x00, 0x00 }
+			setBitRange(data, 5, 9, 0x1FF)
+
+			print(arrayToString(data))
+
+			expected = { 0xE0, 0x3F, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+
+	{
+		const char* script = PRINT_ARRAY ARRAY_EQUALS SET_BIT_RANGE_LSB R"(
+
+		function testFunc()
+			data = { 0xFF, 0xFF, 0x00 }
+			setBitRange(data, 5, 9, 0x0)
+
+			print(arrayToString(data))
+
+			expected = { 0x1F, 0xC0, 0x00 }
+			return equals(data, expected)
+		end
+		)";
+
+	    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 0);
+	}
+
+}
+
 TEST(LuaVag, unpackMotor3_iat) {
 	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
 	function testFunc()
@@ -189,6 +246,17 @@ TEST(LuaVag, unpackMotor3_iat) {
 	)";
 
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 25.5);
+}
+
+TEST(LuaVag, unpackMotor3_desired_wheel_torque) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor3Packet	R"(
+	function testFunc()
+		desired_wheel_torque = getBitRange(data, 24, 12) * 0.39
+		return desired_wheel_torque
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 284.7);
 }
 
 #define realMotor6Packet "\ndata = { 0x3D, 0x54, 0x69, 0x7E, 0xFE, 0xFF, 0xFF, 0x80}\n "
@@ -262,108 +330,26 @@ TEST(LuaVag, ChecksumMotor6) {
     EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x3D);
 }
 
+#define realMotor5Packet "\ndata = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x06, 0xAD}\n "
 
-// Leiderman-Khlystov Coefficients for Estimating Engine Full Load Characteristics and Performance
-TEST(LuaVag, LeidermaKhlystov) {
-	const char* magic = VAG_CHECKSUM realMotor6Packet R"(
-
-function pow(x, power)
-	local result = x
-	for i = 2, power, 1
-	do
-		result = result * x
-	end
-	return result
-end
-
-
-Nemaxhp=188.7
-Nn=3643
-Memax=441.5
-nM=2689
-	
-ne=2000
-Nemax=Nemaxhp*0.7355
-
-Mn=Nemax*9549/Nn
-print('Mn ' ..Mn)
-
-Kn=Nn/nM
-print('Kn ' ..Kn)
-
-Km=Memax/Mn
-print('Km ' ..Km)
-
-M3=(Km-1)*100;
-zz=(100*(Kn-1)*(Kn-1));
-print('m3 ' ..M3)
-print('zz ' ..zz)
-
-ax=1-((M3*Kn*(2-Kn))/zz);
-bx=2*((M3*Kn)/zz);
-cx=(M3*Kn*Kn)/zz;
-
-print('ax ' ..ax)
-print('bx ' ..bx)
-print('cx ' ..cx)
-
-xx=ax*((ne/Nn))+(bx*(pow(ne,2)/pow(Nn,2)))-(cx*(pow(ne,3)/pow(Nn,3)));
-print ('xx ' ..xx)
-
-	
-Ne=Nemax*xx;
-
-Me=(9550*Ne)/ne;
-
-print('Me ' .. Me)
-
-currentRpm = 2000
-
-maxPowerHp =188.7
-maxPowerRpm = 3643 
-maxTorqueNm = 441.5
-maxTorqueRpm = 2689
-
-maxPowerKw = maxPowerHp * 0.7355
-
-
-torqAtMaxPower = maxPowerKw * 9549 / maxPowerRpm
-print('torqAtMaxPower ' ..torqAtMaxPower)
-
-rpmCoef = maxPowerRpm / maxTorqueRpm
-print('rpmCoef ' ..rpmCoef)
-
-torqCoef = maxTorqueNm / torqAtMaxPower
-print('torqCoef ' ..torqCoef)
-
-M3 =(torqCoef -1) * 100
-zz =(100 *(rpmCoef -1) *(rpmCoef -1))
-print('m3 ' ..M3)
-print('zz ' ..zz)
-
-ax = 1 -((M3 * rpmCoef *(2 - rpmCoef)) / zz)
-bx = 2 *((M3 * rpmCoef) / zz)
-cx =(M3 * rpmCoef * rpmCoef) / zz
-
-print('ax ' ..ax)
-print('bx ' ..bx)
-print('cx ' ..cx)
-
-xx = ax *((currentRpm / maxPowerRpm)) +(bx *(pow(currentRpm, 2) / pow(maxPowerRpm, 2))) -(cx *(pow(currentRpm, 3) / pow(maxPowerRpm, 3)))
-print ('xx ' ..xx)
-
-
-Ne = maxPowerKw * xx
-
-Me =(9550 * Ne) / currentRpm
-
-print('Me ' ..Me)
+TEST(LuaVag, ChecksumMotor5) {
+	const char* realdata = VAG_CHECKSUM realMotor5Packet R"(
 
 	function testFunc()
-		return Me
+		return xorChecksum(data, 8)
 	end
-
 	)";
 
-	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(magic).value_or(0), 1846.3770);
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xAD);
+}
+
+TEST(LuaVag, unpackMotor5_fuel) {
+	const char* script = 	GET_BIT_RANGE_LSB	realMotor5Packet	R"(
+	function testFunc()
+		fuelConsumption = getBitRange(data, 16, 15)
+		return fuelConsumption
+	end
+	)";
+
+    EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(script).value_or(0), 22003);
 }

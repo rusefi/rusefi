@@ -36,33 +36,12 @@ typedef enum __attribute__ ((__packed__))
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
-typedef enum __attribute__ ((__packed__)) {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
-
-} adc_channel_mode_e;
-
-typedef enum {
-	TV_FALL = 0,
-	TV_RISE = 1
-} trigger_value_e;
-
 // see also PWM_PHASE_MAX_WAVE_PER_PWM
 // todo: better names?
-typedef enum {
+enum class TriggerWheel : uint8_t {
 	T_PRIMARY = 0,
 	T_SECONDARY = 1,
-	T_NONE = 15
-} trigger_wheel_e;
-
-// see also 'HW_EVENT_TYPES'
-typedef enum {
-	SHAFT_PRIMARY_FALLING = 0,
-	SHAFT_PRIMARY_RISING = 1,
-	SHAFT_SECONDARY_FALLING = 2,
-	SHAFT_SECONDARY_RISING = 3,
-} trigger_event_e;
+};
 
 typedef enum  __attribute__ ((__packed__)) {
 	/**
@@ -531,6 +510,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 } idle_state_e;
 
+// todo: should this be just a boolean?
 typedef enum __attribute__ ((__packed__)) {
 	OPEN_LOOP = 0,
 	CLOSED_LOOP = 1,
@@ -549,17 +529,28 @@ typedef enum __attribute__ ((__packed__)) {
 } antiLagActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	GPPWM_Tps = 0,
-	GPPWM_Map = 1,
-	GPPWM_Clt = 2,
-	GPPWM_Iat = 3,
-	GPPWM_FuelLoad = 4,
-	GPPWM_IgnLoad = 5,
-	GPPWM_AuxTemp1 = 6,
-	GPPWM_AuxTemp2 = 7,
-	GPPWM_Zero = 8,
+	GPPWM_Zero = 0,
+	GPPWM_Tps = 1,
+	GPPWM_Map = 2,
+	GPPWM_Clt = 3,
+	GPPWM_Iat = 4,
+	GPPWM_FuelLoad = 5,
+	GPPWM_IgnLoad = 6,
+	GPPWM_AuxTemp1 = 7,
+	GPPWM_AuxTemp2 = 8,
 	GPPWM_AccelPedal = 9,
 	GPPWM_Vbatt = 10,
+	GPPWM_VVT_1I = 11,
+	GPPWM_VVT_1E = 12,
+	GPPWM_VVT_2I = 13,
+	GPPWM_VVT_2E = 14,
+	GPPWM_EthanolPercent = 15,
+	GPPWM_AuxLinear1 = 16,
+	GPPWM_AuxLinear2 = 17,
+	GPPWM_GppwmOutput1 = 18,
+	GPPWM_GppwmOutput2 = 19,
+	GPPWM_GppwmOutput3 = 20,
+	GPPWM_GppwmOutput4 = 21,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

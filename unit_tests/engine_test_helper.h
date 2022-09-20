@@ -81,14 +81,14 @@ public:
 	 */
 	void clearQueue();
 
-	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
-	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitime_t expectedTimestamp);
+	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitimeus_t expectedTimestamp);
+	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitimeus_t expectedTimestamp);
 
 	AngleBasedEvent * assertTriggerEvent(const char *msg, int index, AngleBasedEvent *expected, void *callback, int triggerEventIndex, angle_t angleOffsetFromTriggerEvent);
 
-	void assertEvent(const char *msg, int index, void *callback, efitime_t momentX, InjectionEvent *event);
-	void assertInjectorUpEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
-	void assertInjectorDownEvent(const char *msg, int eventIndex, efitime_t momentX, long injectorIndex);
+	void assertEvent(const char *msg, int index, void *callback, efitimeus_t momentX, InjectionEvent *event);
+	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
+	void assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?
 	void assertRpm(int expectedRpm, const char *msg);
 

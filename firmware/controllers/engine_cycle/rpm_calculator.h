@@ -12,6 +12,7 @@
 #include "stored_value_sensor.h"
 #include "timer.h"
 #include "rpm_calculator_api.h"
+#include "trigger_decoder.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -168,20 +169,21 @@ private:
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp);
+		uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
 /**
  * @brief   Initialize RPM calculator
  */
 void initRpmCalculator();
+operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { if (engine->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
+#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

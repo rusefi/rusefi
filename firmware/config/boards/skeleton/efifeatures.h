@@ -209,8 +209,6 @@
  */
 //#define EFI_UART_GPS FALSE
 
-#define EFI_SERVO TRUE
-
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 
 

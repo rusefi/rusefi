@@ -88,34 +88,34 @@ static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->useOnlyRisingEdgeForTriggerTemp = false;
 
-	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
-	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
-	s->addEvent720(232.76, T_SECONDARY, TV_RISE);
-	s->addEvent720(300.54, T_SECONDARY, TV_FALL);
-	s->addEvent720(360, T_PRIMARY, TV_RISE);
+	s->addEvent720(53.747, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(121.90, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(232.76, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(300.54, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(360, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
-	s->addEvent720(409.8412, T_SECONDARY, TV_RISE);
-	s->addEvent720(478.6505, T_SECONDARY, TV_FALL);
-	s->addEvent720(588.045, T_SECONDARY, TV_RISE);
-	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
-	s->addEvent720(720, T_PRIMARY, TV_FALL);
+	s->addEvent720(409.8412, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(478.6505, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(588.045, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
+	s->addEvent720(657.03, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 
 	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 0)) << "@0";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 1)) << "@1";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 1)) << "@1";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 1)) << "@1";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 1)) << "@1";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 2)) << "@2";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 2)) << "@2";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 2)) << "@2";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 2)) << "@2";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 3)) << "@3";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 3)) << "@3";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(0, 3)) << "@3";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 3)) << "@3";
 
-	ASSERT_EQ( 1,  s->wave.getChannelState(0, 4)) << "@4";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 5)) << "@5";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 8)) << "@8";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(0, 4)) << "@4";
+	ASSERT_EQ( TriggerValue::RISE,  s->wave.getChannelState(1, 5)) << "@5";
+	ASSERT_EQ( TriggerValue::FALL,  s->wave.getChannelState(1, 8)) << "@8";
 	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
 	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
 

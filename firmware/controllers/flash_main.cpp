@@ -10,7 +10,7 @@
 #include "pch.h"
 
 #if EFI_INTERNAL_FLASH
-#include "os_access.h"
+
 #include "flash_main.h"
 #include "eficonsole.h"
 
@@ -125,6 +125,7 @@ void writeToFlashIfPending() {
 	// Prevent sensor timeouts while flashing
 	Sensor::inhibitTimeouts(true);
 	writeToFlashNow();
+	// we do not want to allow sensor timeouts right away, we re-enable next time method is invoked
 }
 
 // Erase and write a copy of the configuration at the specified address
@@ -153,6 +154,7 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 bool burnWithoutFlash = false;
 
 void writeToFlashNow(void) {
+	engine->configBurnTimer.reset();
 	bool isSuccess = false;
 
 	if (burnWithoutFlash) {

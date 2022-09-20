@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "drivers/gpio/gpio_ext.h"
 
 #if HW_HELLEN
@@ -43,6 +43,12 @@ const char *vvtNames[] = {
 		PROTOCOL_VVT2_NAME,
 		PROTOCOL_VVT3_NAME,
 		PROTOCOL_VVT4_NAME};
+
+const char *laNames[] = {
+		PROTOCOL_WA_CHANNEL_1,
+		PROTOCOL_WA_CHANNEL_2,
+		PROTOCOL_WA_CHANNEL_3,
+		PROTOCOL_WA_CHANNEL_4};
 
 // these short names are part of engine sniffer protocol
 static const char* const sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
@@ -130,6 +136,7 @@ EnginePins::EnginePins() :
 	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
 	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+		enginePins.coils[i].coilIndex = i;
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
 
@@ -344,12 +351,6 @@ void NamedOutputPin::setLow() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
-InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
-	overlappingCounter = 1; // Force update in reset
-	reset();
-	injectorIndex = -1;
-}
-
 bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
@@ -374,6 +375,44 @@ void InjectorOutputPin::reset() {
 
 IgnitionOutputPin::IgnitionOutputPin() {
 	reset();
+}
+
+void IgnitionOutputPin::setHigh() {
+	NamedOutputPin::setHigh();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = true;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = true;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = true;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = true;
+		break;
+	}
+}
+
+void IgnitionOutputPin::setLow() {
+	NamedOutputPin::setLow();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = false;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = false;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = false;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = false;
+		break;
+	}
 }
 
 void IgnitionOutputPin::reset() {

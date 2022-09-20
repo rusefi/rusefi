@@ -8,7 +8,11 @@
 #include "pch.h"
 
 #include "spark_logic.h"
-#include "os_access.h"
+
+// dependency injection
+#include "engine_state.h"
+#include "rpm_calculator_api.h"
+// end of injection
 
 #include "utlist.h"
 #include "event_queue.h"
@@ -36,8 +40,6 @@ int isIgnitionTimingError(void) {
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 	efitick_t nowNt = getTimeNowNt();
-	engine->outputChannels.mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
-	engine->mostRecentSparkEvent = nowNt;
 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
@@ -75,7 +77,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	const angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
-		- engine->engineState.timingAdvance[event->cylinderNumber]
+		- getEngineState()->timingAdvance[event->cylinderNumber]
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
@@ -112,7 +114,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
-	assertAngleRange(dwellStartAngle, "findAngle#a6", CUSTOM_ERR_6550);
+
+	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", CUSTOM_ERR_6550);
 	wrapAngle2(dwellStartAngle, "findAngle#7", CUSTOM_ERR_6550, getEngineCycle(engine->getOperationMode()));
 	event->dwellAngle = dwellStartAngle;
 
@@ -398,7 +401,7 @@ static void prepareIgnitionSchedule() {
 	 * but we are already re-purposing the output signals, but everything works because we
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 	 */
-	operation_mode_e operationMode = engine->getOperationMode();
+	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
 	float maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
@@ -492,7 +495,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  */
 percent_t getCoilDutyCycle(int rpm) {
 	floatms_t totalPerCycle = engine->engineState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
-	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
+	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
 

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define BOARD_ID_154hyundai_c 10
+
 void hellenWbo();
 
 void setHellen144LedPins();

@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 
 #if EFI_MAP_AVERAGING
 
@@ -104,7 +104,12 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
-	float instantMap = convertMap(instantVoltage).value_or(0);
+	SensorResult mapResult = convertMap(instantVoltage);
+	if (!mapResult) {
+		// hopefully this warning is not too much CPU consumption for fast ADC callback
+		warning(CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+	}
+	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
@@ -167,7 +172,6 @@ static void applyMapMinBufferLength() {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
@@ -183,7 +187,7 @@ void refreshMapAveragingPreCalc() {
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
+			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation

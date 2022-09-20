@@ -79,15 +79,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->can2TxPin = Gpio::B13;
 }
 
-static void setupDefaultSensorInputs() {
-
-	engineConfiguration->afr.hwChannel = EFI_ADC_4;
-	setEgoSensor(ES_14Point7_Free);
-	
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_9;
-
-}
-
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();

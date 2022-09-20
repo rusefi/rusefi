@@ -33,17 +33,24 @@ static void hwTimerCallback(PWMDriver*) {
 }
 
 static constexpr PWMConfig timerConfig = {
-	SCHEDULER_TIMER_FREQ,
-	UINT32_MAX,		// timer period = 2^32 counts
-	nullptr,		// No update callback
-	{
+	.frequency = SCHEDULER_TIMER_FREQ,
+	/* wanted timer period = 2^32 counts,
+	 * but driver set (period - 1) value to register
+	 * also period is uint32_t
+	 * So set it to zero so it will overlap to 0xffffffff when writen to register */
+	.period = 0,
+	.callback = nullptr,		// No update callback
+	.channels = {
 		{PWM_OUTPUT_DISABLED, hwTimerCallback},	// Channel 0 = timer callback, others unused
 		{PWM_OUTPUT_DISABLED, nullptr},
 		{PWM_OUTPUT_DISABLED, nullptr},
 		{PWM_OUTPUT_DISABLED, nullptr}
 	},
-	0,	// CR1
-	0	// CR2
+	.cr2 = 0,
+#if STM32_PWM_USE_ADVANCED
+	.bdtr = 0,
+#endif
+	.dier = 0
 };
 
 void portInitMicrosecondTimer() {

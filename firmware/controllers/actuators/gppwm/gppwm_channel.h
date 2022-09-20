@@ -14,7 +14,9 @@ public:
 	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
 	float update();
 	percent_t getOutput() const;
-	void setOutput(float result);
+
+	// Returns actual output duty, with hysteresis applied
+	float setOutput(float result);
 
 private:
 	// Store the current state so we can apply hysteresis
@@ -27,3 +29,5 @@ private:
 	OutputPin* m_output = nullptr;
 	const ValueProvider3D* m_table = nullptr;
 };
+
+expected<float> readGppwmChannel(gppwm_channel_e channel);

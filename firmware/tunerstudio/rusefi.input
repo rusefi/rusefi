@@ -189,10 +189,17 @@ enable2ndByteCanID = false
 	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
-	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
-	gppwm2_load = {(gppwm2_loadAxis == 0) ? TPSValue : ((gppwm2_loadAxis == 1) ? MAPValue : ((gppwm2_loadAxis == 2) ? coolant : ((gppwm2_loadAxis == 3) ? intake : ((gppwm2_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
-	gppwm3_load = {(gppwm3_loadAxis == 0) ? TPSValue : ((gppwm3_loadAxis == 1) ? MAPValue : ((gppwm3_loadAxis == 2) ? coolant : ((gppwm3_loadAxis == 3) ? intake : ((gppwm3_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
-	gppwm4_load = {(gppwm4_loadAxis == 0) ? TPSValue : ((gppwm4_loadAxis == 1) ? MAPValue : ((gppwm4_loadAxis == 2) ? coolant : ((gppwm4_loadAxis == 3) ? intake : ((gppwm4_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
+	gppwm1_load = {(gppwm1_loadAxis == 0) ? 0 : (gppwm1_loadAxis == 1) ? TPSValue : (gppwm1_loadAxis == 2) ? MAPValue : (gppwm1_loadAxis == 3) ? coolant : (gppwm1_loadAxis == 4) ? intake : (gppwm1_loadAxis == 5) ? fuelingLoad : (gppwm1_loadAxis == 6) ? ignitionLoad : (gppwm1_loadAxis == 7) ? auxTemp1 : (gppwm1_loadAxis == 8) ? auxTemp2 : (gppwm1_loadAxis == 9) ? throttlePedalPosition : (gppwm1_loadAxis == 10) ? VBatt : (gppwm1_loadAxis == 11) ? vvtPositionB1I : (gppwm1_loadAxis == 12) ? vvtPositionB1E : (gppwm1_loadAxis == 13) ? vvtPositionB2I : (gppwm1_loadAxis == 14) ? vvtPositionB2E : (gppwm1_loadAxis == 15) ? flexPercent : (gppwm1_loadAxis == 16) ? auxLinear1 : (gppwm1_loadAxis == 17) ? auxLinear2 : 0}
+	gppwm2_load = {(gppwm2_loadAxis == 0) ? 0 : (gppwm2_loadAxis == 1) ? TPSValue : (gppwm2_loadAxis == 2) ? MAPValue : (gppwm2_loadAxis == 3) ? coolant : (gppwm2_loadAxis == 4) ? intake : (gppwm2_loadAxis == 5) ? fuelingLoad : (gppwm2_loadAxis == 6) ? ignitionLoad : (gppwm2_loadAxis == 7) ? auxTemp1 : (gppwm2_loadAxis == 8) ? auxTemp2 : (gppwm2_loadAxis == 9) ? throttlePedalPosition : (gppwm2_loadAxis == 10) ? VBatt : (gppwm2_loadAxis == 11) ? vvtPositionB1I : (gppwm2_loadAxis == 12) ? vvtPositionB1E : (gppwm2_loadAxis == 13) ? vvtPositionB2I : (gppwm2_loadAxis == 14) ? vvtPositionB2E : (gppwm2_loadAxis == 15) ? flexPercent : (gppwm2_loadAxis == 16) ? auxLinear1 : (gppwm2_loadAxis == 17) ? auxLinear2 : 0}
+	gppwm3_load = {(gppwm3_loadAxis == 0) ? 0 : (gppwm3_loadAxis == 1) ? TPSValue : (gppwm3_loadAxis == 2) ? MAPValue : (gppwm3_loadAxis == 3) ? coolant : (gppwm3_loadAxis == 4) ? intake : (gppwm3_loadAxis == 5) ? fuelingLoad : (gppwm3_loadAxis == 6) ? ignitionLoad : (gppwm3_loadAxis == 7) ? auxTemp1 : (gppwm3_loadAxis == 8) ? auxTemp2 : (gppwm3_loadAxis == 9) ? throttlePedalPosition : (gppwm3_loadAxis == 10) ? VBatt : (gppwm3_loadAxis == 11) ? vvtPositionB1I : (gppwm3_loadAxis == 12) ? vvtPositionB1E : (gppwm3_loadAxis == 13) ? vvtPositionB2I : (gppwm3_loadAxis == 14) ? vvtPositionB2E : (gppwm3_loadAxis == 15) ? flexPercent : (gppwm3_loadAxis == 16) ? auxLinear1 : (gppwm3_loadAxis == 17) ? auxLinear2 : 0}
+	gppwm4_load = {(gppwm4_loadAxis == 0) ? 0 : (gppwm4_loadAxis == 1) ? TPSValue : (gppwm4_loadAxis == 2) ? MAPValue : (gppwm4_loadAxis == 3) ? coolant : (gppwm4_loadAxis == 4) ? intake : (gppwm4_loadAxis == 5) ? fuelingLoad : (gppwm4_loadAxis == 6) ? ignitionLoad : (gppwm4_loadAxis == 7) ? auxTemp1 : (gppwm4_loadAxis == 8) ? auxTemp2 : (gppwm4_loadAxis == 9) ? throttlePedalPosition : (gppwm4_loadAxis == 10) ? VBatt : (gppwm4_loadAxis == 11) ? vvtPositionB1I : (gppwm4_loadAxis == 12) ? vvtPositionB1E : (gppwm4_loadAxis == 13) ? vvtPositionB2I : (gppwm4_loadAxis == 14) ? vvtPositionB2E : (gppwm4_loadAxis == 15) ? flexPercent : (gppwm4_loadAxis == 16) ? auxLinear1 : (gppwm4_loadAxis == 17) ? auxLinear2 : 0}
+
+	ignBlends1_blendVal = {(ignBlends1_blendParameter == 0) ? 0 : (ignBlends1_blendParameter == 1) ? TPSValue : (ignBlends1_blendParameter == 2) ? MAPValue : (ignBlends1_blendParameter == 3) ? coolant : (ignBlends1_blendParameter == 4) ? intake : (ignBlends1_blendParameter == 5) ? fuelingLoad : (ignBlends1_blendParameter == 6) ? ignitionLoad : (ignBlends1_blendParameter == 7) ? auxTemp1 : (ignBlends1_blendParameter == 8) ? auxTemp2 : (ignBlends1_blendParameter == 9) ? throttlePedalPosition : (ignBlends1_blendParameter == 10) ? VBatt : (ignBlends1_blendParameter == 11) ? vvtPositionB1I : (ignBlends1_blendParameter == 12) ? vvtPositionB1E : (ignBlends1_blendParameter == 13) ? vvtPositionB2I : (ignBlends1_blendParameter == 14) ? vvtPositionB2E : (ignBlends1_blendParameter == 15) ? flexPercent : (ignBlends1_blendParameter == 16) ? auxLinear1 : (ignBlends1_blendParameter == 17) ? auxLinear2 : 0}
+	ignBlends2_blendVal = {(ignBlends2_blendParameter == 0) ? 0 : (ignBlends2_blendParameter == 1) ? TPSValue : (ignBlends2_blendParameter == 2) ? MAPValue : (ignBlends2_blendParameter == 3) ? coolant : (ignBlends2_blendParameter == 4) ? intake : (ignBlends2_blendParameter == 5) ? fuelingLoad : (ignBlends2_blendParameter == 6) ? ignitionLoad : (ignBlends2_blendParameter == 7) ? auxTemp1 : (ignBlends2_blendParameter == 8) ? auxTemp2 : (ignBlends2_blendParameter == 9) ? throttlePedalPosition : (ignBlends2_blendParameter == 10) ? VBatt : (ignBlends2_blendParameter == 11) ? vvtPositionB1I : (ignBlends2_blendParameter == 12) ? vvtPositionB1E : (ignBlends2_blendParameter == 13) ? vvtPositionB2I : (ignBlends2_blendParameter == 14) ? vvtPositionB2E : (ignBlends2_blendParameter == 15) ? flexPercent : (ignBlends2_blendParameter == 16) ? auxLinear1 : (ignBlends2_blendParameter == 17) ? auxLinear2 : 0}
+	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
+	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
+
+	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
 
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
@@ -224,6 +231,8 @@ enable2ndByteCanID = false
     debugFieldI3List = bits,   U08,   [0:7], "Alt: Reset Cnt",          "",                   "",          "Idle: Reset Cnt",                "Idle di3",            "           ",               "",           "VVT1: 10xTarget",         "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di3",               "s counter",         "",           "di3",          "di3",           "22di3",          "",        "24:di3",     "",               "write err", "",             "",       "",     "",     "Latest Received","",                     "",    "",      "",      "","Starter Disable","",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 3 State",  "",               "VVT2: 10xTarger",        "VVT3: 10xTarger",        "VVT4: 10xTarger"
     debugFieldI4List = bits,   U08,   [0:7], "Alt: Period",             "",                   "",          "Idle: State",                    "Idle di4",            "Cycle Cnt 1",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di4",               "executor",          "",           "di4",          "di4",           "22di4",          "",        "24:di4",      "",              "",          "",             "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 4 State",  "",               "",                       "",                       ""
     debugFieldI5List = bits,   U08,   [0:7], "",                        "",                   "",          "",                               "Idle di5",            "Cycle Cnt 2",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "di5",        "di5",               "ETB di5",               "max executor",      "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",          "",       "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 5 State",  "",               "",                       "",                       ""
+
+	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -697,6 +706,34 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins = tcu_32SpeedBins, vehicleSpeedKph
 		yBins = tcu_32Vals
 
+	curve = ignAdder1Bias, "Ignition adder 1 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends1_blendBins, ignBlends1_blendVal
+		yBins = ignBlends1_blendValues
+
+	curve = ignAdder2Bias, "Ignition adder 2 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends2_blendBins, ignBlends2_blendVal
+		yBins = ignBlends2_blendValues
+
+	curve = ignAdder3Bias, "Ignition adder 3 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends3_blendBins, ignBlends3_blendVal
+		yBins = ignBlends3_blendValues
+
+	curve = ignAdder4Bias, "Ignition adder 4 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = ignBlends4_blendBins, ignBlends4_blendVal
+		yBins = ignBlends4_blendValues
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -765,6 +802,30 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = ignAdder1Table, ignAdder1Map, "Ignition adder 1", 1
+      xBins       = ignBlends1_rpmBins, RPMValue
+      yBins       = ignBlends1_loadBins, ignitionLoad
+      zBins       = ignBlends1_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder2Table, ignAdder2Map, "Ignition adder 2", 1
+      xBins       = ignBlends2_rpmBins, RPMValue
+      yBins       = ignBlends2_loadBins, ignitionLoad
+      zBins       = ignBlends2_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder3Table, ignAdder3Map, "Ignition adder 3", 1
+      xBins       = ignBlends3_rpmBins, RPMValue
+      yBins       = ignBlends3_loadBins, ignitionLoad
+      zBins       = ignBlends3_table
+      gridOrient  = 250, 0, 340
+
+   table = ignAdder4Table, ignAdder4Map, "Ignition adder 4", 1
+      xBins       = ignBlends4_rpmBins, RPMValue
+      yBins       = ignBlends4_loadBins, ignitionLoad
+      zBins       = ignBlends4_table
+      gridOrient  = 250, 0, 340
 
    table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
       ;       constant, variable
@@ -1098,7 +1159,7 @@ gaugeCategory = Sensors - Extra 2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
-   currentEnginePhaseGauge = currentEnginePhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
+   currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1190,8 +1251,8 @@ gaugeCategory = Fueling
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    baroCorrectionGauge  = baroCorrection,@@GAUGE_NAME_FUEL_BARO_CORR@@,           "ratio",        0.5,    1.5,      0.6,     0.7,     1.3,   1.4,   1,   1
    crankingFuelGauge = crankingFuelMs,   @@GAUGE_NAME_FUEL_CRANKING@@,      "mg",        0,   100,     0, 0,      100,    100,   3, 1
-   iatCorrectionGauge = iatCorrection, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
-   cltCorrectionGauge = cltCorrection, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   iatCorrectionGauge = running_intakeTemperatureCoefficient, @@GAUGE_NAME_FUEL_IAT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
+   cltCorrectionGauge = running_coolantTemperatureCoefficient, @@GAUGE_NAME_FUEL_CLT_CORR@@, "mult",     0,   3,     0,    0,    3,  3,   2,   2
    injectorDutyCycleGauge=injectorDutyCycle, @@GAUGE_NAME_FUEL_INJ_DUTY@@,"%",      0,    120,      10,     10,     100,   100,   1,   1
    actualLastInjectionGauge   = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, "mSec",        0,   25.5,     1.0,    1.2,      20,    25,   3, 1
    veValueGauge      = veValue,                 "fuel: VE",            "",        0,    120,      10,     10,     100,   100,   1,   1
@@ -1383,6 +1444,9 @@ gaugeCategory = GPPWM Outputs
    indicator =        { sd_logging_internal },       "No SD logging",        "SD logging",  white,  black,  green,  black
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
+
+   indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
 [KeyActions]
@@ -1490,6 +1554,16 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
+
+		groupMenu = "Ignition Adders"
+		groupChildMenu = ignAdder1Cfg,			"Adder 1 bias"
+		groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { ignBlends1_blendParameter != 0 }
+		groupChildMenu = ignAdder2Cfg,			"Adder 2 bias"
+		groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { ignBlends2_blendParameter != 0 }
+		groupChildMenu = ignAdder3Cfg,			"Adder 3 bias"
+		groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { ignBlends3_blendParameter != 0 }
+		groupChildMenu = ignAdder4Cfg,			"Adder 4 bias"
+		groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { ignBlends4_blendParameter != 0 }
 
 		groupMenu = "Cylinder ign trims"
 		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
@@ -2029,6 +2103,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ; todo: https://github.com/rusefi/rusefi/issues/2077
 
 	    field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+   		field = "MAP readout angle",                    mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
@@ -2038,6 +2113,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
+		field = "Cam for engine sync resolution",		engineSyncCam
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2217,6 +2293,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable multiple sparks",				multisparkEnable
 		panel = multisparkMain
 		panel = multisparkDwellParams
+
+	dialog = ignAdder1Cfg, "Ignition adder 1 config"
+		field = "Blend parameter", ignBlends1_blendParameter
+		panel = ignAdder1Bias
+
+	dialog = ignAdder2Cfg, "Ignition adder 2 config"
+		field = "Blend parameter", ignBlends2_blendParameter
+		panel = ignAdder2Bias
+
+	dialog = ignAdder3Cfg, "Ignition adder 3 config"
+		field = "Blend parameter", ignBlends3_blendParameter
+		panel = ignAdder3Bias
+
+	dialog = ignAdder4Cfg, "Ignition adder 4 config"
+		field = "Blend parameter", ignBlends4_blendParameter
+		panel = ignAdder4Bias
 
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection
@@ -2548,11 +2640,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = allPinsSensors
 
 	dialog = allPins3_2
-		field = "servo#1",								servoOutputPins1
-		field = "servo#2",								servoOutputPins2
-		field = "servo#3",								servoOutputPins3
-		field = "servo#4",								servoOutputPins4
-		field = "servo#5",								servoOutputPins5
 		field = "VVT Pin #1",							vvtPins1
 		field = "VVT Pin #2",							vvtPins2
 		field = "VVT Pin #3",							vvtPins3
@@ -3020,7 +3107,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = softwareKnockResponseCfg, "Response"
 		field = knockRetardAggression,      knockRetardAggression
 		field = knockRetardReapplyRate,     knockRetardReapplyRate
-		field = knockRetardMaximum,         knockRetardMaximum
 
 	dialog = softwareKnockLeft, ""
 		panel = softwareKnockCfg
@@ -3169,20 +3255,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Battery Input Divider Coefficient",	vbattDividerCoeff
 	dialog = alternator, "Alternator Settings",	yAxis
 		field = "Enabled",								isAlternatorControlEnabled
-		field = "simple on/off mode",					onOffAlternatorLogic, {isAlternatorControlEnabled == 1}
 		field = "Target",								targetVBatt, {isAlternatorControlEnabled == 1}
 		field = "Pin",									alternatorControlPin, {isAlternatorControlEnabled == 1}
 		field = "Pin Mode",								alternatorControlPinMode, {isAlternatorControlEnabled == 1}
-		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "PWM frequency",						alternatorPwmFrequency, {isAlternatorControlEnabled == 1}
 		field = "Off Above TPS",						alternatorOffAboveTps, {isAlternatorControlEnabled == 1}
 		field = "Detailed status in console",			isVerboseAlternator, {isAlternatorControlEnabled == 1}
 		field = "#PID control"
-		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
-		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1 && onOffAlternatorLogic == 0}
+		field = "offset",								alternatorControl_offset, {isAlternatorControlEnabled == 1}
+		field = "P factor",								alternatorControl_pFactor, {isAlternatorControlEnabled == 1}
+		field = "I factor",								alternatorControl_iFactor, {isAlternatorControlEnabled == 1}
+		field = "D factor",								alternatorControl_dFactor, {isAlternatorControlEnabled == 1}
+		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1}
+		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
 	dialog = startStopDialog, "Start/Stop Button"
@@ -3917,9 +4002,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Trailing Pin 3",						trailingCoilPins3
 		field = "Trailing Pin 4",						trailingCoilPins4
 
-    dialog = mapCamDialog, "Engine Phase by MAP sensor"
-		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
-
 	dialog = fancyHardwareDialog, "Fancy Boards"
 	    field = "Tachometer Output",                    boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
@@ -3935,7 +4017,8 @@ dialog = tcuControls, "Transmission Settings"
         field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
-		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases
+		field = "vvtBooleanForVerySpecialCases",        vvtBooleanForVerySpecialCases
+		field = tempBooleanForVerySpecialLogic,         tempBooleanForVerySpecialLogic
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
@@ -3945,7 +4028,11 @@ dialog = tcuControls, "Transmission Settings"
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
-		panel = mapCamDialog
+		field = vinNumber,                              vinNumber
+		field = turbochargerFilter,                     turbochargerFilter
+		field = auxFrequencyFilter,                     auxFrequencyFilter
+		field = useBiQuadOnAuxSpeedSensors,             useBiQuadOnAuxSpeedSensors
+		field = "TODO KS mode 4569",                    kickStartCranking
 		panel = allTriggerDebug
 		panel = torqueTableTbl
 

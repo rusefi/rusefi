@@ -28,8 +28,6 @@
 #include "rpm_calculator_api.h"
 // end of injection
 
-#include "os_access.h"
-
 #if EFI_PRINTF_FUEL_DETAILS
 	bool printFuelDebug = false;
 #endif // EFI_PRINTF_FUEL_DETAILS
@@ -47,105 +45,22 @@
 #include "local_version_holder.h"
 #include "event_queue.h"
 #include "injector_model.h"
+#include "injection_gpio.h"
+
 #if EFI_LAUNCH_CONTROL
 #include "launch_control.h"
-#endif
+#endif // EFI_LAUNCH_CONTROL
 
 #include "backup_ram.h"
-
-void startSimultaneousInjection(void*) {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		enginePins.injectors[i].open(nowNt);
-	}
-}
-
-static void endSimultaneousInjectionOnlyTogglePins() {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		enginePins.injectors[i].close(nowNt);
-	}
-}
 
 void endSimultaneousInjection(InjectionEvent *event) {
 	event->isScheduled = false;
 	endSimultaneousInjectionOnlyTogglePins();
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
-}
-
-void InjectorOutputPin::open(efitick_t nowNt) {
-	// per-output counter for error detection
-	overlappingCounter++;
-	// global counter for logging
-	getEngineState()->fuelInjectionCounter++;
-
-#if FUEL_MATH_EXTREME_LOGGING
-	if (printFuelDebug) {
-		printf("InjectorOutputPin::open %s %d now=%0.1fms\r\n", name, overlappingCounter, (int)getTimeNowUs() / 1000.0);
-	}
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	if (overlappingCounter > 1) {
-//		/**
-//		 * #299
-//		 * this is another kind of overlap which happens in case of a small duty cycle after a large duty cycle
-//		 */
-#if FUEL_MATH_EXTREME_LOGGING
-		if (printFuelDebug) {
-			printf("overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
-		}
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-	} else {
-#if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, true);
-#endif // EFI_TOOTH_LOGGER
-		setHigh();
-	}
-}
-
-void turnInjectionPinHigh(InjectionEvent *event) {
-	efitick_t nowNt = getTimeNowNt();
-	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
-		InjectorOutputPin *output = event->outputs[i];
-
-		if (output) {
-			output->open(nowNt);
-		}
-	}
-}
-
-void InjectorOutputPin::close(efitick_t nowNt) {
-#if FUEL_MATH_EXTREME_LOGGING
-	if (printFuelDebug) {
-		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
-	}
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-
-	overlappingCounter--;
-	if (overlappingCounter > 0) {
-#if FUEL_MATH_EXTREME_LOGGING
-		if (printFuelDebug) {
-			printf("was overlapping, no need to touch pin %s %d\r\n", name, (int)getTimeNowUs());
-		}
-#endif /* FUEL_MATH_EXTREME_LOGGING */
-	} else {
-#if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, false);
-#endif // EFI_TOOTH_LOGGER
-		setLow();
-	}
-
-	// Don't allow negative overlap count
-	if (overlappingCounter < 0) {
-		overlappingCounter = 0;
-	}
+	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
-
-	engine->outputChannels.mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
-	engine->mostRecentIgnitionEvent = nowNt;
 
 	event->isScheduled = false;
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
@@ -154,7 +69,7 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
+	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
 void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
@@ -265,12 +180,12 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 
 	float angleFromNow = eventAngle - currentPhase;
 	if (angleFromNow < 0) {
-		angleFromNow += engine->engineState.engineCycle;
+		angleFromNow += getEngineState()->engineCycle;
 	}
 
 	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
+	getExecutorInterface()->scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", angleFromNow, NT2US(startTime - nowNt), injectionDuration);
@@ -285,16 +200,15 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
-	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
+	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < getTriggerCentral()->engineCycleEventCount, "handleFuel/event index");
 
-	if (trgEventIndex == 0) {
-		engine->tpsAccelEnrichment.onEngineCycleTps();
-	}
-
+	LimpState limitedFuelState = getLimpManager()->allowInjection();
+	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
+	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
 		return;
 	}
@@ -303,7 +217,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	 * Injection events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = &engine->injectionEvents;
+	FuelSchedule *fs = getFuelSchedule();
 	if (!fs->isReady) {
 		fs->addFuelEvents();
 	}
@@ -348,18 +262,12 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		return;
 	}
 
-	LimpState limitedFuelState = engine->limpManager.allowInjection();
-	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
-	bool limitedFuel = !limitedFuelState.value;
 	
 	if (trgEventIndex == 0) {
-		if (HAVE_CAM_INPUT()) {
-			engine->triggerCentral.validateCamVvtCounters();
-		}
 
-		if (engine->triggerCentral.checkIfTriggerConfigChanged()) {
-			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
-			engine->injectionEvents.isReady = false;
+		if (getTriggerCentral()->checkIfTriggerConfigChanged()) {
+			getIgnitionEvents()->isReady = false; // we need to rebuild complete ignition schedule
+			getFuelSchedule()->isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
 			// see updateTriggerWaveform() -> prepareOutputSignals()
 
@@ -372,7 +280,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
+	handleFuel(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
 		rpm, trgEventIndex, edgeTimestamp);
@@ -381,105 +289,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
 	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
-}
-
-// Check if the engine is not stopped or cylinder cleanup is activated
-static bool isPrimeInjectionPulseSkipped() {
-	if (!engine->rpmCalculator.isStopped())
-		return true;
-	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
-}
-
-/**
- * Prime injection pulse
- */
-void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
-	if (!ignitionOn) {
-		// don't prime on ignition-off
-		return;
-	}
-
-	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
-	// So we check and update the ignition switch counter in non-volatile backup-RAM
-#if EFI_PROD_CODE
-	uint32_t ignSwitchCounter = backupRamLoad(BACKUP_IGNITION_SWITCH_COUNTER);
-#else /* EFI_PROD_CODE */
-	uint32_t ignSwitchCounter = 0;
-#endif /* EFI_PROD_CODE */
-
-	// if we're just toying with the ignition switch, give it another chance eventually...
-	if (ignSwitchCounter > 10)
-		ignSwitchCounter = 0;
-	// If we're going to skip this pulse, then save the counter as 0.
-	// That's because we'll definitely need the prime pulse next time (either due to the cylinder cleanup or the engine spinning)
-	if (isPrimeInjectionPulseSkipped())
-		ignSwitchCounter = -1;
-	// start prime injection if this is a 'fresh start'
-	if (ignSwitchCounter == 0) {
-		auto primeDelayMs = engineConfiguration->primingDelay * 1000;
-
-		auto startTime = getTimeNowNt() + MS2NT(primeDelayMs);
-		engine->executor.scheduleByTimestampNt("prime", &m_start, startTime, { PrimeController::onPrimeStartAdapter, this});
-	} else {
-		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
-	}
-#if EFI_PROD_CODE
-	// we'll reset it later when the engine starts
-	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
-#endif /* EFI_PROD_CODE */
-}
-
-void PrimeController::onPrimeStart() {
-	auto durationMs = getPrimeDuration();
-
-	// Don't prime a zero-duration pulse
-	if (durationMs <= 0) {
-		efiPrintf("Skipped zero-duration priming pulse.");
-		return;
-	}
-
-	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
-
-	auto endTime = getTimeNowNt() + MS2NT(durationMs);
-
-	// Open all injectors, schedule closing later
-	m_isPriming = true;
-	startSimultaneousInjection();
-	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
-}
-
-void PrimeController::onPrimeEnd() {
-	endSimultaneousInjectionOnlyTogglePins();
-
-	m_isPriming = false;
-}
-
-floatms_t PrimeController::getPrimeDuration() const {
-	auto clt = Sensor::get(SensorType::Clt);
-
-	// If the coolant sensor is dead, skip the prime. The engine will still start fine, but may take a little longer.
-	if (!clt) {
-		return 0;
-	}
-
-	auto primeMass = 
-		0.001f *	// convert milligram to gram
-		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
-
-	return engine->module<InjectorModel>()->getInjectionDuration(primeMass);
-}
-
-void updatePrimeInjectionPulseState() {
-	static bool counterWasReset = false;
-	if (counterWasReset)
-		return;
-
-	if (!engine->rpmCalculator.isStopped()) {
-#if EFI_PROD_CODE
-		backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, 0);
-#endif /* EFI_PROD_CODE */
-		counterWasReset = true;
-	}
 }
 
 #endif /* EFI_ENGINE_CONTROL */

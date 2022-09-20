@@ -21,8 +21,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.sd_msd;
 	if (strEqualCaseInsensitive(name, "isFan2On"))
 		return engine->outputChannels.isFan2On;
-	if (strEqualCaseInsensitive(name, "alternatorOnOff"))
-		return engine->outputChannels.alternatorOnOff;
 	if (strEqualCaseInsensitive(name, "toothLogReady"))
 		return engine->outputChannels.toothLogReady;
 	if (strEqualCaseInsensitive(name, "isTpsError"))
@@ -343,10 +341,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.detectedGear;
 	if (strEqualCaseInsensitive(name, "instantMAPValue"))
 		return engine->outputChannels.instantMAPValue;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenSparkEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenSparkEvents;
-	if (strEqualCaseInsensitive(name, "mostRecentTimeBetweenIgnitionEvents"))
-		return engine->outputChannels.mostRecentTimeBetweenIgnitionEvents;
 	if (strEqualCaseInsensitive(name, "maxLockedDuration"))
 		return engine->outputChannels.maxLockedDuration;
 	if (strEqualCaseInsensitive(name, "maxTriggerReentrant"))
@@ -481,5 +475,9 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.injectorState11;
 	if (strEqualCaseInsensitive(name, "injectorState12"))
 		return engine->outputChannels.injectorState12;
+	if (strEqualCaseInsensitive(name, "outputRequestPeriod"))
+		return engine->outputChannels.outputRequestPeriod;
+	if (strEqualCaseInsensitive(name, "mapFast"))
+		return engine->outputChannels.mapFast;
 	return EFI_ERROR_CODE;
 }

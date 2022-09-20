@@ -9,7 +9,7 @@
 #include "pch.h"
 
 #if !EFI_UNIT_TEST
-#include "os_access.h"
+
 #include "eficonsole.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
@@ -95,7 +95,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
 	efiPrintf("rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
-			engine->getOperationMode());
+			getEngineRotationState()->getOperationMode());
 
 	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 
@@ -692,7 +692,7 @@ static void setSpiMode(int index, bool mode) {
 
 static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
-		engine->hwTriggerInputEnabled = isEnabled;
+		getTriggerCentral()->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
@@ -918,7 +918,7 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		efiPrintf("global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
-		efiPrintf("trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
+		efiPrintf("trigger_hw_input=%s", boolToString(getTriggerCentral()->hwTriggerInputEnabled));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
 		efiPrintf("is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {

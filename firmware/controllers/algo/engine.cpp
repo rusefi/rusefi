@@ -16,7 +16,7 @@
 #include "advance_map.h"
 #include "speed_density.h"
 #include "advance_map.h"
-#include "os_access.h"
+
 #include "aux_valves.h"
 #include "map_averaging.h"
 #include "perf_trace.h"
@@ -100,82 +100,17 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-static operation_mode_e lookupOperationMode() {
-	if (engineConfiguration->twoStroke) {
-		return TWO_STROKE;
-	} else {
-		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
-	}
-}
-
-static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, config);
-
-	shape.initializeSyncPoint(initState, config);
-}
-
 void Engine::updateTriggerWaveform() {
-	static TriggerDecoderBase initState("init");
 
-	// Re-read config in case it's changed
-	primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
-	}
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	TRIGGER_WAVEFORM(initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration));
+	engine->triggerCentral.updateWaveform();
 
-	/**
-	 * this is only useful while troubleshooting a new trigger shape in the field
-	 * in very VERY rare circumstances
-	 */
-	if (engineConfiguration->overrideTriggerGaps) {
-		int gapIndex = 0;
 
-		// copy however many the user wants
-		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
-			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
-			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
-		}
-
-		// fill the remainder with the default gaps
-		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
-			engine->triggerCentral.triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
-			engine->triggerCentral.triggerShape.syncronizationRatioTo[gapIndex] = NAN;
-		}
-	}
-
-	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
-		/**
-	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
-	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
-	 	 */
-		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
-				initState);
-
-		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
-	}
-
-	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-		// todo: should 'vvtWithRealDecoder' be used here?
-		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
-			initVvtShape(
-				triggerCentral.vvtShape[camIndex],
-				vvtTriggerConfiguration[camIndex],
-				initState
-			);
-		}
-	}
-
-	// This is not the right place for this, but further refactoring has to happen before it can get moved.
-	engine->triggerCentral.triggerState.setNeedsDisambiguation(engine->triggerCentral.triggerShape.needsDisambiguation());
-
-	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
+	if (!engine->triggerCentral.triggerShape.shapeDefinitionError) {
 		prepareOutputSignals();
 	}
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
@@ -193,12 +128,12 @@ void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
 	// Re-read config in case it's changed
-	primaryTriggerConfiguration.update();
+	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
+		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 
-	watchdog();
+	efiWatchdog();
 	updateSlowSensors();
 	checkShutdown();
 
@@ -236,7 +171,7 @@ void Engine::periodicSlowCallback() {
 
 #if ANALOG_HW_CHECK_MODE
 	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
-	efitimesec_t secondsNow = getTimeNowSeconds();
+	efitimesec_t secondsNow = getTimeNowS();
 
 #if ! HW_CHECK_ALWAYS_STIMULATE
 	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
@@ -260,11 +195,6 @@ void Engine::periodicSlowCallback() {
 #endif // ANALOG_HW_CHECK_MODE
 }
 
-
-#if (BOARD_TLE8888_COUNT > 0)
-extern float vBattForTle8888;
-#endif /* BOARD_TLE8888_COUNT */
-
 /**
  * We are executing these heavy (logarithm) methods from outside the trigger callbacks for performance reasons.
  * See also periodicFastCallback
@@ -274,16 +204,10 @@ void Engine::updateSlowSensors() {
 
 #if EFI_ENGINE_CONTROL
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
-	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
+	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
+	getEngineState()->sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
-
-#if (BOARD_TLE8888_COUNT > 0)
-	// nasty value injection into C driver which would not be able to access Engine class
-	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
-#endif /* BOARD_TLE8888_COUNT */
-
 #endif
 }
 
@@ -331,10 +255,6 @@ void Engine::updateSwitchInputs() {
 	engine->engineState.brakePedalState = getBrakePedalState();
 
 #endif // EFI_GPIO_HARDWARE
-}
-
-void Engine::onTriggerSignalEvent() {
-	isSpinning = true;
 }
 
 Engine::Engine() {
@@ -415,24 +335,24 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 			if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
 				efiPrintf("error: synchronizationPoint @ index %d expected %d/%d got %d/%d",
 						triggerCentral.triggerState.currentCycle.current_index,
-						TRIGGER_WAVEFORM(getExpectedEventCount(0)),
-						TRIGGER_WAVEFORM(getExpectedEventCount(1)),
+						TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
+						TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)),
 						triggerCentral.triggerState.currentCycle.eventCount[0],
 						triggerCentral.triggerState.currentCycle.eventCount[1]);
 			}
 #endif /* EFI_PROD_CODE */
 		}
 
-		engine->triggerErrorDetection.add(isDecodingError);
+		engine->triggerCentral.triggerErrorDetection.add(isDecodingError);
 	}
 
 }
 #endif
 
 void Engine::injectEngineReferences() {
-	primaryTriggerConfiguration.update();
+	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
+		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 }
 
@@ -442,7 +362,7 @@ void Engine::setConfig() {
 	injectEngineReferences();
 }
 
-void Engine::watchdog() {
+void Engine::efiWatchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
@@ -451,7 +371,21 @@ void Engine::watchdog() {
 		return;
 	}
 
-	if (!isSpinning) {
+	static efitimems_t mostRecentMs = 0;
+	efitimems_t msNow = getTimeNowMs();
+	if (engineConfiguration->tempBooleanForVerySpecialLogic && engine->configBurnTimer.hasElapsedSec(5)) {
+
+		if (mostRecentMs != 0) {
+			efitimems_t gapInMs = msNow - mostRecentMs;
+			if (gapInMs > 500) {
+				firmwareError(WATCH_DOG_SECONDS, "gap in time: now=%d mS, was %d mS, gap=%dmS",
+					msNow, mostRecentMs, gapInMs);
+			}
+		}
+	}
+	mostRecentMs = msNow;
+
+	if (!getTriggerCentral()->isSpinningJustForWatchdog) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run
 			warning(CUSTOM_ERR_2ND_WATCHDOG, "Some pins were turned off by 2nd pass watchdog");
@@ -467,7 +401,7 @@ void Engine::watchdog() {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}
-	isSpinning = false;
+	getTriggerCentral()->isSpinningJustForWatchdog = false;
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("engine has STOPPED");
@@ -561,50 +495,8 @@ bool Engine::isMainRelayEnabled() const {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
-
-float Engine::getTimeIgnitionSeconds(void) const {
-	// return negative if the ignition is turned off
-	if (ignitionOnTimeNt == 0)
-		return -1;
-	float numSeconds = (float)NT2US(getTimeNowNt() - ignitionOnTimeNt) / US_PER_SECOND_F;
-	return numSeconds;
-}
-
 injection_mode_e getCurrentInjectionMode() {
 	return getEngineRotationState()->isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
-}
-
-// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
-// this is related to 'knownOperationMode' flag
-static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	switch (type) {
-		case TT_TOOTHED_WHEEL:
-		case TT_ONE:
-		case TT_3_1_CAM:
-		case TT_36_2_2_2:	// TODO: should this one be in this list?
-		case TT_TOOTHED_WHEEL_60_2:
-		case TT_TOOTHED_WHEEL_36_1:
-			// These modes could be either cam or crank speed
-			return false;
-		default:
-			return true;
-	}
-}
-
-operation_mode_e Engine::getOperationMode() const {
-	return rpmCalculator.getOperationMode();
-}
-
-
-operation_mode_e RpmCalculator::getOperationMode() const {
-	// Ignore user-provided setting for well known triggers.
-	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
-		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return engine->triggerCentral.triggerShape.getWheelOperationMode();
-	} else {
-		// For example 36-1, could be on either cam or crank, so we have to ask the user
-		return lookupOperationMode();
-	}
 }
 
 /**
@@ -645,4 +537,26 @@ EngineState * getEngineState() {
 	return &engine->engineState;
 }
 
+TunerStudioOutputChannels *getTunerStudioOutputChannels() {
+	return &engine->outputChannels;
+}
 
+ExecutorInterface *getExecutorInterface() {
+	return &engine->executor;
+}
+
+TriggerCentral * getTriggerCentral() {
+	return &engine->triggerCentral;
+}
+
+LimpManager * getLimpManager() {
+	return &engine->limpManager;
+}
+
+FuelSchedule *getFuelSchedule() {
+	return &engine->injectionEvents;
+}
+
+IgnitionEventList *getIgnitionEvents() {
+	return &engine->ignitionEvents;
+}

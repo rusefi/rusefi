@@ -19,15 +19,15 @@ static void commonRenix(TriggerWaveform *s) {
 
 	float currentAngle = 0;
 	for (int i = 0;i < 20;i++) {
-		s->addEventAngle(currentAngle + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle + tooth, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle + tooth / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+		s->addEventAngle(currentAngle + tooth, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 		currentAngle += tooth;
 	}
 
-	s->addEventAngle(currentAngle + tooth, T_PRIMARY, TV_RISE);
+	s->addEventAngle(currentAngle + tooth, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 
 	// float math error accumulates at this point so we have to spell out 180
-	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
+	s->addEventAngle(s->getCycleDuration(), TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
 // TT_RENIX_44_2_2

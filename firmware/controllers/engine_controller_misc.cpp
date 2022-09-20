@@ -6,7 +6,7 @@
  */
 
 #include "pch.h"
-#include "os_access.h"
+
 
 extern ButtonDebounce startStopButtonDebounce;
 
@@ -35,23 +35,6 @@ void irqEnterHook() {}
 void irqExitHook() {}
 void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
-
-#if !EFI_UNIT_TEST
-/**
- * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
- */
-efitimeus_t getTimeNowUs() {
-	ScopePerf perf(PE::GetTimeNowUs);
-	return NT2US(getTimeNowNt());
-}
-
-
-static WrapAround62 timeNt;
-
-efitick_t getTimeNowNt() {
-	return timeNt.update(getTimeNowLowerNt());
-}
-#endif /* !EFI_UNIT_TEST */
 
 static void onStartStopButtonToggle() {
 	engine->startStopStateToggleCounter++;

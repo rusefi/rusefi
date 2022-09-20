@@ -35,7 +35,7 @@ angle_t wrapAngleMethod(angle_t param, const char *msg, obd_code_e code) {
 }
 
 floatms_t getEngineCycleDuration(int rpm) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
+	return getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 }
 
 /**
@@ -49,11 +49,11 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 }
 
 float getFuelingLoad() {
-	return engine->engineState.fuelingLoad;
+	return getEngineState()->fuelingLoad;
 }
 
 float getIgnitionLoad() {
-	return engine->engineState.ignitionLoad;
+	return getEngineState()->ignitionLoad;
 }
 
 /**
@@ -399,8 +399,7 @@ static int getIgnitionPinForIndex(int cylinderIndex) {
 	}
 }
 
-void prepareIgnitionPinIndices(ignition_mode_e ignitionMode) {
-	(void)ignitionMode;
+void prepareIgnitionPinIndices() {
 #if EFI_ENGINE_CONTROL
 	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
 		engine->ignitionPin[cylinderIndex] = getIgnitionPinForIndex(cylinderIndex);
@@ -434,16 +433,7 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	engine->engineState.engineCycle = getEngineCycle(engine->getOperationMode());
-
-	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
-	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
-	for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
-		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
-			maxTimingCorrMap = maxF(maxTimingCorrMap, config->ignitionIatCorrTable[l][rpmIndex]);
-			maxTimingMap = maxF(maxTimingMap, config->ignitionTable[l][rpmIndex]);
-		}
-	}
+	getEngineState()->engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
@@ -452,9 +442,9 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
+	prepareIgnitionPinIndices();
 
-	TRIGGER_WAVEFORM(prepareShape(engine->triggerCentral.triggerFormDetails));
+	engine->triggerCentral.triggerShape.prepareShape(engine->triggerCentral.triggerFormDetails);
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();

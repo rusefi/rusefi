@@ -76,7 +76,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
-			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
+			trigger_event_e event = (currentValue == TriggerValue::RISE ? riseEvents : fallEvents)[i];
 			if (isUsefulSignal(event, triggerConfiguration)) {
 				state.decodeTriggerEvent(
 					"sim",
@@ -106,7 +106,7 @@ void TriggerStimulatorHelper::assertSyncPosition(
 		feedSimulatedEvent(triggerConfiguration, state, shape, i);
 	}
 
-	int revolutionCounter = state.getTotalRevolutionCounter();
+	int revolutionCounter = state.getCrankSynchronizationCounter();
 	if (revolutionCounter != TEST_REVOLUTIONS) {
 		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
 				getTrigger_type_e(triggerConfiguration.TriggerType.type),

@@ -22,7 +22,7 @@
 
 #include "pch.h"
 
-#include "os_access.h"
+
 #include "speed_density.h"
 #include "advance_map.h"
 #include "flash_main.h"
@@ -1118,16 +1118,6 @@ void applyNonPersistentConfiguration() {
 	engine->updateTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
-
-#if EFI_ENGINE_CONTROL
-
-void prepareShapes() {
-	prepareOutputSignals();
-
-	engine->injectionEvents.addFuelEvents();
-}
-
-#endif
 
 void setTwoStrokeOperationMode() {
 	engineConfiguration->twoStroke = true;

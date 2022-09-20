@@ -43,6 +43,7 @@
 #include "fan_control.h"
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
+#include "prime_injection.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -89,57 +90,6 @@ struct AirmassModelBase;
 class IEtbController;
 
 struct IIdleController;
-
-class PrimaryTriggerConfiguration final : public TriggerConfiguration {
-public:
-	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
-
-protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
-	trigger_config_s getType() const override;
-};
-
-class VvtTriggerConfiguration final : public TriggerConfiguration {
-public:
-	const int index;
-
-	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
-	}
-
-protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
-	bool isVerboseTriggerSynchDetails() const override;
-	trigger_config_s getType() const override;
-};
-
-class PrimeController : public EngineModule {
-public:
-	void onIgnitionStateChanged(bool ignitionOn) override;
-
-	floatms_t getPrimeDuration() const;
-
-	void onPrimeStart();
-	void onPrimeEnd();
-
-	bool isPriming() const {
-		return m_isPriming;
-	}
-
-private:
-	scheduling_s m_start;
-	scheduling_s m_end;
-
-	bool m_isPriming = false;
-
-	static void onPrimeStartAdapter(PrimeController* instance) {
-		instance->onPrimeStart();
-	}
-
-	static void onPrimeEndAdapter(PrimeController* instance) {
-		instance->onPrimeEnd();
-	}
-};
 
 class Engine final : public TriggerStateListener {
 public:
@@ -206,8 +156,6 @@ public:
 		return engineModules.get<get_t>();
 	}
 
-	cyclic_buffer<int> triggerErrorDetection;
-
 #if EFI_TCU
 	GearControllerBase *gearController;
 #endif
@@ -227,16 +175,6 @@ public:
 	FanControl1 fan1;
 	FanControl2 fan2;
 
-	efitick_t mostRecentSparkEvent;
-	efitick_t mostRecentIgnitionEvent;
-
-	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-#if CAMS_PER_BANK == 1
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
-#else
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
-#endif
-
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -249,7 +187,6 @@ public:
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
-	operation_mode_e getOperationMode() const;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
@@ -257,10 +194,6 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-
-	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
-	// GND input pins instead of leaving them floating
-	bool hwTriggerInputEnabled = true;
 
 	int getGlobalConfigurationVersion(void) const;
 
@@ -285,19 +218,11 @@ public:
 
     // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
-	/**
-	 * this is based on engineSnifferRpmThreshold settings and current RPM
-	 */
-	bool isEngineSnifferEnabled = false;
 
 #if EFI_UNIT_TEST
 	bool tdcMarkEnabled = true;
 #endif // EFI_UNIT_TEST
 
-	/**
-	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
-	 */
-	sensor_chart_e sensorChartMode = SC_OFF;
 
 	bool slowCallBackWasInvoked = false;
 
@@ -307,10 +232,12 @@ public:
 	int startStopStateToggleCounter = 0;
 
 	/**
-	 * this is needed by getTimeIgnitionSeconds() and checkShutdown()
+	 * this is needed by and checkShutdown()
 	 * todo: refactor to Timer?
 	 */
 	efitick_t ignitionOnTimeNt = 0;
+
+	Timer configBurnTimer;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
@@ -342,11 +269,6 @@ public:
 	 */
 	bool isFunctionalTestMode = false;
 
-	/**
-	 * See also triggerSimulatorFrequency
-	 */
-	bool directSelfStimulation = false;
-
 	void resetEngineSnifferIfInTestMode();
 
 	/**
@@ -356,10 +278,6 @@ public:
 	 */
 	int ignitionPin[MAX_CYLINDER_COUNT];
 
-	/**
-	 * this is invoked each time we register a trigger tooth signal
-	 */
-	void onTriggerSignalEvent();
 	EngineState engineState;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
@@ -372,15 +290,10 @@ public:
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
 
-	/**
-	 * value of 'triggerShape.getLength()'
-	 * pre-calculating this value is a performance optimization
-	 */
-	uint32_t engineCycleEventCount = 0;
 
 	void preCalculate();
 
-	void watchdog();
+	void efiWatchdog();
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
@@ -403,13 +316,6 @@ public:
 	 */
 	bool isMainRelayEnabled() const;
 
-	/**
-	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
-	 * This method returns the number of seconds since the ignition voltage is present.
-	 * The return value is float for more FSIO flexibility.
-	 */
-	float getTimeIgnitionSeconds(void) const;
-
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
 #if EFI_UNIT_TEST
@@ -419,13 +325,6 @@ public:
 	LimpManager limpManager;
 
 private:
-	/**
-	 * By the way:
-	 * 'cranking' means engine is not stopped and the rpm are below crankingRpm
-	 * 'running' means RPM are above crankingRpm
-	 * 'spinning' means the engine is not stopped
-	 */
-	bool isSpinning = false;
 	void reset();
 
 	void injectEngineReferences();
@@ -433,7 +332,6 @@ private:
 
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
 
-void prepareShapes();
 void applyNonPersistentConfiguration();
 void prepareOutputSignals();
 
