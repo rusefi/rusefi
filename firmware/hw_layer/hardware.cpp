@@ -69,10 +69,6 @@
 #include "can_vss.h"
 #endif
 
-/**
- * #311 we want to test RTC before engine start so that we do not test it while engine is running
- */
-bool rtcWorks = true;
 #if HAL_USE_SPI
 extern bool isSpiInitialized[5];
 

@@ -8,9 +8,9 @@
 
 #pragma once
 
-void printDateTime(void);
+void printDateTime();
 void setDateTime(const char *strDate);
-void initRtc(void);
+void initRtc();
 void date_set_tm(struct tm *);
 void date_get_tm(struct tm *);
 void dateToString(char *buffer);
