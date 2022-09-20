@@ -299,7 +299,7 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 	return (decrLimitPerSec <= 0.0f) ? newValue : oldValue - minF(oldValue - newValue, decrLimitPerSec * secsPassed);
 }
 
-static bool isPhaseInRange(float test, float current, float next) {
+bool isPhaseInRange(float test, float current, float next) {
 	bool afterCurrent = test >= current;
 	bool beforeNext = test < next;
 
