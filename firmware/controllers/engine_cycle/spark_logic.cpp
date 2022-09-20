@@ -75,7 +75,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	const angle_t sparkAngle =
+	angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
 		- getEngineState()->timingAdvance[event->cylinderNumber]
 		// Offset by this cylinder's position in the cycle
@@ -107,6 +107,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	event->outputs[0] = output;
 	event->outputs[1] = secondOutput;
+
+	wrapAngle2(sparkAngle, "findAngle#2", CUSTOM_ERR_6550, getEngineCycle(engine->getOperationMode()));
 	event->sparkAngle = sparkAngle;
 	// Stash which cylinder we're scheduling so that knock sensing knows which
 	// cylinder just fired
