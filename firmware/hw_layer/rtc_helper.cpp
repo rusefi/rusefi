@@ -139,6 +139,7 @@ void printDateTime() {
 
 		auto month = months[timp.tm_mon];
 
+		// Prints something like "19 Sep 2022 21:19:55"
 		efiPrintf("Current RTC time is: %02u %s %04u %02u:%02u:%02u", timp.tm_mday, month, timp.tm_year + 1900, timp.tm_hour, timp.tm_min, timp.tm_sec);
 	}
 }
