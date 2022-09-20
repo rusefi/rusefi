@@ -41,8 +41,6 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #endif
 
 #if EFI_RTC
-static bool rtcWorks = false;
-
 static time_t GetTimeUnixSec() {
 	tm tim;
 	RTCDateTime timespec;
@@ -50,10 +48,6 @@ static time_t GetTimeUnixSec() {
 	rtcGetTime(&RTCD1, &timespec);
 	rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
 	time_t result = mktime(&tim);
-
-	if (result > 0) {
-		rtcWorks = true;
-	}
 
 	return result;
 }
@@ -131,18 +125,21 @@ void dateToString(char *lcd_str) {
 	put2(12, lcd_str, timp.tm_sec);
 }
 
+static const char* const months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
 void printDateTime() {
 	tm timp;
 
 	time_t unix_time = GetTimeUnixSec();
 	if (unix_time == -1) {
-		efiPrintf("incorrect time in RTC cell");
+		efiPrintf("invalid time in RTC cell");
 	} else {
-		efiPrintf("%D - unix time", unix_time);
+		efiPrintf("Current Unix time: %d", unix_time);
 		date_get_tm(&timp);
 
-		efiPrintf("Current RTC localtime is: %04u-%02u-%02u %02u:%02u:%02u w=%d", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
-				timp.tm_min, timp.tm_sec, rtcWorks);
+		auto month = months[timp.tm_mon];
+
+		efiPrintf("Current RTC time is: %02u %s %04u %02u:%02u:%02u", timp.tm_mday, month, timp.tm_year + 1900, timp.tm_hour, timp.tm_min, timp.tm_sec);
 	}
 }
 
