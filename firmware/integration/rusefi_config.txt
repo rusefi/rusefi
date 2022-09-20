@@ -1741,6 +1741,9 @@ end_struct
 #define IGN_BLEND_COUNT 4
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
 
+#define VE_BLEND_COUNT 4
+blend_table_s[VE_BLEND_COUNT iterate] veBlends
+
 end_struct
 
 ! Pedal Position Sensor

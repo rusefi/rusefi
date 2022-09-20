@@ -24,6 +24,7 @@
 #include "event_registry.h"
 #include "fuel_math.h"
 #include "advance_map.h"
+#include "gppwm_channel.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;
@@ -482,6 +483,24 @@ void setAlgorithm(engine_load_mode_e algo) {
 
 void setFlatInjectorLag(float value) {
 	setArrayValues(engineConfiguration->injector.battLagCorr, value);
+}
+
+BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
+	auto value = readGppwmChannel(cfg.blendParameter);
+
+	if (!value) {
+		return { 0, 0 };
+	}
+
+	float tableValue = interpolate3d(
+		cfg.table,
+		cfg.loadBins, load,
+		cfg.rpmBins, rpm
+	);
+
+	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
+
+	return { blendFactor, 0.01f * blendFactor * tableValue };
 }
 
 #endif /* EFI_ENGINE_CONTROL */

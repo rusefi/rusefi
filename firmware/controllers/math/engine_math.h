@@ -73,3 +73,14 @@ void setSingleCoilDwell();
  * an odd-fire engine (v-twin, V10, some v6, etc)
  */
 angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber);
+
+// Table blending helpers
+struct BlendResult {
+	// Bias in percent (0-100%)
+	float Bias;
+
+	// Result value (bias * table value)
+	float Value;
+};
+
+BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load);

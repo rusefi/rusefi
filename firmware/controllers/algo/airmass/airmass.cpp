@@ -35,6 +35,18 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 		ve = interpolateClamped(0.0f, idleVe, engineConfiguration->idlePidDeactivationTpsThreshold, ve, tps.Value);
 	}
 
+	// Add any adjustments if configured
+	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
+		auto result = calculateBlend(config->veBlends[i], rpm, load);
+
+		engine->outputChannels.veBlendBias[i] = result.Bias;
+		engine->outputChannels.veBlendOutput[i] = result.Value;
+
+		// Apply as a multiplier, not as an adder
+		// Value of +5 means add 5%, aka multiply by 1.05
+		ve *= ((100 + result.Value) * 0.01f);
+	}
+
 	engine->engineState.currentVe = ve;
 	engine->engineState.currentVeLoad = load;
 	return ve * PERCENT_DIV;

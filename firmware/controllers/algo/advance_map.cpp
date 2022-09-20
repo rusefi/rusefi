@@ -30,32 +30,6 @@
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
-struct BlendResult {
-	// Bias in percent (0-100%)
-	float Bias;
-
-	// Result value (bias * table value)
-	float Value;
-};
-
-BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
-	auto value = readGppwmChannel(cfg.blendParameter);
-
-	if (!value) {
-		return { 0, 0 };
-	}
-
-	float tableValue = interpolate3d(
-		cfg.table,
-		cfg.loadBins, load,
-		cfg.rpmBins, rpm
-	);
-
-	float blendFactor = interpolate2d(value.Value, cfg.blendBins, cfg.blendValues);
-
-	return { blendFactor, 0.01f * blendFactor * tableValue };
-}
-
 /**
  * @return ignition timing angle advance before TDC
  */
