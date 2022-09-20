@@ -3,10 +3,6 @@
 float getOutputValueByName(const char *name) {
 	if (strEqualCaseInsensitive(name, "sd_present"))
 		return engine->outputChannels.sd_present;
-	if (strEqualCaseInsensitive(name, "isIgnitionEnabledIndicator"))
-		return engine->outputChannels.isIgnitionEnabledIndicator;
-	if (strEqualCaseInsensitive(name, "isInjectionEnabledIndicator"))
-		return engine->outputChannels.isInjectionEnabledIndicator;
 	if (strEqualCaseInsensitive(name, "sd_logging_internal"))
 		return engine->outputChannels.sd_logging_internal;
 	if (strEqualCaseInsensitive(name, "isFanOn"))

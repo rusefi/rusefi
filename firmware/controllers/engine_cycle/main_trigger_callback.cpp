@@ -207,6 +207,8 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < getTriggerCentral()->engineCycleEventCount, "handleFuel/event index");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
+
+	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
@@ -283,7 +285,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	handleFuel(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, trgEventIndex, edgeTimestamp);
+		rpm, trgEventIndex, edgeTimestamp, currentPhase, nextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle

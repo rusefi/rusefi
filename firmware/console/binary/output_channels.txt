@@ -10,8 +10,6 @@
 struct_no_prefix output_channels_s
 
 bit sd_present
-bit isIgnitionEnabledIndicator;
-bit isInjectionEnabledIndicator;
 bit sd_logging_internal
 bit unusedb4;
 bit unusedb5;
