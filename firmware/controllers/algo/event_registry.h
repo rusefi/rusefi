@@ -13,6 +13,8 @@
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
+struct AngleBasedEventOld;
+
 struct AngleBasedEventBase {
 	scheduling_s scheduling;
 	action_s action;
@@ -23,6 +25,8 @@ struct AngleBasedEventBase {
 
 	virtual bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const = 0;
 	virtual float getAngleFromNow(float currentPhase) const = 0;
+
+	virtual AngleBasedEventOld* asOld() { return nullptr; }
 };
 
 struct AngleBasedEventOld : public AngleBasedEventBase {
@@ -30,6 +34,8 @@ struct AngleBasedEventOld : public AngleBasedEventBase {
 
 	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
 	float getAngleFromNow(float currentPhase) const override;
+
+	AngleBasedEventOld* asOld() override { return this; }
 };
 
 struct AngleBasedEventNew : public AngleBasedEventBase {
