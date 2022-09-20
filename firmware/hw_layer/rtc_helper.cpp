@@ -14,11 +14,6 @@
 #include "rtc_helper.h"
 #include <sys/time.h>
 
-#if EFI_RTC
-extern bool rtcWorks;
-
-#endif /* EFI_RTC */
-
 void date_set_tm(tm *timp) {
 	(void)timp;
 #if EFI_RTC
@@ -46,17 +41,25 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #endif
 
 #if EFI_RTC
-static time_t GetTimeUnixSec() {
-  tm tim;
-  RTCDateTime timespec;
+static bool rtcWorks = false;
 
-  rtcGetTime(&RTCD1, &timespec);
-  rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
-  return mktime(&tim);
+static time_t GetTimeUnixSec() {
+	tm tim;
+	RTCDateTime timespec;
+
+	rtcGetTime(&RTCD1, &timespec);
+	rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
+	time_t result = mktime(&tim);
+
+	if (result > 0) {
+		rtcWorks = true;
+	}
+
+	return result;
 }
 
 static void SetTimeUnixSec(time_t unix_time) {
-  tm tim;
+	tm tim;
 
 #if defined __GNUC__
 	tm *canary;
@@ -128,7 +131,7 @@ void dateToString(char *lcd_str) {
 	put2(12, lcd_str, timp.tm_sec);
 }
 
-void printDateTime(void) {
+void printDateTime() {
 	tm timp;
 
 	time_t unix_time = GetTimeUnixSec();
@@ -168,9 +171,11 @@ void dateToString(char *lcd_str) {
 
 #endif
 
-void initRtc(void) {
+void initRtc() {
 #if EFI_RTC
 	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
 	efiPrintf("initRtc()");
+
+	printDateTime();
 #endif /* EFI_RTC */
 }
