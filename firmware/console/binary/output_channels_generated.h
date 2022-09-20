@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Sep 17 00:15:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 20 02:04:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -39,98 +39,98 @@ struct output_channels_s {
 	bool sd_present : 1 {};
 	/**
 	offset 0 bit 1 */
-	bool isIgnitionEnabledIndicator : 1 {};
-	/**
-	offset 0 bit 2 */
-	bool isInjectionEnabledIndicator : 1 {};
-	/**
-	offset 0 bit 3 */
 	bool sd_logging_internal : 1 {};
 	/**
-	offset 0 bit 4 */
+	offset 0 bit 2 */
 	bool unusedb4 : 1 {};
 	/**
-	offset 0 bit 5 */
+	offset 0 bit 3 */
 	bool unusedb5 : 1 {};
 	/**
 	 * radiator fan
-	offset 0 bit 6 */
+	offset 0 bit 4 */
 	bool isFanOn : 1 {};
 	/**
-	offset 0 bit 7 */
+	offset 0 bit 5 */
 	bool isO2HeaterOn : 1 {};
 	/**
-	offset 0 bit 8 */
+	offset 0 bit 6 */
 	bool checkEngine : 1 {};
 	/**
-	offset 0 bit 9 */
+	offset 0 bit 7 */
 	bool needBurn : 1 {};
 	/**
-	offset 0 bit 10 */
+	offset 0 bit 8 */
 	bool sd_msd : 1 {};
 	/**
-	offset 0 bit 11 */
+	offset 0 bit 9 */
 	bool isFan2On : 1 {};
 	/**
-	offset 0 bit 12 */
+	offset 0 bit 10 */
 	bool unusedBitLAtwfs : 1 {};
 	/**
-	offset 0 bit 13 */
+	offset 0 bit 11 */
 	bool toothLogReady : 1 {};
 	/**
-	offset 0 bit 14 */
+	offset 0 bit 12 */
 	bool unused3123 : 1 {};
 	/**
-	offset 0 bit 15 */
+	offset 0 bit 13 */
 	bool isTpsError : 1 {};
 	/**
-	offset 0 bit 16 */
+	offset 0 bit 14 */
 	bool isCltError : 1 {};
 	/**
-	offset 0 bit 17 */
+	offset 0 bit 15 */
 	bool isMapError : 1 {};
 	/**
-	offset 0 bit 18 */
+	offset 0 bit 16 */
 	bool isIatError : 1 {};
 	/**
-	offset 0 bit 19 */
+	offset 0 bit 17 */
 	bool unused131313 : 1 {};
 	/**
-	offset 0 bit 20 */
+	offset 0 bit 18 */
 	bool isTriggerError : 1 {};
 	/**
-	offset 0 bit 21 */
+	offset 0 bit 19 */
 	bool hasCriticalError : 1 {};
 	/**
-	offset 0 bit 22 */
+	offset 0 bit 20 */
 	bool isWarnNow : 1 {};
 	/**
-	offset 0 bit 23 */
+	offset 0 bit 21 */
 	bool isPedalError : 1 {};
 	/**
-	offset 0 bit 24 */
+	offset 0 bit 22 */
 	bool isKnockChipOk : 1 {};
 	/**
-	offset 0 bit 25 */
+	offset 0 bit 23 */
 	bool launchTriggered : 1 {};
 	/**
-	offset 0 bit 26 */
+	offset 0 bit 24 */
 	bool isTps2Error : 1 {};
 	/**
-	offset 0 bit 27 */
+	offset 0 bit 25 */
 	bool isIdleClosedLoop : 1 {};
 	/**
+	offset 0 bit 26 */
+	bool unusedBit_26_26 : 1 {};
+	/**
+	offset 0 bit 27 */
+	bool unusedBit_26_27 : 1 {};
+	/**
 	offset 0 bit 28 */
-	bool unusedBit_28_28 : 1 {};
+	bool unusedBit_26_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_28_29 : 1 {};
+	bool unusedBit_26_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_28_30 : 1 {};
+	bool unusedBit_26_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_28_31 : 1 {};
+	bool unusedBit_26_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	RPM
@@ -1416,4 +1416,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Sep 17 00:15:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 20 02:04:53 UTC 2022
