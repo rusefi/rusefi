@@ -292,7 +292,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 }
 
 static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
-		int rpm, efitick_t edgeTimestamp, float currentPhase) {
+		int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = engine->engineState.sparkDwell;
@@ -349,7 +349,8 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 
 	bool scheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
 		&event->sparkEvent, trgEventIndex, edgeTimestamp, sparkAngle,
-		{ fireSparkAndPrepareNextSchedule, event });
+		{ fireSparkAndPrepareNextSchedule, event },
+		currentPhase, nextPhase);
 
 	if (scheduled) {
 #if SPARK_EXTREME_LOGGING
@@ -471,7 +472,7 @@ void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTim
 			}
 #endif // EFI_LAUNCH_CONTROL
 
-			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp, currentPhase);
+			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp, currentPhase, nextPhase);
 		}
 	}
 }
