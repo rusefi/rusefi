@@ -84,7 +84,7 @@ public:
 #if !EFI_UNIT_TEST
 private:
 #endif // EFI_UNIT_TEST
-	AngleBasedEvent m_event;
+	AngleBasedEventOld m_event;
 
 	HpfpQuantity m_quantity;
 	HpfpLobe     m_lobe;
