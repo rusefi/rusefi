@@ -199,6 +199,8 @@ enable2ndByteCanID = false
 	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
 	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
 
+	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
+
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
 
@@ -229,6 +231,10 @@ enable2ndByteCanID = false
     debugFieldI3List = bits,   U08,   [0:7], "Alt: Reset Cnt",          "",                   "",          "Idle: Reset Cnt",                "Idle di3",            "           ",               "",           "VVT1: 10xTarget",         "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di3",               "s counter",         "",           "di3",          "di3",           "22di3",          "",        "24:di3",     "",               "write err", "",             "",       "",     "",     "Latest Received","",                     "",    "",      "",      "","Starter Disable","",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 3 State",  "",               "VVT2: 10xTarger",        "VVT3: 10xTarger",        "VVT4: 10xTarger"
     debugFieldI4List = bits,   U08,   [0:7], "Alt: Period",             "",                   "",          "Idle: State",                    "Idle di4",            "Cycle Cnt 1",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di4",               "executor",          "",           "di4",          "di4",           "22di4",          "",        "24:di4",      "",              "",          "",             "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 4 State",  "",               "",                       "",                       ""
     debugFieldI5List = bits,   U08,   [0:7], "",                        "",                   "",          "",                               "Idle di5",            "Cycle Cnt 2",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "di5",        "di5",               "ETB di5",               "max executor",      "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",          "",       "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 5 State",  "",               "",                       "",                       ""
+
+	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
+
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart"
 
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -1156,6 +1162,7 @@ gaugeCategory = Sensors - Extra 2
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
    currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
+   auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1396,8 +1403,8 @@ gaugeCategory = GPPWM Outputs
    indicator =                   { isWarnNow },        "No warnings",           "Warning",  white,  black, yellow,  black
    indicator =                 { checkEngine },    "No Check Engine",      "Check Engine",  white,  black,    red,  black
    indicator =               { isTriggerError},         "Trigger OK",       "Trigger ERR",  white,  black,    red,  black
-   indicator =  { isIgnitionEnabledIndicator },       "Ignition cut",       "Ignition OK", yellow,  black,  white,  black
-   indicator = { isInjectionEnabledIndicator },      "Injection cut",      "Injection OK", yellow,  black,  white,  black
+   indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
+   indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
 
    ; this is required so that the "config error" feature works in TS
    ; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
@@ -1412,7 +1419,6 @@ gaugeCategory = GPPWM Outputs
    indicator =                    { isFanOn },             "Fan off",            "Fan on",  white,  black,  green,  black
    indicator =                   { isFan2On },           "Fan 2 off",          "Fan 2 on",  white,  black,  green,  black
    indicator =              { isMainRelayOn },      "Main relay off",     "Main relay on",  white,  black,  green,  black
-   indicator =        { fuelCutReason == 11 },          "No cleanup",       "Cyl cleanup",  white,  black, yellow,  black
    ; Line 2
    ;         =                     expression,             off-label,            on-label, off-bg, off-fg,  on-bg,  on-fg
    indicator =               { isFuelPumpOn },       "Fuel pump off",      "Fuel pump on",  white,  black,  green,  black
@@ -1440,6 +1446,9 @@ gaugeCategory = GPPWM Outputs
    indicator =        { sd_logging_internal },       "No SD logging",        "SD logging",  white,  black,  green,  black
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
+
+   indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
 [KeyActions]
@@ -4022,6 +4031,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
 		field = vinNumber,                              vinNumber
+		field = turbochargerFilter,                     turbochargerFilter
+		field = auxFrequencyFilter,                     auxFrequencyFilter
+		field = useBiQuadOnAuxSpeedSensors,             useBiQuadOnAuxSpeedSensors
 		field = "TODO KS mode 4569",                    kickStartCranking
 		panel = allTriggerDebug
 		panel = torqueTableTbl

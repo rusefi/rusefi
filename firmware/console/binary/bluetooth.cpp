@@ -174,6 +174,11 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 
 	tsChannel = getBluetoothChannel();
 
+	if (tsChannel == nullptr) {
+		efiPrintf("No Bluetooth channel configured! Check your board config.");
+		return;
+	}
+
 	if (btProcessIsStarted) {
 		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
 		return;

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 18 01:43:57 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 21 03:06:35 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -106,6 +106,7 @@ public class Fields {
 	public static final int auxAnalogInputs7_offset = 1754;
 	public static final int auxAnalogInputs8_offset = 1755;
 	public static final int auxFastSensor1_adcChannel_offset = 685;
+	public static final int auxFrequencyFilter_offset = 2076;
 	public static final int auxLinear1_hwChannel_offset = 3700;
 	public static final int auxLinear1_offset = 3700;
 	public static final int auxLinear1_v1_offset = 3704;
@@ -371,12 +372,12 @@ public class Fields {
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int coastingFuelCutClt_offset = 2096;
+	public static final int coastingFuelCutClt_offset = 2098;
 	public static final int coastingFuelCutEnabled_offset = 764;
-	public static final int coastingFuelCutMap_offset = 2100;
-	public static final int coastingFuelCutRpmHigh_offset = 2090;
-	public static final int coastingFuelCutRpmLow_offset = 2092;
-	public static final int coastingFuelCutTps_offset = 2094;
+	public static final int coastingFuelCutMap_offset = 2102;
+	public static final int coastingFuelCutRpmHigh_offset = 2092;
+	public static final int coastingFuelCutRpmLow_offset = 2094;
+	public static final int coastingFuelCutTps_offset = 2096;
 	public static final int coastingFuelCutVssHigh_offset = 1574;
 	public static final int coastingFuelCutVssLow_offset = 1573;
 	public static final int communicationLedPin_offset = 1524;
@@ -1788,7 +1789,7 @@ public class Fields {
 	public static final int PidAutoTune_Peak_MAXIMUM = 1;
 	public static final int PidAutoTune_Peak_MINIMUM = -1;
 	public static final int PidAutoTune_Peak_NOT_A_PEAK = 0;
-	public static final int pidExtraForLowRpm_offset = 2098;
+	public static final int pidExtraForLowRpm_offset = 2100;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
 	public static final int pin_input_mode_e_PI_PULLUP = 1;
@@ -1915,18 +1916,16 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1437932482;
+	public static final int SIGNATURE_HASH = 1632536142;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
-	public static final int sorryUnused1_offset = 2074;
-	public static final int sorryUnused2_offset = 2076;
-	public static final int sorryUnused3_offset = 2078;
-	public static final int sorryUnused4_offset = 2080;
-	public static final int sorryUnused5_offset = 2082;
-	public static final int sorryUnused6_offset = 2084;
-	public static final int sorryUnused7_offset = 2086;
-	public static final int sorryUnused8_offset = 2088;
+	public static final int sorryUnused1_offset = 2080;
+	public static final int sorryUnused2_offset = 2082;
+	public static final int sorryUnused3_offset = 2084;
+	public static final int sorryUnused4_offset = 2086;
+	public static final int sorryUnused5_offset = 2088;
+	public static final int sorryUnused6_offset = 2090;
 	public static final int sparkDwellRpmBins_offset = 4156;
 	public static final int sparkDwellValues_offset = 4172;
 	public static final int specs_offset = 364;
@@ -2410,7 +2409,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.18.all.1437932482";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.21.all.1632536142";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
@@ -2430,6 +2429,7 @@ public class Fields {
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
 	public static final int tuneHidingKey_offset = 3768;
 	public static final int tunerStudioSerialSpeed_offset = 740;
+	public static final int turbochargerFilter_offset = 1040;
 	public static final int turboSpeedSensorInputPin_offset = 1474;
 	public static final int turboSpeedSensorMultiplier_offset = 1380;
 	public static final int twoStroke_offset = 1360;
@@ -2449,8 +2449,6 @@ public class Fields {
 	public static final int unused1130_offset = 1628;
 	public static final int unused1740b2_offset = 1628;
 	public static final int unused4080_offset = 3123;
-	public static final int unused962_offset = 1040;
-	public static final int unused_1484_bit_27_offset = 1372;
 	public static final int unused_1484_bit_29_offset = 1372;
 	public static final int unused_1484_bit_30_offset = 1372;
 	public static final int unused_1484_bit_38_offset = 1372;
@@ -2481,6 +2479,7 @@ public class Fields {
 	public static final int unusedBit_539_8_offset = 1628;
 	public static final int unusedBit_539_9_offset = 1628;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1372;
+	public static final int useBiQuadOnAuxSpeedSensors_offset = 1372;
 	public static final int useCicPidForIdle_offset = 120;
 	public static final int useCltBasedRpmLimit_offset = 1372;
 	public static final int useEeprom_offset = 120;
@@ -3083,7 +3082,7 @@ public class Fields {
 	public static final Field LAUNCHFUELADDED = Field.create("LAUNCHFUELADDED", 1028, FieldType.INT).setScale(1.0);
 	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1032, FieldType.INT).setScale(1.0);
 	public static final Field HARDCUTRPMRANGE = Field.create("HARDCUTRPMRANGE", 1036, FieldType.INT).setScale(1.0);
-	public static final Field UNUSED962 = Field.create("UNUSED962", 1040, FieldType.INT).setScale(1.0);
+	public static final Field TURBOCHARGERFILTER = Field.create("TURBOCHARGERFILTER", 1040, FieldType.FLOAT);
 	public static final Field LAUNCHTPSTHRESHOLD = Field.create("LAUNCHTPSTHRESHOLD", 1044, FieldType.INT).setScale(1.0);
 	public static final Field LAUNCHACTIVATEDELAY = Field.create("LAUNCHACTIVATEDELAY", 1048, FieldType.FLOAT);
 	public static final Field STFT_MAXIDLEREGIONRPM = Field.create("STFT_MAXIDLEREGIONRPM", 1052, FieldType.INT8).setScale(50.0);
@@ -3225,7 +3224,7 @@ public class Fields {
 	public static final Field FORCEO2HEATING = Field.create("FORCEO2HEATING", 1372, FieldType.BIT, 24);
 	public static final Field INVERTVVTCONTROLINTAKE = Field.create("INVERTVVTCONTROLINTAKE", 1372, FieldType.BIT, 25);
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26);
-	public static final Field UNUSED_1484_BIT_27 = Field.create("UNUSED_1484_BIT_27", 1372, FieldType.BIT, 27);
+	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1372, FieldType.BIT, 27);
 	public static final Field UNUSED_1484_BIT_38 = Field.create("UNUSED_1484_BIT_38", 1372, FieldType.BIT, 28);
 	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1372, FieldType.BIT, 29);
 	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1372, FieldType.BIT, 30);
@@ -3539,21 +3538,20 @@ public class Fields {
 	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 2070, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_2071 = Field.create("ALIGNMENTFILL_AT_2071", 2071, FieldType.INT8).setScale(1.0);
 	public static final Field MC33816_CS = Field.create("MC33816_CS", 2072, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2074, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2076, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2078, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED4 = Field.create("SORRYUNUSED4", 2080, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED5 = Field.create("SORRYUNUSED5", 2082, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED6 = Field.create("SORRYUNUSED6", 2084, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED7 = Field.create("SORRYUNUSED7", 2086, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED8 = Field.create("SORRYUNUSED8", 2088, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2090, FieldType.INT16).setScale(1.0);
-	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2092, FieldType.INT16).setScale(1.0);
-	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 2094, FieldType.INT16).setScale(1.0);
-	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 2096, FieldType.INT16).setScale(1.0);
-	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 2098, FieldType.INT16).setScale(1.0);
-	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 2100, FieldType.INT16).setScale(1.0);
-	public static final Field ALIGNMENTFILL_AT_2102 = Field.create("ALIGNMENTFILL_AT_2102", 2102, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_2074 = Field.create("ALIGNMENTFILL_AT_2074", 2074, FieldType.INT8).setScale(1.0);
+	public static final Field AUXFREQUENCYFILTER = Field.create("AUXFREQUENCYFILTER", 2076, FieldType.FLOAT);
+	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2080, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2082, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2084, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED4 = Field.create("SORRYUNUSED4", 2086, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED5 = Field.create("SORRYUNUSED5", 2088, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED6 = Field.create("SORRYUNUSED6", 2090, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2092, FieldType.INT16).setScale(1.0);
+	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2094, FieldType.INT16).setScale(1.0);
+	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 2096, FieldType.INT16).setScale(1.0);
+	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 2098, FieldType.INT16).setScale(1.0);
+	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 2100, FieldType.INT16).setScale(1.0);
+	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 2102, FieldType.INT16).setScale(1.0);
 	public static final Field HIGHPRESSUREFUEL_HWCHANNEL = Field.create("HIGHPRESSUREFUEL_HWCHANNEL", 2104, FieldType.INT8, adc_channel_e).setScale(1.0);
 	public static final Field HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1 = Field.create("HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1", 2105, FieldType.INT8).setScale(1.0);
 	public static final Field HIGHPRESSUREFUEL_V1 = Field.create("HIGHPRESSUREFUEL_V1", 2108, FieldType.FLOAT);
@@ -4489,7 +4487,7 @@ public class Fields {
 	LAUNCHFUELADDED,
 	LAUNCHBOOSTDUTY,
 	HARDCUTRPMRANGE,
-	UNUSED962,
+	TURBOCHARGERFILTER,
 	LAUNCHTPSTHRESHOLD,
 	LAUNCHACTIVATEDELAY,
 	STFT_MAXIDLEREGIONRPM,
@@ -4631,7 +4629,7 @@ public class Fields {
 	FORCEO2HEATING,
 	INVERTVVTCONTROLINTAKE,
 	INVERTVVTCONTROLEXHAUST,
-	UNUSED_1484_BIT_27,
+	USEBIQUADONAUXSPEEDSENSORS,
 	UNUSED_1484_BIT_38,
 	UNUSED_1484_BIT_29,
 	UNUSED_1484_BIT_30,
@@ -4938,21 +4936,20 @@ public class Fields {
 	TLE8888_CSPINMODE,
 	ALIGNMENTFILL_AT_2071,
 	MC33816_CS,
+	ALIGNMENTFILL_AT_2074,
+	AUXFREQUENCYFILTER,
 	SORRYUNUSED1,
 	SORRYUNUSED2,
 	SORRYUNUSED3,
 	SORRYUNUSED4,
 	SORRYUNUSED5,
 	SORRYUNUSED6,
-	SORRYUNUSED7,
-	SORRYUNUSED8,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,
 	COASTINGFUELCUTTPS,
 	COASTINGFUELCUTCLT,
 	PIDEXTRAFORLOWRPM,
 	COASTINGFUELCUTMAP,
-	ALIGNMENTFILL_AT_2102,
 	HIGHPRESSUREFUEL_HWCHANNEL,
 	HIGHPRESSUREFUEL_ALIGNMENTFILL_AT_1,
 	HIGHPRESSUREFUEL_V1,

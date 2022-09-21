@@ -12,18 +12,8 @@
 #include <cstdint>
 #include <cstddef>
 
-
+#include "can_category.h"
 #include "can.h"
-
-enum class CanCategory : uint16_t {
-	NBC = 0,
-	VERBOSE = 1,
-	LUA = 2,
-	DOWNSTREAM_FLASHING = 3,
-	SERIAL = 4,
-	WBO_SERVICE = 5,
-	OBD = 6,
-};
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -45,6 +35,8 @@ public:
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	 */
 	~CanTxMessage();
+
+    CanCategory category;
 
 #if EFI_CAN_SUPPORT
 	/**

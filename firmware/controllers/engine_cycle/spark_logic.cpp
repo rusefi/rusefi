@@ -114,7 +114,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
 	efiAssertVoid(CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
-	assertAngleRange(dwellStartAngle, "findAngle#a6", CUSTOM_ERR_6550);
+	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", CUSTOM_ERR_6550);
 	event->dwellPosition.setAngle(dwellStartAngle);
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -288,7 +288,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 }
 
 static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
-		int rpm, efitick_t edgeTimestamp) {
+		int rpm, efitick_t edgeTimestamp, float currentPhase) {
 
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = engine->engineState.sparkDwell;
@@ -425,7 +425,7 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp) {
+void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
 	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
@@ -434,6 +434,8 @@ void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTim
 	}
 
 	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+
+	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
 	bool limitedSpark = !limitedSparkState.value;
 
@@ -468,7 +470,7 @@ void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTim
 			}
 #endif // EFI_LAUNCH_CONTROL
 
-			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
+			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp, currentPhase);
 		}
 	}
 }

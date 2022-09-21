@@ -48,6 +48,7 @@ static plain_get_float_s getF_plain[] = {
 	{"boostPid.pFactor", &engineConfiguration->boostPid.pFactor},
 	{"boostPid.iFactor", &engineConfiguration->boostPid.iFactor},
 	{"boostPid.dFactor", &engineConfiguration->boostPid.dFactor},
+	{"turbochargerFilter", &engineConfiguration->turbochargerFilter},
 	{"launchActivateDelay", &engineConfiguration->launchActivateDelay},
 	{"turboSpeedSensorMultiplier", &engineConfiguration->turboSpeedSensorMultiplier},
 	{"knockDetectionWindowStart", &engineConfiguration->knockDetectionWindowStart},
@@ -112,6 +113,7 @@ static plain_get_float_s getF_plain[] = {
 	{"oilPressure.value1", &engineConfiguration->oilPressure.value1},
 	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
 	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
+	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
 	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
 	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
 	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
@@ -648,6 +650,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->invertVvtControlIntake;
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 		return engineConfiguration->invertVvtControlExhaust;
+	if (strEqualCaseInsensitive(name, "useBiQuadOnAuxSpeedSensors"))
+		return engineConfiguration->useBiQuadOnAuxSpeedSensors;
 	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
 		return engineConfiguration->tempBooleanForVerySpecialLogic;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
@@ -2087,6 +2091,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
 	{
 		engineConfiguration->invertVvtControlExhaust = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useBiQuadOnAuxSpeedSensors"))
+	{
+		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))

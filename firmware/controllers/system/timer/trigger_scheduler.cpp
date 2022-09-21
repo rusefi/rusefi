@@ -2,9 +2,8 @@
 
 #include "event_queue.h"
 
-
-bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
-       assertNotInListMethodBody(AngleBasedEvent, head, element, nextToothEvent)
+bool TriggerScheduler::assertNotInList(AngleBasedEventBase *head, AngleBasedEventBase *element) {
+       assertNotInListMethodBody(AngleBasedEventBase, head, element, nextToothEvent)
 }
 
 /**
@@ -17,7 +16,7 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
+bool TriggerScheduler::scheduleOrQueue(AngleBasedEventOld *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
@@ -73,17 +72,30 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
+bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
+		uint32_t trgEventIndex,
+		efitick_t edgeTimestamp,
+		angle_t angle,
+		action_s action) {
+	event->enginePhase = angle;
+	event->action = action;
+
+	// TODO: implement me!
+
+	return false;
+}
+
 void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 							   uint32_t trgEventIndex,
-							   efitick_t edgeTimestamp) {
+							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	if (!isValidRpm(rpm)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
 
-	AngleBasedEvent *current, *tmp, *keephead;
-	AngleBasedEvent *keeptail = nullptr;
+	AngleBasedEventBase *current, *tmp, *keephead;
+	AngleBasedEventBase *keeptail = nullptr;
 
 	{
 		chibios_rt::CriticalSectionLocker csl;
@@ -94,7 +106,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 
 	LL_FOREACH_SAFE2(keephead, current, tmp, nextToothEvent)
 	{
-		if (current->position.triggerEventIndex == trgEventIndex) {
+		if (current->shouldSchedule(trgEventIndex, currentPhase, nextPhase)) {
 			// time to fire a spark which was scheduled previously
 
 			// Yes this looks like O(n^2), but that's only over the entire engine
@@ -120,7 +132,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 			scheduleByAngle(
 				sDown,
 				edgeTimestamp,
-				current->position.angleOffsetFromTriggerEvent,
+				current->getAngleFromNow(currentPhase),
 				current->action
 			);
 		} else {
@@ -137,10 +149,28 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 	}
 }
 
+bool AngleBasedEventOld::shouldSchedule(uint32_t trgEventIndex, float /*currentPhase*/, float /*nextPhase*/) const {
+	return position.triggerEventIndex == trgEventIndex;
+}
+
+float AngleBasedEventOld::getAngleFromNow(float /*currentPhase*/) const {
+	return position.angleOffsetFromTriggerEvent;
+}
+
+bool AngleBasedEventNew::shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const {
+	// TODO: implement me!
+	return true;
+}
+
+float AngleBasedEventNew::getAngleFromNow(float currentPhase) const {
+	// TODO: implement me!
+	return 0;
+}
+
 #if EFI_UNIT_TEST
 // todo: reduce code duplication with another 'getElementAtIndexForUnitText'
-AngleBasedEvent * TriggerScheduler::getElementAtIndexForUnitTest(int index) {
-	AngleBasedEvent * current;
+AngleBasedEventBase * TriggerScheduler::getElementAtIndexForUnitTest(int index) {
+	AngleBasedEventBase * current;
 
 	LL_FOREACH2(m_angleBasedEventsHead, current, nextToothEvent)
 	{

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Sep 17 00:15:40 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 20 02:04:53 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -388,37 +388,37 @@ public class TsOutputs {
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field SD_PRESENT = Field.create("SD_PRESENT", 0, FieldType.BIT, 0);
-	public static final Field ISIGNITIONENABLEDINDICATOR = Field.create("ISIGNITIONENABLEDINDICATOR", 0, FieldType.BIT, 1);
-	public static final Field ISINJECTIONENABLEDINDICATOR = Field.create("ISINJECTIONENABLEDINDICATOR", 0, FieldType.BIT, 2);
-	public static final Field SD_LOGGING_INTERNAL = Field.create("SD_LOGGING_INTERNAL", 0, FieldType.BIT, 3);
-	public static final Field UNUSEDB4 = Field.create("UNUSEDB4", 0, FieldType.BIT, 4);
-	public static final Field UNUSEDB5 = Field.create("UNUSEDB5", 0, FieldType.BIT, 5);
-	public static final Field ISFANON = Field.create("ISFANON", 0, FieldType.BIT, 6);
-	public static final Field ISO2HEATERON = Field.create("ISO2HEATERON", 0, FieldType.BIT, 7);
-	public static final Field CHECKENGINE = Field.create("CHECKENGINE", 0, FieldType.BIT, 8);
-	public static final Field NEEDBURN = Field.create("NEEDBURN", 0, FieldType.BIT, 9);
-	public static final Field SD_MSD = Field.create("SD_MSD", 0, FieldType.BIT, 10);
-	public static final Field ISFAN2ON = Field.create("ISFAN2ON", 0, FieldType.BIT, 11);
-	public static final Field UNUSEDBITLATWFS = Field.create("UNUSEDBITLATWFS", 0, FieldType.BIT, 12);
-	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 13);
-	public static final Field UNUSED3123 = Field.create("UNUSED3123", 0, FieldType.BIT, 14);
-	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 15);
-	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 16);
-	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 17);
-	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 18);
-	public static final Field UNUSED131313 = Field.create("UNUSED131313", 0, FieldType.BIT, 19);
-	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 20);
-	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 21);
-	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 22);
-	public static final Field ISPEDALERROR = Field.create("ISPEDALERROR", 0, FieldType.BIT, 23);
-	public static final Field ISKNOCKCHIPOK = Field.create("ISKNOCKCHIPOK", 0, FieldType.BIT, 24);
-	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 25);
-	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 26);
-	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_28_28 = Field.create("UNUSEDBIT_28_28", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_28_29 = Field.create("UNUSEDBIT_28_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_28_30 = Field.create("UNUSEDBIT_28_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_28_31 = Field.create("UNUSEDBIT_28_31", 0, FieldType.BIT, 31);
+	public static final Field SD_LOGGING_INTERNAL = Field.create("SD_LOGGING_INTERNAL", 0, FieldType.BIT, 1);
+	public static final Field UNUSEDB4 = Field.create("UNUSEDB4", 0, FieldType.BIT, 2);
+	public static final Field UNUSEDB5 = Field.create("UNUSEDB5", 0, FieldType.BIT, 3);
+	public static final Field ISFANON = Field.create("ISFANON", 0, FieldType.BIT, 4);
+	public static final Field ISO2HEATERON = Field.create("ISO2HEATERON", 0, FieldType.BIT, 5);
+	public static final Field CHECKENGINE = Field.create("CHECKENGINE", 0, FieldType.BIT, 6);
+	public static final Field NEEDBURN = Field.create("NEEDBURN", 0, FieldType.BIT, 7);
+	public static final Field SD_MSD = Field.create("SD_MSD", 0, FieldType.BIT, 8);
+	public static final Field ISFAN2ON = Field.create("ISFAN2ON", 0, FieldType.BIT, 9);
+	public static final Field UNUSEDBITLATWFS = Field.create("UNUSEDBITLATWFS", 0, FieldType.BIT, 10);
+	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 11);
+	public static final Field UNUSED3123 = Field.create("UNUSED3123", 0, FieldType.BIT, 12);
+	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 13);
+	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 14);
+	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 15);
+	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 16);
+	public static final Field UNUSED131313 = Field.create("UNUSED131313", 0, FieldType.BIT, 17);
+	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 18);
+	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 19);
+	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 20);
+	public static final Field ISPEDALERROR = Field.create("ISPEDALERROR", 0, FieldType.BIT, 21);
+	public static final Field ISKNOCKCHIPOK = Field.create("ISKNOCKCHIPOK", 0, FieldType.BIT, 22);
+	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 23);
+	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 24);
+	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_26_26 = Field.create("UNUSEDBIT_26_26", 0, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_26_27 = Field.create("UNUSEDBIT_26_27", 0, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_26_28 = Field.create("UNUSEDBIT_26_28", 0, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_26_29 = Field.create("UNUSEDBIT_26_29", 0, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_26_30 = Field.create("UNUSEDBIT_26_30", 0, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_26_31 = Field.create("UNUSEDBIT_26_31", 0, FieldType.BIT, 31);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01);
@@ -941,8 +941,6 @@ public class TsOutputs {
 	public static final Field ALIGNMENTFILL_AT_754 = Field.create("ALIGNMENTFILL_AT_754", 754, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
-	ISIGNITIONENABLEDINDICATOR,
-	ISINJECTIONENABLEDINDICATOR,
 	SD_LOGGING_INTERNAL,
 	UNUSEDB4,
 	UNUSEDB5,
@@ -968,10 +966,12 @@ public class TsOutputs {
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
-	UNUSEDBIT_28_28,
-	UNUSEDBIT_28_29,
-	UNUSEDBIT_28_30,
-	UNUSEDBIT_28_31,
+	UNUSEDBIT_26_26,
+	UNUSEDBIT_26_27,
+	UNUSEDBIT_26_28,
+	UNUSEDBIT_26_29,
+	UNUSEDBIT_26_30,
+	UNUSEDBIT_26_31,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
