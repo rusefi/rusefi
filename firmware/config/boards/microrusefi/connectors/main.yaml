@@ -364,6 +364,7 @@ info:
   name: Main Connector
   board_url: https://rusefi.com/s/microrusefi
   id: main
+  order: 0
   image:
     file: main.jpg
   pins:
