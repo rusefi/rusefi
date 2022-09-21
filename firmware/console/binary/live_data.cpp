@@ -38,7 +38,7 @@ const launch_control_state_s* getLiveDataAddr() {
 
 template<>
 const injector_model_s* getLiveDataAddr() {
-	return &engine->module<InjectorModel>().unmock();
+	return &engine->hello.get<InjectorModel>().unmock();
 }
 
 template<>

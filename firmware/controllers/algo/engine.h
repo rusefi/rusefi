@@ -122,7 +122,10 @@ public:
 	IFuelComputer *fuelComputer = nullptr;
 
 	type_list<
-		Mockable<InjectorModel>,
+		Mockable<InjectorModel>
+	> hello;
+
+	type_list<
 #if EFI_IDLE_CONTROL
 		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL

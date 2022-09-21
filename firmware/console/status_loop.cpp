@@ -289,7 +289,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 	if (!engine->rpmCalculator.isStopped()) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
-		floatms_t injectorLag = engine->module<InjectorModel>()->getDeadtime();
+		floatms_t injectorLag = engine->hello.get<InjectorModel>()->getDeadtime();
 		efiPrintf("rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
 
 		efiPrintf("iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
@@ -601,7 +601,7 @@ static void updateFuelCorrections() {
 	engine->outputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 
 // get rid of this, have gauges use injector model info directly
-	engine->outputChannels.injectorLagMs = engine->module<InjectorModel>()->getDeadtime();
+	engine->outputChannels.injectorLagMs = engine->hello.get<InjectorModel>()->getDeadtime();
 }
 
 static void updateFuelLoads() {

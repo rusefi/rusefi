@@ -22,7 +22,7 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 	// Injection duration of 20ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	engine->rpmCalculator.oneDegreeUs = 100;
 
@@ -62,7 +62,7 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 	// Injection duration of 20ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	engine->rpmCalculator.oneDegreeUs = 100;
 
@@ -101,7 +101,7 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 	// Injection duration of 20ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	engine->rpmCalculator.oneDegreeUs = 100;
 
@@ -140,7 +140,7 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 
 	// Expect no calls to injector model
 	StrictMock<MockInjectorModel2> im;
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	engine->rpmCalculator.oneDegreeUs = 100;
 

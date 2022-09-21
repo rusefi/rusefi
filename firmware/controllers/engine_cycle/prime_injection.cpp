@@ -26,7 +26,7 @@ floatms_t PrimeController::getPrimeDuration() const {
 		0.001f *	// convert milligram to gram
 		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
 
-	return engine->module<InjectorModel>()->getInjectionDuration(primeMass);
+	return engine->hello.get<InjectorModel>()->getInjectionDuration(primeMass);
 }
 // Check if the engine is not stopped or cylinder cleanup is activated
 static bool isPrimeInjectionPulseSkipped() {

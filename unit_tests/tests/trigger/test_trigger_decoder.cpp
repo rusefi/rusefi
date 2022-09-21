@@ -613,7 +613,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	ASSERT_EQ( 1,  engine->engineState.running.intakeTemperatureCoefficient) << "iatC";
 	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
-	ASSERT_EQ( 0,  engine->module<InjectorModel>()->getDeadtime()) << "lag";
+	ASSERT_EQ( 0,  engine->hello.get<InjectorModel>()->getDeadtime()) << "lag";
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";
 
@@ -651,7 +651,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	// Injection duration of 12.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
@@ -811,7 +811,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
-	engine->module<InjectorModel>().set(&im2);
+	engine->hello.get<InjectorModel>().set(&im2);
 
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
@@ -949,7 +949,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
-	engine->module<InjectorModel>().set(&im);
+	engine->hello.get<InjectorModel>().set(&im);
 
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
@@ -1016,7 +1016,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	engine->engineState.injectionDuration = 2.0f;
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
-	engine->module<InjectorModel>().set(&im2);
+	engine->hello.get<InjectorModel>().set(&im2);
 
 	ASSERT_EQ( 10,  getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm)))) << "Lduty for maf=3";
 
