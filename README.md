@@ -5,7 +5,7 @@
 
 <b>GPL open-source DIY ECU</b>
 
-18/09/2022
+21/09/2022
 
 [![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
 </div>
