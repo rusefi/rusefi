@@ -23,7 +23,8 @@ public:
 
 
 void initAuxSpeedSensors() {
-	auxSpeed1.initIfValid(engineConfiguration->auxSpeedSensorInputPin[0], converter, 0.05f);
+	auxSpeed1.useBiQuad = engineConfiguration->useBiQuadOnAuxSpeedSensors;
+	auxSpeed1.initIfValid(engineConfiguration->auxSpeedSensorInputPin[0], converter, engineConfiguration->auxFrequencyFilter);
 	auxSpeed2.initIfValid(engineConfiguration->auxSpeedSensorInputPin[1], converter, 0.05f);
 }
 

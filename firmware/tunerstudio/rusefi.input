@@ -1162,6 +1162,7 @@ gaugeCategory = Sensors - Extra 2
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
    currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
+   auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
