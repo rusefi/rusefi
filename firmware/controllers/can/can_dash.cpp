@@ -1243,6 +1243,20 @@ static void populateFrame(Aim5f7& msg) {
 	msg.LambdaTarget1 = engine->fuelComputer->targetLambda;
 	msg.LambdaTarget2 = engine->fuelComputer->targetLambda;
 }
+// User Specific frames for EcuMaster PMU
+struct Aim5fe {
+	scaled_channel<uint16_t, 1> Fan1Status;
+	scaled_channel<uint16_t, 1> Fan2Status;
+	scaled_channel<uint16_t, 1> FuelPumpStatus;
+	scaled_channel<uint16_t, 1> MainRelayStatus;
+};
+
+static void populateFrame(Aim5fe& msg) {
+	msg.Fan1Status = engine->outputChannels.isFanOn;
+	msg.Fan2Status = engine->outputChannels.isFan2On;
+	msg.FuelPumpStatus = enginePins.fuelPumpRelay.getLogicValue();
+	msg.MainRelayStatus = engine->outputChannels.isMainRelayOn;
+}
 
 void canDashboardAim(CanCycle cycle) {
 	if (!cycle.isInterval(CI::_10ms)) {
@@ -1257,6 +1271,7 @@ void canDashboardAim(CanCycle cycle) {
 	transmitStruct<Aim5f5>(CanCategory::NBC, 0x5f5, false);
 	transmitStruct<Aim5f6>(CanCategory::NBC, 0x5f6, false);
 	transmitStruct<Aim5f7>(CanCategory::NBC, 0x5f7, false);
+	transmitStruct<Aim5fe>(CanCategory::NBC, 0x5fe, false);
 
 	// there are more, but less important for us
 	// transmitStruct<Aim5f8>(0x5f8, false);
@@ -1265,6 +1280,7 @@ void canDashboardAim(CanCycle cycle) {
 	// transmitStruct<Aim5fb>(0x5fb, false);
 	// transmitStruct<Aim5fc>(0x5fc, false);
 	// transmitStruct<Aim5fd>(0x5fd, false);
+	// transmitStruct<Aim5fe>(0x5fe, false);
 }
 
 #endif // EFI_CAN_SUPPORT
