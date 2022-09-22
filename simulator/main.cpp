@@ -223,7 +223,7 @@ int intFlashErase(flashaddr_t address, size_t size) {
 int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
 	auto fileName = makeFileName(address);
 
-	printf("Simulator: reading config from %s\n", fileName);
+	printf("Simulator: reading config from %s\n", fileName.c_str());
 
 	std::ifstream flash;
 	flash.open(fileName, std::ios::binary);
@@ -244,7 +244,7 @@ int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
 
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 	auto fileName = makeFileName(address);
-	printf("Simulator: writing config to %s\n", fileName);
+	printf("Simulator: writing config to %s\n", fileName.c_str());
 
 	std::ofstream flash;
 	flash.open(fileName, std::ios::binary | std::ios::trunc);
