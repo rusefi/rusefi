@@ -276,7 +276,7 @@ void Engine::reset() {
 
 void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308
-	engineState.lua = {};
+	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
 #if EFI_BOOST_CONTROL
 	boostController.resetLua();
