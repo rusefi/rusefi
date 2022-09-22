@@ -8,6 +8,7 @@
  */
 
 #include "pch.h"
+#include "mpu_util.h"
 
 #if EFI_INTERNAL_FLASH
 
