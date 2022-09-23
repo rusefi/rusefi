@@ -12,8 +12,7 @@
 
 void initDodgeRam(TriggerWaveform *s) {
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = true;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->isSynchronizationNeeded = false;
 
@@ -27,8 +26,7 @@ void initDodgeRam(TriggerWaveform *s) {
 }
 
 void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
-	s->useRiseEdge = true;
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->setTriggerSynchronizationGap(3);
 
@@ -103,8 +101,7 @@ void configureNeon2003TriggerWaveformCam(TriggerWaveform *s) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = true;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 496;
 
@@ -126,7 +123,6 @@ gap=1.43/0.71
 
 	float EPS_ANGLE = 0.3;
 
-	s->useOnlyPrimaryForSync = true;
 
 	if (useOnlyPrimary) {
 		s->addEvent720(144, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
@@ -153,6 +149,8 @@ gap=1.43/0.71
 		 * 64 secondary (one wide + 15 narrow + 16 narrow + one wide + 15 narrow + 16 narrow)
 		 *
 		 */
+
+		s->useOnlyPrimaryForSync = true;
 
 		s->addEvent720(25, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
 		s->addEvent720(30, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
@@ -323,7 +321,7 @@ gap=1.43/0.71
 }
 
 void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->tdcPosition = 150;
 
 	float w = 7;
@@ -447,7 +445,7 @@ static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform
 }
 
 void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 	s->setTriggerSynchronizationGap(3.79);
 
 	s->tdcPosition = 279;
@@ -457,22 +455,17 @@ void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 
 
 void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	s->setTriggerSynchronizationGap(0.8227);
-
-	s->useRiseEdge = false;
-
 
 	s->initialState[(int)TriggerWheel::T_PRIMARY] = TriggerValue::RISE;
 
 	configureNeon1995TriggerWaveformCommon(true, s);
-
-	s->useOnlyPrimaryForSync = true;
 }
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 581;
 
@@ -555,7 +548,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
@@ -574,7 +567,7 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 }
 
 void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
@@ -607,5 +600,4 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	// one small tooth at the end of the engine cycle
 	s->addEventAngle(s->getCycleDuration() - narrow / 2, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	s->addEventAngle(s->getCycleDuration(), TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->useOnlyPrimaryForSync = true;
 }

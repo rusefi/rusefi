@@ -11,7 +11,7 @@
 #include "trigger_universal.h"
 
 void configureHondaCbr600(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->useOnlyPrimaryForSync = true;
 	s->setTriggerSynchronizationGap(6);
 
@@ -52,7 +52,7 @@ void configureHondaCbr600(TriggerWaveform *s) {
 }
 
 void configureOnePlus16(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	int count = 16;
 	float tooth = s->getCycleDuration() / count;
@@ -77,7 +77,7 @@ static void kseriesTooth(TriggerWaveform* s, float end) {
 
 // TT_HONDA_K_12_1
 void configureHondaK_12_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	// nominal gap 0.33
 	s->setSecondTriggerSynchronizationGap2(0.2f, 0.5f);
@@ -100,7 +100,7 @@ void configureHondaK_12_1(TriggerWaveform *s) {
  * 2003 Honda Element
  */
 void configureHondaK_4_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.11, 2.38);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.28, 0.474);

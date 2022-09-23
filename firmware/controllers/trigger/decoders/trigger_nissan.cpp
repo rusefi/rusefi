@@ -16,9 +16,7 @@
  * 8,2,2,2 Nissan pattern
  */
 void initializeNissanSR20VE_4(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->gapBothDirections = true;
-	s->useOnlyPrimaryForSync = true;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
 	s->tdcPosition = 630;
 
@@ -48,7 +46,7 @@ static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
 }
 
 void initializeNissanVQvvt(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	int offset = 720 - 520;
 
@@ -79,10 +77,9 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 }
 
 void initializeNissanVQ35crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 675;
-	s->useRiseEdge = true;
 
 	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
 	makeNissanPattern(s, 3, 36, 2);
@@ -92,7 +89,7 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 }
 
 void initializeNissanMR18crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 80;
 
@@ -102,7 +99,7 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::Rise);
 	s->setTriggerSynchronizationGap(0.33);
 	s->setSecondTriggerSynchronizationGap(3);
 
@@ -124,7 +121,7 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 // yes, this is CAM shaft shape NOT crank shaft shape!
 // we will add crank shape once Pavel makes progress
 void initializeNissanVQ30cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 120;
 
@@ -163,7 +160,7 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 }
 
 void initializeNissanMRvvt(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->tdcPosition = 0;
 
 	int x = 73;

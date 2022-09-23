@@ -10,7 +10,7 @@
 #include "trigger_universal.h"
 
 void setSkodaFavorit(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->addEvent360(46, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	s->addEvent360(177, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
@@ -26,7 +26,7 @@ void setSkodaFavorit(TriggerWaveform *s) {
 }
 
 void setVwConfiguration(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;

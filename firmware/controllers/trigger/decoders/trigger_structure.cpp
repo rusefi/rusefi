@@ -50,12 +50,11 @@ void event_trigger_position_s::setAngle(angle_t angle) {
 }
 
 TriggerWaveform::TriggerWaveform() {
-	initialize(OM_NONE);
+	initialize(OM_NONE, SyncEdge::Rise);
 }
 
-void TriggerWaveform::initialize(operation_mode_e operationMode) {
+void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEdge) {
 	isSynchronizationNeeded = true; // that's default value
-	bothFrontsRequired = false;
 	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
@@ -69,10 +68,9 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 
 	tdcPosition = 0;
 	shapeDefinitionError = useOnlyPrimaryForSync = false;
-	useRiseEdge = true;
-	gapBothDirections = false;
 
 	this->operationMode = operationMode;
+	this->syncEdge = syncEdge;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
@@ -209,6 +207,10 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	}
 	if (isSingleToothOnPrimaryChannel) {
 		useOnlyPrimaryForSync = true;
+	} else {
+		if (getExpectedEventCount(TriggerWheel::T_SECONDARY) == 0 && useOnlyPrimaryForSync) {
+			firmwareError(ERROR_TRIGGER_DRAMA, "why would you set useOnlyPrimaryForSync with only one trigger wheel?");
+		}
 	}
 
 // todo: move the following logic from below here
@@ -334,8 +336,6 @@ angle_t TriggerWaveform::getSwitchAngle(int index) const {
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped,
 		operation_mode_e operationMode) {
 #if EFI_ENGINE_CONTROL
-
-	s->useRiseEdge = true;
 
 	initializeSkippedToothTriggerWaveformExt(s, total, skipped,
 			operationMode);
@@ -800,7 +800,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		wave.checkSwitchTimes(getCycleDuration());
 	}
 
-	if (bothFrontsRequired && useOnlyRisingEdgeForTrigger) {
+	if (syncEdge == SyncEdge::Both && useOnlyRisingEdgeForTrigger) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #else
