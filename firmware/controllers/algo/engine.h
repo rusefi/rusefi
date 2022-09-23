@@ -271,13 +271,6 @@ public:
 
 	void resetEngineSnifferIfInTestMode();
 
-	/**
-	 * pre-calculated reference to which output pin should be used for
-	 * given sequence index within engine cycle
-	 * todo: update documentation
-	 */
-	int ignitionPin[MAX_CYLINDER_COUNT];
-
 	EngineState engineState;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM

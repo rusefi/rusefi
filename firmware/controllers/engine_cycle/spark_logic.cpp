@@ -69,6 +69,31 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		} \
 }
 
+/**
+ * @param cylinderIndex from 0 to cylinderCount, not cylinder number
+ */
+static int getIgnitionPinForIndex(int cylinderIndex, ignition_mode_e ignitionMode) {
+	switch (ignitionMode) {
+	case IM_ONE_COIL:
+		return 0;
+	case IM_WASTED_SPARK: {
+		if (engineConfiguration->specs.cylindersCount == 1) {
+			// we do not want to divide by zero
+			return 0;
+		}
+		return cylinderIndex % (engineConfiguration->specs.cylindersCount / 2);
+	}
+	case IM_INDIVIDUAL_COILS:
+		return cylinderIndex;
+	case IM_TWO_COILS:
+		return cylinderIndex % 2;
+
+	default:
+		firmwareError(CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
+		return 0;
+	}
+}
+
 static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event) {
 	// todo: clean up this implementation? does not look too nice as is.
 
@@ -84,7 +109,10 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		+ engine->module<KnockController>()->getKnockRetard();
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
-	const int index = engine->ignitionPin[event->cylinderIndex];
+
+	auto ignitionMode = getCurrentIgnitionMode();
+
+	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
 	const int coilIndex = ID2INDEX(getCylinderId(index));
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
@@ -94,7 +122,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	//  - we are running wasted spark, and have "two wire" mode enabled
 	//  - We are running sequential mode, but we're cranking, so we should run in two wire wasted mode (not one wire wasted)
 	bool isTwoWireWasted = engineConfiguration->twoWireBatchIgnition || (engineConfiguration->ignitionMode == IM_INDIVIDUAL_COILS);
-	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && isTwoWireWasted) {
+	if (ignitionMode == IM_WASTED_SPARK && isTwoWireWasted) {
 		int secondIndex = index + engineConfiguration->specs.cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
