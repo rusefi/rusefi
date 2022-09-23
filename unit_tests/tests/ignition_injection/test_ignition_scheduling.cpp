@@ -13,18 +13,23 @@ using ::testing::_;
 TEST(ignition, twoCoils) {
 	EngineTestHelper eth(FRANKENSO_BMW_M73_F);
 
-	// first one to fire uses first coil
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(1)], 0);
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(2)], 1);
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(3)], 0);
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(4)], 1);
-
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(11)], 0);
-	ASSERT_EQ(engine->ignitionPin[ID2INDEX(12)], 1);
-
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
 	setArrayValues(engine->engineState.timingAdvance, 0.0f);
 	initializeIgnitionActions();
+
+	// first one to fire uses first coil
+	EXPECT_EQ(engine->ignitionEvents.elements[0].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[1].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[2].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[3].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[4].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[5].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[6].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[7].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[8].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[9].cylinderNumber, 6);
+	EXPECT_EQ(engine->ignitionEvents.elements[10].cylinderNumber, 0);
+	EXPECT_EQ(engine->ignitionEvents.elements[11].cylinderNumber, 6);
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[0].outputs[0], (void*)&enginePins.coils[0]);
