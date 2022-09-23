@@ -64,11 +64,14 @@ extern bool main_loop_started;
 #include "HD44780.h"
 #include "rusefi.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "max31855.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_INTERNAL_FLASH
+#include "flash_main.h"
+#endif
 
 #if EFI_CJ125
 #include "cj125.h"
@@ -573,6 +576,8 @@ static void updateMiscSensors() {
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
 	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
+	engine->outputChannels.auxSpeed1 = Sensor::getOrZero(SensorType::AuxSpeed1);
+	engine->outputChannels.auxSpeed2 = Sensor::getOrZero(SensorType::AuxSpeed2);
 
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();

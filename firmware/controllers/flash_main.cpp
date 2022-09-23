@@ -11,6 +11,7 @@
 
 #if EFI_INTERNAL_FLASH
 
+#include "mpu_util.h"
 #include "flash_main.h"
 #include "eficonsole.h"
 
