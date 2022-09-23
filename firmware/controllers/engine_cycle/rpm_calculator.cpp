@@ -249,10 +249,6 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	if (isSpinningUp()) {
 		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt);
 	}
-	/**
-	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
-	 */
-	prepareIgnitionPinIndices();
 }
 
 /**
