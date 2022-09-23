@@ -25,6 +25,7 @@
 #include <chprintf.h>
 #include "rusefi_lua.h"
 #include "can_hw.h"
+#include "flash_main.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -98,7 +99,9 @@ void rusEfiFunctionalTest(void) {
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(MINIMAL_PINS);
+	initFlash();
+	loadConfiguration();
+
 	enableTriggerStimulator();
 
 	commonInitEngineController();
