@@ -1,6 +1,9 @@
 /**
  * @file	rusefi_enums.h
- * @brief	Fundamental rusEfi enumerable types live here
+ * @brief	Fundamental rusEFI enumerable types live here
+ *
+ * This and few over headers are part of integration API between C/C++ and code generator for memory meta and java code.
+ * TODO: move enums which should not be visible outside of the firmware out of 'integration API' headers like this one
  *
  * @note this file should probably not include any other files
  *

@@ -1,6 +1,9 @@
 /*
  * @file engine_types.h
  *
+ * See 'integration API' note in rusefi_enums.h
+ * TODO: spell out which enums belong here and which enums belong in rusefi_enums.h for what reasons
+ *
  * @date Oct 23, 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
