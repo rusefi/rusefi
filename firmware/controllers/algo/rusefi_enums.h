@@ -673,4 +673,10 @@ enum class SelectedGear : uint8_t {
 	Low = 11,
 };
 
+enum class SyncEdge : uint8_t {
+	Rise,
+	Fall,
+	Both
+};
+
 #endif // __cplusplus

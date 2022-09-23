@@ -64,12 +64,6 @@ class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-enum class SyncEdge {
-	Rise,
-	Fall,
-	Both
-};
-
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
  * @see TriggerState for trigger decoder state which works based on this trigger shape model
