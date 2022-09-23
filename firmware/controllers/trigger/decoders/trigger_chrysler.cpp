@@ -385,6 +385,8 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 }
 
 static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform *s) {
+	s->useOnlyPrimaryForSync = withCam;
+	
 	TriggerWheel crank = withCam ? TriggerWheel::T_SECONDARY : TriggerWheel::T_PRIMARY;
 
 	// voodoo magic - we always need 720 at the end
