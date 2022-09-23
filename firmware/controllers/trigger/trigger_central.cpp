@@ -25,6 +25,7 @@
 #include "main_trigger_callback.h"
 #include "status_loop.h"
 #include "engine_sniffer.h"
+#include "auto_generated_sync_edge.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"

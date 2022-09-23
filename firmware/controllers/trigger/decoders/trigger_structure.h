@@ -64,11 +64,7 @@ class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-enum class SyncEdge : uint8_t {
-	Rise,
-	Fall,
-	Both
-};
+#include "sync_edge.h"
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
