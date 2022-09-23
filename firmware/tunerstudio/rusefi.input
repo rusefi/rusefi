@@ -1714,6 +1714,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Misc sensors
+		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = fuelPressureSensor,		"Fuel pressure"
@@ -1750,16 +1751,14 @@ menuDialog = main
 
 
 		# EXPERIMENTAL FEATURES
-                subMenu = mc33Dialog,                           "GDI Dreams"
+                subMenu = mc33Dialog,                           "PT2001 control"
 		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
 		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
-		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
+		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = fancyHardwareDialog,      "Fancy Hardware"
-		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = rotaryDialog, 			"Rotary"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1767,12 +1766,15 @@ menuDialog = main
 		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 		subMenu = std_separator
 
-		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
 #		subMenu = std_separator
+
+		subMenu = std_separator
+		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = rotaryDialog, 			"Rotary"
 
       menu = "Help"
          subMenu = helpGeneral,     "rusEFI Info"
@@ -2430,7 +2432,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = wastegateIdlePosLeft, West
 		panel = wastegateIdlePosGauges, East
 
-    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
+    dialog = mc33Dialog, "Low-Z injector control PT2001"
     	field = "SPI Chip Select",						mc33816_cs
 		field = "SPI Device",	        				mc33816spiDevice
 		field = "MC33816 rstb",							mc33816_rstb
@@ -3324,6 +3326,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
+		field = "ADC vRef voltage",						adcVcc
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Smoothing factor",						slowAdcAlpha
@@ -3414,7 +3417,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "L9779 SPI",                            tle8888spiDevice @@if_ts_show_spi
 
 	dialog = connection, "", 	yAxis
-		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		panel = auxSerial
