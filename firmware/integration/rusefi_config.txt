@@ -1226,7 +1226,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e hpfpValvePin;
 	pin_output_mode_e hpfpValvePinMode;
 
-	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"kPa (absolute)", 1, 0, 0, 500, 0
+	float boostCutPressure;+MAP value above which fuel is cut in case of overboost.\nSet to 0 to disable overboost cut.;"kPa (absolute)", 1, 0, 0, 1000, 0
 
 	uint8_t[16] autoscale tchargeBins;;"kg/h", 5, 0, 0, 1200, 0
 	uint8_t[16] autoscale tchargeValues;;"ratio", 0.01, 0, 0, 1, 2
@@ -1621,7 +1621,7 @@ float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
 uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
-uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 0
+uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
@@ -1631,19 +1631,19 @@ uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, -125, 125, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
+uint16_t[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 1000, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable1RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, -125, 125, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
+uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 1000, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, -20, 90, 1
-uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 0
+uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 1000, 0
 uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
-uint16_t[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 0
+uint16_t[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 #if LAMBDA
@@ -1657,7 +1657,7 @@ uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"afr", {1/@@PAC
 !	afr_table_t afrTable
 ! end_union
 
-uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 0
+uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
 float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
@@ -1687,12 +1687,12 @@ struct cyl_trim_s
 end_struct
 
 ! All ign trim tables share axes
-uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 400, 0
+uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] ignTrims
 
 ! All fuel trim tables share axes
-uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 400, 0
+uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] fuelTrims
 
@@ -1731,7 +1731,7 @@ uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
 struct blend_table_s
 	int16_t[8 x 8] autoscale table;;"", 0.1, 0, -100, 100, 1
-	uint16_t[8] loadBins;;"Load", 1, 0, 0, 500, 0
+	uint16_t[8] loadBins;;"Load", 1, 0, 0, 1000, 0
 	uint16_t[8] rpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 	gppwm_channel_e blendParameter
