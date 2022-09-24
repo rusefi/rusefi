@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 23 23:16:48 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 24 00:19:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2231,8 +2231,8 @@ public class Fields {
 	public static final int trigger_type_e_TT_GM_60_2_2_2 = 54;
 	public static final int trigger_type_e_TT_GM_7X = 5;
 	public static final int trigger_type_e_TT_HONDA_CBR_600 = 28;
-	public static final int trigger_type_e_TT_HONDA_K_12_1 = 46;
-	public static final int trigger_type_e_TT_HONDA_K_4_1 = 67;
+	public static final int trigger_type_e_TT_HONDA_K_CAM_4_1 = 67;
+	public static final int trigger_type_e_TT_HONDA_K_CRANK_12_1 = 46;
 	public static final int trigger_type_e_TT_JEEP_18_2_2_2 = 37;
 	public static final int trigger_type_e_TT_JEEP_4_CYL = 40;
 	public static final int trigger_type_e_TT_KAWA_KX450F = 57;
