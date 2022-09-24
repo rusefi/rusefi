@@ -42,7 +42,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 		return;
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
-	s->initialize(operationMode);
+	s->initialize(operationMode, SyncEdge::Rise);
 #if EFI_UNIT_TEST
 	s->knownOperationMode = false;
 #endif // EFI_UNIT_TEST
@@ -61,7 +61,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 }
 
 void configureOnePlusOne(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->addEvent360( 90, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
@@ -74,7 +74,7 @@ void configureOnePlusOne(TriggerWaveform *s) {
 }
 
 void configure3_1_cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 
 	const float crankW = 360 / 3 / 2;
@@ -114,7 +114,7 @@ void configure3_1_cam(TriggerWaveform *s) {
  */
 void configureKawaKX450F(TriggerWaveform *s) {
 	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->setTriggerSynchronizationGap(2.28);
 
@@ -128,9 +128,7 @@ void configureKawaKX450F(TriggerWaveform *s) {
 }
 
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	s->useRiseEdge = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	int offset = 20;
 
@@ -155,9 +153,8 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 // - Honda 24+1 (set this on crank primary, single tooth cam)
 // - AEM 24+1 CAS wheel (same config as Honda)
 void configure12ToothCrank(TriggerWaveform* s) {
-	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::Rise);
 
-	s->useRiseEdge = true;
 	s->shapeWithoutTdc = true;
 
 	// Sync after 3 good teeth

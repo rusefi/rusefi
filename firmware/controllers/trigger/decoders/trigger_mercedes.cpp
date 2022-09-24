@@ -4,7 +4,7 @@
 #include "trigger_structure.h"
 
 void setMercedesTwoSegment(TriggerWaveform* s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	s->addEvent360(180 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
 	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);

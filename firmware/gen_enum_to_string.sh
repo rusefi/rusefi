@@ -32,6 +32,14 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
+	-outputPath controllers/trigger/decoders \
+	-generatedFile sync_edge \
+	-enumInputFile controllers/trigger/decoders/sync_edge.h
+
+[ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
+
+java -DSystemOut.name=logs/gen_enum_to_string \
+	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-generatedFile enginetypes \
 	-enumInputFile controllers/algo/engine_types.h

@@ -11,7 +11,7 @@
 #include "trigger_universal.h"
 
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
@@ -35,8 +35,7 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
  * TT_MITSUBISHI = 11
  */
 void initializeMitsubishi4g18(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	s->setTriggerSynchronizationGap(1.6666);
 
@@ -56,7 +55,7 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 	s->tdcPosition = 90;
 	int totalTeethCount = 36;
 
@@ -86,7 +85,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 }
 
 void initialize36_2_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 	s->tdcPosition = 90;
 	int totalTeethCount = 36;
 
@@ -111,7 +110,7 @@ void initialize36_2_1(TriggerWaveform *s) {
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	int w = 5;
 	s->addEvent360(120 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
