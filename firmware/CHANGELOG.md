@@ -17,7 +17,7 @@ Release template (copy/paste this for new release):
  -   
 
 ### Fixed
- -   
+ - Insist on setBoardConfigOverrides #4614   
 
  -->
 
