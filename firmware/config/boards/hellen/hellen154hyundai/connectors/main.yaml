@@ -183,7 +183,7 @@ pins:
     # H144_LS_7
     id: F13
     class: outputs
-    ts_name: K48 BK1 Wastegate Solenoid
+    ts_name: K47 BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
 
   - pin: K53
