@@ -181,6 +181,3 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 	return &CAND1;
 }
 #endif // HAL_USE_CAN
-
-void setBoardConfigOverrides() {
-}
