@@ -25,3 +25,7 @@ efitick_t getTimeNowNt() {
 
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
+
+void setBoardConfigOverrides() {
+}
+
