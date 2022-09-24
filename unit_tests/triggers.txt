@@ -2710,7 +2710,7 @@ event 248 0 1 706.36
 event 249 0 0 709.09
 event 250 0 1 711.82
 event 251 0 0 714.55
-TRIGGERTYPE 46 52 TT_HONDA_K_12_1 0.00
+TRIGGERTYPE 46 52 TT_HONDA_K_CRANK_12_1 0.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
@@ -4365,7 +4365,7 @@ event 6 0 1 500.00
 event 7 0 0 505.00
 event 8 0 1 680.00
 event 9 0 0 685.00
-TRIGGERTYPE 67 10 TT_HONDA_K_4_1 0.00
+TRIGGERTYPE 67 10 TT_HONDA_K_CAM_4_1 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
