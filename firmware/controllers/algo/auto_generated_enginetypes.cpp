@@ -412,10 +412,10 @@ case TT_GM_7X:
   return "TT_GM_7X";
 case TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
-case TT_HONDA_K_12_1:
-  return "TT_HONDA_K_12_1";
-case TT_HONDA_K_4_1:
-  return "TT_HONDA_K_4_1";
+case TT_HONDA_K_CRANK_12_1:
+  return "TT_HONDA_K_CRANK_12_1";
+case TT_HONDA_K_CAM_4_1:
+  return "TT_HONDA_K_CAM_4_1";
 case TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
 case TT_JEEP_4_CYL:

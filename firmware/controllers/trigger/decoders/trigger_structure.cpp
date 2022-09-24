@@ -679,11 +679,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureBarra3plus1cam(this);
 		break;
 
-	case TT_HONDA_K_4_1:
+	case TT_HONDA_K_CAM_4_1:
 		configureHondaK_4_1(this);
 		break;
 
-	case TT_HONDA_K_12_1:
+	case TT_HONDA_K_CRANK_12_1:
 		configureHondaK_12_1(this);
 		break;
 

@@ -75,7 +75,7 @@ static void kseriesTooth(TriggerWaveform* s, float end) {
 	s->addEvent360(end    , TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
-// TT_HONDA_K_12_1
+// TT_HONDA_K_CRANK_12_1
 void configureHondaK_12_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
