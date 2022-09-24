@@ -18,7 +18,7 @@
  */
 
 void initialize2jzGE1_12(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	float crankD = 360 / 12 / 2; // 15
 
@@ -55,7 +55,7 @@ void initialize2jzGE1_12(TriggerWaveform *s) {
  * https://rusefi.com/forum/viewtopic.php?f=5&t=1720
  */
 void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	float camD = 720 / 6; // 120
 
@@ -125,8 +125,7 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 }
 
 void initializeToyota4_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	int w = 10;
 

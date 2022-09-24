@@ -367,11 +367,6 @@ static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, Tri
 	PRINT_INC_INDEX; \
 }
 
-#define considerEventForGap() (!triggerShape.useOnlyPrimaryForSync || isPrimary)
-
-#define needToSkipFall(type) ((!triggerShape.gapBothDirections) && (( triggerShape.useRiseEdge) && (type != TriggerValue::RISE)))
-#define needToSkipRise(type) ((!triggerShape.gapBothDirections) && ((!triggerShape.useRiseEdge) && (type != TriggerValue::FALL)))
-
 int TriggerDecoderBase::getCurrentIndex() const {
 	return currentCycle.current_index;
 }
@@ -514,6 +509,24 @@ void TriggerDecoderBase::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
+static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel triggerWheel, TriggerValue edge) {
+	if (triggerWheel != TriggerWheel::T_PRIMARY && triggerShape.useOnlyPrimaryForSync) {
+		// Non-primary events ignored 
+		return false;
+	}
+
+	switch (triggerShape.syncEdge) {
+		case SyncEdge::Both: return true;
+		case SyncEdge::Rise: return edge == TriggerValue::RISE;
+		case SyncEdge::Fall: return edge == TriggerValue::FALL;
+	}
+
+	// how did we get here?
+	// assert(false)?
+
+	return false;
+}
+
 /**
  * @brief Trigger decoding happens here
  * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
@@ -571,9 +584,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	toothDurations[0] =
 			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
-	bool isPrimary = triggerWheel == TriggerWheel::T_PRIMARY;
-
-	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
+	if (!shouldConsiderEdge(triggerShape, triggerWheel, type)) {
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
