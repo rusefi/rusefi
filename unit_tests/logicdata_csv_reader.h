@@ -4,6 +4,9 @@
  * @date Jun 26, 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
+
+const int SINGLE_TRIGGER_FIRST[1] = {0};
+
 class CsvReader {
 public:
 	CsvReader(size_t triggerCount, size_t vvtCount) : CsvReader(triggerCount, vvtCount, 0.0) {}

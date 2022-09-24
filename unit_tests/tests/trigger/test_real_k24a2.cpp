@@ -3,10 +3,9 @@
 #include "logicdata_csv_reader.h"
 
 static void doTest(const char* testFile, int expectedRpm) {
-	CsvReader reader(1, /* vvtCount */ 0);
-	int indeces[1] = {0};
+	CsvReader reader(/* triggerCount */ 1, /* vvtCount */ 0);
 
-	reader.open(testFile, indeces);
+	reader.open(testFile, SINGLE_TRIGGER_FIRST);
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
