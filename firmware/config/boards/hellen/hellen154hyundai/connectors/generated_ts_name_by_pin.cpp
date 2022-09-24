@@ -23,7 +23,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F10: return "A43 Clutch Input";
 		case Gpio::F11: return "K40 VSS";
 		case Gpio::F12: return "VVT2";
-		case Gpio::F13: return "K48 BK1 Wastegate Solenoid";
+		case Gpio::F13: return "K47 BK1 Wastegate Solenoid";
 		case Gpio::F8: return "A29 Brake Input";
 		case Gpio::F9: return "A57 AC Request";
 		case Gpio::G12: return "K87 AC Relay";
