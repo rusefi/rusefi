@@ -431,7 +431,10 @@ typedef enum {
 	 */
 	TT_RENIX_66_2_2_2 = 45,
 
-	TT_HONDA_K_12_1 = 46,
+	/**
+	 * Honda K crank shape
+	 */
+	TT_HONDA_K_CRANK_12_1 = 46,
 
 	TT_VVT_BOSCH_QUICK_START = 47,
 
@@ -479,7 +482,10 @@ typedef enum {
 
 	TT_SUZUKI_G13B = 66,
 
-	TT_HONDA_K_4_1 = 67,
+	/**
+	 * Honda K cam shaft
+	 */
+	TT_HONDA_K_CAM_4_1 = 67,
 
 	TT_NISSAN_MR18_CRANK = 68,
 
