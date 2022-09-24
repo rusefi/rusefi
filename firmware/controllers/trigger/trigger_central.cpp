@@ -703,7 +703,15 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
         // todo: what is broken _exactly_?
 		currentEngineDecodedPhase = currentPhase;
 
-		// Record precise time and phase of the engine. This is used for VVT decode.
+		// Check that the expected next phase (from the last tooth) is close to the actual current phase:
+		// basically, check that the tooth width is correct
+		auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
+		if (estimatedCurrentPhase) {
+			triggerToothAngleError = expectedNextPhase - estimatedCurrentPhase.Value;
+		}
+
+		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
+		// trigger pattern selected matches reality (ie, we check the next tooth is where we think it should be)
 		{
 			// under lock to avoid mismatched tooth phase and time
 			chibios_rt::CriticalSectionLocker csl;
@@ -743,6 +751,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentPhase);
 
+		expectedNextPhase = nextPhase + tdcPosition();
+		wrapAngle(expectedNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 
 #if EFI_CDM_INTEGRATION
 	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
