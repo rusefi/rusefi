@@ -17,7 +17,7 @@ Release template (copy/paste this for new release):
  -   
 
 ### Fixed
- -   
+ - Enforce board configuration overrides more strictly #4614   
 
  -->
 
