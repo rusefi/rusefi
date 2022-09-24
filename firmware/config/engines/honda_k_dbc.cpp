@@ -23,8 +23,11 @@ void setProteusHondaElement2003() {
 //	engineConfiguration->trigger.customTotalToothCount = 12;
 //	engineConfiguration->trigger.customSkippedToothCount = 0;
 
-	engineConfiguration->trigger.type = TT_HONDA_K_4_1;
-	engineConfiguration->globalTriggerAngleOffset = 570;
+	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
+	engineConfiguration->globalTriggerAngleOffset = 675;
+
+//	engineConfiguration->trigger.type = TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
+//	engineConfiguration->globalTriggerAngleOffset = 570;
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
