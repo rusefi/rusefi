@@ -55,7 +55,7 @@ public class TriggerImage {
                 return "Miata NB";
             case TT_SUBARU_SVX:
                 return "Subaru SVX";
-            case TT_HONDA_K_12_1:
+            case TT_HONDA_K_CRANK_12_1:
                 return "Honda K 1/12";
             case TT_SUBARU_7_6:
                 return "Subaru 7/6";
