@@ -34,6 +34,7 @@ void setProteusHondaElement2003() {
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
 	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -41;
+	engineConfiguration->vvtOffsets[1] = 171;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->injector.flow = 270;
