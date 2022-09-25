@@ -2634,14 +2634,14 @@
 #define vssFilterReciprocal_offset 567
 #define vssGearRatio_offset 568
 #define vssToothCount_offset 570
-#define vvt_mode_e_auto_enum 0="VVT_INACTIVE",2="VVT_2JZ",8="VVT_BARRA_3_PLUS_1",5="VVT_BOSCH_QUICK_START",4="VVT_FIRST_HALF",7="VVT_FORD_ST170",10="VVT_HONDA_K",13="VVT_MAP_V_TWIN",15="VVT_MAZDA_SKYACTIV",3="VVT_MIATA_NB",12="VVT_MITSUBISHI_3A92",14="VVT_MITSUBISHI_6G75",11="VVT_NISSAN_MR",9="VVT_NISSAN_VQ",1="VVT_SECOND_HALF",6="VVT_TOYOTA_4_1"
+#define vvt_mode_e_auto_enum 0="VVT_INACTIVE",2="VVT_2JZ",8="VVT_BARRA_3_PLUS_1",5="VVT_BOSCH_QUICK_START",4="VVT_FIRST_HALF",7="VVT_FORD_ST170",10="VVT_HONDA_K_INTAKE",13="VVT_MAP_V_TWIN",15="VVT_MAZDA_SKYACTIV",3="VVT_MIATA_NB",12="VVT_MITSUBISHI_3A92",14="VVT_MITSUBISHI_6G75",11="VVT_NISSAN_MR",9="VVT_NISSAN_VQ",1="VVT_SECOND_HALF",6="VVT_TOYOTA_4_1"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "vvt16", "vvt17"
 #define vvt_mode_e_VVT_2JZ 2
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
 #define vvt_mode_e_VVT_BOSCH_QUICK_START 5
 #define vvt_mode_e_VVT_FIRST_HALF 4
 #define vvt_mode_e_VVT_FORD_ST170 7
-#define vvt_mode_e_VVT_HONDA_K 10
+#define vvt_mode_e_VVT_HONDA_K_INTAKE 10
 #define vvt_mode_e_VVT_INACTIVE 0
 #define vvt_mode_e_VVT_MAP_V_TWIN 13
 #define vvt_mode_e_VVT_MAZDA_SKYACTIV 15
