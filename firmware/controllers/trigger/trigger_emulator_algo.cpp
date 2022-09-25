@@ -46,9 +46,12 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 #if EFI_SHAFT_POSITION_INPUT
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
-			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
+			bool isRise = TriggerValue::RISE == multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
-			handleShaftSignal(i, currentValue == TriggerValue::RISE, stamp);
+			isRise ^= (i == 0 && engineConfiguration->invertPrimaryTriggerSignal);
+			isRise ^= (i == 1 && engineConfiguration->invertSecondaryTriggerSignal);
+
+			handleShaftSignal(i, isRise, stamp);
 		}
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
