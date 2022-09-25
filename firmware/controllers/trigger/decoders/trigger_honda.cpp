@@ -102,8 +102,8 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 void configureHondaK_4_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.11, 2.38);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.28, 0.474);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 4.5);	// nominal 2.27
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1, 0.5);	// nominal 0.28
 
 	angle_t start = 55.5;
 	angle_t end = 70.5;
