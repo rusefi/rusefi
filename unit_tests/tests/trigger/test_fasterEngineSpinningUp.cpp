@@ -119,8 +119,34 @@ static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int e
 	EXPECT_EQ(expectedRpm, round(Sensor::getOrZero(SensorType::Rpm))) << "test RPM: with " << std::to_string(startUpDelayMs) << " startUpDelayMs";
 }
 
+static void doTestFasterEngineSpinningUp60_2_onlyRise(int startUpDelayMs, int rpm1, int expectedRpm) {
+	EngineTestHelper eth(TEST_ENGINE);
+	// turn on FasterEngineSpinUp mode
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	setupSimpleTestEngineWithMaf(&eth, IM_SEQUENTIAL, TT_TOOTHED_WHEEL_60_2);
+	eth.moveTimeForwardMs(startUpDelayMs);
+
+	// fire 30 tooth rise/fall signals
+	eth.fireTriggerEvents2(30 /* count */, 1 /*ms*/);
+	// now fire missed tooth rise/fall
+	eth.fireRise(5 /*ms*/);
+	EXPECT_EQ(rpm1, round(Sensor::getOrZero(SensorType::Rpm)));
+
+	eth.fireFall(1);
+	eth.fireTriggerEvents2(30, 1);
+
+	// After some more regular teeth, instant RPM is still correct
+	EXPECT_EQ(rpm1, round(Sensor::getOrZero(SensorType::Rpm)));
+}
+
 TEST(cranking, testFasterEngineSpinningUp60_2) {
 	doTestFasterEngineSpinningUp60_2(0, 1000, 1000);
 	doTestFasterEngineSpinningUp60_2(100, 1000, 1000);
 	doTestFasterEngineSpinningUp60_2(1000, 1000, 1000);
+
+	doTestFasterEngineSpinningUp60_2_onlyRise(0, 1000, 1000);
+	doTestFasterEngineSpinningUp60_2_onlyRise(100, 1000, 1000);
+	doTestFasterEngineSpinningUp60_2_onlyRise(1000, 1000, 1000);
 }
