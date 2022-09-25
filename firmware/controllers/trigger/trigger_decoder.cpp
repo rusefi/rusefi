@@ -195,7 +195,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			// Wrap the angle back in to [0, 720)
 			fixAngle(angle, "trgSync", CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 
-			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
+			if (shape->useOnlyRisingEdges) {
 				efiAssertVoid(OBD_PCM_Processor_Fault, triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
 				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
 
@@ -517,6 +517,7 @@ static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel
 
 	switch (triggerShape.syncEdge) {
 		case SyncEdge::Both: return true;
+		case SyncEdge::RiseOnly:
 		case SyncEdge::Rise: return edge == TriggerValue::RISE;
 		case SyncEdge::Fall: return edge == TriggerValue::FALL;
 	}
@@ -555,7 +556,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 	}
 
-	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
+	bool useOnlyRisingEdgeForTrigger = triggerShape.useOnlyRisingEdges;
 
 	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
@@ -697,7 +698,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 * in case of noise the counter could be above the expected number of events, that's why 'more or equals' and not just 'equals'
 			 */
 
-			unsigned int endOfCycleIndex = triggerShape.getSize() - (triggerConfiguration.UseOnlyRisingEdgeForTrigger ? 2 : 1);
+			unsigned int endOfCycleIndex = triggerShape.getSize() - (useOnlyRisingEdgeForTrigger ? 2 : 1);
 
 			isSynchronizationPoint = !getShaftSynchronized() || (currentCycle.current_index >= endOfCycleIndex);
 
