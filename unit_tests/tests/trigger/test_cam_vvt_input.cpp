@@ -125,8 +125,6 @@ TEST(trigger, testNB2CamInput) {
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
 	for (int i = 0; i < 6;i++) {
 		eth.fireRise(25 * 70 / 180);
@@ -177,5 +175,5 @@ TEST(trigger, testNB2CamInput) {
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
-	EXPECT_EQ(40, waveChart.getSize());
+	EXPECT_EQ(24, waveChart.getSize());
 }

@@ -164,7 +164,6 @@ TEST(trigger, noiselessDecoder) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	// we'll test on 60-2 wheel
 	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2);

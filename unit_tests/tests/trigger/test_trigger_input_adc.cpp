@@ -75,7 +75,6 @@ TEST(big, testTriggerInputAdc) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->adcVcc = 3.3f;
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
