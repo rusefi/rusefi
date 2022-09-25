@@ -118,7 +118,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	// todo: why does VVT_2JZ not use real decoder?
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
-			&& vvtMode != VVT_HONDA_K
+			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
@@ -180,7 +180,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAZDA_SKYACTIV:
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
-	case VVT_HONDA_K:
+	case VVT_HONDA_K_INTAKE:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_INACTIVE:
 		// do nothing
@@ -360,7 +360,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 
 		// this could be just an 'if' but let's have it expandable for future use :)
 		switch(engineConfiguration->vvtMode[camIndex]) {
-		case VVT_HONDA_K:
+		case VVT_HONDA_K_INTAKE:
 			// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
 			vvtPosition = wrapVvt(vvtPosition, 180);
 			break;

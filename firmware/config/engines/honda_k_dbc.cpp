@@ -29,7 +29,7 @@ void setProteusHondaElement2003() {
 //	engineConfiguration->trigger.type = TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
 //	engineConfiguration->globalTriggerAngleOffset = 570;
 
-	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
+	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = -41;
 
