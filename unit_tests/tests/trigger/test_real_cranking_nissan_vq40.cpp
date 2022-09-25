@@ -46,7 +46,7 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -45.64, 1e-2);
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -45.45, 1e-2);
-	ASSERT_EQ(101, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(102, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());

@@ -134,7 +134,6 @@ void setBoardDefaultConfiguration() {
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
-	engineConfiguration->vvtCamSensorUseRise = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 

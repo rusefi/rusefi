@@ -920,8 +920,6 @@ static void getValue(const char *paramStr) {
 		efiPrintf("is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
 		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
-	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
-		efiPrintf("vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
 	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
 		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
@@ -1105,8 +1103,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
-		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {

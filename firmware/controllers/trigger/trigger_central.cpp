@@ -214,6 +214,8 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	}
 
 	if (engineConfiguration->displayLogicLevelsInEngineSniffer && isImportantFront) {
+		// TODO: this logic is wrong!
+
 		if (engineConfiguration->vvtCamSensorUseRise) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?
@@ -280,10 +282,15 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
+	const auto& vvtShape = tc->vvtShape[camIndex];
 
-	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TriggerValue::FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
-	if (!isVvtWithRealDecoder && !isImportantFront) {
+
+	// Non real decoders only use the rising edge
+	bool vvtUseOnlyRise = vvtShape.useOnlyRisingEdges || !isVvtWithRealDecoder;
+
+	bool isImportantFront = (!vvtUseOnlyRise || (front == TriggerValue::RISE));
+	if (!isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
@@ -300,7 +307,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	if (isVvtWithRealDecoder) {
 		vvtDecoder.decodeTriggerEvent(
 				"vvt",
-			tc->vvtShape[camIndex],
+			vvtShape,
 			nullptr,
 			tc->vvtTriggerConfiguration[camIndex],
 			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
@@ -934,7 +941,6 @@ void onConfigurationChangeTriggerCallback() {
 	changed |= isConfigurationChanged(globalTriggerAngleOffset);
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
-	changed |= isConfigurationChanged(vvtCamSensorUseRise);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
 
 	if (changed) {
