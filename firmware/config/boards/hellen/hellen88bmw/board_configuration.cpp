@@ -135,14 +135,13 @@ void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;
 
-	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

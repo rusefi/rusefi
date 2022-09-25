@@ -190,7 +190,6 @@ void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
 	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->etb.pFactor = 8.8944;

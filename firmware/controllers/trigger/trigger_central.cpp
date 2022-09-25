@@ -473,7 +473,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!engineConfiguration->useNoiselessTriggerDecoder) {
-		if (!isUsefulSignal(signal, getTriggerCentral()->primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -660,7 +660,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
 			return;
 		}
-		if (!isUsefulSignal(signal, primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, triggerShape)) {
 			return;
 		}
 	}

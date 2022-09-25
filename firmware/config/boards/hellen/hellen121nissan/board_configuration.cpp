@@ -135,8 +135,6 @@ void setBoardDefaultConfiguration() {
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
-	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 //	setAlgorithm(LM_SPEED_DENSITY);
     // at least this starts
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
