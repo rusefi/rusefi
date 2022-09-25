@@ -110,7 +110,7 @@ void initialize36_2_1(TriggerWaveform *s) {
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	int w = 5;
 	s->addEvent360(120 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);

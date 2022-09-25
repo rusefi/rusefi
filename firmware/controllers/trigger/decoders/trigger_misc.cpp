@@ -56,7 +56,7 @@ void configureTriTach(TriggerWaveform * s) {
  * based on https://www.w8ji.com/distributor_stabbing.htm
  */
 void configureFordPip(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 662.5;
 
@@ -79,7 +79,7 @@ void configureFordPip(TriggerWaveform * s) {
 }
 
 void configureFordST170(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	int width = 10;
 
 	int total = s->getCycleDuration() / 8;
@@ -123,7 +123,7 @@ void configureDaihatsu4(TriggerWaveform * s) {
 }
 
 void configureBarra3plus1cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	// This wheel has four teeth
 	// two short gaps, and two long gaps

@@ -22,7 +22,7 @@ static float addTooth(float offset, TriggerWaveform *s) {
  * GM/Daewoo Distributor on the F8CV
  */
 void configureGm60_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
@@ -61,7 +61,7 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 }
 
 void configureGmTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	float w = 5;
 

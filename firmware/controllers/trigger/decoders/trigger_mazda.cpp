@@ -191,7 +191,7 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
 // Cam pattern for intake/exhaust on all Skyactiv-G (and maybe -D/-X)
 void initializeMazdaSkyactivCam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
     // wide
 	s->addEvent360(50, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
