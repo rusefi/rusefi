@@ -18,7 +18,7 @@ public:
 	}
 	~CsvReader();
 
-	void open(const char *fileName, const int* columnIndeces = SINGLE_TRIGGER_FIRST);
+	void open(const char *fileName, const int* triggerColumnIndeces = SINGLE_TRIGGER_FIRST);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
@@ -41,6 +41,6 @@ private:
 
 	int m_lineIndex = -1;
 
-	const int* columnIndeces;
+	const int* triggerColumnIndeces;
 };
 
