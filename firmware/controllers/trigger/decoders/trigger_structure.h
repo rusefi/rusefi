@@ -183,8 +183,6 @@ public:
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
-	bool useOnlyRisingEdgeForTriggerTemp;
-
 	/* (0..1] angle range */
 	void addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 	/* (0..720] angle range
