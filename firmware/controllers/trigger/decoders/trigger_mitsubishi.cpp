@@ -11,7 +11,7 @@
 #include "trigger_universal.h"
 
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
@@ -55,7 +55,7 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
 	int totalTeethCount = 36;
 
@@ -85,7 +85,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 }
 
 void initialize36_2_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
 	int totalTeethCount = 36;
 

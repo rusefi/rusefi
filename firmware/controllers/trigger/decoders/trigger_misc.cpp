@@ -27,7 +27,7 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 
 // TT_TRI_TACH
 void configureTriTach(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->isSynchronizationNeeded = false;
 

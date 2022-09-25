@@ -10,7 +10,7 @@
 #include "trigger_subaru.h"
 
 static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount, bool hasRotaryRelevance) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 #if EFI_UNIT_TEST
 	// placed on 'cam' on '2-stroke' rotary
@@ -66,7 +66,7 @@ void initializeSubaruEZ30(TriggerWaveform *s) {
 }
 
 static void initializeSubaru7_6(TriggerWaveform *s, bool withCrankWheel) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	/* To make trigger decoder happy last event should be exactly at 720
 	 * This code generates two trigger patterns: crank+cam (7+6) and
