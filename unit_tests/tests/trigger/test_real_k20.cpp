@@ -13,7 +13,7 @@ TEST(realk20, cranking) {
 		reader.processLine(&eth);
 	}
 
-	ASSERT_EQ(84, round(Sensor::getOrZero(SensorType::Rpm)));
+	ASSERT_EQ(1182, round(Sensor::getOrZero(SensorType::Rpm)));
 
 
 }
