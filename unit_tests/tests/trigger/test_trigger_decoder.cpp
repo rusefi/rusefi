@@ -183,13 +183,10 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	eth.fireTriggerEvents(48);
 
 	IgnitionEventList *ecl = &engine->ignitionEvents;
-	ASSERT_EQ( 1,  ecl->isReady) << "ford inline ignition events size";
-	ASSERT_EQ( 0,  ecl->elements[0].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.9579, ecl->elements[0].dwellPosition.angleOffsetFromTriggerEvent, EPS2D) << "angle offset#1";
+	ASSERT_EQ(true,  ecl->isReady) << "ford inline ignition events size";
 
-	ASSERT_EQ( 10,  ecl->elements[5].dwellPosition.triggerEventIndex) << "event index";
-	ASSERT_NEAR(7.9579, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS2D) << "angle offset#2";
-
+	EXPECT_NEAR(ecl->elements[0].dwellAngle, 7.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].dwellAngle, 607.960f, 1e-3);
 
 	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
@@ -318,8 +315,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("fuel #2", 4.5450, engine->engineState.injectionDuration);
 	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
-	ASSERT_EQ( 0,  ilist->elements[0].dwellPosition.triggerEventIndex) << "dwell @ index";
-	assertEqualsM("dwell offset", 8.5, ilist->elements[0].dwellPosition.angleOffsetFromTriggerEvent);
+	EXPECT_NEAR(ilist->elements[0].dwellAngle, 8.5f, 1e-3);
 
 	ASSERT_EQ( 0,  eth.engine.triggerCentral.triggerState.getCurrentIndex()) << "index #2";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size/2";
