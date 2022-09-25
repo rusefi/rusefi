@@ -5,7 +5,7 @@
 static void doTest(const char* testFile, int expectedRpm) {
 	CsvReader reader(/* triggerCount */ 1, /* vvtCount */ 0);
 
-	reader.open(testFile, SINGLE_TRIGGER_FIRST);
+	reader.open(testFile);
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;

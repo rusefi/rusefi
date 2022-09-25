@@ -723,8 +723,10 @@ case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
-case VVT_HONDA_K:
-  return "VVT_HONDA_K";
+case VVT_HONDA_K_EXHAUST:
+  return "VVT_HONDA_K_EXHAUST";
+case VVT_HONDA_K_INTAKE:
+  return "VVT_HONDA_K_INTAKE";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN:

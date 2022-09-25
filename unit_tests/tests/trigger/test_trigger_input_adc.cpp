@@ -89,8 +89,8 @@ TEST(big, testTriggerInputAdc) {
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
 
 	CsvReader reader(1, 0);
-	int indices[2] = {0, 1};
-	reader.open("tests/trigger/resources/trigger_adc_1.csv", indices);
+
+	reader.open("tests/trigger/resources/trigger_adc_1.csv");
 	simulateTrigger(trigAdcState, reader, 2.0f, 3.3f);
 
 	ASSERT_EQ(0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);

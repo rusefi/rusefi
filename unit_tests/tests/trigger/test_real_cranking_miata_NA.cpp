@@ -12,8 +12,8 @@
 
 TEST(cranking, realCrankingFromFile) {
 	CsvReader reader(2, /* vvtCount */ 0);
-	int indeces[2] = {1, 0}; // this logic data file has first trigger channel in second column and second trigger channel in first column
-	reader.open("tests/trigger/resources/cranking_na_3.csv", indeces);
+	// this logic data file has first trigger channel in second column and second trigger channel in first column
+	reader.open("tests/trigger/resources/cranking_na_3.csv", REVERSE_ORDER);
 
 	EngineTestHelper eth (FRANKENSO_MIATA_NA6_MAP);
 	engineConfiguration->alwaysInstantRpm = true;

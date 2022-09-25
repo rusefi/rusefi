@@ -88,9 +88,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_NISSAN_VQ = 9,
 
 	/**
-	 * 4 plus one
+	 * 4 equally spaced no way to sync
 	 */
-	VVT_HONDA_K = 10,
+	VVT_HONDA_K_INTAKE = 10,
 
 	VVT_NISSAN_MR = 11,
 
@@ -101,6 +101,11 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_MITSUBISHI_6G75 = 14,
 
 	VVT_MAZDA_SKYACTIV = 15,
+
+	/**
+	 * 4 plus one
+	 */
+	VVT_HONDA_K_EXHAUST = 16,
 
 } vvt_mode_e;
 
