@@ -58,6 +58,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	isSecondWheelCam = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
+	useOnlyRisingEdges = false;
 
 	setTriggerSynchronizationGap(2);
 	for (int gapIndex = 1; gapIndex < GAP_TRACKING_LENGTH ; gapIndex++) {
