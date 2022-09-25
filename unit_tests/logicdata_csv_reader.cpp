@@ -21,10 +21,11 @@ CsvReader::~CsvReader() {
 	}
 }
 
-void CsvReader::open(const char *fileName, const int* triggerColumnIndeces) {
+void CsvReader::open(const char *fileName, const int* triggerColumnIndeces, const int *vvtColumnIndeces) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
 	this->triggerColumnIndeces = triggerColumnIndeces;
+	this->vvtColumnIndeces = vvtColumnIndeces;
 	ASSERT_TRUE(fp != nullptr);
 }
 
@@ -70,7 +71,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 	for (size_t i = 0;i<m_vvtCount;i++) {
 		char *vvtToken = trim(strtok(nullptr, s));
-		newVvtState[i] = vvtToken[0] == '1';
+		newVvtState[vvtColumnIndeces[i]] = vvtToken[0] == '1';
 	}
 
 	if (timeStampstr == nullptr) {
