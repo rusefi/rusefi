@@ -146,7 +146,10 @@ public:
 	// Which edge(s) to consider for finding the sync point: rise, fall, or both
 	SyncEdge syncEdge;
 
-	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
+	// If true, falling edges should be fully ignored on this trigger shape.
+	bool useOnlyRisingEdges;
+
+	void calculateExpectedEventCounts();
 
 	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
 
@@ -179,8 +182,6 @@ public:
 	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
-
-	bool useOnlyRisingEdgeForTriggerTemp;
 
 	/* (0..1] angle range */
 	void addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
