@@ -20,7 +20,7 @@ public:
 	}
 	~CsvReader();
 
-	void open(const char *fileName, const int* triggerColumnIndeces = NORMAL_ORDER);
+	void open(const char *fileName, const int* triggerColumnIndeces = NORMAL_ORDER, const int *vvtColumnIndeces = NORMAL_ORDER);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
