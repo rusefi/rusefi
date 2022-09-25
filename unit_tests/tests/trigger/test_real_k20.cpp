@@ -14,22 +14,22 @@ TEST(realk20, cranking) {
 
 	EngineTestHelper eth (PROTEUS_HONDA_K);
 
-	while (reader.haveMore() && reader.lineIndex() < 101) {
-		reader.processLine(&eth);
-		ASSERT_EQ(getExhaustIndex(), 0) << "Skipping until first exhaust event " << reader.lineIndex();
-	}
-
-	reader.haveMore();
-	reader.processLine(&eth);
-	ASSERT_EQ(getExhaustIndex(), 1) << "First exhaust event " << reader.lineIndex();
-
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		ASSERT_TRUE(getExhaustIndex() != 0 ) << "At line " << reader.lineIndex();
+
+		// TODO
+		// float vvtI = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+		// if (vvtI != 0) {
+		// 	EXPECT_TRUE(vvtI > -10 && vvtI < 10);
+		// }
+
+		float vvtE = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
+		if (vvtE != 0) {
+			EXPECT_TRUE(vvtE > -10 && vvtE < 10);
+		}
+
 	}
 
-	ASSERT_EQ(173, getExhaustIndex()); // huh? not synching?
-
-	ASSERT_EQ(1182, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_EQ(1182, round(Sensor::getOrZero(SensorType::Rpm)));
+	EXPECT_TRUE(getTriggerCentral()->triggerState.hasSynchronizedPhase());
 }
