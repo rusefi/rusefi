@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 25 03:24:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 25 03:39:53 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2549,7 +2549,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_FIRST_HALF = 4;
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
-	public static final int vvt_mode_e_VVT_HONDA_K = 10;
+	public static final int vvt_mode_e_VVT_HONDA_K_INTAKE = 10;
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MAP_V_TWIN = 13;
 	public static final int vvt_mode_e_VVT_MAZDA_SKYACTIV = 15;
