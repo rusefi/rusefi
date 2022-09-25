@@ -191,8 +191,8 @@ size_t TriggerWaveform::getExpectedEventCount(TriggerWheel channelIndex) const {
 	return expectedEventCount[(int)channelIndex];
 }
 
-void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
-	if (!useOnlyRisingEdgeForTrigger) {
+void TriggerWaveform::calculateExpectedEventCounts() {
+	if (!useOnlyRisingEdges) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (getExpectedEventCount((TriggerWheel)i) % 2 != 0) {
 				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount((TriggerWheel)i));
@@ -200,7 +200,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(TriggerWheel::T_PRIMARY) == 1 : getExpectedEventCount(TriggerWheel::T_PRIMARY) == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdges ? getExpectedEventCount(TriggerWheel::T_PRIMARY) == 1 : getExpectedEventCount(TriggerWheel::T_PRIMARY) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "shapeWithoutTdc isSynchronizationNeeded isSingleToothOnPrimaryChannel constraint violation");
@@ -259,7 +259,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, T
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 	// todo: see calculateExpectedEventCounts
 	// related calculation should be done once trigger is initialized outside of trigger shape scope
-	if (!useOnlyRisingEdgeForTriggerTemp || state == TriggerValue::RISE) {
+	if (!useOnlyRisingEdges || state == TriggerValue::RISE) {
 		expectedEventCount[(int)channelIndex]++;
 	}
 
@@ -388,7 +388,7 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 		}
 	} while (left <= right);
 	left -= 1;
-	if (useOnlyRisingEdgeForTriggerTemp) {
+	if (useOnlyRisingEdges) {
 		left &= ~1U;
 	}
 	return left;
@@ -474,8 +474,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	shapeDefinitionError = false;
 
-	bool useOnlyRisingEdgeForTrigger = triggerConfig.UseOnlyRisingEdgeForTrigger;
-	this->useOnlyRisingEdgeForTriggerTemp = useOnlyRisingEdgeForTrigger;
+	this->useOnlyRisingEdges = triggerConfig.UseOnlyRisingEdgeForTrigger;
 
 	switch (triggerConfig.TriggerType.type) {
 
@@ -789,18 +788,19 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		setShapeDefinitionError(true);
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig.TriggerType.type);
 	}
+
 	/**
 	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'
 	 * and move it here, after all events were added.
 	 */
-	calculateExpectedEventCounts(useOnlyRisingEdgeForTrigger);
+	calculateExpectedEventCounts();
 	version++;
 
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getCycleDuration());
 	}
 
-	if (syncEdge == SyncEdge::Both && useOnlyRisingEdgeForTrigger) {
+	if (syncEdge == SyncEdge::Both && useOnlyRisingEdges) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
 #else

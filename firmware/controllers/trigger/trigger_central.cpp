@@ -279,6 +279,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
+	const auto& vvtShape = tc->vvtShape[camIndex];
 
 	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TriggerValue::FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
@@ -472,7 +473,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
 	if (!engineConfiguration->useNoiselessTriggerDecoder) {
-		if (!isUsefulSignal(signal, getTriggerCentral()->primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, getTriggerCentral()->triggerShape)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -519,7 +520,7 @@ void TriggerCentral::resetCounters() {
 static const bool isUpEvent[4] = { false, true, false, true };
 static const int wheelIndeces[4] = { 0, 0, 1, 1};
 
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex) {
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEventIndex, bool addOppositeEvent) {
 	if (!getTriggerCentral()->isEngineSnifferEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside getTriggerCentral()->isEngineSnifferEnabled
 	}
@@ -529,7 +530,7 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEve
 	bool isUp = isUpEvent[(int) ckpSignalType];
 
 	addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::UP : FrontDirection::DOWN);
-	if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
+	if (addOppositeEvent) {
 		// let's add the opposite event right away
 		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::DOWN : FrontDirection::UP);
 	}
@@ -659,7 +660,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
 			return;
 		}
-		if (!isUsefulSignal(signal, primaryTriggerConfiguration)) {
+		if (!isUsefulSignal(signal, triggerShape)) {
 			return;
 		}
 	}
@@ -692,7 +693,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		int crankInternalIndex = triggerState.getCrankSynchronizationCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 
-		reportEventToWaveChart(signal, triggerIndexForListeners);
+		reportEventToWaveChart(signal, triggerIndexForListeners, triggerShape.useOnlyRisingEdges);
 
 		// Look up this tooth's angle from the sync point. If this tooth is the sync point, we'll get 0 here.
 		auto currentPhaseFromSyncPoint = getTriggerCentral()->triggerFormDetails.eventAngles[triggerIndexForListeners];
@@ -772,7 +773,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		decodeMapCam(timestamp, currentPhase);
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
-		reportEventToWaveChart(signal, 0);
+		reportEventToWaveChart(signal, 0, triggerShape.useOnlyRisingEdges);
 	}
 }
 
