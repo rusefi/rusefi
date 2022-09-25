@@ -11,7 +11,7 @@
 static void test(int engineSyncCam, float camOffsetAdd) {
 	CsvReader reader(1, /* vvtCount */ 2);
 
-	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", SINGLE_TRIGGER_FIRST);
+	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv");
 	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->alwaysInstantRpm = true;
