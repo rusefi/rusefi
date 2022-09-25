@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 24 04:29:23 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 25 03:55:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -621,7 +621,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
 	public static final int engine_type_e_PROTEUS_HARLEY = 6;
-	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
+	public static final int engine_type_e_PROTEUS_HONDA_K = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
@@ -2408,7 +2408,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.24.all.4059657144";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.25.all.3946241398";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1264;
@@ -2549,7 +2549,8 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_FIRST_HALF = 4;
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
-	public static final int vvt_mode_e_VVT_HONDA_K = 10;
+	public static final int vvt_mode_e_VVT_HONDA_K_EXHAUST = 16;
+	public static final int vvt_mode_e_VVT_HONDA_K_INTAKE = 10;
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MAP_V_TWIN = 13;
 	public static final int vvt_mode_e_VVT_MAZDA_SKYACTIV = 15;
@@ -3403,7 +3404,7 @@ public class Fields {
 	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 1736, FieldType.INT8).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_1737 = Field.create("ALIGNMENTFILL_AT_1737", 1737, FieldType.INT8).setScale(1.0);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 1740, FieldType.INT).setScale(1.0);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "vvt16", "vvt17"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2JZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K Intake", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "Mazda Skyactiv", "Honda K Exhaust", "vvt17"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 1744, FieldType.INT8, vvt_mode_e).setScale(1.0);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 1745, FieldType.INT8, vvt_mode_e).setScale(1.0);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 1746, FieldType.INT8).setScale(1.0);

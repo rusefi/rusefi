@@ -204,7 +204,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	HELLEN_128_MERCEDES_8_CYL = 89,
 
-	PROTEUS_HONDA_ELEMENT_2003 = 90,
+	PROTEUS_HONDA_K = 90,
 
 	PROTEUS_HONDA_OBD2A = 91,
 
@@ -483,7 +483,7 @@ typedef enum {
 	TT_SUZUKI_G13B = 66,
 
 	/**
-	 * Honda K cam shaft
+	 * Honda K exhaust cam shaft
 	 */
 	TT_HONDA_K_CAM_4_1 = 67,
 

@@ -239,7 +239,7 @@ void PrimaryTriggerDecoder::resetInstantRpm() {
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
-	auto triggerSize = getTriggerSize();
+	auto triggerSize = getTriggerCentral()->triggerShape.getLength();
 
 	int eventsToCopy = minI(spinningEventIndex, triggerSize);
 
@@ -283,8 +283,10 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
 	}
-	// we are OK to subtract 32 bit value from more precise 64 bit since the result would 32 bit which is
-	// OK for small time differences like this one
+
+	// It's OK to truncate from 64b to 32b, ARM with single precision FPU uses an expensive
+	// software function to convert 64b int -> float, while 32b int -> float is very cheap hardware conversion
+	// The difference is guaranteed to be short (it's 90 degrees of engine rotation!), so it won't overflow.
 	uint32_t time = nowNt - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 
@@ -316,13 +318,18 @@ void PrimaryTriggerDecoder::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 		return;
 	}
 	// here we remember tooth timestamps which happen prior to synchronization
-	if (spinningEventIndex >= PRE_SYNC_EVENTS) {
+	if (spinningEventIndex >= efi::size(spinningEvents)) {
 		// too many events while trying to find synchronization point
 		// todo: better implementation would be to shift here or use cyclic buffer so that we keep last
 		// 'PRE_SYNC_EVENTS' events
 		return;
 	}
-	spinningEvents[spinningEventIndex++] = nowNt;
+
+	spinningEvents[spinningEventIndex] = nowNt;
+
+	// If we are using only rising edges, we never write in to the odd-index slots that
+	// would be used by falling edges
+	spinningEventIndex += engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
 }
 
 void PrimaryTriggerDecoder::updateInstantRpm(

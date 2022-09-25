@@ -891,7 +891,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
 		break;
-	case PROTEUS_HONDA_ELEMENT_2003:
+	case PROTEUS_HONDA_K:
 		setProteusHondaElement2003();
 		break;
 	case PROTEUS_HONDA_OBD2A:

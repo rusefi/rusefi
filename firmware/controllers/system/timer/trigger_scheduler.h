@@ -14,7 +14,8 @@ public:
 			     uint32_t trgEventIndex,
 			     efitick_t edgeTimestamp,
 			     angle_t angle,
-			     action_s action);
+			     action_s action,
+				 float currentPhase, float nextPhase);
 
 	void scheduleEventsUntilNextTriggerTooth(int rpm,
 						 uint32_t trgEventIndex,

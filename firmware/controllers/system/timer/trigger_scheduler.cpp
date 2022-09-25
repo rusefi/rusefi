@@ -76,11 +76,39 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
-		action_s action) {
+		action_s action,
+		float currentPhase, float nextPhase) {
 	event->enginePhase = angle;
-	event->action = action;
 
-	// TODO: implement me!
+	if (event->shouldSchedule(trgEventIndex, currentPhase, nextPhase)) {
+		// if we're due now, just schedule the event
+		scheduleByAngle(
+			&event->scheduling,
+			edgeTimestamp,
+			event->getAngleFromNow(currentPhase),
+			action
+		);
+
+		return true;
+	} else {
+		// Not due at this tooth, add to the list to execute later
+		event->action = action;
+
+		{
+			chibios_rt::CriticalSectionLocker csl;
+
+			// TODO: This is O(n), consider some other way of detecting if in a list,
+			// and consider doubly linked or other list tricks.
+
+			if (!assertNotInList(m_angleBasedEventsHead, event)) {
+				// Use Append to retain some semblance of event ordering in case of
+				// time skew.  Thus on events are always followed by off events.
+				LL_APPEND2(m_angleBasedEventsHead, event, nextToothEvent);
+
+				return false;
+			}
+		}
+	}
 
 	return false;
 }
@@ -158,13 +186,16 @@ float AngleBasedEventOld::getAngleFromNow(float /*currentPhase*/) const {
 }
 
 bool AngleBasedEventNew::shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const {
-	// TODO: implement me!
-	return true;
+	return isPhaseInRange(this->enginePhase, currentPhase, nextPhase);
 }
 
 float AngleBasedEventNew::getAngleFromNow(float currentPhase) const {
-	// TODO: implement me!
-	return 0;
+	float angleOffset = this->enginePhase - currentPhase;
+	if (angleOffset < 0) {
+		angleOffset += engine->engineState.engineCycle;
+	}
+
+	return angleOffset;
 }
 
 #if EFI_UNIT_TEST
