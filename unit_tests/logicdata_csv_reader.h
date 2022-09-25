@@ -18,7 +18,7 @@ public:
 	}
 	~CsvReader();
 
-	void open(const char *fileName, const int* columnIndeces);
+	void open(const char *fileName, const int* columnIndeces = SINGLE_TRIGGER_FIRST);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
