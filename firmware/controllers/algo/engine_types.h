@@ -204,7 +204,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	HELLEN_128_MERCEDES_8_CYL = 89,
 
-	PROTEUS_HONDA_ELEMENT_2003 = 90,
+	PROTEUS_HONDA_K = 90,
 
 	PROTEUS_HONDA_OBD2A = 91,
 

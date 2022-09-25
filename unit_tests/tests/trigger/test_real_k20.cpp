@@ -7,7 +7,7 @@ TEST(realk20, cranking) {
 
 	reader.open("tests/trigger/resources/civic-K20-cranking.csv", NORMAL_ORDER, REVERSE_ORDER);
 
-	EngineTestHelper eth (PROTEUS_HONDA_ELEMENT_2003);
+	EngineTestHelper eth (PROTEUS_HONDA_K);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
