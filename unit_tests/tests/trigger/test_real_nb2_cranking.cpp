@@ -11,7 +11,7 @@
 TEST(realCrankingNB2, normalCranking) {
 	CsvReader reader(1, /* vvtCount */ 1);
 
-	reader.open("tests/trigger/resources/nb2-cranking-good.csv", SINGLE_TRIGGER_FIRST);
+	reader.open("tests/trigger/resources/nb2-cranking-good.csv");
 	EngineTestHelper eth (HELLEN_NB2);
 	engineConfiguration->alwaysInstantRpm = true;
 
@@ -37,7 +37,7 @@ TEST(realCrankingNB2, normalCranking) {
 TEST(realCrankingNB2, crankingMissingInjector) {
 	CsvReader reader(1, /* vvtCount */ 1);
 
-	reader.open("tests/trigger/resources/nb2-cranking-good-missing-injector-1.csv", SINGLE_TRIGGER_FIRST);
+	reader.open("tests/trigger/resources/nb2-cranking-good-missing-injector-1.csv");
 	EngineTestHelper eth (HELLEN_NB2);
 	engineConfiguration->alwaysInstantRpm = true;
 
