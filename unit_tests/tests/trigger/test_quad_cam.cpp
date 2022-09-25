@@ -23,7 +23,6 @@ TEST(trigger, testQuadCam) {
 	// this crank trigger would be easier to test, crank shape is less important for this test
 	eth.setTriggerType(TT_ONE);
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));

@@ -25,7 +25,6 @@ void setTestCamEngineConfiguration() {
 //	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 //	triggerConfig->customTotalToothCount = 60;
 //	triggerConfig->customSkippedToothCount = 0;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;

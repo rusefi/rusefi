@@ -38,8 +38,6 @@ void setDefaultBaseEngine() {
 	// Trigger
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
-
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	// Default this to on - if you want to diagnose, turn it off.

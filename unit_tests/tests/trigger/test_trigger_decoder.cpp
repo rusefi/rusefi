@@ -460,7 +460,6 @@ TEST(trigger, testTriggerDecoder) {
 		EngineTestHelper eth(MITSU_4G93);
 
 
-		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
 		applyNonPersistentConfiguration();
 
@@ -476,7 +475,6 @@ TEST(trigger, testTriggerDecoder) {
 		EngineTestHelper eth(DODGE_NEON_2003_CRANK);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
-		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 		applyNonPersistentConfiguration();
 		prepareOutputSignals();
@@ -1058,7 +1056,6 @@ TEST(big, testSparkReverseOrderBug319) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->isInjectionEnabled = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -1162,7 +1159,6 @@ TEST(big, testMissedSpark299) {
 
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
