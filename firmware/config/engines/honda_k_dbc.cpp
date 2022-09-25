@@ -13,7 +13,7 @@
 
 /**
  * K24A4 engine
- * PROTEUS_HONDA_ELEMENT_2003
+ * PROTEUS_HONDA_K
  */
 void setProteusHondaElement2003() {
 	engineConfiguration->specs.cylindersCount = 4;
