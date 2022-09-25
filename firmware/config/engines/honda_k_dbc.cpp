@@ -23,6 +23,8 @@ void setProteusHondaElement2003() {
 //	engineConfiguration->trigger.customTotalToothCount = 12;
 //	engineConfiguration->trigger.customSkippedToothCount = 0;
 
+	engineConfiguration->engineSyncCam = 1;
+
 	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
 	engineConfiguration->globalTriggerAngleOffset = 675;
 
@@ -30,7 +32,7 @@ void setProteusHondaElement2003() {
 //	engineConfiguration->globalTriggerAngleOffset = 570;
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
-	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -41;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;

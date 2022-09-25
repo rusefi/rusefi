@@ -9,6 +9,8 @@ const int NORMAL_ORDER[2] = {0, 1};
 
 const int REVERSE_ORDER[2] = {1, 0};
 
+
+
 class CsvReader {
 public:
 	CsvReader(size_t triggerCount, size_t vvtCount) : CsvReader(triggerCount, vvtCount, 0.0) {}
@@ -19,6 +21,8 @@ public:
 	{
 	}
 	~CsvReader();
+
+	bool twoBanksSingleCamMode = true;
 
 	void open(const char *fileName, const int* triggerColumnIndeces = NORMAL_ORDER, const int *vvtColumnIndeces = NORMAL_ORDER);
 	bool haveMore();
