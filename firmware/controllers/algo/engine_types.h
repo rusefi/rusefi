@@ -483,7 +483,7 @@ typedef enum {
 	TT_SUZUKI_G13B = 66,
 
 	/**
-	 * Honda K cam shaft
+	 * Honda K exhaust cam shaft
 	 */
 	TT_HONDA_K_CAM_4_1 = 67,
 
