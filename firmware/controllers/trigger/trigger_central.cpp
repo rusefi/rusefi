@@ -180,8 +180,9 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAZDA_SKYACTIV:
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
-	case VVT_HONDA_K_INTAKE:
+	case VVT_HONDA_K_EXHAUST:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
+	case VVT_HONDA_K_INTAKE:
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
