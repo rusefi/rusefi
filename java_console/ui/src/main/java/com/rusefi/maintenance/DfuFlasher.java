@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.ConsoleUI;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
@@ -32,6 +31,7 @@ import static com.rusefi.StartupFrame.appendBundleName;
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
+    public static final String WMIC_DRIVER_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like 'STM32 Bootloader'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
@@ -131,6 +131,13 @@ public class DfuFlasher {
     }
 
     private static void executeDFU(StatusWindow wnd) {
+        boolean driverIsHappy = detectSTM32BootloaderDriverState(wnd);
+        if (!driverIsHappy) {
+            wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            wnd.setErrorState(true);
+            return;
+        }
+
         StringBuffer stdout = new StringBuffer();
         String errorResponse;
         try {
@@ -159,6 +166,15 @@ public class DfuFlasher {
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
+    }
+
+    private static boolean detectSTM32BootloaderDriverState(StatusWindow wnd) {
+        StringBuffer output = new StringBuffer();
+        StringBuffer error = new StringBuffer();
+        ExecHelper.executeCommand(WMIC_DRIVER_QUERY_COMMAND, wnd, output, error, null);
+        wnd.append(output.toString());
+        wnd.append(error.toString());
+        return output.toString().contains("ConfigManagerErrorCode=0");
     }
 
     private static void appendWindowsVersion(StatusWindow wnd) {
