@@ -8,13 +8,9 @@
 #include "pch.h"
 #include "trigger_mazda.h"
 
-TEST(trigger, miataNA) {
-	TriggerWaveform naShape;
-
-	// TODO: why?
-	//naShape.useOnlyRisingEdgeForTriggerTemp = false;
-	initializeMazdaMiataNaShape(&naShape);
-
-	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
-	// todo: https://github.com/rusefi/rusefi/issues/679
-}
+// TEST(trigger, miataNA) {
+// 	TriggerWaveform naShape;
+// 	initializeMazdaMiataNaShape(&naShape);
+// 	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
+// 	// todo: https://github.com/rusefi/rusefi/issues/679
+// }

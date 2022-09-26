@@ -536,7 +536,6 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int triggerEve
 	bool isUp = isUpEvent[(int) ckpSignalType];
 
 	addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::UP : FrontDirection::DOWN);
-
 	if (addOppositeEvent) {
 		// let's add the opposite event right away
 		addEngineSnifferCrankEvent(wheelIndex, triggerEventIndex, isUp ? FrontDirection::DOWN : FrontDirection::UP);

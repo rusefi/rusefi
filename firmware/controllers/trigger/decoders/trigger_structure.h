@@ -146,6 +146,7 @@ public:
 	// Which edge(s) to consider for finding the sync point: rise, fall, or both
 	SyncEdge syncEdge;
 
+	// If true, falling edges should be fully ignored on this trigger shape.
 	bool useOnlyRisingEdges;
 
 	void calculateExpectedEventCounts();
