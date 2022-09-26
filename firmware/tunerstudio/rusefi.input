@@ -2078,7 +2078,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "What kind of engine",                  twoStroke
 		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = "With VR sensors only rising edge has reliable position"
-		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
 	    field = "Trigger Angle Advance",         		globalTriggerAngleOffset

@@ -14,7 +14,6 @@ TEST(sensors, test2jz) {
 
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE);
 
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";

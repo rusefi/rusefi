@@ -75,7 +75,6 @@ void setFordAspireEngineConfiguration() {
 
 	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
 
 	engineConfiguration->triggerInputDebugPins[0] = Gpio::C15;

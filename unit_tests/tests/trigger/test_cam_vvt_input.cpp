@@ -84,7 +84,6 @@ TEST(trigger, testCamInput) {
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setCrankOperationMode();
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE);

@@ -467,7 +467,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger;
+	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder

@@ -14,7 +14,6 @@ TEST(trigger, testQuadCam) {
 	setCrankOperationMode();
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
 

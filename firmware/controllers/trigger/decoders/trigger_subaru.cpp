@@ -223,6 +223,8 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 #endif
 
 		/* we should use only falling edges */
+	// TODO: this trigger needs to be converted to SyncEdge::RiseOnly, so invert all rise/fall events!
+	// see https://github.com/rusefi/rusefi/issues/4624
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
