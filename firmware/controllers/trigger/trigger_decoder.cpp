@@ -329,7 +329,8 @@ void PrimaryTriggerDecoder::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 
 	// If we are using only rising edges, we never write in to the odd-index slots that
 	// would be used by falling edges
-	spinningEventIndex += engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
+	// TODO: don't reach across to trigger central to get this info
+	spinningEventIndex += getTriggerCentral()->triggerShape.useOnlyRisingEdges ? 2 : 1;
 }
 
 void PrimaryTriggerDecoder::updateInstantRpm(
