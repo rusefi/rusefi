@@ -81,6 +81,7 @@ public class DfuFlasher {
             if (signature.get() == null) {
                 wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
+                wnd.setErrorState(true);
                 return null;
             }
             boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
@@ -89,6 +90,7 @@ public class DfuFlasher {
             wnd.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
+            // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
                 boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd);
                 isSignatureValidated.set(isSignatureValidatedLocal);
@@ -96,6 +98,7 @@ public class DfuFlasher {
             }).getSerialPort();
             if (port == null) {
                 wnd.append("*** ERROR *** rusEFI serial port not detected");
+                wnd.setErrorState(true);
                 return null;
             } else {
                 wnd.append("Detected rusEFI on " + port + "\n");

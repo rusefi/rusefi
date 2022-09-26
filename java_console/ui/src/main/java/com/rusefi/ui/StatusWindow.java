@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -20,7 +21,7 @@ public class StatusWindow implements StatusConsumer {
     private static final Logging log = getLogging(StatusWindow.class);
 
     private static final Color LIGHT_RED = new Color(255, 102, 102);
-    private static final Color LIGHT_GREEN = new Color(102, 255 ,102);
+    private static final Color LIGHT_GREEN = new Color(102, 255, 102);
     // todo: extract driver from console bundle? find a separate driver bundle?
     private final JTextArea logTextArea = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
@@ -56,6 +57,7 @@ public class StatusWindow implements StatusConsumer {
     public void setErrorState(boolean isErrorState) {
         if (isErrorState) {
             logTextArea.setBackground(LIGHT_RED);
+            copyContentToClipboard();
         } else {
             logTextArea.setBackground(LIGHT_GREEN);
         }
@@ -74,12 +76,22 @@ public class StatusWindow implements StatusConsumer {
 
     @Override
     public void append(final String string) {
+        // todo: check if AWT thread and do not invokeLater if already on AWT thread
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
             log.info(s);
             logTextArea.append(s + "\r\n");
             UiUtils.trueLayout(logTextArea);
         });
+    }
+
+    public void copyContentToClipboard() {
+        // kludge: due to 'append' method using invokeLater even while on AWT thread we also need invokeLater to
+        // actually get overall status message
+        SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
+                .setContents(new StringSelection(logTextArea.getText()), null));
+
+        append("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
     public void setStatus(String status) {
