@@ -43,7 +43,8 @@ public class DfuFlasher {
         StatusWindow wnd = createStatusWindow();
 
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
-        if (isSignatureValidated == null) return;
+        if (isSignatureValidated == null)
+            return;
         if (isSignatureValidated.get()) {
             if (!ProgramSelector.IS_WIN) {
                 wnd.append("Switched to DFU mode!");
@@ -78,7 +79,7 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
+                wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
                 return null;
             }
@@ -94,7 +95,7 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
+                wnd.append("*** ERROR *** rusEFI serial port not detected");
                 return null;
             } else {
                 wnd.append("Detected rusEFI on " + port + "\n");
@@ -152,7 +153,6 @@ public class DfuFlasher {
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
             appendWindowsVersion(wnd);
-            wnd.append("Windows " + System.getProperty("os.version"));
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
