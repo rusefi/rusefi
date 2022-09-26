@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 19 16:22:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 26 09:32:07 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1246,7 +1246,7 @@ struct engine_configuration_s {
 	 * Select which cam is used for engine sync. Other cams will be used only for VVT measurement, but not engine sync.
 	 * offset 566
 	 */
-	uint8_t engineSyncCam;
+	engineSyncCam_e engineSyncCam;
 	/**
 	 * Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.
 	 * offset 567
@@ -5044,4 +5044,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 19 16:22:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 26 09:32:07 UTC 2022
