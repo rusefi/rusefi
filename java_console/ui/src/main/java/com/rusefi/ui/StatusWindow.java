@@ -1,8 +1,8 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.FileLog;
-import com.rusefi.ui.util.DefaultExceptionHandler;
+import com.rusefi.autoupdate.Autoupdate;
+import com.rusefi.rusEFIVersion;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +38,10 @@ public class StatusWindow implements StatusConsumer {
         };
         content.add(messagesScroll, BorderLayout.CENTER);
         content.add(bottomStatusLabel, BorderLayout.SOUTH);
+
+        append("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        append("Windows " + System.getProperty("os.version"));
+        append("Bundle " + Autoupdate.readBundleFullNameNotNull());
     }
 
     @NotNull
