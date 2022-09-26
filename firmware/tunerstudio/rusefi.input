@@ -10,7 +10,7 @@
 ;
 ; For example
 ;
-;     float bias_resistor;+Pull-up resistor value on your board;"Ohm"
+;     float bias_resistor;Pull-up resistor value on your board;"Ohm"
 ; here 'bias_resistor' is internal field name and the text between semicolons is what produces the tooltip
 ; Note that '+' sign is required after first semicolon for tooltop to appear in TunerStudio
 ;
