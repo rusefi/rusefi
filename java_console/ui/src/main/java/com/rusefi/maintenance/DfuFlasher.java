@@ -31,7 +31,7 @@ import static com.rusefi.StartupFrame.appendBundleName;
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
-    public static final String WMIC_DRIVER_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like 'STM32 Bootloader'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_DRIVER_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like 'STM32 Bootloader'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
