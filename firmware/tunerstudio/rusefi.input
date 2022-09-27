@@ -2110,7 +2110,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
    		field = "MAP readout angle",                    mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-		field = "Cam for engine sync resolution",		engineSyncCam, (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
+		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
