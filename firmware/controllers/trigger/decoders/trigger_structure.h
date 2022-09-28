@@ -33,7 +33,7 @@
 #define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
+		   firmwareError(CUSTOM_ERR_ANGLE, "a NaN %s", msg);                \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg, code);	   					            \
