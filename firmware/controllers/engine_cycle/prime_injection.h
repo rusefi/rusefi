@@ -12,6 +12,7 @@
 class PrimeController : public EngineModule {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
+	void onSlowCallback() override;
 
 	floatms_t getPrimeDuration() const;
 
@@ -35,7 +36,7 @@ private:
 	static void onPrimeEndAdapter(PrimeController* instance) {
 		instance->onPrimeEnd();
 	}
-};
 
-// reset injection switch counter if the engine started spinning
-void updatePrimeInjectionPulseState();
+	uint32_t getKeyCycleCounter() const;
+	void setKeyCycleCounter(uint32_t count);
+};

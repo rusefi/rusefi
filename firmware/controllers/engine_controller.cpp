@@ -194,8 +194,6 @@ static void doPeriodicSlowCallback() {
 
 	if (engine->rpmCalculator.isStopped()) {
 		resetAccel();
-	} else {
-		updatePrimeInjectionPulseState();
 	}
 
 	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
