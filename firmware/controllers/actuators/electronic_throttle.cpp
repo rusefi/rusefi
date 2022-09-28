@@ -529,7 +529,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		// Allow up to 10 percent-seconds of error
 		if (etbIntegralError > 10.0f) {
 			// TODO: figure out how to handle uncalibrated ETB 
-			//engine->limpManager.etbProblem();
+			//getLimpManager()->etbProblem();
 		}
 
 		// Normal case - use PID to compute closed loop part
@@ -548,7 +548,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	if (!m_motor) return;
 
 	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (engine->limpManager.allowElectronicThrottle()
+	if (getLimpManager()->allowElectronicThrottle()
 		&& outputValue
 		&& !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();

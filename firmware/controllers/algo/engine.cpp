@@ -520,7 +520,7 @@ void Engine::periodicFastCallback() {
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->limpManager.stopEngine();
+	getLimpManager()->stopEngine();
 	engine->ignitionOnTimeNt = 0;
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
@@ -551,7 +551,7 @@ TriggerCentral * getTriggerCentral() {
 }
 
 LimpManager * getLimpManager() {
-	return &engine->limpManager;
+	return &engine->module<LimpManager>().unmock();
 }
 
 FuelSchedule *getFuelSchedule() {

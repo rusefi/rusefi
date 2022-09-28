@@ -82,7 +82,7 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
-	if (engine->limpManager.isEngineStop(nowNt)) {
+	if (getLimpManager()->isEngineStop(nowNt)) {
 		return false;
 	}
 
