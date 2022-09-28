@@ -20,6 +20,7 @@ enum class ClearReason : uint8_t {
 	FloodClear, // 11
 	EnginePhase, // 12
 	KickStart, // 13
+	IgnitionOff, // 14
 
 	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
 };
@@ -77,10 +78,13 @@ private:
 	bool m_state = false;
 };
 
-class LimpManager {
+class LimpManager : public EngineModule {
 public:
 	// This is called from periodicFastCallback to update internal state
 	void updateState(int rpm, efitick_t nowNt);
+
+	void onFastCallback() override;
+	void onIgnitionStateChanged(bool ignitionOn) override;
 
 	// Other subsystems call these APIs to determine their behavior
 	bool allowElectronicThrottle() const;
@@ -117,6 +121,9 @@ private:
 	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
+
+	// Ignition switch state
+	bool m_ignitionOn = false;
 
 	Timer m_engineStopTimer;
 };
