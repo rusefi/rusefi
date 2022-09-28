@@ -149,7 +149,7 @@ void stopVvtControlPins() {
 	}
 }
 
-void initAuxPid() {
+void initVvtActuators() {
 
 	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
 			config->vvtTable1RpmBins);
