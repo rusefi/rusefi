@@ -3223,6 +3223,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = vvtPidDialog0, "Configuration"
 	    field = "Activation Delay",                   vvtActivationDelayMs
+	    field = "Do not control below RPM",             vvtControlMinRpm
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2
         field = "VVT solenoid bank 2 intake",                   vvtPins3
