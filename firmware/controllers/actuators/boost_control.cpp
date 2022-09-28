@@ -227,7 +227,7 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 
 void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
-	// 'initAuxPid' is an example of a subsystem without explicit enable
+	// 'initVvtActuators' is an example of a subsystem without explicit enable
 	if (!engineConfiguration->isBoostControlEnabled) {
 		return;
 	}
