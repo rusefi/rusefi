@@ -14,7 +14,7 @@ Release template (copy/paste this for new release):
  -   
 
 ### Added
- -   
+ - VVT minimum RPM setting #4545  
 
 ### Fixed
  - Enforce board configuration overrides more strictly #4614   
