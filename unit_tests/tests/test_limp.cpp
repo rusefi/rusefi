@@ -26,7 +26,6 @@ TEST(limp, revLimit) {
 	engineConfiguration->rpmHardLimit = 2500;
 
 	LimpManager dut;
-	dut.onIgnitionStateChanged(true);
 
 	// Under rev limit, inj/ign allowed
 	dut.updateState(2000, 0);
@@ -55,7 +54,6 @@ TEST(limp, revLimitCltBased) {
 	copyArray(engineConfiguration->cltRevLimitRpm, { 1000, 2000, 3000, 4000 });
 
 	LimpManager dut;
-	dut.onIgnitionStateChanged(true);
 
 	// Check low temperature first
 	Sensor::setMockValue(SensorType::Clt, 10);
@@ -102,7 +100,6 @@ TEST(limp, boostCut) {
 	engineConfiguration->boostCutPressure = 100;
 
 	LimpManager dut;
-	dut.onIgnitionStateChanged(true);
 
 	// Below threshold, injection allowed
 	Sensor::setMockValue(SensorType::Map, 80);
@@ -138,7 +135,6 @@ TEST(limp, oilPressureFailureCase) {
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
-	dut.onIgnitionStateChanged(true);
 
 	// Low oil pressure!
 	Sensor::setMockValue(SensorType::OilPressure, 50);
@@ -172,7 +168,6 @@ TEST(limp, oilPressureSuccessCase) {
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
-	dut.onIgnitionStateChanged(true);
 
 	// Low oil pressure!
 	Sensor::setMockValue(SensorType::OilPressure, 50);

@@ -42,10 +42,12 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
+#if !EFI_UNIT_TEST
 	if (!m_ignitionOn) {
 		allowFuel.clear(ClearReason::IgnitionOff);
 		allowSpark.clear(ClearReason::IgnitionOff);
 	}
+#endif
 
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
