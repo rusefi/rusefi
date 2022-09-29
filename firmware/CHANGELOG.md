@@ -30,8 +30,6 @@ Release template (copy/paste this for new release):
 ### Fixed
  - Enforce board configuration overrides more strictly #4614
  - Fuel Priming reset fix #4627
-
-### Fixed
  - Slower than expected RPM information was slowing engine start #4629
 
 ## September 2022 Release - "Day 203"
