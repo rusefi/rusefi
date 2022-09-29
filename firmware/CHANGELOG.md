@@ -14,11 +14,7 @@ Release template (copy/paste this for new release):
  -   
 
 ### Added
- - VVT minimum RPM setting #4545  
 
-### Fixed
- - Enforce board configuration overrides more strictly #4614
- - Fuel Priming reset fix #4627
 
  -->
 
@@ -28,6 +24,12 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Flexible ignition adder/trim tables #4586
+ - VVT minimum RPM setting #4545  
+ - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
+
+### Fixed
+ - Enforce board configuration overrides more strictly #4614
+ - Fuel Priming reset fix #4627
 
 ## September 2022 Release - "Day 203"
 
