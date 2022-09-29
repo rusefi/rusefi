@@ -112,7 +112,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	// If we're in engine stop mode, inhibit fuel
-	if (isEngineStop(nowNt)) {
+	if (shutdownController.isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
@@ -171,21 +171,6 @@ void LimpManager::fatalError() {
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
 	setFaultRevLimit(0);
-}
-
-void LimpManager::stopEngine() {
-	m_engineStopTimer.reset();
-}
-
-bool LimpManager::isEngineStop(efitick_t nowNt) const {
-	float timeSinceStop = getTimeSinceEngineStop(nowNt);
-
-	// If there was stop requested in the past 5 seconds, we're in stop mode
-	return timeSinceStop < 5;
-}
-
-float LimpManager::getTimeSinceEngineStop(efitick_t nowNt) const {
-	return m_engineStopTimer.getElapsedSeconds(nowNt);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {
