@@ -11,10 +11,16 @@ Release template (copy/paste this for new release):
 ## Month 202x Release - "Release Name"
 
 ### Breaking Changes
- -   
+ -
 
 ### Added
+ -
 
+### Fixed
+ - 
+
+### Removed
+ - 
 
  -->
 
