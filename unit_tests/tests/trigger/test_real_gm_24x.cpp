@@ -12,10 +12,23 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 
 	eth.setTriggerType(TT_GM_24x);
 
+	int eventCount = 0;
+	bool gotRpm = false;
+
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+		eventCount++;
 
 		engine->rpmCalculator.onSlowCallback();
+
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+		if (!gotRpm && rpm) {
+			gotRpm = true;
+
+			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
+			EXPECT_EQ(eventCount, 23);
+			EXPECT_NEAR(rpm, 77.0f, 0.1);
+		}
 	}
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
