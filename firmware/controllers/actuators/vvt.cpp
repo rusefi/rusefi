@@ -105,7 +105,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 void VvtController::setOutput(expected<percent_t> outputValue) {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 #if EFI_SHAFT_POSITION_INPUT
-	bool enabled = rpm > engineConfiguration->cranking.rpm /* todo: make this configurable? */
+	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
 
@@ -149,7 +149,10 @@ void stopVvtControlPins() {
 	}
 }
 
-void initAuxPid() {
+void initVvtActuators() {
+    if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
+        engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+    }
 
 	vvtTable1.init(config->vvtTable1, config->vvtTable1LoadBins,
 			config->vvtTable1RpmBins);

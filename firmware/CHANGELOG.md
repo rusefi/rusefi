@@ -14,10 +14,11 @@ Release template (copy/paste this for new release):
  -   
 
 ### Added
- -   
+ - VVT minimum RPM setting #4545  
 
 ### Fixed
- - Enforce board configuration overrides more strictly #4614   
+ - Enforce board configuration overrides more strictly #4614
+ - Fuel Priming reset fix #4627
 
  -->
 
