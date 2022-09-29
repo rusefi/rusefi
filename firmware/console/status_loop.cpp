@@ -270,43 +270,6 @@ void updateDevConsoleState(void) {
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
-/*
- * command example:
- * sfm 3500 400
- * that would be 'show fuel for rpm 3500 maf 4.0'
- */
-
-static void showFuelInfo2(float rpm, float engineLoad) {
-	efiPrintf("inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
-			engineConfiguration->specs.displacement);
-
-	efiPrintf("algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
-			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
-
-	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
-
-#if EFI_ENGINE_CONTROL
-	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	efiPrintf("cranking fuel: %.2f", engine->engineState.cranking.fuel);
-
-	if (!engine->rpmCalculator.isStopped()) {
-		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
-		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
-		floatms_t injectorLag = engine->module<InjectorModel>()->getDeadtime();
-		efiPrintf("rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
-
-		efiPrintf("iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
-				injectorLag);
-	}
-#endif
-}
-
-#if EFI_ENGINE_CONTROL
-static void showFuelInfo() {
-	showFuelInfo2(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad());
-}
-#endif
-
 static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
@@ -903,11 +866,6 @@ void updateTunerStudioState() {
 
 void initStatusLoop(void) {
 	addConsoleActionI("warn", setWarningEnabled);
-
-#if EFI_ENGINE_CONTROL
-	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
-	addConsoleAction("fuelinfo", showFuelInfo);
-#endif
 }
 
 void startStatusThreads(void) {

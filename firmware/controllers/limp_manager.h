@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rusefi_types.h"
+#include "shutdown_controller.h"
 
 #include <cstdint>
 
@@ -23,6 +23,7 @@ enum class ClearReason : uint8_t {
 	IgnitionOff, // 14
 
 	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
+	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
 };
 
 // Only allows clearing the value, but never resetting it.
@@ -80,6 +81,8 @@ private:
 
 class LimpManager : public EngineModule {
 public:
+	ShutdownController shutdownController;
+
 	// This is called from periodicFastCallback to update internal state
 	void updateState(int rpm, efitick_t nowNt);
 
@@ -97,10 +100,6 @@ public:
 	// Other subsystems call these APIs to indicate a problem has occured
 	void etbProblem();
 	void fatalError();
-	void stopEngine();
-
-	bool isEngineStop(efitick_t nowNt) const;
-	float getTimeSinceEngineStop(efitick_t nowNt) const;
 
 private:
 	void setFaultRevLimit(int limit);
@@ -124,8 +123,6 @@ private:
 
 	// Ignition switch state
 	bool m_ignitionOn = false;
-
-	Timer m_engineStopTimer;
 };
 
 LimpManager * getLimpManager();
