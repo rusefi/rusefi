@@ -231,11 +231,6 @@ public:
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
 
-	/**
-	 * this is needed by and checkShutdown()
-	 * todo: refactor to Timer?
-	 */
-	efitick_t ignitionOnTimeNt = 0;
 
 	Timer configBurnTimer;
 
@@ -329,7 +324,6 @@ void applyNonPersistentConfiguration();
 void prepareOutputSignals();
 
 void validateConfiguration();
-void doScheduleStopEngine();
 void scheduleReboot();
 bool isLockedFromUser();
 void unlockEcu(int password);

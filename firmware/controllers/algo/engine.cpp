@@ -416,14 +416,18 @@ void Engine::efiWatchdog() {
 void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL
 	// if we are already in the "ignition_on" mode, then do nothing
+/* this logic is not alive
 	if (ignitionOnTimeNt > 0) {
 		return;
 	}
+todo: move to shutdown_controller.cpp
+*/
 
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
 /* this needs work or tests
+todo: move to shutdown_controller.cpp
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -516,18 +520,6 @@ void Engine::periodicFastCallback() {
 	tachSignalCallback();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
-}
-
-void doScheduleStopEngine() {
-	efiPrintf("Starting doScheduleStopEngine");
-	engine->limpManager.stopEngine();
-	engine->ignitionOnTimeNt = 0;
-	// todo: initiate stepper motor parking
-	// make sure we have stored all the info
-#if EFI_PROD_CODE
-	//todo: FIX kinetis build with this line
-	//backupRamFlush();
-#endif // EFI_PROD_CODE
 }
 
 EngineRotationState * getEngineRotationState() {
