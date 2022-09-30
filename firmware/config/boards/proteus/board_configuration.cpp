@@ -197,3 +197,7 @@ void boardPrepareForStop() {
 	// Wake on the CAN RX pin
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
+
+int setBoardMetaOutputsCount() {
+    return efi::size(PROTEUS_OUTPUTS);
+}
