@@ -1152,3 +1152,4 @@ __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
 
 __attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
+__attribute__((weak)) Gpio* getBoardMetaOutputs() { return nullptr; }

@@ -224,3 +224,7 @@ void setBoardDefaultConfiguration() {
 int getBoardMetaOutputsCount() {
     return efi::size(MRE_OUTPUTS);
 }
+
+Gpio* getBoardMetaOutputs() {
+    return &MRE_OUTPUTS;
+}
