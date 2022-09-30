@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sat Sep 17 00:15:40 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Fri Sep 30 00:59:59 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -20,6 +20,7 @@ public class TriggerStatePrimary {
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAN_DEFAULT_BASE = 0x200;
+	public static final int CAN_ECU_HW_META = 0xAB1234;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
 	public static final String CAN_RX_PREFIX = "CAN_rx";

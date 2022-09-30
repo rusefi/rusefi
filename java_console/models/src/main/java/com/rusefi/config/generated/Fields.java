@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 29 02:24:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 30 01:00:52 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -259,6 +259,7 @@ public class Fields {
 	public static final int can_baudrate_e_B250KBPS = 1;
 	public static final int can_baudrate_e_B500KBPS = 2;
 	public static final int CAN_DEFAULT_BASE = 0x200;
+	public static final int CAN_ECU_HW_META = 0xAB1234;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
 	public static final int can_nbc_e_CAN_AIM_DASH = 12;
@@ -2407,7 +2408,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.09.29.all.3732279294";
+	public static final String TS_SIGNATURE = "rusEFI 2022.09.30.all.2717408623";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1264;
