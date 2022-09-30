@@ -2119,3 +2119,4 @@ end_struct
 #define CAN_ECU_SERIAL_RX_ID 0x100
 #define CAN_ECU_SERIAL_TX_ID 0x102
 
+#define CAN_ECU_HW_META 0xAB1234
