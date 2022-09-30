@@ -1,12 +1,14 @@
 #include "global.h"
 #include "can_category.h"
-// was generated automatically by rusEFI tool  from can_category.h // by enum2string.jar tool on Mon Sep 19 01:30:13 UTC 2022
+// was generated automatically by rusEFI tool  from can_category.h // by enum2string.jar tool on Fri Sep 30 03:14:34 UTC 2022
 // see also gen_config_and_enums.bat
 
 
 
 const char *getCanCategory(CanCategory value){
 switch(value) {
+case CanCategory::BENCH_TEST:
+  return "BENCH_TEST";
 case CanCategory::DOWNSTREAM_FLASHING:
   return "DOWNSTREAM_FLASHING";
 case CanCategory::LUA:
