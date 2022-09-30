@@ -226,5 +226,5 @@ int getBoardMetaOutputsCount() {
 }
 
 Gpio* getBoardMetaOutputs() {
-    return &MRE_OUTPUTS;
+    return MRE_OUTPUTS;
 }
