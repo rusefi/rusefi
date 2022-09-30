@@ -15,7 +15,9 @@ static void setPin(const CANRxFrame& frame, int value) {
 		if (index >= getBoardMetaOutputsCount())
 			return;
 		Gpio pin = getBoardMetaOutputs()[index];
+#if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+#endif // EFI_GPIO_HARDWARE && EFI_PROD_CODE
 }
 
 void processCanBenchTest(const CANRxFrame& frame) {
