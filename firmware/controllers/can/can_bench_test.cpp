@@ -10,6 +10,14 @@
 
 #if EFI_CAN_SUPPORT
 
+static void setPin(const CANRxFrame& frame, int value) {
+		int index = frame.data8[1];
+		if (index >= getBoardMetaOutputsCount())
+			return;
+		Gpio pin = getBoardMetaOutputs()[index];
+		palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
+}
+
 void processCanBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != CAN_ECU_HW_META) {
 		return;
@@ -24,12 +32,11 @@ void processCanBenchTest(const CANRxFrame& frame) {
 		msg[1] = 0;
 		msg[2] = getBoardMetaOutputsCount();
 
-	} else if (command == CAN_BENCH_GET_COUNT) {
-
+	} else if (command == CAN_BENCH_GET_SET) {
+	    setPin(frame, 1);
+	} else if (command == CAN_BENCH_GET_CLEAR) {
+	    setPin(frame, 0);
 	}
-
-
 }
-
 
 #endif // EFI_CAN_SUPPORT

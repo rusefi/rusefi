@@ -201,3 +201,7 @@ void boardPrepareForStop() {
 int getBoardMetaOutputsCount() {
     return efi::size(PROTEUS_OUTPUTS);
 }
+
+Gpio* getBoardMetaOutputs() {
+    return &PROTEUS_OUTPUTS;
+}
