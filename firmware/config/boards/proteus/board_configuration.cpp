@@ -203,5 +203,5 @@ int getBoardMetaOutputsCount() {
 }
 
 Gpio* getBoardMetaOutputs() {
-    return &PROTEUS_OUTPUTS;
+    return PROTEUS_OUTPUTS;
 }
