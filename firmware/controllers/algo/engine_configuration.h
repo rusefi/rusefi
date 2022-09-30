@@ -97,3 +97,5 @@ extern bool isActiveConfigurationVoid;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))
+
+int getBoardMetaOutputsCount();

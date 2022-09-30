@@ -11,6 +11,7 @@
 #include "pch.h"
 
 #include "rusefi_lua.h"
+#include "can_bench_test.h"
 
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
@@ -207,6 +208,8 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 
 	// todo: convert to CanListener or not?
 	processCanRxImu(frame);
+
+	processCanBenchTest(frame);
 
 	processLuaCan(busIndex, frame);
 

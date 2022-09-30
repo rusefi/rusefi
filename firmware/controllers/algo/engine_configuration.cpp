@@ -1151,4 +1151,4 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
 
-__attribute__((weak)) int setBoardMetaOutputsCount() { return 0; }
+__attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
