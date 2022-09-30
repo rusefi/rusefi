@@ -221,6 +221,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 }
 
-int setBoardMetaOutputsCount() {
+int getBoardMetaOutputsCount() {
     return efi::size(MRE_OUTPUTS);
 }
