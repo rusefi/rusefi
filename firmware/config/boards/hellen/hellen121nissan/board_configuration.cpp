@@ -120,8 +120,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE; // none because handled by Lua!
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 
 	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
