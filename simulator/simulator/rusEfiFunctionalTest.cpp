@@ -97,7 +97,7 @@ void rusEfiFunctionalTest(void) {
 	initDataStructures();
 
 
-	// todo: reduce code duplication with initEngineContoller
+	// todo: reduce code duplication with initEngineController
 
 	initFlash();
 	loadConfiguration();
