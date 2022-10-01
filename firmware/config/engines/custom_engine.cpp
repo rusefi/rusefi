@@ -702,6 +702,8 @@ void mreBoardNewTest() {
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+    engineConfiguration->injector.flow = 5; // longer blink
+
 
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->ignitionPins[1 - 1] = Gpio::D6;
