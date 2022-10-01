@@ -649,7 +649,7 @@ bool validateConfig() {
 
 #if !EFI_UNIT_TEST
 
-void initEngineContoller() {
+void initEngineController() {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL

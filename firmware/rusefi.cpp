@@ -286,7 +286,7 @@ void runRusEfiWithConfig() {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller();
+		initEngineController();
 
 	#if EFI_ENGINE_EMULATOR
 		initEngineEmulator();
