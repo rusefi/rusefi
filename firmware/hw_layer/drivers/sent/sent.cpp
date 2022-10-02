@@ -7,6 +7,8 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2022
  */
 
+#if EFI_PROD_CODE
+
 #include "pch.h"
 
 #include "sent.h"
@@ -474,3 +476,5 @@ void initSent(void)
 
 	chThdCreateStatic(waSentDecoderThread, sizeof(waSentDecoderThread), NORMALPRIO, SentDecoderThread, nullptr);
 }
+
+#endif /* EFI_PROD_CODE */

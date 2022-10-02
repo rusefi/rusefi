@@ -7,6 +7,8 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2022
  */
 
+#if EFI_PROD_CODE
+
 #include "ch.h"
 #include "hal.h"
 
@@ -74,3 +76,5 @@ void stopSent()
 }
 
 #endif /* HAL_USE_ICU */
+
+#endif /* EFI_PROD_CODE */
