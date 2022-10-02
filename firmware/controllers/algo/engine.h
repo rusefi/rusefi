@@ -328,8 +328,6 @@ void scheduleReboot();
 bool isLockedFromUser();
 void unlockEcu(int password);
 
-#define HW_CHECK_RPM 200
-
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST
 extern Engine ___engine;

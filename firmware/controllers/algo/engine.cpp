@@ -179,12 +179,13 @@ void Engine::periodicSlowCallback() {
 	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
 #endif
 
+    int hwCheckRpm = 204;
 	if (secondsNow > 2 && secondsNow < 180) {
-		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
+		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, hwCheckRpm);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
 		static bool isHappyTest = false;
 		if (!isHappyTest) {
-			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
+			setTriggerEmulatorRPM(5 * hwCheckRpm);
 			efiPrintf("TEST PASSED");
 			isHappyTest = true;
 		}
