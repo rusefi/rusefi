@@ -444,7 +444,11 @@ void SENT_ISR_Handler(uint8_t ch, uint16_t clocks)
 {
 	/* encode to fit msg_t */
 	msg_t msg = (ch << 16) | clocks;
+
+	/* called from ISR */
+	chSysLockFromISR();
 	chMBPostI(&sent_mb, msg);
+	chSysUnlockFromISR();
 }
 
 static void SentDecoderThread(void*)
