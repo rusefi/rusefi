@@ -22,10 +22,10 @@
 #if (HAL_USE_ICU == TRUE)
 
 /* TODO: get at runtime */
-#define SENT_ICU_FREQ		72000000 // == CPU freq
+#define SENT_ICU_FREQ		(168000000 / 2) // == CPU freq / 2
 
 /* TODO: move to config */
-#define SENT_INPUT_GPIO		Gpio::A2
+#define SENT_INPUT_GPIO		Gpio::A1
 
 /* TODO: implement helper to get AF from GPIO for TIM2 capture */
 #define SENT_INPUT_AF		PAL_MODE_ALTERNATE(1)
