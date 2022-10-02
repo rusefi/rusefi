@@ -225,7 +225,7 @@ void setDefaultFuel() {
 	/**
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
-	engineConfiguration->injector.flow = 210;
+	engineConfiguration->injector.flow = 200;
 	engineConfiguration->stoichRatioPrimary = STOICH_RATIO;
 
 	// 9.0 = E100 pure ethanol
