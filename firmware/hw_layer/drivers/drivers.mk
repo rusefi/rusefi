@@ -30,4 +30,5 @@ HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/gpio/tle9104.cpp \
 	$(DRIVERS_DIR)/gpio/l9779.cpp \
 	$(DRIVERS_DIR)/gpio/protected_gpio.cpp \
+	$(DRIVERS_DIR)/sent/sent_hw_icu.cpp \
 	$(DRIVERS_DIR)/lcd/HD44780.cpp
