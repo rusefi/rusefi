@@ -25,10 +25,10 @@
 #define SENT_ICU_FREQ		72000000 // == CPU freq
 
 /* TODO: move to config */
-#define SENT_INPUT_GPIO		Gpio::A0
+#define SENT_INPUT_GPIO		Gpio::A2
 
-/* TODO: implement helper to get AF from GPIO for TIM capture */
-#define SENT_INPUT_AF		PAL_MODE_ALTERNATE(2)
+/* TODO: implement helper to get AF from GPIO for TIM2 capture */
+#define SENT_INPUT_AF		PAL_MODE_ALTERNATE(1)
 
 /* TODO: implement helper to get ICU and channel from GPIO */
 #define SENT_ICU_UNIT		ICUD2	/* TIM2 */
@@ -55,7 +55,10 @@ static ICUConfig icucfg_in1 =
 
 void startSent()
 {
-	if (isBrainPinValid(SENT_INPUT_GPIO)) {
+	/* SENT is inited last, if pin is unused - use it for SENT
+	 * TODO: remove this when SENT options get integrated into settings */
+	if ((isBrainPinValid(SENT_INPUT_GPIO)) &&
+		(getPinFunction(SENT_INPUT_GPIO) == NULL)) {
 		efiSetPadMode("SENT", SENT_INPUT_GPIO, SENT_INPUT_AF);
 
 		icuStart(&SENT_ICU_UNIT, &icucfg_in1);
