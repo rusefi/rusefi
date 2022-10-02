@@ -479,6 +479,9 @@ void initSent(void)
 	chMBObjectInit(&sent_mb, sent_mb_buffer, SENT_MB_SIZE);
 
 	chThdCreateStatic(waSentDecoderThread, sizeof(waSentDecoderThread), NORMALPRIO, SentDecoderThread, nullptr);
+
+	/* Start HW layer */
+	startSent();
 }
 
 #endif /* EFI_PROD_CODE */
