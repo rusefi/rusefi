@@ -7,8 +7,7 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2022
  */
 
-#include "ch.h"
-#include "hal.h"
+#include "pch.h"
 
 #include "sent.h"
 
