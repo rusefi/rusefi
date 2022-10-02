@@ -13,89 +13,112 @@
 
 #include "sent.h"
 
-struct sent_channel {
-	SM_SENT_enum state;
-	uint8_t nibbles[SENT_MSG_PAYLOAD_SIZE];
-	/* Tick interval in CPU clocks - adjusted on SYNC */
-	uint32_t tickClocks;
+typedef enum
+{
+	SM_SENT_INIT_STATE = 0,
+	SM_SENT_SYNC_STATE,
+	SM_SENT_STATUS_STATE,
+	SM_SENT_SIG1_DATA1_STATE,
+	SM_SENT_SIG1_DATA2_STATE,
+	SM_SENT_SIG1_DATA3_STATE,
+	SM_SENT_SIG2_DATA1_STATE,
+	SM_SENT_SIG2_DATA2_STATE,
+	SM_SENT_SIG2_DATA3_STATE,
+	SM_SENT_CRC_STATE,
+}SM_SENT_enum;
 
-	/* fast channel data */
-	int32_t gm_sig0;
-	int32_t gm_sig1;
-	int8_t gm_stat;
-
-	/* slow channel stuff */
-	struct {
-		uint16_t data;
-		uint8_t id;
-	} scMsg[16];
-	uint16_t scMsgFlags;
-	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
-	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
-	bool sc16Bit;		/* C-flag */
-
-#if SENT_STATISTIC_COUNTERS
-	/* stats */
+struct sent_channel_stat {
 	uint32_t PulseCnt;
 	uint32_t ShortIntervalErr;
 	uint32_t LongIntervalErr;
 	uint32_t SyncErr;
 	uint32_t CrcErrCnt;
 	uint32_t FrameCnt;
-#endif // SENT_STATISTIC_COUNTERS
 };
 
-static struct sent_channel channels[SENT_CHANNELS_NUM];
+class sent_channel {
+private:
+	SM_SENT_enum state;
 
-uint16_t sentOpenThrottleVal = 0;
-uint16_t sentClosedThrottleVal = 0;
+	/* Tick interval in CPU clocks - adjusted on SYNC */
+	uint32_t tickClocks;
 
-uint16_t sentOpenTempVal = 0;
-uint16_t sentClosedTempVal = 0;
+	/* fast channel nibbles.
+	 * TODO: rewrite with uint32_t shift register */
+	uint8_t nibbles[SENT_MSG_PAYLOAD_SIZE];
 
-uint8_t sent_crc4(uint8_t* pdata, uint16_t ndata);
-uint8_t sent_crc4_gm(uint8_t* pdata, uint16_t ndata);
+	/* slow channel shift registers and flags */
+	uint16_t scMsgFlags;
+	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
+	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
+	bool sc16Bit;		/* C-flag */
+	/* Decoder */
+	int SlowChannelDecoder(void);
 
-static int SENT_SlowChannelDecoder(struct sent_channel *ch);
+	/* CRC */
+	uint8_t crc4(uint8_t* pdata, uint16_t ndata);
+	uint8_t crc4_gm(uint8_t* pdata, uint16_t ndata);
+
+public:
+	/* fast channel data */
+	int32_t sig0;
+	int32_t sig1;
+	int8_t stat;
+
+	/* slow channel data */
+	struct {
+		uint16_t data;
+		uint8_t id;
+	} scMsg[16];
+
+	/* Statistic counters */
+#if SENT_STATISTIC_COUNTERS
+	sent_channel_stat statistic;
+#endif // SENT_STATISTIC_COUNTERS
+
+	int Decoder(uint16_t clocks);
+};
+
+static sent_channel channels[SENT_CHANNELS_NUM];
 
 //#define SENT_TICK (5 * 72) // 5uS @72MHz
 #define SENT_TICK (27 * 72 / 10) // 2.7uS @72MHz
 
-int SENT_Decoder(struct sent_channel *ch, uint16_t clocks)
+int sent_channel::Decoder(uint16_t clocks)
 {
 	int ret = 0;
 
 	#if SENT_STATISTIC_COUNTERS
-		ch->PulseCnt++;
+		statistic.PulseCnt++;
 	#endif
 
 	/* special case for out-of-sync state */
-	if (ch->state == SM_SENT_INIT_STATE) {
+	if (state == SM_SENT_INIT_STATE) {
 		/* check is pulse looks like sync with allowed +/-20% deviation */
 		int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * SENT_TICK;
 
 		if ((clocks >= (syncClocks * 80 / 100)) &&
 			(clocks <= (syncClocks * 120 / 100))) {
 			/* calculate tick time */
-			ch->tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			/* next state */
-			ch->state = SM_SENT_STATUS_STATE;
+			state = SM_SENT_STATUS_STATE;
 			/* done for this pulse */
 			return 0;
 		}
 	}
 
-	int interval = (clocks + ch->tickClocks / 2) / ch->tickClocks - SENT_OFFSET_INTERVAL;
+	int interval = (clocks + tickClocks / 2) / tickClocks - SENT_OFFSET_INTERVAL;
 
 	if (interval < 0) {
 		#if SENT_STATISTIC_COUNTERS
-			ch->ShortIntervalErr++;
+			statistic.ShortIntervalErr++;
 		#endif //SENT_STATISTIC_COUNTERS
-		ch->state = SM_SENT_INIT_STATE;
+		state = SM_SENT_INIT_STATE;
 		return -1;
 	}
 
-	switch(ch->state)
+	switch(state)
 	{
 		case SM_SENT_INIT_STATE:
 			/* handles above, should not get in here */
@@ -105,25 +128,25 @@ int SENT_Decoder(struct sent_channel *ch, uint16_t clocks)
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				ch->tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
-				ch->state = SM_SENT_STATUS_STATE;
+				tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				state = SM_SENT_STATUS_STATE;
 			}
 			else
 			{
 				#if SENT_STATISTIC_COUNTERS
 					// Increment sync interval err count
-					ch->SyncErr++;
+					statistic.SyncErr++;
 					if (interval > SENT_SYNC_INTERVAL)
 					{
-						ch->LongIntervalErr++;
+						statistic.LongIntervalErr++;
 					}
 					else
 					{
-						ch->ShortIntervalErr++;
+						statistic.ShortIntervalErr++;
 					}
 				#endif // SENT_STATISTIC_COUNTERS
 				/* wait for next sync and recalibrate tickClocks */
-				ch->state = SM_SENT_INIT_STATE;
+				state = SM_SENT_INIT_STATE;
 			}
 			break;
 
@@ -137,132 +160,132 @@ int SENT_Decoder(struct sent_channel *ch, uint16_t clocks)
 		case SM_SENT_CRC_STATE:
 			if(interval <= SENT_MAX_INTERVAL)
 			{
-				ch->nibbles[ch->state - SM_SENT_STATUS_STATE] = interval;
+				nibbles[state - SM_SENT_STATUS_STATE] = interval;
 
-				if (ch->state != SM_SENT_CRC_STATE)
+				if (state != SM_SENT_CRC_STATE)
 				{
 					/* TODO: refactor */
-					ch->state = (SM_SENT_enum)((int)ch->state + 1);
+					state = (SM_SENT_enum)((int)state + 1);
 				}
 				else
 				{
 					#if SENT_STATISTIC_COUNTERS
-						ch->FrameCnt++;
+						statistic.FrameCnt++;
 					#endif // SENT_STATISTIC_COUNTERS
 					/* CRC check */
 					/* TODO: find correct way to calculate CRC */
-					if ((ch->nibbles[7] == sent_crc4(ch->nibbles, 7)) ||
-						(ch->nibbles[7] == sent_crc4_gm(ch->nibbles + 1, 6)))
+					if ((nibbles[7] == crc4(nibbles, 7)) ||
+						(nibbles[7] == crc4_gm(nibbles + 1, 6)))
 					{
 						// Full packet has been received
-						ch->gm_sig0 =
-							(ch->nibbles[1 + 0] << 8) |
-							(ch->nibbles[1 + 1] << 4) |
-							(ch->nibbles[1 + 2] << 0);
-						ch->gm_sig1 =
-							(ch->nibbles[1 + 3] << 0) |
-							(ch->nibbles[1 + 4] << 4) |
-							(ch->nibbles[1 + 5] << 8);
-						ch->gm_stat =
-							ch->nibbles[0];
+						sig0 =
+							(nibbles[1 + 0] << 8) |
+							(nibbles[1 + 1] << 4) |
+							(nibbles[1 + 2] << 0);
+						sig1 =
+							(nibbles[1 + 3] << 0) |
+							(nibbles[1 + 4] << 4) |
+							(nibbles[1 + 5] << 8);
+						stat =
+							nibbles[0];
 						ret = 1;
 					}
 					else
 					{
 						#if SENT_STATISTIC_COUNTERS
-							ch->CrcErrCnt++;
+							statistic.CrcErrCnt++;
 						#endif // SENT_STATISTIC_COUNTERS
 						ret = -1;
 					}
-					ch->state = SM_SENT_SYNC_STATE;
+					state = SM_SENT_SYNC_STATE;
 				}
 			}
 			else
 			{
 				#if SENT_STATISTIC_COUNTERS
-					ch->LongIntervalErr++;
+					statistic.LongIntervalErr++;
 				#endif
 
-				ch->state = SM_SENT_INIT_STATE;
+				state = SM_SENT_INIT_STATE;
 			}
 			break;
 	}
 
 	if (ret > 0) {
 		/* valid packet received, can process slow channels */
-		SENT_SlowChannelDecoder(ch);
+		SlowChannelDecoder();
 	} else if (ret < 0) {
 		/* packet is incorrect, reset slow channel state machine */
-		ch->scShift2 = 0;
-		ch->scShift3 = 0;
+		scShift2 = 0;
+		scShift3 = 0;
 	}
 
 	return ret;
 }
 
-static int SENT_SlowChannelDecoder(struct sent_channel *ch)
+int sent_channel::SlowChannelDecoder()
 {
 	/* bit 2 and bit 3 from status nibble are used to transfer short messages */
-	bool b2 = !!(ch->nibbles[0] & (1 << 2));
-	bool b3 = !!(ch->nibbles[0] & (1 << 3));
+	bool b2 = !!(nibbles[0] & (1 << 2));
+	bool b3 = !!(nibbles[0] & (1 << 3));
 
 	/* shift in new data */
-	ch->scShift2 = (ch->scShift2 << 1) | b2;
-	ch->scShift3 = (ch->scShift3 << 1) | b3;
+	scShift2 = (scShift2 << 1) | b2;
+	scShift3 = (scShift3 << 1) | b3;
 
 	if (1) {
 		/* Short Serial Message format */
 
 		/* 0b1000.0000.0000.0000? */
-		if ((ch->scShift3 & 0xffff) == 0x8000) {
+		if ((scShift3 & 0xffff) == 0x8000) {
 			/* Done receiving */
-			uint8_t id = (ch->scShift2 >> 12) & 0x0f;
+			uint8_t id = (scShift2 >> 12) & 0x0f;
 
 			/* TODO: add CRC check */
-			ch->scMsg[id].data = (ch->scShift2 >> 4) & 0xff;
-			ch->scMsg[id].id = id;
-			ch->scMsgFlags |= (1 << id);
+			scMsg[id].data = (scShift2 >> 4) & 0xff;
+			scMsg[id].id = id;
+			scMsgFlags |= (1 << id);
 		}
 	}
 	if (1) {
 		/* Enhanced Serial Message format */
 
 		/* 0b11.1111.0xxx.xx0x.xxx0 ? */
-		if ((ch->scShift3 & 0x3f821) == 0x3f000) {
+		if ((scShift3 & 0x3f821) == 0x3f000) {
 			uint8_t id;
 
 			/* C: configuration bit is used to indicate 16 bit format */
-			ch->sc16Bit = !!(ch->scShift3 & (1 << 10));
-			if (!ch->sc16Bit) {
+			sc16Bit = !!(scShift3 & (1 << 10));
+			if (!sc16Bit) {
 				int i;
 				/* 12 bit message, 8 bit ID */
-				id = ((ch->scShift3 >> 1) & 0x0f) |
-					 ((ch->scShift3 >> 2) & 0xf0);
-				uint16_t data = ch->scShift2 & 0x0fff; /* 12 bit */
+				id = ((scShift3 >> 1) & 0x0f) |
+					 ((scShift3 >> 2) & 0xf0);
+				uint16_t data = scShift2 & 0x0fff; /* 12 bit */
 
 				/* TODO: add crc check */
 				/* Find free mainbox or mailbox with same ID */
 				/* TODO: allow message box freeing */
 				for (i = 0; i < 16; i++) {
-					if (((ch->scMsgFlags & (1 << i)) == 0) ||
-						(ch->scMsg[i].id == id)) {
-						ch->scMsg[i].data = data;
-						ch->scMsg[i].id = id;
-						ch->scMsgFlags |= (1 << i);
+					if (((scMsgFlags & (1 << i)) == 0) ||
+						(scMsg[i].id == id)) {
+						scMsg[i].data = data;
+						scMsg[i].id = id;
+						scMsgFlags |= (1 << i);
 						return 0;
 					}
 				}
 			} else {
 				/* 16 bit message, 4 bit ID */
 				uint16_t data;
-				data = (ch->scShift2 & 0x0fff) |
-					   (((ch->scShift3 >> 1) & 0x0f) << 12);
-				id = (ch->scShift3 >> 6) & 0x0f;
+				data = (scShift2 & 0x0fff) |
+					   (((scShift3 >> 1) & 0x0f) << 12);
+				id = (scShift3 >> 6) & 0x0f;
 
 				/* TODO: add crc check */
-				ch->scMsg[id].data = data; /* 16 bit */
-				ch->scMsg[id].id = id; /* straight mapping */
-				ch->scMsgFlags |= (1 << id);
+				scMsg[id].data = data; /* 16 bit */
+				scMsg[id].id = id; /* straight mapping */
+				scMsgFlags |= (1 << id);
 			}
 		}
 	}
@@ -271,7 +294,7 @@ static int SENT_SlowChannelDecoder(struct sent_channel *ch)
 }
 
 /* This CRC works for Si7215 for WHOLE message expect last nibble (CRC) */
-uint8_t sent_crc4(uint8_t* pdata, uint16_t ndata)
+uint8_t sent_channel::crc4(uint8_t* pdata, uint16_t ndata)
 {
 	size_t i;
 	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
@@ -288,7 +311,7 @@ uint8_t sent_crc4(uint8_t* pdata, uint16_t ndata)
 
 /* This CRC works for GM pressure sensor for message minus status nibble and minus CRC nibble */
 /* TODO: double check and use same CRC routine? */
-uint8_t sent_crc4_gm(uint8_t* pdata, uint16_t ndata)
+uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
 {
 	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
 	uint8_t calculatedCRC, i;
@@ -306,16 +329,7 @@ uint8_t sent_crc4_gm(uint8_t* pdata, uint16_t ndata)
 	return calculatedCRC;
 }
 
-uint16_t SENT_GetOpenThrottleVal(void)
-{
-	return sentOpenThrottleVal;
-}
-
-uint16_t SENT_GetClosedThrottleVal(void)
-{
-	return sentClosedThrottleVal;
-}
-
+#if 0
 /* Stat counters */
 uint32_t SENT_GetShortIntervalErrCnt(void)
 {
@@ -395,11 +409,6 @@ void SENT_GetRawNibbles(uint8_t* buf)
 	}
 }
 
-uint8_t SENT_GetThrottleValPrec(void)
-{
-	return (100 - ((sentOpenThrottleVal - SENT_THROTTLE_OPEN_VAL) * 100)/(SENT_THROTTLE_CLOSE_VAL - SENT_THROTTLE_OPEN_VAL));
-}
-
 /* Slow Channel */
 uint16_t SENT_GetSlowMessagesFlags(uint32_t n)
 {
@@ -419,18 +428,19 @@ uint16_t SENT_GetSlowMessageID(uint32_t n, uint32_t i)
 /* GM DI fuel pressure, temperature sensor data */
 uint32_t SENT_GetSig0(uint32_t n)
 {
-	return channels[n].gm_sig0;
+	return channels[n].sig0;
 }
 
 uint32_t SENT_GetSig1(uint32_t n)
 {
-	return channels[n].gm_sig1;
+	return channels[n].sig1;
 }
 
 uint8_t SENT_GetStat(uint32_t n)
 {
-	return channels[n].gm_stat;
+	return channels[n].stat;
 }
+#endif
 
 /* 4 per channel should be enougth */
 #define SENT_MB_SIZE		(4 * SENT_CHANNELS_NUM)
@@ -459,14 +469,17 @@ static void SentDecoderThread(void*)
 		msg_t ret;
 
 		ret = chMBFetchTimeout(&sent_mb, &msg, TIME_INFINITE);
-		/* TODO: handle ret */
+
 		if (ret == MSG_OK) {
 			uint16_t tick = msg & 0xffff;
 			uint8_t n = (msg >> 16) & 0xff;
-			struct sent_channel *ch = &channels[n];
 
-			if (SENT_Decoder(ch, tick) > 0) {
-				/* Call high level decoder from here */
+			if (n < SENT_CHANNELS_NUM) {
+				sent_channel &ch = channels[n];
+
+				if (ch.Decoder(tick) > 0) {
+					/* Call high level decoder from here */
+				}
 			}
 		}
 	}

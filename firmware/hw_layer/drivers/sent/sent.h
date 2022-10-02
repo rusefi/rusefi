@@ -32,20 +32,6 @@
 #define SENT_THROTTLE_OPEN_VAL	435     // Sensor position of fully open throttle
 #define SENT_THROTTLE_CLOSE_VAL	3665    // Sensor position of fully closed throttle
 
-typedef enum
-{
-	SM_SENT_INIT_STATE = 0,
-	SM_SENT_SYNC_STATE,
-	SM_SENT_STATUS_STATE,
-	SM_SENT_SIG1_DATA1_STATE,
-	SM_SENT_SIG1_DATA2_STATE,
-	SM_SENT_SIG1_DATA3_STATE,
-	SM_SENT_SIG2_DATA1_STATE,
-	SM_SENT_SIG2_DATA2_STATE,
-	SM_SENT_SIG2_DATA3_STATE,
-	SM_SENT_CRC_STATE,
-}SM_SENT_enum;
-
 /* SENT decoder init */
 void initSent();
 
