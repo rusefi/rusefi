@@ -589,6 +589,7 @@ void proteusBoardTest() {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
 	engineConfiguration->triggerSimulatorFrequency = 600;
+    engineConfiguration->injector.flow = 4.6; // longer blink
 
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
