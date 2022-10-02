@@ -635,6 +635,19 @@ void proteusBoardTest() {
 	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
+	strncpy(config->luaScript, R"(
+	startPwm(0, 10, 0.5)
+	startPwm(1, 11, 0.5)
+	startPwm(2, 12, 0.5)
+	startPwm(3, 13, 0.5)
+	startPwm(4, 14, 0.5)
+	startPwm(5, 15, 0.5)
+    startPwm(6, 16, 0.5)
+	startPwm(7, 17, 0.5)
+
+	function onTick()
+	end
+    )", efi::size(config->luaScript));
 
 #endif // EFI_PROD_CODE
 
