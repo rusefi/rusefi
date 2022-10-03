@@ -166,7 +166,6 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 
 	// release the command
 	btProcessIsStarted = false;
-	chThdExit(MSG_OK);
 }
 
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
