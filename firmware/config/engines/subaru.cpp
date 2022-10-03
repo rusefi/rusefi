@@ -30,7 +30,6 @@ void setSubaru2003Wrx() {
 
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned; // we want to avoid PD1 conflict
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 }
 
 /**

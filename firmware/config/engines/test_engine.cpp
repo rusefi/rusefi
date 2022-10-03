@@ -109,7 +109,6 @@ void setProteusAnalogPwmTest() {
 	// Disable trigger stim
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
 	engineConfiguration->idle.solenoidPin = Gpio::G4;
