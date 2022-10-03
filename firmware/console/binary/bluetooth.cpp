@@ -269,11 +269,12 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	commands[numCommands++] = cmdBaud;
 	commands[numCommands++] = cmdName;
    	commands[numCommands++] = cmdPin;
-   	
-   	// create a thread to execute these commands later
-   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
-   	
+
 	btProcessIsStarted = true;
+
+	// create a thread to execute these commands after TS disconnected
+	// See bluetoothSoftwareDisconnectNotify
+	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
 }
 
 // Called after 1S of silence on BT UART...
