@@ -35,6 +35,7 @@ STOP mode for F7 is needed for wakeup from multiple EXTI pins. For example PD0, 
 However, for F40X & F42X this may be useless. STOP in itself eats more current than standby. 
 With F4 only having PA0 available for wakeup, this negates its need.
 */
+/*
 void stm32_stop() {
 	// Don't get bothered by interrupts
 	__disable_irq();
@@ -63,6 +64,7 @@ void stm32_stop() {
 	// Lastly, reboot
 	NVIC_SystemReset();
 }
+*/
 /* 
  * Standby for both F4 & F7 works perfectly, with very little current consumption.
  * Downside is that there is a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
