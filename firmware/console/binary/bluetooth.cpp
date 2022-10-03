@@ -20,7 +20,6 @@
 #if EFI_BLUETOOTH_SETUP
 
 static bool btProcessIsStarted = false;
-static bool btProcessIsRunning = false;
 static const char *commands[5];
 static int numCommands = 0;
 static int setBaudIdx = -1;
@@ -159,9 +158,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 		return;
 	} else {
 		// call this when the thread is resumed (after the disconnect)
-		btProcessIsRunning = true;
 		runCommands();
-		btProcessIsRunning = false;
 	}
 
 	// release the command
@@ -291,9 +288,6 @@ void bluetoothCancel() {
 		efiPrintf("The Bluetooth module init procedure was not started! Nothing to cancel!");
 		return;
 	}
-
-	if (btProcessIsRunning)
-		return;
 	
 	// terminate thread
 	chThdTerminate(btThread);
