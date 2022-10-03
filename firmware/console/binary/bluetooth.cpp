@@ -69,7 +69,7 @@ static void runCommands() {
 				break;
 		}
 		
-		bool restoreAndExit = (cmdIdx >= numCommands || baudIdx < 0);
+		bool restoreAndExit = (cmdIdx >= numCommands || baudIdx < 0) || chThdShouldTerminateX();
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
