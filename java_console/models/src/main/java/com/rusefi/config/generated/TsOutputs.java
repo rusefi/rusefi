@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Sep 30 00:59:58 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 03 15:05:28 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -341,7 +341,7 @@ public class TsOutputs {
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
-	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
+	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
