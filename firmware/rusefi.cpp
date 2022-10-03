@@ -190,7 +190,7 @@ void runRusEfi() {
 #endif
 
 #if defined(STM32F4) || defined(STM32F7)
-	addConsoleAction("stm32_stop", stm32_stop);
+//	addConsoleAction("stm32_stop", stm32_stop);
 	addConsoleAction("stm32_standby", stm32_standby);
 #endif
 
