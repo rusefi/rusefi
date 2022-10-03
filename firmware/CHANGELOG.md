@@ -11,7 +11,7 @@ Release template (copy/paste this for new release):
 ## Month 202x Release - "Release Name"
 
 ### Breaking Changes
- -
+ - 
 
 ### Added
  -
@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - Enforce board configuration overrides more strictly #4614
  - Fuel Priming reset fix #4627
+ - Slower than expected RPM information was slowing engine start #4629
 
 ## September 2022 Release - "Day 203"
 
