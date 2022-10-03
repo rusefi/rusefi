@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 28 02:22:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 03 15:05:31 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1618,9 +1618,17 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
+	 * offset 752
+	 */
+	uint16_t unusedTrig;
+	/**
 	 * offset 754
 	 */
 	pin_output_mode_e triggerSimulatorPinModes[TRIGGER_SIMULATOR_PIN_COUNT];
+	/**
+	 * offset 756
+	 */
+	uint8_t unusedTrigMode;
 	/**
 	 * need 4 byte alignment
 	units
@@ -3142,76 +3150,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1628 bit 8 */
-	bool unusedBit_539_8 : 1 {};
+	bool unusedBit_541_8 : 1 {};
 	/**
 	offset 1628 bit 9 */
-	bool unusedBit_539_9 : 1 {};
+	bool unusedBit_541_9 : 1 {};
 	/**
 	offset 1628 bit 10 */
-	bool unusedBit_539_10 : 1 {};
+	bool unusedBit_541_10 : 1 {};
 	/**
 	offset 1628 bit 11 */
-	bool unusedBit_539_11 : 1 {};
+	bool unusedBit_541_11 : 1 {};
 	/**
 	offset 1628 bit 12 */
-	bool unusedBit_539_12 : 1 {};
+	bool unusedBit_541_12 : 1 {};
 	/**
 	offset 1628 bit 13 */
-	bool unusedBit_539_13 : 1 {};
+	bool unusedBit_541_13 : 1 {};
 	/**
 	offset 1628 bit 14 */
-	bool unusedBit_539_14 : 1 {};
+	bool unusedBit_541_14 : 1 {};
 	/**
 	offset 1628 bit 15 */
-	bool unusedBit_539_15 : 1 {};
+	bool unusedBit_541_15 : 1 {};
 	/**
 	offset 1628 bit 16 */
-	bool unusedBit_539_16 : 1 {};
+	bool unusedBit_541_16 : 1 {};
 	/**
 	offset 1628 bit 17 */
-	bool unusedBit_539_17 : 1 {};
+	bool unusedBit_541_17 : 1 {};
 	/**
 	offset 1628 bit 18 */
-	bool unusedBit_539_18 : 1 {};
+	bool unusedBit_541_18 : 1 {};
 	/**
 	offset 1628 bit 19 */
-	bool unusedBit_539_19 : 1 {};
+	bool unusedBit_541_19 : 1 {};
 	/**
 	offset 1628 bit 20 */
-	bool unusedBit_539_20 : 1 {};
+	bool unusedBit_541_20 : 1 {};
 	/**
 	offset 1628 bit 21 */
-	bool unusedBit_539_21 : 1 {};
+	bool unusedBit_541_21 : 1 {};
 	/**
 	offset 1628 bit 22 */
-	bool unusedBit_539_22 : 1 {};
+	bool unusedBit_541_22 : 1 {};
 	/**
 	offset 1628 bit 23 */
-	bool unusedBit_539_23 : 1 {};
+	bool unusedBit_541_23 : 1 {};
 	/**
 	offset 1628 bit 24 */
-	bool unusedBit_539_24 : 1 {};
+	bool unusedBit_541_24 : 1 {};
 	/**
 	offset 1628 bit 25 */
-	bool unusedBit_539_25 : 1 {};
+	bool unusedBit_541_25 : 1 {};
 	/**
 	offset 1628 bit 26 */
-	bool unusedBit_539_26 : 1 {};
+	bool unusedBit_541_26 : 1 {};
 	/**
 	offset 1628 bit 27 */
-	bool unusedBit_539_27 : 1 {};
+	bool unusedBit_541_27 : 1 {};
 	/**
 	offset 1628 bit 28 */
-	bool unusedBit_539_28 : 1 {};
+	bool unusedBit_541_28 : 1 {};
 	/**
 	offset 1628 bit 29 */
-	bool unusedBit_539_29 : 1 {};
+	bool unusedBit_541_29 : 1 {};
 	/**
 	offset 1628 bit 30 */
-	bool unusedBit_539_30 : 1 {};
+	bool unusedBit_541_30 : 1 {};
 	/**
 	offset 1628 bit 31 */
-	bool unusedBit_539_31 : 1 {};
+	bool unusedBit_541_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -5049,4 +5057,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 28 02:22:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 03 15:05:31 UTC 2022
