@@ -34,7 +34,7 @@ public enum SerialPortScanner {
     void findAllAvailablePorts(boolean includeSlowTcpLookup) {
         List<String> ports = new ArrayList<>();
         String[] serialPorts = LinkManager.getCommPorts();
-        if (serialPorts.length > 0 && serialPorts.length < 15)
+        if (serialPorts.length > 0)
             ports.add(AUTO_SERIAL);
         ports.addAll(Arrays.asList(serialPorts));
         if (includeSlowTcpLookup)
