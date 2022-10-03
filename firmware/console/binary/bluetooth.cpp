@@ -104,10 +104,12 @@ static void runCommands() {
 		bool wasAnswer = false;
 		int received = tsChannel->readTimeout(buffer, 2, btModuleTimeout);
 		if (received == 2) {
+			efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
+		} else {
+			efiPrintf("timeout receiving BT reply");
 		}
-		efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
@@ -154,6 +156,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chSysUnlock();
 	
 	if (msg == MSG_TIMEOUT) {
+		// timeout waiting for silence on uart...
 		efiPrintf("The Bluetooth module init procedure is cancelled (timeout)!");
 		return;
 	} else {
@@ -273,7 +276,8 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
    	
 	btProcessIsStarted = true;
 }
-	
+
+// Called after 1S of silence on BT UART...
 void bluetoothSoftwareDisconnectNotify() {
 	if (btProcessIsStarted) {
 		// start communication with the module
