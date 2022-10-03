@@ -862,7 +862,6 @@ void setTest33816EngineConfiguration() {
 
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 
 	engineConfiguration->injectionPins[0] = Gpio::B9; // #1
 	engineConfiguration->injectionPins[1] = Gpio::E2; // #2
