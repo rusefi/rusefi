@@ -19,7 +19,7 @@ public enum SerialPortScanner {
 
     private volatile boolean isRunning = true;
 
-    private static final boolean SHOW_PCAN = Boolean.parseBoolean(System.getenv().get("RUSEFI_PCAN"));
+    private static final boolean SHOW_PCAN = false;// todo: reimplement with wmic Boolean.parseBoolean(System.getenv().get("RUSEFI_PCAN"));
     private static final boolean SHOW_SOCKETCAN = isLinux();
 
     static final String AUTO_SERIAL = "Auto Serial";
@@ -31,7 +31,7 @@ public enum SerialPortScanner {
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
      */
-    void findAllAvailablePorts(boolean includeSlowTcpLookup) {
+    private void findAllAvailablePorts(boolean includeSlowTcpLookup) {
         List<String> ports = new ArrayList<>();
         String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length > 0)
@@ -65,8 +65,10 @@ public enum SerialPortScanner {
 
     public void startTimer() {
         Thread portsScanner = new Thread(() -> {
+            boolean isFirstTime = true;
             while (isRunning) {
-                findAllAvailablePorts(true);
+                findAllAvailablePorts(!isFirstTime);
+                isFirstTime = false;
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {

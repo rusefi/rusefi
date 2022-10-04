@@ -76,7 +76,7 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
-    private final JLabel noPortsMessage = new JLabel("No ports found!");
+    private final JLabel noPortsMessage = new JLabel("<html>No ports found!<br>Confirm blue LED is blinking</html>");
 
     public StartupFrame() {
 //        AudioPlayback.start();
@@ -171,10 +171,6 @@ public class StartupFrame {
         }
 
         SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(this::applyKnownPorts));
-
-        // todo: invoke this NOT on AWT thread?
-        SerialPortScanner.INSTANCE.findAllAvailablePorts(false);
-        applyKnownPorts();
 
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
