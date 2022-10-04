@@ -1,10 +1,12 @@
 package com.rusefi.maintenance;
 
 import com.rusefi.Launcher;
+import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.URLLabel;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -17,6 +19,7 @@ import java.util.Objects;
 
 import static com.rusefi.StartupFrame.appendBundleName;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
 
@@ -33,22 +36,16 @@ public class ProgramSelector {
     public static final String BOOT_COMMANDER_EXE = "BootCommander.exe";
     public static final String OPENBLT_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "openblt";
 
+
+    private final JPanel content = new JPanel(new BorderLayout());
+    private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel controls = new JPanel(new FlowLayout());
     private final JComboBox<String> mode = new JComboBox<>();
 
     public ProgramSelector(JComboBox<String> comboPorts) {
-        /*
-         * todo: add FULL AUTO mode which would fire up DFU and ST-LINK in parallel hoping that one of those would work?
-         */
-        if (IS_WIN) {
-            mode.addItem(AUTO_DFU);
-            mode.addItem(MANUAL_DFU);
-            mode.addItem(DFU_ERASE);
-            mode.addItem(ST_LINK);
-            mode.addItem(OPENBLT_CAN);
-        }
-        mode.addItem(DFU_SWITCH);
-
+        content.add(controls, BorderLayout.NORTH);
+        content.add(noHardware, BorderLayout.SOUTH);
+        controls.setVisible(false);
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
@@ -117,6 +114,28 @@ public class ProgramSelector {
     }
 
     public JPanel getControl() {
-        return controls;
+        return content;
+    }
+
+    public void apply(SerialPortScanner.AvailableHardware currentHardware) {
+        noHardware.setVisible(currentHardware.isEmpty());
+        controls.setVisible(!currentHardware.isEmpty());
+
+        mode.removeAllItems();
+        if (IS_WIN) {
+            if (!currentHardware.getKnownPorts().isEmpty())
+                mode.addItem(AUTO_DFU);
+            if (currentHardware.isDfuFound()) {
+                mode.addItem(MANUAL_DFU);
+                mode.addItem(DFU_ERASE);
+            }
+            if (currentHardware.isStLinkConnected())
+                mode.addItem(ST_LINK);
+            // todo: detect PCAN mode.addItem(OPENBLT_CAN);
+        }
+        if (!currentHardware.getKnownPorts().isEmpty())
+            mode.addItem(DFU_SWITCH);
+        trueLayout(mode);
+        UiUtils.trueLayout(content);
     }
 }
