@@ -28,6 +28,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Flexible ignition adder/trim tables #4586
+ - Startup Frame should scan for available hardware #4633
 
 ### Fixed
  - Slower than expected RPM information was slowing engine start #4629
