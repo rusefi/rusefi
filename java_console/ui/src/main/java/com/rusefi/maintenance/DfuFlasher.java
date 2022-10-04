@@ -8,6 +8,7 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,8 @@ import static com.rusefi.StartupFrame.appendBundleName;
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
-    private static final String WMIC_DRIVER_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
@@ -168,13 +170,24 @@ public class DfuFlasher {
         }
     }
 
-    private static boolean detectSTM32BootloaderDriverState(StatusWindow wnd) {
+    public static boolean detectSTM32BootloaderDriverState(StatusConsumer wnd) {
+        return detectDevice(wnd, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
+    }
+
+    public static boolean detectStLink(StatusConsumer wnd) {
+        return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
+    }
+
+    private static boolean detectDevice(StatusConsumer wnd, String queryCommand, String pattern) {
+        //        long now = System.currentTimeMillis();
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
-        ExecHelper.executeCommand(WMIC_DRIVER_QUERY_COMMAND, wnd, output, error, null);
+        ExecHelper.executeCommand(queryCommand, wnd, output, error, null);
         wnd.append(output.toString());
         wnd.append(error.toString());
-        return output.toString().contains("ConfigManagerErrorCode=0");
+//        long cost = System.currentTimeMillis() - now;
+//        System.out.println("DFU lookup cost " + cost + "ms");
+        return output.toString().contains(pattern);
     }
 
     private static void appendWindowsVersion(StatusWindow wnd) {

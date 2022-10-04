@@ -29,8 +29,11 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - VVT minimum RPM setting #4545
  - Flexible ignition adder/trim tables #4586
- - VVT minimum RPM setting #4545  
+ - Enforce board configuration overrides more strictly #4614
+ - Fuel Priming reset fix #4627
+ - Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
 
 ### Fixed

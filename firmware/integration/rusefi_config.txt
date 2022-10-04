@@ -184,7 +184,7 @@ struct_no_prefix engine_configuration_s
 #define EGT_CHANNEL_COUNT 8
 #define DIGIPOT_COUNT 4
 #define HW_MAX_ADC_INDEX 17
-#define TRIGGER_SIMULATOR_PIN_COUNT 3
+#define TRIGGER_SIMULATOR_PIN_COUNT 2
 #define TRIGGER_INPUT_PIN_COUNT 2
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
@@ -739,7 +739,9 @@ pin_input_mode_e throttlePedalUpPinMode;
 	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
 	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
+	uint16_t unusedTrig
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
+	uint8_t unusedTrigMode
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
@@ -2119,3 +2121,4 @@ end_struct
 #define CAN_ECU_SERIAL_RX_ID 0x100
 #define CAN_ECU_SERIAL_TX_ID 0x102
 
+#define CAN_ECU_HW_META 0xAB1234
