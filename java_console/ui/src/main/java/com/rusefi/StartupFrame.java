@@ -237,8 +237,6 @@ public class StartupFrame {
             isFirstTimeApplyingPorts = false;
             connectPanel.setVisible(!ports.isEmpty());
             noPortsMessage.setVisible(ports.isEmpty());
-//        panel.add(comboSpeeds); // todo: finish speed selector UI component
-//            horizontalLine.setVisible(!ports.isEmpty());
 
             applyPortSelectionToUIcontrol(ports);
             currentlyDisplayedPorts = ports;
