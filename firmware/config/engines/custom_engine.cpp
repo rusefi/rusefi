@@ -293,12 +293,6 @@ void setEtbTestConfiguration() {
 	// see also setDefaultEtbBiasCurve
 }
 
-#if EFI_UNIT_TEST
-void setIssue898() {
-	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
-}
-#endif /* EFI_UNIT_TEST */
-
 #if HW_FRANKENSO && EFI_PROD_CODE
 
 
