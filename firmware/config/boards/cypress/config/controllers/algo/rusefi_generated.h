@@ -264,6 +264,7 @@
 #define can_baudrate_e_B500KBPS 2
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
+#define CAN_ECU_HW_META 0xAB1234
 #define CAN_ECU_SERIAL_RX_ID 0x100
 #define CAN_ECU_SERIAL_TX_ID 0x102
 #define can_nbc_e_auto_enum 0="CAN_BUS_NBC_NONE",12="CAN_AIM_DASH",6="CAN_BUS_BMW_E90",10="CAN_BUS_GENESIS_COUPE",11="CAN_BUS_HONDA_K",7="CAN_BUS_Haltech",3="CAN_BUS_MAZDA_RX8",8="CAN_BUS_MQB",4="CAN_BUS_NBC_BMW",1="CAN_BUS_NBC_FIAT",2="CAN_BUS_NBC_VAG",9="CAN_BUS_NISSAN_VQ",5="CAN_BUS_W202_C180"
@@ -669,6 +670,7 @@
 #define engineMake_offset 1092
 #define engineSnifferFocusOnInputs_offset 1360
 #define engineSnifferRpmThreshold_offset 10
+#define engineSyncCam_enum "Intake First Bank", "Exhaust First Bank", "Intake Second Bank", "Exhaust Second Bank"
 #define engineSyncCam_offset 566
 #define engineType_offset 0
 #define ERROR_BUFFER_SIZE 120
@@ -1967,16 +1969,15 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 3946241398
+#define SIGNATURE_HASH 479564741
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
-#define sorryUnused1_offset 2080
-#define sorryUnused2_offset 2082
-#define sorryUnused3_offset 2084
-#define sorryUnused4_offset 2086
-#define sorryUnused5_offset 2088
-#define sorryUnused6_offset 2090
+#define sorryUnused1_offset 2082
+#define sorryUnused2_offset 2084
+#define sorryUnused3_offset 2086
+#define sorryUnused4_offset 2088
+#define sorryUnused5_offset 2090
 #define sparkDwellRpmBins_offset 4156
 #define sparkDwellValues_offset 4172
 #define specs_offset 364
@@ -2266,7 +2267,7 @@
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
 #define trigger_offset 468
-#define TRIGGER_SIMULATOR_PIN_COUNT 3
+#define TRIGGER_SIMULATOR_PIN_COUNT 2
 #define trigger_type_e_auto_enum 0="TT_TOOTHED_WHEEL",38="TT_12_TOOTH_CRANK",50="TT_1_16",29="TT_2JZ_1_12",25="TT_2JZ_3_34",70="TT_36_2_1",71="TT_36_2_1_1",23="TT_36_2_2_2",31="TT_3_1_CAM",20="TT_60_2_VW",30="TT_CHRYSLER_NGC_36_2_2",6="TT_DAIHATSU",2="TT_DODGE_NEON_1995",39="TT_DODGE_NEON_1995_ONLY_CRANK",14="TT_DODGE_NEON_2003_CAM",32="TT_DODGE_NEON_2003_CRANK",19="TT_DODGE_RAM",22="TT_DODGE_STRATUS",41="TT_FIAT_IAW_P8",1="TT_FORD_ASPIRE",42="TT_FORD_ST170",65="TT_FORD_TFI_PIP",27="TT_GM_24x",74="TT_GM_24x_2",54="TT_GM_60_2_2_2",5="TT_GM_7X",28="TT_HONDA_CBR_600",67="TT_HONDA_K_CAM_4_1",46="TT_HONDA_K_CRANK_12_1",37="TT_JEEP_18_2_2_2",40="TT_JEEP_4_CYL",57="TT_KAWA_KX450F",15="TT_MAZDA_DOHC_1_4",3="TT_MAZDA_MIATA_NA",4="TT_MAZDA_MIATA_NB1",35="TT_MAZDA_MIATA_VVT_TEST",7="TT_MAZDA_SOHC_4",10="TT_MERCEDES_2_SEGMENT",33="TT_MIATA_VVT",11="TT_MITSUBISHI",52="TT_NISSAN_MR18_CAM_VVT",68="TT_NISSAN_MR18_CRANK",61="TT_NISSAN_QR25",24="TT_NISSAN_SR20VE",60="TT_NISSAN_VQ30",58="TT_NISSAN_VQ35",18="TT_ONE",16="TT_ONE_PLUS_ONE",44="TT_RENIX_44_2_2",45="TT_RENIX_66_2_2_2",26="TT_ROVER_K",55="TT_SKODA_FAVORIT",36="TT_SUBARU_7_6",51="TT_SUBARU_7_WITHOUT_6",12="TT_SUBARU_EZ30",49="TT_SUBARU_SVX",64="TT_SUBARU_SVX_CAM_VVT",63="TT_SUBARU_SVX_CRANK_1",66="TT_SUZUKI_G13B",69="TT_TOOTHED_WHEEL_32_2",9="TT_TOOTHED_WHEEL_36_1",48="TT_TOOTHED_WHEEL_36_2",8="TT_TOOTHED_WHEEL_60_2",53="TT_TRI_TACH",75="TT_UNUSED",56="TT_VVT_BARRA_3_PLUS_1",47="TT_VVT_BOSCH_QUICK_START",17="TT_VVT_JZ",13="TT_VVT_MAZDA_SKYACTIV",43="TT_VVT_MIATA_NB",62="TT_VVT_MITSUBISHI_3A92",72="TT_VVT_MITSUBISHI_6G75",59="TT_VVT_NISSAN_VQ35",73="TT_VVT_TOYOTA_4_1",21="UNUSED_21",34="UNUSED_34"
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "INVALID", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
 #define trigger_type_e_Force_4_bytes_size_trigger_type 70000
@@ -2399,10 +2400,8 @@
 #define triggerSimulatorFrequency_offset 576
 #define triggerSimulatorPinModes1_offset 754
 #define triggerSimulatorPinModes2_offset 755
-#define triggerSimulatorPinModes3_offset 756
 #define triggerSimulatorPins1_offset 748
 #define triggerSimulatorPins2_offset 750
-#define triggerSimulatorPins3_offset 752
 #define TriggerWheel_T_PRIMARY 0
 #define TriggerWheel_T_SECONDARY 1
 #define TRIM_SIZE 4
@@ -2525,7 +2524,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.09.25.cypress.3946241398"
+#define TS_SIGNATURE "rusEFI 2022.10.04.cypress.479564741"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2573,30 +2572,32 @@
 #define unused_1484_bit_38_offset 1372
 #define unusedAlteOnOff_offset 764
 #define unusedBit_45_31_offset 120
-#define unusedBit_539_10_offset 1628
-#define unusedBit_539_11_offset 1628
-#define unusedBit_539_12_offset 1628
-#define unusedBit_539_13_offset 1628
-#define unusedBit_539_14_offset 1628
-#define unusedBit_539_15_offset 1628
-#define unusedBit_539_16_offset 1628
-#define unusedBit_539_17_offset 1628
-#define unusedBit_539_18_offset 1628
-#define unusedBit_539_19_offset 1628
-#define unusedBit_539_20_offset 1628
-#define unusedBit_539_21_offset 1628
-#define unusedBit_539_22_offset 1628
-#define unusedBit_539_23_offset 1628
-#define unusedBit_539_24_offset 1628
-#define unusedBit_539_25_offset 1628
-#define unusedBit_539_26_offset 1628
-#define unusedBit_539_27_offset 1628
-#define unusedBit_539_28_offset 1628
-#define unusedBit_539_29_offset 1628
-#define unusedBit_539_30_offset 1628
-#define unusedBit_539_31_offset 1628
-#define unusedBit_539_8_offset 1628
-#define unusedBit_539_9_offset 1628
+#define unusedBit_541_10_offset 1628
+#define unusedBit_541_11_offset 1628
+#define unusedBit_541_12_offset 1628
+#define unusedBit_541_13_offset 1628
+#define unusedBit_541_14_offset 1628
+#define unusedBit_541_15_offset 1628
+#define unusedBit_541_16_offset 1628
+#define unusedBit_541_17_offset 1628
+#define unusedBit_541_18_offset 1628
+#define unusedBit_541_19_offset 1628
+#define unusedBit_541_20_offset 1628
+#define unusedBit_541_21_offset 1628
+#define unusedBit_541_22_offset 1628
+#define unusedBit_541_23_offset 1628
+#define unusedBit_541_24_offset 1628
+#define unusedBit_541_25_offset 1628
+#define unusedBit_541_26_offset 1628
+#define unusedBit_541_27_offset 1628
+#define unusedBit_541_28_offset 1628
+#define unusedBit_541_29_offset 1628
+#define unusedBit_541_30_offset 1628
+#define unusedBit_541_31_offset 1628
+#define unusedBit_541_8_offset 1628
+#define unusedBit_541_9_offset 1628
+#define unusedTrig_offset 752
+#define unusedTrigMode_offset 756
 #define useAdvanceCorrectionsForCranking_offset 1372
 #define useBiQuadOnAuxSpeedSensors_offset 1372
 #define useCicPidForIdle_offset 120
@@ -2689,6 +2690,7 @@
 #define vvtActivationDelayMs_offset 3586
 #define vvtBooleanForVerySpecialCases_offset 960
 #define vvtCamSensorUseRise_offset 764
+#define vvtControlMinRpm_offset 2080
 #define vvtMode1_offset 1744
 #define vvtMode2_offset 1745
 #define vvtOffsets1_offset 1244

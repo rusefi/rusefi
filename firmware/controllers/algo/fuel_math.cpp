@@ -213,6 +213,7 @@ angle_t getInjectionOffset(float rpm, float load) {
 
 	if (cisnan(value)) {
 		// we could be here while resetting configuration for example
+		// huh? what? when do we have RPM while resetting configuration? is that CI edge case? shall we fix CI?
 		warning(CUSTOM_ERR_6569, "phase map not ready");
 		return 0;
 	}

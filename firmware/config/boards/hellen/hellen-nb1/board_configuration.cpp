@@ -92,8 +92,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 
 	if (engineConfiguration->trigger.type == TT_MAZDA_MIATA_NB1) {
 	    engineConfiguration->trigger.type = TT_MIATA_VVT;

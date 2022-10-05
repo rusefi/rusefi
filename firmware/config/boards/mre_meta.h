@@ -7,8 +7,16 @@
 
 #pragma once
 
+#define MRE_INJ_1 Gpio::TLE8888_PIN_1
+#define MRE_INJ_2 Gpio::TLE8888_PIN_2
+#define MRE_INJ_3 Gpio::TLE8888_PIN_3
+#define MRE_INJ_4 Gpio::TLE8888_PIN_4
+
 // OpenDrain: 4.5A
 #define MRE_LS_1 Gpio::TLE8888_PIN_6
+
+// "3 - Lowside 2"
+#define MRE_LS_2 Gpio::TLE8888_PIN_5
 
 // clt = "18 - AN temp 1"
 // R27 pull-up
@@ -45,3 +53,13 @@
 
 // 28 - AN volt 10
 #define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4
+
+#if HW_MICRO_RUSEFI
+static Gpio MRE_OUTPUTS[] = {
+MRE_INJ_1,
+MRE_INJ_2,
+MRE_INJ_3,
+MRE_INJ_4,
+MRE_LS_1,
+};
+#endif // HW_MICRO_RUSEFI

@@ -231,11 +231,6 @@ public:
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
 
-	/**
-	 * this is needed by and checkShutdown()
-	 * todo: refactor to Timer?
-	 */
-	efitick_t ignitionOnTimeNt = 0;
 
 	Timer configBurnTimer;
 
@@ -329,12 +324,9 @@ void applyNonPersistentConfiguration();
 void prepareOutputSignals();
 
 void validateConfiguration();
-void doScheduleStopEngine();
 void scheduleReboot();
 bool isLockedFromUser();
 void unlockEcu(int password);
-
-#define HW_CHECK_RPM 200
 
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST

@@ -33,7 +33,7 @@
 #define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
+		   firmwareError(CUSTOM_ERR_ANGLE, "a NaN %s", msg);                \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg, code);	   					            \
@@ -294,5 +294,3 @@ void findTriggerPosition(
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
-
-#define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)

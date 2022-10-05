@@ -11,13 +11,10 @@ Release template (copy/paste this for new release):
 ## Month 202x Release - "Release Name"
 
 ### Breaking Changes
- -   
 
 ### Added
- -   
 
 ### Fixed
- - Enforce board configuration overrides more strictly #4614   
 
  -->
 
@@ -26,7 +23,14 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - VVT minimum RPM setting #4545
  - Flexible ignition adder/trim tables #4586
+ - Enforce board configuration overrides more strictly #4614
+ - Fuel Priming reset fix #4627
+ - Startup Frame should scan for available hardware #4633
+
+### Fixed
+ - Slower than expected RPM information was slowing engine start #4629
 
 ## September 2022 Release - "Day 203"
 

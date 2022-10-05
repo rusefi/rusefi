@@ -15,6 +15,11 @@ void setHellen144LedPins() {
 	engineConfiguration->warningLedPin = H144_LED4;
 }
 
+void setHellenCan() {
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
+}
+
 void setHellen176LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;

@@ -883,10 +883,6 @@ void triggerInfo(void) {
 		}
 	}
 
-
-//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(engineConfiguration->triggerSimulatorPins[2]),
-//			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[2]));
-
 	efiPrintf("trigger error extra LED: %s %s", hwPortname(engineConfiguration->triggerErrorPin),
 			getPin_output_mode_e(engineConfiguration->triggerErrorPinMode));
 	efiPrintf("primary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[0]));

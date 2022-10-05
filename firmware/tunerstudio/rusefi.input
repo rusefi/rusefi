@@ -10,7 +10,7 @@
 ;
 ; For example
 ;
-;     float bias_resistor;+Pull-up resistor value on your board;"Ohm"
+;     float bias_resistor;Pull-up resistor value on your board;"Ohm"
 ; here 'bias_resistor' is internal field name and the text between semicolons is what produces the tooltip
 ; Note that '+' sign is required after first semicolon for tooltop to appear in TunerStudio
 ;
@@ -2076,7 +2076,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "What kind of engine",                  twoStroke
-		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
+		field = "Skipped wheel location",               skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = "With VR sensors only rising edge has reliable position"
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
 	    field = "!For well-known trigger types use '0' trigger angle offset"
@@ -2109,6 +2109,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
    		field = "MAP readout angle",                    mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
@@ -2116,7 +2117,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
-		field = "Cam for engine sync resolution",		engineSyncCam
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2533,7 +2533,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = allPins1_1
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
-		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
@@ -3222,6 +3221,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = vvtPidDialog0, "Configuration"
 	    field = "Activation Delay",                   vvtActivationDelayMs
+	    field = "Do not control below RPM",             vvtControlMinRpm
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2
         field = "VVT solenoid bank 2 intake",                   vvtPins3
@@ -3923,8 +3923,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "trigger stimulator pin mode #1", 		triggerSimulatorPinModes1@@if_ts_show_hardware_simulator
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2@@if_ts_show_hardware_simulator
 		field = "trigger stimulator pin mode #2", 		triggerSimulatorPinModes2@@if_ts_show_hardware_simulator
-		field = "trigger stimulator pin #3", 			triggerSimulatorPins3@@if_ts_show_hardware_simulator
-		field = "trigger stimulator pin mode #3", 		triggerSimulatorPinModes3@@if_ts_show_hardware_simulator
 		field = ""
 	    field = "Logic input channel 1", 				logicAnalyzerPins1
 	    field = "Logic input channel 2", 				logicAnalyzerPins2
