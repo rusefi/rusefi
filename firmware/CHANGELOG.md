@@ -32,8 +32,9 @@ Release template (copy/paste this for new release):
  - VVT minimum RPM setting #4545
  - Flexible ignition adder/trim tables #4586
  - Enforce board configuration overrides more strictly #4614
- - Startup Frame should scan for available hardware #4633
+ - rusEFI console Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
+ - Lua: function to access VIN setting #3967
 
 ### Fixed
  - Fuel Priming reset fix #4627
