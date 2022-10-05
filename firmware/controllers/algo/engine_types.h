@@ -82,10 +82,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	TEST_ENGINE = 26,
 
-	// used by unit test
-	// see https://github.com/rusefi/rusefi/issues/898
-	// see TriggerWaveform::bothFrontsRequired
-	TEST_ISSUE_898 = 27,
+	UNUSED_27 = 27,
 
 	TEST_CRANK_ENGINE = 28,
 
