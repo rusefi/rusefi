@@ -42,7 +42,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 		return;
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
-	s->initialize(operationMode, SyncEdge::Rise);
+	s->initialize(operationMode, SyncEdge::RiseOnly);
 #if EFI_UNIT_TEST
 	s->knownOperationMode = false;
 #endif // EFI_UNIT_TEST
