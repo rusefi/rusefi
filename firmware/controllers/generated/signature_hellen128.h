@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh null
 //
 
-#define SIGNATURE_HASH 3798707963
-#define TS_SIGNATURE "rusEFI 2022.10.05.hellen128.3798707963"
+#define SIGNATURE_HASH 2117955695
+#define TS_SIGNATURE "rusEFI 2022.10.05.hellen128.2117955695"
