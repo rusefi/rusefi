@@ -34,9 +34,20 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 }
 
+void LimpManager::onFastCallback() {
+	updateState(Sensor::getOrZero(SensorType::Rpm), getTimeNowNt());
+}
+
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
+
+#if !EFI_UNIT_TEST
+	if (!m_ignitionOn) {
+		allowFuel.clear(ClearReason::IgnitionOff);
+		allowSpark.clear(ClearReason::IgnitionOff);
+	}
+#endif
 
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
@@ -157,6 +168,10 @@ todo AndreiKA this change breaks 22 unit tests?
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
+}
+
+void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
+	m_ignitionOn = ignitionOn;
 }
 
 void LimpManager::etbProblem() {

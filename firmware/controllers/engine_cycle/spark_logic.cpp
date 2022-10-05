@@ -461,7 +461,7 @@ void onTriggerEventSparkLogic(uint32_t trgEventIndex, int rpm, efitick_t edgeTim
 		return;
 	}
 
-	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+	LimpState limitedSparkState = getLimpManager()->allowIgnition();
 
 	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;

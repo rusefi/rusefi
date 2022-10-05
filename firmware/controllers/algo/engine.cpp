@@ -544,7 +544,7 @@ TriggerCentral * getTriggerCentral() {
 }
 
 LimpManager * getLimpManager() {
-	return &engine->limpManager;
+	return &engine->module<LimpManager>().unmock();
 }
 
 FuelSchedule *getFuelSchedule() {
