@@ -28,8 +28,12 @@ using namespace luaaa;
 
 static int lua_vin(lua_State* l) {
 	auto zeroBasedCharIndex = luaL_checkinteger(l, 1);
-	char value = engineConfiguration->vinNumber[zeroBasedCharIndex];
-	lua_pushnumber(l, value);
+	if (zeroBasedCharIndex < 0 || zeroBasedCharIndex > VIN_NUMBER_SIZE) {
+		lua_pushnil(l);
+	} else {
+		char value = engineConfiguration->vinNumber[zeroBasedCharIndex];
+		lua_pushnumber(l, value);
+	}
 	return 1;
 }
 
