@@ -826,9 +826,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise();
 		break;
-	case TEST_ISSUE_898:
-		setIssue898();
-		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
 	case MRE_VW_B6:
