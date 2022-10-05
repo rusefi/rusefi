@@ -41,6 +41,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_hooks.cpp \
 	tests/lua/test_lua_Leiderman_Khlystov.cpp \
 	tests/lua/test_can_filter.cpp \
+	tests/lua/test_lua_vin.cpp \
 	tests/sensor/test_cj125.cpp \
 	tests/test_change_engine_type.cpp \
 	tests/util/test_scaled_channel.cpp \
