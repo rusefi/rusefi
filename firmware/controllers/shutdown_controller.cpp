@@ -3,9 +3,7 @@
  *
  */
 
-#include "shutdown_controller.h"
-#include "loggingcentral.h"
-#include "limp_manager.h"
+#include "pch.h"
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");

@@ -192,9 +192,6 @@ void EngineState::periodicFastCallback() {
 #if EFI_LAUNCH_CONTROL
 	engine->launchController.update();
 #endif //EFI_LAUNCH_CONTROL
-
-	engine->limpManager.updateState(rpm, nowNt);
-
 #endif // EFI_ENGINE_CONTROL
 }
 

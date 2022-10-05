@@ -732,7 +732,7 @@ TEST(etb, setOutputLimpHome) {
 	EXPECT_CALL(motor, disable());
 
 	// Trip a fatal error
-	engine->limpManager.fatalError();
+	getLimpManager()->fatalError();
 
 	etb.setOutput(25.0f);
 }
