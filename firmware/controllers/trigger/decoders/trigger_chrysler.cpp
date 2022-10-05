@@ -26,7 +26,7 @@ void initDodgeRam(TriggerWaveform *s) {
 }
 
 void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->setTriggerSynchronizationGap(3);
 
@@ -321,7 +321,7 @@ gap=1.43/0.71
 }
 
 void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 150;
 
 	float w = 7;
@@ -467,7 +467,7 @@ void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
 }
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 581;
 
@@ -550,7 +550,7 @@ static void add4cylblock(int off, TriggerWaveform *s) {
 
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
@@ -569,7 +569,7 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 }
 
 void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;

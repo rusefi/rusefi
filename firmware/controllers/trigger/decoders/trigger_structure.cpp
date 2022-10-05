@@ -476,6 +476,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	this->useOnlyRisingEdges = triggerConfig.UseOnlyRisingEdgeForTrigger;
 
+	if (syncEdge == SyncEdge::RiseOnly && !this->useOnlyRisingEdges) {
+		// firmwareError(OBD_PCM_Processor_Fault, "useOnlyRise must be set");
+	}
+
 	switch (triggerConfig.TriggerType.type) {
 
 	case TT_TOOTHED_WHEEL:
