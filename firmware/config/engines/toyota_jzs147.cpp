@@ -67,34 +67,6 @@ static void common2jz() {
 
 }
 
-void setToyota_jzs147EngineConfiguration() {
-	common2jz();
-
-	setCamOperationMode();
-	engineConfiguration->trigger.type = TT_2JZ_1_12;
-
-//// temporary while I am fixing trigger bug
-//	setCrankOperationMode();
-//	//set trigger_type 16
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-//	engineConfiguration->trigger.customTotalToothCount = 36;
-//	engineConfiguration->trigger.customSkippedToothCount = 2;
-//
-//	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-//	engineConfiguration->twoWireBatchIgnition = true;
-//
-//	engineConfiguration->crankingInjectionMode = IM_BATCH;
-//	engineConfiguration->injectionMode = IM_BATCH;
-//	engineConfiguration->twoWireBatchInjection = true;
-
-//	engineConfiguration->triggerInputPins[0] = Gpio::A5;
-//	engineConfiguration->triggerInputPins[1] = Gpio::C6;
-
-	engineConfiguration->isSdCardEnabled = false;
-
-
-}
-
 /**
  * TOYOTA_2JZ_GTE_VVTi
  * set engine_type 44
