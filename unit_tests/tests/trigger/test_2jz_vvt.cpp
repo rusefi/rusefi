@@ -8,21 +8,19 @@
 #include "pch.h"
 
 TEST(sensors, test2jz) {
-
 	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-
-	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE);
 
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 	for (int i = 0; i < 2;i++) {
-		eth.fireRise(25);
+		eth.fireRise(12.5);
+		eth.fireFall(12.5);
 		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM at " << i;
 	}
-	eth.fireRise(25);
+	eth.fireRise(12.5);
+	eth.fireFall(12.5);
 	// first time we have RPM
 	ASSERT_EQ(2400,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 
@@ -32,6 +30,7 @@ TEST(sensors, test2jz) {
 	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
 	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
-	// currentPosition
-	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition[0][0], EPS3D);
+	// Expected angle is 12.5ms + 3ms of a 25ms revolution = 15.5/25 = 223.2 degrees from the sync point
+	// Minus 155 degree trigger offset = 68.2
+	ASSERT_NEAR(68.2f, engine->triggerCentral.currentVVTEventPosition[0][0], EPS3D);
 }
