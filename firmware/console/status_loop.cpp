@@ -759,7 +759,6 @@ void updateTunerStudioState() {
 		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i).Code;
 	}
 
-	tsOutputChannels->startStopStateToggleCounter = engine->startStopStateToggleCounter;
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
 	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
 
