@@ -42,7 +42,7 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 		return;
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
-	s->initialize(operationMode, SyncEdge::Rise);
+	s->initialize(operationMode, SyncEdge::RiseOnly);
 #if EFI_UNIT_TEST
 	s->knownOperationMode = false;
 #endif // EFI_UNIT_TEST
@@ -74,7 +74,7 @@ void configureOnePlusOne(TriggerWaveform *s) {
 }
 
 void configure3_1_cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 
 	const float crankW = 360 / 3 / 2;
@@ -153,7 +153,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 // - Honda 24+1 (set this on crank primary, single tooth cam)
 // - AEM 24+1 CAS wheel (same config as Honda)
 void configure12ToothCrank(TriggerWaveform* s) {
-	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->shapeWithoutTdc = true;
 

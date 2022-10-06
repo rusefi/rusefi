@@ -46,7 +46,7 @@ static void addPrimaryToothEndingAt(TriggerWaveform *s, float fallAngle) {
 }
 
 void initializeNissanVQvvt(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int offset = 720 - 520;
 
@@ -77,7 +77,7 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 }
 
 void initializeNissanVQ35crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 675;
 
@@ -89,7 +89,7 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 }
 
 void initializeNissanMR18crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 80;
 
@@ -99,7 +99,7 @@ void initializeNissanMR18crank(TriggerWaveform *s) {
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->setTriggerSynchronizationGap(0.33);
 	s->setSecondTriggerSynchronizationGap(3);
 
@@ -121,7 +121,7 @@ static void addvq30tooth(TriggerWaveform *s, float angle) {
 // yes, this is CAM shaft shape NOT crank shaft shape!
 // we will add crank shape once Pavel makes progress
 void initializeNissanVQ30cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 120;
 
@@ -160,7 +160,7 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 }
 
 void initializeNissanMRvvt(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 0;
 
 	int x = 73;
