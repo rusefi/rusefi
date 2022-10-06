@@ -635,9 +635,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 #if EFI_UNIT_TEST
 				// hack? feature? existing unit test relies on VVT phase available right away
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
-				int rpm = Sensor::getOrZero(SensorType::Rpm);
-				efitick_t nowNt = getTimeNowNt();
-				getLimpManager()->updateState(rpm, nowNt);
+				getLimpManager()->onFastCallback();
 #endif // EFI_UNIT_TEST
 			}
 

@@ -145,6 +145,7 @@ public:
 #endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
+		LimpManager,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -309,8 +310,6 @@ public:
 #if EFI_UNIT_TEST
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
-
-	LimpManager limpManager;
 
 private:
 	void reset();

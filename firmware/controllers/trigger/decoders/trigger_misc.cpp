@@ -101,7 +101,7 @@ void configureFordST170(TriggerWaveform * s) {
 }
 
 void configureDaihatsu4(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int width = 10;
 
