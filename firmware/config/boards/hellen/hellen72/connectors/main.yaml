@@ -311,10 +311,17 @@ pins:
     function: Neutral Switch
 
   - pin: 4I
-  # H144_IN_RES3 
+  # H176_IN_RES3 
     id: F8
     class: switch_inputs
-    ts_name: 4I - Clutch (A8)
+    ts_name: 4I - Clutch rev D
+    function: Clutch Switch
+    
+  - pin: 4I
+  # H176_IN_D1 
+    id: E13
+    class: switch_inputs
+    ts_name: 4I - Clutch rev E/F
     function: Clutch Switch
 
   - pin: 4J
