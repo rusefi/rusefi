@@ -50,6 +50,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
+	$(CONTROLLERS_DIR)/can/can_bench_test.cpp \
 	$(CONTORLLERS_DIR)/can/rusefi_wideband.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
@@ -59,12 +60,13 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/persistent_store.cpp \
 	$(CONTROLLERS_DIR)/serial/serial_rx.cpp \
 	$(CONTROLLERS_DIR)/serial/serial_sensor.cpp \
-	$(CONTROLLERS_DIR)/buttonshift.cpp \
-	$(CONTROLLERS_DIR)/tcu.cpp \
-	$(CONTROLLERS_DIR)/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/start_stop.cpp \
-	$(CONTROLLERS_DIR)/simple_tcu.cpp \
-	$(CONTROLLERS_DIR)/tc_4l6x.cpp \
+	$(CONTROLLERS_DIR)/tcu/buttonshift.cpp \
+	$(CONTROLLERS_DIR)/tcu/tcu.cpp \
+	$(CONTROLLERS_DIR)/tcu/gear_controller.cpp \
+	$(CONTROLLERS_DIR)/tcu/simple_tcu.cpp \
+	$(CONTROLLERS_DIR)/tcu/tc_4l6x.cpp \
+	$(CONTROLLERS_DIR)/shutdown_controller.cpp \
 	$(CONTROLLERS_DIR)/limp_manager.cpp \
 
 CONTROLLERS_INC=\
@@ -77,6 +79,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
+	$(CONTROLLERS_DIR)/tcu \
 	$(CONTROLLERS_DIR)/trigger \
     $(CONTROLLERS_DIR)/sensors \
 	$(CONTROLLERS_DIR)/sensors/converters \

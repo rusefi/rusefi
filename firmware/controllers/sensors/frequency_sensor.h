@@ -14,6 +14,11 @@ public:
 	void initIfValid(brain_pin_e pin, SensorConverter &converter, float filterParameter);
 	void deInit();
 
+	// sad workaround: we are not good at BiQuad configuring
+	bool useBiQuad = true;
+
+    void showInfo(const char* sensorName) const override;
+
 	void onEdge(efitick_t nowNt);
 
 	int eventCounter = 0;

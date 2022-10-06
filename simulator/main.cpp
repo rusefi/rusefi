@@ -18,6 +18,11 @@
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
 
+#include <iostream>
+#include <filesystem>
+#include <fstream>
+#include <sstream>
+
 #define CONSOLE_WA_SIZE     THD_WORKING_AREA_SIZE(4096)
 
 bool main_loop_started = false;
@@ -188,3 +193,76 @@ int main(int argc, char** argv) {
 	chEvtUnregister(chnGetEventSource(&SD2), &sd2fel);
 	return 0;
 }
+
+
+uintptr_t getFlashAddrFirstCopy() {
+	return 1;
+}
+
+uintptr_t getFlashAddrSecondCopy() {
+	return 2;
+}
+
+#include "flash_int.h"
+
+static std::string makeFileName(flashaddr_t addr) {
+	std::stringstream ss;
+
+	ss << "flash" << addr << ".bin";
+
+	return ss.str();
+}
+
+int intFlashErase(flashaddr_t address, size_t size) {
+	// Try to delete the file, swallow any errors (we can overwrite it anyway)
+	try {
+		std::filesystem::remove(makeFileName(address));
+	} catch (...) { }
+}
+
+int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
+	auto fileName = makeFileName(address);
+
+	printf("Simulator: reading config from %s\n", fileName.c_str());
+
+	std::ifstream flash;
+	flash.open(fileName, std::ios::binary);
+
+	if (!flash.is_open()) {
+		// no file, nothing to read
+		// setting ot all 1s emulates real erased flash behavior
+		memset(buffer, 0xFF, size);
+		return HAL_SUCCESS;
+	}
+
+	flash.read(buffer, size);
+
+	flash.close();
+
+	return HAL_SUCCESS;
+}
+
+int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
+	auto fileName = makeFileName(address);
+	printf("Simulator: writing config to %s\n", fileName.c_str());
+
+	std::ofstream flash;
+	flash.open(fileName, std::ios::binary | std::ios::trunc);
+
+	flash.write(buffer, size);
+
+	flash.close();
+
+	return HAL_SUCCESS;
+}
+
+// Write from file in to memory
+// void simulatorWriteFlash(const persistent_config_container_s& cfg) {
+// 	std::ofstream flash;
+// 	flash.open(simFileName, std::ios::binary | std::ios::trunc);
+
+// 	const char* ptr = reinterpret_cast<const char*>(&cfg);
+// 	flash.write(ptr, sizeof(cfg));
+
+// 	flash.close();
+// }

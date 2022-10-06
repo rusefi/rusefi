@@ -1,6 +1,9 @@
 /**
  * @file	rusefi_enums.h
- * @brief	Fundamental rusEfi enumerable types live here
+ * @brief	Fundamental rusEFI enumerable types live here
+ *
+ * This and few over headers are part of integration API between C/C++ and code generator for memory meta and java code.
+ * TODO: move enums which should not be visible outside of the firmware out of 'integration API' headers like this one
  *
  * @note this file should probably not include any other files
  *
@@ -85,9 +88,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_NISSAN_VQ = 9,
 
 	/**
-	 * 4 plus one
+	 * 4 equally spaced no way to sync
 	 */
-	VVT_HONDA_K = 10,
+	VVT_HONDA_K_INTAKE = 10,
 
 	VVT_NISSAN_MR = 11,
 
@@ -98,6 +101,11 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_MITSUBISHI_6G75 = 14,
 
 	VVT_MAZDA_SKYACTIV = 15,
+
+	/**
+	 * 4 plus one
+	 */
+	VVT_HONDA_K_EXHAUST = 16,
 
 } vvt_mode_e;
 
@@ -547,6 +555,10 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_EthanolPercent = 15,
 	GPPWM_AuxLinear1 = 16,
 	GPPWM_AuxLinear2 = 17,
+	GPPWM_GppwmOutput1 = 18,
+	GPPWM_GppwmOutput2 = 19,
+	GPPWM_GppwmOutput3 = 20,
+	GPPWM_GppwmOutput4 = 21,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

@@ -10,7 +10,7 @@
 ;
 ; For example
 ;
-;     float bias_resistor;+Pull-up resistor value on your board;"Ohm"
+;     float bias_resistor;Pull-up resistor value on your board;"Ohm"
 ; here 'bias_resistor' is internal field name and the text between semicolons is what produces the tooltip
 ; Note that '+' sign is required after first semicolon for tooltop to appear in TunerStudio
 ;
@@ -199,6 +199,8 @@ enable2ndByteCanID = false
 	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
 	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
 
+	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
+
 [PcVariables]
 	tuneCrcPcVariable = continuousChannelValue, tuneCrc16
 
@@ -229,6 +231,10 @@ enable2ndByteCanID = false
     debugFieldI3List = bits,   U08,   [0:7], "Alt: Reset Cnt",          "",                   "",          "Idle: Reset Cnt",                "Idle di3",            "           ",               "",           "VVT1: 10xTarget",         "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di3",               "s counter",         "",           "di3",          "di3",           "22di3",          "",        "24:di3",     "",               "write err", "",             "",       "",     "",     "Latest Received","",                     "",    "",      "",      "","Starter Disable","",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 3 State",  "",               "VVT2: 10xTarger",        "VVT3: 10xTarger",        "VVT4: 10xTarger"
     debugFieldI4List = bits,   U08,   [0:7], "Alt: Period",             "",                   "",          "Idle: State",                    "Idle di4",            "Cycle Cnt 1",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "",           "",                  "ETB di4",               "executor",          "",           "di4",          "di4",           "22di4",          "",        "24:di4",      "",              "",          "",             "",       "",     "",     "Init Count",     "",                     "",    "",      "",      "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 4 State",  "",               "",                       "",                       ""
     debugFieldI5List = bits,   U08,   [0:7], "",                        "",                   "",          "",                               "Idle di5",            "Cycle Cnt 2",               "",           "",                        "",                  "",                       "",                  "",      "",          "",         "",             "di5",        "di5",               "ETB di5",               "max executor",      "di5",        "di5",          "di5",           "22di5",          "di5",     "di5",        "di5",            "di5",       "di5",          "",       "di5",  "di5",  "di5",            "",                     "di5", "di5",   "di5",   "",""                "",           "",               "",              "",          "",            "",                              "",           "",                "",                   "Solenoid 5 State",  "",               "",                       "",                       ""
+
+	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
+
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off"
 
 [ConstantsExtensions]
      ; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -1156,6 +1162,7 @@ gaugeCategory = Sensors - Extra 2
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
    currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
+   auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1396,8 +1403,8 @@ gaugeCategory = GPPWM Outputs
    indicator =                   { isWarnNow },        "No warnings",           "Warning",  white,  black, yellow,  black
    indicator =                 { checkEngine },    "No Check Engine",      "Check Engine",  white,  black,    red,  black
    indicator =               { isTriggerError},         "Trigger OK",       "Trigger ERR",  white,  black,    red,  black
-   indicator =  { isIgnitionEnabledIndicator },       "Ignition cut",       "Ignition OK", yellow,  black,  white,  black
-   indicator = { isInjectionEnabledIndicator },      "Injection cut",      "Injection OK", yellow,  black,  white,  black
+   indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
+   indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
 
    ; this is required so that the "config error" feature works in TS
    ; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
@@ -1412,7 +1419,6 @@ gaugeCategory = GPPWM Outputs
    indicator =                    { isFanOn },             "Fan off",            "Fan on",  white,  black,  green,  black
    indicator =                   { isFan2On },           "Fan 2 off",          "Fan 2 on",  white,  black,  green,  black
    indicator =              { isMainRelayOn },      "Main relay off",     "Main relay on",  white,  black,  green,  black
-   indicator =        { fuelCutReason == 11 },          "No cleanup",       "Cyl cleanup",  white,  black, yellow,  black
    ; Line 2
    ;         =                     expression,             off-label,            on-label, off-bg, off-fg,  on-bg,  on-fg
    indicator =               { isFuelPumpOn },       "Fuel pump off",      "Fuel pump on",  white,  black,  green,  black
@@ -1440,6 +1446,9 @@ gaugeCategory = GPPWM Outputs
    indicator =        { sd_logging_internal },       "No SD logging",        "SD logging",  white,  black,  green,  black
    indicator =                     { sd_msd },           "No SD USB",            "SD USB",  white,  black,  green,  black
    indicator =          { etbRevLimitActive },    "No ETB RPM Limit",     "ETB RPM Limit",  white,  black, yellow,  black
+
+   indicator = { wbo0_hasFault }, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, { WBO0: bitStringValue(wboFaultCodeList, faultCode)}, white, black, red, black
+
 ; looks like TS would append four system indicators below: Data Logging, ???, Not Connected, Protocol Error
 
 [KeyActions]
@@ -1705,6 +1714,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Misc sensors
+		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
 		subMenu = speedSensor,				"Vehicle speed sensor"
 		subMenu = oilPressureSensor,		"Oil pressure"
 		subMenu = fuelPressureSensor,		"Fuel pressure"
@@ -1713,7 +1723,7 @@ menuDialog = main
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 		subMenu = std_separator
 
-		subMenu = auxLinearSensors,			"Aux Linear Sensors"
+		subMenu = auxLinearSensors,			"Aux Sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -1741,16 +1751,14 @@ menuDialog = main
 
 
 		# EXPERIMENTAL FEATURES
-                subMenu = mc33Dialog,                           "GDI Dreams"
+                subMenu = mc33Dialog,                           "PT2001 control"
 		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
 		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
-		subMenu = vrThreshold,				"VR Sensor Threshold"@@if_ts_show_vr_threshold_all
+		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = fancyHardwareDialog,      "Fancy Hardware"
-		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = rotaryDialog, 			"Rotary"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -1758,12 +1766,15 @@ menuDialog = main
 		subMenu = maxKnockRetardTbl,		"Max knock retard" @@if_ts_show_software_knock
 		subMenu = std_separator
 
-		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
 #		subMenu = std_separator
+
+		subMenu = std_separator
+		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = rotaryDialog, 			"Rotary"
 
       menu = "Help"
          subMenu = helpGeneral,     "rusEFI Info"
@@ -1929,7 +1940,7 @@ cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@@@ts_co
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
 cmd_set_engine_type_PROTEUS_VW_B6 					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_VW_B6_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_K                 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_K_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_SET_ENGINE_TYPE_16_hex@@@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
@@ -2065,7 +2076,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "What kind of engine",                  twoStroke
-		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
+		field = "Skipped wheel location",               skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
 		field = "With VR sensors only rising edge has reliable position"
 		field = "use only rising edge",					useOnlyRisingEdgeForTrigger    
 	    field = "!Reminder that 4-stroke cycle is 720 degrees"
@@ -2099,6 +2110,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
    		field = "MAP readout angle",                    mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 	    field = "Cam mode (exhaust cams)",			    vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 	    field = "VVT sync edge",	    				vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
+		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 	    field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
 		field = "VVT offset bank 1 exhaust",			vvtOffsets2, { camInputs2 != 0 }
@@ -2106,7 +2118,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "VVT offset bank 2 exhaust",			vvtOffsets4, { camInputs4 != 0 }
 		field = "Require cam/VVT sync for ignition",	isPhaseSyncRequiredForIgnition
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
-		field = "Cam for engine sync resolution",		engineSyncCam
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
@@ -2421,7 +2432,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = wastegateIdlePosLeft, West
 		panel = wastegateIdlePosGauges, East
 
-    dialog = mc33Dialog, "Low-Z injector control (MC33816)"
+    dialog = mc33Dialog, "Low-Z injector control PT2001"
     	field = "SPI Chip Select",						mc33816_cs
 		field = "SPI Device",	        				mc33816spiDevice
 		field = "MC33816 rstb",							mc33816_rstb
@@ -2523,7 +2534,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = allPins1_1
 		field = "trigger stimulator pin #1", 			triggerSimulatorPins1
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2
-		field = "trigger stimulator pin #2", 			triggerSimulatorPins3
 		field = "Warning Led",							warningLedPin
 		field = "tle6240_cs",							tle6240_cs
 		field = "tle6240 SPI",							tle6240spiDevice
@@ -2790,6 +2800,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = auxLinearSensors
 		panel = auxLinearSensor1
 		panel = auxLinearSensor2
+		field = auxSpeedSensorInputPin1,                auxSpeedSensorInputPin1
+		field = auxSpeedSensorInputPin2,                auxSpeedSensorInputPin2
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
@@ -3212,6 +3224,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = vvtPidDialog0, "Configuration"
 	    field = "Activation Delay",                   vvtActivationDelayMs
+	    field = "Do not control below RPM",             vvtControlMinRpm
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2
         field = "VVT solenoid bank 2 intake",                   vvtPins3
@@ -3315,6 +3328,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Engine->Other inputs	
 	dialog = analogInputSettings, "Analog Input Settings"
 		field = "!ECU reboot needed to apply these settings"
+		field = "ADC vRef voltage",						adcVcc
 		field = "Use fixed baro corr from MAP", 		useFixedBaroCorrFromMap
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Smoothing factor",						slowAdcAlpha
@@ -3405,7 +3419,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "L9779 SPI",                            tle8888spiDevice @@if_ts_show_spi
 
 	dialog = connection, "", 	yAxis
-		field = "ADC vRef voltage",						adcVcc
 		panel = tsPort							@@if_ts_show_tunerstudio_port
 		field = "uartConsoleSerialSpeed",				uartConsoleSerialSpeed
 		panel = auxSerial
@@ -3865,7 +3878,7 @@ dialog = tcuControls, "Transmission Settings"
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
 		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
-		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003@@if_show_Proteus_presets
+		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_K@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
 		commandButton = "Proteus Harley",           cmd_set_engine_type_PROTEUS_HARLEY@@if_show_Proteus_presets
 		
@@ -3913,8 +3926,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "trigger stimulator pin mode #1", 		triggerSimulatorPinModes1@@if_ts_show_hardware_simulator
 		field = "trigger stimulator pin #2", 			triggerSimulatorPins2@@if_ts_show_hardware_simulator
 		field = "trigger stimulator pin mode #2", 		triggerSimulatorPinModes2@@if_ts_show_hardware_simulator
-		field = "trigger stimulator pin #3", 			triggerSimulatorPins3@@if_ts_show_hardware_simulator
-		field = "trigger stimulator pin mode #3", 		triggerSimulatorPinModes3@@if_ts_show_hardware_simulator
 		field = ""
 	    field = "Logic input channel 1", 				logicAnalyzerPins1
 	    field = "Logic input channel 2", 				logicAnalyzerPins2
@@ -4022,6 +4033,9 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Artificial Misfire",                   artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
 		field = vinNumber,                              vinNumber
+		field = turbochargerFilter,                     turbochargerFilter
+		field = auxFrequencyFilter,                     auxFrequencyFilter
+		field = useBiQuadOnAuxSpeedSensors,             useBiQuadOnAuxSpeedSensors
 		field = "TODO KS mode 4569",                    kickStartCranking
 		panel = allTriggerDebug
 		panel = torqueTableTbl

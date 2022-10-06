@@ -11,9 +11,8 @@
 
 TEST(crankingVW, vwRealCrankingFromFile) {
 	CsvReader reader(1, /* vvtCount */ 0);
-	int indeces[1] = {0};
 
-	reader.open("tests/trigger/resources/nick_1.csv", indeces);
+	reader.open("tests/trigger/resources/nick_1.csv");
 	EngineTestHelper eth (VW_ABA);
 	engineConfiguration->alwaysInstantRpm = true;
 	eth.setTriggerType(TT_60_2_VW);
@@ -33,9 +32,8 @@ TEST(crankingVW, crankingTwiceWithGap) {
 
 	{
 		CsvReader reader(1, /* vvtCount */ 0);
-		int indeces[1] = {0};
 
-		reader.open("tests/trigger/resources/nick_1.csv", indeces);
+		reader.open("tests/trigger/resources/nick_1.csv");
 		
 		while (reader.haveMore()) {
 			reader.processLine(&eth);
@@ -50,9 +48,8 @@ TEST(crankingVW, crankingTwiceWithGap) {
 	{
 		// Offset by a short time offset, 10 seconds
 		CsvReader reader(1, /* vvtCount */ 0, 10);
-		int indeces[1] = {0};
 
-		reader.open("tests/trigger/resources/nick_1.csv", indeces);
+		reader.open("tests/trigger/resources/nick_1.csv");
 		
 		while (reader.haveMore()) {
 			reader.processLine(&eth);
@@ -65,9 +62,8 @@ TEST(crankingVW, crankingTwiceWithGap) {
 	{
 		// Offset by long time offset, 5m14.15s
 		CsvReader reader(1, /* vvtCount */ 0, 314.159);
-		int indeces[1] = {0};
 
-		reader.open("tests/trigger/resources/nick_1.csv", indeces);
+		reader.open("tests/trigger/resources/nick_1.csv");
 		
 		while (reader.haveMore()) {
 			reader.processLine(&eth);

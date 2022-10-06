@@ -74,7 +74,9 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_MIATA_NB;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
-	case VVT_HONDA_K:
+	case VVT_HONDA_K_EXHAUST:
+	    return TT_HONDA_K_CAM_4_1;
+	case VVT_HONDA_K_INTAKE:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
 	case VVT_MAP_V_TWIN:
@@ -177,12 +179,13 @@ void Engine::periodicSlowCallback() {
 	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
 #endif
 
+    int hwCheckRpm = 204;
 	if (secondsNow > 2 && secondsNow < 180) {
-		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
+		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, hwCheckRpm);
 	} else if (!hasFirmwareError() && secondsNow > 180) {
 		static bool isHappyTest = false;
 		if (!isHappyTest) {
-			setTriggerEmulatorRPM(5 * HW_CHECK_RPM);
+			setTriggerEmulatorRPM(5 * hwCheckRpm);
 			efiPrintf("TEST PASSED");
 			isHappyTest = true;
 		}
@@ -270,7 +273,6 @@ void Engine::reset() {
 	 * it's important for fixAngle() that engineCycle field never has zero
 	 */
 	engineState.engineCycle = getEngineCycle(FOUR_STROKE_CRANK_SENSOR);
-	memset(&ignitionPin, 0, sizeof(ignitionPin));
 	resetLua();
 }
 
@@ -415,14 +417,18 @@ void Engine::efiWatchdog() {
 void Engine::checkShutdown() {
 #if EFI_MAIN_RELAY_CONTROL
 	// if we are already in the "ignition_on" mode, then do nothing
+/* this logic is not alive
 	if (ignitionOnTimeNt > 0) {
 		return;
 	}
+todo: move to shutdown_controller.cpp
+*/
 
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
 /* this needs work or tests
+todo: move to shutdown_controller.cpp
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -517,18 +523,6 @@ void Engine::periodicFastCallback() {
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
 
-void doScheduleStopEngine() {
-	efiPrintf("Starting doScheduleStopEngine");
-	engine->limpManager.stopEngine();
-	engine->ignitionOnTimeNt = 0;
-	// todo: initiate stepper motor parking
-	// make sure we have stored all the info
-#if EFI_PROD_CODE
-	//todo: FIX kinetis build with this line
-	//backupRamFlush();
-#endif // EFI_PROD_CODE
-}
-
 EngineRotationState * getEngineRotationState() {
 	return &engine->rpmCalculator;
 }
@@ -550,7 +544,7 @@ TriggerCentral * getTriggerCentral() {
 }
 
 LimpManager * getLimpManager() {
-	return &engine->limpManager;
+	return &engine->module<LimpManager>().unmock();
 }
 
 FuelSchedule *getFuelSchedule() {

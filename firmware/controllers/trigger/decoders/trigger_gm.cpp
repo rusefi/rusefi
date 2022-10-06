@@ -22,7 +22,7 @@ static float addTooth(float offset, TriggerWaveform *s) {
  * GM/Daewoo Distributor on the F8CV
  */
 void configureGm60_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->isSecondWheelCam = true;
 
@@ -61,7 +61,7 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 }
 
 void configureGmTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	float w = 5;
 
@@ -110,7 +110,7 @@ static int gm_tooth_pair(float startAngle, bool isShortLong, TriggerWaveform* s,
  * based on data in https://rusefi.com/forum/viewtopic.php?f=3&t=936&p=30303#p30285
  */
 static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
 	/* 
 	 * Okay, here's how this magic works:
@@ -151,8 +151,6 @@ static void initGmLS24(TriggerWaveform *s, float shortToothWidth) {
 
 		angle = gm_tooth_pair(angle, bit, s, CRANK_MODE_MULTIPLIER, shortToothWidth);
 	}
-
-	s->useOnlyPrimaryForSync = true;
 }
 
 // TT_GM_24x

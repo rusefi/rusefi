@@ -11,7 +11,7 @@
 #include "trigger_universal.h"
 
 void configureHondaCbr600(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->useOnlyPrimaryForSync = true;
 	s->setTriggerSynchronizationGap(6);
 
@@ -52,7 +52,7 @@ void configureHondaCbr600(TriggerWaveform *s) {
 }
 
 void configureOnePlus16(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int count = 16;
 	float tooth = s->getCycleDuration() / count;
@@ -75,9 +75,9 @@ static void kseriesTooth(TriggerWaveform* s, float end) {
 	s->addEvent360(end    , TriggerWheel::T_PRIMARY, TriggerValue::FALL);
 }
 
-// TT_HONDA_K_12_1
+// TT_HONDA_K_CRANK_12_1
 void configureHondaK_12_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	// nominal gap 0.33
 	s->setSecondTriggerSynchronizationGap2(0.2f, 0.5f);
@@ -100,10 +100,10 @@ void configureHondaK_12_1(TriggerWaveform *s) {
  * 2003 Honda Element
  */
 void configureHondaK_4_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.11, 2.38);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.28, 0.474);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.5, 4.5);	// nominal 2.27
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.1, 0.5);	// nominal 0.28
 
 	angle_t start = 55.5;
 	angle_t end = 70.5;

@@ -33,7 +33,7 @@
 #define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
+		   firmwareError(CUSTOM_ERR_ANGLE, "a NaN %s", msg);                \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg, code);	   					            \
@@ -64,6 +64,7 @@ class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
+#include "sync_edge.h"
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -105,16 +106,6 @@ public:
 	bool shapeDefinitionError = false;
 
 	/**
-	 * https://github.com/rusefi/rusefi/issues/898
-	 * User can choose for example Miata trigger which is not compatible with useOnlyRisingEdgeForTrigger option
-	 * Such contradictory configuration causes a very hard to identify issue and for the sake of usability it's better to
-	 * just crash with a very visible fatal error
-	 *
-	 * One day a nicer implementation could be simply ignoring 'useOnlyRisingEdgeForTrigger' in case of 'bothFrontsRequired'
-	 */
-	bool bothFrontsRequired = false;
-
-	/**
 	 * this variable is incremented after each trigger shape redefinition
 	 */
 	int version = 0;
@@ -151,19 +142,14 @@ public:
 	 * See also gapBothDirections
 	 */
 	bool useOnlyPrimaryForSync;
-	/**
-	 * Should we use falls or rises for gap ratio detection?
-	 * See also useOnlyRisingEdgeForTrigger
-	 */
-	bool useRiseEdge;
-	/**
-	 * This is about selecting signal edges within particular trigger channels.
-	 * Should we measure gaps with both fall and rise signal edges?
-	 * See also useOnlyPrimaryForSync
-	 */
-	bool gapBothDirections;
 
-	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
+	// Which edge(s) to consider for finding the sync point: rise, fall, or both
+	SyncEdge syncEdge;
+
+	// If true, falling edges should be fully ignored on this trigger shape.
+	bool useOnlyRisingEdges;
+
+	void calculateExpectedEventCounts();
 
 	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
 
@@ -197,8 +183,6 @@ public:
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
-	bool useOnlyRisingEdgeForTriggerTemp;
-
 	/* (0..1] angle range */
 	void addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
 	/* (0..720] angle range
@@ -226,7 +210,7 @@ public:
 	void addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
 
-	void initialize(operation_mode_e operationMode);
+	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);
 	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
@@ -310,5 +294,3 @@ void findTriggerPosition(
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
-
-#define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)

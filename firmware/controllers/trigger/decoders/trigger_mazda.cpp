@@ -25,18 +25,13 @@
 #define NB_CRANK_MAGIC 70
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 	s->isSecondWheelCam = true;
 
 	// nominal gap is 0.325
 	s->setTriggerSynchronizationGap2(0.1, 0.5);
 	// nominal gap is ~1.52
 	s->setSecondTriggerSynchronizationGap2(0.5, 2.3);
-
-	s->useRiseEdge = false;
-
-	s->bothFrontsRequired = true;
-	s->gapBothDirections = true;
 
 	s->tdcPosition = 5.181;
 
@@ -67,7 +62,7 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
 	 * Note that only half of the physical wheel is defined here!
 	 */
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 60 + 655;
 
@@ -89,11 +84,9 @@ static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, TriggerWheel cons
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
-	s->useRiseEdge = false;
 	s->useOnlyPrimaryForSync = true;
-	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 
 	s->tdcPosition = 276;
 
@@ -126,13 +119,11 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 //	s->initialState[0] = 1;
 
 //	float w = 720 / 4 * 0.215;
 	float a = 5;
-
-	s->bothFrontsRequired = true;
 
 	float z = 0.093;
 	a = 180;
@@ -154,7 +145,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSecondWheelCam = true;
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
@@ -180,7 +171,7 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 }
 
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	// Nominal gap is 8.92
 	s->setTriggerSynchronizationGap2(6, 20);
@@ -200,7 +191,7 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
 // Cam pattern for intake/exhaust on all Skyactiv-G (and maybe -D/-X)
 void initializeMazdaSkyactivCam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
     // wide
 	s->addEvent360(50, TriggerWheel::T_PRIMARY, TriggerValue::RISE);

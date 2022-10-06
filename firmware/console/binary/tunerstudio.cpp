@@ -190,6 +190,8 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_
 		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 		memcpy(addr, content, count);
 	}
+	// Force any board configuration options that humans shouldn't be able to change
+	setBoardConfigOverrides();
 
 	sendOkResponse(tsChannel, mode);
 }
@@ -240,6 +242,8 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_
 	if (!rebootForPresetPending) {
 		getWorkingPageAddr()[offset] = value;
 	}
+	// Force any board configuration options that humans shouldn't be able to change
+	setBoardConfigOverrides();
 }
 
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
@@ -429,9 +433,11 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
-		// no data in a whole second means time to disconnect BT
-		// assume there's connection loss and notify the bluetooth init code
-		bluetoothSoftwareDisconnectNotify();
+		if (tsChannel == getBluetoothChannel()) {
+			// no data in a whole second means time to disconnect BT
+			// assume there's connection loss and notify the bluetooth init code
+			bluetoothSoftwareDisconnectNotify();
+		}
 #endif  /* EFI_BLUETOOTH_SETUP */
 		tsChannel->in_sync = false;
 		return -1;

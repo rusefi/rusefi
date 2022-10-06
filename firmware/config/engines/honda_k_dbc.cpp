@@ -13,7 +13,7 @@
 
 /**
  * K24A4 engine
- * PROTEUS_HONDA_ELEMENT_2003
+ * PROTEUS_HONDA_K
  */
 void setProteusHondaElement2003() {
 	engineConfiguration->specs.cylindersCount = 4;
@@ -23,12 +23,18 @@ void setProteusHondaElement2003() {
 //	engineConfiguration->trigger.customTotalToothCount = 12;
 //	engineConfiguration->trigger.customSkippedToothCount = 0;
 
-	engineConfiguration->trigger.type = TT_HONDA_K_4_1;
-	engineConfiguration->globalTriggerAngleOffset = 570;
+	engineConfiguration->engineSyncCam = 1;
 
-	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
-	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+	engineConfiguration->trigger.type = TT_HONDA_K_CRANK_12_1;
+	engineConfiguration->globalTriggerAngleOffset = 675;
+
+//	engineConfiguration->trigger.type = TT_HONDA_K_CAM_4_1; // cam as primary, ignoring crank
+//	engineConfiguration->globalTriggerAngleOffset = 570;
+
+	engineConfiguration->vvtMode[0] = VVT_HONDA_K_INTAKE;
+	engineConfiguration->vvtMode[1] = VVT_HONDA_K_EXHAUST;
 	engineConfiguration->vvtOffsets[0] = -41;
+	engineConfiguration->vvtOffsets[1] = 171;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->injector.flow = 270;

@@ -277,7 +277,7 @@ TEST(HPFP, Schedule) {
 
 	// Make the previous event happen, schedule the next.
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, 1, tick_per_deg * 0);
+		1000, 1, tick_per_deg * 0, 0, 0);
 	// Mock executor doesn't run events, so we run it manually
 	HpfpController::pinTurnOff(&hpfp);
 
@@ -287,7 +287,7 @@ TEST(HPFP, Schedule) {
 
 	// Make it happen
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, 2, tick_per_deg * 180);
+		1000, 2, tick_per_deg * 180, 0, 0);
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.

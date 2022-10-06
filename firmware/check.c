@@ -14,4 +14,11 @@
 	#error "GCC compiler >= 9.3.1 required"
 #endif
 
+// Firmware builds but does not actually run on GCC10 :(
+// todo: one day someone should fix it, do YOU want to help?
+#if (GCC_VERSION > 1000)
+	#pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
+	#error "GCC10 not supported see https://github.com/rusefi/rusefi/labels/Gcc10"
+#endif
+
 #endif

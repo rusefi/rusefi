@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.ConsoleUI;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
@@ -9,6 +8,7 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +32,8 @@ import static com.rusefi.StartupFrame.appendBundleName;
 public class DfuFlasher {
     private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
+    private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
@@ -43,7 +45,8 @@ public class DfuFlasher {
         StatusWindow wnd = createStatusWindow();
 
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
-        if (isSignatureValidated == null) return;
+        if (isSignatureValidated == null)
+            return;
         if (isSignatureValidated.get()) {
             if (!ProgramSelector.IS_WIN) {
                 wnd.append("Switched to DFU mode!");
@@ -78,8 +81,9 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
+                wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
+                wnd.setErrorState(true);
                 return null;
             }
             boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
@@ -88,13 +92,15 @@ public class DfuFlasher {
             wnd.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
+            // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
                 boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd);
                 isSignatureValidated.set(isSignatureValidatedLocal);
                 return null;
             }).getSerialPort();
             if (port == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
+                wnd.append("*** ERROR *** rusEFI serial port not detected");
+                wnd.setErrorState(true);
                 return null;
             } else {
                 wnd.append("Detected rusEFI on " + port + "\n");
@@ -127,6 +133,13 @@ public class DfuFlasher {
     }
 
     private static void executeDFU(StatusWindow wnd) {
+        boolean driverIsHappy = detectSTM32BootloaderDriverState(wnd);
+        if (!driverIsHappy) {
+            wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            wnd.setErrorState(true);
+            return;
+        }
+
         StringBuffer stdout = new StringBuffer();
         String errorResponse;
         try {
@@ -152,10 +165,29 @@ public class DfuFlasher {
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
             appendWindowsVersion(wnd);
-            wnd.append("Windows " + System.getProperty("os.version"));
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
+    }
+
+    public static boolean detectSTM32BootloaderDriverState(StatusConsumer wnd) {
+        return detectDevice(wnd, WMIC_DFU_QUERY_COMMAND, "ConfigManagerErrorCode=0");
+    }
+
+    public static boolean detectStLink(StatusConsumer wnd) {
+        return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
+    }
+
+    private static boolean detectDevice(StatusConsumer wnd, String queryCommand, String pattern) {
+        //        long now = System.currentTimeMillis();
+        StringBuffer output = new StringBuffer();
+        StringBuffer error = new StringBuffer();
+        ExecHelper.executeCommand(queryCommand, wnd, output, error, null);
+        wnd.append(output.toString());
+        wnd.append(error.toString());
+//        long cost = System.currentTimeMillis() - now;
+//        System.out.println("DFU lookup cost " + cost + "ms");
+        return output.toString().contains(pattern);
     }
 
     private static void appendWindowsVersion(StatusWindow wnd) {

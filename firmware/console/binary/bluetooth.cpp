@@ -20,7 +20,6 @@
 #if EFI_BLUETOOTH_SETUP
 
 static bool btProcessIsStarted = false;
-static bool btProcessIsRunning = false;
 static const char *commands[5];
 static int numCommands = 0;
 static int setBaudIdx = -1;
@@ -70,7 +69,7 @@ static void runCommands() {
 				break;
 		}
 		
-		bool restoreAndExit = (cmdIdx >= numCommands || baudIdx < 0);
+		bool restoreAndExit = (cmdIdx >= numCommands || baudIdx < 0) || chThdShouldTerminateX();
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
@@ -105,10 +104,12 @@ static void runCommands() {
 		bool wasAnswer = false;
 		int received = tsChannel->readTimeout(buffer, 2, btModuleTimeout);
 		if (received == 2) {
+			efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
+		} else {
+			efiPrintf("timeout receiving BT reply");
 		}
-		efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
@@ -155,24 +156,27 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chSysUnlock();
 	
 	if (msg == MSG_TIMEOUT) {
+		// timeout waiting for silence on uart...
 		efiPrintf("The Bluetooth module init procedure is cancelled (timeout)!");
 		return;
 	} else {
 		// call this when the thread is resumed (after the disconnect)
-		btProcessIsRunning = true;
 		runCommands();
-		btProcessIsRunning = false;
 	}
 
 	// release the command
 	btProcessIsStarted = false;
-	chThdExit(MSG_OK);
 }
 
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = getBluetoothChannel();
+
+	if (tsChannel == nullptr) {
+		efiPrintf("No Bluetooth channel configured! Check your board config.");
+		return;
+	}
 
 	if (btProcessIsStarted) {
 		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
@@ -265,13 +269,15 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	commands[numCommands++] = cmdBaud;
 	commands[numCommands++] = cmdName;
    	commands[numCommands++] = cmdPin;
-   	
-   	// create a thread to execute these commands later
-   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
-   	
+
 	btProcessIsStarted = true;
+
+	// create a thread to execute these commands after TS disconnected
+	// See bluetoothSoftwareDisconnectNotify
+	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
 }
-	
+
+// Called after 1S of silence on BT UART...
 void bluetoothSoftwareDisconnectNotify() {
 	if (btProcessIsStarted) {
 		// start communication with the module
@@ -286,9 +292,6 @@ void bluetoothCancel() {
 		efiPrintf("The Bluetooth module init procedure was not started! Nothing to cancel!");
 		return;
 	}
-
-	if (btProcessIsRunning)
-		return;
 	
 	// terminate thread
 	chThdTerminate(btThread);

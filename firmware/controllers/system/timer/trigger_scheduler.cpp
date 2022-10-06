@@ -2,9 +2,8 @@
 
 #include "event_queue.h"
 
-
-bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
-       assertNotInListMethodBody(AngleBasedEvent, head, element, nextToothEvent)
+bool TriggerScheduler::assertNotInList(AngleBasedEventBase *head, AngleBasedEventBase *element) {
+       assertNotInListMethodBody(AngleBasedEventBase, head, element, nextToothEvent)
 }
 
 /**
@@ -17,7 +16,7 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
+bool TriggerScheduler::scheduleOrQueue(AngleBasedEventOld *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
@@ -73,17 +72,58 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
+bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
+		uint32_t trgEventIndex,
+		efitick_t edgeTimestamp,
+		angle_t angle,
+		action_s action,
+		float currentPhase, float nextPhase) {
+	event->enginePhase = angle;
+
+	if (event->shouldSchedule(trgEventIndex, currentPhase, nextPhase)) {
+		// if we're due now, just schedule the event
+		scheduleByAngle(
+			&event->scheduling,
+			edgeTimestamp,
+			event->getAngleFromNow(currentPhase),
+			action
+		);
+
+		return true;
+	} else {
+		// Not due at this tooth, add to the list to execute later
+		event->action = action;
+
+		{
+			chibios_rt::CriticalSectionLocker csl;
+
+			// TODO: This is O(n), consider some other way of detecting if in a list,
+			// and consider doubly linked or other list tricks.
+
+			if (!assertNotInList(m_angleBasedEventsHead, event)) {
+				// Use Append to retain some semblance of event ordering in case of
+				// time skew.  Thus on events are always followed by off events.
+				LL_APPEND2(m_angleBasedEventsHead, event, nextToothEvent);
+
+				return false;
+			}
+		}
+	}
+
+	return false;
+}
+
 void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 							   uint32_t trgEventIndex,
-							   efitick_t edgeTimestamp) {
+							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	if (!isValidRpm(rpm)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
 
-	AngleBasedEvent *current, *tmp, *keephead;
-	AngleBasedEvent *keeptail = nullptr;
+	AngleBasedEventBase *current, *tmp, *keephead;
+	AngleBasedEventBase *keeptail = nullptr;
 
 	{
 		chibios_rt::CriticalSectionLocker csl;
@@ -94,7 +134,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 
 	LL_FOREACH_SAFE2(keephead, current, tmp, nextToothEvent)
 	{
-		if (current->position.triggerEventIndex == trgEventIndex) {
+		if (current->shouldSchedule(trgEventIndex, currentPhase, nextPhase)) {
 			// time to fire a spark which was scheduled previously
 
 			// Yes this looks like O(n^2), but that's only over the entire engine
@@ -120,7 +160,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 			scheduleByAngle(
 				sDown,
 				edgeTimestamp,
-				current->position.angleOffsetFromTriggerEvent,
+				current->getAngleFromNow(currentPhase),
 				current->action
 			);
 		} else {
@@ -137,10 +177,31 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 	}
 }
 
+bool AngleBasedEventOld::shouldSchedule(uint32_t trgEventIndex, float /*currentPhase*/, float /*nextPhase*/) const {
+	return position.triggerEventIndex == trgEventIndex;
+}
+
+float AngleBasedEventOld::getAngleFromNow(float /*currentPhase*/) const {
+	return position.angleOffsetFromTriggerEvent;
+}
+
+bool AngleBasedEventNew::shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const {
+	return isPhaseInRange(this->enginePhase, currentPhase, nextPhase);
+}
+
+float AngleBasedEventNew::getAngleFromNow(float currentPhase) const {
+	float angleOffset = this->enginePhase - currentPhase;
+	if (angleOffset < 0) {
+		angleOffset += engine->engineState.engineCycle;
+	}
+
+	return angleOffset;
+}
+
 #if EFI_UNIT_TEST
 // todo: reduce code duplication with another 'getElementAtIndexForUnitText'
-AngleBasedEvent * TriggerScheduler::getElementAtIndexForUnitTest(int index) {
-	AngleBasedEvent * current;
+AngleBasedEventBase * TriggerScheduler::getElementAtIndexForUnitTest(int index) {
+	AngleBasedEventBase * current;
 
 	LL_FOREACH2(m_angleBasedEventsHead, current, nextToothEvent)
 	{

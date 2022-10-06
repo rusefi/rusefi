@@ -1,6 +1,9 @@
 /*
  * @file engine_types.h
  *
+ * See 'integration API' note in rusefi_enums.h
+ * TODO: spell out which enums belong here and which enums belong in rusefi_enums.h for what reasons
+ *
  * @date Oct 23, 2021
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
@@ -79,10 +82,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	TEST_ENGINE = 26,
 
-	// used by unit test
-	// see https://github.com/rusefi/rusefi/issues/898
-	// see TriggerWaveform::bothFrontsRequired
-	TEST_ISSUE_898 = 27,
+	UNUSED_27 = 27,
 
 	TEST_CRANK_ENGINE = 28,
 
@@ -104,7 +104,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	MRE_SUBARU_EJ18 = 37,
 
-	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
+	UNUSED_38 = 38,
 
 	PROTEUS_VW_B6 = 39,
 
@@ -201,7 +201,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	HELLEN_128_MERCEDES_8_CYL = 89,
 
-	PROTEUS_HONDA_ELEMENT_2003 = 90,
+	PROTEUS_HONDA_K = 90,
 
 	PROTEUS_HONDA_OBD2A = 91,
 
@@ -376,8 +376,6 @@ typedef enum {
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_2JZ_1_12 = 29,
-
 	TT_CHRYSLER_NGC_36_2_2 = 30,
 
 	// skipped 3/1 with cam sensor for testing
@@ -428,7 +426,10 @@ typedef enum {
 	 */
 	TT_RENIX_66_2_2_2 = 45,
 
-	TT_HONDA_K_12_1 = 46,
+	/**
+	 * Honda K crank shape
+	 */
+	TT_HONDA_K_CRANK_12_1 = 46,
 
 	TT_VVT_BOSCH_QUICK_START = 47,
 
@@ -476,7 +477,10 @@ typedef enum {
 
 	TT_SUZUKI_G13B = 66,
 
-	TT_HONDA_K_4_1 = 67,
+	/**
+	 * Honda K exhaust cam shaft
+	 */
+	TT_HONDA_K_CAM_4_1 = 67,
 
 	TT_NISSAN_MR18_CRANK = 68,
 
@@ -502,6 +506,7 @@ typedef enum {
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
 	UNUSED_21 = 21,
+	UNUSED_29 = 29,
 	UNUSED_34 = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project

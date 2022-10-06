@@ -22,10 +22,10 @@
 #include "mre_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::TLE8888_PIN_1;
-	engineConfiguration->injectionPins[1] = Gpio::TLE8888_PIN_2;
-	engineConfiguration->injectionPins[2] = Gpio::TLE8888_PIN_3;
-	engineConfiguration->injectionPins[3] = Gpio::TLE8888_PIN_4;
+	engineConfiguration->injectionPins[0] = MRE_INJ_1;
+	engineConfiguration->injectionPins[1] = MRE_INJ_2;
+	engineConfiguration->injectionPins[2] = MRE_INJ_3;
+	engineConfiguration->injectionPins[3] = MRE_INJ_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -219,4 +219,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+}
+
+int getBoardMetaOutputsCount() {
+    return efi::size(MRE_OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return MRE_OUTPUTS;
 }

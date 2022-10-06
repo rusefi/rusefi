@@ -21,8 +21,8 @@ static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, fal
  * todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
  * @return true if front should be decoded further, false if we are not interested
  */
-bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration& triggerConfiguration) {
-	return !triggerConfiguration.UseOnlyRisingEdgeForTrigger || isRisingEdge[(int) signal];
+bool isUsefulSignal(trigger_event_e signal, const TriggerWaveform& shape) {
+	return !shape.useOnlyRisingEdges || isRisingEdge[(int) signal];
 }
 
 #if EFI_UNIT_TEST
@@ -77,7 +77,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 			trigger_event_e event = (currentValue == TriggerValue::RISE ? riseEvents : fallEvents)[i];
-			if (isUsefulSignal(event, triggerConfiguration)) {
+			if (isUsefulSignal(event, shape)) {
 				state.decodeTriggerEvent(
 					"sim",
 						shape,

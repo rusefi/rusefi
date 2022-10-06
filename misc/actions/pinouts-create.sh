@@ -4,16 +4,23 @@ I_AM="pinouts-create.sh:"
 
 I_AM="gen_upload_pinouts.sh:"
 
-if [ -z $1 ] ; then
- echo "Specific yaml parameter not specified, searching for */connectors/*.yaml"
- CONNECTORS=$(find -path "./firmware/config/boards/*/connectors/*.yaml")
-else
- CONNECTORS=$1
- echo "Processing $CONNECTORS"
-fi
 # yq 3 and 4 have incompatible syntax. We use yq 4.
 echo ${I_AM} invoking yq version
 yqdir/yq -V
+
+if [ -z $1 ] ; then
+  echo "Specific yaml parameter not specified, searching for */connectors/*.yaml"
+  CONNECTORS=$(find -path "./firmware/config/boards/*/connectors/*.yaml")
+  FILES=$(for f in $CONNECTORS; do
+    ORDER=$(yqdir/yq e '.info.order' $f)
+    echo "$f $ORDER"
+  done)
+  CONNECTORS=$(echo "$FILES" | sort -k2 | cut -d ' ' -f 1)
+else
+  CONNECTORS=$1
+  echo "Processing $CONNECTORS"
+fi
+
 for c in $CONNECTORS; do
   echo "${I_AM} processing "$c
   DIR="pinouts/"$(echo $c | tr '/' '\n' | tail -n +5 | head -n -2 | tr '\n' '/')

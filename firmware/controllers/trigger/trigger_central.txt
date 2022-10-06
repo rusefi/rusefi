@@ -13,5 +13,7 @@ int vvtCamCounter
 
     float autoscale currentEngineDecodedPhase;Engine Phase;"deg",1, 0, 0, 0, 0
 
+	float triggerToothAngleError;;"deg", 1, 0, -30, 30, 2
+
 end_struct
 

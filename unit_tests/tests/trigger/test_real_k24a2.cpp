@@ -3,15 +3,14 @@
 #include "logicdata_csv_reader.h"
 
 static void doTest(const char* testFile, int expectedRpm) {
-	CsvReader reader(1, /* vvtCount */ 0);
-	int indeces[1] = {0};
+	CsvReader reader(/* triggerCount */ 1, /* vvtCount */ 0);
 
-	reader.open(testFile, indeces);
+	reader.open(testFile);
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(TT_HONDA_K_12_1);
+	eth.setTriggerType(TT_HONDA_K_CRANK_12_1);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

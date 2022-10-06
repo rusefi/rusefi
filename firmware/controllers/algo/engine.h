@@ -145,6 +145,7 @@ public:
 #endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
+		LimpManager,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -231,11 +232,6 @@ public:
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
 
-	/**
-	 * this is needed by and checkShutdown()
-	 * todo: refactor to Timer?
-	 */
-	efitick_t ignitionOnTimeNt = 0;
 
 	Timer configBurnTimer;
 
@@ -270,13 +266,6 @@ public:
 	bool isFunctionalTestMode = false;
 
 	void resetEngineSnifferIfInTestMode();
-
-	/**
-	 * pre-calculated reference to which output pin should be used for
-	 * given sequence index within engine cycle
-	 * todo: update documentation
-	 */
-	int ignitionPin[MAX_CYLINDER_COUNT];
 
 	EngineState engineState;
 	/**
@@ -322,8 +311,6 @@ public:
 	AirmassModelBase* mockAirmassModel = nullptr;
 #endif
 
-	LimpManager limpManager;
-
 private:
 	void reset();
 
@@ -336,12 +323,9 @@ void applyNonPersistentConfiguration();
 void prepareOutputSignals();
 
 void validateConfiguration();
-void doScheduleStopEngine();
 void scheduleReboot();
 bool isLockedFromUser();
 void unlockEcu(int password);
-
-#define HW_CHECK_RPM 200
 
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST

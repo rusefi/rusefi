@@ -85,8 +85,8 @@ TEST(misc, testFuelMap) {
 
 
 static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useOnlyRisingEdgeForTriggerTemp = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->useOnlyRisingEdges = false;
 
 	s->addEvent720(53.747, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
 	s->addEvent720(121.90, TriggerWheel::T_SECONDARY, TriggerValue::FALL);

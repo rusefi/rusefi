@@ -72,25 +72,6 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	getFuelSchedule()->addFuelEventsForCylinder(event->ownIndex);
 }
 
-static bool isPhaseInRange(float test, float current, float next) {
-	bool afterCurrent = test >= current;
-	bool beforeNext = test < next;
-
-	if (next > current) {
-		// we're not near the end of the cycle, comparison is simple
-		// 0            |------------------------|       720
-		//            next                    current
-		return afterCurrent && beforeNext;
-	} else {
-		// we're near the end of the cycle so we have to check the wraparound
-		// 0 -----------|                        |------ 720
-		//            next                    current
-		// Check whether test is after current (ie, between current tooth and end of cycle)
-		// or if test if before next (ie, between start of cycle and next tooth)
-		return afterCurrent || beforeNext;
-	}
-}
-
 void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	auto eventAngle = injectionStartAngle;
 
@@ -226,6 +207,8 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < getTriggerCentral()->engineCycleEventCount, "handleFuel/event index");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
+
+	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
 	bool limitedFuel = !limitedFuelState.value;
 	if (limitedFuel) {
@@ -302,12 +285,12 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	handleFuel(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, trgEventIndex, edgeTimestamp);
+		rpm, trgEventIndex, edgeTimestamp, currentPhase, nextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp);
+	onTriggerEventSparkLogic(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
 }
 
 #endif /* EFI_ENGINE_CONTROL */

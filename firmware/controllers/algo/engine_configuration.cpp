@@ -826,9 +826,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise();
 		break;
-	case TEST_ISSUE_898:
-		setIssue898();
-		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
 	case MRE_VW_B6:
@@ -891,7 +888,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU();
 		break;
-	case PROTEUS_HONDA_ELEMENT_2003:
+	case PROTEUS_HONDA_K:
 		setProteusHondaElement2003();
 		break;
 	case PROTEUS_HONDA_OBD2A:
@@ -1069,9 +1066,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
 		break;
-	case TOYOTA_JZS147:
-		setToyota_jzs147EngineConfiguration();
-		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
@@ -1150,3 +1144,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 // These symbols are weak so that a board_configuration.cpp file can override them
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
+
+__attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
+__attribute__((weak)) Gpio* getBoardMetaOutputs() { return nullptr; }

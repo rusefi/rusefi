@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Sep 17 00:15:40 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Oct 03 15:05:29 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -20,6 +20,7 @@ public class EngineState {
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAN_DEFAULT_BASE = 0x200;
+	public static final int CAN_ECU_HW_META = 0xAB1234;
 	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
 	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
 	public static final String CAN_RX_PREFIX = "CAN_rx";
@@ -340,7 +341,7 @@ public class EngineState {
 	public static final int TRIGGER_INPUT_PIN_COUNT = 2;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
-	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
+	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;

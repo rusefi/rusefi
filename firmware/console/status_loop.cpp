@@ -64,11 +64,14 @@ extern bool main_loop_started;
 #include "HD44780.h"
 #include "rusefi.h"
 #include "pin_repository.h"
-#include "flash_main.h"
 #include "max31855.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
+
+#if EFI_INTERNAL_FLASH
+#include "flash_main.h"
+#endif
 
 #if EFI_CJ125
 #include "cj125.h"
@@ -266,43 +269,6 @@ void updateDevConsoleState(void) {
 	scheduleLogging(&logicAnalyzerLogger);
 #endif /* EFI_LOGIC_ANALYZER */
 }
-
-/*
- * command example:
- * sfm 3500 400
- * that would be 'show fuel for rpm 3500 maf 4.0'
- */
-
-static void showFuelInfo2(float rpm, float engineLoad) {
-	efiPrintf("inj flow %.2fcc/min displacement %.2fL", engineConfiguration->injector.flow,
-			engineConfiguration->specs.displacement);
-
-	efiPrintf("algo=%s/pump=%s", getEngine_load_mode_e(engineConfiguration->fuelAlgorithm),
-			boolToString(enginePins.fuelPumpRelay.getLogicValue()));
-
-	efiPrintf("injection phase=%.2f/global fuel correction=%.2f", getInjectionOffset(rpm, getFuelingLoad()), engineConfiguration->globalFuelCorrection);
-
-#if EFI_ENGINE_CONTROL
-	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	efiPrintf("cranking fuel: %.2f", engine->engineState.cranking.fuel);
-
-	if (!engine->rpmCalculator.isStopped()) {
-		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
-		float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
-		floatms_t injectorLag = engine->module<InjectorModel>()->getDeadtime();
-		efiPrintf("rpm=%.2f engineLoad=%.2f", rpm, engineLoad);
-
-		efiPrintf("iatCorrection=%.2f cltCorrection=%.2f injectorLag=%.2f", iatCorrection, cltCorrection,
-				injectorLag);
-	}
-#endif
-}
-
-#if EFI_ENGINE_CONTROL
-static void showFuelInfo() {
-	showFuelInfo2(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad());
-}
-#endif
 
 static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
@@ -573,6 +539,8 @@ static void updateMiscSensors() {
 	engine->outputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
 	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
+	engine->outputChannels.auxSpeed1 = Sensor::getOrZero(SensorType::AuxSpeed1);
+	engine->outputChannels.auxSpeed2 = Sensor::getOrZero(SensorType::AuxSpeed2);
 
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();
@@ -657,9 +625,6 @@ static void updateFlags() {
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
 	engine->outputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
-	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
-	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	// todo: eliminate state copy logic by giving DfcoController it's owm xxx.txt and leveraging LiveData
 	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
 
@@ -901,11 +866,6 @@ void updateTunerStudioState() {
 
 void initStatusLoop(void) {
 	addConsoleActionI("warn", setWarningEnabled);
-
-#if EFI_ENGINE_CONTROL
-	addConsoleActionFF("fuelinfo2", (VoidFloatFloat) showFuelInfo2);
-	addConsoleAction("fuelinfo", showFuelInfo);
-#endif
 }
 
 void startStatusThreads(void) {

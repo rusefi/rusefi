@@ -55,7 +55,7 @@ public class TriggerImage {
                 return "Miata NB";
             case TT_SUBARU_SVX:
                 return "Subaru SVX";
-            case TT_HONDA_K_12_1:
+            case TT_HONDA_K_CRANK_12_1:
                 return "Honda K 1/12";
             case TT_SUBARU_7_6:
                 return "Subaru 7/6";
@@ -71,8 +71,6 @@ public class TriggerImage {
                 return "Chrysler NGC 36/2/2";
             case TT_ONE:
                 return "Single Tooth";
-            case TT_2JZ_1_12:
-                return "2JZ 1/12";
             case TT_JEEP_4_CYL:
                 return "Jeep 4 cylinder";
             case TT_JEEP_18_2_2_2:

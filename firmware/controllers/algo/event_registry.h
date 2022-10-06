@@ -13,15 +13,36 @@
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
-class AngleBasedEvent {
-public:
+struct AngleBasedEventOld;
+
+struct AngleBasedEventBase {
 	scheduling_s scheduling;
-	event_trigger_position_s position;
 	action_s action;
 	/**
 	 * Trigger-based scheduler maintains a linked list of all pending tooth-based events.
 	 */
-	AngleBasedEvent *nextToothEvent = nullptr;
+	AngleBasedEventBase *nextToothEvent = nullptr;
+
+	virtual bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const = 0;
+	virtual float getAngleFromNow(float currentPhase) const = 0;
+
+	virtual AngleBasedEventOld* asOld() { return nullptr; }
+};
+
+struct AngleBasedEventOld : public AngleBasedEventBase {
+	event_trigger_position_s position;
+
+	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
+	float getAngleFromNow(float currentPhase) const override;
+
+	AngleBasedEventOld* asOld() override { return this; }
+};
+
+struct AngleBasedEventNew : public AngleBasedEventBase {
+	float enginePhase;
+
+	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
+	float getAngleFromNow(float currentPhase) const override;
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
@@ -31,7 +52,7 @@ public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
-	AngleBasedEvent sparkEvent;
+	AngleBasedEventNew sparkEvent;
 
 	scheduling_s trailingSparkCharge;
 	scheduling_s trailingSparkFire;
@@ -49,7 +70,9 @@ public:
 	 * this timestamp allows us to measure actual dwell time
 	 */
 	uint32_t actualStartOfDwellNt = 0;
-	event_trigger_position_s dwellPosition{};
+
+	float dwellAngle = 0;
+
 	/**
 	 * Sequential number of currently processed spark event
 	 * @see engineState.sparkCounter
@@ -79,8 +102,8 @@ public:
 	int valveIndex;
 	angle_t extra;
 
-	AngleBasedEvent open;
-	AngleBasedEvent close;
+	AngleBasedEventOld open;
+	AngleBasedEventOld close;
 };
 
 

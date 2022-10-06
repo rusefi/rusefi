@@ -376,39 +376,6 @@ size_t getNextFiringCylinderId(size_t prevCylinderId) {
 }
 
 /**
- * @param cylinderIndex from 0 to cylinderCount, not cylinder number
- */
-static int getIgnitionPinForIndex(int cylinderIndex) {
-	switch (getCurrentIgnitionMode()) {
-	case IM_ONE_COIL:
-		return 0;
-	case IM_WASTED_SPARK: {
-		if (engineConfiguration->specs.cylindersCount == 1) {
-			// we do not want to divide by zero
-			return 0;
-		}
-		return cylinderIndex % (engineConfiguration->specs.cylindersCount / 2);
-	}
-	case IM_INDIVIDUAL_COILS:
-		return cylinderIndex;
-	case IM_TWO_COILS:
-		return cylinderIndex % 2;
-
-	default:
-		firmwareError(CUSTOM_OBD_IGNITION_MODE, "Invalid ignition mode getIgnitionPinForIndex(): %d", engineConfiguration->ignitionMode);
-		return 0;
-	}
-}
-
-void prepareIgnitionPinIndices() {
-#if EFI_ENGINE_CONTROL
-	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
-		engine->ignitionPin[cylinderIndex] = getIgnitionPinForIndex(cylinderIndex);
-	}
-#endif /* EFI_ENGINE_CONTROL */
-}
-
-/**
  * @return IM_WASTED_SPARK if in SPINNING mode and IM_INDIVIDUAL_COILS setting
  * @return engineConfiguration->ignitionMode otherwise
  */
@@ -416,7 +383,8 @@ ignition_mode_e getCurrentIgnitionMode() {
 	ignition_mode_e ignitionMode = engineConfiguration->ignitionMode;
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync info yet, so wasted spark mode is better
-	if (ignitionMode == IM_INDIVIDUAL_COILS) {
+	// However, only do this on even cylinder count engines: odd cyl count doesn't fire at all
+	if (ignitionMode == IM_INDIVIDUAL_COILS && (engineConfiguration->specs.cylindersCount % 2 == 0)) {
 		bool missingPhaseInfoForSequential = 
 			!engine->triggerCentral.triggerState.hasSynchronizedPhase();
 
@@ -442,8 +410,6 @@ void prepareOutputSignals() {
 				getIgnition_mode_e(engineConfiguration->ignitionMode));
 	}
 #endif /* EFI_UNIT_TEST */
-
-	prepareIgnitionPinIndices();
 
 	engine->triggerCentral.triggerShape.prepareShape(engine->triggerCentral.triggerFormDetails);
 

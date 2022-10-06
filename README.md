@@ -1,14 +1,11 @@
 <div align="center">
 
-
 <img src="https://raw.githubusercontent.com/wiki/rusefi/rusefi/Images/logo_new.png" alt="rusEFI" width="600" />
 
 <b>GPL open-source DIY ECU</b>
 
 [![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
-[![Rusefi on Slack](https://img.shields.io/badge/slack-rusefi-orange.svg?style=flat&logo=slack)](https://rusefi.slack.com)
 </div>
-
 
 # rusEFI
 

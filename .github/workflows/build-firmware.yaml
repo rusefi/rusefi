@@ -62,11 +62,11 @@ jobs:
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
-            skip-rate: 90
 
           - build-target: hellen81
             folder: hellen/hellen81
             ini-file: rusefi_hellen81.ini
+            skip-rate: 90
 
           - build-target: alphax-2chan
             folder: hellen/alphax-2chan
@@ -80,18 +80,22 @@ jobs:
           - build-target: harley81
             folder: hellen/harley81
             ini-file: rusefi_harley81.ini
+            skip-rate: 90
 
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
+            skip-rate: 90
 
           - build-target: hellen88bmw_avr
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
+            skip-rate: 90
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
+            skip-rate: 90
 
           - build-target: hellen-gm-e67
             folder: hellen/hellen-gm-e67
@@ -101,11 +105,12 @@ jobs:
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
             ini-file: rusefi_hellenNA8_96.ini
-            skip-rate: 50
+            skip-rate: 90
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
+            skip-rate: 90
 
           - build-target: hellen128
             folder: hellen/hellen128
@@ -182,7 +187,6 @@ jobs:
           - build-target: proteus_f4_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f4.ini
-            skip-rate: 90
 
           - build-target: proteus_f7
             folder: proteus
@@ -191,7 +195,6 @@ jobs:
           - build-target: proteus_f7_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-            skip-rate: 90
 
           - build-target: proteus_h7
             folder: proteus

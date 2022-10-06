@@ -181,9 +181,7 @@ void setBoardDefaultConfiguration() {
 		engineConfiguration->digitalPotentiometerChipSelect[i] = Gpio::Unassigned;
 	}
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
-	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 
 	/////////////////////////////////////////////////////////

@@ -34,9 +34,20 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		operationMode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
 }
 
+void LimpManager::onFastCallback() {
+	updateState(Sensor::getOrZero(SensorType::Rpm), getTimeNowNt());
+}
+
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
+
+#if !EFI_UNIT_TEST
+	if (!m_ignitionOn) {
+		allowFuel.clear(ClearReason::IgnitionOff);
+		allowSpark.clear(ClearReason::IgnitionOff);
+	}
+#endif
 
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
@@ -112,7 +123,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	// If we're in engine stop mode, inhibit fuel
-	if (isEngineStop(nowNt)) {
+	if (shutdownController.isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
@@ -159,6 +170,10 @@ todo AndreiKA this change breaks 22 unit tests?
 	m_transientAllowIgnition = allowSpark;
 }
 
+void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
+	m_ignitionOn = ignitionOn;
+}
+
 void LimpManager::etbProblem() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
 	setFaultRevLimit(1500);
@@ -171,21 +186,6 @@ void LimpManager::fatalError() {
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
 	setFaultRevLimit(0);
-}
-
-void LimpManager::stopEngine() {
-	m_engineStopTimer.reset();
-}
-
-bool LimpManager::isEngineStop(efitick_t nowNt) const {
-	float timeSinceStop = getTimeSinceEngineStop(nowNt);
-
-	// If there was stop requested in the past 5 seconds, we're in stop mode
-	return timeSinceStop < 5;
-}
-
-float LimpManager::getTimeSinceEngineStop(efitick_t nowNt) const {
-	return m_engineStopTimer.getElapsedSeconds(nowNt);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {

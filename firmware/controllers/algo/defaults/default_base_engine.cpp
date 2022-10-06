@@ -21,6 +21,8 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 
+	engineConfiguration->turbochargerFilter = 0.01f;
+
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
 	engineConfiguration->debugMode = DBG_INSTANT_RPM;

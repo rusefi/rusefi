@@ -12,7 +12,7 @@
 
 // TT_FIAT_IAW_P8
 void configureFiatIAQ_P8(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	int width = 60;
 	s->tdcPosition = width;
@@ -27,7 +27,7 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 
 // TT_TRI_TACH
 void configureTriTach(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->isSynchronizationNeeded = false;
 
@@ -56,7 +56,7 @@ void configureTriTach(TriggerWaveform * s) {
  * based on https://www.w8ji.com/distributor_stabbing.htm
  */
 void configureFordPip(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 662.5;
 
@@ -79,7 +79,7 @@ void configureFordPip(TriggerWaveform * s) {
 }
 
 void configureFordST170(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	int width = 10;
 
 	int total = s->getCycleDuration() / 8;
@@ -101,7 +101,7 @@ void configureFordST170(TriggerWaveform * s) {
 }
 
 void configureDaihatsu4(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int width = 10;
 
@@ -123,10 +123,7 @@ void configureDaihatsu4(TriggerWaveform * s) {
 }
 
 void configureBarra3plus1cam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	s->useRiseEdge = true;
-	// TODO: gapBothDirections?
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	// This wheel has four teeth
 	// two short gaps, and two long gaps

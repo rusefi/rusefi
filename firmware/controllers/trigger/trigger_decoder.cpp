@@ -195,7 +195,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			// Wrap the angle back in to [0, 720)
 			fixAngle(angle, "trgSync", CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 
-			if (engineConfiguration->useOnlyRisingEdgeForTrigger) {
+			if (shape->useOnlyRisingEdges) {
 				efiAssertVoid(OBD_PCM_Processor_Fault, triggerDefinitionIndex < triggerShapeLength, "trigger shape fail");
 				assertIsInBounds(triggerDefinitionIndex, shape->isRiseEvent, "isRise");
 
@@ -239,7 +239,7 @@ void PrimaryTriggerDecoder::resetInstantRpm() {
 void PrimaryTriggerDecoder::movePreSynchTimestamps() {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
-	auto triggerSize = getTriggerSize();
+	auto triggerSize = getTriggerCentral()->triggerShape.getLength();
 
 	int eventsToCopy = minI(spinningEventIndex, triggerSize);
 
@@ -280,20 +280,25 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	efitick_t time90ago = timeOfLastEvent[prevIndex];
+
+	// No previous timestamp, instant RPM isn't ready yet
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
 	}
-	// we are OK to subtract 32 bit value from more precise 64 bit since the result would 32 bit which is
-	// OK for small time differences like this one
+
+	// It's OK to truncate from 64b to 32b, ARM with single precision FPU uses an expensive
+	// software function to convert 64b int -> float, while 32b int -> float is very cheap hardware conversion
+	// The difference is guaranteed to be short (it's 90 degrees of engine rotation!), so it won't overflow.
 	uint32_t time = nowNt - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 
 	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
 	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
 
-	// just for safety
-	if (time == 0)
+	// just for safety, avoid divide-by-0
+	if (time == 0) {
 		return prevInstantRpmValue;
+	}
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);
@@ -316,13 +321,18 @@ void PrimaryTriggerDecoder::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 		return;
 	}
 	// here we remember tooth timestamps which happen prior to synchronization
-	if (spinningEventIndex >= PRE_SYNC_EVENTS) {
+	if (spinningEventIndex >= efi::size(spinningEvents)) {
 		// too many events while trying to find synchronization point
 		// todo: better implementation would be to shift here or use cyclic buffer so that we keep last
 		// 'PRE_SYNC_EVENTS' events
 		return;
 	}
-	spinningEvents[spinningEventIndex++] = nowNt;
+
+	spinningEvents[spinningEventIndex] = nowNt;
+
+	// If we are using only rising edges, we never write in to the odd-index slots that
+	// would be used by falling edges
+	spinningEventIndex += engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
 }
 
 void PrimaryTriggerDecoder::updateInstantRpm(
@@ -366,11 +376,6 @@ static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, Tri
 	currentCycle.current_index++; \
 	PRINT_INC_INDEX; \
 }
-
-#define considerEventForGap() (!triggerShape.useOnlyPrimaryForSync || isPrimary)
-
-#define needToSkipFall(type) ((!triggerShape.gapBothDirections) && (( triggerShape.useRiseEdge) && (type != TriggerValue::RISE)))
-#define needToSkipRise(type) ((!triggerShape.gapBothDirections) && ((!triggerShape.useRiseEdge) && (type != TriggerValue::FALL)))
 
 int TriggerDecoderBase::getCurrentIndex() const {
 	return currentCycle.current_index;
@@ -514,6 +519,25 @@ void TriggerDecoderBase::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
+static bool shouldConsiderEdge(const TriggerWaveform& triggerShape, TriggerWheel triggerWheel, TriggerValue edge) {
+	if (triggerWheel != TriggerWheel::T_PRIMARY && triggerShape.useOnlyPrimaryForSync) {
+		// Non-primary events ignored 
+		return false;
+	}
+
+	switch (triggerShape.syncEdge) {
+		case SyncEdge::Both: return true;
+		case SyncEdge::RiseOnly:
+		case SyncEdge::Rise: return edge == TriggerValue::RISE;
+		case SyncEdge::Fall: return edge == TriggerValue::FALL;
+	}
+
+	// how did we get here?
+	// assert(false)?
+
+	return false;
+}
+
 /**
  * @brief Trigger decoding happens here
  * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
@@ -542,7 +566,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 	}
 
-	bool useOnlyRisingEdgeForTrigger = triggerConfiguration.UseOnlyRisingEdgeForTrigger;
+	bool useOnlyRisingEdgeForTrigger = triggerShape.useOnlyRisingEdges;
 
 	efiAssert(CUSTOM_TRIGGER_UNEXPECTED, signal <= SHAFT_SECONDARY_RISING, "unexpected signal", unexpected);
 
@@ -571,9 +595,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	toothDurations[0] =
 			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
 
-	bool isPrimary = triggerWheel == TriggerWheel::T_PRIMARY;
-
-	if (needToSkipFall(type) || needToSkipRise(type) || (!considerEventForGap())) {
+	if (!shouldConsiderEdge(triggerShape, triggerWheel, type)) {
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
 			printf("%s isLessImportant %s now=%d index=%d\r\n",
@@ -686,7 +708,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 * in case of noise the counter could be above the expected number of events, that's why 'more or equals' and not just 'equals'
 			 */
 
-			unsigned int endOfCycleIndex = triggerShape.getSize() - (triggerConfiguration.UseOnlyRisingEdgeForTrigger ? 2 : 1);
+			unsigned int endOfCycleIndex = triggerShape.getSize() - (useOnlyRisingEdgeForTrigger ? 2 : 1);
 
 			isSynchronizationPoint = !getShaftSynchronized() || (currentCycle.current_index >= endOfCycleIndex);
 

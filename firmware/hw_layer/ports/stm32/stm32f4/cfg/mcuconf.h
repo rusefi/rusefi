@@ -45,7 +45,7 @@
 #define STM32_LSI_ENABLED                   TRUE
 #define STM32_HSE_ENABLED                   TRUE
 
-// rusEfi would automatically detect if we have 32768 quarts osc - see 'rtcWorks'
+// rusEfi would automatically detect if we have 32768 quartz osc - see 'rtcWorks'
 // todo: apply LSE patch
 #define STM32_LSE_ENABLED                   FALSE
 

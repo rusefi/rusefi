@@ -17,6 +17,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
 	tests/trigger/test_real_k24a2.cpp \
+	tests/trigger/test_real_k20.cpp \
 	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
@@ -40,6 +41,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_hooks.cpp \
 	tests/lua/test_lua_Leiderman_Khlystov.cpp \
 	tests/lua/test_can_filter.cpp \
+	tests/lua/test_lua_vin.cpp \
 	tests/sensor/test_cj125.cpp \
 	tests/test_change_engine_type.cpp \
 	tests/util/test_scaled_channel.cpp \
@@ -54,7 +56,6 @@ TESTS_SRC_CPP = \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
-	tests/test_issue_898.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/test_gear_detector.cpp \

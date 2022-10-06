@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Sep 16 20:09:28 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 18 01:42:51 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -370,6 +370,14 @@ case GPPWM_EthanolPercent:
   return "GPPWM_EthanolPercent";
 case GPPWM_FuelLoad:
   return "GPPWM_FuelLoad";
+case GPPWM_GppwmOutput1:
+  return "GPPWM_GppwmOutput1";
+case GPPWM_GppwmOutput2:
+  return "GPPWM_GppwmOutput2";
+case GPPWM_GppwmOutput3:
+  return "GPPWM_GppwmOutput3";
+case GPPWM_GppwmOutput4:
+  return "GPPWM_GppwmOutput4";
 case GPPWM_Iat:
   return "GPPWM_Iat";
 case GPPWM_IgnLoad:
@@ -715,8 +723,10 @@ case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
-case VVT_HONDA_K:
-  return "VVT_HONDA_K";
+case VVT_HONDA_K_EXHAUST:
+  return "VVT_HONDA_K_EXHAUST";
+case VVT_HONDA_K_INTAKE:
+  return "VVT_HONDA_K_INTAKE";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN:

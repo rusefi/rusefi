@@ -25,6 +25,7 @@
 #include <chprintf.h>
 #include "rusefi_lua.h"
 #include "can_hw.h"
+#include "flash_main.h"
 
 #define DEFAULT_SIM_RPM 1200
 #define DEFAULT_SNIFFER_THR 2500
@@ -96,9 +97,11 @@ void rusEfiFunctionalTest(void) {
 	initDataStructures();
 
 
-	// todo: reduce code duplication with initEngineContoller
+	// todo: reduce code duplication with initEngineController
 
-	resetConfigurationExt(MINIMAL_PINS);
+	initFlash();
+	loadConfiguration();
+
 	enableTriggerStimulator();
 
 	commonInitEngineController();
@@ -178,3 +181,6 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 	return &CAND1;
 }
 #endif // HAL_USE_CAN
+
+void setBoardConfigOverrides() {
+}

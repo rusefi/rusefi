@@ -11,13 +11,16 @@ Release template (copy/paste this for new release):
 ## Month 202x Release - "Release Name"
 
 ### Breaking Changes
- -   
+ - 
 
 ### Added
- -   
+ -
 
 ### Fixed
- -   
+ - 
+
+### Removed
+ - 
 
  -->
 
@@ -26,7 +29,16 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - VVT minimum RPM setting #4545
  - Flexible ignition adder/trim tables #4586
+ - Enforce board configuration overrides more strictly #4614
+ - rusEFI console Startup Frame should scan for available hardware #4633
+ - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
+ - Lua: function to access VIN setting #3967
+
+### Fixed
+ - Fuel Priming reset fix #4627
+ - Slower than expected RPM information was slowing engine start #4629
 
 ## September 2022 Release - "Day 203"
 

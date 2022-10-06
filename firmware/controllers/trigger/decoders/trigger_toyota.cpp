@@ -12,50 +12,10 @@
 #include "trigger_toyota.h"
 
 /**
- * TT_2JZ_1_12
- * One cam + 12 crank
- * http://rusefi.com/images/triggers/trigger_29.png
- */
-
-void initialize2jzGE1_12(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	float crankD = 360 / 12 / 2; // 15
-
-	float crankAngle = 10;
-	s->addEventClamped(crankAngle, TriggerWheel::T_SECONDARY, TriggerValue::FALL, -1, 721); // 120
-
-	for (int i = 0; i < 2; i++) {
-		s->addEventClamped(crankAngle + crankD, TriggerWheel::T_SECONDARY, TriggerValue::RISE, -1, 721);
-		crankAngle += crankD;
-		s->addEventClamped(crankAngle + crankD, TriggerWheel::T_SECONDARY, TriggerValue::FALL, -1, 721); // 120
-		crankAngle += crankD;
-	}
-
-
-	s->addEventClamped(75, TriggerWheel::T_PRIMARY, TriggerValue::FALL, -1, 721);
-
-	for (int i = 0; i < 21; i++) {
-		s->addEventClamped(crankAngle + crankD, TriggerWheel::T_SECONDARY, TriggerValue::RISE, -1, 721);
-		crankAngle += crankD;
-		s->addEventClamped(crankAngle + crankD, TriggerWheel::T_SECONDARY, TriggerValue::FALL, -1, 721); // 120
-		crankAngle += crankD;
-	}
-
-	s->addEventClamped(crankAngle + crankD, TriggerWheel::T_SECONDARY, TriggerValue::RISE, -1, 721);
-	crankAngle += crankD;
-
-
-	s->addEventClamped(720, TriggerWheel::T_PRIMARY, TriggerValue::RISE, -1, 721);
-
-	s->isSynchronizationNeeded = false;
-}
-
-/**
  * https://rusefi.com/forum/viewtopic.php?f=5&t=1720
  */
 void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	float camD = 720 / 6; // 120
 
@@ -125,8 +85,7 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 }
 
 void initializeToyota4_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	int w = 10;
 
