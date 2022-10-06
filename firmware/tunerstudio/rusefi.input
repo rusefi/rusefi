@@ -4013,6 +4013,10 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "2-step input",                         boardUse2stepPullDown
 	    field = "boardUseCamPullDown",                  boardUseCamPullDown
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
+	    field = "boardUseD2PullDown",                   boardUseD2PullDown
+	    field = "boardUseD3PullDown",                   boardUseD3PullDown
+	    field = "boardUseD4PullDown",                   boardUseD4PullDown
+	    field = "boardUseD5PullDown",                   boardUseD5PullDown
 
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "I understand ECU Locking",             yesUnderstandLocking
