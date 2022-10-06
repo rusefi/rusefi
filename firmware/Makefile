@@ -74,7 +74,7 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   USE_CPPOPT  = -std=c++20 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
-  # gcc-10 c++ 2a depricated uses of volatile errors
+  # gcc-10 c++ 20 depricated uses of volatile errors
   USE_CPPOPT += -Wno-deprecated
 endif
 
