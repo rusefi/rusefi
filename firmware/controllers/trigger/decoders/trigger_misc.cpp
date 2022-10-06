@@ -56,7 +56,7 @@ void configureTriTach(TriggerWaveform * s) {
  * based on https://www.w8ji.com/distributor_stabbing.htm
  */
 void configureFordPip(TriggerWaveform * s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 662.5;
 
