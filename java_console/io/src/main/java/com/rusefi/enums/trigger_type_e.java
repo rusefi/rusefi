@@ -34,7 +34,7 @@ public enum trigger_type_e {
 	TT_ROVER_K,
 	TT_GM_24x,
 	TT_HONDA_CBR_600,
-	TT_2JZ_1_12,
+	UNUSED_29,
 	TT_CHRYSLER_NGC_36_2_2,
 	TT_3_1_CAM,
 	TT_DODGE_NEON_2003_CRANK,
