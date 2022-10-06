@@ -62,7 +62,7 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
 	 * Note that only half of the physical wheel is defined here!
 	 */
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 60 + 655;
 
@@ -145,7 +145,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSecondWheelCam = true;
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
@@ -171,7 +171,7 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 }
 
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	// Nominal gap is 8.92
 	s->setTriggerSynchronizationGap2(6, 20);
@@ -191,7 +191,7 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
 // Cam pattern for intake/exhaust on all Skyactiv-G (and maybe -D/-X)
 void initializeMazdaSkyactivCam(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
     // wide
 	s->addEvent360(50, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
