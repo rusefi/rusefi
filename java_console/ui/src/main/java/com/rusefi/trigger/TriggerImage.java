@@ -71,8 +71,6 @@ public class TriggerImage {
                 return "Chrysler NGC 36/2/2";
             case TT_ONE:
                 return "Single Tooth";
-            case TT_2JZ_1_12:
-                return "2JZ 1/12";
             case TT_JEEP_4_CYL:
                 return "Jeep 4 cylinder";
             case TT_JEEP_18_2_2_2:
