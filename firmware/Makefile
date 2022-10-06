@@ -58,7 +58,7 @@ endif
 # yes we have two kinds of EXTRA_*PARAMS so that we can define those in two different places independently
 #
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant
+  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant  -fno-inline-functions
 endif
 
 # EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
@@ -73,7 +73,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT  = -std=c++2a -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT  = -std=c++20 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
   # gcc-10 c++ 2a depricated uses of volatile errors
   USE_CPPOPT += -Wno-deprecated
 endif
