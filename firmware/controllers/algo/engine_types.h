@@ -104,7 +104,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	MRE_SUBARU_EJ18 = 37,
 
-	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
+	UNUSED_38 = 38,
 
 	PROTEUS_VW_B6 = 39,
 
@@ -376,8 +376,6 @@ typedef enum {
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_2JZ_1_12 = 29,
-
 	TT_CHRYSLER_NGC_36_2_2 = 30,
 
 	// skipped 3/1 with cam sensor for testing
@@ -508,6 +506,7 @@ typedef enum {
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
 	UNUSED_21 = 21,
+	UNUSED_29 = 29,
 	UNUSED_34 = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project

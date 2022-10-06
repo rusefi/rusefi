@@ -1066,9 +1066,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
 		break;
-	case TOYOTA_JZS147:
-		setToyota_jzs147EngineConfiguration();
-		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
