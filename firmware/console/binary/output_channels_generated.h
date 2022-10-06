@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 20 02:04:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 06 22:59:50 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1205,19 +1205,21 @@ struct output_channels_s {
 	/**
 	 * offset 416
 	 */
-	uint8_t startStopStateToggleCounter = (uint8_t)0;
+	uint8_t starterState = (uint8_t)0;
 	/**
 	 * offset 417
 	 */
-	uint8_t starterState = (uint8_t)0;
+	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
 	 * offset 418
 	 */
-	uint8_t starterRelayDisable = (uint8_t)0;
+	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	units
 	 * offset 419
 	 */
-	uint8_t multiSparkCounter = (uint8_t)0;
+	uint8_t alignmentFill_at_419[1];
 	/**
 	 * offset 420
 	 */
@@ -1416,4 +1418,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Sep 20 02:04:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 06 22:59:50 UTC 2022
