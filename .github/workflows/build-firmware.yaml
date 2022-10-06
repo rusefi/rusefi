@@ -62,7 +62,6 @@ jobs:
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
-            skip-rate: 90
 
           - build-target: hellen81
             folder: hellen/hellen81
