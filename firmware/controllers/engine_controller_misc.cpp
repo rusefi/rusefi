@@ -37,7 +37,7 @@ void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
 static void onStartStopButtonToggle() {
-	engine->startStopStateToggleCounter++;
+	engine->engineState.startStopStateToggleCounter++;
 
 	if (engine->rpmCalculator.isStopped()) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
@@ -57,11 +57,11 @@ static void onStartStopButtonToggle() {
 void slowStartStopButtonCallback() {
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
-	if (startStopState && !engine->startStopState) {
+	if (startStopState && !engine->engineState.startStopState) {
 		// we are here on transition from 0 to 1
 		onStartStopButtonToggle();
 	}
-	engine->startStopState = startStopState;
+	engine->engineState.startStopState = startStopState;
 
 	if (engine->startStopStateLastPushTime == 0) {
    		// nothing is going on with startStop button
