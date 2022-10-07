@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Oct 03 15:05:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Oct 07 17:58:33 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3659,7 +3659,7 @@ struct engine_configuration_s {
 	 */
 	float auxFrequencyFilter;
 	/**
-	 * "RPM", 1, 0, 0, 3000, 0
+	RPM
 	 * offset 2080
 	 */
 	int16_t vvtControlMinRpm;
@@ -5057,4 +5057,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Oct 03 15:05:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Oct 07 17:58:33 UTC 2022
