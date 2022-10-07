@@ -229,10 +229,6 @@ public:
 
 	RpmCalculator rpmCalculator;
 
-	bool startStopState = false;
-	int startStopStateToggleCounter = 0;
-
-
 	Timer configBurnTimer;
 
 	/**
