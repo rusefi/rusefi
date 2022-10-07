@@ -1,5 +1,6 @@
 package com.rusefi.test;
 
+import com.rusefi.MaybeSemicolorWasMissedException;
 import com.rusefi.ReaderState;
 import com.rusefi.output.GetConfigValueConsumer;
 import org.junit.Test;
@@ -185,5 +186,17 @@ public class GetConfigValueConsumerTest {
                 "\t\treturn config->enableFan1WithAc;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getHeaderAndGetter());
+    }
+
+    @Test(expected = MaybeSemicolorWasMissedException.class)
+    public void generateSuspiciousTsInfo() throws IOException {
+        String test = "struct total\n" +
+                "uint8_t hello;\"unit\", 1, 0, 0, 100, 0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+
+
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        state.readBufferedReader(test, getConfigValueConsumer);
     }
 }
