@@ -265,10 +265,10 @@ public class VariableRegistry {
         value = value.trim();
         if (value.isEmpty())
             return false;
-        return isQ(value, quote);
+        return simpleIsQuoted(value, quote);
     }
 
-    private static boolean isQ(String value, char quote) {
+    private static boolean simpleIsQuoted(String value, char quote) {
         return value.charAt(0) == quote && value.charAt(value.length() - 1) == quote;
     }
 
