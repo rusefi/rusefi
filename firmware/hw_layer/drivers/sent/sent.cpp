@@ -13,9 +13,13 @@
 
 #include "sent.h"
 
+/* Maximum slow shannel mailboxes, DO NOT CHANGE */
+#define SENT_SLOW_CHANNELS_MAX  16
+
 typedef enum
 {
-	SM_SENT_INIT_STATE = 0,
+	SM_SENT_CALIB_STATE = 0,
+	SM_SENT_INIT_STATE,
 	SM_SENT_SYNC_STATE,
 	SM_SENT_STATUS_STATE,
 	SM_SENT_SIG1_DATA1_STATE,
@@ -28,20 +32,23 @@ typedef enum
 }SM_SENT_enum;
 
 struct sent_channel_stat {
-	uint32_t PulseCnt;
 	uint32_t ShortIntervalErr;
 	uint32_t LongIntervalErr;
 	uint32_t SyncErr;
 	uint32_t CrcErrCnt;
 	uint32_t FrameCnt;
+	uint32_t RestartCnt;
 };
 
 class sent_channel {
 private:
-	SM_SENT_enum state;
+	SM_SENT_enum state = SM_SENT_CALIB_STATE;
 
-	/* Tick interval in CPU clocks - adjusted on SYNC */
-	uint32_t tickClocks;
+	/* Unit interval in timer clocks - adjusted on SYNC */
+	uint32_t tickPerUnit;
+	uint32_t pulseCounter;
+	/* pulses skipped in init state while waiting for SYNC */
+	uint32_t initStatePulseCounter;
 
 	/* fast channel nibbles.
 	 * TODO: rewrite with uint32_t shift register */
@@ -58,6 +65,8 @@ private:
 	/* CRC */
 	uint8_t crc4(uint8_t* pdata, uint16_t ndata);
 	uint8_t crc4_gm(uint8_t* pdata, uint16_t ndata);
+
+	void restart(void);
 
 public:
 	/* fast channel data */
@@ -81,34 +90,75 @@ public:
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
-//#define SENT_TICK (5 * 72) // 5uS @72MHz
-#define SENT_TICK (27 * 72 / 10) // 2.7uS @72MHz
+void sent_channel::restart(void)
+{
+	state = SM_SENT_CALIB_STATE;
+	pulseCounter = 0;
+	initStatePulseCounter = 0;
+	tickPerUnit = 0;
+
+	/* reset slow channels */
+	scMsgFlags = 0;
+	scShift2 = 0;
+	scShift3 = 0;
+
+	#if SENT_STATISTIC_COUNTERS
+		statistic.ShortIntervalErr = 0;
+		statistic.LongIntervalErr = 0;
+		statistic.SyncErr = 0;
+		statistic.CrcErrCnt = 0;
+		statistic.FrameCnt = 0;
+		statistic.RestartCnt++;
+	#endif
+}
 
 int sent_channel::Decoder(uint16_t clocks)
 {
 	int ret = 0;
 
-	#if SENT_STATISTIC_COUNTERS
-		statistic.PulseCnt++;
-	#endif
+	pulseCounter++;
+
+	/* special case - tick time calculation */
+	if (state == SM_SENT_CALIB_STATE) {
+		/* Find longes pulse ... */
+		if (clocks > tickPerUnit) {
+			tickPerUnit = clocks;
+		}
+		/* ... of 9 pulses */
+		if (pulseCounter >= (SENT_MSG_PAYLOAD_SIZE + 1)) {
+			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			pulseCounter = 0;
+			state = SM_SENT_INIT_STATE;
+		}
+		return 0;
+	}
 
 	/* special case for out-of-sync state */
 	if (state == SM_SENT_INIT_STATE) {
-		/* check is pulse looks like sync with allowed +/-20% deviation */
-		int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * SENT_TICK;
+		/* check if pulse looks like sync with allowed +/-20% deviation */
+		int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
 
-		if ((clocks >= (syncClocks * 80 / 100)) &&
-			(clocks <= (syncClocks * 120 / 100))) {
-			/* calculate tick time */
-			tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+		if (((100 * clocks) >= (syncClocks * 80)) &&
+			((100 * clocks) <= (syncClocks * 120))) {
+			initStatePulseCounter = 0;
+			/* adjust unit time */
+			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			/* next state */
 			state = SM_SENT_STATUS_STATE;
-			/* done for this pulse */
-			return 0;
+		} else {
+			initStatePulseCounter++;
+			/* 3 frames skipped, no SYNC detected - recalibrate */
+			if (initStatePulseCounter >= (9 * 3)) {
+				restart();
+			}
 		}
+		/* done for this pulse */
+		return 0;
 	}
 
-	int interval = (clocks + tickClocks / 2) / tickClocks - SENT_OFFSET_INTERVAL;
+	int interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 
 	if (interval < 0) {
 		#if SENT_STATISTIC_COUNTERS
@@ -120,15 +170,17 @@ int sent_channel::Decoder(uint16_t clocks)
 
 	switch(state)
 	{
+		case SM_SENT_CALIB_STATE:
 		case SM_SENT_INIT_STATE:
-			/* handles above, should not get in here */
+			/* handled above, should not get in here */
+			ret = -1;
 			break;
 
 		case SM_SENT_SYNC_STATE:
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				tickClocks = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 				state = SM_SENT_STATUS_STATE;
 			}
 			else
@@ -145,7 +197,7 @@ int sent_channel::Decoder(uint16_t clocks)
 						statistic.ShortIntervalErr++;
 					}
 				#endif // SENT_STATISTIC_COUNTERS
-				/* wait for next sync and recalibrate tickClocks */
+				/* wait for next sync and recalibrate tickPerUnit */
 				state = SM_SENT_INIT_STATE;
 			}
 			break;
@@ -207,6 +259,7 @@ int sent_channel::Decoder(uint16_t clocks)
 				#endif
 
 				state = SM_SENT_INIT_STATE;
+				ret = -1;
 			}
 			break;
 	}
@@ -218,6 +271,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		/* packet is incorrect, reset slow channel state machine */
 		scShift2 = 0;
 		scShift3 = 0;
+		/* TODO: add error counter and restart from CALIB state? */
 	}
 
 	return ret;
@@ -266,7 +320,7 @@ int sent_channel::SlowChannelDecoder()
 				/* TODO: add crc check */
 				/* Find free mainbox or mailbox with same ID */
 				/* TODO: allow message box freeing */
-				for (i = 0; i < 16; i++) {
+				for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
 					if (((scMsgFlags & (1 << i)) == 0) ||
 						(scMsg[i].id == id)) {
 						scMsg[i].data = data;
@@ -370,7 +424,7 @@ uint32_t SENT_GetSyncErrCnt(void)
 uint32_t SENT_GetSyncCnt(void)
 {
 	#if SENT_STATISTIC_COUNTERS
-		return channels[0].PulseCnt;
+		return channels[0].pulseCounter;
 	#else
 		return 0;
 	#endif
@@ -389,7 +443,7 @@ uint32_t SENT_GetFrameCnt(uint32_t n)
 uint32_t SENT_GetErrPercent(void)
 {
 	#if SENT_STATISTIC_COUNTERS
-		return 100 * channels[0].SyncErr / channels[0].PulseCnt;
+		return 100 * channels[0].SyncErr / channels[0].pulseCounter;
 	#else
 		return 0;
 	#endif
@@ -397,7 +451,7 @@ uint32_t SENT_GetErrPercent(void)
 
 uint32_t SENT_GetTickTimeNs(void)
 {
-	return channels[0].tickClocks * 1000 / 72;
+	return channels[0].tickPerUnit * 1000 / 72;
 }
 
 /* Debug */
