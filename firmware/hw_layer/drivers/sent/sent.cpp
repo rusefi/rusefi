@@ -13,23 +13,54 @@
 
 #include "sent.h"
 
+/*==========================================================================*/
+/* Protocol definitions.													*/
+/*==========================================================================*/
+
+#define SENT_OFFSET_INTERVAL	12
+#define SENT_SYNC_INTERVAL		(56 - SENT_OFFSET_INTERVAL) // 56 ticks - 12
+
+#define SENT_MIN_INTERVAL		12
+#define SENT_MAX_INTERVAL		15
+
+#define SENT_CRC_SEED           0x05
+
+#define SENT_MSG_DATA_SIZE      6
+/* Status + two 12-bit signals + CRC */
+#define SENT_MSG_PAYLOAD_SIZE   (1 + SENT_MSG_DATA_SIZE + 1)  // Size of payload
+
+/*==========================================================================*/
+/* Decoder configuration													*/
+/*==========================================================================*/
+
+#ifndef SENT_CHANNELS_NUM
+#define SENT_CHANNELS_NUM		4 // Number of sent channels
+#endif
+
+/* collect statistic */
+#define SENT_STATISTIC_COUNTERS	1
+
 /* Maximum slow shannel mailboxes, DO NOT CHANGE */
 #define SENT_SLOW_CHANNELS_MAX  16
 
+/*==========================================================================*/
+/* Decoder																	*/
+/*==========================================================================*/
+
 typedef enum
 {
-	SM_SENT_CALIB_STATE = 0,
-	SM_SENT_INIT_STATE,
-	SM_SENT_SYNC_STATE,
-	SM_SENT_STATUS_STATE,
-	SM_SENT_SIG1_DATA1_STATE,
-	SM_SENT_SIG1_DATA2_STATE,
-	SM_SENT_SIG1_DATA3_STATE,
-	SM_SENT_SIG2_DATA1_STATE,
-	SM_SENT_SIG2_DATA2_STATE,
-	SM_SENT_SIG2_DATA3_STATE,
-	SM_SENT_CRC_STATE,
-}SM_SENT_enum;
+	SENT_STATE_CALIB = 0,
+	SENT_STATE_INIT,
+	SENT_STATE_SYNC,
+	SENT_STATE_STATUS,
+	SENT_STATE_SIG1_DATA1,
+	SENT_STATE_SIG1_DATA2,
+	SENT_STATE_SIG1_DATA3,
+	SENT_STATE_SIG2_DATA1,
+	SENT_STATE_SIG2_DATA2,
+	SENT_STATE_SIG2_DATA3,
+	SENT_STATE_CRC,
+} SENT_STATE_enum;
 
 struct sent_channel_stat {
 	uint32_t ShortIntervalErr;
@@ -42,7 +73,7 @@ struct sent_channel_stat {
 
 class sent_channel {
 private:
-	SM_SENT_enum state = SM_SENT_CALIB_STATE;
+	SENT_STATE_enum state = SENT_STATE_CALIB;
 
 	/* Unit interval in timer clocks - adjusted on SYNC */
 	uint32_t tickPerUnit;
@@ -95,7 +126,7 @@ static sent_channel channels[SENT_CHANNELS_NUM];
 
 void sent_channel::restart(void)
 {
-	state = SM_SENT_CALIB_STATE;
+	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
 	initStatePulseCounter = 0;
 	tickPerUnit = 0;
@@ -122,7 +153,7 @@ int sent_channel::Decoder(uint16_t clocks)
 	pulseCounter++;
 
 	/* special case - tick time calculation */
-	if (state == SM_SENT_CALIB_STATE) {
+	if (state == SENT_STATE_CALIB) {
 		/* Find longes pulse ... */
 		if (clocks > tickPerUnit) {
 			tickPerUnit = clocks;
@@ -132,13 +163,13 @@ int sent_channel::Decoder(uint16_t clocks)
 			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			pulseCounter = 0;
-			state = SM_SENT_INIT_STATE;
+			state = SENT_STATE_INIT;
 		}
 		return 0;
 	}
 
 	/* special case for out-of-sync state */
-	if (state == SM_SENT_INIT_STATE) {
+	if (state == SENT_STATE_INIT) {
 		/* check if pulse looks like sync with allowed +/-20% deviation */
 		int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
 
@@ -149,7 +180,7 @@ int sent_channel::Decoder(uint16_t clocks)
 			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			/* next state */
-			state = SM_SENT_STATUS_STATE;
+			state = SENT_STATE_STATUS;
 		} else {
 			initStatePulseCounter++;
 			/* 3 frames skipped, no SYNC detected - recalibrate */
@@ -167,24 +198,24 @@ int sent_channel::Decoder(uint16_t clocks)
 		#if SENT_STATISTIC_COUNTERS
 			statistic.ShortIntervalErr++;
 		#endif //SENT_STATISTIC_COUNTERS
-		state = SM_SENT_INIT_STATE;
+		state = SENT_STATE_INIT;
 		return -1;
 	}
 
 	switch(state)
 	{
-		case SM_SENT_CALIB_STATE:
-		case SM_SENT_INIT_STATE:
+		case SENT_STATE_CALIB:
+		case SENT_STATE_INIT:
 			/* handled above, should not get in here */
 			ret = -1;
 			break;
 
-		case SM_SENT_SYNC_STATE:
+		case SENT_STATE_SYNC:
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
 				tickPerUnit = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
-				state = SM_SENT_STATUS_STATE;
+				state = SENT_STATE_STATUS;
 			}
 			else
 			{
@@ -201,26 +232,26 @@ int sent_channel::Decoder(uint16_t clocks)
 					}
 				#endif // SENT_STATISTIC_COUNTERS
 				/* wait for next sync and recalibrate tickPerUnit */
-				state = SM_SENT_INIT_STATE;
+				state = SENT_STATE_INIT;
 			}
 			break;
 
-		case SM_SENT_STATUS_STATE:
-		case SM_SENT_SIG1_DATA1_STATE:
-		case SM_SENT_SIG1_DATA2_STATE:
-		case SM_SENT_SIG1_DATA3_STATE:
-		case SM_SENT_SIG2_DATA1_STATE:
-		case SM_SENT_SIG2_DATA2_STATE:
-		case SM_SENT_SIG2_DATA3_STATE:
-		case SM_SENT_CRC_STATE:
+		case SENT_STATE_STATUS:
+		case SENT_STATE_SIG1_DATA1:
+		case SENT_STATE_SIG1_DATA2:
+		case SENT_STATE_SIG1_DATA3:
+		case SENT_STATE_SIG2_DATA1:
+		case SENT_STATE_SIG2_DATA2:
+		case SENT_STATE_SIG2_DATA3:
+		case SENT_STATE_CRC:
 			if(interval <= SENT_MAX_INTERVAL)
 			{
-				nibbles[state - SM_SENT_STATUS_STATE] = interval;
+				nibbles[state - SENT_STATE_STATUS] = interval;
 
-				if (state != SM_SENT_CRC_STATE)
+				if (state != SENT_STATE_CRC)
 				{
 					/* TODO: refactor */
-					state = (SM_SENT_enum)((int)state + 1);
+					state = (SENT_STATE_enum)((int)state + 1);
 				}
 				else
 				{
@@ -252,7 +283,7 @@ int sent_channel::Decoder(uint16_t clocks)
 						#endif // SENT_STATISTIC_COUNTERS
 						ret = -1;
 					}
-					state = SM_SENT_SYNC_STATE;
+					state = SENT_STATE_SYNC;
 				}
 			}
 			else
@@ -261,7 +292,7 @@ int sent_channel::Decoder(uint16_t clocks)
 					statistic.LongIntervalErr++;
 				#endif
 
-				state = SM_SENT_INIT_STATE;
+				state = SENT_STATE_INIT;
 				ret = -1;
 			}
 			break;
@@ -409,118 +440,9 @@ void sent_channel::Info(void)
 	#endif
 }
 
-#if 0
-/* Stat counters */
-uint32_t SENT_GetShortIntervalErrCnt(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[0].ShortIntervalErr;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetLongIntervalErrCnt(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[0].LongIntervalErr;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetCrcErrCnt(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[0].CrcErrCnt;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetSyncErrCnt(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[0].SyncErr;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetSyncCnt(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[0].pulseCounter;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetFrameCnt(uint32_t n)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return channels[n].FrameCnt;
-	#else
-		(void)n;
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetErrPercent(void)
-{
-	#if SENT_STATISTIC_COUNTERS
-		return 100 * channels[0].SyncErr / channels[0].pulseCounter;
-	#else
-		return 0;
-	#endif
-}
-
-uint32_t SENT_GetTickTimeNs(void)
-{
-	return channels[0].tickPerUnit * 1000 / 72;
-}
-
-/* Debug */
-void SENT_GetRawNibbles(uint8_t* buf)
-{
-	for(uint8_t i = 0; i < SENT_MSG_PAYLOAD_SIZE; i++)
-	{
-		buf[i] = channels[0].nibbles[i];
-	}
-}
-
-/* Slow Channel */
-uint16_t SENT_GetSlowMessagesFlags(uint32_t n)
-{
-	return channels[n].scMsgFlags;
-}
-
-uint16_t SENT_GetSlowMessage(uint32_t n, uint32_t i)
-{
-	return channels[n].scMsg[i].data;
-}
-
-uint16_t SENT_GetSlowMessageID(uint32_t n, uint32_t i)
-{
-	return channels[n].scMsg[i].id;
-}
-
-/* GM DI fuel pressure, temperature sensor data */
-uint32_t SENT_GetSig0(uint32_t n)
-{
-	return channels[n].sig0;
-}
-
-uint32_t SENT_GetSig1(uint32_t n)
-{
-	return channels[n].sig1;
-}
-
-uint8_t SENT_GetStat(uint32_t n)
-{
-	return channels[n].stat;
-}
-#endif
+/*==========================================================================*/
+/* Decoder thread settings.													*/
+/*==========================================================================*/
 
 /* 4 per channel should be enougth */
 #define SENT_MB_SIZE		(4 * SENT_CHANNELS_NUM)
