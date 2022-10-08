@@ -89,8 +89,8 @@ private:
 	uint16_t scMsgFlags;
 	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
 	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
-	bool sc16Bit;		/* C-flag */
-	/* Decoder */
+	/* Slow channel decoder */
+	int SlowChannelStore(uint8_t id, uint16_t data);
 	int SlowChannelDecoder(void);
 
 	/* CRC */
@@ -116,6 +116,7 @@ public:
 	sent_channel_stat statistic;
 #endif // SENT_STATISTIC_COUNTERS
 
+	/* Decoder */
 	int Decoder(uint16_t clocks);
 
 	/* Show status */
@@ -311,6 +312,33 @@ int sent_channel::Decoder(uint16_t clocks)
 	return ret;
 }
 
+int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
+{
+	int i;
+
+	/* Update already allocated messagebox? */
+	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		if ((scMsgFlags & BIT(i)) && (scMsg[i].id == id)) {
+			scMsg[i].data = data;
+			return 0;
+		}
+	}
+
+	/* New message? Allocate messagebox */
+	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		if (!(scMsgFlags & BIT(i)))
+		 {
+			scMsg[i].data = data;
+			scMsg[i].id = id;
+			scMsgFlags |= (1 << i);
+			return 0;
+		}
+	}
+
+	/* No free mailboxes for new ID */
+	return -1;
+}
+
 int sent_channel::SlowChannelDecoder()
 {
 	/* bit 2 and bit 3 from status nibble are used to transfer short messages */
@@ -327,12 +355,13 @@ int sent_channel::SlowChannelDecoder()
 		/* 0b1000.0000.0000.0000? */
 		if ((scShift3 & 0xffff) == 0x8000) {
 			/* Done receiving */
-			uint8_t id = (scShift2 >> 12) & 0x0f;
 
-			/* TODO: add CRC check */
-			scMsg[id].data = (scShift2 >> 4) & 0xff;
-			scMsg[id].id = id;
-			scMsgFlags |= (1 << id);
+			/* TODO: add crc check */
+
+			uint8_t id = (scShift2 >> 12) & 0x0f;
+			uint16_t data = (scShift2 >> 4) & 0xff;
+
+			return SlowChannelStore(id, data);
 		}
 	}
 	if (1) {
@@ -342,38 +371,29 @@ int sent_channel::SlowChannelDecoder()
 		if ((scShift3 & 0x3f821) == 0x3f000) {
 			uint8_t id;
 
-			/* C: configuration bit is used to indicate 16 bit format */
-			sc16Bit = !!(scShift3 & (1 << 10));
+			/* C-flag: configuration bit is used to indicate 16 bit format */
+			bool sc16Bit = !!(scShift3 & (1 << 10));
 			if (!sc16Bit) {
-				int i;
 				/* 12 bit message, 8 bit ID */
+
+				/* TODO: add crc check */
+
 				id = ((scShift3 >> 1) & 0x0f) |
 					 ((scShift3 >> 2) & 0xf0);
 				uint16_t data = scShift2 & 0x0fff; /* 12 bit */
 
 				/* TODO: add crc check */
-				/* Find free mainbox or mailbox with same ID */
-				/* TODO: allow message box freeing */
-				for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
-					if (((scMsgFlags & (1 << i)) == 0) ||
-						(scMsg[i].id == id)) {
-						scMsg[i].data = data;
-						scMsg[i].id = id;
-						scMsgFlags |= (1 << i);
-						return 0;
-					}
-				}
+				return SlowChannelStore(id, data);
 			} else {
 				/* 16 bit message, 4 bit ID */
-				uint16_t data;
-				data = (scShift2 & 0x0fff) |
-					   (((scShift3 >> 1) & 0x0f) << 12);
-				id = (scShift3 >> 6) & 0x0f;
 
 				/* TODO: add crc check */
-				scMsg[id].data = data; /* 16 bit */
-				scMsg[id].id = id; /* straight mapping */
-				scMsgFlags |= (1 << id);
+
+				id = (scShift3 >> 6) & 0x0f;
+				uint16_t data = (scShift2 & 0x0fff) |
+					   (((scShift3 >> 1) & 0x0f) << 12);
+
+				return SlowChannelStore(id, data);
 			}
 		}
 	}
