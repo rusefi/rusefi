@@ -229,19 +229,6 @@ void printTPSInfo(void) {
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
-static void printTemperatureInfo() {
-#if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo();
-
-	efiPrintf("fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
-			hwPortname(engineConfiguration->fanPin));
-
-	efiPrintf("A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
-			hwPortname(engineConfiguration->acRelayPin));
-
-#endif /* EFI_ANALOG_SENSORS */
-}
-
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration();
@@ -1145,7 +1132,6 @@ void initSettings(void) {
 	// todo: start saving values into flash right away?
 
 	addConsoleAction("showconfig", doPrintConfiguration);
-	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);

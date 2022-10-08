@@ -130,4 +130,29 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	}
 }
 
+void AdcSubscription::PrintInfo() {
+	for (size_t i = 0; i < efi::size(s_entries); i++) {
+		auto& entry = s_entries[i];
+
+		if (!entry.Sensor) {
+			// Skip unconfigured entries
+			continue;
+		}
+
+		const auto name = entry.Sensor->getSensorName();
+		float mcuVolts = getVoltage("sensor", entry.Channel);
+		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
+		auto channel = entry.Channel;
+
+		efiPrintf(
+			"%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f",
+			name,
+			channel,
+			getAdcMode(channel),
+			getPinNameByAdcChannel(name, channel, pinNameBuffer),
+			mcuVolts, sensorVolts, entry.VoltsPerAdcVolt
+		);
+	}
+}
+
 #endif // !EFI_UNIT_TEST
