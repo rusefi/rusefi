@@ -86,6 +86,9 @@ public:
 #endif // SENT_STATISTIC_COUNTERS
 
 	int Decoder(uint16_t clocks);
+
+	/* Show status */
+	void Info(void);
 };
 
 static sent_channel channels[SENT_CHANNELS_NUM];
@@ -383,6 +386,29 @@ uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
 	return calculatedCRC;
 }
 
+void sent_channel::Info(void)
+{
+	int i;
+
+	efiPrintf("Unit time %d timer ticks", tickPerUnit);
+	efiPrintf("Total pulses %d", pulseCounter);
+	efiPrintf("Last fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
+
+	efiPrintf("Slow channels:");
+	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		if (scMsgFlags & BIT(i)) {
+			efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
+		}
+	}
+
+	#if SENT_STATISTIC_COUNTERS
+		efiPrintf("Restarts %d", statistic.RestartCnt);
+		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
+		efiPrintf("Total frames %d with crc erorr %d", statistic.FrameCnt, statistic.CrcErrCnt);
+		efiPrintf("Sync errors %d", statistic.SyncErr);
+	#endif
+}
+
 #if 0
 /* Stat counters */
 uint32_t SENT_GetShortIntervalErrCnt(void)
@@ -539,6 +565,19 @@ static void SentDecoderThread(void*)
 	}
 }
 
+static void printSentInfo()
+{
+	int i;
+
+	for (i = 0; i < SENT_CHANNELS_NUM; i++) {
+		sent_channel &ch = channels[i];
+
+		efiPrintf("---- SENT ch %d ----", i);
+		ch.Info();
+		efiPrintf("--------------------");
+	}
+}
+
 /* Should be called once */
 void initSent(void)
 {
@@ -549,6 +588,8 @@ void initSent(void)
 
 	/* Start HW layer */
 	startSent();
+
+	addConsoleAction("sentinfo", &printSentInfo);
 }
 
 #endif /* EFI_PROD_CODE */
