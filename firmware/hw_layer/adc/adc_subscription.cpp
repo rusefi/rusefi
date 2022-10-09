@@ -144,6 +144,8 @@ void AdcSubscription::PrintInfo() {
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 		auto channel = entry.Channel;
 
+		char pinNameBuffer[16];
+
 		efiPrintf(
 			"%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f",
 			name,

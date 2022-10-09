@@ -53,6 +53,7 @@
 #include "start_stop.h"
 #include "dynoview.h"
 #include "vr_pwm.h"
+#include "adc_subscription.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -235,8 +236,6 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	return buffer;
 }
 
-static char pinNameBuffer[16];
-
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
 #endif /* HAL_USE_ADC */
@@ -244,7 +243,6 @@ extern AdcDevice fastAdc;
 static void printSensorInfo() {
 	// Print info about analog mappings
 	AdcSubscription::PrintInfo();
-
 
 	// Print info about all sensors
 	Sensor::showAllSensorInfo();

@@ -261,8 +261,6 @@ static void setCrankingIACExtra(float percent) {
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
 	efiPrintf("cranking_fuel %.2f", timeMs);
-
-	printTemperatureInfo();
 }
 
 static void setGlobalTriggerAngleOffset(float value) {
@@ -811,14 +809,6 @@ void scheduleStopEngine(void) {
 	doScheduleStopEngine();
 }
 
-static void printAllInfo() {
-	printTemperatureInfo();
-	printTPSInfo();
-#if EFI_ENGINE_SNIFFER
-	efiPrintf("waveChartUsedSize=%d", waveChartUsedSize);
-#endif
-}
-
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
@@ -1135,7 +1125,6 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
 	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);
