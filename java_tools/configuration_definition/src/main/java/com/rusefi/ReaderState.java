@@ -191,8 +191,12 @@ public class ReaderState {
             consumer.handleEndStruct(this, structure);
     }
 
-    public void readBufferedReader(String inputString, ConfigurationConsumer... consumers) throws IOException {
-        readBufferedReader(new BufferedReader(new StringReader(inputString)), Arrays.asList(consumers));
+    public void readBufferedReader(String inputString, ConfigurationConsumer... consumers) {
+        try {
+            readBufferedReader(new BufferedReader(new StringReader(inputString)), Arrays.asList(consumers));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {

@@ -22,7 +22,7 @@ public class TSProjectConsumerTest {
     }
 
     @Test
-    public void conditionalField() throws IOException {
+    public void conditionalField() {
         String test = "struct pid_s\n" +
                 "custom afr_table_t 4x4 array,   U08,   @OFFSET@, [4x4],\"deg\",\t   {1/10},     0,        0,  25.0,     1 \n" +
                 "#if LAMBDA\n" +

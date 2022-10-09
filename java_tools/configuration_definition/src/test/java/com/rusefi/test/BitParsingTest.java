@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BitParsingTest {
     @Test
-    public void testBitParser() throws IOException {
+    public void testBitParser() {
         ReaderState state = new ReaderState();
 
         String inputString = "struct pid_s\n" +

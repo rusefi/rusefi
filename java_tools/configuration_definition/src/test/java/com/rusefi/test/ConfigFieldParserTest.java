@@ -48,7 +48,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testFloatMsAlias() throws IOException {
+    public void testFloatMsAlias() {
         String test = "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -63,7 +63,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testSameFieldTwice() throws IOException {
+    public void testSameFieldTwice() {
         String test = "struct pid_s\n" +
                 "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "int afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -76,7 +76,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testCustomEnum() throws IOException {
+    public void testCustomEnum() {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
@@ -95,7 +95,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testShortForm() throws IOException {
+    public void testShortForm() {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\"\n" +
                 "custom ego_sensor_e 1 bits, S08, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
@@ -114,7 +114,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void test2byteCustomEnum() throws IOException {
+    public void test2byteCustomEnum() {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "custom ego_sensor_e2 2 bits, S16, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
@@ -133,7 +133,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void test4byteCustomEnum() throws IOException {
+    public void test4byteCustomEnum() {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
                 "custom ego_sensor_e4 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
@@ -150,7 +150,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void alignFourByteTypes() throws IOException {
+    public void alignFourByteTypes() {
         // we expect padding before each 4 byte field
         String test = "struct pid_s\n" +
                 "\tint16_t periodMs1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -171,7 +171,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void alignArray6() throws IOException {
+    public void alignArray6() {
         // we expect padding before each 4 byte field
         String test = "struct vr_threshold_s\n" +
                 "\tuint8_t pin;\n" +
@@ -191,7 +191,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void manyStartAreNotMultiplication() throws IOException {
+    public void manyStartAreNotMultiplication() {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE \"***\"\n" +
                 "end_struct\n" +
@@ -200,7 +200,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public void invalidDefine() throws IOException {
+    public void invalidDefine() {
         String test = "struct pid_s\n" +
                 VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
                 "end_struct\n" +
@@ -209,7 +209,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void multiplicationInDefine() throws IOException {
+    public void multiplicationInDefine() {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
                 "#define ERROR_BUFFER_COUNT 120\n" +
@@ -226,7 +226,7 @@ public class ConfigFieldParserTest {
                 "#define RESULT 14400\n", state.variableRegistry.getDefinesSection());
     }
     @Test
-    public void expressionInMultiplier() throws IOException {
+    public void expressionInMultiplier() {
         String test = "struct pid_s\n" +
                 "\tint16_t autoscale periodMs;PID dTime;\"ms\",      {1/10},      0,       0, 3000,      0\n" +
                 "\tint16_t periodMs2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -247,7 +247,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void useCustomType() throws IOException {
+    public void useCustomType() {
         ReaderState state = new ReaderState();
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -267,7 +267,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testDefineChar() throws IOException {
+    public void testDefineChar() {
         ReaderState state = new ReaderState();
         String test =
                 "#define SD_r 'r'\n" +
@@ -282,7 +282,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testDefine() throws IOException {
+    public void testDefine() {
         ReaderState state = new ReaderState();
         String test =
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -299,7 +299,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testFsioVisible() throws IOException {
+    public void testFsioVisible() {
         {
             ReaderState state = new ReaderState();
             ConfigField cf = ConfigField.parse(state, "int fsio_visible field");
@@ -349,7 +349,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void test2byteOffset() throws IOException {
+    public void test2byteOffset() {
         String test = "struct_no_prefix pid_s\n" +
                 "\tint8_t byte1\n" +
                 "\tint16_t short\n" +
@@ -534,7 +534,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testArrayOfOne() throws IOException {
+    public void testArrayOfOne() {
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 1\n" +
                 "int[ERROR_BUFFER_SIZE iterate] autoscale field;;\"ratio\", 0.01, 0, 0, 650, 0\n" +
@@ -559,7 +559,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testStructAfterByte() throws IOException {
+    public void testStructAfterByte() {
         String test = "struct struct_s\n" +
                 "\tint int2\n" +
                 "end_struct\n" +
@@ -604,7 +604,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void justTwoBytes() throws IOException {
+    public void justTwoBytes() {
         String test =
                 "struct_no_prefix pid_s\n" +
                 "\tint8_t byte1\n" +
@@ -699,7 +699,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testStructTooltips() throws IOException {
+    public void testStructTooltips() {
         String test = "struct total\n" +
                 "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +

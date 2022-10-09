@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 public class GetConfigValueConsumerTest {
     @Test
-    public void testStructArrayAndCharArgument() throws IOException {
+    public void testStructArrayAndCharArgument() {
         ReaderState state = new ReaderState();
         String test = "struct total\n" +
                 "custom lua_script_t 200 string, ASCII, @OFFSET@, 200\n" +
@@ -43,7 +43,7 @@ public class GetConfigValueConsumerTest {
     }
 
     @Test
-    public void generateEmbeddedStruct() throws IOException {
+    public void generateEmbeddedStruct() {
         ReaderState state = new ReaderState();
         String test = "struct total\n" +
                 "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
@@ -85,7 +85,7 @@ public class GetConfigValueConsumerTest {
     }
 
     @Test
-    public void generateGetConfig() throws IOException {
+    public void generateGetConfig() {
         String test = "struct total\n" +
                 "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
                 "float tempC_1;these values are in Celcius;\"*C\", 1, 0, -40, 200, 1\n" +
@@ -189,7 +189,7 @@ public class GetConfigValueConsumerTest {
     }
 
     @Test(expected = MaybeSemicolorWasMissedException.class)
-    public void generateSuspiciousTsInfo() throws IOException {
+    public void generateSuspiciousTsInfo() {
         String test = "struct total\n" +
                 "uint8_t hello;\"unit\", 1, 0, 0, 100, 0\n" +
                 "end_struct\n";
