@@ -172,10 +172,14 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 }
 
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
-	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
+	static const char *usage = "Usage: bluetooth_<hc05/hc06/bk/jdy> <baud> <name> <pincode>";
+
+	if ((baudRate == nullptr) || (name == nullptr) || (pinCode == nullptr)) {
+		efiPrintf("%s", usage);
+		return;
+	}
 
 	tsChannel = getBluetoothChannel();
-
 	if (tsChannel == nullptr) {
 		efiPrintf("No Bluetooth channel configured! Check your board config.");
 		return;
@@ -190,11 +194,10 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 
 	// now check the arguments and add other commands:
 	// 1) baud rate
-	int baud = (baudRate != NULL) ? atoi(baudRate) : 0;
-	int i;
+	int baud = atoi(baudRate);
 	// find a known baud rate in our list
 	setBaudIdx = -1;
-	for (i = 1; baudRates[i] > 0; i++) {
+	for (int i = 1; baudRates[i] > 0; i++) {
 		if (baudRates[i] == baud) {
 			setBaudIdx = i;
 			break;
@@ -202,36 +205,25 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	}
 	// check the baud rate index
 	if (setBaudIdx < 1) {
-		if (baud == 0)
-			efiPrintf("The <baud> parameter is set to zero! The baud rate won't be set!");
-		else { 
-			// unknown baud rate
-			efiPrintf("Wrong <baud> parameter '%s'! %s", baudRate, usage);
-			return;
-		}
-	} else {
-		// ok, add command!
-		
+		// unknown baud rate
+		efiPrintf("Wrong <baud> parameter '%s'! %s", baudRate, usage);
+		return;
 	}
 	
 	// 2) check name
-	if (name == NULL || strlen(name) < 1 || strlen(name) > 20) {
+	if ((strlen(name) < 1) || (strlen(name) > 20)) {
 		efiPrintf("Wrong <name> parameter! Up to 20 characters expected! %s", usage);
 		return;
 	}
 
 	// 3) check pin code
-	int numDigits = 0;
-	// check the pincode
-	if (pinCode != NULL && strlen(pinCode) == 4) {
-		for (i = 0; i < 4; i++) {
-			if (isdigit(pinCode[i]))
-				numDigits++;
-		}
-	}
-	if (numDigits != 4) {
+	if (strlen(pinCode) != 4) {
 		efiPrintf("Wrong <pincode> parameter! 4 digits expected! %s", usage);
-		return;
+	}
+	for (int i = 0; i < 4; i++) {
+		if (!isdigit(pinCode[i])) {
+			efiPrintf("<pincode> should contain digits only %s", usage);
+		}
 	}
 
 	// ok, add commands!
