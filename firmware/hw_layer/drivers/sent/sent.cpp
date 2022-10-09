@@ -119,6 +119,12 @@ public:
 	/* Decoder */
 	int Decoder(uint16_t clocks);
 
+	/* get latest valid signal0 and signal1
+	 * Note:
+	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
+	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
+	int GetSignals(uint16_t *pSig0, uint16_t *pSig1);
+
 	/* Show status */
 	void Info(void);
 };
@@ -264,7 +270,10 @@ int sent_channel::Decoder(uint16_t clocks)
 					if ((nibbles[7] == crc4(nibbles, 7)) ||
 						(nibbles[7] == crc4_gm(nibbles + 1, 6)))
 					{
-						// Full packet has been received
+						/* Full packet with correct CRC has been received
+						 * NOTE different MSB packing for sig0 and sig1
+						 * is it protocol-defined or device-specific?
+						 * looks like some devices send 16 + 8 bit, not 12 + 12 */
 						sig0 =
 							(nibbles[1 + 0] << 8) |
 							(nibbles[1 + 1] << 4) |
@@ -310,6 +319,19 @@ int sent_channel::Decoder(uint16_t clocks)
 	}
 
 	return ret;
+}
+
+int sent_channel::GetSignals(uint16_t *pSig0, uint16_t *pSig1)
+{
+	if (pSig0) {
+		*pSig0 = sig0;
+	}
+
+	if (pSig1) {
+		*pSig1 = sig1;
+	}
+
+	return 0;
 }
 
 int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
