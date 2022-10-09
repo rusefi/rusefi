@@ -698,9 +698,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
-        // todo: local variable is needed because generated field type is not proper 'float' but scaled_channel
-        // todo: what is broken _exactly_?
-
 
 		// Check that the expected next phase (from the last tooth) is close to the actual current phase:
 		// basically, check that the tooth width is correct
