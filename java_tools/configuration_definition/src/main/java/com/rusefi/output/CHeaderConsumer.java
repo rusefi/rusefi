@@ -8,11 +8,13 @@ import java.io.IOException;
 
 import static com.rusefi.ToolUtil.EOL;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Configuration consumer which writes C header file
  */
 public class CHeaderConsumer extends BaseCHeaderConsumer {
-    @org.jetbrains.annotations.NotNull
+    @NotNull
     private final ReaderState state;
     /**
      * looks like sometimes we want to not include "define XXX value" into generated C headers
