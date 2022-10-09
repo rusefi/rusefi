@@ -38,7 +38,7 @@ public class OutputsTest {
     }
 
     @Test(expected = BitState.TooManyBitsInARow.class)
-    public void tooManyBits() throws IOException {
+    public void tooManyBits() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 40; i++)
             sb.append("bit b" + i + "\n");
@@ -52,7 +52,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void generateDataLog() throws IOException {
+    public void generateDataLog() {
         String test = "struct total\n" +
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
                 "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
@@ -89,7 +89,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void generateDataLogMultiLineCommentWithQuotes() throws IOException {
+    public void generateDataLogMultiLineCommentWithQuotes() {
         String test = "#define GAUGE_NAME_FUEL_BASE \"fuel: base mass\"\n" +
                 "struct total\n" +
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",1, 0, 0, 0, 0\n" +
@@ -109,7 +109,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void generateGetOutputs() throws IOException {
+    public void generateGetOutputs() {
         String test = "struct_no_prefix ts_outputs_s\n" +
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
@@ -134,7 +134,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void sensorStruct() throws IOException {
+    public void sensorStruct() {
         String test = "struct total\n" +
                 "    struct pid_status_s\n" +
                 "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
@@ -164,7 +164,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void testLongIterate() throws IOException {
+    public void testLongIterate() {
         ReaderState state = new ReaderState();
         String test = "struct total\n" +
 "\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +

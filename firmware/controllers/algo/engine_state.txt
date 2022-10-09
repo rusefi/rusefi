@@ -88,6 +88,8 @@ running_fuel_s running
     bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
     bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
+    bit startStopState
+    int startStopStateToggleCounter
 
     float egt1
     float egt2

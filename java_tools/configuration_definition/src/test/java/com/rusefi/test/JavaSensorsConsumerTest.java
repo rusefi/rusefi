@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class JavaSensorsConsumerTest {
     @Test
-    public void generateJavaSensors() throws IOException {
+    public void generateJavaSensors() {
         ReaderState state = new ReaderState();
         state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         state.variableRegistry.register("GAUGE_NAME_RPM", "\"hello\"");
@@ -44,7 +44,7 @@ public class JavaSensorsConsumerTest {
     }
 
     @Test
-    public void bitAtTheEndBug() throws IOException {
+    public void bitAtTheEndBug() {
         ReaderState state = new ReaderState();
         String outputChannels =
                 "struct_no_prefix output_channels_s\n" +

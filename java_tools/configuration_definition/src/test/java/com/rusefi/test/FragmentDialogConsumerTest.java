@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class FragmentDialogConsumerTest {
     @Test
-    public void generateFragmentDialog() throws IOException {
+    public void generateFragmentDialog() {
         ReaderState state = new ReaderState();
         String outputChannels = "" +
                 "\n" +

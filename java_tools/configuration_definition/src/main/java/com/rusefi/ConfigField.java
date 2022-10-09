@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
@@ -162,6 +163,7 @@ public class ConfigField {
         }
 
         String comment = matcher.group(10);
+        validateComment(comment);
         String type = matcher.group(1);
         int[] arraySizes;
         String arraySizeAsText;
@@ -193,6 +195,16 @@ public class ConfigField {
             log.debug("comment " + comment);
 
         return field;
+    }
+
+    private static void validateComment(String comment) {
+        if (comment == null)
+            return;
+        comment = comment.trim();
+        if (comment.isEmpty())
+            return;
+        if (comment.charAt(0) == '"' && !EnumIniField.isQuoted(comment))
+            throw new MaybeSemicolorWasMissedException("This comment looks like semicolon was missed: " + comment);
     }
 
     public static boolean isPreprocessorDirective(String line) {

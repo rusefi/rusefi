@@ -1338,7 +1338,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	Gpio mc33816_cs;
 
 	float auxFrequencyFilter
-	int16_t vvtControlMinRpm;"RPM", 1, 0, 0, 3000, 0
+	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
 	Gpio[5 iterate] sorryUnused
 

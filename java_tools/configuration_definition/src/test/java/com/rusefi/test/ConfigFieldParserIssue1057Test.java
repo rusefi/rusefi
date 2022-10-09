@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ConfigFieldParserIssue1057Test {
     @Test
-    public void testBitsPadding() throws IOException {
+    public void testBitsPadding() {
         ReaderState state = new ReaderState();
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 

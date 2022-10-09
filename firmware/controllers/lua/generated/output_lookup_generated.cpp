@@ -357,8 +357,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.triggerVvtFall;
 	if (strEqualCaseInsensitive(name, "triggerVvtRise"))
 		return engine->outputChannels.triggerVvtRise;
-	if (strEqualCaseInsensitive(name, "startStopStateToggleCounter"))
-		return engine->outputChannels.startStopStateToggleCounter;
 	if (strEqualCaseInsensitive(name, "starterState"))
 		return engine->outputChannels.starterState;
 	if (strEqualCaseInsensitive(name, "starterRelayDisable"))
