@@ -277,7 +277,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 0
 	uint8_t tcu_currentRange;"Current Range";"", 1, 0, 0, 0, 0
 
 	uint16_t autoscale tcRatio;@@GAUGE_NAME_TC_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	float lastShiftTime;"S"
+	float lastShiftTime
 
     int vssEdgeCounter
     int issEdgeCounter
