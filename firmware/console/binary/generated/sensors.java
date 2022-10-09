@@ -168,7 +168,7 @@ luaLastCycleDuration("luaLastCycleDuration", SensorCategory.SENSOR_INPUTS, Field
 testBenchIter("testBenchIter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 352, 1.0, 0.0, 0.0, "count"),
 tcu_currentRange("Current Range", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 353, 1.0, 0.0, 0.0, ""),
 tcRatio("Torque Converter Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 354, 0.01, 0.0, 0.0, "value"),
-lastShiftTime("S", SensorCategory.SENSOR_INPUTS, FieldType.INT, 356, 1.0, -1.0, -1.0, ""),
+lastShiftTime("lastShiftTime", SensorCategory.SENSOR_INPUTS, FieldType.INT, 356, 1.0, -1.0, -1.0, ""),
 vssEdgeCounter("vssEdgeCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 360, 1.0, -1.0, -1.0, ""),
 issEdgeCounter("issEdgeCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT, 364, 1.0, -1.0, -1.0, ""),
 auxLinear1("Aux Linear 1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 368, 0.01, 0.0, 0.0, ""),
