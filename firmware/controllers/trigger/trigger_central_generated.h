@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Sep 24 04:28:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Oct 09 02:21:36 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -18,11 +18,11 @@ struct trigger_central_s {
 	/**
 	 * offset 28
 	 */
-	scaled_channel<float, 1, 1> mapVvt_MAP_AT_SPECIAL_POINT = (float)0;
+	float mapVvt_MAP_AT_SPECIAL_POINT = (float)0;
 	/**
 	 * offset 32
 	 */
-	scaled_channel<float, 1, 1> mapVvt_MAP_AT_DIFF = (float)0;
+	float mapVvt_MAP_AT_DIFF = (float)0;
 	/**
 	 * offset 36
 	 */
@@ -42,7 +42,7 @@ struct trigger_central_s {
 	deg
 	 * offset 40
 	 */
-	scaled_channel<float, 1, 1> currentEngineDecodedPhase = (float)0;
+	float currentEngineDecodedPhase = (float)0;
 	/**
 	deg
 	 * offset 44
@@ -52,4 +52,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Sep 24 04:28:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Oct 09 02:21:36 UTC 2022
