@@ -17,6 +17,9 @@
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
 
+#include <stdio.h>
+#include <ctype.h>
+
 #if EFI_BLUETOOTH_SETUP
 
 static bool btProcessIsStarted = false;
@@ -222,7 +225,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	// check the pincode
 	if (pinCode != NULL && strlen(pinCode) == 4) {
 		for (i = 0; i < 4; i++) {
-			if (pinCode[i] >= '0' && pinCode[i] <= '9')	// digit
+			if (isdigit(pinCode[i]))
 				numDigits++;
 		}
 	}
