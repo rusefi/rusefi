@@ -706,7 +706,14 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// basically, check that the tooth width is correct
 		auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
 		if (estimatedCurrentPhase) {
-			triggerToothAngleError = expectedNextPhase - estimatedCurrentPhase.Value;
+			float angleError = expectedNextPhase - estimatedCurrentPhase.Value;
+
+			float cycle = getEngineState()->engineCycle;
+			while (angleError < -cycle / 2) {
+				angleError += cycle;
+			}
+
+			triggerToothAngleError = angleError;
 		}
 
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
