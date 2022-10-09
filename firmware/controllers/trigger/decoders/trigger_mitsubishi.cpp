@@ -84,6 +84,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(1); // redundancy
 }
 
+// Mitsubishi 4B11
 void initialize36_2_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
