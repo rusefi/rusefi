@@ -202,13 +202,15 @@ void efiPrintfInternal(const char *format, ...) {
 	// Write the formatted string to the output buffer
 	va_list ap;
 	va_start(ap, format);
-	chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
+	size_t len = chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
 	// Ensure that the string is comma-terminated in case it overflowed
-	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
+	if (len > sizeof(lineBuffer->buffer) - 1)
+		len = sizeof(lineBuffer->buffer) - 1;
+	lineBuffer->buffer[len] = LOG_DELIMITER[0];
 
-	for (unsigned int i = 0; i < strlen(lineBuffer->buffer); i++) {
+	for (size_t i = 0; i < len; i++) {
 		/* just replace all non-printable chars with space
 		 * TODO: is there any other "prohibited" chars? */
 		if (isprint(lineBuffer->buffer[i]) == 0)
