@@ -23,7 +23,9 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
+        output.write("static constexpr LogField fields[] = {\r\n");
         output.write(getBody());
+        output.write("};\r\n");
         output.close();
     }
 
