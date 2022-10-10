@@ -206,10 +206,10 @@ void efiPrintfInternal(const char *format, ...) {
 	va_end(ap);
 
 	// Ensure that the string is comma-terminated in case it overflowed
+	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
+
 	if (len > sizeof(lineBuffer->buffer) - 1)
 		len = sizeof(lineBuffer->buffer) - 1;
-	lineBuffer->buffer[len] = LOG_DELIMITER[0];
-
 	for (size_t i = 0; i < len; i++) {
 		/* just replace all non-printable chars with space
 		 * TODO: is there any other "prohibited" chars? */
