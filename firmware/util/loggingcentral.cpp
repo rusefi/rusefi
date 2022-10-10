@@ -207,7 +207,7 @@ void efiPrintfInternal(const char *format, ...) {
 
 	for (unsigned int i = 0; i < strlen(lineBuffer->buffer); i++) {
 		// todo: open question which layer would not handle CR/LF properly?
-		efiAssertVoid(OBD_PCM_Processor_Fault, lineBuffer->buffer[i] != '\n', "No CRLF please");
+		efiAssertVoid(OBD_PCM_Processor_Fault, (lineBuffer->buffer[i] != '\n') && (lineBuffer->buffer[i] != '\r'), "No CRLF please");
 	}
 
 	{
