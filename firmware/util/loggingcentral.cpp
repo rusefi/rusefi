@@ -26,6 +26,9 @@
 
 #include "thread_controller.h"
 
+/* for isprint() */
+#include <ctype.h>
+
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
 	writeInternal(line->buffer);
@@ -206,8 +209,10 @@ void efiPrintfInternal(const char *format, ...) {
 	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
 
 	for (unsigned int i = 0; i < strlen(lineBuffer->buffer); i++) {
-		// todo: open question which layer would not handle CR/LF properly?
-		efiAssertVoid(OBD_PCM_Processor_Fault, (lineBuffer->buffer[i] != '\n') && (lineBuffer->buffer[i] != '\r'), "No CRLF please");
+		/* just replace all non-printable chars with space
+		 * TODO: is there any other "prohibited" chars? */
+		if (isprint(lineBuffer->buffer[i]) == 0)
+			lineBuffer->buffer[i] = ' ';
 	}
 
 	{
