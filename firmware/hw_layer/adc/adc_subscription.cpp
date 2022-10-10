@@ -130,6 +130,7 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	}
 }
 
+#if EFI_PROD_CODE
 void AdcSubscription::PrintInfo() {
 	for (size_t i = 0; i < efi::size(s_entries); i++) {
 		auto& entry = s_entries[i];
@@ -156,5 +157,6 @@ void AdcSubscription::PrintInfo() {
 		);
 	}
 }
+#endif // EFI_PROD_CODE
 
 #endif // !EFI_UNIT_TEST
