@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.rusefi.ReaderState;
 import com.rusefi.output.SdCardFieldsConsumer;
+import com.rusefi.util.LazyFile;
 
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class SdCardFieldsGeneratorTest {
         state.variableRegistry.register("GAUGE_NAME_CPU_TEMP", "te");
 
 
-        SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(null);
+        SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);
         state.readBufferedReader(test, consumer);
         assertEquals("\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 0},\n" +
                 "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 0},\n" +

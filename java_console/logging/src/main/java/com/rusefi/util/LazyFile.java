@@ -12,6 +12,8 @@ public class LazyFile implements Output {
     public static final String LAZY_FILE_TAG = "was generated automatically by rusEFI tool ";
     public static final String LAZY_FILE_TAG_LOWER = LAZY_FILE_TAG.toLowerCase();
 
+    public static String TEST = "test_file_name";
+
     private final String filename;
 
     private final StringBuffer content = new StringBuffer();
@@ -34,6 +36,8 @@ public class LazyFile implements Output {
 
     @Override
     public void close() throws IOException {
+        if (TEST.equals(filename))
+            return;
         String fileContent = unifySpaces(readCurrentContent(filename));
         String newContent = unifySpaces(contentWithoutTag.toString());
 
@@ -62,6 +66,8 @@ public class LazyFile implements Output {
     }
 
     private String readCurrentContent(String filename) throws IOException {
+        if (TEST.equals(filename))
+            return "";
         if (!new File(filename).exists()) {
             SystemOut.println(filename + " does not exist considering empty current content");
             return "";
