@@ -4,15 +4,16 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
 
 public class SdCardFieldsConsumer implements ConfigurationConsumer {
     private final StringBuilder body = new StringBuilder();
-    private final String outputFileName;
+    private final LazyFile output;
 
     public SdCardFieldsConsumer(String outputFileName) {
-        this.outputFileName = outputFileName;
+        output = new LazyFile(outputFileName);
     }
 
     @Override
@@ -22,7 +23,8 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        ConfigurationConsumer.super.endFile();
+        output.write(getBody());
+        output.close();
     }
 
     @Override
