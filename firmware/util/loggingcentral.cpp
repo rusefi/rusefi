@@ -182,11 +182,6 @@ void efiPrintfInternal(const char *format, ...) {
 	}
 #endif
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
-	for (unsigned int i = 0; i < strlen(format); i++) {
-		// todo: open question which layer would not handle CR/LF properly?
-		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
-	}
-
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -209,6 +204,11 @@ void efiPrintfInternal(const char *format, ...) {
 
 	// Ensure that the string is comma-terminated in case it overflowed
 	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
+
+	for (unsigned int i = 0; i < strlen(lineBuffer->buffer); i++) {
+		// todo: open question which layer would not handle CR/LF properly?
+		efiAssertVoid(OBD_PCM_Processor_Fault, lineBuffer->buffer[i] != '\n', "No CRLF please");
+	}
 
 	{
 		// Push the buffer in to the written list so it can be written back
