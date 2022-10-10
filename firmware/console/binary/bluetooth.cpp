@@ -227,9 +227,13 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chRegSetThreadName("bluetooth thread");
 
 	efiPrintf("*** Bluetooth module setup procedure ***");
-	efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
-	efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
-	efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+
+	/* JDY33 supports disconnect on request */
+	if (btModuleType != BLUETOOTH_JDY_3x) {
+		efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
+		efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
+		efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+	}
 
 	// now wait
 	chSysLock();
