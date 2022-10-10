@@ -342,6 +342,10 @@ public class ReaderState {
         destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
     }
 
+    public void addSdDestination(String outputFileName) {
+        destinations.add(new SdCardFieldsConsumer(outputFileName));
+    }
+
     public void addJavaDestination(String fileName) {
         destinations.add(new FileJavaFieldsConsumer(this, fileName));
     }
