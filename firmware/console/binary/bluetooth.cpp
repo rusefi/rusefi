@@ -27,14 +27,11 @@
 #endif
 
 static bool btProcessIsStarted = false;
-static const char *commands[5];
-static int numCommands = 0;
-static int setBaudIdx = -1;
 
 bluetooth_module_e btModuleType;
-static char cmdBaud[25];
-static char cmdName[30];
-static char cmdPin[16];
+static int setBaudIdx = -1;
+static char btName[20 + 1];
+static char btPinCode[4 + 1];
 
 // JDY-33 has 9: 128000 which we do not
 static const unsigned int baudRates[] = 	{	115200, 9600, 	38400,	2400,	4800,	19200,	57600 };
@@ -106,6 +103,7 @@ static int btWaitOk(void)
 // Main communication code
 // We assume that the user has disconnected the software before starting the code.
 static void runCommands() {
+	char tmp[64];
 	size_t baudIdx = 0;
 	bool baudFound = false;
 
@@ -120,8 +118,8 @@ static void runCommands() {
 		tsChannel->stop();
 		chThdSleepMilliseconds(10);	// safety
 
-		if (chThdShouldTerminateX() || (baudIdx == 7)) {
-			if (baudIdx == 7)
+		if (chThdShouldTerminateX() || (baudIdx == ARRAY_SIZE(baudRates))) {
+			if (baudIdx == ARRAY_SIZE(baudRates))
 				efiPrintf("Failed to find current BT module baudrate");
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 		}
@@ -150,8 +148,6 @@ static void runCommands() {
 
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 #if EFI_BLUETOOTH_SETUP_DEBUG
-		char tmp[64];
-
 		/* Debug, get version, current settings */
 		btWrite("AT+VERSION\r\n");
 		btReadLine(tmp, sizeof(tmp));
@@ -180,46 +176,57 @@ static void runCommands() {
 		btWaitOk();
 	}
 
-	int cmdIdx;
-	// run all commands
-	for (cmdIdx = 0; cmdIdx < numCommands; cmdIdx++) {
-		int ret;
-		const char * command = commands[cmdIdx];
-		// send current command
-		btWrite(command);
+	if (btModuleType == BLUETOOTH_HC_05)
+		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx]);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
+	else
+		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRateCodes[setBaudIdx]);
+	btWrite(tmp);
+	if (btWaitOk() != 0) {
+		goto cmdFailed;
+	}
 
-		// waiting for an answer
-		ret = btWaitOk();
-		if (ret == 0) {
-			// if we changed the baud rate
-			if (commands[cmdIdx] == cmdBaud) {
-				tsChannel->stop();
-				chThdSleepMilliseconds(10);	// safety
-				tsChannel->start(baudRates[setBaudIdx]);
-			}
-			// move to the next command
-		} else {
-			efiPrintf("command %s failed %d", command, ret);
-			break;
+	/* restart with new baud */
+	tsChannel->stop();
+	chThdSleepMilliseconds(10);	// safety
+	tsChannel->start(baudRates[setBaudIdx]);
+
+	chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
+	btWrite(tmp);
+	if (btWaitOk() != 0) {
+		goto cmdFailed;
+	}
+	if (btModuleType == BLUETOOTH_JDY_3x) {
+		/* BLE broadcast name */
+		chsnprintf(tmp, sizeof(tmp), "AT+NAMB=%s\r\n", btName);
+		btWrite(tmp);
+		if (btWaitOk() != 0) {
+			goto cmdFailed;
 		}
 	}
 
-	// the connection is already restored to the current baud rate, so print the result
-	if (cmdIdx == numCommands) {
-		if (btModuleType == BLUETOOTH_JDY_3x) {
-			/* Now reset module to apply new settings */
-			btWrite("AT+RESET\r\n");
-			if (btWaitOk() != 0) {
-				efiPrintf("JDY33 fialed to reset");
-			}
-		}
+	if (btModuleType == BLUETOOTH_HC_05)
+		chsnprintf(tmp, sizeof(tmp), "AT+PSWD=%s\r\n", btPinCode);
+	else
+		chsnprintf(tmp, sizeof(tmp), "AT+PIN%s\r\n", btPinCode);
 
-		efiPrintf("SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
-		// Update baudrate in setting
-		engineConfiguration->tunerStudioSerialSpeed = baudRates[baudIdx];
-	} else {
-		efiPrintf("FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
+	btWrite(tmp);
+	if (btWaitOk() != 0) {
+		goto cmdFailed;
 	}
+
+	if (btModuleType == BLUETOOTH_JDY_3x) {
+		/* Now reset module to apply new settings */
+		btWrite("AT+RESET\r\n");
+		if (btWaitOk() != 0) {
+			efiPrintf("JDY33 fialed to reset");
+		}
+	}
+
+	efiPrintf("SUCCESS! All commands passed to the Bluetooth module!");
+	return;
+
+cmdFailed:
+	efiPrintf("FAIL! Command %s failed", tmp);
 }
 
 static THD_FUNCTION(btThreadEntryPoint, arg) {
@@ -272,14 +279,12 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 		return;
 	}
 
-	numCommands = 0;
-
 	// now check the arguments and add other commands:
 	// 1) baud rate
 	int baud = atoi(baudRate);
 	// find a known baud rate in our list
 	setBaudIdx = -1;
-	for (int i = 0; baudRates[i] > 0; i++) {
+	for (size_t i = 0; i < ARRAY_SIZE(baudRates); i++) {
 		if (baudRates[i] == baud) {
 			setBaudIdx = i;
 			break;
@@ -308,41 +313,11 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 		}
 	}
 
-	btModuleType = moduleType;
+	/* copy settings */
+	strncpy(btName, name, 20);
+	strncpy(btPinCode, pinCode, 4);
 
-	// ok, add commands!
-	switch (moduleType) {
-	case BLUETOOTH_HC_05:
-		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+UART=%d,0,0\r\n", baud);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
-		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME=%s\r\n", name);
-		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PSWD=%s\r\n", pinCode);
-		// todo: add more commands?
-		// AT+RMAAD
-		// AT+ROLE=0
-		break;
-	case BLUETOOTH_HC_06:
-		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%d", baudRateCodes[setBaudIdx]);
-		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
-		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
-		break;
-	case BLUETOOTH_BK3231:
-		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%d\r\n", baudRateCodes[setBaudIdx]);
-		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
-		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
-		break;
-	case BLUETOOTH_JDY_3x:
-		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%d\r\n", baudRateCodes[setBaudIdx]);
-		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
-		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
-		break;
-	default:
-		// todo: add support for other BT module types
-		efiPrintf("This Bluetooth module is currently not supported!");
-		return;
-	}
-	commands[numCommands++] = cmdBaud;
-	commands[numCommands++] = cmdName;
-   	commands[numCommands++] = cmdPin;
+	btModuleType = moduleType;
 
 	// create a thread to execute these commands after TS disconnected
 	// See bluetoothSoftwareDisconnectNotify
