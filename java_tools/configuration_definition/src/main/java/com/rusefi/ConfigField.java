@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
 import com.rusefi.output.ConfigStructure;
+import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 
 import java.util.Arrays;
@@ -397,7 +398,10 @@ public class ConfigField {
         return isFromIterate;
     }
 
-    // todo: find more usages for this method?
+    /**
+     * todo: find more usages for this method?
+     * @see DataLogConsumer.getComment
+     */
     public String getCommentOrName() {
         if (comment == null || comment.trim().isEmpty())
             return quote(name);
