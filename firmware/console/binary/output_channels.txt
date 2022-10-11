@@ -40,7 +40,7 @@ bit isIdleClosedLoop;
 
 uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
 
-uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
+uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint8_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 1
@@ -55,7 +55,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale TPSValue;@@GAUGE_NAME_TPS@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale throttlePedalPosition;@@GAUGE_NAME_THROTTLE_PEDAL@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
-	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
+	uint16_t autoscale tpsADC;;"ADC", 1, 0, 0, 0, 0
 	uint16_t autoscale rawMaf;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	uint16_t autoscale mafMeasured;@@GAUGE_NAME_AIR_FLOW_MEASURED@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
@@ -63,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
-	uint8_t autoscale knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",{1/10}, 0, 0, 0, 0
+	uint8_t autoscale knockRetard;@@GAUGE_NAME_KNOCK_RETARD@@;"deg",{1/10}, 0, 0, 0, 1
 	uint8_t autoscale idleCurrentPosition;;"%", 0.5, 0, 0, 100, 1
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 2
@@ -71,31 +71,31 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale oilPressure;@@GAUGE_NAME_OIL_PRESSURE@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
-	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 0
+	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 3
 	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
-	uint16_t autoscale fuelRunning;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	uint16_t autoscale actualLastInjection;@@GAUGE_NAME_FUEL_LAST_INJECTION@@\nActual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelRunning;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+	uint16_t autoscale actualLastInjection;@@GAUGE_NAME_FUEL_LAST_INJECTION@@\nActual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 
 
 	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
-	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 1
 	int16_t autoscale injectionOffset;;"deg", 1, 0, 0, 0, 0
 
-	int16_t autoscale tCharge;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	int16_t autoscale tCharge;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 1
 
 !  Corrections
 ! todo: inline this further to injectorModel deadTime
-	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 
 ! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
 	uint16_t autoscale engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Wall model AE
-	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
+	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 	int16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -109,13 +109,13 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Idle & ETB
 	uint16_t autoscale idleAirValvePosition;@@GAUGE_NAME_IAC@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale etbTarget;ETB Target;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale etb1Error;ETB Error;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale etbTarget;ETB Target;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 1
+	int16_t autoscale etb1Error;ETB Error;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 3
 ! Fuel system
 	int16_t autoscale fuelTankLevel;Fuel level;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale totalFuelConsumption;@@GAUGE_NAME_FUEL_CONSUMPTION@@;"grams",1, 0, 0, 0, 0
+	uint16_t autoscale totalFuelConsumption;@@GAUGE_NAME_FUEL_CONSUMPTION@@;"grams",1, 0, 0, 0, 1
 	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
 
 ! Y axis values for selectable tables
@@ -282,8 +282,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
     int vssEdgeCounter
     int issEdgeCounter
 
-	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 0
-	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 0
+	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 2
+	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 2
 
 	bit dfcoActive
 	bit tpsAccelActive
