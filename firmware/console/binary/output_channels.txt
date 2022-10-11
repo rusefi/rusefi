@@ -100,7 +100,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 	int16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
+	uint16_t autoscale canReadCounter;;"",1, 0, 0, 0, 0
 	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 ! Ignition
 	int16_t autoscale ignitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
@@ -153,7 +153,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 ! Errors
 	uint32_t autoscale totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
-	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
+	uint32_t autoscale orderingErrorCounter;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
 	uint16_t autoscale lastErrorCode;@@GAUGE_NAME_WARNING_LAST@@;"error",1, 0, 0, 0, 0
