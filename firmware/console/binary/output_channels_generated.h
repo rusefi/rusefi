@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Oct 09 21:43:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 01:55:05 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -142,7 +142,7 @@ struct output_channels_s {
 	RPM/s
 	 * offset 6
 	 */
-	uint16_t rpmAcceleration = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> rpmAcceleration = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_GEAR_RATIO@@
 	value
@@ -199,7 +199,7 @@ struct output_channels_s {
 	ADC
 	 * offset 24
 	 */
-	uint16_t tpsADC = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> tpsADC = (uint16_t)0;
 	/**
 	V
 	 * offset 26
@@ -1417,4 +1417,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Oct 09 21:43:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 01:55:05 UTC 2022
