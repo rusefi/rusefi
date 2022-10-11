@@ -681,7 +681,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			// float absError = absF(angleError);
 			// // TODO: configurable threshold
 			// if (absError > 10 && absError < 720) {
-			// 	// This tooth came at a very unexpected time, ignore it
+			//  // This tooth came at a very unexpected time, ignore it
 			// 	warning(CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
 
 			// 	return false;
