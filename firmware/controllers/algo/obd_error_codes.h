@@ -2146,6 +2146,12 @@ typedef enum {
 	CUSTOM_CAM_TOO_MANY_TEETH = 9004,
 	CUSTOM_CAM_NOT_ENOUGH_TEETH = 9005,
 
+	// Where we expected one trigger edge, we got two in quick succession
+	CUSTOM_PRIMARY_DOUBLED_EDGE = 9006,
+
+	// A trigger tooth arrived at an unexpected time
+	CUSTOM_PRIMARY_BAD_TOOTH_TIMING = 9007,
+
 	/**
 	 * This is not engine miss detection - this is only internal scheduler state validation
 	 * Should not happen
