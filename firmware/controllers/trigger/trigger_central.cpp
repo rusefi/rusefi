@@ -667,6 +667,9 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 				//             |-| |----------------
 				//             | | |
 				// ____________| |_|
+				//             1   2
+				//     #1 will be decoded
+				//     #2 will be ignored
 				// We're not sure which edge was the "real" one, but they were close enough
 				// together that it doesn't really matter.
 				warning(CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%d", angleSinceLastTooth, triggerState.currentCycle.current_index);
