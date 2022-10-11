@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 01:55:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 03:02:39 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -345,7 +345,7 @@ struct output_channels_s {
 	/**
 	 * offset 70
 	 */
-	uint16_t revolutionCounterSinceStart = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> revolutionCounterSinceStart = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_ROC@@
 	ratio
@@ -355,7 +355,7 @@ struct output_channels_s {
 	/**
 	 * offset 74
 	 */
-	uint16_t canReadCounter = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> canReadCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	ms
@@ -503,7 +503,7 @@ struct output_channels_s {
 	/**
 	 * offset 140
 	 */
-	uint32_t orderingErrorCounter = (uint32_t)0;
+	scaled_channel<uint32_t, 1, 1> orderingErrorCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	count
@@ -1417,4 +1417,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 01:55:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Oct 11 03:02:39 UTC 2022
