@@ -97,7 +97,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
 
-	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
+	uint16_t autoscale revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 	int16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
@@ -183,7 +183,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 ! todo: { max31855_cs1 != 0}
 	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
-	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
 	int16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -200,10 +200,10 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int8_t[12 iterate] autoscale knock;;"dBv",1, 0, 0, 0, 0
 
 	int8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, -1, 10, 0
-	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 1
 
-	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
 	int16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -211,7 +211,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale lowFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_LOW@@;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
 	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
