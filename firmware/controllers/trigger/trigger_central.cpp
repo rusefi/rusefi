@@ -650,7 +650,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 
 		// Wrap around correctly at the end of the cycle
 		float cycle = getEngineState()->engineCycle;
-		while (angleError < -cycle / 2) {
+		if (angleError < -cycle / 2) {
 			angleError += cycle;
 		}
 
@@ -680,9 +680,9 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			// Absolute error from last tooth
 			// float absError = absF(angleError);
 			// // TODO: configurable threshold
-			// if (absError > 5) {
+			// if (absError > 10 && absError < 720) {
 			// 	// This tooth came at a very unexpected time, ignore it
-			// 	// warning(CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
+			// 	warning(CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
 
 			// 	return false;
 			// }
