@@ -101,14 +101,14 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
-	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	int16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 ! Ignition
-	int16_t autoscale ignitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale sparkDwellValue;@@GAUGE_COIL_DWELL_TIME@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	int16_t autoscale ignitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
+	uint16_t autoscale sparkDwellValue;@@GAUGE_COIL_DWELL_TIME@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 1
 
 	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Idle & ETB
-	uint16_t autoscale idleAirValvePosition;@@GAUGE_NAME_IAC@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idleAirValvePosition;@@GAUGE_NAME_IAC@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 1
 	int16_t autoscale etbTarget;ETB Target;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 1
 	int16_t autoscale etb1Error;ETB Error;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 3
@@ -116,7 +116,7 @@ uint16_t autoscale rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale fuelTankLevel;Fuel level;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale totalFuelConsumption;@@GAUGE_NAME_FUEL_CONSUMPTION@@;"grams",1, 0, 0, 0, 1
-	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 3
 
 ! Y axis values for selectable tables
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
