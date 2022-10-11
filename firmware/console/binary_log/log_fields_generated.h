@@ -2,19 +2,30 @@
 // todo https://github.com/rusefi/rusefi/issues/3985
 
 static constexpr LogField fields[] = {
-	{engine->outputChannels.RPMValue, GAUGE_NAME_RPM, "rpm", 0},
 	{packedTime, GAUGE_NAME_TIME, "sec", 0},
+	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
+	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM/s", 2},
+	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
+	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 1},
 	{engine->outputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
-	{engine->outputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
 	{engine->outputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
-	{engine->outputChannels.coolant, GAUGE_NAME_CLT, "C", 1},
-	{engine->outputChannels.intake, GAUGE_NAME_IAT, "C", 1},
-	{engine->outputChannels.auxTemp1, GAUGE_NAME_AUX_TEMP1, "C", 1},
-	{engine->outputChannels.auxTemp2, GAUGE_NAME_AUX_TEMP2, "C", 1},
-	{engine->outputChannels.TPSValue, GAUGE_NAME_TPS, "%", 2},
-	{engine->outputChannels.TPS2Value, GAUGE_NAME_TPS2, "%", 2},
+	{engine->outputChannels.internalMcuTemperature, "CPU Temperature", "deg C", 0},
+	{engine->outputChannels.coolant, "CLT", "deg C", 1},
+	{engine->outputChannels.intake, "IAT", "deg C", 1},
+	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},
+	{engine->outputChannels.auxTemp2, "auxTemp2", "deg C", 1},
+	{engine->outputChannels.TPSValue, "TPS", "%", 2},
 	{engine->outputChannels.throttlePedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
-	{engine->outputChannels.MAPValue, GAUGE_NAME_MAP, "kPa", 1},
+	{engine->outputChannels.tpsADC, "tpsADC", "ADC", 0},
+	{engine->outputChannels.rawMaf, "rawMaf", "V", 3},
+	{engine->outputChannels.mafMeasured, "MAF sensor", "kg/h", 1},
+	{engine->outputChannels.MAPValue, "MAP", "kPa", 1},
+
+
+
+
+
+	{engine->outputChannels.TPS2Value, GAUGE_NAME_TPS2, "%", 2},
 	{engine->outputChannels.AFRValue, GAUGE_NAME_AFR, "afr", 2},
 	{engine->outputChannels.AFRValue2, GAUGE_NAME_AFR2, "afr", 2},
 	{engine->outputChannels.lambdaValue, GAUGE_NAME_LAMBDA, "", 3},
@@ -82,7 +93,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.fuelTankLevel, GAUGE_NAME_FUEL_LEVEL, "%", 0},
 //	{engine->outputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 //	{engine->outputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
-	{engine->outputChannels.mafMeasured, GAUGE_NAME_AIR_FLOW_MEASURED, "kg/h", 1},
 	{engine->outputChannels.mafEstimate, GAUGE_NAME_AIR_FLOW_ESTIMATE, "kg/h", 1},
 	{engine->outputChannels.tcuDesiredGear, GAUGE_NAME_DESIRED_GEAR, "gear", 0},
 	{engine->outputChannels.tcuCurrentGear, GAUGE_NAME_CURRENT_GEAR, "gear", 0},
