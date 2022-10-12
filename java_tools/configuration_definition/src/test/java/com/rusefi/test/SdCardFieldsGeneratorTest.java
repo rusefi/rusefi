@@ -68,7 +68,7 @@ public class SdCardFieldsGeneratorTest {
                         "    end_struct\n" +
                         "\tpid_status_s alternatorStatus\n" +
                         "end_struct",
-                "\t{engine->outputChannels.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
+                "\t{engine->outputChannels.alternatorStatus.pTerm, \"alternatorStatus.pTerm\", \"\", 2},\n",
                 readerState -> {
 
                 });
