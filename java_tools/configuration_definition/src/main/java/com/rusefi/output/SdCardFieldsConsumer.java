@@ -51,9 +51,9 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
         if (configField.isFromIterate()) {
             String name = configField.getIterateOriginalName() + "[" + (configField.getIterateIndex() - 1) + "]";
-            return getLine(readerState, configField, prefix, name);
+            return getLine(readerState, configField, prefix, prefix + name);
         } else {
-            return getLine(readerState, configField, prefix, configField.getName());
+            return getLine(readerState, configField, prefix, prefix + configField.getName());
         }
     }
 
