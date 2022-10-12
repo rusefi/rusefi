@@ -309,7 +309,7 @@ public class ReaderState {
                 String commentWithIndex = getCommentWithIndex(cf, i);
                 ConfigField element = new ConfigField(state, cf.getName() + i, commentWithIndex, null,
                         cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
-                element.isFromIterate(true);
+                element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }
         } else if (cf.isDirective()) {

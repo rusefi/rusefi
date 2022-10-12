@@ -54,6 +54,8 @@ public class ConfigField {
     private final String trueName;
     private final String falseName;
     private boolean isFromIterate;
+    private String iterateOriginalName;
+    private int iterateIndex;
 
     /**
      * todo: one day someone should convert this into a builder
@@ -390,8 +392,18 @@ public class ConfigField {
         return token;
     }
 
-    public void isFromIterate(boolean isFromIterate) {
-        this.isFromIterate = isFromIterate;
+    public void setFromIterate(String iterateOriginalName, int iterateIndex) {
+        this.iterateOriginalName = iterateOriginalName;
+        this.iterateIndex = iterateIndex;
+        this.isFromIterate = true;
+    }
+
+    public String getIterateOriginalName() {
+        return iterateOriginalName;
+    }
+
+    public int getIterateIndex() {
+        return iterateIndex;
     }
 
     public boolean isFromIterate() {

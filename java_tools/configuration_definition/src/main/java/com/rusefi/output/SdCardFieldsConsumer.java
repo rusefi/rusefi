@@ -23,7 +23,8 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        output.write("static constexpr LogField fields[] = {\r\n");
+        output.write("static constexpr LogField fields[] = {\r\n" +
+                "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
         output.write(getBody());
         output.write("};\r\n");
         output.close();
@@ -48,7 +49,16 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
         if (configField.isBit())
             return "";
 
-        return "\t{engine->outputChannels." + configField.getName() +
+        if (configField.isFromIterate()) {
+            String name = configField.getIterateOriginalName() + "[" + (configField.getIterateIndex() - 1) + "]";
+            return getLine(readerState, configField, prefix, name);
+        } else {
+            return getLine(readerState, configField, prefix, configField.getName());
+        }
+    }
+
+    private String getLine(ReaderState readerState, ConfigField configField, String prefix, String name) {
+        return "\t{engine->outputChannels." + name +
                 ", "
                 + DataLogConsumer.getComment(prefix, configField, readerState.variableRegistry) +
                 ", " +

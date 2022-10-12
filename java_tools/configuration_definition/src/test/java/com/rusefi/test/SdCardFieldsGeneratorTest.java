@@ -48,4 +48,20 @@ public class SdCardFieldsGeneratorTest {
         state.readBufferedReader(test, consumer);
         assertEquals("\t{engine->outputChannels.RPMValue, \"feee\", \"RPM\", 2},\n", consumer.getBody());
     }
+
+    @Test
+    public void array() {
+        String test = "struct_no_prefix output_channels_s\n" +
+                "uint16_t[4 iterate] recentErrorCode;;\"error\", 1, 0, 0, 0, 0\n" +
+                "end_struct";
+
+        ReaderState state = new ReaderState();
+
+        SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);
+        state.readBufferedReader(test, consumer);
+        assertEquals("\t{engine->outputChannels.recentErrorCode[0], \"recentErrorCode 1\", \"error\", 0},\n" +
+                "\t{engine->outputChannels.recentErrorCode[1], \"recentErrorCode 2\", \"error\", 0},\n" +
+                "\t{engine->outputChannels.recentErrorCode[2], \"recentErrorCode 3\", \"error\", 0},\n" +
+                "\t{engine->outputChannels.recentErrorCode[3], \"recentErrorCode 4\", \"error\", 0},\n", consumer.getBody());
+    }
 }
