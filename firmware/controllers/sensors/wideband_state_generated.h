@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Fri Jun 24 00:17:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Oct 12 01:02:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -13,12 +13,12 @@ struct wideband_state_s {
 	%
 	 * offset 1
 	 */
-	scaled_channel<uint8_t, 1, 1> heaterDuty = (uint8_t)0;
+	uint8_t heaterDuty = (uint8_t)0;
 	/**
 	%
 	 * offset 2
 	 */
-	scaled_channel<uint8_t, 1, 1> pumpDuty = (uint8_t)0;
+	uint8_t pumpDuty = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
@@ -49,4 +49,4 @@ struct wideband_state_s {
 static_assert(sizeof(wideband_state_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Fri Jun 24 00:17:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Oct 12 01:02:23 UTC 2022
