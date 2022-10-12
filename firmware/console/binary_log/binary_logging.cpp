@@ -125,8 +125,14 @@ size_t writeBlock(char* buffer) {
 	// Offset 4 = field data
 	const char* dataBlockStart = buffer + 4;
 	char* dataBlock = buffer + 4;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		size_t entrySize = fields[i].writeData(dataBlock);
+	uint8_t sum = 0;
+	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
+		size_t entrySize = fields[fieldIndex].writeData(dataBlock);
+
+		for (size_t byteIndex = 0; byteIndex < entrySize; byteIndex++) {
+			// "CRC" at the end is just the sum of all bytes
+			sum += dataBlock[byteIndex];
+		}
 
 		// Increment pointer to next entry
 		dataBlock += entrySize;
@@ -134,11 +140,6 @@ size_t writeBlock(char* buffer) {
 
 	size_t dataBlockSize = dataBlock - dataBlockStart;
 
-	// "CRC" at the end is just the sum of all bytes
-	uint8_t sum = 0;
-	for (size_t i = 0; i < dataBlockSize; i++) {
-		sum += dataBlockStart[i];
-	}
 	*dataBlock = sum;
 
 	// Total size has 4 byte header + 1 byte checksum
