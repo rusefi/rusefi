@@ -44,7 +44,7 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     private String processOutput(ReaderState readerState, ConfigField configField, String prefix) {
         if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
             return "";
-        if (configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX))
+        if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
             return "";
         if (configField.isBit())
             return "";
