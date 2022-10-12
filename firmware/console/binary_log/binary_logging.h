@@ -7,4 +7,4 @@
 struct Writer;
 void writeFileHeader(Writer& buffer);
 void writeSdLogLine(Writer& buffer);
-size_t writeBlock(char* buffer);
+void writeBlock(Writer& outBuffer);
