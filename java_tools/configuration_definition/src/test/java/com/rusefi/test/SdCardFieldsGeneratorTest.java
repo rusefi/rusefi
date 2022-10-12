@@ -30,7 +30,7 @@ public class SdCardFieldsGeneratorTest {
         SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);
         state.readBufferedReader(test, consumer);
         assertEquals(
-                "\t{engine->outputChannels.internalMcuTemperature, \"internalMcuTemperature\", \"\", -1},\n" +
+                "\t{engine->outputChannels.internalMcuTemperature, \"internalMcuTemperature\", \"\", 0},\n" +
                         "\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 2},\n" +
                         "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
                         "\t{engine->outputChannels.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
