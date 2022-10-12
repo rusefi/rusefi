@@ -36,17 +36,17 @@ static uint64_t binaryLogCount = 0;
 
 extern bool main_loop_started;
 
-void writeSdLogLine(Writer& buffer) {
+void writeSdLogLine(Writer& bufferedWriter) {
 	if (!main_loop_started)
 		return;
 
 	if (binaryLogCount == 0) {
-		writeFileHeader(buffer);
+		writeFileHeader(bufferedWriter);
 	} else {
 		updateTunerStudioState();
 		size_t length = writeBlock(sdLogBuffer);
 		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-		buffer.write(sdLogBuffer, length);
+		bufferedWriter.write(sdLogBuffer, length);
 	}
 
 	binaryLogCount++;
