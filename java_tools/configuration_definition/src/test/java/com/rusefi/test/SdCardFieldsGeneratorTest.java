@@ -12,12 +12,12 @@ public class SdCardFieldsGeneratorTest {
     @Test
     public void outputs() {
         String test = "struct_no_prefix output_channels_s\n" +
+                "\tfloat autoscale internalMcuTemperature\n" +
                 "uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;\"RPM\",1, 0, 0, 8000, 2\n" +
                 "\n" +
                 "uint16_t rpmAcceleration;dRPM;\"RPM/s\",1, 0, 0, 5, 2\n" +
                 "\n" +
                 "\tuint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
-                "\tint8_t autoscale internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;\"deg C\",1, 0, 0, 0, 0\n" +
                 "end_struct";
 
         ReaderState state = new ReaderState();
@@ -29,10 +29,13 @@ public class SdCardFieldsGeneratorTest {
 
         SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);
         state.readBufferedReader(test, consumer);
-        assertEquals("\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 2},\n" +
-                "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
-                "\t{engine->outputChannels.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
-                "\t{engine->outputChannels.internalMcuTemperature, \"te\", \"deg C\", 0},\n", consumer.getBody());
+        assertEquals(
+                "\t{engine->outputChannels.internalMcuTemperature, \"internalMcuTemperature\", \"\", -1},\n" +
+                        "\t{engine->outputChannels.RPMValue, \"hello\", \"RPM\", 2},\n" +
+                        "\t{engine->outputChannels.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
+                        "\t{engine->outputChannels.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
+                ""
+                , consumer.getBody());
     }
 
     @Test
