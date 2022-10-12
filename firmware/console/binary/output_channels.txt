@@ -72,7 +72,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	int16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
 	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 3
-	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 2
 
 	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 3
@@ -122,7 +122,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
-	float knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 0
+	float knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
@@ -214,7 +214,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
-	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 2
 	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 
 	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
@@ -247,10 +247,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
     	uint32_t resetCounter;;"", 1, 0, 0, 10000, 0
     end_struct
 
-	int16_t autoscale tps1Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale tps2Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale tps1Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale tps2Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
     int8_t sparkCutReason;Spark Cut Code;"code",1, 0, 0, 0, 0
     int8_t fuelCutReason;Fuel Cut Code;"code",1, 0, 0, 0, 0
