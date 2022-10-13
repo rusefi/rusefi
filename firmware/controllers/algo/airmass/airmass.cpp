@@ -42,6 +42,10 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 		engine->outputChannels.veBlendBias[i] = result.Bias;
 		engine->outputChannels.veBlendOutput[i] = result.Value;
 
+		if (result.Value == 0) {
+			continue;
+		}
+
 		// Apply as a multiplier, not as an adder
 		// Value of +5 means add 5%, aka multiply by 1.05
 		ve *= ((100 + result.Value) * 0.01f);

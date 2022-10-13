@@ -452,6 +452,11 @@ void setFlatInjectorLag(float value) {
 }
 
 BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {
+	// If set to 0, skip the math as its disabled
+	if (cfg.blendParameter == GPPWM_Zero) {
+		return { 0, 0 };
+	}
+
 	auto value = readGppwmChannel(cfg.blendParameter);
 
 	if (!value) {
