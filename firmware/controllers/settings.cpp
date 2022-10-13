@@ -229,19 +229,6 @@ void printTPSInfo(void) {
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
-static void printTemperatureInfo() {
-#if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo();
-
-	efiPrintf("fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
-			hwPortname(engineConfiguration->fanPin));
-
-	efiPrintf("A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
-			hwPortname(engineConfiguration->acRelayPin));
-
-#endif /* EFI_ANALOG_SENSORS */
-}
-
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
 	doPrintConfiguration();
@@ -274,8 +261,6 @@ static void setCrankingIACExtra(float percent) {
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
 	efiPrintf("cranking_fuel %.2f", timeMs);
-
-	printTemperatureInfo();
 }
 
 static void setGlobalTriggerAngleOffset(float value) {
@@ -824,14 +809,6 @@ void scheduleStopEngine(void) {
 	doScheduleStopEngine();
 }
 
-static void printAllInfo() {
-	printTemperatureInfo();
-	printTPSInfo();
-#if EFI_ENGINE_SNIFFER
-	efiPrintf("waveChartUsedSize=%d", waveChartUsedSize);
-#endif
-}
-
 #if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
@@ -1145,11 +1122,9 @@ void initSettings(void) {
 	// todo: start saving values into flash right away?
 
 	addConsoleAction("showconfig", doPrintConfiguration);
-	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
 	addConsoleAction("set_wasted_spark_ignition", setWastedIgnition);

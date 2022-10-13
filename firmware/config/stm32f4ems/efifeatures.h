@@ -437,5 +437,9 @@
 #define EFI_STORAGE_EXT_SNOR    FALSE
 #endif
 
+#ifndef EFI_SENT_SUPPORT
+#define EFI_SENT_SUPPORT        FALSE
+#endif
+
 // killing joystick for now due to Unable to change broken settings #3227
 #define EFI_JOYSTICK FALSE

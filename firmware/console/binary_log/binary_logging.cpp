@@ -15,8 +15,6 @@
 // floating number of seconds with millisecond precision
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
-// todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
-// todo: make this logic smarter
 // The list of logged fields lives in a separate file so it can eventually be tool-generated
 #include "log_fields_generated.h"
 
@@ -30,23 +28,19 @@ static constexpr uint16_t computeFieldsRecordLength() {
 }
 
 #if EFI_FILE_LOGGING
-// this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[250];
 static uint64_t binaryLogCount = 0;
 
 extern bool main_loop_started;
 
-void writeSdLogLine(Writer& buffer) {
+void writeSdLogLine(Writer& bufferedWriter) {
 	if (!main_loop_started)
 		return;
 
 	if (binaryLogCount == 0) {
-		writeFileHeader(buffer);
+		writeFileHeader(bufferedWriter);
 	} else {
 		updateTunerStudioState();
-		size_t length = writeBlock(sdLogBuffer);
-		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-		buffer.write(sdLogBuffer, length);
+		writeBlock(bufferedWriter);
 	}
 
 	binaryLogCount++;
@@ -104,7 +98,9 @@ static uint8_t blockRollCounter = 0;
 
 //static efitimeus_t prevSdCardLineTime = 0;
 
-size_t writeBlock(char* buffer) {
+void writeBlock(Writer& outBuffer) {
+	static char buffer[16];
+
 	// Offset 0 = Block type, standard data block in this case
 	buffer[0] = 0;
 
@@ -117,30 +113,25 @@ size_t writeBlock(char* buffer) {
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
 
+	outBuffer.write(buffer, 4);
+
 	// todo: add a log field for SD card period
 //	prevSdCardLineTime = nowUs;
 
 	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
-	// Offset 4 = field data
-	const char* dataBlockStart = buffer + 4;
-	char* dataBlock = buffer + 4;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		size_t entrySize = fields[i].writeData(dataBlock);
-
-		// Increment pointer to next entry
-		dataBlock += entrySize;
-	}
-
-	size_t dataBlockSize = dataBlock - dataBlockStart;
-
-	// "CRC" at the end is just the sum of all bytes
 	uint8_t sum = 0;
-	for (size_t i = 0; i < dataBlockSize; i++) {
-		sum += dataBlockStart[i];
-	}
-	*dataBlock = sum;
+	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
+		size_t entrySize = fields[fieldIndex].writeData(buffer);
 
-	// Total size has 4 byte header + 1 byte checksum
-	return dataBlockSize + 5;
+		for (size_t byteIndex = 0; byteIndex < entrySize; byteIndex++) {
+			// "CRC" at the end is just the sum of all bytes
+			sum += buffer[byteIndex];
+		}
+		outBuffer.write(buffer, entrySize);
+	}
+
+	buffer[0] = sum;
+	// 1 byte checksum footer
+	outBuffer.write(buffer, 1);
 }

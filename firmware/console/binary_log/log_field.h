@@ -7,11 +7,26 @@
 struct Writer;
 class LogField {
 public:
+	// Scaled channels, memcpys data directly and describes format in header
 	template <typename TValue, int TMult, int TDiv>
 	constexpr LogField(const scaled_channel<TValue, TMult, TDiv>& toRead,
 			   const char* name, const char* units, int8_t digits)
 		: m_multiplier(float(TDiv) / TMult)
 		, m_addr(toRead.getFirstByteAddr())
+		, m_type(resolveType<TValue>())
+		, m_digits(digits)
+		, m_size(sizeForType(resolveType<TValue>()))
+		, m_name(name)
+		, m_units(units)
+	{
+	}
+
+	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
+	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
+	constexpr LogField(TValue& toRead,
+			   const char* name, const char* units, int8_t digits)
+		: m_multiplier(1)
+		, m_addr(&toRead)
 		, m_type(resolveType<TValue>())
 		, m_digits(digits)
 		, m_size(sizeForType(resolveType<TValue>()))
@@ -61,7 +76,7 @@ private:
 	}
 
 	const float m_multiplier;
-	const char* const m_addr;
+	const void* const m_addr;
 	const Type m_type;
 	const int8_t m_digits;
 	const uint8_t m_size;

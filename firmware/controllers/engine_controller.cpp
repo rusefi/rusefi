@@ -53,6 +53,7 @@
 #include "start_stop.h"
 #include "dynoview.h"
 #include "vr_pwm.h"
+#include "adc_subscription.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -235,68 +236,16 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 	return buffer;
 }
 
-static char pinNameBuffer[16];
-
 #if HAL_USE_ADC
 extern AdcDevice fastAdc;
 #endif /* HAL_USE_ADC */
 
-static void printAnalogChannelInfoExt(const char *name, adc_channel_e hwChannel, float adcVoltage,
-		float dividerCoeff) {
-#if HAL_USE_ADC
-	if (!isAdcChannelValid(hwChannel)) {
-		efiPrintf("ADC is not assigned for %s", name);
-		return;
-	}
+static void printSensorInfo() {
+	// Print info about analog mappings
+	AdcSubscription::PrintInfo();
 
-	float voltage = adcVoltage * dividerCoeff;
-	efiPrintf("%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f", name, hwChannel, getAdcMode(hwChannel),
-			getPinNameByAdcChannel(name, hwChannel, pinNameBuffer), adcVoltage, voltage, dividerCoeff);
-#endif /* HAL_USE_ADC */
-}
-
-static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
-#if HAL_USE_ADC
-	printAnalogChannelInfoExt(name, hwChannel, getVoltage(name, hwChannel), engineConfiguration->analogInputDividerCoefficient);
-#endif /* HAL_USE_ADC */
-}
-
-static void printAnalogInfo() {
-	efiPrintf("analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
-
-	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
-	printAnalogChannelInfo("fuel gauge", engineConfiguration->fuelLevelSensor);
-	printAnalogChannelInfo("TPS1 Primary", engineConfiguration->tps1_1AdcChannel);
-	printAnalogChannelInfo("TPS1 Secondary", engineConfiguration->tps1_2AdcChannel);
-	printAnalogChannelInfo("TPS2 Primary", engineConfiguration->tps2_1AdcChannel);
-	printAnalogChannelInfo("TPS2 Secondary", engineConfiguration->tps2_2AdcChannel);
-	printAnalogChannelInfo("LPF", engineConfiguration->lowPressureFuel.hwChannel);
-	printAnalogChannelInfo("HPF", engineConfiguration->highPressureFuel.hwChannel);
-	printAnalogChannelInfo("pPS1", engineConfiguration->throttlePedalPositionAdcChannel);
-	printAnalogChannelInfo("pPS2", engineConfiguration->throttlePedalPositionSecondAdcChannel);
-	printAnalogChannelInfo("CLT", engineConfiguration->clt.adcChannel);
-	printAnalogChannelInfo("IAT", engineConfiguration->iat.adcChannel);
-	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
-	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
-	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	for (int i = 0; i < AUX_ANALOG_INPUT_COUNT ; i++) {
-		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
-		printAnalogChannelInfo("Aux analog", ch);
-	}
-
-	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
-	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
-	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-
-	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
-
-	printAnalogChannelInfo("CJ UR", engineConfiguration->cj125ur);
-	printAnalogChannelInfo("CJ UA", engineConfiguration->cj125ua);
-
-	printAnalogChannelInfo("HIP9011", engineConfiguration->hipOutputChannel);
-
-	printAnalogChannelInfoExt("Vbatt", engineConfiguration->vbattAdcChannel, getVoltage("vbatt", engineConfiguration->vbattAdcChannel),
-			engineConfiguration->vbattDividerCoeff);
+	// Print info about all sensors
+	Sensor::showAllSensorInfo();
 }
 
 #define isOutOfBounds(offset) ((offset<0) || (offset) >= (int) sizeof(engine_configuration_s))
@@ -650,7 +599,7 @@ bool validateConfig() {
 #if !EFI_UNIT_TEST
 
 void initEngineController() {
-	addConsoleAction("analoginfo", printAnalogInfo);
+	addConsoleAction("sensorinfo", printSensorInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
 	initBenchTest();

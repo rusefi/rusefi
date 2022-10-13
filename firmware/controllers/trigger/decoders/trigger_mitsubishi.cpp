@@ -84,6 +84,7 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(1); // redundancy
 }
 
+// Mitsubishi 4B11
 void initialize36_2_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 90;
@@ -94,15 +95,15 @@ void initialize36_2_1(TriggerWaveform *s) {
 
 	float oneTooth = 720 / totalTeethCount;
 
-	float offset = (36 - 17 - 2 - 16) * oneTooth;
-
-	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-			NO_LEFT_FILTER, offset + 17 * oneTooth + 1);
-
-	offset += (17 + 2) * oneTooth;
+	float offset = (36 - 16 - 2 - 17) * oneTooth;
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
 			NO_LEFT_FILTER, offset + 16 * oneTooth + 1);
+
+	offset += (16 + 2) * oneTooth;
+
+	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 17 * oneTooth + 1);
 
 
 	s->setTriggerSynchronizationGap(3);

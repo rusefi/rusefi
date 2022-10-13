@@ -697,16 +697,20 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto currentPhaseFromSyncPoint = getTriggerCentral()->triggerFormDetails.eventAngles[triggerIndexForListeners];
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
-		auto currentPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
-        // todo: local variable is needed because generated field type is not proper 'float' but scaled_channel
-        // todo: what is broken _exactly_?
-		currentEngineDecodedPhase = currentPhase;
+		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
 
 		// Check that the expected next phase (from the last tooth) is close to the actual current phase:
 		// basically, check that the tooth width is correct
 		auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
 		if (estimatedCurrentPhase) {
-			triggerToothAngleError = expectedNextPhase - estimatedCurrentPhase.Value;
+			float angleError = expectedNextPhase - estimatedCurrentPhase.Value;
+
+			float cycle = getEngineState()->engineCycle;
+			while (angleError < -cycle / 2) {
+				angleError += cycle;
+			}
+
+			triggerToothAngleError = angleError;
 		}
 
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
@@ -748,7 +752,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
 			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
-		} while (nextPhase == currentPhase);
+		} while (nextPhase == currentEngineDecodedPhase);
 
 		expectedNextPhase = nextPhase + tdcPosition();
 		wrapAngle(expectedNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
@@ -765,10 +769,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 
 		// Handle ignition and injection
-		mainTriggerCallback(triggerIndexForListeners, timestamp, currentPhase, nextPhase);
+		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
 
 		// Decode the MAP based "cam" sensor
-		decodeMapCam(timestamp, currentPhase);
+		decodeMapCam(timestamp, currentEngineDecodedPhase);
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0, triggerShape.useOnlyRisingEdges);

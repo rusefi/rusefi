@@ -191,8 +191,12 @@ public class ReaderState {
             consumer.handleEndStruct(this, structure);
     }
 
-    public void readBufferedReader(String inputString, ConfigurationConsumer... consumers) throws IOException {
-        readBufferedReader(new BufferedReader(new StringReader(inputString)), Arrays.asList(consumers));
+    public void readBufferedReader(String inputString, ConfigurationConsumer... consumers) {
+        try {
+            readBufferedReader(new BufferedReader(new StringReader(inputString)), Arrays.asList(consumers));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
@@ -305,7 +309,7 @@ public class ReaderState {
                 String commentWithIndex = getCommentWithIndex(cf, i);
                 ConfigField element = new ConfigField(state, cf.getName() + i, commentWithIndex, null,
                         cf.getType(), new int[0], cf.getTsInfo(), false, false, cf.isHasAutoscale(), null, null);
-                element.isFromIterate(true);
+                element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }
         } else if (cf.isDirective()) {
@@ -336,6 +340,10 @@ public class ReaderState {
 
     public void addCHeaderDestination(String cHeader) {
         destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
+    }
+
+    public void addSdDestination(String outputFileName) {
+        destinations.add(new SdCardFieldsConsumer(outputFileName));
     }
 
     public void addJavaDestination(String fileName) {

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 03 15:05:28 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 06 22:59:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -676,10 +676,10 @@ public class TsOutputs {
 	public static final Field TRIGGERSECONDARYRISE = Field.create("TRIGGERSECONDARYRISE", 404, FieldType.INT).setScale(1.0);
 	public static final Field TRIGGERVVTFALL = Field.create("TRIGGERVVTFALL", 408, FieldType.INT).setScale(1.0);
 	public static final Field TRIGGERVVTRISE = Field.create("TRIGGERVVTRISE", 412, FieldType.INT).setScale(1.0);
-	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 416, FieldType.INT8).setScale(1.0);
-	public static final Field STARTERSTATE = Field.create("STARTERSTATE", 417, FieldType.INT8).setScale(1.0);
-	public static final Field STARTERRELAYDISABLE = Field.create("STARTERRELAYDISABLE", 418, FieldType.INT8).setScale(1.0);
-	public static final Field MULTISPARKCOUNTER = Field.create("MULTISPARKCOUNTER", 419, FieldType.INT8).setScale(1.0);
+	public static final Field STARTERSTATE = Field.create("STARTERSTATE", 416, FieldType.INT8).setScale(1.0);
+	public static final Field STARTERRELAYDISABLE = Field.create("STARTERRELAYDISABLE", 417, FieldType.INT8).setScale(1.0);
+	public static final Field MULTISPARKCOUNTER = Field.create("MULTISPARKCOUNTER", 418, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_419 = Field.create("ALIGNMENTFILL_AT_419", 419, FieldType.INT8).setScale(1.0);
 	public static final Field ALTERNATORSTATUS_PTERM = Field.create("ALTERNATORSTATUS_PTERM", 420, FieldType.FLOAT);
 	public static final Field ALTERNATORSTATUS_ITERM = Field.create("ALTERNATORSTATUS_ITERM", 424, FieldType.INT16).setScale(0.01);
 	public static final Field ALTERNATORSTATUS_DTERM = Field.create("ALTERNATORSTATUS_DTERM", 426, FieldType.INT16).setScale(0.01);
@@ -1229,10 +1229,10 @@ public class TsOutputs {
 	TRIGGERSECONDARYRISE,
 	TRIGGERVVTFALL,
 	TRIGGERVVTRISE,
-	STARTSTOPSTATETOGGLECOUNTER,
 	STARTERSTATE,
 	STARTERRELAYDISABLE,
 	MULTISPARKCOUNTER,
+	ALIGNMENTFILL_AT_419,
 	ALTERNATORSTATUS_PTERM,
 	ALTERNATORSTATUS_ITERM,
 	ALTERNATORSTATUS_DTERM,
