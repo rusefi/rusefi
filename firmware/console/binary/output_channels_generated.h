@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 12 01:02:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 13 00:06:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -980,12 +980,12 @@ struct output_channels_s {
 	count
 	 * offset 344
 	 */
-	int luaInvocationCounter = (int)0;
+	uint32_t luaInvocationCounter = (uint32_t)0;
 	/**
 	nt
 	 * offset 348
 	 */
-	int luaLastCycleDuration = (int)0;
+	uint32_t luaLastCycleDuration = (uint32_t)0;
 	/**
 	count
 	 * offset 352
@@ -1009,11 +1009,11 @@ struct output_channels_s {
 	/**
 	 * offset 360
 	 */
-	int vssEdgeCounter = (int)0;
+	uint32_t vssEdgeCounter = (uint32_t)0;
 	/**
 	 * offset 364
 	 */
-	int issEdgeCounter = (int)0;
+	uint32_t issEdgeCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_1@@
 	 * offset 368
@@ -1180,27 +1180,27 @@ struct output_channels_s {
 	/**
 	 * offset 392
 	 */
-	int triggerPrimaryFall = (int)0;
+	uint32_t triggerPrimaryFall = (uint32_t)0;
 	/**
 	 * offset 396
 	 */
-	int triggerPrimaryRise = (int)0;
+	uint32_t triggerPrimaryRise = (uint32_t)0;
 	/**
 	 * offset 400
 	 */
-	int triggerSecondaryFall = (int)0;
+	uint32_t triggerSecondaryFall = (uint32_t)0;
 	/**
 	 * offset 404
 	 */
-	int triggerSecondaryRise = (int)0;
+	uint32_t triggerSecondaryRise = (uint32_t)0;
 	/**
 	 * offset 408
 	 */
-	int triggerVvtFall = (int)0;
+	uint32_t triggerVvtFall = (uint32_t)0;
 	/**
 	 * offset 412
 	 */
-	int triggerVvtRise = (int)0;
+	uint32_t triggerVvtRise = (uint32_t)0;
 	/**
 	 * offset 416
 	 */
@@ -1398,7 +1398,7 @@ struct output_channels_s {
 	/**
 	 * offset 596
 	 */
-	int outputRequestPeriod = (int)0;
+	uint32_t outputRequestPeriod = (uint32_t)0;
 	/**
 	 * offset 600
 	 */
@@ -1417,4 +1417,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 12 01:02:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Oct 13 00:06:29 UTC 2022
