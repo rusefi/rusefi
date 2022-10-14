@@ -101,7 +101,7 @@ static void populateFrame(Sensors1& msg) {
 	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
 
 #if	HAL_USE_ADC
-	msg.mcuTemp = getMCUInternalTemperature();
+	msg.mcuTemp = getMCUInternalTemperature() + PACK_ADD_TEMPERATURE;
 #endif
 
 	msg.fuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
