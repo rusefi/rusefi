@@ -58,7 +58,7 @@ endif
 # yes we have two kinds of EXTRA_*PARAMS so that we can define those in two different places independently
 #
 ifeq ($(USE_OPT),)
-  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -falign-functions=16 -fsingle-precision-constant  -fno-inline-functions
+  USE_OPT = $(EXTRA_PARAMS) $(EXTRA_2_PARAMS) $(DEBUG_LEVEL_OPT) $(RFLAGS) -fomit-frame-pointer -fsingle-precision-constant  -fno-inline-functions
 endif
 
 # EFI_UNIT_TEST determines if we are running in a unit test (hide things from hw/sim)
@@ -368,7 +368,7 @@ UINCDIR =
 ULIBDIR =
 
 # List all user libraries here
-ULIBS = -lm --specs=nano.specs
+ULIBS = -lm --specs=nano.specs -Wl,--sort-section=alignment
 
 #
 # End of user defines
