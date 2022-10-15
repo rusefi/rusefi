@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.file.BaseMap;
 import com.rusefi.models.XYData;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 
 import javax.swing.*;
 
