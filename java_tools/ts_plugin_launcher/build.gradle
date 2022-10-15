@@ -5,7 +5,7 @@ plugins {
 
 defaultTasks 'shadowJar'
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
   implementation global_libs.annotations
@@ -13,7 +13,7 @@ dependencies {
   implementation ts_plugin_libs.httpmime
   implementation project(':autoupdate')
   implementation ts_plugin_libs.launcher_api
-  implementation libs.commons_logging
+  implementation global_libs.commons_logging
 
   testImplementation global_libs.junit
 }
