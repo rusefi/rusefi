@@ -2,14 +2,16 @@ plugins {
     id 'java-library'
 }
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
+
+defaultTasks 'shadowJar'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
 }
 
 dependencies {
-    api libs.javaxJson
+    api global_libs.javaxJson
     api project(':logging-api')
     api project(':core_ui')
     api project(':core_io')
