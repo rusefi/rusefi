@@ -12,7 +12,7 @@ import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;

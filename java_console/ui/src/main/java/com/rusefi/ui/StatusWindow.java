@@ -3,7 +3,7 @@ package com.rusefi.ui;
 import com.devexperts.logging.Logging;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.rusEFIVersion;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 

@@ -4,7 +4,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.livedata.VariableValueSource;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
