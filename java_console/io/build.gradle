@@ -4,6 +4,7 @@ plugins {
 }
 
 apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
@@ -22,10 +23,12 @@ dependencies {
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
     implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
     implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-    implementation libs.json
+    implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
     testFixturesImplementation libs.mockito
+    testFixturesApi global_libs.annotations
+    testFixturesApi global_libs.junit
 }
