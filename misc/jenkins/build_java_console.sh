@@ -4,7 +4,7 @@ echo "java version"
 java -version
 
 echo "Generating Java (Antlr)"
-cd android
+cd java_tools
 ./gradlew :config_definition:generateGrammarSource
 cd ..
 
