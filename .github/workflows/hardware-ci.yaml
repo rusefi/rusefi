@@ -18,12 +18,12 @@ jobs:
             config-name: all
             ini-file: rusefi_f4-disco.ini
 
-          - build-target: proteus_f4
-            script: hardware_ci_proteus
-            runs-on: hw-ci-proteus
-            folder: proteus
-            config-name: proteus_f4
-            ini-file: rusefi_proteus_f4.ini
+#          - build-target: proteus_f4
+#            script: hardware_ci_proteus
+#            runs-on: hw-ci-proteus
+#            folder: proteus
+#            config-name: proteus_f4
+#            ini-file: rusefi_proteus_f4.ini
 
     runs-on: ${{matrix.runs-on}}
 
