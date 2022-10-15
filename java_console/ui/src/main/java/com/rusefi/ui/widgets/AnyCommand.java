@@ -3,6 +3,7 @@ package com.rusefi.ui.widgets;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;

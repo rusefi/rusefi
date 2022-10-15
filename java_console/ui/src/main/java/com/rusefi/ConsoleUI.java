@@ -16,6 +16,8 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
+import com.rusefi.core.ui.AutoupdateUtil;
+
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
