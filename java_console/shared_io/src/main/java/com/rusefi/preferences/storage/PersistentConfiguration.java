@@ -1,4 +1,4 @@
-package com.rusefi.ui.storage;
+package com.rusefi.preferences.storage;
 
 import com.rusefi.shared.FileUtil;
 

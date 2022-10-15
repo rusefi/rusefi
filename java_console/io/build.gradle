@@ -15,7 +15,6 @@ tasks.withType(Test) {
 
 dependencies {
     implementation libs.javaxJson
-    api project(':autoupdate')
     api project(':models')
     api project(':shared_io')
     api project(':logging')

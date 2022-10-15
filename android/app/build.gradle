@@ -49,7 +49,6 @@ android {
 
 dependencies {
     implementation project(':ecu_io')
-    implementation project(':autoupdate')
     implementation project(':logging-api')
     implementation project(':shared_io')
     implementation project(':models')
