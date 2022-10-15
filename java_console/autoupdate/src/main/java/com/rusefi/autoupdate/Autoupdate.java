@@ -2,10 +2,8 @@ package com.rusefi.autoupdate;
 
 import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.util.FrameHelper;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,13 +20,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
     private static final String TITLE = "rusEFI Bundle Updater 20220717";
-    private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
-        String bundleFullName = readBundleFullName();
+        String bundleFullName = BundleUtil.readBundleFullName();
 
         if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             System.out.println("Release update requested");
@@ -196,31 +193,6 @@ public class Autoupdate {
             // ignore
         }
         return doUpdate.get();
-    }
-
-    /**
-     * @return null in case of error
-     */
-    @Nullable
-    public static String readBundleFullName() {
-        try {
-            BufferedReader r = new BufferedReader(new FileReader(BUNDLE_NAME_FILE));
-            String fullName = r.readLine();
-            fullName = fullName.trim();
-            if (fullName.length() < 3)
-                return null; // just paranoia check
-            return fullName;
-        } catch (IOException e) {
-            System.err.println(new Date() + ": Error reading " + BUNDLE_NAME_FILE);
-            return null;
-        }
-    }
-
-    @NotNull
-    public static String readBundleFullNameNotNull() {
-        String bundle = readBundleFullName();
-        bundle = bundle == null ? "unknown bundle" : bundle;
-        return bundle;
     }
 
     enum UpdateMode {

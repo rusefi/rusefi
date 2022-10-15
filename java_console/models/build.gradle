@@ -5,7 +5,6 @@ plugins {
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-    api project(':autoupdate')
     api project(':inifile')
     api libs.snakeyaml
 }

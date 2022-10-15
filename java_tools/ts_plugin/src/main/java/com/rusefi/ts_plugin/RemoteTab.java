@@ -37,7 +37,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * remote ECU access & control
