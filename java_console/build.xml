@@ -97,7 +97,7 @@
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
             <src path="io/src/testFixtures/java"/>
-            <src path="luaformatter/src/main/java"/>
+            <src path="luaformatter/src"/>
             <src path="models/src/main/java"/>
             <src path="models/src/test/java"/>
             <src path="inifile/src/main/java"/>
