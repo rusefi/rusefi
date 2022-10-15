@@ -5,6 +5,7 @@ import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -16,6 +17,7 @@ import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+@Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
 public class LiveDataColorTest {
     @Test
     public void testAllFiles() throws IOException, URISyntaxException {
@@ -38,7 +40,7 @@ public class LiveDataColorTest {
 
     private void testSpecificFile(String fileName) throws IOException {
         String sourceCode = getContentOrNull(getClass(), fileName);
-        assertNotNull("sourceCode for " + fileName, sourceCode);
+        assertNotNull("Not found: sourceCode for " + fileName, sourceCode);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
 
