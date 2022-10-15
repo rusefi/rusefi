@@ -1,6 +1,5 @@
 ext {
   libs = [
-          mockito        : "org.mockito:mockito-all:1.10.19",
           javaxJson      : "javax.json:javax.json-api:1.1.4",
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           commons_logging: "commons-logging:commons-logging:1.2",

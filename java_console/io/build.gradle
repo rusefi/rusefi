@@ -28,7 +28,7 @@ dependencies {
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testFixturesImplementation libs.mockito
+    testFixturesImplementation global_libs.mockito
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit
 }

@@ -117,11 +117,11 @@ public class ConsoleUI {
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
-            // todo: rethink this UI? special command line key to enable it?
-            EcuStimulator stimulator = EcuStimulator.getInstance();
-            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
-        }
+//        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
+//            // todo: rethink this UI? special command line key to enable it?
+//            EcuStimulator stimulator = EcuStimulator.getInstance();
+//            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
+//        }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
