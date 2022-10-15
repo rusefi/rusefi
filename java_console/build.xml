@@ -88,7 +88,6 @@
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
             <src path="autotest/src/main/java"/>
-            <src path="autotest/src/test/java"/>
             <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
             <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
@@ -98,7 +97,7 @@
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
             <src path="io/src/testFixtures/java"/>
-            <src path="luaformatter/src"/>
+            <src path="luaformatter/src/main/java"/>
             <src path="models/src/main/java"/>
             <src path="models/src/test/java"/>
             <src path="inifile/src/main/java"/>

@@ -1,7 +1,7 @@
 package com.rusefi.ui.widgets;
 
 import com.rusefi.core.MessagesCentral;
-import com.rusefi.EcuStimulator;
+//import com.rusefi.EcuStimulator;
 import com.rusefi.io.CommandQueue;
 
 import javax.swing.*;
@@ -13,6 +13,7 @@ import java.awt.*;
  * Date: 3/17/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class PotCommand {
     public static final double VOLTAGE_CORRECTION = 2.9 / 3;
     public final JPanel panel;
@@ -40,7 +41,7 @@ public class PotCommand {
             }
         });
 */
-
+/*
         potSpinner = new JSpinner() {
             @Override
             public Dimension getPreferredSize() {
@@ -106,3 +107,4 @@ public class PotCommand {
     }
 
 }
+*/

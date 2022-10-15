@@ -1,6 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.rusefi.EcuStimulator;
+//import com.rusefi.EcuStimulator;
 import com.rusefi.core.Sensor;
 
 import javax.swing.*;
@@ -12,6 +12,7 @@ import java.awt.*;
  * 6/30/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class MafCommand extends JPanel {
     public MafCommand() {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -40,3 +41,4 @@ public class MafCommand extends JPanel {
         add(maf);
     }
 }
+*/
