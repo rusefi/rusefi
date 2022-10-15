@@ -51,6 +51,7 @@ dependencies {
     implementation project(':ecu_io')
     implementation project(':logging-api')
     implementation project(':models')
+    implementation global_libs.annotations
 
     def acraVersion = '5.7.0'
     implementation "ch.acra:acra-http:$acraVersion"
