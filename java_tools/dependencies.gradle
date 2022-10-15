@@ -1,0 +1,7 @@
+ext {
+  global_libs = [
+          junit          : "junit:junit:4.13",
+          annotations    : "org.jetbrains:annotations:16.0.1",
+  ]
+
+}
