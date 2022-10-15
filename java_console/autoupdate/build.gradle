@@ -11,7 +11,8 @@ configurations {
 dependencies {
     api libs.javaxJson
     api project(':logging-api')
-    api project(':shared_io')
+    api project(':core_ui')
+    api project(':core_io')
 
     api group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
     api libs.json
