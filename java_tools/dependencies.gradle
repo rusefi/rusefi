@@ -6,6 +6,8 @@ ext {
           antlr          : "org.antlr:antlr4:4.9.3", // use ANTLR version 4
           json           : "com.googlecode.json-simple:json-simple:1.1.1",
           mockito        : "org.mockito:mockito-all:1.10.19",
+          javaxJson      : "javax.json:javax.json-api:1.1.4",
+          snakeyaml      : "org.yaml:snakeyaml:1.26",
   ]
 
   ts_plugin_libs = [

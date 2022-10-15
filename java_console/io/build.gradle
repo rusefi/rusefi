@@ -15,7 +15,7 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation libs.javaxJson
+    implementation global_libs.javaxJson
     api project(':models')
     api project(':core_io')
     api project(':logging')
