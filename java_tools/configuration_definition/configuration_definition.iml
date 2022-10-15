@@ -17,5 +17,6 @@
     <orderEntry type="module" module-name="enum_to_string" />
     <orderEntry type="module" module-name="logging-api" />
     <orderEntry type="library" name="antlr" level="project" />
+    <orderEntry type="module" module-name="io" />
   </component>
 </module>
