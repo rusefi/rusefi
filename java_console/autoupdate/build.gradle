@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 apply from: '../../java_tools/dependencies.gradle'
@@ -24,4 +25,12 @@ dependencies {
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
     testImplementation global_libs.mockito
+}
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.rusefi.autoupdate.Autoupdate'
+        )
+    }
 }
