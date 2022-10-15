@@ -44,7 +44,6 @@ public class LiveDataParserTest {
     }
 
     @Test
-    @Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
     public void testMethodNamesCode() {
         String sourceCode = "void AcController::onSlowCallback() {\n" +
                 "}\n" +
@@ -116,6 +115,7 @@ public class LiveDataParserTest {
     }
 
     @Test
+    @Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
     public void testConfigurationInRealSourceCode() throws IOException, URISyntaxException {
         String fileName = StateDictionary.INSTANCE.getFileName(live_data_e.LDS_boost_control);
         String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, fileName + CPP_SUFFIX);
