@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.tools.ConsoleTools;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 
 import java.util.Date;
 
