@@ -7,4 +7,10 @@ ext {
           json           : "com.googlecode.json-simple:json-simple:1.1.1",
   ]
 
+  ts_plugin_libs = [
+          httpclient  : "org.apache.httpcomponents:httpclient:4.5.12",
+          httpcore    : "org.apache.httpcomponents:httpcore:4.4.13",
+          httpmime    : "org.apache.httpcomponents:httpmime:4.5.12",
+          launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
+  ]
 }
