@@ -50,7 +50,6 @@ android {
 dependencies {
     implementation project(':ecu_io')
     implementation project(':logging-api')
-    implementation project(':shared_io')
     implementation project(':models')
     implementation libs.annotations
 
