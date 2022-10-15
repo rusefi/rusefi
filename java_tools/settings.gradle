@@ -1,3 +1,5 @@
+//todo include ':proxy_server'
+//todo project(':proxy_server').projectDir = new File('proxy_server')
 include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
 include ':gcc_map_reader'

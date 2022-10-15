@@ -3,6 +3,9 @@ plugins {
 }
 
 dependencies {
+    implementation project(':logging-api')
+    implementation project(':ecu_io')
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
