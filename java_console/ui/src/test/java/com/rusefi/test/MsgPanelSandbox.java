@@ -2,7 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.MessagesPane;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 
 public class MsgPanelSandbox extends FrameHelper {
     public static void main(String[] args) {

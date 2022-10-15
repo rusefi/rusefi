@@ -1,5 +1,6 @@
 package com.rusefi.core.ui;
 
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.autoupdate.ReportedIOException;
 import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;

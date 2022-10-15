@@ -3,9 +3,9 @@ package com.rusefi.ui.light;
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -41,7 +41,7 @@ public class LightweightGUI {
 
 
         JPanel leftPanel = new JPanel(new VerticalFlowLayout());
-        leftPanel.add(new JLabel(Autoupdate.readBundleFullName()));
+        leftPanel.add(new JLabel(BundleUtil.readBundleFullName()));
 
 
         JLabel firmwareVersion = new JLabel();
