@@ -1,2 +1,4 @@
 include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
+include ':gcc_map_reader'
+project(':gcc_map_reader').projectDir = new File('gcc_map_reader')
