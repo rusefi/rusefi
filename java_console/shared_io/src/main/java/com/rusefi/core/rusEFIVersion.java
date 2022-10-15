@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.core;
 
 import java.io.File;
 import java.net.URISyntaxException;

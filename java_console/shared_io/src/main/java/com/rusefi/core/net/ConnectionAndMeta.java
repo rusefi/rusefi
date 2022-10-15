@@ -1,4 +1,4 @@
-package com.rusefi.shared;
+package com.rusefi.core.net;
 
 import javax.net.ssl.*;
 import java.io.*;

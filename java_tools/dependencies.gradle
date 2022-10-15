@@ -3,6 +3,7 @@ ext {
           junit          : "junit:junit:4.13",
           annotations    : "org.jetbrains:annotations:16.0.1",
           jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
+          antlr          : "org.antlr:antlr4:4.9.3", // use ANTLR version 4
   ]
 
 }

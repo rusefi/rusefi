@@ -4,7 +4,7 @@ plugins {
     id 'antlr'
 }
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 defaultTasks 'shadowJar'
 
@@ -12,7 +12,7 @@ dependencies {
     implementation project(':logging')
     implementation project(':models')
     implementation project(':enum_to_string')
-    antlr libs.antlr
+    antlr global_libs.antlr
 }
 
 shadowJar {
@@ -34,9 +34,9 @@ shadowJar {
      and loggin-api as in build.xml
     */
     dependencies {
-        exclude(dependency(libs.jsr305))
-        exclude(dependency(libs.junit))
-        exclude(dependency(libs.annotations))
+        exclude(dependency(global_libs.jsr305))
+        exclude(dependency(global_libs.junit))
+        exclude(dependency(global_libs.annotations))
         exclude(dependency('com.ibm.icu:icu4j:.*'))
     }
 }

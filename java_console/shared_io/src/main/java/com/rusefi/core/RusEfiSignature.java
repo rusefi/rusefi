@@ -1,4 +1,4 @@
-package com.rusefi;
+package com.rusefi.core;
 
 public class RusEfiSignature {
     private final String year;

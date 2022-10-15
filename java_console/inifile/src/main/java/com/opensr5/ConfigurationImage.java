@@ -1,10 +1,9 @@
 package com.opensr5;
 
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020

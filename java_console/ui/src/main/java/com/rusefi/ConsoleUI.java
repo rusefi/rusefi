@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
@@ -29,8 +28,9 @@ import java.util.Map;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
-import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * @see StartupFrame

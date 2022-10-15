@@ -10,7 +10,7 @@ import com.rusefi.ui.UIContext;
 import javax.swing.*;
 import java.awt.*;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer

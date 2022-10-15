@@ -1,4 +1,4 @@
-package com.rusefi.shared;
+package com.rusefi.core;
 
 import org.jetbrains.annotations.NotNull;
 

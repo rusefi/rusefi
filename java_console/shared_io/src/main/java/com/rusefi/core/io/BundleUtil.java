@@ -1,4 +1,4 @@
-package com.rusefi.autoupdate;
+package com.rusefi.core.io;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

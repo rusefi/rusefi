@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.TsTuneReader;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import org.apache.http.concurrent.FutureCallback;

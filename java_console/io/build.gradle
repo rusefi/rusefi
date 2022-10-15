@@ -16,7 +16,7 @@ tasks.withType(Test) {
 dependencies {
     implementation libs.javaxJson
     api project(':models')
-    api project(':shared_io')
+    api project(':core_io')
     api project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'

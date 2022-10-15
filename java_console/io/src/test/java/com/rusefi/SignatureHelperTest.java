@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

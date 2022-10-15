@@ -1,7 +1,7 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.tools.online.ProxyClient;
 import org.takes.Take;
 import org.takes.facets.fork.FkRegex;
