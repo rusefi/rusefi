@@ -7,6 +7,7 @@ apply from: '../../android/dependencies.gradle'
 
 dependencies {
     api project(':core_ui')
+    api project(':shared_ui')
     api project(':ecu_io')
     api project(':inifile')
     api project(':ts_plugin_launcher')

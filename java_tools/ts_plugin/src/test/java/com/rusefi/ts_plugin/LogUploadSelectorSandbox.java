@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.MockitoTestHelper;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
