@@ -3,17 +3,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-apply from: '../../android/dependencies.gradle'
-
 defaultTasks 'shadowJar'
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    implementation libs.jsr305
-    implementation project(':logging')
-    implementation project(':logging-api')
-    implementation libs.annotations
-    testImplementation libs.junit
+    api project(':logging')
 }
 
 /*
