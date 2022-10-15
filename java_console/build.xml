@@ -2,7 +2,6 @@
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
-    <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
 
     <resources id="libs">
         <string>lib/mockito-all-1.10.19.jar</string>
@@ -150,27 +149,6 @@
                 <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
-    </target>
-
-    <target name="server_jar" depends="jar">
-        <delete file="${server_jar_file}"/>
-        <echo message="Building ${server_jar_file}"/>
-
-        <jar destfile="${server_jar_file}">
-            <manifest>
-                <attribute name="Main-Class" value="com.rusefi.server.BackendLauncher"/>
-                <attribute name="Built-Date" value="${TODAY}"/>
-                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-            </manifest>
-
-            <zipfileset src="${jar_file}" includes="**/*.class"/>
-            <zipfileset src="lib/server/cactoos.jar" includes="**/*.class"/>
-            <zipfileset src="lib/server/javax.json.jar" includes="**/*.class"/>
-            <zipfileset src="lib/server/takes.jar" includes="**/*.class"/>
-            <zipfileset src="lib/log4j-api-2.13.3.jar"/>
-            <zipfileset src="lib/log4j-core-2.13.3.jar"/>
-            <fileset dir="../java_tools/proxy_server/src/main/resources" includes="**/*.*"/>
-        </jar>
     </target>
 
     <target name="copy_c_sources">

@@ -46,7 +46,7 @@ jobs:
 
       - name: Build console
         working-directory: ./java_console
-        run: ant server_jar
+        run: ant jar
 
       - name: Attach console junit results
         if: always()
