@@ -2,6 +2,8 @@ package com.rusefi.server;
 
 import org.json.simple.JSONObject;
 
+import java.util.Objects;
+
 /**
  * rusEFI Online user - ID and username
  */
@@ -33,6 +35,19 @@ public class UserDetails {
 
     public int getUserId() {
         return userId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDetails that = (UserDetails) o;
+        return userId == that.userId && userName.equals(that.userName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userName, userId);
     }
 
     @Override

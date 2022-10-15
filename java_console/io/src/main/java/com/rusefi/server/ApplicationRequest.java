@@ -45,7 +45,7 @@ public class ApplicationRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ApplicationRequest that = (ApplicationRequest) o;
-        return vehicleOwner == that.vehicleOwner &&
+        return vehicleOwner.equals(that.vehicleOwner) &&
                 sessionDetails.equals(that.sessionDetails);
     }
 
