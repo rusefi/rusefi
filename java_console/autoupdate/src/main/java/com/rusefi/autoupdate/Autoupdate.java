@@ -1,9 +1,11 @@
 package com.rusefi.autoupdate;
 
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
-import com.rusefi.preferences.storage.PersistentConfiguration;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.FileUtil;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.core.ui.FrameHelper;
 
 import javax.swing.*;
 import java.awt.*;
