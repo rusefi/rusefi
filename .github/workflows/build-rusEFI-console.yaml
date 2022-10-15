@@ -27,7 +27,7 @@ jobs:
         run: ./gen_default_everything.sh
 
       - name: Generate Java (Antlr)
-        working-directory: ./android
+        working-directory: ./java_tools
         run: ./gradlew :config_definition:generateGrammarSource
 
       - name: Print GCC version
