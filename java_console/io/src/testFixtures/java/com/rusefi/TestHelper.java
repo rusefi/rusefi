@@ -31,6 +31,7 @@ import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION_OFFSET;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
+import org.junit.Assert;
 import static org.junit.Assert.assertTrue;
 
 public class TestHelper extends MockitoTestHelper {
@@ -114,13 +115,13 @@ public class TestHelper extends MockitoTestHelper {
     }
 
     public static void assertLatch(String message, CountDownLatch reconnectCounter, int timeout) throws InterruptedException {
-        assertTrue(message, reconnectCounter.await(timeout, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(message, reconnectCounter.await(timeout, TimeUnit.MILLISECONDS));
         log.info("*******************");
         log.info(message + " is good");
         log.info("*******************");
     }
 
     public static void assertLatch(CountDownLatch reconnectCounter) throws InterruptedException {
-        assertTrue(reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
+        Assert.assertTrue(reconnectCounter.await(READ_IMAGE_TIMEOUT, TimeUnit.MILLISECONDS));
     }
 }
