@@ -6,7 +6,7 @@ import com.rusefi.io.IMethodInvocation;
 import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;

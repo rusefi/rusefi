@@ -1,6 +1,5 @@
 package com.rusefi.autodetect;
 
-import com.rusefi.IoUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.light.LightweightGUI;
@@ -8,7 +7,7 @@ import com.rusefi.ui.light.LightweightGUI;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ReconnectSandbox {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         LinkManager linkManager = new LinkManager();
 
@@ -20,7 +19,7 @@ public class ReconnectSandbox {
 
         while (true) {
             System.out.println("Hello " + status);
-            IoUtil.sleepSeconds(1);
+            Thread.sleep(1000);
         }
     }
 

@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    implementation project(':shared_ui')
+    implementation global_libs.antlr
+    implementation 'com.miglayout:miglayout-swing:4.1'
+}
+
+//compileJava {
+//    dependsOn(':config_definition:generateGrammarSource')
+//}

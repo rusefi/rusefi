@@ -12,7 +12,7 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;

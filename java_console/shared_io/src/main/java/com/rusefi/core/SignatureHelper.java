@@ -1,6 +1,4 @@
-package com.rusefi;
-
-import com.rusefi.core.Pair;
+package com.rusefi.core;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -8,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
-import static com.rusefi.shared.FileUtil.RUSEFI_SETTINGS_FOLDER;
+import static com.rusefi.core.FileUtil.RUSEFI_SETTINGS_FOLDER;
 
 public class SignatureHelper {
     private final static String LOCAL_INI = RUSEFI_SETTINGS_FOLDER + File.separator + "ini_database";

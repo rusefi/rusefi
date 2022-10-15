@@ -4,7 +4,7 @@ import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 

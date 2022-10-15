@@ -1,9 +1,9 @@
 package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.RusEfiSignature;
-import com.rusefi.SignatureHelper;
-import com.rusefi.autoupdate.BundleUtil;
+import com.rusefi.core.RusEfiSignature;
+import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.io.BundleUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.StatusConsumer;

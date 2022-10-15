@@ -6,7 +6,7 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;

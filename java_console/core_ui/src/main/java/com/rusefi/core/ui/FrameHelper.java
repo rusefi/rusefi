@@ -1,4 +1,4 @@
-package com.rusefi.ui.util;
+package com.rusefi.core.ui;
 
 import javax.swing.*;
 import java.awt.*;

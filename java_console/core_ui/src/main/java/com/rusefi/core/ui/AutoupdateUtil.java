@@ -1,7 +1,7 @@
-package com.rusefi.autoupdate;
+package com.rusefi.core.ui;
 
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.autoupdate.ReportedIOException;
+import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,7 +13,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLStreamHandlerFactory;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class AutoupdateUtil {
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
@@ -30,7 +29,7 @@ public class AutoupdateUtil {
 
     static class ProgressView {
         private final FrameHelper frameHelper;
-        private JProgressBar progressBar;
+        private final JProgressBar progressBar;
 
         ProgressView(FrameHelper frameHelper, JProgressBar progressBar) {
             this.frameHelper = frameHelper;

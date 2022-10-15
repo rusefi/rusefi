@@ -6,6 +6,7 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
@@ -15,7 +16,7 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 

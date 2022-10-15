@@ -3,8 +3,8 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
-import com.rusefi.autoupdate.Autoupdate;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.DriverInstall;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
@@ -94,7 +94,7 @@ public class StartupFrame {
 
     @NotNull
     public static String appendBundleName(String title) {
-        String bundleName = Autoupdate.readBundleFullNameNotNull();
+        String bundleName = BundleUtil.readBundleFullNameNotNull();
         return title + " " + bundleName;
     }
 
@@ -191,7 +191,7 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        if (Autoupdate.readBundleFullNameNotNull().contains("proteus_f7")) {
+        if (BundleUtil.readBundleFullNameNotNull().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
             Color originalColor = urlLabel.getForeground();
@@ -257,7 +257,7 @@ public class StartupFrame {
 
     @Nullable
     private static ImageIcon getBundleIcon() {
-        String bundle = Autoupdate.readBundleFullNameNotNull();
+        String bundle = BundleUtil.readBundleFullNameNotNull();
         String logoName;
         // these should be about 213px wide
         if (bundle.contains("proteus")) {

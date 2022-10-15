@@ -7,7 +7,6 @@ ext {
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
           commons_logging: "commons-logging:commons-logging:1.2",
-          antlr          : "org.antlr:antlr4:4.9.3", // use ANTLR version 4
           json           : "com.googlecode.json-simple:json-simple:1.1.1",
   ]
 

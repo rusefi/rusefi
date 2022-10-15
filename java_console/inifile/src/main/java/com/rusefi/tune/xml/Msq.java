@@ -5,7 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,6 @@
-package com.rusefi.preferences.storage;
+package com.rusefi.core.preferences.storage;
 
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;

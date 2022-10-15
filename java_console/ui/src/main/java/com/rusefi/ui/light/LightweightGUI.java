@@ -6,6 +6,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.ConnectionWatchdog;

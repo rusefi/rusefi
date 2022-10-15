@@ -5,8 +5,8 @@ import android.widget.TextView;
 
 import com.rusefi.Listener;
 import com.rusefi.dfu.DfuImage;
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.FileUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.config.generated.Fields.CMD_DATE;
 import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * This UI element displays an array of buttons, each for one of the recently used commands
