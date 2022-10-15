@@ -8,6 +8,7 @@ import com.rusefi.livedata.LiveDataParserSandbox;
 import com.rusefi.livedata.ParseResult;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ public class LiveDataParserTest {
     }
 
     @Test
+    @Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
     public void testMethodNamesCode() {
         String sourceCode = "void AcController::onSlowCallback() {\n" +
                 "}\n" +
