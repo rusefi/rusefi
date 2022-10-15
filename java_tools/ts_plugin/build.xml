@@ -23,6 +23,7 @@
                classpath="${lib_list}:${console_path}/lib/log4j-api-2.13.3.jar:${console_path}/lib/log4j-core-2.13.3.jar:${console_path}/lib/jsr305-2.0.1.jar:${console_path}/lib/jcip-annotations-1.0.jar:${console_path}/lib/annotations.jar:${console_path}/lib/jSerialComm.jar:${console_path}/lib/junit.jar:${console_path}/lib/json-simple-1.1.1.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
             <src path="${console_path}/shared_ui/src"/>
+            <src path="${console_path}/core_ui/src/main/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/shared_io/src/main/java"/>
             <src path="${console_path}/inifile/src"/>
