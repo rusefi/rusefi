@@ -9,6 +9,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Files;
@@ -19,8 +20,9 @@ import static org.junit.Assert.*;
 /**
  * from IDEA this unit test needs to be executed with "empty" working directory
  */
+@Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
 public class TuneReadWriteTest {
-    private static final String PATH = "ui/src/test/resources/frankenso/";
+    private static final String PATH = "src/test/resources/frankenso/";
     private static final String TEST_INI = PATH + "mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
