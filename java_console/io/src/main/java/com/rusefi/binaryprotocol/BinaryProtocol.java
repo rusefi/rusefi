@@ -65,7 +65,7 @@ public class BinaryProtocol {
     private final Object ioLock = new Object();
 
     BinaryProtocolLogger binaryProtocolLogger;
-    public static boolean DISABLE_LOCAL_CACHE;
+    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
 
     public static String findCommand(byte command) {
         switch (command) {
@@ -377,7 +377,7 @@ public class BinaryProtocol {
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
-        if (DISABLE_LOCAL_CACHE)
+        if (DISABLE_LOCAL_CONFIGURATION_CACHE)
             return null;
         ConfigurationImage localCached;
         try {

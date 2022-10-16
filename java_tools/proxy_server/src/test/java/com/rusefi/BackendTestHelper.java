@@ -43,7 +43,7 @@ public class BackendTestHelper {
 
     public static void commonServerTest() throws MalformedURLException {
         HttpUtil.RUSEFI_PROXY_HOSTNAME = TcpConnector.LOCALHOST;
-        BinaryProtocol.DISABLE_LOCAL_CACHE = true;
+        BinaryProtocol.DISABLE_LOCAL_CONFIGURATION_CACHE = true;
 
         rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");
     }
