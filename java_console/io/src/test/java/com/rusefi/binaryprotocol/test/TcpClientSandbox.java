@@ -10,9 +10,12 @@ import java.net.Socket;
 import static com.rusefi.io.tcp.TcpConnector.DEFAULT_PORT;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
-public class SimulatorTcpSandbox {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        BinaryProtocol.DISABLE_LOCAL_CACHE = true;
+/**
+ * @see TcpServerSandbox
+ */
+public class TcpClientSandbox {
+    public static void main(String[] args) throws IOException {
+        BinaryProtocol.DISABLE_LOCAL_CONFIGURATION_CACHE = true;
 
         Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
         TcpIoStream tsStream = new TcpIoStream("sandbox", s);
@@ -36,9 +39,6 @@ public class SimulatorTcpSandbox {
             long time = System.currentTimeMillis() - startMs;
             double timePerCommand = 1.0 * time / count;
             System.out.println("Executed " + count + " getSignature in " + time + "ms\n" + "Per-signature: " + timePerCommand + "ms");
-
-//        linkManager.submit(() -> {
-
         }
 
         {
@@ -57,8 +57,6 @@ public class SimulatorTcpSandbox {
 
 
         }
-        //        ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
-
         System.exit(0);
     }
 
