@@ -1,6 +1,6 @@
 ext {
   global_libs = [
-          junit          : "junit:junit:4.13",
+          junit          : "junit:junit:4.13.2",
           annotations    : "org.jetbrains:annotations:16.0.1",
           jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
           antlr          : "org.antlr:antlr4:4.9.3", // use ANTLR version 4
@@ -13,7 +13,7 @@ ext {
   ]
 
   ts_plugin_libs = [
-          httpclient  : "org.apache.httpcomponents:httpclient:4.5.12",
+          httpclient  : "org.apache.httpcomponents:httpclient:4.5.13",
           httpcore    : "org.apache.httpcomponents:httpcore:4.4.13",
           httpmime    : "org.apache.httpcomponents:httpmime:4.5.12",
           launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
