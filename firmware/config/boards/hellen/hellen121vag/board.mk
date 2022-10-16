@@ -22,3 +22,5 @@ DDEFS += -DSHORT_BOARD_NAME=hellen121vag
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
 
+DDEFS += -DTS_NO_SECONDARY=TRUE
+

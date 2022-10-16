@@ -18,3 +18,5 @@ include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 
 DDEFS += -DSHORT_BOARD_NAME=hellen-gm-e67
+
+DDEFS += -DTS_NO_SECONDARY=TRUE

@@ -30,3 +30,5 @@ DDEFS += -DHAL_TRIGGER_USE_ADC=TRUE
 DDEFS += -DSHORT_BOARD_NAME=hellen81
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
+
+DDEFS += -DTS_NO_SECONDARY=TRUE

@@ -21,3 +21,5 @@ DDEFS += -DSHORT_BOARD_NAME=hellenNA8_96
 # Enable serial pins on expansion header
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 
+DDEFS += -DTS_NO_SECONDARY=TRUE
+

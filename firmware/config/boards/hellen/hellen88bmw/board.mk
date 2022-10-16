@@ -21,3 +21,5 @@ DDEFS += -DFIRMWARE_ID=\"hellen88bmw\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DSHORT_BOARD_NAME=hellen88bmw
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
+
+DDEFS += -DTS_NO_SECONDARY=TRUE
