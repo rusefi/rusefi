@@ -15,7 +15,6 @@ dependencies {
     implementation files('../lib/dfu/IntelHexParser.jar')
 
     testImplementation global_libs.mockito
-    testImplementation project(':proxy_server')
     testImplementation testFixtures(project(':ecu_io'))
 }
 

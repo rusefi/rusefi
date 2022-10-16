@@ -56,7 +56,7 @@ public class LocalApplicationProxyTest {
         assertLatch(backendCreated);
 
         SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
-        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
+        ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
         CountDownLatch disconnected = new CountDownLatch(1);
         LocalApplicationProxy.startAndRun(context, applicationRequest, -1, (String message) -> disconnected.countDown(), LocalApplicationProxy.ConnectionListener.VOID);
@@ -72,7 +72,7 @@ public class LocalApplicationProxyTest {
 
         try (ServerSocketReference ignored1 = createMockBackend(context, gaugePokes)) {
             SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
             try (ServerSocketReference ignored2 = LocalApplicationProxy.startAndRun(context, applicationRequest, -1, TcpIoStream.DisconnectListener.VOID, LocalApplicationProxy.ConnectionListener.VOID)) {
                 TcpIoStream applicationConnection = new TcpIoStream("mock application ", new Socket(LOCALHOST, context.authenticatorPort()));
@@ -113,7 +113,7 @@ public class LocalApplicationProxyTest {
         try (ServerSocketReference ignored1 = createMockBackend(context, gaugePokes)) {
 
             SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
-            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, createTestUserResolver().apply(TEST_TOKEN_1));
+            ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
             CountDownLatch disconnected = new CountDownLatch(1);
 
