@@ -9,6 +9,7 @@ ext {
           javaxJson      : "javax.json:javax.json-api:1.1.4",
           snakeyaml      : "org.yaml:snakeyaml:1.26",
           commons_logging: "commons-logging:commons-logging:1.2",
+          jcip           : 'net.jcip:jcip-annotations:1.0',
   ]
 
   ts_plugin_libs = [

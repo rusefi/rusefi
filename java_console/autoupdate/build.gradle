@@ -17,7 +17,7 @@ dependencies {
     api project(':core_ui')
     api project(':core_io')
 
-    api group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
+    api global_libs.jcip
     api global_libs.json
     // not 'api' since Android would use own implementation
     implementation ts_plugin_libs.httpclient

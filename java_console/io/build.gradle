@@ -16,13 +16,13 @@ tasks.withType(Test) {
 
 dependencies {
     implementation global_libs.javaxJson
+    api global_libs.jcip
     api project(':models')
     api project(':core_io')
     api project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
     implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
-    implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
     implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
