@@ -16,7 +16,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 
-public class ServerSandbox {
+public class TakesServerSandbox {
 
     public static void main(final String... args) throws Exception {
         Take fork = new TkFork(
