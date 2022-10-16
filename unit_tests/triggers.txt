@@ -456,8 +456,8 @@ event 9 0 1 532.74
 event 10 1 1 546.37
 event 11 1 0 613.22
 TRIGGERTYPE 12 120 TT_SUBARU_EZ30 0.00
-knownOperationMode=false
-crankBased=false
+knownOperationMode=true
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=360
