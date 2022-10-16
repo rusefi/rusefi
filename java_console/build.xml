@@ -86,11 +86,7 @@
         </javac>
     </target>
 
-    <target name="native_header">
-        <javah classpath="io/src/main/java" destdir="../unit_tests/native" class="com.rusefi.native_.EngineLogic"/>
-    </target>
-
-    <target name="test" depends="compile, copy_c_sources">
+   <target name="test" depends="compile, copy_c_sources">
         <junit fork="yes"
                maxmemory="512m"
                printsummary="yes"
@@ -121,7 +117,7 @@
         </copy>
     </target>
 
-    <target name="jar" depends="compile, native_header, copy_c_sources">
+    <target name="jar" depends="compile, copy_c_sources">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>
