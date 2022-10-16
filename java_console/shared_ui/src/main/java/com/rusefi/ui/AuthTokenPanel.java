@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.auth.AuthTokenUtil;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +14,7 @@ import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class AuthTokenPanel {
     private final static Logging log = Logging.getLogging(AuthTokenPanel.class);

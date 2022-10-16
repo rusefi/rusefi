@@ -1,7 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.tools.online.UploadResult;
-import com.rusefi.ui.storage.PersistentConfiguration;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;

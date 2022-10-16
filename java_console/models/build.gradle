@@ -2,10 +2,9 @@ plugins {
     id 'java-library'
 }
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
-    api project(':autoupdate')
     api project(':inifile')
-    api libs.snakeyaml
+    api global_libs.snakeyaml
 }

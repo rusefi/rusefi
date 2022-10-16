@@ -2,7 +2,7 @@ package com.rusefi.config;
 
 import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;

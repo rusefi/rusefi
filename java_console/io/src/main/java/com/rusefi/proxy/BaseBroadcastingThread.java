@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.shared.FileUtil.close;
+import static com.rusefi.core.FileUtil.close;
 
 public class BaseBroadcastingThread {
     private static final Logging log = getLogging(BaseBroadcastingThread.class);

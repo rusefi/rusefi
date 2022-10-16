@@ -1,0 +1,15 @@
+
+apply from: 'dependencies.gradle'
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    plugins.withType(JavaPlugin) {
+        dependencies {
+            implementation global_libs.annotations
+            testImplementation global_libs.junit
+        }
+    }
+}

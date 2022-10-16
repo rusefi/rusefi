@@ -3,6 +3,9 @@
  *
  * TODO: change 'verbose' into 'broadcast'?
  *
+ * If you edit this file, please update rusEFI_CAN_verbose.dbc!
+ * Kvaser Database Editor works well for this task, and is free.
+ * 
  * @author Matthew Kennedy, (c) 2020
  */
 
@@ -101,7 +104,7 @@ static void populateFrame(Sensors1& msg) {
 	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
 
 #if	HAL_USE_ADC
-	msg.mcuTemp = getMCUInternalTemperature();
+	msg.mcuTemp = getMCUInternalTemperature() + PACK_ADD_TEMPERATURE;
 #endif
 
 	msg.fuelLevel = Sensor::getOrZero(SensorType::FuelLevel);

@@ -2,13 +2,13 @@ plugins {
     id 'java-library'
 }
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
+    api project(':core_ui')
     api project(':ecu_io')
     api project(':models')
     api ts_plugin_libs.httpclient
     api ts_plugin_libs.httpmime
-    api libs.json
-    testImplementation libs.junit
+    api global_libs.json
 }

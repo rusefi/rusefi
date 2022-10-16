@@ -206,6 +206,7 @@ struct_no_prefix engine_configuration_s
 
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define TRIGGER_IS_CRANK_KEY "crankBased"
+#define TRIGGER_CYCLE_DURATION "cycleDuration"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
 #define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"

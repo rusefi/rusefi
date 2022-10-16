@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.tune.xml.Msq;

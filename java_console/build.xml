@@ -2,7 +2,6 @@
     <property name="jar_file_folder" value="../java_console_binary"/>
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
-    <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
 
     <resources id="libs">
         <string>lib/mockito-all-1.10.19.jar</string>
@@ -13,9 +12,6 @@
         <string>lib/dfu/dfu_java.jar</string>
         <string>lib/dfu/IntelHexParser.jar</string>
         <string>lib/json-simple-1.1.1.jar</string>
-        <string>lib/server/javax.json.jar</string>
-        <string>lib/server/cactoos.jar</string>
-        <string>lib/server/takes.jar</string>
         <string>lib/json-simple-1.1.1.jar</string>
         <string>lib/jaxb-api.jar</string>
         <string>lib/httpclient.jar</string>
@@ -45,33 +41,7 @@
         <delete dir="out"/>
     </target>
 
-    <target name="autoupdate_compile">
-        <mkdir dir="autoupdate_build/classes"/>
-        <javac
-                debug="yes"
-                destdir="autoupdate_build/classes"
-                classpath="lib/annotations.jar"
-        >
-            <src path="autoupdate/src/main/java"/>
-            <src path="shared_io/src/main/java"/>
-        </javac>
-    </target>
-
     <target name="build" depends="jar, test"/>
-
-    <target name="autoupdate_jar" depends="autoupdate_compile">
-        <tstamp>
-            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
-        </tstamp>
-
-        <jar destfile="rusefi_autoupdate.jar" basedir="autoupdate_build/classes">
-            <manifest>
-                <attribute name="Main-Class" value="com.rusefi.autoupdate.Autoupdate"/>
-                <attribute name="Built-Date" value="${TODAY}"/>
-                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-            </manifest>
-        </jar>
-    </target>
 
     <target name="compile">
         <fail message="Unsupported Java version: ${ant.java.version}.
@@ -88,12 +58,9 @@
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
             <src path="autotest/src/main/java"/>
-            <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
             <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
             <src path="../java_tools/enum_to_string/src/main/java"/>
-            <src path="../java_tools/proxy_server/src/main/java"/>
-            <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
             <src path="io/src/test/java"/>
             <src path="io/src/testFixtures/java"/>
@@ -102,6 +69,7 @@
             <src path="models/src/test/java"/>
             <src path="inifile/src/main/java"/>
             <src path="inifile/src/test/java"/>
+            <src path="core_ui/src/main/java"/>
             <src path="shared_ui/src/main/java"/>
             <src path="shared_io/src/main/java"/>
 <!--            <src path="shared_io/src/test/java"/>-->
@@ -109,8 +77,6 @@
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
             <src path="logging/src/main/java"/>
-            <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
-            <src path="tools/src/main/java"/>
             <!-- uncomment if you want to compile under java 11
             // see https://github.com/rusefi/rusefi/issues/1526
             please remove the space between '-' and '-add-exports' it should be double-dash
@@ -120,11 +86,7 @@
         </javac>
     </target>
 
-    <target name="native_header">
-        <javah classpath="io/src/main/java" destdir="../unit_tests/native" class="com.rusefi.native_.EngineLogic"/>
-    </target>
-
-    <target name="test" depends="compile, copy_c_sources">
+   <target name="test" depends="compile, copy_c_sources">
         <junit fork="yes"
                maxmemory="512m"
                printsummary="yes"
@@ -139,7 +101,6 @@
             <batchtest todir="build">
 <!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
                 <fileset dir="autotest/src/main/java" includes="**/test/**/*Test.java"/>
-                <fileset dir="autoupdate/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="inifile/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/*Test.java"/>
@@ -149,27 +110,6 @@
         </junit>
     </target>
 
-    <target name="server_jar" depends="jar">
-        <delete file="${server_jar_file}"/>
-        <echo message="Building ${server_jar_file}"/>
-
-        <jar destfile="${server_jar_file}">
-            <manifest>
-                <attribute name="Main-Class" value="com.rusefi.server.BackendLauncher"/>
-                <attribute name="Built-Date" value="${TODAY}"/>
-                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-            </manifest>
-
-            <zipfileset src="${jar_file}" includes="**/*.class"/>
-            <zipfileset src="lib/server/cactoos.jar" includes="**/*.class"/>
-            <zipfileset src="lib/server/javax.json.jar" includes="**/*.class"/>
-            <zipfileset src="lib/server/takes.jar" includes="**/*.class"/>
-            <zipfileset src="lib/log4j-api-2.13.3.jar"/>
-            <zipfileset src="lib/log4j-core-2.13.3.jar"/>
-            <fileset dir="../java_tools/proxy_server/src/main/resources" includes="**/*.*"/>
-        </jar>
-    </target>
-
     <target name="copy_c_sources">
         <copy todir="build/classes/c_sources" flatten="true">
             <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
@@ -177,7 +117,7 @@
         </copy>
     </target>
 
-    <target name="jar" depends="compile, native_header, copy_c_sources, autoupdate_jar">
+    <target name="jar" depends="compile, copy_c_sources">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>

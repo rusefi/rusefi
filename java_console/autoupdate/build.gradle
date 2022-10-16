@@ -1,24 +1,36 @@
 plugins {
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
+
+defaultTasks 'shadowJar'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
 }
 
 dependencies {
-    api libs.javaxJson
+    api global_libs.javaxJson
     api project(':logging-api')
-    api project(':shared_io')
+    api project(':core_ui')
+    api project(':core_io')
 
-    api group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-    api libs.json
+    api global_libs.jcip
+    api global_libs.json
     // not 'api' since Android would use own implementation
     implementation ts_plugin_libs.httpclient
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testImplementation libs.mockito
+    testImplementation global_libs.mockito
+}
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.rusefi.autoupdate.Autoupdate'
+        )
+    }
 }

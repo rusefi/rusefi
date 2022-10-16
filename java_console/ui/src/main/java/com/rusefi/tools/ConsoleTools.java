@@ -14,6 +14,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Pair;
 import com.rusefi.core.ResponseBuffer;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;

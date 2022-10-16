@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+dependencies {
+    implementation project(':shared_ui')
+    implementation project(':autotest')
+    implementation project(':luaformatter')
+    implementation project(':config_definition')
+    implementation global_libs.antlr
+    implementation 'com.miglayout:miglayout-swing:4.1'
+    implementation files('../lib/dfu/dfu_java.jar')
+    implementation files('../lib/SteelSeries-3.9.30.jar')
+    implementation files('../lib/dfu/IntelHexParser.jar')
+
+    testImplementation global_libs.mockito
+    testImplementation testFixtures(project(':ecu_io'))
+}
+
+shadowJar {
+    manifest {
+        attributes(
+                'Main-Class': 'com.rusefi.Launcher'
+        )
+    }
+}

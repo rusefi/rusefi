@@ -1,15 +1,13 @@
 package com.rusefi.ui;
 
-import com.rusefi.ConsoleUI;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**

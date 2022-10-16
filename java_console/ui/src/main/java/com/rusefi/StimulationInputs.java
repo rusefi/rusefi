@@ -9,6 +9,7 @@ import java.awt.*;
  * 8/13/14
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class StimulationInputs {
     static final int DEFAULT_RPM_MIN = 800;
     static final int DEFAULT_RPM_MAX = 7000;
@@ -83,3 +84,4 @@ public class StimulationInputs {
     }
 }
 
+*/

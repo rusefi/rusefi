@@ -3,17 +3,10 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-apply from: '../../android/dependencies.gradle'
-
 defaultTasks 'shadowJar'
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    implementation libs.jsr305
-    implementation project(':logging')
-    implementation project(':logging-api')
-    implementation libs.annotations
-    testImplementation libs.junit
+    api project(':logging')
 }
 
 /*
@@ -48,11 +41,11 @@ shadowJar {
 
     /*
      to keep only classes from logging
-     and loggin-api as in build.xml
+     and logging-api as in build.xml
     */
     dependencies {
-        exclude(dependency(libs.jsr305))
-        exclude(dependency(libs.junit))
-        exclude(dependency(libs.annotations))
+        exclude(dependency(global_libs.jsr305))
+        exclude(dependency(global_libs.junit))
+        exclude(dependency(global_libs.annotations))
     }
 }

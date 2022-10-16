@@ -1,6 +1,6 @@
 package com.rusefi.ui.util;
 
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
