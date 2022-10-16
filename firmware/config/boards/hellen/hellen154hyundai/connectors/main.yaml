@@ -75,12 +75,19 @@ pins:
     function: Analog Ground
 
 
-  - pin: K17
+  - pin: K17b
     function: Crank Sensor
     # IN_CRANK AIN24 A24
     id: [B1]
     class: [event_inputs]
-    ts_name: Crank - K17
+    ts_name: Crank - K17 rev B
+
+  - pin: K17c
+    function: Crank Sensor
+    # H144_IN_SENS2
+    id: [F4]
+    class: [event_inputs]
+    ts_name: Crank - K17 rev C
 
   - pin: K21
     # H144_IN_O2S
@@ -220,12 +227,19 @@ pins:
   - pin: K61
     function: Analog Ground
 
-  - pin: K62
+  - pin: K62b
 # cam1 IN_CAM
     id: [A6]
     function: Cam Sensor
     class: [event_inputs]
-    ts_name: Cam - K62
+    ts_name: Cam - K62 rev B
+
+  - pin: K62c
+    # H144_IN_SENS3
+    id: [F5]
+    function: Cam Sensor
+    class: [event_inputs]
+    ts_name: Cam - K62 rev C
 
   - pin: K63
     function: sensor +5v feed
@@ -451,7 +465,7 @@ info:
     - pin: K16
       x: 2940
       y: 660
-    - pin: K17
+    - pin: K17c
       x: 3011
       y: 660
     - pin: K18
@@ -593,7 +607,7 @@ info:
     - pin: K61
       x: 3011
       y: 342
-    - pin: K62
+    - pin: K62c
       x: 3086
       y: 342
     - pin: K63
