@@ -409,11 +409,12 @@ public class BinaryProtocol {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
             // that's unusual - most of the protocol is LITTLE_ENDIAN
             bb.order(ByteOrder.BIG_ENDIAN);
-            int crcFromController = bb.getInt();
-            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
-            short crc16FromController = (short) crcFromController;
+            int crc32FromController = bb.getInt();
+            short crc16FromController = (short) crc32FromController;
+
+            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crc32FromController, crc32FromController));
             log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-            return crcFromController;
+            return crc32FromController;
         } else {
             return  -1;
         }
