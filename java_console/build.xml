@@ -59,20 +59,6 @@
 
     <target name="build" depends="jar, test"/>
 
-    <target name="autoupdate_jar" depends="autoupdate_compile">
-        <tstamp>
-            <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
-        </tstamp>
-
-        <jar destfile="rusefi_autoupdate.jar" basedir="autoupdate_build/classes">
-            <manifest>
-                <attribute name="Main-Class" value="com.rusefi.autoupdate.Autoupdate"/>
-                <attribute name="Built-Date" value="${TODAY}"/>
-                <attribute name="Signature-Vendor" value="rusEFI LLC"/>
-            </manifest>
-        </jar>
-    </target>
-
     <target name="compile">
         <fail message="Unsupported Java version: ${ant.java.version}.
   Make sure that the Java version is 1.8 NOT greater see https://github.com/rusefi/rusefi/issues/3128">
@@ -88,7 +74,6 @@
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
             <src path="autotest/src/main/java"/>
-            <src path="autoupdate/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
             <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
             <src path="../java_tools/enum_to_string/src/main/java"/>
@@ -157,7 +142,7 @@
         </copy>
     </target>
 
-    <target name="jar" depends="compile, native_header, copy_c_sources, autoupdate_jar">
+    <target name="jar" depends="compile, native_header, copy_c_sources">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>
