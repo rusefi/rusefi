@@ -815,11 +815,10 @@ void triggerInfo(void) {
 
 #endif /* HAL_TRIGGER_USE_PAL */
 
-	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s useRiseEdge=%s tdcOffset=%.2f",
+	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s tdcOffset=%.2f",
 			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
-			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
-			TRIGGER_WAVEFORM(tdcPosition));
+			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
 		efiPrintf("total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
