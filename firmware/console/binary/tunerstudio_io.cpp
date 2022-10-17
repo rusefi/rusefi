@@ -69,15 +69,15 @@ void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf
 	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
 	// Write header
-	write(headerBuffer, sizeof(headerBuffer), false);
+	write(headerBuffer, sizeof(headerBuffer), /*isEndOfPacket*/false);
 
 	// If data, write that
 	if (size) {
-		write(buf, size, false);
+		write(buf, size, /*isEndOfPacket*/false);
 	}
 
 	// Lastly the CRC footer
-	write(crcBuffer, sizeof(crcBuffer), true);
+	write(crcBuffer, sizeof(crcBuffer), /*isEndOfPacket*/true);
 	flush();
 }
 

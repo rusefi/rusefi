@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
 import static com.rusefi.config.generated.Fields.engine_type_e_MRE_MIATA_NB2_MAP;
-import static com.rusefi.shared.FileUtil.littleEndianWrap;
+import static com.rusefi.core.FileUtil.littleEndianWrap;
 import static junit.framework.Assert.*;
 
 public class JniUnitTest {

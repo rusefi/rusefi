@@ -1,0 +1,44 @@
+include ':proxy_server'
+project(':proxy_server').projectDir = new File('proxy_server')
+include ':core_io'
+project(':core_io').projectDir = new File('../java_console/shared_io')
+include ':core_ui'
+project(':core_ui').projectDir = new File('../java_console/core_ui')
+include ':logging-api'
+project(':logging-api').projectDir = new File('../java_console/logging-api')
+include ':gcc_map_reader'
+project(':gcc_map_reader').projectDir = new File('gcc_map_reader')
+include ':enum_to_string'
+project(':enum_to_string').projectDir = new File('enum_to_string')
+include ':logicdata2c'
+project(':logicdata2c').projectDir = new File('logicdata2c')
+include ':version2header'
+project(':version2header').projectDir = new File('version2header')
+include ':bin2header'
+project(':bin2header').projectDir = new File('bin2header')
+include ':config_definition'
+project(':config_definition').projectDir = new File('configuration_definition')
+include ':ts_plugin_launcher'
+project(':ts_plugin_launcher').projectDir = new File('ts_plugin_launcher')
+include ':ts_plugin'
+project(':ts_plugin').projectDir = new File('ts_plugin')
+include ':autoupdate'
+project(':autoupdate').projectDir = new File('../java_console/autoupdate')
+include ':shared_ui'
+project(':shared_ui').projectDir = new File('../java_console/shared_ui')
+include ':ecu_io'
+project(':ecu_io').projectDir = new File('../java_console/io')
+include ':logging'
+project(':logging').projectDir = new File('../java_console/logging')
+include ':logging-api'
+project(':logging-api').projectDir = new File('../java_console/logging-api')
+include ':inifile'
+project(':inifile').projectDir = new File('../java_console/inifile')
+include ':models'
+project(':models').projectDir = new File('../java_console/models')
+include ':autotest'
+project(':autotest').projectDir = new File('../java_console/autotest')
+include ':ui'
+project(':ui').projectDir = new File('../java_console/ui')
+include ':luaformatter'
+project(':luaformatter').projectDir = new File('../java_console/luaformatter_module')

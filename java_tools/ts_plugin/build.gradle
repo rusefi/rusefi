@@ -6,12 +6,12 @@ plugins {
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-    api project(':ecu_io')
+    api project(':core_ui')
     api project(':shared_ui')
+    api project(':ecu_io')
     api project(':inifile')
     api project(':ts_plugin_launcher')
-    api project(':ts_plugin_launcher')
-    testImplementation libs.mockito
+    testImplementation global_libs.mockito
     testImplementation testFixtures( project(':ecu_io'))
     implementation files('../ts_plugin_launcher/lib/TunerStudioPluginAPI.jar')
 }

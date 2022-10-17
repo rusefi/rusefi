@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+// that git submodule uses non gralde folder structure so here we are hacking things
+sourceSets {
+    main {
+        java {
+            srcDir '../luaformatter/src'
+        }
+    }
+    test {
+        java {
+            srcDir '../luaformatter/test'
+        }
+    }
+}

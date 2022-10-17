@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.io.File;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * @see DfuFlasher
@@ -80,6 +80,7 @@ public class FirmwareFlasher {
             sa.stop();
             wnd.setStatus(DONE);
         } else {
+            wnd.setErrorState(true);
             wnd.append("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }

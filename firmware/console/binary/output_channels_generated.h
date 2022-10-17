@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Oct 09 21:43:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 17 03:42:46 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -8,7 +8,7 @@ struct pid_status_s {
 	/**
 	 * offset 0
 	 */
-	scaled_channel<float, 1, 1> pTerm = (float)0;
+	float pTerm = (float)0;
 	/**
 	 * offset 4
 	 */
@@ -136,7 +136,7 @@ struct output_channels_s {
 	RPM
 	 * offset 4
 	 */
-	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
+	uint16_t RPMValue = (uint16_t)0;
 	/**
 	 * dRPM
 	RPM/s
@@ -154,13 +154,13 @@ struct output_channels_s {
 	kph
 	 * offset 10
 	 */
-	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
+	uint8_t vehicleSpeedKph = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_CPU_TEMP@@
 	deg C
 	 * offset 11
 	 */
-	scaled_channel<int8_t, 1, 1> internalMcuTemperature = (int8_t)0;
+	int8_t internalMcuTemperature = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_CLT@@
 	deg C
@@ -312,7 +312,7 @@ struct output_channels_s {
 	deg
 	 * offset 58
 	 */
-	scaled_channel<int16_t, 1, 1> injectionOffset = (int16_t)0;
+	int16_t injectionOffset = (int16_t)0;
 	/**
 	deg C
 	 * offset 60
@@ -329,7 +329,7 @@ struct output_channels_s {
 	crc16
 	 * offset 64
 	 */
-	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
+	uint16_t engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
@@ -415,7 +415,7 @@ struct output_channels_s {
 	grams
 	 * offset 94
 	 */
-	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
+	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
@@ -443,25 +443,25 @@ struct output_channels_s {
 	Volts
 	 * offset 104
 	 */
-	scaled_channel<float, 1, 1> knockLevel = (float)0;
+	float knockLevel = (float)0;
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	sec
 	 * offset 108
 	 */
-	scaled_channel<uint32_t, 1, 1> seconds = (uint32_t)0;
+	uint32_t seconds = (uint32_t)0;
 	/**
 	 * Engine Mode
 	em
 	 * offset 112
 	 */
-	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
+	uint32_t engineMode = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_VERSION@@
 	version_f
 	 * offset 116
 	 */
-	scaled_channel<uint32_t, 1, 1> firmwareVersion = (uint32_t)0;
+	uint32_t firmwareVersion = (uint32_t)0;
 	/**
 	V
 	 * offset 120
@@ -475,19 +475,19 @@ struct output_channels_s {
 	/**
 	 * offset 124
 	 */
-	scaled_channel<uint32_t, 1, 1> tsConfigVersion = (uint32_t)0;
+	uint32_t tsConfigVersion = (uint32_t)0;
 	/**
 	 * offset 128
 	 */
-	scaled_channel<float, 1, 1> calibrationValue = (float)0;
+	float calibrationValue = (float)0;
 	/**
 	 * offset 132
 	 */
-	scaled_channel<uint8_t, 1, 1> calibrationMode = (uint8_t)0;
+	uint8_t calibrationMode = (uint8_t)0;
 	/**
 	 * offset 133
 	 */
-	scaled_channel<uint8_t, 1, 1> idleTargetPosition = (uint8_t)0;
+	uint8_t idleTargetPosition = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
@@ -499,7 +499,7 @@ struct output_channels_s {
 	counter
 	 * offset 136
 	 */
-	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
+	uint32_t totalTriggerErrorCounter = (uint32_t)0;
 	/**
 	 * offset 140
 	 */
@@ -509,13 +509,13 @@ struct output_channels_s {
 	count
 	 * offset 144
 	 */
-	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
+	uint16_t warningCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_WARNING_LAST@@
 	error
 	 * offset 146
 	 */
-	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
+	uint16_t lastErrorCode = (uint16_t)0;
 	/**
 	error
 	 * offset 148
@@ -525,62 +525,62 @@ struct output_channels_s {
 	val
 	 * offset 164
 	 */
-	scaled_channel<float, 1, 1> debugFloatField1 = (float)0;
+	float debugFloatField1 = (float)0;
 	/**
 	val
 	 * offset 168
 	 */
-	scaled_channel<float, 1, 1> debugFloatField2 = (float)0;
+	float debugFloatField2 = (float)0;
 	/**
 	val
 	 * offset 172
 	 */
-	scaled_channel<float, 1, 1> debugFloatField3 = (float)0;
+	float debugFloatField3 = (float)0;
 	/**
 	val
 	 * offset 176
 	 */
-	scaled_channel<float, 1, 1> debugFloatField4 = (float)0;
+	float debugFloatField4 = (float)0;
 	/**
 	val
 	 * offset 180
 	 */
-	scaled_channel<float, 1, 1> debugFloatField5 = (float)0;
+	float debugFloatField5 = (float)0;
 	/**
 	val
 	 * offset 184
 	 */
-	scaled_channel<float, 1, 1> debugFloatField6 = (float)0;
+	float debugFloatField6 = (float)0;
 	/**
 	val
 	 * offset 188
 	 */
-	scaled_channel<float, 1, 1> debugFloatField7 = (float)0;
+	float debugFloatField7 = (float)0;
 	/**
 	val
 	 * offset 192
 	 */
-	scaled_channel<uint32_t, 1, 1> debugIntField1 = (uint32_t)0;
+	uint32_t debugIntField1 = (uint32_t)0;
 	/**
 	val
 	 * offset 196
 	 */
-	scaled_channel<uint32_t, 1, 1> debugIntField2 = (uint32_t)0;
+	uint32_t debugIntField2 = (uint32_t)0;
 	/**
 	val
 	 * offset 200
 	 */
-	scaled_channel<uint32_t, 1, 1> debugIntField3 = (uint32_t)0;
+	uint32_t debugIntField3 = (uint32_t)0;
 	/**
 	val
 	 * offset 204
 	 */
-	scaled_channel<int16_t, 1, 1> debugIntField4 = (int16_t)0;
+	int16_t debugIntField4 = (int16_t)0;
 	/**
 	val
 	 * offset 206
 	 */
-	scaled_channel<int16_t, 1, 1> debugIntField5 = (int16_t)0;
+	int16_t debugIntField5 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_X@@
 	G
@@ -634,17 +634,17 @@ struct output_channels_s {
 	crc16
 	 * offset 240
 	 */
-	scaled_channel<uint16_t, 1, 1> tuneCrc16 = (uint16_t)0;
+	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
 	 * offset 242
 	 */
-	scaled_channel<uint8_t, 1, 1> fuelClosedLoopBinIdx = (uint8_t)0;
+	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_CURRENT_GEAR@@
 	gear
 	 * offset 243
 	 */
-	scaled_channel<int8_t, 1, 1> tcuCurrentGear = (int8_t)0;
+	int8_t tcuCurrentGear = (int8_t)0;
 	/**
 	V
 	 * offset 244
@@ -654,13 +654,13 @@ struct output_channels_s {
 	dBv
 	 * offset 246
 	 */
-	scaled_channel<int8_t, 1, 1> knock[12];
+	int8_t knock[12];
 	/**
 	 * @@GAUGE_NAME_DESIRED_GEAR@@
 	gear
 	 * offset 258
 	 */
-	scaled_channel<int8_t, 1, 1> tcuDesiredGear = (int8_t)0;
+	int8_t tcuDesiredGear = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_FLEX@@
 	%
@@ -771,7 +771,7 @@ struct output_channels_s {
 	 * @@GAUGE_NAME_KNOCK_COUNTER@@
 	 * offset 298
 	 */
-	scaled_channel<uint16_t, 1, 1> knockCount = (uint16_t)0;
+	uint16_t knockCount = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Z@@
 	G
@@ -794,7 +794,7 @@ struct output_channels_s {
 	deg
 	 * offset 306
 	 */
-	scaled_channel<int8_t, 1, 1> vvtTargets[4];
+	int8_t vvtTargets[4];
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
 	hz
@@ -826,13 +826,13 @@ struct output_channels_s {
 	code
 	 * offset 320
 	 */
-	scaled_channel<int8_t, 1, 1> sparkCutReason = (int8_t)0;
+	int8_t sparkCutReason = (int8_t)0;
 	/**
 	 * Fuel Cut Code
 	code
 	 * offset 321
 	 */
-	scaled_channel<int8_t, 1, 1> fuelCutReason = (int8_t)0;
+	int8_t fuelCutReason = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
 	kg/h
@@ -878,7 +878,7 @@ struct output_channels_s {
 	/**
 	 * offset 336
 	 */
-	scaled_channel<float, 1, 1> calibrationValue2 = (float)0;
+	float calibrationValue2 = (float)0;
 	/**
 	offset 340 bit 0 */
 	bool isMainRelayOn : 1 {};
@@ -980,12 +980,12 @@ struct output_channels_s {
 	count
 	 * offset 344
 	 */
-	int luaInvocationCounter = (int)0;
+	uint32_t luaInvocationCounter = (uint32_t)0;
 	/**
 	nt
 	 * offset 348
 	 */
-	int luaLastCycleDuration = (int)0;
+	uint32_t luaLastCycleDuration = (uint32_t)0;
 	/**
 	count
 	 * offset 352
@@ -1009,11 +1009,11 @@ struct output_channels_s {
 	/**
 	 * offset 360
 	 */
-	int vssEdgeCounter = (int)0;
+	uint32_t vssEdgeCounter = (uint32_t)0;
 	/**
 	 * offset 364
 	 */
-	int issEdgeCounter = (int)0;
+	uint32_t issEdgeCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_AUX_LINEAR_1@@
 	 * offset 368
@@ -1180,27 +1180,27 @@ struct output_channels_s {
 	/**
 	 * offset 392
 	 */
-	int triggerPrimaryFall = (int)0;
+	uint32_t triggerPrimaryFall = (uint32_t)0;
 	/**
 	 * offset 396
 	 */
-	int triggerPrimaryRise = (int)0;
+	uint32_t triggerPrimaryRise = (uint32_t)0;
 	/**
 	 * offset 400
 	 */
-	int triggerSecondaryFall = (int)0;
+	uint32_t triggerSecondaryFall = (uint32_t)0;
 	/**
 	 * offset 404
 	 */
-	int triggerSecondaryRise = (int)0;
+	uint32_t triggerSecondaryRise = (uint32_t)0;
 	/**
 	 * offset 408
 	 */
-	int triggerVvtFall = (int)0;
+	uint32_t triggerVvtFall = (uint32_t)0;
 	/**
 	 * offset 412
 	 */
-	int triggerVvtRise = (int)0;
+	uint32_t triggerVvtRise = (uint32_t)0;
 	/**
 	 * offset 416
 	 */
@@ -1256,7 +1256,7 @@ struct output_channels_s {
 	RPM
 	 * offset 552
 	 */
-	scaled_channel<uint16_t, 1, 1> ISSValue = (uint16_t)0;
+	uint16_t ISSValue = (uint16_t)0;
 	/**
 	V
 	 * offset 554
@@ -1398,15 +1398,20 @@ struct output_channels_s {
 	/**
 	 * offset 596
 	 */
-	int outputRequestPeriod = (int)0;
+	uint32_t outputRequestPeriod = (uint32_t)0;
 	/**
 	 * offset 600
 	 */
 	float mapFast = (float)0;
 	/**
+	value
 	 * offset 604
 	 */
-	uint8_t unusedAtTheEnd[150];
+	float luaGauges[LUA_GAUGE_COUNT];
+	/**
+	 * offset 612
+	 */
+	uint8_t unusedAtTheEnd[142];
 	/**
 	 * need 4 byte alignment
 	units
@@ -1417,4 +1422,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 756);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Oct 09 21:43:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 17 03:42:46 UTC 2022

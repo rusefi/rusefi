@@ -37,9 +37,9 @@ android {
     }
 
     buildTypes {
-	debug {
-	    minifyEnabled false
-	}
+        debug {
+            minifyEnabled false
+        }
         release {
             minifyEnabled false
             signingConfig signingConfigs.release
@@ -49,11 +49,9 @@ android {
 
 dependencies {
     implementation project(':ecu_io')
-    implementation project(':autoupdate')
     implementation project(':logging-api')
-    implementation project(':shared_io')
     implementation project(':models')
-    implementation libs.annotations
+    implementation global_libs.annotations
 
     def acraVersion = '5.7.0'
     implementation "ch.acra:acra-http:$acraVersion"
@@ -74,8 +72,6 @@ dependencies {
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    testImplementation libs.junit
 }
 
 /*

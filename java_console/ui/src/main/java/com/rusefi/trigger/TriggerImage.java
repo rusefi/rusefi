@@ -3,7 +3,7 @@ package com.rusefi.trigger;
 import com.rusefi.StartupFrame;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.ui.engine.UpDownImage;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;

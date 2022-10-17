@@ -1,8 +1,8 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 

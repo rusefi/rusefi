@@ -1,11 +1,11 @@
 package com.rusefi.ui;
 
-import com.rusefi.EcuStimulator;
+//import com.rusefi.EcuStimulator;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import net.ericaro.surfaceplotter.DefaultSurfaceModel;
+//import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.awt.*;
  * 7/22/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class Live3DReport {
     public static final Range KEY_RANGE = new Range(1.5f, 4.0f);
     private final XYData primary = new XYData();
@@ -62,3 +63,4 @@ public class Live3DReport {
         return control;
     }
 }
+*/

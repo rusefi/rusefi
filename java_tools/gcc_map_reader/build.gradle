@@ -3,13 +3,7 @@ plugins {
     id 'application'
 }
 
-defaultTasks 'jar'
-
-apply from: '../../android/dependencies.gradle'
-
-dependencies {
-    testImplementation libs.junit
-}
+defaultTasks 'shadowJar'
 
 jar {
     mainClassName = 'rusefi.GccMapReader'
@@ -20,8 +14,4 @@ jar {
             'Main-Class': 'rusefi.GccMapReader'
         )
     }
-}
-
-run {
-    classpath = files( '$rootDir/../../../java_console_binary/rusefi_console.jar' )
 }

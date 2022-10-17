@@ -9,7 +9,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.*;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;

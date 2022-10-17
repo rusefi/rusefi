@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * This is an immutable model of an individual field
  * Andrey Belomutskiy, (c) 2013-2020
@@ -54,6 +56,8 @@ public class ConfigField {
     private final String trueName;
     private final String falseName;
     private boolean isFromIterate;
+    private String iterateOriginalName;
+    private int iterateIndex;
 
     /**
      * todo: one day someone should convert this into a builder
@@ -64,7 +68,7 @@ public class ConfigField {
                        String arraySizeAsText,
                        String type,
                        int[] arraySizes,
-                       String tsInfo,
+                       @Nullable String tsInfo,
                        boolean isIterate,
                        boolean fsioVisible,
                        boolean hasAutoscale,
@@ -376,7 +380,7 @@ public class ConfigField {
     public int getDigits() {
         String[] tokens = getTokens();
         if (tokens.length < 6)
-            return -1;
+            return 0;
         return Integer.parseInt(tokens[5].trim());
     }
 
@@ -390,8 +394,18 @@ public class ConfigField {
         return token;
     }
 
-    public void isFromIterate(boolean isFromIterate) {
-        this.isFromIterate = isFromIterate;
+    public void setFromIterate(String iterateOriginalName, int iterateIndex) {
+        this.iterateOriginalName = iterateOriginalName;
+        this.iterateIndex = iterateIndex;
+        this.isFromIterate = true;
+    }
+
+    public String getIterateOriginalName() {
+        return iterateOriginalName;
+    }
+
+    public int getIterateIndex() {
+        return iterateIndex;
     }
 
     public boolean isFromIterate() {

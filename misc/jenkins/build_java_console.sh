@@ -4,7 +4,7 @@ echo "java version"
 java -version
 
 echo "Generating Java (Antlr)"
-cd android
+cd java_tools
 ./gradlew :config_definition:generateGrammarSource
 cd ..
 
@@ -18,7 +18,7 @@ cd ..
 echo "java console looks good"
 
 echo "Building TS plugin"
-cd android
+cd java_tools
 ./gradlew :ts_plugin_launcher:shadowJar
 cd ..
 

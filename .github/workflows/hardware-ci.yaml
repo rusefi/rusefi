@@ -52,8 +52,11 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_live_documentation.sh
 
+    - name: Add compiler to PATH
+      run: echo "$HOME/.rusefi-tools/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
+
     # Make sure the compiler works
-    - name: Test Compiler
+    - name: Test/Identify Compiler
       run: arm-none-eabi-gcc -v
 
     # We aren't guaranteed a clean machine every time, so manually clean the output
@@ -75,7 +78,7 @@ jobs:
       run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
     - name: Generate Java (Antlr)
-      working-directory: ./android
+      working-directory: ./java_tools
       run: ./gradlew :config_definition:generateGrammarSource
 
     # This both compiles and runs HW CI tests

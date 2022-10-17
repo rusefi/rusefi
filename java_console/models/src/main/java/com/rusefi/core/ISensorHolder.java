@@ -2,7 +2,7 @@ package com.rusefi.core;
 
 import java.nio.ByteBuffer;
 
-import static com.rusefi.shared.FileUtil.littleEndianWrap;
+import static com.rusefi.core.FileUtil.littleEndianWrap;
 
 public interface ISensorHolder {
     default void grabSensorValues(byte[] response) {

@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.stream.PCanIoStream;
 import com.rusefi.tools.CANConnectorStartup;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;

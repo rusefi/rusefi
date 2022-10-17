@@ -211,13 +211,13 @@ jobs:
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            skip-rate: 95
+            skip-rate: 1
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 95
+            skip-rate: 1
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
@@ -317,7 +317,7 @@ jobs:
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
         wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
         tar -xvf compiler.tar.bz2
-        echo "::add-path::`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin"
+        echo "`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler

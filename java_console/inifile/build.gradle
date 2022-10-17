@@ -2,9 +2,7 @@ plugins {
     id 'java-library'
 }
 
-apply from: '../../android/dependencies.gradle'
-
 dependencies {
     api project(':logging-api')
-    api project(':shared_io')
+    api project(':core_io')
 }

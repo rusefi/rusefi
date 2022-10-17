@@ -1,7 +1,7 @@
 package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 
 import java.io.*;
 import java.util.List;

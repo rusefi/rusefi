@@ -36,49 +36,84 @@ BS_:
 BU_:
 
 
+BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
+ SG_ AFR : 7|16@0+ (0.001,0) [0|0] "AFR" Vector__XXX
+ SG_ VVTPos : 24|16@1- (0.02,0) [0|0] "deg" Vector__XXX
+ SG_ NewSignal_0010 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0009 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0008 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0015 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0016 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ NewSignal_0024 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 512 BASE0: 8 Vector__XXX
- SG_ WarningCounter : 7|16@0+ (1,0) [0|0] "" Vector__XXX
- SG_ LastError : 23|16@0+ (1,0) [0|0] "" Vector__XXX
- SG_ RevLimAct : 32|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ MainRelayAct : 33|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ FuelPumpAct : 34|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ CELAct : 35|1@0+ (1,0) [0|0] "" Vector__XXX
- SG_ EGOHeatAct : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ WarningCounter : 0|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ LastError : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ RevLimAct : 32|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ MainRelayAct : 33|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ FuelPumpAct : 34|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ CELAct : 35|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ EGOHeatAct : 36|1@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 513 BASE1: 8 Vector__XXX
- SG_ RPM : 7|16@0+ (1,0) [0|0] "RPM" Vector__XXX
- SG_ IgnitionTiming : 23|16@0- (0.02,0) [0|0] "°" Vector__XXX
- SG_ InjDuty : 39|8@0+ (0.5,0) [0|100] "%" Vector__XXX
- SG_ IgnDuty : 47|8@0+ (0.5,0) [0|100] "%" Vector__XXX
- SG_ VehicleSpeed : 55|8@0+ (1,0) [0|255] "kph" Vector__XXX
+ SG_ RPM : 0|16@1+ (1,0) [0|0] "RPM" Vector__XXX
+ SG_ IgnitionTiming : 16|16@1- (0.02,0) [0|0] "deg" Vector__XXX
+ SG_ InjDuty : 32|8@1+ (0.5,0) [0|100] "%" Vector__XXX
+ SG_ IgnDuty : 40|8@1+ (0.5,0) [0|100] "%" Vector__XXX
+ SG_ VehicleSpeed : 48|8@1+ (1,0) [0|255] "kph" Vector__XXX
+ SG_ FlexPct : 56|8@1+ (1,0) [0|100] "%" Vector__XXX
 
 BO_ 514 BASE2: 8 Vector__XXX
- SG_ PPS : 7|16@0- (0.01,0) [0|0] "%" Vector__XXX
- SG_ TPS1 : 23|16@0- (0.01,0) [0|0] "%" Vector__XXX
- SG_ TPS2 : 39|16@0- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ PPS : 0|16@1- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ TPS1 : 16|16@1- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ TPS2 : 32|16@1- (0.01,0) [0|0] "%" Vector__XXX
 
 BO_ 515 BASE3: 8 Vector__XXX
- SG_ MAP : 7|16@0+ (0.03,0) [0|0] "kPa" Vector__XXX
- SG_ CoolantTemp : 23|8@0+ (1,0) [0|0] "°C" Vector__XXX
- SG_ IntakeTemp : 31|8@0+ (1,0) [0|0] "°C" Vector__XXX
- SG_ AUX1Temp : 39|8@0+ (1,0) [0|0] "°C" Vector__XXX
- SG_ AUX2Temp : 47|8@0+ (1,0) [0|0] "°C" Vector__XXX
- SG_ MCUTemp : 55|8@0+ (1,0) [0|0] "°C" Vector__XXX
- SG_ FuelLevel : 63|8@0+ (0.5,0) [0|0] "%" Vector__XXX
+ SG_ MAP : 0|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
+ SG_ CoolantTemp : 16|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
+ SG_ IntakeTemp : 24|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
+ SG_ AUX1Temp : 32|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
+ SG_ AUX2Temp : 40|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
+ SG_ MCUTemp : 48|8@1+ (1,-40) [-40|100] "deg C" Vector__XXX
+ SG_ FuelLevel : 56|8@1+ (0.5,0) [0|0] "%" Vector__XXX
 
 BO_ 516 BASE4: 8 Vector__XXX
- SG_ AFR : 7|16@0+ (0.001,0) [0|0] "AFR" Vector__XXX
- SG_ OilPress : 15|16@0+ (0.03,0) [0|0] "kPa" Vector__XXX
- SG_ VVTPos : 23|16@0- (0.02,0) [0|0] "°" Vector__XXX
- SG_ BattVolt : 31|16@0+ (1,0) [0|0] "mV" Vector__XXX
+ SG_ OilPress : 16|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
+ SG_ BattVolt : 48|16@1+ (0.001,0) [0|25] "mV" Vector__XXX
 
 BO_ 517 BASE5: 8 Vector__XXX
- SG_ CylAM : 7|16@0+ (1,0) [0|0] "mg" Vector__XXX
- SG_ EstMAF : 23|16@0+ (0.01,0) [0|0] "kg/h" Vector__XXX
- SG_ InjPW : 39|16@0- (0.003,0) [0|0] "ms" Vector__XXX
+ SG_ CylAM : 0|16@1+ (1,0) [0|0] "mg" Vector__XXX
+ SG_ EstMAF : 16|16@1+ (0.01,0) [0|0] "kg/h" Vector__XXX
+ SG_ InjPW : 32|16@1+ (0.003333333,0) [0|0] "ms" Vector__XXX
+ SG_ KnockCt : 48|16@1+ (1,0) [0|0] "count" Vector__XXX
+
+BO_ 518 BASE6: 8 Vector__XXX
+ SG_ FuelUsed : 0|16@1+ (1,0) [0|0] "g" Vector__XXX
+ SG_ FuelFlow : 16|16@1+ (0.005,0) [0|327] "g/s" Vector__XXX
+ SG_ FuelTrim1 : 32|16@1+ (0.01,0) [-50|50] "%" Vector__XXX
+ SG_ FuelTrim2 : 48|16@1+ (0.01,0) [-50|50] "%" Vector__XXX
+
+BO_ 519 BASE7: 8 Vector__XXX
+ SG_ Lam1 : 0|16@1+ (0.0001,0) [0|2] "lambda" Vector__XXX
+ SG_ Lam2 : 16|16@1+ (0.0001,0) [0|2] "lambda" Vector__XXX
+ SG_ FpLow : 32|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
+ SG_ FpHigh : 48|16@1+ (0.1,0) [0|0] "bar" Vector__XXX
+
+BO_ 520 BASE8: 8 Vector__XXX
+ SG_ Cam1I : 0|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam1Itar : 8|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam1E : 16|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam1Etar : 24|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam2I : 32|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam2Itar : 40|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam2E : 48|8@1- (1,0) [-100|100] "deg" Vector__XXX
+ SG_ Cam2Etar : 56|8@1- (1,0) [-100|100] "deg" Vector__XXX
 
 
 
+CM_ SG_ 3221225472 AFR "Current AFR Reading
+";
+CM_ SG_ 3221225472 VVTPos "Current VVT Position Reading";
 CM_ SG_ 512 WarningCounter "Total warnings since ECU start time";
 CM_ SG_ 512 LastError "Last error code";
 CM_ SG_ 512 RevLimAct "RPM Limiter Active";
@@ -92,6 +127,7 @@ CM_ SG_ 513 InjDuty "Injection Duty
 ";
 CM_ SG_ 513 IgnDuty "Ignition Duty";
 CM_ SG_ 513 VehicleSpeed "Current Vehicle Speed";
+CM_ SG_ 513 FlexPct "Ethanol percent";
 CM_ SG_ 514 PPS "Current Accelerator Pedal Position
 ";
 CM_ SG_ 514 TPS1 "Throttle Body 1 Position";
@@ -103,13 +139,29 @@ CM_ SG_ 515 AUX1Temp "Current Aux1 Temperature";
 CM_ SG_ 515 AUX2Temp "Current Aux2 Temperature";
 CM_ SG_ 515 MCUTemp "Current MCU Temperature";
 CM_ SG_ 515 FuelLevel "Current Fuel Level";
-CM_ SG_ 516 AFR "Current AFR Reading
-";
 CM_ SG_ 516 OilPress "Current Oil Pressure Reading";
-CM_ SG_ 516 VVTPos "Current VVT Position Reading";
 CM_ SG_ 516 BattVolt "Current Battery Voltage Reading";
 CM_ SG_ 517 CylAM "Current Estmated Cylinder Airmass";
 CM_ SG_ 517 EstMAF "Currrent Estimated Total Airflow
 ";
 CM_ SG_ 517 InjPW "Current Commanded Injector Pulsewidth";
+CM_ SG_ 517 KnockCt "Knock detection counter";
+CM_ SG_ 518 FuelUsed "Total fuel consumed";
+CM_ SG_ 518 FuelFlow "Fuel flow rate";
+CM_ SG_ 518 FuelTrim1 "Fuel trim bank 1";
+CM_ SG_ 518 FuelTrim2 "Fuel trim bank 2";
+CM_ BO_ 519 "Fueling";
+CM_ SG_ 519 Lam1 "Lambda sensor 1";
+CM_ SG_ 519 Lam2 "Lambda sensor 2";
+CM_ SG_ 519 FpLow "Fuel pressure - low sensor";
+CM_ SG_ 519 FpHigh "Fuel pressure - high (GDI) sensor";
+CM_ BO_ 520 "Cams";
+CM_ SG_ 520 Cam1I "Cam bank 1 intake actual";
+CM_ SG_ 520 Cam1Itar "Cam bank 1 intake target";
+CM_ SG_ 520 Cam1E "Cam bank 1 exhaust actual";
+CM_ SG_ 520 Cam1Etar "Cam bank 1 exhaust target";
+CM_ SG_ 520 Cam2I "Cam bank 2 intake actual";
+CM_ SG_ 520 Cam2Itar "Cam bank 2 intake target";
+CM_ SG_ 520 Cam2E "Cam bank 2 exhaust actual";
+CM_ SG_ 520 Cam2Etar "Cam bank 2 exhaust target";
 

@@ -23,7 +23,8 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        output.write("static constexpr LogField fields[] = {\r\n");
+        output.write("static constexpr LogField fields[] = {\r\n" +
+                "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
         output.write(getBody());
         output.write("};\r\n");
         output.close();
@@ -41,9 +42,23 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     }
 
     private String processOutput(ReaderState readerState, ConfigField configField, String prefix) {
+        if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
+            return "";
+        if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
+            return "";
+        if (configField.isBit())
+            return "";
 
+        if (configField.isFromIterate()) {
+            String name = configField.getIterateOriginalName() + "[" + (configField.getIterateIndex() - 1) + "]";
+            return getLine(readerState, configField, prefix, prefix + name);
+        } else {
+            return getLine(readerState, configField, prefix, prefix + configField.getName());
+        }
+    }
 
-        return "\t{engine->outputChannels." + configField.getName() +
+    private String getLine(ReaderState readerState, ConfigField configField, String prefix, String name) {
+        return "\t{engine->outputChannels." + name +
                 ", "
                 + DataLogConsumer.getComment(prefix, configField, readerState.variableRegistry) +
                 ", " +

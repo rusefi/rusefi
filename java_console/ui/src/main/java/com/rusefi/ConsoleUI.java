@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.LinkManager;
@@ -17,6 +16,8 @@ import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
+import com.rusefi.core.ui.AutoupdateUtil;
+
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,8 +30,8 @@ import java.util.Map;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
-import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
 
 /**
  * @see StartupFrame
@@ -115,11 +116,11 @@ public class ConsoleUI {
 //        tabbedPane.addTab("LE controls", new FlexibleControls().getPanel());
 
 //        tabbedPane.addTab("ADC", new AdcPanel(new BooleanInputsModel()).createAdcPanel());
-        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
-            // todo: rethink this UI? special command line key to enable it?
-            EcuStimulator stimulator = EcuStimulator.getInstance();
-            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
-        }
+//        if (tabbedPane.paneSettings.showStimulatorPane && !LinkManager.isSimulationMode && !LinkManager.isLogViewerMode(port)) {
+//            // todo: rethink this UI? special command line key to enable it?
+//            EcuStimulator stimulator = EcuStimulator.getInstance();
+//            tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
+//        }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 

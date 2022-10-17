@@ -20,7 +20,7 @@ import java.net.Socket;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
-import static com.rusefi.shared.FileUtil.close;
+import static com.rusefi.core.FileUtil.close;
 
 /**
  * Takes any IoStream and exposes it as local TCP/IP server socket

@@ -20,6 +20,7 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ConfigStructure {
     public static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
+    public static final String UNUSED_ANYTHING_PREFIX = "unused";
     public static final String UNUSED_BIT_PREFIX = "unusedBit_";
 
     public final String name;

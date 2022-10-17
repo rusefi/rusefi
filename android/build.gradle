@@ -9,6 +9,7 @@ buildscript {
 }
 
 apply from: 'dependencies.gradle'
+apply from: '../java_tools/dependencies.gradle'
 
 allprojects {
     repositories {
@@ -19,8 +20,8 @@ allprojects {
 
     plugins.withType(JavaPlugin) {
         dependencies {
-            implementation libs.annotations
-            testImplementation libs.junit
+            implementation global_libs.annotations
+            testImplementation global_libs.junit
         }
     }
 }

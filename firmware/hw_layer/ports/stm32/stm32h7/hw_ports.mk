@@ -6,6 +6,9 @@ HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/stm32h7xx_hal_flash.
 HW_LAYER_EMS_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/mpu_util.cpp \
 					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v4.cpp \
 
+# This MCU has a cache, align functions to a cache line for maximum cache efficiency
+USE_OPT += -falign-functions=16
+
 DDEFS += -DSTM32H743xx
 MCU = cortex-m7
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32h7/STM32H743xI.ld

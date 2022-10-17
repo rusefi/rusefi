@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Oct 06 23:23:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Oct 17 03:42:47 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -261,6 +261,7 @@ public class EngineState {
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
+	public static final int LUA_GAUGE_COUNT = 2;
 	public static final int LUA_PWM_COUNT = 8;
 	public static final int LUA_SCRIPT_SIZE = 8000;
 	public static final int MAF_DECODING_COUNT = 256;
@@ -333,6 +334,7 @@ public class EngineState {
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final String TRIGGER_COMMENT = "#";
+	public static final String TRIGGER_CYCLE_DURATION = "cycleDuration";
 	public static final String TRIGGER_GAP_FROM = "gapFrom";
 	public static final String TRIGGER_GAP_TO = "gapTo";
 	public static final String TRIGGER_GAPS_COUNT = "gapsCount";

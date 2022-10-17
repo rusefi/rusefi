@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 

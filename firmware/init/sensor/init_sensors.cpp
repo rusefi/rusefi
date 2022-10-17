@@ -74,9 +74,8 @@ void initNewSensors() {
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 
-#ifdef HARDWARE_CI
-
-	chThdSleepMilliseconds(10);
+#if defined(HARDWARE_CI) && !defined(HW_PROTEUS)
+	chThdSleepMilliseconds(100);
 
 	if (Sensor::getOrZero(SensorType::BatteryVoltage) < 8) {
 		// Fake that we have battery voltage, some tests rely on it

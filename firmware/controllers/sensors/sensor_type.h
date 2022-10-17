@@ -94,6 +94,9 @@ enum class SensorType : unsigned char {
 	AuxAnalog7,
 	AuxAnalog8,
 
+	LuaGauge1,
+	LuaGauge2,
+
 	AuxLinear1,
 	AuxLinear2,
 

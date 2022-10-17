@@ -17,7 +17,6 @@
     <orderEntry type="library" name="surfaceplotter" level="project" />
     <orderEntry type="library" name="batik" level="project" />
     <orderEntry type="library" name="SteelSeries" level="project" />
-    <orderEntry type="module" module-name="autotest" />
     <orderEntry type="module" module-name="configuration_definition" />
     <orderEntry type="library" name="httpclient" level="project" />
     <orderEntry type="library" name="XML for 11" level="project" />
@@ -28,9 +27,10 @@
     <orderEntry type="module" module-name="models" />
     <orderEntry type="library" scope="TEST" name="takes" level="project" />
     <orderEntry type="library" name="dfu_java" level="project" />
-    <orderEntry type="module" module-name="proxy_server" scope="TEST" />
     <orderEntry type="library" name="antlr" level="project" />
     <orderEntry type="library" scope="TEST" name="mockito-all-1.10.19" level="project" />
     <orderEntry type="module" module-name="luaformatter" />
+    <orderEntry type="module" module-name="core_ui" exported="" />
+    <orderEntry type="module" module-name="autotest" />
   </component>
 </module>

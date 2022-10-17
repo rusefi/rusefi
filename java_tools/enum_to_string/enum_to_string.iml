@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module type="JAVA_MODULE" version="4">
+<module version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$">
+    <content url="file://$MODULE_DIR$/src/main/java">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="junit" level="project" />
-    <orderEntry type="library" exported="" name="snakeyaml" level="project" />
+    <orderEntry type="library" exported="" name="jsr305-2.0.1" level="project" />
     <orderEntry type="module" module-name="logging" exported="" />
-    <orderEntry type="module" module-name="logging-api" />
   </component>
 </module>

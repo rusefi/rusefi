@@ -8,7 +8,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
 import javax.swing.*;
