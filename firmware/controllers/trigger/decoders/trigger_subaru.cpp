@@ -9,7 +9,7 @@
 
 #include "trigger_subaru.h"
 
-static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount, bool hasRotaryRelevance) {
+static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 #if EFI_UNIT_TEST
@@ -50,7 +50,7 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
  * https://rusefi.com/forum/viewtopic.php?f=2&t=1932
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
-	initialize_one_of_36_2_2_2(s, 12, 15, true);
+	initialize_one_of_36_2_2_2(s, 12, 15);
 
 	s->setTriggerSynchronizationGap(0.333f);
 	s->setSecondTriggerSynchronizationGap(1.0f);
@@ -58,7 +58,7 @@ void initialize36_2_2_2(TriggerWaveform *s) {
 }
 
 void initializeSubaruEZ30(TriggerWaveform *s) {
-	initialize_one_of_36_2_2_2(s, 18, 9, true);
+	initialize_one_of_36_2_2_2(s, 18, 9);
 
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 0.25, 0.5);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.7, 1.5);

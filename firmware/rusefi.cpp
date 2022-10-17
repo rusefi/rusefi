@@ -190,7 +190,7 @@ void runRusEfi() {
 #endif
 
 #if defined(STM32F4) || defined(STM32F7)
-	addConsoleAction("stm32_stop", stm32_stop);
+//	addConsoleAction("stm32_stop", stm32_stop);
 	addConsoleAction("stm32_standby", stm32_standby);
 #endif
 
@@ -271,7 +271,6 @@ void runRusEfiWithConfig() {
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
-	engineConfiguration->triggerSimulatorFrequency = HW_CHECK_RPM;
 	enableTriggerStimulator();
 #endif // HW_CHECK_ALWAYS_STIMULATE
 
@@ -286,7 +285,7 @@ void runRusEfiWithConfig() {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller();
+		initEngineController();
 
 	#if EFI_ENGINE_EMULATOR
 		initEngineEmulator();

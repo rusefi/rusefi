@@ -26,6 +26,17 @@ using namespace luaaa;
 #include "electronic_throttle_impl.h"
 #endif
 
+static int lua_vin(lua_State* l) {
+	auto zeroBasedCharIndex = luaL_checkinteger(l, 1);
+	if (zeroBasedCharIndex < 0 || zeroBasedCharIndex > VIN_NUMBER_SIZE) {
+		lua_pushnil(l);
+	} else {
+		char value = engineConfiguration->vinNumber[zeroBasedCharIndex];
+		lua_pushnumber(l, value);
+	}
+	return 1;
+}
+
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
@@ -585,6 +596,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	configureRusefiLuaUtilHooks(l);
 
 	lua_register(l, "readPin", lua_readpin);
+	lua_register(l, "vin", lua_vin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
 	lua_register(l, "getSensor", lua_getSensorByName);

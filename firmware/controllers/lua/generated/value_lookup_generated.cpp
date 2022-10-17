@@ -302,8 +302,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardAggression;
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 		return engineConfiguration->knockRetardReapplyRate;
-	if (strEqualCaseInsensitive(name, "engineSyncCam"))
-		return engineConfiguration->engineSyncCam;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return engineConfiguration->vssFilterReciprocal;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
@@ -772,6 +770,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->fan2OnTemperature;
 	if (strEqualCaseInsensitive(name, "fan2OffTemperature"))
 		return engineConfiguration->fan2OffTemperature;
+	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
+		return engineConfiguration->vvtControlMinRpm;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
 		return engineConfiguration->coastingFuelCutRpmHigh;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmLow"))
@@ -1221,11 +1221,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
 	{
 		engineConfiguration->knockRetardReapplyRate = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "engineSyncCam"))
-	{
-		engineConfiguration->engineSyncCam = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
@@ -2396,6 +2391,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "fan2OffTemperature"))
 	{
 		engineConfiguration->fan2OffTemperature = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
+	{
+		engineConfiguration->vvtControlMinRpm = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))

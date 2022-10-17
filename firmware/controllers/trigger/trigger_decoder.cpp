@@ -280,6 +280,8 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
 	efitick_t time90ago = timeOfLastEvent[prevIndex];
+
+	// No previous timestamp, instant RPM isn't ready yet
 	if (time90ago == 0) {
 		return prevInstantRpmValue;
 	}
@@ -293,9 +295,10 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
 	fixAngle(angleDiff, "angleDiff", CUSTOM_ERR_6561);
 
-	// just for safety
-	if (time == 0)
+	// just for safety, avoid divide-by-0
+	if (time == 0) {
 		return prevInstantRpmValue;
+	}
 
 	float instantRpm = (60000000.0 / 360 * US_TO_NT_MULTIPLIER) * angleDiff / time;
 	assertIsInBoundsWithResult(current_index, instantRpmValue, "instantRpmValue", 0);

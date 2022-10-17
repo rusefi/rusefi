@@ -14,6 +14,8 @@ void hellenWbo();
 void setHellen144LedPins();
 void setHellen176LedPins();
 
+void setHellenCan();
+
 int detectHellenBoardId();
 void detectHellenBoardType();
 

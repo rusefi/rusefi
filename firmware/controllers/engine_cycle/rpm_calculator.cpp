@@ -82,7 +82,7 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
-	if (engine->limpManager.isEngineStop(nowNt)) {
+	if (getLimpManager()->shutdownController.isEngineStop(nowNt)) {
 		return false;
 	}
 
@@ -209,11 +209,9 @@ uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 }
 
 void RpmCalculator::onSlowCallback() {
-	/**
-	 * Update engine RPM state if needed (check timeouts).
-	 */
-	if (!checkIfSpinning(getTimeNowNt())) {
-		engine->rpmCalculator.setStopSpinning();
+	// Stop the engine if it's been too long since we got a trigger event
+	if (!engine->triggerCentral.engineMovedRecently(getTimeNowNt())) {
+		setStopSpinning();
 	}
 }
 

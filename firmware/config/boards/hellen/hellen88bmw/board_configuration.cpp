@@ -118,8 +118,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->enableSoftwareKnock = true;
 	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 
 	engineConfiguration->fuelPumpPin = Gpio::D12;	// OUT_IO9 // 113 Fuel Pump Relay
 	engineConfiguration->idle.solenoidPin = H144_OUT_PWM5;

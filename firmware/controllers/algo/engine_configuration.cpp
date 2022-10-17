@@ -1147,3 +1147,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 // These symbols are weak so that a board_configuration.cpp file can override them
 __attribute__((weak)) void setBoardDefaultConfiguration() { }
 __attribute__((weak)) void setBoardConfigOverrides() { }
+
+__attribute__((weak)) int getBoardMetaOutputsCount() { return 0; }
+__attribute__((weak)) Gpio* getBoardMetaOutputs() { return nullptr; }

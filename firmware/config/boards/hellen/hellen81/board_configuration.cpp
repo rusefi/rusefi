@@ -111,8 +111,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 }
 
 /**
@@ -127,9 +126,6 @@ void setBoardDefaultConfiguration() {
 	setIgnitionPins();
 
 	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
 
 	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
 	engineConfiguration->fanPin = Gpio::D12;	// OUT_PWM8

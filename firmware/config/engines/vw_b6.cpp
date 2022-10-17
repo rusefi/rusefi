@@ -389,12 +389,12 @@ void setMreVwPassatB6() {
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
 
 	// "42 - Injector 4", somehow GP4 did not work? not enough current? not happy with diode?
-	lowPressureFuelPumpControl->pin = Gpio::TLE8888_PIN_4;
+	lowPressureFuelPumpControl->pin = MRE_INJ_4;
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
 
-	coolantControl->pin = Gpio::TLE8888_PIN_5; // "3 - Lowside 2"
+	coolantControl->pin = MRE_LS_2;
 	// "7 - Lowside 1"
 	//engineConfiguration->hpfpValvePin = MRE_LS_1;
 	engineConfiguration->disablePrimaryUart = true;

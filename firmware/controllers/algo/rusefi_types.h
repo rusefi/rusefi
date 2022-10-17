@@ -77,6 +77,8 @@ using efitimems_t = uint32_t;
 
 using angle_t = float;
 
+using engineSyncCam_e = uint8_t;
+
 // mass in grams
 using mass_t = float;
 

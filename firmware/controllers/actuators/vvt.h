@@ -14,7 +14,7 @@
 
 class ValueProvider3D;
 
-void initAuxPid();
+void initVvtActuators();
 void startVvtControlPins();
 void stopVvtControlPins();
 

@@ -194,8 +194,6 @@ static void doPeriodicSlowCallback() {
 
 	if (engine->rpmCalculator.isStopped()) {
 		resetAccel();
-	} else {
-		updatePrimeInjectionPulseState();
 	}
 
 	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
@@ -651,7 +649,7 @@ bool validateConfig() {
 
 #if !EFI_UNIT_TEST
 
-void initEngineContoller() {
+void initEngineController() {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
@@ -690,7 +688,7 @@ void initEngineContoller() {
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 #if EFI_AUX_PID
-	initAuxPid();
+	initVvtActuators();
 #endif /* EFI_AUX_PID */
 
 #if EFI_MALFUNCTION_INDICATOR

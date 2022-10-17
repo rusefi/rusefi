@@ -466,7 +466,7 @@ static void mreBoardOldTest() {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
-	engineConfiguration->triggerSimulatorFrequency = HW_CHECK_RPM;
+	engineConfiguration->triggerSimulatorFrequency = 202;
 	// set cranking_rpm 500
 	engineConfiguration->cranking.rpm = 100;
 	// set cranking_dwell 200
@@ -583,6 +583,7 @@ void proteusBoardTest() {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
 	engineConfiguration->triggerSimulatorFrequency = 600;
+    engineConfiguration->injector.flow = 4.6; // longer blink
 
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -597,17 +598,22 @@ void proteusBoardTest() {
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_2;
 	engineConfiguration->injectionPins[2] = PROTEUS_LS_3;
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_4;
-	engineConfiguration->injectionPins[4] = Gpio::G12;// "Lowside 5"
-	engineConfiguration->injectionPins[5] = Gpio::G13;// "Lowside 6"
-	engineConfiguration->injectionPins[6] = Gpio::B5;//  "Lowside 9"
-	engineConfiguration->injectionPins[7] = Gpio::B4;//  "Lowside 8"
-	engineConfiguration->injectionPins[8] = Gpio::B7;//  "Lowside 11"
+	engineConfiguration->injectionPins[4] = PROTEUS_LS_5;
+	engineConfiguration->injectionPins[5] = PROTEUS_LS_6;
+	engineConfiguration->injectionPins[6] = PROTEUS_LS_9;
+	engineConfiguration->injectionPins[7] = PROTEUS_LS_8;
+	engineConfiguration->injectionPins[8] = PROTEUS_LS_11;
 	engineConfiguration->injectionPins[9] = PROTEUS_LS_10;
-	engineConfiguration->injectionPins[10] = Gpio::B8;//  "Lowside 12"
-	engineConfiguration->injectionPins[11] = Gpio::B9;//  "Lowside 13"    # pin 10/black35
+	engineConfiguration->injectionPins[10] = PROTEUS_LS_12;
+	engineConfiguration->injectionPins[11] = PROTEUS_LS_13;
 
 
-
+    engineConfiguration->luaOutputPins[0] = PROTEUS_LS_7;
+    engineConfiguration->luaOutputPins[1] = PROTEUS_LS_14;
+    engineConfiguration->luaOutputPins[2] = PROTEUS_LS_15;
+    engineConfiguration->luaOutputPins[3] = PROTEUS_LS_16;
+    engineConfiguration->luaOutputPins[4] = PROTEUS_HS_2;
+    engineConfiguration->luaOutputPins[5] = PROTEUS_HS_4;
 
 	engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
 	engineConfiguration->ignitionPins[1] = PROTEUS_IGN_2;
@@ -623,6 +629,19 @@ void proteusBoardTest() {
 	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
+	strncpy(config->luaScript, R"(
+	startPwm(0, 10, 0.5)
+	startPwm(1, 11, 0.5)
+	startPwm(2, 12, 0.5)
+	startPwm(3, 13, 0.5)
+	startPwm(4, 14, 0.5)
+	startPwm(5, 15, 0.5)
+    startPwm(6, 16, 0.5)
+	startPwm(7, 17, 0.5)
+
+	function onTick()
+	end
+    )", efi::size(config->luaScript));
 
 #endif // EFI_PROD_CODE
 
@@ -691,6 +710,8 @@ void mreBoardNewTest() {
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
+    engineConfiguration->injector.flow = 5; // longer blink
+
 
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->ignitionPins[1 - 1] = Gpio::D6;
@@ -835,7 +856,6 @@ void setTest33816EngineConfiguration() {
 
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
-	engineConfiguration->triggerSimulatorPins[2] = Gpio::Unassigned;
 
 	engineConfiguration->injectionPins[0] = Gpio::B9; // #1
 	engineConfiguration->injectionPins[1] = Gpio::E2; // #2

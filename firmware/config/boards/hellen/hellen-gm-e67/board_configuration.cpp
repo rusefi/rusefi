@@ -103,8 +103,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 
 	// TLE9201 driver
     // This chip has three control pins:

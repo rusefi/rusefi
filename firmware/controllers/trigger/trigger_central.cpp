@@ -635,9 +635,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 #if EFI_UNIT_TEST
 				// hack? feature? existing unit test relies on VVT phase available right away
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
-				int rpm = Sensor::getOrZero(SensorType::Rpm);
-				efitick_t nowNt = getTimeNowNt();
-				getLimpManager()->updateState(rpm, nowNt);
+				getLimpManager()->onFastCallback();
 #endif // EFI_UNIT_TEST
 			}
 
@@ -882,10 +880,6 @@ void triggerInfo(void) {
 					tc->vvtEventRiseCounter[camInputIndex], tc->vvtEventFallCounter[camInputIndex]);
 		}
 	}
-
-
-//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(engineConfiguration->triggerSimulatorPins[2]),
-//			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[2]));
 
 	efiPrintf("trigger error extra LED: %s %s", hwPortname(engineConfiguration->triggerErrorPin),
 			getPin_output_mode_e(engineConfiguration->triggerErrorPinMode));

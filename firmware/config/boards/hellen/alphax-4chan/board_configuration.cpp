@@ -167,8 +167,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
-	engineConfiguration->canTxPin = Gpio::D1;
-	engineConfiguration->canRxPin = Gpio::D0;
+	setHellenCan();
 }
 
 /**
@@ -217,4 +216,19 @@ void setBoardDefaultConfiguration() {
 void boardPrepareForStop() {
 	// Wake on the CAN RX pin
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
+
+static Gpio OUTPUTS[] = {
+		H144_LS_1,
+		H144_LS_2,
+		H144_LS_3,
+		H144_LS_4,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
 }

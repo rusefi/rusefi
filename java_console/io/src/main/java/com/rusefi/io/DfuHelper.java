@@ -41,7 +41,8 @@ public class DfuHelper {
                 signatureWithPrefix = PREFIX + "_" + s.getBundle();
             }
 
-            if (!bundleName.equalsIgnoreCase(signatureWithPrefix)) {
+            // hack: QC firmare self-identifies as "normal" not QC firmware :(
+            if (!bundleName.equalsIgnoreCase(signatureWithPrefix) && !bundleName.contains("_QC_")) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
                 log.info(message);
 

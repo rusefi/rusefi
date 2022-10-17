@@ -12,10 +12,10 @@ TEST(trigger, map_cam_by_magic_point) {
 	engineConfiguration->camInputs[0] = Gpio::A0;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 	eth.engine.periodicFastCallback(); // trigger limp mode
-	ASSERT_FALSE(eth.engine.limpManager.allowIgnition());
-	ASSERT_FALSE(eth.engine.limpManager.allowInjection());
-	ASSERT_EQ(ClearReason::EnginePhase, eth.engine.limpManager.allowIgnition().reason);
-	ASSERT_EQ(ClearReason::EnginePhase, eth.engine.limpManager.allowInjection().reason);
+	ASSERT_FALSE(getLimpManager()->allowIgnition());
+	ASSERT_FALSE(getLimpManager()->allowInjection());
+	ASSERT_EQ(ClearReason::EnginePhase, getLimpManager()->allowIgnition().reason);
+	ASSERT_EQ(ClearReason::EnginePhase, getLimpManager()->allowInjection().reason);
 
 	engine->outputChannels.instantMAPValue = 100;
 
@@ -39,8 +39,8 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(1, engine->triggerCentral.triggerState.camResyncCounter);
 	ASSERT_EQ(10, engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT);
 
-	ASSERT_EQ(ClearReason::None, eth.engine.limpManager.allowIgnition().reason);
-	ASSERT_EQ(ClearReason::None, eth.engine.limpManager.allowInjection().reason);
+	ASSERT_EQ(ClearReason::None, getLimpManager()->allowIgnition().reason);
+	ASSERT_EQ(ClearReason::None, getLimpManager()->allowInjection().reason);
 
 	// We have "VVT" sync, things should be scheduled!
 	ASSERT_EQ(2, engine->executor.size());
