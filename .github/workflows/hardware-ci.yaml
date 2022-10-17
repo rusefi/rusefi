@@ -53,7 +53,7 @@ jobs:
       run: ./gen_live_documentation.sh
 
     - name: Add compiler to PATH
-      run: echo "::add-path::$HOME/.rusefi-tools/gcc-arm-none-eabi-9-2020-q2-update/bin"
+      run: echo "$HOME/.rusefi-tools/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
 
     # Make sure the compiler works
     - name: Test/Identify Compiler
