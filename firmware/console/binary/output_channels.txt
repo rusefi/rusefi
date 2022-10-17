@@ -364,5 +364,6 @@ bit injectorState12
 
 uint32_t outputRequestPeriod
 float mapFast
-	uint8_t[150 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	float[LUA_GAUGE_COUNT iterate] luaGauges;;"value",1, 0, 0, 50000, 3
+	uint8_t[142 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
