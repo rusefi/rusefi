@@ -167,7 +167,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	findTriggerPosition(&engine->triggerCentral.triggerShape,
 			&engine->triggerCentral.triggerFormDetails,
 			&position, 200);
-	assertTriggerPosition(&position, 3, 20);
+	assertTriggerPosition(&position, 2, 80);
 
 	findTriggerPosition(&engine->triggerCentral.triggerShape,
 			&engine->triggerCentral.triggerFormDetails,
