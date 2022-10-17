@@ -336,15 +336,6 @@ angle_t TriggerWaveform::getSwitchAngle(int index) const {
 	return getCycleDuration() * wave.getSwitchTime(index);
 }
 
-void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped,
-		operation_mode_e operationMode) {
-#if EFI_ENGINE_CONTROL
-
-	initializeSkippedToothTriggerWaveformExt(s, total, skipped,
-			operationMode);
-#endif
-}
-
 void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatioFrom, syncRatioTo);
 }
@@ -479,12 +470,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	switch (triggerConfig.TriggerType.type) {
 	case TT_TOOTHED_WHEEL:
-		/**
-		 * huh? why all know skipped wheel shapes use 'setToothedWheelConfiguration' method
-		 * which touches 'useRiseEdge' flag while here we do not touch it?!
-		 */
-		initializeSkippedToothTriggerWaveformExt(this, triggerConfig.TriggerType.customTotalToothCount,
-				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode);
+		initializeSkippedToothTrigger(this, triggerConfig.TriggerType.customTotalToothCount,
+				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
 	case TT_MAZDA_MIATA_NA:
@@ -621,7 +608,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_ONE:
-		setToothedWheelConfiguration(this, 1, 0, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 1, 0, triggerOperationMode, SyncEdge::Rise);
 		break;
 
 	case TT_MAZDA_SOHC_4:
@@ -633,7 +620,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_VVT_JZ:
-		setToothedWheelConfiguration(this, 3, 0, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 3, 0, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
 	case TT_36_2_1_1:
@@ -645,7 +632,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    break;
 
 	case TT_TOOTHED_WHEEL_32_2:
-		setToothedWheelConfiguration(this, 32, 2, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 32, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		// todo: why is this 32/2 asking for third gap while 60/2 is happy with just two gaps?
 		// method above sets second gap, here we add third
 		// this third gap is not required to sync on perfect signal but is needed to handle to reject cranking transition noise
@@ -653,11 +640,11 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:
-		setToothedWheelConfiguration(this, 60, 2, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 60, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:
-		setToothedWheelConfiguration(this, 36, 2, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 36, 2, triggerOperationMode, SyncEdge::RiseOnly);
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.6, 3.5);
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
@@ -667,7 +654,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case TT_TOOTHED_WHEEL_36_1:
-		setToothedWheelConfiguration(this, 36, 1, triggerOperationMode);
+		initializeSkippedToothTrigger(this, 36, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:

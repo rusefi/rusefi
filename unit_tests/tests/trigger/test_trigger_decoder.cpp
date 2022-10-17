@@ -415,7 +415,7 @@ TEST(trigger, testTriggerDecoder) {
 	EngineTestHelperBase base(&e, &c.engineConfiguration, &c);
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
 
-	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
+	initializeSkippedToothTrigger(s, 2, 0, FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 	assertEqualsM("shape size", s->getSize(), 4);
 	ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
 	ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
