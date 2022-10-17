@@ -16,6 +16,9 @@ ifeq ($(IS_STM32F429),yes)
 	USE_OPT += -Wl,--defsym=STM32F4_HAS_SRAM3=1
 	DDEFS += -DSTM32F429xx
 	DDEFS += -DEFI_IS_F42x
+else ifeq ($(IS_STM32F427),yes)
+	DDEFS += -DSTM32F427xx
+	DDEFS += -DEFI_IS_F42x
 else
 	DDEFS += -DSTM32F407xx
 endif

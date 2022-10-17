@@ -5,7 +5,8 @@ BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen128/board_configuration.cpp
 
 BOARDINC = $(BOARDS_DIR)/hellen/hellen128
 
-#BRDFLAGS     = -DSTM32F427xx
+BRDFLAGS     = -DSTM32F427xx
+IS_STM32F427 = yes
 
 # Set this if you want a default engine type other than normal hellen128
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
@@ -28,7 +29,7 @@ DDEFS += -DSHORT_BOARD_NAME=hellen128
 # PE0 and PE1 - UART8
 DDEFS += -DSTM32_SERIAL_USE_UART8=TRUE
 DDEFS += -DTS_SECONDARY_PORT=SD8
-DDEFS += -DSTM32F427xx
+#DDEFS += -DSTM32F427xx
 
 
 include $(BOARDS_DIR)/hellen/hellen-common176.mk
