@@ -241,4 +241,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.ignBlendOutput[3], "ignBlendOutput 4", "deg", 2},
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
+	{engine->outputChannels.luaGauges[0], "luaGauges 1", "value", 3},
+	{engine->outputChannels.luaGauges[1], "luaGauges 2", "value", 3},
 };
