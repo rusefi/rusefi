@@ -61,7 +61,7 @@ public class EnumIniField extends IniField {
         return image.getByteBuffer(getOffset(), 4);
     }
 
-    private static boolean isQuoted(String q) {
+    public static boolean isQuoted(String q) {
         final int len = q.length();
         return (len >= 2 && q.charAt(0) == '"' && q.charAt(len - 1) == '"');
     }

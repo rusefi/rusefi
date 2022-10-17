@@ -6,7 +6,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.SignatureHelper;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.config.generated.Fields;
@@ -15,7 +15,7 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.Nullable;
@@ -65,7 +65,7 @@ public class BinaryProtocol {
     private final Object ioLock = new Object();
 
     BinaryProtocolLogger binaryProtocolLogger;
-    public static boolean DISABLE_LOCAL_CACHE;
+    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
 
     public static String findCommand(byte command) {
         switch (command) {
@@ -377,7 +377,7 @@ public class BinaryProtocol {
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
-        if (DISABLE_LOCAL_CACHE)
+        if (DISABLE_LOCAL_CONFIGURATION_CACHE)
             return null;
         ConfigurationImage localCached;
         try {
@@ -409,11 +409,12 @@ public class BinaryProtocol {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
             // that's unusual - most of the protocol is LITTLE_ENDIAN
             bb.order(ByteOrder.BIG_ENDIAN);
-            int crcFromController = bb.getInt();
-            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
-            short crc16FromController = (short) crcFromController;
+            int crc32FromController = bb.getInt();
+            short crc16FromController = (short) crc32FromController;
+
+            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crc32FromController, crc32FromController));
             log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-            return crcFromController;
+            return crc32FromController;
         } else {
             return  -1;
         }

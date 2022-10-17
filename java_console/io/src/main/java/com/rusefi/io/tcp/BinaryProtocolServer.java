@@ -182,19 +182,10 @@ public class BinaryProtocolServer {
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-                int offset = swap16(dis.readShort());
-                int count = swap16(dis.readShort());
-                log.info("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
-
-                byte[] response = new byte[1 + count];
-                response[0] = (byte) TS_OK.charAt(0);
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
-                if (MOCK_SD_CARD)
-                    currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
-                if (currentOutputs != null)
-                    System.arraycopy(currentOutputs, offset, response, 1, count);
+
+                byte[] response = getOutputCommandResponse(payload, currentOutputs);
                 stream.sendPacket(response);
             } else if (command == Fields.TS_GET_TEXT) {
                 // todo: relay command
@@ -206,6 +197,23 @@ public class BinaryProtocolServer {
                 log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
+    }
+
+    @NotNull
+    public static byte[] getOutputCommandResponse(byte[] payload, byte[] currentOutputs) throws IOException {
+        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
+        int offset = swap16(dis.readShort());
+        int count = swap16(dis.readShort());
+        if (log.debugEnabled())
+            log.debug("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
+
+        byte[] response = new byte[1 + count];
+        response[0] = (byte) TS_OK.charAt(0);
+        if (MOCK_SD_CARD)
+            currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
+        if (currentOutputs != null)
+            System.arraycopy(currentOutputs, offset, response, 1, count);
+        return response;
     }
 
     @NotNull
@@ -329,11 +337,19 @@ public class BinaryProtocolServer {
         log.info("CRC check");
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
         byte[] content = bp.getControllerConfiguration().getContent();
-        int result = IoHelper.getCrc32(content);
+        byte[] packet = createCrcResponse(content);
+        stream.sendPacket(packet);
+    }
+
+    @NotNull
+    public static byte[] createCrcResponse(byte[] content) throws IOException {
+        int crc32value = IoHelper.getCrc32(content);
         ByteArrayOutputStream response = new ByteArrayOutputStream();
+        // header
         response.write(TS_OK.charAt(0));
-        new DataOutputStream(response).writeInt(result);
-        stream.sendPacket(response.toByteArray());
+        // payload
+        new DataOutputStream(response).writeInt(crc32value);
+        return response.toByteArray();
     }
 
     public static class Packet {

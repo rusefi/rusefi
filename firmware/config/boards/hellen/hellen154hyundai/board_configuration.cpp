@@ -58,13 +58,6 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	// trigger inputs
-	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
-	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = H144_IN_CAM;
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
-
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->vvtMode[1 * CAMS_PER_BANK] = VVT_SECOND_HALF;
 
@@ -105,7 +98,16 @@ void setBoardConfigOverrides() {
 	engineConfiguration->clt.config.bias_resistor = 4700;
 	engineConfiguration->iat.config.bias_resistor = 4700;
 
+	// trigger inputs
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	// Direct hall-only cam input
+	// this one same on both revisions
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
+
 	if (engine->engineState.hellenBoardId == -1) {
+	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	    engineConfiguration->camInputs[0] = H144_IN_CAM;
+
 		// control pins are inverted since overall ECU pinout seems to be inverted
 		engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
 		engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
@@ -125,6 +127,10 @@ void setBoardConfigOverrides() {
 			efiSetPadMode("ETB FIX2", H144_OUT_IO13, PAL_MODE_INPUT_ANALOG);
 		}
 	} else if (engine->engineState.hellenBoardId == BOARD_ID_154hyundai_c) {
+		engineConfiguration->triggerInputPins[0] = H144_IN_SENS2;
+		engineConfiguration->camInputs[0] = H144_IN_SENS3;
+
+
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins = true;
 

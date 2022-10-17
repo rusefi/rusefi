@@ -9,6 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setToyota_jzs147EngineConfiguration();
 void setToyota_2jz_vics();
-

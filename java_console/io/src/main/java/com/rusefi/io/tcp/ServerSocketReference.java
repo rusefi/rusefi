@@ -1,6 +1,6 @@
 package com.rusefi.io.tcp;
 
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 
 import java.io.Closeable;
 import java.net.ServerSocket;

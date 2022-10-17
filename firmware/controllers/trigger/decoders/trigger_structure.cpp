@@ -695,6 +695,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
         break;
 
 	case UNUSED_21:
+	case UNUSED_29:
 	case UNUSED_34:
 	case TT_1_16:
 		configureOnePlus16(this);
@@ -734,10 +735,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	case TT_2JZ_3_34:
 		initialize2jzGE3_34_simulation_shape(this);
-		break;
-
-	case TT_2JZ_1_12:
-		initialize2jzGE1_12(this);
 		break;
 
 	case TT_12_TOOTH_CRANK:

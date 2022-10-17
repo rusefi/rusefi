@@ -4,6 +4,7 @@ plugins {
 }
 
 apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
@@ -14,21 +15,31 @@ tasks.withType(Test) {
 }
 
 dependencies {
-    implementation libs.javaxJson
-    implementation project(':inifile')
-    implementation project(':autoupdate')
-    implementation project(':models')
-    implementation project(':logging-api')
-    implementation project(':shared_io')
-    implementation project(':logging')
+    implementation global_libs.javaxJson
+    api global_libs.jcip
+    api project(':models')
+    api project(':core_io')
+    api project(':logging')
 
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.9.2'
     implementation group: 'tel.schich', name: 'javacan-core', version: '3.2.0'
-    implementation group: 'net.jcip', name: 'jcip-annotations', version: '1.0'
-    implementation libs.json
+    implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
     // junit 4.13 does not mix well with httpclient :(
     testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testFixturesImplementation libs.mockito
+    testFixturesImplementation global_libs.mockito
+    testFixturesApi global_libs.annotations
+    testFixturesApi global_libs.junit
+}
+
+compileJava {
+    doLast {
+        // gradle java plugin always generates JNI headers
+        copy {
+            from 'build/generated/sources/headers/java/main'
+            into "../../unit_tests/native"
+            include 'com*.h'
+        }
+    }
 }

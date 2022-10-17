@@ -6,6 +6,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -25,6 +26,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.617025
 gapTo.0=1.028375
@@ -70,6 +72,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.100000
 gapTo.0=0.500000
@@ -93,6 +96,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.065000
 gapTo.0=0.170000
@@ -124,6 +128,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=1
 gapFrom.0=4.500000
 gapTo.0=7.500000
@@ -161,6 +166,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.093750
 gapTo.0=0.156250
@@ -178,6 +184,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -195,6 +202,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=2.250000
 gapTo.0=3.750000
@@ -322,6 +330,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -403,6 +412,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=1.012500
 gapTo.0=1.687500
@@ -428,6 +438,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.249950
 gapTo.0=2.083250
@@ -445,10 +456,11 @@ event 9 0 1 532.74
 event 10 1 1 546.37
 event 11 1 0 613.22
 TRIGGERTYPE 12 120 TT_SUBARU_EZ30 0.00
-knownOperationMode=false
-crankBased=false
+knownOperationMode=true
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=0.250000
 gapTo.0=0.500000
@@ -582,6 +594,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=3
 gapFrom.0=0.322500
 gapTo.0=0.537500
@@ -607,6 +620,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.750000
 gapTo.0=1.500000
@@ -632,6 +646,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -651,6 +666,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -664,6 +680,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.750000
 gapTo.0=1.250000
@@ -679,6 +696,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.750000
 gapTo.0=1.250000
@@ -690,6 +708,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -733,6 +752,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=1.600000
 gapTo.0=4.000000
@@ -978,6 +998,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1021,6 +1042,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.250000
 gapTo.0=1.900000
@@ -1054,6 +1076,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=0.249750
 gapTo.0=0.416250
@@ -1187,6 +1210,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=7.252500
 gapTo.0=16.000000
@@ -1204,6 +1228,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1355,6 +1380,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1496,6 +1522,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1605,6 +1632,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=4.500000
 gapTo.0=7.500000
@@ -1663,70 +1691,56 @@ event 50 1 1 675.00
 event 51 1 0 690.00
 event 52 1 1 705.00
 event 53 0 0 710.00
-TRIGGERTYPE 29 50 TT_2JZ_1_12 0.00
+TRIGGERTYPE 29 34 UNUSED_29 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
 event 0 0 1 0.00
-event 1 1 0 10.00
-event 2 1 1 25.00
-event 3 1 0 40.00
-event 4 1 1 55.00
-event 5 1 0 70.00
-event 6 0 0 75.00
-event 7 1 1 85.00
-event 8 1 0 100.00
-event 9 1 1 115.00
-event 10 1 0 130.00
-event 11 1 1 145.00
-event 12 1 0 160.00
-event 13 1 1 175.00
-event 14 1 0 190.00
-event 15 1 1 205.00
-event 16 1 0 220.00
-event 17 1 1 235.00
-event 18 1 0 250.00
-event 19 1 1 265.00
-event 20 1 0 280.00
-event 21 1 1 295.00
-event 22 1 0 310.00
-event 23 1 1 325.00
-event 24 1 0 340.00
-event 25 1 1 355.00
-event 26 1 0 370.00
-event 27 1 1 385.00
-event 28 1 0 400.00
-event 29 1 1 415.00
-event 30 1 0 430.00
-event 31 1 1 445.00
-event 32 1 0 460.00
-event 33 1 1 475.00
-event 34 1 0 490.00
-event 35 1 1 505.00
-event 36 1 0 520.00
-event 37 1 1 535.00
-event 38 1 0 550.00
-event 39 1 1 565.00
-event 40 1 0 580.00
-event 41 1 1 595.00
-event 42 1 0 610.00
-event 43 1 1 625.00
-event 44 1 0 640.00
-event 45 1 1 655.00
-event 46 1 0 670.00
-event 47 1 1 685.00
-event 48 1 0 700.00
-event 49 1 1 715.00
+event 1 0 0 4.00
+event 2 1 1 21.50
+event 3 1 0 44.00
+event 4 1 1 66.50
+event 5 1 0 89.00
+event 6 1 1 111.50
+event 7 1 0 134.00
+event 8 1 1 156.50
+event 9 1 0 179.00
+event 10 1 1 201.50
+event 11 1 0 224.00
+event 12 1 1 246.50
+event 13 1 0 269.00
+event 14 1 1 291.50
+event 15 1 0 314.00
+event 16 1 1 336.50
+event 17 1 0 359.00
+event 18 1 1 381.50
+event 19 1 0 404.00
+event 20 1 1 426.50
+event 21 1 0 449.00
+event 22 1 1 471.50
+event 23 1 0 494.00
+event 24 1 1 516.50
+event 25 1 0 539.00
+event 26 1 1 561.50
+event 27 1 0 584.00
+event 28 1 1 606.50
+event 29 1 0 629.00
+event 30 1 1 651.50
+event 31 1 0 674.00
+event 32 1 1 696.50
+event 33 1 0 719.00
 TRIGGERTYPE 30 64 TT_CHRYSLER_NGC_36_2_2 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=16
 gapFrom.0=2.625000
 gapTo.0=4.375000
@@ -1830,6 +1844,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1849,6 +1864,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.750000
 gapTo.0=1.500000
@@ -1874,6 +1890,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=180
 gapsCount=2
 gapFrom.0=0.350000
 gapTo.0=1.150000
@@ -1901,6 +1918,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -1944,6 +1962,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=0.065000
 gapTo.0=0.170000
@@ -1975,6 +1994,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=4.897500
 gapTo.0=13.000000
@@ -2024,6 +2044,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2083,6 +2104,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=30
 gapsCount=3
 gapFrom.0=0.550000
 gapTo.0=1.450000
@@ -2144,6 +2166,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=1
 gapFrom.0=2.842500
 gapTo.0=4.737500
@@ -2185,6 +2208,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2228,6 +2252,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=2.250000
 gapTo.0=3.750000
@@ -2241,6 +2266,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2260,6 +2286,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=6.000000
 gapTo.0=20.000000
@@ -2277,6 +2304,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=180
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2454,6 +2482,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=120
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2715,6 +2744,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=2
 gapFrom.0=1.600000
 gapTo.0=2.400000
@@ -2778,6 +2808,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.483750
 gapTo.0=0.806250
@@ -2797,6 +2828,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=1.600000
 gapTo.0=3.500000
@@ -2876,6 +2908,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2935,6 +2968,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -2978,6 +3012,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=4.897500
 gapTo.0=13.000000
@@ -3003,6 +3038,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=3.800000
 gapTo.0=5.000000
@@ -3034,6 +3070,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -3587,6 +3624,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=true
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -3706,6 +3744,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=1
 gapFrom.0=2.932500
 gapTo.0=4.887500
@@ -3727,6 +3766,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=1.600000
 gapTo.0=2.400000
@@ -3746,6 +3786,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=1
 gapFrom.0=1.710000
 gapTo.0=2.850000
@@ -3827,6 +3868,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=120
 gapsCount=3
 gapFrom.0=0.200000
 gapTo.0=0.500000
@@ -3960,6 +4002,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=4.000000
 gapTo.0=6.000000
@@ -3983,6 +4026,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=3
 gapFrom.0=4.335000
 gapTo.0=7.225000
@@ -4038,6 +4082,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=180
 gapsCount=2
 gapFrom.0=0.247500
 gapTo.0=0.412500
@@ -4177,6 +4222,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=2
 gapFrom.0=6.750000
 gapTo.0=11.250000
@@ -4204,6 +4250,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -4263,6 +4310,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -4322,6 +4370,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.495000
 gapTo.0=0.825000
@@ -4349,6 +4398,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=0.165000
 gapTo.0=0.275000
@@ -4370,6 +4420,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=2
 gapFrom.0=1.500000
 gapTo.0=4.500000
@@ -4391,6 +4442,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=180
 gapsCount=1
 gapFrom.0=0.247500
 gapTo.0=0.412500
@@ -4528,6 +4580,7 @@ knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=3
 gapFrom.0=2.250000
 gapTo.0=3.750000
@@ -4601,6 +4654,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=2
 gapFrom.0=2.250000
 gapTo.0=3.750000
@@ -4639,8 +4693,8 @@ event 28 0 1 140.00
 event 29 0 0 145.00
 event 30 0 1 150.00
 event 31 0 0 155.00
-event 32 0 1 170.00
-event 33 0 0 175.00
+event 32 0 1 160.00
+event 33 0 0 165.00
 event 34 0 1 180.00
 event 35 0 0 185.00
 event 36 0 1 190.00
@@ -4705,8 +4759,8 @@ event 94 0 1 500.00
 event 95 0 0 505.00
 event 96 0 1 510.00
 event 97 0 0 515.00
-event 98 0 1 530.00
-event 99 0 0 535.00
+event 98 0 1 520.00
+event 99 0 0 525.00
 event 100 0 1 540.00
 event 101 0 0 545.00
 event 102 0 1 550.00
@@ -4744,6 +4798,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=2
 gapFrom.0=2.250000
 gapTo.0=3.750000
@@ -4883,6 +4938,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=180
 gapsCount=2
 gapFrom.0=0.247500
 gapTo.0=0.412500
@@ -5022,6 +5078,7 @@ knownOperationMode=true
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=720
 gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
@@ -5037,6 +5094,7 @@ knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
+cycleDuration=360
 gapsCount=3
 gapFrom.0=3.000000
 gapTo.0=5.000000

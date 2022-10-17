@@ -18,7 +18,7 @@ import java.util.Map;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Launcher.*;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * This class checks the recommended versions numbers and compares them with current versions

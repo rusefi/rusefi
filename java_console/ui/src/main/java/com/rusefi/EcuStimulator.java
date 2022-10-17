@@ -7,11 +7,10 @@ import com.rusefi.file.TableGenerator;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import com.rusefi.ui.ChartHelper;
+//import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;
-import com.rusefi.ui.widgets.PotCommand;
+//import com.rusefi.ui.widgets.PotCommand;
 import com.rusefi.ui.widgets.RpmCommand;
-import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +28,7 @@ import java.util.concurrent.CountDownLatch;
  * Date: 3/24/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class EcuStimulator {
     private static final String DELIMITER = ",";
     private static final long SLEEP_TIME = 300;
@@ -137,6 +137,7 @@ public class EcuStimulator {
         /**
          * Let's give the firmware some time to react
          */
+/*
         sleepRuntime(SLEEP_TIME);
 
         statusLabel.setText("RPM " + rpm + ", el " + engineLoad + ", CLT " + clt);
@@ -144,6 +145,7 @@ public class EcuStimulator {
         /**
          * We are making a number of measurements and then we take the middle one
          */
+/*
         MultipleMeasurements r = waitForMultipleResults(dwellSensor, null);
         List<Double> dwells = r.getDwells();
         List<Double> advances = r.getAdvances();
@@ -302,6 +304,7 @@ public class EcuStimulator {
         }
         LinkManager.engineState.timeListeners.remove(listener);
          */
+/*
         return result;
     }
 
@@ -318,3 +321,4 @@ public class EcuStimulator {
         }
     }
 }
+*/

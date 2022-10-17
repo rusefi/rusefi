@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../luaformatter">
       <sourceFolder url="file://$MODULE_DIR$/../luaformatter/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../luaformatter/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../luaformatter/src/test" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

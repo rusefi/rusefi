@@ -5,10 +5,10 @@ import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.JTextFieldWithWidth;
-import net.ericaro.surfaceplotter.DefaultSurfaceModel;
-import net.ericaro.surfaceplotter.JSurfacePanel;
-import net.ericaro.surfaceplotter.Mapper;
-import net.ericaro.surfaceplotter.surface.SurfaceModel;
+//import net.ericaro.surfaceplotter.DefaultSurfaceModel;
+//import net.ericaro.surfaceplotter.JSurfacePanel;
+//import net.ericaro.surfaceplotter.Mapper;
+//import net.ericaro.surfaceplotter.surface.SurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +21,7 @@ import static com.rusefi.models.Utils.parseIntWithReason;
  * Date: 1/22/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class ChartHelper {
     private ChartHelper() {
     }
@@ -142,3 +143,4 @@ public class ChartHelper {
         sm.setYMax(yRange.getMax());
     }
 }
+*/

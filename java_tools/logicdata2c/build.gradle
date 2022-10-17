@@ -4,10 +4,10 @@ plugins {
 
 defaultTasks 'jar'
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
-    testImplementation libs.junit
+    testImplementation global_libs.junit
 }
 
 jar {

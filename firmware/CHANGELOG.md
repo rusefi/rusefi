@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - Fuel Priming reset fix #4627
  - Slower than expected RPM information was slowing engine start #4629
+ - Fix 36-2-1 trigger (Mitsubishi 4B11, etc) #4635
 
 ## September 2022 Release - "Day 203"
 

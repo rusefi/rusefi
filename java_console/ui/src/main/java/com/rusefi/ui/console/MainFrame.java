@@ -8,8 +8,8 @@ import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +19,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
     private static final Logging log = getLogging(Launcher.class);

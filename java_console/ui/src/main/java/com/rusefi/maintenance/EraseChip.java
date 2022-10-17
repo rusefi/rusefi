@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 

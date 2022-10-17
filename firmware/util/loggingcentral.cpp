@@ -26,6 +26,9 @@
 
 #include "thread_controller.h"
 
+/* for isprint() */
+#include <ctype.h>
+
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {
 	writeInternal(line->buffer);
@@ -182,11 +185,6 @@ void efiPrintfInternal(const char *format, ...) {
 	}
 #endif
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_TEXT_LOGGING
-	for (unsigned int i = 0; i < strlen(format); i++) {
-		// todo: open question which layer would not handle CR/LF properly?
-		efiAssertVoid(OBD_PCM_Processor_Fault, format[i] != '\n', "No CRLF please");
-	}
-
 	LogLineBuffer* lineBuffer;
 	msg_t msg;
 
@@ -204,11 +202,20 @@ void efiPrintfInternal(const char *format, ...) {
 	// Write the formatted string to the output buffer
 	va_list ap;
 	va_start(ap, format);
-	chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
+	size_t len = chvsnprintf(lineBuffer->buffer, sizeof(lineBuffer->buffer), format, ap);
 	va_end(ap);
 
 	// Ensure that the string is comma-terminated in case it overflowed
 	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
+
+	if (len > sizeof(lineBuffer->buffer) - 1)
+		len = sizeof(lineBuffer->buffer) - 1;
+	for (size_t i = 0; i < len; i++) {
+		/* just replace all non-printable chars with space
+		 * TODO: is there any other "prohibited" chars? */
+		if (isprint(lineBuffer->buffer[i]) == 0)
+			lineBuffer->buffer[i] = ' ';
+	}
 
 	{
 		// Push the buffer in to the written list so it can be written back

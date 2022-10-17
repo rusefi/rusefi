@@ -4,6 +4,7 @@
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
 #include "fallback_sensor.h"
+#include "frequency_sensor.h"
 #include "Lps25Sensor.h"
 #include "linear_func.h"
 #include "resistance_func.h"
@@ -35,6 +36,10 @@ void CanSensorBase::showInfo(const char* sensorName) const {
 
 void RedundantSensor::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
+
+void FrequencySensor::showInfo(const char* sensorName) const {
+	efiPrintf("FrequencySensor \"%s\" counter %d", sensorName, eventCounter);
 }
 
 void RedundantFordTps::showInfo(const char* sensorName) const {

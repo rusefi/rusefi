@@ -27,7 +27,7 @@ jobs:
         run: ./gen_default_everything.sh
 
       - name: Generate Java (Antlr)
-        working-directory: ./android
+        working-directory: ./java_tools
         run: ./gradlew :config_definition:generateGrammarSource
 
       - name: Print GCC version
@@ -46,7 +46,7 @@ jobs:
 
       - name: Build console
         working-directory: ./java_console
-        run: ant server_jar
+        run: ant jar
 
       - name: Attach console junit results
         if: always()
@@ -56,16 +56,15 @@ jobs:
           path: ./java_console/build/*.txt
 
       - name: Configuration Definition CI, without pushing new .jar
-        working-directory: ./android
+        working-directory: ./java_tools
         run: ./gradlew :config_definition:shadowJar
 
-      - name: Test everything gradle while we are here
-        # it's a bit of a mess but well
-        working-directory: ./android
+      - name: Test everything java_tools gradle while we are here
+        working-directory: ./java_tools
         run: ./gradlew test
 
       - name: Configuration Definition and other tools CI, without pushing new .jars
-        working-directory: ./android
+        working-directory: ./java_tools
         run: ./gradlew shadowJar
 
       # this job focuses of tool validation so we do not push fresh enums here

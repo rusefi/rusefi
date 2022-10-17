@@ -344,7 +344,7 @@ void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
-		snprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
+		chsnprintf(engineConfiguration->gpPwmNote[i], sizeof(engineConfiguration->gpPwmNote[0]), "GPPWM%d", i);
 
 		cfg.pin = Gpio::Unassigned;
 		cfg.dutyIfError = 0;
@@ -1065,9 +1065,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case TOYOTA_2JZ_GTE_VVTi:
 		setToyota_2jz_vics();
-		break;
-	case TOYOTA_JZS147:
-		setToyota_jzs147EngineConfiguration();
 		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();

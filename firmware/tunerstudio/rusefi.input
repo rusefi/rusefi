@@ -1723,7 +1723,7 @@ menuDialog = main
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
 		subMenu = std_separator
 
-		subMenu = auxLinearSensors,			"Aux Linear Sensors"
+		subMenu = auxLinearSensors,			"Aux Sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -2798,6 +2798,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = auxLinearSensors
 		panel = auxLinearSensor1
 		panel = auxLinearSensor2
+		field = auxSpeedSensorInputPin1,                auxSpeedSensorInputPin1
+		field = auxSpeedSensorInputPin2,                auxSpeedSensorInputPin2
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
@@ -4009,6 +4011,10 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "2-step input",                         boardUse2stepPullDown
 	    field = "boardUseCamPullDown",                  boardUseCamPullDown
 	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
+	    field = "boardUseD2PullDown",                   boardUseD2PullDown
+	    field = "boardUseD3PullDown",                   boardUseD3PullDown
+	    field = "boardUseD4PullDown",                   boardUseD4PullDown
+	    field = "boardUseD5PullDown",                   boardUseD5PullDown
 
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "I understand ECU Locking",             yesUnderstandLocking

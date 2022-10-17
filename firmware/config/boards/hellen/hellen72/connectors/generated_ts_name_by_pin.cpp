@@ -27,6 +27,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D15: return "3M - ALTERN (PWM6)";
 		case Gpio::D9: return "2C - AC Fan / INJ_5";
 		case Gpio::E12: return "5I - Digital Input";
+		case Gpio::E13: return "4I - Clutch rev E/F";
 		case Gpio::E14: return "4H - Neutral";
 		case Gpio::E15: return "5C - Digital Input";
 		case Gpio::E2: return "3Z - IGN_5 / GNDA";
@@ -38,7 +39,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F13: return "3C - Purge Solenoid / INJ_7";
 		case Gpio::F14: return "3D - EGR Solenoid / INJ_8";
 		case Gpio::F5: return "5D - SENSOR INPUT";
-		case Gpio::F8: return "4I - Clutch (A8)";
+		case Gpio::F8: return "4I - Clutch rev D";
 		case Gpio::F9: return "4B - Brake/RES1 (A7)";
 		case Gpio::G2: return "2M - FPUMP (O9)";
 		case Gpio::G3: return "3E - CANIST (O10)";

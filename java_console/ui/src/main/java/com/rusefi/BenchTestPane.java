@@ -2,9 +2,9 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,7 +1,7 @@
 package com.rusefi.tools.online;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import org.apache.http.HttpResponse;

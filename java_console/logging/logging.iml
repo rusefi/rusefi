@@ -8,6 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="annotations" level="project" />
-    <orderEntry type="module" module-name="logging-api" />
+    <orderEntry type="module" module-name="logging-api" exported="" />
   </component>
 </module>

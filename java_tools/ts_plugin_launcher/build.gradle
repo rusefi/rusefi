@@ -5,17 +5,17 @@ plugins {
 
 defaultTasks 'shadowJar'
 
-apply from: '../../android/dependencies.gradle'
+apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
-  implementation libs.annotations
+  implementation global_libs.annotations
   implementation ts_plugin_libs.httpcore
   implementation ts_plugin_libs.httpmime
   implementation project(':autoupdate')
   implementation ts_plugin_libs.launcher_api
-  implementation libs.commons_logging
+  implementation global_libs.commons_logging
 
-  testImplementation libs.junit
+  testImplementation global_libs.junit
 }
 
 def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
@@ -54,8 +54,8 @@ shadowJar {
    dependencies in resulting jar
   */
   dependencies {
-      exclude(dependency(libs.junit))
-      exclude(dependency(libs.annotations))
+      exclude(dependency(global_libs.junit))
+      exclude(dependency(global_libs.annotations))
       exclude(dependency(ts_plugin_libs.launcher_api))
   }
 }

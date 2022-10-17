@@ -1,9 +1,9 @@
 package com.rusefi.ui.test;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.waves.EngineChartParser;
 
 import javax.swing.*;

@@ -3,7 +3,7 @@ package com.rusefi.sensor_logs;
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 
 import java.io.*;
 import java.util.*;

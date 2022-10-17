@@ -62,7 +62,6 @@ jobs:
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
-            skip-rate: 90
 
           - build-target: hellen81
             folder: hellen/hellen81
@@ -212,13 +211,13 @@ jobs:
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            skip-rate: 95
+            skip-rate: 1
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 95
+            skip-rate: 1
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33

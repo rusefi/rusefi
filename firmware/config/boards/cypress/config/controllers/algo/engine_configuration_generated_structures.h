@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Oct 03 15:05:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 12 01:02:26 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3659,7 +3659,7 @@ struct engine_configuration_s {
 	 */
 	float auxFrequencyFilter;
 	/**
-	 * "RPM", 1, 0, 0, 3000, 0
+	RPM
 	 * offset 2080
 	 */
 	int16_t vvtControlMinRpm;
@@ -4575,7 +4575,7 @@ struct persistent_config_s {
 	%
 	 * offset 5452
 	 */
-	scaled_channel<uint8_t, 1, 1> boostTpsBins[BOOST_LOAD_COUNT];
+	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 5460
@@ -4624,7 +4624,7 @@ struct persistent_config_s {
 	load
 	 * offset 5648
 	 */
-	scaled_channel<uint8_t, 1, 1> idleVeLoadBins[IDLE_VE_SIZE];
+	uint8_t idleVeLoadBins[IDLE_VE_SIZE];
 	/**
 	%
 	 * offset 5652
@@ -5057,4 +5057,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22048);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Oct 03 15:05:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 12 01:02:26 UTC 2022

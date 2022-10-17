@@ -2,7 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.file.BaseMap;
 import com.rusefi.models.XYData;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 
 import javax.swing.*;
 
@@ -10,6 +10,7 @@ import javax.swing.*;
  * 7/18/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class ShowMap {
     public static void main(String[] args) {
 //        XYData data = BaseMap.loadData("a.csv", "maf", "af");
@@ -23,3 +24,4 @@ public class ShowMap {
         new FrameHelper().showFrame(jsp);
     }
 }
+*/

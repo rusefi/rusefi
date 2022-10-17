@@ -1,10 +1,10 @@
 package com.rusefi.tools;
 
 import com.rusefi.server.SessionDetails;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import org.jetbrains.annotations.NotNull;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class VehicleToken {
     private static final String VEHICLE_TOKEN = "VEHICLE_TOKEN";

@@ -57,6 +57,7 @@ public class TriggerWheelInfo {
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
+        int cycleDuration = -1;
         TriggerWheelInfo.TriggerGaps gaps = null;
         while (true) {
             line = reader.readLine();
@@ -84,6 +85,9 @@ public class TriggerWheelInfo {
                     break;
                 case TRIGGER_IS_CRANK_KEY:
                     isCrankBased = Boolean.parseBoolean(value);
+                    break;
+                case TRIGGER_CYCLE_DURATION:
+                    cycleDuration = (int)Double.parseDouble(value);
                     break;
                 case TRIGGER_IS_SECOND_WHEEL_CAM:
                     isSecondWheelCam = Boolean.parseBoolean(value);

@@ -1,9 +1,9 @@
 package com.rusefi.ts_plugin;
 
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.SignatureHelper;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.Timeouts;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.Pair;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
@@ -12,7 +12,7 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
 import com.rusefi.proxy.client.UpdateType;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
@@ -37,7 +37,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * remote ECU access & control

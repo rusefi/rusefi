@@ -5,7 +5,7 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.opensr5.ini.IniFileModel;
 import com.rusefi.TsTuneReader;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 
 import javax.swing.*;
 import java.util.ArrayList;

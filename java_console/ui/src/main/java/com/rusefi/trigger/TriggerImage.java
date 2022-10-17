@@ -3,7 +3,7 @@ package com.rusefi.trigger;
 import com.rusefi.StartupFrame;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.ui.engine.UpDownImage;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.waves.EngineReport;
 import org.jetbrains.annotations.NotNull;
@@ -71,8 +71,6 @@ public class TriggerImage {
                 return "Chrysler NGC 36/2/2";
             case TT_ONE:
                 return "Single Tooth";
-            case TT_2JZ_1_12:
-                return "2JZ 1/12";
             case TT_JEEP_4_CYL:
                 return "Jeep 4 cylinder";
             case TT_JEEP_18_2_2_2:

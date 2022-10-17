@@ -2,7 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.SignatureHelper;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -12,7 +12,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

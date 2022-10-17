@@ -41,6 +41,7 @@
 #include "gps_uart.h"
 #include "HD44780.h"
 #include "joystick.h"
+#include "sent.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
@@ -252,6 +253,9 @@ void applyNewHardwareSettings() {
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
+#if EFI_SENT_SUPPORT
+	stopSent();
+#endif
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
@@ -366,6 +370,10 @@ void applyNewHardwareSettings() {
 #if EFI_AUX_PID
 	startVvtControlPins();
 #endif /* EFI_AUX_PID */
+
+#if EFI_SENT_SUPPORT
+	startSent();
+#endif
 
 	adcConfigListener(engine);
 }
@@ -584,6 +592,10 @@ void initHardware() {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	initJoystick();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
+
+#if EFI_SENT_SUPPORT
+	initSent();
+#endif
 
 	calcFastAdcIndexes();
 
