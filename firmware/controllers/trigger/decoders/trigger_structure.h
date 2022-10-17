@@ -291,6 +291,4 @@ void findTriggerPosition(
 		event_trigger_position_s *position,
 		angle_t angle);
 
-void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
-
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
