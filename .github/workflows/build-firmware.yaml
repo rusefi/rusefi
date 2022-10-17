@@ -317,7 +317,7 @@ jobs:
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
         wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
-        echo "`pwd`/.rusefi-tools/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
+        echo "`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
