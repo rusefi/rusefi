@@ -18,7 +18,7 @@ void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s,
 		float offset, float engineCycle, float filterLeft, float filterRight);
 
 
-void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
+void initializeSkippedToothTrigger(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode, SyncEdge syncEdge);
 
 // TT_3_1_CAM
 void configure3_1_cam(TriggerWaveform *s);
