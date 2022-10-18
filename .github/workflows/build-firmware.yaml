@@ -211,13 +211,18 @@ jobs:
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            skip-rate: 1
+            skip-rate: 95
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 1
+            skip-rate: 95
+
+          - build-target: stm32f429_nucleo
+            folder: nucleo_f429
+            ini-file: no
+            skip-config: yes
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
