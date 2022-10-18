@@ -28,6 +28,8 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 
+#endif /* EFI_MAP_AVERAGING */
+
 class MapAverager : public StoredValueSensor {
 public:
 	MapAverager(SensorType type, efitick_t timeout)
@@ -55,5 +57,3 @@ private:
 };
 
 MapAverager& getMapAvg();
-
-#endif /* EFI_MAP_AVERAGING */
