@@ -559,6 +559,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GppwmOutput2 = 19,
 	GPPWM_GppwmOutput3 = 20,
 	GPPWM_GppwmOutput4 = 21,
+	GPPWM_LuaGauge1 = 22,
+	GPPWM_LuaGauge2 = 23,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
