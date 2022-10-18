@@ -512,8 +512,8 @@ static void updateRawSensors() {
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 
-	engine->outputChannels.luaGauges[0] = Sensor::getRaw(SensorType::LuaGauge1);
-	engine->outputChannels.luaGauges[1] = Sensor::getRaw(SensorType::LuaGauge2);
+	engine->outputChannels.luaGauges[0] = Sensor::getOrZero(SensorType::LuaGauge1);
+	engine->outputChannels.luaGauges[1] = Sensor::getOrZero(SensorType::LuaGauge2);
 
 	for (int i = 0;i<AUX_ANALOG_INPUT_COUNT;i++) {
 		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
