@@ -1,7 +1,6 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.util.TimeUtil;
-import com.rusefi.SimulatorExecHelper;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 

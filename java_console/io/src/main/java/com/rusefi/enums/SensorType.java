@@ -50,6 +50,8 @@ public enum SensorType {
 	AuxAnalog6,
 	AuxAnalog7,
 	AuxAnalog8,
+	LuaGauge1,
+	LuaGauge2,
 	AuxLinear1,
 	AuxLinear2,
 	AuxSpeed1,

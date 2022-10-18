@@ -69,7 +69,7 @@ BO_ 514 BASE2: 8 Vector__XXX
  SG_ TPS2 : 32|16@1- (0.01,0) [0|0] "%" Vector__XXX
 
 BO_ 515 BASE3: 8 Vector__XXX
- SG_ MAP : 0|16@1+ (0.03,0) [0|0] "kPa" Vector__XXX
+ SG_ MAP : 0|16@1+ (0.03333333,0) [0|0] "kPa" Vector__XXX
  SG_ CoolantTemp : 16|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
  SG_ IntakeTemp : 24|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX
  SG_ AUX1Temp : 32|8@1+ (1,-40) [-40|200] "deg C" Vector__XXX

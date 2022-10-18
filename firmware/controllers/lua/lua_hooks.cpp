@@ -677,6 +677,19 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 #endif // EFI_LAUNCH_CONTROL
 
+	/**
+	 * same exact could be accomplished via LuaSensor just with more API
+	 */
+	lua_register(l, "setLuaGauge", [](lua_State* l) {
+		auto index = luaL_checkinteger(l, 1) - 1;
+		auto value = luaL_checknumber(l, 2);
+		if (index < 0 || index >= LUA_GAUGE_COUNT)
+			return 0;
+		extern StoredValueSensor luaGauges[LUA_GAUGE_COUNT];
+		luaGauges[index].setValidValue(value, getTimeNowNt());
+		return 0;
+	});
+
 	lua_register(l, "enableCanTx", [](lua_State* l) {
 		engine->allowCanTx = lua_toboolean(l, 1);
 		return 0;

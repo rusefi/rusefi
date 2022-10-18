@@ -34,15 +34,17 @@ void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s, int to
 	s->addEventClamped(offset + engineCycle, wheel, TriggerValue::FALL, filterLeft, filterRight);
 }
 
-void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount,
-		operation_mode_e operationMode) {
+void initializeSkippedToothTrigger(TriggerWaveform *s, int totalTeethCount, int skippedCount,
+		operation_mode_e operationMode, SyncEdge syncEdge) {
 	if (totalTeethCount <= 0) {
 		firmwareError(CUSTOM_OBD_TRIGGER_WAVEFORM, "Invalid total tooth count for missing tooth decoder: %d", totalTeethCount);
 		s->setShapeDefinitionError(true);
 		return;
 	}
 	efiAssertVoid(CUSTOM_NULL_SHAPE, s != NULL, "TriggerWaveform is NULL");
-	s->initialize(operationMode, SyncEdge::RiseOnly);
+
+	s->initialize(operationMode, syncEdge);
+
 #if EFI_UNIT_TEST
 	s->knownOperationMode = false;
 #endif // EFI_UNIT_TEST
