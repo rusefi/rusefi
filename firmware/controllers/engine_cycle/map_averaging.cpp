@@ -41,20 +41,6 @@
  */
 static NamedOutputPin mapAveragingPin("map");
 
-/**
- * Running MAP accumulator - sum of all measurements within averaging window
- */
-static volatile float mapAdcAccumulator = 0;
-/**
- * Running counter of measurements to consider for averaging
- */
-static volatile int mapMeasurementsCounter = 0;
-
-/**
- * v_ for Voltage
- */
-static float v_averagedMapValue;
-
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 // in MAP units, not voltage!
@@ -68,29 +54,61 @@ static int averagedMapBufIdx = 0;
 static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
 static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
-/**
- * that's a performance optimization: let's not bother averaging
- * if we are outside of of the window
- */
-static bool isAveraging = false;
-
 static void endAveraging(void *arg);
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
-	{
-		// with locking we will have a consistent state
-		chibios_rt::CriticalSectionLocker csl;
-		mapAdcAccumulator = 0;
-		mapMeasurementsCounter = 0;
-		isAveraging = true;
-	}
+	getMapAvg().start();
 
 	mapAveragingPin.setHigh();
 
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		endAveraging);
+}
+
+void MapAverager::start() {
+	chibios_rt::CriticalSectionLocker csl;
+
+	m_counter = 0;
+	m_sum = 0;
+	m_isAveraging = true;
+}
+
+SensorResult MapAverager::submit(float volts) {
+	auto result = m_function ? m_function->convert(volts) : unexpected;
+
+	if (m_isAveraging && result) {
+		chibios_rt::CriticalSectionLocker csl;
+
+		m_counter++;
+		m_sum += result.Value;
+	}
+
+	return result;
+}
+
+void MapAverager::stop() {
+	m_isAveraging = false;
+
+	if (m_counter > 0) {
+		float averageMap = m_sum / m_counter;
+
+		// TODO: this should be per-sensor, not one for all MAP sensors
+		averagedMapRunningBuffer[averagedMapBufIdx] = averageMap;
+		// increment circular running buffer index
+		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+		// find min. value (only works for pressure values, not raw voltages!)
+		float minPressure = averagedMapRunningBuffer[0];
+		for (int i = 1; i < mapMinBufferLength; i++) {
+			if (averagedMapRunningBuffer[i] < minPressure)
+				minPressure = averagedMapRunningBuffer[i];
+		}
+
+		setValidValue(minPressure, getTimeNowNt());
+	} else {
+		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
+	}
 }
 
 #if HAL_USE_ADC
@@ -104,23 +122,18 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
-	SensorResult mapResult = convertMap(instantVoltage);
+
+	SensorResult mapResult = getMapAvg().submit(instantVoltage);
+
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
 		warning(CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
 	}
+
 	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
-
-	/* Calculates the average values from the ADC samples.*/
-	if (isAveraging) {
-		// with locking we will have a consistent state
-		chibios_rt::CriticalSectionLocker csl;
-		mapAdcAccumulator += adcValue;
-		mapMeasurementsCounter++;
-	}
 }
 #endif
 
@@ -128,32 +141,9 @@ static void endAveraging(void*) {
 #if ! EFI_UNIT_TEST
 	chibios_rt::CriticalSectionLocker csl;
 #endif
-	isAveraging = false;
-	// with locking we would have a consistent state
-#if HAL_USE_ADC
-	if (mapMeasurementsCounter > 0) {
-		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 
-		SensorResult mapValue = convertMap(v_averagedMapValue);
+	getMapAvg().stop();
 
-		// Skip update if conversion invalid
-		if (mapValue) {
-			averagedMapRunningBuffer[averagedMapBufIdx] = mapValue.Value;
-			// increment circular running buffer index
-			averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-			// find min. value (only works for pressure values, not raw voltages!)
-			float minPressure = averagedMapRunningBuffer[0];
-			for (int i = 1; i < mapMinBufferLength; i++) {
-				if (averagedMapRunningBuffer[i] < minPressure)
-					minPressure = averagedMapRunningBuffer[i];
-			}
-
-			onMapAveraged(minPressure, getTimeNowNt());
-		}
-	} else {
-		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
-	}
-#endif
 	mapAveragingPin.setLow();
 }
 
@@ -170,9 +160,7 @@ static void applyMapMinBufferLength() {
 
 #if EFI_TUNER_STUDIO
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -254,13 +242,13 @@ void mapAveragingTriggerCallback(
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
-		scheduling_s *starTimer = &startTimers[i][structIndex];
+		scheduling_s *startTimer = &startTimers[i][structIndex];
 		scheduling_s *endTimer = &endTimers[i][structIndex];
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(starTimer, edgeTimestamp, samplingStart,
+		scheduleByAngle(startTimer, edgeTimestamp, samplingStart,
 				{ startAveraging, endTimer });
 	}
 #endif
