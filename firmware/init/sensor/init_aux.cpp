@@ -18,7 +18,14 @@ static FunctionalSensor auxSensors[] = {
 	{ SensorType::AuxAnalog8, MS2NT(50) },
 };
 
+StoredValueSensor luaGauges[] = {
+		{ SensorType::LuaGauge1, MS2NT(5000) },
+		{ SensorType::LuaGauge2, MS2NT(5000) },
+};
+
+
 static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
+static_assert(efi::size(luaGauges) == LUA_GAUGE_COUNT);
 
 void initAuxSensors() {
 	for (size_t i = 0; i < efi::size(engineConfiguration->auxAnalogInputs); i++) {
@@ -34,5 +41,10 @@ void initAuxSensors() {
 		sensor.Register();
 
 		AdcSubscription::SubscribeSensor(sensor, channel, 10);
+	}
+
+	for (size_t i = 0; i < efi::size(luaGauges); i++) {
+		auto& sensor = luaGauges[i];
+		sensor.Register();
 	}
 }

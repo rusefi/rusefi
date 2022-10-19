@@ -60,7 +60,9 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
+#ifndef EFI_CLOCK_LOCKS
 #define EFI_CLOCK_LOCKS TRUE
+#endif
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
@@ -107,7 +109,9 @@
 #define EFI_CLI_SUPPORT TRUE
 #endif
 
+#ifndef EFI_RTC
 #define EFI_RTC TRUE
+#endif
 
 #ifndef EFI_ALTERNATOR_CONTROL
 #define EFI_ALTERNATOR_CONTROL TRUE

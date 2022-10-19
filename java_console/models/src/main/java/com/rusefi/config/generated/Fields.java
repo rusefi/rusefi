@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 16 06:41:02 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 10:47:13 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1228,6 +1228,8 @@ public class Fields {
 	public static final int gppwm_channel_e_GPPWM_GppwmOutput4 = 21;
 	public static final int gppwm_channel_e_GPPWM_Iat = 4;
 	public static final int gppwm_channel_e_GPPWM_IgnLoad = 6;
+	public static final int gppwm_channel_e_GPPWM_LuaGauge1 = 22;
+	public static final int gppwm_channel_e_GPPWM_LuaGauge2 = 23;
 	public static final int gppwm_channel_e_GPPWM_Map = 2;
 	public static final int gppwm_channel_e_GPPWM_Tps = 1;
 	public static final int gppwm_channel_e_GPPWM_Vbatt = 10;
@@ -1632,6 +1634,7 @@ public class Fields {
 	public static final int lps25BaroSensorScl_offset = 818;
 	public static final int lps25BaroSensorSda_offset = 820;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
+	public static final int LUA_GAUGE_COUNT = 2;
 	public static final int LUA_PWM_COUNT = 8;
 	public static final int LUA_SCRIPT_SIZE = 8000;
 	public static final int luaOutputPins1_offset = 1226;
@@ -1778,7 +1781,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5524;
 	public static final int pedalToTpsRpmBins_offset = 5532;
 	public static final int pedalToTpsTable_offset = 5460;
-	public static final int persistent_config_s_size = 22048;
+	public static final int persistent_config_s_size = 22800;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1917,7 +1920,7 @@ public class Fields {
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1234480794;
+	public static final int SIGNATURE_HASH = 731219959;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2147,7 +2150,7 @@ public class Fields {
 	public static final int torqueLoadBins_offset = 3684;
 	public static final int torqueRpmBins_offset = 3672;
 	public static final int torqueTable_offset = 3636;
-	public static final int TOTAL_CONFIG_SIZE = 22048;
+	public static final int TOTAL_CONFIG_SIZE = 22800;
 	public static final int totalGearsCount_offset = 1584;
 	public static final int tps1_1AdcChannel_offset = 456;
 	public static final int tps1_2AdcChannel_offset = 686;
@@ -2408,10 +2411,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.10.16.all.1234480794";
+	public static final String TS_SIGNATURE = "rusEFI 2022.10.19.all.731219959";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1268;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2510,9 +2513,38 @@ public class Fields {
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int vbattAdcChannel_offset = 457;
 	public static final int vbattDividerCoeff_offset = 416;
+	public static final int VE_BLEND_COUNT = 4;
 	public static final int ve_override_e_VE_MAP = 1;
 	public static final int ve_override_e_VE_None = 0;
 	public static final int ve_override_e_VE_TPS = 2;
+	public static final int veBlends1_blendBins_offset = 22210;
+	public static final int veBlends1_blendParameter_offset = 22208;
+	public static final int veBlends1_blendValues_offset = 22226;
+	public static final int veBlends1_loadBins_offset = 22176;
+	public static final int veBlends1_offset = 22048;
+	public static final int veBlends1_rpmBins_offset = 22192;
+	public static final int veBlends1_table_offset = 22048;
+	public static final int veBlends2_blendBins_offset = 22398;
+	public static final int veBlends2_blendParameter_offset = 22396;
+	public static final int veBlends2_blendValues_offset = 22414;
+	public static final int veBlends2_loadBins_offset = 22364;
+	public static final int veBlends2_offset = 22236;
+	public static final int veBlends2_rpmBins_offset = 22380;
+	public static final int veBlends2_table_offset = 22236;
+	public static final int veBlends3_blendBins_offset = 22586;
+	public static final int veBlends3_blendParameter_offset = 22584;
+	public static final int veBlends3_blendValues_offset = 22602;
+	public static final int veBlends3_loadBins_offset = 22552;
+	public static final int veBlends3_offset = 22424;
+	public static final int veBlends3_rpmBins_offset = 22568;
+	public static final int veBlends3_table_offset = 22424;
+	public static final int veBlends4_blendBins_offset = 22774;
+	public static final int veBlends4_blendParameter_offset = 22772;
+	public static final int veBlends4_blendValues_offset = 22790;
+	public static final int veBlends4_loadBins_offset = 22740;
+	public static final int veBlends4_offset = 22612;
+	public static final int veBlends4_rpmBins_offset = 22756;
+	public static final int veBlends4_table_offset = 22612;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int vehicleName_offset = 1156;
 	public static final int vehicleSpeedSensorInputPin_offset = 822;
@@ -3647,7 +3679,7 @@ public class Fields {
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 2568, FieldType.INT16).setScale(1.0);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 2570, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 2571, FieldType.INT8).setScale(1.0);
-	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"};
+	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2572, FieldType.INT8, gppwm_channel_e).setScale(1.0);
 	public static final Field GPPWM1_ALIGNMENTFILL_MAP = Field.create("GPPWM1_ALIGNMENTFILL_MAP", 2573, FieldType.INT8).setScale(1.0);
 	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2574, FieldType.INT8).setScale(1.0);
@@ -4020,6 +4052,38 @@ public class Fields {
 	public static final Field IGNBLENDS4_BLENDBINS = Field.create("IGNBLENDS4_BLENDBINS", 22022, FieldType.INT16).setScale(0.1);
 	public static final Field IGNBLENDS4_BLENDVALUES = Field.create("IGNBLENDS4_BLENDVALUES", 22038, FieldType.INT8).setScale(0.5);
 	public static final Field IGNBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS4_ALIGNMENTFILL_AT_186", 22046, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS1_TABLE = Field.create("VEBLENDS1_TABLE", 22048, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS1_LOADBINS = Field.create("VEBLENDS1_LOADBINS", 22176, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS1_RPMBINS = Field.create("VEBLENDS1_RPMBINS", 22192, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS1_BLENDPARAMETER = Field.create("VEBLENDS1_BLENDPARAMETER", 22208, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field VEBLENDS1_ALIGNMENTFILL_AT_161 = Field.create("VEBLENDS1_ALIGNMENTFILL_AT_161", 22209, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS1_BLENDBINS = Field.create("VEBLENDS1_BLENDBINS", 22210, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS1_BLENDVALUES = Field.create("VEBLENDS1_BLENDVALUES", 22226, FieldType.INT8).setScale(0.5);
+	public static final Field VEBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS1_ALIGNMENTFILL_AT_186", 22234, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS2_TABLE = Field.create("VEBLENDS2_TABLE", 22236, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS2_LOADBINS = Field.create("VEBLENDS2_LOADBINS", 22364, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS2_RPMBINS = Field.create("VEBLENDS2_RPMBINS", 22380, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS2_BLENDPARAMETER = Field.create("VEBLENDS2_BLENDPARAMETER", 22396, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field VEBLENDS2_ALIGNMENTFILL_AT_161 = Field.create("VEBLENDS2_ALIGNMENTFILL_AT_161", 22397, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS2_BLENDBINS = Field.create("VEBLENDS2_BLENDBINS", 22398, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS2_BLENDVALUES = Field.create("VEBLENDS2_BLENDVALUES", 22414, FieldType.INT8).setScale(0.5);
+	public static final Field VEBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS2_ALIGNMENTFILL_AT_186", 22422, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS3_TABLE = Field.create("VEBLENDS3_TABLE", 22424, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS3_LOADBINS = Field.create("VEBLENDS3_LOADBINS", 22552, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS3_RPMBINS = Field.create("VEBLENDS3_RPMBINS", 22568, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS3_BLENDPARAMETER = Field.create("VEBLENDS3_BLENDPARAMETER", 22584, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field VEBLENDS3_ALIGNMENTFILL_AT_161 = Field.create("VEBLENDS3_ALIGNMENTFILL_AT_161", 22585, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS3_BLENDBINS = Field.create("VEBLENDS3_BLENDBINS", 22586, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS3_BLENDVALUES = Field.create("VEBLENDS3_BLENDVALUES", 22602, FieldType.INT8).setScale(0.5);
+	public static final Field VEBLENDS3_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS3_ALIGNMENTFILL_AT_186", 22610, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS4_TABLE = Field.create("VEBLENDS4_TABLE", 22612, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS4_LOADBINS = Field.create("VEBLENDS4_LOADBINS", 22740, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS4_RPMBINS = Field.create("VEBLENDS4_RPMBINS", 22756, FieldType.INT16).setScale(1.0);
+	public static final Field VEBLENDS4_BLENDPARAMETER = Field.create("VEBLENDS4_BLENDPARAMETER", 22772, FieldType.INT8, gppwm_channel_e).setScale(1.0);
+	public static final Field VEBLENDS4_ALIGNMENTFILL_AT_161 = Field.create("VEBLENDS4_ALIGNMENTFILL_AT_161", 22773, FieldType.INT8).setScale(1.0);
+	public static final Field VEBLENDS4_BLENDBINS = Field.create("VEBLENDS4_BLENDBINS", 22774, FieldType.INT16).setScale(0.1);
+	public static final Field VEBLENDS4_BLENDVALUES = Field.create("VEBLENDS4_BLENDVALUES", 22790, FieldType.INT8).setScale(0.5);
+	public static final Field VEBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS4_ALIGNMENTFILL_AT_186", 22798, FieldType.INT8).setScale(1.0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5415,5 +5479,37 @@ public class Fields {
 	IGNBLENDS4_BLENDBINS,
 	IGNBLENDS4_BLENDVALUES,
 	IGNBLENDS4_ALIGNMENTFILL_AT_186,
+	VEBLENDS1_TABLE,
+	VEBLENDS1_LOADBINS,
+	VEBLENDS1_RPMBINS,
+	VEBLENDS1_BLENDPARAMETER,
+	VEBLENDS1_ALIGNMENTFILL_AT_161,
+	VEBLENDS1_BLENDBINS,
+	VEBLENDS1_BLENDVALUES,
+	VEBLENDS1_ALIGNMENTFILL_AT_186,
+	VEBLENDS2_TABLE,
+	VEBLENDS2_LOADBINS,
+	VEBLENDS2_RPMBINS,
+	VEBLENDS2_BLENDPARAMETER,
+	VEBLENDS2_ALIGNMENTFILL_AT_161,
+	VEBLENDS2_BLENDBINS,
+	VEBLENDS2_BLENDVALUES,
+	VEBLENDS2_ALIGNMENTFILL_AT_186,
+	VEBLENDS3_TABLE,
+	VEBLENDS3_LOADBINS,
+	VEBLENDS3_RPMBINS,
+	VEBLENDS3_BLENDPARAMETER,
+	VEBLENDS3_ALIGNMENTFILL_AT_161,
+	VEBLENDS3_BLENDBINS,
+	VEBLENDS3_BLENDVALUES,
+	VEBLENDS3_ALIGNMENTFILL_AT_186,
+	VEBLENDS4_TABLE,
+	VEBLENDS4_LOADBINS,
+	VEBLENDS4_RPMBINS,
+	VEBLENDS4_BLENDPARAMETER,
+	VEBLENDS4_ALIGNMENTFILL_AT_161,
+	VEBLENDS4_BLENDBINS,
+	VEBLENDS4_BLENDVALUES,
+	VEBLENDS4_ALIGNMENTFILL_AT_186,
 	};
 }

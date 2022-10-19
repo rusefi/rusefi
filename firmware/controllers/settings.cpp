@@ -326,23 +326,6 @@ static void setInjectorLag(float voltage, float value) {
 	setCurveValue(INJECTOR_LAG_CURVE, voltage, value);
 }
 
-/*
-static void setToothedWheel(int total, int skipped) {
-	if (total < 1 || skipped >= total) {
-		efiPrintf("invalid parameters %d %d", total, skipped);
-		return;
-	}
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = total;
-	engineConfiguration->trigger.customSkippedToothCount = skipped;
-
-	efiPrintf("toothed: total=%d/skipped=%d", total, skipped);
-	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
-}
-*/
-
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
 		return;
@@ -1143,8 +1126,6 @@ void initSettings(void) {
 
 	addConsoleActionS(CMD_ENABLE, enable);
 	addConsoleActionS(CMD_DISABLE, disable);
-
-//	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 
 	addConsoleActionFF("set_injector_lag", setInjectorLag);
 
