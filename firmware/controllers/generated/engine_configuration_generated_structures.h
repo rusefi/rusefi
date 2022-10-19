@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 12 01:03:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 20:16:20 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3666,7 +3666,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2082
 	 */
-	Gpio sorryUnused[5];
+	brain_input_pin_e sentInputPins[SENT_INPUT_COUNT];
+	/**
+	 * offset 2084
+	 */
+	Gpio sorryUnused[4];
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
@@ -5053,8 +5057,12 @@ struct persistent_config_s {
 	 * offset 21296
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
+	/**
+	 * offset 22048
+	 */
+	blend_table_s veBlends[VE_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 22048);
+static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 12 01:03:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 20:16:20 UTC 2022

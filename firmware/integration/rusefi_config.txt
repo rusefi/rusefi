@@ -113,6 +113,7 @@ struct_no_prefix engine_configuration_s
 #define BLOCKING_FACTOR 500
 
 #define AUX_ANALOG_INPUT_COUNT 8
+#define SENT_INPUT_COUNT 1
 
 #define LUA_PWM_COUNT 8
 #define LUA_ANALOG_INPUT_COUNT 8
@@ -349,7 +350,7 @@ struct spi_pins
 end_struct
 
 
-#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"
+#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:4], @@gppwm_channel_e_enum@@
 
 struct gppwm_channel
@@ -1342,7 +1343,9 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	float auxFrequencyFilter
 	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
-	Gpio[5 iterate] sorryUnused
+    brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
+
+	Gpio[4 iterate] sorryUnused
 
 	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
@@ -1750,6 +1753,9 @@ end_struct
 
 #define IGN_BLEND_COUNT 4
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
+
+#define VE_BLEND_COUNT 4
+blend_table_s[VE_BLEND_COUNT iterate] veBlends
 
 end_struct
 

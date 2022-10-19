@@ -8,17 +8,11 @@
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
 
-// Firmware builds require at least GCC 9.3.1
-#if (GCC_VERSION < 931)
-	#pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
-	#error "GCC compiler >= 9.3.1 required"
-#endif
+#pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
 
-// Firmware builds but does not actually run on GCC10 :(
-// todo: one day someone should fix it, do YOU want to help?
-#if (GCC_VERSION > 1000)
-	#pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
-	#error "GCC10 not supported see https://github.com/rusefi/rusefi/labels/Gcc10"
+// Firmware builds require at least GCC 10.3.1
+#if (GCC_VERSION < 1031)
+	#error "GCC compiler >= 10.3.1 required"
 #endif
 
 #endif

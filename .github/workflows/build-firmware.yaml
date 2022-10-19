@@ -47,6 +47,7 @@ jobs:
             proteus_f7_hardware_QC_special_build,
             proteus_h7,
             proteus_legacy,
+            stm32f429_nucleo,
             stm32f767_nucleo,
             stm32h743_nucleo,
             subaru_eg33_f7,
@@ -206,18 +207,23 @@ jobs:
             ini-file: rusefi_proteus_f7.ini
             skip-rate: 90
 
+          - build-target: stm32f429_nucleo
+            folder: nucleo_f429
+            ini-file: no
+            skip-config: yes
+
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
             ini-file: no
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
-            skip-rate: 1
+            skip-rate: 95
 
           - build-target: stm32h743_nucleo
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 1
+            skip-rate: 95
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
@@ -315,9 +321,9 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
-        tar -xvf compiler.tar.xz
-        echo "`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin" >> $GITHUB_PATH
+        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
+        tar -xvf compiler.tar.bz2
+        echo "`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin" >> $GITHUB_PATH
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
@@ -437,9 +443,9 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-9-2020-q2-update-x86_64-linux.tar.xz' -O compiler.tar.xz
-        tar -xvf compiler.tar.xz
-        echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin"
+        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
+        tar -xvf compiler.tar.bz2
+        echo "::add-path::`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin"
   
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler

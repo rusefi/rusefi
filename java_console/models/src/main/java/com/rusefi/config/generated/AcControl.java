@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Mon Oct 17 03:42:46 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Oct 19 20:15:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -321,6 +321,7 @@ public class AcControl {
 	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
+	public static final int SENT_INPUT_COUNT = 1;
 	public static final int STFT_BANK_COUNT = 2;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int TCU_GEAR_COUNT = 10;
@@ -385,6 +386,7 @@ public class AcControl {
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
+	public static final int VE_BLEND_COUNT = 4;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;
 	public static final int VM_VVT_INACTIVE = 0;
