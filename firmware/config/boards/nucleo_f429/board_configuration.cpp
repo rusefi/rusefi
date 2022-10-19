@@ -9,7 +9,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 }
 
-__attribute__((weak)) void preHalInit() {
+void preHalInit() {
 	efiSetPadMode("Ethernet",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("Ethernet",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
