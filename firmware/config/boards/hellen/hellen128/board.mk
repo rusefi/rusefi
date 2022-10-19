@@ -5,8 +5,7 @@ BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen128/board_configuration.cpp
 
 BOARDINC = $(BOARDS_DIR)/hellen/hellen128
 
-BRDFLAGS     = -DSTM32F427xx
-IS_STM32F427 = yes
+IS_STM32F429 = yes
 
 # Set this if you want a default engine type other than normal hellen128
 ifeq ($(VAR_DEF_ENGINE_TYPE),)
