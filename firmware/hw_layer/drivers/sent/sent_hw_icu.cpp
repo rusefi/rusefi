@@ -24,9 +24,6 @@
 /* TODO: get at runtime */
 #define SENT_ICU_FREQ		(168000000 / 2) // == CPU freq / 2
 
-/* TODO: move to config */
-#define SENT_INPUT_GPIO		Gpio::A1
-
 /* TODO: implement helper to get AF from GPIO for TIM2 capture */
 #define SENT_INPUT_AF		PAL_MODE_ALTERNATE(1)
 
@@ -55,11 +52,10 @@ static ICUConfig icucfg_in1 =
 
 void startSent()
 {
-	/* SENT is inited last, if pin is unused - use it for SENT
-	 * TODO: remove this when SENT options get integrated into settings */
-	if ((isBrainPinValid(SENT_INPUT_GPIO)) &&
-		(getPinFunction(SENT_INPUT_GPIO) == NULL)) {
-		efiSetPadMode("SENT", SENT_INPUT_GPIO, SENT_INPUT_AF);
+    brain_pin_e sentPin = engineConfiguration->sentInputPins[0];
+
+	if (isBrainPinValid(sentPin)) {
+		efiSetPadMode("SENT", sentPin, SENT_INPUT_AF);
 
 		icuStart(&SENT_ICU_UNIT, &icucfg_in1);
 		icuStartCapture(&SENT_ICU_UNIT);
@@ -69,12 +65,14 @@ void startSent()
 
 void stopSent()
 {
-	if (isBrainPinValid(SENT_INPUT_GPIO)) {
+    brain_pin_e sentPin = engineConfiguration->sentInputPins[0];
+
+	if (isBrainPinValid(sentPin)) {
 		icuDisableNotifications(&SENT_ICU_UNIT);
 		icuStopCapture(&SENT_ICU_UNIT);
 		icuStop(&SENT_ICU_UNIT);
 
-		efiSetPadUnused(SENT_INPUT_GPIO);
+		efiSetPadUnused(sentPin);
 	}
 }
 
