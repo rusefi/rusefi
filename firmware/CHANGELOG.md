@@ -30,7 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - VVT minimum RPM setting #4545
- - Flexible ignition adder/trim tables #4586
+ - Flexible ignition and VE adder/trim tables #4586 #4640
  - Enforce board configuration overrides more strictly #4614
  - rusEFI console Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
