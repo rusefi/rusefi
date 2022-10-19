@@ -2,6 +2,8 @@
 BOARDCPPSRC = $(PROJECT_DIR)/config/boards/nucleo_f429/board_configuration.cpp
 BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f429
 
+DDEFS += -DEFI_FILE_LOGGING=FALSE
+
 # Enable ethernet
 LWIP = yes
 DDEFS += -DEFI_ETHERNET=TRUE
