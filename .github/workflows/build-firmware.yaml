@@ -318,10 +318,10 @@ jobs:
       if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
-        tar -xvf compiler.tar.bz2
-        echo "`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin" >> $GITHUB_PATH
+      run: | 
+        wget 'https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz' -O compiler.tar.xz
+        tar -xvf compiler.tar.xz
+        echo "::add-path::`pwd`/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
