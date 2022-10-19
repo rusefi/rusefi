@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - rusEFI console Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
  - Lua: function to access VIN setting #3967
+ - Lua: designated Lua gauges with logging #4672
 
 ### Fixed
  - Fuel Priming reset fix #4627
