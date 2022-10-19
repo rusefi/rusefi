@@ -42,7 +42,7 @@ public class TcpClientSandbox {
         }
 
         {
-            BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
+            //BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
             int count = 10000;
             long startMs = System.currentTimeMillis();
             for (int i = 0; i < count; i++) {

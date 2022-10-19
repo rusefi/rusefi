@@ -18,6 +18,10 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
 		return Sensor::get(SensorType::Iat);
+	case GPPWM_LuaGauge1:
+		return Sensor::get(SensorType::LuaGauge1);
+	case GPPWM_LuaGauge2:
+		return Sensor::get(SensorType::LuaGauge2);
 	case GPPWM_FuelLoad:
 		return getFuelingLoad();
 	case GPPWM_IgnLoad:
