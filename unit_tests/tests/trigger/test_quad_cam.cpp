@@ -24,17 +24,22 @@ TEST(trigger, testQuadCam) {
 
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
-	eth.fireRise(25);
+	eth.fireFall(12.5);
+	eth.fireRise(12.5);
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm));
 
-	eth.fireRise(25);
+	eth.fireFall(12.5);
+	eth.fireRise(12.5);
 	// first time we have RPM
 	ASSERT_EQ(2400, Sensor::getOrZero(SensorType::Rpm));
 
 	// need to be out of VVT sync to see VVT sync in action
-	eth.fireRise(25);
-	eth.fireRise(25);
-	eth.fireRise(25);
+	eth.fireFall(12.5);
+	eth.fireRise(12.5);
+	eth.fireFall(12.5);
+	eth.fireRise(12.5);
+	eth.fireFall(12.5);
+	eth.fireRise(12.5);
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
