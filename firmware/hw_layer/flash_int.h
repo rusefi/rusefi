@@ -146,14 +146,14 @@ bool intFlashIsErased(flashaddr_t address, size_t size);
 bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size);
 
 /**
- * @brief Copy data from the flash memory to a @p buffer.
- * @warning The @p buffer must be at least @p size bytes long.
- * @param address First address of the flash memory to be copied.
- * @param buffer Buffer to copy to.
+ * @brief Copy data from the flash memory to a @p destination.
+ * @warning The @p destination must be at least @p size bytes long.
+ * @param source First address of the flash memory to be copied.
+ * @param destination Buffer to copy to.
  * @param size Size of the data to be copied in bytes.
  * @return FLASH_RETURN_SUCCESS if successfully copied.
  */
-int intFlashRead(flashaddr_t address, char* buffer, size_t size);
+int intFlashRead(flashaddr_t source, char* destination, size_t size);
 
 /**
  * @brief Copy data from a @p buffer to the flash memory.

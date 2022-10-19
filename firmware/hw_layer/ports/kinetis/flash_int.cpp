@@ -197,8 +197,8 @@ bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	return TRUE;
 }
 
-int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
-	memcpy(buffer, (char*) address, size);
+int intFlashRead(flashaddr_t source, char* destination, size_t size) {
+	memcpy(destination, (char*) source, size);
 	return FLASH_RETURN_SUCCESS;
 }
 
