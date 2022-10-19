@@ -22,6 +22,7 @@ const size_t backupSize = (BACKUP_RAM_NUM + 1) * sizeof(uint32_t);
 
 static void backupInit() {
 	static_assert(backupSize <= BACKUP_FLASH_SIZE, "Backup flash overflow");
+	static_assert(BACKUP_FLASH_ADDR != nullptr, "Backup address undefined");
 
 	// first, load the whole buffer into the memory
 	intFlashRead((flashaddr_t)BACKUP_FLASH_ADDR, (char *)backupRam, backupSize);
