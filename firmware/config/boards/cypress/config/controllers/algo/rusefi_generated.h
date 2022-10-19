@@ -1235,8 +1235,8 @@
 #define gppwm4_pwmFrequency_offset 2844
 #define gppwm4_rpmBins_offset 2858
 #define gppwm4_table_offset 2866
-#define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",3="GPPWM_Clt",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",18="GPPWM_GppwmOutput1",19="GPPWM_GppwmOutput2",20="GPPWM_GppwmOutput3",21="GPPWM_GppwmOutput4",4="GPPWM_Iat",6="GPPWM_IgnLoad",2="GPPWM_Map",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt"
-#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4"
+#define gppwm_channel_e_auto_enum 0="GPPWM_Zero",9="GPPWM_AccelPedal",16="GPPWM_AuxLinear1",17="GPPWM_AuxLinear2",7="GPPWM_AuxTemp1",8="GPPWM_AuxTemp2",3="GPPWM_Clt",15="GPPWM_EthanolPercent",5="GPPWM_FuelLoad",18="GPPWM_GppwmOutput1",19="GPPWM_GppwmOutput2",20="GPPWM_GppwmOutput3",21="GPPWM_GppwmOutput4",4="GPPWM_Iat",6="GPPWM_IgnLoad",22="GPPWM_LuaGauge1",23="GPPWM_LuaGauge2",2="GPPWM_Map",1="GPPWM_Tps",12="GPPWM_VVT_1E",11="GPPWM_VVT_1I",14="GPPWM_VVT_2E",13="GPPWM_VVT_2I",10="GPPWM_Vbatt"
+#define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2"
 #define gppwm_channel_e_GPPWM_AccelPedal 9
 #define gppwm_channel_e_GPPWM_AuxLinear1 16
 #define gppwm_channel_e_GPPWM_AuxLinear2 17
@@ -1251,6 +1251,8 @@
 #define gppwm_channel_e_GPPWM_GppwmOutput4 21
 #define gppwm_channel_e_GPPWM_Iat 4
 #define gppwm_channel_e_GPPWM_IgnLoad 6
+#define gppwm_channel_e_GPPWM_LuaGauge1 22
+#define gppwm_channel_e_GPPWM_LuaGauge2 23
 #define gppwm_channel_e_GPPWM_Map 2
 #define gppwm_channel_e_GPPWM_Tps 1
 #define gppwm_channel_e_GPPWM_Vbatt 10
@@ -1669,6 +1671,7 @@
 #define lps25BaroSensorScl_offset 818
 #define lps25BaroSensorSda_offset 820
 #define LUA_ANALOG_INPUT_COUNT 8
+#define LUA_GAUGE_COUNT 2
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
 #define luaOutputPins1_offset 1226
@@ -1820,7 +1823,7 @@
 #define pedalToTpsRpmBins_offset 5532
 #define pedalToTpsTable_offset 5460
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22048
+#define persistent_config_s_size 22800
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1969,7 +1972,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 1234480794
+#define SIGNATURE_HASH 731219959
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2207,7 +2210,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 22048
+#define TOTAL_CONFIG_SIZE 22800
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2255,7 +2258,7 @@
 #define TransmissionControllerMode_SimpleTransmissionController 1
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 12
-#define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71 || trigger_type == 74
+#define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 12 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71 || trigger_type == 74
 #define trigger_customSkippedToothCount_offset 476
 #define trigger_customTotalToothCount_offset 472
 #define TRIGGER_CYCLE_DURATION "cycleDuration"
@@ -2350,7 +2353,7 @@
 #define trigger_type_e_UNUSED_34 34
 #define trigger_type_offset 468
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 21 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
-#define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 12 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
+#define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
 #define triggerCompCenterVolt_offset 2536
 #define triggerCompHystMax_offset 2538
 #define triggerCompHystMin_offset 2537
@@ -2525,12 +2528,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.16.cypress.1234480794"
+#define TS_SIGNATURE "rusEFI 2022.10.19.cypress.731219959"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1268
+#define TS_TOTAL_OUTPUT_SIZE 1280
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2630,11 +2633,40 @@
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 457
 #define vbattDividerCoeff_offset 416
+#define VE_BLEND_COUNT 4
 #define ve_override_e_auto_enum 0="VE_None",1="VE_MAP",2="VE_TPS"
 #define ve_override_e_enum "None", "MAP", "TPS"
 #define ve_override_e_VE_MAP 1
 #define ve_override_e_VE_None 0
 #define ve_override_e_VE_TPS 2
+#define veBlends1_blendBins_offset 22210
+#define veBlends1_blendParameter_offset 22208
+#define veBlends1_blendValues_offset 22226
+#define veBlends1_loadBins_offset 22176
+#define veBlends1_offset 22048
+#define veBlends1_rpmBins_offset 22192
+#define veBlends1_table_offset 22048
+#define veBlends2_blendBins_offset 22398
+#define veBlends2_blendParameter_offset 22396
+#define veBlends2_blendValues_offset 22414
+#define veBlends2_loadBins_offset 22364
+#define veBlends2_offset 22236
+#define veBlends2_rpmBins_offset 22380
+#define veBlends2_table_offset 22236
+#define veBlends3_blendBins_offset 22586
+#define veBlends3_blendParameter_offset 22584
+#define veBlends3_blendValues_offset 22602
+#define veBlends3_loadBins_offset 22552
+#define veBlends3_offset 22424
+#define veBlends3_rpmBins_offset 22568
+#define veBlends3_table_offset 22424
+#define veBlends4_blendBins_offset 22774
+#define veBlends4_blendParameter_offset 22772
+#define veBlends4_blendValues_offset 22790
+#define veBlends4_loadBins_offset 22740
+#define veBlends4_offset 22612
+#define veBlends4_rpmBins_offset 22756
+#define veBlends4_table_offset 22612
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1156
 #define vehicleSpeedSensorInputPin_offset 822

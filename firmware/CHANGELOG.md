@@ -30,11 +30,13 @@ Release template (copy/paste this for new release):
 
 ### Added
  - VVT minimum RPM setting #4545
- - Flexible ignition adder/trim tables #4586
+ - Flexible ignition and VE adder/trim tables #4586 #4640
  - Enforce board configuration overrides more strictly #4614
  - rusEFI console Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
  - Lua: function to access VIN setting #3967
+ - Lua: designated Lua gauges with logging #4672
+ - GCC10 is the suggested compiler now, GCC9 no longer supported #4641
 
 ### Fixed
  - Fuel Priming reset fix #4627

@@ -19,5 +19,6 @@
     <orderEntry type="library" name="mockito-all-1.10.19" level="project" />
     <orderEntry type="module" module-name="logging" exported="" />
     <orderEntry type="library" name="javacan-core" level="project" />
+    <orderEntry type="library" name="httpclient" level="project" />
   </component>
 </module>

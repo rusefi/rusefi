@@ -32,7 +32,6 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.core.rusEFIVersion.CONSOLE_VERSION;
-import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * @see StartupFrame

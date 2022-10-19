@@ -263,14 +263,14 @@ bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size) {
 	return TRUE;
 }
 
-int intFlashRead(flashaddr_t address, char* buffer, size_t size) {
+int intFlashRead(flashaddr_t source, char* destination, size_t size) {
 #if CORTEX_MODEL == 7
 	// If we have a cache, invalidate the relevant cache lines.
 	// They may still contain old data, leading us to read invalid data.
-	SCB_InvalidateDCache_by_Addr((uint32_t*)address, size);
+	SCB_InvalidateDCache_by_Addr((uint32_t*)source, size);
 #endif
 
-	memcpy(buffer, (char*) address, size);
+	memcpy(destination, (char*) source, size);
 	return FLASH_RETURN_SUCCESS;
 }
 

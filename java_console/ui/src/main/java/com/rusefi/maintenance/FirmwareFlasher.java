@@ -80,6 +80,7 @@ public class FirmwareFlasher {
             sa.stop();
             wnd.setStatus(DONE);
         } else {
+            wnd.setErrorState(true);
             wnd.append("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
