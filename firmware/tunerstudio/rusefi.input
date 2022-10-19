@@ -4103,6 +4103,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseD3PullDown",                   boardUseD3PullDown
 	    field = "boardUseD4PullDown",                   boardUseD4PullDown
 	    field = "boardUseD5PullDown",                   boardUseD5PullDown
+	    field = sentInputPins1,                         sentInputPins
 
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "I understand ECU Locking",             yesUnderstandLocking
