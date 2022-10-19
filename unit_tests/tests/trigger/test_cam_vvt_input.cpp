@@ -93,13 +93,15 @@ TEST(trigger, testCamInput) {
 
 	for (int i = 0; i < 5;i++) {
 		eth.fireRise(25);
+		eth.fireFall(25);
 	}
 
-	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
+	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 600;i++) {
 		eth.fireRise(25);
+		eth.fireFall(25);
 	}
 
 	// asserting that lack of camshaft signal would be detecting
@@ -108,6 +110,10 @@ TEST(trigger, testCamInput) {
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {
+		eth.moveTimeForwardUs(MS2US(25));
+		eth.firePrimaryTriggerRise();
+		EXPECT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
+
 		eth.moveTimeForwardUs(MS2US(5));
 
 		// cam comes every other crank rev
@@ -116,12 +122,12 @@ TEST(trigger, testCamInput) {
 		}
 
 		eth.moveTimeForwardUs(MS2US(20));
-		eth.firePrimaryTriggerRise();
+		eth.firePrimaryTriggerFall();
 	}
 
 	// asserting that error code has cleared
-	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	EXPECT_NEAR_M3(-109, engine->triggerCentral.getVVTPosition(0, 0));
+	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
+	EXPECT_NEAR_M3(-289, engine->triggerCentral.getVVTPosition(0, 0));
 }
 
 TEST(trigger, testNB2CamInput) {
