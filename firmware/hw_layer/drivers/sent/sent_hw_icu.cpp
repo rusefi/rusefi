@@ -22,7 +22,7 @@
 #if (HAL_USE_ICU == TRUE)
 
 /* TODO: get at runtime */
-#define SENT_ICU_FREQ		(168000000 / 2) // == CPU freq / 2
+#define SENT_ICU_FREQ		(CORE_CLOCK / 2) // == CPU freq / 2
 
 /* TODO: implement helper to get AF from GPIO for TIM2 capture */
 #define SENT_INPUT_AF		PAL_MODE_ALTERNATE(1)
