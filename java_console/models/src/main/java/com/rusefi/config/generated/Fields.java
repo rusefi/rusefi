@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 10:47:13 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 20:16:20 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1919,16 +1919,16 @@ public class Fields {
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int sensorChartMode_offset = 955;
 	public static final int sensorSnifferRpmThreshold_offset = 4;
+	public static final int SENT_INPUT_COUNT = 1;
+	public static final int sentInputPins1_offset = 2082;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 731219959;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
-	public static final int sorryUnused1_offset = 2082;
-	public static final int sorryUnused2_offset = 2084;
-	public static final int sorryUnused3_offset = 2086;
-	public static final int sorryUnused4_offset = 2088;
-	public static final int sorryUnused5_offset = 2090;
+	public static final int sorryUnused1_offset = 2084;
+	public static final int sorryUnused2_offset = 2086;
+	public static final int sorryUnused3_offset = 2088;
+	public static final int sorryUnused4_offset = 2090;
 	public static final int sparkDwellRpmBins_offset = 4156;
 	public static final int sparkDwellValues_offset = 4172;
 	public static final int specs_offset = 364;
@@ -2411,7 +2411,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.10.19.all.731219959";
+	public static final String TS_SIGNATURE = "rusEFI 2022.10.19.all.2553196302";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -3576,11 +3576,11 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_2074 = Field.create("ALIGNMENTFILL_AT_2074", 2074, FieldType.INT8).setScale(1.0);
 	public static final Field AUXFREQUENCYFILTER = Field.create("AUXFREQUENCYFILTER", 2076, FieldType.FLOAT);
 	public static final Field VVTCONTROLMINRPM = Field.create("VVTCONTROLMINRPM", 2080, FieldType.INT16).setScale(1.0);
-	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2082, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2084, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2086, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED4 = Field.create("SORRYUNUSED4", 2088, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED5 = Field.create("SORRYUNUSED5", 2090, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SENTINPUTPINS1 = Field.create("SENTINPUTPINS1", 2082, FieldType.INT16, brain_input_pin_e).setScale(1.0);
+	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2084, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2086, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2088, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field SORRYUNUSED4 = Field.create("SORRYUNUSED4", 2090, FieldType.INT16, Gpio).setScale(1.0);
 	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2092, FieldType.INT16).setScale(1.0);
 	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2094, FieldType.INT16).setScale(1.0);
 	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 2096, FieldType.INT16).setScale(1.0);
@@ -5006,11 +5006,11 @@ public class Fields {
 	ALIGNMENTFILL_AT_2074,
 	AUXFREQUENCYFILTER,
 	VVTCONTROLMINRPM,
+	SENTINPUTPINS1,
 	SORRYUNUSED1,
 	SORRYUNUSED2,
 	SORRYUNUSED3,
 	SORRYUNUSED4,
-	SORRYUNUSED5,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,
 	COASTINGFUELCUTTPS,

@@ -1969,18 +1969,19 @@
 #define sensor_chart_e_SC_TRIGGER 1
 #define sensorChartMode_offset 955
 #define sensorSnifferRpmThreshold_offset 4
+#define SENT_INPUT_COUNT 1
+#define sentInputPins1_offset 2082
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 731219959
+#define SIGNATURE_HASH 2553196302
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
-#define sorryUnused1_offset 2082
-#define sorryUnused2_offset 2084
-#define sorryUnused3_offset 2086
-#define sorryUnused4_offset 2088
-#define sorryUnused5_offset 2090
+#define sorryUnused1_offset 2084
+#define sorryUnused2_offset 2086
+#define sorryUnused3_offset 2088
+#define sorryUnused4_offset 2090
 #define sparkDwellRpmBins_offset 4156
 #define sparkDwellValues_offset 4172
 #define specs_offset 364
@@ -2528,7 +2529,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.19.cypress.731219959"
+#define TS_SIGNATURE "rusEFI 2022.10.19.cypress.2553196302"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
