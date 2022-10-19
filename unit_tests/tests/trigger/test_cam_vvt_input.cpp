@@ -114,20 +114,20 @@ TEST(trigger, testCamInput) {
 		eth.firePrimaryTriggerRise();
 		EXPECT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
 
-		eth.moveTimeForwardUs(MS2US(5));
+		eth.moveTimeForwardUs(MS2US(10));
 
 		// cam comes every other crank rev
 		if (i % 2 == 0) {
 			hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 		}
 
-		eth.moveTimeForwardUs(MS2US(20));
+		eth.moveTimeForwardUs(MS2US(15));
 		eth.firePrimaryTriggerFall();
 	}
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	EXPECT_NEAR_M3(-289, engine->triggerCentral.getVVTPosition(0, 0));
+	EXPECT_NEAR_M3(-109, engine->triggerCentral.getVVTPosition(0, 0));
 }
 
 TEST(trigger, testNB2CamInput) {
