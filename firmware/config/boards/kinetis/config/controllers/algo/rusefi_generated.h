@@ -1823,7 +1823,7 @@
 #define pedalToTpsRpmBins_offset 5532
 #define pedalToTpsTable_offset 5460
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22048
+#define persistent_config_s_size 22800
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1972,7 +1972,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 4157152621
+#define SIGNATURE_HASH 1128408379
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2210,7 +2210,7 @@
 #define torqueLoadBins_offset 3684
 #define torqueRpmBins_offset 3672
 #define torqueTable_offset 3636
-#define TOTAL_CONFIG_SIZE 22048
+#define TOTAL_CONFIG_SIZE 22800
 #define totalGearsCount_offset 1584
 #define tps1_1AdcChannel_offset 456
 #define tps1_2AdcChannel_offset 686
@@ -2528,12 +2528,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.19.kin.4157152621"
+#define TS_SIGNATURE "rusEFI 2022.10.19.kin.1128408379"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1268
+#define TS_TOTAL_OUTPUT_SIZE 1280
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
@@ -2633,11 +2633,40 @@
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define vbattAdcChannel_offset 457
 #define vbattDividerCoeff_offset 416
+#define VE_BLEND_COUNT 4
 #define ve_override_e_auto_enum 0="VE_None",1="VE_MAP",2="VE_TPS"
 #define ve_override_e_enum "None", "MAP", "TPS"
 #define ve_override_e_VE_MAP 1
 #define ve_override_e_VE_None 0
 #define ve_override_e_VE_TPS 2
+#define veBlends1_blendBins_offset 22210
+#define veBlends1_blendParameter_offset 22208
+#define veBlends1_blendValues_offset 22226
+#define veBlends1_loadBins_offset 22176
+#define veBlends1_offset 22048
+#define veBlends1_rpmBins_offset 22192
+#define veBlends1_table_offset 22048
+#define veBlends2_blendBins_offset 22398
+#define veBlends2_blendParameter_offset 22396
+#define veBlends2_blendValues_offset 22414
+#define veBlends2_loadBins_offset 22364
+#define veBlends2_offset 22236
+#define veBlends2_rpmBins_offset 22380
+#define veBlends2_table_offset 22236
+#define veBlends3_blendBins_offset 22586
+#define veBlends3_blendParameter_offset 22584
+#define veBlends3_blendValues_offset 22602
+#define veBlends3_loadBins_offset 22552
+#define veBlends3_offset 22424
+#define veBlends3_rpmBins_offset 22568
+#define veBlends3_table_offset 22424
+#define veBlends4_blendBins_offset 22774
+#define veBlends4_blendParameter_offset 22772
+#define veBlends4_blendValues_offset 22790
+#define veBlends4_loadBins_offset 22740
+#define veBlends4_offset 22612
+#define veBlends4_rpmBins_offset 22756
+#define veBlends4_table_offset 22612
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1156
 #define vehicleSpeedSensorInputPin_offset 822

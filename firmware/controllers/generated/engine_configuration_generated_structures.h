@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 12 01:03:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 10:47:13 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5053,8 +5053,12 @@ struct persistent_config_s {
 	 * offset 21296
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
+	/**
+	 * offset 22048
+	 */
+	blend_table_s veBlends[VE_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 22048);
+static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 12 01:03:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 19 10:47:13 UTC 2022
