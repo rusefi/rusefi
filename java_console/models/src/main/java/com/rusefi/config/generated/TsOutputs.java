@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 19 10:46:16 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 19 20:15:05 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -321,6 +321,7 @@ public class TsOutputs {
 	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
+	public static final int SENT_INPUT_COUNT = 1;
 	public static final int STFT_BANK_COUNT = 2;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int TCU_GEAR_COUNT = 10;
