@@ -1,13 +1,11 @@
 package com.rusefi.trigger;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.enums.trigger_type_e;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.rusefi.config.generated.Fields.*;
@@ -15,7 +13,6 @@ import static com.rusefi.config.generated.Fields.*;
 public class TriggerWheelInfo {
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
     static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
-    static trigger_type_e onlyOneTrigger = null;
 
     private final int id;
     private final boolean isSecondWheelCam;
@@ -26,14 +23,12 @@ public class TriggerWheelInfo {
     private final boolean hasSecondChannel;
     private final boolean hardcodedOperationMode;
     private final TriggerGaps gaps;
-    private final int cycleDuration;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
-                            boolean hardcodedOperationMode, TriggerGaps gaps,
-                            int cycleDuration) {
+                            boolean hardcodedOperationMode, TriggerGaps gaps) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -42,19 +37,7 @@ public class TriggerWheelInfo {
         this.isCrankBased = isCrankBased;
         this.hasSecondChannel = hasSecondChannel;
         this.hardcodedOperationMode = hardcodedOperationMode;
-        this.gaps = Objects.requireNonNull(gaps, "gaps " + triggerName);
-        this.cycleDuration = cycleDuration;
-        boolean crankCycled = cycleDuration == 360;
-        com.rusefi.enums.trigger_type_e ordinal = findByOrdinal(id);
-        if (ordinal == onlyOneTrigger) {
-            System.out.println("That's the one: " + ordinal);
-        }
-        if (id != trigger_type_e_TT_36_2_2_2) {
-            if (crankCycled && !isCrankBased)
-                throw new IllegalStateException("Not isCrankBased " + triggerName + " " + cycleDuration);
-            if (!crankCycled && isCrankBased)
-                throw new IllegalStateException("Not crankCycled " + triggerName);
-        }
+        this.gaps = gaps;
     }
 
     private static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
@@ -128,8 +111,7 @@ public class TriggerWheelInfo {
                 isSecondWheelCam,
                 hasSecondChannel,
                 hardcodedOperationMode,
-                gaps,
-                cycleDuration
+                gaps
         );
     }
 
@@ -160,15 +142,6 @@ public class TriggerWheelInfo {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    public static com.rusefi.enums.trigger_type_e findByOrdinal(int id) {
-        // todo: do we care about quicker implementation? probably not
-        for (trigger_type_e type : com.rusefi.enums.trigger_type_e.values()) {
-            if (type.ordinal() == id)
-                return type;
-        }
-        throw new IllegalArgumentException("No type for " + id);
     }
 
     @NotNull
