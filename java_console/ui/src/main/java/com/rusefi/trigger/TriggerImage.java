@@ -1,6 +1,7 @@
 package com.rusefi.trigger;
 
 import com.rusefi.StartupFrame;
+import com.rusefi.enums.trigger_type_e;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -14,7 +15,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * This utility produces images of trigger signals supported by rusEFI
@@ -37,13 +37,14 @@ public class TriggerImage {
      */
     public static int EXTRA_COUNT = 1;
     private static int sleepAtEnd;
+    private static trigger_type_e onlyOneTrigger = null;
 
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
      * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
-        switch (TriggerWheelInfo.findByOrdinal(triggerName.getId())) {
+        switch (findByOrdinal(triggerName.getId())) {
             case TT_FORD_ASPIRE:
                 return "Ford Aspire";
             case TT_VVT_BOSCH_QUICK_START:
@@ -101,7 +102,7 @@ public class TriggerImage {
         }
 
         if (args.length > 1)
-            TriggerWheelInfo.onlyOneTrigger = TriggerWheelInfo.findByOrdinal(Integer.parseInt(args[1]));
+            onlyOneTrigger = findByOrdinal(Integer.parseInt(args[1]));
 
         if (args.length > 2)
             sleepAtEnd = Integer.parseInt(args[2]);
@@ -136,7 +137,7 @@ public class TriggerImage {
     }
 
     private static void onWheel(TriggerPanel triggerPanel, JPanel topPanel, JPanel content, TriggerWheelInfo triggerWheelInfo) {
-        if (TriggerWheelInfo.onlyOneTrigger != null && TriggerWheelInfo.findByOrdinal(triggerWheelInfo.getId()) != TriggerWheelInfo.onlyOneTrigger)
+        if (onlyOneTrigger != null && findByOrdinal(triggerWheelInfo.getId()) != onlyOneTrigger)
             return;
 
         topPanel.removeAll();
@@ -197,7 +198,7 @@ public class TriggerImage {
         UiUtils.trueRepaint(triggerPanel);
         content.paintImmediately(content.getVisibleRect());
         new File(OUTPUT_FOLDER).mkdir();
-        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + TriggerWheelInfo.findByOrdinal(triggerWheelInfo.getId()) + ".png", content);
+        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + findByOrdinal(triggerWheelInfo.getId()) + ".png", content);
     }
 
     @NotNull
@@ -310,6 +311,15 @@ public class TriggerImage {
         return waves;
     }
 
+    public static trigger_type_e findByOrdinal(int id) {
+        // todo: do we care about quicker implementation? probably not
+        for (trigger_type_e type : trigger_type_e.values()) {
+            if (type.ordinal() == id)
+                return type;
+        }
+        throw new IllegalArgumentException("No type for " + id);
+    }
+
     private static class TriggerPanel extends JPanel {
         public String name = "";
         public String id;
@@ -353,7 +363,6 @@ public class TriggerImage {
             }
             g.drawString("     " + tdcMessage, 0, tdcFontSize);
             g.setColor(Color.darkGray);
-            Objects.requireNonNull(gaps.gapFrom, "gaps from " + name);
             for (int i = 0; i < gaps.gapFrom.length; i++) {
                 String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
                 g.drawString("            " + message, 0, tdcFontSize * (2 + i));
