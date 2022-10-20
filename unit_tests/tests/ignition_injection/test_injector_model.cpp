@@ -7,17 +7,21 @@ using ::testing::StrictMock;
 class MockInjectorModel : public InjectorModelBase {
 public:
 	MOCK_METHOD(floatms_t, getDeadtime, (), (const, override));
-	MOCK_METHOD(float, getInjectorMassFlowRate, (), (override));
+	MOCK_METHOD(float, getBaseFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
 	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
-	MOCK_METHOD(float, correctShortPulse, (float baseDuration), (const, override));
+	MOCK_METHOD(float, getSmallPulseFlowRate, (), (const, override));
+	MOCK_METHOD(float, getSmallPulseBreakPoint, (), (const, override));
+	MOCK_METHOD(InjectorNonlinearMode, getNonlinearMode, (), (const, override));
 };
 
 TEST(InjectorModel, Prepare) {
 	StrictMock<MockInjectorModel> dut;
 
 	EXPECT_CALL(dut, getDeadtime());
-	EXPECT_CALL(dut, getInjectorMassFlowRate());
+	EXPECT_CALL(dut, getBaseFlowRate());
+	EXPECT_CALL(dut, getNonlinearMode());
+	EXPECT_CALL(dut, getInjectorFlowRatio());
 
 	dut.prepare();
 }
@@ -27,11 +31,12 @@ TEST(InjectorModel, getInjectionDuration) {
 
 	EXPECT_CALL(dut, getDeadtime())
 		.WillOnce(Return(2.0f));
-	EXPECT_CALL(dut, getInjectorMassFlowRate())
+	EXPECT_CALL(dut, getInjectorFlowRatio())
+		.WillOnce(Return(1.0f));
+	EXPECT_CALL(dut, getBaseFlowRate())
 		.WillOnce(Return(4.8f)); // 400cc/min
-	EXPECT_CALL(dut, correctShortPulse(_))
-		.Times(2)
-		.WillRepeatedly([](float b) { return b; });
+	EXPECT_CALL(dut, getNonlinearMode())
+		.WillRepeatedly(Return(INJ_None));
 
 	dut.prepare();
 
@@ -39,23 +44,65 @@ TEST(InjectorModel, getInjectionDuration) {
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 20 / 4.8f + 2.0f, EPS4D);
 }
 
-TEST(InjectorModel, getInjectionDurationNonlinear) {
+TEST(InjectorModel, getInjectionDurationWithFlowRatio) {
 	StrictMock<MockInjectorModel> dut;
 
 	EXPECT_CALL(dut, getDeadtime())
 		.WillOnce(Return(2.0f));
-	EXPECT_CALL(dut, getInjectorMassFlowRate())
+	EXPECT_CALL(dut, getInjectorFlowRatio())
+		.WillOnce(Return(1.1f));
+	EXPECT_CALL(dut, getBaseFlowRate())
 		.WillOnce(Return(4.8f)); // 400cc/min
-
-	// Dummy nonlinearity correction: just doubles the pulse
-	EXPECT_CALL(dut, correctShortPulse(_))
-		.Times(2)
-		.WillRepeatedly([](float b) { return 2 * b; });
+	EXPECT_CALL(dut, getNonlinearMode())
+		.WillRepeatedly(Return(INJ_None));
 
 	dut.prepare();
 
-	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 2 * 10 / 4.8f + 2.0f, EPS4D);
-	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * 20 / 4.8f + 2.0f, EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 10 / (4.8f * 1.1f) + 2.0f, EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 20 / (4.8f * 1.1f) + 2.0f, EPS4D);
+}
+
+TEST(InjectorModel, nonLinearFordMode) {
+	StrictMock<MockInjectorModel> dut;
+
+	EXPECT_CALL(dut, getDeadtime())
+		.WillOnce(Return(0));
+	EXPECT_CALL(dut, getInjectorFlowRatio())
+		.WillOnce(Return(1.0f));
+
+	// 2005 F150 injectors
+	EXPECT_CALL(dut, getBaseFlowRate())
+		.WillRepeatedly(Return(2.979f));
+	EXPECT_CALL(dut, getSmallPulseFlowRate())
+		.WillRepeatedly(Return(3.562f));
+	EXPECT_CALL(dut, getSmallPulseBreakPoint())
+		.WillRepeatedly(Return(0.00627f));
+	EXPECT_CALL(dut, getNonlinearMode())
+		.WillRepeatedly(Return(INJ_FordModel));
+
+	dut.prepare();
+
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.000f), 0.344f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.001f), 0.625f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.002f), 0.906f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.003f), 1.187f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.004f), 1.467f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.005f), 1.748f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.006f), 2.029f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.007f), 2.350f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.008f), 2.685f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.009f), 3.021f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.010f), 3.357f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.011f), 3.693f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.012f), 4.028f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.013f), 4.364f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.014f), 4.700f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.015f), 5.035f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.016f), 5.371f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.017f), 5.707f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.018f), 6.042f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.019f), 6.378f, 1e-3);
+	EXPECT_NEAR(dut.getBaseDurationImpl(0.020f), 6.714f, 1e-3);
 }
 
 TEST(InjectorModel, nonlinearPolynomial) {
@@ -116,22 +163,6 @@ INSTANTIATE_TEST_SUITE_P(
 	FlowRateFixture,
 	::testing::Values(0.1f, 0.5f, 1.0f, 2.0f, 10.0f)
 );
-
-TEST_P(FlowRateFixture, FlowRateRatio) {
-	float flowRatio = GetParam();
-
-	StrictMock<TesterGetFlowRate> dut;
-	EXPECT_CALL(dut, getInjectorFlowRatio()).WillOnce(Return(flowRatio));
-
-	EngineTestHelper eth(TEST_ENGINE);
-	engineConfiguration->injector.flow = 500;
-
-	// 500 cc/min = 6g/s
-	float expectedFlow = flowRatio * 6.0f;
-
-	// Check that flow is adjusted correctly
-	EXPECT_FLOAT_EQ(expectedFlow, dut.getInjectorMassFlowRate());
-}
 
 TEST_P(FlowRateFixture, PressureRatio) {
 	float pressureRatio = GetParam();
