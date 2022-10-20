@@ -9,3 +9,5 @@
 
 __NO_RETURN void runRusEfi();
 __NO_RETURN void rebootNow();
+
+void preHalInit();

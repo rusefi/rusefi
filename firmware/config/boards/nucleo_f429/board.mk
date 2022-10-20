@@ -2,7 +2,7 @@
 BOARDCPPSRC = $(PROJECT_DIR)/config/boards/nucleo_f429/board_configuration.cpp
 BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f429
 
-DDEFS += -DEFI_FILE_LOGGING=FALSE
+DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
 LWIP = yes
@@ -12,3 +12,4 @@ DDEFS += -DEFI_ETHERNET=TRUE
 IS_STM32F429 = yes
 
 DDEFS += -DFIRMWARE_ID=\"nucleo_f429\"
+DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
