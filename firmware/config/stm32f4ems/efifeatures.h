@@ -11,6 +11,8 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
+#define SENT_CHANNELS_NUM 1
+
 #ifndef EFI_BOOST_CONTROL
 #define EFI_BOOST_CONTROL TRUE
 #endif
