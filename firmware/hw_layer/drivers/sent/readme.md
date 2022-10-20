@@ -1,5 +1,5 @@
 microRusEFI
-24 - AN temp 3
-PA2
+23 - AN temp 2
+PA1
 ICU2
 

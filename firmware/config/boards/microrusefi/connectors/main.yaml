@@ -157,8 +157,8 @@ pins:
     type: at
 
   - pin: 23
-    id: [A1, EFI_ADC_1]
-    class: [switch_inputs, analog_inputs]
+    id: [A1, A1, EFI_ADC_1]
+    class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
     function: IAT sensor
     ts_name: 23 - AN temp 2
