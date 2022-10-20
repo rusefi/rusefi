@@ -56,10 +56,10 @@ static brain_input_pin_e sentPins[SENT_INPUT_COUNT];
 void startSent()
 {
 	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
-		sentPins[i] = engineConfiguration->sentInputPins[0];
+		brain_input_pin_e sentPin = engineConfiguration->sentInputPins[i];
 
-		if (isBrainPinValid(sentPins[i])) {
-			efiSetPadMode("SENT", sentPins[i], SENT_INPUT_AF);
+		if (isBrainPinValid(sentPin)) {
+			efiSetPadMode("SENT", sentPin, SENT_INPUT_AF);
 
 			icuStart(&SENT_ICU_UNIT, &icucfg_in1);
 			icuStartCapture(&SENT_ICU_UNIT);
@@ -71,12 +71,14 @@ void startSent()
 void stopSent()
 {
 	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
-		if (isBrainPinValid(sentPins[i])) {
+		brain_input_pin_e sentPin = activeConfiguration.sentInputPins[i];
+
+		if (isBrainPinValid(sentPin)) {
 			icuDisableNotifications(&SENT_ICU_UNIT);
 			icuStopCapture(&SENT_ICU_UNIT);
 			icuStop(&SENT_ICU_UNIT);
 
-			efiSetPadUnused(sentPins[i]);
+			efiSetPadUnused(sentPin);
 		}
 	}
 }
