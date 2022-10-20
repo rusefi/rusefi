@@ -67,12 +67,12 @@ jobs:
           - build-target: hellen81
             folder: hellen/hellen81
             ini-file: rusefi_hellen81.ini
-            skip-rate: 90
+            
 
           - build-target: alphax-2chan
             folder: hellen/alphax-2chan
             ini-file: rusefi_alphax-2chan.ini
-            skip-rate: 90
+            
 
           - build-target: alphax-4chan
             folder: hellen/alphax-4chan
@@ -81,37 +81,37 @@ jobs:
           - build-target: harley81
             folder: hellen/harley81
             ini-file: rusefi_harley81.ini
-            skip-rate: 90
+            
 
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
+            
 
           - build-target: hellen88bmw_avr
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
-            skip-rate: 90
+            
 
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
-            skip-rate: 90
+            
 
           - build-target: hellen-gm-e67
             folder: hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini
-            skip-rate: 90
+            
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
             ini-file: rusefi_hellenNA8_96.ini
-            skip-rate: 90
+            
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
-            skip-rate: 90
+            
 
           - build-target: hellen128
             folder: hellen/hellen128
@@ -121,7 +121,7 @@ jobs:
           - build-target: hellen121vag
             folder: hellen/hellen121vag
             ini-file: rusefi_hellen121vag.ini
-            skip-rate: 90
+            
 
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
@@ -139,7 +139,7 @@ jobs:
           - build-target: frankenso_na6
             folder: frankenso
             ini-file: rusefi_frankenso_na6.ini
-            skip-rate: 90
+            
 
           - build-target: kinetis
             folder: kinetis
@@ -153,33 +153,32 @@ jobs:
           - build-target: mre_f4_debug
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
+            
 
           - build-target: mre_f4_recovery
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
+            
 
           - build-target: mre_f4_hardware_QC_special_build
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
 
           - build-target: mre_f7
             folder: microrusefi
             ini-file: rusefi_mre_f7.ini
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-rate: 90
+            
 
           - build-target: prometheus_405
             folder: prometheus
             ini-file: rusefi_prometheus_405.ini
-            skip-rate: 90
+            
 
           - build-target: prometheus_469
             folder: prometheus
             ini-file: rusefi_prometheus_469.ini
-            skip-rate: 90
+            
 
           - build-target: proteus_f4
             folder: proteus
@@ -200,12 +199,12 @@ jobs:
           - build-target: proteus_h7
             folder: proteus
             ini-file: rusefi_proteus_h7.ini
-            skip-rate: 90
+            
 
           - build-target: proteus_legacy
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
-            skip-rate: 90
+            
 
           - build-target: stm32f429_nucleo
             folder: nucleo_f429
