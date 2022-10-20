@@ -50,29 +50,34 @@ static ICUConfig icucfg_in1 =
 	.arr = 0xFFFFFFFFU,
 };
 
+/* current config */
+static brain_input_pin_e sentPins[SENT_INPUT_COUNT];
+
 void startSent()
 {
-    brain_pin_e sentPin = engineConfiguration->sentInputPins[0];
+	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
+		sentPins[i] = engineConfiguration->sentInputPins[0];
 
-	if (isBrainPinValid(sentPin)) {
-		efiSetPadMode("SENT", sentPin, SENT_INPUT_AF);
+		if (isBrainPinValid(sentPins[i])) {
+			efiSetPadMode("SENT", sentPins[i], SENT_INPUT_AF);
 
-		icuStart(&SENT_ICU_UNIT, &icucfg_in1);
-		icuStartCapture(&SENT_ICU_UNIT);
-		icuEnableNotifications(&SENT_ICU_UNIT);
+			icuStart(&SENT_ICU_UNIT, &icucfg_in1);
+			icuStartCapture(&SENT_ICU_UNIT);
+			icuEnableNotifications(&SENT_ICU_UNIT);
+		}
 	}
 }
 
 void stopSent()
 {
-    brain_pin_e sentPin = engineConfiguration->sentInputPins[0];
+	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
+		if (isBrainPinValid(sentPins[i])) {
+			icuDisableNotifications(&SENT_ICU_UNIT);
+			icuStopCapture(&SENT_ICU_UNIT);
+			icuStop(&SENT_ICU_UNIT);
 
-	if (isBrainPinValid(sentPin)) {
-		icuDisableNotifications(&SENT_ICU_UNIT);
-		icuStopCapture(&SENT_ICU_UNIT);
-		icuStop(&SENT_ICU_UNIT);
-
-		efiSetPadUnused(sentPin);
+			efiSetPadUnused(sentPins[i]);
+		}
 	}
 }
 
