@@ -742,7 +742,9 @@ pin_input_mode_e throttlePedalUpPinMode;
 	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
 	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
-	uint16_t unusedTrig
+
+	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
+
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
 	uint8_t unusedTrigMode
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
@@ -817,7 +819,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
-	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
+	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:1], "None", "Polynomial", "Ford (dual slope)"
 	InjectorNonlinearMode injectorNonlinearMode
 	pin_input_mode_e clutchUpPinMode;
 
@@ -1212,7 +1214,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit stepperDcInvertedPins;Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit canOpenBLT; Allow OpenBLT on Primary CAN
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
-	bit unused1740b2
+	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 	bit unused1127
 	bit unused1128
 	bit unused1129
@@ -1444,7 +1446,9 @@ tChargeMode_e tChargeMode;
 	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
 	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"sec", 0.1, 0, 0, 10, 1
 
-	int8_t[9] unused4080;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
+
+	int8_t[5] unused4080;;"", 1, 0, 0, 0, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
