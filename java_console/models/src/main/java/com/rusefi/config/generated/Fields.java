@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 21 02:15:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 21 02:31:02 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -725,6 +725,8 @@ public class Fields {
 	public static final int flexCranking_offset = 1372;
 	public static final int flexSensorPin_offset = 844;
 	public static final int forceO2Heating_offset = 1372;
+	public static final int fordInjectorSmallPulseBreakPoint_offset = 3124;
+	public static final int fordInjectorSmallPulseSlope_offset = 752;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1284,8 +1286,8 @@ public class Fields {
 	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
 	public static final int HPFP_TARGET_SIZE = 10;
 	public static final int hpfpActivationAngle_offset = 3138;
-	public static final int hpfpCam_offset = 3133;
-	public static final int hpfpCamLobes_offset = 3132;
+	public static final int hpfpCam_offset = 3132;
+	public static final int hpfpCamLobes_offset = 3131;
 	public static final int hpfpCompensation_offset = 3432;
 	public static final int hpfpCompensationLoadBins_offset = 3532;
 	public static final int hpfpCompensationRpmBins_offset = 3552;
@@ -1293,8 +1295,8 @@ public class Fields {
 	public static final int hpfpDeadtimeVoltsBins_offset = 3178;
 	public static final int hpfpLobeProfileAngle_offset = 3162;
 	public static final int hpfpLobeProfileQuantityBins_offset = 3146;
-	public static final int hpfpMinAngle_offset = 3135;
-	public static final int hpfpPeakPos_offset = 3134;
+	public static final int hpfpMinAngle_offset = 3134;
+	public static final int hpfpPeakPos_offset = 3133;
 	public static final int hpfpPidI_offset = 3142;
 	public static final int hpfpPidP_offset = 3140;
 	public static final int hpfpPumpVolume_offset = 3136;
@@ -1523,6 +1525,8 @@ public class Fields {
 	public static final int injectorCorrectionPolynomial6_offset = 2020;
 	public static final int injectorCorrectionPolynomial7_offset = 2024;
 	public static final int injectorCorrectionPolynomial8_offset = 2028;
+	public static final int injectorFlowAsMassFlow_offset = 1628;
+	public static final int InjectorNonlinearMode_INJ_FordModel = 2;
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final int injectorNonlinearMode_offset = 826;
@@ -1922,7 +1926,6 @@ public class Fields {
 	public static final int SENT_INPUT_COUNT = 1;
 	public static final int sentInputPins1_offset = 2082;
 	public static final int showHumanReadableWarning_offset = 960;
-	public static final int SIGNATURE_HASH = 1985998488;
 	public static final int silentTriggerError_offset = 1360;
 	public static final int skippedWheelOnCam_offset = 1360;
 	public static final int slowAdcAlpha_offset = 1600;
@@ -2412,7 +2415,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.10.21.all.1985998488";
+	public static final String TS_SIGNATURE = "rusEFI 2022.10.21.all.3054433504";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -2450,8 +2453,7 @@ public class Fields {
 	public static final int unused1128_offset = 1628;
 	public static final int unused1129_offset = 1628;
 	public static final int unused1130_offset = 1628;
-	public static final int unused1740b2_offset = 1628;
-	public static final int unused4080_offset = 3123;
+	public static final int unused4080_offset = 3126;
 	public static final int unused_1484_bit_29_offset = 1372;
 	public static final int unused_1484_bit_30_offset = 1372;
 	public static final int unused_1484_bit_38_offset = 1372;
@@ -2481,7 +2483,6 @@ public class Fields {
 	public static final int unusedBit_541_31_offset = 1628;
 	public static final int unusedBit_541_8_offset = 1628;
 	public static final int unusedBit_541_9_offset = 1628;
-	public static final int unusedTrig_offset = 752;
 	public static final int unusedTrigMode_offset = 756;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1372;
 	public static final int useBiQuadOnAuxSpeedSensors_offset = 1372;
@@ -2918,7 +2919,7 @@ public class Fields {
 	public static final Field COMPRESSIONRATIO = Field.create("COMPRESSIONRATIO", 744, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 748, FieldType.INT16, Gpio).setScale(1.0);
 	public static final Field TRIGGERSIMULATORPINS2 = Field.create("TRIGGERSIMULATORPINS2", 750, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field UNUSEDTRIG = Field.create("UNUSEDTRIG", 752, FieldType.INT16).setScale(1.0);
+	public static final Field FORDINJECTORSMALLPULSESLOPE = Field.create("FORDINJECTORSMALLPULSESLOPE", 752, FieldType.INT16).setScale(0.001);
 	public static final Field TRIGGERSIMULATORPINMODES1 = Field.create("TRIGGERSIMULATORPINMODES1", 754, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field TRIGGERSIMULATORPINMODES2 = Field.create("TRIGGERSIMULATORPINMODES2", 755, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field UNUSEDTRIGMODE = Field.create("UNUSEDTRIGMODE", 756, FieldType.INT8).setScale(1.0);
@@ -3373,7 +3374,7 @@ public class Fields {
 	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 1628, FieldType.BIT, 0);
 	public static final Field CANOPENBLT = Field.create("CANOPENBLT", 1628, FieldType.BIT, 1);
 	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2);
-	public static final Field UNUSED1740B2 = Field.create("UNUSED1740B2", 1628, FieldType.BIT, 3);
+	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1628, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1628, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1628, FieldType.BIT, 5);
 	public static final Field UNUSED1129 = Field.create("UNUSED1129", 1628, FieldType.BIT, 6);
@@ -3782,12 +3783,15 @@ public class Fields {
 	public static final Field MAXCAMPHASERESOLVERPM = Field.create("MAXCAMPHASERESOLVERPM", 3120, FieldType.INT8).setScale(50.0);
 	public static final Field DFCODELAY = Field.create("DFCODELAY", 3121, FieldType.INT8).setScale(0.1);
 	public static final Field ACDELAY = Field.create("ACDELAY", 3122, FieldType.INT8).setScale(0.1);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3123, FieldType.INT8).setScale(1.0);
-	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3132, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_3123 = Field.create("ALIGNMENTFILL_AT_3123", 3123, FieldType.INT8).setScale(1.0);
+	public static final Field FORDINJECTORSMALLPULSEBREAKPOINT = Field.create("FORDINJECTORSMALLPULSEBREAKPOINT", 3124, FieldType.INT16).setScale(0.001);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3126, FieldType.INT8).setScale(1.0);
+	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3131, FieldType.INT8).setScale(1.0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
-	public static final Field HPFPCAM = Field.create("HPFPCAM", 3133, FieldType.INT8, hpfp_cam_e).setScale(1.0);
-	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3134, FieldType.INT8).setScale(1.0);
-	public static final Field HPFPMINANGLE = Field.create("HPFPMINANGLE", 3135, FieldType.INT8).setScale(1.0);
+	public static final Field HPFPCAM = Field.create("HPFPCAM", 3132, FieldType.INT8, hpfp_cam_e).setScale(1.0);
+	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3133, FieldType.INT8).setScale(1.0);
+	public static final Field HPFPMINANGLE = Field.create("HPFPMINANGLE", 3134, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_3135 = Field.create("ALIGNMENTFILL_AT_3135", 3135, FieldType.INT8).setScale(1.0);
 	public static final Field HPFPPUMPVOLUME = Field.create("HPFPPUMPVOLUME", 3136, FieldType.INT16).setScale(0.001);
 	public static final Field HPFPACTIVATIONANGLE = Field.create("HPFPACTIVATIONANGLE", 3138, FieldType.INT8).setScale(1.0);
 	public static final Field ISSFILTERRECIPROCAL = Field.create("ISSFILTERRECIPROCAL", 3139, FieldType.INT8).setScale(1.0);
@@ -4359,7 +4363,7 @@ public class Fields {
 	COMPRESSIONRATIO,
 	TRIGGERSIMULATORPINS1,
 	TRIGGERSIMULATORPINS2,
-	UNUSEDTRIG,
+	FORDINJECTORSMALLPULSESLOPE,
 	TRIGGERSIMULATORPINMODES1,
 	TRIGGERSIMULATORPINMODES2,
 	UNUSEDTRIGMODE,
@@ -4806,7 +4810,7 @@ public class Fields {
 	STEPPERDCINVERTEDPINS,
 	CANOPENBLT,
 	CAN2OPENBLT,
-	UNUSED1740B2,
+	INJECTORFLOWASMASSFLOW,
 	UNUSED1127,
 	UNUSED1128,
 	UNUSED1129,
@@ -5210,11 +5214,14 @@ public class Fields {
 	MAXCAMPHASERESOLVERPM,
 	DFCODELAY,
 	ACDELAY,
+	ALIGNMENTFILL_AT_3123,
+	FORDINJECTORSMALLPULSEBREAKPOINT,
 	UNUSED4080,
 	HPFPCAMLOBES,
 	HPFPCAM,
 	HPFPPEAKPOS,
 	HPFPMINANGLE,
+	ALIGNMENTFILL_AT_3135,
 	HPFPPUMPVOLUME,
 	HPFPACTIVATIONANGLE,
 	ISSFILTERRECIPROCAL,

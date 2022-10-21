@@ -328,6 +328,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idlePositionMax;
 	if (strEqualCaseInsensitive(name, "tunerStudioSerialSpeed"))
 		return engineConfiguration->tunerStudioSerialSpeed;
+	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseSlope"))
+		return engineConfiguration->fordInjectorSmallPulseSlope;
 	if (strEqualCaseInsensitive(name, "is_enabled_spi_1"))
 		return engineConfiguration->is_enabled_spi_1;
 	if (strEqualCaseInsensitive(name, "is_enabled_spi_2"))
@@ -734,6 +736,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->canOpenBLT;
 	if (strEqualCaseInsensitive(name, "can2OpenBLT"))
 		return engineConfiguration->can2OpenBLT;
+	if (strEqualCaseInsensitive(name, "injectorFlowAsMassFlow"))
+		return engineConfiguration->injectorFlowAsMassFlow;
 	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
 		return engineConfiguration->benchTestOffTime;
 	if (strEqualCaseInsensitive(name, "benchTestCount"))
@@ -846,6 +850,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->dfcoDelay;
 	if (strEqualCaseInsensitive(name, "acDelay"))
 		return engineConfiguration->acDelay;
+	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseBreakPoint"))
+		return engineConfiguration->fordInjectorSmallPulseBreakPoint;
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
 		return engineConfiguration->hpfpCamLobes;
 	if (strEqualCaseInsensitive(name, "hpfpPeakPos"))
@@ -1286,6 +1292,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tunerStudioSerialSpeed"))
 	{
 		engineConfiguration->tunerStudioSerialSpeed = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseSlope"))
+	{
+		engineConfiguration->fordInjectorSmallPulseSlope = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "is_enabled_spi_1"))
@@ -2303,6 +2314,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->can2OpenBLT = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "injectorFlowAsMassFlow"))
+	{
+		engineConfiguration->injectorFlowAsMassFlow = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
@@ -2581,6 +2597,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "acDelay"))
 	{
 		engineConfiguration->acDelay = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseBreakPoint"))
+	{
+		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))

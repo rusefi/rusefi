@@ -752,6 +752,8 @@
 #define flexCranking_offset 1372
 #define flexSensorPin_offset 844
 #define forceO2Heating_offset 1372
+#define fordInjectorSmallPulseBreakPoint_offset 3124
+#define fordInjectorSmallPulseSlope_offset 752
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1273,8 +1275,8 @@
 #define HPFP_LOBE_PROFILE_SIZE 16
 #define HPFP_TARGET_SIZE 10
 #define hpfpActivationAngle_offset 3138
-#define hpfpCam_offset 3133
-#define hpfpCamLobes_offset 3132
+#define hpfpCam_offset 3132
+#define hpfpCamLobes_offset 3131
 #define hpfpCompensation_offset 3432
 #define hpfpCompensationLoadBins_offset 3532
 #define hpfpCompensationRpmBins_offset 3552
@@ -1282,8 +1284,8 @@
 #define hpfpDeadtimeVoltsBins_offset 3178
 #define hpfpLobeProfileAngle_offset 3162
 #define hpfpLobeProfileQuantityBins_offset 3146
-#define hpfpMinAngle_offset 3135
-#define hpfpPeakPos_offset 3134
+#define hpfpMinAngle_offset 3134
+#define hpfpPeakPos_offset 3133
 #define hpfpPidI_offset 3142
 #define hpfpPidP_offset 3140
 #define hpfpPumpVolume_offset 3136
@@ -1519,7 +1521,9 @@
 #define injectorCorrectionPolynomial6_offset 2020
 #define injectorCorrectionPolynomial7_offset 2024
 #define injectorCorrectionPolynomial8_offset 2028
-#define InjectorNonlinearMode_auto_enum 0="INJ_None",1="INJ_PolynomialAdder"
+#define injectorFlowAsMassFlow_offset 1628
+#define InjectorNonlinearMode_auto_enum 0="INJ_None",2="INJ_FordModel",1="INJ_PolynomialAdder"
+#define InjectorNonlinearMode_INJ_FordModel 2
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define injectorNonlinearMode_offset 826
@@ -1940,7 +1944,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 960
-#define SIGNATURE_HASH 255932226
+#define SIGNATURE_HASH 3473943866
 #define silentTriggerError_offset 1360
 #define skippedWheelOnCam_offset 1360
 #define slowAdcAlpha_offset 1600
@@ -2496,7 +2500,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.21.subaru_eg33_f7.255932226"
+#define TS_SIGNATURE "rusEFI 2022.10.21.subaru_eg33_f7.3473943866"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2537,8 +2541,7 @@
 #define unused1128_offset 1628
 #define unused1129_offset 1628
 #define unused1130_offset 1628
-#define unused1740b2_offset 1628
-#define unused4080_offset 3123
+#define unused4080_offset 3126
 #define unused_1484_bit_29_offset 1372
 #define unused_1484_bit_30_offset 1372
 #define unused_1484_bit_38_offset 1372
@@ -2568,7 +2571,6 @@
 #define unusedBit_541_31_offset 1628
 #define unusedBit_541_8_offset 1628
 #define unusedBit_541_9_offset 1628
-#define unusedTrig_offset 752
 #define unusedTrigMode_offset 756
 #define useAdvanceCorrectionsForCranking_offset 1372
 #define useBiQuadOnAuxSpeedSensors_offset 1372
