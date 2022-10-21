@@ -2222,7 +2222,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
-		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Injector flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Injector flow units",		injectorFlowAsMassFlow, {isInjectionEnabled == 1}
 		field = "Fuel rail pressure sensor", injectorPressureType, { isInjectionEnabled && (highPressureFuel_hwChannel || lowPressureFuel_hwChannel) }
 		field = "Injector flow compensation mode", injectorCompensationMode, { isInjectionEnabled }
 		field = "Injector reference pressure", fuelReferencePressure, { isInjectionEnabled && injectorCompensationMode != 0 }
@@ -2273,9 +2274,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "x^6",								injectorCorrectionPolynomial7
 		field = "x^7",								injectorCorrectionPolynomial8
 
+	dialog = injectorNonlinearFord, "Ford-model Small Pulse Correction", yAxis
+		field = "Small pulse slope (ALOSL)",			fordInjectorSmallPulseSlope
+		field = "Set this to 'mass flow'",				injectorFlowAsMassFlow
+		field = "Large pulse slope (AHISL)",			injector_flow
+		field = "Small pulse breakpoint (FUEL_BKPT)",	fordInjectorSmallPulseBreakPoint
+
 	dialog = injectorNonlinear
 		field = "Small pulse correction mode",		injectorNonlinearMode
-		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode != 0 }
+		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode == 1 }
+		panel = injectorNonlinearFord, {1}, { injectorNonlinearMode == 2 }
 
 	dialog = testLuaOut, "Lua Out Test"
 		commandButton = "Lua Out #1",	cmd_test_lua1

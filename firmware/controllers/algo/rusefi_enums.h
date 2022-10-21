@@ -620,6 +620,7 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	INJ_None = 0,
 	INJ_PolynomialAdder = 1,
+	INJ_FordModel = 2,
 } InjectorNonlinearMode;
 
 typedef enum __attribute__ ((__packed__)) {
