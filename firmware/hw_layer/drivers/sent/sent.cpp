@@ -29,6 +29,9 @@
 /* Status + two 12-bit signals + CRC */
 #define SENT_MSG_PAYLOAD_SIZE   (1 + SENT_MSG_DATA_SIZE + 1)  // Size of payload
 
+/* use 3 full frames + one additional pulse for unit time calibration */
+#define SENT_CALIBRATION_PULSES	(1 + 3 * SENT_MSG_PAYLOAD_SIZE)
+
 /*==========================================================================*/
 /* Decoder configuration													*/
 /*==========================================================================*/
@@ -161,12 +164,13 @@ int sent_channel::Decoder(uint16_t clocks)
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
-		/* Find longes pulse ... */
+		/* Find longes pulse */
 		if (clocks > tickPerUnit) {
 			tickPerUnit = clocks;
 		}
-		/* ... of 9 pulses */
-		if (pulseCounter >= (SENT_MSG_PAYLOAD_SIZE + 1)) {
+		/* ...this should be SYNC pulse */
+		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
+			/* calculate Unit time from SYNC pulse */
 			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			pulseCounter = 0;
