@@ -99,6 +99,7 @@ private:
 	/* CRC */
 	uint8_t crc4(uint8_t* pdata, uint16_t ndata);
 	uint8_t crc4_gm(uint8_t* pdata, uint16_t ndata);
+	uint8_t crc4_gm_v2(uint8_t* pdata, uint16_t ndata);
 
 	void restart(void);
 
@@ -273,7 +274,8 @@ int sent_channel::Decoder(uint16_t clocks)
 					/* CRC check */
 					/* TODO: find correct way to calculate CRC */
 					if ((nibbles[7] == crc4(nibbles, 7)) ||
-						(nibbles[7] == crc4_gm(nibbles + 1, 6)))
+						(nibbles[7] == crc4_gm(nibbles + 1, 6)) ||
+						(nibbles[7] == crc4_gm_v2(nibbles + 1, 6)))
 					{
 						/* Full packet with correct CRC has been received
 						 * NOTE different MSB packing for sig0 and sig1
@@ -446,6 +448,8 @@ uint8_t sent_channel::crc4(uint8_t* pdata, uint16_t ndata)
 
 /* This CRC works for GM pressure sensor for message minus status nibble and minus CRC nibble */
 /* TODO: double check and use same CRC routine? */
+
+/* This is correct for GM throttle body */
 uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
 {
 	size_t i;
@@ -460,6 +464,25 @@ uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
 	}
 	// One more round with 0 as input
 	//crc = CrcLookup[crc];
+
+	return crc;
+}
+
+/* This is correct for GDI fuel pressure sensor */
+uint8_t sent_channel::crc4_gm_v2(uint8_t* pdata, uint16_t ndata)
+{
+	size_t i;
+	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
+	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
+
+	for (i = 0; i < ndata; i++)
+	{
+		crc = CrcLookup[crc];
+		crc = (crc ^ pdata[i]) & 0x0F;
+		//crc = pdata[i] ^ CrcLookup[crc];
+	}
+	// One more round with 0 as input
+	crc = CrcLookup[crc];
 
 	return crc;
 }
