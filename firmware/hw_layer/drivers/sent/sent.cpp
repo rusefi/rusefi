@@ -448,20 +448,20 @@ uint8_t sent_channel::crc4(uint8_t* pdata, uint16_t ndata)
 /* TODO: double check and use same CRC routine? */
 uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
 {
+	size_t i;
+	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
 	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
-	uint8_t calculatedCRC, i;
-
-	calculatedCRC = SENT_CRC_SEED; // initialize checksum with seed "0101"
 
 	for (i = 0; i < ndata; i++)
 	{
-		calculatedCRC = CrcLookup[calculatedCRC];
-		calculatedCRC = (calculatedCRC ^ pdata[i]) & 0x0F;
+		crc = CrcLookup[crc];
+		crc = (crc ^ pdata[i]) & 0x0F;
+		//crc = pdata[i] ^ CrcLookup[crc];
 	}
 	// One more round with 0 as input
-	calculatedCRC = CrcLookup[calculatedCRC];
+	//crc = CrcLookup[crc];
 
-	return calculatedCRC;
+	return crc;
 }
 
 void sent_channel::Info(void)
