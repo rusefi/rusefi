@@ -507,7 +507,7 @@ void sent_channel::Info(void)
 	#if SENT_STATISTIC_COUNTERS
 		efiPrintf("Restarts %d", statistic.RestartCnt);
 		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
-		efiPrintf("Total frames %d with crc error %d", statistic.FrameCnt, statistic.CrcErrCnt);
+		efiPrintf("Total frames %d with crc error %d (%f %%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
 		efiPrintf("Sync errors %d", statistic.SyncErr);
 	#endif
 }
