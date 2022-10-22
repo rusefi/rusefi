@@ -17,11 +17,9 @@
 #if (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE)
 
 #if (HAL_TRIGGER_USE_PAL == TRUE)
-	void extiTriggerTurnOnInputPins();
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
 #else
-	#define extiTriggerTurnOnInputPins() ((void)0)
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		UNUSED(msg);
 		UNUSED(index);
@@ -160,9 +158,6 @@ void startTriggerInputPins() {
 }
 
 void turnOnTriggerInputPins() {
-	/* init all trigger HW available */
-	extiTriggerTurnOnInputPins();
-
 	applyNewTriggerInputPins();
 }
 
