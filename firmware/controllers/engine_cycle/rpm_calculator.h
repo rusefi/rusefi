@@ -174,10 +174,6 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIn
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
-/**
- * @brief   Initialize RPM calculator
- */
-void initRpmCalculator();
 operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
