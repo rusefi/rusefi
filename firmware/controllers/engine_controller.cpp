@@ -471,9 +471,13 @@ void commonInitEngineController() {
 	initLaunchControl();
 #endif
 
-#if EFI_UNIT_TEST
-	engine->rpmCalculator.Register();
-#endif /* EFI_UNIT_TEST */
+#if EFI_SHAFT_POSITION_INPUT
+	/**
+	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
+	 * other listeners can access current RPM value
+	 */
+	initRpmCalculator();
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (engineConfiguration->isEngineControlEnabled) {
