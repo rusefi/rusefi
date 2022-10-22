@@ -162,6 +162,7 @@ static void initTriggerPwm() {
 void enableTriggerStimulator() {
 	initTriggerPwm();
 	engine->triggerCentral.directSelfStimulation = true;
+    engine->rpmCalculator.Register();
 }
 
 void enableExternalTriggerStimulator() {
