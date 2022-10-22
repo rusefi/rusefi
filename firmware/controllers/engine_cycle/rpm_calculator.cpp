@@ -381,6 +381,21 @@ void tdcMarkCallback(
 	}
 }
 
+void initRpmCalculator() {
+
+#if ! HW_CHECK_MODE
+	if (hasFirmwareError()) {
+		return;
+	}
+#endif // HW_CHECK_MODE
+
+	// Only register if not configured to read RPM over OBD2
+	if (!engineConfiguration->consumeObdSensors) {
+		engine->rpmCalculator.Register();
+	}
+
+}
+
 /**
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which
