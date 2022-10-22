@@ -76,7 +76,4 @@ void extiTriggerTurnOffInputPin(brain_pin_e brainPin) {
 	efiExtiDisablePin(brainPin);
 }
 
-void extiTriggerTurnOnInputPins() {
-}
-
 #endif /* (EFI_SHAFT_POSITION_INPUT && (HAL_TRIGGER_USE_PAL == TRUE)) */
