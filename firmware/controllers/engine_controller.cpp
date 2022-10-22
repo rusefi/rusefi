@@ -471,6 +471,10 @@ void commonInitEngineController() {
 	initLaunchControl();
 #endif
 
+#if EFI_UNIT_TEST
+	engine->rpmCalculator.Register();
+#endif /* EFI_UNIT_TEST */
+
 #if EFI_SHAFT_POSITION_INPUT
 	/**
 	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
