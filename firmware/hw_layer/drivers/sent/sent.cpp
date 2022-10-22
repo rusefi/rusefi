@@ -225,7 +225,8 @@ int sent_channel::Decoder(uint16_t clocks)
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 				state = SENT_STATE_STATUS;
 			}
 			else
