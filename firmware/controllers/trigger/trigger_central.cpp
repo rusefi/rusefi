@@ -134,12 +134,12 @@ static void turnOffAllDebugFields(void *arg) {
 	(void)arg;
 #if EFI_PROD_CODE
 	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
-		if (engineConfiguration->triggerInputDebugPins[index] != Gpio::Unassigned) {
+		if (isBrainPinValid(engineConfiguration->triggerInputDebugPins[index])) {
 			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
 		}
 	}
 	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
-		if (engineConfiguration->camInputsDebug[index] != Gpio::Unassigned) {
+		if (isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
 		}
 	}
@@ -205,7 +205,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 }
 
 static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
-	if (isImportantFront && engineConfiguration->camInputsDebug[index] != Gpio::Unassigned) {
+	if (isImportantFront && isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
@@ -1031,7 +1031,7 @@ bool TriggerCentral::isTriggerConfigChanged() {
 #endif // EFI_UNIT_TEST
 
 void validateTriggerInputs() {
-	if (engineConfiguration->triggerInputPins[0] == Gpio::Unassigned && engineConfiguration->triggerInputPins[1] != Gpio::Unassigned) {
+	if (!isBrainPinValid(engineConfiguration->triggerInputPins[0]) && isBrainPinValid(engineConfiguration->triggerInputPins[1])) {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
@@ -1039,7 +1039,7 @@ void validateTriggerInputs() {
 		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
 	}
 
-	if (engineConfiguration->camInputs[0] == Gpio::Unassigned && engineConfiguration->camInputs[2] != Gpio::Unassigned) {
+	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
 		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
 }
