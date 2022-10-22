@@ -190,9 +190,9 @@ void applyNewTriggerInputPins() {
 #if EFI_PROD_CODE
 	// first we will turn off all the changed pins
 	stopTriggerInputPins();
-	if (engineConfiguration->triggerInputDebugPins[0] != activeConfiguration.triggerInputDebugPins[0]) {
+	if (isConfigurationChanged(triggerInputDebugPins[0])) {
 		engine->rpmCalculator.unregister();
-		if (engineConfiguration->triggerInputDebugPins[0] != Gpio::Unassigned) {
+		if (isBrainPinValid(engineConfiguration->triggerInputDebugPins[0])) {
 			// if we do not have primary input channel maybe it's BCM mode and we inject RPM value via Lua?
 			engine->rpmCalculator.Register();
 		}
