@@ -472,10 +472,12 @@ void sent_channel::Info(void)
 	efiPrintf("Total pulses %d", pulseCounter);
 	efiPrintf("Last fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
 
-	efiPrintf("Slow channels:");
-	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
-		if (scMsgFlags & BIT(i)) {
-			efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
+	if (scMsgFlags) {
+		efiPrintf("Slow channels:");
+		for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+			if (scMsgFlags & BIT(i)) {
+				efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
+			}
 		}
 	}
 
