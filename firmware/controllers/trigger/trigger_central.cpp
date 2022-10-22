@@ -1035,10 +1035,6 @@ void validateTriggerInputs() {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
-	if (engineConfiguration->camInputs[0] == Gpio::Unassigned && engineConfiguration->camInputs[1] != Gpio::Unassigned) {
-		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
-	}
-
 	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
 		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
