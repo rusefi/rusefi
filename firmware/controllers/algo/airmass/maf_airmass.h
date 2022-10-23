@@ -10,4 +10,7 @@ public:
 
 	// Compute airmass based on flow & engine speed
 	AirmassResult getAirmassImpl(float massAirFlow, int rpm) const;
+
+private:
+	float getMaf() const;
 };

@@ -26,6 +26,7 @@ enum class SensorType : unsigned char {
 	 */
 	Map,
 	Maf,
+	Maf2,
 
 	OilPressure, // 6
 
