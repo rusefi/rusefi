@@ -131,7 +131,7 @@ public class LuaScriptPanel {
             scriptText.setText("No configuration image");
             return;
         }
-        ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.luaScript.getOffset(), Fields.LUA_SCRIPT_SIZE);
+        ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.LUASCRIPT.getOffset(), Fields.LUA_SCRIPT_SIZE);
 
         byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];
         luaScriptBuffer.get(scriptArr);
@@ -166,7 +166,7 @@ public class LuaScriptPanel {
                 remaining = paddedScript.length - idx;
                 int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-                bp.writeData(paddedScript, idx, Fields.luaScript.getOffset() + idx, thisWrite);
+                bp.writeData(paddedScript, idx, Fields.LUASCRIPT.getOffset() + idx, thisWrite);
 
                 idx += thisWrite;
 
