@@ -16,7 +16,7 @@ Current binaries are always available on our [build server](http://rusefi.com/bu
 [shop.rusEFI.com](https://www.shop.rusefi.com/)
 
 # Cloning the repository
-
+`git clone https://github.com/rusefi/rusefi.git`
 Important note - we now use submodules:
 
 `git submodule update --init`
