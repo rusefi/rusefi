@@ -30,7 +30,6 @@ Important note - we now use submodules:
  * [Misc tools](/java_tools) Misc development utilities
  * [misc/Jenkins](/misc/jenkins) Jenkins Continuous Integration scripts
  * [Software Development process](misc/SoftwareDevelopmentProcess.md)
- * [Work in progress status](work_in_progress.md)
 
 # External Links
 
