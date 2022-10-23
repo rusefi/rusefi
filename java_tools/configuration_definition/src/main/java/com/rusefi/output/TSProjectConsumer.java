@@ -27,7 +27,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     public TSProjectConsumer(String tsPath, ReaderState state) {
         this.tsPath = tsPath;
-        tsOutput = new TsOutput(true, true);
+        tsOutput = new TsOutput(true);
         this.state = state;
     }
 

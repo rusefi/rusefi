@@ -18,12 +18,10 @@ public class TsOutput {
     private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
-    private final boolean registerOffsets;
     private final StringBuilder tsHeader = new StringBuilder();
 
-    public TsOutput(boolean longForm, boolean registerOffsets) {
+    public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
-        this.registerOffsets = registerOffsets;
     }
 
     public String getContent() {
@@ -67,9 +65,6 @@ public class TsOutput {
 //                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
 //                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
-                }
-                if (registerOffsets) {
-                    state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
                 }
 
                 if (cs != null) {
