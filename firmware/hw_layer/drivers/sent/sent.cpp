@@ -572,6 +572,11 @@ static void printSentInfo()
 	}
 }
 
+float getSentValue(int index) {
+    // todo: just return ETB 0 to 100% for now?
+    return 23;
+}
+
 /* Should be called once */
 void initSent(void)
 {
