@@ -112,6 +112,8 @@ void RegisteredOutputPin::unregister() {
 // todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
 #define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
 
+// offset of X within engineConfiguration, plus offset of Y within X
+// decltype(engine_configuration_s::x) resolves the typename of the struct X inside engineConfiguration
 #define CONFIG_OFFSET2(x, y) (offsetof(engine_configuration_s, x) + offsetof(decltype(engine_configuration_s::x), y))
 #define CONFIG_PIN_OFFSETS2(x, y) CONFIG_OFFSET2(x, y##Pin), CONFIG_OFFSET2(x, y##PinMode)
 
