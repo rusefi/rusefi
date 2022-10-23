@@ -249,7 +249,7 @@ void applyNewHardwareSettings() {
 
 #if EFI_SENT_SUPPORT
 	stopSent();
-#endif
+#endif // EFI_SENT_SUPPORT
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
