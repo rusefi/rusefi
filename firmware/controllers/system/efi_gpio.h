@@ -43,20 +43,20 @@ public:
  */
 class RegisteredOutputPin : public virtual OutputPin {
 public:
-	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
+	RegisteredOutputPin(const char *registrationName, size_t pinOffset, size_t pinModeOffset);
 	void init();
 	void unregister();
-	RegisteredOutputPin *next;
+	RegisteredOutputPin* const next;
 	const char *registrationName;
 private:
-	short pinOffset;
-	short pinModeOffset;
+	const uint16_t m_pinOffset;
+	const uint16_t m_pinModeOffset;
 	bool isPinConfigurationChanged();
 };
 
 class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
 public:
-		RegisteredNamedOutputPin(const char *name, short pinOffset, short pinModeOffset);
+		RegisteredNamedOutputPin(const char *name, size_t pinOffset, size_t pinModeOffset);
 };
 
 class EnginePins {
