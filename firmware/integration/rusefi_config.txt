@@ -1851,6 +1851,7 @@ end_struct
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
+#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF sensor 2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_MASS "air mass"
 

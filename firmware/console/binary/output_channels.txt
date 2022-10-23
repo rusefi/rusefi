@@ -57,8 +57,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
 	uint16_t autoscale rawMaf;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	uint16_t autoscale rawMaf2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	uint16_t autoscale mafMeasured;@@GAUGE_NAME_AIR_FLOW_MEASURED@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
+	uint16_t autoscale mafMeasured2;@@GAUGE_NAME_AIR_FLOW_MEASURED_2@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
 	uint16_t autoscale MAPValue;@@GAUGE_NAME_MAP@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 1
 
@@ -368,5 +370,5 @@ bit injectorState12
 uint32_t outputRequestPeriod
 float mapFast
 	float[LUA_GAUGE_COUNT iterate] luaGauges;;"value",1, 0, 0, 50000, 3
-	uint8_t[142 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[138 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
