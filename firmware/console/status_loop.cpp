@@ -508,6 +508,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 	engine->outputChannels.rawMaf = Sensor::getRaw(SensorType::Maf);
+	engine->outputChannels.rawMaf2 = Sensor::getRaw(SensorType::Maf2);
 	engine->outputChannels.rawMap = Sensor::getRaw(SensorType::MapSlow);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
@@ -687,6 +688,7 @@ void updateTunerStudioState() {
 
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
+	tsOutputChannels->mafMeasured2 = Sensor::getOrZero(SensorType::Maf2);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
 	// offset 116
