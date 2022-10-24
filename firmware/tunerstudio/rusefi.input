@@ -2596,6 +2596,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "TPS1 ADC input", 						tps1_1AdcChannel
 		field = "TPS2 ADC input", 						tps2_1AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
+		field = "MAF 2 ADC input", 						maf2AdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
 		field = "MAP ADC input", 						map_sensor_hwChannel
@@ -2932,6 +2933,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = mafSettings, "MAF sensor", yAxis
 		field = "MAF ADC input", 						mafAdcChannel
+		field = "MAF 2 ADC input", 						maf2AdcChannel
 
 ;			Sensors->EGO sensor
 	dialog = egoSettings_sensor,	"EGO sensor"

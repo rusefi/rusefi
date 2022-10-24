@@ -599,7 +599,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;Single value to be used in event of a failed MAP sensor \nThis value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
-	adc_channel_e mafAdcChannel 
+	adc_channel_e mafAdcChannel
 
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
@@ -746,7 +746,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
 
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
-	uint8_t unusedTrigMode
+	adc_channel_e maf2AdcChannel
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
@@ -1851,6 +1851,7 @@ end_struct
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
+#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF sensor 2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_MASS "air mass"
 
