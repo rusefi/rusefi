@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 19 10:46:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 24 16:45:39 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1419,9 +1419,20 @@ struct output_channels_s {
 	 */
 	float luaGauges[LUA_GAUGE_COUNT];
 	/**
+	V
 	 * offset 624
 	 */
-	uint8_t unusedAtTheEnd[142];
+	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_AIR_FLOW_MEASURED_2@@
+	kg/h
+	 * offset 626
+	 */
+	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
+	/**
+	 * offset 628
+	 */
+	uint8_t unusedAtTheEnd[138];
 	/**
 	 * need 4 byte alignment
 	units
@@ -1432,4 +1443,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 768);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Oct 19 10:46:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 24 16:45:39 UTC 2022

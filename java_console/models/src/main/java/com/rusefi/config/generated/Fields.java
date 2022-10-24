@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 24 12:55:45 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 24 16:46:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -375,6 +375,7 @@ public class Fields {
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF sensor 2";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear 1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear 2";
@@ -1179,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.10.24.all.2192303047";
+	public static final String TS_SIGNATURE = "rusEFI 2022.10.24.all.3165638592";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -1516,7 +1517,7 @@ public class Fields {
 	public static final Field FORDINJECTORSMALLPULSESLOPE = Field.create("FORDINJECTORSMALLPULSESLOPE", 752, FieldType.INT16).setScale(0.001);
 	public static final Field TRIGGERSIMULATORPINMODES1 = Field.create("TRIGGERSIMULATORPINMODES1", 754, FieldType.INT8, pin_output_mode_e).setScale(1.0);
 	public static final Field TRIGGERSIMULATORPINMODES2 = Field.create("TRIGGERSIMULATORPINMODES2", 755, FieldType.INT8, pin_output_mode_e).setScale(1.0);
-	public static final Field UNUSEDTRIGMODE = Field.create("UNUSEDTRIGMODE", 756, FieldType.INT8).setScale(1.0);
+	public static final Field MAF2ADCCHANNEL = Field.create("MAF2ADCCHANNEL", 756, FieldType.INT8, adc_channel_e).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_757 = Field.create("ALIGNMENTFILL_AT_757", 757, FieldType.INT8).setScale(1.0);
 	public static final Field O2HEATERPIN = Field.create("O2HEATERPIN", 758, FieldType.INT16, output_pin_e).setScale(1.0);
 	public static final Field O2HEATERPINMODETODO = Field.create("O2HEATERPINMODETODO", 760, FieldType.INT8, pin_output_mode_e).setScale(1.0);
@@ -2960,7 +2961,7 @@ public class Fields {
 	FORDINJECTORSMALLPULSESLOPE,
 	TRIGGERSIMULATORPINMODES1,
 	TRIGGERSIMULATORPINMODES2,
-	UNUSEDTRIGMODE,
+	MAF2ADCCHANNEL,
 	ALIGNMENTFILL_AT_757,
 	O2HEATERPIN,
 	O2HEATERPINMODETODO,

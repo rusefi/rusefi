@@ -473,5 +473,9 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.outputRequestPeriod;
 	if (strEqualCaseInsensitive(name, "mapFast"))
 		return engine->outputChannels.mapFast;
+	if (strEqualCaseInsensitive(name, "rawMaf2"))
+		return engine->outputChannels.rawMaf2;
+	if (strEqualCaseInsensitive(name, "mafMeasured2"))
+		return engine->outputChannels.mafMeasured2;
 	return EFI_ERROR_CODE;
 }

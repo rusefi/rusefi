@@ -392,6 +392,7 @@
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
+#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF sensor 2"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear 1"
 #define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear 2"
@@ -1025,7 +1026,7 @@
 #define SENT_INPUT_COUNT 1
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 2192303047
+#define SIGNATURE_HASH 3165638592
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1297,7 +1298,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.24.all.2192303047"
+#define TS_SIGNATURE "rusEFI 2022.10.24.all.3165638592"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

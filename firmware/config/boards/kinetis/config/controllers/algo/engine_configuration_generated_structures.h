@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 21 02:29:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 24 16:45:41 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1629,7 +1629,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 756
 	 */
-	uint8_t unusedTrigMode;
+	adc_channel_e maf2AdcChannel;
 	/**
 	 * need 4 byte alignment
 	units
@@ -5084,4 +5084,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 21 02:29:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Oct 24 16:45:41 UTC 2022
