@@ -336,6 +336,7 @@ int sent_channel::GetMsg(uint32_t* rx)
 	}
 
 	/* TODO: add check if any packet was received */
+	/* TODO: add check for time since last message reseived */
 	return 0;
 }
 
