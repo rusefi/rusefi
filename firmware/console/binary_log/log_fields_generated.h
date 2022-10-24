@@ -251,4 +251,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "luaGauges 1", "value", 3},
 	{engine->outputChannels.luaGauges[1], "luaGauges 2", "value", 3},
+	{engine->outputChannels.rawMaf2, "rawMaf2", "V", 3},
+	{engine->outputChannels.mafMeasured2, "MAF sensor 2", "kg/h", 1},
 };
