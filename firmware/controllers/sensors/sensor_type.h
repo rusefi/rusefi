@@ -26,7 +26,6 @@ enum class SensorType : unsigned char {
 	 */
 	Map,
 	Maf,
-	Maf2,
 
 	OilPressure, // 6
 
@@ -84,6 +83,8 @@ enum class SensorType : unsigned char {
 
 	EGT1,
 	EGT2,
+
+	Maf2,	// Second bank MAF sensor
 
 	// analog voltage inputs for Lua
 	AuxAnalog1,
