@@ -52,14 +52,15 @@
 
 /* Helpers for Msg manipulations */
 /* nibbles order: status, sig0_MSN, sig0_MidN, sig0_LSN, sig1_MSN, sig1_MidN, sig1_LSN, CRC */
-/* we put newest nibble in [31:28] bits of rxReg, so when full message is received:
- * CRC is [31:28]
- * status is [3:0]
- * sig0 is [15:4], sig1 is [27:16] */
-#define MsgGetNibble(msg, n)	(((msg) >> (4 * (n))) & 0xf)
+/* we shift rxReg left for 4 bits on each neable received and put newest nibble
+ * in [3:0] bits of rxReg, so when full message is received:
+ * CRC is [3:0] - nibble 7
+ * status is [31:28] - nibble 0
+ * sig0 is [27:16], sig1 is [15:4] */
+#define MsgGetNibble(msg, n)	(((msg) >> (4 * (7 - (n)))) & 0xf)
 #define MsgGetStat(msg)			MsgGetNibble(msg, 0)
-#define MsgGetSig0(msg)			(((msg) >> (1 * 4)) & 0xfff)
-#define MsgGetSig1(msg)			(((msg) >> (4 * 4)) & 0xfff)
+#define MsgGetSig0(msg)			(((msg) >> (4 * 4)) & 0xfff)
+#define MsgGetSig1(msg)			(((msg) >> (1 * 4)) & 0xfff)
 #define MsgGetCrc(msg)			MsgGetNibble(msg, 7)
 
 typedef enum
@@ -270,7 +271,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		case SENT_STATE_CRC:
 			if(interval <= SENT_MAX_INTERVAL)
 			{
-				rxReg = (rxReg >> 4) | ((uint32_t)interval << 28);
+				rxReg = (rxReg << 4) | (uint32_t)interval;
 
 				if (state != SENT_STATE_CRC)
 				{
@@ -356,15 +357,15 @@ int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1)
 
 	if (pSig0) {
 		uint16_t tmp = MsgGetSig0(rx);
-		/* swap */
-		tmp = 	((tmp >> 8) & 0x00f) |
-				((tmp << 8) & 0xf00) |
-				(tmp & 0x0f0);
 		*pSig0 = tmp;
 	}
 
 	if (pSig1) {
 		uint16_t tmp = MsgGetSig1(rx);
+		/* swap */
+		tmp = 	((tmp >> 8) & 0x00f) |
+				((tmp << 8) & 0xf00) |
+				(tmp & 0x0f0);
 		*pSig1 = tmp;
 	}
 
