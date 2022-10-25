@@ -116,6 +116,7 @@ pins:
     color: purple
 
 info:
+  id: GM-E67
   title: Hellen GM E67
   name: Hellen GM E67
   board_url: https://rusefi.com/s/gm-e67
