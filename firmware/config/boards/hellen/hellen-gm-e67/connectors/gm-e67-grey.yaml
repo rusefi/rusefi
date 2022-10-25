@@ -1,5 +1,5 @@
 pins:
-  - pin: 7
+  - pin: G7
     # H144_OUT_PWM1
     id: D13
     class: outputs
@@ -7,7 +7,7 @@ pins:
     type: hs
     ts_name: C3-7 - Alternator Enable
 
-  - pin: 16
+  - pin: G16
     # H144_OUT_IO9
     id: G13
     class: outputs
@@ -15,11 +15,11 @@ pins:
     type: hs
     ts_name: C3-16 - Coolant Pump
 
-  - pin: 33
+  - pin: G33
     function: CAN bus low
     type: can
 
-  - pin: 49
+  - pin: G49
     # H144_OUT_IO12
     id: A8
     class: outputs
@@ -27,11 +27,11 @@ pins:
     type: hs
     ts_name: C3-49 - Fan Relay
 
-  - pin: 53
+  - pin: G53
     function: CAN bus high
     type: can
 
-  - pin: 55
+  - pin: G55
     # H144_IN_CLT
     id: EFI_ADC_12
     type: av
@@ -40,7 +40,7 @@ pins:
     function: CLT
     color: purple
 
-  - pin: 56
+  - pin: G56
     # H144_IN_IAT
     id: EFI_ADC_13
     type: av
@@ -49,7 +49,7 @@ pins:
     function: IAT
     color: purple
 
-  - pin: 57
+  - pin: G57
     # H144_IN_AUX4
     id: EFI_ADC_7
     type: av
@@ -58,7 +58,7 @@ pins:
     function: A/C Pressure
     color: purple
 
-  - pin: 58
+  - pin: G58
     # H144_IN_MAP3
     id: EFI_ADC_2
     type: av
@@ -67,7 +67,7 @@ pins:
     function: Baro Pressure
     color: purple
 
-  - pin: 59
+  - pin: G59
     # H144_IN_MAP2
     id: EFI_ADC_11
     type: av
@@ -76,7 +76,7 @@ pins:
     function: MAP
     color: purple
 
-  - pin: 66
+  - pin: G66
     # H144_IN_VSS
     id: F11
     class: switch_inputs
@@ -85,6 +85,6 @@ pins:
     ts_name: C3-66 - VSS Input
     color: gray
 
-  - pin: 67
+  - pin: G67
     function: Vehicle Speed Sensor Input Neg
     color: gray
