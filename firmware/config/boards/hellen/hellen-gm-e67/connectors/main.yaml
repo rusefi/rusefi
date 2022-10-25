@@ -114,3 +114,19 @@ pins:
     function: Starter Enable
     type: ls
     color: purple
+
+info:
+  title: Hellen GM E67
+  name: Hellen GM E67
+  board_url: https://rusefi.com/s/gm-e67
+  image:
+    file: main.jpg
+  pins:
+    - pin: U12
+      x: 1119
+      y: 424
+
+    - pin: U19
+      x: 1095
+      y: 234
+
