@@ -144,6 +144,8 @@ void setProteusVwPassatB6() {
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 
+	engineConfiguration->auxSpeedSensorInputPin[0] = PROTEUS_DIGITAL_5;
+
 	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 
