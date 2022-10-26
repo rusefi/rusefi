@@ -721,6 +721,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "restartEtb", [](lua_State* l) {
+		// this is about Lua sensor acting in place of real analog PPS sensor
+		// todo: smarter implementation
+		initElectronicThrottle();
+		return 0;
+	});
+
 	lua_register(l, "crc8_j1850", [](lua_State* l) {
 		uint8_t data[8];
 		uint32_t length = getArray(l, 1, data, sizeof(data));
