@@ -465,6 +465,7 @@ void testLuaExecString(const char* script) {
 }
 
 #endif // EFI_UNIT_TEST
+#endif // EFI_LUA
 
 // This is technically non-compliant, but it's only used for lua float parsing.
 // It doesn't properly handle very small and very large numbers, and doesn't
@@ -508,5 +509,3 @@ extern "C" float strtof_rusefi(const char* str, char** endPtr) {
 
 	return integerPart + fractionalPart / div;
 }
-
-#endif // EFI_LUA

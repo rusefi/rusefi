@@ -199,6 +199,11 @@ enable2ndByteCanID = false
 	ignBlends3_blendVal = {(ignBlends3_blendParameter == 0) ? 0 : (ignBlends3_blendParameter == 1) ? TPSValue : (ignBlends3_blendParameter == 2) ? MAPValue : (ignBlends3_blendParameter == 3) ? coolant : (ignBlends3_blendParameter == 4) ? intake : (ignBlends3_blendParameter == 5) ? fuelingLoad : (ignBlends3_blendParameter == 6) ? ignitionLoad : (ignBlends3_blendParameter == 7) ? auxTemp1 : (ignBlends3_blendParameter == 8) ? auxTemp2 : (ignBlends3_blendParameter == 9) ? throttlePedalPosition : (ignBlends3_blendParameter == 10) ? VBatt : (ignBlends3_blendParameter == 11) ? vvtPositionB1I : (ignBlends3_blendParameter == 12) ? vvtPositionB1E : (ignBlends3_blendParameter == 13) ? vvtPositionB2I : (ignBlends3_blendParameter == 14) ? vvtPositionB2E : (ignBlends3_blendParameter == 15) ? flexPercent : (ignBlends3_blendParameter == 16) ? auxLinear1 : (ignBlends3_blendParameter == 17) ? auxLinear2 : 0}
 	ignBlends4_blendVal = {(ignBlends4_blendParameter == 0) ? 0 : (ignBlends4_blendParameter == 1) ? TPSValue : (ignBlends4_blendParameter == 2) ? MAPValue : (ignBlends4_blendParameter == 3) ? coolant : (ignBlends4_blendParameter == 4) ? intake : (ignBlends4_blendParameter == 5) ? fuelingLoad : (ignBlends4_blendParameter == 6) ? ignitionLoad : (ignBlends4_blendParameter == 7) ? auxTemp1 : (ignBlends4_blendParameter == 8) ? auxTemp2 : (ignBlends4_blendParameter == 9) ? throttlePedalPosition : (ignBlends4_blendParameter == 10) ? VBatt : (ignBlends4_blendParameter == 11) ? vvtPositionB1I : (ignBlends4_blendParameter == 12) ? vvtPositionB1E : (ignBlends4_blendParameter == 13) ? vvtPositionB2I : (ignBlends4_blendParameter == 14) ? vvtPositionB2E : (ignBlends4_blendParameter == 15) ? flexPercent : (ignBlends4_blendParameter == 16) ? auxLinear1 : (ignBlends4_blendParameter == 17) ? auxLinear2 : 0}
 
+	veBlends1_blendVal = {(veBlends1_blendParameter == 0) ? 0 : (veBlends1_blendParameter == 1) ? TPSValue : (veBlends1_blendParameter == 2) ? MAPValue : (veBlends1_blendParameter == 3) ? coolant : (veBlends1_blendParameter == 4) ? intake : (veBlends1_blendParameter == 5) ? fuelingLoad : (veBlends1_blendParameter == 6) ? ignitionLoad : (veBlends1_blendParameter == 7) ? auxTemp1 : (veBlends1_blendParameter == 8) ? auxTemp2 : (veBlends1_blendParameter == 9) ? throttlePedalPosition : (veBlends1_blendParameter == 10) ? VBatt : (veBlends1_blendParameter == 11) ? vvtPositionB1I : (veBlends1_blendParameter == 12) ? vvtPositionB1E : (veBlends1_blendParameter == 13) ? vvtPositionB2I : (veBlends1_blendParameter == 14) ? vvtPositionB2E : (veBlends1_blendParameter == 15) ? flexPercent : (veBlends1_blendParameter == 16) ? auxLinear1 : (veBlends1_blendParameter == 17) ? auxLinear2 : 0}
+	veBlends2_blendVal = {(veBlends2_blendParameter == 0) ? 0 : (veBlends2_blendParameter == 1) ? TPSValue : (veBlends2_blendParameter == 2) ? MAPValue : (veBlends2_blendParameter == 3) ? coolant : (veBlends2_blendParameter == 4) ? intake : (veBlends2_blendParameter == 5) ? fuelingLoad : (veBlends2_blendParameter == 6) ? ignitionLoad : (veBlends2_blendParameter == 7) ? auxTemp1 : (veBlends2_blendParameter == 8) ? auxTemp2 : (veBlends2_blendParameter == 9) ? throttlePedalPosition : (veBlends2_blendParameter == 10) ? VBatt : (veBlends2_blendParameter == 11) ? vvtPositionB1I : (veBlends2_blendParameter == 12) ? vvtPositionB1E : (veBlends2_blendParameter == 13) ? vvtPositionB2I : (veBlends2_blendParameter == 14) ? vvtPositionB2E : (veBlends2_blendParameter == 15) ? flexPercent : (veBlends2_blendParameter == 16) ? auxLinear1 : (veBlends2_blendParameter == 17) ? auxLinear2 : 0}
+	veBlends3_blendVal = {(veBlends3_blendParameter == 0) ? 0 : (veBlends3_blendParameter == 1) ? TPSValue : (veBlends3_blendParameter == 2) ? MAPValue : (veBlends3_blendParameter == 3) ? coolant : (veBlends3_blendParameter == 4) ? intake : (veBlends3_blendParameter == 5) ? fuelingLoad : (veBlends3_blendParameter == 6) ? ignitionLoad : (veBlends3_blendParameter == 7) ? auxTemp1 : (veBlends3_blendParameter == 8) ? auxTemp2 : (veBlends3_blendParameter == 9) ? throttlePedalPosition : (veBlends3_blendParameter == 10) ? VBatt : (veBlends3_blendParameter == 11) ? vvtPositionB1I : (veBlends3_blendParameter == 12) ? vvtPositionB1E : (veBlends3_blendParameter == 13) ? vvtPositionB2I : (veBlends3_blendParameter == 14) ? vvtPositionB2E : (veBlends3_blendParameter == 15) ? flexPercent : (veBlends3_blendParameter == 16) ? auxLinear1 : (veBlends3_blendParameter == 17) ? auxLinear2 : 0}
+	veBlends4_blendVal = {(veBlends4_blendParameter == 0) ? 0 : (veBlends4_blendParameter == 1) ? TPSValue : (veBlends4_blendParameter == 2) ? MAPValue : (veBlends4_blendParameter == 3) ? coolant : (veBlends4_blendParameter == 4) ? intake : (veBlends4_blendParameter == 5) ? fuelingLoad : (veBlends4_blendParameter == 6) ? ignitionLoad : (veBlends4_blendParameter == 7) ? auxTemp1 : (veBlends4_blendParameter == 8) ? auxTemp2 : (veBlends4_blendParameter == 9) ? throttlePedalPosition : (veBlends4_blendParameter == 10) ? VBatt : (veBlends4_blendParameter == 11) ? vvtPositionB1I : (veBlends4_blendParameter == 12) ? vvtPositionB1E : (veBlends4_blendParameter == 13) ? vvtPositionB2I : (veBlends4_blendParameter == 14) ? vvtPositionB2E : (veBlends4_blendParameter == 15) ? flexPercent : (veBlends4_blendParameter == 16) ? auxLinear1 : (veBlends4_blendParameter == 17) ? auxLinear2 : 0}
+
 	wbo0_hasFault = { enableAemXSeries && (faultCode >= 3) }
 
 [PcVariables]
@@ -736,6 +741,34 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins = ignBlends4_blendBins, ignBlends4_blendVal
 		yBins = ignBlends4_blendValues
 
+	curve = veBlend1Bias, "VE blend 1 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = veBlends1_blendBins, veBlends1_blendVal
+		yBins = veBlends1_blendValues
+
+	curve = veBlend2Bias, "VE blend 2 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = veBlends2_blendBins, veBlends2_blendVal
+		yBins = veBlends2_blendValues
+
+	curve = veBlend3Bias, "VE blend 3 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = veBlends3_blendBins, veBlends3_blendVal
+		yBins = veBlends3_blendValues
+
+	curve = veBlend4Bias, "VE blend 4 bias"
+		columnLabel = "param", "bias"
+		xAxis = 0, 100, 11
+		yAxis = 0, 100, 5
+		xBins = veBlends4_blendBins, veBlends4_blendVal
+		yBins = veBlends4_blendValues
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -827,6 +860,30 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
       xBins       = ignBlends4_rpmBins, RPMValue
       yBins       = ignBlends4_loadBins, ignitionLoad
       zBins       = ignBlends4_table
+      gridOrient  = 250, 0, 340
+
+   table = veBlend1Table, veBlend1Map, "VE blend 1", 1
+      xBins       = veBlends1_rpmBins, RPMValue
+      yBins       = veBlends1_loadBins, fuelingLoad
+      zBins       = veBlends1_table
+      gridOrient  = 250, 0, 340
+
+   table = veBlend2Table, veBlend2Map, "VE blend 2", 1
+      xBins       = veBlends2_rpmBins, RPMValue
+      yBins       = veBlends2_loadBins, fuelingLoad
+      zBins       = veBlends2_table
+      gridOrient  = 250, 0, 340
+
+   table = veBlend3Table, veBlend3Map, "VE blend 3", 1
+      xBins       = veBlends3_rpmBins, RPMValue
+      yBins       = veBlends3_loadBins, fuelingLoad
+      zBins       = veBlends3_table
+      gridOrient  = 250, 0, 340
+
+   table = veBlend4Table, veBlend4Map, "VE blend 4", 1
+      xBins       = veBlends4_rpmBins, RPMValue
+      yBins       = veBlends4_loadBins, fuelingLoad
+      zBins       = veBlends4_table
       gridOrient  = 250, 0, 340
 
    table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",   1
@@ -1110,6 +1167,8 @@ gaugeCategory = Test Bench
 gaugeCategory = LUA
    luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
    luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+   luaGauges1gauge = luaGauges1, "Lua Gauge 1", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
+   luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
 
 gaugeCategory = Alternator PID
    alternatorStatus_iTermGauge = alternatorStatus_iTerm,"Alternator PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1163,8 +1222,6 @@ gaugeCategory = Sensors - Extra 2
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
    currentEnginePhaseGauge = currentEngineDecodedPhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
    auxSpeed1Gauge = auxSpeed1, "Aux Freq Input1", "hz", 0, 30000, 0, 0, 30000, 30000, 0, 0
-   luaGauges1gauge = luaGauges1, "Lua Gauge 1", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
-   luaGauges2gauge = luaGauges2, "Lua Gauge 2", "lua", 0, 30000, 0, 0, 30000, 30000, 0, 3
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1520,6 +1577,17 @@ menuDialog = main
 
 		# Air mass model
 		subMenu = veTableDialog,			"VE", 0, {isInjectionEnabled == 1}
+
+		groupMenu = "VE blend tables"
+		groupChildMenu = veBlend1Cfg,		"Adder 1 bias", 0, {isInjectionEnabled}
+		groupChildMenu = veBlend1Table,		"Ignition adder 1", 0, { isInjectionEnabled && veBlends1_blendParameter != 0 }
+		groupChildMenu = veBlend2Cfg,		"Adder 2 bias", 0, {isInjectionEnabled}
+		groupChildMenu = veBlend2Table,		"Ignition adder 2", 0, { isInjectionEnabled && veBlends2_blendParameter != 0 }
+		groupChildMenu = veBlend3Cfg,		"Adder 3 bias", 0, {isInjectionEnabled}
+		groupChildMenu = veBlend3Table,		"Ignition adder 3", 0, { isInjectionEnabled && veBlends3_blendParameter != 0 }
+		groupChildMenu = veBlend4Cfg,		"Adder 4 bias", 0, {isInjectionEnabled}
+		groupChildMenu = veBlend4Table,		"Ignition adder 4", 0, { isInjectionEnabled && veBlends4_blendParameter != 0 }
+
 		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == @@engine_load_mode_e_LM_SPEED_DENSITY@@}
 		subMenu = mapEstimateTableTbl,		"MAP estimate table", 0, { enableMapEstimationTableFallback }
@@ -1559,15 +1627,15 @@ menuDialog = main
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
 
-		groupMenu = "Ignition Adders"
-		groupChildMenu = ignAdder1Cfg,			"Adder 1 bias"
-		groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { ignBlends1_blendParameter != 0 }
-		groupChildMenu = ignAdder2Cfg,			"Adder 2 bias"
-		groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { ignBlends2_blendParameter != 0 }
-		groupChildMenu = ignAdder3Cfg,			"Adder 3 bias"
-		groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { ignBlends3_blendParameter != 0 }
-		groupChildMenu = ignAdder4Cfg,			"Adder 4 bias"
-		groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { ignBlends4_blendParameter != 0 }
+		groupMenu = "Ignition blend tables"
+		groupChildMenu = ignAdder1Cfg,			"Adder 1 bias", 0, {isIgnitionEnabled}
+		groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { isIgnitionEnabled && ignBlends1_blendParameter != 0 }
+		groupChildMenu = ignAdder2Cfg,			"Adder 2 bias", 0, {isIgnitionEnabled}
+		groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { isIgnitionEnabled && ignBlends2_blendParameter != 0 }
+		groupChildMenu = ignAdder3Cfg,			"Adder 3 bias", 0, {isIgnitionEnabled}
+		groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { isIgnitionEnabled && ignBlends3_blendParameter != 0 }
+		groupChildMenu = ignAdder4Cfg,			"Adder 4 bias", 0, {isIgnitionEnabled}
+		groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { isIgnitionEnabled && ignBlends4_blendParameter != 0 }
 
 		groupMenu = "Cylinder ign trims"
 		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
@@ -2154,7 +2222,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
-		field = "Injector Flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Injector flow",			injector_flow, {isInjectionEnabled == 1}
+		field = "Injector flow units",		injectorFlowAsMassFlow, {isInjectionEnabled == 1}
 		field = "Fuel rail pressure sensor", injectorPressureType, { isInjectionEnabled && (highPressureFuel_hwChannel || lowPressureFuel_hwChannel) }
 		field = "Injector flow compensation mode", injectorCompensationMode, { isInjectionEnabled }
 		field = "Injector reference pressure", fuelReferencePressure, { isInjectionEnabled && injectorCompensationMode != 0 }
@@ -2205,9 +2274,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "x^6",								injectorCorrectionPolynomial7
 		field = "x^7",								injectorCorrectionPolynomial8
 
+	dialog = injectorNonlinearFord, "Ford-model Small Pulse Correction", yAxis
+		field = "Small pulse slope (ALOSL)",			fordInjectorSmallPulseSlope
+		field = "Set this to 'mass flow'",				injectorFlowAsMassFlow
+		field = "Large pulse slope (AHISL)",			injector_flow
+		field = "Small pulse breakpoint (FUEL_BKPT)",	fordInjectorSmallPulseBreakPoint
+
 	dialog = injectorNonlinear
 		field = "Small pulse correction mode",		injectorNonlinearMode
-		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode != 0 }
+		panel = injectorNonlinearPolynomial, {1}, { injectorNonlinearMode == 1 }
+		panel = injectorNonlinearFord, {1}, { injectorNonlinearMode == 2 }
 
 	dialog = testLuaOut, "Lua Out Test"
 		commandButton = "Lua Out #1",	cmd_test_lua1
@@ -2315,6 +2391,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = ignAdder4Cfg, "Ignition adder 4 config"
 		field = "Blend parameter", ignBlends4_blendParameter
 		panel = ignAdder4Bias
+
+	dialog = veBlend1Cfg, "VE blend 1 config"
+		field = "Blend parameter", veBlends1_blendParameter
+		panel = veBlend2Bias
+
+	dialog = veBlend2Cfg, "VE blend 2 config"
+		field = "Blend parameter", veBlends2_blendParameter
+		panel = veBlend2Bias
+
+	dialog = veBlend3Cfg, "VE blend 3 config"
+		field = "Blend parameter", veBlends3_blendParameter
+		panel = veBlend3Bias
+
+	dialog = veBlend4Cfg, "VE blend 4 config"
+		field = "Blend parameter", veBlends4_blendParameter
+		panel = veBlend4Bias
 
 	dialog = dwellSettings, "", yAxis
 		panel = dwellCorrection
@@ -2504,6 +2596,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "TPS1 ADC input", 						tps1_1AdcChannel
 		field = "TPS2 ADC input", 						tps2_1AdcChannel
 		field = "MAF ADC input", 						mafAdcChannel
+		field = "MAF 2 ADC input", 						maf2AdcChannel
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
 		field = "MAP ADC input", 						map_sensor_hwChannel
@@ -2840,6 +2933,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = mafSettings, "MAF sensor", yAxis
 		field = "MAF ADC input", 						mafAdcChannel
+		field = "MAF 2 ADC input", 						maf2AdcChannel
 
 ;			Sensors->EGO sensor
 	dialog = egoSettings_sensor,	"EGO sensor"
@@ -3780,8 +3874,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
-		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || (etbFunctions1 == @@etb_function_e_ETB_IdleValve@@) }
+		panel = etbIdleDialog
+		panel = etbPidDialog
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
@@ -4019,6 +4113,7 @@ dialog = tcuControls, "Transmission Settings"
 	    field = "boardUseD3PullDown",                   boardUseD3PullDown
 	    field = "boardUseD4PullDown",                   boardUseD4PullDown
 	    field = "boardUseD5PullDown",                   boardUseD5PullDown
+	    field = "SENT input 1",                         sentInputPins1
 
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "I understand ECU Locking",             yesUnderstandLocking

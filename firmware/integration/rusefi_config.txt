@@ -113,6 +113,7 @@ struct_no_prefix engine_configuration_s
 #define BLOCKING_FACTOR 500
 
 #define AUX_ANALOG_INPUT_COUNT 8
+#define SENT_INPUT_COUNT 1
 
 #define LUA_PWM_COUNT 8
 #define LUA_ANALOG_INPUT_COUNT 8
@@ -317,7 +318,7 @@ custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:4], @@vvt_mode_e_enum@@
 ! todo: convert slow ADC to software scheduler and make TIM8 available
 ! todo: maybe convert fast ADC to software scheduler as well? less sure about that
 
-#define brain_input_pin_e_enum "NONE", "INVALID", "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15", "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11"
+#define brain_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"
 custom brain_input_pin_e 2 bits, U16, @OFFSET@, [0:7], @@brain_input_pin_e_enum@@
 
 !
@@ -598,7 +599,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;Single value to be used in event of a failed MAP sensor \nThis value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
-	adc_channel_e mafAdcChannel 
+	adc_channel_e mafAdcChannel
 
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
@@ -741,9 +742,11 @@ pin_input_mode_e throttlePedalUpPinMode;
 	float compressionRatio;Just for reference really, not taken into account by any logic at this point;"CR", 1, 0, 0, 300, 1
 
 	Gpio[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\nSee also directSelfStimulation which is different.
-	uint16_t unusedTrig
+
+	uint16_t autoscale fordInjectorSmallPulseSlope;;"g/s", 0.001, 0, 0, 65, 3
+
 	pin_output_mode_e[TRIGGER_SIMULATOR_PIN_COUNT iterate] triggerSimulatorPinModes;
-	uint8_t unusedTrigMode
+	adc_channel_e maf2AdcChannel
 	output_pin_e o2heaterPin;Narrow band o2 heater, not used for CJ125. 'ON' if engine is running, 'OFF' if stopped or cranking. See wboHeaterPin
 	pin_output_mode_e o2heaterPinModeTodO;
 
@@ -816,7 +819,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;Some vehicles have a switch to indicate that clutch pedal is all the way up
-	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
+	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:1], "None", "Polynomial", "Ford (dual slope)"
 	InjectorNonlinearMode injectorNonlinearMode
 	pin_input_mode_e clutchUpPinMode;
 
@@ -1211,7 +1214,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit stepperDcInvertedPins;Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit canOpenBLT; Allow OpenBLT on Primary CAN
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
-	bit unused1740b2
+	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 	bit unused1127
 	bit unused1128
 	bit unused1129
@@ -1342,7 +1345,9 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	float auxFrequencyFilter
 	int16_t vvtControlMinRpm;;"RPM", 1, 0, 0, 3000, 0
 
-	Gpio[5 iterate] sorryUnused
+    brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
+
+	Gpio[4 iterate] sorryUnused
 
 	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
@@ -1441,7 +1446,9 @@ tChargeMode_e tChargeMode;
 	uint8_t autoscale dfcoDelay;Delay before cutting fuel. Set to 0 to cut immediately with no delay. May cause rumbles and pops out of your exhaust...;"sec", 0.1, 0, 0, 10, 1
 	uint8_t autoscale acDelay;Delay before engaging the AC compressor. Set to 0 to engage immediately with no delay. Use this to prevent bogging at idle when AC engages.;"sec", 0.1, 0, 0, 10, 1
 
-	int8_t[9] unused4080;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
+
+	int8_t[5] unused4080;;"", 1, 0, 0, 0, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
@@ -1751,6 +1758,9 @@ end_struct
 #define IGN_BLEND_COUNT 4
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
 
+#define VE_BLEND_COUNT 4
+blend_table_s[VE_BLEND_COUNT iterate] veBlends
+
 end_struct
 
 ! Pedal Position Sensor
@@ -1841,6 +1851,7 @@ end_struct
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
+#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF sensor 2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_MASS "air mass"
 

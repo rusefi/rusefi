@@ -7,8 +7,33 @@
 #include "maf.h"
 #include "fuel_math.h"
 
+float MafAirmass::getMaf() const {
+	auto maf = Sensor::get(SensorType::Maf);
+
+	if (Sensor::hasSensor(SensorType::Maf2)) {
+		auto maf2 = Sensor::get(SensorType::Maf2);
+
+		if (maf && maf2) {
+			// Both MAFs work, return the sum
+			return maf.Value + maf2.Value;
+		} else if (maf) {
+			// MAF 1 works, but not MAF 2, so double the value from #1
+			return 2 * maf.Value;
+		} else if (maf2) {
+			// MAF 2 works, but not MAF 1, so double the value from #2
+			return 2 * maf2.Value;
+		} else {
+			// Both MAFs are broken, give up.
+			return 0;
+		}
+	} else {
+		return maf.value_or(0);
+	}
+}
+
 AirmassResult MafAirmass::getAirmass(int rpm) {
-	float maf = Sensor::getOrZero(SensorType::Maf);
+	float maf = getMaf();
+
 	return getAirmassImpl(maf, rpm);
 }
 

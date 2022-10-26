@@ -471,13 +471,9 @@ void commonInitEngineController() {
 	initLaunchControl();
 #endif
 
-#if EFI_SHAFT_POSITION_INPUT
-	/**
-	 * there is an implicit dependency on the fact that 'tachometer' listener is the 1st listener - this case
-	 * other listeners can access current RPM value
-	 */
-	initRpmCalculator();
-#endif /* EFI_SHAFT_POSITION_INPUT */
+#if EFI_UNIT_TEST
+	engine->rpmCalculator.Register();
+#endif /* EFI_UNIT_TEST */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
 	if (engineConfiguration->isEngineControlEnabled) {
@@ -581,13 +577,13 @@ bool validateConfig() {
 	}
 
 	// VVT
-	if (engineConfiguration->camInputs[0] != Gpio::Unassigned) {
+	if (isBrainPinValid(engineConfiguration->camInputs[0])) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (engineConfiguration->camInputs[1] != Gpio::Unassigned) {
+	if (isBrainPinValid(engineConfiguration->camInputs[1])) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}
@@ -665,10 +661,10 @@ void initEngineController() {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 13000
+#define RAM_UNUSED_SIZE 30000
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 16
+#define CCM_UNUSED_SIZE 512
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;

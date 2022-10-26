@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Oct 17 03:42:45 UTC 2022
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Mon Oct 24 16:45:38 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -81,6 +81,8 @@ case SensorType::LuaGauge2:
   return "LuaGauge2";
 case SensorType::Maf:
   return "Maf";
+case SensorType::Maf2:
+  return "Maf2";
 case SensorType::Map:
   return "Map";
 case SensorType::MapFast:

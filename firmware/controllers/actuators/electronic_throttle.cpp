@@ -951,7 +951,7 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 	}
 }
 
-void doInitElectronicThrottle() {
+static void doInitElectronicThrottle() {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);

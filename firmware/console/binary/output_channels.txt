@@ -335,7 +335,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
 	uint8_t[IGN_BLEND_COUNT iterate] autoscale ignBlendBias;;"%", 0.5, 0, 0, 100, 1
-	uint16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2
+	int16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2
+
+	uint8_t[VE_BLEND_COUNT iterate] autoscale veBlendBias;;"%", 0.5, 0, 0, 100, 1
+	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendOutput;;"%", 0.01, 0, -50, 50, 2
 
 bit coilState1
 bit coilState2
@@ -365,5 +368,9 @@ bit injectorState12
 uint32_t outputRequestPeriod
 float mapFast
 	float[LUA_GAUGE_COUNT iterate] luaGauges;;"value",1, 0, 0, 50000, 3
-	uint8_t[142 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+	uint16_t autoscale rawMaf2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	uint16_t autoscale mafMeasured2;@@GAUGE_NAME_AIR_FLOW_MEASURED_2@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
+
+	uint8_t[138 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

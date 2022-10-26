@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Oct 17 03:42:46 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Oct 24 16:45:39 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -115,6 +115,7 @@ public class FuelComputer {
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF sensor 2";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear 1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear 2";
@@ -321,6 +322,7 @@ public class FuelComputer {
 	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
+	public static final int SENT_INPUT_COUNT = 1;
 	public static final int STFT_BANK_COUNT = 2;
 	public static final int STFT_CELL_COUNT = 4;
 	public static final int TCU_GEAR_COUNT = 10;
@@ -385,6 +387,7 @@ public class FuelComputer {
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
+	public static final int VE_BLEND_COUNT = 4;
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;
 	public static final int VM_VVT_INACTIVE = 0;

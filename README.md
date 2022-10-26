@@ -16,7 +16,7 @@ Current binaries are always available on our [build server](http://rusefi.com/bu
 [shop.rusEFI.com](https://www.shop.rusefi.com/)
 
 # Cloning the repository
-
+`git clone https://github.com/rusefi/rusefi.git`
 Important note - we now use submodules:
 
 `git submodule update --init`
@@ -30,20 +30,19 @@ Important note - we now use submodules:
  * [Misc tools](/java_tools) Misc development utilities
  * [misc/Jenkins](/misc/jenkins) Jenkins Continuous Integration scripts
  * [Software Development process](misc/SoftwareDevelopmentProcess.md)
- * [Work in progress status](work_in_progress.md)
 
 # External Links
 
- * Forum http://rusefi.com/forum
- * Documentation https://github.com/rusefi/rusefi/wiki
- * Doxygen documentation is available at http://rusefi.com/docs/html
- * General source code Q&A is at http://rusefi.com/forum/viewtopic.php?f=5&t=10
- * Facebook https://www.facebook.com/rusEfiECU
- * YouTube: https://www.youtube.com/user/rusefi
- * Patreon https://www.patreon.com/rusefi
+ * [Forum](http://rusefi.com/forum)
+ * [Documentation](https://github.com/rusefi/rusefi/wiki)
+ * [Doxygen documentation](http://rusefi.com/docs/html)
+ * [General source code Q&A](http://rusefi.com/forum/viewtopic.php?f=5&t=10)
+ * [Facebook](https://www.facebook.com/rusEfiECU)
+ * [YouTube](https://www.youtube.com/user/rusefi)
+ * [Patreon](https://www.patreon.com/rusefi)
 
 # Building the Code
-See https://rusefi.com/forum/viewtopic.php?f=5&t=9
+Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
 
 
 # Release Notes

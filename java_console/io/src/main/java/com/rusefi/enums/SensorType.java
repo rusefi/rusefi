@@ -42,6 +42,7 @@ public enum SensorType {
 	InputShaftSpeed,
 	EGT1,
 	EGT2,
+	Maf2,
 	AuxAnalog1,
 	AuxAnalog2,
 	AuxAnalog3,

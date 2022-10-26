@@ -135,14 +135,50 @@ static void commonPassatB6() {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
 
+
+static const float hardCodedFreqBins[] = {139,
+		152,
+		180,
+		217,
+		280,
+		300,
+		365};
+
+static const float hardCodedGperSValues[] {
+		3.58,
+		4.5,
+		6.7,
+		11,
+		22,
+		25,
+		40
+};
+
 /**
  * set engine_type 39
  */
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
+	static_assert(sizeof(hardCodedFreqBins) == sizeof(hardCodedGperSValues));
+	{
+		size_t mi = 0;
+		for (; mi < efi::size(hardCodedFreqBins); mi++) {
+			config->scriptCurve1Bins[mi] = hardCodedFreqBins[mi];
+			config->scriptCurve1[mi] = hardCodedGperSValues[mi];
+		}
+
+		for (; mi < SCRIPT_CURVE_16; mi++) {
+			config->scriptCurve1Bins[mi] = 3650 + mi;
+			config->scriptCurve1[mi] = 4000;
+		}
+	}
+
+
 	commonPassatB6();
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
+
+	engineConfiguration->auxSpeedSensorInputPin[0] = PROTEUS_DIGITAL_5;
 
 	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;

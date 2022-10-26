@@ -13,6 +13,9 @@
 #include "mpu_util.h"
 
 int main(void) {
+	// Maybe your board needs to do something special before HAL init
+	preHalInit();
+
 	/*
 	 * ChibiOS/RT initialization
 	 */
@@ -28,3 +31,5 @@ int main(void) {
 	return 0;
 }
 
+// Weak linked default implementation (not necessarily required for all boards)
+__attribute__((weak)) void preHalInit() { }

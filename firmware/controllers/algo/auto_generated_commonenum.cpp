@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 18 01:26:09 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Oct 21 02:29:53 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -29,6 +29,8 @@ case InjectionTimingMode::Start:
 }
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value){
 switch(value) {
+case INJ_FordModel:
+  return "INJ_FordModel";
 case INJ_None:
   return "INJ_None";
 case INJ_PolynomialAdder:

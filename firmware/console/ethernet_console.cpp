@@ -81,23 +81,6 @@ struct EthernetThread : public TunerstudioThread {
 static EthernetThread ethernetConsole;
 
 void startEthernetConsole() {
-#ifndef STM32H7
-	// TODO: why does this break H7? I thought the pins were the same?
-	efiSetPadMode("ETH_RMII_REF_CLK",  Gpio::A1, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_MDIO",  Gpio::A2, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_RMII_CRS_DV",  Gpio::A7, PAL_MODE_ALTERNATE(0xb));
-
-	efiSetPadMode("ETH_MDC",  Gpio::C1, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_RMII_RXD0",  Gpio::C4, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_RMII_RXD1",  Gpio::C5, PAL_MODE_ALTERNATE(0xb));
-
-	efiSetPadMode("ETH_RMII_RXD1",  Gpio::D5, PAL_MODE_ALTERNATE(0xb));
-
-	efiSetPadMode("ETH_RMII_TX_EN", Gpio::G11, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_RMII_TXD0", Gpio::G13, PAL_MODE_ALTERNATE(0xb));
-	efiSetPadMode("ETH_RMII_TXD1", Gpio::G14, PAL_MODE_ALTERNATE(0xb));
-#endif // STM32H7
-
 	ethernetConsole.start();
 }
 

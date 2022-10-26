@@ -24,7 +24,11 @@ using namespace luaaa;
 
 #if EFI_PROD_CODE
 #include "electronic_throttle_impl.h"
-#endif
+#endif // EFI_PROD_CODE
+
+#if EFI_SENT_SUPPORT
+#include "sent.h"
+#endif // EFI_SENT_SUPPORT
 
 static int lua_vin(lua_State* l) {
 	auto zeroBasedCharIndex = luaL_checkinteger(l, 1);
@@ -410,6 +414,14 @@ struct LuaSensor final : public StoredValueSensor {
 		}
 	}
 
+	bool isRedundant() const override {
+		return m_isRedundant;
+	}
+
+	void setRedundant(bool value) {
+		m_isRedundant = value;
+	}
+
 	void set(float value) {
 		setValidValue(value, getTimeNowNt());
 	}
@@ -419,6 +431,8 @@ struct LuaSensor final : public StoredValueSensor {
 	}
 
 	void showInfo(const char*) const {}
+private:
+	bool m_isRedundant = false;
 };
 
 struct LuaPid final {
@@ -584,6 +598,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	luaSensor
 		.ctor<lua_State*, const char*>()
 		.fun("set", &LuaSensor::set)
+		.fun("setRedundant", &LuaSensor::setRedundant)
+		.fun("setTimeout", &LuaSensor::setTimeout)
 		.fun("invalidate", &LuaSensor::invalidate);
 
 	LuaClass<LuaPid> luaPid(l, "Pid");
@@ -669,6 +685,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 			return 1;
 	});
 
+#if EFI_SENT_SUPPORT
+	lua_register(l, "getSentValue",
+			[](lua_State* l) {
+			auto humanIndex = luaL_checkinteger(l, 1);
+			auto value = getSentValue(humanIndex - 1);
+			lua_pushnumber(l, value);
+			return 1;
+	});
+#endif // EFI_SENT_SUPPORT
+
 #if EFI_LAUNCH_CONTROL
 	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
@@ -694,6 +720,15 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->allowCanTx = lua_toboolean(l, 1);
 		return 0;
 	});
+
+#if EFI_PROD_CODE
+	lua_register(l, "restartEtb", [](lua_State* l) {
+		// this is about Lua sensor acting in place of real analog PPS sensor
+		// todo: smarter implementation
+		initElectronicThrottle();
+		return 0;
+	});
+#endif // EFI_PROD_CODE
 
 	lua_register(l, "crc8_j1850", [](lua_State* l) {
 		uint8_t data[8];
