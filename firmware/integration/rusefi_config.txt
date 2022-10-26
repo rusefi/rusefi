@@ -110,7 +110,7 @@ struct_no_prefix engine_configuration_s
 #define LE_COMMAND_LENGTH 200
 
 ! see 'blockingFactor' in rusefi.ini
-#define BLOCKING_FACTOR 500
+#define BLOCKING_FACTOR 750
 
 #define AUX_ANALOG_INPUT_COUNT 8
 #define SENT_INPUT_COUNT 1
