@@ -51,15 +51,17 @@ uint32_t getAlternateFunctions(ICUDriver *driver) {
 	return 0xffffffff;
 }
 
-#define	RETURN_ICU_TRUE(icu, channel, af)				\
+#define	RETURN_ICU_TRUE(icu, channel, af, clock)		\
 	do {												\
 		if (icu_ptr) {									\
 			if (*icu_ptr != (icu)) {					\
+				if (af_ptr)								\
+					*af_ptr = (af);						\
 				*icu_ptr = (icu);						\
 				if (channel_ptr)						\
 					*channel_ptr = (channel);			\
-				if (af_ptr)								\
-					*af_ptr = (af);						\
+				if (*clock_ptr)							\
+					*clock_ptr = clock;					\
 				return true;							\
 			} else {									\
 				/* if current icu is allready in *icu_ptr, continue and return another icu available on this pin, if any */ \
@@ -71,31 +73,31 @@ uint32_t getAlternateFunctions(ICUDriver *driver) {
 	} while(0)
 
 #if (STM32_ICU_USE_TIM1 == TRUE)
-	#define RETURN_ICU1(channel)	RETURN_ICU_TRUE(&ICUD1, channel, GPIO_AF_TIM1)
+	#define RETURN_ICU1(channel)	RETURN_ICU_TRUE(&ICUD1, channel, GPIO_AF_TIM1, STM32_TIMCLK1)
 #else
 	#define RETURN_ICU1(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM2 == TRUE)
-	#define RETURN_ICU2(channel)	RETURN_ICU_TRUE(&ICUD2, channel, GPIO_AF_TIM2)
+	#define RETURN_ICU2(channel)	RETURN_ICU_TRUE(&ICUD2, channel, GPIO_AF_TIM2, STM32_TIMCLK2)
 #else
 	#define RETURN_ICU2(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM3 == TRUE)
-	#define RETURN_ICU3(channel)	RETURN_ICU_TRUE(&ICUD3, channel, GPIO_AF_TIM3)
+	#define RETURN_ICU3(channel)	RETURN_ICU_TRUE(&ICUD3, channel, GPIO_AF_TIM3, STM32_TIMCLK3)
 #else
 	#define RETURN_ICU3(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM4 == TRUE)
-	#define RETURN_ICU4(channel)	RETURN_ICU_TRUE(&ICUD4, channel, GPIO_AF_TIM4)
+	#define RETURN_ICU4(channel)	RETURN_ICU_TRUE(&ICUD4, channel, GPIO_AF_TIM4, STM32_TIMCLK4)
 #else
 	#define RETURN_ICU4(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM5 == TRUE)
-	#define RETURN_ICU5(channel)	RETURN_ICU_TRUE(&ICUD5, channel, GPIO_AF_TIM5)
+	#define RETURN_ICU5(channel)	RETURN_ICU_TRUE(&ICUD5, channel, GPIO_AF_TIM5, STM32_TIMCLK5)
 #else
 	#define RETURN_ICU5(channel)
 #endif
@@ -105,43 +107,43 @@ uint32_t getAlternateFunctions(ICUDriver *driver) {
 /* TIM7 is internal only */
 
 #if (STM32_ICU_USE_TIM8 == TRUE)
-	#define RETURN_ICU8(channel)	RETURN_ICU_TRUE(&ICUD8, channel, GPIO_AF_TIM8)
+	#define RETURN_ICU8(channel)	RETURN_ICU_TRUE(&ICUD8, channel, GPIO_AF_TIM8, STM32_TIMCLK8)
 #else
 	#define RETURN_ICU8(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM9 == TRUE)
-	#define RETURN_ICU9(channel)	RETURN_ICU_TRUE(&ICUD9, channel, GPIO_AF_TIM9)
+	#define RETURN_ICU9(channel)	RETURN_ICU_TRUE(&ICUD9, channel, GPIO_AF_TIM9, STM32_TIMCLK9)
 #else
 	#define RETURN_ICU9(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM10 == TRUE)
-	#define RETURN_ICU10(channel)	RETURN_ICU_TRUE(&ICUD10, channel, GPIO_AF_TIM10)
+	#define RETURN_ICU10(channel)	RETURN_ICU_TRUE(&ICUD10, channel, GPIO_AF_TIM10, STM32_TIMCLK10)
 #else
 	#define RETURN_ICU10(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM11 == TRUE)
-	#define RETURN_ICU11(channel)	RETURN_ICU_TRUE(&ICUD11, channel, GPIO_AF_TIM11)
+	#define RETURN_ICU11(channel)	RETURN_ICU_TRUE(&ICUD11, channel, GPIO_AF_TIM11, STM32_TIMCLK11)
 #else
 	#define RETURN_ICU11(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM12 == TRUE)
-	#define RETURN_ICU12(channel)	RETURN_ICU_TRUE(&ICUD12, channel, GPIO_AF_TIM12)
+	#define RETURN_ICU12(channel)	RETURN_ICU_TRUE(&ICUD12, channel, GPIO_AF_TIM12, STM32_TIMCLK12)
 #else
 	#define RETURN_ICU12(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM13 == TRUE)
-	#define RETURN_ICU13(channel)	RETURN_ICU_TRUE(&ICUD13, channel, GPIO_AF_TIM13)
+	#define RETURN_ICU13(channel)	RETURN_ICU_TRUE(&ICUD13, channel, GPIO_AF_TIM13, STM32_TIMCLK13)
 #else
 	#define RETURN_ICU13(channel)
 #endif
 
 #if (STM32_ICU_USE_TIM14 == TRUE)
-	#define RETURN_ICU14(channel)	RETURN_ICU_TRUE(&ICUD14, channel, GPIO_AF_TIM14)
+	#define RETURN_ICU14(channel)	RETURN_ICU_TRUE(&ICUD14, channel, GPIO_AF_TIM14, STM32_TIMCLK14)
 #else
 	#define RETURN_ICU14(channel)
 #endif
@@ -149,7 +151,7 @@ uint32_t getAlternateFunctions(ICUDriver *driver) {
 /**
  * ChibiOS limitation is that only channels #1 and #2 could be used for input capture
  */
-bool getIcuParams(brain_pin_e hwPin, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, iomode_t *af_ptr)
+bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, uint32_t *clock_ptr)
 {
 	switch (hwPin) {
 		case Gpio::A0:
