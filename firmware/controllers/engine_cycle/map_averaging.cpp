@@ -56,11 +56,13 @@ static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
 static void endAveraging(MapAverager* arg);
 
+static size_t currentMapAverager = 0;
+
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
-	// TODO: look up averager based on cylinder index
-	auto& averager = getMapAvg(0);
+	// TODO: set currentMapAverager based on cylinder bank
+	auto& averager = getMapAvg(currentMapAverager);
 	averager.start();
 
 	mapAveragingPin.setHigh();
@@ -128,7 +130,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
 
-	SensorResult mapResult = getMapAvg().submit(instantVoltage);
+	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
