@@ -207,14 +207,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->knockBankCyl5 = 0;
 	engineConfiguration->knockBankCyl6 = 1;
 
-	/* Cylinder to bank mapping */
-	engineConfiguration->cylinderBankSelect[1 - 1] = 0;
-	engineConfiguration->cylinderBankSelect[2 - 1] = 1;
-	engineConfiguration->cylinderBankSelect[3 - 1] = 0;
-	engineConfiguration->cylinderBankSelect[4 - 1] = 1;
-	engineConfiguration->cylinderBankSelect[5 - 1] = 0;
-	engineConfiguration->cylinderBankSelect[6 - 1] = 1;
-
 	/* Misc settings */
 	engineConfiguration->acSwitch = Gpio::MC33972_PIN_22;
 	engineConfiguration->acSwitchMode = PI_DEFAULT;

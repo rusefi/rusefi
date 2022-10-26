@@ -13,6 +13,13 @@ static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorControl.periodMs = 100;
 }
 
+/* Cylinder to bank mapping */
+void setLeftRightBanksNeedBetterName() {
+    for (int i = 0;i<engineConfiguration->specs.cylindersCount;i++) {
+	    engineConfiguration->cylinderBankSelect[i] = i % 2;
+    }
+}
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
