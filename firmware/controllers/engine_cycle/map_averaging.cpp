@@ -93,6 +93,7 @@ void MapAverager::stop() {
 
 	if (m_counter > 0) {
 		float averageMap = m_sum / m_counter;
+		m_lastCounter = m_counter;
 
 		// TODO: this should be per-sensor, not one for all MAP sensors
 		averagedMapRunningBuffer[averagedMapBufIdx] = averageMap;

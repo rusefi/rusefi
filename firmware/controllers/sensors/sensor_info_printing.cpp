@@ -69,7 +69,7 @@ void Lps25Sensor::showInfo(const char* sensorName) const {
 
 void MapAverager::showInfo(const char* sensorName) const {
 	const auto value = get();
-	efiPrintf("Sensor \"%s\" is MAP averager: valid %s value %.2f", boolToString(value.Valid), value.Value);
+	efiPrintf("Sensor \"%s\" is MAP averager: valid: %s value: %.2f averaged sample count: %d", sensorName, boolToString(value.Valid), value.Value, m_lastCounter);
 }
 
 void LinearFunc::showInfo(float testRawValue) const {

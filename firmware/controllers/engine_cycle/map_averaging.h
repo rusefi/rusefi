@@ -53,6 +53,7 @@ private:
 
 	bool m_isAveraging = false;
 	size_t m_counter = 0;
+	size_t m_lastCounter = 0;
 	float m_sum = 0;
 };
 
