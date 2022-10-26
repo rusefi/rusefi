@@ -63,6 +63,9 @@
 #define MsgGetSig1(msg)			(((msg) >> (1 * 4)) & 0xfff)
 #define MsgGetCrc(msg)			MsgGetNibble(msg, 7)
 
+/* convert CPU ticks to float Us */
+#define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
+
 typedef enum
 {
 	SENT_STATE_CALIB = 0,
@@ -521,7 +524,7 @@ void sent_channel::Info(void)
 	uint8_t stat;
 	uint16_t sig0, sig1;
 
-	efiPrintf("Unit time %d timer ticks", tickPerUnit);
+	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(tickPerUnit));
 	efiPrintf("Total pulses %d", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
