@@ -50,9 +50,6 @@ static ICUConfig icucfg_in1 =
 	.arr = 0xFFFFFFFFU,
 };
 
-/* current config */
-static brain_input_pin_e sentPins[SENT_INPUT_COUNT];
-
 void startSent()
 {
 	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
