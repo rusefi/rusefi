@@ -54,17 +54,19 @@ static int averagedMapBufIdx = 0;
 static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
 static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
-static void endAveraging(void *arg);
+static void endAveraging(MapAverager* arg);
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
-	getMapAvg().start();
+	// TODO: look up averager based on cylinder index
+	auto& averager = getMapAvg(0);
+	averager.start();
 
 	mapAveragingPin.setHigh();
 
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
-		endAveraging);
+		{ endAveraging, &averager });
 }
 
 void MapAverager::start() {
@@ -89,6 +91,8 @@ SensorResult MapAverager::submit(float volts) {
 }
 
 void MapAverager::stop() {
+	chibios_rt::CriticalSectionLocker csl;
+
 	m_isAveraging = false;
 
 	if (m_counter > 0) {
@@ -138,12 +142,8 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 }
 #endif
 
-static void endAveraging(void*) {
-#if ! EFI_UNIT_TEST
-	chibios_rt::CriticalSectionLocker csl;
-#endif
-
-	getMapAvg().stop();
+static void endAveraging(MapAverager* arg) {
+	arg->stop();
 
 	mapAveragingPin.setLow();
 }
