@@ -49,6 +49,10 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
 
+#if HAL_USE_ICU
+bool getIcuParams(brain_pin_e hwPin, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, iomode_t *af_ptr);
+#endif
+
 // MMC Card
 #if HAL_USE_MMC_SPI
 // HS = max 50MHz SPI
