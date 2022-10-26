@@ -19,4 +19,4 @@ void SENT_ISR_Handler(uint8_t ch, uint16_t val_res);
 void startSent(void);
 void stopSent(void);
 
-float getSentValue(int index);
+float getSentValue(size_t index);

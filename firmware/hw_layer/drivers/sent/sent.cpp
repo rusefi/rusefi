@@ -605,9 +605,21 @@ static void printSentInfo()
 	}
 }
 
-float getSentValue(int index) {
-    // todo: just return ETB 0 to 100% for now?
-    return 23;
+/* Don't be confused: this actually returns throttle body position */
+float getSentValue(size_t index) {
+	if (index < SENT_CHANNELS_NUM) {
+		uint16_t sig0, sig1;
+		sent_channel &ch = channels[index];
+
+		if (ch.GetSignals(NULL, &sig0, &sig1) == 0) {
+			if (sig0 + sig1 == 0xfff) {
+				/* scale to 0.0 .. 1.0 */
+				return (float)sig1 / 0xfff;
+			}
+		}
+	}
+
+    return NAN;
 }
 
 /* Should be called once */
