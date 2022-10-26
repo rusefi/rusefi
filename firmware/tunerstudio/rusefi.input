@@ -3874,8 +3874,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Debug mode",							debugMode
 
 	dialog = etbDialogRight
-		panel = etbIdleDialog, { etbFunctions1 == @@etb_function_e_ETB_IdleValve@@ }
-		panel = etbPidDialog,  { etbFunctions1 == @@etb_function_e_ETB_IdleValve@@ }
+		panel = etbIdleDialog
+		panel = etbPidDialog
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
