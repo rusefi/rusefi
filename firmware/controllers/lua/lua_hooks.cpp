@@ -414,6 +414,14 @@ struct LuaSensor final : public StoredValueSensor {
 		}
 	}
 
+	bool isRedundant() const override {
+		return m_isRedundant;
+	}
+
+	void setRedundant(bool value) {
+		m_isRedundant = value;
+	}
+
 	void set(float value) {
 		setValidValue(value, getTimeNowNt());
 	}
@@ -423,6 +431,8 @@ struct LuaSensor final : public StoredValueSensor {
 	}
 
 	void showInfo(const char*) const {}
+private:
+	bool m_isRedundant = false;
 };
 
 struct LuaPid final {
@@ -588,6 +598,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	luaSensor
 		.ctor<lua_State*, const char*>()
 		.fun("set", &LuaSensor::set)
+		.fun("setRedundant", &LuaSensor::setRedundant)
+		.fun("setTimeout", &LuaSensor::setTimeout)
 		.fun("invalidate", &LuaSensor::invalidate);
 
 	LuaClass<LuaPid> luaPid(l, "Pid");
