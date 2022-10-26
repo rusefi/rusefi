@@ -11,46 +11,6 @@
 
 #if HAL_USE_ICU
 
-uint32_t getAlternateFunctions(ICUDriver *driver) {
-#if STM32_ICU_USE_TIM1
-	if (driver == &ICUD1) {
-		return GPIO_AF_TIM1;
-	}
-#endif
-#if STM32_ICU_USE_TIM2
-	if (driver == &ICUD2) {
-		return GPIO_AF_TIM2;
-	}
-#endif
-#if STM32_ICU_USE_TIM3
-	if (driver == &ICUD3) {
-		return GPIO_AF_TIM3;
-	}
-#endif
-#if STM32_ICU_USE_TIM4
-	if (driver == &ICUD4) {
-		return GPIO_AF_TIM4;
-	}
-#endif
-#if STM32_ICU_USE_TIM8
-	if (driver == &ICUD8) {
-		return GPIO_AF_TIM8;
-	}
-#endif
-#if STM32_ICU_USE_TIM9
-	if (driver == &ICUD9) {
-		return GPIO_AF_TIM9;
-	}
-#endif
-	if (driver == NULL) {
-		//firmwareError(CUSTOM_ERR_ICU_AF, "getAlternateFunctions(NULL)");
-	} else {
-		//firmwareError(CUSTOM_ERR_ICU_DRIVER, "No such driver");
-	}
-
-	return 0xffffffff;
-}
-
 #define	RETURN_ICU_TRUE(icu, channel, af, clock)		\
 	do {												\
 		if (icu_ptr) {									\
