@@ -22,12 +22,14 @@
 #if (HAL_USE_ICU == TRUE)
 
 /* TODO: get at runtime */
-#define SENT_ICU_FREQ		(CORE_CLOCK / 2) // == CPU freq / 2
+/* Max timer clock for most timers on STM32 is CPU clock / 2 */
+#define SENT_TIMER_CLOCK_DIV	2
+#define SENT_ICU_FREQ			(CORE_CLOCK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
 
 /* ICU callbacks */
 static void icuperiodcb_in1(ICUDriver *icup)
 {
-	SENT_ISR_Handler(0, icuGetPeriodX(icup));
+	SENT_ISR_Handler(0, icuGetPeriodX(icup) * SENT_TIMER_CLOCK_DIV);
 }
 
 /* ICU configs */
