@@ -77,9 +77,13 @@ public:
 
 	void showInfo(const char*) const override { }
 
+	void setTimeout(int timeoutMs) {
+		m_timeoutPeriod = MS2NT(timeoutMs);
+	}
+
 private:
 	SensorResult m_result;
 
-	const efitick_t m_timeoutPeriod;
+	efitick_t m_timeoutPeriod;
 	efitick_t m_lastUpdate = 0;
 };
