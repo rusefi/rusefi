@@ -951,23 +951,7 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 	}
 }
 
-static void doInitElectronicThrottle() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
-#if EFI_PROD_CODE
-	addConsoleAction("ethinfo", showEthInfo);
-	addConsoleAction("etbreset", etbReset);
-	addConsoleActionI("etb_freq", setEtbFrequency);
-
-	// this command is useful for real hardware test with known cheap hardware
-	addConsoleAction("etb_test_hw", [](){
-		set18919_AM810_pedal_position_sensor();
-	});
-
-#endif /* EFI_PROD_CODE */
-
-	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
-	throttle2TrimTable.init(config->throttle2TrimTable, config->throttle2TrimTpsBins, config->throttle2TrimRpmBins);
-
+void doInitElectronicThrottle() {
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
@@ -1033,6 +1017,22 @@ void initElectronicThrottle() {
 		engine->etbControllers[i] = etbControllers[i];
 	}
 #endif
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
+#if EFI_PROD_CODE
+	addConsoleAction("ethinfo", showEthInfo);
+	addConsoleAction("etbreset", etbReset);
+	addConsoleActionI("etb_freq", setEtbFrequency);
+
+	// this command is useful for real hardware test with known cheap hardware
+	addConsoleAction("etb_test_hw", [](){
+		set18919_AM810_pedal_position_sensor();
+	});
+
+#endif /* EFI_PROD_CODE */
+
+	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+	throttle2TrimTable.init(config->throttle2TrimTable, config->throttle2TrimTpsBins, config->throttle2TrimRpmBins);
 
 	doInitElectronicThrottle();
 }
