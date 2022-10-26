@@ -13,7 +13,7 @@
 #include "pch.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
-#include "defaults.h"
+#include "gm_ls_4.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -142,11 +142,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->invertPrimaryTriggerSignal = true;
-	engineConfiguration->globalTriggerAngleOffset = 86;
 
-	engineConfiguration->fuelReferencePressure = 400; // 400 kPa, 58 psi
-	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
-	engineConfiguration->injector.flow = 440;
 
 	engineConfiguration->boostControlPin = H144_OUT_PWM5;
 	engineConfiguration->brakePedalPin = H144_IN_RES2;
@@ -162,13 +158,7 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 8;
-	setLeftRightBanksNeedBetterName();
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
-	engineConfiguration->specs.displacement = 6.2;
-
-	engineConfiguration->tChargeAirIncrLimit = 5;
-	engineConfiguration->tChargeAirDecrLimit = 15;
+	setGmLs4();
 
 	engineConfiguration->enableSoftwareKnock = true;
 
@@ -184,9 +174,6 @@ void setBoardDefaultConfiguration() {
 	// random values to have valid config
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
-
-	engineConfiguration->useETBforIdleControl = true;
-	engineConfiguration->etbIdleThrottleRange = 15;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
     // would not hurt just in case no cam
