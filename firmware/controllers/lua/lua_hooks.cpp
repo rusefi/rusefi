@@ -676,7 +676,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 #if EFI_SENT_SUPPORT
 	lua_register(l, "getSentValue",
 			[](lua_State* l) {
-    		auto humanIndex = luaL_checkinteger(l, 1);
+			auto humanIndex = luaL_checkinteger(l, 1);
 			auto value = getSentValue(humanIndex - 1);
 			lua_pushnumber(l, value);
 			return 1;
