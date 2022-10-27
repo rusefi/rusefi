@@ -345,7 +345,7 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case UNUSED_27:
+case PROTEUS_GM_LS_4:
   return "UNUSED_27";
 case UNUSED_38:
   return "UNUSED_38";

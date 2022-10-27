@@ -82,7 +82,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	TEST_ENGINE = 26,
 
-	UNUSED_27 = 27,
+	PROTEUS_GM_LS_4 = 27,
 
 	TEST_CRANK_ENGINE = 28,
 
