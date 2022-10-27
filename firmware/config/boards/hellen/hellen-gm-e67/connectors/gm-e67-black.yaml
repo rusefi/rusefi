@@ -252,3 +252,7 @@ pins:
     ts_name: C2-72 INJ 1
     function: injectpr output 1
     type: inj
+
+  - pin: K73
+    function: GND
+    type: GND
