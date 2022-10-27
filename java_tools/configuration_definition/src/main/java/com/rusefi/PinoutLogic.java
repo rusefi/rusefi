@@ -87,11 +87,9 @@ public class PinoutLogic {
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getSimpleForm().length() > 0) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
-                registry.register(outputEnumName + ENUM_SUFFIX, pair.getShorterForm());
-                parseState.addDefinition(outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
+                parseState.addDefinition(registry, outputEnumName + ENUM_SUFFIX, pair.getShorterForm(), Definition.OverwritePolicy.IgnoreNew);
             }
-            registry.register(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm());
-            parseState.addDefinition(outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm(), Definition.OverwritePolicy.IgnoreNew);
+            parseState.addDefinition(registry, outputEnumName + FULL_JAVA_ENUM, pair.getSimpleForm(), Definition.OverwritePolicy.IgnoreNew);
         }
     }
 
