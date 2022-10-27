@@ -285,7 +285,7 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define LOGIC_ANALYZER_BUFFER_SIZE 120 /*1800*/
+#define LOGIC_ANALYZER_BUFFER_SIZE 10 /*1800*/
 #define DL_OUTPUT_BUFFER 10 /*6500*/
 
 #define UTILITY_THREAD_STACK_SIZE 270 /*400*/

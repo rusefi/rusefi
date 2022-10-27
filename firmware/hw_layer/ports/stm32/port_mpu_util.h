@@ -60,6 +60,18 @@ typedef enum {
 #define GPIO_AF_TIM9 3
 #endif
 
+#ifndef GPIO_AF_TIM12
+#define GPIO_AF_TIM12 9
+#endif
+
+#ifndef GPIO_AF_TIM13
+#define GPIO_AF_TIM13 9
+#endif
+
+#ifndef GPIO_AF_TIM14
+#define GPIO_AF_TIM14 9
+#endif
+
 #ifndef ADC_CR2_SWSTART
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
