@@ -64,8 +64,8 @@ public class IoUtil2 {
 
         // nasty trick - do not insert signature into live data files
         if (tsPath != null) {
-            state.variableRegistry.register(ConfigDefinition.SIGNATURE_HASH, "" + crc32);
-            parseState.addDefinition(ConfigDefinition.SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
+            parseState.addDefinition(state.variableRegistry,
+                    ConfigDefinition.SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
         }
     }
 }
