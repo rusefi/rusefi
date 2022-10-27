@@ -1,7 +1,7 @@
 /*
  * gm_ls_4.h
  *
- *  Created on: 25 окт. 2022 г.
+ *  Created on: 25 пїЅпїЅпїЅ. 2022 пїЅ.
  *      Author: Huge
  */
 
@@ -10,3 +10,4 @@
 #include "engine_configuration.h"
 
 void setGmLs4();
+void setProteusGmLs4();
