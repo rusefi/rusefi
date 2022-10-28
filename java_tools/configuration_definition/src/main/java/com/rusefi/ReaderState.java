@@ -352,7 +352,7 @@ public class ReaderState {
 
     public void addPrepend(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            // see UsagesReader use-case with dynamic prepend usage
+            // see LiveDataProcessor use-case with dynamic prepend usage
             return;
         }
         prependFiles.add(fileName);

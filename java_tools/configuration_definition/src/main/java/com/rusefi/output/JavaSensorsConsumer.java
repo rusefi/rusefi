@@ -54,7 +54,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
                 }
                 tsPosition += configField.getSize(next);
-                // this value would be consumed by UsagesReader
+                // this value would be consumed by LiveDataProcessor
                 // todo: too many variables that's fragile shall we move tsPosition to iterator state?
                 sensorTsPosition  = tsPosition;
 
