@@ -48,6 +48,6 @@ SSHCMD
     fi
     echo "* upload done!"
   else
-    echo "Unexpected $sig"
+    echo "[upload_ini] Unexpected Signature: [$sig]"
   fi
 fi
