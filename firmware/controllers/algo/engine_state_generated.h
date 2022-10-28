@@ -216,7 +216,7 @@ struct engine_state_s {
 	/**
 	 * offset 32
 	 */
-	int currentTpsAdc = (int)0;
+	uint32_t currentTpsAdc = (int)0;
 	/**
 	 * offset 36
 	 */
@@ -382,7 +382,7 @@ struct engine_state_s {
 	/**
 	 * offset 120
 	 */
-	int startStopStateToggleCounter = (int)0;
+	uint32_t startStopStateToggleCounter = (int)0;
 	/**
 	 * offset 124
 	 */
@@ -406,11 +406,11 @@ struct engine_state_s {
 	/**
 	 * offset 136
 	 */
-	int fuelInjectionCounter = (int)0;
+	uint32_t fuelInjectionCounter = (int)0;
 	/**
 	 * offset 140
 	 */
-	int sparkCounter = (int)0;
+	uint32_t sparkCounter = (int)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
 	 * offset 144
