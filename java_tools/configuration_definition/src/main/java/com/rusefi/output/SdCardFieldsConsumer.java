@@ -17,11 +17,6 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() {
-        ConfigurationConsumer.super.startFile();
-    }
-
-    @Override
     public void endFile() throws IOException {
         output.write("static constexpr LogField fields[] = {\r\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n");
