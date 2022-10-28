@@ -59,7 +59,7 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->vvtMode[1 * CAMS_PER_BANK] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
@@ -101,8 +101,8 @@ void setBoardConfigOverrides() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// Direct hall-only cam input
-	// this one same on both revisions
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
+	// exhaust input same on both revisions
+	engineConfiguration->camInputs[1] = H144_IN_D_AUX4;
 
 	if (engine->engineState.hellenBoardId == -1) {
 	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
