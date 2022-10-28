@@ -274,7 +274,7 @@ static void getByte(int offset) {
 
 static void setBit(const char *offsetStr, const char *bitStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
-	if (absI(offset) == absI(ERROR_CODE)) {
+	if (absI(offset) == absI(ATOI_ERROR_CODE)) {
 		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}
@@ -282,12 +282,12 @@ static void setBit(const char *offsetStr, const char *bitStr, const char *valueS
 		return;
 	}
 	int bit = atoi(bitStr);
-	if (absI(bit) == absI(ERROR_CODE)) {
+	if (absI(bit) == absI(ATOI_ERROR_CODE)) {
 		efiPrintf("invalid bit [%s]", bitStr);
 		return;
 	}
 	int value = atoi(valueStr);
-	if (absI(value) == absI(ERROR_CODE)) {
+	if (absI(value) == absI(ATOI_ERROR_CODE)) {
 		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
@@ -362,7 +362,7 @@ static void getFloat(int offset) {
 
 static void setFloat(const char *offsetStr, const char *valueStr) {
 	int offset = atoi(offsetStr);
-	if (absI(offset) == absI(ERROR_CODE)) {
+	if (absI(offset) == absI(ATOI_ERROR_CODE)) {
 		efiPrintf("invalid offset [%s]", offsetStr);
 		return;
 	}

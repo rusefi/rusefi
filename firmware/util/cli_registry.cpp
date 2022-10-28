@@ -338,7 +338,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 		int value[2];
 		for (int i = 0; i < 2; i++) {
 			value[i] = atoi(argv[i]);
-			if (absI(value[i]) == ERROR_CODE) {
+			if (absI(value[i]) == ATOI_ERROR_CODE) {
 				#if EFI_PROD_CODE || EFI_SIMULATOR
 					efiPrintf("not an integer [%s]", argv[0]);
 				#endif
@@ -420,7 +420,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 	case INT_FLOAT_PARAMETER:
 	{
 		int value1 = atoi(argv[0]);
-		if (absI(value1) == ERROR_CODE) {
+		if (absI(value1) == ATOI_ERROR_CODE) {
 			#if EFI_PROD_CODE || EFI_SIMULATOR
 				efiPrintf("not an integer [%s]", argv[0]);
 			#endif
@@ -439,7 +439,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 	case ONE_PARAMETER:
 	{
 		int value = atoi(argv[0]);
-		if (absI(value) == ERROR_CODE) {
+		if (absI(value) == ATOI_ERROR_CODE) {
 			#if EFI_PROD_CODE || EFI_SIMULATOR
 				efiPrintf("not an integer [%s]", argv[0]);
 			#endif
