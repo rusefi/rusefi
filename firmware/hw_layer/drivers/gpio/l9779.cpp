@@ -400,7 +400,7 @@ int L9779::update_output()
 		CMD_CONTR_REG(2, regs[2]),
 		CMD_CONTR_REG(3, regs[3])
 	};
-	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
+	ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* atomic */
