@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Oct 06 23:23:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Oct 28 08:35:47 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -216,7 +216,7 @@ struct engine_state_s {
 	/**
 	 * offset 32
 	 */
-	uint32_t currentTpsAdc = (int)0;
+	uint32_t currentTpsAdc = (uint32_t)0;
 	/**
 	 * offset 36
 	 */
@@ -382,7 +382,7 @@ struct engine_state_s {
 	/**
 	 * offset 120
 	 */
-	uint32_t startStopStateToggleCounter = (int)0;
+	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
 	 * offset 124
 	 */
@@ -406,11 +406,11 @@ struct engine_state_s {
 	/**
 	 * offset 136
 	 */
-	uint32_t fuelInjectionCounter = (int)0;
+	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * offset 140
 	 */
-	uint32_t sparkCounter = (int)0;
+	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
 	 * offset 144
@@ -425,4 +425,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 152);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Oct 06 23:23:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Oct 28 08:35:47 UTC 2022
