@@ -20,13 +20,13 @@ public class SignatureConsumer implements ConfigurationConsumer {
         this.registry = registry;
     }
 
-    public static void storeUniqueBuildId(ReaderState state, ParseState parseState, String tsPath, long uniqueId) {
+    public static void storeUniqueBuildId(ReaderState state, ParseState parseState, String tsPath, FirmwareVersion uniqueId) {
         // store a hash as a built-in variable
 
         // nasty trick - do not insert signature into live data files
         if (tsPath != null) {
             parseState.addDefinition(state.variableRegistry,
-                    ConfigDefinition.SIGNATURE_HASH, Long.toString(uniqueId), Definition.OverwritePolicy.NotAllowed);
+                    ConfigDefinition.SIGNATURE_HASH, uniqueId.encode(), Definition.OverwritePolicy.NotAllowed);
         }
     }
 
