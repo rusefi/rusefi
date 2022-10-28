@@ -83,8 +83,9 @@ void writeFileHeader(Writer& outBuffer) {
 	buffer[19] = recordLength & 0xFF;
 
 	// Number of logger fields
-	buffer[20] = 0;
-	buffer[21] = efi::size(fields);
+	int fieldsCount = efi::size(fields);
+	buffer[20] = fieldsCount >> 8;
+	buffer[21] = fieldsCount;
 
 	outBuffer.write(buffer, MLQ_HEADER_SIZE);
 
