@@ -54,17 +54,21 @@ static int averagedMapBufIdx = 0;
 static scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
 static scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
 
-static void endAveraging(void *arg);
+static void endAveraging(MapAverager* arg);
+
+static size_t currentMapAverager = 0;
 
 static void startAveraging(scheduling_s *endAveragingScheduling) {
 	efiAssertVoid(CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
-	getMapAvg().start();
+	// TODO: set currentMapAverager based on cylinder bank
+	auto& averager = getMapAvg(currentMapAverager);
+	averager.start();
 
 	mapAveragingPin.setHigh();
 
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
-		endAveraging);
+		{ endAveraging, &averager });
 }
 
 void MapAverager::start() {
@@ -89,6 +93,8 @@ SensorResult MapAverager::submit(float volts) {
 }
 
 void MapAverager::stop() {
+	chibios_rt::CriticalSectionLocker csl;
+
 	m_isAveraging = false;
 
 	if (m_counter > 0) {
@@ -124,7 +130,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 
 	float instantVoltage = adcToVoltsDivided(adcValue);
 
-	SensorResult mapResult = getMapAvg().submit(instantVoltage);
+	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
@@ -138,12 +144,8 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 }
 #endif
 
-static void endAveraging(void*) {
-#if ! EFI_UNIT_TEST
-	chibios_rt::CriticalSectionLocker csl;
-#endif
-
-	getMapAvg().stop();
+static void endAveraging(MapAverager* arg) {
+	arg->stop();
 
 	mapAveragingPin.setLow();
 }

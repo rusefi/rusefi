@@ -57,4 +57,4 @@ private:
 	float m_sum = 0;
 };
 
-MapAverager& getMapAvg();
+MapAverager& getMapAvg(size_t idx);
