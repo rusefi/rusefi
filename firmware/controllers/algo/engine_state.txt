@@ -35,7 +35,7 @@ float engineCycleDurationMs;
 
 float minRpmKcurrentTPS
 
-int currentTpsAdc
+uint32_t currentTpsAdc
 float tpsVoltageMCU
 float tpsVoltageBoard
 
@@ -89,15 +89,15 @@ running_fuel_s running
     bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
     bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
     bit startStopState
-    int startStopStateToggleCounter
+    uint32_t startStopStateToggleCounter
 
     float egt1
     float egt2
 
     int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
 
-int fuelInjectionCounter
-int sparkCounter
+uint32_t fuelInjectionCounter
+uint32_t sparkCounter
 
 
 	! Values used for load axes for fuel/ign tables
