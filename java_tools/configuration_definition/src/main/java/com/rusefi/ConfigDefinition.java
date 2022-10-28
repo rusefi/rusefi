@@ -21,7 +21,6 @@ public class ConfigDefinition {
     private static final String KEY_DEFINITION = "-definition";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
-    private static final String KEY_SD_DESTINATION = "-sd_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
@@ -95,9 +94,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_C_DESTINATION:
                     state.addCHeaderDestination(args[i + 1]);
-                    break;
-                case KEY_SD_DESTINATION:
-                    state.addSdDestination(args[i + 1]);
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);

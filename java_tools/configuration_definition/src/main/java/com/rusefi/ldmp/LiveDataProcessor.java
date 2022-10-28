@@ -5,6 +5,7 @@ import com.rusefi.EnumToString;
 import com.rusefi.InvokeReader;
 import com.rusefi.ReaderState;
 import com.rusefi.output.*;
+import com.rusefi.util.LazyFile;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -70,7 +71,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException;
+        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr) throws IOException;
     }
 
     private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
@@ -81,9 +82,11 @@ public class LiveDataProcessor {
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
+        SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
+
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames) throws IOException {
+            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr) throws IOException {
                 // TODO: use outputNames
 
                 int startingPosition = javaSensorsConsumer.sensorTsPosition;
@@ -105,6 +108,12 @@ public class LiveDataProcessor {
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
                 state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
+
+                if (constexpr != null) {
+                    sdCardFieldsConsumer.home = constexpr;
+                    state.addDestination(sdCardFieldsConsumer::handleEndStruct);
+                }
+
                 state.doJob();
 
                 fancyNewStuff.append(fragmentDialogConsumer.getContent());
@@ -115,14 +124,18 @@ public class LiveDataProcessor {
             }
         };
 
-        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>)data.get("Usages");
+
+
+
+        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>) data.get("Usages");
 
         for (LinkedHashMap entry : liveDocs) {
-            String name = (String)entry.get("name");
-            String java = (String)entry.get("java");
-            String folder = (String)entry.get("folder");
-            String prepend = (String)entry.get("prepend");
-            Boolean withCDefines = (Boolean)entry.get("withCDefines");
+            String name = (String) entry.get("name");
+            String java = (String) entry.get("java");
+            String folder = (String) entry.get("folder");
+            String prepend = (String) entry.get("prepend");
+            String constexpr = (String) entry.get("constexpr");
+            Boolean withCDefines = (Boolean) entry.get("withCDefines");
             // Defaults to false if not specified
             withCDefines = withCDefines != null && withCDefines;
 
@@ -133,14 +146,14 @@ public class LiveDataProcessor {
                 outputNamesArr = new String[0];
             } else if (outputNames instanceof String) {
                 outputNamesArr = new String[1];
-                outputNamesArr[0] = (String)outputNames;
+                outputNamesArr[0] = (String) outputNames;
             } else {
-                ArrayList<String> nameList = (ArrayList<String>)outputNames;
+                ArrayList<String> nameList = (ArrayList<String>) outputNames;
                 outputNamesArr = new String[nameList.size()];
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr);
+            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
@@ -170,6 +183,10 @@ public class LiveDataProcessor {
             }
         }
         enumContent.append("} live_data_e;\n");
+
+        LazyFile lazyFile = new LazyFile("console/binary_log/log_fields_generated.h");
+        SdCardFieldsConsumer.wrapContent(lazyFile, sdCardFieldsConsumer.getBody());
+        lazyFile.close();
 
         totalSensors.append(javaSensorsConsumer.getContent());
 
