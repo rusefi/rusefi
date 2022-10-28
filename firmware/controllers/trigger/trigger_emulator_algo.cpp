@@ -163,17 +163,20 @@ void enableTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
     engine->rpmCalculator.Register();
+    incrementGlobalConfigurationVersion();
 }
 
 void enableExternalTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = false;
+    incrementGlobalConfigurationVersion();
 }
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
 	triggerSignal.stop();
 	hasInitTriggerEmulator = false;
+    incrementGlobalConfigurationVersion();
 }
 
 void initTriggerEmulatorLogic() {
