@@ -154,7 +154,7 @@ void EngineState::periodicFastCallback() {
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0));
 
-	float injectionMass = getInjectionMass(rpm);
+	float injectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 	auto clResult = fuelClosedLoopCorrection();
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
