@@ -641,50 +641,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-	lua_register(l, "findCurveIndex", [](lua_State* l) {
-		auto name = luaL_checklstring(l, 1, nullptr);
-		auto result = getCurveIndexByName(name);
-		if (!result) {
-			lua_pushnil(l);
-		} else {
-			// TS counts curve from 1 so convert indexing here
-			lua_pushnumber(l, result.Value + HUMAN_OFFSET);
-		}
-		return 1;
-	});
-
-#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
-	lua_register(l, "txCan", lua_txCan);
-#endif
-
-	lua_register(l, "findTableIndex",
-			[](lua_State* l) {
-			auto name = luaL_checklstring(l, 1, nullptr);
-			auto index = getTableIndexByName(name);
-			if (!index) {
-				lua_pushnil(l);
-			} else {
-				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, index.Value + HUMAN_OFFSET);
-			}
-			return 1;
-	});
-
-	lua_register(l, "findSetting",
-			[](lua_State* l) {
-			auto name = luaL_checklstring(l, 1, nullptr);
-			auto defaultValue = luaL_checknumber(l, 2);
-
-			auto index = getSettingIndexByName(name);
-			if (!index) {
-				lua_pushnumber(l, defaultValue);
-			} else {
-				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, engineConfiguration->scriptSetting[index.Value]);
-			}
-			return 1;
-	});
-
 #if EFI_SENT_SUPPORT
 	lua_register(l, "getSentValue",
 			[](lua_State* l) {
@@ -889,4 +845,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "canRxAddMask", lua_canRxAddMask);
 #endif // EFI_CAN_SUPPORT
 #endif // not EFI_UNIT_TEST
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
+	lua_register(l, "txCan", lua_txCan);
+#endif
 }
