@@ -545,7 +545,7 @@ static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) 
 		return;
 	}
 	int mode = atoi(modeCode);
-	if (absI(mode) == ERROR_CODE) {
+	if (absI(mode) == ATOI_ERROR_CODE) {
 		return;
 	}
 	engineConfiguration->triggerSimulatorPinModes[index] = (pin_output_mode_e) mode;
