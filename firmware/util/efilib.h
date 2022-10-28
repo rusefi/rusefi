@@ -29,9 +29,6 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 
 #define BIT(n) (UINT32_C(1) << (n))
 
-// we also have efi::size which probably does not work for C code
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-
 #define HUMAN_OFFSET 1
 
 // human-readable IDs start from 1 while computer-readable indices start from 0
