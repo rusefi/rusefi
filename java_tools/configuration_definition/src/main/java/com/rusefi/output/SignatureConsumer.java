@@ -1,6 +1,8 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
+import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
@@ -16,6 +18,16 @@ public class SignatureConsumer implements ConfigurationConsumer {
         SystemOut.println("Writing Signature header to " + destHeader);
         this.destHeader = destHeader;
         this.registry = registry;
+    }
+
+    public static void storeUniqueBuildId(ReaderState state, ParseState parseState, String tsPath, long uniqueId) {
+        // store a hash as a built-in variable
+
+        // nasty trick - do not insert signature into live data files
+        if (tsPath != null) {
+            parseState.addDefinition(state.variableRegistry,
+                    ConfigDefinition.SIGNATURE_HASH, Long.toString(uniqueId), Definition.OverwritePolicy.NotAllowed);
+        }
     }
 
     @Override

@@ -175,8 +175,8 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil2.getCrc32(state.inputFiles);
-        IoUtil2.signatureHash(state, parseState, tsInputFileFolder, crc32);
+        long uniqueId = IoUtil2.getCrc32(state.inputFiles);
+        SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
@@ -227,7 +227,7 @@ public class ConfigDefinition {
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
-            tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
+            tmpRegistry.register(SIGNATURE_HASH, "" + uniqueId);
             tmpRegistry.readPrependValues(signaturePrependFile);
             state.destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
