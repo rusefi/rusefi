@@ -19,11 +19,11 @@ pwd
 echo -e "\nUploading .ini files"
 ls -l .
 
-echo "Processing file $fileName:"
+echo "[upload_ini] Processing file $fileName:"
 sig=$(grep "^ *signature *=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
-  if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([0-9]+) ]]; then
+  if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
     year=${BASH_REMATCH[1]}
     month=${BASH_REMATCH[2]}
     day=${BASH_REMATCH[3]}
