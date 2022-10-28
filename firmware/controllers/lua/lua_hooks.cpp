@@ -21,6 +21,7 @@
 using namespace luaaa;
 
 #include "script_impl.h"
+#include "trigger_emulator_algo.h"
 
 #if EFI_PROD_CODE
 #include "electronic_throttle_impl.h"
@@ -658,6 +659,19 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 #endif // EFI_LAUNCH_CONTROL
+
+	lua_register(l, "selfStimulateRPM", [](lua_State* l) {
+		auto rpm = luaL_checkinteger(l, 1);
+		if (rpm < 1) {
+			disableTriggerStimulator();
+			return 0;
+		}
+		if (!engine->triggerCentral.directSelfStimulation) {
+		    enableTriggerStimulator();
+		}
+        setTriggerEmulatorRPM(rpm);
+		return 0;
+	});
 
 	/**
 	 * same exact could be accomplished via LuaSensor just with more API
