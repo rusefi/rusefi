@@ -377,6 +377,7 @@
 #define etb_function_e_ETB_Throttle2 2
 #define etb_function_e_ETB_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
+#define FIRINGORDER FIRINGORDER
 #define FLASH_DATA_VERSION 10015
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
@@ -1026,7 +1027,7 @@
 #define SENT_INPUT_COUNT 1
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH 4125718368
+#define SIGNATURE_HASH SIGNATURE_HASH
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1298,7 +1299,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.27.cypress.4125718368"
+#define TS_SIGNATURE "rusEFI 2022.10.28.cypress.SIGNATURE_HASH"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

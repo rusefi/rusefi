@@ -30,8 +30,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 25
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum 0="NONE",7="A02 - VBat",15="A03 - Coolant t Ain",10="A04 - EGR t Ain",16="A06 - Oxyg 1 Ain",9="A06 - Oxyg 2 Ain",12="A18 - AUX0 Ain",1="AUX0_18 - MAP Ain",6="AUX0_19 - IAT Ain",13="B02 - TPS Ain",4="B05 - MAF Ain"
-#define adc_channel_e_fullenum "NONE","AUX0_18 - MAP Ain","INVALID","INVALID","B05 - MAF Ain","INVALID","AUX0_19 - IAT Ain","A02 - VBat","INVALID","A06 - Oxyg 2 Ain","A04 - EGR t Ain","INVALID","A18 - AUX0 Ain","B02 - TPS Ain","INVALID","A03 - Coolant t Ain","A06 - Oxyg 1 Ain"
+#define adc_channel_e_enum adc_channel_e_enum
+#define adc_channel_e_fullenum adc_channel_e_fullenum
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define AFTERSTART_DECAY_CURVE_SIZE 8
@@ -84,8 +84,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",126="A07 - Cam VR+",124="A08 - Crank 1 VR+",75="A08 - Crank 2 VR+",64="B11 - Speed Din"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","B11 - Speed Din","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","A08 - Crank 2 VR+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","A08 - Crank 1 VR+","INVALID","A07 - Cam VR+"
+#define brain_input_pin_e_enum brain_input_pin_e_enum
+#define brain_input_pin_e_fullenum brain_input_pin_e_fullenum
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_INVALID 0x80
@@ -387,6 +387,7 @@
 #define etb_function_e_ETB_Throttle2 2
 #define etb_function_e_ETB_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
+#define FIRINGORDER FIRINGORDER
 #define FLASH_DATA_VERSION 10015
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
@@ -889,8 +890,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",186="A01 - Injector 5",194="A12 - Injector 6",159="AUX0_14 - AUX0 OD output 1",158="AUX0_17 - AUX0 OD output 0",160="B08 - AC clutch",149="C14 - FPump modulator",153="C15 - AUX1 OD out",148="C16 - Tacho out",157="D01 - IDLE close",156="D02 - IDLE open",147="D03 - FAN 2 relay",121="D05 - Self Shutdown",155="D06 - Absorber purge valve",188="D07 - Ignition Cyl 4",198="D08 - Ignition Cyl 2",189="D09 - Ignition Cyl 3",199="D10 - Ignition Cyl 1",185="D11 - Injector 3",192="D12 - Injector 2",184="D13 - Injector 1",197="D16 - Ignition Cyl 6",146="D17 - FAN 1 relay",154="D18 - Auxillary air valve",152="D19 - Check Engine indicator",161="D20 - Inertia-Resonance Super-Charger control",191="D21 - Ignition Cyl 5",151="D22 - EGR control",150="D23 - Fuel Pump relay",193="D26 - Injector 4"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D05 - Self Shutdown","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D17 - FAN 1 relay","D03 - FAN 2 relay","C16 - Tacho out","C14 - FPump modulator","D23 - Fuel Pump relay","D22 - EGR control","D19 - Check Engine indicator","C15 - AUX1 OD out","D18 - Auxillary air valve","D06 - Absorber purge valve","D02 - IDLE open","D01 - IDLE close","AUX0_17 - AUX0 OD output 0","AUX0_14 - AUX0 OD output 1","B08 - AC clutch","D20 - Inertia-Resonance Super-Charger control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D13 - Injector 1","D11 - Injector 3","A01 - Injector 5","INVALID","D07 - Ignition Cyl 4","D09 - Ignition Cyl 3","INVALID","D21 - Ignition Cyl 5","D12 - Injector 2","D26 - Injector 4","A12 - Injector 6","INVALID","INVALID","D16 - Ignition Cyl 6","D08 - Ignition Cyl 2","D10 - Ignition Cyl 1"
+#define output_pin_e_enum output_pin_e_enum
+#define output_pin_e_fullenum output_pin_e_fullenum
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -992,7 +993,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2365042362
+#define SIGNATURE_HASH SIGNATURE_HASH
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1015,8 +1016,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 24
-#define switch_input_pin_e_enum 0="NONE",183="A19 - AC Ctrl Din",182="A20 - Torque Ctrl Din",181="B09 - P pos Din",180="B10 - N pos Din",178="B12 - IGN Din",177="C09 - Air Condition request Din",166="C10 - Starter Din",167="C12 - Memory SW Din",168="C13 - Test SW Din",169="D04 - California ID Din"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C10 - Starter Din","C12 - Memory SW Din","C13 - Test SW Din","D04 - California ID Din","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C09 - Air Condition request Din","B12 - IGN Din","INVALID","B10 - N pos Din","B09 - P pos Din","A20 - Torque Ctrl Din","A19 - AC Ctrl Din"
+#define switch_input_pin_e_enum switch_input_pin_e_enum
+#define switch_input_pin_e_fullenum switch_input_pin_e_fullenum
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
@@ -1265,7 +1266,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.10.27.subaru_eg33_f7.2365042362"
+#define TS_SIGNATURE "rusEFI 2022.10.28.subaru_eg33_f7.SIGNATURE_HASH"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
