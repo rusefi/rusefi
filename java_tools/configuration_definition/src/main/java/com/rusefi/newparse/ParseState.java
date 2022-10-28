@@ -118,7 +118,7 @@ public class ParseState {
      */
     public void addDefinition(VariableRegistry variableRegistry, String name, String value, Definition.OverwritePolicy overwritePolicy) {
         // old implementation
-        variableRegistry.register(name, name);
+        variableRegistry.register(name, value);
         // new implementation
         addDefinition(name, value, overwritePolicy);
     }
