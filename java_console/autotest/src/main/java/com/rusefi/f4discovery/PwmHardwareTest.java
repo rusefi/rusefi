@@ -1,6 +1,7 @@
 package com.rusefi.f4discovery;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.IoUtil;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
@@ -37,7 +38,7 @@ public class PwmHardwareTest extends RusefiTestBase {
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
         ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
-        ecu.sendCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_TOOTHED_WHEEL_60_2.ordinal());
+        ecu.sendCommand(IoUtil.setTriggerType(com.rusefi.enums.trigger_type_e.TT_TOOTHED_WHEEL_60_2));
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1200);
