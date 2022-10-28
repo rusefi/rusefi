@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Oct 09 02:21:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Fri Oct 28 13:10:32 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -14,7 +14,7 @@ struct trigger_central_s {
 	/**
 	 * offset 24
 	 */
-	int vvtCamCounter = (int)0;
+	uint32_t vvtCamCounter = (uint32_t)0;
 	/**
 	 * offset 28
 	 */
@@ -52,4 +52,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sun Oct 09 02:21:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Fri Oct 28 13:10:32 UTC 2022
