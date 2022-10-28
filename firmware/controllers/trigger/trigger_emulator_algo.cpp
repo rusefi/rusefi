@@ -162,7 +162,6 @@ static void startSimulatedTriggerSignal() {
 void enableTriggerStimulator() {
 	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
-    engine->rpmCalculator.Register();
     incrementGlobalConfigurationVersion();
 }
 

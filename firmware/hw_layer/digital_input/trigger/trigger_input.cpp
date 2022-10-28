@@ -191,7 +191,7 @@ void applyNewTriggerInputPins() {
 	// first we will turn off all the changed pins
 	stopTriggerInputPins();
 
-	if (isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
+	if (engine->triggerCentral.directSelfStimulation || isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
 		engine->rpmCalculator.Register();
 	} else {
 		// if we do not have primary input channel maybe it's BCM mode and we inject RPM value via Lua?
