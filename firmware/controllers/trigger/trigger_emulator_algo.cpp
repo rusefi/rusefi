@@ -143,7 +143,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 #endif /* EFI_PROD_CODE */
 }
 
-static void initTriggerPwm() {
+static void startSimulatedTriggerSignal() {
 	// No need to start more than once
 	if (hasInitTriggerEmulator) {
 		return;
@@ -160,13 +160,13 @@ static void initTriggerPwm() {
 }
 
 void enableTriggerStimulator() {
-	initTriggerPwm();
+	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
     engine->rpmCalculator.Register();
 }
 
 void enableExternalTriggerStimulator() {
-	initTriggerPwm();
+	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = false;
 }
 
