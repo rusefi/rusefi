@@ -8,7 +8,6 @@
 #include "pch.h"
 
 #include "vw_b6.h"
-#include "custom_engine.h"
 #include "table_helper.h"
 #include "electronic_throttle_impl.h"
 #include "mre_meta.h"

@@ -12,7 +12,7 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
+#include "defaults.h"
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
@@ -74,8 +74,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
