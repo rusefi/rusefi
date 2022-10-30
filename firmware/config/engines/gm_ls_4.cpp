@@ -6,6 +6,7 @@
 #include "gm_ls_4.h"
 #include "defaults.h"
 #include <rusefi/arrays.h>
+#include "proteus_meta.h"
 
 void setGmLs4() {
 	engineConfiguration->globalTriggerAngleOffset = 86;
@@ -139,12 +140,13 @@ end
 }
 
 void setProteusGmLs4() {
+#if HW_PROTEUS
 	engineConfiguration->etbFunctions[1] = ETB_None;
 
 	engineConfiguration->mainRelayPin = PROTEUS_LS_12;
 	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_3);
 
 // todo: tps
-
+#endif //HW_PROTEUS
 	setGmLs4();
 }
