@@ -114,7 +114,7 @@ void WaveReader::onFallEvent() {
 	periodEventTimeUs = nowUs;
 }
 
-void logicAnalyzerCallback(void* arg, efitick_t stamp) {
+void logicAnalyzerCallback(void* arg, efitick_t /*stamp*/) {
 	WaveReader* instance = reinterpret_cast<WaveReader*>(arg);
 
 	bool rise = palReadLine(instance->line) == PAL_HIGH;
@@ -126,7 +126,7 @@ void logicAnalyzerCallback(void* arg, efitick_t stamp) {
 	}
 }
 
-static void initWave(int index) {
+static void initWave(size_t index) {
 	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
 	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
@@ -242,7 +242,7 @@ void initWaveAnalyzer() {
 }
 
 void startLogicAnalyzerPins() {
-	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
+	for (size_t index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
 		initWave(index);
 	}
 }

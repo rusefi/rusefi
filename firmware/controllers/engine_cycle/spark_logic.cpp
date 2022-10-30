@@ -39,8 +39,6 @@ int isIgnitionTimingError(void) {
 }
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
-	efitick_t nowNt = getTimeNowNt();
-
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkId);

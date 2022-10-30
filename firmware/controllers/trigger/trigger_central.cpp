@@ -279,8 +279,6 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
-	const auto& vvtShape = tc->vvtShape[camIndex];
-
 	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TriggerValue::FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
 	if (!isVvtWithRealDecoder && !isImportantFront) {

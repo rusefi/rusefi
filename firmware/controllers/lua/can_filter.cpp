@@ -12,7 +12,7 @@ CanFilter* getFilterForId(size_t busIndex, int Id) {
 		auto& filter = filters[i];
 
 		if (filter.accept(Id)) {
-			if (filter.Bus == ANY_BUS || filter.Bus == busIndex) {
+			if (filter.Bus == ANY_BUS || filter.Bus == (int)busIndex) {
 				return &filter;
 			}
 		}

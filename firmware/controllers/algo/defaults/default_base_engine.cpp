@@ -15,7 +15,7 @@ static void setDefaultAlternatorParameters() {
 
 /* Cylinder to bank mapping */
 void setLeftRightBanksNeedBetterName() {
-    for (int i = 0;i<engineConfiguration->specs.cylindersCount;i++) {
+    for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 	    engineConfiguration->cylinderBankSelect[i] = i % 2;
     }
 }
