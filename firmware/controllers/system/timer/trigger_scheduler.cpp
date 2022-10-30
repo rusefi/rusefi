@@ -185,7 +185,7 @@ float AngleBasedEventOld::getAngleFromNow(float /*currentPhase*/) const {
 	return position.angleOffsetFromTriggerEvent;
 }
 
-bool AngleBasedEventNew::shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const {
+bool AngleBasedEventNew::shouldSchedule(uint32_t /*trgEventIndex*/, float currentPhase, float nextPhase) const {
 	return isPhaseInRange(this->enginePhase, currentPhase, nextPhase);
 }
 

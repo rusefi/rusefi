@@ -24,7 +24,6 @@ static Pid alternatorPid(&persistentState.persistentConfiguration.engineConfigur
 
 static percent_t currentAltDuty;
 
-static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
 static void pidReset() {

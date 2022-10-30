@@ -15,7 +15,7 @@
 void TransmissionControllerBase::init() {
 }
 
-void TransmissionControllerBase::update(gear_e gear) {
+void TransmissionControllerBase::update(gear_e /*gear*/) {
 	postState();
 }
 
