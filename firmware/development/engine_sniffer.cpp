@@ -32,14 +32,18 @@
 static char shaft_signal_msg_index[15];
 
 #if EFI_ENGINE_SNIFFER
+#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
+ #else
+#define addEngineSnifferEvent(n, msg) {}
+#endif /* EFI_ENGINE_SNIFFER */
+
+#if EFI_ENGINE_SNIFFER
 
 #include "eficonsole.h"
 #include "status_loop.h"
 
 #define CHART_DELIMETER	'!'
 extern WaveChart waveChart;
-
-extern uint32_t maxLockedDuration;
 
 /**
  * This is the number of events in the digital chart which would be displayed
@@ -72,12 +76,6 @@ static void resetNow() {
 
 WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
 }
-
-#if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
- #else
-#define addEngineSnifferEvent(n, msg) {}
-#endif /* EFI_ENGINE_SNIFFER */
 
 void WaveChart::init() {
 	isInitialized = true;
