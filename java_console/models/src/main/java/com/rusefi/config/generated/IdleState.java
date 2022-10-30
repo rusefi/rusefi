@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 30 21:54:10 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -16,7 +16,7 @@ public class IdleState {
 	public static final Field WASRESETPID = Field.create("WASRESETPID", 20, FieldType.BIT, 2);
 	public static final Field MUSTRESETPID = Field.create("MUSTRESETPID", 20, FieldType.BIT, 3);
 	public static final Field ISCRANKING = Field.create("ISCRANKING", 20, FieldType.BIT, 4);
-	public static final Field USEIACTABLEFORCOASTING = Field.create("USEIACTABLEFORCOASTING", 20, FieldType.BIT, 5);
+	public static final Field ISIACTABLEFORCOASTING = Field.create("ISIACTABLEFORCOASTING", 20, FieldType.BIT, 5);
 	public static final Field NOTIDLING = Field.create("NOTIDLING", 20, FieldType.BIT, 6);
 	public static final Field NEEDRESET = Field.create("NEEDRESET", 20, FieldType.BIT, 7);
 	public static final Field ISINDEADZONE = Field.create("ISINDEADZONE", 20, FieldType.BIT, 8);
@@ -58,7 +58,7 @@ public class IdleState {
 	WASRESETPID,
 	MUSTRESETPID,
 	ISCRANKING,
-	USEIACTABLEFORCOASTING,
+	ISIACTABLEFORCOASTING,
 	NOTIDLING,
 	NEEDRESET,
 	ISINDEADZONE,

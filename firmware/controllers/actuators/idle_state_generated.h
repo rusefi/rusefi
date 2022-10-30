@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 30 21:54:10 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -59,7 +59,7 @@ struct idle_state_s {
 	bool isCranking : 1 {};
 	/**
 	offset 20 bit 5 */
-	bool useIacTableForCoasting : 1 {};
+	bool isIacTableForCoasting : 1 {};
 	/**
 	offset 20 bit 6 */
 	bool notIdling : 1 {};
@@ -165,4 +165,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 30 21:54:10 UTC 2022
