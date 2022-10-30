@@ -42,6 +42,32 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
 STARTER_OUTPUT_INDEX = 0
 startPwm(STARTER_OUTPUT_INDEX, 100, 0)
 
@@ -58,15 +84,40 @@ setTickRate(100)
 function canIgnStatus(bus, id, dlc, data)
     crankingBits = getBitRange(data, 2, 2)
     isCranking = (crankingBits == 2)
-    print('crankingBits ' .. crankingBits .. ', isCranking ' .. isCranking)
+-- need special considerations to append boolean   print('crankingBits ' .. crankingBits .. ', isCranking ' .. isCranking)
+    print('crankingBits ' .. crankingBits)
+end
+
+function printAny(bus, id, dlc, data)
+    print('packet ' .. id)
 end
 
 canRxAdd(IGN_STATUS, canIgnStatus)
+-- canRxAddMask(0, 0xFFFFFFF, printAny)
 
 -- todo: take VIN from configuration? encode VIN?
 canVin1    = { 0x47, 0x4E, 0x4C, 0x43, 0x32, 0x45, 0x30, 0x34 }
 canVin2    = { 0x42, 0x52, 0x32, 0x31, 0x36, 0x33, 0x36, 0x36 }
 dataECMEngineStatus = { 0x84, 0x09, 0x99, 0x0A, 0x00, 0x40, 0x08, 0x00 }
+
+-- todo: smarter loop code :)
+canVin1[1] = vin(1)
+canVin1[2] = vin(2)
+canVin1[3] = vin(3)
+canVin1[4] = vin(4)
+canVin1[5] = vin(5)
+canVin1[6] = vin(6)
+canVin1[7] = vin(7)
+canVin1[8] = vin(8)
+
+canVin2[1] = vin(9)
+canVin2[2] = vin(10)
+canVin2[3] = vin(11)
+canVin2[4] = vin(12)
+canVin2[5] = vin(13)
+canVin2[6] = vin(14)
+canVin2[7] = vin(15)
+canVin2[8] = vin(16)
 
 function onTick()
     txCan(1, VIN_Part1, 0, canVin1)
@@ -87,6 +138,10 @@ end
 }
 
 void setProteusGmLs4() {
+// main relay 12
+// todo: tps
+// todo: pps
+
 	setGmLs4();
 
 }
