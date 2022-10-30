@@ -135,13 +135,16 @@ end
 
     )", efi::size(config->luaScript));
 
+	setPPSCalibration(0.51, 2.11, 1.01, 4.23);
 }
 
 void setProteusGmLs4() {
-// main relay 12
+	engineConfiguration->etbFunctions[1] = ETB_None;
+
+	engineConfiguration->mainRelayPin = PROTEUS_LS_12;
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_4, PROTEUS_IN_ANALOG_VOLT_3);
+
 // todo: tps
-// todo: pps
 
 	setGmLs4();
-
 }
