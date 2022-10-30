@@ -660,6 +660,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 #endif // EFI_LAUNCH_CONTROL
 
+#if !EFI_UNIT_TEST
 	lua_register(l, "selfStimulateRPM", [](lua_State* l) {
 		auto rpm = luaL_checkinteger(l, 1);
 		if (rpm < 1) {
@@ -672,6 +673,7 @@ void configureRusefiLuaHooks(lua_State* l) {
         setTriggerEmulatorRPM(rpm);
 		return 0;
 	});
+#endif // EFI_UNIT_TEST
 
 	/**
 	 * same exact could be accomplished via LuaSensor just with more API
