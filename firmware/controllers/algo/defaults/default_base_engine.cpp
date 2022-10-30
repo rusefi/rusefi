@@ -102,6 +102,11 @@ void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = pps2;
 }
 
+void setTPS1Inputs(adc_channel_e tps1, adc_channel_e tps2) {
+	engineConfiguration->tps1_1AdcChannel = tps1;
+	engineConfiguration->tps1_2AdcChannel = tps2;
+}
+
 void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, float secondaryDown) {
 	engineConfiguration->throttlePedalUpVoltage = primaryUp;
 	engineConfiguration->throttlePedalWOTVoltage = primaryDown;

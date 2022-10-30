@@ -67,7 +67,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;

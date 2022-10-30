@@ -128,8 +128,6 @@ static void setupDefaultSensorInputs() {
 	// vehicles without TPS or for first start without TPS one would have to turn in off
 	// to avoid cranking corrections based on wrong TPS data
 	engineConfiguration->tps1_1AdcChannel = MRE_IN_TPS;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-
 
 	engineConfiguration->map.sensor.hwChannel = MRE_IN_MAP;
 
