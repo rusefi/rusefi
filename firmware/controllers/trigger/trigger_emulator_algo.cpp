@@ -61,11 +61,6 @@ PwmConfig triggerSignal;
 
 static int atTriggerVersion = 0;
 
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
-
 /**
  * todo: why is this method NOT reciprocal to getCrankDivider?!
  * todo: oh this method has only one usage? there must me another very similar method!

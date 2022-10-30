@@ -73,6 +73,12 @@ static void resetNow() {
 WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
 }
 
+#if EFI_ENGINE_SNIFFER
+#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
+ #else
+#define addEngineSnifferEvent(n, msg) {}
+#endif /* EFI_ENGINE_SNIFFER */
+
 void WaveChart::init() {
 	isInitialized = true;
 	reset();
