@@ -242,6 +242,12 @@ void initWaveChart(WaveChart *chart) {
 
 #endif /* EFI_ENGINE_SNIFFER */
 
+void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, FrontDirection frontDirection) {
+	if (!engineConfiguration->engineSnifferFocusOnInputs) {
+		addEngineSnifferEvent(pin->getShortName(), frontDirection == FrontDirection::UP ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
+	}
+}
+
 void addEngineSnifferTdcEvent(int rpm) {
 	static char rpmBuffer[_MAX_FILLER];
 	itoa10(rpmBuffer, rpm);

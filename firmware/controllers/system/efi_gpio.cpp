@@ -335,9 +335,7 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-	if (!engineConfiguration->engineSnifferFocusOnInputs) {
-		addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
-	}
+    addEngineSnifferOutputPinEvent(this, FrontDirection::UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -352,7 +350,7 @@ void NamedOutputPin::setLow() {
 	setValue(false);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
+	addEngineSnifferOutputPinEvent(this, FrontDirection::DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
