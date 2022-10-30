@@ -96,3 +96,8 @@ void setDefaultBaseEngine() {
 	setDefaultVrThresholds();
 
 }
+
+void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
+	engineConfiguration->throttlePedalPositionAdcChannel = pps1;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = pps2;
+}

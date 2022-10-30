@@ -80,6 +80,7 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
+#include "defaults.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -1110,11 +1111,7 @@ void setProteusHitachiEtbDefaults() {
 	engineConfiguration->tps2_1AdcChannel = PROTEUS_IN_TPS2_1;
 	// EFI_ADC_0: "Analog Volt 5"
 	engineConfiguration->tps2_2AdcChannel = PROTEUS_IN_ANALOG_VOLT_5;
-	// EFI_ADC_1: "Analog Volt 6"
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_6;
-
-	// EFI_ADC_2: "Analog Volt 7"
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_6, PROTEUS_IN_PPS2);
 #endif // HW_PROTEUS
 }
 
