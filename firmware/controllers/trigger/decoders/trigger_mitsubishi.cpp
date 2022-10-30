@@ -130,7 +130,7 @@ void initializeVvt3A92(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
 }
 
-void initializeVvt6G75(TriggerWaveform *s) {
+void initializeVvt6G75(TriggerWaveform /* *s */) {
 	//	s->shapeWithoutTdc = true;
 	//	s->isSynchronizationNeeded = false;
 }
