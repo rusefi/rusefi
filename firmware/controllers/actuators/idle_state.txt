@@ -16,7 +16,7 @@ bit shouldResetPid;idle: shouldResetPid
 bit wasResetPid;idle: wasResetPid\nThis is needed to slowly turn on the PID back after it was reset.
 bit mustResetPid;idle: mustResetPid\nThis is used when the PID configuration is changed, to guarantee the reset
 bit isCranking;idle: cranking
-bit useIacTableForCoasting
+bit isIacTableForCoasting
 bit notIdling
 bit needReset;idle: reset
 bit isInDeadZone;idle: dead zone
