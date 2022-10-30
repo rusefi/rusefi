@@ -162,7 +162,7 @@ PROJ_CHDRS  = $(filter %.h,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 #| Set important path variables                                                         |
 #|--------------------------------------------------------------------------------------|
 VPATH    = $(foreach path,$(sort $(foreach file,$(PROJ_FILES),$(dir $(file)))) $(subst \,/,$(OBJ_PATH)),$(path) :)
-OBJ_PATH = $(PROJECT_DIR)/build-openblt/obj
+OBJ_PATH = $(PROJECT_DIR)/build-openblt/obj-$(PROJECT_BOARD)/
 BIN_PATH = $(PROJECT_DIR)/build-openblt
 INC_PATH = $(patsubst %/,%,$(patsubst %,-I%,$(sort $(foreach file,$(filter %.h,$(PROJ_FILES)),$(dir $(file))))))
 LIB_PATH  = 
@@ -170,8 +170,10 @@ LIB_PATH  =
 #|--------------------------------------------------------------------------------------|
 #| Define targets                                                                       |
 #|--------------------------------------------------------------------------------------|
-AOBJS = $(patsubst %.s,%.o,$(PROJ_ASRCS))
-COBJS = $(patsubst %.c,%.o,$(PROJ_CSRCS))
+AOBJS := $(patsubst %.s,%.o,$(PROJ_ASRCS))
+AOBJS := $(addprefix $(OBJ_PATH),$(AOBJS))
+COBJS := $(patsubst %.c,%.o,$(PROJ_CSRCS))
+COBJS := $(addprefix $(OBJ_PATH),$(COBJS))
 
 #|--------------------------------------------------------------------------------------|
 #| Make ALL                                                                             |
@@ -195,28 +197,26 @@ $(BIN_PATH)/$(PROJ_NAME).bin : $(BIN_PATH)/$(PROJ_NAME).elf
 	@mkdir -p $(@D)
 	@$(OC) -O binary $< $@
 
-$(BIN_PATH)/$(PROJ_NAME).elf : $(AOBJS) $(COBJS)
+$(BIN_PATH)/$(PROJ_NAME).elf : $(OBJ_PATH) $(AOBJS) $(COBJS)
 	@mkdir -p $(@D)
 	@echo +++ Linking [$(notdir $@)]
-	@echo $(patsubst %.o,$(OBJ_PATH)/%.o,$(^F))
-	@$(LN) $(LFLAGS) -o $@ $(patsubst %.o,$(OBJ_PATH)/%.o,$(^F)) $(LIBS)
+	@echo $(patsubst %.o,$(OBJ_PATH)%.o,$(^F))
+	@$(LN) $(LFLAGS) -o $@ $(patsubst %.o,$(OBJ_PATH)%.o,$(^F)) $(LIBS)
 
 #|--------------------------------------------------------------------------------------|
 #| Compile and assemble                                                                 |
 #|--------------------------------------------------------------------------------------|
-$(AOBJS): %.o: %.s $(PROJ_CHDRS) $(OBJ_PATH)
-	@mkdir -p $(@D)
-	@echo +++ Assembling [$(notdir $<)]
-	@$(AS) $(AFLAGS) -c $< -o $(OBJ_PATH)/$(@F)
+$(OBJ_PATH)%.o: %.s
+	@echo +++ Assembling [$<] to [$@]
+	@$(AS) $(AFLAGS) -c $< -o $@
 
-$(COBJS): %.o: %.c $(PROJ_CHDRS) $(OBJ_PATH)
-	@mkdir -p $(@D)
-	@echo +++ Compiling [$(notdir $<)]
-	@$(CC) $(CFLAGS) -c $< -o $(OBJ_PATH)/$(@F)
+$(OBJ_PATH)%.o: %.c
+	@echo +++ Compiling [$<] to [$@]
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_PATH):
-	@echo Compiler Options
-	@echo $(CC) -c $(CFLAGS) main.c -o main.o
+	@echo AOBJS = $(AOBJS)
+	@echo COBJS = $(COBJS)
 	@mkdir -p $(OBJ_PATH)
 
 #|--------------------------------------------------------------------------------------|
@@ -225,11 +225,6 @@ $(OBJ_PATH):
 .PHONY: clean
 clean: 
 	@echo +++ Cleaning build environment
-	@$(RM) $(RMFLAGS) $(foreach file,$(AOBJS),$(OBJ_PATH)/$(file))
-	@$(RM) $(RMFLAGS) $(foreach file,$(COBJS),$(OBJ_PATH)/$(file))
-	@$(RM) $(RMFLAGS) $(patsubst %.o,%.lst,$(foreach file,$(COBJS),$(OBJ_PATH)/$(file)))
-	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).elf $(BIN_PATH)/$(PROJ_NAME).map
-	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).srec
-	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).bin
-	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).hex
+	@$(RM) $(RMFLAGS) -r $(OBJ_PATH)
+	@$(RM) $(RMFLAGS) -r $(BIN_PATH)
 	@echo +++ Clean complete
