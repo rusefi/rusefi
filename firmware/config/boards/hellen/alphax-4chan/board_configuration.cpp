@@ -11,8 +11,8 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
 static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
@@ -103,8 +103,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
+	setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
 
 	// random values to have valid config
 	engineConfiguration->tps1SecondaryMin = 1000;

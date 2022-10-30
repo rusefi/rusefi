@@ -12,9 +12,9 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
 #include "hellen_meta.h"
 #include "i2c_bb.h"
+#include "defaults.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -205,8 +205,7 @@ void setBoardDefaultConfiguration() {
 	 * md_sanci latest tune
 	 * https://rusefi.com/online/view.php?msq=630
 	 */
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
 	engineConfiguration->throttlePedalUpVoltage = 1.49;
 	engineConfiguration->throttlePedalWOTVoltage = 4.72;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
