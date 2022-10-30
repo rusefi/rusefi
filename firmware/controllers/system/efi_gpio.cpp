@@ -7,7 +7,7 @@
  */
 
 #include "pch.h"
-
+#include "engine_sniffer.h"
 
 #include "drivers/gpio/gpio_ext.h"
 
@@ -18,11 +18,6 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
