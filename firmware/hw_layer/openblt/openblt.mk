@@ -162,7 +162,7 @@ PROJ_CHDRS  = $(filter %.h,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 #| Set important path variables                                                         |
 #|--------------------------------------------------------------------------------------|
 VPATH    = $(foreach path,$(sort $(foreach file,$(PROJ_FILES),$(dir $(file)))) $(subst \,/,$(OBJ_PATH)),$(path) :)
-OBJ_PATH = $(PROJECT_DIR)/build-openblt/obj/
+OBJ_PATH = $(PROJECT_DIR)/build-openblt/obj-$(PROJECT_BOARD)/
 BIN_PATH = $(PROJECT_DIR)/build-openblt
 INC_PATH = $(patsubst %/,%,$(patsubst %,-I%,$(sort $(foreach file,$(filter %.h,$(PROJ_FILES)),$(dir $(file))))))
 LIB_PATH  = 
