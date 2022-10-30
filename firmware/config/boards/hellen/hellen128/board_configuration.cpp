@@ -73,8 +73,7 @@ static void setupDefaultSensorInputs() {
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A6;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
+	setTPS1Inputs(EFI_ADC_4, EFI_ADC_8);
 
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;

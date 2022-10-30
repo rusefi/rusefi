@@ -69,8 +69,8 @@ static void setupDefaultSensorInputs() {
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A6; // 86 - CAM1
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS; // 92 - TPS 1
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+    // 92 - TPS 1
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
     // 34 In PPS1
     // 35 In PPS2

@@ -63,8 +63,7 @@ static void setupDefaultSensorInputs() {
 
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 	engineConfiguration->useETBforIdleControl = true;
 
 	engineConfiguration->throttlePedalUpVoltage = 0.73;
