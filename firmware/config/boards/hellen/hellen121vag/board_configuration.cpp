@@ -72,8 +72,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS; // 92 - TPS 1
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-
     // 34 In PPS1
     // 35 In PPS2
     setPPSInputs(H144_IN_PPS, H144_IN_AUX2);

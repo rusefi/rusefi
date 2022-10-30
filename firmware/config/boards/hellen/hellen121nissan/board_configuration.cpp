@@ -71,8 +71,7 @@ static void setupDefaultSensorInputs() {
 	// todo: this requires unit test change
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
 	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;

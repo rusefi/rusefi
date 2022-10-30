@@ -72,7 +72,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
