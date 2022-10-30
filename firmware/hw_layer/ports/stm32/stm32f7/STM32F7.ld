@@ -44,6 +44,7 @@ MEMORY
     flash5 (rx) : org = 0x00000000, len = 0
     flash6 (rx) : org = 0x00000000, len = 0
     flash7 (rx) : org = 0x00000000, len = 0
+    shared      : org = 0x20000000, len = _OpenBLT_Shared_Params_Size
     ram0   (wx) : org = 0x20020000 + _OpenBLT_Shared_Params_Size, len = 384k - _OpenBLT_Shared_Params_Size      /* SRAM1 + SRAM2 */
     ram1   (wx) : org = 0x20020000 + _OpenBLT_Shared_Params_Size, len = 368k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2   (wx) : org = 0x2007C000, len = 16k       /* SRAM2 */
