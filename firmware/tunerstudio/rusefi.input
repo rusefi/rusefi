@@ -1180,6 +1180,7 @@ gaugeCategory = Alternator PID
 
 gaugeCategory = Idle
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
+   idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
    idleStatus_iTermGauge = idleStatus_iTerm,"Idle PID iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_dTermGauge = idleStatus_dTerm,"Idle PID dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
    idleStatus_outputGauge = idleStatus_output,"Idle PID output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1276,7 +1277,6 @@ gaugeCategory = Sensors - Extra 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
-   idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
    AuxT1Gauge        = auxTemp1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    AuxT2Gauge        = auxTemp2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
@@ -3117,6 +3117,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Off temperature",					fanOffTemperature
 		field = "Enable with AC",					enableFan1WithAc
 		field = "Disable when engine stopped",		disableFan1WhenStopped
+		field = "Idle adder",							fan1ExtraIdle
 
 	dialog = fan2Settings, "Fan 2"
 		field = "Pin",								fan2Pin
@@ -3125,6 +3126,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Off temperature",					fan2OffTemperature
 		field = "Enable with AC",					enableFan2WithAc
 		field = "Disable when engine stopped",		disableFan2WhenStopped
+		field = "Idle adder",							fan2ExtraIdle
 
 	dialog = fanTest, "", xAxis
 		commandButton = "Test Fan 1", cmd_test_fan_1
@@ -3143,6 +3145,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Max RPM",						maxAcRpm
 		field = "Max CLT",						maxAcClt
 		field = "Max TPS",						maxAcTps
+		field = "A/C Idle adder",				acIdleExtraOffset
+		field = "A/C RPM adder",				acIdleRpmBump
 
 	dialog = acSettings, "", border
 		panel = acSettingsWest, West
