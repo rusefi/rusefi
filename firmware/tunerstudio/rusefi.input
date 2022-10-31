@@ -1619,44 +1619,40 @@ menuDialog = main
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition settings"
-        subMenu = std_separator
-
-		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
-		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
-
-		groupMenu = "Ignition blend tables"
-		groupChildMenu = ignAdder1Cfg,			"Adder 1 bias", 0, {isIgnitionEnabled}
-		groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { isIgnitionEnabled && ignBlends1_blendParameter != 0 }
-		groupChildMenu = ignAdder2Cfg,			"Adder 2 bias", 0, {isIgnitionEnabled}
-		groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { isIgnitionEnabled && ignBlends2_blendParameter != 0 }
-		groupChildMenu = ignAdder3Cfg,			"Adder 3 bias", 0, {isIgnitionEnabled}
-		groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { isIgnitionEnabled && ignBlends3_blendParameter != 0 }
-		groupChildMenu = ignAdder4Cfg,			"Adder 4 bias", 0, {isIgnitionEnabled}
-		groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { isIgnitionEnabled && ignBlends4_blendParameter != 0 }
-
-		groupMenu = "Cylinder ign trims"
-		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
-		groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
-		groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
-		groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
-		groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
-		groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
-		groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
-		groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
-		groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
-		groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
-		groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
-		groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
-
+		subMenu = cltTimingCorrCurve,			"Ign CLT correction", 0, {isIgnitionEnabled == 1}
+		subMenu = ignitionIatCorrTableTbl,	"Ign IAT correction", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
-		# corrections
-		subMenu = cltTimingCorrCurve,		"CLT correction", 0, {isIgnitionEnabled == 1}
-		subMenu = ignitionIatCorrTableTbl,	"IAT correction", 0, {isIgnitionEnabled == 1}
-		
+		subMenu = dwellSettings,				"Dwell", 0, {isIgnitionEnabled == 1}
+		groupMenu = "Ignition blend tables"
+			groupChildMenu = ignAdder1Cfg,			"Adder 1 bias", 0, {isIgnitionEnabled}
+			groupChildMenu = ignAdder1Table,		"Ignition adder 1", 0, { isIgnitionEnabled && ignBlends1_blendParameter != 0 }
+			groupChildMenu = ignAdder2Cfg,			"Adder 2 bias", 0, {isIgnitionEnabled}
+			groupChildMenu = ignAdder2Table,		"Ignition adder 2", 0, { isIgnitionEnabled && ignBlends2_blendParameter != 0 }
+			groupChildMenu = ignAdder3Cfg,			"Adder 3 bias", 0, {isIgnitionEnabled}
+			groupChildMenu = ignAdder3Table,		"Ignition adder 3", 0, { isIgnitionEnabled && ignBlends3_blendParameter != 0 }
+			groupChildMenu = ignAdder4Cfg,			"Adder 4 bias", 0, {isIgnitionEnabled}
+			groupChildMenu = ignAdder4Table,		"Ignition adder 4", 0, { isIgnitionEnabled && ignBlends4_blendParameter != 0 }
+		groupMenu = "Cylinder ign trims"
+			groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
+			groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
+			groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
+			groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
+			groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
+			groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
+			groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
+			groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
+			groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
+			groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
+			groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
+			groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
+		subMenu = std_separator
+
+		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
+
 	menu = "&Cranking"
 		subMenu = crankingDialog,			"Cranking settings"
 		subMenu = postCrankingEnrichment,	"After-start enrichment"
