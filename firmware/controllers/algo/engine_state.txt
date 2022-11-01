@@ -46,11 +46,11 @@ float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
 
 struct cranking_fuel_s
 
-floatms_t baseFuel;Duration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.\nDeprecated. Please use '1'.\nTODO: maybe account for injector flow?
+floatms_t baseFuel;Fuel: base duration\nDuration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.\nDeprecated. Please use '1'.\nTODO: maybe account for injector flow?
 float coolantTemperatureCoefficient;
 float tpsCoefficient
 float durationCoefficient
-floatms_t fuel;Actual injection duration based on all above coefficients.
+floatms_t fuel;Fuel: Actual injection\nduration based on all coefficients.
 
 ! end of cranking_s structure definition
 end_struct
@@ -67,7 +67,7 @@ float postCrankingFuelCorrection
 	float timeSinceCrankingInSecs
 
 	floatms_t baseFuel;
-	floatms_t fuel;Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
+	floatms_t fuel;Fuel: actual\nActual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
 ! end of running_fuel_s structure definition
 end_struct
 
@@ -78,7 +78,7 @@ running_fuel_s running
 
 	! spark-related
 	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
-	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
+	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
 	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
