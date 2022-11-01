@@ -705,7 +705,7 @@ public class ConfigFieldParserTest {
                 "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "percent_t afr_typet\n" +
 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
-                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "bit enableFan1WithAc;Turn on this fan when AC is on.\n" +
                 "end_struct\n" +
                 "pid_s pid;comment\n" +
         "end_struct\n";

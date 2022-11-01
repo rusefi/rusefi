@@ -35,9 +35,6 @@ public class ConfigField {
 
     private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
 
-    // we used to have a weird feature of only handing comments starting with + as tooltips
-    // very unclear what was the value of it. todo; remove all of those and kill this tag?
-    public static final char TS_COMMENT_TAG = '+';
     public static final String VOID_NAME = "";
     public static final String BOOLEAN_T = "boolean";
     public static final String DIRECTIVE_T = "directive";
@@ -244,7 +241,7 @@ public class ConfigField {
     public String getCommentContent() {
         if (comment == null || comment.isEmpty())
             return comment;
-        return (comment.charAt(0) == TS_COMMENT_TAG ? comment.substring(1) : comment).trim();
+        return comment.trim();
     }
 
     public int[] getArraySizes() {
