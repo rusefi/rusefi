@@ -14,7 +14,5 @@ public class SourceReaderTest {
         String fileName = "ac_control.cpp";
         String content = LiveDataParserPanel.getContent(getClass(), fileName);
         assertNotNull(content);
-
     }
-
 }
