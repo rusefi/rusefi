@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Oct 28 08:35:47 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 01 20:59:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -134,6 +134,7 @@ static_assert(sizeof(speed_density_s) == 12);
 // start of cranking_fuel_s
 struct cranking_fuel_s {
 	/**
+	 * Fuel: base duration
 	 * Duration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.
 	 * Deprecated. Please use '1'.
 	 * TODO: maybe account for injector flow?
@@ -153,7 +154,8 @@ struct cranking_fuel_s {
 	 */
 	float durationCoefficient = (float)0;
 	/**
-	 * Actual injection duration based on all above coefficients.
+	 * Fuel: Actual injection
+	 * duration based on all coefficients.
 	 * offset 16
 	 */
 	floatms_t fuel = (floatms_t)0;
@@ -185,6 +187,7 @@ struct running_fuel_s {
 	 */
 	floatms_t baseFuel = (floatms_t)0;
 	/**
+	 * Fuel: actual
 	 * Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.
 	 * Without injector lag.
 	 * @see baseFuel
@@ -253,7 +256,8 @@ struct engine_state_s {
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
-	 * ignition dwell duration as crankshaft angle
+	 * ignition dwell duration
+	 * as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
 	 * offset 104
@@ -425,4 +429,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 152);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Fri Oct 28 08:35:47 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 01 20:59:53 UTC 2022

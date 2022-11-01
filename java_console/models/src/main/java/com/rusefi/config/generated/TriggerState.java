@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Oct 26 20:53:56 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Nov 01 20:59:53 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -150,7 +150,7 @@ public class TriggerState {
 	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
-	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
+	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure mult";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
@@ -168,7 +168,7 @@ public class TriggerState {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
-	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
+	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration add fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "fuel: fuel trim 2";

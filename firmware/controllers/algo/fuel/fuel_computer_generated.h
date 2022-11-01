@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Sep 03 07:08:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Nov 01 20:59:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -26,6 +26,7 @@ struct fuel_computer_s {
 	 */
 	float sdTcharge_coff = (float)0;
 	/**
+	 * SD cylinder mass
 	 * Speed-density logic: calculated air mass in one cylinder, in grams
 	 * offset 20
 	 */
@@ -130,4 +131,4 @@ struct fuel_computer_s {
 static_assert(sizeof(fuel_computer_s) == 28);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Sep 03 07:08:26 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Nov 01 20:59:53 UTC 2022
