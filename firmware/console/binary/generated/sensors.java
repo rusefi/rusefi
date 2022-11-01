@@ -386,7 +386,7 @@ m_knockRetard("Knock Degrees retarded\nlarger number = more retard", SensorCateg
 m_knockThreshold("m_knockThreshold", SensorCategory.SENSOR_INPUTS, FieldType.INT, 772, 1.0, -1.0, -1.0, ""),
 m_knockCount("m_knockCount", SensorCategory.SENSOR_INPUTS, FieldType.INT, 776, 1.0, -1.0, -1.0, ""),
 m_maximumRetard("m_maximumRetard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 780, 1.0, -1.0, -1.0, ""),
-m_requested_pump("Computed requested pump duration in degrees (not including deadtime)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 784, 1.0, -1.0, -1.0, ""),
+m_requested_pump("HPFP duration\nComputed requested pump duration in degrees (not including deadtime)", SensorCategory.SENSOR_INPUTS, FieldType.INT, 784, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent("fuel_requested_percent", SensorCategory.SENSOR_INPUTS, FieldType.INT, 788, 1.0, -1.0, -1.0, ""),
 fuel_requested_percent_pi("fuel_requested_percent_pi", SensorCategory.SENSOR_INPUTS, FieldType.INT, 792, 1.0, -1.0, -1.0, ""),
 nextLobe("nextLobe", SensorCategory.SENSOR_INPUTS, FieldType.INT, 800, 1.0, -1.0, -1.0, ""),

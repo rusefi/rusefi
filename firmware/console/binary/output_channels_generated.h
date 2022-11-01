@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 24 16:45:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Nov 01 21:35:07 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -883,6 +883,7 @@ struct output_channels_s {
 	offset 340 bit 0 */
 	bool isMainRelayOn : 1 {};
 	/**
+	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
 	offset 340 bit 1 */
 	bool isUsbConnected : 1 {};
@@ -1443,4 +1444,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 768);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Oct 24 16:45:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Nov 01 21:35:07 UTC 2022

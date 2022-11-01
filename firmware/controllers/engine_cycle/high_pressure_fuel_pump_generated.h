@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jun 29 03:16:46 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,6 +6,7 @@
 // start of high_pressure_fuel_pump_s
 struct high_pressure_fuel_pump_s {
 	/**
+	 * HPFP duration
 	 * Computed requested pump duration in degrees (not including deadtime)
 	 * offset 0
 	 */
@@ -128,4 +129,4 @@ struct high_pressure_fuel_pump_s {
 static_assert(sizeof(high_pressure_fuel_pump_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jun 29 03:16:46 EDT 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Nov 01 21:35:07 UTC 2022
