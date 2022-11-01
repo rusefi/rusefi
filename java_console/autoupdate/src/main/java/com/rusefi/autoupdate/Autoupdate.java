@@ -39,6 +39,8 @@ public class Autoupdate {
                 if (bundleFullName != null) {
                     System.out.println("Handling " + bundleFullName);
                     handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
+                } else {
+                    System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName");
                 }
             } else {
                 System.out.println("Update mode: NEVER");
