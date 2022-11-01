@@ -62,8 +62,8 @@ public class TsOutput {
                         // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
                         commentContent = commentContent.substring(0, newLineIndex);
                     }
-//                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
-//                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
+                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
+                        throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online at " + commentContent.length());
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
 

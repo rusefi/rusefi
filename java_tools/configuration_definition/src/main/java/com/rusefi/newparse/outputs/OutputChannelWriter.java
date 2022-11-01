@@ -21,7 +21,7 @@ public class OutputChannelWriter {
 
     private int cumulativeSize = 0;
 
-    public void writeOutputChannels(ParseState parser, String namePrefix) throws FileNotFoundException {
+    public void writeOutputChannels(ParseState parser, String namePrefix) {
         // Assume the last struct is the one we want...
         Struct s = parser.getStructs().get(parser.getStructs().size() - 1);
 
