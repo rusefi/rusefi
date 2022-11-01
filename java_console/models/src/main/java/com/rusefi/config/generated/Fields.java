@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 01 14:52:15 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 01 21:00:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -410,7 +410,7 @@ public class Fields {
 	public static final String GAUGE_NAME_ETB_ERROR = "ETB position error";
 	public static final String GAUGE_NAME_ETB_TARGET = "ETB position target";
 	public static final String GAUGE_NAME_FLEX = "Flex Ethanol %";
-	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure correction";
+	public static final String GAUGE_NAME_FUEL_BARO_CORR = "fuel: Barometric pressure mult";
 	public static final String GAUGE_NAME_FUEL_BASE = "fuel: base mass";
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "fuel: CLT correction";
@@ -428,7 +428,7 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW = "Fuel pressure (low)";
 	public static final String GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS = "kPa";
 	public static final String GAUGE_NAME_FUEL_RUNNING = "fuel: running";
-	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration extra fuel ms";
+	public static final String GAUGE_NAME_FUEL_TPS_EXTRA = "fuel: TPS acceleration add fuel ms";
 	public static final String GAUGE_NAME_FUEL_TPS_ROC = "fuel: TPS change";
 	public static final String GAUGE_NAME_FUEL_TRIM = "fuel: fuel trim";
 	public static final String GAUGE_NAME_FUEL_TRIM_2 = "fuel: fuel trim 2";
@@ -1180,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.01.all.snap_51012";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.01.all.snap_16528";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;

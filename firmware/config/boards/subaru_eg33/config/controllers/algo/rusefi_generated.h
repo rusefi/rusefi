@@ -437,7 +437,7 @@
 #define GAUGE_NAME_ETB_ERROR "ETB position error"
 #define GAUGE_NAME_ETB_TARGET "ETB position target"
 #define GAUGE_NAME_FLEX "Flex Ethanol %"
-#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure correction"
+#define GAUGE_NAME_FUEL_BARO_CORR "fuel: Barometric pressure mult"
 #define GAUGE_NAME_FUEL_BASE "fuel: base mass"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "fuel: CLT correction"
@@ -455,7 +455,7 @@
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
 #define GAUGE_NAME_FUEL_RUNNING "fuel: running"
-#define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration extra fuel ms"
+#define GAUGE_NAME_FUEL_TPS_EXTRA "fuel: TPS acceleration add fuel ms"
 #define GAUGE_NAME_FUEL_TPS_ROC "fuel: TPS change"
 #define GAUGE_NAME_FUEL_TRIM "fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "fuel: fuel trim 2"
@@ -992,7 +992,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH snap_7838
+#define SIGNATURE_HASH snap_39242
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1265,7 +1265,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.11.01.subaru_eg33_f7.snap_7838"
+#define TS_SIGNATURE "rusEFI 2022.11.01.subaru_eg33_f7.snap_39242"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
