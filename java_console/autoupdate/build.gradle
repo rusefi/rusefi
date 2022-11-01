@@ -1,11 +1,8 @@
 plugins {
     id 'java-library'
-    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 apply from: '../../java_tools/dependencies.gradle'
-
-defaultTasks 'shadowJar'
 
 configurations {
     all*.exclude group: 'org.hamcrest', module: 'hamcrest-core'
@@ -27,7 +24,18 @@ dependencies {
     testImplementation global_libs.mockito
 }
 
-shadowJar {
+// yes nasty sorry
+evaluationDependsOn(':core_ui')
+evaluationDependsOn(':core_io')
+
+jar {
+    archivesBaseName = 'rusefi_autoupdate'
+    destinationDir = file("$rootDir/../java_console_binary")
+
+    from project.sourceSets.main.allSource
+    from project(':core_ui').sourceSets.main.output
+    from project(":core_io").sourceSets.main.output
+
     manifest {
         attributes(
                 'Main-Class': 'com.rusefi.autoupdate.Autoupdate'
