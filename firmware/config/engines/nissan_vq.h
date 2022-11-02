@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "engine_configuration.h"
-
-#define NISSAN_VQ_VVT_OFFSET -610
 #define NISSAN_VQ_CAM_OFFSET -360
 
 void setHellen121nissanVQ();
