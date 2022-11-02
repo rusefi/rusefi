@@ -30,22 +30,22 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 		if (vvt1 != 0) {
 			if (!hasSeenFirstVvt) {
-				EXPECT_NEAR(vvt1, -45.56, 1);
+				EXPECT_NEAR(vvt1, 1.4, /*precision*/1);
 				hasSeenFirstVvt = true;
 			}
 
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt1 > -48 && vvt1 < -43);
+			EXPECT_TRUE(vvt1 > -3 && vvt1 < 3);
 		}
 
 		if (vvt2 != 0) {
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt2 > -48 && vvt2 < -43);
+			EXPECT_TRUE(vvt2 > -3 && vvt2 < 3);
 		}
 	}
 
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -45.64, 1e-2);
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -45.45, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 1.351, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), 1.548, 1e-2);
 	ASSERT_EQ(101, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?
