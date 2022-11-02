@@ -1,9 +1,9 @@
 struct_no_prefix fuel_computer_s
 
 	float currentAfrLoad
-	float targetLambda
-	float stoichiometricRatio
-	float targetAFR
+	float targetLambda;fuel: target lambda
+	float stoichiometricRatio;fuel: stoich ratio
+	float targetAFR;fuel: target AFR
 
 ! c'mon, not the whole LiveData spaghetti for SD class?
 float sdTcharge_coff
