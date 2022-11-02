@@ -8,6 +8,9 @@
 #include "pch.h"
 
 #include "nissan_vq.h"
+#include "hellen_meta.h"
+
+#define NISSAN_VQ_VVT_OFFSET 157
 
 void setHellen121nissanQR() {
 	engineConfiguration->trigger.type = TT_NISSAN_QR25;
@@ -24,7 +27,7 @@ void setHellen121nissanQR() {
 	// we have this here and not in board_configuration.cpp so that unit test would get this value
 	engineConfiguration->invertCamVVTSignal = true;
 
-	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
+	engineConfiguration->vvtOffsets[0] = 157;
 
 }
 
@@ -127,8 +130,22 @@ end
 	// we have this here and not in board_configuration.cpp so that unit test would get this value
 	engineConfiguration->invertCamVVTSignal = true;
 
-	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
-	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
+	engineConfiguration->vvtOffsets[0 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET;
+	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET + NISSAN_VQ_CAM_OFFSET;
+
+
+	// VVT closed loop
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.5;
+	engineConfiguration->auxPid[0].dFactor = 0.05;
+	engineConfiguration->auxPid[0].offset = 50;
+//	engineConfiguration->auxPid[0].minValue = 20;
+//	engineConfiguration->auxPid[0].maxValue = 90;
+
+#if HW_HELLEN
+	engineConfiguration->vvtPins[0 * CAMS_PER_BANK] = H176_LS_7;
+	engineConfiguration->vvtPins[1 * CAMS_PER_BANK] = H176_LS_8;
+#endif
 
 	engineConfiguration->cranking.baseFuel = 35;
 }
