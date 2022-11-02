@@ -410,6 +410,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 }
 
 // this method is useful for desperate time debugging
+// readpin PA0
 void readPin(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == Gpio::Invalid) {
@@ -418,7 +419,6 @@ void readPin(const char *pinName) {
 	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
 	efiPrintf("pin %s value %d", hwPortname(pin), physicalValue);
 }
-
 
 // this method is useful for desperate time debugging or hardware validation
 static void benchSetPinValue(const char *pinName, int bit) {
