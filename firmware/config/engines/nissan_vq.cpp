@@ -43,7 +43,9 @@ function onTick()
 	local RPMread = math.floor(getSensor("RPM") + 0.5) / 3.15
 	local RPMhi = RPMread / 256
 	local RPMlo = RPMread
-	local CLTread = math.floor(getSensor("CLT") + 0.5)
+	cltValue = getSensor("CLT")
+	cltValue = (cltValue == nil and 0 or tps)
+	local CLTread = math.floor(cltValue + 0.5)
 
 	--print('ac out = ' ..globalAcOut)
 	if globalAcOut == 1 and RPMread >80 then
