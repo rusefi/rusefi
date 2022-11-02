@@ -19,7 +19,12 @@ pwd
 echo -e "\nUploading .ini files"
 ls -l .
 
-echo "[upload_ini] Looking for signature in $fileName..."
+if [ "$fileName" == "no" ]; then
+  echo "[upload_ini] signature file not needed"
+  exit 0
+fi
+
+echo "[upload_ini] Looking for signature in [$fileName]..."
 sig=$(grep "^\s*signature\s*=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
