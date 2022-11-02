@@ -140,7 +140,7 @@ enable2ndByteCanID = false
 		recordField = time,				"Time",			8,			32,			0.001,	"ms"
 
 		; it seems that TS also needs to know the diff.size of a tooth
-		calcField = toothTime,			"ToothTime",	"ms",		{ time - pastValue(time, 1) }
+		calcField = toothTime,			"ToothTime",	"ms", { time - pastValue(time, 1) }
 
 
 [VeAnalyze]
@@ -270,11 +270,11 @@ enable2ndByteCanID = false
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
 
-	maintainConstantValue = throttlePedalUpVoltage,			{ (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue  : throttlePedalUpVoltage }
+	maintainConstantValue = throttlePedalUpVoltage, { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue  : throttlePedalUpVoltage }
 	maintainConstantValue = throttlePedalSecondaryUpVoltage, { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue2 : throttlePedalSecondaryUpVoltage }
 
-	maintainConstantValue = throttlePedalWOTVoltage,			{ (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
-	maintainConstantValue = throttlePedalSecondaryWOTVoltage,{ (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
+	maintainConstantValue = throttlePedalWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
+	maintainConstantValue = throttlePedalSecondaryWOTVoltage, { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
 
 	requiresPowerCycle = useETBforIdleControl
 	requiresPowerCycle = warningLedPin
@@ -1248,14 +1248,14 @@ gaugeCategory = Debug
 	debugF5Gauge = debugFloatField5, {bitStringValue( debugFieldF5List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	4,	4
 	debugF6Gauge = debugFloatField6, {bitStringValue( debugFieldF6List,  debugMode )}, "",  -100,	100,	0,	0,	100,  100,	4,	4
 	debugF7Gauge = debugFloatField7, {bitStringValue( debugFieldF7List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	4,	4
-	debugI1Gauge = debugIntField1,	{bitStringValue( debugFieldI1List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
-	debugI2Gauge = debugIntField2,	{bitStringValue( debugFieldI2List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
-	debugI3Gauge = debugIntField3,	{bitStringValue( debugFieldI3List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
-	debugI4Gauge = debugIntField4,	{bitStringValue( debugFieldI4List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
-	debugI5Gauge = debugIntField5,	{bitStringValue( debugFieldI5List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
+	debugI1Gauge = debugIntField1, {bitStringValue( debugFieldI1List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
+	debugI2Gauge = debugIntField2, {bitStringValue( debugFieldI2List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
+	debugI3Gauge = debugIntField3, {bitStringValue( debugFieldI3List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
+	debugI4Gauge = debugIntField4, {bitStringValue( debugFieldI4List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
+	debugI5Gauge = debugIntField5, {bitStringValue( debugFieldI5List,  debugMode )}, "",	0,	100,	0,	0,	100,  100,	0,	0
 
 gaugeCategory = Sensors - Basic
-	RPMGauge			= RPMValue,			"RPM - engine speed",		"RPM",		0,	{rpmHardLimit + 2000},	200,	{cranking_rpm},	{rpmHardLimit - 500},  {rpmHardLimit},	0,	0
+	RPMGauge			= RPMValue,			"RPM - engine speed",		"RPM",		0, {rpmHardLimit + 2000},	200, {cranking_rpm}, {rpmHardLimit - 500},  {rpmHardLimit},	0,	0
 	CLTGauge			= coolant,		"Coolant temp",		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	IATGauge			= intake,	"Intake air temp",		"C",		-40,	140,	-15,		1,		95,	110,	1,	1
 	afr1Gauge			= AFRValue, @@GAUGE_NAME_AFR@@,			"",		10,	19.4,		12,	13,		15,	16,	2,	2
@@ -1693,8 +1693,8 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = boostDialog,			"Boost control"
-		subMenu = boostOpenLoopDialog,	"Boost control open loop",			{ isBoostControlEnabled }
-		subMenu = boostPidDialog,		"Boost control PID",	{ isBoostControlEnabled && boostType == 1 }
+		subMenu = boostOpenLoopDialog,	"Boost control open loop", { isBoostControlEnabled }
+		subMenu = boostPidDialog,		"Boost control PID", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostTargetDialog,	"Boost control target", { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
@@ -2156,15 +2156,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "First gap to",							triggerGapOverrideTo1  , { overrideTriggerGaps == 1 }
 
 		field = "Second gap from",						triggerGapOverrideFrom2, { overrideTriggerGaps == 1 }
-		field = "Second gap to",						triggerGapOverrideTo2,	{ overrideTriggerGaps == 1 }
+		field = "Second gap to",						triggerGapOverrideTo2, { overrideTriggerGaps == 1 }
 
 		field = "Third gap from",						triggerGapOverrideFrom3, { overrideTriggerGaps == 1 }
-		field = "Third gap to",							triggerGapOverrideTo3,	{ overrideTriggerGaps == 1 }
+		field = "Third gap to",							triggerGapOverrideTo3, { overrideTriggerGaps == 1 }
 
 		field = "Gap #4 from",								triggerGapOverrideFrom4, { overrideTriggerGaps == 1 }
-		field = "Gap #4 to",								triggerGapOverrideTo4,	{ overrideTriggerGaps == 1 }
+		field = "Gap #4 to",								triggerGapOverrideTo4, { overrideTriggerGaps == 1 }
 		field = "Gap #5 from",								triggerGapOverrideFrom5, { overrideTriggerGaps == 1 }
-		field = "Gap #5 to",								triggerGapOverrideTo5,	{ overrideTriggerGaps == 1 }
+		field = "Gap #5 to",								triggerGapOverrideTo5, { overrideTriggerGaps == 1 }
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 		field = "!https://rusefi.com/s/vvt"
@@ -2194,12 +2194,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		; cam if
 		; two-stroke, or
 		; not crank trigger and ((vague trigger and cam choice) or not vague trigger)
-		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {	twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
+		field = "Cam Sensor (Primary channel)",		triggerInputPins1, 1, {twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )  }
 		field = "Crank Sensor (Primary channel)",		triggerInputPins1, 1, { !(twoStroke == 1 || ( !(@@TRIGGER_CRANK_BASED@@) && ( ( (@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) && skippedWheelOnCam) || !(@@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@)  ) )) }
 
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel",					triggerInputPins2,				{ triggerInputPins2 != 0 || (triggerInputPins1 != 0 &&									(@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
-		field = "Invert Secondary",						invertSecondaryTriggerSignal, {									triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
+		field = "Secondary channel",					triggerInputPins2, { triggerInputPins2 != 0 || (triggerInputPins1 != 0 &&									(@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) ) }
+		field = "Invert Secondary",						invertSecondaryTriggerSignal, {triggerInputPins2 != 0 && (@@TRIGGER_TYPE_WITH_SECOND_WHEEL@@) }
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
 		field = "Cam sensor bank 1 intake",			camInputs1, { camInputs1 != 0 || (vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ ) }
@@ -2211,8 +2211,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 
 	dialog = triggerConfiguration
-		panel = triggerConfiguration_settings,	{1}, { consumeObdSensors == 0 }
-		panel = triggerInputs,						{1}, { consumeObdSensors == 0 }
+		panel = triggerConfiguration_settings, {1}, { consumeObdSensors == 0 }
+		panel = triggerInputs, {1}, { consumeObdSensors == 0 }
 		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 
 ;			Engine->Injection Settings
@@ -2224,8 +2224,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Injector reference pressure", fuelReferencePressure, { isInjectionEnabled && injectorCompensationMode != 0 }
 
 	dialog = fuelParams, "Fuel characteristics", yAxis
-		field = "Stoichiometric ratio",			stoichRatioPrimary,		{isInjectionEnabled == 1}
-		field = "E100 stoichiometric ratio",	stoichRatioSecondary,	{isInjectionEnabled == 1 && flexSensorPin != 0 }
+		field = "Stoichiometric ratio",			stoichRatioPrimary, {isInjectionEnabled == 1}
+		field = "E100 stoichiometric ratio",	stoichRatioSecondary, {isInjectionEnabled == 1 && flexSensorPin != 0 }
 
 	dialog = injectorOutputSettings, "Injector Outputs",	yAxis
 		field = "Use only first half of outputs for batch mode"
@@ -2292,14 +2292,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
-		commandButton = "Injector #2", cmd_test_inj2,	{ cylindersCount >= 2 }
-		commandButton = "Injector #3", cmd_test_inj3,	{ cylindersCount >= 3 }
-		commandButton = "Injector #4", cmd_test_inj4,	{ cylindersCount >= 4 }
-		commandButton = "Injector #5", cmd_test_inj5,	{ cylindersCount >= 5 }
-		commandButton = "Injector #6", cmd_test_inj6,	{ cylindersCount >= 6 }
-		commandButton = "Injector #7", cmd_test_inj7,	{ cylindersCount >= 7 }
-		commandButton = "Injector #8", cmd_test_inj8,	{ cylindersCount >= 8 }
-		commandButton = "Injector #9", cmd_test_inj9,	{ cylindersCount >= 9 }
+		commandButton = "Injector #2", cmd_test_inj2, { cylindersCount >= 2 }
+		commandButton = "Injector #3", cmd_test_inj3, { cylindersCount >= 3 }
+		commandButton = "Injector #4", cmd_test_inj4, { cylindersCount >= 4 }
+		commandButton = "Injector #5", cmd_test_inj5, { cylindersCount >= 5 }
+		commandButton = "Injector #6", cmd_test_inj6, { cylindersCount >= 6 }
+		commandButton = "Injector #7", cmd_test_inj7, { cylindersCount >= 7 }
+		commandButton = "Injector #8", cmd_test_inj8, { cylindersCount >= 8 }
+		commandButton = "Injector #9", cmd_test_inj9, { cylindersCount >= 9 }
 		commandButton = "Injector #10", cmd_test_inj10, { cylindersCount >= 10 }
 		commandButton = "Injector #11", cmd_test_inj11, { cylindersCount >= 11 }
 		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }
@@ -2895,10 +2895,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis
 		field = "MAP ADC input",						map_sensor_hwChannel
-		field = "MAP type",								map_sensor_type,	{ map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ }
+		field = "MAP type",								map_sensor_type, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "MAP value low point",				map_sensor_lowValue, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		field = "MAP voltage low point",				mapLowValueVoltage,  { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
-		field = "MAP value high point",						map_sensor_highValue,{ map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
+		field = "MAP value high point",						map_sensor_highValue, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		field = "MAP voltage high value",					mapHighValueVoltage, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 
 	dialog = mapCommon, "MAP common settings"
@@ -2947,7 +2947,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable CAN Wideband",			enableAemXSeries, { canReadEnabled }
 		field = "Enable Innovate LC-2 Serial",			enableInnovateLC2, { auxSerialRxPin && auxSerialTxPin }
 		panel = egoSettings_IO
-		panel = egoSettings_sensor,	{afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
+		panel = egoSettings_sensor, {afr_hwChannel != @@ADC_CHANNEL_NONE@@ && enableAemXSeries == 0 && !auxSerialRxPin && !auxSerialTxPin}
 
 ;			Engine->EGT inputs
 	dialog = egtInputs, "EGT inputs"
@@ -3005,7 +3005,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Stepper B-",								stepper_raw_output4
 
 	dialog = idleStepperHwType, ""
-		panel = idleStepperHw,	{ useStepperIdle && !useHbridgesToDriveIdleStepper && !useRawOutputToDriveIdleStepper }
+		panel = idleStepperHw, { useStepperIdle && !useHbridgesToDriveIdleStepper && !useRawOutputToDriveIdleStepper }
 		panel = stepperHbridgeHardware, { useStepperIdle && useHbridgesToDriveIdleStepper && !useRawOutputToDriveIdleStepper }
 		panel = stepperDirectDriveHardware,  { useStepperIdle && !useHbridgesToDriveIdleStepper && useRawOutputToDriveIdleStepper }
 
@@ -3686,18 +3686,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Transmission Controller" transmissionControllerMode, { tcuEnabled }
 
 	dialog = shiftSolenoidPanel, "Shift Solenoids"
-		field = "Solenoid 1 output"	tcu_solenoid1,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 1 output Mode"	tcu_solenoid_mode1,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 2 output"	tcu_solenoid2,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 2 output Mode"	tcu_solenoid_mode2,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 3 output"	tcu_solenoid3,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 3 output Mode"	tcu_solenoid_mode3,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 4 output"	tcu_solenoid4,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 4 output Mode"	tcu_solenoid_mode4,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 5 output"	tcu_solenoid5,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 5 output Mode"	tcu_solenoid_mode5,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 6 output"	tcu_solenoid6,		{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
-		field = "Solenoid 6 output Mode"	tcu_solenoid_mode6,	{ tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 1 output"	tcu_solenoid1, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 1 output Mode"	tcu_solenoid_mode1, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 2 output"	tcu_solenoid2, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 2 output Mode"	tcu_solenoid_mode2, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 3 output"	tcu_solenoid3, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 3 output Mode"	tcu_solenoid_mode3, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 4 output"	tcu_solenoid4, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 4 output Mode"	tcu_solenoid_mode4, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 5 output"	tcu_solenoid5, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 5 output Mode"	tcu_solenoid_mode5, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 6 output"	tcu_solenoid6, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
+		field = "Solenoid 6 output Mode"	tcu_solenoid_mode6, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_SimpleTransmissionController@@ || transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "3-2 Solenoid output" tcu_32_solenoid_pin, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "3-2 Solenoid output mode" tcu_32_solenoid_pin_mode, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 		field = "3-2 Solenoid Frequency" tcu_32_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
@@ -3713,10 +3713,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Pressure Control Solenoid Frequency" tcu_pc_solenoid_freq, { tcuEnabled && (transmissionControllerMode == @@TransmissionControllerMode_Gm4l6x@@) }
 
 	dialog = buttonShiftInputPanel, "Switch/Button Shift"
-		field = "Upshift Pin"		tcuUpshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
-		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
-		field = "Downshift Pin"		tcuDownshiftButtonPin,		{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
-		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode,	{ tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Upshift Pin"		tcuUpshiftButtonPin, { tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Upshift Pin Mode"	tcuUpshiftButtonPinMode, { tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin"		tcuDownshiftButtonPin, { tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
+		field = "Downshift Pin Mode"	tcuDownshiftButtonPinMode, { tcuEnabled && gearControllerMode == @@GearControllerMode_ButtonShift@@ }
 
 	dialog = inputSpeedSensorPanel, "Input Speed Sensor"
 		field = "Input Pin", tcuInputSpeedSensorPin
@@ -3858,7 +3858,7 @@ dialog = tcuControls, "Transmission Settings"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = etbHbridgeHardware,		{ etbFunctions1 != @@etb_function_e_ETB_None@@ || etbFunctions2 != @@etb_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) } @@if_ts_show_etb_pins
+		panel = etbHbridgeHardware, { etbFunctions1 != @@etb_function_e_ETB_None@@ || etbFunctions2 != @@etb_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) } @@if_ts_show_etb_pins
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -4039,13 +4039,13 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Enable Launch Control",						launchControlEnabled
 		field = "Activation Mode",							launchActivationMode
 
-		field = "Launch Button",								launchActivatePin,		{ launchActivatePin != 0 || (launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1)}
+		field = "Launch Button",								launchActivatePin, { launchActivatePin != 0 || (launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1)}
 		field = "Launch Button inverted",				launchActivateInverted
 		field = "Launch Button mode",						launchActivatePinMode,  {launchActivationMode == @@launchActivationMode_e_SWITCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 
-		field = "Clutch Down",							clutchDownPin,			{launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+		field = "Clutch Down",							clutchDownPin, {launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 		field = "Clutch Down inverted",					clutchDownPinInverted
-		field = "Clutch Down mode",						clutchDownPinMode,		{launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
+		field = "Clutch Down mode",						clutchDownPinMode, {launchActivationMode == @@launchActivationMode_e_CLUTCH_INPUT_LAUNCH@@ && launchControlEnabled == 1}
 		field = ""
 
 ; dead code		field = "Rpm Threshold",								launchRpmThreshold,  {launchControlEnabled == 1}
