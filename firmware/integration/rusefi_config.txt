@@ -1246,7 +1246,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
 	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2
 
-	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;
+	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output\nTODO: rename to vvtOutputs
 
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
@@ -1323,7 +1323,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pin_input_mode_e brakePedalPinMode;
 
 
-	pid_s[CAMS_PER_BANK iterate] auxPid;
+	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
 	int8_t[8] primeBins;;"C", 1, 0, -40, 120, 0
 
