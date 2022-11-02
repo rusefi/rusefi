@@ -602,7 +602,6 @@ static void updateFuelInfo() {
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
-	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
 
 	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }
