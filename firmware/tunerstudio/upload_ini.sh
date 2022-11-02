@@ -19,8 +19,9 @@ pwd
 echo -e "\nUploading .ini files"
 ls -l .
 
-echo "[upload_ini] Processing file $fileName:"
+echo "[upload_ini] Looking for signature in $fileName..."
 sig=$(grep "^ *signature *=" $fileName         | cut -f2 -d "=")
+echi "Got [$sig]"
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
   if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
