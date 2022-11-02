@@ -20,8 +20,7 @@ echo -e "\nUploading .ini files"
 ls -l .
 
 echo "[upload_ini] Looking for signature in $fileName..."
-sig=$(grep "^ *signature *=" $fileName         | cut -f2 -d "=")
-echo "Got [$sig]"
+sig=$(grep "^\s*signature\s*=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
   if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
@@ -51,4 +50,7 @@ SSHCMD
   else
     echo "[upload_ini] Unexpected Signature: [$sig]"
   fi
+else
+  echo "Signature not found in $fileName"
+  exit 1
 fi
