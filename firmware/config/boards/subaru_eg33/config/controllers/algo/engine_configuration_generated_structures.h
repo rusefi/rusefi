@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Oct 24 16:45:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 02 15:21:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3329,6 +3329,8 @@ struct engine_configuration_s {
 	 */
 	float egoValueShift;
 	/**
+	 * VVT output
+	 * TODO: rename to vvtOutputs
 	 * offset 1700
 	 */
 	output_pin_e vvtPins[CAM_INPUTS_COUNT];
@@ -3586,6 +3588,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1959[1];
 	/**
+	 * VVT output PID
+	 * TODO: rename to vvtPid
 	 * offset 1960
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
@@ -5084,4 +5088,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Mon Oct 24 16:45:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 02 15:21:45 UTC 2022
