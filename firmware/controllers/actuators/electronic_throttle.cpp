@@ -169,7 +169,6 @@ static TsCalMode functionToCalModeSecMax(etb_function_e func) {
 #endif // EFI_TUNER_STUDIO
 
 static percent_t directPwmValue = NAN;
-static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
@@ -721,10 +720,9 @@ static void showEtbInfo() {
 
 	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-
 	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
 			hwPortname(engineConfiguration->etbIo[0].controlPin),
-			currentEtbDuty,
+			engine->outputChannels.etb1DutyCycle,
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
