@@ -951,8 +951,12 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 }
 
 void doInitElectronicThrottle() {
-	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedal);
 	bool anyEtbConfigured = false;
+
+	/* is it hack? */
+	if (!shouldInitThrottles)
+		return;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
 	// todo: rename etbFunctions to something-without-etb for same reason?
