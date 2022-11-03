@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 03 02:20:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -438,11 +438,11 @@ public class EngineState {
 	public static final Field CURRENTBAROCORRECTEDVE = Field.create("CURRENTBAROCORRECTEDVE", 44, FieldType.FLOAT);
 	public static final Field INJECTORFLOWCORRECTION = Field.create("INJECTORFLOWCORRECTION", 48, FieldType.FLOAT);
 	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 52, FieldType.FLOAT);
-	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 56, FieldType.FLOAT);
-	public static final Field CRANKING_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKING_COOLANTTEMPERATURECOEFFICIENT", 60, FieldType.FLOAT);
-	public static final Field CRANKING_TPSCOEFFICIENT = Field.create("CRANKING_TPSCOEFFICIENT", 64, FieldType.FLOAT);
-	public static final Field CRANKING_DURATIONCOEFFICIENT = Field.create("CRANKING_DURATIONCOEFFICIENT", 68, FieldType.FLOAT);
-	public static final Field CRANKING_FUEL = Field.create("CRANKING_FUEL", 72, FieldType.FLOAT);
+	public static final Field CRANKINGFUEL_BASEFUEL = Field.create("CRANKINGFUEL_BASEFUEL", 56, FieldType.FLOAT);
+	public static final Field CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT = Field.create("CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT", 60, FieldType.FLOAT);
+	public static final Field CRANKINGFUEL_TPSCOEFFICIENT = Field.create("CRANKINGFUEL_TPSCOEFFICIENT", 64, FieldType.FLOAT);
+	public static final Field CRANKINGFUEL_DURATIONCOEFFICIENT = Field.create("CRANKINGFUEL_DURATIONCOEFFICIENT", 68, FieldType.FLOAT);
+	public static final Field CRANKINGFUEL_FUEL = Field.create("CRANKINGFUEL_FUEL", 72, FieldType.FLOAT);
 	public static final Field RUNNING_POSTCRANKINGFUELCORRECTION = Field.create("RUNNING_POSTCRANKINGFUELCORRECTION", 76, FieldType.FLOAT);
 	public static final Field RUNNING_INTAKETEMPERATURECOEFFICIENT = Field.create("RUNNING_INTAKETEMPERATURECOEFFICIENT", 80, FieldType.FLOAT);
 	public static final Field RUNNING_COOLANTTEMPERATURECOEFFICIENT = Field.create("RUNNING_COOLANTTEMPERATURECOEFFICIENT", 84, FieldType.FLOAT);
@@ -488,8 +488,8 @@ public class EngineState {
 	public static final Field UNUSEDBIT_22_30 = Field.create("UNUSEDBIT_22_30", 116, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_22_31 = Field.create("UNUSEDBIT_22_31", 116, FieldType.BIT, 31);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 120, FieldType.INT).setScale(1.0);
-	public static final Field EGT1 = Field.create("EGT1", 124, FieldType.FLOAT);
-	public static final Field EGT2 = Field.create("EGT2", 128, FieldType.FLOAT);
+	public static final Field EGTVALUE1 = Field.create("EGTVALUE1", 124, FieldType.FLOAT);
+	public static final Field EGTVALUE2 = Field.create("EGTVALUE2", 128, FieldType.FLOAT);
 	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 132, FieldType.INT16).setScale(1.0);
 	public static final Field ALIGNMENTFILL_AT_134 = Field.create("ALIGNMENTFILL_AT_134", 134, FieldType.INT8).setScale(1.0);
 	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 136, FieldType.INT).setScale(1.0);
@@ -542,11 +542,11 @@ public class EngineState {
 	CURRENTBAROCORRECTEDVE,
 	INJECTORFLOWCORRECTION,
 	BAROCORRECTION,
-	CRANKING_BASEFUEL,
-	CRANKING_COOLANTTEMPERATURECOEFFICIENT,
-	CRANKING_TPSCOEFFICIENT,
-	CRANKING_DURATIONCOEFFICIENT,
-	CRANKING_FUEL,
+	CRANKINGFUEL_BASEFUEL,
+	CRANKINGFUEL_COOLANTTEMPERATURECOEFFICIENT,
+	CRANKINGFUEL_TPSCOEFFICIENT,
+	CRANKINGFUEL_DURATIONCOEFFICIENT,
+	CRANKINGFUEL_FUEL,
 	RUNNING_POSTCRANKINGFUELCORRECTION,
 	RUNNING_INTAKETEMPERATURECOEFFICIENT,
 	RUNNING_COOLANTTEMPERATURECOEFFICIENT,
@@ -592,8 +592,8 @@ public class EngineState {
 	UNUSEDBIT_22_30,
 	UNUSEDBIT_22_31,
 	STARTSTOPSTATETOGGLECOUNTER,
-	EGT1,
-	EGT2,
+	EGTVALUE1,
+	EGTVALUE2,
 	DESIREDRPMLIMIT,
 	ALIGNMENTFILL_AT_134,
 	FUELINJECTIONCOUNTER,
