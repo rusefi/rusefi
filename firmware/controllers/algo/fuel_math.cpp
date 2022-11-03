@@ -54,7 +54,7 @@ float getCrankingFuel3(
 	/**
 	 * Cranking fuel changes over time
 	 */
-	engine->engineState.cranking.durationCoefficient = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
+	engine->engineState.crankingFuel.durationCoefficient = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
 
 	/**

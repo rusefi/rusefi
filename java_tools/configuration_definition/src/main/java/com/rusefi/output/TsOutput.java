@@ -48,8 +48,11 @@ public class TsOutput {
                  * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
                  * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
                  */
-                if (!usedNames.add(nameWithPrefix) && !isConstantsSection) {
-                    throw new IllegalStateException(nameWithPrefix + " already present");
+                if (!usedNames.add(nameWithPrefix)
+                        && !isConstantsSection
+                        && !configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)
+                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
                 if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
