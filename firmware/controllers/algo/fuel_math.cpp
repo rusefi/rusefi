@@ -81,28 +81,28 @@ float getCrankingFuel3(
 		// If failed flex sensor, default to 50% E
 		auto flex = Sensor::get(SensorType::FuelEthanolPercent).value_or(50);
 
-		engine->engineState.cranking.coolantTemperatureCoefficient =
+		engine->engineState.crankingFuel.coolantTemperatureCoefficient =
 			interpolateClamped(
 				0, e0Mult,
 				85, e85Mult,
 				flex
 			);
 	} else {
-		engine->engineState.cranking.coolantTemperatureCoefficient = e0Mult;
+		engine->engineState.crankingFuel.coolantTemperatureCoefficient = e0Mult;
 	}
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-	engine->engineState.cranking.tpsCoefficient =
+	engine->engineState.crankingFuel.tpsCoefficient =
 		tps.Valid
 		? interpolate2d(tps.Value, config->crankingTpsBins, config->crankingTpsCoef)
 		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
-			* engine->engineState.cranking.durationCoefficient
-			* engine->engineState.cranking.coolantTemperatureCoefficient
-			* engine->engineState.cranking.tpsCoefficient;
+			* engine->engineState.crankingFuel.durationCoefficient
+			* engine->engineState.crankingFuel.coolantTemperatureCoefficient
+			* engine->engineState.crankingFuel.tpsCoefficient;
 
-	engine->engineState.cranking.fuel = crankingFuel * 1000;
+	engine->engineState.crankingFuel.fuel = crankingFuel * 1000;
 
 	// don't re-warn for zero fuel when we already warned for a more specific problem
 	if (!alreadyWarned && crankingFuel <= 0) {
