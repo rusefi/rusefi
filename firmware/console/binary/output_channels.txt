@@ -117,9 +117,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint16_t totalFuelConsumption;@@GAUGE_NAME_FUEL_CONSUMPTION@@;"grams",1, 0, 0, 0, 1
 	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 3
 
-! Y axis values for selectable tables
-	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
-	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
+	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
+	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
 
 	float knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 2
 
@@ -154,6 +153,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
 	uint8_t idleTargetPosition;;"", 1, 0, 0, 0, 0
 
+	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
+	uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
+
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
@@ -182,15 +184,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 ! todo: { max31855_cs1 != 0}
 	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
-	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
-
 	int16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawClt;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	uint16_t tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
 	uint8_t fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
 	int8_t tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, -1, 10, 0
 
@@ -291,12 +290,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
-	uint8_t detectedGear;@@GAUGE_NAME_DETECTED_GEAR@@;"", 1, 0, 0, @@GEARS_COUNT@@, 0
-
 	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
     uint16_t maxLockedDuration;;"us", 1, 0, 0, 65535, 0
-    uint8_t maxTriggerReentrant;;"", 1, 0, 0, 100, 0
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
     uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
@@ -312,6 +308,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
     uint8_t starterState;;"", 1, 0, -10000, 10000, 3
     uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
     uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
+
+	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
 	pid_status_s alternatorStatus
 	pid_status_s idleStatus
@@ -329,8 +327,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 	uint8_t[4 iterate] autoscale gppwmOutput;GPPWM Output;"%", 0.5, 0, 0, 100, 2
 
 	int16_t autoscale rawBattery;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-
-	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
 	uint8_t[IGN_BLEND_COUNT iterate] autoscale ignBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2

@@ -574,11 +574,6 @@ static void updateFuelCorrections() {
 	engine->outputChannels.injectorLagMs = engine->module<InjectorModel>()->getDeadtime();
 }
 
-static void updateFuelLoads() {
-	engine->outputChannels.veTableYAxis = engine->engineState.currentVeLoad;
-	engine->outputChannels.afrTableYAxis = engine->fuelComputer->currentAfrLoad;
-}
-
 static void updateFuelResults() {
 	// todo: kill outputChannel while taking care of gauge name and scale!
 	engine->outputChannels.chargeAirMass = engine->fuelComputer->sdAirMassInOneCylinder;
@@ -592,7 +587,6 @@ static void updateFuelResults() {
 
 static void updateFuelInfo() {
 	updateFuelCorrections();
-	updateFuelLoads();
 	updateFuelResults();
 
 	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
