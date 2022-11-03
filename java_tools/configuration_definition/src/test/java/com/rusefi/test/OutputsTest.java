@@ -2,10 +2,12 @@ package com.rusefi.test;
 
 import com.rusefi.BitState;
 import com.rusefi.ReaderState;
+import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.GetOutputValueConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -35,6 +37,45 @@ public class OutputsTest {
                 "root_tCharge = scalar, F32, 16, \"\", 1, 0\n" +
                 "; total TS size = 20\n";
         assertEquals(expected, parseToOutputChannels(test));
+
+        String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
+                "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
+                "isForcedInduction = bits, U32, 8, [0:0]\n" +
+                "enableFan1WithAc = bits, U32, 8, [1:1]\n" +
+                "unusedBit_5_2 = bits, U32, 8, [2:2]\n" +
+                "unusedBit_5_3 = bits, U32, 8, [3:3]\n" +
+                "unusedBit_5_4 = bits, U32, 8, [4:4]\n" +
+                "unusedBit_5_5 = bits, U32, 8, [5:5]\n" +
+                "unusedBit_5_6 = bits, U32, 8, [6:6]\n" +
+                "unusedBit_5_7 = bits, U32, 8, [7:7]\n" +
+                "unusedBit_5_8 = bits, U32, 8, [8:8]\n" +
+                "unusedBit_5_9 = bits, U32, 8, [9:9]\n" +
+                "unusedBit_5_10 = bits, U32, 8, [10:10]\n" +
+                "unusedBit_5_11 = bits, U32, 8, [11:11]\n" +
+                "unusedBit_5_12 = bits, U32, 8, [12:12]\n" +
+                "unusedBit_5_13 = bits, U32, 8, [13:13]\n" +
+                "unusedBit_5_14 = bits, U32, 8, [14:14]\n" +
+                "unusedBit_5_15 = bits, U32, 8, [15:15]\n" +
+                "unusedBit_5_16 = bits, U32, 8, [16:16]\n" +
+                "unusedBit_5_17 = bits, U32, 8, [17:17]\n" +
+                "unusedBit_5_18 = bits, U32, 8, [18:18]\n" +
+                "unusedBit_5_19 = bits, U32, 8, [19:19]\n" +
+                "unusedBit_5_20 = bits, U32, 8, [20:20]\n" +
+                "unusedBit_5_21 = bits, U32, 8, [21:21]\n" +
+                "unusedBit_5_22 = bits, U32, 8, [22:22]\n" +
+                "unusedBit_5_23 = bits, U32, 8, [23:23]\n" +
+                "unusedBit_5_24 = bits, U32, 8, [24:24]\n" +
+                "unusedBit_5_25 = bits, U32, 8, [25:25]\n" +
+                "unusedBit_5_26 = bits, U32, 8, [26:26]\n" +
+                "unusedBit_5_27 = bits, U32, 8, [27:27]\n" +
+                "unusedBit_5_28 = bits, U32, 8, [28:28]\n" +
+                "unusedBit_5_29 = bits, U32, 8, [29:29]\n" +
+                "unusedBit_5_30 = bits, U32, 8, [30:30]\n" +
+                "unusedBit_5_31 = bits, U32, 8, [31:31]\n" +
+                "m_requested_pump = scalar, F32, 12, \"\", 1, 0\n" +
+                "tCharge = scalar, F32, 16, \"\", 1, 0\n" +
+                "; total TS size = 20\n";
+        assertEquals(expectedLegacy, runOriginalImplementation(test, state).getContent());
     }
 
     @Test(expected = BitState.TooManyBitsInARow.class)
@@ -45,10 +86,24 @@ public class OutputsTest {
         String test = "struct total\n" +
                 sb +
                 "end_struct\n";
+        runOriginalImplementation(test);
+    }
+
+    /**
+     * while we have {@link OutputChannelWriter} here we use the current 'legacy' implementation
+     *
+     */
+    private static OutputsSectionConsumer runOriginalImplementation(String test) {
         ReaderState state = new ReaderState();
 
+        return runOriginalImplementation(test, state);
+    }
+
+    @NotNull
+    private static OutputsSectionConsumer runOriginalImplementation(String test, ReaderState state) {
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, tsProjectConsumer);
+        return tsProjectConsumer;
     }
 
     @Test
