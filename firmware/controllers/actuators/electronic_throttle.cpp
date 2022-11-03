@@ -966,18 +966,14 @@ void doInitElectronicThrottle() {
 		}
 		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
-		// If this motor is actually set up, init the etb
-		if (motor)
-		{
-			auto controller = engine->etbControllers[i];
-			if (!controller) {
-				continue;
-			}
-
-			auto pid = getEtbPidForFunction(func);
-
-			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		auto controller = engine->etbControllers[i];
+		if (!controller) {
+			continue;
 		}
+
+		auto pid = getEtbPidForFunction(func);
+
+		anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
 	}
 
 	if (!anyEtbConfigured) {
@@ -1019,7 +1015,6 @@ void initElectronicThrottle() {
 	}
 #endif
 
-	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);

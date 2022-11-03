@@ -102,13 +102,11 @@ void initIdleHardware() {
 			auto motorB = initDcMotor(engineConfiguration->stepper_raw_output[2],
 				engineConfiguration->stepper_raw_output[3], ETB_COUNT + 1);
 
-			if (motorA && motorB) {
-				iacHbridgeHw.initialize(
-					motorA,
-					motorB,
-					engineConfiguration->idleStepperReactionTime
-				);
-			}
+			iacHbridgeHw.initialize(
+				motorA,
+				motorB,
+				engineConfiguration->idleStepperReactionTime
+			);
 
 			hw = &iacHbridgeHw;
 		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
@@ -117,13 +115,11 @@ void initIdleHardware() {
 			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1],
 				ETB_COUNT + 1, /*useTwoWires*/ true);
 
-			if (motorA && motorB) {
-				iacHbridgeHw.initialize(
-					motorA,
-					motorB,
-					engineConfiguration->idleStepperReactionTime
-				);
-			}
+			iacHbridgeHw.initialize(
+				motorA,
+				motorB,
+				engineConfiguration->idleStepperReactionTime
+			);
 
 			hw = &iacHbridgeHw;
 		} else {
