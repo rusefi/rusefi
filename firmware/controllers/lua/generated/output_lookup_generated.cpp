@@ -113,12 +113,12 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.engineMakeCodeNameCrc16;
 	if (strEqualCaseInsensitive(name, "wallFuelAmount"))
 		return engine->outputChannels.wallFuelAmount;
-	if (strEqualCaseInsensitive(name, "wallFuelCorrection"))
-		return engine->outputChannels.wallFuelCorrection;
+	if (strEqualCaseInsensitive(name, "wallFuelCorrectionValue"))
+		return engine->outputChannels.wallFuelCorrectionValue;
 	if (strEqualCaseInsensitive(name, "revolutionCounterSinceStart"))
 		return engine->outputChannels.revolutionCounterSinceStart;
-	if (strEqualCaseInsensitive(name, "deltaTps"))
-		return engine->outputChannels.deltaTps;
+	if (strEqualCaseInsensitive(name, "deltaTpsValue"))
+		return engine->outputChannels.deltaTpsValue;
 	if (strEqualCaseInsensitive(name, "canReadCounter"))
 		return engine->outputChannels.canReadCounter;
 	if (strEqualCaseInsensitive(name, "tpsAccelFuel"))
@@ -239,8 +239,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.lowFuelPressure;
 	if (strEqualCaseInsensitive(name, "highFuelPressure"))
 		return engine->outputChannels.highFuelPressure;
-	if (strEqualCaseInsensitive(name, "targetLambda"))
-		return engine->outputChannels.targetLambda;
 	if (strEqualCaseInsensitive(name, "AFRValue"))
 		return engine->outputChannels.AFRValue;
 	if (strEqualCaseInsensitive(name, "VssAcceleration"))

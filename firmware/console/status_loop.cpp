@@ -597,13 +597,13 @@ static void updateFuelInfo() {
 
 	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
 	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
-	engine->outputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
+	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 
-	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
+	engine->outputChannels.crankingFuelMs = engine->engineState.crankingFuel.fuel;
 }
 
 static void updateIgnition(int rpm) {
@@ -692,7 +692,7 @@ void updateTunerStudioState() {
 
 	// offset 116
 	// TPS acceleration
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
+	tsOutputChannels->deltaTpsValue = engine->tpsAccelEnrichment.getMaxDelta();
 
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
