@@ -39,7 +39,7 @@
  *
  * enable verbose_etb
  * disable verbose_etb
- * ethinfo
+ * etbinfo
  * set mock_pedal_position X
  *
  *
