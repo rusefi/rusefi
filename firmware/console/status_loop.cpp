@@ -604,7 +604,7 @@ static void updateFuelInfo() {
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
 
-	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
+	engine->outputChannels.crankingFuelMs = engine->engineState.crankingFuel.fuel;
 }
 
 static void updateIgnition(int rpm) {

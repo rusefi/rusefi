@@ -214,4 +214,16 @@ public class OutputsTest {
                 "; total TS size = 1\n";
         assertEquals(expectedLegacy, runOriginalImplementation(test).getContent());
     }
+
+    @Test
+    public void nameNotDuplicate() {
+        String test = "struct total\n" +
+                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "struct afr_type\n" +
+                "float afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "end_struct\n";
+
+        runOriginalImplementation(test);
+    }
 }
