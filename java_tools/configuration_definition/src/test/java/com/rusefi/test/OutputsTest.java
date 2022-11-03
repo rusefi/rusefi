@@ -61,7 +61,6 @@ public class OutputsTest {
 
     /**
      * while we have {@link OutputChannelWriter} here we use the current 'legacy' implementation
-     *
      */
     private static OutputsSectionConsumer runOriginalImplementation(String test) {
         ReaderState state = new ReaderState();
@@ -129,7 +128,7 @@ public class OutputsTest {
         assertEquals(
                 "entry = baseFuel, \"fuel: base mass\", int,    \"%d\"\n" +
                         "entry = baseFuel2, \"line1\", int,    \"%d\"\n"
-                        , dataLogConsumer.getContent());
+                , dataLogConsumer.getContent());
 
     }
 
@@ -192,7 +191,7 @@ public class OutputsTest {
     public void testLongIterate() {
         ReaderState state = new ReaderState();
         String test = "struct total\n" +
-"\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
+                "\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
                 "end_struct\n";
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
@@ -200,5 +199,19 @@ public class OutputsTest {
                 "\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
                         "\ttriggerSimulatorPins2 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
                         "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
+    }
+
+    @Test
+    public void nameDuplicate() {
+        String test = "struct total\n" +
+                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_type;123;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+
+
+        String expectedLegacy = "afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
+                "afr_type = scalar, U08, 0, \"ms\", 1, 0\n" +
+                "; total TS size = 1\n";
+        assertEquals(expectedLegacy, runOriginalImplementation(test).getContent());
     }
 }
