@@ -201,7 +201,7 @@ public class OutputsTest {
                         "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
 
-    @Test
+    @Test(expected = IllegalStateException.class)
     public void nameDuplicate() {
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
