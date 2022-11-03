@@ -73,13 +73,15 @@ public class TsOutput {
                 }
 
                 if (configField.isBit()) {
-                    tsHeader.append(nameWithPrefix + " = bits, U32,");
-                    tsHeader.append(" " + tsPosition + ", [");
-                    tsHeader.append(bitIndex + ":" + bitIndex);
-                    tsHeader.append("]");
-                    if (isConstantsSection)
-                        tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
-                    tsHeader.append(EOL);
+                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX)) {
+                        tsHeader.append(nameWithPrefix + " = bits, U32,");
+                        tsHeader.append(" " + tsPosition + ", [");
+                        tsHeader.append(bitIndex + ":" + bitIndex);
+                        tsHeader.append("]");
+                        if (isConstantsSection)
+                            tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
+                        tsHeader.append(EOL);
+                    }
 
                     tsPosition += configField.getSize(next);
                     return tsPosition;
