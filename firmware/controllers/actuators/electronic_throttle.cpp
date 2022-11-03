@@ -191,7 +191,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 		}
 
 		// If no sensor is configured for this throttle, skip initialization.
-		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
+		if (!Sensor::hasSensor(functionToPositionSensor(function))) {
 			return false;
 		}
 
