@@ -714,7 +714,7 @@ static EtbThread etbThread CCM_OPTIONAL;
 
 #endif
 
-static void showEthInfo() {
+static void showEtbInfo() {
 #if EFI_PROD_CODE
 	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);
@@ -797,7 +797,7 @@ static void etbReset() {
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -806,7 +806,7 @@ void setEtbPFactor(float value) {
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -815,7 +815,7 @@ void setEtbIFactor(float value) {
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -824,7 +824,7 @@ void setEtbDFactor(float value) {
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 void etbAutocal(size_t throttleIndex) {
@@ -1016,7 +1016,7 @@ void initElectronicThrottle() {
 #endif
 
 #if EFI_PROD_CODE
-	addConsoleAction("ethinfo", showEthInfo);
+	addConsoleAction("etbinfo", showEtbInfo);
 	addConsoleAction("etbreset", etbReset);
 	addConsoleActionI("etb_freq", setEtbFrequency);
 
