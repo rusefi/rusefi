@@ -5,6 +5,8 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
+import java.util.TreeSet;
+
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -19,6 +21,7 @@ public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
+    private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
@@ -40,6 +43,14 @@ public class TsOutput {
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
+
+                /**
+                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
+                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
+                 */
+                if (!usedNames.add(nameWithPrefix) && !isConstantsSection) {
+                    throw new IllegalStateException(nameWithPrefix + " already present");
+                }
 
                 if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
                     tsPosition += configField.getSize(next);
