@@ -43,6 +43,9 @@ Release template (copy/paste this for new release):
  - Slower than expected RPM information was slowing engine start #4629
  - Fix 36-2-1 trigger (Mitsubishi 4B11, etc) #4635
 
+### Removed
+ - Idle timing deadzone #4729
+
 ## September 2022 Release - "Day 203"
 
 ### Added
