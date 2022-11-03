@@ -693,7 +693,7 @@ void updateTunerStudioState() {
 
 	// offset 116
 	// TPS acceleration
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
+	tsOutputChannels->deltaTpsValue = engine->tpsAccelEnrichment.getMaxDelta();
 
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 
