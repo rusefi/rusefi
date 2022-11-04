@@ -197,16 +197,20 @@ window.addEventListener('load', function() {
       hideEmptyColumns(sdiv.querySelector('.pinout-table'));
       checkImagesLoaded();
     }.bind(null, connector, sdiv, img));
-    img.src = connector.info.image.file;
-    if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
-      document.title = connector.info.title;
-    }
-    if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
-      document.getElementById("board-link").innerText = document.title;
-      document.getElementById("board-link").href = connector.info.board_url;
-    }
-    if (typeof(connector.info.name) != "undefined") {
-      sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    if (typeof(connector.info) != "undefined") {
+      img.src = connector.info.image.file;
+      if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
+        document.title = connector.info.title;
+      }
+      if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
+        document.getElementById("board-link").innerText = document.title;
+        document.getElementById("board-link").href = connector.info.board_url;
+      }
+      if (typeof(connector.info.name) != "undefined") {
+        sdiv.querySelector(".connector-name").innerText = connector.info.name;
+      }
+    } else {
+      img.parentElement.parentElement.style.height = 0;
     }
   }
 });
