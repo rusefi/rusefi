@@ -156,6 +156,7 @@ void setBoardDefaultConfiguration() {
 	setupDefaultSensorInputs();
 
 	setGmLs4();
+	setEtbPID(7.4320, 117.6542, 0.0766);
 
 	engineConfiguration->enableSoftwareKnock = true;
 
