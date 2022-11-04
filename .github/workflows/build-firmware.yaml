@@ -101,7 +101,6 @@ jobs:
           - build-target: hellen-gm-e67
             folder: hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini
-            skip-rate: 90
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
