@@ -194,9 +194,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	engineConfiguration->etb.pFactor = 8.8944;
-	engineConfiguration->etb.iFactor = 70.2307;
-	engineConfiguration->etb.dFactor = 0.1855;
+	setEtbPID(8.8944, 70.2307, 0.1855);
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 

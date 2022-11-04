@@ -121,3 +121,9 @@ void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, fl
 	engineConfiguration->throttlePedalSecondaryUpVoltage = secondaryUp;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = secondaryDown;
 }
+
+void setEtbPID(float p, float i, float d) {
+	engineConfiguration->etb.pFactor = p;
+	engineConfiguration->etb.iFactor = i;
+	engineConfiguration->etb.dFactor = d;
+}
