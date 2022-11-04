@@ -66,10 +66,7 @@ static void setupDefaultSensorInputs() {
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 	engineConfiguration->useETBforIdleControl = true;
 
-	engineConfiguration->throttlePedalUpVoltage = 0.73;
-	engineConfiguration->throttlePedalWOTVoltage = 4.0;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.34;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 1.86;
+	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
 
 	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
@@ -214,9 +211,5 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	engineConfiguration->tpsMin = 98;
-	engineConfiguration->tpsMax = 926;
-
-	engineConfiguration->tps1SecondaryMin = 891;
-	engineConfiguration->tps1SecondaryMax = 69;
+    setTPS1Calibration(98, 926, 891, 69);
 }
