@@ -25,7 +25,7 @@ void addEngineSnifferLogicAnalyzerEvent(int laIndex, FrontDirection frontDirecti
  */
 void addEngineSnifferCrankEvent(int wheelIndex, int triggerEventIndex, FrontDirection frontDirection);
 void addEngineSnifferVvtEvent(int vvtIndex, FrontDirection frontDirection);
-void addEngineSnifferOutputPinEvent(int outputPinType, int isUp);
+void addEngineSnifferOutputPinEvent(NamedOutputPin *pin, FrontDirection frontDirection);
 
 #if EFI_ENGINE_SNIFFER
 

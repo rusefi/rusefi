@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 06 02:04:24 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 27 18:46:37 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -297,6 +297,8 @@ case PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
 case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
   return "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE";
+case PROTEUS_GM_LS_4:
+  return "PROTEUS_GM_LS_4";
 case PROTEUS_HARLEY:
   return "PROTEUS_HARLEY";
 case PROTEUS_HONDA_K:
@@ -345,8 +347,6 @@ case TLE8888_BENCH_ENGINE:
   return "TLE8888_BENCH_ENGINE";
 case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
-case UNUSED_27:
-  return "UNUSED_27";
 case UNUSED_38:
   return "UNUSED_38";
 case UNUSED_48:

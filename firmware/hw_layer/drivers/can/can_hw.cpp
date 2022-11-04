@@ -232,7 +232,7 @@ void startCanPins() {
 
 	// Validate pins
 	if (!isValidCanTxPin(engineConfiguration->canTxPin)) {
-		if (engineConfiguration->canTxPin == Gpio::Unassigned) {
+		if (!isBrainPinValid(engineConfiguration->canTxPin)) {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}
@@ -241,7 +241,7 @@ void startCanPins() {
 	}
 
 	if (!isValidCanRxPin(engineConfiguration->canRxPin)) {
-		if (engineConfiguration->canRxPin == Gpio::Unassigned) {
+		if (!isBrainPinValid(engineConfiguration->canRxPin)) {
 			// todo: smarter online change of settings, kill isCanEnabled with fire
 			return;
 		}

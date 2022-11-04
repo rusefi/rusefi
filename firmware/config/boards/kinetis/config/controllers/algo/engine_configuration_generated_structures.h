@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 19 20:15:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 02 15:21:42 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1618,9 +1618,10 @@ struct engine_configuration_s {
 	 */
 	Gpio triggerSimulatorPins[TRIGGER_SIMULATOR_PIN_COUNT];
 	/**
+	g/s
 	 * offset 752
 	 */
-	uint16_t unusedTrig;
+	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseSlope;
 	/**
 	 * offset 754
 	 */
@@ -1628,7 +1629,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 756
 	 */
-	uint8_t unusedTrigMode;
+	adc_channel_e maf2AdcChannel;
 	/**
 	 * need 4 byte alignment
 	units
@@ -3134,8 +3135,9 @@ struct engine_configuration_s {
 	offset 1628 bit 2 */
 	bool can2OpenBLT : 1 {};
 	/**
+	 * Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
 	offset 1628 bit 3 */
-	bool unused1740b2 : 1 {};
+	bool injectorFlowAsMassFlow : 1 {};
 	/**
 	offset 1628 bit 4 */
 	bool unused1127 : 1 {};
@@ -3327,6 +3329,8 @@ struct engine_configuration_s {
 	 */
 	float egoValueShift;
 	/**
+	 * VVT output
+	 * TODO: rename to vvtOutputs
 	 * offset 1700
 	 */
 	output_pin_e vvtPins[CAM_INPUTS_COUNT];
@@ -3584,6 +3588,8 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1959[1];
 	/**
+	 * VVT output PID
+	 * TODO: rename to vvtPid
 	 * offset 1960
 	 */
 	pid_s auxPid[CAMS_PER_BANK];
@@ -4011,30 +4017,47 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> acDelay;
 	/**
+	 * need 4 byte alignment
+	units
 	 * offset 3123
 	 */
-	int8_t unused4080[9];
+	uint8_t alignmentFill_at_3123[1];
+	/**
+	mg
+	 * offset 3124
+	 */
+	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseBreakPoint;
+	/**
+	 * offset 3126
+	 */
+	int8_t unused4080[5];
 	/**
 	lobes/cam
-	 * offset 3132
+	 * offset 3131
 	 */
 	uint8_t hpfpCamLobes;
 	/**
-	 * offset 3133
+	 * offset 3132
 	 */
 	hpfp_cam_e hpfpCam;
 	/**
 	 * Crank angle ATDC of first lobe peak
 	deg
-	 * offset 3134
+	 * offset 3133
 	 */
 	uint8_t hpfpPeakPos;
 	/**
 	 * If the requested activation time is below this angle, don't bother running the pump
 	deg
-	 * offset 3135
+	 * offset 3134
 	 */
 	uint8_t hpfpMinAngle;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 3135
+	 */
+	uint8_t alignmentFill_at_3135[1];
 	/**
 	 * Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
 	cc
@@ -5065,4 +5088,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 19 20:15:08 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 02 15:21:42 UTC 2022

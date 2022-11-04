@@ -123,9 +123,9 @@
         <echo message="Building ${jar_file}"/>
 
         <copy todir="build/classes">
-            <fileset dir="ui/resources" includes="**/*.gif"/>
-            <fileset dir="ui/resources" includes="**/*.png"/>
-            <fileset dir="ui/resources" includes="**/*.jpg"/>
+            <fileset dir="ui/src/main/resources" includes="**/*.gif"/>
+            <fileset dir="ui/src/main/resources" includes="**/*.png"/>
+            <fileset dir="ui/src/main/resources" includes="**/*.jpg"/>
         </copy>
 
         <tstamp>

@@ -148,7 +148,7 @@ static void incLogFileName() {
 		if (result < 5) {
             data[result] = 0;
 			logFileIndex = maxI(MIN_FILE_INDEX, atoi(data));
-			if (absI(logFileIndex) == ERROR_CODE) {
+			if (absI(logFileIndex) == ATOI_ERROR_CODE) {
 				logFileIndex = MIN_FILE_INDEX;
 			} else {
 				logFileIndex++; // next file would use next file name

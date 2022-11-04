@@ -55,7 +55,9 @@ public class PersistentConfiguration {
             /**
              * interesting things are happening while this is executed under TS as a plugin so we need non-default CL parameter
              */
-            XMLDecoder e = new XMLDecoder(inputStream, null, null, PersistentConfiguration.class.getClassLoader());
+            XMLDecoder e = new XMLDecoder(inputStream, null, e1 -> {
+                // empty not null exception listener replaces default exception listener which prints to System.err
+            }, PersistentConfiguration.class.getClassLoader());
             config = (Map<String, Object>) e.readObject();
             e.close();
             System.out.println("Console configuration from " + CONFIG_FILE_NAME);

@@ -13,6 +13,13 @@ static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorControl.periodMs = 100;
 }
 
+/* Cylinder to bank mapping */
+void setLeftRightBanksNeedBetterName() {
+    for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	    engineConfiguration->cylinderBankSelect[i] = i % 2;
+    }
+}
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
@@ -86,4 +93,35 @@ void setDefaultBaseEngine() {
 
 	setDefaultVrThresholds();
 
+}
+
+void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
+	engineConfiguration->throttlePedalPositionAdcChannel = pps1;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = pps2;
+}
+
+void setTPS1Inputs(adc_channel_e tps1, adc_channel_e tps2) {
+	engineConfiguration->tps1_1AdcChannel = tps1;
+	engineConfiguration->tps1_2AdcChannel = tps2;
+}
+
+void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1SecondaryMin, uint16_t tps1SecondaryMax) {
+	engineConfiguration->tpsMin = tpsMin;
+	engineConfiguration->tpsMax = tpsMax;
+
+	engineConfiguration->tps1SecondaryMin = tps1SecondaryMin;
+	engineConfiguration->tps1SecondaryMax = tps1SecondaryMax;
+}
+
+void setPPSCalibration(float primaryUp, float primaryDown, float secondaryUp, float secondaryDown) {
+	engineConfiguration->throttlePedalUpVoltage = primaryUp;
+	engineConfiguration->throttlePedalWOTVoltage = primaryDown;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = secondaryUp;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = secondaryDown;
+}
+
+void setEtbPID(float p, float i, float d) {
+	engineConfiguration->etb.pFactor = p;
+	engineConfiguration->etb.iFactor = i;
+	engineConfiguration->etb.dFactor = d;
 }

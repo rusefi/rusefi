@@ -35,6 +35,9 @@ DDEFS += -DFIRMWARE_ID=\"microRusEFI\"
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += $(VAR_DEF_ENGINE_TYPE)
 
+# This board can capture SENT
+DDEFS += -DEFI_SENT_SUPPORT=TRUE
+
 # We are running on microRusEFI hardware!
 DDEFS += -DHW_MICRO_RUSEFI=1
 

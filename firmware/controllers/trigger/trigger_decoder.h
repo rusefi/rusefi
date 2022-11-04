@@ -204,7 +204,7 @@ public:
 	 */
 	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
 
-	int spinningEventIndex = 0;
+	size_t spinningEventIndex = 0;
 
 	// we might need up to one full trigger cycle of events - which on 60-2 means storage for ~120
 	// todo: change the implementation to reuse 'timeOfLastEvent'

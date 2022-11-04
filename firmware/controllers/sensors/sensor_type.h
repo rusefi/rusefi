@@ -84,6 +84,12 @@ enum class SensorType : unsigned char {
 	EGT1,
 	EGT2,
 
+	Maf2,	// Second bank MAF sensor
+
+	Map2,
+	MapSlow2,
+	MapFast2,
+
 	// analog voltage inputs for Lua
 	AuxAnalog1,
 	AuxAnalog2,

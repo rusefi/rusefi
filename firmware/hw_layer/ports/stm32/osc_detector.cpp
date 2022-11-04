@@ -40,7 +40,7 @@ static uint32_t getTimerCounts(size_t count) {
 	getOneCapture();
 
 	uint32_t firstCapture = getOneCapture();
-	uint32_t lastCapture;
+	uint32_t lastCapture = 0;
 
 	for (size_t i = 0; i < count; i++)
 	{

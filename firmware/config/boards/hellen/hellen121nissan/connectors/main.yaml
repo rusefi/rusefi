@@ -19,19 +19,19 @@ pins:
   - pin: 8a
     function: USB -
     
+ # OUT_C-IVC_L OUT_INJ7 
   - pin: 10a
     id: F13
     ts_name: 10 - VTC Left
     class: outputs
     function: Intake VTC solenoid Bank 2
- # OUT_C-IVC_L OUT_INJ7 
 
+ # OUT_C-IVC_R OUT_INJ8
   - pin: 11a
     id: F14
     ts_name: 11 - VTC Right
     class: outputs
     function: Intake VTC solenoid Bank 1
- # OUT_C-IVC_R OUT_INJ8
  
   - pin: 13a
     function: Crank Sensor

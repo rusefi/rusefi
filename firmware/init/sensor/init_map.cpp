@@ -4,8 +4,7 @@
 #include "linear_func.h"
 #include "fallback_sensor.h"
 #include "functional_sensor.h"
-#include "function_pointer_sensor.h"
-#include "identity_func.h"
+#include "map_averaging.h"
 
 static LinearFunc baroConverter;
 static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));
@@ -14,24 +13,21 @@ static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));
 // how the *voltage* is determined, not how its converted to a pressure.
 static LinearFunc mapConverter;
 static FunctionalSensor slowMapSensor(SensorType::MapSlow, MS2NT(50));
+static FunctionalSensor slowMapSensor2(SensorType::MapSlow2, MS2NT(50));
 
 // lowest reasonable idle is maybe 600 rpm
 // one sample per cycle (1 cylinder, or "sample one cyl" mode) gives a period of 100ms
 // add some margin -> 200ms timeout for fast MAP sampling
-static FunctionalSensor fastMapSensor(SensorType::MapFast, MS2NT(200));
+MapAverager fastMapSensor(SensorType::MapFast, MS2NT(200));
+MapAverager fastMapSensor2(SensorType::MapFast2, MS2NT(200));
 
-// This is called from the fast ADC completion callback
-void onMapAveraged(float mapKpa, efitick_t nowNt) {
-	// This sensor uses identity function, so it's kPa in, kPa out
-	fastMapSensor.postRawValue(mapKpa, nowNt);
-}
-
-SensorResult convertMap(float volts) {
-	return mapConverter.convert(volts);
+MapAverager& getMapAvg(size_t idx) {
+	return idx == 0 ? fastMapSensor : fastMapSensor2;
 }
 
 // Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
 static FallbackSensor mapCombiner(SensorType::Map, SensorType::MapFast, SensorType::MapSlow);
+static FallbackSensor mapCombiner2(SensorType::Map2, SensorType::MapFast2, SensorType::MapSlow2);
 
 // helper struct for the local getMapCfg function
 struct MapCfg {
@@ -106,11 +102,16 @@ void initMap() {
 		configureMapFunction(mapConverter, engineConfiguration->map.sensor.type);
 
 		slowMapSensor.setFunction(mapConverter);
-		fastMapSensor.setFunction(identityFunction);
+		slowMapSensor2.setFunction(mapConverter);
+		fastMapSensor.setFunction(mapConverter);
+		fastMapSensor2.setFunction(mapConverter);
 
 		slowMapSensor.Register();
+		slowMapSensor2.Register();
 		fastMapSensor.Register();
+		fastMapSensor2.Register();
 		mapCombiner.Register();
+		mapCombiner2.Register();
 
 		// Configure slow MAP as a normal analog sensor
 		AdcSubscription::SubscribeSensor(slowMapSensor, mapChannel, 100);

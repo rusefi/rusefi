@@ -7,7 +7,7 @@
  */
 
 #include "pch.h"
-
+#include "engine_sniffer.h"
 
 #include "drivers/gpio/gpio_ext.h"
 
@@ -18,11 +18,6 @@
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
@@ -64,27 +59,28 @@ static const char* const auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
-RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, short pinOffset,
-		short pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, size_t pinOffset,
+		size_t pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
 }
 
-RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, short pinOffset,
-		short pinModeOffset) {
-	this->registrationName = registrationName;
-	this->pinOffset = pinOffset;
-	this->pinModeOffset = pinModeOffset;
+RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset,
+		size_t pinModeOffset)
+	: next(registeredOutputHead)
+	, registrationName(registrationName)
+	, m_pinOffset(static_cast<uint16_t>(pinOffset))
+	, m_pinModeOffset(static_cast<uint16_t>(pinModeOffset))
+	{
 	// adding into head of the list is so easy and since we do not care about order that's what we shall do
-	this->next = registeredOutputHead;
 	registeredOutputHead = this;
 }
 
 bool RegisteredOutputPin::isPinConfigurationChanged() {
 #if EFI_PROD_CODE
-	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
-	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[m_pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
 
-    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
-    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[m_pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
     return curPin != newPin || curMode != newMode;
 #else
     return true;
@@ -92,8 +88,8 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 }
 
 void RegisteredOutputPin::init() {
-	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
-    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
+    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
 		this->initPin(registrationName, newPin, newMode);
@@ -106,11 +102,15 @@ void RegisteredOutputPin::unregister() {
 	}
 }
 
-#define CONFIG_OFFSET(x) x##_offset
+#define CONFIG_OFFSET(x) (offsetof(engine_configuration_s, x))
 // todo: pin and pinMode should be combined into a composite entity
 // todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
 #define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
 
+// offset of X within engineConfiguration, plus offset of Y within X
+// decltype(engine_configuration_s::x) resolves the typename of the struct X inside engineConfiguration
+#define CONFIG_OFFSET2(x, y) (offsetof(engine_configuration_s, x) + offsetof(decltype(engine_configuration_s::x), y))
+#define CONFIG_PIN_OFFSETS2(x, y) CONFIG_OFFSET2(x, y##Pin), CONFIG_OFFSET2(x, y##PinMode)
 
 EnginePins::EnginePins() :
 		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
@@ -122,8 +122,8 @@ EnginePins::EnginePins() :
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
-		idleSolenoidPin("Idle Valve", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
-		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
+		idleSolenoidPin("Idle Valve", CONFIG_OFFSET2(idle, solenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
+		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
@@ -330,9 +330,7 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-	if (!engineConfiguration->engineSnifferFocusOnInputs) {
-		addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
-	}
+    addEngineSnifferOutputPinEvent(this, FrontDirection::UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
@@ -347,7 +345,7 @@ void NamedOutputPin::setLow() {
 	setValue(false);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
+	addEngineSnifferOutputPinEvent(this, FrontDirection::DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 

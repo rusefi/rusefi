@@ -508,6 +508,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 	engine->outputChannels.rawMaf = Sensor::getRaw(SensorType::Maf);
+	engine->outputChannels.rawMaf2 = Sensor::getRaw(SensorType::Maf2);
 	engine->outputChannels.rawMap = Sensor::getRaw(SensorType::MapSlow);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
@@ -596,14 +597,14 @@ static void updateFuelInfo() {
 
 	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
 	engine->outputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
-	engine->outputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
+	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
 	engine->outputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
 	engine->outputChannels.currentTargetAfr = engine->fuelComputer->targetAFR;
 
-	engine->outputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
+	engine->outputChannels.crankingFuelMs = engine->engineState.crankingFuel.fuel;
 }
 
 static void updateIgnition(int rpm) {
@@ -687,11 +688,12 @@ void updateTunerStudioState() {
 
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
+	tsOutputChannels->mafMeasured2 = Sensor::getOrZero(SensorType::Maf2);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
 	// offset 116
 	// TPS acceleration
-	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
+	tsOutputChannels->deltaTpsValue = engine->tpsAccelEnrichment.getMaxDelta();
 
 	tsOutputChannels->totalTriggerErrorCounter = engine->triggerCentral.triggerState.totalTriggerErrorCounter;
 

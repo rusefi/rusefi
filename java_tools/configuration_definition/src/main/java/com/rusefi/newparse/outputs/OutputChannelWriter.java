@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+/**
+ * As of Nov 2022 this implementation is not used in prod :(
+ */
 public class OutputChannelWriter {
     private final PrintStream ps;
 
@@ -21,7 +24,7 @@ public class OutputChannelWriter {
 
     private int cumulativeSize = 0;
 
-    public void writeOutputChannels(ParseState parser, String namePrefix) throws FileNotFoundException {
+    public void writeOutputChannels(ParseState parser, String namePrefix) {
         // Assume the last struct is the one we want...
         Struct s = parser.getStructs().get(parser.getStructs().size() - 1);
 

@@ -22,7 +22,6 @@ typedef uint32_t ioportmask_t;
 #define FIRMWARE_ID "UNIT_TEST"
 
 // just a stub implementation for unit tests
-#define EXPECTED_REMAINING_STACK 1
 #define getCurrentRemainingStack() (999999)
 
 #define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)

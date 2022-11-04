@@ -5,6 +5,8 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 
+import java.util.TreeSet;
+
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -18,12 +20,11 @@ public class TsOutput {
     private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
-    private final boolean registerOffsets;
     private final StringBuilder tsHeader = new StringBuilder();
+    private final TreeSet<String> usedNames = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public TsOutput(boolean longForm, boolean registerOffsets) {
+    public TsOutput(boolean longForm) {
         this.isConstantsSection = longForm;
-        this.registerOffsets = registerOffsets;
     }
 
     public String getContent() {
@@ -42,6 +43,17 @@ public class TsOutput {
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
+
+                /**
+                 * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
+                 * A simple solution would be to allow only one variable per each conditional section - would be simpler not to check against previous field
+                 */
+                if (!usedNames.add(nameWithPrefix)
+                        && !isConstantsSection
+                        && !configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)
+                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                    throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
+                }
 
                 if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
                     tsPosition += configField.getSize(next);
@@ -64,12 +76,9 @@ public class TsOutput {
                         // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
                         commentContent = commentContent.substring(0, newLineIndex);
                     }
-//                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
-//                            throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online");
+                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
+                        throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online at " + commentContent.length());
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
-                }
-                if (registerOffsets) {
-                    state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
                 }
 
                 if (cs != null) {
@@ -78,13 +87,15 @@ public class TsOutput {
                 }
 
                 if (configField.isBit()) {
-                    tsHeader.append(nameWithPrefix + " = bits, U32,");
-                    tsHeader.append(" " + tsPosition + ", [");
-                    tsHeader.append(bitIndex + ":" + bitIndex);
-                    tsHeader.append("]");
-                    if (isConstantsSection)
-                        tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
-                    tsHeader.append(EOL);
+                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX)) {
+                        tsHeader.append(nameWithPrefix + " = bits, U32,");
+                        tsHeader.append(" " + tsPosition + ", [");
+                        tsHeader.append(bitIndex + ":" + bitIndex);
+                        tsHeader.append("]");
+                        if (isConstantsSection)
+                            tsHeader.append(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
+                        tsHeader.append(EOL);
+                    }
 
                     tsPosition += configField.getSize(next);
                     return tsPosition;

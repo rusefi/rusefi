@@ -17,6 +17,7 @@ Usages:
     java: TsOutputs.java
     folder: console/binary
     prepend: integration/rusefi_config.txt
+    constexpr: "engine->outputChannels"
 
   - name: knock_controller
     java: KnockController.java
@@ -77,6 +78,7 @@ Usages:
     java: EngineState.java
     folder: controllers/algo
     prepend: integration/rusefi_config.txt
+    constexpr: "engine->engineState"
 
   - name: tps_accel_state
     java: TpsAccelState.java
@@ -86,6 +88,7 @@ Usages:
     java: TriggerCentral.java
     folder: controllers/trigger
     withCDefines: true
+    constexpr: "engine->triggerCentral"
 
   - name: trigger_state
     java: TriggerState.java

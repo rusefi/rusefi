@@ -11,8 +11,9 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
 #include "hellen_meta.h"
+#include "gm_ls_4.h"
+#include "defaults.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -75,12 +76,9 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->camInputs[0] = H144_IN_SENS4;
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
+	setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
@@ -139,6 +137,10 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+
+
 	engineConfiguration->boostControlPin = H144_OUT_PWM5;
 	engineConfiguration->brakePedalPin = H144_IN_RES2;
 //	engineConfiguration->acSwitch = H144_IN_D_AUX3;
@@ -153,24 +155,10 @@ void setBoardDefaultConfiguration() {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->specs.cylindersCount = 8;
-	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
-	engineConfiguration->specs.displacement = 6.2;
+	setGmLs4();
+	setEtbPID(7.4320, 117.6542, 0.0766);
 
 	engineConfiguration->enableSoftwareKnock = true;
-
-	// random values to have valid config
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 1000;
-	// random values to have valid config
-	engineConfiguration->tps1SecondaryMin = 1000;
-	engineConfiguration->tps1SecondaryMax = 0;
-	// random values to have valid config
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 5.0;
-	// random values to have valid config
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -181,58 +169,4 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = Gpio::G4; //1E - Check Engine Light
 
-    strncpy(config->luaScript, R"(
-
-function getBitRange(data, bitIndex, bitWidth)
-	byteIndex = bitIndex >> 3
-	shift = bitIndex - byteIndex * 8
-	value = data[1 + byteIndex]
-	if (shift + bitWidth > 8) then
-		value = value + data[2 + byteIndex] * 256
-	end
-	mask = (1 << bitWidth) - 1
-	return (value >> shift) & mask
-end
-
-STARTER_OUTPUT_INDEX = 0
-startPwm(STARTER_OUTPUT_INDEX, 100, 0)
-
--- 201
-ECMEngineStatus = 0xC9
-IGN_STATUS = 0x1f1
--- 0x514
-VIN_Part1 = 1300
--- 04E1
-VIN_Part2 = 1249
-
-setTickRate(100)
-
-function canIgnStatus(bus, id, dlc, data)
-    crankingBits = getBitRange(data, 2, 2)
-    isCranking = (crankingBits == 2)
-    print('crankingBits ' .. crankingBits .. ', isCranking ' .. isCranking)
-end
-
-canRxAdd(IGN_STATUS, canIgnStatus)
-
--- todo: take VIN from configuration? encode VIN?
-canVin1    = { 0x47, 0x4E, 0x4C, 0x43, 0x32, 0x45, 0x30, 0x34 }
-canVin2    = { 0x42, 0x52, 0x32, 0x31, 0x36, 0x33, 0x36, 0x36 }
-dataECMEngineStatus = { 0x84, 0x09, 0x99, 0x0A, 0x00, 0x40, 0x08, 0x00 }
-
-function onTick()
-    txCan(1, VIN_Part1, 0, canVin1)
-    txCan(1, VIN_Part2, 0, canVin2)
-
-    -- good enough for fuel module!
-    txCan(1, ECMEngineStatus, 0, dataECMEngineStatus)
-
-    if isCranking then
-        setPwmDuty(STARTER_OUTPUT_INDEX, 1)
-    else
-        setPwmDuty(STARTER_OUTPUT_INDEX, 0)
-    end
-end
-
-    )", efi::size(config->luaScript));
 }

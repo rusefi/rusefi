@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Oct 06 23:23:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 03 02:20:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -134,6 +134,7 @@ static_assert(sizeof(speed_density_s) == 12);
 // start of cranking_fuel_s
 struct cranking_fuel_s {
 	/**
+	 * Fuel: base duration
 	 * Duration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.
 	 * Deprecated. Please use '1'.
 	 * TODO: maybe account for injector flow?
@@ -153,7 +154,8 @@ struct cranking_fuel_s {
 	 */
 	float durationCoefficient = (float)0;
 	/**
-	 * Actual injection duration based on all above coefficients.
+	 * Fuel: Actual injection
+	 * duration based on all coefficients.
 	 * offset 16
 	 */
 	floatms_t fuel = (floatms_t)0;
@@ -185,6 +187,7 @@ struct running_fuel_s {
 	 */
 	floatms_t baseFuel = (floatms_t)0;
 	/**
+	 * Fuel: actual
 	 * Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.
 	 * Without injector lag.
 	 * @see baseFuel
@@ -216,7 +219,7 @@ struct engine_state_s {
 	/**
 	 * offset 32
 	 */
-	int currentTpsAdc = (int)0;
+	uint32_t currentTpsAdc = (uint32_t)0;
 	/**
 	 * offset 36
 	 */
@@ -241,7 +244,7 @@ struct engine_state_s {
 	/**
 	 * offset 56
 	 */
-	cranking_fuel_s cranking;
+	cranking_fuel_s crankingFuel;
 	/**
 	 * offset 76
 	 */
@@ -253,7 +256,8 @@ struct engine_state_s {
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
-	 * ignition dwell duration as crankshaft angle
+	 * ignition dwell duration
+	 * as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
 	 * offset 104
@@ -382,15 +386,15 @@ struct engine_state_s {
 	/**
 	 * offset 120
 	 */
-	int startStopStateToggleCounter = (int)0;
+	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
 	 * offset 124
 	 */
-	float egt1 = (float)0;
+	float egtValue1 = (float)0;
 	/**
 	 * offset 128
 	 */
-	float egt2 = (float)0;
+	float egtValue2 = (float)0;
 	/**
 	 * User-defined RPM hard limit
 	rpm
@@ -406,11 +410,11 @@ struct engine_state_s {
 	/**
 	 * offset 136
 	 */
-	int fuelInjectionCounter = (int)0;
+	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * offset 140
 	 */
-	int sparkCounter = (int)0;
+	uint32_t sparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
 	 * offset 144
@@ -425,4 +429,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 152);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Oct 06 23:23:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 03 02:20:45 UTC 2022

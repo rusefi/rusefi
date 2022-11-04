@@ -22,59 +22,81 @@
 #if (HAL_USE_ICU == TRUE)
 
 /* TODO: get at runtime */
-#define SENT_ICU_FREQ		(168000000 / 2) // == CPU freq / 2
-
-/* TODO: move to config */
-#define SENT_INPUT_GPIO		Gpio::A1
-
-/* TODO: implement helper to get AF from GPIO for TIM2 capture */
-#define SENT_INPUT_AF		PAL_MODE_ALTERNATE(1)
-
-/* TODO: implement helper to get ICU and channel from GPIO */
-#define SENT_ICU_UNIT		ICUD2	/* TIM2 */
-#define SENT_ICU_CHANNEL	ICU_CHANNEL_2
+/* Max timer clock for most timers on STM32 is CPU clock / 2 */
+#define SENT_TIMER_CLOCK_DIV	2
+#define SENT_ICU_FREQ			(CORE_CLOCK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
 
 /* ICU callbacks */
 static void icuperiodcb_in1(ICUDriver *icup)
 {
-	SENT_ISR_Handler(0, icuGetPeriodX(icup));
+	SENT_ISR_Handler(0, icuGetPeriodX(icup) * SENT_TIMER_CLOCK_DIV);
 }
 
 /* ICU configs */
-static ICUConfig icucfg_in1 =
+static ICUConfig icucfg[SENT_INPUT_COUNT] =
 {
-	.mode = ICU_INPUT_ACTIVE_LOW,
-	.frequency = SENT_ICU_FREQ,
-	.width_cb = NULL,
-	.period_cb = icuperiodcb_in1,
-	.overflow_cb = NULL,
-	.channel = SENT_ICU_CHANNEL,
-	.dier = 0U,
-	.arr = 0xFFFFFFFFU,
+	{
+		.mode = ICU_INPUT_ACTIVE_LOW,
+		.frequency = SENT_ICU_FREQ,
+		.width_cb = NULL,
+		.period_cb = icuperiodcb_in1,
+		.overflow_cb = NULL,
+		.channel = ICU_CHANNEL_1,	/* will be overwriten on startSent() */
+		.dier = 0U,
+		.arr = 0xFFFFFFFFU,
+	}
 };
 
 void startSent()
 {
-	/* SENT is inited last, if pin is unused - use it for SENT
-	 * TODO: remove this when SENT options get integrated into settings */
-	if ((isBrainPinValid(SENT_INPUT_GPIO)) &&
-		(getPinFunction(SENT_INPUT_GPIO) == NULL)) {
-		efiSetPadMode("SENT", SENT_INPUT_GPIO, SENT_INPUT_AF);
+	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
+		brain_input_pin_e sentPin = engineConfiguration->sentInputPins[i];
 
-		icuStart(&SENT_ICU_UNIT, &icucfg_in1);
-		icuStartCapture(&SENT_ICU_UNIT);
-		icuEnableNotifications(&SENT_ICU_UNIT);
+		if (!isBrainPinValid(sentPin)) {
+			continue;
+		}
+
+		ICUConfig *cfg = &icucfg[i];
+		ICUDriver *icu;
+		iomode_t pinAF;
+		uint32_t baseClock;
+
+		if (getIcuParams(sentPin, &pinAF, &icu, &cfg->channel, &baseClock) != true) {
+			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
+			/* throw error? */
+			continue;
+		}
+
+		efiSetPadMode("SENT", sentPin, PAL_MODE_ALTERNATE(pinAF));
+
+		icuStart(icu, cfg);
+		icuStartCapture(icu);
+		icuEnableNotifications(icu);
 	}
 }
 
 void stopSent()
 {
-	if (isBrainPinValid(SENT_INPUT_GPIO)) {
-		icuDisableNotifications(&SENT_ICU_UNIT);
-		icuStopCapture(&SENT_ICU_UNIT);
-		icuStop(&SENT_ICU_UNIT);
+	for (int i = 0; i < SENT_INPUT_COUNT; i++) {
+		brain_input_pin_e sentPin = activeConfiguration.sentInputPins[i];
 
-		efiSetPadUnused(SENT_INPUT_GPIO);
+		if (!isBrainPinValid(sentPin)) {
+			continue;
+		}
+
+		ICUDriver *icu;
+
+		if (getIcuParams(sentPin, NULL, &icu, NULL, NULL) != true) {
+			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
+			/* throw error? */
+			continue;
+		}
+
+		icuDisableNotifications(icu);
+		icuStopCapture(icu);
+		icuStop(icu);
+
+		efiSetPadUnused(sentPin);
 	}
 }
 

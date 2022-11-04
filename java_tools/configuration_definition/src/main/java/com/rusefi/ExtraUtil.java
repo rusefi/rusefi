@@ -12,8 +12,7 @@ public class ExtraUtil {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
             String result = FiringOrderTSLogic.invoke(firingEnumFileName);
-            variableRegistry.register("FIRINGORDER", result);
-            parseState.addDefinition("FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
+            parseState.addDefinition(variableRegistry, "FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
         }
     }
 

@@ -29,6 +29,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
         ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
         ecu.changeRpm(1000);
 
+        // making output pins available
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 1 none");
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
@@ -40,7 +41,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
         EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.vehicleSpeedKph));
 
         // attaching VSS to idle output since there is a jumper on test discovery
-        ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
+        ecu.sendCommand("set " + CMD_VSS_PIN + " " + "pa5");
 
         sleep(2 * Timeouts.SECOND);
 

@@ -74,7 +74,7 @@
 #define PAL_USE_CALLBACKS           TRUE
 
 // USB Serial
-#define SERIAL_USB_BUFFERS_SIZE     512
+#define SERIAL_USB_BUFFERS_SIZE     768
 #define SERIAL_USB_BUFFERS_NUMBER   2
 
 // USB Mass Storage

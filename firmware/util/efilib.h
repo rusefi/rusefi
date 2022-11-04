@@ -29,9 +29,6 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 
 #define BIT(n) (UINT32_C(1) << (n))
 
-// we also have efi::size which probably does not work for C code
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
-
 #define HUMAN_OFFSET 1
 
 // human-readable IDs start from 1 while computer-readable indices start from 0
@@ -43,7 +40,7 @@ static inline uint32_t SWAP_UINT32(uint32_t x)
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
 
-#define ERROR_CODE 311223344
+#define ATOI_ERROR_CODE 311223344
 
 #define Q(x) #x
 #define QUOTE(x) Q(x)

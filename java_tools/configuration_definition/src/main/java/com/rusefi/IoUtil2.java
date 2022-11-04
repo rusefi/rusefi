@@ -1,7 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.newparse.ParseState;
-import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
@@ -59,13 +57,4 @@ public class IoUtil2 {
         return crc32;
     }
 
-    static void signatureHash(ReaderState state, ParseState parseState, String tsPath, long crc32) {
-        // store the CRC32 as a built-in variable
-
-        // nasty trick - do not insert signature into live data files
-        if (tsPath != null) {
-            state.variableRegistry.register(ConfigDefinition.SIGNATURE_HASH, "" + crc32);
-            parseState.addDefinition(ConfigDefinition.SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
-        }
-    }
 }

@@ -21,7 +21,6 @@ public class ConfigDefinition {
     private static final String KEY_DEFINITION = "-definition";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
-    private static final String KEY_SD_DESTINATION = "-sd_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
@@ -95,9 +94,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_C_DESTINATION:
                     state.addCHeaderDestination(args[i + 1]);
-                    break;
-                case KEY_SD_DESTINATION:
-                    state.addSdDestination(args[i + 1]);
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -175,8 +171,8 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil2.getCrc32(state.inputFiles);
-        IoUtil2.signatureHash(state, parseState, tsInputFileFolder, crc32);
+        FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.inputFiles));
+        SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
@@ -227,7 +223,7 @@ public class ConfigDefinition {
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
-            tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
+            tmpRegistry.register(SIGNATURE_HASH, uniqueId.encode());
             tmpRegistry.readPrependValues(signaturePrependFile);
             state.destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }

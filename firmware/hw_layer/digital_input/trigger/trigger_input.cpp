@@ -17,11 +17,9 @@
 #if (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE)
 
 #if (HAL_TRIGGER_USE_PAL == TRUE)
-	void extiTriggerTurnOnInputPins();
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
 	void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
 #else
-	#define extiTriggerTurnOnInputPins() ((void)0)
 	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 		UNUSED(msg);
 		UNUSED(index);
@@ -160,9 +158,6 @@ void startTriggerInputPins() {
 }
 
 void turnOnTriggerInputPins() {
-	/* init all trigger HW available */
-	extiTriggerTurnOnInputPins();
-
 	applyNewTriggerInputPins();
 }
 
@@ -188,9 +183,21 @@ void startTriggerDebugPins() {
 }
 
 void applyNewTriggerInputPins() {
+	if (hasFirmwareError()) {
+		return;
+	}
+
 #if EFI_PROD_CODE
 	// first we will turn off all the changed pins
 	stopTriggerInputPins();
+
+	if (isBrainPinValid(engineConfiguration->triggerInputPins[0])) {
+		engine->rpmCalculator.Register();
+	} else {
+		// if we do not have primary input channel maybe it's BCM mode and we inject RPM value via Lua?
+		engine->rpmCalculator.unregister();
+	}
+
 	// then we will enable all the changed pins
 	startTriggerInputPins();
 #endif /* EFI_PROD_CODE */

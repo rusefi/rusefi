@@ -1,6 +1,7 @@
 package com.rusefi.newparse;
 
 import com.rusefi.EnumsReader;
+import com.rusefi.VariableRegistry;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.generated.RusefiConfigGrammarBaseListener;
 import com.rusefi.generated.RusefiConfigGrammarParser;
@@ -110,6 +111,16 @@ public class ParseState {
 
     public Definition findDefinition(String name) {
         return definitions.getOrDefault(name, null);
+    }
+
+    /**
+     * we are in a lengthy period of transition between two implementations
+     */
+    public void addDefinition(VariableRegistry variableRegistry, String name, String value, Definition.OverwritePolicy overwritePolicy) {
+        // old implementation
+        variableRegistry.register(name, value);
+        // new implementation
+        addDefinition(name, value, overwritePolicy);
     }
 
     public void addDefinition(String name, Object value, Definition.OverwritePolicy overwritePolicy) {

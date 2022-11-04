@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 @Ignore // todo: https://github.com/rusefi/rusefi/issues/4669
 public class LiveDataColorTest {
     @Test
-    public void testAllFiles() throws IOException, URISyntaxException {
+    public void testAllFiles() throws IOException {
         int counter = 0;
         for (live_data_e view : live_data_e.values()) {
             String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;

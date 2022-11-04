@@ -2,9 +2,9 @@
 
 struct_no_prefix trigger_central_s
 
-	int[HW_EVENT_TYPES iterate] hwEventCounters;Hardware events since boot
+	uint32_t[HW_EVENT_TYPES iterate] hwEventCounters;Hardware events since boot
 
-int vvtCamCounter
+uint32_t vvtCamCounter
 
     float mapVvt_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
     float mapVvt_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3

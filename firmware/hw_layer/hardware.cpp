@@ -211,12 +211,6 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-static void turnOnHardware() {
-#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins();
-#endif /* EFI_SHAFT_POSITION_INPUT */
-}
-
 void stopSpi(spi_device_e device) {
 #if HAL_USE_SPI
 	if (!isSpiInitialized[device]) {
@@ -255,7 +249,7 @@ void applyNewHardwareSettings() {
 
 #if EFI_SENT_SUPPORT
 	stopSent();
-#endif
+#endif // EFI_SENT_SUPPORT
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	stopJoystickPins();
@@ -559,7 +553,9 @@ void initHardware() {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-	turnOnHardware();
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	turnOnTriggerInputPins();
+#endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_HIP_9011
 	initHip9011();

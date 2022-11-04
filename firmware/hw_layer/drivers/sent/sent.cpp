@@ -29,6 +29,9 @@
 /* Status + two 12-bit signals + CRC */
 #define SENT_MSG_PAYLOAD_SIZE   (1 + SENT_MSG_DATA_SIZE + 1)  // Size of payload
 
+/* use 3 full frames + one additional pulse for unit time calibration */
+#define SENT_CALIBRATION_PULSES	(1 + 3 * SENT_MSG_PAYLOAD_SIZE)
+
 /*==========================================================================*/
 /* Decoder configuration													*/
 /*==========================================================================*/
@@ -46,6 +49,22 @@
 /*==========================================================================*/
 /* Decoder																	*/
 /*==========================================================================*/
+
+/* Helpers for Msg manipulations */
+/* nibbles order: status, sig0_MSN, sig0_MidN, sig0_LSN, sig1_MSN, sig1_MidN, sig1_LSN, CRC */
+/* we shift rxReg left for 4 bits on each neable received and put newest nibble
+ * in [3:0] bits of rxReg, so when full message is received:
+ * CRC is [3:0] - nibble 7
+ * status is [31:28] - nibble 0
+ * sig0 is [27:16], sig1 is [15:4] */
+#define MsgGetNibble(msg, n)	(((msg) >> (4 * (7 - (n)))) & 0xf)
+#define MsgGetStat(msg)			MsgGetNibble(msg, 0)
+#define MsgGetSig0(msg)			(((msg) >> (4 * 4)) & 0xfff)
+#define MsgGetSig1(msg)			(((msg) >> (1 * 4)) & 0xfff)
+#define MsgGetCrc(msg)			MsgGetNibble(msg, 7)
+
+/* convert CPU ticks to float Us */
+#define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
 
 typedef enum
 {
@@ -81,9 +100,10 @@ private:
 	/* pulses skipped in init state while waiting for SYNC */
 	uint32_t initStatePulseCounter;
 
-	/* fast channel nibbles.
-	 * TODO: rewrite with uint32_t shift register */
-	uint8_t nibbles[SENT_MSG_PAYLOAD_SIZE];
+	/* fast channel shift register*/
+	uint32_t rxReg;
+	/* fast channel last received valid message */
+	uint32_t rxLast;
 
 	/* slow channel shift registers and flags */
 	uint16_t scMsgFlags;
@@ -94,17 +114,13 @@ private:
 	int SlowChannelDecoder(void);
 
 	/* CRC */
-	uint8_t crc4(uint8_t* pdata, uint16_t ndata);
-	uint8_t crc4_gm(uint8_t* pdata, uint16_t ndata);
+	uint8_t crc4(uint32_t data);
+	uint8_t crc4_gm(uint32_t data);
+	uint8_t crc4_gm_v2(uint32_t data);
 
 	void restart(void);
 
 public:
-	/* fast channel data */
-	int32_t sig0;
-	int32_t sig1;
-	int8_t stat;
-
 	/* slow channel data */
 	struct {
 		uint16_t data;
@@ -119,11 +135,13 @@ public:
 	/* Decoder */
 	int Decoder(uint16_t clocks);
 
-	/* get latest valid signal0 and signal1
+	/* Get last raw message */
+	int GetMsg(uint32_t* rx);
+	/* Unpack last valid message to status, signal0 and signal1
 	 * Note:
 	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
 	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
-	int GetSignals(uint16_t *pSig0, uint16_t *pSig1);
+	int GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1);
 
 	/* Show status */
 	void Info(void);
@@ -161,12 +179,13 @@ int sent_channel::Decoder(uint16_t clocks)
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
-		/* Find longes pulse ... */
+		/* Find longes pulse */
 		if (clocks > tickPerUnit) {
 			tickPerUnit = clocks;
 		}
-		/* ... of 9 pulses */
-		if (pulseCounter >= (SENT_MSG_PAYLOAD_SIZE + 1)) {
+		/* ...this should be SYNC pulse */
+		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
+			/* calculate Unit time from SYNC pulse */
 			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 			pulseCounter = 0;
@@ -221,7 +240,9 @@ int sent_channel::Decoder(uint16_t clocks)
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = (clocks + 56 / 2) / (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				rxReg = 0;
 				state = SENT_STATE_STATUS;
 			}
 			else
@@ -253,7 +274,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		case SENT_STATE_CRC:
 			if(interval <= SENT_MAX_INTERVAL)
 			{
-				nibbles[state - SENT_STATE_STATUS] = interval;
+				rxReg = (rxReg << 4) | (uint32_t)interval;
 
 				if (state != SENT_STATE_CRC)
 				{
@@ -267,23 +288,13 @@ int sent_channel::Decoder(uint16_t clocks)
 					#endif // SENT_STATISTIC_COUNTERS
 					/* CRC check */
 					/* TODO: find correct way to calculate CRC */
-					if ((nibbles[7] == crc4(nibbles, 7)) ||
-						(nibbles[7] == crc4_gm(nibbles + 1, 6)))
+					if ((MsgGetCrc(rxReg) == crc4(rxReg)) ||
+						(MsgGetCrc(rxReg) == crc4_gm(rxReg)) ||
+						(MsgGetCrc(rxReg) == crc4_gm_v2(rxReg)))
 					{
-						/* Full packet with correct CRC has been received
-						 * NOTE different MSB packing for sig0 and sig1
-						 * is it protocol-defined or device-specific?
-						 * looks like some devices send 16 + 8 bit, not 12 + 12 */
-						sig0 =
-							(nibbles[1 + 0] << 8) |
-							(nibbles[1 + 1] << 4) |
-							(nibbles[1 + 2] << 0);
-						sig1 =
-							(nibbles[1 + 3] << 0) |
-							(nibbles[1 + 4] << 4) |
-							(nibbles[1 + 5] << 8);
-						stat =
-							nibbles[0];
+						/* Full packet with correct CRC has been received */
+						rxLast = rxReg;
+						/* TODO: add timestamp? */
 						ret = 1;
 					}
 					else
@@ -321,14 +332,45 @@ int sent_channel::Decoder(uint16_t clocks)
 	return ret;
 }
 
-int sent_channel::GetSignals(uint16_t *pSig0, uint16_t *pSig1)
+int sent_channel::GetMsg(uint32_t* rx)
 {
+	if (rx) {
+		*rx = rxLast;
+	}
+
+	/* TODO: add check if any packet was received */
+	/* TODO: add check for time since last message reseived */
+	return 0;
+}
+
+int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1)
+{
+	uint32_t rx;
+	int ret = GetMsg(&rx);
+
+	if (ret < 0) {
+		return ret;
+	}
+
+	/* NOTE different MSB packing for sig0 and sig1
+	 * is it protocol-defined or device-specific?
+	 * Also looks like some devices send 16 + 8 bit, not 12 + 12 */
+	if (pStat) {
+		*pStat = MsgGetStat(rx);
+	}
+
 	if (pSig0) {
-		*pSig0 = sig0;
+		uint16_t tmp = MsgGetSig0(rx);
+		*pSig0 = tmp;
 	}
 
 	if (pSig1) {
-		*pSig1 = sig1;
+		uint16_t tmp = MsgGetSig1(rx);
+		/* swap */
+		tmp = 	((tmp >> 8) & 0x00f) |
+				((tmp << 8) & 0xf00) |
+				(tmp & 0x0f0);
+		*pSig1 = tmp;
 	}
 
 	return 0;
@@ -364,8 +406,8 @@ int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
 int sent_channel::SlowChannelDecoder()
 {
 	/* bit 2 and bit 3 from status nibble are used to transfer short messages */
-	bool b2 = !!(nibbles[0] & (1 << 2));
-	bool b3 = !!(nibbles[0] & (1 << 3));
+	bool b2 = !!(MsgGetStat(rxLast) & BIT(2));
+	bool b3 = !!(MsgGetStat(rxLast) & BIT(3));
 
 	/* shift in new data */
 	scShift2 = (scShift2 << 1) | b2;
@@ -423,61 +465,85 @@ int sent_channel::SlowChannelDecoder()
 	return 0;
 }
 
-/* This CRC works for Si7215 for WHOLE message expect last nibble (CRC) */
-uint8_t sent_channel::crc4(uint8_t* pdata, uint16_t ndata)
+/* This is correct for Si7215 */
+/* This CRC is calculated for WHOLE message expect last nibble (CRC) */
+uint8_t sent_channel::crc4(uint32_t data)
 {
 	size_t i;
 	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
 	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
 
-	for (i = 0; i < ndata; i++)
-	{
-		crc = crc ^ pdata[i];
+	for (i = 0; i < 7; i++) {
+		crc = crc ^ MsgGetNibble(data, i);
 		crc = CrcLookup[crc];
 	}
 
 	return crc;
 }
 
-/* This CRC works for GM pressure sensor for message minus status nibble and minus CRC nibble */
-/* TODO: double check and use same CRC routine? */
-uint8_t sent_channel::crc4_gm(uint8_t* pdata, uint16_t ndata)
+/* TODO: double check two following and use same CRC routine? */
+
+/* This is correct for GM throttle body */
+/* This CRC is calculated for message expect status nibble and minus CRC nibble */
+uint8_t sent_channel::crc4_gm(uint32_t data)
 {
+	size_t i;
+	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
 	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
-	uint8_t calculatedCRC, i;
 
-	calculatedCRC = SENT_CRC_SEED; // initialize checksum with seed "0101"
+	for (i = 1; i < 7; i++) {
+		crc = CrcLookup[crc];
+		crc = (crc ^ MsgGetNibble(data, i)) & 0xf;
+	}
 
-	for (i = 0; i < ndata; i++)
-	{
-		calculatedCRC = CrcLookup[calculatedCRC];
-		calculatedCRC = (calculatedCRC ^ pdata[i]) & 0x0F;
+	return crc;
+}
+
+/* This is correct for GDI fuel pressure sensor */
+/* This CRC is calculated for message expect status nibble and minus CRC nibble */
+uint8_t sent_channel::crc4_gm_v2(uint32_t data)
+{
+	size_t i;
+	uint8_t crc = SENT_CRC_SEED; // initialize checksum with seed "0101"
+	const uint8_t CrcLookup[16] = {0, 13, 7, 10, 14, 3, 9, 4, 1, 12, 6, 11, 15, 2, 8, 5};
+
+	for (i = 1; i < 7; i++) {
+		crc = CrcLookup[crc];
+		crc = (crc ^ MsgGetNibble(data, i)) & 0xf;
 	}
 	// One more round with 0 as input
-	calculatedCRC = CrcLookup[calculatedCRC];
+	crc = CrcLookup[crc];
 
-	return calculatedCRC;
+	return crc;
 }
 
 void sent_channel::Info(void)
 {
 	int i;
 
-	efiPrintf("Unit time %d timer ticks", tickPerUnit);
-	efiPrintf("Total pulses %d", pulseCounter);
-	efiPrintf("Last fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
+	uint8_t stat;
+	uint16_t sig0, sig1;
 
-	efiPrintf("Slow channels:");
-	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
-		if (scMsgFlags & BIT(i)) {
-			efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
+	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(tickPerUnit));
+	efiPrintf("Total pulses %d", pulseCounter);
+
+	if (GetSignals(&stat, &sig0, &sig1) == 0) {
+		efiPrintf("Last valid fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
+	}
+
+	if (scMsgFlags) {
+		efiPrintf("Slow channels:");
+		for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+			if (scMsgFlags & BIT(i)) {
+				efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
+			}
 		}
 	}
 
 	#if SENT_STATISTIC_COUNTERS
 		efiPrintf("Restarts %d", statistic.RestartCnt);
 		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
-		efiPrintf("Total frames %d with crc erorr %d", statistic.FrameCnt, statistic.CrcErrCnt);
+		efiPrintf("Total frames %d with crc error %d (%f %%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
 		efiPrintf("Sync errors %d", statistic.SyncErr);
 	#endif
 }
@@ -540,6 +606,23 @@ static void printSentInfo()
 		ch.Info();
 		efiPrintf("--------------------");
 	}
+}
+
+/* Don't be confused: this actually returns throttle body position */
+float getSentValue(size_t index) {
+	if (index < SENT_CHANNELS_NUM) {
+		uint16_t sig0, sig1;
+		sent_channel &ch = channels[index];
+
+		if (ch.GetSignals(NULL, &sig0, &sig1) == 0) {
+			if (sig0 + sig1 == 0xfff) {
+				/* scale to 0.0 .. 1.0 */
+				return (float)sig1 / 0xfff;
+			}
+		}
+	}
+
+    return NAN;
 }
 
 /* Should be called once */

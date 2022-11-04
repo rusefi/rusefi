@@ -69,7 +69,7 @@ pins:
     ts_name: J7_8 AUX
     function: J7_8 AUX
 
-  - pin: 1
+  - pin: K1
     # H144_IGN_1
     id: C13
     class: outputs
@@ -79,7 +79,7 @@ pins:
 
 
 
-  - pin: 16
+  - pin: K16
     # H144_LS_3
     id: D11
     class: outputs
@@ -87,7 +87,7 @@ pins:
     function: injector output 3
     type: inj
 
-  - pin: 17
+  - pin: K17
     # H144_IGN_8
     id: E6
     class: outputs
@@ -95,7 +95,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 18
+  - pin: K18
     # H144_IGN_4
     id: E3
     class: outputs
@@ -103,7 +103,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 32
+  - pin: K32
     # H144_LS_2
     id: G8
     class: outputs
@@ -111,7 +111,7 @@ pins:
     function: injector output 2
     type: inj
 
-  - pin: 33
+  - pin: K33
     # H144_IGN_7
     id: B9
     class: outputs
@@ -119,7 +119,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 34
+  - pin: K34
     # H144_IGN_5
     id: E2
     class: outputs
@@ -127,7 +127,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 48
+  - pin: K48
     # H144_LS_8
     id: F14
     class: outputs
@@ -135,7 +135,7 @@ pins:
     function: injector output 8
     type: inj
 
-  - pin: 49
+  - pin: K49
     # H144_LS_5
     id: D9
     class: outputs
@@ -143,7 +143,7 @@ pins:
     function: injector output 5
     type: inj
 
-  - pin: 52
+  - pin: K52
     # H144_LS_6
     id: F12
     class: outputs
@@ -151,7 +151,7 @@ pins:
     function: injector output 6
     type: inj
 
-  - pin: 53
+  - pin: K53
     # H144_IGN_2
     id: E5
     class: outputs
@@ -159,7 +159,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 54
+  - pin: K54
     # H144_IGN_6
     id: B8
     class: outputs
@@ -167,7 +167,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 55
+  - pin: K55
     # H144_IGN_3
     id: E4
     class: outputs
@@ -175,7 +175,7 @@ pins:
     function: igniter
     type: ign
 
-  - pin: 59
+  - pin: K59
     # H144_IN_SENS4
     id: F6
     class: event_inputs
@@ -184,7 +184,7 @@ pins:
     type: ls
     color: purple
 
-  - pin: 60
+  - pin: K60
     # H144_IN_O2S2
     id: EFI_ADC_1
     class: analog_inputs
@@ -193,7 +193,7 @@ pins:
     type: av
     color: purple
 
-  - pin: 63
+  - pin: K63
     # H144_IN_SENS2
     id: F4
     class: event_inputs
@@ -202,7 +202,7 @@ pins:
     type: ls
     color: purple
 
-  - pin: 64
+  - pin: K64
     # H144_IN_TPS
     id: EFI_ADC_4
     class: analog_inputs
@@ -211,7 +211,7 @@ pins:
     type: av
     color: purple
 
-  - pin: 65
+  - pin: K65
     # H144_IN_MAP1
     id: EFI_ADC_10
     class: analog_inputs
@@ -220,7 +220,7 @@ pins:
     type: av
     color: purple
 
-  - pin: 66
+  - pin: K66
     # H144_IN_AUX1
     id: EFI_ADC_8
     class: analog_inputs
@@ -229,7 +229,7 @@ pins:
     type: av
     color: purple
 
-  - pin: 70
+  - pin: K70
     # H144_LS_4
     id: D10
     class: outputs
@@ -237,7 +237,7 @@ pins:
     function: injector output 4
     type: inj
 
-  - pin: 71
+  - pin: K71
     # H144_LS_7
     id: F13
     class: outputs
@@ -245,10 +245,14 @@ pins:
     function: injector output 7
     type: inj
 
-  - pin: 72
+  - pin: K72
     # H144_LS_1
     id: G7
     class: outputs
     ts_name: C2-72 INJ 1
     function: injectpr output 1
     type: inj
+
+  - pin: K73
+    function: GND
+    type: GND

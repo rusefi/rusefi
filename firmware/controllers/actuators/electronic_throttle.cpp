@@ -39,7 +39,7 @@
  *
  * enable verbose_etb
  * disable verbose_etb
- * ethinfo
+ * etbinfo
  * set mock_pedal_position X
  *
  *
@@ -80,6 +80,7 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
+#include "defaults.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -168,7 +169,6 @@ static TsCalMode functionToCalModeSecMax(etb_function_e func) {
 #endif // EFI_TUNER_STUDIO
 
 static percent_t directPwmValue = NAN;
-static percent_t currentEtbDuty;
 
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
@@ -713,17 +713,16 @@ static EtbThread etbThread CCM_OPTIONAL;
 
 #endif
 
-static void showEthInfo() {
+static void showEtbInfo() {
 #if EFI_PROD_CODE
 	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);
 
 	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-
 	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
 			hwPortname(engineConfiguration->etbIo[0].controlPin),
-			currentEtbDuty,
+			engine->outputChannels.etb1DutyCycle,
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
@@ -796,7 +795,7 @@ static void etbReset() {
 void setEtbPFactor(float value) {
 	engineConfiguration->etb.pFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -805,7 +804,7 @@ void setEtbPFactor(float value) {
 void setEtbIFactor(float value) {
 	engineConfiguration->etb.iFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -814,7 +813,7 @@ void setEtbIFactor(float value) {
 void setEtbDFactor(float value) {
 	engineConfiguration->etb.dFactor = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 /**
@@ -823,7 +822,7 @@ void setEtbDFactor(float value) {
 void setEtbOffset(int value) {
 	engineConfiguration->etb.offset = value;
 	etbPidReset();
-	showEthInfo();
+	showEtbInfo();
 }
 
 void etbAutocal(size_t throttleIndex) {
@@ -952,22 +951,6 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 }
 
 void doInitElectronicThrottle() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
-#if EFI_PROD_CODE
-	addConsoleAction("ethinfo", showEthInfo);
-	addConsoleAction("etbreset", etbReset);
-	addConsoleActionI("etb_freq", setEtbFrequency);
-
-	// this command is useful for real hardware test with known cheap hardware
-	addConsoleAction("etb_test_hw", [](){
-		set18919_AM810_pedal_position_sensor();
-	});
-
-#endif /* EFI_PROD_CODE */
-
-	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
-	throttle2TrimTable.init(config->throttle2TrimTable, config->throttle2TrimTpsBins, config->throttle2TrimRpmBins);
-
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
@@ -981,18 +964,14 @@ void doInitElectronicThrottle() {
 		}
 		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
-		// If this motor is actually set up, init the etb
-		if (motor)
-		{
-			auto controller = engine->etbControllers[i];
-			if (!controller) {
-				continue;
-			}
-
-			auto pid = getEtbPidForFunction(func);
-
-			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		auto controller = engine->etbControllers[i];
+		if (!controller) {
+			continue;
 		}
+
+		auto pid = getEtbPidForFunction(func);
+
+		anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
 	}
 
 	if (!anyEtbConfigured) {
@@ -1033,6 +1012,21 @@ void initElectronicThrottle() {
 		engine->etbControllers[i] = etbControllers[i];
 	}
 #endif
+
+#if EFI_PROD_CODE
+	addConsoleAction("etbinfo", showEtbInfo);
+	addConsoleAction("etbreset", etbReset);
+	addConsoleActionI("etb_freq", setEtbFrequency);
+
+	// this command is useful for real hardware test with known cheap hardware
+	addConsoleAction("etb_test_hw", [](){
+		set18919_AM810_pedal_position_sensor();
+	});
+
+#endif /* EFI_PROD_CODE */
+
+	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
+	throttle2TrimTable.init(config->throttle2TrimTable, config->throttle2TrimTpsBins, config->throttle2TrimRpmBins);
 
 	doInitElectronicThrottle();
 }
@@ -1110,11 +1104,7 @@ void setProteusHitachiEtbDefaults() {
 	engineConfiguration->tps2_1AdcChannel = PROTEUS_IN_TPS2_1;
 	// EFI_ADC_0: "Analog Volt 5"
 	engineConfiguration->tps2_2AdcChannel = PROTEUS_IN_ANALOG_VOLT_5;
-	// EFI_ADC_1: "Analog Volt 6"
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_6;
-
-	// EFI_ADC_2: "Analog Volt 7"
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_6, PROTEUS_IN_PPS2);
 #endif // HW_PROTEUS
 }
 

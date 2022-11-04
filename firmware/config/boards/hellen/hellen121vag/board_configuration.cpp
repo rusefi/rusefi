@@ -11,9 +11,9 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
 #include "electronic_throttle_impl.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1; // 96 - INJ_1
@@ -69,13 +69,12 @@ static void setupDefaultSensorInputs() {
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = Gpio::A6; // 86 - CAM1
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS; // 92 - TPS 1
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+    // 92 - TPS 1
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
-
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS; // 34 In PPS1
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2; // 35 In PPS2
+    // 34 In PPS1
+    // 35 In PPS2
+    setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
 
 	engineConfiguration->throttlePedalUpVoltage = 0.4;
 	engineConfiguration->throttlePedalWOTVoltage = 2;

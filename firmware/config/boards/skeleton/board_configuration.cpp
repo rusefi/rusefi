@@ -79,7 +79,6 @@ static void setupDefaultSensorInputs() {
 	// Throttle Body Position Sensors, second channel is a check/fail-safe
 	// tps = "20 - AN volt 5"
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	// Throttle pedal inputs
 	// Idle/Up/Closed (no pressure on pedal) pin

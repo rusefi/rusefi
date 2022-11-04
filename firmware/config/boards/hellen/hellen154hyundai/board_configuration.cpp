@@ -11,7 +11,7 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
+#include "defaults.h"
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
@@ -59,21 +59,16 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->vvtMode[1 * CAMS_PER_BANK] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[1] = VVT_SECOND_HALF;
 
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
-	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 	engineConfiguration->useETBforIdleControl = true;
 
-	engineConfiguration->throttlePedalUpVoltage = 0.73;
-	engineConfiguration->throttlePedalWOTVoltage = 4.0;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.34;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 1.86;
+	setPPSCalibration(0.73, 4.0, 0.34, 1.86);
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
@@ -101,8 +96,8 @@ void setBoardConfigOverrides() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// Direct hall-only cam input
-	// this one same on both revisions
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
+	// exhaust input same on both revisions
+	engineConfiguration->camInputs[1] = H144_IN_D_AUX4;
 
 	if (engine->engineState.hellenBoardId == -1) {
 	    engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
@@ -197,9 +192,7 @@ void setBoardDefaultConfiguration() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	engineConfiguration->etb.pFactor = 8.8944;
-	engineConfiguration->etb.iFactor = 70.2307;
-	engineConfiguration->etb.dFactor = 0.1855;
+	setEtbPID(8.8944, 70.2307, 0.1855);
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
@@ -214,9 +207,5 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	engineConfiguration->tpsMin = 98;
-	engineConfiguration->tpsMax = 926;
-
-	engineConfiguration->tps1SecondaryMin = 891;
-	engineConfiguration->tps1SecondaryMax = 69;
+    setTPS1Calibration(98, 926, 891, 69);
 }

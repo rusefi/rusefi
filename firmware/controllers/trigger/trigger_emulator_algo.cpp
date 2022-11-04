@@ -61,11 +61,6 @@ PwmConfig triggerSignal;
 
 static int atTriggerVersion = 0;
 
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
-
 /**
  * todo: why is this method NOT reciprocal to getCrankDivider?!
  * todo: oh this method has only one usage? there must me another very similar method!
@@ -143,7 +138,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 #endif /* EFI_PROD_CODE */
 }
 
-static void initTriggerPwm() {
+static void startSimulatedTriggerSignal() {
 	// No need to start more than once
 	if (hasInitTriggerEmulator) {
 		return;
@@ -160,19 +155,23 @@ static void initTriggerPwm() {
 }
 
 void enableTriggerStimulator() {
-	initTriggerPwm();
+	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = true;
+    engine->rpmCalculator.Register();
+    incrementGlobalConfigurationVersion();
 }
 
 void enableExternalTriggerStimulator() {
-	initTriggerPwm();
+	startSimulatedTriggerSignal();
 	engine->triggerCentral.directSelfStimulation = false;
+    incrementGlobalConfigurationVersion();
 }
 
 void disableTriggerStimulator() {
 	engine->triggerCentral.directSelfStimulation = false;
 	triggerSignal.stop();
 	hasInitTriggerEmulator = false;
+    incrementGlobalConfigurationVersion();
 }
 
 void initTriggerEmulatorLogic() {

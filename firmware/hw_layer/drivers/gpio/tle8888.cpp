@@ -388,8 +388,7 @@ int Tle8888::spi_rw(uint16_t tx, uint16_t *rx_ptr)
  */
 int Tle8888::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 {
-	int ret;
-	uint16_t rxdata;
+	int ret = 0;
 	SPIDriver *spi = cfg->spi_bus;
 
 	if (n <= 0) {
@@ -413,7 +412,7 @@ int Tle8888::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* data transfer */
-		rxdata = spiPolledExchange(spi, tx[i]);
+		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
 
 		if (rx)
 			rx[i] = rxdata;
@@ -484,7 +483,7 @@ int Tle8888::update_output()
 		CMD_CMD0((mr_manual ? REG_CMD0_MRSE : 0x0) |
 				 ((o_data & BIT(TLE8888_OUTPUT_MR)) ? REG_CMD0_MRON : 0x0))
 	};
-	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
+	ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* atomic */
@@ -515,9 +514,9 @@ int Tle8888::update_status_and_diag()
 		CMD_OPSTAT(1),
 		CMD_OPSTAT(1)
 	};
-	uint16_t rx[ARRAY_SIZE(tx)];
+	uint16_t rx[efi::size(tx)];
 
-	ret = spi_rw_array(tx, rx, ARRAY_SIZE(tx));
+	ret = spi_rw_array(tx, rx, efi::size(tx));
 
 	if (ret == 0) {
 		/* the address and content of the selected register is transmitted with the
@@ -696,7 +695,7 @@ int Tle8888::chip_init()
 		CMD_OE_SET
 	};
 
-	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
+	ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* enable pins */

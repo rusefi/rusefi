@@ -12,6 +12,7 @@
 
 #include "subaru.h"
 #include "custom_engine.h"
+#include "defaults.h"
 
 void setSubaru2003Wrx() {
 	setFrankenso_01_LCD(engineConfiguration);
@@ -70,6 +71,7 @@ void setSubaruEG33Defaults() {
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;
 
 	engineConfiguration->specs.cylindersCount = 6;
+	setLeftRightBanksNeedBetterName();
 	engineConfiguration->specs.firingOrder = FO_1_6_3_2_5_4;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;

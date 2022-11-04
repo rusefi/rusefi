@@ -342,17 +342,13 @@ public class ReaderState {
         destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
     }
 
-    public void addSdDestination(String outputFileName) {
-        destinations.add(new SdCardFieldsConsumer(outputFileName));
-    }
-
     public void addJavaDestination(String fileName) {
         destinations.add(new FileJavaFieldsConsumer(this, fileName));
     }
 
     public void addPrepend(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
-            // see UsagesReader use-case with dynamic prepend usage
+            // see LiveDataProcessor use-case with dynamic prepend usage
             return;
         }
         prependFiles.add(fileName);

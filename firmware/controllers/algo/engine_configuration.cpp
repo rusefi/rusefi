@@ -67,6 +67,7 @@
 #include "mercedes.h"
 #include "mitsubishi.h"
 
+#include "gm_ls_4.h"
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
@@ -870,6 +871,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_MICRO_RUSEFI
 #if HW_PROTEUS
+	case PROTEUS_GM_LS_4:
+		setProteusGmLs4();
+		break;
 	case PROTEUS_VW_B6:
 		setProteusVwPassatB6();
 		break;

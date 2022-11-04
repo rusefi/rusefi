@@ -174,19 +174,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t trgEventIn
 void tdcMarkCallback(
 		uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
-/**
- * @brief   Initialize RPM calculator
- */
-void initRpmCalculator();
 operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
-
-#if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { if (getTriggerCentral()->isEngineSnifferEnabled) { waveChart.addEvent3((name), (msg)); } }
- #else
-#define addEngineSnifferEvent(n, msg) {}
-#endif /* EFI_ENGINE_SNIFFER */
 
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action);
 

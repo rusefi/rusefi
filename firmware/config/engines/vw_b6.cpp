@@ -8,10 +8,10 @@
 #include "pch.h"
 
 #include "vw_b6.h"
-#include "custom_engine.h"
 #include "table_helper.h"
 #include "electronic_throttle_impl.h"
 #include "mre_meta.h"
+#include "defaults.h"
 #include "proteus_meta.h"
 
 static void commonPassatB6() {
@@ -134,14 +134,50 @@ static void commonPassatB6() {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
 
+
+static const float hardCodedFreqBins[] = {139,
+		152,
+		180,
+		217,
+		280,
+		300,
+		365};
+
+static const float hardCodedGperSValues[] {
+		3.58,
+		4.5,
+		6.7,
+		11,
+		22,
+		25,
+		40
+};
+
 /**
  * set engine_type 39
  */
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
+	static_assert(sizeof(hardCodedFreqBins) == sizeof(hardCodedGperSValues));
+	{
+		size_t mi = 0;
+		for (; mi < efi::size(hardCodedFreqBins); mi++) {
+			config->scriptCurve1Bins[mi] = hardCodedFreqBins[mi];
+			config->scriptCurve1[mi] = hardCodedGperSValues[mi];
+		}
+
+		for (; mi < SCRIPT_CURVE_16; mi++) {
+			config->scriptCurve1Bins[mi] = 3650 + mi;
+			config->scriptCurve1[mi] = 4000;
+		}
+	}
+
+
 	commonPassatB6();
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
+
+	engineConfiguration->auxSpeedSensorInputPin[0] = PROTEUS_DIGITAL_5;
 
 	engineConfiguration->lowPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_5;
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
@@ -160,8 +196,7 @@ void setProteusVwPassatB6() {
 
 
 	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
-	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = PROTEUS_IN_PPS2;
+	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_9, PROTEUS_IN_PPS2);
 
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
@@ -343,9 +378,8 @@ void setMreVwPassatB6() {
 
 
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = MRE_IN_ANALOG_VOLT_3;
 	// 36 - AN volt 8
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = MRE_IN_ANALOG_VOLT_8;
+	setPPSInputs(MRE_IN_ANALOG_VOLT_3, MRE_IN_ANALOG_VOLT_8);
 
 	// "26 - AN volt 2"
 	engineConfiguration->highPressureFuel.hwChannel = MRE_IN_ANALOG_VOLT_2;

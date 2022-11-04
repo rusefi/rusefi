@@ -11,14 +11,10 @@
  */
 
 #include "pch.h"
-#include "custom_engine.h"
 #include "hellen_meta.h"
+#include "defaults.h"
 
 static OutputPin alphaEn;
-static OutputPin alphaTachPullUp;
-static OutputPin alphaTempPullUp;
-static OutputPin alphaCrankPPullUp;
-static OutputPin alphaCrankNPullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -96,10 +92,8 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_O2S2;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX1;
+	setPPSInputs(H144_IN_PPS, H144_IN_AUX1);
 
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
@@ -120,18 +114,10 @@ void boardInitHardware() {
 	alphaEn.initPin("a-EN", H144_OUT_IO3);
 	alphaEn.setValue(1);
 
-//	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
-//	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
-//	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
-//	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
 	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
-	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
-	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
-	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 }
 
 void setBoardConfigOverrides() {

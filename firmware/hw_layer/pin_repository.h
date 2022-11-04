@@ -22,7 +22,6 @@ class PinRepository {
 	 * Class constructors are a great way to have simple initialization sequence
 	 */
 	PinRepository();
-	int totalPinsUsed = 0;
 	const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 };
 

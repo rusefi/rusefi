@@ -19,11 +19,16 @@ pwd
 echo -e "\nUploading .ini files"
 ls -l .
 
-echo "Processing file $fileName:"
-sig=$(grep "^ *signature *=" $fileName         | cut -f2 -d "=")
+if [ "$fileName" == "no" ]; then
+  echo "[upload_ini] signature file not needed"
+  exit 0
+fi
+
+echo "[upload_ini] Looking for signature in [$fileName]..."
+sig=$(grep "^\s*signature\s*=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
-  if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([0-9]+) ]]; then
+  if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
     year=${BASH_REMATCH[1]}
     month=${BASH_REMATCH[2]}
     day=${BASH_REMATCH[3]}
@@ -48,6 +53,9 @@ SSHCMD
     fi
     echo "* upload done!"
   else
-    echo "Unexpected $sig"
+    echo "[upload_ini] Unexpected Signature: [$sig]"
   fi
+else
+  echo "Signature not found in $fileName"
+  exit 1
 fi

@@ -24,7 +24,7 @@ public class BundleUtil {
                 return null; // just paranoia check
             return fullName;
         } catch (IOException e) {
-            System.err.println(new Date() + ": Error reading " + BUNDLE_NAME_FILE);
+            System.err.println(new Date() + ": BundleUtil: Error reading " + BUNDLE_NAME_FILE);
             return null;
         }
     }

@@ -241,7 +241,7 @@ void PrimaryTriggerDecoder::movePreSynchTimestamps() {
 	// at appropriate locations
 	auto triggerSize = getTriggerCentral()->triggerShape.getLength();
 
-	int eventsToCopy = minI(spinningEventIndex, triggerSize);
+	size_t eventsToCopy = minI(spinningEventIndex, triggerSize);
 
 	size_t firstSrc;
 	size_t firstDst;
@@ -649,9 +649,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
 			    const char * prefix = verbose ? "[vrb]" : "[err]";
-
-				int rpm = Sensor::getOrZero(SensorType::Rpm);
-				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 
 				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];

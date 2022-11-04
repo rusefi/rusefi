@@ -295,8 +295,7 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
  */
 int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 {
-	int ret;
-	uint16_t rxdata;
+	int ret = 0;
 	SPIDriver *spi = cfg->spi_bus;
 
 	if (n <= 0) {
@@ -312,7 +311,7 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		/* Slave Select assertion. */
 		spiSelect(spi);
 		/* data transfer */
-		rxdata = spiPolledExchange(spi, tx[i]);
+		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
 
 		if (rx)
 			rx[i] = rxdata;
@@ -401,7 +400,7 @@ int L9779::update_output()
 		CMD_CONTR_REG(2, regs[2]),
 		CMD_CONTR_REG(3, regs[3])
 	};
-	ret = spi_rw_array(tx, NULL, ARRAY_SIZE(tx));
+	ret = spi_rw_array(tx, NULL, efi::size(tx));
 
 	if (ret == 0) {
 		/* atomic */

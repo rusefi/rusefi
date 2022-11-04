@@ -1,6 +1,5 @@
 /**
- * @file fsio_impl.h
- * @brief FSIO as it's used for GPIO
+ * @file script_impl.h
  *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020

@@ -95,6 +95,8 @@ static AdcSubscriptionEntry* findEntry() {
 	efiSetPadUnused(getAdcChannelBrainPin("adc unsubscribe", entry->Channel));
 #endif // EFI_PROD_CODE
 
+	sensor.unregister();
+
 	// clear the sensor first to mark this entry not in use
 	entry->Sensor = nullptr;
 

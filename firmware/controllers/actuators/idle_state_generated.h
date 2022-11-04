@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,17 +22,19 @@ struct idle_state_s {
 	 */
 	percent_t baseIdlePosition = (percent_t)0;
 	/**
-	 * idle: iacByTpsTaper portion of idle
+	 * idle: iacByTpsTaper portion
 	 * offset 12
 	 */
 	percent_t iacByTpsTaper = (percent_t)0;
 	/**
+	 * idle: throttlePedalUpState
 	 * true in IDLE throttle pedal state, false if driver is touching the pedal
 	 * todo: better name for this field?
 	 * offset 16
 	 */
 	int throttlePedalUpState = (int)0;
 	/**
+	 * idle: mightResetPid
 	 * The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
 	 * The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
 	 * We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
@@ -59,7 +61,7 @@ struct idle_state_s {
 	bool isCranking : 1 {};
 	/**
 	offset 20 bit 5 */
-	bool useIacTableForCoasting : 1 {};
+	bool isIacTableForCoasting : 1 {};
 	/**
 	offset 20 bit 6 */
 	bool notIdling : 1 {};
@@ -152,7 +154,7 @@ struct idle_state_s {
 	 */
 	int targetRpmAcBump = (int)0;
 	/**
-	 * idle: iacByRpmTaper portion of idle
+	 * idle: iacByRpmTaper portion
 	 * offset 32
 	 */
 	percent_t iacByRpmTaper = (percent_t)0;
@@ -165,4 +167,4 @@ struct idle_state_s {
 static_assert(sizeof(idle_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Aug 30 02:28:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Nov 01 20:59:53 UTC 2022

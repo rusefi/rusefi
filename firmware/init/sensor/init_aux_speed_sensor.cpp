@@ -13,11 +13,7 @@ static FrequencySensor auxSpeed2(SensorType::AuxSpeed2, MS2NT(500));
 static class : public SensorConverter  {
 public:
 	SensorResult convert(float frequency) const override {
-		auto hz = frequency;
-
-		auto rpm = hz * 60;
-
-		return rpm;
+		return frequency;
 	}
 } converter;
 

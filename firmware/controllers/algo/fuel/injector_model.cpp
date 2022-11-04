@@ -10,12 +10,44 @@
 #include "fuel_computer.h"
 
 void InjectorModelBase::prepare() {
-	m_massFlowRate = getInjectorMassFlowRate();
+	float flowRatio = getInjectorFlowRatio();
+
+	// "large pulse" flow rate
+	m_massFlowRate = flowRatio * getBaseFlowRate();
 	m_deadtime = getDeadtime();
+
+	if (getNonlinearMode() == INJ_FordModel) {
+		m_smallPulseFlowRate = flowRatio * getSmallPulseFlowRate();
+		m_smallPulseBreakPoint = getSmallPulseBreakPoint();
+
+		// amount added to small pulses to correct for the "kink" from low flow region
+		m_smallPulseOffset = 1000 * ((m_smallPulseBreakPoint / m_massFlowRate) - (m_smallPulseBreakPoint / m_smallPulseFlowRate));
+	}
 }
 
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	return ccPerMinute * (fuelDensity / 60.f);
+}
+
+float InjectorModel::getBaseFlowRate() const {
+	if (engineConfiguration->injectorFlowAsMassFlow) {
+		return engineConfiguration->injector.flow;
+	} else {
+		return convertToGramsPerSecond(engineConfiguration->injector.flow);
+	}
+}
+
+float InjectorModel::getSmallPulseFlowRate() const {
+	return engineConfiguration->fordInjectorSmallPulseSlope;
+}
+
+float InjectorModel::getSmallPulseBreakPoint() const {
+	// convert milligrams -> grams
+	return 0.001f * engineConfiguration->fordInjectorSmallPulseBreakPoint;
+}
+
+InjectorNonlinearMode InjectorModel::getNonlinearMode() const {
+	return engineConfiguration->injectorNonlinearMode;
 }
 
 expected<float> InjectorModel::getAbsoluteRailPressure() const {
@@ -79,15 +111,6 @@ float InjectorModel::getInjectorFlowRatio() {
 	return flowRatio;
 }
 
-float InjectorModel::getInjectorMassFlowRate() {
-	// TODO: injector flow dependent upon temperature/ethanol content?
-	auto injectorVolumeFlow = engineConfiguration->injector.flow;
-
-	float flowRatio = getInjectorFlowRatio();
-
-	return flowRatio * convertToGramsPerSecond(injectorVolumeFlow);
-}
-
 float InjectorModel::getDeadtime() const {
 	return interpolate2d(
 		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
@@ -97,18 +120,15 @@ float InjectorModel::getDeadtime() const {
 }
 
 float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
-	// TODO: support injector nonlinearity correction
-
-	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
-
-	if (baseDuration <= 0) {
-		// If 0 duration, don't correct or add deadtime, just skip the injection.
+	if (fuelMassGram <= 0) {
+		// If 0 mass, don't do any math, just skip the injection.
 		return 0.0f;
 	}
 
-	// Correct short pulses (if enabled)
-	baseDuration = correctShortPulse(baseDuration);
+	// Get the no-offset duration
+	float baseDuration = getBaseDurationImpl(fuelMassGram);
 
+	// Add deadtime offset
 	return baseDuration + m_deadtime;
 }
 
@@ -117,8 +137,18 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 	return duration * m_massFlowRate * 0.001f;
 }
 
-float InjectorModel::correctShortPulse(float baseDuration) const {
-	switch (engineConfiguration->injectorNonlinearMode) {
+float InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
+	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
+
+	switch (getNonlinearMode()) {
+	case INJ_FordModel:
+		if (fuelMassGram < m_smallPulseBreakPoint) {
+			// Small pulse uses a different slope, and adds the "zero fuel pulse" offset
+			return (fuelMassGram / m_smallPulseFlowRate * 1000) + m_smallPulseOffset;
+		} else {
+			// Large pulse
+			return baseDuration;
+		}
 	case INJ_PolynomialAdder:
 		return correctInjectionPolynomial(baseDuration);
 	case INJ_None:
@@ -127,7 +157,7 @@ float InjectorModel::correctShortPulse(float baseDuration) const {
 	}
 }
 
-float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
+float InjectorModelBase::correctInjectionPolynomial(float baseDuration) const {
 	if (baseDuration > engineConfiguration->applyNonlinearBelowPulse) {
 		// Large pulse, skip correction.
 		return baseDuration;

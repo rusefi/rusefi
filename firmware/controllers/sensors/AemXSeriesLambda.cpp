@@ -35,7 +35,7 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
-	int32_t id = CAN_ID(frame);
+	uint32_t id = CAN_ID(frame);
 
 	// accept frame has already guaranteed that this message belongs to us
 	// We just have to check if it's AEM or rusEFI
