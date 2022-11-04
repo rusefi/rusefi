@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 02 15:21:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Nov 04 19:07:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3806,11 +3806,9 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
-	 * If the RPM closer to target than this value, disable timing correction to prevent oscillation
-	RPM
 	 * offset 2496
 	 */
-	int16_t idleTimingPidDeadZone;
+	int16_t unused2496;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	cycles
@@ -5088,4 +5086,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 02 15:21:43 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Nov 04 19:07:53 UTC 2022

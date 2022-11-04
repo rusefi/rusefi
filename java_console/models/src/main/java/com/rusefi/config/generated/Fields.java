@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 04 16:44:35 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 04 19:08:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1180,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.04.all.snap_4640";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.04.all.snap_140";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1276;
@@ -2234,7 +2234,7 @@ public class Fields {
 	public static final Field IDLETIMINGPID_PERIODMS = Field.create("IDLETIMINGPID_PERIODMS", 2490, FieldType.INT16).setScale(1.0);
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 2492, FieldType.INT16).setScale(1.0);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 2494, FieldType.INT16).setScale(1.0);
-	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 2496, FieldType.INT16).setScale(1.0);
+	public static final Field UNUSED2496 = Field.create("UNUSED2496", 2496, FieldType.INT16).setScale(1.0);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 2498, FieldType.INT16).setScale(1.0);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 2500, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 2504, FieldType.INT8).setScale(1.0);
@@ -3666,7 +3666,7 @@ public class Fields {
 	IDLETIMINGPID_PERIODMS,
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
-	IDLETIMINGPIDDEADZONE,
+	UNUSED2496,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
