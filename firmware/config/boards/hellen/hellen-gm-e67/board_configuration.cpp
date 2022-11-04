@@ -159,19 +159,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	// random values to have valid config
-	engineConfiguration->tpsMin = 0;
-	engineConfiguration->tpsMax = 1000;
-	// random values to have valid config
-	engineConfiguration->tps1SecondaryMin = 1000;
-	engineConfiguration->tps1SecondaryMax = 0;
-	// random values to have valid config
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 5.0;
-	// random values to have valid config
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
-
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
