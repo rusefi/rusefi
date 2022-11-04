@@ -137,6 +137,7 @@ end
     )", efi::size(config->luaScript));
 
 	setPPSCalibration(0.51, 2.11, 1.01, 4.23);
+	setTPS1Calibration(880, 129, 118, 870);
 }
 
 void setProteusGmLs4() {
