@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "global.h"
 #include "trigger_structure.h"
-#include "engine_configuration.h"
 #include "trigger_state_generated.h"
 #include "trigger_state_primary_generated.h"
 #include "timer.h"
