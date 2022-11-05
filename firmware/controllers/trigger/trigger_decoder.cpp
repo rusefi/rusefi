@@ -30,18 +30,16 @@
 #include "global_shared.h"
 #include "loggingcentral.h"
 #include "error_handling.h"
-#include "efi_gpio.h"
-#include "engine_configuration.h"
 #include "perf_trace.h"
 
-#include <rusefi/math.h>
+#include "efi_gpio.h"
+#include "engine_configuration.h"
+
 #include "trigger_central.h"
 #include "trigger_decoder.h"
 #include "sensor.h"
 #include "engine_state.h"
 #include "engine_math.h"
-#include "obd_error_codes.h"
-#include "trigger_decoder.h"
 #include "trigger_simulator.h"
 
 #if EFI_SENSOR_CHART
