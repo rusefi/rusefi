@@ -32,7 +32,6 @@
 #include "error_handling.h"
 #include "perf_trace.h"
 
-#include "efi_gpio.h"
 #include "engine_configuration.h"
 
 #include "trigger_central.h"
