@@ -527,6 +527,7 @@ static void printSentInfo()
 }
 
 /* Don't be confused: this actually returns throttle body position */
+/* TODO: remove, replace with getSentValues() */
 float getSentValue(size_t index) {
 	if (index < SENT_CHANNELS_NUM) {
 		uint16_t sig0, sig1;
@@ -541,6 +542,17 @@ float getSentValue(size_t index) {
 	}
 
     return NAN;
+}
+
+int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1) {
+	if (index < SENT_CHANNELS_NUM) {
+		sent_channel &ch = channels[index];
+
+		return ch.GetSignals(NULL, sig0, sig1);
+	}
+
+	/* invalid channel */
+    return -1;
 }
 
 /* Should be called once */
