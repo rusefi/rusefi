@@ -52,6 +52,6 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 	}
 
 	engine->engineState.currentVe = ve;
-	engine->engineState.currentVeLoad = load;
+	engine->engineState.veTableYAxis = load;
 	return ve * PERCENT_DIV;
 }
