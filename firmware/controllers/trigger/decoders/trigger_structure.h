@@ -59,7 +59,6 @@ public:
 	void setAngle(angle_t angle);
 };
 
-class Engine;
 class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
