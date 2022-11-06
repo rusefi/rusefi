@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 03 02:20:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Nov 06 00:27:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -425,8 +425,19 @@ struct engine_state_s {
 	 * offset 148
 	 */
 	float ignitionLoad = (float)0;
+	/**
+	%
+	 * offset 152
+	 */
+	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 154
+	 */
+	uint8_t alignmentFill_at_154[2];
 };
-static_assert(sizeof(engine_state_s) == 152);
+static_assert(sizeof(engine_state_s) == 156);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Nov 03 02:20:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Nov 06 00:27:04 UTC 2022

@@ -1,1 +1,1 @@
-rusEfi uses http://launch4j.sourceforge.net/ to create console launcher
+rusEFI uses http://launch4j.sourceforge.net/ to create console launcher

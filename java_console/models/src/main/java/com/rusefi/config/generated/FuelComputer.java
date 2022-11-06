@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Nov 01 20:59:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Nov 06 00:27:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -393,49 +393,49 @@ public class FuelComputer {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field CURRENTAFRLOAD = Field.create("CURRENTAFRLOAD", 0, FieldType.FLOAT);
-	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 4, FieldType.FLOAT);
-	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 8, FieldType.FLOAT);
-	public static final Field TARGETAFR = Field.create("TARGETAFR", 12, FieldType.FLOAT);
-	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 16, FieldType.FLOAT);
-	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 20, FieldType.FLOAT);
-	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 24, FieldType.BIT, 0);
-	public static final Field UNUSEDBIT_7_1 = Field.create("UNUSEDBIT_7_1", 24, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_7_2 = Field.create("UNUSEDBIT_7_2", 24, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_7_3 = Field.create("UNUSEDBIT_7_3", 24, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_7_4 = Field.create("UNUSEDBIT_7_4", 24, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_7_5 = Field.create("UNUSEDBIT_7_5", 24, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_7_6 = Field.create("UNUSEDBIT_7_6", 24, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_7_7 = Field.create("UNUSEDBIT_7_7", 24, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_7_8 = Field.create("UNUSEDBIT_7_8", 24, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_7_9 = Field.create("UNUSEDBIT_7_9", 24, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_7_10 = Field.create("UNUSEDBIT_7_10", 24, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_7_11 = Field.create("UNUSEDBIT_7_11", 24, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_7_12 = Field.create("UNUSEDBIT_7_12", 24, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_7_13 = Field.create("UNUSEDBIT_7_13", 24, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_7_14 = Field.create("UNUSEDBIT_7_14", 24, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_7_15 = Field.create("UNUSEDBIT_7_15", 24, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_7_16 = Field.create("UNUSEDBIT_7_16", 24, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_7_17 = Field.create("UNUSEDBIT_7_17", 24, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_7_18 = Field.create("UNUSEDBIT_7_18", 24, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_7_19 = Field.create("UNUSEDBIT_7_19", 24, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_7_20 = Field.create("UNUSEDBIT_7_20", 24, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_7_21 = Field.create("UNUSEDBIT_7_21", 24, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_7_22 = Field.create("UNUSEDBIT_7_22", 24, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_7_23 = Field.create("UNUSEDBIT_7_23", 24, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_7_24 = Field.create("UNUSEDBIT_7_24", 24, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_7_25 = Field.create("UNUSEDBIT_7_25", 24, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_7_26 = Field.create("UNUSEDBIT_7_26", 24, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_7_27 = Field.create("UNUSEDBIT_7_27", 24, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_7_28 = Field.create("UNUSEDBIT_7_28", 24, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_7_29 = Field.create("UNUSEDBIT_7_29", 24, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_7_30 = Field.create("UNUSEDBIT_7_30", 24, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_7_31 = Field.create("UNUSEDBIT_7_31", 24, FieldType.BIT, 31);
+	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 0, FieldType.INT16).setScale(0.01);
+	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 2, FieldType.INT16).setScale(1.0E-4);
+	public static final Field TARGETAFR = Field.create("TARGETAFR", 4, FieldType.INT16).setScale(0.001);
+	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 6, FieldType.INT16).setScale(0.001);
+	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 8, FieldType.FLOAT);
+	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 12, FieldType.FLOAT);
+	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 16, FieldType.BIT, 0);
+	public static final Field UNUSEDBIT_7_1 = Field.create("UNUSEDBIT_7_1", 16, FieldType.BIT, 1);
+	public static final Field UNUSEDBIT_7_2 = Field.create("UNUSEDBIT_7_2", 16, FieldType.BIT, 2);
+	public static final Field UNUSEDBIT_7_3 = Field.create("UNUSEDBIT_7_3", 16, FieldType.BIT, 3);
+	public static final Field UNUSEDBIT_7_4 = Field.create("UNUSEDBIT_7_4", 16, FieldType.BIT, 4);
+	public static final Field UNUSEDBIT_7_5 = Field.create("UNUSEDBIT_7_5", 16, FieldType.BIT, 5);
+	public static final Field UNUSEDBIT_7_6 = Field.create("UNUSEDBIT_7_6", 16, FieldType.BIT, 6);
+	public static final Field UNUSEDBIT_7_7 = Field.create("UNUSEDBIT_7_7", 16, FieldType.BIT, 7);
+	public static final Field UNUSEDBIT_7_8 = Field.create("UNUSEDBIT_7_8", 16, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_7_9 = Field.create("UNUSEDBIT_7_9", 16, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_7_10 = Field.create("UNUSEDBIT_7_10", 16, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_7_11 = Field.create("UNUSEDBIT_7_11", 16, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_7_12 = Field.create("UNUSEDBIT_7_12", 16, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_7_13 = Field.create("UNUSEDBIT_7_13", 16, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_7_14 = Field.create("UNUSEDBIT_7_14", 16, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_7_15 = Field.create("UNUSEDBIT_7_15", 16, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_7_16 = Field.create("UNUSEDBIT_7_16", 16, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_7_17 = Field.create("UNUSEDBIT_7_17", 16, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_7_18 = Field.create("UNUSEDBIT_7_18", 16, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_7_19 = Field.create("UNUSEDBIT_7_19", 16, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_7_20 = Field.create("UNUSEDBIT_7_20", 16, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_7_21 = Field.create("UNUSEDBIT_7_21", 16, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_7_22 = Field.create("UNUSEDBIT_7_22", 16, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_7_23 = Field.create("UNUSEDBIT_7_23", 16, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_7_24 = Field.create("UNUSEDBIT_7_24", 16, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_7_25 = Field.create("UNUSEDBIT_7_25", 16, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_7_26 = Field.create("UNUSEDBIT_7_26", 16, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_7_27 = Field.create("UNUSEDBIT_7_27", 16, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_7_28 = Field.create("UNUSEDBIT_7_28", 16, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_7_29 = Field.create("UNUSEDBIT_7_29", 16, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_7_30 = Field.create("UNUSEDBIT_7_30", 16, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_7_31 = Field.create("UNUSEDBIT_7_31", 16, FieldType.BIT, 31);
 	public static final Field[] VALUES = {
-	CURRENTAFRLOAD,
+	AFRTABLEYAXIS,
 	TARGETLAMBDA,
-	STOICHIOMETRICRATIO,
 	TARGETAFR,
+	STOICHIOMETRICRATIO,
 	SDTCHARGE_COFF,
 	SDAIRMASSINONECYLINDER,
 	SDISTCHARGEAIRMODEL,

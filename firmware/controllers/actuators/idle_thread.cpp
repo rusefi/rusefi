@@ -161,12 +161,6 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		return 0;
 	}
 
-	// If inside the deadzone, do nothing
-	if (absI(rpm - targetRpm) < engineConfiguration->idleTimingPidDeadZone) {
-		m_timingPid.reset();
-		return 0;
-	}
-
 	// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
 	return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 }
@@ -364,7 +358,7 @@ float IdleController::getIdlePosition(float rpm) {
 }
 
 void IdleController::onSlowCallback() {
-	float position = getIdlePosition(engine->triggerCentral.triggerState.getInstantRpm());
+	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
 }
 

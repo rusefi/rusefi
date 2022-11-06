@@ -127,7 +127,7 @@ void TriggerStimulatorHelper::assertSyncPosition(
 /**
  * @return trigger synchronization point index, or error code if not found
  */
-uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
+expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 		TriggerWaveform& shape,
 		const TriggerConfiguration& triggerConfiguration,
 		TriggerDecoderBase& state) {
@@ -139,6 +139,7 @@ uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 		}
 	}
 	shape.setShapeDefinitionError(true);
+
 	firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
-	return EFI_ERROR_CODE;
+	return unexpected;
 }

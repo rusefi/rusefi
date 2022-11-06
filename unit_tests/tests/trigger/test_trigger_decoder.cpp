@@ -150,19 +150,13 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 0);
+	position.setAngle(0);
 	assertTriggerPosition(&position, 0, 0);
 
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 200);
-	assertTriggerPosition(&position, 2, 80);
+	position.setAngle(200);
+	assertTriggerPosition(&position, 3, 20);
 
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 360);
+	position.setAngle(360);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
@@ -1041,7 +1035,7 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	setConstantDwell(45);
 
-	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
+	engine->triggerCentral.syncAndReport(1, 0);
 
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
@@ -1054,7 +1048,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.fireFall(20);
 
-	engine->triggerCentral.triggerState.syncEnginePhase(1, 0, 720);
+	engine->triggerCentral.syncAndReport(1, 0);
 
 	eth.executeActions();
 

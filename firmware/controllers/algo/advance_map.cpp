@@ -104,7 +104,7 @@ angle_t getAdvanceCorrections(int rpm) {
 		);
 	}
 
-	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
 	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
 

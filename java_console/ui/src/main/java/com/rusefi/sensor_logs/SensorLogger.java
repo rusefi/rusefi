@@ -34,7 +34,7 @@ public class SensorLogger {
 //
 //            Sensor.idlePosition,
 
-            Sensor.TARGET_AFR,
+//            Sensor.TARGET_AFR,
 //            Sensor.tCharge,
             Sensor.veValue,
 

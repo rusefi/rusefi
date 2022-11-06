@@ -800,8 +800,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idleTimingPid.minValue;
 	if (strEqualCaseInsensitive(name, "idleTimingPid.maxValue"))
 		return engineConfiguration->idleTimingPid.maxValue;
-	if (strEqualCaseInsensitive(name, "idleTimingPidDeadZone"))
-		return engineConfiguration->idleTimingPidDeadZone;
 	if (strEqualCaseInsensitive(name, "tpsAccelFractionPeriod"))
 		return engineConfiguration->tpsAccelFractionPeriod;
 	if (strEqualCaseInsensitive(name, "idlerpmpid_iTermMin"))
@@ -2472,11 +2470,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "idleTimingPid.maxValue"))
 	{
 		engineConfiguration->idleTimingPid.maxValue = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "idleTimingPidDeadZone"))
-	{
-		engineConfiguration->idleTimingPidDeadZone = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsAccelFractionPeriod"))

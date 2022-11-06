@@ -10,6 +10,7 @@
 #include "rusefi_enums.h"
 #include "listener_array.h"
 #include "trigger_decoder.h"
+#include "instant_rpm_calculator.h"
 #include "trigger_central_generated.h"
 #include "timer.h"
 #include "pin_repository.h"
@@ -48,11 +49,25 @@ public:
 class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
+	angle_t syncAndReport(int divider, int remainder);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
 	void updateWaveform();
+
+	InstantRpmCalculator instantRpm;
+
+	void prepareTriggerShape() {
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+		if (triggerShape.shapeDefinitionError) {
+			// Nothing to do here if there's a problem with the trigger shape
+			return;
+		}
+
+		triggerFormDetails.prepareEventAngles(&triggerShape);
+#endif
+	}
 
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
@@ -210,10 +225,5 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
-
-void calculateTriggerSynchPoint(
-		TriggerCentral *triggerCentral,
-	TriggerWaveform& shape,
-	TriggerDecoderBase& state);
 
 TriggerCentral * getTriggerCentral();
