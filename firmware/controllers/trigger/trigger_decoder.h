@@ -182,23 +182,30 @@ private:
 	Timer m_timeSinceDecodeError;
 };
 
-/**
- * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
- */
-class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
+class InstantRpmCalculator {
 public:
-	PrimaryTriggerDecoder(const char* name);
-	void resetState() override;
-
-	void resetHasFullSync() {
-		// If this trigger doesn't need disambiguation, we already have phase sync
-		m_hasSynchronizedPhase = !m_needsDisambiguation;
-	}
-
-	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
-
+	InstantRpmCalculator();
 	float getInstantRpm() const {
 		return m_instantRpm;
+	}
+
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	void updateInstantRpm(
+		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
+		uint32_t index, efitick_t nowNt);
+#endif
+	/**
+	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
+	 * Needed for early spin-up RPM detection.
+	 */
+	void setLastEventTimeForInstantRpm(efitick_t nowNt);
+
+	void movePreSynchTimestamps();
+
+	void resetInstantRpm() {
+		memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
+		memset(spinningEvents, 0, sizeof(spinningEvents));
+		spinningEventIndex = 0;
 	}
 
 	/**
@@ -219,18 +226,37 @@ public:
 	 * Stores last non-zero instant RPM value to fix early instability
 	 */
 	float prevInstantRpmValue = 0;
-	void movePreSynchTimestamps();
 
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void updateInstantRpm(
+
+	float m_instantRpm = 0;
+private:
+	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 		uint32_t index, efitick_t nowNt);
-#endif
-	/**
-	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
-	 * Needed for early spin-up RPM detection.
-	 */
-	void setLastEventTimeForInstantRpm(efitick_t nowNt);
+
+	float m_instantRpmRatio = 0;
+};
+
+/**
+ * the reason for sub-class is simply to save RAM but not having statistics in the trigger initialization instance
+ */
+class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
+public:
+	PrimaryTriggerDecoder(const char* name);
+	void resetState() override;
+
+	void resetHasFullSync() {
+		// If this trigger doesn't need disambiguation, we already have phase sync
+		m_hasSynchronizedPhase = !m_needsDisambiguation;
+	}
+
+	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
+
+	InstantRpmCalculator instantRpm;
+
+	float getInstantRpm() const {
+		return instantRpm.getInstantRpm();
+	}
 
 	// Returns true if syncEnginePhase has been called,
 	// i.e. if we have enough VVT information to have full sync on
@@ -251,14 +277,6 @@ public:
 	void onTooManyTeeth(int actual, int expected) override;
 
 private:
-	float calculateInstantRpm(
-		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-		uint32_t index, efitick_t nowNt);
-
-	void resetInstantRpm();
-
-	float m_instantRpm = 0;
-	float m_instantRpmRatio = 0;
 
 	bool m_needsDisambiguation = false;
 };

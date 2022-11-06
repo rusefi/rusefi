@@ -109,11 +109,15 @@ void TriggerDecoderBase::resetCurrentCycleState() {
 
 #if EFI_SHAFT_POSITION_INPUT
 
+InstantRpmCalculator::InstantRpmCalculator() :
+			//https://en.cppreference.com/w/cpp/language/zero_initialization
+			timeOfLastEvent()
+			, instantRpmValue()
+	{
+}
+
 PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
 	: TriggerDecoderBase(name)
-	//https://en.cppreference.com/w/cpp/language/zero_initialization
-	, timeOfLastEvent()
-	, instantRpmValue()
 {
 }
 
@@ -198,20 +202,14 @@ int TriggerDecoderBase::getCrankSynchronizationCounter() const {
 void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
-	prevInstantRpmValue = 0;
-	m_instantRpm = 0;
-
 	resetHasFullSync();
-	resetInstantRpm();
+
+	instantRpm.prevInstantRpmValue = 0;
+	instantRpm.m_instantRpm = 0;
+	instantRpm.resetInstantRpm();
 }
 
-void PrimaryTriggerDecoder::resetInstantRpm() {
-	memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
-	memset(spinningEvents, 0, sizeof(spinningEvents));
-	spinningEventIndex = 0;
-}
-
-void PrimaryTriggerDecoder::movePreSynchTimestamps() {
+void InstantRpmCalculator::movePreSynchTimestamps() {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
 	auto triggerSize = getTriggerCentral()->triggerShape.getLength();
@@ -234,7 +232,7 @@ void PrimaryTriggerDecoder::movePreSynchTimestamps() {
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
-float PrimaryTriggerDecoder::calculateInstantRpm(
+float InstantRpmCalculator::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {
 
@@ -291,10 +289,7 @@ float PrimaryTriggerDecoder::calculateInstantRpm(
 	return instantRpm;
 }
 
-void PrimaryTriggerDecoder::setLastEventTimeForInstantRpm(efitick_t nowNt) {
-	if (getShaftSynchronized()) {
-		return;
-	}
+void InstantRpmCalculator::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 	// here we remember tooth timestamps which happen prior to synchronization
 	if (spinningEventIndex >= efi::size(spinningEvents)) {
 		// too many events while trying to find synchronization point
@@ -310,7 +305,7 @@ void PrimaryTriggerDecoder::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 	spinningEventIndex += engineConfiguration->useOnlyRisingEdgeForTrigger ? 2 : 1;
 }
 
-void PrimaryTriggerDecoder::updateInstantRpm(
+void InstantRpmCalculator::updateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t index, efitick_t nowNt) {
 
@@ -377,7 +372,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 
 		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
 		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
-		resetInstantRpm();
+		instantRpm.resetInstantRpm();
 	}
 
 	return totalShift;
