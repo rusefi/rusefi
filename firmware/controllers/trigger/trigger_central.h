@@ -55,7 +55,14 @@ public:
 	void updateWaveform();
 
 	void prepareTriggerShape() {
-		triggerShape.prepareShape(triggerFormDetails);
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+		if (triggerShape.shapeDefinitionError) {
+			// Nothing to do here if there's a problem with the trigger shape
+			return;
+		}
+
+		triggerFormDetails.prepareEventAngles(&triggerShape);
+#endif
 	}
 
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply

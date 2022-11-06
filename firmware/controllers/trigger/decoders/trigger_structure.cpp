@@ -426,17 +426,6 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	}
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails& details) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (shapeDefinitionError) {
-		// Nothing to do here if there's a problem with the trigger shape
-		return;
-	}
-
-	details.prepareEventAngles(this);
-#endif
-}
-
 void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
