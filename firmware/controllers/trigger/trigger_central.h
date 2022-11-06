@@ -54,6 +54,10 @@ public:
 	void validateCamVvtCounters();
 	void updateWaveform();
 
+	void prepareTriggerShape() {
+		triggerShape.prepareShape(triggerFormDetails);
+	}
+
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
