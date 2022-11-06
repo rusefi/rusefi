@@ -19,14 +19,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMMON_H_INCLUDED
-#define COMMON_H_INCLUDED
+#pragma ince
 
 #if !defined(MIN)
 #define MIN(a,b) (((a)<(b))?(a):(b))
-#endif
-#if !defined(MAX)
-#define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
 
 #define CLAMP(x, low, high) ({\
@@ -35,5 +31,3 @@
 	__typeof__(high) __high = (high);\
 	(__x > __high) ? __high : ((__x < __low) ? __low : __x);\
 })
-
-#endif /* COMMON_H_INCLUDED */

@@ -267,10 +267,6 @@ private:
 	operation_mode_e operationMode;
 };
 
-#ifndef MAX
-#define MAX(a,b) (((a)>(b))?(a):(b))
-#endif
-
 /**
  * Misc values calculated from TriggerWaveform
  */
