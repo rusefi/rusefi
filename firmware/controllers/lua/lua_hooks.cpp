@@ -655,6 +655,17 @@ void configureRusefiLuaHooks(lua_State* l) {
 			lua_pushnumber(l, value);
 			return 1;
 	});
+
+	lua_register(l, "getSentValues",
+			[](lua_State* l) {
+			uint16_t sig0;
+			uint16_t sig1;
+			auto humanIndex = luaL_checkinteger(l, 1);
+			auto ret = getSentValues(humanIndex - 1, &sig0, &sig1);
+			lua_pushnumber(l, sig0);
+			lua_pushnumber(l, sig1);
+			return 2;
+	});
 #endif // EFI_SENT_SUPPORT
 
 #if EFI_LAUNCH_CONTROL
