@@ -839,11 +839,11 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 
 	TriggerStimulatorHelper helper;
 
-	uint32_t syncIndex = helper.findTriggerSyncPoint(shape,
+	expected<uint32_t> syncIndex = helper.findTriggerSyncPoint(shape,
 			triggerConfiguration,
 			*this);
-	if (syncIndex == EFI_ERROR_CODE) {
-		return syncIndex;
+	if (!syncIndex) {
+		return EFI_ERROR_CODE;
 	}
 
 	// Assert that we found the sync point on the very first revolution
@@ -856,9 +856,9 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 #endif /* EFI_UNIT_TEST */
 
 	helper.assertSyncPosition(triggerConfiguration,
-			syncIndex, *this, shape);
+			syncIndex.Value, *this, shape);
 
-	return syncIndex % shape.getSize();
+	return syncIndex.Value % shape.getSize();
 }
 
 #endif /* EFI_SHAFT_POSITION_INPUT */
