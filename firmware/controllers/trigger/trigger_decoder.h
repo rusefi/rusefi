@@ -207,6 +207,8 @@ public:
 		memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
 		memset(spinningEvents, 0, sizeof(spinningEvents));
 		spinningEventIndex = 0;
+		prevInstantRpmValue = 0;
+		m_instantRpm = 0;
 	}
 
 	/**
