@@ -48,6 +48,7 @@ public:
 class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
+	angle_t syncAndReport(int divider, int remainder);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 	int getHwEventCounter(int index) const;
 	void resetCounters();

@@ -124,10 +124,10 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_FIRST_HALF;
 }
 
-static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
+angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
-	return tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
+	return triggerState.syncEnginePhase(divider, remainder, engineCycle);
 }
 
 static void turnOffAllDebugFields(void *arg) {
@@ -162,16 +162,16 @@ static angle_t adjustCrankPhase(int camIndex) {
 	switch (vvtMode) {
 	case VVT_FIRST_HALF:
 	case VVT_MAP_V_TWIN:
-		return syncAndReport(tc, getCrankDivider(operationMode), 1);
+		return tc->syncAndReport(getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_2JZ:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_ST170:
@@ -181,7 +181,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
 	case VVT_HONDA_K_EXHAUST:
-		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K_INTAKE:
 	case VVT_INACTIVE:
 		// do nothing
