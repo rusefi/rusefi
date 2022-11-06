@@ -29,6 +29,18 @@ struct AngleBasedEventBase {
 	virtual AngleBasedEventOld* asOld() { return nullptr; }
 };
 
+/**
+ * This structure defines an angle position in relation to specific tooth within trigger shape
+ */
+class event_trigger_position_s {
+public:
+	size_t triggerEventIndex = 0;
+
+	angle_t angleOffsetFromTriggerEvent = 0;
+
+	void setAngle(angle_t angle);
+};
+
 struct AngleBasedEventOld : public AngleBasedEventBase {
 	event_trigger_position_s position;
 
