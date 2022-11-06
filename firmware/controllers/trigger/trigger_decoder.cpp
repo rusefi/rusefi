@@ -837,9 +837,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 		return 0;
 	}
 
-	TriggerStimulatorHelper helper;
-
-	expected<uint32_t> syncIndex = helper.findTriggerSyncPoint(shape,
+	expected<uint32_t> syncIndex = TriggerStimulatorHelper::findTriggerSyncPoint(shape,
 			triggerConfiguration,
 			*this);
 	if (!syncIndex) {
@@ -855,7 +853,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 	}
 #endif /* EFI_UNIT_TEST */
 
-	helper.assertSyncPosition(triggerConfiguration,
+	TriggerStimulatorHelper::assertSyncPosition(triggerConfiguration,
 			syncIndex.Value, *this, shape);
 
 	return syncIndex.Value % shape.getSize();
