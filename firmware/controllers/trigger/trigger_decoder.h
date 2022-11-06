@@ -191,6 +191,7 @@ public:
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	void updateInstantRpm(
+			uint32_t current_index,
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 		uint32_t index, efitick_t nowNt);
 #endif

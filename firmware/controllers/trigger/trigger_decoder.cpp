@@ -306,6 +306,7 @@ void InstantRpmCalculator::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 }
 
 void InstantRpmCalculator::updateInstantRpm(
+		uint32_t current_index,
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t index, efitick_t nowNt) {
 
@@ -315,7 +316,7 @@ void InstantRpmCalculator::updateInstantRpm(
 
 #if EFI_SENSOR_CHART
 	if (getEngineState()->sensorChartMode == SC_RPM_ACCEL || getEngineState()->sensorChartMode == SC_DETAILED_RPM) {
-		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
+		angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
 		if (engineConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 			scAddData(currentAngle, m_instantRpm);
 		} else {
