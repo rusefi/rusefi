@@ -240,12 +240,12 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped() && !isSpinning) {
 		state = SPINNING_UP;
-		engine->triggerCentral.triggerState.instantRpm.spinningEventIndex = 0;
+		engine->triggerCentral.instantRpm.spinningEventIndex = 0;
 		isSpinning = true;
 	}
 	// update variables needed by early instant RPM calc.
 	if (isSpinningUp() && !engine->triggerCentral.triggerState.getShaftSynchronized()) {
-		engine->triggerCentral.triggerState.instantRpm.setLastEventTimeForInstantRpm(nowNt);
+		engine->triggerCentral.instantRpm.setLastEventTimeForInstantRpm(nowNt);
 	}
 }
 
@@ -298,7 +298,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		} else {
 			// we are here only once trigger is synchronized for the first time
 			// while transitioning  from 'spinning' to 'running'
-			engine->triggerCentral.triggerState.instantRpm.movePreSynchTimestamps();
+			engine->triggerCentral.instantRpm.movePreSynchTimestamps();
 		}
 
 		rpmState->onNewEngineCycle();
@@ -315,13 +315,13 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #endif /* EFI_SENSOR_CHART */
 
 	// Always update instant RPM even when not spinning up
-	engine->triggerCentral.triggerState.instantRpm.updateInstantRpm(
+	engine->triggerCentral.instantRpm.updateInstantRpm(
 			engine->triggerCentral.triggerState.currentCycle.current_index,
 
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
 		trgEventIndex, nowNt);
 
-	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 	if (alwaysInstantRpm) {
 		rpmState->setRpmValue(instantRpm);
 	} else if (rpmState->isSpinningUp()) {

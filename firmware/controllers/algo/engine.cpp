@@ -314,7 +314,7 @@ void Engine::OnTriggerSynchronizationLost() {
 	rpmCalculator.setStopSpinning();
 
 	triggerCentral.triggerState.resetState();
-	triggerCentral.triggerState.instantRpm.resetInstantRpm();
+	triggerCentral.instantRpm.resetInstantRpm();
 
 	for (size_t i = 0; i < efi::size(triggerCentral.vvtState); i++) {
 		for (size_t j = 0; j < efi::size(triggerCentral.vvtState[0]); j++) {
