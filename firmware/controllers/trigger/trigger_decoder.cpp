@@ -204,8 +204,6 @@ void PrimaryTriggerDecoder::resetState() {
 
 	resetHasFullSync();
 
-	instantRpm.prevInstantRpmValue = 0;
-	instantRpm.m_instantRpm = 0;
 	instantRpm.resetInstantRpm();
 }
 
