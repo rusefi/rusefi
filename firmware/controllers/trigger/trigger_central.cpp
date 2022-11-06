@@ -47,7 +47,7 @@ TriggerCentral::TriggerCentral() :
 		triggerState("TRG")
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
-	triggerState.resetTriggerState();
+	triggerState.resetState();
 	noiseFilter.resetAccumSignalData();
 }
 

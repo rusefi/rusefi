@@ -57,7 +57,7 @@
 TriggerDecoderBase::TriggerDecoderBase(const char* name)
 	: name(name)
 {
-	resetTriggerState();
+	resetState();
 }
 
 bool TriggerDecoderBase::getShaftSynchronized() {
@@ -77,7 +77,7 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 	shaft_is_synchronized = value;
 }
 
-void TriggerDecoderBase::resetTriggerState() {
+void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
 	toothed_previous_time = 0;
 
@@ -195,8 +195,8 @@ int TriggerDecoderBase::getCrankSynchronizationCounter() const {
 	return crankSynchronizationCounter;
 }
 
-void PrimaryTriggerDecoder::resetTriggerState() {
-	TriggerDecoderBase::resetTriggerState();
+void PrimaryTriggerDecoder::resetState() {
+	TriggerDecoderBase::resetState();
 
 	prevInstantRpmValue = 0;
 	m_instantRpm = 0;
@@ -831,7 +831,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 #endif
 
 
-	resetTriggerState();
+	resetState();
 
 	if (shape.shapeDefinitionError) {
 		return 0;
