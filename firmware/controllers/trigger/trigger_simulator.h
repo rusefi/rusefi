@@ -17,7 +17,7 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i);
 class TriggerStimulatorHelper {
 public:
 
-	uint32_t findTriggerSyncPoint(
+	expected<uint32_t> findTriggerSyncPoint(
 			TriggerWaveform& shape,
 			const TriggerConfiguration& triggerConfiguration,
 			TriggerDecoderBase& state);
