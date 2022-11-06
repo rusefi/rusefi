@@ -255,12 +255,6 @@ public:
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
-	InstantRpmCalculator instantRpm;
-
-	float getInstantRpm() const {
-		return instantRpm.getInstantRpm();
-	}
-
 	// Returns true if syncEnginePhase has been called,
 	// i.e. if we have enough VVT information to have full sync on
 	// an indeterminite crank pattern

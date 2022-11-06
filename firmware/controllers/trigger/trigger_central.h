@@ -55,6 +55,8 @@ public:
 	void validateCamVvtCounters();
 	void updateWaveform();
 
+	InstantRpmCalculator instantRpm;
+
 	void prepareTriggerShape() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 		if (triggerShape.shapeDefinitionError) {

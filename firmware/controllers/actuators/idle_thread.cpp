@@ -358,7 +358,7 @@ float IdleController::getIdlePosition(float rpm) {
 }
 
 void IdleController::onSlowCallback() {
-	float position = getIdlePosition(engine->triggerCentral.triggerState.getInstantRpm());
+	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
 }
 

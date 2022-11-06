@@ -131,7 +131,7 @@ angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
 	if (totalShift != 0) {
 		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
 		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
-		triggerState.instantRpm.resetInstantRpm();
+		instantRpm.resetInstantRpm();
 	}
 	return totalShift;
 }
