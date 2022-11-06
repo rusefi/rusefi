@@ -272,5 +272,3 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-
-void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);
