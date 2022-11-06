@@ -47,18 +47,6 @@
 			angle -= engineCycleDurationLocalCopy;   						\
 	}
 
-/**
- * This structure defines an angle position in relation to specific tooth within trigger shape
- */
-class event_trigger_position_s {
-public:
-	size_t triggerEventIndex = 0;
-
-	angle_t angleOffsetFromTriggerEvent = 0;
-
-	void setAngle(angle_t angle);
-};
-
 class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
@@ -278,11 +266,5 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
-
-void findTriggerPosition(
-		TriggerWaveform *shape,
-		TriggerFormDetails *details,
-		event_trigger_position_s *position,
-		angle_t angle);
 
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
