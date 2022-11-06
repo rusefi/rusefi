@@ -969,7 +969,6 @@ static void calculateTriggerSynchPoint(
 		TriggerCentral *triggerCentral,
 		TriggerWaveform& shape,
 		TriggerDecoderBase& state) {
-	state.resetTriggerState();
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
