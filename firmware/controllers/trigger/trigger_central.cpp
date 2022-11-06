@@ -127,7 +127,13 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
-	return triggerState.syncEnginePhase(divider, remainder, engineCycle);
+	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
+	if (totalShift != 0) {
+		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
+		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
+		triggerState.instantRpm.resetInstantRpm();
+	}
+	return totalShift;
 }
 
 static void turnOffAllDebugFields(void *arg) {
