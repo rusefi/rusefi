@@ -952,6 +952,47 @@ static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& con
 	shape.initializeSyncPoint(initState, config);
 }
 
+void TriggerCentral::validateCamVvtCounters() {
+	// micro-optimized 'crankSynchronizationCounter % 256'
+	int camVvtValidationIndex = triggerState.getCrankSynchronizationCounter() & 0xFF;
+	if (camVvtValidationIndex == 0) {
+		vvtCamCounter = 0;
+	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
+		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
+	}
+}
+/**
+ * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerDecoderBase *state'
+ */
+static void calculateTriggerSynchPoint(
+		TriggerCentral *triggerCentral,
+		TriggerWaveform& shape,
+		TriggerDecoderBase& state) {
+	state.resetTriggerState();
+
+#if EFI_PROD_CODE
+	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
+#endif
+	triggerCentral->triggerErrorDetection.clear();
+	shape.initializeSyncPoint(state, triggerCentral->primaryTriggerConfiguration);
+
+	int length = shape.getLength();
+	triggerCentral->engineCycleEventCount = length;
+
+	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
+	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
+		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
+		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
+		shape.setShapeDefinitionError(true);
+		return;
+	}
+
+	if (shape.getSize() == 0) {
+		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+	}
+}
+
 void TriggerCentral::updateWaveform() {
 	static TriggerDecoderBase initState("init");
 
