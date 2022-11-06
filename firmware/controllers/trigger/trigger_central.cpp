@@ -966,15 +966,15 @@ void TriggerCentral::validateCamVvtCounters() {
  * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerDecoderBase *state'
  */
 static void calculateTriggerSynchPoint(
-		TriggerCentral *triggerCentral,
+		const PrimaryTriggerConfiguration &primaryTriggerConfiguration,
 		TriggerWaveform& shape,
-		TriggerDecoderBase& state) {
+		TriggerDecoderBase& initState) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
 #endif
-	triggerCentral->triggerErrorDetection.clear();
-	shape.initializeSyncPoint(state, triggerCentral->primaryTriggerConfiguration);
+
+	shape.initializeSyncPoint(initState, primaryTriggerConfiguration);
 
 	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
 		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
@@ -1026,11 +1026,13 @@ void TriggerCentral::updateWaveform() {
 
 		efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 
+		triggerErrorDetection.clear();
+
 		/**
 	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(this,
+		calculateTriggerSynchPoint(primaryTriggerConfiguration,
 				triggerShape,
 				initState);
 	}
