@@ -998,7 +998,11 @@ void doInitElectronicThrottle() {
 #endif /* EFI_UNIT_TEST */
 
 #if !EFI_UNIT_TEST
-	etbThread.start();
+	static bool started = false;
+	if (started == false) {
+		etbThread.start();
+		started = true;
+	}
 #endif
 }
 
