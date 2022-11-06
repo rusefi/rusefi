@@ -139,7 +139,7 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
-	virtual void resetTriggerState();
+	virtual void resetState();
 	void setShaftSynchronized(bool value);
 	bool getShaftSynchronized();
 
@@ -188,7 +188,7 @@ private:
 class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
 public:
 	PrimaryTriggerDecoder(const char* name);
-	void resetTriggerState() override;
+	void resetState() override;
 
 	void resetHasFullSync() {
 		// If this trigger doesn't need disambiguation, we already have phase sync

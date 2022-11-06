@@ -313,11 +313,11 @@ void Engine::OnTriggerSynchronizationLost() {
 	// Needed for early instant-RPM detection
 	rpmCalculator.setStopSpinning();
 
-	triggerCentral.triggerState.resetTriggerState();
+	triggerCentral.triggerState.resetState();
 
 	for (size_t i = 0; i < efi::size(triggerCentral.vvtState); i++) {
 		for (size_t j = 0; j < efi::size(triggerCentral.vvtState[0]); j++) {
-			triggerCentral.vvtState[i][j].resetTriggerState();
+			triggerCentral.vvtState[i][j].resetState();
 		}
 	}
 }
