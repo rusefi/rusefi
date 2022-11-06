@@ -977,13 +977,9 @@ static void calculateTriggerSynchPoint(
 	triggerCentral->triggerErrorDetection.clear();
 	shape.initializeSyncPoint(state, triggerCentral->primaryTriggerConfiguration);
 
-	int length = shape.getLength();
-	triggerCentral->engineCycleEventCount = length;
-
-	efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
 	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
 		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
-		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", length);
+		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", shape.getSize());
 		shape.setShapeDefinitionError(true);
 		return;
 	}
@@ -1026,6 +1022,11 @@ void TriggerCentral::updateWaveform() {
 	}
 
 	if (!triggerShape.shapeDefinitionError) {
+		int length = triggerShape.getLength();
+		engineCycleEventCount = length;
+
+		efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
+
 		/**
 	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
@@ -1033,8 +1034,6 @@ void TriggerCentral::updateWaveform() {
 		calculateTriggerSynchPoint(this,
 				triggerShape,
 				initState);
-
-		engineCycleEventCount = triggerShape.getLength();
 	}
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
