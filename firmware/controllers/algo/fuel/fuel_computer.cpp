@@ -23,8 +23,6 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	return airmass / afr;
 }
 
-FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&lambdaTable) {}
-
 float FuelComputer::getStoichiometricRatio() const {
 	float primary = engineConfiguration->stoichRatioPrimary;
 
@@ -55,10 +53,13 @@ float FuelComputer::getStoichiometricRatio() const {
 	return interpolateClamped(0, primary, 100, secondary, flex.Value);
 }
 
-float FuelComputer::getTargetLambda(int rpm, float load) const {
-	efiAssert(OBD_PCM_Processor_Fault, m_lambdaTable != nullptr, "AFR table null", 0);
 
-	return m_lambdaTable->getValue(rpm, load);
+float FuelComputer::getTargetLambda(int rpm, float load) const {
+	return interpolate3d(
+		config->lambdaTable,
+		config->lambdaLoadBins, load,
+		config->lambdaRpmBins, rpm
+	);
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {

@@ -57,7 +57,7 @@ const ac_control_s* getLiveDataAddr() {
 
 template<>
 const fuel_computer_s* getLiveDataAddr() {
-	return engine->fuelComputer;
+	return &engine->fuelComputer;
 }
 
 template<>

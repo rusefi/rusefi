@@ -37,6 +37,7 @@ Usages:
     java: FuelComputer.java
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config.txt
+    constexpr: "engine->fuelComputer"
 
   - name: launch_control_state
     java: LaunchControl.java
