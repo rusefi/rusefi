@@ -159,19 +159,13 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	event_trigger_position_s position;
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 0);
+	position.setAngle(0);
 	assertTriggerPosition(&position, 0, 0);
 
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 200);
+	position.setAngle(200);
 	assertTriggerPosition(&position, 3, 20);
 
-	findTriggerPosition(&engine->triggerCentral.triggerShape,
-			&engine->triggerCentral.triggerFormDetails,
-			&position, 360);
+	position.setAngle(360);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
