@@ -38,7 +38,6 @@ public class GaugesPanel {
             Sensor.tCharge,
             Sensor.baseFuel,
             Sensor.runningFuel,
-            Sensor.TARGET_AFR,
 
             Sensor.etbTarget,
             Sensor.lastErrorCode,

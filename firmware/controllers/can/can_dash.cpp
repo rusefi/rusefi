@@ -1240,8 +1240,8 @@ static void populateFrame(Aim5f7& msg) {
 	msg.LambdaErr1 = 0;
 	msg.LambdaErr2 = 0;
 	// both targets are the same for now
-	msg.LambdaTarget1 = engine->fuelComputer->targetLambda;
-	msg.LambdaTarget2 = engine->fuelComputer->targetLambda;
+	msg.LambdaTarget1 = (float)engine->fuelComputer->targetLambda;
+	msg.LambdaTarget2 = (float)engine->fuelComputer->targetLambda;
 }
 
 void canDashboardAim(CanCycle cycle) {

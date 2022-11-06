@@ -105,6 +105,7 @@ uint32_t sparkCounter
 	float fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@
 	float ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@
 
+	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
 ! engine_state_s
 end_struct
