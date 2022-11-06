@@ -20,3 +20,4 @@ void startSent(void);
 void stopSent(void);
 
 float getSentValue(size_t index);
+int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1);
