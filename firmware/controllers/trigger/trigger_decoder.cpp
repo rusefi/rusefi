@@ -203,8 +203,6 @@ void PrimaryTriggerDecoder::resetState() {
 	TriggerDecoderBase::resetState();
 
 	resetHasFullSync();
-
-	instantRpm.resetInstantRpm();
 }
 
 void InstantRpmCalculator::movePreSynchTimestamps() {
