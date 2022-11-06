@@ -211,9 +211,4 @@ void onConfigurationChangeTriggerCallback();
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6
 #define SYMMETRICAL_TWELVE_TIMES_CRANK_SENSOR_DIVIDER 24
 
-void calculateTriggerSynchPoint(
-		TriggerCentral *triggerCentral,
-	TriggerWaveform& shape,
-	TriggerDecoderBase& state);
-
 TriggerCentral * getTriggerCentral();

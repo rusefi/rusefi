@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+#include "rusefi_enums.h"
 
 void setAlgorithm(engine_load_mode_e algo);
 
