@@ -56,12 +56,6 @@ public class GaugesPanel {
     private static final int DEFAULT_COLUMNS = 3;
     public static boolean IS_PAUSED; // dirty but works for not
 
-    static {
-        int expected = SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT;
-        if (DEFAULT_LAYOUT.length != expected)
-            throw new IllegalStateException("Invalid gauges panel size " + DEFAULT_LAYOUT.length + " while " + expected  + " expected");
-    }
-
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
     private final Node config;

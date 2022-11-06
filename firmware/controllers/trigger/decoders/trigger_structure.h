@@ -47,19 +47,6 @@
 			angle -= engineCycleDurationLocalCopy;   						\
 	}
 
-/**
- * This structure defines an angle position in relation to specific tooth within trigger shape
- */
-class event_trigger_position_s {
-public:
-	size_t triggerEventIndex = 0;
-
-	angle_t angleOffsetFromTriggerEvent = 0;
-
-	void setAngle(angle_t angle);
-};
-
-class Engine;
 class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
@@ -224,7 +211,6 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape(TriggerFormDetails& details);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
@@ -267,10 +253,6 @@ private:
 	operation_mode_e operationMode;
 };
 
-#ifndef MAX
-#define MAX(a,b) (((a)>(b))?(a):(b))
-#endif
-
 /**
  * Misc values calculated from TriggerWaveform
  */
@@ -284,11 +266,5 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
-
-void findTriggerPosition(
-		TriggerWaveform *shape,
-		TriggerFormDetails *details,
-		event_trigger_position_s *position,
-		angle_t angle);
 
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x

@@ -668,7 +668,7 @@ void updateTunerStudioState() {
 
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
-	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	auto instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 	tsOutputChannels->instantRpm = instantRpm;
 
 	updateSensors();

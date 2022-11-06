@@ -124,13 +124,13 @@ TEST(AirmassModes, VeOverride) {
 
 	// Use default mode - will call with 10
 	dut.getAirmass(0);
-	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 10.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 10.0f);
 
 	// Override to TPS
 	engineConfiguration->veOverrideMode = VE_TPS;
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
 	dut.getAirmass(0);
-	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 30.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.veTableYAxis, 30.0f);
 }
 
 TEST(AirmassModes, FallbackMap) {

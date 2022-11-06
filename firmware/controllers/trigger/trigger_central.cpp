@@ -47,7 +47,7 @@ TriggerCentral::TriggerCentral() :
 		triggerState("TRG")
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
-	triggerState.resetTriggerState();
+	triggerState.resetState();
 	noiseFilter.resetAccumSignalData();
 }
 
@@ -124,10 +124,16 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_FIRST_HALF;
 }
 
-static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
+angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
-	return tc->triggerState.syncEnginePhase(divider, remainder, engineCycle);
+	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
+	if (totalShift != 0) {
+		// Reset instant RPM, since the engine phase has now changed, invalidating the tooth history buffer
+		// maybe TODO: could/should we rotate the buffer around to re-align it instead? Is that worth it?
+		instantRpm.resetInstantRpm();
+	}
+	return totalShift;
 }
 
 static void turnOffAllDebugFields(void *arg) {
@@ -162,16 +168,16 @@ static angle_t adjustCrankPhase(int camIndex) {
 	switch (vvtMode) {
 	case VVT_FIRST_HALF:
 	case VVT_MAP_V_TWIN:
-		return syncAndReport(tc, getCrankDivider(operationMode), 1);
+		return tc->syncAndReport(getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), 0);
 	case VVT_2JZ:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_ST170:
@@ -181,7 +187,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_3A92:
 	case VVT_MITSUBISHI_6G75:
 	case VVT_HONDA_K_EXHAUST:
-		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
+		return tc->syncAndReport(getCrankDivider(operationMode), engineConfiguration->vvtBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K_INTAKE:
 	case VVT_INACTIVE:
 		// do nothing
@@ -952,6 +958,42 @@ static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& con
 	shape.initializeSyncPoint(initState, config);
 }
 
+void TriggerCentral::validateCamVvtCounters() {
+	// micro-optimized 'crankSynchronizationCounter % 256'
+	int camVvtValidationIndex = triggerState.getCrankSynchronizationCounter() & 0xFF;
+	if (camVvtValidationIndex == 0) {
+		vvtCamCounter = 0;
+	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
+		// magic logic: we expect at least 60 CAM/VVT events for each 256 trigger cycles, otherwise throw a code
+		warning(OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, "No Camshaft Position Sensor signals");
+	}
+}
+/**
+ * Calculate 'shape.triggerShapeSynchPointIndex' value using 'TriggerDecoderBase *state'
+ */
+static void calculateTriggerSynchPoint(
+		const PrimaryTriggerConfiguration &primaryTriggerConfiguration,
+		TriggerWaveform& shape,
+		TriggerDecoderBase& initState) {
+
+#if EFI_PROD_CODE
+	efiAssertVoid(CUSTOM_TRIGGER_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "calc s");
+#endif
+
+	shape.initializeSyncPoint(initState, primaryTriggerConfiguration);
+
+	if (shape.getSize() >= PWM_PHASE_MAX_COUNT) {
+		// todo: by the time we are here we had already modified a lot of RAM out of bounds!
+		firmwareError(CUSTOM_ERR_TRIGGER_WAVEFORM_TOO_LONG, "Trigger length above maximum: %d", shape.getSize());
+		shape.setShapeDefinitionError(true);
+		return;
+	}
+
+	if (shape.getSize() == 0) {
+		firmwareError(CUSTOM_ERR_TRIGGER_ZERO, "triggerShape size is zero");
+	}
+}
+
 void TriggerCentral::updateWaveform() {
 	static TriggerDecoderBase initState("init");
 
@@ -985,15 +1027,20 @@ void TriggerCentral::updateWaveform() {
 	}
 
 	if (!triggerShape.shapeDefinitionError) {
+		int length = triggerShape.getLength();
+		engineCycleEventCount = length;
+
+		efiAssertVoid(CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
+
+		triggerErrorDetection.clear();
+
 		/**
 	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(this,
+		calculateTriggerSynchPoint(primaryTriggerConfiguration,
 				triggerShape,
 				initState);
-
-		engineCycleEventCount = triggerShape.getLength();
 	}
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {

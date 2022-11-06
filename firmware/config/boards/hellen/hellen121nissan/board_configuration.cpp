@@ -164,9 +164,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->startUpFuelPumpDuration = 4;
 	engineConfiguration->postCrankingFactor = 1.05;
 
-	engineConfiguration->etb.pFactor = 6.1350;
-	engineConfiguration->etb.iFactor = 87.7182;
-	engineConfiguration->etb.dFactor = 0.0702;
+    setEtbPID(6.1350, 87.7182, 0.0702);
 
 	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;

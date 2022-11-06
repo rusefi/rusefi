@@ -25,16 +25,14 @@ function hideEmptyColumns(table) {
   }
 }
 
+function addRow(table, pin) {
+  var clone = getRow(table, pin)
+  table.appendChild(clone);
+}
+
 function addRow(table, pin, cid) {
-  var template = document.getElementById("table-template");
-  var clone = template.content.cloneNode(true);
+  var clone = getRow(table, pin)
   var row = clone.querySelector(".data");
-  var cells = row.children;
-  for (var i = 0; i < cells.length; i++) {
-    var cell = cells[i];
-    cell.textContent = Array.isArray(pin[cell.dataset.field]) ? pin[cell.dataset.field].join(", ") : pin[cell.dataset.field];
-  }
-  clone.querySelector(".pin-data").dataset.type = pin.type;
   if (pin.pdiv) {
     row.addEventListener('click', function(table, pin, cid) {
       var container;
@@ -48,6 +46,19 @@ function addRow(table, pin, cid) {
     }.bind(null, table, pin, cid));
   }
   table.appendChild(clone);
+}
+
+function getRow(table, pin) {
+  var template = document.getElementById("table-template");
+  var clone = template.content.cloneNode(true);
+  var row = clone.querySelector(".data");
+  var cells = row.children;
+  for (var i = 0; i < cells.length; i++) {
+    var cell = cells[i];
+    cell.textContent = Array.isArray(pin[cell.dataset.field]) ? pin[cell.dataset.field].join(", ") : pin[cell.dataset.field];
+  }
+  clone.querySelector(".pin-data").dataset.type = pin.type;
+  return clone;
 }
 
 function clickPin(table, pin, cid) {
@@ -83,6 +94,7 @@ function clickPin(table, pin, cid) {
   }
   container.scrollIntoView()
 }
+
 function checkparams() {
   var params = new URLSearchParams(window.location.search);
   var connector = params.get("connector");
@@ -197,16 +209,28 @@ window.addEventListener('load', function() {
       hideEmptyColumns(sdiv.querySelector('.pinout-table'));
       checkImagesLoaded();
     }.bind(null, connector, sdiv, img));
-    img.src = connector.info.image.file;
-    if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
-      document.title = connector.info.title;
-    }
-    if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
-      document.getElementById("board-link").innerText = document.title;
-      document.getElementById("board-link").href = connector.info.board_url;
-    }
-    if (typeof(connector.info.name) != "undefined") {
-      sdiv.querySelector(".connector-name").innerText = connector.info.name;
+    if (typeof(connector.info) != "undefined") {
+      img.src = connector.info.image.file;
+      if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
+        document.title = connector.info.title;
+      }
+      if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
+        document.getElementById("board-link").innerText = document.title;
+        document.getElementById("board-link").href = connector.info.board_url;
+      }
+      if (typeof(connector.info.name) != "undefined") {
+        sdiv.querySelector(".connector-name").innerText = connector.info.name;
+      }
+    } else {
+      img.parentElement.parentElement.style.height = 0;
+      for (var i = 0; i < connector.pins.length; i++) {
+        var pin = connector.pins[i];
+        if (!pin.pin) {
+          continue;
+        }
+        var fullTable = sdiv.querySelector(".pinout-table").querySelector("tbody");
+        addRow(fullTable, pin);
+      }
     }
   }
 });

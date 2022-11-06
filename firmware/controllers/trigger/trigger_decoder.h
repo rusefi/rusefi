@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "global.h"
 #include "trigger_structure.h"
-#include "engine_configuration.h"
 #include "trigger_state_generated.h"
 #include "trigger_state_primary_generated.h"
 #include "timer.h"
@@ -141,7 +139,7 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
-	virtual void resetTriggerState();
+	virtual void resetState();
 	void setShaftSynchronized(bool value);
 	bool getShaftSynchronized();
 
@@ -190,7 +188,7 @@ private:
 class PrimaryTriggerDecoder : public TriggerDecoderBase, public trigger_state_primary_s {
 public:
 	PrimaryTriggerDecoder(const char* name);
-	void resetTriggerState() override;
+	void resetState() override;
 
 	void resetHasFullSync() {
 		// If this trigger doesn't need disambiguation, we already have phase sync
@@ -198,41 +196,6 @@ public:
 	}
 
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
-
-	float getInstantRpm() const {
-		return m_instantRpm;
-	}
-
-	/**
-	 * timestamp of each trigger wheel tooth
-	 */
-	uint32_t timeOfLastEvent[PWM_PHASE_MAX_COUNT];
-
-	size_t spinningEventIndex = 0;
-
-	// we might need up to one full trigger cycle of events - which on 60-2 means storage for ~120
-	// todo: change the implementation to reuse 'timeOfLastEvent'
-	uint32_t spinningEvents[120];
-	/**
-	 * instant RPM calculated at this trigger wheel tooth
-	 */
-	float instantRpmValue[PWM_PHASE_MAX_COUNT];
-	/**
-	 * Stores last non-zero instant RPM value to fix early instability
-	 */
-	float prevInstantRpmValue = 0;
-	void movePreSynchTimestamps();
-
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void updateInstantRpm(
-		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-		uint32_t index, efitick_t nowNt);
-#endif
-	/**
-	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
-	 * Needed for early spin-up RPM detection.
-	 */
-	void setLastEventTimeForInstantRpm(efitick_t nowNt);
 
 	// Returns true if syncEnginePhase has been called,
 	// i.e. if we have enough VVT information to have full sync on
@@ -253,14 +216,6 @@ public:
 	void onTooManyTeeth(int actual, int expected) override;
 
 private:
-	float calculateInstantRpm(
-		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-		uint32_t index, efitick_t nowNt);
-
-	void resetInstantRpm();
-
-	float m_instantRpm = 0;
-	float m_instantRpmRatio = 0;
 
 	bool m_needsDisambiguation = false;
 };
@@ -274,5 +229,3 @@ public:
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
-
-void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);
