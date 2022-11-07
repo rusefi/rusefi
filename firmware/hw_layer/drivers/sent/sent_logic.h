@@ -36,6 +36,9 @@ struct sent_channel_stat {
 };
 
 class sent_channel {
+public:
+	sent_channel();
+
 private:
 	SENT_STATE_enum state = SENT_STATE_CALIB;
 

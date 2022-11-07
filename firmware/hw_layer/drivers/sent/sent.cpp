@@ -58,6 +58,11 @@
 #define MsgGetSig1(msg)			(((msg) >> (1 * 4)) & 0xfff)
 #define MsgGetCrc(msg)			MsgGetNibble(msg, 7)
 
+
+sent_channel::sent_channel() {
+	state = SENT_STATE_CALIB;
+}
+
 void sent_channel::restart(void)
 {
 	state = SENT_STATE_CALIB;
