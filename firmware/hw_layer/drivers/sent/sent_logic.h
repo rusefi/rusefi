@@ -36,17 +36,14 @@ struct sent_channel_stat {
 };
 
 class sent_channel {
-public:
-	sent_channel();
-
 private:
 	SENT_STATE_enum state = SENT_STATE_CALIB;
 
 	/* Unit interval in timer clocks - adjusted on SYNC */
-	uint32_t tickPerUnit;
-	uint32_t pulseCounter;
+	uint32_t tickPerUnit = 0;
+	uint32_t pulseCounter = 0;
 	/* pulses skipped in init state while waiting for SYNC */
-	uint32_t initStatePulseCounter;
+	uint32_t initStatePulseCounter = 0;
 
 	/* fast channel shift register*/
 	uint32_t rxReg;
