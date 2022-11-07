@@ -419,6 +419,11 @@ struct LuaSensor final : public StoredValueSensor {
 		return m_isRedundant;
 	}
 
+	// do we need method defined exactly on LuaSensor for Luaa to be happy?
+	void setTimeout(int timeoutMs) override {
+	    StoredValueSensor::setTimeout(timeoutMs);
+	}
+
 	void setRedundant(bool value) {
 		m_isRedundant = value;
 	}

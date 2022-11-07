@@ -77,7 +77,7 @@ public:
 
 	void showInfo(const char*) const override { }
 
-	void setTimeout(int timeoutMs) {
+	virtual void setTimeout(int timeoutMs) {
 		m_timeoutPeriod = MS2NT(timeoutMs);
 	}
 
