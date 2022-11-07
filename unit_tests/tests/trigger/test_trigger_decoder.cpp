@@ -154,7 +154,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	assertTriggerPosition(&position, 0, 0);
 
 	position.setAngle(200);
-	assertTriggerPosition(&position, 3, 20);
+	assertTriggerPosition(&position, 2, 80);
 
 	position.setAngle(360);
 	assertTriggerPosition(&position, 6, 0);
