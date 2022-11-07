@@ -71,7 +71,6 @@
 #define FAST_CALLBACK_PERIOD_MS 5
 #define SLOW_CALLBACK_PERIOD_MS 50
 
-class RpmCalculator;
 struct AirmassModelBase;
 
 #define MAF_DECODING_CACHE_SIZE 256
@@ -88,8 +87,6 @@ struct AirmassModelBase;
 #define STEPPER_PARKING_TPS CLEANUP_MODE_TPS
 
 class IEtbController;
-
-struct IIdleController;
 
 class Engine final : public TriggerStateListener {
 public:
