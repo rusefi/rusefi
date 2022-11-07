@@ -40,7 +40,11 @@ bool CsvReader::haveMore() {
 	return result;
 }
 
-double CsvReader::readTimestampAndValues(double *v) {
+/**
+ * @param values reference of values array to modify
+ * @return timestamp of current line
+ */
+double CsvReader::readTimestampAndValues(double *values) {
 	const char s[2] = ",";
 	char *line = buffer;
 
@@ -49,12 +53,13 @@ double CsvReader::readTimestampAndValues(double *v) {
 
 	for (size_t i = 0; i < m_triggerCount; i++) {
 		char *triggerToken = trim(strtok(nullptr, s));
-		v[i] = std::stod(triggerToken);
+		values[i] = std::stod(triggerToken);
 	}
 
 	return timeStamp;
 }
 
+// todo: separate trigger handling from csv file processing
 void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 
