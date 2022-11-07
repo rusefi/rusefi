@@ -109,6 +109,15 @@ TEST(LuaBasic, ExpectNumOrNilReturnsNothing) {
 	)"), unexpected);
 }
 
+TEST(LuaSensor, Timeout) {
+	EXPECT_FLOAT_EQ(0.0f, testLuaReturnsNumberOrNil(R"(
+		function testFunc()
+			cltSensor = Sensor.new("clt")
+			cltSensor:setTimeout(3000)
+		end
+	)").value_or(0));
+}
+
 TEST(SystemLua, ScriptLoads) {
 	startLua();
 }
