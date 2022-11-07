@@ -35,7 +35,7 @@ static void backupInit() {
 	// we cannot trust the saved data anymore, until it's saved in backupRamFlush()
 	// so we mark is as 'pending'
 	backupRam[backupStateOffset] = BACKUP_PENDING;
-	intFlashWrite(BACKUP_FLASH_ADDR + backupStateOffset, (char *)backupRam, sizeof(backupRam[backupStateOffset]));
+	intFlashWrite((flashaddr_t)BACKUP_FLASH_ADDR + backupStateOffset, (char *)backupRam, sizeof(backupRam[backupStateOffset]));
 	
 	wasLoaded = true;
 }
