@@ -137,7 +137,6 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->invertPrimaryTriggerSignal = true;
 
 
