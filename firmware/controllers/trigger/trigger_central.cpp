@@ -210,7 +210,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
+static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
 	if (isImportantFront && isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
@@ -218,34 +218,29 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 		getExecutorInterface()->scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
-	if (engineConfiguration->displayLogicLevelsInEngineSniffer && isImportantFront) {
-		if (engineConfiguration->vvtCamSensorUseRise) {
-			// todo: unify TS composite logger code with console Engine Sniffer
-			// todo: better API to reduce copy/paste?
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
-#endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferVvtEvent(index, FrontDirection::UP);
-			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
-		} else {
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-#endif /* EFI_TOOTH_LOGGER */
+	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
+		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
+		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
-			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
+#if EFI_TOOTH_LOGGER
+		LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
+#endif /* EFI_TOOTH_LOGGER */
+	} else {
+		if (isImportantFront) {
+			// On the important edge, log a rise+fall pair, and nothing on the real falling edge
 			addEngineSnifferVvtEvent(index, FrontDirection::UP);
+			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
+
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
+#endif /* EFI_TOOTH_LOGGER */
 		}
 	}
 }
 
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	TriggerCentral *tc = getTriggerCentral();
-	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
-		// sensor noise + self-stim = loss of trigger sync
-		return;
-	}
 
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
@@ -264,7 +259,6 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	extern ioportid_t criticalErrorLedPort;
 	extern ioportmask_t criticalErrorLedPin;
 
-
 	for (int i = 0 ; i < 100 ; i++) {
 		// turning pin ON and busy-waiting a bit
 		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
@@ -273,26 +267,20 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
-		// todo: migrate injector_pressure_type_e to class enum, maybe merge with FrontDirection?
-		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
+	const auto& vvtShape = tc->vvtShape[camIndex];
 
-#if EFI_TOOTH_LOGGER
-// todo: we need to start logging different VVT channels differently!!!
-		trigger_event_e tooth = front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-
-		LogTriggerTooth(tooth, nowNt);
-#endif /* EFI_TOOTH_LOGGER */
-	}
-
-	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TriggerValue::FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
-	if (!isVvtWithRealDecoder && !isImportantFront) {
-		// todo: there should be a way to always use real trigger code for this logic?
+
+	// Non real decoders only use the rising edge
+	bool vvtUseOnlyRise = vvtShape.useOnlyRisingEdges || !isVvtWithRealDecoder;
+	bool isImportantFront = !vvtUseOnlyRise || (front == TriggerValue::RISE);
+
+	logVvtFront(vvtUseOnlyRise, isImportantFront, front, nowNt, index);
+
+	if (!isImportantFront) {
+		// This edge is unimportant, ignore it.
 		return;
 	}
-
-	logFront(isImportantFront, nowNt, index);
 
 	// If the main trigger is not synchronized, don't decode VVT yet
 	if (!tc->triggerState.getShaftSynchronized()) {
@@ -304,7 +292,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	if (isVvtWithRealDecoder) {
 		vvtDecoder.decodeTriggerEvent(
 				"vvt",
-			tc->vvtShape[camIndex],
+			vvtShape,
 			nullptr,
 			tc->vvtTriggerConfiguration[camIndex],
 			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
