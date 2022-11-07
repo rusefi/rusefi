@@ -266,5 +266,3 @@ public:
 	 */
 	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
-
-#define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
