@@ -58,7 +58,7 @@ void setSingleCoilDwell();
 // expectation is that for well-known triggers engineConfiguration->globalTriggerAngleOffset would usually be zero
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
-		(TRIGGER_WAVEFORM(tdcPosition) + engineConfiguration->globalTriggerAngleOffset)
+		(getTriggerCentral()->triggerShape.tdcPosition + engineConfiguration->globalTriggerAngleOffset)
 
 /** Gets phase offset for a particular cylinder's ID and number
  * For example on 4 cylinder engine with firing order 1-3-4-2, this

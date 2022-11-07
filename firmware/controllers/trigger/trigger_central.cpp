@@ -38,6 +38,8 @@ WaveChart waveChart;
 static scheduling_s debugToggleScheduling;
 #define DEBUG_PIN_DELAY US2NT(60)
 
+#define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
+
 #if EFI_SHAFT_POSITION_INPUT
 
 TriggerCentral::TriggerCentral() :
