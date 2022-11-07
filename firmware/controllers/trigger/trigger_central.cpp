@@ -276,7 +276,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
 
 	// Non real decoders only use the rising edge
-	bool vvtUseOnlyRise = vvtShape.useOnlyRisingEdges || !isVvtWithRealDecoder;
+	bool vvtUseOnlyRise = !isVvtWithRealDecoder || vvtShape.useOnlyRisingEdges;
 	bool isImportantFront = !vvtUseOnlyRise || (front == TriggerValue::RISE);
 
 	logVvtFront(vvtUseOnlyRise, isImportantFront, front, nowNt, index);
