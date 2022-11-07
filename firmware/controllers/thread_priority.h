@@ -25,7 +25,10 @@
 #define PRIO_CJ125 (NORMALPRIO + 5)
 
 // Logging buffer flush is *slightly* above PRIO_CONSOLE so that we don't starve logging buffers during initialization and console commands
-#define PRIO_TEXT_LOG (NORMALPRIO + 2)
+#define PRIO_TEXT_LOG (NORMALPRIO + 4)
+
+#define TCPIP_THREAD_PRIO (NORMALPRIO + 3)
+#define LWIP_THREAD_PRIORITY (NORMALPRIO + 2)
 
 // Console thread 
 #define PRIO_CONSOLE (NORMALPRIO + 1)
