@@ -2,7 +2,7 @@
 
 # Download and extract GCC arm-none-eabi toolchain
 
-URL="https://developer.arm.com/-/media/Files/downloads/gnu/11.3.rel1/binrel/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
+URL="https://github.com/rusefi/build_support/raw/master/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
 ARCHIVE="${URL##*/}"
 DIR="gcc-arm-none-eabi"
 
