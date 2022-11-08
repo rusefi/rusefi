@@ -10,9 +10,9 @@
 
 #pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
 
-// Firmware builds require at least GCC 10.3.1
-#if (GCC_VERSION < 1031)
-	#error "GCC compiler >= 10.3.1 required"
+// Firmware builds require at least GCC 11.3.1
+#if (GCC_VERSION < 1131)
+	#error "GCC compiler >= 11.3.1 required"
 #endif
 
 #endif
