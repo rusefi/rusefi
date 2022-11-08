@@ -24,7 +24,6 @@ LDSCRIPT = $(STARTUPLD_CYPRESS)/cypress_S6E2CxAH.ld
 
 # TODO: somehow this -DDUMMY is helping us to not mess up the parameters, why?!
 # https://github.com/rusefi/rusefi/issues/684
-DDEFS += -DDUMMY
 DDEFS += -D__USE_CMSIS
 DDEFS += -DEFI_ENABLE_ASSERTS=FALSE
 DDEFS += -DCH_DBG_ENABLE_CHECKS=FALSE

@@ -20,7 +20,6 @@ DDEFS += -DSHORT_BOARD_NAME=kin
 
 # TODO: somehow this -DDUMMY is helping us to not mess up the parameters, why?!
 # https://github.com/rusefi/rusefi/issues/684
-DDEFS += -DDUMMY
 DDEFS += -DCPU_MKE16F512VLH16
 DDEFS += -DCPU_MKE16F512VLH16_cm4
 DDEFS += -D__USE_CMSIS
