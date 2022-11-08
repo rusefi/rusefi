@@ -26,14 +26,14 @@ cd ~/.rusefi-tools
 rm -rf arm-none-eabi-gcc.tar.bz2
 
 # Download and extract GCC compiler
-curl -L -o arm-none-eabi-gcc.tar.bz2 https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
-tar -xjvf arm-none-eabi-gcc.tar.bz2
+curl -L -o arm-none-eabi-gcc.tar.xz https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz
+tar -xjvf arm-none-eabi-gcc.tar.xz
 
 # Delete downloaded image
-rm arm-none-eabi-gcc.tar.bz2
+rm arm-none-eabi-gcc.tar.xz
 
 # Add the compiler to your path
-echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-none-eabi-10.3-2021.10/bin' >> ~/.profile
+echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin' >> ~/.profile
 
 # Allow the current user to use serial ports
 sudo usermod -a -G dialout $USER
