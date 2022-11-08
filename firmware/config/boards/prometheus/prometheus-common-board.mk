@@ -6,12 +6,6 @@ BOARDCPPSRC = $(PROJECT_DIR)/config/boards/Prometheus/board_configuration.cpp
 # Required include directories
 BOARDINC = $(PROJECT_DIR)/config/boards/prometheus
 
-# This board uses bootloader
-USE_BOOTLOADER = yes
-
-# include Prometheus bootloader code
-BOOTLOADERINC = $(PROJECT_DIR)/bootloader/prometheus/$(PROMETHEUS_BOARD)
-
 # Default to a release build - clear EXTRA_PARAMS from cmdline to build debug
 ifeq ($(EXTRA_PARAMS),)
 	EXTRA_PARAMS = -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
