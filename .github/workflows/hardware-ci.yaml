@@ -53,7 +53,7 @@ jobs:
       run: ./gen_live_documentation.sh
 
     - name: Add compiler to PATH
-      run: echo "$HOME/.rusefi-tools/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin" >> $GITHUB_PATH
+      run: echo "$HOME/.rusefi-tools/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi/bin" >> $GITHUB_PATH
 
     # Make sure the compiler works
     - name: Test/Identify Compiler

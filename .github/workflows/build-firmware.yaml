@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
-    
+
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
@@ -318,10 +318,10 @@ jobs:
       if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: | 
-        wget 'https://developer.arm.com/-/media/Files/downloads/gnu/11.2-2022.02/binrel/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi.tar.xz' -O compiler.tar.xz
+      run: |
+        wget 'https://developer.arm.com/-/media/Files/downloads/gnu/11.3.rel1/binrel/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz' -O compiler.tar.xz
         tar -xvf compiler.tar.xz
-        echo "::add-path::`pwd`/gcc-arm-11.2-2022.02-x86_64-arm-none-eabi/bin"
+        echo "::add-path::`pwd`/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
