@@ -362,8 +362,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->enableVerboseCanTx;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
-	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
-		return engineConfiguration->vvtCamSensorUseRise;
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
 		return engineConfiguration->measureMapOnlyInOneCylinder;
 	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
@@ -622,8 +620,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isManualSpinningMode;
 	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
 		return engineConfiguration->twoWireBatchInjection;
-	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
-		return engineConfiguration->useOnlyRisingEdgeForTrigger;
 	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
 		return engineConfiguration->twoWireBatchIgnition;
 	if (strEqualCaseInsensitive(name, "useFixedBaroCorrFromMap"))
@@ -1377,11 +1373,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isCJ125Enabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
-	{
-		engineConfiguration->vvtCamSensorUseRise = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
 	{
 		engineConfiguration->measureMapOnlyInOneCylinder = (int)value;
@@ -2025,11 +2016,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
 	{
 		engineConfiguration->twoWireBatchInjection = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
-	{
-		engineConfiguration->useOnlyRisingEdgeForTrigger = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))

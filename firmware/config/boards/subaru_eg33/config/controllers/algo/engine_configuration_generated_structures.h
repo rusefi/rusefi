@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Nov 04 19:07:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 09 03:03:51 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1709,10 +1709,8 @@ struct engine_configuration_s {
 	offset 764 bit 16 */
 	bool isCJ125Enabled : 1 {};
 	/**
-	 * Use rise or fall signal front
-	 * get vvtCamSensorUseRise
 	offset 764 bit 17 */
-	bool vvtCamSensorUseRise : 1 {};
+	bool unused764b17 : 1 {};
 	/**
 	 * Useful for individual intakes
 	offset 764 bit 18 */
@@ -2634,10 +2632,8 @@ struct engine_configuration_s {
 	offset 1372 bit 12 */
 	bool twoWireBatchInjection : 1 {};
 	/**
-	 * VR sensors are only precise on rising front
-	 * enable trigger_only_front
 	offset 1372 bit 13 */
-	bool useOnlyRisingEdgeForTrigger : 1 {};
+	bool unused1372b13 : 1 {};
 	/**
 	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 	offset 1372 bit 14 */
@@ -5086,4 +5082,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Nov 04 19:07:54 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 09 03:03:51 UTC 2022

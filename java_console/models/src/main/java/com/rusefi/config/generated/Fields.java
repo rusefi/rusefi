@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Nov 09 01:58:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Nov 09 03:04:38 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1180,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.09.all.snap_29905";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.09.all.snap_41091";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1256;
@@ -1539,7 +1539,7 @@ public class Fields {
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 764, FieldType.BIT, 14);
 	public static final Field UNUSEDALTEONOFF = Field.create("UNUSEDALTEONOFF", 764, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 764, FieldType.BIT, 16);
-	public static final Field VVTCAMSENSORUSERISE = Field.create("VVTCAMSENSORUSERISE", 764, FieldType.BIT, 17);
+	public static final Field UNUSED764B17 = Field.create("UNUSED764B17", 764, FieldType.BIT, 17);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 764, FieldType.BIT, 18);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 764, FieldType.BIT, 19);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 764, FieldType.BIT, 20);
@@ -1842,7 +1842,7 @@ public class Fields {
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1372, FieldType.BIT, 10);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1372, FieldType.BIT, 11);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1372, FieldType.BIT, 12);
-	public static final Field USEONLYRISINGEDGEFORTRIGGER = Field.create("USEONLYRISINGEDGEFORTRIGGER", 1372, FieldType.BIT, 13);
+	public static final Field UNUSED1372B13 = Field.create("UNUSED1372B13", 1372, FieldType.BIT, 13);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1372, FieldType.BIT, 14);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1372, FieldType.BIT, 15);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1372, FieldType.BIT, 16);
@@ -2983,7 +2983,7 @@ public class Fields {
 	ENABLEVERBOSECANTX,
 	UNUSEDALTEONOFF,
 	ISCJ125ENABLED,
-	VVTCAMSENSORUSERISE,
+	UNUSED764B17,
 	MEASUREMAPONLYINONECYLINDER,
 	STEPPERFORCEPARKINGEVERYRESTART,
 	ISFASTERENGINESPINUPENABLED,
@@ -3282,7 +3282,7 @@ public class Fields {
 	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
-	USEONLYRISINGEDGEFORTRIGGER,
+	UNUSED1372B13,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
