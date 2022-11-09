@@ -319,7 +319,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        sh ./firmware/provide_gcc.sh
+        ./firmware/provide_gcc.sh
         echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
@@ -440,7 +440,7 @@ jobs:
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        sh ./firmware/provide_gcc.sh
+        ./firmware/provide_gcc.sh
         echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
