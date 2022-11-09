@@ -83,7 +83,7 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 			if (count >= 1)
 				gps_str[--count] = '\0';					// delete 0xD
 
-//			scheduleMsg(&logger, "got GPS [%s]", gps_str);
+			// scheduleMsg(&logger, "got GPS [%s]", gps_str);
 
 			// 'gps_str' string completed
 			onGpsMessage(gps_str);

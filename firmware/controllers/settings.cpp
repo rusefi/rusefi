@@ -142,7 +142,6 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
 #if EFI_PROD_CODE
 	printSpiState(engineConfiguration);
-
 #endif // EFI_PROD_CODE
 }
 
@@ -255,7 +254,6 @@ static void setRpmHardLimit(int value) {
 static void setCrankingIACExtra(float percent) {
 	engineConfiguration->crankingIACposition = percent;
 	efiPrintf("cranking_iac %.2f", percent);
-
 }
 
 static void setCrankingFuel(float timeMs) {
