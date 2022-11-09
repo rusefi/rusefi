@@ -12,7 +12,16 @@
 #include <time.h>
 
 #include "rtc_helper.h"
+
+#if EFI_PROD_CODE
 #include <sys/time.h>
+
+// Lua needs this function, but we don't necessarily have to implement it
+extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
+	(void)tv; (void)tzvp;
+	return 0;
+}
+#endif // EFI_PROD_CODE
 
 void date_set_tm(tm *timp) {
 	(void)timp;
@@ -20,7 +29,7 @@ void date_set_tm(tm *timp) {
 	RTCDateTime timespec;
 	rtcConvertStructTmToDateTime(timp, 0, &timespec);
 	rtcSetTime(&RTCD1, &timespec);
-#endif /* EFI_RTC */
+#endif // EFI_RTC
 }
 
 void date_get_tm(tm *timp) {
@@ -29,16 +38,8 @@ void date_get_tm(tm *timp) {
 	RTCDateTime timespec;
 	rtcGetTime(&RTCD1, &timespec);
 	rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
-#endif /* EFI_RTC */
+#endif // EFI_RTC
 }
-
-#if EFI_PROD_CODE
-// Lua needs this function, but we don't necessarily have to implement it
-extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
-	(void)tv; (void)tzvp;
-	return 0;
-}
-#endif
 
 #if EFI_RTC
 static time_t GetTimeUnixSec() {
@@ -61,10 +62,10 @@ static void SetTimeUnixSec(time_t unix_time) {
 		to the object the result was written into.*/
 	canary = localtime_r(&unix_time, &tim);
 	osalDbgCheck(&tim == canary);
-#else
+#else // defined __GNUC__
 	tm *t = localtime(&unix_time);
 	memcpy(&tim, t, sizeof(tm));
-#endif
+#endif // defined __GNUC__
 
 	RTCDateTime timespec;
 	rtcConvertStructTmToDateTime(&tim, 0, &timespec);
@@ -156,7 +157,7 @@ void setDateTime(const char *strDate) {
 	efiPrintf("date_set Date parameter %s is wrong", strDate);
 }
 
-#else /* EFI_RTC */
+#else // EFI_RTC
 
 bool dateToStringShort(char *lcd_str) {
 	lcd_str[0] = 0;
@@ -167,7 +168,7 @@ void dateToString(char *lcd_str) {
 	lcd_str[0] = 0;
 }
 
-#endif
+#endif // EFI_RTC
 
 void initRtc() {
 #if EFI_RTC
@@ -175,5 +176,5 @@ void initRtc() {
 	efiPrintf("initRtc()");
 
 	printDateTime();
-#endif /* EFI_RTC */
+#endif // EFI_RTC
 }
