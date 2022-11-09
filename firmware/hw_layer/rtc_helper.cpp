@@ -12,7 +12,16 @@
 #include <time.h>
 
 #include "rtc_helper.h"
+
+#if EFI_PROD_CODE
 #include <sys/time.h>
+
+// Lua needs this function, but we don't necessarily have to implement it
+extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
+	(void)tv; (void)tzvp;
+	return 0;
+}
+#endif /* EFI_PROD_CODE */
 
 void date_set_tm(tm *timp) {
 	(void)timp;
@@ -31,14 +40,6 @@ void date_get_tm(tm *timp) {
 	rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
 #endif /* EFI_RTC */
 }
-
-#if EFI_PROD_CODE
-// Lua needs this function, but we don't necessarily have to implement it
-extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
-	(void)tv; (void)tzvp;
-	return 0;
-}
-#endif
 
 #if EFI_RTC
 static time_t GetTimeUnixSec() {
@@ -64,7 +65,7 @@ static void SetTimeUnixSec(time_t unix_time) {
 #else
 	tm *t = localtime(&unix_time);
 	memcpy(&tim, t, sizeof(tm));
-#endif
+#endif /* defined __GNUC__ */
 
 	RTCDateTime timespec;
 	rtcConvertStructTmToDateTime(&tim, 0, &timespec);
@@ -167,7 +168,7 @@ void dateToString(char *lcd_str) {
 	lcd_str[0] = 0;
 }
 
-#endif
+#endif /* EFI_RTC */
 
 void initRtc() {
 #if EFI_RTC
