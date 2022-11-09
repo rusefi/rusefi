@@ -4,7 +4,7 @@
 
 set -e
 
-URL="https://github.com/rusefi/build_support/raw/master/arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
+URL="https://github.com/rusefi/build_support/raw/master/rusefi-arm-gnu-toolchain-11.3.rel1-x86_64-arm-none-eabi.tar.xz"
 ARCHIVE="${URL##*/}"
 DIR="gcc-arm-none-eabi"
 
