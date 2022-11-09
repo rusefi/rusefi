@@ -14,7 +14,6 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	setCrankOperationMode();
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_ONE);
 

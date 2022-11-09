@@ -53,6 +53,9 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 
+	// If RiseOnly, ignore falling edges completely.
+	useOnlyRisingEdges = syncEdge == SyncEdge::RiseOnly;
+
 	setTriggerSynchronizationGap(2);
 	for (int gapIndex = 1; gapIndex < GAP_TRACKING_LENGTH ; gapIndex++) {
 		// NaN means do not use this gap ratio
@@ -411,10 +414,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	shapeDefinitionError = false;
 
-	this->useOnlyRisingEdges = triggerConfig.UseOnlyRisingEdgeForTrigger;
-
 	switch (triggerConfig.TriggerType.type) {
-
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTrigger(this, triggerConfig.TriggerType.customTotalToothCount,
 				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
@@ -728,13 +728,5 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getCycleDuration());
-	}
-
-	if (syncEdge == SyncEdge::Both && useOnlyRisingEdges) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#endif
 	}
 }

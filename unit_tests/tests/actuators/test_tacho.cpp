@@ -21,7 +21,6 @@ TEST(Actuators, Tachometer) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
     engineConfiguration->trigger.customTotalToothCount = 8;
     engineConfiguration->trigger.customSkippedToothCount = 0;
-    engineConfiguration->useOnlyRisingEdgeForTrigger = false;
     setCamOperationMode();
 	eth.applyTriggerWaveform();
 

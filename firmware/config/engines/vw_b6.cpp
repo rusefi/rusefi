@@ -63,7 +63,6 @@ static void commonPassatB6() {
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
 	engineConfiguration->invertCamVVTSignal = true;
-	engineConfiguration->vvtCamSensorUseRise = true;
 
 	/**
 	 * PSS-140

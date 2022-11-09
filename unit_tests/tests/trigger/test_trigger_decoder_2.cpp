@@ -5,17 +5,12 @@ using ::testing::StrictMock;
 
 class MockTriggerConfiguration : public TriggerConfiguration {
 public:
-	MockTriggerConfiguration(bool useOnlyRise, trigger_config_s type)
+	MockTriggerConfiguration(trigger_config_s type)
 		: TriggerConfiguration("Mock")
-		, m_useOnlyRise(useOnlyRise)
 		, m_type(type)
 	{ }
 
 protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override {
-		return m_useOnlyRise;
-	}
-
 	bool isVerboseTriggerSynchDetails() const override {
 		return false;
 	}
@@ -25,7 +20,6 @@ protected:
 	}
 
 private:
-	const bool m_useOnlyRise;
 	const trigger_config_s m_type;
 };
 
@@ -47,7 +41,7 @@ static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& 
 #define doTooth(dut, shape, cfg, t) dut.decodeTriggerEvent("", shape, nullptr, cfg, SHAFT_PRIMARY_RISING, t)
 
 TEST(TriggerDecoder, FindsFirstSyncPoint) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -90,7 +84,7 @@ TEST(TriggerDecoder, FindsFirstSyncPoint) {
 
 
 TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -140,7 +134,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 }
 
 TEST(TriggerDecoder, TooManyTeeth_CausesError) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -218,7 +212,7 @@ TEST(TriggerDecoder, TooManyTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -295,7 +289,7 @@ TEST(TriggerDecoder, NotEnoughTeeth_CausesError) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
@@ -326,7 +320,7 @@ TEST(TriggerDecoder, PrimaryDecoderNoDisambiguation) {
 }
 
 TEST(TriggerDecoder, PrimaryDecoderNeedsDisambiguation) {
-	MockTriggerConfiguration cfg(true, {TT_TOOTHED_WHEEL, 4, 1});
+	MockTriggerConfiguration cfg({TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CRANK_SENSOR, cfg);

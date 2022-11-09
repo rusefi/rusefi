@@ -66,7 +66,6 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	setCrankOperationMode();
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_ONE);
 

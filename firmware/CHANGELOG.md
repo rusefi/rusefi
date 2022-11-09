@@ -45,6 +45,7 @@ Release template (copy/paste this for new release):
 
 ### Removed
  - Idle timing deadzone #4729
+ - "Use only rising edge" trigger option - triggers now select automatically based on trigger type #4621
 
 ## September 2022 Release - "Day 203"
 
