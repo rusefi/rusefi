@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-#include <string.h> 
+#include <string.h>
 #include <time.h>
 
 #include "rtc_helper.h"
