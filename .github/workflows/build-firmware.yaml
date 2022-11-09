@@ -110,7 +110,6 @@ jobs:
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
-            skip-rate: 90
 
           - build-target: hellen128
             folder: hellen/hellen128
