@@ -459,7 +459,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger;
+	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && getTriggerCentral()->triggerShape.useOnlyRisingEdges;
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
@@ -807,11 +807,10 @@ void triggerInfo(void) {
 
 #endif /* HAL_TRIGGER_USE_PAL */
 
-	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s useRiseEdge=%s tdcOffset=%.2f",
+	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s tdcOffset=%.2f",
 			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
-			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
-			TRIGGER_WAVEFORM(tdcPosition));
+			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
 
 	if (engineConfiguration->trigger.type == TT_TOOTHED_WHEEL) {
 		efiPrintf("total %d/skipped %d", engineConfiguration->trigger.customTotalToothCount,
@@ -926,11 +925,9 @@ void onConfigurationChangeTriggerCallback() {
 	changed |= isConfigurationChanged(trigger.type);
 	changed |= isConfigurationChanged(skippedWheelOnCam);
 	changed |= isConfigurationChanged(twoStroke);
-	changed |= isConfigurationChanged(useOnlyRisingEdgeForTrigger);
 	changed |= isConfigurationChanged(globalTriggerAngleOffset);
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
 	changed |= isConfigurationChanged(trigger.customSkippedToothCount);
-	changed |= isConfigurationChanged(vvtCamSensorUseRise);
 	changed |= isConfigurationChanged(overrideTriggerGaps);
 
 	if (changed) {

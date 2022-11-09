@@ -153,7 +153,6 @@ static const uint8_t mapBased16IgnitionTable[16][16] = {
 
 void miataNAcommonEngineSettings() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->compressionRatio = 9.1;

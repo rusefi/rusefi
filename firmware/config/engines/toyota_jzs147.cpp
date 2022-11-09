@@ -52,8 +52,6 @@ static void common2jz() {
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
 
-	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 
 	engineConfiguration->injector.flow = 430;

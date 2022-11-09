@@ -190,8 +190,6 @@ void setBoardDefaultConfiguration() {
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
-	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	setEtbPID(8.8944, 70.2307, 0.1855);

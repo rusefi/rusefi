@@ -261,13 +261,11 @@ static void set4EC_AT() {
  */
 static void setCommonMazdaNB() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
 	// set vvt_mode 3
 	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
 	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
-	engineConfiguration->vvtCamSensorUseRise = true;
 
 	engineConfiguration->ignitionDwellForCrankingMs = 4;
 	// set cranking_fuel 27.5

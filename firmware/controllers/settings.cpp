@@ -691,9 +691,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
-		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
-		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
 		incrementGlobalConfigurationVersion();
@@ -871,8 +868,6 @@ static void getValue(const char *paramStr) {
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		efiPrintf("tps_min=%d", engineConfiguration->tpsMin);
-	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
-		efiPrintf("trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
 		efiPrintf("tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
@@ -885,8 +880,6 @@ static void getValue(const char *paramStr) {
 		efiPrintf("is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
 		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
-	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
-		efiPrintf("vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
 	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
 		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
@@ -1070,8 +1063,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
-		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
