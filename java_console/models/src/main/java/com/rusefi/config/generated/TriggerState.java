@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Nov 01 20:59:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Nov 10 20:15:40 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -114,11 +114,11 @@ public class TriggerState {
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
-	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
-	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF sensor 2";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
-	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear 1";
-	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear 2";
+	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear #1";
+	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
