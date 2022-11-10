@@ -1,20 +1,18 @@
 #include "pch.h"
 
+static int addMafPoint(persistent_config_s *e, int i, float kgHrValue, float voltage) {
+	e->mafDecoding[i] = kgHrValue;
+	e->mafDecodingBins[i] = voltage;
+	return i + 1;
+}
+
 static void fillTheRest(persistent_config_s *e, int i) {
 	/**
 	 * unrealistic values just to make binary search happy
 	 */
 	while (i < MAF_DECODING_COUNT) {
-		e->mafDecoding[i] = 200;
-		e->mafDecodingBins[i] = 10 + i;
-		i++;
+		i = addMafPoint(e, i, 3000, 2010 + i);
 	}
-}
-
-static int addMafPoint(persistent_config_s *e, int i, float kgHrValue, float voltage) {
-	e->mafDecoding[i] = kgHrValue;
-	e->mafDecodingBins[i] = voltage;
-	return i + 1;
 }
 
 /**
