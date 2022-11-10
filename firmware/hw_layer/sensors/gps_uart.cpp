@@ -49,8 +49,8 @@ static void printGpsInfo() {
 	float sec = getTimeNowMs() / 1000.0;
 	efiPrintf("communication speed: %.2f", gpsMesagesCount / sec);
 
-	print("GPS latitude = %.2f\r\n", GPSdata.latitude);
-	print("GPS longitude = %.2f\r\n", GPSdata.longitude);
+	efiPrintf("GPS latitude = %.2f\r\n", GPSdata.latitude);
+	efiPrintf("GPS longitude = %.2f\r\n", GPSdata.longitude);
 }
 
 static struct tm curTm;
