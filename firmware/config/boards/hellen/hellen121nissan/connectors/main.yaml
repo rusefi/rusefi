@@ -138,6 +138,10 @@ pins:
     function: TPS 1 sensor input
 
   - pin: 51a
+    # H144_IN_O2S
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: 51 - MAF
     function: MAF signal
 
   - pin: 51a
