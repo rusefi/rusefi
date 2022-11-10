@@ -126,7 +126,10 @@ pins:
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 50 - TPS 1
-    function: TPS 1 sensor input  
+    function: TPS 1 sensor input
+
+  - pin: 51a
+    function: MAF signal
 
   - pin: 60a
     id: E2
