@@ -74,7 +74,7 @@ static void setupDefaultSensorInputs() {
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
 	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engineConfiguration->mafAdcChannel = H144_IN_O2S;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
