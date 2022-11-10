@@ -29,7 +29,7 @@ static long hex2int(const char *a, int len) {
 
 	for (i = 0; i < len; i++)
 		if (a[i] <= 57)
-			val += (a[i] - 48) * (1 << (4 * (len - 1 - i))); // it's number
+			val += (a[i] - 48) * (1 << (4 * (len - 1 - i))); // it's decimal number
 		else
 			val += (a[i] - 87) * (1 << (4 * (len - 1 - i))); // it's a-f -> work only with low case hex
 	return val;
@@ -175,14 +175,14 @@ Magnetic Variation		°				Magnetic Variation
 Magnetic Variation			E=East,W=West
 Mode Indicator	N		A=Autonomous, D=Differential, E=Dead Reckoning, N=None
 Navigational Status			S=Safe C=Caution U=Unsafe V=Not valid
-
 */
+
 void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 	char *p = nmea;
 	char dStr[GPS_MAX_STRING];
 	struct tm timp;
 
-	p = strchr(p, ',') + 1; 				//read time
+	p = strchr(p, ',') + 1;					// read time
 	str_till_comma(p, dStr);
 	if (strlen(dStr) > 5) {
 		timp.tm_hour = str2int(dStr,2);
@@ -190,7 +190,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 		timp.tm_sec  = str2int(dStr+4,2);
 	}
 	
-	p = strchr(p, ',') + 1; 				//read field Valid status
+	p = strchr(p, ',') + 1; 				// read field Valid status
 	str_till_comma(p, dStr);
 
 	if (dStr[0] == 'V') {					// if field is invalid
@@ -217,7 +217,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 		break;
 	}
 
-	p = strchr(p, ',') + 1; 				// longitude
+	p = strchr(p, ',') + 1;					// longitude
 	str_till_comma(p, dStr);				// str to float till comma saved modified string
 	loc->longitude = atoff(dStr);
 
@@ -242,7 +242,7 @@ void nmea_parse_gprmc(char *nmea, loc_t *loc) {
 	str_till_comma(p, dStr);				// str to float till comma saved modified string
 	loc->course = atoff(dStr);
 
-	p = strchr(p, ',') + 1; 				//read date
+	p = strchr(p, ',') + 1;					// read date
 	str_till_comma(p, dStr);
 	if (strlen(dStr) > 5) {
 		timp.tm_mday = str2int(dStr,2);
@@ -303,7 +303,6 @@ int nmea_valid_checksum(const char *message) {
 
 // Compute the GPS location using decimal scale
 void gps_location(loc_t *coord, char *buffer) {
-
 	coord->type = nmea_get_message_type(buffer);
 
 	switch (coord->type) {
@@ -318,5 +317,4 @@ void gps_location(loc_t *coord, char *buffer) {
 		// unknown message type
 		break;
 	}
-
 }
