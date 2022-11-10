@@ -121,7 +121,23 @@ void setMazdaMiataNAMaf(persistent_config_s *e) {
 }
 
 void setNissanMAF0031(persistent_config_s *e) {
-	  int i = 0;
-	  i = addMafPoint(e, i, 0.000000, 0.000000);
-	  fillTheRest(e, i);
+	int i = 0;
+	i = addMafPoint(e, i, 0.29, 3.1768838175);
+	i = addMafPoint(e, i, 0.49, 3.6987752861);
+	i = addMafPoint(e, i, 0.72, 5.8013108424);
+	i = addMafPoint(e, i, 1, 11.1849);
+	i = addMafPoint(e, i, 1.37, 24.5646673361);
+	i = addMafPoint(e, i, 1.66, 41.453048941);
+	i = addMafPoint(e, i, 1.91, 61.5847903829);
+	i = addMafPoint(e, i, 2.09, 79.7924502089);
+	i = addMafPoint(e, i, 2.34, 110.961012317);
+	i = addMafPoint(e, i, 2.89, 208.198652496);
+	i = addMafPoint(e, i, 3.11, 260.1030585044);
+	i = addMafPoint(e, i, 3.54, 387.150427974);
+	i = addMafPoint(e, i, 3.81, 486.5363959026);
+	i = addMafPoint(e, i, 4, 566.628);
+	i = addMafPoint(e, i, 4.32, 722.3485684449);
+	i = addMafPoint(e, i, 4.65, 913.0847954331);
+	i = addMafPoint(e, i, 4.98, 1137.8746972553);
+	fillTheRest(e, i);
 }

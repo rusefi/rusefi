@@ -120,6 +120,8 @@ end
 
 	engineConfiguration->trigger.type = TT_NISSAN_VQ35;
 
+	setNissanMAF0031(config);
+
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6;
 	engineConfiguration->specs.displacement = 4;
