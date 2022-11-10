@@ -286,7 +286,7 @@ TEST(misc, testGpsParser) {
 	ASSERT_EQ( 0,  GPSdata.course) << "3 course";
 	ASSERT_EQ( 2006,  GPSdata.GPStm.tm_year + 1900) << "3 GPS yy";
 	ASSERT_EQ( 12,  GPSdata.GPStm.tm_mon) << "3 GPS mm";
-	ASSERT_EQ( 26,  GPSdata.GPStm.tm_mday) << "3 GPS yy";
+	ASSERT_EQ( 26,  GPSdata.GPStm.tm_mday) << "3 GPS dd";
 	ASSERT_EQ( 11,  GPSdata.GPStm.tm_hour) << "3 GPS hh";
 	ASSERT_EQ( 16,  GPSdata.GPStm.tm_min) << "3 GPS mm";
 	ASSERT_EQ( 9,  GPSdata.GPStm.tm_sec) << "3 GPS ss";
