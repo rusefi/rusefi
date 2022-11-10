@@ -58,17 +58,41 @@ static time_msecs_t mph_ctr;
 // when A/C compressor is allowed to be on, these values need to be sent so the A/C panel activates the compressor
 #define GENESIS_COUPLE_AC_ENABLE_18F 0x18F
 
+//https://www.drive2.ru/b/500679938089681452/
+#define NISSAN_STEERING_WHEEL 0x002
+
+// 505
 #define NISSAN_RPM_1F9 0x1F9
+
+#define NISSAN_UNKNOWN_1 0x231
+#define NISSAN_UNKNOWN_2 0x233
 // Nissan z33 350Z and else
 // 0x23d = 573
 #define NISSAN_RPM_CLT       0x23D
+// 574
+#define NISSAN_UNKNOWN_3 0x23E
 
 #define NISSAN_VEHICLE_SPEED_280 0x280
 // wheel speed see "102 CAN Communication decoded"
 // 19500 value would be 100 kph
 #define NISSAN_WHEEL_SPEED 0x285
 
+#define NISSAN_ABS 0x2A0
+
+// 833 doors
+#define NISSAN_BCM 0x341
+
+// https://www.drive2.com/l/530057789272229668/
+// 852
+#define NISSAN_VEHICLE_SPEED 0x354
+
+// 1361
 #define NISSAN_CLT_551 0x551
+// 1408
+#define NISSAN_RPM_AGAIN 0x580
+#define NISSAN_ODOMETER 0x5C5
+// 1549
+#define NISSAN_BCM_2 0x60D
 
 static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
