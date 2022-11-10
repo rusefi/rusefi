@@ -805,7 +805,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 	spi_device_e l9779spiDevice;
 	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
- 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
+ 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
 
 	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
@@ -1838,8 +1838,8 @@ end_struct
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
-#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear 1"
-#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear 2"
+#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear #1"
+#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear #2"
 
 #define GAUGE_NAME_BOOST_OUTPUT "Boost Output"
 #define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost Closed Loop"
@@ -1851,8 +1851,8 @@ end_struct
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 
-#define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
-#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF sensor 2"
+#define GAUGE_NAME_AIR_FLOW_MEASURED "MAF"
+#define GAUGE_NAME_AIR_FLOW_MEASURED_2 "MAF #2"
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_MASS "air mass"
 
