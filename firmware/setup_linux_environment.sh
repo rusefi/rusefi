@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # it's totally possible to develop on Windows. Also WSL is amazing!
@@ -20,10 +20,11 @@ sudo apt-get install -y build-essential gcc make openjdk-8-jdk-headless ant mtoo
 # delete any old tools, create a new folder, and go there
 rm -rf ~/.rusefi-tools
 mkdir ~/.rusefi-tools
+dir=$(pwd)
 cd ~/.rusefi-tools
 
 # provide GCC arm-none-eabi toolchain
-sh ./provide_gcc.sh
+${dir}/provide_gcc.sh
 
 # Add the compiler to your path
 echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-none-eabi/bin' >> ~/.profile
