@@ -47,7 +47,7 @@ function onTick()
 	local RPMhi = RPMread / 256
 	local RPMlo = RPMread
 	cltValue = getSensor("CLT")
-	cltValue = (cltValue == nil and 0 or tps)
+	cltValue = (cltValue == nil and 0 or cltValue)
 	local CLTread = math.floor(cltValue + 0.5)
 
 	--print('ac out = ' ..globalAcOut)
