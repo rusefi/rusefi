@@ -1,13 +1,13 @@
 #include "pch.h"
 
-static int addMafPoint(persistent_config_s *e, int i, float kgHrValue, float voltage) {
-	e->mafDecoding[i] = kgHrValue;
-	e->mafDecodingBins[i] = voltage;
-	return i + 1;
+static int addMafPoint(persistent_config_s *config, int index, float kgHrValue, float voltage) {
+	config->mafDecoding[index] = kgHrValue;
+	config->mafDecodingBins[index] = voltage;
+	return index + 1;
 }
 
-static int addMafPointByVoltage(persistent_config_s *e, int i, float voltage, float kgHrValue) {
-	return addMafPoint(s, i, kgHrValue, voltage);
+static int addMafPointByVoltage(persistent_config_s *config, int index, float voltage, float kgHrValue) {
+	return addMafPoint(config, index, kgHrValue, voltage);
 }
 
 static void fillTheRest(persistent_config_s *e, int i) {
