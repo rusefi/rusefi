@@ -20,10 +20,10 @@
  * see #testGpsParser
  */
 #include "pch.h"
-#include <time.h>
 #include "nmea.h"
+#include "rtc_helper.h"
 
-static long hex2int(const char *a, int len) {
+static long hex2int(const char * a, const int len) {
 	int i;
 	long val = 0;
 
@@ -33,16 +33,6 @@ static long hex2int(const char *a, int len) {
 		else
 			val += (a[i] - 87) * (1 << (4 * (len - 1 - i))); // it's a-f -> work only with low case hex
 	return val;
-}
-
-static int str2int(const char *a, int len) {
-	 int i = 0,  k = 0;
-	while (i<len) {
-		k = (k<<3)+(k<<1)+(*a)-'0';
-		a++;
-		i++;
-	}
-	return k;
 }
 
 static float gps_deg_dec(float deg_point) {
@@ -180,14 +170,14 @@ Navigational Status			S=Safe C=Caution U=Unsafe V=Not valid
 void nmea_parse_gprmc(char const * const nmea, loc_t *loc) {
 	char const * p = (char *)nmea;
 	char dStr[GPS_MAX_STRING];
-	struct tm timp;
+	efidatetime_t dt;
 
 	p = strchr(p, ',') + 1;					// read time
 	str_till_comma(p, dStr);
 	if (strlen(dStr) > 5) {
-		timp.tm_hour = str2int(dStr,2);
-		timp.tm_min  = str2int(dStr+2,2);
-		timp.tm_sec  = str2int(dStr+4,2);
+		dt.hour = str2int(dStr, 2);
+		dt.minute = str2int(dStr + 2, 2);
+		dt.second = str2int(dStr + 4, 2);
 	}
 	
 	p = strchr(p, ',') + 1; 				// read field Valid status
@@ -245,13 +235,14 @@ void nmea_parse_gprmc(char const * const nmea, loc_t *loc) {
 	p = strchr(p, ',') + 1;					// read date
 	str_till_comma(p, dStr);
 	if (strlen(dStr) > 5) {
-		timp.tm_mday = str2int(dStr,2);
-		timp.tm_mon  = str2int(dStr+2,2);
-		timp.tm_year = str2int(dStr+4,2)+100;	// we receive -200, but standard wait -1900 = add correction
+		dt.day = str2int(dStr, 2);
+		dt.month = str2int(dStr + 2, 2);
+		dt.year = 100 +						// we receive -200, but standard wait -1900 = add correction
+			str2int(dStr + 4, 2);
 	}
 
-	if (timp.tm_year > 0 ) {				// check if date field is valid
-		memcpy(&loc->GPStm, &timp, sizeof(timp));
+	if (dt.year > 0 ) {						// check if date field is valid
+		memcpy(&loc->time, &dt, sizeof(dt));
 	}
 }
 
