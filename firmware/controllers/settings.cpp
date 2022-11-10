@@ -1076,14 +1076,14 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
 		setVssPin(valueStr);
-#endif // EFI_PROD_CODE
+#endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
 #if EFI_RTC
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
-#endif
+#endif /* EFI_RTD */
 	}
 	engine->resetEngineSnifferIfInTestMode();
 }
