@@ -119,3 +119,9 @@ void setMazdaMiataNAMaf(persistent_config_s *e) {
   
   fillTheRest(e, i);
 }
+
+void setNissanMAF0031(persistent_config_s *e) {
+	  int i = 0;
+	  i = addMafPoint(e, i, 0.000000, 0.000000);
+	  fillTheRest(e, i);
+}
