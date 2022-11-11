@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH snap_64243
-#define TS_SIGNATURE "rusEFI 2022.11.10.prometheus_469.snap_64243"
+#define TS_SIGNATURE "rusEFI 2022.11.11.prometheus_469.snap_64243"
