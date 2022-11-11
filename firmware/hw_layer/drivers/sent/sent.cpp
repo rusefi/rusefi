@@ -58,7 +58,8 @@ void sent_channel::restart(void)
 {
 	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
-	initStatePulseCounter = 0;
+	currentStatePulseCounter = 0;
+	hasPausePulse = false;
 	tickPerUnit = 0;
 
 	/* reset slow channels */
@@ -79,22 +80,37 @@ void sent_channel::restart(void)
 int sent_channel::Decoder(uint16_t clocks)
 {
 	int ret = 0;
+	int interval;
 
 	pulseCounter++;
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
-		/* Find longes pulse */
-		if (clocks > tickPerUnit) {
-			tickPerUnit = clocks;
-		}
-		/* ...this should be SYNC pulse */
-		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
-			/* calculate Unit time from SYNC pulse */
-			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+		if (tickPerUnit == 0) {
+			/* no tickPerUnit calculated yet
+			 * lets assume this is sync pulse... */
+			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
-			pulseCounter = 0;
-			state = SENT_STATE_INIT;
+		} else {
+			/* some tickPerUnit calculated...
+			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
+			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
+				currentStatePulseCounter++;
+				if (currentStatePulseCounter == SENT_MSG_PAYLOAD_SIZE) {
+					pulseCounter = 0;
+					currentStatePulseCounter = 0;
+					state = SENT_STATE_INIT;
+				}
+			} else {
+				currentStatePulseCounter = 0;
+				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			}
+		}
+		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
+			/* failed to calculate valid tickPerUnit, restart */
+			restart();
 		}
 		return 0;
 	}
@@ -106,16 +122,22 @@ int sent_channel::Decoder(uint16_t clocks)
 
 		if (((100 * clocks) >= (syncClocks * 80)) &&
 			((100 * clocks) <= (syncClocks * 120))) {
-			initStatePulseCounter = 0;
 			/* adjust unit time */
 			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			/* we get here from calibration phase. calibration phase end with CRC nibble
+			 * if we had to skip ONE pulse before we get sync - that means device sends pause
+			 * pulses in between of messages */
+			if (currentStatePulseCounter == 1) {
+				hasPausePulse = true;
+			}
 			/* next state */
+			currentStatePulseCounter = 0;
 			state = SENT_STATE_STATUS;
 		} else {
-			initStatePulseCounter++;
+			currentStatePulseCounter++;
 			/* 3 frames skipped, no SYNC detected - recalibrate */
-			if (initStatePulseCounter >= (9 * 3)) {
+			if (currentStatePulseCounter >= (9 * 3)) {
 				restart();
 			}
 		}
@@ -123,7 +145,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		return 0;
 	}
 
-	int interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+	interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 
 	if (interval < 0) {
 		#if SENT_STATISTIC_COUNTERS
@@ -209,7 +231,7 @@ int sent_channel::Decoder(uint16_t clocks)
 						#endif // SENT_STATISTIC_COUNTERS
 						ret = -1;
 					}
-					state = SENT_STATE_SYNC;
+					state = hasPausePulse ? SENT_STATE_PAUSE : SENT_STATE_SYNC;
 				}
 			}
 			else
@@ -221,6 +243,9 @@ int sent_channel::Decoder(uint16_t clocks)
 				state = SENT_STATE_INIT;
 				ret = -1;
 			}
+			break;
+		case SENT_STATE_PAUSE:
+			state = SENT_STATE_SYNC;
 			break;
 	}
 

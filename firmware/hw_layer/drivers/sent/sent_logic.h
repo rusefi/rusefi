@@ -27,6 +27,7 @@ typedef enum
 	SENT_STATE_SIG2_DATA2,
 	SENT_STATE_SIG2_DATA3,
 	SENT_STATE_CRC,
+	SENT_STATE_PAUSE,
 } SENT_STATE_enum;
 
 struct sent_channel_stat {
@@ -45,8 +46,9 @@ private:
 	/* Unit interval in timer clocks - adjusted on SYNC */
 	uint32_t tickPerUnit = 0;
 	uint32_t pulseCounter = 0;
-	/* pulses skipped in init state while waiting for SYNC */
-	uint32_t initStatePulseCounter = 0;
+	/* pulses skipped in init or calibration state while waiting for SYNC */
+	uint32_t currentStatePulseCounter = 0;
+	bool hasPausePulse = false;
 
 	/* fast channel shift register*/
 	uint32_t rxReg;
