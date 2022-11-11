@@ -7,7 +7,7 @@ TEST(sent, testFordIdle) {
 
 	reader.open("tests/sent/resources/ford-sent-idle.csv");
 
-	sent_channel channel;
+	static sent_channel channel;
 
 	int lineCount = 0;
 
