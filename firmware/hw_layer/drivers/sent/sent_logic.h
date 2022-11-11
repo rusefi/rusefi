@@ -8,6 +8,9 @@
 #define SENT_CHANNELS_NUM		4 // Number of sent channels
 #endif
 
+/* Maximum slow shannel mailboxes, DO NOT CHANGE */
+#define SENT_SLOW_CHANNELS_MAX  16
+
 /* collect statistic */
 #define SENT_STATISTIC_COUNTERS	1
 
@@ -70,7 +73,7 @@ public:
 	struct {
 		uint16_t data;
 		uint8_t id;
-	} scMsg[16];
+	} scMsg[SENT_SLOW_CHANNELS_MAX];
 
 	/* Statistic counters */
 #if SENT_STATISTIC_COUNTERS
