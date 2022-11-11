@@ -19,15 +19,19 @@ TEST(sent, testFordIdle) {
 		lineCount++;
 
 		if (lineCount == 1) {
+			// get first timestamp
 			prevTimeStamp = stamp;
 			continue;
 		}
-		double diff = stamp - prevTimeStamp;
+		// we care only about falling edges
+		if (value < 0.5) {
+			double diff = stamp - prevTimeStamp;
 
-		// todo: proper mult
-		channel.Decoder(diff * 10'000'000);
+			// On STM32 we are running timer on 1/4 of cpu clock. Cpu clock is 168 MHz
+			channel.Decoder(diff * 168'000'000 / 4);
 
-		prevTimeStamp = stamp;
+			prevTimeStamp = stamp;
+		}
 
 	}
 	printf("testFordIdle: Got %d lines\n", lineCount);
