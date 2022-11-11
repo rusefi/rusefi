@@ -4114,6 +4114,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "boardUseD4PullDown",						boardUseD4PullDown
 		field = "boardUseD5PullDown",						boardUseD5PullDown
 		field = "SENT input 1",								sentInputPins1
+		field = "sentErrorRate",                            sentErrorRate
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = "I understand ECU Locking",				yesUnderstandLocking

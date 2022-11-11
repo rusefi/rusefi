@@ -554,9 +554,13 @@ float getSentValue(size_t index) {
 		sent_channel &ch = channels[index];
 
 		if (ch.GetSignals(NULL, &sig0, &sig1) == 0) {
-			if (sig0 + sig1 == 0xfff) {
+			float maxValue = 0xfff;
+
+			float errorRate = 1.0 - (sig0 + sig1) / maxValue;
+
+			if (absF(errorRate) < engineConfiguration->sentErrorRate) {
 				/* scale to 0.0 .. 1.0 */
-				return (float)sig1 / 0xfff;
+				return sig1 / maxValue;
 			}
 		}
 	}

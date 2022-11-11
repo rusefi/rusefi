@@ -1347,7 +1347,8 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 
     brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
-	Gpio[4 iterate] sorryUnused
+	Gpio[2 iterate] sorryUnused
+	float sentErrorRate
 
 	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
