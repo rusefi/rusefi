@@ -2,15 +2,13 @@
 #include "logicdata_csv_reader.h"
 #include "sent_logic.h"
 
-TEST(sent, testFordIdle) {
+static int sentTest_feedWithFile(sent_channel &channel, const char *file)
+{
+	int lineCount = 0;
 	int printDebug = 0;
 	CsvReader reader(1, 0);
 
-	reader.open("tests/sent/resources/ford-sent-idle.csv");
-
-	static sent_channel channel;
-
-	int lineCount = 0;
+	reader.open(file);
 
 	double prevTimeStamp;
 
@@ -71,10 +69,16 @@ TEST(sent, testFordIdle) {
 		#endif
 	}
 
+	return lineCount;
+}
+
+TEST(sent, testFordIdle) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/ford-sent-idle.csv");
+	ASSERT_TRUE(lineCount > 100);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
 		ASSERT_TRUE(statistic.RestartCnt == 0);
 	#endif
-
-	ASSERT_TRUE(lineCount > 100);
 }
+
