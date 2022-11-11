@@ -82,6 +82,17 @@ TEST(sent, testFordIdle) {
 	#endif
 }
 
+TEST(sent, testFordClosed) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/ford-sent-closed.csv");
+	ASSERT_TRUE(lineCount > 100);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1);
+	#endif
+}
+
 TEST(sent, testFuelPressure) {
 	static sent_channel channel;
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/SENT-fuel-pressure.csv");
