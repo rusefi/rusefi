@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 09 03:03:51 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Nov 11 23:12:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3672,7 +3672,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2084
 	 */
-	Gpio sorryUnused[4];
+	Gpio sorryUnused[2];
+	/**
+	 * offset 2088
+	 */
+	float sentErrorRate;
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
@@ -5082,4 +5086,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Nov 09 03:03:51 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Fri Nov 11 23:12:17 UTC 2022
