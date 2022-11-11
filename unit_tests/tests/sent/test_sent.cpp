@@ -82,3 +82,14 @@ TEST(sent, testFordIdle) {
 	#endif
 }
 
+TEST(sent, testFuelPressure) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/SENT-fuel-pressure.csv");
+	ASSERT_TRUE(lineCount > 100);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		ASSERT_TRUE(statistic.RestartCnt == 0);
+		/* TODO: add more checks? Check data? */
+	#endif
+}
+
