@@ -2,6 +2,11 @@
 #include "logicdata_csv_reader.h"
 #include "sent_logic.h"
 
+// On STM32 we are running timer on 1/4 of cpu clock. Cpu clock is 168 MHz
+#define CORE_CLOCK				168'000'000
+#define TIMER_CLOCK				(CORE_CLOCK / 4)
+#define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / TIMER_CLOCK)
+
 static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 {
 	int lineCount = 0;
@@ -26,8 +31,7 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 		if (value < 0.5) {
 			double diff = stamp - prevTimeStamp;
 
-			// On STM32 we are running timer on 1/4 of cpu clock. Cpu clock is 168 MHz
-			channel.Decoder(diff * 168'000'000 / 4);
+			channel.Decoder(diff * TIMER_CLOCK);
 
 			prevTimeStamp = stamp;
 		}
@@ -43,21 +47,25 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 			}
 		}
 	}
-	printf("testFordIdle: Got %d lines\n", lineCount);
 
 	if (printDebug) {
 		uint8_t stat;
 		uint16_t sig0, sig1;
+
+		printf("Unit time %f uS\n", TicksToUs(channel.getTickTime()));
 
 		if (channel.GetSignals(&stat, &sig0, &sig1) == 0) {
 			printf("Last valid fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x\n", stat, sig0, sig1);
 		}
 
 		printf("Slow channels:\n");
-		for (int i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
-			//if (scMsgFlags & BIT(i)) {
-				printf(" ID %d: %d\n", channel.scMsg[i].id, channel.scMsg[i].data);
-			//}
+		/* run for all possible slow channel IDs (8 bit) */
+		for (int i = 0; i < 256; i++) {
+			int value;
+			value = channel.GetSlowChannelValue(i);
+			if (value < 0)
+				continue;
+			printf(" ID %d: %d\n", i, value);
 		}
 
 		#if SENT_STATISTIC_COUNTERS
@@ -65,6 +73,7 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 			printf("Restarts %d\n", statistic.RestartCnt);
 			printf("Interval errors %d short, %d long\n", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 			printf("Total frames %d with CRC error %d (%f%%)\n", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
+			printf("Total slow channel messages %d with crc6 errors %d (%f%%)\n", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
 			printf("Sync errors %d\n", statistic.SyncErr);
 		#endif
 	}
