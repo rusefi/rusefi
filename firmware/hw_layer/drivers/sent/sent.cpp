@@ -311,9 +311,9 @@ int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1)
 	return 0;
 }
 
-int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
+int sent_channel::StoreSlowChannelValue(uint8_t id, uint16_t data)
 {
-	int i;
+	size_t i;
 
 	/* Update already allocated messagebox? */
 	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
@@ -335,6 +335,20 @@ int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
 	}
 
 	/* No free mailboxes for new ID */
+	return -1;
+}
+
+int sent_channel::GetSlowChannelValue(uint8_t id)
+{
+	size_t i;
+
+	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		if ((scMsgFlags & BIT(i)) && (scMsg[i].id == id)) {
+			return scMsg[i].data;
+		}
+	}
+
+	/* not found */
 	return -1;
 }
 
@@ -361,7 +375,7 @@ int sent_channel::SlowChannelDecoder()
 			uint8_t id = (scShift2 >> 12) & 0x0f;
 			uint16_t data = (scShift2 >> 4) & 0xff;
 
-			return SlowChannelStore(id, data);
+			return StoreSlowChannelValue(id, data);
 		}
 	}
 	if (1) {
@@ -385,14 +399,14 @@ int sent_channel::SlowChannelDecoder()
 					uint16_t data = scShift2 & 0x0fff; /* 12 bit */
 
 					/* TODO: add crc check */
-					return SlowChannelStore(id, data);
+					return StoreSlowChannelValue(id, data);
 				} else {
 					/* 16 bit message, 4 bit ID */
 					id = (scShift3 >> 6) & 0x0f;
 					uint16_t data = (scShift2 & 0x0fff) |
 						   (((scShift3 >> 1) & 0x0f) << 12);
 
-					return SlowChannelStore(id, data);
+					return StoreSlowChannelValue(id, data);
 				}
 			} else {
 				#if SENT_STATISTIC_COUNTERS

@@ -64,8 +64,8 @@ private:
 	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
 	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
 	uint32_t scCrcShift;	/* shift regiter for special order for CRC6 calculation */
-	/* Slow channel decoder */
-	int SlowChannelStore(uint8_t id, uint16_t data);
+	/* Slow channel decoder and helpers */
+	int StoreSlowChannelValue(uint8_t id, uint16_t data);
 	int SlowChannelDecoder(void);
 
 	/* CRC */
@@ -102,6 +102,9 @@ public:
 	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
 	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
 	int GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1);
+
+	/* Get slow channel value for given ID 8*/
+	int GetSlowChannelValue(uint8_t id);
 
 	/* Show status */
 	void Info(void);
