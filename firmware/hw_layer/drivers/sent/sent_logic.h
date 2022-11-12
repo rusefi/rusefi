@@ -37,6 +37,10 @@ struct sent_channel_stat {
 	uint32_t CrcErrCnt;
 	uint32_t FrameCnt;
 	uint32_t RestartCnt;
+
+	/* Slow channel */
+	uint32_t sc;
+	uint32_t scCrcErr;
 };
 
 class sent_channel {
@@ -59,14 +63,20 @@ private:
 	uint16_t scMsgFlags;
 	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
 	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
-	/* Slow channel decoder */
-	int SlowChannelStore(uint8_t id, uint16_t data);
+	uint32_t scCrcShift;	/* shift regiter for special order for CRC6 calculation */
+	/* Slow channel decoder and helpers */
+	int StoreSlowChannelValue(uint8_t id, uint16_t data);
 	int SlowChannelDecoder(void);
 
 	/* CRC */
 	uint8_t crc4(uint32_t data);
 	uint8_t crc4_gm(uint32_t data);
 	uint8_t crc4_gm_v2(uint32_t data);
+	/* Slow channel CRC6 */
+	uint8_t crc6(uint32_t data);
+
+	/* calc unit tick time from sync pulse */
+	uint32_t calcTickPerUnit(uint32_t clocks);
 
 	void restart(void);
 
@@ -92,6 +102,12 @@ public:
 	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
 	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
 	int GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1);
+
+	/* Get slow channel value for given ID 8*/
+	int GetSlowChannelValue(uint8_t id);
+
+	/* Current tick time in CPU/timer clocks */
+	float getTickTime(void);
 
 	/* Show status */
 	void Info(void);
