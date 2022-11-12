@@ -39,6 +39,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_e65.cpp \
 	tests/lua/test_lua_ford.cpp \
 	tests/lua/test_lua_vag.cpp \
+	tests/lua/test_lua_nissan.cpp \
 	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/lua/test_lua_Leiderman_Khlystov.cpp \
