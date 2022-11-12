@@ -54,6 +54,9 @@
 #define MsgGetSig1(msg)			(((msg) >> (1 * 4)) & 0xfff)
 #define MsgGetCrc(msg)			MsgGetNibble(msg, 7)
 
+/* convert CPU ticks to float Us */
+#define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
+
 void sent_channel::restart(void)
 {
 	state = SENT_STATE_CALIB;
@@ -84,6 +87,11 @@ uint32_t sent_channel::calcTickPerUnit(uint32_t clocks)
 	/* int division with rounding */
 	return (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+}
+
+float sent_channel::getTickTime(void)
+{
+	return tickPerUnit;
 }
 
 int sent_channel::Decoder(uint16_t clocks)
@@ -499,9 +507,6 @@ uint8_t sent_channel::crc6(uint32_t data)
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
-/* convert CPU ticks to float Us */
-#define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
-
 void sent_channel::Info(void)
 {
 	int i;
@@ -509,7 +514,7 @@ void sent_channel::Info(void)
 	uint8_t stat;
 	uint16_t sig0, sig1;
 
-	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(tickPerUnit));
+	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
 	efiPrintf("Total pulses %d", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {

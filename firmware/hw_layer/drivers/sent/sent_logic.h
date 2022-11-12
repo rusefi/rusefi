@@ -106,6 +106,9 @@ public:
 	/* Get slow channel value for given ID 8*/
 	int GetSlowChannelValue(uint8_t id);
 
+	/* Current tick time in CPU/timer clocks */
+	float getTickTime(void);
+
 	/* Show status */
 	void Info(void);
 };
