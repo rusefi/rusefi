@@ -73,6 +73,8 @@ void sent_channel::restart(void)
 		statistic.SyncErr = 0;
 		statistic.CrcErrCnt = 0;
 		statistic.FrameCnt = 0;
+		statistic.sc = 0;
+		statistic.scCrcErr = 0;
 		statistic.RestartCnt++;
 	#endif
 }
@@ -345,6 +347,7 @@ int sent_channel::SlowChannelDecoder()
 	/* shift in new data */
 	scShift2 = (scShift2 << 1) | b2;
 	scShift3 = (scShift3 << 1) | b3;
+	scCrcShift = (scCrcShift << 2) | ((uint32_t)b2 << 1) | b3;
 
 	if (1) {
 		/* Short Serial Message format */
@@ -368,29 +371,33 @@ int sent_channel::SlowChannelDecoder()
 		if ((scShift3 & 0x3f821) == 0x3f000) {
 			uint8_t id;
 
-			/* C-flag: configuration bit is used to indicate 16 bit format */
-			bool sc16Bit = !!(scShift3 & (1 << 10));
-			if (!sc16Bit) {
-				/* 12 bit message, 8 bit ID */
+			uint8_t crc = (scShift2 >> 12) & 0x3f;
+			#if SENT_STATISTIC_COUNTERS
+				statistic.sc++;
+			#endif
+			if (crc == crc6(scCrcShift)) {
+				/* C-flag: configuration bit is used to indicate 16 bit format */
+				bool sc16Bit = !!(scShift3 & (1 << 10));
+				if (!sc16Bit) {
+					/* 12 bit message, 8 bit ID */
+					id = ((scShift3 >> 1) & 0x0f) |
+						 ((scShift3 >> 2) & 0xf0);
+					uint16_t data = scShift2 & 0x0fff; /* 12 bit */
 
-				/* TODO: add crc check */
+					/* TODO: add crc check */
+					return SlowChannelStore(id, data);
+				} else {
+					/* 16 bit message, 4 bit ID */
+					id = (scShift3 >> 6) & 0x0f;
+					uint16_t data = (scShift2 & 0x0fff) |
+						   (((scShift3 >> 1) & 0x0f) << 12);
 
-				id = ((scShift3 >> 1) & 0x0f) |
-					 ((scShift3 >> 2) & 0xf0);
-				uint16_t data = scShift2 & 0x0fff; /* 12 bit */
-
-				/* TODO: add crc check */
-				return SlowChannelStore(id, data);
+					return SlowChannelStore(id, data);
+				}
 			} else {
-				/* 16 bit message, 4 bit ID */
-
-				/* TODO: add crc check */
-
-				id = (scShift3 >> 6) & 0x0f;
-				uint16_t data = (scShift2 & 0x0fff) |
-					   (((scShift3 >> 1) & 0x0f) << 12);
-
-				return SlowChannelStore(id, data);
+				#if SENT_STATISTIC_COUNTERS
+					statistic.scCrcErr++;
+				#endif
 			}
 		}
 	}
@@ -450,6 +457,28 @@ uint8_t sent_channel::crc4_gm_v2(uint32_t data)
 	return crc;
 }
 
+uint8_t sent_channel::crc6(uint32_t data)
+{
+	size_t i;
+	/* Seed 0x15 (21) */
+	uint8_t crc = 0x15;
+	/* CRC table for poly = 0x59 (x^6 + x^4 + x^3 + 1) */
+	const uint8_t crc6_table[64] = {
+		 0, 25, 50, 43, 61, 36, 15, 22, 35, 58, 17,  8, 30,  7, 44, 53,
+		31,  6, 45, 52, 34, 59, 16,  9, 60, 37, 14, 23,  1, 24, 51, 42,
+		62, 39, 12, 21,  3, 26, 49, 40, 29,  4, 47, 54, 32, 57, 18, 11,
+		33, 56, 19, 10, 28,  5, 46, 55,  2, 27, 48, 41, 63, 38, 13, 20 };
+
+	for (i = 0; i < 4; i++) {
+		uint8_t tmp = (data >> (24 - 6 * (i + 1))) & 0x3f;
+		crc = tmp ^ crc6_table[crc];
+	}
+	// Extra cound with 0 input
+	crc = 0 ^ crc6_table[crc];
+
+	return crc;
+}
+
 #endif // EFI_PROD_CODE || EFI_UNIT_TEST
 
 #if EFI_PROD_CODE
@@ -486,6 +515,7 @@ void sent_channel::Info(void)
 		efiPrintf("Restarts %d", statistic.RestartCnt);
 		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 		efiPrintf("Total frames %d with CRC error %d (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
+		efiPrintf("Total slow channel messages %d with crc6 errors %d (%f%%)", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
 		efiPrintf("Sync errors %d", statistic.SyncErr);
 	#endif
 }

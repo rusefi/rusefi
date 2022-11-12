@@ -37,6 +37,10 @@ struct sent_channel_stat {
 	uint32_t CrcErrCnt;
 	uint32_t FrameCnt;
 	uint32_t RestartCnt;
+
+	/* Slow channel */
+	uint32_t sc;
+	uint32_t scCrcErr;
 };
 
 class sent_channel {
@@ -59,6 +63,7 @@ private:
 	uint16_t scMsgFlags;
 	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
 	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
+	uint32_t scCrcShift;	/* shift regiter for special order for CRC6 calculation */
 	/* Slow channel decoder */
 	int SlowChannelStore(uint8_t id, uint16_t data);
 	int SlowChannelDecoder(void);
@@ -67,6 +72,8 @@ private:
 	uint8_t crc4(uint32_t data);
 	uint8_t crc4_gm(uint32_t data);
 	uint8_t crc4_gm_v2(uint32_t data);
+	/* Slow channel CRC6 */
+	uint8_t crc6(uint32_t data);
 
 	/* calc unit tick time from sync pulse */
 	uint32_t calcTickPerUnit(uint32_t clocks);
