@@ -77,9 +77,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
-
-//	engineConfiguration->auxTempSensor1.adcChannel = H144_IN_O2S2;
-	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
 static bool isFirstInvocation = true;
