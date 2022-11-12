@@ -711,7 +711,7 @@ struct EtbThread final : public PeriodicController<512> {
 
 static EtbThread etbThread CCM_OPTIONAL;
 
-#endif
+#endif // EFI_UNIT_TEST
 
 static void showEtbInfo() {
 #if EFI_PROD_CODE
