@@ -68,6 +68,9 @@ private:
 	uint8_t crc4_gm(uint32_t data);
 	uint8_t crc4_gm_v2(uint32_t data);
 
+	/* calc unit tick time from sync pulse */
+	uint32_t calcTickPerUnit(uint32_t clocks);
+
 	void restart(void);
 
 public:

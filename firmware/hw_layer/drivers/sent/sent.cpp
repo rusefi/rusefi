@@ -77,6 +77,13 @@ void sent_channel::restart(void)
 	#endif
 }
 
+uint32_t sent_channel::calcTickPerUnit(uint32_t clocks)
+{
+	/* int division with rounding */
+	return (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+}
+
 int sent_channel::Decoder(uint16_t clocks)
 {
 	int ret = 0;
@@ -89,8 +96,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		if (tickPerUnit == 0) {
 			/* no tickPerUnit calculated yet
 			 * lets assume this is sync pulse... */
-			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			tickPerUnit = calcTickPerUnit(clocks);
 		} else {
 			/* some tickPerUnit calculated...
 			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
@@ -104,8 +110,7 @@ int sent_channel::Decoder(uint16_t clocks)
 				}
 			} else {
 				currentStatePulseCounter = 0;
-				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = calcTickPerUnit(clocks);
 			}
 		}
 		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
@@ -123,8 +128,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		if (((100 * clocks) >= (syncClocks * 80)) &&
 			((100 * clocks) <= (syncClocks * 120))) {
 			/* adjust unit time */
-			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			tickPerUnit = calcTickPerUnit(clocks);
 			/* we get here from calibration phase. calibration phase end with CRC nibble
 			 * if we had to skip ONE pulse before we get sync - that means device sends pause
 			 * pulses in between of messages */
@@ -167,8 +171,7 @@ int sent_channel::Decoder(uint16_t clocks)
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = calcTickPerUnit(clocks);
 				rxReg = 0;
 				state = SENT_STATE_STATUS;
 			}
