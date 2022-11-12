@@ -10,6 +10,7 @@
 #include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "idle_thread.h"
+#include "init.h"
 
 #include "mocks.h"
 
@@ -199,16 +200,25 @@ TEST(etb, initializationNoPrimarySensor) {
 
 	EtbController dut;
 
-	// Needs pedal for init
-	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+	});
 
-	// Redundant, but no primary configured
-	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_4;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_6;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_6;
 
-	EXPECT_FALSE(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 889;
 
-	// Now configure primary TPS
-	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	engineConfiguration->tps1SecondaryMin = 891;
+	engineConfiguration->tps1SecondaryMax = 102;
+
+	initTps();
+	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
+
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
+	initTps();
 
 	// With primary TPS, should return true (ie, throttle was configured)
 	EXPECT_TRUE(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
