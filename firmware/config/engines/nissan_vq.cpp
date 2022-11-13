@@ -52,7 +52,6 @@ function onTick()
 	local RPMlo = RPMread
 	cltValue = getSensor("CLT")
 	cltValue = (cltValue == nil and 0 or cltValue)
-	local CLTread = math.floor(cltValue + 0.5)
 
 	--print('ac out = ' ..globalAcOut)
 	if globalAcOut == 1 and rpmValue > 250 then
@@ -69,9 +68,9 @@ function onTick()
 	cltGauge = 0x00
 
 	-- clt gauge stuff
-	if CLTread < 115 then
+	if cltValue < 115 then
 		cltGauge = math.floor(cltValue * 1.5 + 0.5)
-	elseif CLTread >= 115 then
+	else
 		cltGauge = 0xF0
 	end
 	-- print('clt gauge = '..cltGauge)
@@ -87,17 +86,19 @@ function onTick()
 
 
 	if rpmValue > 250 then
-		if CLTread <= 80 then
+		if cltValue <= 80 then
 			txCan(1, OUT_1F9, 0, fanPayloadOff)
-		elseif CLTread >= 85 and CLTread < 90 then
+		elseif cltValue < 85 then
+		    -- send nothing
+		elseif cltValue < 90 then
 			txCan(1, OUT_1F9, 0, fanPayloadLo)
-		elseif CLTread >= 90 then
+		else
 			txCan(1, OUT_1F9, 0, fanPayloadHi)
 		end
 	else
 		txCan(1, OUT_1F9, 0, fanPayloadOff)
 	end
-	-- print('CLT temp' ..CLTread)
+	-- print('CLT temp' ..cltValue)
 end
 
 
