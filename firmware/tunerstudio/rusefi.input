@@ -1678,12 +1678,8 @@ menuDialog = main
 		subMenu = idleVeTableTbl,				"Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
-  menu = "&View"
-@@LIVE_DATA_MENU_FROM_FILE@@
-
 	menu = "&Advanced"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
-		subMenu = gearDetection,			"Gear detection", 0
 
 		subMenu = std_separator
 		subMenu = boostDialog,			"Boost control"
@@ -1838,6 +1834,9 @@ menuDialog = main
 
 		menu = "Help"
 			subMenu = helpGeneral,	"rusEFI Info"
+
+  menu = "&View"
+@@LIVE_DATA_MENU_FROM_FILE@@
 
 
 [ControllerCommands]
@@ -3420,6 +3419,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
+		panel = gearDetection
 
 ;			Engine->Other inputs
 	dialog = analogInputSettings, "Analog Input Settings"
