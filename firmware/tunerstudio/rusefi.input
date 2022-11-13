@@ -4071,6 +4071,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "TPS Threshold",								launchTpsThreshold,  {launchControlEnabled == 1}
 		field = "Ignition Retard enable",					enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",						launchTimingRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Fuel Added %",                     launchFuelAdderPercent,  {launchControlEnabled == 1}
 		field = "Ignition Retard RPM Adder",				launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Smooth Retard Mode",						launchSmoothRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Hard Cut Mode"
