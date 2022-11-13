@@ -5,7 +5,8 @@
 
 <b>GPL open-source DIY ECU</b>
 
-[![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
+[![Release](https://img.shields.io/github/v/release/rusefi/rusefi?style=flat)](https://github.com/rusefi/rusefi/releases/latest)![Last Commit](https://img.shields.io/github/last-commit/rusefi/rusefi?style=flat)
+![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/rusefi/rusefi/latest?color=blueviolet&label=Commits%20Since%20Release)
 </div>
 
 # rusEFI
