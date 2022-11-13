@@ -50,7 +50,7 @@ void turnOnSpi(spi_device_e device);
 #endif // HAL_USE_SPI
 
 #if HAL_USE_ICU
-bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, uint32_t *base_clock);
+bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, uint32_t *clock_ptr);
 #endif
 
 // MMC Card

@@ -20,8 +20,8 @@
 				*icu_ptr = (icu);						\
 				if (channel_ptr)						\
 					*channel_ptr = (channel);			\
-				if (*clock_ptr)							\
-					*clock_ptr = clock;					\
+				if (clock_ptr)							\
+					*clock_ptr = (clock);				\
 				return true;							\
 			} else {									\
 				/* if current icu is allready in *icu_ptr, continue and return another icu available on this pin, if any */ \
