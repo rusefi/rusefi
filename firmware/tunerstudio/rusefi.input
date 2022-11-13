@@ -1543,9 +1543,7 @@ menuDialog = main
 
 		# Digital outputs
 		subMenu = outputsDialog,			"Outputs"
-		subMenu = mainRelayDialog,			"Main relay"
 		subMenu = acSettings,				"Air Conditioning"
-		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
 
 	menu = "Fuel"
@@ -3161,10 +3159,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output mode",					starterRelayDisablePinMode
 
     dialog = outputsDialogLeft
+		panel = mainRelayDialog
 		panel = fuelPumpDialog
 		panel = tachSettings
 		panel = startStopDialog
 		panel = starterRelay
+		panel = malfunction
 
     dialog = outputsDialog, "Outputs", border
         panel = outputsDialogLeft, West
@@ -3561,7 +3561,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = limitsAndFallback, "Limits and fallbacks", border
 	    panel = limitsAndFallbackLeft, West
-   		panel = limitsAndFallbackCenter, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
+   		panel = limitsAndFallbackCenter, Center, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
 
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"
