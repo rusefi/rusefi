@@ -28,6 +28,8 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 
+	engineConfiguration->sentErrorRate = 0.03; // 3% error rate
+
 	engineConfiguration->turbochargerFilter = 0.01f;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
