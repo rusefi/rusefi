@@ -36,6 +36,9 @@ void setHellen121nissanVQ() {
 	strncpy(config->luaScript, R"(
 canRxAdd(0x35d)
 
+OUT_1F9 = 0x1F9
+OUT_23D = 0x23D
+
 setTickRate(100)
 t = Timer.new()
 t : reset()
@@ -43,7 +46,8 @@ t : reset()
 globalAcOut = 0
 
 function onTick()
-	local RPMread = math.floor(getSensor("RPM") + 0.5) / 3.15
+    local rpmValue = math.floor(getSensor("RPM") + 0.5)
+	local RPMread = rpmValue / 3.15
 	local RPMhi = RPMread / 256
 	local RPMlo = RPMread
 	cltValue = getSensor("CLT")
@@ -51,7 +55,7 @@ function onTick()
 	local CLTread = math.floor(cltValue + 0.5)
 
 	--print('ac out = ' ..globalAcOut)
-	if globalAcOut == 1 and RPMread >80 then
+	if globalAcOut == 1 and rpmValue > 250 then
 		fanPayloadOff = { 0x88, 0x00 }
 		fanPayloadLo = { 0x88, 0x00 }
 		fanPayloadHi = { 0x88, 0x00 }
@@ -63,15 +67,11 @@ function onTick()
 	end
 
 	cltGauge = 0x00
-	-- acOut = {0x32, 0x80, 0x00, 0x10, 0x00, 0x00}
-	-- txCan(1, 0x625, 0,acOut)
 
 	-- clt gauge stuff
 	if CLTread < 115 then
-		-- txCan(1, 0x608, 0, canCLTpayloadNo)
-		cltGauge = math.floor(CLTread * 1.5 + 0.5)
+		cltGauge = math.floor(cltValue * 1.5 + 0.5)
 	elseif CLTread >= 115 then
-		-- txCan(1, 0x608, 0, canCLTpayloadHi)
 		cltGauge = 0xF0
 	end
 	-- print('clt gauge = '..cltGauge)
@@ -82,20 +82,20 @@ function onTick()
 		CLTandRPM = { 0x00, 0x18, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
 	end
 
-	txCan(1, 0x23D, 0, CLTandRPM) -- transmit CLT and RPM
+	txCan(1, OUT_23D, 0, CLTandRPM) -- transmit CLT and RPM
 
 
 
-	if RPMread > 80 then
+	if rpmValue > 250 then
 		if CLTread <= 80 then
-			txCan(1, 0x1F9, 0, fanPayloadOff)
+			txCan(1, OUT_1F9, 0, fanPayloadOff)
 		elseif CLTread >= 85 and CLTread < 90 then
-			txCan(1, 0x1F9, 0, fanPayloadLo)
+			txCan(1, OUT_1F9, 0, fanPayloadLo)
 		elseif CLTread >= 90 then
-			txCan(1, 0x1F9, 0, fanPayloadHi)
+			txCan(1, OUT_1F9, 0, fanPayloadHi)
 		end
 	else
-		txCan(1, 0x1F9, 0, fanPayloadOff)
+		txCan(1, OUT_1F9, 0, fanPayloadOff)
 	end
 	-- print('CLT temp' ..CLTread)
 end

@@ -64,7 +64,9 @@ static time_msecs_t mph_ctr;
 // 505
 #define NISSAN_RPM_1F9 0x1F9
 
-#define NISSAN_UNKNOWN_1 0x231
+// 561
+#define NISSAN_ENGINE_2 0x231
+// 563
 #define NISSAN_UNKNOWN_2 0x233
 // Nissan z33 350Z and else
 // 0x23d = 573
@@ -72,6 +74,7 @@ static time_msecs_t mph_ctr;
 // 574
 #define NISSAN_UNKNOWN_3 0x23E
 
+// 640
 #define NISSAN_VEHICLE_SPEED_280 0x280
 // wheel speed see "102 CAN Communication decoded"
 // 19500 value would be 100 kph
