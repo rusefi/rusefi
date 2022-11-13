@@ -3153,17 +3153,29 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output",						mainRelayPin@@if_ts_show_main_relay
 		field = "Output mode",					mainRelayPinMode@@if_ts_show_main_relay
 
-	dialog = starterRelay, "Starter relay output"
+	dialog = starterRelayDialog, "Starter Disable"
 		field = "Output",						starterRelayDisablePin
 		field = "Output mode",					starterRelayDisablePinMode
+
+	dialog = startStopDialog, "Starter Control"
+		field = "Start/Stop Button input",		startStopButtonPin
+		field = "Start/Stop Button input mode",				startStopButtonMode
+		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
+		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
+
+;			Engine->MIL Settings
+	dialog = malfunctionDialog,	"Check Engine Settings"
+		field = "Output",						malfunctionIndicatorPin
+		field = "Output mode",				malfunctionIndicatorPinMode
+		field = "Warning Period",									warningPeriod
 
     dialog = outputsDialogLeft
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
 		panel = tachSettings
 		panel = startStopDialog
-		panel = starterRelay
-		panel = malfunction
+		panel = starterRelayDialog
+		panel = malfunctionDialog
 
     dialog = outputsDialog, "Outputs", border
         panel = outputsDialogLeft, West
@@ -3176,11 +3188,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Trigger error LED",					triggerErrorPin
 		field = "Debug Trigger Sync",					debugTriggerSync
 
-;			Engine->MIL Settings
-	dialog = malfunction,	"Check Engine Settings"
-		field = "Output",						malfunctionIndicatorPin
-		field = "Output mode",				malfunctionIndicatorPinMode
-		field = "Warning Period",									warningPeriod
 
 	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
@@ -3370,12 +3377,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Min",									alternatorControl_minValue, {isAlternatorControlEnabled == 1}
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
-
-	dialog = startStopDialog, "Start/Stop Button"
-		field = "Start/Stop Button input",		startStopButtonPin
-		field = "Start/Stop Button input mode",				startStopButtonMode
-		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
-		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
 
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog@@if_ts_show_vbatt
