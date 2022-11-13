@@ -37,6 +37,7 @@ void setHellen121nissanVQ() {
 canRxAdd(0x35d)
 
 OUT_1F9 = 0x1F9
+OUT_233 = 0x233
 OUT_23D = 0x23D
 
 setTickRate(100)
@@ -76,13 +77,16 @@ function onTick()
 	-- print('clt gauge = '..cltGauge)
 	-- rpm fun stuff
 	if t : getElapsedSeconds() < 2 then
-		CLTandRPM = { 0x00, 0x18, 0x0C, 0x01, 0x0A, 0x87, 0xFF, 0xFF }
+		CLTandRPM_D = { 0x00, 0x18, 0x0C, 0x01, 0x0A, 0x87, 0xFF, 0xFF }
 	else
-		CLTandRPM = { 0x00, 0x18, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
+		CLTandRPM_D = { 0x00, 0x18, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
 	end
 
-	txCan(1, OUT_23D, 0, CLTandRPM) -- transmit CLT and RPM
+    state_233 = rpmValue > 250 and 0x10 or 0x18
+	CLTandRPM_3     = { cltGauge, 0x8C, 0x20, state_233, RPMlo, 0x00, 0x00, RPMhi }
 
+	txCan(1, OUT_233, 0, CLTandRPM_3) -- transmit CLT and RPM for who knows whom
+	txCan(1, OUT_23D, 0, CLTandRPM_D) -- transmit CLT and RPM for gauge cluster
 
 
 	if rpmValue > 250 then

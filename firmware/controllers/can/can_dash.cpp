@@ -74,6 +74,9 @@ static time_msecs_t mph_ctr;
 // 574
 #define NISSAN_UNKNOWN_3 0x23E
 
+#define NISSAN_TCU_1 0x251
+#define NISSAN_TCU_2 0x253
+
 // 640
 #define NISSAN_VEHICLE_SPEED_280 0x280
 // wheel speed see "102 CAN Communication decoded"
