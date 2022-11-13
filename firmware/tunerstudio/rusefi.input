@@ -1543,15 +1543,11 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Digital outputs
+		subMenu = outputsDialog,			"Outputs"
 		subMenu = mainRelayDialog,			"Main relay"
-		subMenu = fuelPump,					"Fuel pump"
-		subMenu = fanSetting,				"Radiator Fan"
 		subMenu = acSettings,				"Air Conditioning"
-		subMenu = tachSettings,				"Tachometer"
 		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
-		subMenu = startStopDialog,			"Start Button"
-		subMenu = starterRelay,				"Starter Disable relay"
 
 	menu = "Fuel"
 		# basic
@@ -3150,7 +3146,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = fanTest
 		panel = fanIndicators
 
-	dialog = fuelPump, "Fuel Pump"
+	dialog = fuelPumpDialog, "Fuel Pump"
 		field = "Output",							fuelPumpPin
 		field = "Output mode",					fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
@@ -3164,6 +3160,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = starterRelay, "Starter relay output"
 		field = "Output",						starterRelayDisablePin
 		field = "Output mode",					starterRelayDisablePinMode
+
+    dialog = outputsDialogLeft
+		panel = fuelPumpDialog
+		panel = tachSettings
+		panel = startStopDialog
+		panel = starterRelay
+
+    dialog = outputsDialog, "Outputs", border
+        panel = outputsDialogLeft, West
+        panel = fanSetting, Center
 
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
