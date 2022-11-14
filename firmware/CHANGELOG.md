@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - Lua: function to access VIN setting #3967
  - Lua: designated Lua gauges with logging #4672
  - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
+ - Add fuel adder to launch #4777
 
 ### Fixed
  - Fuel Priming reset fix #4627
