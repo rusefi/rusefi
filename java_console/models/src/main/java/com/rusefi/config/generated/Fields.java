@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 13 22:05:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 14 01:02:52 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1180,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.13.all.snap_57724";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.14.all.snap_7772";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1256;
@@ -2174,8 +2174,10 @@ public class Fields {
 	public static final Field AUXFREQUENCYFILTER = Field.create("AUXFREQUENCYFILTER", 2076, FieldType.FLOAT);
 	public static final Field VVTCONTROLMINRPM = Field.create("VVTCONTROLMINRPM", 2080, FieldType.INT16).setScale(1.0);
 	public static final Field SENTINPUTPINS1 = Field.create("SENTINPUTPINS1", 2082, FieldType.INT16, brain_input_pin_e).setScale(1.0);
-	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2084, FieldType.INT16, Gpio).setScale(1.0);
-	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2086, FieldType.INT16, Gpio).setScale(1.0);
+	public static final Field LAUNCHFUELADDERPERCENT = Field.create("LAUNCHFUELADDERPERCENT", 2084, FieldType.INT8).setScale(1.0);
+	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2085, FieldType.INT8).setScale(1.0);
+	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2086, FieldType.INT8).setScale(1.0);
+	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2087, FieldType.INT8).setScale(1.0);
 	public static final Field SENTERRORRATE = Field.create("SENTERRORRATE", 2088, FieldType.FLOAT);
 	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2092, FieldType.INT16).setScale(1.0);
 	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2094, FieldType.INT16).setScale(1.0);
@@ -3606,8 +3608,10 @@ public class Fields {
 	AUXFREQUENCYFILTER,
 	VVTCONTROLMINRPM,
 	SENTINPUTPINS1,
+	LAUNCHFUELADDERPERCENT,
 	SORRYUNUSED1,
 	SORRYUNUSED2,
+	SORRYUNUSED3,
 	SENTERRORRATE,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,

@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_20555
-#define TS_SIGNATURE "rusEFI 2022.11.13.hellenNA6.snap_20555"
+#define SIGNATURE_HASH snap_44907
+#define TS_SIGNATURE "rusEFI 2022.11.14.hellenNA6.snap_44907"

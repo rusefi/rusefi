@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 11 23:12:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 14 01:01:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3672,7 +3672,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2084
 	 */
-	Gpio sorryUnused[2];
+	int8_t launchFuelAdderPercent;
+	/**
+	 * offset 2085
+	 */
+	int8_t sorryUnused[3];
 	/**
 	 * offset 2088
 	 */
@@ -5086,4 +5090,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 11 23:12:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 14 01:01:45 UTC 2022

@@ -773,6 +773,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->fan2OffTemperature;
 	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
 		return engineConfiguration->vvtControlMinRpm;
+	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
+		return engineConfiguration->launchFuelAdderPercent;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
 		return engineConfiguration->coastingFuelCutRpmHigh;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmLow"))
@@ -2397,6 +2399,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
 	{
 		engineConfiguration->vvtControlMinRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
+	{
+		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
