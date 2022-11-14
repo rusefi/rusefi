@@ -5,6 +5,7 @@ import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
@@ -28,8 +29,7 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
  * @see TcpClientSandbox
  */
 public class TcpServerSandbox {
-    private final static byte [] TOTALLY_EMPTY_CONFIGURATION = new byte[Fields.TOTAL_CONFIG_SIZE];
-    private final static byte [] TOTALLY_EMPTY_OUTPUTS = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
+    private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[Fields.TOTAL_CONFIG_SIZE];
 
     public static void main(String[] args) throws IOException {
         Listener serverSocketCreationCallback = parameter -> System.out.println("serverSocketCreationCallback");
@@ -43,12 +43,17 @@ public class TcpServerSandbox {
                     public void run() {
                         System.out.println("Run server socket: " + socket);
 
+
+                        EcuState ecuState = new EcuState();
+
                         try {
                             IoStream stream = new TcpIoStream(TcpServerSandbox.class.getSimpleName(), socket);
                             IncomingDataBuffer in = stream.getDataBuffer();
 
                             while (!socket.isClosed()) {
-                                handleCommand(stream, in, socket);
+                                handleCommand(ecuState, stream, in, socket);
+
+                                ecuState.onCommand();
 
                             }
 
@@ -63,7 +68,21 @@ public class TcpServerSandbox {
                 serverSocketCreationCallback, StatusConsumer.ANONYMOUS);
     }
 
-    private static void handleCommand(IoStream stream, IncomingDataBuffer in, Socket socket) throws IOException {
+    static class EcuState {
+        private final byte[] outputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
+
+        long startUpTime = System.currentTimeMillis();
+
+        public void onCommand() {
+            int seconds = (int) ((System.currentTimeMillis() - startUpTime) / 1000);
+
+            TsOutputs.SECONDS.setValueU32(outputs, seconds);
+
+        }
+    }
+
+
+    private static void handleCommand(EcuState ecuState, IoStream stream, IncomingDataBuffer in, Socket socket) throws IOException {
         Integer length = BinaryProtocolServer.getPendingPacketLengthOrHandleProtocolCommand(socket, new BinaryProtocolServer.Context(), in);
         if (length == null)
             return;
@@ -80,7 +99,7 @@ public class TcpServerSandbox {
         } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
             stream.sendPacket(BinaryProtocolServer.createCrcResponse(TOTALLY_EMPTY_CONFIGURATION));
         } else if (command == Fields.TS_OUTPUT_COMMAND) {
-            byte[] response = getOutputCommandResponse(payload, TOTALLY_EMPTY_OUTPUTS);
+            byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
         } else if (command == Fields.TS_READ_COMMAND) {
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
