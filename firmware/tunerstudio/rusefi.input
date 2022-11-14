@@ -110,7 +110,6 @@ enable2ndByteCanID = false
 
 [LoggerDefinition]
 ; valid logger types: composite, tooth, trigger, csv
-;	loggerDef = compositeLogger, "Primary Trigger Logger", tooth
 	loggerDef = compositeLogger, "Trigger Logger", composite
 		startCommand = "l\x01"
 		stopCommand  = "l\x02"
@@ -118,14 +117,6 @@ enable2ndByteCanID = false
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
-
-;tooth
-		; recordDef = headerLen, footerLen, recordLen
-;		recordDef =	0,	0,	@@COMPOSITE_PACKET_SIZE@@
-
-		; uint16 that stores 1/100 second
-;		recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
-
 
 		; recordDef = headerLen, footerLen, recordLen
 		recordDef =	0,	0,	@@COMPOSITE_PACKET_SIZE@@
