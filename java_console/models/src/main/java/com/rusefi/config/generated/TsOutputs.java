@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Nov 10 20:15:39 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 14 23:41:55 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -367,6 +367,8 @@ public class TsOutputs {
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
+	public static final char TS_LOGGER_CONTROL = 'l';
+	public static final char TS_LOGGER_READ = 'L';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final char TS_PAGE_COMMAND = 'P';
