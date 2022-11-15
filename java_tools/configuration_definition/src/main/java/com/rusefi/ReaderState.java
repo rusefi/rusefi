@@ -14,7 +14,7 @@ import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
-import static com.rusefi.ConfigField.unquote;
+import static com.rusefi.VariableRegistry.unquote;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 /**
