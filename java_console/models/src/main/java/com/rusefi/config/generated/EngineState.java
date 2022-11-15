@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 15 04:45:57 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 15 14:33:13 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -398,35 +398,35 @@ public class EngineState {
 	public static final Field LUA_CLUTCHUPSTATE = Field.create("LUA_CLUTCHUPSTATE", 8, FieldType.BIT, 0);
 	public static final Field LUA_BRAKEPEDALSTATE = Field.create("LUA_BRAKEPEDALSTATE", 8, FieldType.BIT, 1);
 	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2);
-	public static final Field LUA_UNUSEDBIT_5_3 = Field.create("LUA_UNUSEDBIT_5_3", 8, FieldType.BIT, 3);
-	public static final Field LUA_UNUSEDBIT_5_4 = Field.create("LUA_UNUSEDBIT_5_4", 8, FieldType.BIT, 4);
-	public static final Field LUA_UNUSEDBIT_5_5 = Field.create("LUA_UNUSEDBIT_5_5", 8, FieldType.BIT, 5);
-	public static final Field LUA_UNUSEDBIT_5_6 = Field.create("LUA_UNUSEDBIT_5_6", 8, FieldType.BIT, 6);
-	public static final Field LUA_UNUSEDBIT_5_7 = Field.create("LUA_UNUSEDBIT_5_7", 8, FieldType.BIT, 7);
-	public static final Field LUA_UNUSEDBIT_5_8 = Field.create("LUA_UNUSEDBIT_5_8", 8, FieldType.BIT, 8);
-	public static final Field LUA_UNUSEDBIT_5_9 = Field.create("LUA_UNUSEDBIT_5_9", 8, FieldType.BIT, 9);
-	public static final Field LUA_UNUSEDBIT_5_10 = Field.create("LUA_UNUSEDBIT_5_10", 8, FieldType.BIT, 10);
-	public static final Field LUA_UNUSEDBIT_5_11 = Field.create("LUA_UNUSEDBIT_5_11", 8, FieldType.BIT, 11);
-	public static final Field LUA_UNUSEDBIT_5_12 = Field.create("LUA_UNUSEDBIT_5_12", 8, FieldType.BIT, 12);
-	public static final Field LUA_UNUSEDBIT_5_13 = Field.create("LUA_UNUSEDBIT_5_13", 8, FieldType.BIT, 13);
-	public static final Field LUA_UNUSEDBIT_5_14 = Field.create("LUA_UNUSEDBIT_5_14", 8, FieldType.BIT, 14);
-	public static final Field LUA_UNUSEDBIT_5_15 = Field.create("LUA_UNUSEDBIT_5_15", 8, FieldType.BIT, 15);
-	public static final Field LUA_UNUSEDBIT_5_16 = Field.create("LUA_UNUSEDBIT_5_16", 8, FieldType.BIT, 16);
-	public static final Field LUA_UNUSEDBIT_5_17 = Field.create("LUA_UNUSEDBIT_5_17", 8, FieldType.BIT, 17);
-	public static final Field LUA_UNUSEDBIT_5_18 = Field.create("LUA_UNUSEDBIT_5_18", 8, FieldType.BIT, 18);
-	public static final Field LUA_UNUSEDBIT_5_19 = Field.create("LUA_UNUSEDBIT_5_19", 8, FieldType.BIT, 19);
-	public static final Field LUA_UNUSEDBIT_5_20 = Field.create("LUA_UNUSEDBIT_5_20", 8, FieldType.BIT, 20);
-	public static final Field LUA_UNUSEDBIT_5_21 = Field.create("LUA_UNUSEDBIT_5_21", 8, FieldType.BIT, 21);
-	public static final Field LUA_UNUSEDBIT_5_22 = Field.create("LUA_UNUSEDBIT_5_22", 8, FieldType.BIT, 22);
-	public static final Field LUA_UNUSEDBIT_5_23 = Field.create("LUA_UNUSEDBIT_5_23", 8, FieldType.BIT, 23);
-	public static final Field LUA_UNUSEDBIT_5_24 = Field.create("LUA_UNUSEDBIT_5_24", 8, FieldType.BIT, 24);
-	public static final Field LUA_UNUSEDBIT_5_25 = Field.create("LUA_UNUSEDBIT_5_25", 8, FieldType.BIT, 25);
-	public static final Field LUA_UNUSEDBIT_5_26 = Field.create("LUA_UNUSEDBIT_5_26", 8, FieldType.BIT, 26);
-	public static final Field LUA_UNUSEDBIT_5_27 = Field.create("LUA_UNUSEDBIT_5_27", 8, FieldType.BIT, 27);
-	public static final Field LUA_UNUSEDBIT_5_28 = Field.create("LUA_UNUSEDBIT_5_28", 8, FieldType.BIT, 28);
-	public static final Field LUA_UNUSEDBIT_5_29 = Field.create("LUA_UNUSEDBIT_5_29", 8, FieldType.BIT, 29);
-	public static final Field LUA_UNUSEDBIT_5_30 = Field.create("LUA_UNUSEDBIT_5_30", 8, FieldType.BIT, 30);
-	public static final Field LUA_UNUSEDBIT_5_31 = Field.create("LUA_UNUSEDBIT_5_31", 8, FieldType.BIT, 31);
+	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3);
+	public static final Field LUA_UNUSEDBIT_6_4 = Field.create("LUA_UNUSEDBIT_6_4", 8, FieldType.BIT, 4);
+	public static final Field LUA_UNUSEDBIT_6_5 = Field.create("LUA_UNUSEDBIT_6_5", 8, FieldType.BIT, 5);
+	public static final Field LUA_UNUSEDBIT_6_6 = Field.create("LUA_UNUSEDBIT_6_6", 8, FieldType.BIT, 6);
+	public static final Field LUA_UNUSEDBIT_6_7 = Field.create("LUA_UNUSEDBIT_6_7", 8, FieldType.BIT, 7);
+	public static final Field LUA_UNUSEDBIT_6_8 = Field.create("LUA_UNUSEDBIT_6_8", 8, FieldType.BIT, 8);
+	public static final Field LUA_UNUSEDBIT_6_9 = Field.create("LUA_UNUSEDBIT_6_9", 8, FieldType.BIT, 9);
+	public static final Field LUA_UNUSEDBIT_6_10 = Field.create("LUA_UNUSEDBIT_6_10", 8, FieldType.BIT, 10);
+	public static final Field LUA_UNUSEDBIT_6_11 = Field.create("LUA_UNUSEDBIT_6_11", 8, FieldType.BIT, 11);
+	public static final Field LUA_UNUSEDBIT_6_12 = Field.create("LUA_UNUSEDBIT_6_12", 8, FieldType.BIT, 12);
+	public static final Field LUA_UNUSEDBIT_6_13 = Field.create("LUA_UNUSEDBIT_6_13", 8, FieldType.BIT, 13);
+	public static final Field LUA_UNUSEDBIT_6_14 = Field.create("LUA_UNUSEDBIT_6_14", 8, FieldType.BIT, 14);
+	public static final Field LUA_UNUSEDBIT_6_15 = Field.create("LUA_UNUSEDBIT_6_15", 8, FieldType.BIT, 15);
+	public static final Field LUA_UNUSEDBIT_6_16 = Field.create("LUA_UNUSEDBIT_6_16", 8, FieldType.BIT, 16);
+	public static final Field LUA_UNUSEDBIT_6_17 = Field.create("LUA_UNUSEDBIT_6_17", 8, FieldType.BIT, 17);
+	public static final Field LUA_UNUSEDBIT_6_18 = Field.create("LUA_UNUSEDBIT_6_18", 8, FieldType.BIT, 18);
+	public static final Field LUA_UNUSEDBIT_6_19 = Field.create("LUA_UNUSEDBIT_6_19", 8, FieldType.BIT, 19);
+	public static final Field LUA_UNUSEDBIT_6_20 = Field.create("LUA_UNUSEDBIT_6_20", 8, FieldType.BIT, 20);
+	public static final Field LUA_UNUSEDBIT_6_21 = Field.create("LUA_UNUSEDBIT_6_21", 8, FieldType.BIT, 21);
+	public static final Field LUA_UNUSEDBIT_6_22 = Field.create("LUA_UNUSEDBIT_6_22", 8, FieldType.BIT, 22);
+	public static final Field LUA_UNUSEDBIT_6_23 = Field.create("LUA_UNUSEDBIT_6_23", 8, FieldType.BIT, 23);
+	public static final Field LUA_UNUSEDBIT_6_24 = Field.create("LUA_UNUSEDBIT_6_24", 8, FieldType.BIT, 24);
+	public static final Field LUA_UNUSEDBIT_6_25 = Field.create("LUA_UNUSEDBIT_6_25", 8, FieldType.BIT, 25);
+	public static final Field LUA_UNUSEDBIT_6_26 = Field.create("LUA_UNUSEDBIT_6_26", 8, FieldType.BIT, 26);
+	public static final Field LUA_UNUSEDBIT_6_27 = Field.create("LUA_UNUSEDBIT_6_27", 8, FieldType.BIT, 27);
+	public static final Field LUA_UNUSEDBIT_6_28 = Field.create("LUA_UNUSEDBIT_6_28", 8, FieldType.BIT, 28);
+	public static final Field LUA_UNUSEDBIT_6_29 = Field.create("LUA_UNUSEDBIT_6_29", 8, FieldType.BIT, 29);
+	public static final Field LUA_UNUSEDBIT_6_30 = Field.create("LUA_UNUSEDBIT_6_30", 8, FieldType.BIT, 30);
+	public static final Field LUA_UNUSEDBIT_6_31 = Field.create("LUA_UNUSEDBIT_6_31", 8, FieldType.BIT, 31);
 	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.FLOAT);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT);
 	public static final Field SD_AIRFLOW = Field.create("SD_AIRFLOW", 20, FieldType.FLOAT);
@@ -504,35 +504,35 @@ public class EngineState {
 	LUA_CLUTCHUPSTATE,
 	LUA_BRAKEPEDALSTATE,
 	LUA_ACREQUESTSTATE,
-	LUA_UNUSEDBIT_5_3,
-	LUA_UNUSEDBIT_5_4,
-	LUA_UNUSEDBIT_5_5,
-	LUA_UNUSEDBIT_5_6,
-	LUA_UNUSEDBIT_5_7,
-	LUA_UNUSEDBIT_5_8,
-	LUA_UNUSEDBIT_5_9,
-	LUA_UNUSEDBIT_5_10,
-	LUA_UNUSEDBIT_5_11,
-	LUA_UNUSEDBIT_5_12,
-	LUA_UNUSEDBIT_5_13,
-	LUA_UNUSEDBIT_5_14,
-	LUA_UNUSEDBIT_5_15,
-	LUA_UNUSEDBIT_5_16,
-	LUA_UNUSEDBIT_5_17,
-	LUA_UNUSEDBIT_5_18,
-	LUA_UNUSEDBIT_5_19,
-	LUA_UNUSEDBIT_5_20,
-	LUA_UNUSEDBIT_5_21,
-	LUA_UNUSEDBIT_5_22,
-	LUA_UNUSEDBIT_5_23,
-	LUA_UNUSEDBIT_5_24,
-	LUA_UNUSEDBIT_5_25,
-	LUA_UNUSEDBIT_5_26,
-	LUA_UNUSEDBIT_5_27,
-	LUA_UNUSEDBIT_5_28,
-	LUA_UNUSEDBIT_5_29,
-	LUA_UNUSEDBIT_5_30,
-	LUA_UNUSEDBIT_5_31,
+	LUA_LUADISABLEETB,
+	LUA_UNUSEDBIT_6_4,
+	LUA_UNUSEDBIT_6_5,
+	LUA_UNUSEDBIT_6_6,
+	LUA_UNUSEDBIT_6_7,
+	LUA_UNUSEDBIT_6_8,
+	LUA_UNUSEDBIT_6_9,
+	LUA_UNUSEDBIT_6_10,
+	LUA_UNUSEDBIT_6_11,
+	LUA_UNUSEDBIT_6_12,
+	LUA_UNUSEDBIT_6_13,
+	LUA_UNUSEDBIT_6_14,
+	LUA_UNUSEDBIT_6_15,
+	LUA_UNUSEDBIT_6_16,
+	LUA_UNUSEDBIT_6_17,
+	LUA_UNUSEDBIT_6_18,
+	LUA_UNUSEDBIT_6_19,
+	LUA_UNUSEDBIT_6_20,
+	LUA_UNUSEDBIT_6_21,
+	LUA_UNUSEDBIT_6_22,
+	LUA_UNUSEDBIT_6_23,
+	LUA_UNUSEDBIT_6_24,
+	LUA_UNUSEDBIT_6_25,
+	LUA_UNUSEDBIT_6_26,
+	LUA_UNUSEDBIT_6_27,
+	LUA_UNUSEDBIT_6_28,
+	LUA_UNUSEDBIT_6_29,
+	LUA_UNUSEDBIT_6_30,
+	LUA_UNUSEDBIT_6_31,
 	SD_TCHARGE,
 	SD_TCHARGEK,
 	SD_AIRFLOW,
