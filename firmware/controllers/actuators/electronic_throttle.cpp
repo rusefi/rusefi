@@ -578,13 +578,13 @@ void EtbController::update() {
 		return;
 	}
 
-	if (engineConfiguration->disableEtbWhenEngineStopped) {
-		if (!engine->triggerCentral.engineMovedRecently()) {
-			// If engine is stopped and so configured, skip the ETB update entirely
-			// This is quieter and pulls less power than leaving it on all the time
-			m_motor->disable();
-			return;
-		}
+	if ((engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently())
+	        ||
+			engine->engineState.lua.luaDisableEtb) {
+		// If engine is stopped and so configured, skip the ETB update entirely
+		// This is quieter and pulls less power than leaving it on all the time
+		m_motor->disable();
+		return;
 	}
 
 

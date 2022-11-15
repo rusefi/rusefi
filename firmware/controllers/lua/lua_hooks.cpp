@@ -755,6 +755,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 		return 0;
 	});
+	lua_register(l, "setEtbDisabled", [](lua_State* l) {
+		auto luaAdjustment = luaL_checknumber(l, 1);
+		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
+		return 0;
+	});
 #endif // EFI_PROD_CODE
 
 	lua_register(l, "setClutchUpState", [](lua_State* l) {
