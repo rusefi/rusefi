@@ -1,3 +1,7 @@
+open source SAE J2716 stm32 implementation
+
+for unit test see https://github.com/rusefi/rusefi/tree/master/unit_tests/tests/sent
+
 microRusEFI
 
 23 - AN temp 2
