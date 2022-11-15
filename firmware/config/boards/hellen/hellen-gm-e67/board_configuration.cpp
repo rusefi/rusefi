@@ -136,17 +136,18 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->invertPrimaryTriggerSignal = true;
 
+	engineConfiguration->luaOutputPins[0] = H144_OUT_IO6; // starter relay
 
 	engineConfiguration->boostControlPin = H144_OUT_PWM5;
 	engineConfiguration->brakePedalPin = H144_IN_RES2;
-//	engineConfiguration->acSwitch = H144_IN_D_AUX3;
-//	engineConfiguration->acRelayPin = H144_OUT_IO6;
+//	engineConfiguration->acSwitch =
+//	engineConfiguration->acRelayPin =
 	engineConfiguration->fuelPumpPin = H144_OUT_IO5;
 	engineConfiguration->fanPin = H144_OUT_IO12;
 	engineConfiguration->mainRelayPin = H144_OUT_IO3;
     engineConfiguration->tachOutputPin = H144_OUT_PWM7;
 	engineConfiguration->alternatorControlPin = H144_OUT_PWM1;
-//	engineConfiguration->fan2Pin = H144_OUT_IO2;
+//	engineConfiguration->fan2Pin =
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
