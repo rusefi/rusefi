@@ -718,7 +718,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
 			/* Wideband Sensor 1 */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1)) * 1000;
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wideband Sensor 2 */
