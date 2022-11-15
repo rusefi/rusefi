@@ -9,6 +9,7 @@ struct LuaAdjustments
 	bit clutchUpState
 	bit brakePedalState
     bit acRequestState
+    bit luaDisableEtb
 
 end_struct
 
