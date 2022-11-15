@@ -36,7 +36,7 @@ enable2ndByteCanID = false
 	signature	= @@TS_SIGNATURE@@
 
 [TunerStudio]
-	queryCommand	= "@@TS_HELLO_COMMAND@@"
+	queryCommand	= "S"
 	versionInfo	= "V"  ; firmware version for title bar.
 	signature= @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
@@ -111,9 +111,9 @@ enable2ndByteCanID = false
 [LoggerDefinition]
 ; valid logger types: composite, tooth, trigger, csv
 	loggerDef = compositeLogger, "Trigger Logger", composite
-		startCommand = "@@TS_LOGGER_CONTROL@@\x01"
-		stopCommand  = "@@TS_LOGGER_CONTROL@@\x02"
-		dataReadCommand = "@@TS_LOGGER_READ@@"
+		startCommand = "l\x01"
+		stopCommand  = "l\x02"
+		dataReadCommand = "L"
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
