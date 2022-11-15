@@ -83,6 +83,9 @@ static time_msecs_t mph_ctr;
 // 19500 value would be 100 kph
 #define NISSAN_WHEEL_SPEED 0x285
 
+// 670
+#define NISSAN_UNKNOWN_4 0x29E
+
 #define NISSAN_ABS 0x2A0
 
 // 833 doors
