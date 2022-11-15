@@ -2046,8 +2046,6 @@ end_struct
 #define TS_CRC_CHECK_COMMAND 'k'
 ! 0x52 82
 #define TS_READ_COMMAND 'R'
-#define TS_LOGGER_CONTROL 'l'
-#define TS_LOGGER_READ 'L'
 ! 0x47
 #define TS_GET_TEXT 'G'
 ! 0x45

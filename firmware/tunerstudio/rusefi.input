@@ -111,9 +111,9 @@ enable2ndByteCanID = false
 [LoggerDefinition]
 ; valid logger types: composite, tooth, trigger, csv
 	loggerDef = compositeLogger, "Trigger Logger", composite
-		startCommand = "@#TS_LOGGER_CONTROL#@\x01"
-		stopCommand  = "@#TS_LOGGER_CONTROL#@\x02"
-		dataReadCommand = "@#TS_LOGGER_READ#@"
+		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x01"
+		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x02"
+		dataReadCommand = "@#TS_GET_LOGGER_GET_BUFFER#@"
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
