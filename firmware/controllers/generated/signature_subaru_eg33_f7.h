@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH snap_48034
-#define TS_SIGNATURE "rusEFI 2022.11.14.subaru_eg33_f7.snap_48034"
+#define TS_SIGNATURE "rusEFI 2022.11.15.subaru_eg33_f7.snap_48034"
