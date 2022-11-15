@@ -98,6 +98,8 @@ public class TcpServerSandbox {
             stream.sendPacket(TS_OK.getBytes());
         } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
             stream.sendPacket(BinaryProtocolServer.createCrcResponse(TOTALLY_EMPTY_CONFIGURATION));
+        } else if (command == Fields.TS_SET_LOGGER_SWITCH) {
+        } else if (command == Fields.TS_GET_LOGGER_GET_BUFFER) {
         } else if (command == Fields.TS_OUTPUT_COMMAND) {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
