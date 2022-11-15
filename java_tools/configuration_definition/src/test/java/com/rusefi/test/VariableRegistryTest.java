@@ -76,6 +76,6 @@ public class VariableRegistryTest {
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define SINGLE 'L'\n" +
                 "#define DOUBLE \"R\""));
-        assertEquals("hello 'L' \"R\" 'L' \"R\"", registry.applyVariables("hello @@SINGLE@@ @@DOUBLE@@ @@SINGLE@@ @@DOUBLE@@"));
+        assertEquals("hello L R 'L' \"R\"", registry.applyVariables("hello @#SINGLE#@ @#DOUBLE#@ @@SINGLE@@ @@DOUBLE@@"));
     }
 }

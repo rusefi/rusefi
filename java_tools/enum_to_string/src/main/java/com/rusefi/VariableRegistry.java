@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,12 +39,26 @@ public class VariableRegistry {
     // todo: smarter regex! See TsWriter.VAR which is a bit better but still not perfect
     // todo: https://github.com/rusefi/rusefi/issues/3053 ?
     private final Pattern VAR = Pattern.compile("(@@(.*?)@@)");
+    private final Pattern VAR_REMOVE_QUOTE = Pattern.compile("(@#(.*?)#@)");
 
     public Map<String, Integer> intValues = new HashMap<>();
 
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     // todo: move thid logic to JavaFieldsConsumer since that's the consumer?
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    public static String unquote(String token) {
+        return VariableRegistry.unquote(token, '\"');
+    }
+    @NotNull
+    public static String unquote(String token, char quoteSymbol) {
+        int length = token.length();
+        if (length < 2)
+            return token;
+        if (token.charAt(0) == quoteSymbol && token.charAt(token.length() - 1) == quoteSymbol)
+            return token.substring(1, length - 1);
+        return token;
+    }
 
     public void readPrependValues(String prependFile) throws IOException {
         readPrependValues(new FileReader(prependFile));
@@ -162,15 +177,28 @@ public class VariableRegistry {
     public String applyVariables(String line) {
         if (line == null)
             return null;
+        line = process(line, VAR, key -> {
+            if (!data.containsKey(key))
+                throw new IllegalStateException("No such variable: [" + key + "]");
+            return data.get(key);
+        });
+        line = process(line, VAR_REMOVE_QUOTE, key -> {
+            if (!data.containsKey(key))
+                throw new IllegalStateException("No such variable: [" + key + "]");
+            String unquotedDouble = unquote(data.get(key));
+            return unquote(unquotedDouble, '\'');
+        });
+        return line;
+    }
+
+    @NotNull
+    private String process(String line, Pattern pattern, Function<String, String> function) {
         Matcher m;
-        while ((m = VAR.matcher(line)).find()) {
+        while ((m = pattern.matcher(line)).find()) {
             if (m.groupCount() < 2)
                 throw new IllegalStateException("Something broken in: [" + line + "]");
             String key = m.group(2);
-            if (!data.containsKey(key))
-                throw new IllegalStateException("No such variable: [" + key + "]");
-            String s = data.get(key);
-            line = m.replaceFirst(s);
+            line = m.replaceFirst(function.apply(key));
         }
         return line;
     }

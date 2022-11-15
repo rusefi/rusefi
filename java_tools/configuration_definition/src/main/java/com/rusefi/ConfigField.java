@@ -383,12 +383,7 @@ public class ConfigField {
 
     // see testUnquote
     public static String unquote(String token) {
-        int length = token.length();
-        if (length < 2)
-            return token;
-        if (token.charAt(0) == '\"' && token.charAt(token.length() - 1) == '\"')
-            return token.substring(1, length - 1);
-        return token;
+        return VariableRegistry.unquote(token);
     }
 
     public void setFromIterate(String iterateOriginalName, int iterateIndex) {
