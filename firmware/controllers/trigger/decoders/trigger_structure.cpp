@@ -218,7 +218,7 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 }
 
 /**
- * Deprecated! many usages should be replaced by addEvent360
+ * See header for documentation
  */
 void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
@@ -229,18 +229,10 @@ void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, Trigg
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
-/**
- * This version of the method is best when same wheel could be mounted either on crank or cam
- *
- * @param angle 0 to 360 or 0 to 720 depending on configuration
- */
 void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 
-/**
- * @param angle [0,1)
- */
 void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
@@ -636,6 +628,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
         break;
 
 	case TT_BENELLI:
+	    configureBenelli(this);
+        break;
+
 	case UNUSED_29:
 	case UNUSED_34:
 	case TT_1_16:
