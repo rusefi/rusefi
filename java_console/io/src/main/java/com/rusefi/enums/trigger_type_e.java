@@ -26,7 +26,7 @@ public enum trigger_type_e {
 	TT_ONE,
 	TT_DODGE_RAM,
 	TT_60_2_VW,
-	UNUSED_21,
+	TT_BENELLI,
 	TT_DODGE_STRATUS,
 	TT_36_2_2_2,
 	TT_NISSAN_SR20VE,
