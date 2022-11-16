@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TriggerImage" type="Application" factoryName="Application" nameIsGenerated="true">
+  <configuration default="false" name="TriggerImage individual" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.rusefi.trigger.TriggerImage" />
     <module name="java_tools.ui.main" />
     <option name="PROGRAM_PARAMETERS" value="../unit_tests 21 10" />
