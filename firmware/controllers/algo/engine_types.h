@@ -356,6 +356,8 @@ typedef enum {
 	 */
 	TT_60_2_VW = 20,
 
+	TT_BENELLI = 21,
+
 	TT_DODGE_STRATUS = 22,
 
     /**
@@ -505,7 +507,6 @@ typedef enum {
 
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
-	UNUSED_21 = 21,
 	UNUSED_29 = 29,
 	UNUSED_34 = 34,
 
