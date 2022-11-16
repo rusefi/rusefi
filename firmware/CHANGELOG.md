@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - Lua: designated Lua gauges with logging #4672
  - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
  - Add fuel adder to launch #4777
+ - 3-cylinder Benelli trigger
 
 ### Fixed
  - Fuel Priming reset fix #4627
