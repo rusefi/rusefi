@@ -356,7 +356,7 @@ typedef enum {
 	 */
 	TT_60_2_VW = 20,
 
-	TT_BENELLI = 21,
+	TT_BENELLI_TRE = 21,
 
 	TT_DODGE_STRATUS = 22,
 
