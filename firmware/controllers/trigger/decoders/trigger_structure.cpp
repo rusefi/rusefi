@@ -229,10 +229,18 @@ void TriggerWaveform::addEvent360(angle_t angle, TriggerWheel const channelIndex
 	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
+/**
+ * This version of the method is best when same wheel could be mounted either on crank or cam
+ *
+ * @param angle 0 to 360 or 0 to 720 depending on configuration
+ */
 void TriggerWaveform::addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
+/**
+ * @param angle [0,1)
+ */
 void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
