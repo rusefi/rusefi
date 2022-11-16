@@ -159,3 +159,8 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 	// previous gap should be 1.0
 	s->setTriggerSynchronizationGap3(1, 0.8f, 1.2f);
 }
+
+void configureBenelli(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+}
