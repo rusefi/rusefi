@@ -170,7 +170,9 @@ public:
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
-	/* (0..1] angle range */
+	/**
+	 * @param angle (0..1]
+	 */
 	void addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 	/* (0..720] angle range
 	 * Deprecated! many usages should be replaced by addEvent360
@@ -183,11 +185,15 @@ public:
 	void addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
+	 * This version of the method is best when same wheel could be mounted either on crank or cam
+	 *
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
 	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 *
 	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
 	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
+	 *
+	 * @param angle (0..360] or (0..720] depending on configuration
 	 */
 	void addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
