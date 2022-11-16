@@ -118,7 +118,7 @@ static void runCommands() {
 		tsChannel->stop();
 		chThdSleepMilliseconds(10);	// safety
 
-		if (chThdShouldTerminateX() || (baudIdx == ARRAY_SIZE(baudRates))) {
+		if (chThdShouldTerminateX() || (baudIdx == efi::size(baudRates))) {
 			if (baudIdx == ARRAY_SIZE(baudRates))
 				efiPrintf("Failed to find current BT module baudrate");
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
@@ -284,7 +284,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	int baud = atoi(baudRate);
 	// find a known baud rate in our list
 	setBaudIdx = -1;
-	for (size_t i = 0; i < ARRAY_SIZE(baudRates); i++) {
+	for (size_t i = 0; i < efi::size(baudRates); i++) {
 		if (baudRates[i] == baud) {
 			setBaudIdx = i;
 			break;
