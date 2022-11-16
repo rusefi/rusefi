@@ -163,4 +163,18 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 void configureBenelli(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
+    constexpr float magic = 15;
+
+	float angle = 3 * magic;
+
+	s->addEvent360(angle / 2 /* 22.5 */, TriggerValue::RISE);
+	s->addEvent360(angle /*     45   */, TriggerValue::FALL);
+
+	for (int i = 0;i< 24 - 3;i++) {
+		angle += magic / 2;
+		s->addEvent360(angle, TriggerValue::RISE);
+
+		angle += magic / 2;
+		s->addEvent360(angle, TriggerValue::FALL);
+	}
 }

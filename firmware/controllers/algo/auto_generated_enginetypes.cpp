@@ -376,8 +376,8 @@ case TT_3_1_CAM:
   return "TT_3_1_CAM";
 case TT_60_2_VW:
   return "TT_60_2_VW";
-case TT_BENELLI:
-  return "TT_BENELLI";
+case TT_BENELLI_TRE:
+  return "TT_BENELLI_TRE";
 case TT_CHRYSLER_NGC_36_2_2:
   return "TT_CHRYSLER_NGC_36_2_2";
 case TT_DAIHATSU:
