@@ -171,16 +171,16 @@ public:
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
 	/* (0..1] angle range */
-	void addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
+	void addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 	/* (0..720] angle range
 	 * Deprecated! many usages should be replaced by addEvent360
 	 */
-	void addEvent720(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
+	void addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
 	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
 	 */
-	void addEvent360(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
+	void addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
@@ -189,12 +189,12 @@ public:
 	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
 	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
 	 */
-	void addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state);
+	void addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/* (0..720] angle range
 	 * Deprecated?
 	 */
-	void addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight);
+	void addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
 	operation_mode_e getWheelOperationMode() const;
 
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);

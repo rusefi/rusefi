@@ -163,12 +163,12 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	return cycleStartAngle + positionWithinCycle;
 }
 
-void TriggerWaveform::addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight) {
+void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
 #if EFI_UNIT_TEST
 //		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
 #endif /* EFI_UNIT_TEST */
-		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
+		addEvent(angle / getEngineCycle(operationMode), stateParam, channelIndex);
 	}
 }
 
@@ -220,13 +220,13 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 /**
  * Deprecated! many usages should be replaced by addEvent360
  */
-void TriggerWaveform::addEvent720(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
-	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
+void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
-void TriggerWaveform::addEvent360(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
+void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
-	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
+	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
 /**
@@ -234,14 +234,14 @@ void TriggerWaveform::addEvent360(angle_t angle, TriggerWheel const channelIndex
  *
  * @param angle 0 to 360 or 0 to 720 depending on configuration
  */
-void TriggerWaveform::addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
-	addEvent(angle / getCycleDuration(), channelIndex, state);
+void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 
 /**
  * @param angle [0,1)
  */
-void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
+void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {

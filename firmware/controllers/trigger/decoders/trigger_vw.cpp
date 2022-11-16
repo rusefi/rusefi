@@ -12,14 +12,14 @@
 void setSkodaFavorit(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
-	s->addEvent360(46, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(177, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(46, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(177, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(183, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(183, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(226, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(360, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(226, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->tdcPosition = 180 - 46;
 	s->setTriggerSynchronizationGap(3.91);
@@ -38,8 +38,8 @@ void setVwConfiguration(TriggerWaveform *s) {
 			NO_LEFT_FILTER, 690);
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth) );
-	s->addEventClamped(0 + angleDown + 12, TriggerWheel::T_PRIMARY, TriggerValue::RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(0 + engineCycle, TriggerWheel::T_PRIMARY, TriggerValue::FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(0 + angleDown + 12, TriggerValue::RISE, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(0 + engineCycle, TriggerValue::FALL, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 
 	s->setTriggerSynchronizationGap2(1.6, 4);
 	s->setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise

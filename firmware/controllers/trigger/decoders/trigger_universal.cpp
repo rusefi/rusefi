@@ -24,14 +24,14 @@ void addSkippedToothTriggerEvents(TriggerWheel wheel, TriggerWaveform *s, int to
 	for (int i = 0; i < totalTeethCount - skippedCount - 1; i++) {
 		float angleDown = engineCycle / totalTeethCount * (i + (1 - toothWidth));
 		float angleUp = engineCycle / totalTeethCount * (i + 1);
-		s->addEventClamped(offset + angleDown, wheel, TriggerValue::RISE, filterLeft, filterRight);
-		s->addEventClamped(offset + angleUp, wheel, TriggerValue::FALL, filterLeft, filterRight);
+		s->addEventClamped(offset + angleDown, TriggerValue::RISE, wheel, filterLeft, filterRight);
+		s->addEventClamped(offset + angleUp, TriggerValue::FALL, wheel, filterLeft, filterRight);
 	}
 
 	float angleDown = engineCycle / totalTeethCount * (totalTeethCount - skippedCount - 1 + (1 - toothWidth));
-	s->addEventClamped(offset + angleDown, wheel, TriggerValue::RISE, filterLeft, filterRight);
+	s->addEventClamped(offset + angleDown, TriggerValue::RISE, wheel, filterLeft, filterRight);
 	// custom handling of last event in order to avoid rounding error
-	s->addEventClamped(offset + engineCycle, wheel, TriggerValue::FALL, filterLeft, filterRight);
+	s->addEventClamped(offset + engineCycle, TriggerValue::FALL, wheel, filterLeft, filterRight);
 }
 
 void initializeSkippedToothTrigger(TriggerWaveform *s, int totalTeethCount, int skippedCount,
@@ -65,11 +65,11 @@ void initializeSkippedToothTrigger(TriggerWaveform *s, int totalTeethCount, int 
 void configureOnePlusOne(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
-	s->addEvent360( 90, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360( 90, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(270, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent360(360, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent360(270, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -82,31 +82,31 @@ void configure3_1_cam(TriggerWaveform *s) {
 	const float crankW = 360 / 3 / 2;
 
 
-	TriggerWheel crank = TriggerWheel:: T_SECONDARY;
+	TriggerWheel crank = TriggerWheel::T_SECONDARY;
 
-	s->addEvent720(10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(50, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(10, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(50, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 
 	float a = 2 * crankW;
 
 	// #1/3
-	s->addEvent720(a += crankW, crank, TriggerValue::RISE);
-	s->addEvent720(a += crankW, crank, TriggerValue::FALL);
+	s->addEvent720(a += crankW, TriggerValue::RISE, crank);
+	s->addEvent720(a += crankW, TriggerValue::FALL, crank);
 	// #2/3
-	s->addEvent720(a += crankW, crank, TriggerValue::RISE);
-	s->addEvent720(a += crankW, crank, TriggerValue::FALL);
+	s->addEvent720(a += crankW, TriggerValue::RISE, crank);
+	s->addEvent720(a += crankW, TriggerValue::FALL, crank);
 	// #3/3
 	a += crankW;
 	a += crankW;
 
 	// 2nd #1/3
-	s->addEvent720(a += crankW, crank, TriggerValue::RISE);
-	s->addEvent720(a += crankW, crank, TriggerValue::FALL);
+	s->addEvent720(a += crankW, TriggerValue::RISE, crank);
+	s->addEvent720(a += crankW,  TriggerValue::FALL, crank);
 
 	// 2nd #2/3
-	s->addEvent720(a += crankW, crank, TriggerValue::RISE);
-	s->addEvent720(a += crankW, crank, TriggerValue::FALL);
+	s->addEvent720(a += crankW, TriggerValue::RISE, crank);
+	s->addEvent720(a += crankW, TriggerValue::FALL, crank);
 
 	s->isSynchronizationNeeded = false;
 }
@@ -125,8 +125,8 @@ void configureKawaKX450F(TriggerWaveform *s) {
 	addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
 			NO_LEFT_FILTER, 720 - 39);
 
-	s->addEvent(0.97, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent(1, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent(0.97, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent(1, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
@@ -138,17 +138,17 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(0.645);
 	s->setSecondTriggerSynchronizationGap(1.556);
 
-	s->addEvent360(offset + 0, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(offset + 70, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(offset + 0, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(offset + 70, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(offset + 90, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(offset + 110, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(offset + 90, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(offset + 110, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(offset + 180, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(offset + 200, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(offset + 180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(offset + 200, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(offset + 270, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(offset + 340, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(offset + 270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(offset + 340, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 // Useful for:
@@ -165,6 +165,6 @@ void configure12ToothCrank(TriggerWaveform* s) {
 	}
 
 	// Just a single tooth with 50% duty cycle
-	s->addEventAngle(15, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEventAngle(30, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEventAngle(15, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(30, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }

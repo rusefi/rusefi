@@ -6,14 +6,14 @@
 void setMercedesTwoSegment(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
-	s->addEvent360(180 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(180 - 10, TriggerValue::RISE);
+	s->addEvent360(180, TriggerValue::FALL);
 
-	s->addEvent360(227 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(227, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(227 - 10, TriggerValue::RISE);
+	s->addEvent360(227, TriggerValue::FALL);
 
-	s->addEvent360(360 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(360, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(360 - 10, TriggerValue::RISE);
+	s->addEvent360(360, TriggerValue::FALL);
 
 	s->setTriggerSynchronizationGap(1.35);
 	s->setSecondTriggerSynchronizationGap(2.84);
