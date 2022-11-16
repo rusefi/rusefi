@@ -38,21 +38,21 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
-	s->addEvent720(52.960405, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(122.635956, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(52.960405, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(122.635956, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(216.897031, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(232.640068, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(288.819688, TriggerWheel::T_PRIMARY, TriggerValue::FALL);		// <-- This edge is the sync point
-	s->addEvent720(302.646323, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(216.897031, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(232.640068, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(288.819688, TriggerValue::FALL, TriggerWheel::T_PRIMARY);		// <-- This edge is the sync point
+	s->addEvent720(302.646323, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(412.448056, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(482.816719, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(412.448056, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(482.816719, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(577.035495, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(592.878113, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(662.899708, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(720.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(577.035495, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(592.878113, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(662.899708, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->useOnlyPrimaryForSync = true;
 }
 
@@ -72,15 +72,15 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap2(0.8f, 1.8f);
 
 	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
-	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEventAngle(180.0f - NB_CRANK_MAGIC, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(180.0f - 4, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEventAngle(180.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f - 4, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
 static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, TriggerWheel const channelIndex) {
-	s->addEvent720(angle, channelIndex, TriggerValue::RISE);
-	s->addEvent720(angle + 4, channelIndex, TriggerValue::FALL);
+	s->addEvent720(angle, TriggerValue::RISE, channelIndex);
+	s->addEvent720(angle + 4, TriggerValue::FALL, channelIndex);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
@@ -93,25 +93,25 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	/**
 	 * cam sensor is primary, crank sensor is secondary
 	 */
-	s->addEvent720(20.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(20.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	addNBCrankTooth(s, offset + 66.0f, TriggerWheel::T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 180, TriggerWheel:: T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 
-	s->addEvent720(340.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(360.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(340.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(360.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(380.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(400.0f, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(380.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(400.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	addNBCrankTooth(s, offset + 66.0f + 360, TriggerWheel:: T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 540, TriggerWheel:: T_SECONDARY);
 	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 
-	s->addEvent720(720.0f, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
@@ -127,18 +127,18 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 	float z = 0.093;
 	a = 180;
-	s->addEvent720(a - z * 720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(a, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	a += 180;
-	s->addEvent720(a - z * 720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(a, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	a += 180;
-	s->addEvent720(a - z * 720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(a, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	a += 180;
-	s->addEvent720(a - z * 720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(a, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->isSynchronizationNeeded = false;
 	s->shapeWithoutTdc = true;
@@ -150,21 +150,21 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
-	s->addEvent720(95.329254, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(95.329254, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(95.329254 + 14.876692, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(95.329254 + 82.693557, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(95.329254 + 14.876692, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 82.693557, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 137.119154, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(95.329254 + 137.119154, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(95.329254 + 192.378308, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(95.329254 + 261.556418, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(95.329254 + 192.378308, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 261.556418, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 373.060597, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(95.329254 + 443.503184, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(95.329254 + 373.060597, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 443.503184, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 555.349776, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(720, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(95.329254 + 555.349776, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;
@@ -178,14 +178,14 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	// Nominal gap is 0.128
 	s->setSecondTriggerSynchronizationGap2(0.04f, 0.2f);
 
-	s->addEvent720(325, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEvent720(360, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(325, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(641, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEvent720(679, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(641, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(679, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(700, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(700, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
 // https://rusefi.com/forum/viewtopic.php?f=17&t=2417
@@ -194,26 +194,26 @@ void initializeMazdaSkyactivCam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
     // wide
-	s->addEvent360(50, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(70, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(50, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(70, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
     // narrow
-	s->addEvent360(80, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(90, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(80, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(90, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
     // wide
-	s->addEvent360(140, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(160, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(140, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(160, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
     // narrow
-	s->addEvent360(170, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(170, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
     // wide
-	s->addEvent360(250, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(270, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
     // wide
-	s->addEvent360(340, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(360, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(340, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->setTriggerSynchronizationGap(0.43);
 	s->setSecondTriggerSynchronizationGap(0.78);
