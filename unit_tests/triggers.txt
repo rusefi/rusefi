@@ -993,7 +993,7 @@ event 228 0 1 702.00
 event 229 0 0 702.00
 event 230 0 1 708.00
 event 231 0 0 708.00
-TRIGGERTYPE 21 34 UNUSED_21 0.00
+TRIGGERTYPE 21 34 TT_BENELLI 0.00
 knownOperationMode=true
 crankBased=false
 hasSecondChannel=true
