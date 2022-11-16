@@ -627,7 +627,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMazdaSkyactivCam(this);
         break;
 
-	case UNUSED_21:
+	case TT_BENELLI:
 	case UNUSED_29:
 	case UNUSED_34:
 	case TT_1_16:
