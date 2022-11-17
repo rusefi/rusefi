@@ -23,7 +23,7 @@
 #if EFI_BLUETOOTH_SETUP
 
 #ifndef EFI_BLUETOOTH_SETUP_DEBUG
-#define EFI_BLUETOOTH_SETUP_DEBUG FALSE
+#define EFI_BLUETOOTH_SETUP_DEBUG TRUE
 #endif
 
 static bool btProcessIsStarted = false;
