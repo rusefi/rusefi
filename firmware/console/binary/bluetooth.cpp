@@ -119,7 +119,7 @@ static void runCommands() {
 		chThdSleepMilliseconds(10);	// safety
 
 		if (chThdShouldTerminateX() || (baudIdx == efi::size(baudRates))) {
-			if (baudIdx == ARRAY_SIZE(baudRates))
+			if (baudIdx == efi::size(baudRates))
 				efiPrintf("Failed to find current BT module baudrate");
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 		}
