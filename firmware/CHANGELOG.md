@@ -28,8 +28,11 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## November 2022 Release - "Day 267"
+
 ### Added
  - VVT minimum RPM setting #4545
+ - Fuel/spark cut codes to TS indicators #4592
  - Flexible ignition and VE adder/trim tables #4586 #4640
  - Enforce board configuration overrides more strictly #4614
  - rusEFI console Startup Frame should scan for available hardware #4633
