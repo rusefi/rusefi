@@ -72,7 +72,6 @@ jobs:
           - build-target: alphax-2chan
             folder: hellen/alphax-2chan
             ini-file: rusefi_alphax-2chan.ini
-            skip-rate: 90
 
           - build-target: alphax-4chan
             folder: hellen/alphax-4chan
