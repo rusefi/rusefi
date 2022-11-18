@@ -4,7 +4,7 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build-firmware:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     strategy:
       # Let all builds finish even if one fails early
@@ -406,7 +406,7 @@ jobs:
 
   # here we build f407-discovery
   build-primary-bundle:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
       with:
