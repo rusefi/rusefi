@@ -47,10 +47,10 @@ endif
 
 
 ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
+  $(info No CCACHE_DIR)
 else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
+  $(info CCACHE_DIR is ${CCACHE_DIR})
+  CCPREFIX=ccache
 endif
 
 
@@ -182,25 +182,25 @@ include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/ARMCMx/compilers/GCC/mk/port_v7m.mk
 # EX files (optional).
 ifneq ($(USE_LIS302),no)
-include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
+  include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(LWIP),yes)
-	include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
+  include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
 endif
 
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
-include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
+  include $(CHIBIOS)/os/various/fatfs_bindings/fatfs.mk
 endif
 
 #Now include RusEFI mk files
 include console/binary/tunerstudio.mk
 ifeq ($(USE_FATFS),yes)
-include $(PROJECT_DIR)/ext/FatFS/fatfs.mk
+  include $(PROJECT_DIR)/ext/FatFS/fatfs.mk
 endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
@@ -212,7 +212,7 @@ ifeq ($(BOOTLOADERINC),)
 endif
 
 ifeq ($(USE_BOOTLOADER),yes)
-include $(PROJECT_DIR)/bootloader/bootloader.mk
+  include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
 
 ifeq ($(USE_OPENBLT),yes)
@@ -230,31 +230,31 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 # setting.
 # check.c goes first to throw error as soon as possible
 CSRC =  check.c \
-	$(ALLCSRC) \
-	$(BOARDSRC) \
-	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
-	$(CHIBIOS)/os/various/evtimer.c \
-	$(DEV_SRC) \
-	$(BOOTLOADERSRC) \
-	${HW_MASS_STORAGE_SRC_C} \
-	$(HW_LAYER_EMS) \
-	$(HW_LAYER_DRIVERS_CORE) \
-	$(HW_LAYER_DRIVERS) \
-	$(RUSEFI_LIB_C) \
-	main_hardfault.c
+  $(ALLCSRC) \
+  $(BOARDSRC) \
+  $(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
+  $(CHIBIOS)/os/various/evtimer.c \
+  $(DEV_SRC) \
+  $(BOOTLOADERSRC) \
+  ${HW_MASS_STORAGE_SRC_C} \
+  $(HW_LAYER_EMS) \
+  $(HW_LAYER_DRIVERS_CORE) \
+  $(HW_LAYER_DRIVERS) \
+  $(RUSEFI_LIB_C) \
+  main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = \
-    $(ALLCPPSRC) \
-    $(BOARDCPPSRC) \
-	$(DEV_SRC_CPP) \
-	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(HW_LAYER_DRIVERS_CPP) \
-	$(CONSOLE_SRC_CPP) \
-	$(RUSEFI_LIB_CPP) \
-	rusefi.cpp \
-	main.cpp
+  $(ALLCPPSRC) \
+  $(BOARDCPPSRC) \
+  $(DEV_SRC_CPP) \
+  $(HW_LAYER_DRIVERS_CORE_CPP) \
+  $(HW_LAYER_DRIVERS_CPP) \
+  $(CONSOLE_SRC_CPP) \
+  $(RUSEFI_LIB_CPP) \
+  rusefi.cpp \
+  main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
 # NOTE: Mixing ARM and THUMB mode enables the -mthumb-interwork compiler
@@ -278,32 +278,32 @@ TCPPSRC =
 
 # List ASM source files here
 ASMXSRC = $(ALLXASMSRC) \
-	$(RUSEFIASM) \
-	main_hardfault_asm.S
+  $(RUSEFIASM) \
+  main_hardfault_asm.S
 
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders
 #
 INCDIR = \
-	$(PCH_DIR) \
-	$(BOARDINC) \
-	$(ALLINC) \
-	$(TESTINC) \
-	$(BOOTLOADERINC) \
-	$(CHIBIOS)/os/various \
-	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
-	$(RUSEFI_LIB_INC) \
-	$(CONFDIR) \
-	ext/FatFS \
-	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(PROJECT_DIR)/hw_layer/serial_over_usb \
-	$(PROJECT_DIR)/hw_layer/lcd \
-	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(HW_INC) \
-	development/hw_layer \
-	development/test \
-	$(CHIBIOS_CONTRIB)/os/various
-	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
+  $(PCH_DIR) \
+  $(BOARDINC) \
+  $(ALLINC) \
+  $(TESTINC) \
+  $(BOOTLOADERINC) \
+  $(CHIBIOS)/os/various \
+  $(CHIBIOS)/os/hal/lib/peripherals/sensors \
+  $(RUSEFI_LIB_INC) \
+  $(CONFDIR) \
+  ext/FatFS \
+  $(PROJECT_DIR)/hw_layer/mass_storage \
+  $(PROJECT_DIR)/hw_layer/serial_over_usb \
+  $(PROJECT_DIR)/hw_layer/lcd \
+  $(PROJECT_DIR)/hw_layer/mass_storage \
+  $(HW_INC) \
+  development/hw_layer \
+  development/test \
+  $(CHIBIOS_CONTRIB)/os/various
+# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
 #
 # Project, sources and paths
