@@ -2,9 +2,10 @@
 	strncpy(config->luaScript, R"(
 canRxAdd(0x35d)
 
-OUT_1F9 = 0x1F9
-OUT_233 = 0x233
-OUT_23D = 0x23D
+OUT_1F9 = 0x1F9 -- 505
+OUT_233 = 0x233 -- 563
+OUT_23D = 0x23D -- 573
+OUT_23E = 0x23E -- 574
 
 setTickRate(100)
 t = Timer.new()
@@ -13,6 +14,13 @@ t : reset()
 globalAcOut = 0
 
 function onTick()
+    local MAF = getSensor("MAF")
+    MAF = (MAF == nil and 0 or MAF)
+    local TPS = getSensor("Tps1")
+    TPS = (TPS == nil and 0 or TPS)
+    local PPS = getSensor("AcceleratorPedal")
+    PPS = (PPS == nil and 0 or PPS)
+    -- print ("MAF " .. MAF .. " TPS " .. TPS .. " PPS " .. PPS)
     local rpmValue = math.floor(getSensor("RPM") + 0.5)
 	local RPMread = rpmValue / 3.15
 	local RPMhi = RPMread / 256
@@ -42,10 +50,12 @@ function onTick()
 	end
 	-- print('clt gauge = '..cltGauge)
 	-- rpm fun stuff
+	PPS256 = PPS * 256 / 100
+	TPScapped = (TPS > 0.5 and 0.5 or TPS)
 	if t : getElapsedSeconds() < 2 then
-		CLTandRPM_D = { 0x00, 0x18, 0x0C, 0x01, 0x0A, 0x87, 0xFF, 0xFF }
+		CLTandRPM_D = { 0x00, PPS256, 0x0C, 0x01, 0x0A, 0x87, 0xFF, 0xFF }
 	else
-		CLTandRPM_D = { 0x00, 0x18, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
+		CLTandRPM_D = { 0x00, PPS256, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
 	end
 
     state_233 = rpmValue > 250 and 0x10 or 0x18
