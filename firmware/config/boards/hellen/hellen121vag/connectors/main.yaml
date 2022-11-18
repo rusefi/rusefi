@@ -53,7 +53,7 @@ pins:
     type: inj
     
   - pin: 21a
-    function: Main relay A
+    function: Main relay option A
    
   - pin: 22a
     id: I0
@@ -62,7 +62,7 @@ pins:
     function: OUT_VVT1_1
 
   - pin: 23a
-    function: Main relay B
+    function: Main relay option B
 
   - pin: 24a
     id: F14
@@ -71,7 +71,7 @@ pins:
     function: OUT_INJ8
     type: inj
 
-# something wird same IAT on pin 85? figure this out one day
+# something weird same IAT on pin 85? figure this out one day
 #  - pin: 26a
 #    id: EFI_ADC_13
 #    class: analog_inputs
