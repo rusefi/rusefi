@@ -226,10 +226,10 @@ CPPC = $(CCPREFIX) $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
-#LD   = $(TRGT)gcc
-LD   = $(TRGT)g++
+#LD   = $(CC)
+LD   = $(CPPC)
 CP   = $(TRGT)objcopy
-AS   = $(TRGT)gcc -x assembler-with-cpp
+AS   = $(CC) -x assembler-with-cpp
 AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
