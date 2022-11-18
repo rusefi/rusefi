@@ -30,6 +30,7 @@
 #include <net/if.h>
 #include <sys/ioctl.h>
 
+#include <algorithm>
 #include <cstring>
 #include <queue>
 
