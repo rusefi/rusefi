@@ -32,24 +32,24 @@ PCHSUB = simulator
 CONFDIR = .
 
 ifneq ($(OS),Windows_NT)
-	SANITIZE = yes
+  SANITIZE = yes
 else
-	SANITIZE = no
+  SANITIZE = no
 endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-	USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
-#	If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
-	USE_OPT += -O2
-#	USE_OPT += -O0 -g
+# If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
+  USE_OPT += -O2
+#  USE_OPT += -O0 -g
 
-	ifeq ($(OS),Windows_NT)
-		USE_OPT += -DEFI_SIM_IS_WINDOWS=1
-	else
-		USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
-	endif
+  ifeq ($(OS),Windows_NT)
+    USE_OPT += -DEFI_SIM_IS_WINDOWS=1
+  else
+    USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
+  endif
 endif
 
 # See explanation in main firmware Makefile for these three defines
@@ -57,14 +57,14 @@ USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
 
 # Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 ifeq ($(SANITIZE),yes)
-	USE_OPT += -fsanitize=address
+  USE_OPT += -fsanitize=address
 endif
 
 ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
+  $(info No CCACHE_DIR)
 else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
+  $(info CCACHE_DIR is ${CCACHE_DIR})
+  CCPREFIX=ccache
 endif
 
 # C specific options here (added to USE_OPT).
@@ -168,33 +168,33 @@ CSRC =  $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
-	$(PROJECT_DIR)/development/sensor_chart.cpp \
-	$(HW_LAYER_DRIVERS_CPP) \
-	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(CONSOLE_SRC_CPP) \
-	$(DEV_SIMULATOR_SRC_CPP) \
-	simulator/rusEfiFunctionalTest.cpp \
-	simulator/can/hal_can_lld.cpp \
-	simulator/framework.cpp \
-	simulator/boards.cpp \
-	$(TEST_SRC_CPP) \
-	$(RUSEFI_LIB_CPP) \
-	main.cpp
+  $(PROJECT_DIR)/development/sensor_chart.cpp \
+  $(HW_LAYER_DRIVERS_CPP) \
+  $(HW_LAYER_DRIVERS_CORE_CPP) \
+  $(CONSOLE_SRC_CPP) \
+  $(DEV_SIMULATOR_SRC_CPP) \
+  simulator/rusEfiFunctionalTest.cpp \
+  simulator/can/hal_can_lld.cpp \
+  simulator/framework.cpp \
+  simulator/boards.cpp \
+  $(TEST_SRC_CPP) \
+  $(RUSEFI_LIB_CPP) \
+  main.cpp
 
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
-          $(PCH_DIR) \
-          $(ALLINC) \
-          $(CHIBIOS)/os/various/cpp_wrappers \
-          $(PROJECT_DIR)/hw_layer/drivers/can \
-          ${CHIBIOS}/os/various \
-          $(CHIBIOS)/os/hal/lib/streams \
-		  $(RUSEFI_LIB_INC) \
-          simulator/can \
-          simulator
+  $(PCH_DIR) \
+  $(ALLINC) \
+  $(CHIBIOS)/os/various/cpp_wrappers \
+  $(PROJECT_DIR)/hw_layer/drivers/can \
+  ${CHIBIOS}/os/various \
+  $(CHIBIOS)/os/hal/lib/streams \
+  $(RUSEFI_LIB_INC) \
+  simulator/can \
+  simulator
 
 # List ASM source files here
 ASMSRC =
