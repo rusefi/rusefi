@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  build-base:
+    image: rusefi/build-base:ubuntu-${UBUNTU_VERSION:-22.04}
+    build:
+      dockerfile: build-base.Dockerfile
+      context: .
+
+  firmware:
+    image: rusefi/firmware:ubuntu-${UBUNTU_VERSION:-22.04}
+    build:
+      dockerfile: firmware.Dockerfile
+      context: .
+    volumes:
+      - .:/rusefi/rusefi
+    network_mode: host
+
+  simulator:
+    image: rusefi/simulator:ubuntu-${UBUNTU_VERSION:-22.04}
+    build:
+      dockerfile: simulator.Dockerfile
+      context: .
+    volumes:
+      - .:/rusefi/rusefi
+    network_mode: host
