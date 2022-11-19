@@ -114,7 +114,6 @@ static plain_get_float_s getF_plain[] = {
 	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
 	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
 	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
-	{"sentErrorRate", &engineConfiguration->sentErrorRate},
 	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
 	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
 	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
