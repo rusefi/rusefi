@@ -239,7 +239,9 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		return;
 	}
 
+#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 	onTriggerChanged(stamp, isPrimary, rise);
+#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 
 	if ((stamp - prevStamp) > minDeltaTimeForStableAdcDetectionNt) {
 		switchingCnt++;
@@ -360,7 +362,9 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	}
 
 	if (transitionCooldownCnt <= 0) {
+#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		onTriggerChanged(stamp - stampCorrectionForAdc, true, transition == 1);
+#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		// let's skip some nearest possible measurements:
 		// the transition cannot be SO fast, but the jitter can!
 		transitionCooldownCnt = transitionCooldown;
