@@ -56,7 +56,8 @@
         </fail>
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
-               classpath="${lib_list}">
+               classpath="${lib_list}"
+               encoding="iso-8859-1">
             <src path="autotest/src/main/java"/>
             <src path="../java_tools/configuration_definition/src/main/java"/>
             <src path="../java_tools/configuration_definition/build/generated-src/antlr/main"/>
