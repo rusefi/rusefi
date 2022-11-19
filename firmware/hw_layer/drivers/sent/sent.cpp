@@ -507,8 +507,6 @@ uint8_t sent_channel::crc6(uint32_t data)
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
-static float valueErrorRate = -1;
-
 void sent_channel::Info(void)
 {
 	int i;
@@ -522,7 +520,6 @@ void sent_channel::Info(void)
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
 		efiPrintf("Last valid fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
 	}
-	efiPrintf("valueErrorRate %f", valueErrorRate);
 
 	if (scMsgFlags) {
 		efiPrintf("Slow channels:");
@@ -610,14 +607,10 @@ float getSentValue(size_t index) {
 		sent_channel &ch = channels[index];
 
 		if (ch.GetSignals(NULL, &sig0, &sig1) == 0) {
-			float maxValue = 0xfff;
 
-			valueErrorRate = 1.0 - (sig0 + sig1) / maxValue;
-
-			if (absF(valueErrorRate) <= engineConfiguration->sentErrorRate) {
-				/* scale to 0.0 .. 1.0 */
-				return sig1 / maxValue;
-			}
+			// GM sig0 + sig1 == 0xfff but Ford does not
+			/* scale to 0.0 .. 1.0 */
+			return sig0;
 		}
 	}
 
