@@ -171,10 +171,10 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 
 	// call the main trigger handler
 	hwHandleShaftSignal(isPrimary ? 0 : 1, isRising, stamp);
-#endif
+#endif // 1
 }
 
-#endif /* EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC */
+#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 
 
 void TriggerAdcDetector::init() {
@@ -212,7 +212,7 @@ void TriggerAdcDetector::init() {
 	modeSwitchCnt = 0;
 
 	reset();
-#endif // EFI_SIMULATOR
+#endif // ! EFI_SIMULATOR
 }
 
 void TriggerAdcDetector::reset() {
@@ -344,7 +344,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		transition = -1;
 	}
 	else {
-		return;	// both are positive/negative/zero: not interested!
+		return; // both are positive/negative/zero: not interested!
 	}
 
  	if (isSignalWeak) {
@@ -355,7 +355,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			zeroThreshold = minDeltaThresholdStrongSignal;
 		 } else {
 			// we cannot trust the weak signal!
-		 	return;
+			return;
 		 }
 	}
 
@@ -374,7 +374,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			triggerAdcITerm = 1.0f / (triggerAdcITermCoef * deltaTimeUs);
 			triggerAdcITerm = maxF(triggerAdcITerm, triggerAdcITermMin);
 		}
-#endif
+#endif // 0
 	}
 
 	if (switchingCnt >= analogToDigitalTransitionCnt) {
@@ -402,7 +402,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	
 	prevValue = transition;
 	prevStamp = stamp;
-#endif // EFI_SIMULATOR
+#endif // ! EFI_SIMULATOR
 }
 
 triggerAdcMode_t getTriggerAdcMode(void) {
