@@ -169,9 +169,24 @@ info:
   image:
     file: main.jpg
   pins:
+    - pin: 125
+      x: 116
+      y: 251
+    - pin: 126
+      x: 152
+      y: 251
+
     - pin: 132
       x: 360
       y: 251
+    - pin: 138
+      x: 152
+      y: 252
+
     - pin: 144
       x: 360
       y: 186
+
+    - pin: 223
+      x: 1030
+      y: 290
