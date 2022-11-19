@@ -235,6 +235,7 @@ void TriggerAdcDetector::reset() {
 }
 
 void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool rise) {
+#if ! EFI_SIMULATOR
 	if (curAdcMode != TRIGGER_ADC_EXTI) {
 		return;
 	}
@@ -262,6 +263,7 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 	}
 
 	prevStamp = stamp;
+#endif // ! EFI_SIMULATOR
 }
 
 void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t value) {
