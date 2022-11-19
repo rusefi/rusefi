@@ -19,24 +19,24 @@ extern int maxTriggerReentrant;
 
 #if EFI_PROD_CODE
 extern uint32_t maxPrecisionCallbackDuration;
-#endif /* EFI_PROD_CODE  */
+#endif // EFI_PROD_CODE
 
 extern uint32_t maxSchedulingPrecisionLoss;
 
 void resetMaxValues() {
 #if (EFI_PROD_CODE || EFI_SIMULATOR) && EFI_SHAFT_POSITION_INPUT
 	maxEventCallbackDuration = triggerMaxDuration = 0;
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 	maxSchedulingPrecisionLoss = 0;
 
 #if EFI_CLOCK_LOCKS
 	maxLockedDuration = 0;
-#endif /* EFI_CLOCK_LOCKS */
+#endif // EFI_CLOCK_LOCKS
 
 #if EFI_PROD_CODE
 	maxPrecisionCallbackDuration = 0;
-#endif /* EFI_PROD_CODE  */
+#endif // EFI_PROD_CODE
 }
 
 void printRuntimeStats(void) {
@@ -44,7 +44,7 @@ void printRuntimeStats(void) {
 
 #if EFI_CLOCK_LOCKS
 	efiPrintf("maxLockedDuration=%d / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
-#endif /* EFI_CLOCK_LOCKS */
+#endif // EFI_CLOCK_LOCKS
 
 	efiPrintf("maxEventCallbackDuration=%d", maxEventCallbackDuration);
 }
