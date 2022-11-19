@@ -12,9 +12,9 @@
 
 #include "global.h"
 #include "io_pins.h"
+#include "efi_gpio.h"
 
 #ifdef __cplusplus
-#include "efi_gpio.h"
 
 class PinRepository {
 	public:

@@ -162,6 +162,7 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
+  $(RUSEFI_LIB_C)
 
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
