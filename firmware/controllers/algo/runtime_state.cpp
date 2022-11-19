@@ -11,9 +11,6 @@
 // todo: revive implementation! we shall measure how far is actual execution timestamp from desired execution timestamp
 uint32_t maxSchedulingPrecisionLoss = 0;
 
-
-extern uint32_t hipLastExecutionCount;
-
 extern uint32_t maxLockedDuration;
 extern uint32_t maxEventCallbackDuration;
 extern uint32_t triggerMaxDuration;
@@ -50,8 +47,4 @@ void printRuntimeStats(void) {
 #endif /* EFI_CLOCK_LOCKS */
 
 	efiPrintf("maxEventCallbackDuration=%d", maxEventCallbackDuration);
-
-#if EFI_HIP_9011
-	efiPrintf("hipLastExecutionCount=%d", hipLastExecutionCount);
-#endif /* EFI_HIP_9011 */
 }
