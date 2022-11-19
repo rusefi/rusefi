@@ -241,8 +241,10 @@ extern AdcDevice fastAdc;
 #endif /* HAL_USE_ADC */
 
 static void printSensorInfo() {
+#if HAL_USE_ADC
 	// Print info about analog mappings
 	AdcSubscription::PrintInfo();
+#endif // HAL_USE_ADC
 
 	// Print info about all sensors
 	Sensor::showAllSensorInfo();
