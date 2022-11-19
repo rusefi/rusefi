@@ -258,7 +258,9 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
 			prevValue = rise ? 1: -1;
+#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 			setTriggerAdcMode(TRIGGER_ADC_ADC);
+#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 		}
 	}
 
@@ -388,7 +390,9 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		// we need at least 3 high-signal teeth to be certain!
 		if (switchingTeethCnt++ > 3) {
 			switchingTeethCnt = 0;
+#if EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 			setTriggerAdcMode(TRIGGER_ADC_EXTI);
+#endif // EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 			// we don't want to loose the signal on return
 			minDeltaThresholdCntPos = DELTA_THRESHOLD_CNT_HIGH;
 			minDeltaThresholdCntNeg = DELTA_THRESHOLD_CNT_HIGH;
