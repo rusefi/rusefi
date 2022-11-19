@@ -2,26 +2,62 @@ pins:
 
   - pin: 103
     function: Pedal Analog GND
+  - pin: 104
+    function: Sensor GND
+    type: GND
   - pin: 105
     function: Throttle Analog GND
   - pin: 106
     function: Pedal Analog GND
-  - pin: 111
+
+  - pin: 112
+    class: analog_inputs
+    function: Fuel Level
+    ts_name: 112 Fuel Level
+  - pin: 113
+    function: Brake Input
+    ts_name: 113 Brake Input
+
+  - pin: 114
     function: Pedal Position 2
+  - pin: 115
+    class: outputs
+    ts_name: Main Relay
+    function: Main Relay Control
+    type: ls
+  - pin: 116
+    function: Ignition Switch KL15 / Battery Voltage Analog Input
+    ts_name: 116 - Voltage From Key
+    color: white
+
+  - pin: 120
+    function: 120 Switch
+
   - pin: 121
     function: Pedal Position 1
+
+  - pin: 123
+    function: 123 Input
+
   - pin: 125
-    function: Pedal +5V
+    function: Pedal +5V Supply
+  - pin: 126
+    function: 3.3 Analog Supply PPS2
+    color: black
+    type: 3.3v
+
   - pin: 132
     function: CAN bus high
     type: can
+  - pin: 138
+    function: Analog Supply TPS
+    color: black
 
   - pin: 140
     class: outputs
     function: 140 relay output
     color: orange B4
     type: ls
-
   - pin: 141
     class: outputs
     function: Engine Radiator Fan
@@ -50,12 +86,14 @@ pins:
     function: Crank Sensor VR- Negative Input
     ts_name: 201 Crank VR-
   - pin: 203
+    class: analog_inputs
     function: Throttle Position 1
   - pin: 204
     function: Sensor GND
     type: GND
+
   - pin: 210
-    function: Pedal +5V
+    function: Pedal +5V Supply
   - pin: 213
     function: Crank Sensor VR+ Positive Input
     ts_name: 213 Crank VR+
@@ -63,15 +101,30 @@ pins:
     class: analog_inputs
     ts_name: 215 CLT
     function: CLT sensor
+  - pin: 219
+    class: analog_inputs
+    ts_name: 219 MAP
+    function: Manifold Pressure Sensor
+
   - pin: 220
     function: Throttle Position 2
+  - pin: 223
+    function: Analog Supply MAP
+    color: red
+
   - pin: 227
     ts_name: 227 IAT
     function: Intake Air Temperature
+  - pin: 231
+    class: event_inputs
+    ts_name: 231 Cam
+    function: Cam Sensor
   - pin: 232
     class: event_inputs
     ts_name: 232 - VSS
     function: VSS in
+  - pin: 233
+    function: MAF analog of frequency
 
   - pin: 242
     function: injector output 2
