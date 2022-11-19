@@ -1,0 +1,23 @@
+pins:
+
+  - pin: 132
+    function: CAN bus high
+    type: can
+  - pin: 144
+    function: CAN bus low
+    type: can
+
+
+info:
+  id: H-112
+  title: H-112
+  name: H-112
+  image:
+    file: main.jpg
+  pins:
+    - pin: 132
+      x: 360
+      y: 251
+    - pin: 144
+      x: 360
+      y: 186
