@@ -1,11 +1,112 @@
 pins:
 
+  - pin: 103
+    function: Pedal Analog GND
+  - pin: 105
+    function: Throttle Analog GND
+  - pin: 106
+    function: Pedal Analog GND
+  - pin: 111
+    function: Pedal Position 2
+  - pin: 121
+    function: Pedal Position 1
+  - pin: 125
+    function: Pedal +5V
   - pin: 132
     function: CAN bus high
     type: can
+
+  - pin: 140
+    class: outputs
+    function: 140 relay output
+    color: orange B4
+    type: ls
+
+  - pin: 141
+    class: outputs
+    function: Engine Radiator Fan
+    color: orange B4
+    type: ls
+  - pin: 142
+    class: outputs
+    function: Fuel Pump Relay
+    type: ls
   - pin: 144
     function: CAN bus low
     type: can
+
+  - pin: 153
+    function: GND
+    type: GND
+  - pin: 154
+    function: GND
+    type: GND
+  - pin: 155
+    function: +12V TBD
+  - pin: 156
+    function: +12V TBD
+
+  - pin: 201
+    function: Crank Sensor VR- Negative Input
+    ts_name: 201 Crank VR-
+  - pin: 203
+    function: Throttle Position 1
+  - pin: 204
+    function: Sensor GND
+    type: GND
+  - pin: 210
+    function: Pedal +5V
+  - pin: 213
+    function: Crank Sensor VR+ Positive Input
+    ts_name: 213 Crank VR+
+  - pin: 215
+    class: analog_inputs
+    ts_name: 215 CLT
+    function: CLT sensor
+  - pin: 220
+    function: Throttle Position 2
+  - pin: 227
+    ts_name: 227 IAT
+    function: Intake Air Temperature
+  - pin: 232
+    class: event_inputs
+    ts_name: 232 - VSS
+    function: VSS in
+
+  - pin: 242
+    function: injector output 2
+  - pin: 243
+    function: injector output 3
+  - pin: 244
+    function: injector output 1
+  - pin: 245
+    function: injector output 4
+  - pin: 246
+    function: Low Side Output?
+    type: ls?
+  - pin: 247
+    function: Sensor GND
+    type: GND
+
+  - pin: 250
+    function: Power GND
+    type: GND
+  - pin: 251
+    function: ETB positive
+    type: etb
+    color: purple
+  - pin: 252
+    function: ETB negative
+    type: etb
+    color: purple
+  - pin: 253
+    function: Coil 2
+  - pin: 254
+    function: Coil 3
+  - pin: 255
+    function: Coil 4
+  - pin: 256
+    function: Coil 1
 
 
 info:
