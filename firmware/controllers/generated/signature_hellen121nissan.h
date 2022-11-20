@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_42150
-#define TS_SIGNATURE "rusEFI 2022.11.20.hellen121nissan.snap_42150"
+#define SIGNATURE_HASH snap_52586
+#define TS_SIGNATURE "rusEFI 2022.11.20.hellen121nissan.snap_52586"
