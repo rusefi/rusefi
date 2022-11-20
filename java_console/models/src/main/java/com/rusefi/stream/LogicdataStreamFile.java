@@ -383,6 +383,7 @@ public class LogicdataStreamFile extends StreamFile {
 	protected void writeFooter() throws IOException {
 		if (stream == null)
 			return;
+		System.out.println("Writing " + eventsBuffer.size() + " event(s)");
 		writeEvents(eventsBuffer);
         write(BLOCK);
         for (int i = 0; i < numChannels; i++) {
