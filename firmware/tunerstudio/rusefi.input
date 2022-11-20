@@ -776,7 +776,7 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		yBins		= boostTpsBins,  TPSValue
 		zBins		= boostTableOpenLoop
 
-	table = boostTable2Tbl,  boostMapClosed,  "Boost control target",	1
+	table = boostTable2Tbl,  boostMapClosed,  "Boost control target (kPa)",	1
 		xBins		= boostRpmBins,  RPMValue
 		yBins		= boostTpsBins,  TPSValue
 		zBins		= boostTableClosedLoop
