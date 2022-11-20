@@ -1702,12 +1702,12 @@ menuDialog = main
 
 		groupMenu = "Lua Calibrations"
 		groupChildMenu = scriptSetting,		"Lua Script Settings"
-		groupChildMenu = std_separator
+
 		groupChildMenu = scriptTable1TblSettings,			"Script Table #1"
 		groupChildMenu = scriptTable2TblSettings,			"Script Table #2"
 		groupChildMenu = scriptTable3TblSettings,			"Script Table #3"
 		groupChildMenu = scriptTable4TblSettings,			"Script Table #4"
-		groupChildMenu = std_separator
+
 		groupChildMenu = scriptCurve1Settings,				"Script Curve #1"
 		groupChildMenu = scriptCurve2Settings,				"Script Curve #2"
 		groupChildMenu = scriptCurve3Settings,				"Script Curve #3"
