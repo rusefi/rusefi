@@ -3765,7 +3765,8 @@ dialog = tcuControls, "Transmission Settings"
 
 ;Boost Closed Loop
 
-			dialog = boostPidDialog, ""
+	dialog = boostPidDialog, ""
+	    topicHelp = "boostPidHelp"
 			field = "Enable closed loop above",			minimumBoostClosedLoopMap, { isBoostControlEnabled && boostType == 1 }
 				field = "P Gain",									boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 			field = "I Gain",									boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
@@ -3787,6 +3788,18 @@ dialog = tcuControls, "Transmission Settings"
 		field = "D gain",							etbWastegatePid_dFactor,  { isBoostControlEnabled }
 		field = "PID min",							etbWastegatePid_minValue, { isBoostControlEnabled }
 		field = "PID max",							etbWastegatePid_maxValue, { isBoostControlEnabled }
+
+    help = boostPidHelp, "Boost Control PID"
+        text = "P = % per kPa error"
+        text = "I = % per kPa-seconds"
+        text = "D = % per kPa/sec"
+        text = ""
+        text = "If the boost error is 5kpa, and your P is set to 2, it will make a correction of 10%."
+        text = "If the boost error has been 5kPa for 2 second (10 kPa-seconds) and I is set to 0.1, it will make a correction of 1%"
+        text = "If the boost is changing at 10kPa/s and D is set to 0.5, it will make a correction of 5%."
+        text = "Those three terms are then added together, and limited by the PID min/max settings."
+        text = ""
+        text = "That is then added to the value from the open loop table, and sent to PWM the valve."
 
 	help = veTableDialogHelp, "Volumetric Efficiency"
 		text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode. VE incorporates pressure ratio as measured by MAP sensor in boost (no VE ever above 105%ish)"
