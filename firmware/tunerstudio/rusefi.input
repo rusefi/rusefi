@@ -1706,12 +1706,14 @@ menuDialog = main
 		subMenu = scriptTable2TblSettings,			"Script Table #2"
 		subMenu = scriptTable3TblSettings,			"Script Table #3"
 		subMenu = scriptTable4TblSettings,			"Script Table #4"
-		subMenu = scriptCurve1Settings,					"Script Curve #1"
-		subMenu = scriptCurve2Settings,				"Script Curve #2"
-		subMenu = scriptCurve3Settings,				"Script Curve #3"
-		subMenu = scriptCurve4Settings,				"Script Curve #4"
-		subMenu = scriptCurve5Settings,				"Script Curve #5"
-		subMenu = scriptCurve6Settings,				"Script Curve #6"
+
+		groupMenu = "Script Curves"
+		groupChildMenu = scriptCurve1Settings,				"Script Curve #1"
+		groupChildMenu = scriptCurve2Settings,				"Script Curve #2"
+		groupChildMenu = scriptCurve3Settings,				"Script Curve #3"
+		groupChildMenu = scriptCurve4Settings,				"Script Curve #4"
+		groupChildMenu = scriptCurve5Settings,				"Script Curve #5"
+		groupChildMenu = scriptCurve6Settings,				"Script Curve #6"
 
 # users are confused by TCU dialogs. open question how to repackage as pre-alpha
 #		subMenu = std_separator
