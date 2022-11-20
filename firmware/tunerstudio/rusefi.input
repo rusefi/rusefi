@@ -3044,8 +3044,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Fan #1 adder",							fan1ExtraIdle
 		field = "Fan #2 adder",							fan2ExtraIdle
 		field = "Extra idle air if throttle pressed",	iacByTpsTaper
-		field = "Air Taper Rpm Range",						airTaperRpmRange
-		field = "Air By Rpm Taper",							airByRpmTaper
 
 	dialog = idleGating, "Idle Detection Thresholds"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
