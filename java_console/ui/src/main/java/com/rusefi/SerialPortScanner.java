@@ -60,6 +60,7 @@ public enum SerialPortScanner {
         }
         if (SHOW_PCAN)
             ports.add(LinkManager.PCAN);
+//        if (SHOW_TPlink32){};
         if (SHOW_SOCKETCAN)
             ports.add(LinkManager.SOCKET_CAN);
 
