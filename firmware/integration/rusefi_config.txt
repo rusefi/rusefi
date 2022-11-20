@@ -951,7 +951,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     switch_input_pin_e launchActivatePin;
 
     pid_s boostPid;
-	custom boostType_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop", "Closed Loop"
+	custom boostType_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop", "Open + Closed Loop"
     boostType_e boostType;
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
