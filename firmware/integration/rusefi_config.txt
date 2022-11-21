@@ -1534,7 +1534,9 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 	vin_number_t vinNumber
 
-uint8_t[224] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint16_t highSpeedOffsets[32];;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
+
+uint8_t[160] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -2054,6 +2056,7 @@ end_struct
 ! 0x34
 #define TS_GET_OUTPUTS_SIZE '4'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
+#define TS_GET_SCATTERED_GET_COMMAND '9'
 
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_DISABLE 2
