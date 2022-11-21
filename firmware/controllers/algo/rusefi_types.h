@@ -75,6 +75,17 @@ using efitimems64_t = int64_t;
  */
 using efitimems_t = uint32_t;
 
+// date-time struct a la ctime struct tm
+typedef struct {
+	uint32_t year;
+	uint8_t month;
+	uint8_t day;
+	uint8_t hour;
+	uint8_t minute;
+	uint8_t second;
+	// uint16_t millisecond;
+} efidatetime_t;
+
 using angle_t = float;
 
 using engineSyncCam_e = uint8_t;
