@@ -68,7 +68,7 @@ static void gps_convert_deg_to_dec(float *latitude, char ns, float *longitude, c
 }
 
 // in string collect all char till comma and convert to float
-static int str_till_comma(char *a, char *dStr) {
+static int str_till_comma(const char * const a, char * const dStr) {
 
 	int i = 0, sLen = strlen(a);
 	if (sLen > GPS_MAX_STRING)
@@ -100,8 +100,8 @@ Unit				M=Meters
 Age of DGPS Corr	s			Age of Differential Corrections
 DGPS Ref Station				ID of DGPS Reference Station
 */
-void nmea_parse_gpgga(char *nmea, loc_t *loc) {
-	char *p = nmea;
+void nmea_parse_gpgga(char const * const nmea, loc_t *loc) {
+	char const * p = (char *)nmea;
 	char dStr[GPS_MAX_STRING];
 
 	p = strchr(p, ',') + 1; 				//skip time - we read date&time if Valid in GxRMC
@@ -177,8 +177,8 @@ Mode Indicator	N		A=Autonomous, D=Differential, E=Dead Reckoning, N=None
 Navigational Status			S=Safe C=Caution U=Unsafe V=Not valid
 */
 
-void nmea_parse_gprmc(char *nmea, loc_t *loc) {
-	char *p = nmea;
+void nmea_parse_gprmc(char const * const nmea, loc_t *loc) {
+	char const * p = (char *)nmea;
 	char dStr[GPS_MAX_STRING];
 	struct tm timp;
 
@@ -280,7 +280,7 @@ nmea_message_type nmea_get_message_type(const char *message) {
 	return NMEA_UNKNOWN;
 }
 
-int nmea_valid_checksum(const char *message) {
+int nmea_valid_checksum(char const * message) {
 	char p;
 	int sum = 0;
 	const char* starPtr = strrchr(message, '*');
@@ -302,7 +302,7 @@ int nmea_valid_checksum(const char *message) {
 }
 
 // Compute the GPS location using decimal scale
-void gps_location(loc_t *coord, char *buffer) {
+void gps_location(loc_t *coord, char const * const buffer) {
 	coord->type = nmea_get_message_type(buffer);
 
 	switch (coord->type) {
