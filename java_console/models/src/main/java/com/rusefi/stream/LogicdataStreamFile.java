@@ -2,17 +2,18 @@ package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Support for Saleae .logicdata format.
  * (c) andreika 2020
- *
+ * <p>
  * Jun 7 status: this code mostly works but it needs more testing
  *
  * @see LogicdataStreamFileSandbox
@@ -68,7 +69,7 @@ public class LogicdataStreamFile extends StreamFile {
     public void append(List<CompositeEvent> events) {
         try {
             if (stream == null) {
-                stream = new LogicdataOutputStream(new FileOutputStream(fileName));
+                stream = new LogicdataOutputStream(Files.newOutputStream(Paths.get(fileName)));
                 writeHeader();
             }
             eventsBuffer.addAll(events);
@@ -459,32 +460,9 @@ public class LogicdataStreamFile extends StreamFile {
 			writeVarLength(value);
 	}
 
-    private void writeAs(long value, int numBytes) throws IOException {
-    	if (value == 0) {
-   			writeByte(0);
-   		} else {
-			writeByte(numBytes);
-			for (int i = 0; i < numBytes; i++) {
-				writeByte((byte)((value >> (i * 8)) & 0xff));
-			}
-		}
-    }
-
     // This is the main secret of this format! :)
     private void writeVarLength(long value) throws IOException {
-    	if (value < 0 || value > 0xFFFFFFFFL) {
-    		writeAs(value, 8);
-    	} else if (value == 0) {
-    		writeByte(0);
-		} else if (value <= 0xff) {
-			writeAs(value, 1);
-		} else if (value <= 0xffff) {
-			writeAs(value, 2);
-		} else if (value <= 0xffffff) {
-			writeAs(value, 3);
-		} else {
-			writeAs(value, 4);
-		}
+		stream.writeVarLength(value);
 	}
 
     private void writeDouble(double value) throws IOException {
