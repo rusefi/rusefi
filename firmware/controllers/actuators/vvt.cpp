@@ -122,7 +122,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 
 #if EFI_AUX_PID
 
-static char vvtOutputNames[CAM_INPUTS_COUNT][13] = {
+static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
 "Vvt Output#1",
 #if CAM_INPUTS_COUNT > 1
 "Vvt Output#2",

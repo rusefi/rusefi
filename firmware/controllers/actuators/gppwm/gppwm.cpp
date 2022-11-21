@@ -19,7 +19,7 @@ static gppwm_Map3D_t* tables[] = {
 	&table4,
 };
 
-static char channelNames[GPPWM_CHANNELS][8] = { "GPPWM#1",
+static const char *channelNames[GPPWM_CHANNELS] = { "GPPWM#1",
 "GPPWM#2",
 "GPPWM#3",
 "GPPWM#4",

@@ -36,9 +36,7 @@
 #define numChannels 6
 #define reservedDurationInSamples 10
 
-#define MAX_STRING_SIZE 40
-
-static char channelNames[][MAX_STRING_SIZE] = { "Primary", "Secondary", "TDC",
+static const char *channelNames[] = { "Primary", "Secondary", "TDC",
 		"Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
 static int CHANNEL_FLAGS[] = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00,
