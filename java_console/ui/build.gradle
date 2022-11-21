@@ -28,4 +28,8 @@ shadowJar {
                 'Main-Class': 'com.rusefi.Launcher'
         )
     }
+
+    dependencies {
+        exclude(dependency('com.ibm.icu:icu4j:.*'))
+    }
 }
