@@ -110,6 +110,7 @@
 
 /**
  * ChibiOS limitation is that only channels #1 and #2 could be used for input capture
+ * Could this be unified with getConfigForPin() method?
  */
 bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icuchannel_t *channel_ptr, uint32_t *clock_ptr)
 {
