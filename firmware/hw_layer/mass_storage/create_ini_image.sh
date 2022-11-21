@@ -15,6 +15,9 @@ BOARD_SPECIFIC_URL=$5
 IMAGE=ramdisk.image
 ZIP=rusefi.ini.zip
 
+# mkfs.fat and fatlabel are privileged on some systems
+PATH="$PATH:/usr/sbin"
+
 echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARDNAME [$BOARD_SPECIFIC_URL]"
 
 rm -f $ZIP $IMAGE
