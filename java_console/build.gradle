@@ -1,0 +1,2 @@
+// apply from: 'dependencies.gradle'
+apply from: '../java_tools/dependencies.gradle'
