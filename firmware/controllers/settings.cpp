@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-#if !EFI_UNIT_TEST
+#if ! EFI_UNIT_TEST
 
 #include "eficonsole.h"
 #include "trigger_decoder.h"
@@ -23,21 +23,21 @@
 #include "can_hw.h"
 #include "rusefi.h"
 #include "hardware.h"
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
-#endif /* EFI_INTERNAL_FLASH */
+#endif // EFI_INTERNAL_FLASH
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern int waveChartUsedSize;
 extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
+#endif // EFI_ENGINE_SNIFFER
 
 void printSpiState(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
@@ -139,11 +139,11 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 		efiPrintf("digitalPotentiometer CS%d %s", i,
 				hwPortname(engineConfiguration->digitalPotentiometerChipSelect[i]));
 	}
-#if EFI_PROD_CODE
 
+#if EFI_PROD_CODE
 	printSpiState(engineConfiguration);
 
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 }
 
 static void doPrintConfiguration() {
@@ -614,7 +614,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 	}
 	incrementGlobalConfigurationVersion();
 }
-#endif
+#endif // HAL_USE_ADC
 
 static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
@@ -638,7 +638,7 @@ static void showPinFunction(const char *pinName) {
 	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));
 }
 
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
@@ -687,8 +687,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "auto_idle")) {
 #if EFI_IDLE_CONTROL
 		setIdleMode(isEnabled ? IM_MANUAL : IM_AUTO);
-#endif /* EFI_IDLE_CONTROL */
-#endif /* EFI_PROD_CODE */
+#endif // EFI_IDLE_CONTROL
+#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
@@ -748,7 +748,7 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		} else {
 			disableTriggerStimulator();
 		}
-#endif
+#endif // EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -789,7 +789,6 @@ void scheduleStopEngine(void) {
 	doScheduleStopEngine();
 }
 
-#if ! EFI_UNIT_TEST
 const plain_get_short_s getS_plain[] = {
 		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
 		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
@@ -824,8 +823,6 @@ static plain_get_integer_s getI_plain[] = {
 //		{"idle_rpm", setTargetIdleRpm},
 };
 
-#endif /* EFI_UNIT_TEST */
-
 static plain_get_integer_s *findInt(const char *name) {
 	plain_get_integer_s *currentI = &getI_plain[0];
 	while (currentI < getI_plain + efi::size(getI_plain)) {
@@ -838,7 +835,6 @@ static plain_get_integer_s *findInt(const char *name) {
 }
 
 static void getValue(const char *paramStr) {
-#if ! EFI_UNIT_TEST
 	{
 		plain_get_integer_s *known = findInt(paramStr);
 		if (known != nullptr) {
@@ -856,16 +852,12 @@ static void getValue(const char *paramStr) {
 		}
 	}
 
-
-#endif /* EFI_UNIT_TEST */
-
-
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
 		efiPrintf("isCJ125Enabled=%d", engineConfiguration->isCJ125Enabled);
 #if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
 		efiPrintf("tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
@@ -933,15 +925,15 @@ const command_f_s commandsF[] = {
 		{"idle_p", setIdlePFactor},
 		{"idle_i", setIdleIFactor},
 		{"idle_d", setIdleDFactor},
-#endif /* EFI_IDLE_CONTROL */
-#endif /* EFI_PROD_CODE */
+#endif // EFI_IDLE_CONTROL
+#endif // EFI_PROD_CODE
 
-#if EFI_ELECTRONIC_THROTTLE_BODY && (!EFI_UNIT_TEST)
+#if EFI_ELECTRONIC_THROTTLE_BODY
 		{"etb_p", setEtbPFactor},
 		{"etb_i", setEtbIFactor},
 		{"etb_d", setEtbDFactor},
 		{"etb", setThrottleDutyCycle},
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 		//		{"", },
 //		{"", },
@@ -988,16 +980,16 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 #if EFI_CAN_SUPPORT
 		{"can_mode", setCanType},
 		{"can_vss", setCanVss},
-#endif /* EFI_CAN_SUPPORT */
+#endif // EFI_CAN_SUPPORT
 #if EFI_IDLE_CONTROL
 		{"idle_position", setManualIdleValvePosition},
 		{"idle_rpm", setTargetIdleRpm},
-#endif /* EFI_IDLE_CONTROL */
-#endif /* EFI_PROD_CODE */
+#endif // EFI_IDLE_CONTROL
+#endif // EFI_PROD_CODE
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 		{"etb_o", setEtbOffset},
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 		//		{"", },
 		//		{"", },
@@ -1039,7 +1031,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
 	} else
-#endif /* EFI_ALTERNATOR_CONTROL */
+#endif // EFI_ALTERNATOR_CONTROL
 	if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
@@ -1058,7 +1050,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
-#endif /* EFI_EMULATE_POSITION_SENSORS */
+#endif // EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
@@ -1091,7 +1083,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 void initSettings(void) {
 #if EFI_SIMULATOR
 	printf("initSettings\n");
-#endif
+#endif // EFI_SIMULATOR
 
 	// todo: start saving values into flash right away?
 
@@ -1159,30 +1151,30 @@ void initSettings(void) {
 
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
-#endif
+#endif // HAL_USE_ADC
 	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
 	addConsoleActionI("set_pot_spi", setPotSpi);
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 }
 
-#endif /* !EFI_UNIT_TEST */
+#endif // ! EFI_UNIT_TEST
 
 void setEngineType(int value) {
 	{
 #if EFI_PROD_CODE
 		chibios_rt::CriticalSectionLocker csl;
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 
 		engineConfiguration->engineType = (engine_type_e)value;
 		resetConfigurationExt((engine_type_e)value);
 		engine->resetEngineSnifferIfInTestMode();
 
-	#if EFI_INTERNAL_FLASH
+#if EFI_INTERNAL_FLASH
 		writeToFlashNow();
-	#endif /* EFI_INTERNAL_FLASH */
+#endif // EFI_INTERNAL_FLASH
 	}
 	incrementGlobalConfigurationVersion();
 #if ! EFI_UNIT_TEST
 	doPrintConfiguration();
-#endif /* EFI_UNIT_TEST */
+#endif // ! EFI_UNIT_TEST
 }
