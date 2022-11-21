@@ -85,7 +85,7 @@ public class LogicdataStreamFile extends StreamFile {
     	// we need at least 2 records
     	if (events == null || events.size() < 2)
     		return;
-		long firstRecordTs = events.get(1).getTimestamp();
+		long firstRecordTs = events.get(1).getTimestamp(); // huh why not index '0'?
 		long lastRecordTs = events.get(events.size() - 1).getTimestamp();
 	    // we don't know the total duration, so we create a margin after the last record which equals to the duration of the first event
 		// TODO: why do we jump from timestamps to samples?

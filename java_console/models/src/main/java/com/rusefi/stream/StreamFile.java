@@ -6,6 +6,7 @@ import java.io.*;
 import java.util.List;
 
 public abstract class StreamFile {
+    // todo: always write into Writer since it has better API, it's insane to have to references into same stream
     protected OutputStream stream;
     protected Writer writer;
 
