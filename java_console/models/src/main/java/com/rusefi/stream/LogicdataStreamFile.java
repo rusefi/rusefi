@@ -47,7 +47,6 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private final String fileName;
 	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
-	private int totalBytes = 0;
 
 	private static final String [] channelNames = { "Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
@@ -69,7 +68,7 @@ public class LogicdataStreamFile extends StreamFile {
     public void append(List<CompositeEvent> events) {
         try {
             if (stream == null) {
-                stream = new FileOutputStream(fileName);
+                stream = new LogicdataOutputStream(new FileOutputStream(fileName));
                 writeHeader();
             }
             eventsBuffer.addAll(events);
@@ -367,8 +366,7 @@ public class LogicdataStreamFile extends StreamFile {
 	}
 
 	private void writeByte(int i) throws IOException {
-		stream.write(i);
-		totalBytes++;
+		stream.writeByte(i);
 	}
 
 	private void writeChannelDataFooter() throws IOException {
