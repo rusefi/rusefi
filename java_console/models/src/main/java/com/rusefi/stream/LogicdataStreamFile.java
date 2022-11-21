@@ -154,118 +154,118 @@ public class LogicdataStreamFile extends StreamFile {
     private void writeHeader() throws IOException {
         writeByte(magic);
 
-        write(title.length());
+        writeVarLength(title.length());
         write(title);
         stream.flush();
 
-        write(BLOCK);
-        write(SUB);
-        write(frequency);
-        write(0);
-        write(reservedDurationInSamples);
-        write(frequency / frequencyDiv);
+        writeVarLength(BLOCK);
+        writeVarLength(SUB);
+        writeVarLength(frequency);
+        writeVarLength(0);
+        writeVarLength(reservedDurationInSamples);
+        writeVarLength(frequency / frequencyDiv);
         write(0, 2);
-        write(numChannels);
+        writeVarLength(numChannels);
 
-        write(BLOCK);
-        write(0);
+        writeVarLength(BLOCK);
+        writeVarLength(0);
 
-        write(BLOCK);
+        writeVarLength(BLOCK);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
 		}
-        write(0);
+        writeVarLength(0);
 
-        write(BLOCK);
+        writeVarLength(BLOCK);
 
 		writeId(0, 0);
-		write(0);
-		write(0);
+		writeVarLength(0);
+		writeVarLength(0);
     }
 
     private void writeChannelHeader(int ch) throws IOException {
-		write(0xff);
-		write(ch);
+		writeVarLength(0xff);
+		writeVarLength(ch);
 		write(channelNames[ch]);
 		write(0, 2);
 		writeDouble(1.0);
-		write(0);
+		writeVarLength(0);
 		writeDouble(0.0);
-		write(1);	// or 2
+		writeVarLength(1);	// or 2
 		writeDouble(0.0);	// or 1.0
 
 		// this part sounds like the 'next' pointer?
 		if (ch == numChannels - 1) {
-			write(0);
+			writeVarLength(0);
 		} else {
 			writeId(1 + ch, 1);
 			for (int i = 0; i < 3; i++) {
-				write((CHANNEL_FLAGS[ch] >> (i * 8)) & 0xff);
+				writeVarLength((CHANNEL_FLAGS[ch] >> (i * 8)) & 0xff);
 			}
 		}
     }
 
     private void writeChannelDataHeader() throws IOException {
-		write(BLOCK);
-		write(scaledDurationInSamples);
+		writeVarLength(BLOCK);
+		writeVarLength(scaledDurationInSamples);
 		write(0, 5);
-		write(numChannels);
+		writeVarLength(numChannels);
 		write(0, 3);
 		writeId(0, 1);
-		write(0);
+		writeVarLength(0);
 
-        write(BLOCK);
+        writeVarLength(BLOCK);
 		write(0, 3);
 
 		for (int i = 0; i < numChannels; i++) {
 			writeChannelHeader(i);
 		}
 
-        write(BLOCK);
+        writeVarLength(BLOCK);
 		write(new int[]{ SUB, SUB, 0, SUB, 0, SUB });
 		write(0, 6);
 
-        write(BLOCK);
+        writeVarLength(BLOCK);
 		write(0, 2);
-		write(realDurationInSamples);
-		write(0);
-		write(SUB);
-		write(reservedDurationInSamples);
-		write(frequency / frequencyDiv);
+		writeVarLength(realDurationInSamples);
+		writeVarLength(0);
+		writeVarLength(SUB);
+		writeVarLength(reservedDurationInSamples);
+		writeVarLength(frequency / frequencyDiv);
 		write(0, 2);
-		write(SUB);
+		writeVarLength(SUB);
 		write(0, 2);
-		write(1);
+		writeVarLength(1);
 		write(0, 3);
 		writeId(0, 0);
 
-		write(BLOCK);
+		writeVarLength(BLOCK);
 		write(new int[]{ (int)realDurationInSamples, (int)realDurationInSamples, (int)realDurationInSamples });
-		write(0);
-		write(SUB);
-		write(0);
+		writeVarLength(0);
+		writeVarLength(SUB);
+		writeVarLength(0);
 
-		write(BLOCK);
-		write(0);
+		writeVarLength(BLOCK);
+		writeVarLength(0);
 
-		write(BLOCK);
+		writeVarLength(BLOCK);
 		write(SUB, 4);
-		write(0);
+		writeVarLength(0);
 
-		write(BLOCK);
-    	write(frequency);
+		writeVarLength(BLOCK);
+    	writeVarLength(frequency);
 		write(0, 3);
-		write(1);
+		writeVarLength(1);
 		write(0, 3);
 		writeId(0, 0);
 		write(new int[]{ 0, 1, 1, 0, 1, 0x13 });
-		write(SUB);
+		writeVarLength(SUB);
 
-		write(BLOCK);
-		write(0);
-		write(realDurationInSamples);
+		writeVarLength(BLOCK);
+		writeVarLength(0);
+		writeVarLength(realDurationInSamples);
 		write(0, 2);
-		write(numChannels);
+		writeVarLength(numChannels);
 		write(new int[]{ 1, 0, 1 });
 	}
 
@@ -273,37 +273,37 @@ public class LogicdataStreamFile extends StreamFile {
     	int numEdges = chDeltas.size();
     	if (numEdges == 0)
     		lastRecord = 0;
-    	write(CHANNEL_BLOCK);
+    	writeVarLength(CHANNEL_BLOCK);
     	// channel#0 is somehow special...
     	if (ch == 0) {
-			write(SUB);
-			write(BLOCK);
+			writeVarLength(SUB);
+			writeVarLength(BLOCK);
 		}
 
-		write(ch + 1);
-		write(0);
-		write(realDurationInSamples);
-		write(1);
-		write(lastRecord);
+		writeVarLength(ch + 1);
+		writeVarLength(0);
+		writeVarLength(realDurationInSamples);
+		writeVarLength(1);
+		writeVarLength(lastRecord);
 
 		// todo: why do we convert from
 		int numSamplesLeft = (int)(realDurationInSamples - lastRecord);
-		write(numSamplesLeft);
+		writeVarLength(numSamplesLeft);
 
-		write(chLastState);
+		writeVarLength(chLastState);
 
 		int chFlag = (numEdges == 0) ? FLAG_EMPTY : (useLongDeltas ? FLAG_NOTEMPTY_LONG : FLAG_NOTEMPTY);
-		write(chFlag);
+		writeVarLength(chFlag);
 
 		if (ch == 0) {
-			write(0);
-			write(BLOCK);
+			writeVarLength(0);
+			writeVarLength(BLOCK);
 			write(0, 11);
 			if (useLongDeltas) {
-				write(BLOCK);
+				writeVarLength(BLOCK);
 				write(0, 6);
 			}
-			write(BLOCK);
+			writeVarLength(BLOCK);
 		} else {
 			write(0, 10);
 			if (useLongDeltas) {
@@ -311,22 +311,22 @@ public class LogicdataStreamFile extends StreamFile {
 			}
 		}
 
-		write(numEdges);
-		write(0);
-		write(numEdges);
-		write(0);
-		write(numEdges);
+		writeVarLength(numEdges);
+		writeVarLength(0);
+		writeVarLength(numEdges);
+		writeVarLength(0);
+		writeVarLength(numEdges);
 
 		writeEdges(chDeltas, useLongDeltas);
 
 		if (ch == 0) {
-			write(BLOCK);
+			writeVarLength(BLOCK);
 			write(0, 6);
 			if (!useLongDeltas) {
-				write(BLOCK);
+				writeVarLength(BLOCK);
 				write(0, 6);
 			}
-			write(BLOCK);
+			writeVarLength(BLOCK);
 		} else {
 			write(0, 4);
 			if (!useLongDeltas) {
@@ -339,11 +339,11 @@ public class LogicdataStreamFile extends StreamFile {
 			return;
 		}
 
-		write(1);
-		write(0);
-		write(1);
-		write(0);
-		write(1);
+		writeVarLength(1);
+		writeVarLength(0);
+		writeVarLength(1);
+		writeVarLength(0);
+		writeVarLength(1);
     	write(0, 16);
 
     	writeRaw(0xFF, 8);
@@ -373,10 +373,10 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private void writeChannelDataFooter() throws IOException {
     	write(0, 3);
-    	write(1);
-    	write(1);
-    	write(0);
-    	write(numChannels);
+    	writeVarLength(1);
+    	writeVarLength(1);
+    	writeVarLength(0);
+    	writeVarLength(numChannels);
     }
 
     @Override
@@ -385,45 +385,45 @@ public class LogicdataStreamFile extends StreamFile {
 			return;
 		System.out.println("Writing " + eventsBuffer.size() + " event(s)");
 		writeEvents(eventsBuffer);
-        write(BLOCK);
+        writeVarLength(BLOCK);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
         }
-        write(1);
+        writeVarLength(1);
 		writeId(numChannels, 0x15);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
         }
-        write(1);
-        write(0);
-        write(frequency);
+        writeVarLength(1);
+        writeVarLength(0);
+        writeVarLength(frequency);
 		write(0, 16);
-        write(0x01);
-        write(0x23); // ???
-        write(SUB);
+        writeVarLength(0x01);
+        writeVarLength(0x23); // ???
+        writeVarLength(SUB);
 
-        write(BLOCK);
-        write(numChannels + 1);
-        write(0);
-        write(0xFFFFFFFFFFFFFFFFL);
-        write(0xFFFFFFFFL);
-        write(1);
+        writeVarLength(BLOCK);
+        writeVarLength(numChannels + 1);
+        writeVarLength(0);
+        writeVarLength(0xFFFFFFFFFFFFFFFFL);
+        writeVarLength(0xFFFFFFFFL);
+        writeVarLength(1);
         write(0, 3);
 
-        write(BLOCK);
-        write(0);
+        writeVarLength(BLOCK);
+        writeVarLength(0);
 
-        write(BLOCK);
-        write(0);
+        writeVarLength(BLOCK);
+        writeVarLength(0);
         writeDouble(1.0);
-        write(SUB);
+        writeVarLength(SUB);
 		write(0, 6);
-		write(1);
+		writeVarLength(1);
 		write(0, 4);
 
-        write(1);
-        write(0x29);  // ???
-        write(SUB);
+        writeVarLength(1);
+        writeVarLength(0x29);  // ???
+        writeVarLength(SUB);
 
         writeTimingMarker();
 
@@ -432,33 +432,33 @@ public class LogicdataStreamFile extends StreamFile {
     }
 
     private void writeTimingMarker() throws IOException {
-    	write(BLOCK);
-    	write(numChannels + 2);
+    	writeVarLength(BLOCK);
+    	writeVarLength(numChannels + 2);
     	write(0, 4);
     	write("Timing Marker Pair");
     	write("A1");
     	write("A2");
     	write(0, 2);
-    	write(SUB);
+    	writeVarLength(SUB);
     	write(0, 9);
     }
 
     private void writeId(int i1, int i2) throws IOException {
-		write((numChannels == 4) ? LOGIC4 : LOGIC8);
-		write(i1);
-		write(i2);
+		writeVarLength((numChannels == 4) ? LOGIC4 : LOGIC8);
+		writeVarLength(i1);
+		writeVarLength(i2);
     }
 
     ///////////////////////////////////////////////////////////////////////
 
     private void write(int value, int num) throws IOException {
     	for (int i = 0; i < num; i++)
-    		write(value);
+    		writeVarLength(value);
     }
 
 	private void write(int[] values) throws IOException {
 		for (int value : values)
-			write(value);
+			writeVarLength(value);
 	}
 
     private void writeAs(long value, int numBytes) throws IOException {
@@ -473,7 +473,7 @@ public class LogicdataStreamFile extends StreamFile {
     }
 
     // This is the main secret of this format! :)
-    private void write(long value) throws IOException {
+    private void writeVarLength(long value) throws IOException {
     	if (value < 0 || value > 0xFFFFFFFFL) {
     		writeAs(value, 8);
     	} else if (value == 0) {
@@ -506,7 +506,7 @@ public class LogicdataStreamFile extends StreamFile {
     }
 
     private void write(String str) throws IOException {
-   		write(str.length());
+   		writeVarLength(str.length());
     	for (char c : str.toCharArray()) {
     		writeByte(c);
     	}
