@@ -1,5 +1,8 @@
 /**
  * file lua_lib.h
+ * if you like any of those you would have to copy paste into your script manually - those
+ * are NOT part of the default anything automatically
+ * please remove slash from the end of each line
  */
 
 #define ARRAY_EQUALS "function equals(data1, data2) \
