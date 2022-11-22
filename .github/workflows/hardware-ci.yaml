@@ -8,15 +8,16 @@ jobs:
       # Let all builds finish even if one fails early
       fail-fast: false
       matrix:
-        build-target: [f407-discovery, proteus_f4]
+#        build-target: [f407-discovery, proteus_f4]
+        build-target: [proteus_f4]
 
         include:
-          - build-target: f407-discovery
-            script: hardware_ci_f4_discovery
-            runs-on: hw-ci-f4-discovery
-            folder: f407-discovery
-            config-name: all
-            ini-file: rusefi_f4-disco.ini
+#          - build-target: f407-discovery
+#            script: hardware_ci_f4_discovery
+#            runs-on: hw-ci-f4-discovery
+#            folder: f407-discovery
+#            config-name: all
+#            ini-file: rusefi_f4-disco.ini
 
           - build-target: proteus_f4
             script: hardware_ci_proteus
