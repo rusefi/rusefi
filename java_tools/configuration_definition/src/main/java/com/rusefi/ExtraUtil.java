@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -8,7 +8,7 @@ import com.rusefi.util.SystemOut;
 import java.io.IOException;
 
 public class ExtraUtil {
-    static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
+    static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, DefinitionsState parseState) throws IOException {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
             String result = FiringOrderTSLogic.invoke(firingEnumFileName);

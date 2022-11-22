@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 import static com.rusefi.VariableRegistry.AUTO_ENUM_SUFFIX;
 
-public class ParseState {
+public class ParseState implements DefinitionsState {
     private final Map<String, Definition> definitions = new HashMap<>();
     private final Map<String, Struct> structs = new HashMap<>();
     private final List<Struct> structList = new ArrayList<>();
@@ -116,6 +116,7 @@ public class ParseState {
     /**
      * we are in a lengthy period of transition between two implementations
      */
+    @Override
     public void addDefinition(VariableRegistry variableRegistry, String name, String value, Definition.OverwritePolicy overwritePolicy) {
         // old implementation
         variableRegistry.register(name, value);
@@ -146,6 +147,7 @@ public class ParseState {
         addDefinition(name, value, definitionOverwritePolicy);
     }
 
+    @Override
     public void setDefinitionPolicy(Definition.OverwritePolicy policy) {
         this.definitionOverwritePolicy = policy;
     }
