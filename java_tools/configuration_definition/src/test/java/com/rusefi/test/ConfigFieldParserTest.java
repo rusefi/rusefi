@@ -50,7 +50,7 @@ public class ConfigFieldParserTest {
     @Test
     public void testFloatMsAlias() {
         String test = "struct pid_s\n" +
-                "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "floatms_t afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0\n" +
                 "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
