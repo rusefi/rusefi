@@ -130,7 +130,7 @@ public class IniFileReaderTest {
                 "[Constants]\n" +
                         "   crc32CheckCommand   = \"k\\x00\\x00\\x00\\x00\\x00\\x00\"\n" +
                         "page = 1\n" +
-                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1, 0, -40, 200, 1\n" +
+                        "primingSquirtDurationMs\t\t\t= scalar, F32,\t96,\t\"*C\", 1.0, 0, -40, 200, 1\n" +
                         "";
         RawIniFile lines = IniFileReader.read(new ByteArrayInputStream(string.getBytes()));
         IniFileModel model = new IniFileModel().readIniFile(lines);

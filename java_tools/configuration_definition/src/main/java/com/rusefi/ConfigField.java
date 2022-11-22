@@ -95,7 +95,13 @@ public class ConfigField {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
-                if (!hasAutoscale && !scale.trim().equals("1")) {
+                Double scaleDouble;
+                try {
+                    scaleDouble = Double.parseDouble(scale);
+                } catch (NumberFormatException ignore) {
+                    scaleDouble = -1.0;
+                }
+                if (!hasAutoscale && scaleDouble != 1) {
                     throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
                 }
             }
