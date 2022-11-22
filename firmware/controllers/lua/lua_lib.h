@@ -89,6 +89,7 @@ end  \
 
 // one day we shall get Preprocessor macros with C++11 raw string literals
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55971
+// for when you want "I want bitWidth number of bits starting at bitIndex in data array
 #define GET_BIT_RANGE_LSB " \
 function getBitRange(data, bitIndex, bitWidth) \
 	byteIndex = bitIndex >> 3 \
