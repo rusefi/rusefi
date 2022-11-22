@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
-import com.rusefi.newparse.ParseState;
+import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +46,7 @@ public class PinoutLogic {
         return null;
     }
 
-    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state, ParseState parseState) {
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state, DefinitionsState parseState) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -220,7 +220,7 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state, ParseState parseState) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state, DefinitionsState parseState) throws IOException {
         readFiles();
         registerPins(boardName, globalList, registry, state, parseState);
 
