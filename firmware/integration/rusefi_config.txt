@@ -1534,7 +1534,7 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 	vin_number_t vinNumber
 
-uint16_t[32] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0
+uint16_t[32] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
 
 uint8_t[160] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
