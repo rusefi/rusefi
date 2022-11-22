@@ -992,7 +992,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH snap_7677
+#define SIGNATURE_HASH snap_45814
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1206,6 +1206,8 @@
 #define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F_char F
+#define TS_GET_SCATTERED_GET_COMMAND '9'
+#define TS_GET_SCATTERED_GET_COMMAND_char 9
 #define TS_GET_TEXT 'G'
 #define TS_GET_TEXT_char G
 #define TS_HELLO_COMMAND 'S'
@@ -1265,7 +1267,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.11.21.subaru_eg33_f7.snap_7677"
+#define TS_SIGNATURE "rusEFI 2022.11.22.subaru_eg33_f7.snap_45814"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

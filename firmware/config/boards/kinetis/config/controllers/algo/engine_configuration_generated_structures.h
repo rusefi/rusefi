@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 19 14:44:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 22 01:52:39 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4308,16 +4308,20 @@ struct engine_configuration_s {
 	 */
 	vin_number_t vinNumber;
 	/**
+	 * need 4 byte alignment
 	units
 	 * offset 3787
 	 */
-	uint8_t mainUnusedEnd[224];
+	uint8_t alignmentFill_at_3787[1];
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 4011
+	 * offset 3788
 	 */
-	uint8_t alignmentFill_at_4011[1];
+	uint16_t highSpeedOffsets[32];
+	/**
+	units
+	 * offset 3852
+	 */
+	uint8_t mainUnusedEnd[160];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5090,4 +5094,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 19 14:44:53 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 22 01:52:39 UTC 2022

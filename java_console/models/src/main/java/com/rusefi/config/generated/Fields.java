@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 21 00:19:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 22 01:53:29 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1160,6 +1160,7 @@ public class Fields {
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
+	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
@@ -1180,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.21.all.snap_50215";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.22.all.snap_27436";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1256;
@@ -2463,8 +2464,9 @@ public class Fields {
 	public static final Field ETBMINIMUMPOSITION = Field.create("ETBMINIMUMPOSITION", 3764, FieldType.FLOAT);
 	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 3768, FieldType.INT16).setScale(1.0);
 	public static final Field VINNUMBER = Field.create("VINNUMBER", 3770, 17, FieldType.STRING).setScale(1.0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3787, FieldType.INT8).setScale(1.0);
-	public static final Field ALIGNMENTFILL_AT_4011 = Field.create("ALIGNMENTFILL_AT_4011", 4011, FieldType.INT8).setScale(1.0);
+	public static final Field ALIGNMENTFILL_AT_3787 = Field.create("ALIGNMENTFILL_AT_3787", 3787, FieldType.INT8).setScale(1.0);
+	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3788, FieldType.INT16).setScale(1.0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3852, FieldType.INT8).setScale(1.0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0);
@@ -3897,8 +3899,9 @@ public class Fields {
 	ETBMINIMUMPOSITION,
 	TUNEHIDINGKEY,
 	VINNUMBER,
+	ALIGNMENTFILL_AT_3787,
+	HIGHSPEEDOFFSETS,
 	MAINUNUSEDEND,
-	ALIGNMENTFILL_AT_4011,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,
