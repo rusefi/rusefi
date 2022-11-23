@@ -116,4 +116,3 @@ efitimems_t getTimeNowMs();
 efitimesec_t getTimeNowS();
 
 #endif /* __cplusplus */
-

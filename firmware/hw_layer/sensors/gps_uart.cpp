@@ -49,8 +49,8 @@ static void printGpsInfo() {
 	float sec = getTimeNowMs() / 1000.0;
 	efiPrintf("communication speed: %.2f", gpsMesagesCount / sec);
 
-	print("GPS latitude = %.2f\r\n", GPSdata.latitude);
-	print("GPS longitude = %.2f\r\n", GPSdata.longitude);
+	efiPrintf("GPS latitude = %.2f\r\n", GPSdata.latitude);
+	efiPrintf("GPS longitude = %.2f\r\n", GPSdata.longitude);
 }
 
 static struct tm curTm;
@@ -83,7 +83,7 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 			if (count >= 1)
 				gps_str[--count] = '\0';					// delete 0xD
 
-//			scheduleMsg(&logger, "got GPS [%s]", gps_str);
+			// scheduleMsg(&logger, "got GPS [%s]", gps_str);
 
 			// 'gps_str' string completed
 			onGpsMessage(gps_str);
