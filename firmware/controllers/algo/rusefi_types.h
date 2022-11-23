@@ -34,8 +34,8 @@ using time_t = uint32_t;
 #define FOUR_STROKE_CYCLE_DURATION 720
 
 // gasoline E0
-#define STOICH_RATIO				14.7f
-#define CONST_PI           3.14159265358979323846
+#define STOICH_RATIO 14.7f
+#define CONST_PI 3.14159265358979323846
 
 
 // time in seconds

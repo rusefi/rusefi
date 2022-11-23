@@ -17,6 +17,7 @@
 
 #include "rtc_helper.h"
 #include "fuel_math.h"
+
 // CAN Bus ID for broadcast
 #define CAN_FIAT_MOTOR_INFO           0x561
 #define CAN_MAZDA_RX_RPM_SPEED        0x201
@@ -432,7 +433,7 @@ void canDashboardBMWE90(CanCycle cycle)
 			msg[1] = 0x41;
 			msg[2] = 0x61;
 			msg[3] = 0x8F;
-			msg[4] = 0xFC;			
+			msg[4] = 0xFC;
 		}
 
 		{ //Ebrake light

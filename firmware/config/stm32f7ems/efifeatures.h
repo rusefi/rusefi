@@ -15,7 +15,7 @@
 #ifndef EFI_EMBED_INI_MSD
 #define EFI_EMBED_INI_MSD FALSE
 #endif
- 
+
 #include "../stm32f4ems/efifeatures.h"
 
 #pragma once
