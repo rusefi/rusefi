@@ -511,14 +511,6 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		m_shouldResetPid = false;
 	}
 
-	// Only report the 0th throttle
-	if (m_function == ETB_Throttle1) {
-#if EFI_TUNER_STUDIO
-		// Error is positive if the throttle needs to open further
-		engine->outputChannels.etb1Error = target - observation;
-#endif /* EFI_TUNER_STUDIO */
-	}
-
 	// Only allow autotune with stopped engine, and on the first throttle
 	if (m_isAutotune) {
 		return getClosedLoopAutotune(target, observation);
