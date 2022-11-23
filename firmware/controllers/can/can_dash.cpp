@@ -15,6 +15,7 @@
 #include "can_bmw.h"
 #include "can_vag.h"
 
+#include "rusefi_types.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
 
@@ -554,16 +555,22 @@ void canDashboardBMWE90(CanCycle cycle)
 
 	{
 		if (!cluster_time_set) {
-			struct tm timp;
-			date_get_tm(&timp);
+#if EFI_RTC
+			efidatetime_t dateTime = getRtcDateTime();
+#else // EFI_RTC
+			efidatetime_t dateTime = {
+				.year = 0, .month = 0, .day = 0,
+				.hour = 0, .minute = 0, .second = 0,
+			};
+#endif // EFI_RTC
 			CanTxMessage msg(CanCategory::NBC, E90_TIME, 8);
-			msg[0] = timp.tm_hour;
-			msg[1] = timp.tm_min;
-			msg[2] = timp.tm_sec;
-			msg[3] = timp.tm_mday;
-			msg[4] = (((timp.tm_mon + 1) << 4) | 0x0F);
-			msg[5] = (timp.tm_year + 1900) & 0xFF;
-			msg[6] = ((timp.tm_year + 1900) >> 8) | 0xF0;
+			msg[0] = dateTime.hour;
+			msg[1] = dateTime.minute;
+			msg[2] = dateTime.second;
+			msg[3] = dateTime.day;
+			msg[4] = (dateTime.month << 4) | 0x0F;
+			msg[5] = dateTime.year & 0xFF;
+			msg[6] = (dateTime.year >> 8) | 0xF0; // collides CAN dash at 4096!
 			msg[7] = 0xF2;
 			cluster_time_set = 1;
 		}

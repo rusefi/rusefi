@@ -17,9 +17,11 @@
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
 #include "value_lookup.h"
+#if EFI_RTC
+#include "rtc_helper.h"
+#endif // EFI_RTC
 
 #if EFI_PROD_CODE
-#include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
 #include "hardware.h"
@@ -874,14 +876,9 @@ static void getValue(const char *paramStr) {
 		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		efiPrintf("isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
-	}
-
-#if EFI_RTC
-	else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
+	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		printDateTime();
-	}
-#endif
-	else {
+	} else {
 		efiPrintf("Invalid Parameter: %s", paramStr);
 	}
 }
@@ -1069,11 +1066,9 @@ static void setValue(const char *paramStr, const char *valueStr) {
 #endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
 		engineConfiguration->targetVBatt = valueF;
-#if EFI_RTC
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
-#endif
 	}
 	engine->resetEngineSnifferIfInTestMode();
 }
@@ -1153,6 +1148,32 @@ void initSettings(void) {
 	addConsoleActionSS(CMD_LOGIC_PIN, setLogicInputPin);
 	addConsoleActionI("set_pot_spi", setPotSpi);
 #endif // EFI_PROD_CODE
+}
+
+void printDateTime() {
+#if EFI_RTC
+	printRtcDateTime();
+#else // EFI_RTC
+	efiPrintf("Cannot print time: RTC not supported");
+#endif // EFI_RTC
+}
+
+void setDateTime(const char * const isoDateTime) {
+#if EFI_RTC
+	if (strlen(isoDateTime) > 0) {
+		efidatetime_t dateTime;
+		if (sscanf("%04u-%02u-%02uT%02u:%02u:%02u", isoDateTime,
+					&dateTime.year, &dateTime.month, &dateTime.day,
+					&dateTime.hour, &dateTime.minute, &dateTime.second)
+				== 6) { // 6 fields to properly scan
+			setRtcDateTime(&dateTime);
+			return;
+		}
+	}
+	efiPrintf("date_set Date parameter %s is wrong", isoDateTime);
+#else // EFI_RTC
+	efiPrintf("Cannot set time: RTC not supported");
+#endif // EFI_RTC
 }
 
 #endif // ! EFI_UNIT_TEST

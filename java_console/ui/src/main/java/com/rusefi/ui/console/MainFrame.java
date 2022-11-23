@@ -16,7 +16,9 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Objects;
-import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
@@ -27,6 +29,7 @@ public class MainFrame {
     @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
+
     /**
      * @see StartupFrame
      */
@@ -55,7 +58,6 @@ public class MainFrame {
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
         this.consoleUI = Objects.requireNonNull(consoleUI);
-
         this.tabbedPane = tabbedPane;
         listener = (String s) -> {
         };
@@ -67,10 +69,10 @@ public class MainFrame {
             setTitle();
             UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
             if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                long unixGmtTime = System.currentTimeMillis() / 1000L;
-                long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
+                LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
+                String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
                 consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
-                                " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
+                                " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
                         InvocationConfirmationListener.VOID, false));
             }
         }));

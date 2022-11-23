@@ -18,3 +18,6 @@ void scheduleStopEngine(void);
 void printTPSInfo(void);
 void setEngineType(int value);
 void readPin(const char *pinName);
+
+void printDateTime();
+void setDateTime(const char * const isoDateTime);
