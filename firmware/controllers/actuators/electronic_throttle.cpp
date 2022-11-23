@@ -360,6 +360,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	}
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
+	etbCurrentAdjustedTarget = targetPosition;
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
