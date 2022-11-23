@@ -4075,7 +4075,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Speed Threshold",							launchSpeedThreshold,  {launchControlEnabled == 1}
 		field = ""
 		field = "Launch RPM",								launchRpm,  {launchControlEnabled == 1}
-		field = "Ignition Retard",				    launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Ignition Retard Adder",				    launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Hard Cut RPM Adder",						hardCutRpmRange,  {launchControlEnabled == 1}
 		;field = "Extra Fuel",							launchFuelAdded,  {launchControlEnabled == 1}
 		;field = "Boost Solenoid Duty",						launchBoostDuty,  {launchControlEnabled == 1}
