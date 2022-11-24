@@ -1,17 +1,14 @@
 package com.rusefi.ui.livedocs;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.live_data_e;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.ldmp.StateDictionary;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rusefi.binaryprotocol.IoHelper.putShort;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 /**
  * Singleton map of all live documentation entities. Using this registry we know all the entities to update periodically.
@@ -51,8 +48,8 @@ public enum LiveDocsRegistry {
             Field[] values = StateDictionary.INSTANCE.getFields(context);
             int size = Field.getStructureSize(values);
             byte[] packet = new byte[4];
-            putShort(packet, 0, swap16(context.ordinal())); // offset
-            putShort(packet, 2, swap16(size));
+            int offset = context.ordinal();
+            ByteRange.packOffsetAndSize(offset, size, packet);
 
             int structOffset = StateDictionary.INSTANCE.getOffset(context);
             byte[] overallOutputs = SensorCentral.getInstance().getResponse();
