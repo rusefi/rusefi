@@ -1,6 +1,9 @@
 	// by definition this should be a copy-paste of https://github.com/rusefi/rusefi/blob/master/firmware/controllers/lua/examples/350z-ac.txt
 	strncpy(config->luaScript, R"(
-canRxAdd(0x35d)
+
+IN_284 = 0x284 -- 644
+IN_285 = 0x285
+IN_35D = 0x35d
 
 OUT_1F9 = 0x1F9 -- 505
 OUT_233 = 0x233 -- 563
@@ -12,6 +15,10 @@ t = Timer.new()
 t : reset()
 
 globalAcOut = 0
+
+function getTwoBytesMSB(data, offset, factor)
+	return (data[offset + 1] * 256 + data[offset + 2]) * factor
+end
 
 function onTick()
     local MAF = getSensor("MAF")
@@ -81,8 +88,11 @@ function onTick()
 	-- print('CLT temp' ..cltValue)
 end
 
+function onCanRxAbs1(bus, id, dlc, data)
+    kph = getTwoBytesMSB(data, 0, 0.005)
+end
 
-function onCanRx(bus, id, dlc, data)
+function onCanRxAc(bus, id, dlc, data)
 	--print('got CAN id=' ..id ..' dlc=' ..dlc)
 	--print('ac value is= '..data[1])
 	if data[1] == 193 then
@@ -96,4 +106,8 @@ function onCanRx(bus, id, dlc, data)
 	end
 
 end
+
+canRxAdd(IN_35D, onCanRxAbs1)
+canRxAdd(IN_35D, onCanRxAc)
+
 )", efi::size(config->luaScript));
