@@ -13,7 +13,9 @@ import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.commands.WriteChunkCommand;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -170,10 +172,10 @@ public class BinaryProtocolServer {
             } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_READ_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
+                DataInputStream dis = WriteChunkCommand.createPayLoadStream(payload);
                 handleRead(linkManager, dis, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
+                DataInputStream dis = WriteChunkCommand.createPayLoadStream(payload);
                 handleWrite(linkManager, payload, dis, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
@@ -201,18 +203,16 @@ public class BinaryProtocolServer {
 
     @NotNull
     public static byte[] getOutputCommandResponse(byte[] payload, byte[] currentOutputs) throws IOException {
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
+        ByteRange byteRange = ByteRange.valueOf(payload);
         if (log.debugEnabled())
-            log.debug("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
+            log.debug("TS_OUTPUT_COMMAND offset=" + byteRange);
 
-        byte[] response = new byte[1 + count];
+        byte[] response = new byte[1 + byteRange.getCount()];
         response[0] = (byte) TS_OK.charAt(0);
         if (MOCK_SD_CARD)
             currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
         if (currentOutputs != null)
-            System.arraycopy(currentOutputs, offset, response, 1, count);
+            System.arraycopy(currentOutputs, byteRange.getOffset(), response, 1, byteRange.getCount());
         return response;
     }
 
