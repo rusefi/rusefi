@@ -16,9 +16,9 @@ import java.io.File;
 class BinaryProtocolServerSandbox {
 
     public static void main(String[] args) {
-        File f = new File(BinaryProtocolServer.TEST_FILE);
-        if (!f.exists())
-            throw new IllegalStateException("File not found: " + BinaryProtocolServer.TEST_FILE);
+//        File f = new File(BinaryProtocolServer.TEST_FILE);
+//        if (!f.exists())
+//            throw new IllegalStateException("File not found: " + BinaryProtocolServer.TEST_FILE);
 
         BinaryProtocolState state = new BinaryProtocolState();
         ConfigurationImage controller = new ConfigurationImage(new byte[Fields.TOTAL_CONFIG_SIZE]);
