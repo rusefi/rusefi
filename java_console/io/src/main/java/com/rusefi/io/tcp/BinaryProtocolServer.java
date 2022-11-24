@@ -245,12 +245,6 @@ public class BinaryProtocolServer {
         return length;
     }
 
-    private static void sendOkResponse(TcpIoStream stream) throws IOException {
-        byte[] response = new byte[1];
-        response[0] = TS_RESPONSE_OK;
-        stream.sendPacket(response);
-    }
-
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
         return getPacketLength(in, protocolCommandHandler, Timeouts.BINARY_IO_TIMEOUT);
     }
@@ -308,7 +302,7 @@ public class BinaryProtocolServer {
         int count = byteRange.getCount();
         log.info("TS_CHUNK_WRITE_COMMAND: offset=" + byteRange);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        bp.setRange(packet, WriteChunkCommand.SCR_POS, offset, count);
+        bp.setRange(packet, WriteChunkCommand.SCR_POS_WITH_SIZE_PREFIX, offset, count);
         stream.sendPacket(TS_OK.getBytes());
     }
 
