@@ -15,7 +15,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.commands.WriteChunkCommand;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -172,11 +171,11 @@ public class BinaryProtocolServer {
             } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_READ_COMMAND) {
-                DataInputStream dis = WriteChunkCommand.createPayLoadStream(payload);
-                handleRead(linkManager, dis, stream);
+                ByteRange byteRange = ByteRange.valueOf(payload);
+                handleRead(linkManager, byteRange, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
-                DataInputStream dis = WriteChunkCommand.createPayLoadStream(payload);
-                handleWrite(linkManager, payload, dis, stream);
+                ByteRange byteRange = ByteRange.valueOf(payload);
+                handleWrite(linkManager, payload, byteRange, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
@@ -305,20 +304,20 @@ public class BinaryProtocolServer {
         outputStream.flush();
     }
 
-    private void handleWrite(LinkManager linkManager, byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
-        log.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
+    private void handleWrite(LinkManager linkManager, byte[] packet, ByteRange byteRange, TcpIoStream stream) throws IOException {
+        int offset = byteRange.getOffset();
+        int count = byteRange.getCount();
+        log.info("TS_CHUNK_WRITE_COMMAND: offset=" + byteRange);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
         bp.setRange(packet, 7, offset, count);
         stream.sendPacket(TS_OK.getBytes());
     }
 
-    private void handleRead(LinkManager linkManager, DataInputStream dis, TcpIoStream stream) throws IOException {
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
+    private void handleRead(LinkManager linkManager, ByteRange byteRange, TcpIoStream stream) throws IOException {
+        int offset = byteRange.getOffset();
+        int count = byteRange.getCount();
         if (count <= 0) {
-            log.info("Error: negative read request " + offset + "/" + count);
+            log.info("Error: negative read request " + byteRange);
         } else {
             if (log.debugEnabled())
                 log.debug("read " + offset + "/" + count);

@@ -1,5 +1,8 @@
 package com.rusefi.io.commands;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -12,6 +15,11 @@ public class ByteRange {
     private ByteRange(int offset, int count) {
         this.offset = offset;
         this.count = count;
+    }
+
+    @NotNull
+    private static DataInputStream createPayLoadStream(byte[] payload) {
+        return new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
     }
 
     public int getOffset() {
@@ -31,7 +39,7 @@ public class ByteRange {
     }
 
     public static ByteRange valueOf(byte[] payload) throws IOException {
-        try (DataInputStream dis = WriteChunkCommand.createPayLoadStream(payload)) {
+        try (DataInputStream dis = createPayLoadStream(payload)) {
             int offset = swap16(dis.readShort());
             int count = swap16(dis.readShort());
             return new ByteRange(offset, count);
