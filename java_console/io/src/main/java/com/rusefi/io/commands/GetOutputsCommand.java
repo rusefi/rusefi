@@ -6,9 +6,6 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 
 import java.io.IOException;
 
-import static com.rusefi.binaryprotocol.IoHelper.putShort;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
-
 public class GetOutputsCommand {
 
     public static byte[] createRequest() {
@@ -17,8 +14,7 @@ public class GetOutputsCommand {
 
     public static byte[] createRequest(int offset, int size) {
         byte[] packet = new byte[4];
-        putShort(packet, 0, swap16(offset));
-        putShort(packet, 2, swap16(size));
+        ByteRange.packOffsetAndSize(offset, size, packet);
         return packet;
     }
 
