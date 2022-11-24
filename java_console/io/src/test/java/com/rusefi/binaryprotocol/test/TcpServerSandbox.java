@@ -5,22 +5,19 @@ import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.ui.StatusConsumer;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.TS_OK;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
@@ -129,9 +126,8 @@ public class TcpServerSandbox {
         } else if (command == Fields.TS_BURN_COMMAND) {
             stream.sendPacket(new byte[]{Fields.TS_RESPONSE_BURN_OK});
         } else if (command == Fields.TS_READ_COMMAND) {
-            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-            int offset = swap16(dis.readShort());
-            int count = swap16(dis.readShort());
+            ByteRange byteRange = ByteRange.valueOf(payload);
+            int count = byteRange.getCount();
             // always all zero response
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);
