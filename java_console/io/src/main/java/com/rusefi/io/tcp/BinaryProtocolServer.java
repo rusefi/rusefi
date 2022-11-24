@@ -15,6 +15,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.commands.WriteChunkCommand;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.*;
 
 /**
@@ -43,14 +43,13 @@ import static com.rusefi.config.generated.Fields.*;
  */
 
 public class BinaryProtocolServer {
-//    public static final String TEST_FILE = "test_log.mlg.Z";
+    //    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
 
     private final static boolean MOCK_SD_CARD = true;
     private static final int SD_STATUS_OFFSET = 246;
-    private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
     static {
         log.configureDebugEnabled(false);
@@ -309,7 +308,7 @@ public class BinaryProtocolServer {
         int count = byteRange.getCount();
         log.info("TS_CHUNK_WRITE_COMMAND: offset=" + byteRange);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        bp.setRange(packet, 7, offset, count);
+        bp.setRange(packet, WriteChunkCommand.SCR_POS, offset, count);
         stream.sendPacket(TS_OK.getBytes());
     }
 
