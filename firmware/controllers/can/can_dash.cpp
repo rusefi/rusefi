@@ -83,7 +83,10 @@ static time_msecs_t mph_ctr;
 #define NISSAN_VEHICLE_SPEED_280 0x280
 // wheel speed see "102 CAN Communication decoded"
 // 19500 value would be 100 kph
-#define NISSAN_WHEEL_SPEED 0x285
+// 644
+#define NISSAN_WHEEL_SPEED1 0x284
+// 645
+#define NISSAN_WHEEL_SPEED2 0x285
 
 // 670
 #define NISSAN_UNKNOWN_4 0x29E
