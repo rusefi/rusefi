@@ -42,7 +42,7 @@ import static com.rusefi.config.generated.Fields.*;
  */
 
 public class BinaryProtocolServer {
-    public static final String TEST_FILE = "test_log.mlg.Z";
+//    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
