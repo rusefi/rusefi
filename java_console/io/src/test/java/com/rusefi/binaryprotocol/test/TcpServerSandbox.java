@@ -122,7 +122,7 @@ public class TcpServerSandbox {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
         } else if (command == Fields.TS_GET_SCATTERED_GET_COMMAND) {
-            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
+//            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
             int startOffset = HIGHSPEEDOFFSETS.getOffset();
             int totalResponseSize = 0;
             for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
@@ -133,7 +133,7 @@ public class TcpServerSandbox {
                 totalResponseSize += size;
 
                 int twoBytes = getByte(startOffset) + (higherByte & 0x1F) * 256;
-                System.out.println("TS_GET_SCATTERED_GET_COMMAND index=" + i + " type=" + type + " offset=" + twoBytes);
+//                System.out.println("TS_GET_SCATTERED_GET_COMMAND index=" + i + " type=" + type + " offset=" + twoBytes);
                 startOffset += 2;
             }
 
