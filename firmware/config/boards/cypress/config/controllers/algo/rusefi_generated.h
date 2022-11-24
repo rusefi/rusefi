@@ -815,6 +815,7 @@
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_NOTE_SIZE 16
 #define GPPWM_RPM_COUNT 8
+#define HIGH_SPEED_COUNT 32
 #define hpfp_cam_e_auto_enum 0="HPFP_CAM_NONE",2="HPFP_CAM_EX1",4="HPFP_CAM_EX2",1="HPFP_CAM_IN1",3="HPFP_CAM_IN2"
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
 #define hpfp_cam_e_HPFP_CAM_EX1 2
@@ -1026,7 +1027,7 @@
 #define SENT_INPUT_COUNT 1
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH snap_40290
+#define SIGNATURE_HASH snap_62968
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1300,7 +1301,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.11.24.cypress.snap_40290"
+#define TS_SIGNATURE "rusEFI 2022.11.24.cypress.snap_62968"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
