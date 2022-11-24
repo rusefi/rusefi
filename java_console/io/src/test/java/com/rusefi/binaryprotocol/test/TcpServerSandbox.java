@@ -30,6 +30,7 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
  * does not have checkCrc32 command implementation so you have to remove it from .ini if you want to connect to this ECU
  *
  * @see TcpClientSandbox
+ * @see BinaryProtocolServerSandbox what's the difference?
  */
 public class TcpServerSandbox {
     private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[Fields.TOTAL_CONFIG_SIZE];
