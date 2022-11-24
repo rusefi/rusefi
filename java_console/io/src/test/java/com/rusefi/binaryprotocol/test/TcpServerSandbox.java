@@ -122,6 +122,12 @@ public class TcpServerSandbox {
         } else if (command == Fields.TS_OUTPUT_COMMAND) {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
+        } else if (command == Fields.TS_GET_SCATTERED_GET_COMMAND) {
+            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
+        } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
+            stream.sendPacket(TS_OK.getBytes());
+        } else if (command == Fields.TS_BURN_COMMAND) {
+            stream.sendPacket(new byte[]{Fields.TS_RESPONSE_BURN_OK});
         } else if (command == Fields.TS_READ_COMMAND) {
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
             int offset = swap16(dis.readShort());
