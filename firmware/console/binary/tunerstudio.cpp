@@ -213,7 +213,21 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_
 }
 
 void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
+	int totalResponseSize = 0;
+	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
+		int packed = engineConfiguration->highSpeedOffsets[i];
+		int type = packed >> 13;
+		int offset = packed & 0x1FFF;
 
+		int size = type == 0 ? 0 : 1 << type;
+		totalResponseSize += size;
+	}
+
+
+	// Command part of CRC
+	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
+
+	uint8_t crcBuffer[4];
 }
 
 /**
