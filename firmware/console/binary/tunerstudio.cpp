@@ -355,6 +355,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
+			|| command == TS_GET_SCATTERED_GET_COMMAND
 			|| command == TS_SET_LOGGER_SWITCH
 			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
