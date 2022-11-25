@@ -75,6 +75,7 @@
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
 #include "electronic_throttle.h"
+#include "live_data.h"
 
 #include <string.h>
 #include "bench_test.h"
@@ -217,7 +218,6 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
 		int packed = engineConfiguration->highSpeedOffsets[i];
 		int type = packed >> 13;
-		int offset = packed & 0x1FFF;
 
 		int size = type == 0 ? 0 : 1 << type;
 		totalResponseSize += size;
@@ -227,7 +227,25 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	// Command part of CRC
 	uint32_t crc = tsChannel->writePacketHeader(TS_RESPONSE_OK, totalResponseSize);
 
-	uint8_t crcBuffer[4];
+	uint8_t dataBuffer[8];
+	for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
+		int packed = engineConfiguration->highSpeedOffsets[i];
+		int type = packed >> 13;
+		int offset = packed & 0x1FFF;
+
+		if (type == 0)
+			continue;
+		int size = 1 << type;
+
+		// write each data point and CRC incrementally
+		copyRange(dataBuffer, getLiveDataFragments(), offset, size);
+		tsChannel->write(dataBuffer, size, false);
+		crc = crc32inc((void*)dataBuffer, crc, size);
+	}
+	// now write total CRC
+	*(uint32_t*)dataBuffer = SWAP_UINT32(crc);
+	tsChannel->write(reinterpret_cast<uint8_t*>(dataBuffer), 4, true);
+	tsChannel->flush();
 }
 
 /**
