@@ -61,7 +61,8 @@ public:
 	const char *name;
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
-	void crcAndWriteBuffer(uint8_t responseCode, size_t size);
+	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
+	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 
 	/* When TsChannel is in "not in sync" state tsProcessOne will silently try to find

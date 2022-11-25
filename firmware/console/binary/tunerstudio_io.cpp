@@ -55,21 +55,26 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 	flush();
 }
 
-void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size) {
+uint32_t TsChannelBase::writePacketHeader(const uint8_t responseCode, const size_t size) {
 	uint8_t headerBuffer[3];
-	uint8_t crcBuffer[4];
-
 	*(uint16_t*)headerBuffer = SWAP_UINT16(size + 1);
 	*(uint8_t*)(headerBuffer + 2) = responseCode;
+	// Write header
+	write(headerBuffer, sizeof(headerBuffer), /*isEndOfPacket*/false);
+
+	 // Command part of CRC
+	return crc32((void*)(headerBuffer + 2), 1);
+}
+
+void TsChannelBase::writeCrcPacketLarge(const uint8_t responseCode, const uint8_t* buf, const size_t size) {
+	uint8_t crcBuffer[4];
 
 	// Command part of CRC
-	uint32_t crc = crc32((void*)(headerBuffer + 2), 1);
+	uint32_t crc = writePacketHeader(responseCode, size);
 	// Data part of CRC
 	crc = crc32inc((void*)buf, crc, size);
 	*(uint32_t*)crcBuffer = SWAP_UINT32(crc);
 
-	// Write header
-	write(headerBuffer, sizeof(headerBuffer), /*isEndOfPacket*/false);
 
 	// If data, write that
 	if (size) {
