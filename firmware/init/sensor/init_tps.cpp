@@ -8,6 +8,10 @@
 #include "linear_func.h"
 #include "tps.h"
 
+#ifndef MAX_TPS_PPS_DISCREPANCY
+#define MAX_TPS_PPS_DISCREPANCY 5.0f
+#endif
+
 struct TpsConfig {
 	adc_channel_e channel;
 	float closed;
@@ -118,7 +122,7 @@ public:
 			fordTps->Register();
 		} else {
 			// not ford TPS
-			m_redund.configure(5.0f, !hasSecond);
+			m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond);
 			m_redund.Register();
 		}
 	}
