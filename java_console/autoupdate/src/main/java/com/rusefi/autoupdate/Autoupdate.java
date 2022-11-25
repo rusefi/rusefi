@@ -21,7 +21,9 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
-    private static final String TITLE = "rusEFI Bundle Updater 20220717";
+    private static final String LOGO_PATH = "/com/rusefi/";
+    private static final String LOGO = LOGO_PATH + "logo.png";
+    private static final String TITLE = "rusEFI Bundle Updater 20221125";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
@@ -138,7 +140,11 @@ public class Autoupdate {
                 frameClosed.countDown();
             }
         };
-        frameHelper.getFrame().setTitle(TITLE);
+        JFrame frame = frameHelper.getFrame();
+        frame.setTitle(TITLE);
+        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
         JPanel choice = new JPanel(new BorderLayout());
 
         choice.add(new JLabel("Do you want to update bundle to latest version?"), BorderLayout.NORTH);
@@ -151,7 +157,7 @@ public class Autoupdate {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.NEVER.toString());
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(never);
@@ -161,7 +167,7 @@ public class Autoupdate {
         no.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(no);
@@ -171,7 +177,7 @@ public class Autoupdate {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doUpdate.set(true);
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(once);
@@ -183,7 +189,7 @@ public class Autoupdate {
             public void actionPerformed(ActionEvent e) {
                 PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.ALWAYS.toString());
                 doUpdate.set(true);
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(always);
