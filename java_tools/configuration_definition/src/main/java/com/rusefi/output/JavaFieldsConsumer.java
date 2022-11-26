@@ -120,7 +120,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private String terminateField() {
-        return //".setBaseOffset(" + baseOffset + ")" +
+        return ".setBaseOffset(" + baseOffset + ")" +
                 ";" + EOL;
     }
 }
