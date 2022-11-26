@@ -140,12 +140,6 @@ const electronic_throttle_s* getLiveDataAddr(size_t) {
 	return nullptr;
 }
 
-#if EFI_UNIT_TEST
-FragmentList getLiveDataFragments() {
-	return { nullptr, 0 };
-}
-#else
-
 static const FragmentEntry fragments[] = {
 // This header is generated - do not edit by hand!
 #include "live_data_fragments.h"
@@ -154,5 +148,3 @@ static const FragmentEntry fragments[] = {
 FragmentList getLiveDataFragments() {
 	return { fragments, efi::size(fragments) };
 }
-
-#endif
