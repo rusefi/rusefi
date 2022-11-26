@@ -878,10 +878,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
 	// voltage, not ADC like with TPS
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 5;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
+	setPPSCalibration(0, 5, 5, 0);
 
 	engineConfiguration->etb = {
 		1,		// Kp
