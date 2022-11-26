@@ -597,6 +597,7 @@ public class BinaryProtocol {
 
             // Copy this chunk in to the reassembly buffer
             System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+            reassemblyIdx += chunkSize;
             remaining -= chunkSize;
         }
 
