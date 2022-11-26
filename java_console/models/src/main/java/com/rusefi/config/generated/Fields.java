@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 02:30:42 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 05:30:29 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1280,7 +1280,6 @@ public class Fields {
 	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 120, FieldType.BIT, 28);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 120, FieldType.BIT, 29);
 	public static final Field ISSUE_294_31 = Field.create("ISSUE_294_31", 120, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_45_31 = Field.create("UNUSEDBIT_45_31", 120, FieldType.BIT, 31);
 	public static final Field TPSMIN = Field.create("TPSMIN", 124, FieldType.INT16).setScale(1.0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 126, FieldType.INT16).setScale(1.0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 128, FieldType.INT16).setScale(1.0);
@@ -1539,9 +1538,7 @@ public class Fields {
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 764, FieldType.BIT, 12);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 764, FieldType.BIT, 13);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 764, FieldType.BIT, 14);
-	public static final Field UNUSEDALTEONOFF = Field.create("UNUSEDALTEONOFF", 764, FieldType.BIT, 15);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 764, FieldType.BIT, 16);
-	public static final Field UNUSED764B17 = Field.create("UNUSED764B17", 764, FieldType.BIT, 17);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 764, FieldType.BIT, 18);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 764, FieldType.BIT, 19);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 764, FieldType.BIT, 20);
@@ -1844,7 +1841,6 @@ public class Fields {
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1372, FieldType.BIT, 10);
 	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1372, FieldType.BIT, 11);
 	public static final Field TWOWIREBATCHINJECTION = Field.create("TWOWIREBATCHINJECTION", 1372, FieldType.BIT, 12);
-	public static final Field UNUSED1372B13 = Field.create("UNUSED1372B13", 1372, FieldType.BIT, 13);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1372, FieldType.BIT, 14);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1372, FieldType.BIT, 15);
 	public static final Field USESEPARATEADVANCEFORCRANKING = Field.create("USESEPARATEADVANCEFORCRANKING", 1372, FieldType.BIT, 16);
@@ -1859,9 +1855,6 @@ public class Fields {
 	public static final Field INVERTVVTCONTROLINTAKE = Field.create("INVERTVVTCONTROLINTAKE", 1372, FieldType.BIT, 25);
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26);
 	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1372, FieldType.BIT, 27);
-	public static final Field UNUSED_1484_BIT_38 = Field.create("UNUSED_1484_BIT_38", 1372, FieldType.BIT, 28);
-	public static final Field UNUSED_1484_BIT_29 = Field.create("UNUSED_1484_BIT_29", 1372, FieldType.BIT, 29);
-	public static final Field UNUSED_1484_BIT_30 = Field.create("UNUSED_1484_BIT_30", 1372, FieldType.BIT, 30);
 	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1372, FieldType.BIT, 31);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1376, FieldType.INT).setScale(1.0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1380, FieldType.FLOAT);
@@ -1972,34 +1965,6 @@ public class Fields {
 	public static final Field CANOPENBLT = Field.create("CANOPENBLT", 1628, FieldType.BIT, 1);
 	public static final Field CAN2OPENBLT = Field.create("CAN2OPENBLT", 1628, FieldType.BIT, 2);
 	public static final Field INJECTORFLOWASMASSFLOW = Field.create("INJECTORFLOWASMASSFLOW", 1628, FieldType.BIT, 3);
-	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1628, FieldType.BIT, 4);
-	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1628, FieldType.BIT, 5);
-	public static final Field UNUSED1129 = Field.create("UNUSED1129", 1628, FieldType.BIT, 6);
-	public static final Field UNUSED1130 = Field.create("UNUSED1130", 1628, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_541_8 = Field.create("UNUSEDBIT_541_8", 1628, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_541_9 = Field.create("UNUSEDBIT_541_9", 1628, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_541_10 = Field.create("UNUSEDBIT_541_10", 1628, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_541_11 = Field.create("UNUSEDBIT_541_11", 1628, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_541_12 = Field.create("UNUSEDBIT_541_12", 1628, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_541_13 = Field.create("UNUSEDBIT_541_13", 1628, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_541_14 = Field.create("UNUSEDBIT_541_14", 1628, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_541_15 = Field.create("UNUSEDBIT_541_15", 1628, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_541_16 = Field.create("UNUSEDBIT_541_16", 1628, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_541_17 = Field.create("UNUSEDBIT_541_17", 1628, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_541_18 = Field.create("UNUSEDBIT_541_18", 1628, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_541_19 = Field.create("UNUSEDBIT_541_19", 1628, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_541_20 = Field.create("UNUSEDBIT_541_20", 1628, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_541_21 = Field.create("UNUSEDBIT_541_21", 1628, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_541_22 = Field.create("UNUSEDBIT_541_22", 1628, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_541_23 = Field.create("UNUSEDBIT_541_23", 1628, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_541_24 = Field.create("UNUSEDBIT_541_24", 1628, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_541_25 = Field.create("UNUSEDBIT_541_25", 1628, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_541_26 = Field.create("UNUSEDBIT_541_26", 1628, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_541_27 = Field.create("UNUSEDBIT_541_27", 1628, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_541_28 = Field.create("UNUSEDBIT_541_28", 1628, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_541_29 = Field.create("UNUSEDBIT_541_29", 1628, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_541_30 = Field.create("UNUSEDBIT_541_30", 1628, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_541_31 = Field.create("UNUSEDBIT_541_31", 1628, FieldType.BIT, 31);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 1632, FieldType.INT8).setScale(5.0);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1633, FieldType.INT8).setScale(1.0);
 	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1634, FieldType.INT8).setScale(5.0);
@@ -2739,7 +2704,6 @@ public class Fields {
 	VERBOSECAN,
 	ARTIFICIALTESTMISFIRE,
 	ISSUE_294_31,
-	UNUSEDBIT_45_31,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,
@@ -2988,9 +2952,7 @@ public class Fields {
 	USELCDSCREEN,
 	VERBOSETLE8888,
 	ENABLEVERBOSECANTX,
-	UNUSEDALTEONOFF,
 	ISCJ125ENABLED,
-	UNUSED764B17,
 	MEASUREMAPONLYINONECYLINDER,
 	STEPPERFORCEPARKINGEVERYRESTART,
 	ISFASTERENGINESPINUPENABLED,
@@ -3289,7 +3251,6 @@ public class Fields {
 	VERBOSETRIGGERSYNCHDETAILS,
 	ISMANUALSPINNINGMODE,
 	TWOWIREBATCHINJECTION,
-	UNUSED1372B13,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,
 	USESEPARATEADVANCEFORCRANKING,
@@ -3304,9 +3265,6 @@ public class Fields {
 	INVERTVVTCONTROLINTAKE,
 	INVERTVVTCONTROLEXHAUST,
 	USEBIQUADONAUXSPEEDSENSORS,
-	UNUSED_1484_BIT_38,
-	UNUSED_1484_BIT_29,
-	UNUSED_1484_BIT_30,
 	TEMPBOOLEANFORVERYSPECIALLOGIC,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
@@ -3413,34 +3371,6 @@ public class Fields {
 	CANOPENBLT,
 	CAN2OPENBLT,
 	INJECTORFLOWASMASSFLOW,
-	UNUSED1127,
-	UNUSED1128,
-	UNUSED1129,
-	UNUSED1130,
-	UNUSEDBIT_541_8,
-	UNUSEDBIT_541_9,
-	UNUSEDBIT_541_10,
-	UNUSEDBIT_541_11,
-	UNUSEDBIT_541_12,
-	UNUSEDBIT_541_13,
-	UNUSEDBIT_541_14,
-	UNUSEDBIT_541_15,
-	UNUSEDBIT_541_16,
-	UNUSEDBIT_541_17,
-	UNUSEDBIT_541_18,
-	UNUSEDBIT_541_19,
-	UNUSEDBIT_541_20,
-	UNUSEDBIT_541_21,
-	UNUSEDBIT_541_22,
-	UNUSEDBIT_541_23,
-	UNUSEDBIT_541_24,
-	UNUSEDBIT_541_25,
-	UNUSEDBIT_541_26,
-	UNUSEDBIT_541_27,
-	UNUSEDBIT_541_28,
-	UNUSEDBIT_541_29,
-	UNUSEDBIT_541_30,
-	UNUSEDBIT_541_31,
 	BENCHTESTOFFTIME,
 	BENCHTESTCOUNT,
 	BENCHTESTONTIME,

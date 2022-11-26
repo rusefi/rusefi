@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Thu Nov 24 03:15:51 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sat Nov 26 05:29:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -396,69 +396,7 @@ public class TriggerStatePrimary {
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 0, FieldType.BIT, 0);
-	public static final Field UNUSEDBIT_1_1 = Field.create("UNUSEDBIT_1_1", 0, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_1_2 = Field.create("UNUSEDBIT_1_2", 0, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_1_3 = Field.create("UNUSEDBIT_1_3", 0, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_1_4 = Field.create("UNUSEDBIT_1_4", 0, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_1_5 = Field.create("UNUSEDBIT_1_5", 0, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_1_6 = Field.create("UNUSEDBIT_1_6", 0, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_1_7 = Field.create("UNUSEDBIT_1_7", 0, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_1_8 = Field.create("UNUSEDBIT_1_8", 0, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_1_9 = Field.create("UNUSEDBIT_1_9", 0, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_1_10 = Field.create("UNUSEDBIT_1_10", 0, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_1_11 = Field.create("UNUSEDBIT_1_11", 0, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_1_12 = Field.create("UNUSEDBIT_1_12", 0, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_1_13 = Field.create("UNUSEDBIT_1_13", 0, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_1_14 = Field.create("UNUSEDBIT_1_14", 0, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_1_15 = Field.create("UNUSEDBIT_1_15", 0, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_1_16 = Field.create("UNUSEDBIT_1_16", 0, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_1_17 = Field.create("UNUSEDBIT_1_17", 0, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_1_18 = Field.create("UNUSEDBIT_1_18", 0, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_1_19 = Field.create("UNUSEDBIT_1_19", 0, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_1_20 = Field.create("UNUSEDBIT_1_20", 0, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_1_21 = Field.create("UNUSEDBIT_1_21", 0, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_1_22 = Field.create("UNUSEDBIT_1_22", 0, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_1_23 = Field.create("UNUSEDBIT_1_23", 0, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_1_24 = Field.create("UNUSEDBIT_1_24", 0, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_1_25 = Field.create("UNUSEDBIT_1_25", 0, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_1_26 = Field.create("UNUSEDBIT_1_26", 0, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_1_27 = Field.create("UNUSEDBIT_1_27", 0, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_1_28 = Field.create("UNUSEDBIT_1_28", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_1_29 = Field.create("UNUSEDBIT_1_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_1_30 = Field.create("UNUSEDBIT_1_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_1_31 = Field.create("UNUSEDBIT_1_31", 0, FieldType.BIT, 31);
 	public static final Field[] VALUES = {
 	M_HASSYNCHRONIZEDPHASE,
-	UNUSEDBIT_1_1,
-	UNUSEDBIT_1_2,
-	UNUSEDBIT_1_3,
-	UNUSEDBIT_1_4,
-	UNUSEDBIT_1_5,
-	UNUSEDBIT_1_6,
-	UNUSEDBIT_1_7,
-	UNUSEDBIT_1_8,
-	UNUSEDBIT_1_9,
-	UNUSEDBIT_1_10,
-	UNUSEDBIT_1_11,
-	UNUSEDBIT_1_12,
-	UNUSEDBIT_1_13,
-	UNUSEDBIT_1_14,
-	UNUSEDBIT_1_15,
-	UNUSEDBIT_1_16,
-	UNUSEDBIT_1_17,
-	UNUSEDBIT_1_18,
-	UNUSEDBIT_1_19,
-	UNUSEDBIT_1_20,
-	UNUSEDBIT_1_21,
-	UNUSEDBIT_1_22,
-	UNUSEDBIT_1_23,
-	UNUSEDBIT_1_24,
-	UNUSEDBIT_1_25,
-	UNUSEDBIT_1_26,
-	UNUSEDBIT_1_27,
-	UNUSEDBIT_1_28,
-	UNUSEDBIT_1_29,
-	UNUSEDBIT_1_30,
-	UNUSEDBIT_1_31,
 	};
 }

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Thu Nov 24 03:15:51 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Nov 26 05:29:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -402,37 +402,6 @@ public class FuelComputer {
 	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 8, FieldType.FLOAT);
 	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 12, FieldType.FLOAT);
 	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 16, FieldType.BIT, 0);
-	public static final Field UNUSEDBIT_7_1 = Field.create("UNUSEDBIT_7_1", 16, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_7_2 = Field.create("UNUSEDBIT_7_2", 16, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_7_3 = Field.create("UNUSEDBIT_7_3", 16, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_7_4 = Field.create("UNUSEDBIT_7_4", 16, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_7_5 = Field.create("UNUSEDBIT_7_5", 16, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_7_6 = Field.create("UNUSEDBIT_7_6", 16, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_7_7 = Field.create("UNUSEDBIT_7_7", 16, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_7_8 = Field.create("UNUSEDBIT_7_8", 16, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_7_9 = Field.create("UNUSEDBIT_7_9", 16, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_7_10 = Field.create("UNUSEDBIT_7_10", 16, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_7_11 = Field.create("UNUSEDBIT_7_11", 16, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_7_12 = Field.create("UNUSEDBIT_7_12", 16, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_7_13 = Field.create("UNUSEDBIT_7_13", 16, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_7_14 = Field.create("UNUSEDBIT_7_14", 16, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_7_15 = Field.create("UNUSEDBIT_7_15", 16, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_7_16 = Field.create("UNUSEDBIT_7_16", 16, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_7_17 = Field.create("UNUSEDBIT_7_17", 16, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_7_18 = Field.create("UNUSEDBIT_7_18", 16, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_7_19 = Field.create("UNUSEDBIT_7_19", 16, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_7_20 = Field.create("UNUSEDBIT_7_20", 16, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_7_21 = Field.create("UNUSEDBIT_7_21", 16, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_7_22 = Field.create("UNUSEDBIT_7_22", 16, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_7_23 = Field.create("UNUSEDBIT_7_23", 16, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_7_24 = Field.create("UNUSEDBIT_7_24", 16, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_7_25 = Field.create("UNUSEDBIT_7_25", 16, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_7_26 = Field.create("UNUSEDBIT_7_26", 16, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_7_27 = Field.create("UNUSEDBIT_7_27", 16, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_7_28 = Field.create("UNUSEDBIT_7_28", 16, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_7_29 = Field.create("UNUSEDBIT_7_29", 16, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_7_30 = Field.create("UNUSEDBIT_7_30", 16, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_7_31 = Field.create("UNUSEDBIT_7_31", 16, FieldType.BIT, 31);
 	public static final Field[] VALUES = {
 	AFRTABLEYAXIS,
 	TARGETLAMBDA,
@@ -441,36 +410,5 @@ public class FuelComputer {
 	SDTCHARGE_COFF,
 	SDAIRMASSINONECYLINDER,
 	SDISTCHARGEAIRMODEL,
-	UNUSEDBIT_7_1,
-	UNUSEDBIT_7_2,
-	UNUSEDBIT_7_3,
-	UNUSEDBIT_7_4,
-	UNUSEDBIT_7_5,
-	UNUSEDBIT_7_6,
-	UNUSEDBIT_7_7,
-	UNUSEDBIT_7_8,
-	UNUSEDBIT_7_9,
-	UNUSEDBIT_7_10,
-	UNUSEDBIT_7_11,
-	UNUSEDBIT_7_12,
-	UNUSEDBIT_7_13,
-	UNUSEDBIT_7_14,
-	UNUSEDBIT_7_15,
-	UNUSEDBIT_7_16,
-	UNUSEDBIT_7_17,
-	UNUSEDBIT_7_18,
-	UNUSEDBIT_7_19,
-	UNUSEDBIT_7_20,
-	UNUSEDBIT_7_21,
-	UNUSEDBIT_7_22,
-	UNUSEDBIT_7_23,
-	UNUSEDBIT_7_24,
-	UNUSEDBIT_7_25,
-	UNUSEDBIT_7_26,
-	UNUSEDBIT_7_27,
-	UNUSEDBIT_7_28,
-	UNUSEDBIT_7_29,
-	UNUSEDBIT_7_30,
-	UNUSEDBIT_7_31,
 	};
 }
