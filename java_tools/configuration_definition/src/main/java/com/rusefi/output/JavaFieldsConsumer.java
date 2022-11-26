@@ -15,9 +15,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
     protected final ReaderState state;
+    private final int baseOffset;
 
-    public JavaFieldsConsumer(ReaderState state) {
+    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
         this.state = state;
+        this.baseOffset = baseOffset;
     }
 
     public String getContent() {
@@ -71,14 +73,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
                 if (configField.isBit()) {
                     writeJavaFieldName(nameWithPrefix, tsPosition, 1);
-                    content.append("FieldType.BIT, " + bitIndex + ");" + EOL);
+                    content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
 
                 if (TypesHelper.isFloat(configField.getType())) {
                     writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
-                    content.append("FieldType.FLOAT);" + EOL);
+                    content.append("FieldType.FLOAT)" + terminateField());
                 } else {
                     String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
                     if (enumOptions == null)
@@ -103,7 +105,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                         content.append(", " + configField.getType());
                     }
                     content.append(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
-                            ";" + EOL);
+                            terminateField());
                 }
 
                 tsPosition += configField.getSize(next);
@@ -112,5 +114,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             }
         };
         fieldsStrategy.run(state, structure, 0);
+    }
+
+    private String terminateField() {
+        return //".setBaseOffset(" + baseOffset + ")" +
+                ";" + EOL;
     }
 }
