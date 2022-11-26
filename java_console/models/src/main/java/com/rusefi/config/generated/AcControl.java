@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Thu Nov 24 03:15:51 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Nov 26 05:29:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -404,29 +404,6 @@ public class AcControl {
 	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6);
 	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7);
 	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 0, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_9_9 = Field.create("UNUSEDBIT_9_9", 0, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_9_10 = Field.create("UNUSEDBIT_9_10", 0, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_9_11 = Field.create("UNUSEDBIT_9_11", 0, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_9_12 = Field.create("UNUSEDBIT_9_12", 0, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_9_13 = Field.create("UNUSEDBIT_9_13", 0, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_9_14 = Field.create("UNUSEDBIT_9_14", 0, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_9_15 = Field.create("UNUSEDBIT_9_15", 0, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_9_16 = Field.create("UNUSEDBIT_9_16", 0, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_9_17 = Field.create("UNUSEDBIT_9_17", 0, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_9_18 = Field.create("UNUSEDBIT_9_18", 0, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_9_19 = Field.create("UNUSEDBIT_9_19", 0, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_9_20 = Field.create("UNUSEDBIT_9_20", 0, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_9_21 = Field.create("UNUSEDBIT_9_21", 0, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_9_22 = Field.create("UNUSEDBIT_9_22", 0, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_9_23 = Field.create("UNUSEDBIT_9_23", 0, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_9_24 = Field.create("UNUSEDBIT_9_24", 0, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_9_25 = Field.create("UNUSEDBIT_9_25", 0, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_9_26 = Field.create("UNUSEDBIT_9_26", 0, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_9_27 = Field.create("UNUSEDBIT_9_27", 0, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_9_28 = Field.create("UNUSEDBIT_9_28", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_9_29 = Field.create("UNUSEDBIT_9_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_9_30 = Field.create("UNUSEDBIT_9_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_9_31 = Field.create("UNUSEDBIT_9_31", 0, FieldType.BIT, 31);
 	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0);
 	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0);
 	public static final Field[] VALUES = {
@@ -439,29 +416,6 @@ public class AcControl {
 	TPSTOOHIGH,
 	ISDISABLEDBYLUA,
 	ACCOMPRESSORSTATE,
-	UNUSEDBIT_9_9,
-	UNUSEDBIT_9_10,
-	UNUSEDBIT_9_11,
-	UNUSEDBIT_9_12,
-	UNUSEDBIT_9_13,
-	UNUSEDBIT_9_14,
-	UNUSEDBIT_9_15,
-	UNUSEDBIT_9_16,
-	UNUSEDBIT_9_17,
-	UNUSEDBIT_9_18,
-	UNUSEDBIT_9_19,
-	UNUSEDBIT_9_20,
-	UNUSEDBIT_9_21,
-	UNUSEDBIT_9_22,
-	UNUSEDBIT_9_23,
-	UNUSEDBIT_9_24,
-	UNUSEDBIT_9_25,
-	UNUSEDBIT_9_26,
-	UNUSEDBIT_9_27,
-	UNUSEDBIT_9_28,
-	UNUSEDBIT_9_29,
-	UNUSEDBIT_9_30,
-	UNUSEDBIT_9_31,
 	LATEST_USAGE_AC_CONTROL,
 	ACSWITCHLASTCHANGETIMEMS,
 	};

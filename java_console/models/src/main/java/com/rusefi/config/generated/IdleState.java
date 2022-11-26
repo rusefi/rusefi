@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sun Oct 30 21:54:10 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Sat Nov 26 05:29:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -28,21 +28,6 @@ public class IdleState {
 	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 20, FieldType.BIT, 14);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 20, FieldType.BIT, 15);
 	public static final Field ISIDLECOASTING = Field.create("ISIDLECOASTING", 20, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_22_17 = Field.create("UNUSEDBIT_22_17", 20, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_22_18 = Field.create("UNUSEDBIT_22_18", 20, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_22_19 = Field.create("UNUSEDBIT_22_19", 20, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_22_20 = Field.create("UNUSEDBIT_22_20", 20, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_22_21 = Field.create("UNUSEDBIT_22_21", 20, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_22_22 = Field.create("UNUSEDBIT_22_22", 20, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_22_23 = Field.create("UNUSEDBIT_22_23", 20, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_22_24 = Field.create("UNUSEDBIT_22_24", 20, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_22_25 = Field.create("UNUSEDBIT_22_25", 20, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_22_26 = Field.create("UNUSEDBIT_22_26", 20, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_22_27 = Field.create("UNUSEDBIT_22_27", 20, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_22_28 = Field.create("UNUSEDBIT_22_28", 20, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_22_29 = Field.create("UNUSEDBIT_22_29", 20, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_22_30 = Field.create("UNUSEDBIT_22_30", 20, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_22_31 = Field.create("UNUSEDBIT_22_31", 20, FieldType.BIT, 31);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 24, FieldType.INT).setScale(1.0);
 	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 28, FieldType.INT).setScale(1.0);
 	public static final Field IACBYRPMTAPER = Field.create("IACBYRPMTAPER", 32, FieldType.FLOAT);
@@ -70,21 +55,6 @@ public class IdleState {
 	LOOKSLIKECRANKTOIDLE,
 	ISVERBOSEIAC,
 	ISIDLECOASTING,
-	UNUSEDBIT_22_17,
-	UNUSEDBIT_22_18,
-	UNUSEDBIT_22_19,
-	UNUSEDBIT_22_20,
-	UNUSEDBIT_22_21,
-	UNUSEDBIT_22_22,
-	UNUSEDBIT_22_23,
-	UNUSEDBIT_22_24,
-	UNUSEDBIT_22_25,
-	UNUSEDBIT_22_26,
-	UNUSEDBIT_22_27,
-	UNUSEDBIT_22_28,
-	UNUSEDBIT_22_29,
-	UNUSEDBIT_22_30,
-	UNUSEDBIT_22_31,
 	TARGETRPMBYCLT,
 	TARGETRPMACBUMP,
 	IACBYRPMTAPER,

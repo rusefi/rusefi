@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Nov 24 03:15:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 26 05:29:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -397,22 +397,17 @@ public class TsOutputs {
 	public static final int WWAE_TABLE_SIZE = 8;
 	public static final Field SD_PRESENT = Field.create("SD_PRESENT", 0, FieldType.BIT, 0);
 	public static final Field SD_LOGGING_INTERNAL = Field.create("SD_LOGGING_INTERNAL", 0, FieldType.BIT, 1);
-	public static final Field UNUSEDB4 = Field.create("UNUSEDB4", 0, FieldType.BIT, 2);
-	public static final Field UNUSEDB5 = Field.create("UNUSEDB5", 0, FieldType.BIT, 3);
 	public static final Field ISFANON = Field.create("ISFANON", 0, FieldType.BIT, 4);
 	public static final Field ISO2HEATERON = Field.create("ISO2HEATERON", 0, FieldType.BIT, 5);
 	public static final Field CHECKENGINE = Field.create("CHECKENGINE", 0, FieldType.BIT, 6);
 	public static final Field NEEDBURN = Field.create("NEEDBURN", 0, FieldType.BIT, 7);
 	public static final Field SD_MSD = Field.create("SD_MSD", 0, FieldType.BIT, 8);
 	public static final Field ISFAN2ON = Field.create("ISFAN2ON", 0, FieldType.BIT, 9);
-	public static final Field UNUSEDBITLATWFS = Field.create("UNUSEDBITLATWFS", 0, FieldType.BIT, 10);
 	public static final Field TOOTHLOGREADY = Field.create("TOOTHLOGREADY", 0, FieldType.BIT, 11);
-	public static final Field UNUSED3123 = Field.create("UNUSED3123", 0, FieldType.BIT, 12);
 	public static final Field ISTPSERROR = Field.create("ISTPSERROR", 0, FieldType.BIT, 13);
 	public static final Field ISCLTERROR = Field.create("ISCLTERROR", 0, FieldType.BIT, 14);
 	public static final Field ISMAPERROR = Field.create("ISMAPERROR", 0, FieldType.BIT, 15);
 	public static final Field ISIATERROR = Field.create("ISIATERROR", 0, FieldType.BIT, 16);
-	public static final Field UNUSED131313 = Field.create("UNUSED131313", 0, FieldType.BIT, 17);
 	public static final Field ISTRIGGERERROR = Field.create("ISTRIGGERERROR", 0, FieldType.BIT, 18);
 	public static final Field HASCRITICALERROR = Field.create("HASCRITICALERROR", 0, FieldType.BIT, 19);
 	public static final Field ISWARNNOW = Field.create("ISWARNNOW", 0, FieldType.BIT, 20);
@@ -421,12 +416,6 @@ public class TsOutputs {
 	public static final Field LAUNCHTRIGGERED = Field.create("LAUNCHTRIGGERED", 0, FieldType.BIT, 23);
 	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 24);
 	public static final Field ISIDLECLOSEDLOOP = Field.create("ISIDLECLOSEDLOOP", 0, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_26_26 = Field.create("UNUSEDBIT_26_26", 0, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_26_27 = Field.create("UNUSEDBIT_26_27", 0, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_26_28 = Field.create("UNUSEDBIT_26_28", 0, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_26_29 = Field.create("UNUSEDBIT_26_29", 0, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_26_30 = Field.create("UNUSEDBIT_26_30", 0, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_26_31 = Field.create("UNUSEDBIT_26_31", 0, FieldType.BIT, 31);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01);
@@ -589,36 +578,6 @@ public class TsOutputs {
 	public static final Field CALIBRATIONVALUE2 = Field.create("CALIBRATIONVALUE2", 324, FieldType.FLOAT);
 	public static final Field ISMAINRELAYON = Field.create("ISMAINRELAYON", 328, FieldType.BIT, 0);
 	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 328, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_165_2 = Field.create("UNUSEDBIT_165_2", 328, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_165_3 = Field.create("UNUSEDBIT_165_3", 328, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_165_4 = Field.create("UNUSEDBIT_165_4", 328, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_165_5 = Field.create("UNUSEDBIT_165_5", 328, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_165_6 = Field.create("UNUSEDBIT_165_6", 328, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_165_7 = Field.create("UNUSEDBIT_165_7", 328, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_165_8 = Field.create("UNUSEDBIT_165_8", 328, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_165_9 = Field.create("UNUSEDBIT_165_9", 328, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_165_10 = Field.create("UNUSEDBIT_165_10", 328, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_165_11 = Field.create("UNUSEDBIT_165_11", 328, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_165_12 = Field.create("UNUSEDBIT_165_12", 328, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_165_13 = Field.create("UNUSEDBIT_165_13", 328, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_165_14 = Field.create("UNUSEDBIT_165_14", 328, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_165_15 = Field.create("UNUSEDBIT_165_15", 328, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_165_16 = Field.create("UNUSEDBIT_165_16", 328, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_165_17 = Field.create("UNUSEDBIT_165_17", 328, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_165_18 = Field.create("UNUSEDBIT_165_18", 328, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_165_19 = Field.create("UNUSEDBIT_165_19", 328, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_165_20 = Field.create("UNUSEDBIT_165_20", 328, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_165_21 = Field.create("UNUSEDBIT_165_21", 328, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_165_22 = Field.create("UNUSEDBIT_165_22", 328, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_165_23 = Field.create("UNUSEDBIT_165_23", 328, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_165_24 = Field.create("UNUSEDBIT_165_24", 328, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_165_25 = Field.create("UNUSEDBIT_165_25", 328, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_165_26 = Field.create("UNUSEDBIT_165_26", 328, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_165_27 = Field.create("UNUSEDBIT_165_27", 328, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_165_28 = Field.create("UNUSEDBIT_165_28", 328, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_165_29 = Field.create("UNUSEDBIT_165_29", 328, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_165_30 = Field.create("UNUSEDBIT_165_30", 328, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_165_31 = Field.create("UNUSEDBIT_165_31", 328, FieldType.BIT, 31);
 	public static final Field LUAINVOCATIONCOUNTER = Field.create("LUAINVOCATIONCOUNTER", 332, FieldType.INT).setScale(1.0);
 	public static final Field LUALASTCYCLEDURATION = Field.create("LUALASTCYCLEDURATION", 336, FieldType.INT).setScale(1.0);
 	public static final Field TESTBENCHITER = Field.create("TESTBENCHITER", 340, FieldType.INT8).setScale(1.0);
@@ -631,36 +590,6 @@ public class TsOutputs {
 	public static final Field AUXLINEAR2 = Field.create("AUXLINEAR2", 358, FieldType.INT16).setScale(0.01);
 	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 360, FieldType.BIT, 0);
 	public static final Field TPSACCELACTIVE = Field.create("TPSACCELACTIVE", 360, FieldType.BIT, 1);
-	public static final Field UNUSEDBIT_207_2 = Field.create("UNUSEDBIT_207_2", 360, FieldType.BIT, 2);
-	public static final Field UNUSEDBIT_207_3 = Field.create("UNUSEDBIT_207_3", 360, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT_207_4 = Field.create("UNUSEDBIT_207_4", 360, FieldType.BIT, 4);
-	public static final Field UNUSEDBIT_207_5 = Field.create("UNUSEDBIT_207_5", 360, FieldType.BIT, 5);
-	public static final Field UNUSEDBIT_207_6 = Field.create("UNUSEDBIT_207_6", 360, FieldType.BIT, 6);
-	public static final Field UNUSEDBIT_207_7 = Field.create("UNUSEDBIT_207_7", 360, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_207_8 = Field.create("UNUSEDBIT_207_8", 360, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_207_9 = Field.create("UNUSEDBIT_207_9", 360, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_207_10 = Field.create("UNUSEDBIT_207_10", 360, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_207_11 = Field.create("UNUSEDBIT_207_11", 360, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_207_12 = Field.create("UNUSEDBIT_207_12", 360, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_207_13 = Field.create("UNUSEDBIT_207_13", 360, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_207_14 = Field.create("UNUSEDBIT_207_14", 360, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_207_15 = Field.create("UNUSEDBIT_207_15", 360, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_207_16 = Field.create("UNUSEDBIT_207_16", 360, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_207_17 = Field.create("UNUSEDBIT_207_17", 360, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_207_18 = Field.create("UNUSEDBIT_207_18", 360, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_207_19 = Field.create("UNUSEDBIT_207_19", 360, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_207_20 = Field.create("UNUSEDBIT_207_20", 360, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_207_21 = Field.create("UNUSEDBIT_207_21", 360, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_207_22 = Field.create("UNUSEDBIT_207_22", 360, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_207_23 = Field.create("UNUSEDBIT_207_23", 360, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_207_24 = Field.create("UNUSEDBIT_207_24", 360, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_207_25 = Field.create("UNUSEDBIT_207_25", 360, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_207_26 = Field.create("UNUSEDBIT_207_26", 360, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_207_27 = Field.create("UNUSEDBIT_207_27", 360, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_207_28 = Field.create("UNUSEDBIT_207_28", 360, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_207_29 = Field.create("UNUSEDBIT_207_29", 360, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_207_30 = Field.create("UNUSEDBIT_207_30", 360, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_207_31 = Field.create("UNUSEDBIT_207_31", 360, FieldType.BIT, 31);
 	public static final Field BOOSTCONTROLLEROUTPUT = Field.create("BOOSTCONTROLLEROUTPUT", 364, FieldType.INT8).setScale(0.5);
 	public static final Field BOOSTCONTROLLEROPENLOOPPART = Field.create("BOOSTCONTROLLEROPENLOOPPART", 365, FieldType.INT8).setScale(0.5);
 	public static final Field FALLBACKMAP = Field.create("FALLBACKMAP", 366, FieldType.INT16).setScale(0.1);
@@ -782,14 +711,6 @@ public class TsOutputs {
 	public static final Field INJECTORSTATE10 = Field.create("INJECTORSTATE10", 584, FieldType.BIT, 21);
 	public static final Field INJECTORSTATE11 = Field.create("INJECTORSTATE11", 584, FieldType.BIT, 22);
 	public static final Field INJECTORSTATE12 = Field.create("INJECTORSTATE12", 584, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_293_24 = Field.create("UNUSEDBIT_293_24", 584, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_293_25 = Field.create("UNUSEDBIT_293_25", 584, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_293_26 = Field.create("UNUSEDBIT_293_26", 584, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_293_27 = Field.create("UNUSEDBIT_293_27", 584, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_293_28 = Field.create("UNUSEDBIT_293_28", 584, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_293_29 = Field.create("UNUSEDBIT_293_29", 584, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_293_30 = Field.create("UNUSEDBIT_293_30", 584, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_293_31 = Field.create("UNUSEDBIT_293_31", 584, FieldType.BIT, 31);
 	public static final Field OUTPUTREQUESTPERIOD = Field.create("OUTPUTREQUESTPERIOD", 588, FieldType.INT).setScale(1.0);
 	public static final Field MAPFAST = Field.create("MAPFAST", 592, FieldType.FLOAT);
 	public static final Field LUAGAUGES1 = Field.create("LUAGAUGES1", 596, FieldType.FLOAT);
@@ -938,22 +859,17 @@ public class TsOutputs {
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	SD_LOGGING_INTERNAL,
-	UNUSEDB4,
-	UNUSEDB5,
 	ISFANON,
 	ISO2HEATERON,
 	CHECKENGINE,
 	NEEDBURN,
 	SD_MSD,
 	ISFAN2ON,
-	UNUSEDBITLATWFS,
 	TOOTHLOGREADY,
-	UNUSED3123,
 	ISTPSERROR,
 	ISCLTERROR,
 	ISMAPERROR,
 	ISIATERROR,
-	UNUSED131313,
 	ISTRIGGERERROR,
 	HASCRITICALERROR,
 	ISWARNNOW,
@@ -962,12 +878,6 @@ public class TsOutputs {
 	LAUNCHTRIGGERED,
 	ISTPS2ERROR,
 	ISIDLECLOSEDLOOP,
-	UNUSEDBIT_26_26,
-	UNUSEDBIT_26_27,
-	UNUSEDBIT_26_28,
-	UNUSEDBIT_26_29,
-	UNUSEDBIT_26_30,
-	UNUSEDBIT_26_31,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
@@ -1130,36 +1040,6 @@ public class TsOutputs {
 	CALIBRATIONVALUE2,
 	ISMAINRELAYON,
 	ISUSBCONNECTED,
-	UNUSEDBIT_165_2,
-	UNUSEDBIT_165_3,
-	UNUSEDBIT_165_4,
-	UNUSEDBIT_165_5,
-	UNUSEDBIT_165_6,
-	UNUSEDBIT_165_7,
-	UNUSEDBIT_165_8,
-	UNUSEDBIT_165_9,
-	UNUSEDBIT_165_10,
-	UNUSEDBIT_165_11,
-	UNUSEDBIT_165_12,
-	UNUSEDBIT_165_13,
-	UNUSEDBIT_165_14,
-	UNUSEDBIT_165_15,
-	UNUSEDBIT_165_16,
-	UNUSEDBIT_165_17,
-	UNUSEDBIT_165_18,
-	UNUSEDBIT_165_19,
-	UNUSEDBIT_165_20,
-	UNUSEDBIT_165_21,
-	UNUSEDBIT_165_22,
-	UNUSEDBIT_165_23,
-	UNUSEDBIT_165_24,
-	UNUSEDBIT_165_25,
-	UNUSEDBIT_165_26,
-	UNUSEDBIT_165_27,
-	UNUSEDBIT_165_28,
-	UNUSEDBIT_165_29,
-	UNUSEDBIT_165_30,
-	UNUSEDBIT_165_31,
 	LUAINVOCATIONCOUNTER,
 	LUALASTCYCLEDURATION,
 	TESTBENCHITER,
@@ -1172,36 +1052,6 @@ public class TsOutputs {
 	AUXLINEAR2,
 	DFCOACTIVE,
 	TPSACCELACTIVE,
-	UNUSEDBIT_207_2,
-	UNUSEDBIT_207_3,
-	UNUSEDBIT_207_4,
-	UNUSEDBIT_207_5,
-	UNUSEDBIT_207_6,
-	UNUSEDBIT_207_7,
-	UNUSEDBIT_207_8,
-	UNUSEDBIT_207_9,
-	UNUSEDBIT_207_10,
-	UNUSEDBIT_207_11,
-	UNUSEDBIT_207_12,
-	UNUSEDBIT_207_13,
-	UNUSEDBIT_207_14,
-	UNUSEDBIT_207_15,
-	UNUSEDBIT_207_16,
-	UNUSEDBIT_207_17,
-	UNUSEDBIT_207_18,
-	UNUSEDBIT_207_19,
-	UNUSEDBIT_207_20,
-	UNUSEDBIT_207_21,
-	UNUSEDBIT_207_22,
-	UNUSEDBIT_207_23,
-	UNUSEDBIT_207_24,
-	UNUSEDBIT_207_25,
-	UNUSEDBIT_207_26,
-	UNUSEDBIT_207_27,
-	UNUSEDBIT_207_28,
-	UNUSEDBIT_207_29,
-	UNUSEDBIT_207_30,
-	UNUSEDBIT_207_31,
 	BOOSTCONTROLLEROUTPUT,
 	BOOSTCONTROLLEROPENLOOPPART,
 	FALLBACKMAP,
@@ -1323,14 +1173,6 @@ public class TsOutputs {
 	INJECTORSTATE10,
 	INJECTORSTATE11,
 	INJECTORSTATE12,
-	UNUSEDBIT_293_24,
-	UNUSEDBIT_293_25,
-	UNUSEDBIT_293_26,
-	UNUSEDBIT_293_27,
-	UNUSEDBIT_293_28,
-	UNUSEDBIT_293_29,
-	UNUSEDBIT_293_30,
-	UNUSEDBIT_293_31,
 	OUTPUTREQUESTPERIOD,
 	MAPFAST,
 	LUAGAUGES1,
