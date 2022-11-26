@@ -29,16 +29,6 @@ TEST(FuelComputer, getCycleFuel) {
 	EXPECT_FLOAT_EQ(result, 7.0f / (5 * 3));
 }
 
-TEST(FuelComputer, LambdaLookup) {
-	MockVp3d lambdaTable;
-	FuelComputer dut(lambdaTable);
-
-	EXPECT_CALL(lambdaTable, getValue(1500, FloatEq(0.7f)))
-		.WillOnce(Return(0.85f));
-
-	EXPECT_FLOAT_EQ(dut.getTargetLambda(1500, 0.7f), 0.85f);
-}
-
 TEST(FuelComputer, FlexFuel) {
 	EngineTestHelper eth(TEST_ENGINE);
 
