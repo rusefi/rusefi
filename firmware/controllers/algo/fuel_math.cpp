@@ -35,7 +35,6 @@
 #include "lua_hooks.h"
 
 extern fuel_Map3D_t veMap;
-extern lambda_Map3D_t lambdaMap;
 static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL
@@ -331,7 +330,7 @@ float getInjectionMass(int rpm) {
 #endif
 }
 
-static FuelComputer fuelComputer(lambdaMap);
+static FuelComputer fuelComputer;
 
 /**
  * @brief	Initialize fuel map data structure
