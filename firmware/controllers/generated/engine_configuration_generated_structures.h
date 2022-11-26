@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 24 03:16:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 19:31:46 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1703,14 +1703,14 @@ struct engine_configuration_s {
 	bool enableVerboseCanTx : 1 {};
 	/**
 	offset 764 bit 15 */
-	bool unusedAlteOnOff : 1 {};
+	bool etb1configured : 1 {};
 	/**
 	 * enable cj125/disable cj125
 	offset 764 bit 16 */
 	bool isCJ125Enabled : 1 {};
 	/**
 	offset 764 bit 17 */
-	bool unused764b17 : 1 {};
+	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
 	offset 764 bit 18 */
@@ -5094,4 +5094,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 24 03:16:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 19:31:46 UTC 2022

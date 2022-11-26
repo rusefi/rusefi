@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 05:38:17 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 26 19:31:46 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.26.all.snap_62968";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.26.all.snap_24110";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
@@ -1538,7 +1538,9 @@ public class Fields {
 	public static final Field USELCDSCREEN = Field.create("USELCDSCREEN", 764, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 764, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 764, FieldType.BIT, 14).setBaseOffset(0);
+	public static final Field ETB1CONFIGURED = Field.create("ETB1CONFIGURED", 764, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field ISCJ125ENABLED = Field.create("ISCJ125ENABLED", 764, FieldType.BIT, 16).setBaseOffset(0);
+	public static final Field ETB2CONFIGURED = Field.create("ETB2CONFIGURED", 764, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 764, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 764, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 764, FieldType.BIT, 20).setBaseOffset(0);
@@ -2952,7 +2954,9 @@ public class Fields {
 	USELCDSCREEN,
 	VERBOSETLE8888,
 	ENABLEVERBOSECANTX,
+	ETB1CONFIGURED,
 	ISCJ125ENABLED,
+	ETB2CONFIGURED,
 	MEASUREMAPONLYINONECYLINDER,
 	STEPPERFORCEPARKINGEVERYRESTART,
 	ISFASTERENGINESPINUPENABLED,
