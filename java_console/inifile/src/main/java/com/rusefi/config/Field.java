@@ -27,6 +27,9 @@ public class Field {
     private final int bitOffset;
     private final String[] options;
     private double scale = 1;
+    /**
+     * LiveData fragments go one after another in the overall "outputs" region
+     */
     private int baseOffset;
 
     public Field(String name, int offset, FieldType type) {
@@ -123,8 +126,15 @@ public class Field {
         return type.getLoadCommand() + " " + getOffset();
     }
 
+    /**
+     * todo: replace all (?) usages with #getTotalOffset?
+     */
     public int getOffset() {
         return offset;
+    }
+
+    public int getTotalOffset() {
+        return baseOffset + offset;
     }
 
     public String[] getOptions() {
