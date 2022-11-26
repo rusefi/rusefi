@@ -20,8 +20,8 @@ public class ConfigFieldParserIssue1057Test {
 
         state.readBufferedReader(inputString, javaFieldsConsumer);
 
-        assertEquals("\tpublic static final Field ACTIVATEAUXPID1 = Field.create(\"ACTIVATEAUXPID1\", 0, FieldType.BIT, 0);\n" +
-                        "\tpublic static final Field FIELDNAME = Field.create(\"FIELDNAME\", 4, FieldType.INT).setScale(1.0);\n",
+        assertEquals("\tpublic static final Field ACTIVATEAUXPID1 = Field.create(\"ACTIVATEAUXPID1\", 0, FieldType.BIT, 0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field FIELDNAME = Field.create(\"FIELDNAME\", 4, FieldType.INT).setScale(1.0).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
     }
 }
