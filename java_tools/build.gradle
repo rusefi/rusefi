@@ -13,3 +13,8 @@ allprojects {
         }
     }
 }
+
+// gradlew allDeps 
+subprojects {
+    task allDeps(type: DependencyReportTask) {}
+}

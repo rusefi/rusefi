@@ -19,6 +19,13 @@ static gppwm_Map3D_t* tables[] = {
 	&table4,
 };
 
+static const char *channelNames[GPPWM_CHANNELS] = { "GPPWM#1",
+"GPPWM#2",
+"GPPWM#3",
+"GPPWM#4",
+ };
+
+
 void initGpPwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		auto& cfg = engineConfiguration->gppwm[i];
@@ -35,7 +42,7 @@ void initGpPwm() {
 		// Setup pin & pwm
 		pins[i].initPin("gp pwm", cfg.pin);
 		if (usePwm) {
-			startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+			startSimplePwm(&outputs[i], channelNames[i], &engine->executor, &pins[i], freq, 0);
 		}
 
 		// Set up this channel's lookup table

@@ -50,14 +50,14 @@ public class ConfigFieldParserTest {
     @Test
     public void testFloatMsAlias() {
         String test = "struct pid_s\n" +
-                "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "floatms_t afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
                 "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
-        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
+        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "; total TS size = 8\n", tsProjectConsumer.getContent());
     }

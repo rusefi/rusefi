@@ -1,0 +1,331 @@
+pins:
+
+  - pin: 103
+    function: Pedal Analog GND
+  - pin: 104
+    function: Sensor GND
+    type: GND
+  - pin: 105
+    function: Throttle Analog GND
+  - pin: 106
+    function: Pedal Analog GND
+
+  - pin: 112
+    class: analog_inputs
+    function: Fuel Level
+    ts_name: 112 Fuel Level
+  - pin: 113
+    function: Brake Input
+    ts_name: 113 Brake Input
+
+  - pin: 114
+    function: Pedal Position 2
+  - pin: 115
+    class: outputs
+    ts_name: Main Relay
+    function: Main Relay Control
+    type: ls
+  - pin: 116
+    function: Ignition Switch KL15 / Battery Voltage Analog Input
+    ts_name: 116 - Voltage From Key
+    color: white
+
+  - pin: 120
+    function: 120 Switch
+
+  - pin: 121
+    function: Pedal Position 1
+
+  - pin: 123
+    function: 123 Input
+
+  - pin: 125
+    function: Pedal +5V Supply
+  - pin: 126
+    function: 3.3 Analog Supply PPS2
+    color: black
+    type: 3.3v
+
+  - pin: 132
+    function: CAN bus high
+    type: can
+  - pin: 138
+    function: Analog Supply TPS
+    color: black
+
+  - pin: 140
+    class: outputs
+    function: 140 relay output
+    color: orange B4
+    type: ls
+  - pin: 141
+    class: outputs
+    function: Engine Radiator Fan
+    color: orange B4
+    type: ls
+  - pin: 142
+    class: outputs
+    function: Fuel Pump Relay
+    type: ls
+  - pin: 144
+    function: CAN bus low
+    type: can
+
+  - pin: 153
+    function: GND
+    type: GND
+  - pin: 154
+    function: GND
+    type: GND
+  - pin: 155
+    function: +12V TBD
+  - pin: 156
+    function: +12V TBD
+
+  - pin: 201
+    function: Crank Sensor VR- Negative Input
+    ts_name: 201 Crank VR-
+  - pin: 203
+    class: analog_inputs
+    function: Throttle Position 1
+  - pin: 204
+    function: Sensor GND
+    type: GND
+
+  - pin: 210
+    function: Pedal +5V Supply
+  - pin: 213
+    function: Crank Sensor VR+ Positive Input
+    ts_name: 213 Crank VR+
+  - pin: 215
+    class: analog_inputs
+    ts_name: 215 CLT
+    function: CLT sensor
+  - pin: 219
+    class: analog_inputs
+    ts_name: 219 MAP
+    function: Manifold Pressure Sensor
+
+  - pin: 220
+    function: Throttle Position 2
+  - pin: 223
+    function: Analog Supply MAP
+    color: red
+
+  - pin: 227
+    ts_name: 227 IAT
+    function: Intake Air Temperature
+  - pin: 231
+    class: event_inputs
+    ts_name: 231 Cam
+    function: Cam Sensor
+  - pin: 232
+    class: event_inputs
+    ts_name: 232 - VSS
+    function: VSS in
+  - pin: 233
+    function: MAF analog of frequency
+
+  - pin: 242
+    function: injector output 2
+  - pin: 243
+    function: injector output 3
+  - pin: 244
+    function: injector output 1
+  - pin: 245
+    function: injector output 4
+  - pin: 246
+    function: Low Side Output?
+    type: ls?
+  - pin: 247
+    function: Sensor GND
+    type: GND
+
+  - pin: 250
+    function: Power GND
+    type: GND
+  - pin: 251
+    function: ETB positive
+    type: etb
+    color: purple
+  - pin: 252
+    function: ETB negative
+    type: etb
+    color: purple
+  - pin: 253
+    function: Coil 2
+  - pin: 254
+    function: Coil 3
+  - pin: 255
+    function: Coil 4
+  - pin: 256
+    function: Coil 1
+
+
+info:
+  id: H-112
+  title: H-112
+  name: H-112
+  image:
+    file: main.jpg
+  pins:
+    - pin: 103
+      x: 195
+      y: 345
+    - pin: 104
+      x: 225
+      y: 345
+    - pin: 105
+      x: 260
+      y: 345
+    - pin: 106
+      x: 295
+      y: 345
+    - pin: 112
+      x: 500
+      y: 345
+
+    - pin: 113
+      x: 130
+      y: 280
+    - pin: 114
+      x: 160
+      y: 280
+    - pin: 115
+      x: 195
+      y: 280
+    - pin: 116
+      x: 230
+      y: 280
+    - pin: 120
+      x: 365
+      y: 280
+    - pin: 121
+      x: 400
+      y: 280
+    - pin: 123
+      x: 465
+      y: 280
+
+    - pin: 125
+      x: 116
+      y: 251
+    - pin: 126
+      x: 152
+      y: 251
+    - pin: 132
+      x: 365
+      y: 251
+
+    - pin: 138
+      x: 152
+      y: 184
+    - pin: 140
+      x: 225
+      y: 184
+    - pin: 141
+      x: 265
+      y: 184
+    - pin: 142
+      x: 300
+      y: 184
+    - pin: 144
+      x: 360
+      y: 184
+
+    - pin: 153
+      x: 335
+      y: 125
+    - pin: 154
+      x: 385
+      y: 125
+    - pin: 155
+      x: 435
+      y: 125
+    - pin: 156
+      x: 485
+      y: 125
+
+
+    - pin: 201
+      x: 675
+      y: 350
+    - pin: 203
+      x: 750
+      y: 350
+    - pin: 204
+      x: 775
+      y: 350
+    - pin: 210
+      x: 975
+      y: 350
+
+    - pin: 213
+      x: 675
+      y: 285
+    - pin: 215
+      x: 745
+      y: 285
+    - pin: 219
+      x: 875
+      y: 285
+    - pin: 220
+      x: 910
+      y: 285
+    - pin: 223
+      x: 1015
+      y: 285
+
+    - pin: 227
+      x: 745
+      y: 250
+    - pin: 231
+      x: 885
+      y: 250
+    - pin: 232
+      x: 915
+      y: 250
+    - pin: 233
+      x: 950
+      y: 250
+
+    - pin: 242
+      x: 845
+      y: 185
+    - pin: 243
+      x: 885
+      y: 185
+    - pin: 244
+      x: 915
+      y: 185
+    - pin: 245
+      x: 950
+      y: 185
+    - pin: 246
+      x: 985
+      y: 185
+    - pin: 247
+      x: 1015
+      y: 185
+
+    - pin: 250
+      x: 745
+      y: 125
+    - pin: 251
+      x: 800
+      y: 125
+    - pin: 252
+      x: 845
+      y: 125
+    - pin: 253
+      x: 900
+      y: 125
+    - pin: 254
+      x: 945
+      y: 125
+    - pin: 255
+      x: 1000
+      y: 125
+    - pin: 256
+      x: 1045
+      y: 125

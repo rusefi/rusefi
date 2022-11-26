@@ -3,6 +3,8 @@ package com.rusefi.test;
 import com.rusefi.VariableRegistry;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,5 +69,13 @@ public class VariableRegistryTest {
         input.put(2, "Z");
         input.put(3, "N");
         assertEquals("0=\"NONE\",1=\"A\",3=\"N\",2=\"Z\"", VariableRegistry.getHumanSortedTsKeyValueString(input));
+    }
+
+    @Test
+    public void testDefineAndQuotes() throws IOException {
+        VariableRegistry registry = new VariableRegistry();
+        registry.readPrependValues(new StringReader("#define SINGLE 'L'\n" +
+                "#define DOUBLE \"R\""));
+        assertEquals("hello L R 'L' \"R\"", registry.applyVariables("hello @#SINGLE#@ @#DOUBLE#@ @@SINGLE@@ @@DOUBLE@@"));
     }
 }

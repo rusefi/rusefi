@@ -25,7 +25,6 @@ void setTestCamEngineConfiguration() {
 //	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 //	triggerConfig->customTotalToothCount = 60;
 //	triggerConfig->customSkippedToothCount = 0;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
@@ -84,20 +83,14 @@ void setTestVVTEngineConfiguration() {
 void setTestEngineIssue366both() {
 	setTestCamEngineConfiguration();
 
-
-	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-
 }
 
 void setTestEngineIssue366rise() {
 	setTestEngineIssue366both();
-
-
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 }
 #endif /* EFI_UNIT_TEST */
 

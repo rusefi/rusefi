@@ -46,14 +46,6 @@
 #define TCPIP_THREAD_STACKSIZE          1024
 #endif
 
-/* Use ChibiOS specific priorities. */
-#if !defined(TCPIP_THREAD_PRIO)
-#define TCPIP_THREAD_PRIO               (NORMALPRIO + 5)
-#endif
-#if !defined(LWIP_THREAD_PRIORITY)
-#define LWIP_THREAD_PRIORITY            (NORMALPRIO + 4)
-#endif
-
 #define LWIP_LINK_POLL_INTERVAL   TIME_S2I(1)
 #define LWIP_IPADDR(p)            IP4_ADDR(p, 192, 168, 10, 1)
 #define LWIP_GATEWAY(p)           IP4_ADDR(p, 192, 168, 10, 1)

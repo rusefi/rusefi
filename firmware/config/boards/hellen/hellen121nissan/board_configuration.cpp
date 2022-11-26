@@ -74,7 +74,7 @@ static void setupDefaultSensorInputs() {
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
 	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
+	engineConfiguration->mafAdcChannel = H144_IN_O2S;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
@@ -82,9 +82,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
-
-	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
 void setBoardConfigOverrides() {
@@ -132,8 +129,6 @@ void setBoardDefaultConfiguration() {
 	// Some sensible defaults for other options
 	setCrankOperationMode();
 
-	engineConfiguration->vvtCamSensorUseRise = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 //	setAlgorithm(LM_SPEED_DENSITY);
     // at least this starts
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;

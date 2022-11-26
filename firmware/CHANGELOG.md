@@ -28,15 +28,20 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## November 2022 Release - "Day 267"
+
 ### Added
  - VVT minimum RPM setting #4545
+ - Fuel/spark cut codes to TS indicators #4592
  - Flexible ignition and VE adder/trim tables #4586 #4640
  - Enforce board configuration overrides more strictly #4614
  - rusEFI console Startup Frame should scan for available hardware #4633
  - Don't fire the engine without the ignition on (avoids USB keeping engine alive after ignition off) #4474
  - Lua: function to access VIN setting #3967
  - Lua: designated Lua gauges with logging #4672
- - GCC10 is the suggested compiler now, GCC9 no longer supported #4641
+ - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
+ - Add fuel adder to launch #4777
+ - 3-cylinder Benelli trigger
 
 ### Fixed
  - Fuel Priming reset fix #4627
@@ -45,6 +50,7 @@ Release template (copy/paste this for new release):
 
 ### Removed
  - Idle timing deadzone #4729
+ - "Use only rising edge" trigger option - triggers now select automatically based on trigger type #4621
 
 ## September 2022 Release - "Day 203"
 

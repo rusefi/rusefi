@@ -57,11 +57,9 @@ cd ..
 
 # At root folder here
 
-bash misc/jenkins/build_java_console.sh
-[ -e java_console_binary/rusefi_console.jar ] || { echo "rusefi_console.jar build FAILED"; exit 1; }
+bash misc/jenkins/build_java_console.sh || { echo "rusefi_console.jar build FAILED"; exit 1; }
 
-bash misc/jenkins/build_simulator.sh
-[ -e simulator/build/rusefi_simulator.exe ] || { echo "rusefi_simulator.exe build FAILED"; exit 1; }
+bash misc/jenkins/build_simulator.sh || { echo "rusefi_simulator.exe build FAILED"; exit 1; }
 
 STM_ARCH="stm32f407"
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")

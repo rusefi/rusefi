@@ -3,6 +3,11 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
+configurations {
+    // not sure what is this and why but it's huge
+    all*.exclude group: 'com.ibm.icu', module: 'icu4j'
+}
+
 dependencies {
     implementation project(':shared_ui')
     implementation project(':autotest')
@@ -20,6 +25,9 @@ dependencies {
 }
 
 shadowJar {
+    archivesBaseName = 'rusefi_console'
+    archiveClassifier = ''
+
     manifest {
         attributes(
                 'Main-Class': 'com.rusefi.Launcher'

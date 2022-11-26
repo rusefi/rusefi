@@ -5,7 +5,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build-firmware:
     runs-on: ubuntu-latest
-    
+
     strategy:
       # Let all builds finish even if one fails early
       fail-fast: false
@@ -72,7 +72,6 @@ jobs:
           - build-target: alphax-2chan
             folder: hellen/alphax-2chan
             ini-file: rusefi_alphax-2chan.ini
-            skip-rate: 90
 
           - build-target: alphax-4chan
             folder: hellen/alphax-4chan
@@ -110,7 +109,6 @@ jobs:
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
-            skip-rate: 90
 
           - build-target: hellen128
             folder: hellen/hellen128
@@ -318,10 +316,9 @@ jobs:
       if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
-        tar -xvf compiler.tar.bz2
-        echo "`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin" >> $GITHUB_PATH
+      run: |
+        ./firmware/provide_gcc.sh
+        echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
@@ -440,11 +437,10 @@ jobs:
     - name: Download & Install GCC
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
-        wget 'https://github.com/rusefi/build_support/raw/master/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2' -O compiler.tar.bz2
-        tar -xvf compiler.tar.bz2
-        echo "::add-path::`pwd`/gcc-arm-none-eabi-10.3-2021.10/bin"
-  
+      run: |
+        ./firmware/provide_gcc.sh
+        echo "::add-path::`pwd`/gcc-arm-none-eabi/bin"
+
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v

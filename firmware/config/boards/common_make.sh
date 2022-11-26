@@ -16,7 +16,7 @@ mkdir -p .dep
 # todo: start using env variable for number of threads or for '-r'
 make -j$(nproc) -r PROJECT_BOARD=$PROJECT_BOARD PROJECT_CPU=$PROJECT_CPU
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
-if [ $USE_OPENBLT = "yes" ]; then
+if [ "$USE_OPENBLT" = "yes" ]; then
   make openblt
   [ -e build-openblt/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpenBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
@@ -34,7 +34,7 @@ rm -f deliver/*
 echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
 $HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
 
-if [ $USE_OPENBLT = "yes" ]; then
+if [ "$USE_OPENBLT" = "yes" ]; then
   # this image is suitable for update through bootloader only
   # do not deliver update images in any format that can confuse users
   #cp build/rusefi.bin  deliver/rusefi_update.bin
@@ -49,7 +49,7 @@ else
 fi
 
 # bootloader and composite image
-if [ $USE_OPENBLT = "yes" ]; then
+if [ "$USE_OPENBLT" = "yes" ]; then
   rm -f deliver/openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
   $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o build-openblt/openblt_$PROJECT_BOARD.dfu

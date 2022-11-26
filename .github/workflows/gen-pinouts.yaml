@@ -1,3 +1,7 @@
+#
+# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+#
+
 name: Generate Interactive Pinouts
 
 on:

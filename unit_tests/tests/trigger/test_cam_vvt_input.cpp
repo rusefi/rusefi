@@ -84,7 +84,6 @@ TEST(trigger, testCamInput) {
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setCrankOperationMode();
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE);
@@ -93,14 +92,16 @@ TEST(trigger, testCamInput) {
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 
 	for (int i = 0; i < 5;i++) {
-		eth.fireRise(50);
+		eth.fireRise(25);
+		eth.fireFall(25);
 	}
 
-	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
+	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 600;i++) {
-		eth.fireRise(50);
+		eth.fireRise(25);
+		eth.fireFall(25);
 	}
 
 	// asserting that lack of camshaft signal would be detecting
@@ -109,23 +110,31 @@ TEST(trigger, testCamInput) {
 	unitTestWarningCodeState.recentWarnings.clear();
 
 	for (int i = 0; i < 600;i++) {
-		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
-		eth.moveTimeForwardUs(MS2US(40));
+		eth.moveTimeForwardUs(MS2US(25));
+
 		eth.firePrimaryTriggerRise();
+		EXPECT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
+
+		eth.moveTimeForwardUs(MS2US(10));
+
+		// cam comes every other crank rev
+		if (i % 2 == 0) {
+			hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
+		}
+
+		eth.moveTimeForwardUs(MS2US(15));
+		eth.firePrimaryTriggerFall();
 	}
 
 	// asserting that error code has cleared
-	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	EXPECT_NEAR_M3(-181, engine->triggerCentral.getVVTPosition(0, 0));
+	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
+	EXPECT_NEAR_M3(-109, engine->triggerCentral.getVVTPosition(0, 0));
 }
 
 TEST(trigger, testNB2CamInput) {
 	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
-
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
 	for (int i = 0; i < 6;i++) {
@@ -177,5 +186,5 @@ TEST(trigger, testNB2CamInput) {
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
-	EXPECT_EQ(40, waveChart.getSize());
+	EXPECT_EQ(39, waveChart.getSize());
 }

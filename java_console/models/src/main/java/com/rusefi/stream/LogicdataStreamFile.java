@@ -2,17 +2,16 @@ package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Support for Saleae .logicdata format.
  * (c) andreika 2020
- *
+ * <p>
  * Jun 7 status: this code mostly works but it needs more testing
  *
  * @see LogicdataStreamFileSandbox
@@ -47,7 +46,6 @@ public class LogicdataStreamFile extends StreamFile {
 
 	private final String fileName;
 	private final List<CompositeEvent> eventsBuffer = new ArrayList<>();
-	private int totalBytes = 0;
 
 	private static final String [] channelNames = { "Primary", "Secondary", "Trg", "Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
@@ -69,7 +67,7 @@ public class LogicdataStreamFile extends StreamFile {
     public void append(List<CompositeEvent> events) {
         try {
             if (stream == null) {
-                stream = new FileOutputStream(fileName);
+                stream = new LogicdataOutputStream(Files.newOutputStream(Paths.get(fileName)));
                 writeHeader();
             }
             eventsBuffer.addAll(events);
@@ -85,7 +83,7 @@ public class LogicdataStreamFile extends StreamFile {
     	// we need at least 2 records
     	if (events == null || events.size() < 2)
     		return;
-		long firstRecordTs = events.get(1).getTimestamp();
+		long firstRecordTs = events.get(1).getTimestamp(); // huh why not index '0'?
 		long lastRecordTs = events.get(events.size() - 1).getTimestamp();
 	    // we don't know the total duration, so we create a margin after the last record which equals to the duration of the first event
 		// TODO: why do we jump from timestamps to samples?
@@ -154,118 +152,119 @@ public class LogicdataStreamFile extends StreamFile {
     private void writeHeader() throws IOException {
         writeByte(magic);
 
-        write(title.length());
-        write(title);
+		stream.writeVarLength(title.length());
+		stream.writeString(title);
         stream.flush();
 
-        write(BLOCK);
-        write(SUB);
-        write(frequency);
-        write(0);
-        write(reservedDurationInSamples);
-        write(frequency / frequencyDiv);
-        write(0, 2);
-        write(numChannels);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(SUB);
+		stream.writeVarLength(frequency);
+		stream.writeVarLength(0);
+		stream.writeVarLength(reservedDurationInSamples);
+		stream.writeVarLength(frequency / frequencyDiv);
+		write(0, 2);
+		stream.writeVarLength(numChannels);
 
-        write(BLOCK);
-        write(0);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(0);
 
-        write(BLOCK);
-        for (int i = 0; i < numChannels; i++) {
+		stream.writeVarLength(BLOCK);
+		for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
 		}
-        write(0);
+		stream.writeVarLength(0);
 
-        write(BLOCK);
+		stream.writeVarLength(BLOCK);
 
 		writeId(0, 0);
-		write(0);
-		write(0);
-    }
+		stream.writeVarLength(0);
+		stream.writeVarLength(0);
+	}
 
     private void writeChannelHeader(int ch) throws IOException {
-		write(0xff);
-		write(ch);
-		write(channelNames[ch]);
+		stream.writeVarLength(0xff);
+		stream.writeVarLength(ch);
+		stream.writeString(channelNames[ch]);
 		write(0, 2);
-		writeDouble(1.0);
-		write(0);
-		writeDouble(0.0);
-		write(1);	// or 2
-		writeDouble(0.0);	// or 1.0
+		stream.writeDouble(1.0);
+		stream.writeVarLength(0);
+		stream.writeDouble(0.0);
+		// or 2
+		stream.writeVarLength(1);
+		stream.writeDouble(0.0);	// or 1.0
 
 		// this part sounds like the 'next' pointer?
 		if (ch == numChannels - 1) {
-			write(0);
+			stream.writeVarLength(0);
 		} else {
 			writeId(1 + ch, 1);
 			for (int i = 0; i < 3; i++) {
-				write((CHANNEL_FLAGS[ch] >> (i * 8)) & 0xff);
+				stream.writeVarLength((CHANNEL_FLAGS[ch] >> (i * 8)) & 0xff);
 			}
 		}
     }
 
     private void writeChannelDataHeader() throws IOException {
-		write(BLOCK);
-		write(scaledDurationInSamples);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(scaledDurationInSamples);
 		write(0, 5);
-		write(numChannels);
+		stream.writeVarLength(numChannels);
 		write(0, 3);
 		writeId(0, 1);
-		write(0);
+		stream.writeVarLength(0);
 
-        write(BLOCK);
+		stream.writeVarLength(BLOCK);
 		write(0, 3);
 
 		for (int i = 0; i < numChannels; i++) {
 			writeChannelHeader(i);
 		}
 
-        write(BLOCK);
+		stream.writeVarLength(BLOCK);
 		write(new int[]{ SUB, SUB, 0, SUB, 0, SUB });
 		write(0, 6);
 
-        write(BLOCK);
+		stream.writeVarLength(BLOCK);
 		write(0, 2);
-		write(realDurationInSamples);
-		write(0);
-		write(SUB);
-		write(reservedDurationInSamples);
-		write(frequency / frequencyDiv);
+		stream.writeVarLength(realDurationInSamples);
+		stream.writeVarLength(0);
+		stream.writeVarLength(SUB);
+		stream.writeVarLength(reservedDurationInSamples);
+		stream.writeVarLength(frequency / frequencyDiv);
 		write(0, 2);
-		write(SUB);
+		stream.writeVarLength(SUB);
 		write(0, 2);
-		write(1);
+		stream.writeVarLength(1);
 		write(0, 3);
 		writeId(0, 0);
 
-		write(BLOCK);
+		stream.writeVarLength(BLOCK);
 		write(new int[]{ (int)realDurationInSamples, (int)realDurationInSamples, (int)realDurationInSamples });
-		write(0);
-		write(SUB);
-		write(0);
+		stream.writeVarLength(0);
+		stream.writeVarLength(SUB);
+		stream.writeVarLength(0);
 
-		write(BLOCK);
-		write(0);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(0);
 
-		write(BLOCK);
+		stream.writeVarLength(BLOCK);
 		write(SUB, 4);
-		write(0);
+		stream.writeVarLength(0);
 
-		write(BLOCK);
-    	write(frequency);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(frequency);
 		write(0, 3);
-		write(1);
+		stream.writeVarLength(1);
 		write(0, 3);
 		writeId(0, 0);
 		write(new int[]{ 0, 1, 1, 0, 1, 0x13 });
-		write(SUB);
+		stream.writeVarLength(SUB);
 
-		write(BLOCK);
-		write(0);
-		write(realDurationInSamples);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(0);
+		stream.writeVarLength(realDurationInSamples);
 		write(0, 2);
-		write(numChannels);
+		stream.writeVarLength(numChannels);
 		write(new int[]{ 1, 0, 1 });
 	}
 
@@ -273,37 +272,37 @@ public class LogicdataStreamFile extends StreamFile {
     	int numEdges = chDeltas.size();
     	if (numEdges == 0)
     		lastRecord = 0;
-    	write(CHANNEL_BLOCK);
-    	// channel#0 is somehow special...
+		stream.writeVarLength(CHANNEL_BLOCK);
+		// channel#0 is somehow special...
     	if (ch == 0) {
-			write(SUB);
-			write(BLOCK);
+			stream.writeVarLength(SUB);
+			stream.writeVarLength(BLOCK);
 		}
 
-		write(ch + 1);
-		write(0);
-		write(realDurationInSamples);
-		write(1);
-		write(lastRecord);
+		stream.writeVarLength(ch + 1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(realDurationInSamples);
+		stream.writeVarLength(1);
+		stream.writeVarLength(lastRecord);
 
 		// todo: why do we convert from
 		int numSamplesLeft = (int)(realDurationInSamples - lastRecord);
-		write(numSamplesLeft);
+		stream.writeVarLength(numSamplesLeft);
 
-		write(chLastState);
+		stream.writeVarLength(chLastState);
 
 		int chFlag = (numEdges == 0) ? FLAG_EMPTY : (useLongDeltas ? FLAG_NOTEMPTY_LONG : FLAG_NOTEMPTY);
-		write(chFlag);
+		stream.writeVarLength(chFlag);
 
 		if (ch == 0) {
-			write(0);
-			write(BLOCK);
+			stream.writeVarLength(0);
+			stream.writeVarLength(BLOCK);
 			write(0, 11);
 			if (useLongDeltas) {
-				write(BLOCK);
+				stream.writeVarLength(BLOCK);
 				write(0, 6);
 			}
-			write(BLOCK);
+			stream.writeVarLength(BLOCK);
 		} else {
 			write(0, 10);
 			if (useLongDeltas) {
@@ -311,22 +310,22 @@ public class LogicdataStreamFile extends StreamFile {
 			}
 		}
 
-		write(numEdges);
-		write(0);
-		write(numEdges);
-		write(0);
-		write(numEdges);
+		stream.writeVarLength(numEdges);
+		stream.writeVarLength(0);
+		stream.writeVarLength(numEdges);
+		stream.writeVarLength(0);
+		stream.writeVarLength(numEdges);
 
 		writeEdges(chDeltas, useLongDeltas);
 
 		if (ch == 0) {
-			write(BLOCK);
+			stream.writeVarLength(BLOCK);
 			write(0, 6);
 			if (!useLongDeltas) {
-				write(BLOCK);
+				stream.writeVarLength(BLOCK);
 				write(0, 6);
 			}
-			write(BLOCK);
+			stream.writeVarLength(BLOCK);
 		} else {
 			write(0, 4);
 			if (!useLongDeltas) {
@@ -339,12 +338,12 @@ public class LogicdataStreamFile extends StreamFile {
 			return;
 		}
 
-		write(1);
-		write(0);
-		write(1);
-		write(0);
-		write(1);
-    	write(0, 16);
+		stream.writeVarLength(1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(1);
+		write(0, 16);
 
     	writeRaw(0xFF, 8);
 		writeRaw(chFlag, 1);
@@ -367,148 +366,100 @@ public class LogicdataStreamFile extends StreamFile {
 	}
 
 	private void writeByte(int i) throws IOException {
-		stream.write(i);
-		totalBytes++;
+		stream.writeByte(i);
 	}
 
 	private void writeChannelDataFooter() throws IOException {
     	write(0, 3);
-    	write(1);
-    	write(1);
-    	write(0);
-    	write(numChannels);
-    }
+		stream.writeVarLength(1);
+		stream.writeVarLength(1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(numChannels);
+	}
 
     @Override
 	protected void writeFooter() throws IOException {
 		if (stream == null)
 			return;
+		System.out.println("Writing " + eventsBuffer.size() + " event(s)");
 		writeEvents(eventsBuffer);
-        write(BLOCK);
-        for (int i = 0; i < numChannels; i++) {
+		stream.writeVarLength(BLOCK);
+		for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
         }
-        write(1);
+		stream.writeVarLength(1);
 		writeId(numChannels, 0x15);
         for (int i = 0; i < numChannels; i++) {
         	writeId(i, 1);
         }
-        write(1);
-        write(0);
-        write(frequency);
+		stream.writeVarLength(1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(frequency);
 		write(0, 16);
-        write(0x01);
-        write(0x23); // ???
-        write(SUB);
+		stream.writeVarLength(0x01);
+		// ???
+		stream.writeVarLength(0x23);
+		stream.writeVarLength(SUB);
 
-        write(BLOCK);
-        write(numChannels + 1);
-        write(0);
-        write(0xFFFFFFFFFFFFFFFFL);
-        write(0xFFFFFFFFL);
-        write(1);
-        write(0, 3);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(numChannels + 1);
+		stream.writeVarLength(0);
+		stream.writeVarLength(0xFFFFFFFFFFFFFFFFL);
+		stream.writeVarLength(0xFFFFFFFFL);
+		stream.writeVarLength(1);
+		write(0, 3);
 
-        write(BLOCK);
-        write(0);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(0);
 
-        write(BLOCK);
-        write(0);
-        writeDouble(1.0);
-        write(SUB);
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(0);
+		stream.writeDouble(1.0);
+		stream.writeVarLength(SUB);
 		write(0, 6);
-		write(1);
+		stream.writeVarLength(1);
 		write(0, 4);
 
-        write(1);
-        write(0x29);  // ???
-        write(SUB);
+		stream.writeVarLength(1);
+		// ???
+		stream.writeVarLength(0x29);
+		stream.writeVarLength(SUB);
 
-        writeTimingMarker();
+		writeTimingMarker();
 
         stream.flush();
 		System.out.println("writeFooter " + fileName);
     }
 
     private void writeTimingMarker() throws IOException {
-    	write(BLOCK);
-    	write(numChannels + 2);
-    	write(0, 4);
-    	write("Timing Marker Pair");
-    	write("A1");
-    	write("A2");
+		stream.writeVarLength(BLOCK);
+		stream.writeVarLength(numChannels + 2);
+		write(0, 4);
+    	stream.writeString("Timing Marker Pair");
+    	stream.writeString("A1");
+    	stream.writeString("A2");
     	write(0, 2);
-    	write(SUB);
-    	write(0, 9);
+		stream.writeVarLength(SUB);
+		write(0, 9);
     }
 
     private void writeId(int i1, int i2) throws IOException {
-		write((numChannels == 4) ? LOGIC4 : LOGIC8);
-		write(i1);
-		write(i2);
-    }
+		long value = (numChannels == 4) ? LOGIC4 : LOGIC8;
+		stream.writeVarLength(value);
+		stream.writeVarLength(i1);
+		stream.writeVarLength(i2);
+	}
 
     ///////////////////////////////////////////////////////////////////////
 
     private void write(int value, int num) throws IOException {
     	for (int i = 0; i < num; i++)
-    		write(value);
+			stream.writeVarLength(value);
     }
 
 	private void write(int[] values) throws IOException {
 		for (int value : values)
-			write(value);
-	}
-
-    private void writeAs(long value, int numBytes) throws IOException {
-    	if (value == 0) {
-   			writeByte(0);
-   		} else {
-			writeByte(numBytes);
-			for (int i = 0; i < numBytes; i++) {
-				writeByte((byte)((value >> (i * 8)) & 0xff));
-			}
-		}
-    }
-
-    // This is the main secret of this format! :)
-    private void write(long value) throws IOException {
-    	if (value < 0 || value > 0xFFFFFFFFL) {
-    		writeAs(value, 8);
-    	} else if (value == 0) {
-    		writeByte(0);
-		} else if (value <= 0xff) {
-			writeAs(value, 1);
-		} else if (value <= 0xffff) {
-			writeAs(value, 2);
-		} else if (value <= 0xffffff) {
-			writeAs(value, 3);
-		} else {
-			writeAs(value, 4);
-		}
-	}
-
-    private void writeDouble(double value) throws IOException {
-		if (value == 0.0) {
-			writeByte(0);
-		} else {
-			writeByte(8);
-			// doubles are saved little-endian, sorry Java :)
-			ByteBuffer bb = ByteBuffer.allocate(8);
-			bb.order(ByteOrder.LITTLE_ENDIAN);
-	        bb.putDouble(value);
-	        bb.rewind();
-	        for (int i = 0; i < 8; i++) {
-	        	writeByte(bb.get());
-	        }
-		}
-    }
-
-    private void write(String str) throws IOException {
-   		write(str.length());
-    	for (char c : str.toCharArray()) {
-    		writeByte(c);
-    	}
+			stream.writeVarLength(value);
 	}
 
 	private void writeRaw(int value, int num) throws IOException {

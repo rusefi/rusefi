@@ -94,6 +94,10 @@ LaunchControlBase::LaunchControlBase() {
 	isLaunchCondition = false;
 }
 
+bool LaunchControlBase::getFuelCoefficient() const {
+    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0 : 0);
+}
+
 void LaunchControlBase::update() {
 	if (!engineConfiguration->launchControlEnabled) {
 		return;

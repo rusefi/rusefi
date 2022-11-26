@@ -122,14 +122,28 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 
 #if EFI_AUX_PID
 
+static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
+"Vvt Output#1",
+#if CAM_INPUTS_COUNT > 1
+"Vvt Output#2",
+#endif
+#if CAM_INPUTS_COUNT > 2
+"Vvt Output#3",
+#endif
+#if CAM_INPUTS_COUNT > 3
+"Vvt Output#4",
+#endif
+ };
+
+
 static VvtController instances[CAM_INPUTS_COUNT];
 
-static void turnAuxPidOn(int index) {
+static void turnVvtPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
 		return;
 	}
 
-	startSimplePwmExt(&instances[index].m_pwm, "Aux PID",
+	startSimplePwmExt(&instances[index].m_pwm, vvtOutputNames[index],
 			&engine->executor,
 			engineConfiguration->vvtPins[index],
 			&instances[index].m_pin,
@@ -139,7 +153,7 @@ static void turnAuxPidOn(int index) {
 
 void startVvtControlPins() {
 	for (int i = 0;i <CAM_INPUTS_COUNT;i++) {
-		turnAuxPidOn(i);
+		turnVvtPidOn(i);
 	}
 }
 

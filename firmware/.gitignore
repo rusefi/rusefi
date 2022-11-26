@@ -8,3 +8,7 @@ build*
 # precompiled headers
 *.h.gch
 *.h.gcno
+
+# tools
+gcc-arm-none-eabi
+arm-gnu*

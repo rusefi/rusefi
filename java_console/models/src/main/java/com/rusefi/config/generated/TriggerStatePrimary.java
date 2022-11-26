@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Tue Nov 01 20:59:53 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Thu Nov 24 03:15:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -114,11 +114,11 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
 	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
-	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
-	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF sensor 2";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED_2 = "MAF #2";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
-	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear 1";
-	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear 2";
+	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear #1";
+	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear #2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -242,6 +242,7 @@ public class TriggerStatePrimary {
 	public static final int GPPWM_LOAD_COUNT = 8;
 	public static final int GPPWM_NOTE_SIZE = 16;
 	public static final int GPPWM_RPM_COUNT = 8;
+	public static final int HIGH_SPEED_COUNT = 32;
 	public static final int HPFP_COMPENSATION_SIZE = 10;
 	public static final int HPFP_DEADTIME_SIZE = 8;
 	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
@@ -364,6 +365,7 @@ public class TriggerStatePrimary {
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
+	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';

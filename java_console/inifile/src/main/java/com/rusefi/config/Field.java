@@ -158,6 +158,19 @@ public class Field {
         return options[ordinal];
     }
 
+    // todo: move universal setValue one day
+    public void setValueU32(byte[] content, int value) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
+        try {
+            dout.writeInt(value);
+            byte[] src = baos.toByteArray();
+            System.arraycopy(src, 0, content, getOffset(), 4);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void setValue(byte[] content, boolean value) {
         ByteBuffer wrapped = FileUtil.littleEndianWrap(content, 0, content.length);
         if (bitOffset != NO_BIT_OFFSET) {

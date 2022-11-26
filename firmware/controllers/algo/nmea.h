@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "rusefi_types.h"
+
 #define GPS_MAX_STRING 256
 
 typedef enum {
@@ -28,7 +30,7 @@ struct GPSlocation {
 	float speed;
 	float altitude;
 	float course;
-	struct tm GPStm;
+	efidatetime_t time;
 	nmea_message_type type;
 	int quality;
 	int satellites;
@@ -39,6 +41,16 @@ typedef struct GPSlocation loc_t;
 
 nmea_message_type nmea_get_message_type(const char *);
 int nmea_valid_checksum(const char *);
-void nmea_parse_gpgga(char *, loc_t *);
-void nmea_parse_gprmc(char *, loc_t *);
-void gps_location(loc_t *, char *);
+void nmea_parse_gpgga(char const * const, loc_t *);
+void nmea_parse_gprmc(char const * const, loc_t *);
+void gps_location(loc_t *, char const * const);
+
+static int str2int(const char * a, const int len) {
+	int i = 0,  k = 0;
+	while (i < len) {
+		k = (k << 3) + (k << 1) + (*a) - '0';
+		a++;
+		i++;
+	}
+	return k;
+}

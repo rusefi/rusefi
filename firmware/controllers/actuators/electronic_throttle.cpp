@@ -360,6 +360,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	}
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
+	etbCurrentAdjustedTarget = targetPosition;
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
@@ -569,7 +570,6 @@ void EtbController::update() {
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
 		m_pid.postState(engine->outputChannels.etbStatus);
-		engine->outputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -578,13 +578,13 @@ void EtbController::update() {
 		return;
 	}
 
-	if (engineConfiguration->disableEtbWhenEngineStopped) {
-		if (!engine->triggerCentral.engineMovedRecently()) {
-			// If engine is stopped and so configured, skip the ETB update entirely
-			// This is quieter and pulls less power than leaving it on all the time
-			m_motor->disable();
-			return;
-		}
+	if ((engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently())
+	        ||
+			engine->engineState.lua.luaDisableEtb) {
+		// If engine is stopped and so configured, skip the ETB update entirely
+		// This is quieter and pulls less power than leaving it on all the time
+		m_motor->disable();
+		return;
 	}
 
 
@@ -711,7 +711,7 @@ struct EtbThread final : public PeriodicController<512> {
 
 static EtbThread etbThread CCM_OPTIONAL;
 
-#endif
+#endif // EFI_UNIT_TEST
 
 static void showEtbInfo() {
 #if EFI_PROD_CODE

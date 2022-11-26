@@ -13,7 +13,9 @@ import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
+import com.rusefi.io.commands.WriteChunkCommand;
 import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +31,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 import static com.rusefi.config.generated.Fields.*;
 
 /**
@@ -42,14 +43,13 @@ import static com.rusefi.config.generated.Fields.*;
  */
 
 public class BinaryProtocolServer {
-    public static final String TEST_FILE = "test_log.mlg.Z";
+    //    public static final String TEST_FILE = "test_log.mlg.Z";
     private static final Logging log = getLogging(BinaryProtocolServer.class);
     private static final int DEFAULT_PROXY_PORT = 2390;
     public static final String TS_OK = "\0";
 
     private final static boolean MOCK_SD_CARD = true;
     private static final int SD_STATUS_OFFSET = 246;
-    private static final int FAST_TRANSFER_PACKET_SIZE = 2048;
 
     static {
         log.configureDebugEnabled(false);
@@ -170,11 +170,11 @@ public class BinaryProtocolServer {
             } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
             } else if (command == Fields.TS_READ_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-                handleRead(linkManager, dis, stream);
+                ByteRange byteRange = ByteRange.valueOf(payload);
+                handleRead(linkManager, byteRange, stream);
             } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
-                DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-                handleWrite(linkManager, payload, dis, stream);
+                ByteRange byteRange = ByteRange.valueOf(payload);
+                handleWrite(linkManager, payload, byteRange, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
             } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
@@ -201,18 +201,16 @@ public class BinaryProtocolServer {
 
     @NotNull
     public static byte[] getOutputCommandResponse(byte[] payload, byte[] currentOutputs) throws IOException {
-        DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
+        ByteRange byteRange = ByteRange.valueOf(payload);
         if (log.debugEnabled())
-            log.debug("TS_OUTPUT_COMMAND offset=" + offset + "/count=" + count);
+            log.debug("TS_OUTPUT_COMMAND offset=" + byteRange);
 
-        byte[] response = new byte[1 + count];
+        byte[] response = new byte[1 + byteRange.getCount()];
         response[0] = (byte) TS_OK.charAt(0);
         if (MOCK_SD_CARD)
             currentOutputs[SD_STATUS_OFFSET] = 1 + 4;
         if (currentOutputs != null)
-            System.arraycopy(currentOutputs, offset, response, 1, count);
+            System.arraycopy(currentOutputs, byteRange.getOffset(), response, 1, byteRange.getCount());
         return response;
     }
 
@@ -245,12 +243,6 @@ public class BinaryProtocolServer {
             return null;
         }
         return length;
-    }
-
-    private static void sendOkResponse(TcpIoStream stream) throws IOException {
-        byte[] response = new byte[1];
-        response[0] = TS_RESPONSE_OK;
-        stream.sendPacket(response);
     }
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler) throws IOException {
@@ -305,20 +297,20 @@ public class BinaryProtocolServer {
         outputStream.flush();
     }
 
-    private void handleWrite(LinkManager linkManager, byte[] packet, DataInputStream dis, TcpIoStream stream) throws IOException {
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
-        log.info("TS_CHUNK_WRITE_COMMAND: offset=" + offset + " count=" + count);
+    private void handleWrite(LinkManager linkManager, byte[] packet, ByteRange byteRange, TcpIoStream stream) throws IOException {
+        int offset = byteRange.getOffset();
+        int count = byteRange.getCount();
+        log.info("TS_CHUNK_WRITE_COMMAND: offset=" + byteRange);
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        bp.setRange(packet, 7, offset, count);
+        bp.setRange(packet, WriteChunkCommand.SCR_POS_WITH_SIZE_PREFIX, offset, count);
         stream.sendPacket(TS_OK.getBytes());
     }
 
-    private void handleRead(LinkManager linkManager, DataInputStream dis, TcpIoStream stream) throws IOException {
-        int offset = swap16(dis.readShort());
-        int count = swap16(dis.readShort());
+    private void handleRead(LinkManager linkManager, ByteRange byteRange, TcpIoStream stream) throws IOException {
+        int offset = byteRange.getOffset();
+        int count = byteRange.getCount();
         if (count <= 0) {
-            log.info("Error: negative read request " + offset + "/" + count);
+            log.info("Error: negative read request " + byteRange);
         } else {
             if (log.debugEnabled())
                 log.debug("read " + offset + "/" + count);

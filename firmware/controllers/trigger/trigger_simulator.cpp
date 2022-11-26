@@ -139,6 +139,7 @@ expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 		}
 	}
 	shape.setShapeDefinitionError(true);
-	warning(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+
+	firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
 	return unexpected;
 }

@@ -53,6 +53,9 @@ void TriggerWaveform::initialize(operation_mode_e operationMode, SyncEdge syncEd
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 
+	// If RiseOnly, ignore falling edges completely.
+	useOnlyRisingEdges = syncEdge == SyncEdge::RiseOnly;
+
 	setTriggerSynchronizationGap(2);
 	for (int gapIndex = 1; gapIndex < GAP_TRACKING_LENGTH ; gapIndex++) {
 		// NaN means do not use this gap ratio
@@ -160,12 +163,12 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	return cycleStartAngle + positionWithinCycle;
 }
 
-void TriggerWaveform::addEventClamped(angle_t angle, TriggerWheel const channelIndex, TriggerValue const stateParam, float filterLeft, float filterRight) {
+void TriggerWaveform::addEventClamped(angle_t angle, TriggerValue const stateParam, TriggerWheel const channelIndex, float filterLeft, float filterRight) {
 	if (angle > filterLeft && angle < filterRight) {
 #if EFI_UNIT_TEST
 //		printf("addEventClamped %f %s\r\n", angle, getTrigger_value_e(stateParam));
 #endif /* EFI_UNIT_TEST */
-		addEvent(angle / getEngineCycle(operationMode), channelIndex, stateParam);
+		addEvent(angle / getEngineCycle(operationMode), stateParam, channelIndex);
 	}
 }
 
@@ -215,22 +218,22 @@ void TriggerWaveform::calculateExpectedEventCounts() {
 }
 
 /**
- * Deprecated! many usages should be replaced by addEvent360
+ * See header for documentation
  */
-void TriggerWaveform::addEvent720(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
-	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
+void TriggerWaveform::addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
-void TriggerWaveform::addEvent360(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
+void TriggerWaveform::addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
-	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
+	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, state, channelIndex);
 }
 
-void TriggerWaveform::addEventAngle(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
-	addEvent(angle / getCycleDuration(), channelIndex, state);
+void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
+	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, TriggerWheel const channelIndex, TriggerValue const state) {
+void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == TriggerWheel:: T_SECONDARY) {
@@ -411,10 +414,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	shapeDefinitionError = false;
 
-	this->useOnlyRisingEdges = triggerConfig.UseOnlyRisingEdgeForTrigger;
-
 	switch (triggerConfig.TriggerType.type) {
-
 	case TT_TOOTHED_WHEEL:
 		initializeSkippedToothTrigger(this, triggerConfig.TriggerType.customTotalToothCount,
 				triggerConfig.TriggerType.customSkippedToothCount, triggerOperationMode, SyncEdge::RiseOnly);
@@ -627,7 +627,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMazdaSkyactivCam(this);
         break;
 
-	case UNUSED_21:
+	case TT_BENELLI_TRE:
+	    configureBenelli(this);
+        break;
+
 	case UNUSED_29:
 	case UNUSED_34:
 	case TT_1_16:
@@ -728,13 +731,5 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 
 	if (!shapeDefinitionError) {
 		wave.checkSwitchTimes(getCycleDuration());
-	}
-
-	if (syncEdge == SyncEdge::Both && useOnlyRisingEdges) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-		firmwareError(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#else
-		warning(CUSTOM_ERR_BOTH_FRONTS_REQUIRED, "trigger: both fronts required");
-#endif
 	}
 }

@@ -11,14 +11,12 @@
  * Kot_dnz 2014
  */
 
+#if EFI_UART_GPS
 #include "pch.h"
 
 #include <string.h>
-// todo: MISRA does not like time.h
-#include <time.h>
 
-#if EFI_UART_GPS
-
+#include "rusefi_types.h"
 #include "console_io.h"
 #include "eficonsole.h"
 #include "nmea.h"
@@ -30,13 +28,15 @@ static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);
 
 // this field holds our current state
 static loc_t GPSdata;
+static efidatetime_t lastDateTime;
 
-static int gpsMesagesCount = 0;
+static int gpsMessageCount = 0;
 static int uartErrors = 0;
 
-// todo: some data structure for coordinates location
-// todo:
+// TODO: some data structure for coordinates location
+
 float getCurrentSpeed(void) {
+    // TODO: ???
 	return GPSdata.speed;
 }
 
@@ -44,28 +44,27 @@ static void printGpsInfo() {
 	efiPrintf("GPS RX %s", hwPortname(engineConfiguration->gps_rx_pin));
 	efiPrintf("GPS TX %s", hwPortname(engineConfiguration->gps_tx_pin));
 
-	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
+	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMessageCount, uartErrors, getCurrentSpeed());
 
 	float sec = getTimeNowMs() / 1000.0;
-	efiPrintf("communication speed: %.2f", gpsMesagesCount / sec);
+	efiPrintf("communication speed: %.2f", gpsMessageCount / sec);
 
-	print("GPS latitude = %.2f\r\n", GPSdata.latitude);
-	print("GPS longitude = %.2f\r\n", GPSdata.longitude);
+	efiPrintf("GPS latitude = %.2f\r\n", GPSdata.latitude);
+	efiPrintf("GPS longitude = %.2f\r\n", GPSdata.longitude);
 }
 
-static struct tm curTm;
-
-static void onGpsMessage(char *buffer) {
-
+static void onGpsMessage(const char * const buffer) {
 	gps_location(&GPSdata, buffer);
-	date_get_tm(&curTm);
 
-	if (GPSdata.quality == 4 && GPSdata.GPStm.tm_year > 0 && GPSdata.GPStm.tm_sec != curTm.tm_sec) {
-		// quality =4 (valis GxRMC), year > 0, and difference more then second
-		date_set_tm(&GPSdata.GPStm);					// set GPS time
-		//}
+	if (GPSdata.quality == 4 && GPSdata.time.year > 0) {
+		getRtcDateTime(&lastDateTime);
+		if (GPSdata.time.second != dateTime.second) {
+			// quality =4 (valid GxRMC), year > 0, and difference more than second
+			setRtcDateTime(GPSdata.time);
+		}
 	}
-	gpsMesagesCount++;
+
+	gpsMessageCount++;
 }
 
 // we do not want this on stack, right?
@@ -83,7 +82,7 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 			if (count >= 1)
 				gps_str[--count] = '\0';					// delete 0xD
 
-//			scheduleMsg(&logger, "got GPS [%s]", gps_str);
+			// scheduleMsg(&logger, "got GPS [%s]", gps_str);
 
 			// 'gps_str' string completed
 			onGpsMessage(gps_str);
@@ -116,4 +115,4 @@ void initGps(void) {
 	addConsoleAction("gpsinfo", &printGpsInfo);
 }
 
-#endif /* EFI_UART_GPS */
+#endif // EFI_UART_GPS

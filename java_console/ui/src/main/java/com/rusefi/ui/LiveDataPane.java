@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.camick.RXTextUtilities;
+import com.devexperts.logging.Logging;
 import com.rusefi.CodeWalkthrough;
 import com.rusefi.config.Field;
 import com.rusefi.core.Sensor;
@@ -21,6 +22,8 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -29,6 +32,8 @@ import java.awt.event.*;
  * See LiveDataPaneSandbox
  */
 public class LiveDataPane {
+    private static final Logging log = getLogging(LiveDataPane.class);
+
     public static final String CPP_SUFFIX = ".cpp";
 
     /**
@@ -38,13 +43,12 @@ public class LiveDataPane {
     private boolean isPaused;
 
     public LiveDataPane(UIContext uiContext) {
-
+        long start = System.currentTimeMillis();
 
         JPanel vertical = new JPanel(new MigLayout("wrap 1", "[grow,fill]"));
         vertical.setBorder(BorderFactory.createLineBorder(Color.orange));
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel legend = populateLegend();
-
 
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         for (live_data_e view : live_data_e.values()) {
@@ -134,6 +138,7 @@ public class LiveDataPane {
         bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
 
         content.add(bottomPanel, BorderLayout.SOUTH);
+        log.info("created in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @NotNull

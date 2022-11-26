@@ -18,17 +18,17 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	float x = 121.90;
 	float y = 110.86;
 
-	s->addEvent720(x + y - 180, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(x, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(x + y, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(x + 180, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(360, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
+	s->addEvent720(x + y - 180, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x + y, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x + 180, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(x + 180 + y, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(x + 360, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(x + 360 + y, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(x + 540, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(x + 180 + y, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x + 360, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x + 360 + y, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(x + 540, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 /**
@@ -39,18 +39,18 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(1.6666);
 
-	s->addEvent720(106.77999999999997, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEvent720(120.09999999999998, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(188.0775, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(286.33, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(298.875, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(354.91999999999996, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
-	s->addEvent720(366.6825, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(476.45, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(543.9749999999999, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
-	s->addEvent720(639.52, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(653.15, TriggerWheel::T_SECONDARY, TriggerValue::RISE);
-	s->addEvent720(720.0, TriggerWheel::T_SECONDARY, TriggerValue::FALL);
+	s->addEvent720(106.77999999999997, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(120.09999999999998, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(188.0775, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(286.33, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(298.875, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(354.91999999999996, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(366.6825, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(476.45, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(543.9749999999999, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(639.52, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(653.15, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720.0, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 	s->useOnlyPrimaryForSync = true;
 }
 
@@ -114,17 +114,17 @@ void initializeVvt3A92(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	int w = 5;
-	s->addEvent360(120 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(120, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(120 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(120, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(12 + 120 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(12 + 120, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(12 + 120 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(12 + 120, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(240 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(240, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(240 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(240, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(360 - w, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent360(360, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent360(360 - w, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->setTriggerSynchronizationGap(9);
 	s->setSecondTriggerSynchronizationGap(0.11); // redundancy

@@ -29,7 +29,7 @@ public class RusefiParseErrorStrategy extends DefaultErrorStrategy {
         SystemOut.println("Successfully parsed (Antlr) " + filePath + " in " + durationMs + "ms");
     }
 
-    public static void parseDefinitionString(ParseTreeListener listener, String content) throws IOException {
+    public static void parseDefinitionString(ParseTreeListener listener, String content) {
         SystemOut.println("Parsing string (Antlr)");
 
         CharStream in = new ANTLRInputStream(content);

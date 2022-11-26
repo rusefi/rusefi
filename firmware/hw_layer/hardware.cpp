@@ -403,17 +403,20 @@ void initHardwareNoConfig() {
 	initHistogramsModule();
 #endif /* EFI_HISTOGRAMS */
 
+#if EFI_GPIO_HARDWARE
 	/**
 	 * We need the LED_ERROR pin even before we read configuration
 	 */
 	initPrimaryPins();
+#endif // EFI_GPIO_HARDWARE
 
 #if EFI_PROD_CODE
 	// it's important to initialize this pretty early in the game before any scheduling usages
 	initSingleTimerExecutorHardware();
-
+#if EFI_RTC
 	initRtc();
-#endif /* EFI_PROD_CODE */
+#endif // EFI_RTC
+#endif // EFI_PROD_CODE
 
 #if EFI_INTERNAL_FLASH
 	initFlash();

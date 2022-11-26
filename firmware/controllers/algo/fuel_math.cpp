@@ -129,6 +129,11 @@ float getRunningFuel(float baseFuel) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
 	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
+
+#if EFI_LAUNCH_CONTROL
+	runningFuel *= engine->launchController.getFuelCoefficient();
+#endif
+
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
 	engine->engineState.running.fuel = runningFuel * 1000;

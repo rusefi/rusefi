@@ -6,7 +6,8 @@ import java.io.*;
 import java.util.List;
 
 public abstract class StreamFile {
-    protected OutputStream stream;
+    // todo: always write into Writer since it has better API, it's insane to have to references into same stream
+    protected LogicdataOutputStream stream;
     protected Writer writer;
 
     public StreamFile() {
@@ -45,8 +46,9 @@ public abstract class StreamFile {
     }
 
     protected void createFileWriter(String fileName) throws FileNotFoundException {
-        stream = new FileOutputStream(fileName);
-        writer = new OutputStreamWriter(stream);
+        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
+        stream = new LogicdataOutputStream(fileOutputStream);
+        writer = new OutputStreamWriter(fileOutputStream);
     }
 
     protected void writeFooter() throws IOException {

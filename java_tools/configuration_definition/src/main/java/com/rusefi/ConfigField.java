@@ -95,7 +95,13 @@ public class ConfigField {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
-                if (!hasAutoscale && !scale.trim().equals("1")) {
+                Double scaleDouble;
+                try {
+                    scaleDouble = Double.parseDouble(scale);
+                } catch (NumberFormatException ignore) {
+                    scaleDouble = -1.0;
+                }
+                if (!hasAutoscale && scaleDouble != 1) {
                     throw new IllegalStateException("Unexpected scale of " + scale + " without autoscale on " + this);
                 }
             }
@@ -383,12 +389,7 @@ public class ConfigField {
 
     // see testUnquote
     public static String unquote(String token) {
-        int length = token.length();
-        if (length < 2)
-            return token;
-        if (token.charAt(0) == '\"' && token.charAt(token.length() - 1) == '\"')
-            return token.substring(1, length - 1);
-        return token;
+        return VariableRegistry.unquote(token);
     }
 
     public void setFromIterate(String iterateOriginalName, int iterateIndex) {

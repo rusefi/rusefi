@@ -230,11 +230,14 @@ private:
 };
 }
 
+/**
+  * Could this be unified with getIcuParams() method?
+  */
 static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	switch (pin) {
 #if STM32_PWM_USE_TIM1
-	case Gpio::A8:  return stm32_pwm_config{&PWMD1, 0, 1};
-	case Gpio::A9:  return stm32_pwm_config{&PWMD1, 1, 1};
+	case Gpio::A8:  return stm32_pwm_config{&PWMD1, /*channel*/0, /*AF*/1};
+	case Gpio::A9:  return stm32_pwm_config{&PWMD1, /*channel*/1, /*AF*/1};
 	case Gpio::A10: return stm32_pwm_config{&PWMD1, 2, 1};
 	case Gpio::A11: return stm32_pwm_config{&PWMD1, 3, 1};
 

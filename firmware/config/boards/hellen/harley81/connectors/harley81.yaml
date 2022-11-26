@@ -105,7 +105,7 @@ pins:
     function: Sensor Ground
 
   - pin: 30
-    function: Crank Sensor VR+ Negative Input
+    function: Crank Sensor VR+ Positive Input
     ts_name: 30 Crank VR+
 
   - pin: 32

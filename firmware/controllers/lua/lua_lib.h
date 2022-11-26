@@ -1,5 +1,8 @@
 /**
  * file lua_lib.h
+ * if you like any of those you would have to copy paste into your script manually - those
+ * are NOT part of the default anything automatically
+ * please remove slash from the end of each line
  */
 
 #define ARRAY_EQUALS "function equals(data1, data2) \
@@ -89,6 +92,7 @@ end  \
 
 // one day we shall get Preprocessor macros with C++11 raw string literals
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=55971
+// for when you want "I want bitWidth number of bits starting at bitIndex in data array
 #define GET_BIT_RANGE_LSB " \
 function getBitRange(data, bitIndex, bitWidth) \
 	byteIndex = bitIndex >> 3 \

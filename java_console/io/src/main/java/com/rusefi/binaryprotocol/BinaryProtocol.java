@@ -13,6 +13,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.core.FileUtil;
@@ -328,8 +329,7 @@ public class BinaryProtocol {
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
             byte[] packet = new byte[4];
-            putShort(packet, 0, swap16(offset));
-            putShort(packet, 2, swap16(requestSize));
+            ByteRange.packOffsetAndSize(offset, requestSize, packet);
 
             byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
@@ -422,8 +422,7 @@ public class BinaryProtocol {
 
     public static byte[] createCrcCommand(int size) {
         byte[] packet = new byte[4];
-        putShort(packet, 0, swap16(/*offset = */ 0));
-        putShort(packet, 2, swap16(size));
+        ByteRange.packOffsetAndSize(0, size, packet);
         return packet;
     }
 
@@ -477,8 +476,7 @@ public class BinaryProtocol {
         isBurnPending = true;
 
         byte[] packet = new byte[4 + size];
-        putShort(packet, 0, swap16(ecuOffset));
-        putShort(packet, 2, swap16(size));
+        ByteRange.packOffsetAndSize(ecuOffset, size, packet);
 
         System.arraycopy(content, contentOffset, packet, 4, size);
 

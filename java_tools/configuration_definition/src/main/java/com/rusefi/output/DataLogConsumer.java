@@ -11,7 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.TreeSet;
 
-import static com.rusefi.ConfigField.unquote;
+import static com.rusefi.VariableRegistry.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class DataLogConsumer implements ConfigurationConsumer {

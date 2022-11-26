@@ -28,8 +28,9 @@ float FuelComputer::getStoichiometricRatio() const {
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
+		// todo: fatal in July of 2023
 		// 14.7 = E0 gasoline AFR
-		primary = STOICH_RATIO;
+		engineConfiguration->stoichRatioPrimary = primary = STOICH_RATIO;
 	}
 
 	// Without an ethanol/flex sensor, return primary configured stoich ratio
@@ -42,7 +43,8 @@ float FuelComputer::getStoichiometricRatio() const {
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (secondary < 5) {
 		// 9.0 = E100 ethanol AFR
-		secondary = 9.0f;
+		// todo: fatal in July of 2023
+		engineConfiguration->stoichRatioSecondary = secondary = 9.0f;
 	}
 
 	auto flex = Sensor::get(SensorType::FuelEthanolPercent);

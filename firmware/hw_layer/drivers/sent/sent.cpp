@@ -7,11 +7,12 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2022
  */
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 
 #include "pch.h"
 
 #include "sent.h"
+#include "sent_logic.h"
 
 /*==========================================================================*/
 /* Protocol definitions.													*/
@@ -36,16 +37,6 @@
 /* Decoder configuration													*/
 /*==========================================================================*/
 
-#ifndef SENT_CHANNELS_NUM
-#define SENT_CHANNELS_NUM		4 // Number of sent channels
-#endif
-
-/* collect statistic */
-#define SENT_STATISTIC_COUNTERS	1
-
-/* Maximum slow shannel mailboxes, DO NOT CHANGE */
-#define SENT_SLOW_CHANNELS_MAX  16
-
 /*==========================================================================*/
 /* Decoder																	*/
 /*==========================================================================*/
@@ -66,94 +57,12 @@
 /* convert CPU ticks to float Us */
 #define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
 
-typedef enum
-{
-	SENT_STATE_CALIB = 0,
-	SENT_STATE_INIT,
-	SENT_STATE_SYNC,
-	SENT_STATE_STATUS,
-	SENT_STATE_SIG1_DATA1,
-	SENT_STATE_SIG1_DATA2,
-	SENT_STATE_SIG1_DATA3,
-	SENT_STATE_SIG2_DATA1,
-	SENT_STATE_SIG2_DATA2,
-	SENT_STATE_SIG2_DATA3,
-	SENT_STATE_CRC,
-} SENT_STATE_enum;
-
-struct sent_channel_stat {
-	uint32_t ShortIntervalErr;
-	uint32_t LongIntervalErr;
-	uint32_t SyncErr;
-	uint32_t CrcErrCnt;
-	uint32_t FrameCnt;
-	uint32_t RestartCnt;
-};
-
-class sent_channel {
-private:
-	SENT_STATE_enum state = SENT_STATE_CALIB;
-
-	/* Unit interval in timer clocks - adjusted on SYNC */
-	uint32_t tickPerUnit;
-	uint32_t pulseCounter;
-	/* pulses skipped in init state while waiting for SYNC */
-	uint32_t initStatePulseCounter;
-
-	/* fast channel shift register*/
-	uint32_t rxReg;
-	/* fast channel last received valid message */
-	uint32_t rxLast;
-
-	/* slow channel shift registers and flags */
-	uint16_t scMsgFlags;
-	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
-	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
-	/* Slow channel decoder */
-	int SlowChannelStore(uint8_t id, uint16_t data);
-	int SlowChannelDecoder(void);
-
-	/* CRC */
-	uint8_t crc4(uint32_t data);
-	uint8_t crc4_gm(uint32_t data);
-	uint8_t crc4_gm_v2(uint32_t data);
-
-	void restart(void);
-
-public:
-	/* slow channel data */
-	struct {
-		uint16_t data;
-		uint8_t id;
-	} scMsg[16];
-
-	/* Statistic counters */
-#if SENT_STATISTIC_COUNTERS
-	sent_channel_stat statistic;
-#endif // SENT_STATISTIC_COUNTERS
-
-	/* Decoder */
-	int Decoder(uint16_t clocks);
-
-	/* Get last raw message */
-	int GetMsg(uint32_t* rx);
-	/* Unpack last valid message to status, signal0 and signal1
-	 * Note:
-	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
-	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
-	int GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1);
-
-	/* Show status */
-	void Info(void);
-};
-
-static sent_channel channels[SENT_CHANNELS_NUM];
-
 void sent_channel::restart(void)
 {
 	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
-	initStatePulseCounter = 0;
+	currentStatePulseCounter = 0;
+	hasPausePulse = false;
 	tickPerUnit = 0;
 
 	/* reset slow channels */
@@ -167,29 +76,56 @@ void sent_channel::restart(void)
 		statistic.SyncErr = 0;
 		statistic.CrcErrCnt = 0;
 		statistic.FrameCnt = 0;
+		statistic.sc = 0;
+		statistic.scCrcErr = 0;
 		statistic.RestartCnt++;
 	#endif
+}
+
+uint32_t sent_channel::calcTickPerUnit(uint32_t clocks)
+{
+	/* int division with rounding */
+	return (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+}
+
+float sent_channel::getTickTime(void)
+{
+	return tickPerUnit;
 }
 
 int sent_channel::Decoder(uint16_t clocks)
 {
 	int ret = 0;
+	int interval;
 
 	pulseCounter++;
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
-		/* Find longes pulse */
-		if (clocks > tickPerUnit) {
-			tickPerUnit = clocks;
+		if (tickPerUnit == 0) {
+			/* no tickPerUnit calculated yet
+			 * lets assume this is sync pulse... */
+			tickPerUnit = calcTickPerUnit(clocks);
+		} else {
+			/* some tickPerUnit calculated...
+			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
+			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
+				currentStatePulseCounter++;
+				if (currentStatePulseCounter == SENT_MSG_PAYLOAD_SIZE) {
+					pulseCounter = 0;
+					currentStatePulseCounter = 0;
+					state = SENT_STATE_INIT;
+				}
+			} else {
+				currentStatePulseCounter = 0;
+				tickPerUnit = calcTickPerUnit(clocks);
+			}
 		}
-		/* ...this should be SYNC pulse */
 		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
-			/* calculate Unit time from SYNC pulse */
-			tickPerUnit = (tickPerUnit + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
-			pulseCounter = 0;
-			state = SENT_STATE_INIT;
+			/* failed to calculate valid tickPerUnit, restart */
+			restart();
 		}
 		return 0;
 	}
@@ -201,16 +137,21 @@ int sent_channel::Decoder(uint16_t clocks)
 
 		if (((100 * clocks) >= (syncClocks * 80)) &&
 			((100 * clocks) <= (syncClocks * 120))) {
-			initStatePulseCounter = 0;
 			/* adjust unit time */
-			tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-							(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+			tickPerUnit = calcTickPerUnit(clocks);
+			/* we get here from calibration phase. calibration phase end with CRC nibble
+			 * if we had to skip ONE pulse before we get sync - that means device sends pause
+			 * pulses in between of messages */
+			if (currentStatePulseCounter == 1) {
+				hasPausePulse = true;
+			}
 			/* next state */
+			currentStatePulseCounter = 0;
 			state = SENT_STATE_STATUS;
 		} else {
-			initStatePulseCounter++;
+			currentStatePulseCounter++;
 			/* 3 frames skipped, no SYNC detected - recalibrate */
-			if (initStatePulseCounter >= (9 * 3)) {
+			if (currentStatePulseCounter >= (9 * 3)) {
 				restart();
 			}
 		}
@@ -218,7 +159,7 @@ int sent_channel::Decoder(uint16_t clocks)
 		return 0;
 	}
 
-	int interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+	interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 
 	if (interval < 0) {
 		#if SENT_STATISTIC_COUNTERS
@@ -240,8 +181,7 @@ int sent_channel::Decoder(uint16_t clocks)
 			if (interval == SENT_SYNC_INTERVAL)
 			{// sync interval - 56 ticks
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
-								(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
+				tickPerUnit = calcTickPerUnit(clocks);
 				rxReg = 0;
 				state = SENT_STATE_STATUS;
 			}
@@ -304,7 +244,7 @@ int sent_channel::Decoder(uint16_t clocks)
 						#endif // SENT_STATISTIC_COUNTERS
 						ret = -1;
 					}
-					state = SENT_STATE_SYNC;
+					state = hasPausePulse ? SENT_STATE_PAUSE : SENT_STATE_SYNC;
 				}
 			}
 			else
@@ -316,6 +256,9 @@ int sent_channel::Decoder(uint16_t clocks)
 				state = SENT_STATE_INIT;
 				ret = -1;
 			}
+			break;
+		case SENT_STATE_PAUSE:
+			state = SENT_STATE_SYNC;
 			break;
 	}
 
@@ -376,9 +319,9 @@ int sent_channel::GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1)
 	return 0;
 }
 
-int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
+int sent_channel::StoreSlowChannelValue(uint8_t id, uint16_t data)
 {
-	int i;
+	size_t i;
 
 	/* Update already allocated messagebox? */
 	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
@@ -403,6 +346,20 @@ int sent_channel::SlowChannelStore(uint8_t id, uint16_t data)
 	return -1;
 }
 
+int sent_channel::GetSlowChannelValue(uint8_t id)
+{
+	size_t i;
+
+	for (i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
+		if ((scMsgFlags & BIT(i)) && (scMsg[i].id == id)) {
+			return scMsg[i].data;
+		}
+	}
+
+	/* not found */
+	return -1;
+}
+
 int sent_channel::SlowChannelDecoder()
 {
 	/* bit 2 and bit 3 from status nibble are used to transfer short messages */
@@ -412,6 +369,7 @@ int sent_channel::SlowChannelDecoder()
 	/* shift in new data */
 	scShift2 = (scShift2 << 1) | b2;
 	scShift3 = (scShift3 << 1) | b3;
+	scCrcShift = (scCrcShift << 2) | ((uint32_t)b2 << 1) | b3;
 
 	if (1) {
 		/* Short Serial Message format */
@@ -425,7 +383,7 @@ int sent_channel::SlowChannelDecoder()
 			uint8_t id = (scShift2 >> 12) & 0x0f;
 			uint16_t data = (scShift2 >> 4) & 0xff;
 
-			return SlowChannelStore(id, data);
+			return StoreSlowChannelValue(id, data);
 		}
 	}
 	if (1) {
@@ -435,29 +393,33 @@ int sent_channel::SlowChannelDecoder()
 		if ((scShift3 & 0x3f821) == 0x3f000) {
 			uint8_t id;
 
-			/* C-flag: configuration bit is used to indicate 16 bit format */
-			bool sc16Bit = !!(scShift3 & (1 << 10));
-			if (!sc16Bit) {
-				/* 12 bit message, 8 bit ID */
+			uint8_t crc = (scShift2 >> 12) & 0x3f;
+			#if SENT_STATISTIC_COUNTERS
+				statistic.sc++;
+			#endif
+			if (crc == crc6(scCrcShift)) {
+				/* C-flag: configuration bit is used to indicate 16 bit format */
+				bool sc16Bit = !!(scShift3 & (1 << 10));
+				if (!sc16Bit) {
+					/* 12 bit message, 8 bit ID */
+					id = ((scShift3 >> 1) & 0x0f) |
+						 ((scShift3 >> 2) & 0xf0);
+					uint16_t data = scShift2 & 0x0fff; /* 12 bit */
 
-				/* TODO: add crc check */
+					/* TODO: add crc check */
+					return StoreSlowChannelValue(id, data);
+				} else {
+					/* 16 bit message, 4 bit ID */
+					id = (scShift3 >> 6) & 0x0f;
+					uint16_t data = (scShift2 & 0x0fff) |
+						   (((scShift3 >> 1) & 0x0f) << 12);
 
-				id = ((scShift3 >> 1) & 0x0f) |
-					 ((scShift3 >> 2) & 0xf0);
-				uint16_t data = scShift2 & 0x0fff; /* 12 bit */
-
-				/* TODO: add crc check */
-				return SlowChannelStore(id, data);
+					return StoreSlowChannelValue(id, data);
+				}
 			} else {
-				/* 16 bit message, 4 bit ID */
-
-				/* TODO: add crc check */
-
-				id = (scShift3 >> 6) & 0x0f;
-				uint16_t data = (scShift2 & 0x0fff) |
-					   (((scShift3 >> 1) & 0x0f) << 12);
-
-				return SlowChannelStore(id, data);
+				#if SENT_STATISTIC_COUNTERS
+					statistic.scCrcErr++;
+				#endif
 			}
 		}
 	}
@@ -517,6 +479,34 @@ uint8_t sent_channel::crc4_gm_v2(uint32_t data)
 	return crc;
 }
 
+uint8_t sent_channel::crc6(uint32_t data)
+{
+	size_t i;
+	/* Seed 0x15 (21) */
+	uint8_t crc = 0x15;
+	/* CRC table for poly = 0x59 (x^6 + x^4 + x^3 + 1) */
+	const uint8_t crc6_table[64] = {
+		 0, 25, 50, 43, 61, 36, 15, 22, 35, 58, 17,  8, 30,  7, 44, 53,
+		31,  6, 45, 52, 34, 59, 16,  9, 60, 37, 14, 23,  1, 24, 51, 42,
+		62, 39, 12, 21,  3, 26, 49, 40, 29,  4, 47, 54, 32, 57, 18, 11,
+		33, 56, 19, 10, 28,  5, 46, 55,  2, 27, 48, 41, 63, 38, 13, 20 };
+
+	for (i = 0; i < 4; i++) {
+		uint8_t tmp = (data >> (24 - 6 * (i + 1))) & 0x3f;
+		crc = tmp ^ crc6_table[crc];
+	}
+	// Extra cound with 0 input
+	crc = 0 ^ crc6_table[crc];
+
+	return crc;
+}
+
+#endif // EFI_PROD_CODE || EFI_UNIT_TEST
+
+#if EFI_PROD_CODE
+
+static sent_channel channels[SENT_CHANNELS_NUM];
+
 void sent_channel::Info(void)
 {
 	int i;
@@ -524,7 +514,7 @@ void sent_channel::Info(void)
 	uint8_t stat;
 	uint16_t sig0, sig1;
 
-	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(tickPerUnit));
+	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
 	efiPrintf("Total pulses %d", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
@@ -543,7 +533,8 @@ void sent_channel::Info(void)
 	#if SENT_STATISTIC_COUNTERS
 		efiPrintf("Restarts %d", statistic.RestartCnt);
 		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
-		efiPrintf("Total frames %d with crc error %d (%f %%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
+		efiPrintf("Total frames %d with CRC error %d (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
+		efiPrintf("Total slow channel messages %d with crc6 errors %d (%f%%)", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
 		efiPrintf("Sync errors %d", statistic.SyncErr);
 	#endif
 }
@@ -609,20 +600,32 @@ static void printSentInfo()
 }
 
 /* Don't be confused: this actually returns throttle body position */
+/* TODO: remove, replace with getSentValues() */
 float getSentValue(size_t index) {
 	if (index < SENT_CHANNELS_NUM) {
 		uint16_t sig0, sig1;
 		sent_channel &ch = channels[index];
 
 		if (ch.GetSignals(NULL, &sig0, &sig1) == 0) {
-			if (sig0 + sig1 == 0xfff) {
-				/* scale to 0.0 .. 1.0 */
-				return (float)sig1 / 0xfff;
-			}
+
+			// GM sig0 + sig1 == 0xfff but Ford does not
+			/* scale to 0.0 .. 1.0 */
+			return sig0;
 		}
 	}
 
     return NAN;
+}
+
+int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1) {
+	if (index < SENT_CHANNELS_NUM) {
+		sent_channel &ch = channels[index];
+
+		return ch.GetSignals(NULL, sig0, sig1);
+	}
+
+	/* invalid channel */
+    return -1;
 }
 
 /* Should be called once */

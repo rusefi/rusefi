@@ -362,8 +362,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->enableVerboseCanTx;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
-	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
-		return engineConfiguration->vvtCamSensorUseRise;
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
 		return engineConfiguration->measureMapOnlyInOneCylinder;
 	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
@@ -622,8 +620,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isManualSpinningMode;
 	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
 		return engineConfiguration->twoWireBatchInjection;
-	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
-		return engineConfiguration->useOnlyRisingEdgeForTrigger;
 	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
 		return engineConfiguration->twoWireBatchIgnition;
 	if (strEqualCaseInsensitive(name, "useFixedBaroCorrFromMap"))
@@ -776,6 +772,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->fan2OffTemperature;
 	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
 		return engineConfiguration->vvtControlMinRpm;
+	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
+		return engineConfiguration->launchFuelAdderPercent;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
 		return engineConfiguration->coastingFuelCutRpmHigh;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmLow"))
@@ -1375,11 +1373,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 	{
 		engineConfiguration->isCJ125Enabled = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
-	{
-		engineConfiguration->vvtCamSensorUseRise = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
@@ -2027,11 +2020,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->twoWireBatchInjection = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
-	{
-		engineConfiguration->useOnlyRisingEdgeForTrigger = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
 	{
 		engineConfiguration->twoWireBatchIgnition = (int)value;
@@ -2410,6 +2398,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
 	{
 		engineConfiguration->vvtControlMinRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
+	{
+		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))

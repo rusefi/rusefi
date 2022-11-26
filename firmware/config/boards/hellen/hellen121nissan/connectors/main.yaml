@@ -3,6 +3,9 @@ pins:
     function: GND
     type: GND
 
+  - pin: 2a
+    function: LSU 4.2 Heater1
+
   - pin: 4a
     class: outputs
     ts_name: ETB_OUT+
@@ -47,6 +50,9 @@ pins:
     class: [event_inputs]
     ts_name: 14 - Cam Left
 
+  - pin: 16a
+    function: LSU 4.2 UN1
+
   - pin: 21a
 # Q307
     id: D9
@@ -71,6 +77,9 @@ pins:
     function: Injector 1
     type: inj
     
+  - pin: 24a
+    function: LSU 4.2 Heater2
+
   - pin: 29a
     id: D3
     ts_name: 29 - VIAS
@@ -126,7 +135,26 @@ pins:
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 50 - TPS 1
-    function: TPS 1 sensor input  
+    function: TPS 1 sensor input
+
+  - pin: 51a
+    # H144_IN_O2S
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: 51 - MAF
+    function: MAF signal
+
+  - pin: 51a
+    function: LSU 4.2 IP1
+
+  - pin: 56a
+    function: LSU 4.2 IP1
+
+  - pin: 57a
+    function: LSU 4.2 VM2
+
+  - pin: 58a
+    function: LSU 4.2 IP2
 
   - pin: 60a
     id: E2
@@ -187,6 +215,16 @@ pins:
     class: analog_inputs
     ts_name: 73 - CLT
     function: CLT sensor
+
+  - pin: 75a
+    function: LSU 4.2 IA1
+
+  - pin: 77a
+    function: LSU 4.2 UN2
+
+  - pin: 77a
+    function: LSU 4.2 IA2
+
 
   - pin: 78a
     function: GNDA

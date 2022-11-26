@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # it's totally possible to develop on Windows. Also WSL is amazing!
@@ -20,20 +20,14 @@ sudo apt-get install -y build-essential gcc make openjdk-8-jdk-headless ant mtoo
 # delete any old tools, create a new folder, and go there
 rm -rf ~/.rusefi-tools
 mkdir ~/.rusefi-tools
+dir=$(pwd)
 cd ~/.rusefi-tools
 
-# in case not first execution
-rm -rf arm-none-eabi-gcc.tar.bz2
-
-# Download and extract GCC compiler
-curl -L -o arm-none-eabi-gcc.tar.bz2 https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.10/gcc-arm-none-eabi-10.3-2021.10-x86_64-linux.tar.bz2
-tar -xjvf arm-none-eabi-gcc.tar.bz2
-
-# Delete downloaded image
-rm arm-none-eabi-gcc.tar.bz2
+# provide GCC arm-none-eabi toolchain
+${dir}/provide_gcc.sh
 
 # Add the compiler to your path
-echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-none-eabi-10.3-2021.10/bin' >> ~/.profile
+echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-none-eabi/bin' >> ~/.profile
 
 # Allow the current user to use serial ports
 sudo usermod -a -G dialout $USER

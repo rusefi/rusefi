@@ -36,7 +36,7 @@ enable2ndByteCanID = false
 	signature	= @@TS_SIGNATURE@@
 
 [TunerStudio]
-	queryCommand	= "S"
+	queryCommand	= "@#TS_HELLO_COMMAND#@"
 	versionInfo	= "V"  ; firmware version for title bar.
 	signature= @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
@@ -110,22 +110,13 @@ enable2ndByteCanID = false
 
 [LoggerDefinition]
 ; valid logger types: composite, tooth, trigger, csv
-;	loggerDef = compositeLogger, "Primary Trigger Logger", tooth
 	loggerDef = compositeLogger, "Trigger Logger", composite
-		startCommand = "l\x01"
-		stopCommand  = "l\x02"
-		dataReadCommand = "L"
+		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x01"
+		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x02"
+		dataReadCommand = "@#TS_GET_LOGGER_GET_BUFFER#@"
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
-
-;tooth
-		; recordDef = headerLen, footerLen, recordLen
-;		recordDef =	0,	0,	@@COMPOSITE_PACKET_SIZE@@
-
-		; uint16 that stores 1/100 second
-;		recordField = toothTime, "tooth", 0, 16, 0.01, "ms"
-
 
 		; recordDef = headerLen, footerLen, recordLen
 		recordDef =	0,	0,	@@COMPOSITE_PACKET_SIZE@@
@@ -177,6 +168,11 @@ enable2ndByteCanID = false
 
 ; see TS_OUTPUT_SIZE in console source code
 	ochBlockSize	= @@TS_TOTAL_OUTPUT_SIZE@@
+
+; 11.2.3 Full Optimized – High Speed
+    scatteredOchGetCommand = @@TS_GET_SCATTERED_GET_COMMAND_char@@
+	scatteredOffsetArray = highSpeedOffsets
+	scatteredGetEnabled = { 0 }
 
 ;
 ; see TunerStudioOutputChannels struct
@@ -785,7 +781,7 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		yBins		= boostTpsBins,  TPSValue
 		zBins		= boostTableOpenLoop
 
-	table = boostTable2Tbl,  boostMapClosed,  "Boost control target",	1
+	table = boostTable2Tbl,  boostMapClosed,  "Boost control target (kPa)",	1
 		xBins		= boostRpmBins,  RPMValue
 		yBins		= boostTpsBins,  TPSValue
 		zBins		= boostTableClosedLoop
@@ -1534,7 +1530,6 @@ menuDialog = main
 	menu = "&Base &Engine"
 		subMenu = engineChars,				"Base engine"
 		subMenu = limitsAndFallback,		"Limits and fallbacks"
-		subMenu = cltRevLimitCurve,			"CLT-based RPM Limit", 0, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
 		subMenu = triggerConfiguration,		"Trigger"
 		subMenu = triggerConfiguration_IO, "Advanced Trigger"
 		subMenu = triggerConfiguration_gap, "Trigger Gap Override"
@@ -1543,15 +1538,9 @@ menuDialog = main
 		subMenu = std_separator
 
 		# Digital outputs
-		subMenu = mainRelayDialog,			"Main relay"
-		subMenu = fuelPump,					"Fuel pump"
-		subMenu = fanSetting,				"Radiator Fan"
+		subMenu = outputsDialog,			"Outputs"
 		subMenu = acSettings,				"Air Conditioning"
-		subMenu = tachSettings,				"Tachometer"
-		subMenu = malfunction,				"Check engine light"
 		subMenu = statusLeds,				"Status LEDs"
-		subMenu = startStopDialog,			"Start Button"
-		subMenu = starterRelay,				"Starter Disable relay"
 
 	menu = "Fuel"
 		# basic
@@ -1685,12 +1674,9 @@ menuDialog = main
 		subMenu = idleVeTableTbl,				"Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
-  menu = "&View"
-@@LIVE_DATA_MENU_FROM_FILE@@
-
 	menu = "&Advanced"
+		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
-		subMenu = gearDetection,			"Gear detection", 0
 
 		subMenu = std_separator
 		subMenu = boostDialog,			"Boost control"
@@ -1719,19 +1705,21 @@ menuDialog = main
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
 		subMenu = luaOutputs,				"Lua Script PWM Outputs"
-		subMenu = scriptSetting,		"Lua Script Settings"
 
-		subMenu = std_separator
-		subMenu = scriptTable1TblSettings,			"Script Table #1"
-		subMenu = scriptTable2TblSettings,			"Script Table #2"
-		subMenu = scriptTable3TblSettings,			"Script Table #3"
-		subMenu = scriptTable4TblSettings,			"Script Table #4"
-		subMenu = scriptCurve1Settings,					"Script Curve #1"
-		subMenu = scriptCurve2Settings,				"Script Curve #2"
-		subMenu = scriptCurve3Settings,				"Script Curve #3"
-		subMenu = scriptCurve4Settings,				"Script Curve #4"
-		subMenu = scriptCurve5Settings,				"Script Curve #5"
-		subMenu = scriptCurve6Settings,				"Script Curve #6"
+		groupMenu = "Lua Calibrations"
+		groupChildMenu = scriptSetting,		"Lua Script Settings"
+
+		groupChildMenu = scriptTable1TblSettings,			"Script Table #1"
+		groupChildMenu = scriptTable2TblSettings,			"Script Table #2"
+		groupChildMenu = scriptTable3TblSettings,			"Script Table #3"
+		groupChildMenu = scriptTable4TblSettings,			"Script Table #4"
+
+		groupChildMenu = scriptCurve1Settings,				"Script Curve #1"
+		groupChildMenu = scriptCurve2Settings,				"Script Curve #2"
+		groupChildMenu = scriptCurve3Settings,				"Script Curve #3"
+		groupChildMenu = scriptCurve4Settings,				"Script Curve #4"
+		groupChildMenu = scriptCurve5Settings,				"Script Curve #5"
+		groupChildMenu = scriptCurve6Settings,				"Script Curve #6"
 
 # users are confused by TCU dialogs. open question how to repackage as pre-alpha
 #		subMenu = std_separator
@@ -1824,7 +1812,6 @@ menuDialog = main
 		subMenu = hpfpTargetTable,							"HPFP Target Pressure", {hpfpCamLobes != 0}
 		subMenu = hpfpCompensationTable,					"HPFP Pump Compensation", {hpfpCamLobes != 0}
 		subMenu = std_separator
-		subMenu = smLaunchControl,			"Launch Control"
 		subMenu = fancyHardwareDialog,		"Fancy Hardware"
 		subMenu = std_separator
 
@@ -1845,6 +1832,9 @@ menuDialog = main
 
 		menu = "Help"
 			subMenu = helpGeneral,	"rusEFI Info"
+
+  menu = "&View"
+@@LIVE_DATA_MENU_FROM_FILE@@
 
 
 [ControllerCommands]
@@ -2143,8 +2133,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "What kind of engine",						twoStroke
 		field = "Skipped wheel location",					skippedWheelOnCam, 1, { twoStroke == 0 && (trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@ || @@TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION@@) }
-		field = "With VR sensors only rising edge has reliable position"
-		field = "use only rising edge",					useOnlyRisingEdgeForTrigger
 		field = "!Reminder that 4-stroke cycle is 720 degrees"
 		field = "!For well-known trigger types use '0' trigger angle offset"
 		field = "Trigger Angle Advance",					globalTriggerAngleOffset
@@ -2173,9 +2161,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 ; todo: https://github.com/rusefi/rusefi/issues/2077
 
 		field = "Cam mode (intake cams)",				vvtMode1, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-			field = "MAP readout angle",						mapCamDetectionAnglePosition, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
+		field = "MAP readout angle",					mapCamDetectionAnglePosition, 1, { vvtMode1 == @@vvt_mode_e_VVT_MAP_V_TWIN@@ }
 		field = "Cam mode (exhaust cams)",				vvtMode2, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
-		field = "VVT sync edge",						vvtCamSensorUseRise, {trigger_type != @@trigger_type_e_TT_MAZDA_MIATA_NA@@}
 		field = "Cam for engine sync resolution",		engineSyncCam, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ || vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 		field = "#Set offset so VVT indicates 0 degrees in default position"
 		field = "VVT offset bank 1 intake",				vvtOffsets1, { camInputs1 != 0 }
@@ -2186,6 +2173,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Maximum cam/VVT sync RPM",				maxCamPhaseResolveRpm
 		field = "Print verbose VVT sync details to console",verboseVVTDecoding
 		field = "Print verbose trigger sync to console",	verboseTriggerSynchDetails
+		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 		field = "Do not print messages in case of sync error",  silentTriggerError
 		field = "Focus on inputs in engine sniffer",	engineSnifferFocusOnInputs
 		field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
@@ -2214,7 +2202,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = triggerConfiguration
 		panel = triggerConfiguration_settings, {1}, { consumeObdSensors == 0 }
 		panel = triggerInputs, {1}, { consumeObdSensors == 0 }
-		field = "Display logic signals",				displayLogicLevelsInEngineSniffer
 
 ;			Engine->Injection Settings
 	dialog = injChars, "Injector Settings",	yAxis
@@ -3062,8 +3049,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Fan #1 adder",							fan1ExtraIdle
 		field = "Fan #2 adder",							fan2ExtraIdle
 		field = "Extra idle air if throttle pressed",	iacByTpsTaper
-		field = "Air Taper Rpm Range",						airTaperRpmRange
-		field = "Air By Rpm Taper",							airByRpmTaper
 
 	dialog = idleGating, "Idle Detection Thresholds"
 		field = "TPS threshold",	idlePidDeactivationTpsThreshold
@@ -3153,7 +3138,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = fanTest
 		panel = fanIndicators
 
-	dialog = fuelPump, "Fuel Pump"
+	dialog = fuelPumpDialog, "Fuel Pump"
 		field = "Output",							fuelPumpPin
 		field = "Output mode",					fuelPumpPinMode
 		field = "Prime duration",				startUpFuelPumpDuration
@@ -3164,9 +3149,33 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output",						mainRelayPin@@if_ts_show_main_relay
 		field = "Output mode",					mainRelayPinMode@@if_ts_show_main_relay
 
-	dialog = starterRelay, "Starter relay output"
+	dialog = starterRelayDialog, "Starter Disable"
 		field = "Output",						starterRelayDisablePin
 		field = "Output mode",					starterRelayDisablePinMode
+
+	dialog = startStopDialog, "Starter Control"
+		field = "Start/Stop Button input",		startStopButtonPin
+		field = "Start/Stop Button input mode",				startStopButtonMode
+		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
+		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
+
+;			Engine->MIL Settings
+	dialog = malfunctionDialog,	"Check Engine Settings"
+		field = "Output",						malfunctionIndicatorPin
+		field = "Output mode",				malfunctionIndicatorPinMode
+		field = "Warning Period",									warningPeriod
+
+    dialog = outputsDialogLeft
+		panel = mainRelayDialog
+		panel = fuelPumpDialog
+		panel = tachSettings
+		panel = startStopDialog
+		panel = starterRelayDialog
+		panel = malfunctionDialog
+
+    dialog = outputsDialog, "Outputs", border
+        panel = outputsDialogLeft, West
+        panel = fanSetting, Center
 
 	dialog = statusLeds, "Status LEDs"
 		field = "Running status LED",					runningLedPin
@@ -3175,11 +3184,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Trigger error LED",					triggerErrorPin
 		field = "Debug Trigger Sync",					debugTriggerSync
 
-;			Engine->MIL Settings
-	dialog = malfunction,	"Check Engine Settings"
-		field = "Output",						malfunctionIndicatorPin
-		field = "Output mode",				malfunctionIndicatorPinMode
-		field = "Warning Period",									warningPeriod
 
 	dialog = softwareKnockCfg, "Sense"
 		field = "Enable",				enableSoftwareKnock
@@ -3370,12 +3374,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Max",									alternatorControl_maxValue, {isAlternatorControlEnabled == 1}
 		field = "#% duty = Pterm + Iterm + Dterm + offset%"
 
-	dialog = startStopDialog, "Start/Stop Button"
-		field = "Start/Stop Button input",		startStopButtonPin
-		field = "Start/Stop Button input mode",				startStopButtonMode
-		field = "Starter Control",						starterControlPin, { starterControlPin != 0 || startStopButtonPin != 0}
-		field = "Start cranking maximum time",			startCrankingDuration, {startStopButtonPin != 0}
-
 	dialog = energySystems, "Battery and Alternator Settings",	yAxis
 		panel = batteryDialog@@if_ts_show_vbatt
 		panel = alternator
@@ -3418,6 +3416,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft
 		gauge = VSSGauge
+		panel = gearDetection
 
 ;			Engine->Other inputs
 	dialog = analogInputSettings, "Analog Input Settings"
@@ -3549,10 +3548,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Use MAP estimation table as fallback",	enableMapEstimationTableFallback
 		field = "Failed MAP sensor fallback",			failedMapFallback, { !enableMapEstimationTableFallback }
 
-	dialog = limitsAndFallback, "Limits and fallbacks"
+	dialog = limitsAndFallbackLeft
 		panel = limitsSettings
 		panel = etbLimits
 		panel = fallbacks
+
+    dialog = limitsAndFallbackCenter, "CLT-based RPM Limit"
+        panel = cltRevLimitCurve
+
+	dialog = limitsAndFallback, "Limits and fallbacks", border
+	    panel = limitsAndFallbackLeft, West
+   		panel = limitsAndFallbackCenter, Center, { (cutFuelOnHardLimit || cutSparkOnHardLimit) && useCltBasedRpmLimit }
 
 ;			Engine->Base Engine Settings
 	dialog = engineChars, "Base Engine Settings"
@@ -3764,7 +3770,8 @@ dialog = tcuControls, "Transmission Settings"
 
 ;Boost Closed Loop
 
-			dialog = boostPidDialog, ""
+	dialog = boostPidDialog, ""
+	    topicHelp = "boostPidHelp"
 			field = "Enable closed loop above",			minimumBoostClosedLoopMap, { isBoostControlEnabled && boostType == 1 }
 				field = "P Gain",									boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 			field = "I Gain",									boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
@@ -3786,6 +3793,18 @@ dialog = tcuControls, "Transmission Settings"
 		field = "D gain",							etbWastegatePid_dFactor,  { isBoostControlEnabled }
 		field = "PID min",							etbWastegatePid_minValue, { isBoostControlEnabled }
 		field = "PID max",							etbWastegatePid_maxValue, { isBoostControlEnabled }
+
+    help = boostPidHelp, "Boost Control PID"
+        text = "P = % per kPa error"
+        text = "I = % per kPa-seconds"
+        text = "D = % per kPa/sec"
+        text = ""
+        text = "If the boost error is 5kpa, and your P is set to 2, it will make a correction of 10%."
+        text = "If the boost error has been 5kPa for 2 second (10 kPa-seconds) and I is set to 0.1, it will make a correction of 1%"
+        text = "If the boost is changing at 10kPa/s and D is set to 0.5, it will make a correction of 5%."
+        text = "Those three terms are then added together, and limited by the PID min/max settings."
+        text = ""
+        text = "That is then added to the value from the open loop table, and sent to PWM the valve."
 
 	help = veTableDialogHelp, "Volumetric Efficiency"
 		text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode. VE incorporates pressure ratio as measured by MAP sensor in boost (no VE ever above 105%ish)"
@@ -4056,17 +4075,18 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Speed Threshold",							launchSpeedThreshold,  {launchControlEnabled == 1}
 		field = ""
 		field = "Launch RPM",								launchRpm,  {launchControlEnabled == 1}
+		field = "Ignition Retard Adder",				    launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Hard Cut RPM Adder",						hardCutRpmRange,  {launchControlEnabled == 1}
 		;field = "Extra Fuel",							launchFuelAdded,  {launchControlEnabled == 1}
 		;field = "Boost Solenoid Duty",						launchBoostDuty,  {launchControlEnabled == 1}
 		field = "TPS Threshold",								launchTpsThreshold,  {launchControlEnabled == 1}
 		field = "Ignition Retard enable",					enableLaunchRetard,  {launchControlEnabled == 1}
 		field = "Ignition Retard",						launchTimingRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
-		field = "Ignition Retard RPM Adder",				launchTimingRpmRange,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
+		field = "Fuel Added %",                     launchFuelAdderPercent,  {launchControlEnabled == 1}
 		field = "Smooth Retard Mode",						launchSmoothRetard,  {launchControlEnabled == 1 && enableLaunchRetard == 1}
 		field = "Hard Cut Mode"
 		field = "Ignition Cut",							launchSparkCutEnable,  {launchControlEnabled == 1}
 		field = "Fuel Cut",								launchFuelCutEnable,  {launchControlEnabled == 1}
-		field = "Hard Cut RPM Adder",						hardCutRpmRange,  {launchControlEnabled == 1}
 
 
 	dialog = smLaunchControl, "", border

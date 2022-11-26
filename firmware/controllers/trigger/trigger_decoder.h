@@ -29,12 +29,10 @@ public:
 	void update();
 
 	const char* const PrintPrefix;
-	bool UseOnlyRisingEdgeForTrigger;
 	bool VerboseTriggerSynchDetails;
 	trigger_config_s TriggerType;
 
 protected:
-	virtual bool isUseOnlyRisingEdgeForTrigger() const = 0;
 	virtual bool isVerboseTriggerSynchDetails() const = 0;
 	virtual trigger_config_s getType() const = 0;
 };
@@ -44,7 +42,6 @@ public:
 	PrimaryTriggerConfiguration() : TriggerConfiguration("TRG ") {}
 
 protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
 };
@@ -57,7 +54,6 @@ public:
 	}
 
 protected:
-	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
 	trigger_config_s getType() const override;
 };

@@ -69,7 +69,6 @@ void setSubaruEG33Defaults() {
 	setCamOperationMode();
 
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->specs.cylindersCount = 6;
 	setLeftRightBanksNeedBetterName();

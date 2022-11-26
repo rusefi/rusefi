@@ -17,11 +17,11 @@ void configureFiatIAQ_P8(TriggerWaveform * s) {
 	int width = 60;
 	s->tdcPosition = width;
 
-	s->addEvent720(width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(180, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(width, TriggerValue::RISE);
+	s->addEvent720(180, TriggerValue::FALL);
 
-	s->addEvent720(180 + width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEvent720(720, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEvent720(180 + width, TriggerValue::RISE);
+	s->addEvent720(720, TriggerValue::FALL);
 	s->setTriggerSynchronizationGap(3);
 }
 
@@ -40,10 +40,10 @@ void configureTriTach(TriggerWaveform * s) {
 
 	float angleDown = engineCycle / totalTeethCount * (0 + (1 - toothWidth));
 	float angleUp = engineCycle / totalTeethCount * (0 + 1);
-	s->addEventClamped(offset + angleDown, TriggerWheel::T_PRIMARY, TriggerValue::RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleDown + 0.1, TriggerWheel::T_SECONDARY, TriggerValue::RISE, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp, TriggerWheel::T_PRIMARY, TriggerValue::FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
-	s->addEventClamped(offset + angleUp + 0.1, TriggerWheel::T_SECONDARY, TriggerValue::FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleDown, TriggerValue::RISE, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleDown + 0.1, TriggerValue::RISE, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleUp, TriggerValue::FALL, TriggerWheel::T_PRIMARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
+	s->addEventClamped(offset + angleUp + 0.1, TriggerValue::FALL, TriggerWheel::T_SECONDARY, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 
 
 	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
@@ -67,13 +67,13 @@ void configureFordPip(TriggerWaveform * s) {
 	 */
 	int oneCylinder = s->getCycleDuration() / 8;
 
-	s->addEventAngle(oneCylinder * 0.75, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(oneCylinder, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(oneCylinder * 0.75, TriggerValue::RISE);
+	s->addEventAngle(oneCylinder, TriggerValue::FALL);
 
 
 	for (int i = 2;i<=8;i++) {
-		s->addEventAngle(oneCylinder * (i - 0.5), TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-		s->addEventAngle(oneCylinder * i, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEventAngle(oneCylinder * (i - 0.5), TriggerValue::RISE);
+		s->addEventAngle(oneCylinder * i, TriggerValue::FALL);
 	}
 
 }
@@ -84,20 +84,20 @@ void configureFordST170(TriggerWaveform * s) {
 
 	int total = s->getCycleDuration() / 8;
 
-	s->addEventAngle(1 * total - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(1 * total, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(1 * total - width, TriggerValue::RISE);
+	s->addEventAngle(1 * total, TriggerValue::FALL);
 
-	s->addEventAngle(2 * total - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(2 * total, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(2 * total - width, TriggerValue::RISE);
+	s->addEventAngle(2 * total, TriggerValue::FALL);
 
-	s->addEventAngle(4 * total - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(4 * total, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(4 * total - width, TriggerValue::RISE);
+	s->addEventAngle(4 * total, TriggerValue::FALL);
 
-	s->addEventAngle(6 * total - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(6 * total, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(6 * total - width, TriggerValue::RISE);
+	s->addEventAngle(6 * total, TriggerValue::FALL);
 
-	s->addEventAngle(8 * total - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(8 * total, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(8 * total - width, TriggerValue::RISE);
+	s->addEventAngle(8 * total, TriggerValue::FALL);
 }
 
 void configureDaihatsu4(TriggerWaveform * s) {
@@ -107,18 +107,18 @@ void configureDaihatsu4(TriggerWaveform * s) {
 
 	s->setTriggerSynchronizationGap(0.125);
 
-	s->addEventAngle(30 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(30, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(30 - width, TriggerValue::RISE);
+	s->addEventAngle(30, TriggerValue::FALL);
 
 
-	s->addEventAngle(s->getCycleDuration() / 3 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration() / 3, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(s->getCycleDuration() / 3 - width, TriggerValue::RISE);
+	s->addEventAngle(s->getCycleDuration() / 3, TriggerValue::FALL);
 
-	s->addEventAngle(s->getCycleDuration() / 3 * 2 - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration() / 3 * 2, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(s->getCycleDuration() / 3 * 2 - width, TriggerValue::RISE);
+	s->addEventAngle(s->getCycleDuration() / 3 * 2, TriggerValue::FALL);
 
-	s->addEventAngle(s->getCycleDuration() - width, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-	s->addEventAngle(s->getCycleDuration(), TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+	s->addEventAngle(s->getCycleDuration() - width, TriggerValue::RISE);
+	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
 
 }
 
@@ -133,23 +133,23 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 	{
 		int offset = 120;
 
-		s->addEventAngle(offset + 2 * 0 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 0 +  0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEventAngle(offset + 2 * 0 - 10, TriggerValue::RISE);
+		s->addEventAngle(offset + 2 * 0 +  0, TriggerValue::FALL);
 
 		// short gap 60 deg
 
-		s->addEventAngle(offset + 2 * 60 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 60 +  0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEventAngle(offset + 2 * 60 - 10, TriggerValue::RISE);
+		s->addEventAngle(offset + 2 * 60 +  0, TriggerValue::FALL);
 
 		// long gap 120 deg
 
-		s->addEventAngle(offset + 2 * 180 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 180 +  0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEventAngle(offset + 2 * 180 - 10, TriggerValue::RISE);
+		s->addEventAngle(offset + 2 * 180 +  0, TriggerValue::FALL);
 
 		// long gap 120 deg
 
-		s->addEventAngle(offset + 2 * 300 - 10, TriggerWheel::T_PRIMARY, TriggerValue::RISE);
-		s->addEventAngle(offset + 2 * 300 +  0, TriggerWheel::T_PRIMARY, TriggerValue::FALL);
+		s->addEventAngle(offset + 2 * 300 - 10, TriggerValue::RISE);
+		s->addEventAngle(offset + 2 * 300 +  0, TriggerValue::FALL);
 
 		// short gap, 60 deg back to zero/720
 	}
@@ -158,4 +158,23 @@ void configureBarra3plus1cam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(0, 1.6f, 2.4f);
 	// previous gap should be 1.0
 	s->setTriggerSynchronizationGap3(1, 0.8f, 1.2f);
+}
+
+void configureBenelli(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+    constexpr float magic = 15;
+
+	float angle = 3 * magic;
+
+	s->addEvent360(angle / 2 /* 22.5 */, TriggerValue::RISE);
+	s->addEvent360(angle /*     45   */, TriggerValue::FALL);
+
+	for (int i = 0;i< 24 - 3;i++) {
+		angle += magic / 2;
+		s->addEvent360(angle, TriggerValue::RISE);
+
+		angle += magic / 2;
+		s->addEvent360(angle, TriggerValue::FALL);
+	}
 }

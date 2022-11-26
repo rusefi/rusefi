@@ -34,8 +34,8 @@ using time_t = uint32_t;
 #define FOUR_STROKE_CYCLE_DURATION 720
 
 // gasoline E0
-#define STOICH_RATIO				14.7f
-#define CONST_PI           3.14159265358979323846
+#define STOICH_RATIO 14.7f
+#define CONST_PI 3.14159265358979323846
 
 
 // time in seconds
@@ -74,6 +74,17 @@ using efitimems64_t = int64_t;
  * See getTimeNowUs()
  */
 using efitimems_t = uint32_t;
+
+// date-time struct a la ctime struct tm
+typedef struct {
+	uint32_t year;
+	uint8_t month;
+	uint8_t day;
+	uint8_t hour;
+	uint8_t minute;
+	uint8_t second;
+	// uint16_t millisecond;
+} efidatetime_t;
 
 using angle_t = float;
 

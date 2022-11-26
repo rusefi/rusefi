@@ -40,9 +40,6 @@ void setDodgeNeon1995EngineConfiguration() {
 	// set_rpm_hard_limit 4000
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 
-
-//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-
 	/**
 	 * that's 1995 config
 	 */

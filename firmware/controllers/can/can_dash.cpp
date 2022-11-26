@@ -15,8 +15,10 @@
 #include "can_bmw.h"
 #include "can_vag.h"
 
+#include "rusefi_types.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
+
 // CAN Bus ID for broadcast
 #define CAN_FIAT_MOTOR_INFO           0x561
 #define CAN_MAZDA_RX_RPM_SPEED        0x201
@@ -58,17 +60,53 @@ static time_msecs_t mph_ctr;
 // when A/C compressor is allowed to be on, these values need to be sent so the A/C panel activates the compressor
 #define GENESIS_COUPLE_AC_ENABLE_18F 0x18F
 
+//https://www.drive2.ru/b/500679938089681452/
+#define NISSAN_STEERING_WHEEL 0x002
+
+// 505
 #define NISSAN_RPM_1F9 0x1F9
+
+// 561
+#define NISSAN_ENGINE_2 0x231
+// 563
+#define NISSAN_UNKNOWN_2 0x233
 // Nissan z33 350Z and else
 // 0x23d = 573
 #define NISSAN_RPM_CLT       0x23D
+// 574
+#define NISSAN_UNKNOWN_3 0x23E
 
+#define NISSAN_TCU_1 0x251
+#define NISSAN_TCU_2 0x253
+
+// 640
 #define NISSAN_VEHICLE_SPEED_280 0x280
 // wheel speed see "102 CAN Communication decoded"
 // 19500 value would be 100 kph
-#define NISSAN_WHEEL_SPEED 0x285
+// 644
+#define NISSAN_WHEEL_SPEED1 0x284
+// 645
+#define NISSAN_WHEEL_SPEED2 0x285
 
+// 670
+#define NISSAN_UNKNOWN_4 0x29E
+
+#define NISSAN_ABS 0x2A0
+
+// 833 doors
+#define NISSAN_BCM 0x341
+
+// https://www.drive2.com/l/530057789272229668/
+// 852
+#define NISSAN_VEHICLE_SPEED 0x354
+
+// 1361
 #define NISSAN_CLT_551 0x551
+// 1408
+#define NISSAN_RPM_AGAIN 0x580
+#define NISSAN_ODOMETER 0x5C5
+// 1549
+#define NISSAN_BCM_2 0x60D
 
 static uint8_t rpmcounter;
 static uint8_t seatbeltcnt;
@@ -399,7 +437,7 @@ void canDashboardBMWE90(CanCycle cycle)
 			msg[1] = 0x41;
 			msg[2] = 0x61;
 			msg[3] = 0x8F;
-			msg[4] = 0xFC;			
+			msg[4] = 0xFC;
 		}
 
 		{ //Ebrake light
@@ -520,16 +558,22 @@ void canDashboardBMWE90(CanCycle cycle)
 
 	{
 		if (!cluster_time_set) {
-			struct tm timp;
-			date_get_tm(&timp);
+#if EFI_RTC
+			efidatetime_t dateTime = getRtcDateTime();
+#else // EFI_RTC
+			efidatetime_t dateTime = {
+				.year = 0, .month = 0, .day = 0,
+				.hour = 0, .minute = 0, .second = 0,
+			};
+#endif // EFI_RTC
 			CanTxMessage msg(CanCategory::NBC, E90_TIME, 8);
-			msg[0] = timp.tm_hour;
-			msg[1] = timp.tm_min;
-			msg[2] = timp.tm_sec;
-			msg[3] = timp.tm_mday;
-			msg[4] = (((timp.tm_mon + 1) << 4) | 0x0F);
-			msg[5] = (timp.tm_year + 1900) & 0xFF;
-			msg[6] = ((timp.tm_year + 1900) >> 8) | 0xF0;
+			msg[0] = dateTime.hour;
+			msg[1] = dateTime.minute;
+			msg[2] = dateTime.second;
+			msg[3] = dateTime.day;
+			msg[4] = (dateTime.month << 4) | 0x0F;
+			msg[5] = dateTime.year & 0xFF;
+			msg[6] = (dateTime.year >> 8) | 0xF0; // collides CAN dash at 4096!
 			msg[7] = 0xF2;
 			cluster_time_set = 1;
 		}
@@ -685,7 +729,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
 			/* Wideband Sensor 1 */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1)) * 1000;
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wideband Sensor 2 */
