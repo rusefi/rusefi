@@ -752,8 +752,7 @@ TEST(etb, closedLoopPid) {
 	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
 
 	// Disable autotune for now
-	lambda_Map3D_t lambdaMap;
-	Engine e(lambdaMap);
+	Engine e;
 	EngineTestHelperBase base(&e, nullptr, nullptr);
 	e.etbAutoTune = false;
 

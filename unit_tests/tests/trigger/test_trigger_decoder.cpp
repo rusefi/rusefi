@@ -388,8 +388,7 @@ TEST(trigger, testTriggerDecoder) {
 
 	{
 	persistent_config_s c;
-	lambda_Map3D_t lambdaMap;
-	Engine e(lambdaMap);
+	Engine e;
 	EngineTestHelperBase base(&e, &c.engineConfiguration, &c);
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
 
