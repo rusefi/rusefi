@@ -93,7 +93,6 @@ public enum Sensor implements BinaryLogEntry {
 //    etb1Error(GAUGE_NAME_ETB_ERROR, SensorCategory.OTHERS, FieldType.INT16, 96, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
     // Fuel system
-    afrTargetLegacy("fuel: AFR target L", SensorCategory.FUEL, FieldType.INT16, TsOutputs.ETBTARGET, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
     afrTarget(GAUGE_NAME_TARGET_AFR, SensorCategory.FUEL, FieldType.INT16, FuelComputer.TARGETAFR, 1.0 / 1000, 0, 20, ""),
 
     // Knock
