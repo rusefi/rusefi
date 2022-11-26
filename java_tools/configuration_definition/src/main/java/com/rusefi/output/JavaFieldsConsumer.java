@@ -73,8 +73,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String nameWithPrefix = prefix + configField.getName();
 
                 if (configField.isBit()) {
-                    writeJavaFieldName(nameWithPrefix, tsPosition);
-                    content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
+                    if (!configField.getName().startsWith(DataLogConsumer.UNUSED)) {
+                        writeJavaFieldName(nameWithPrefix, tsPosition);
+                        content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
+                    }
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
