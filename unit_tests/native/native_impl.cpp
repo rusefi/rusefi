@@ -9,6 +9,7 @@
 #include "com_rusefi_native__EngineLogic.h"
 #include "auto_generated_sensor.h"
 #include "tunerstudio.h"
+#include "live_data.h"
 
 #include <memory>
 
@@ -75,7 +76,7 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallba
 }
 
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
-	jbyteArray retVal = env->NewByteArray(sizeof(TunerStudioOutputChannels));
+	jbyteArray retVal = env->NewByteArray(TS_TOTAL_OUTPUT_SIZE);
 	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
 	EngineTestHelper* eth = getEth();
 	updateTunerStudioState();
