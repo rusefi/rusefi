@@ -369,38 +369,7 @@ public class ConfigFieldParserTest {
                         "\tpublic static final Field INT2 = Field.create(\"INT2\", 4, FieldType.INT).setScale(1.0);\n" +
                         "\tpublic static final Field BYTE2 = Field.create(\"BYTE2\", 8, FieldType.INT8).setScale(1.0);\n" +
                         "\tpublic static final Field ALIGNMENTFILL_AT_9 = Field.create(\"ALIGNMENTFILL_AT_9\", 9, FieldType.INT8).setScale(1.0);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 12, FieldType.BIT, 0);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_1 = Field.create(\"UNUSEDBIT_7_1\", 12, FieldType.BIT, 1);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_2 = Field.create(\"UNUSEDBIT_7_2\", 12, FieldType.BIT, 2);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_3 = Field.create(\"UNUSEDBIT_7_3\", 12, FieldType.BIT, 3);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_4 = Field.create(\"UNUSEDBIT_7_4\", 12, FieldType.BIT, 4);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_5 = Field.create(\"UNUSEDBIT_7_5\", 12, FieldType.BIT, 5);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_6 = Field.create(\"UNUSEDBIT_7_6\", 12, FieldType.BIT, 6);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_7 = Field.create(\"UNUSEDBIT_7_7\", 12, FieldType.BIT, 7);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_8 = Field.create(\"UNUSEDBIT_7_8\", 12, FieldType.BIT, 8);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_9 = Field.create(\"UNUSEDBIT_7_9\", 12, FieldType.BIT, 9);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_10 = Field.create(\"UNUSEDBIT_7_10\", 12, FieldType.BIT, 10);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_11 = Field.create(\"UNUSEDBIT_7_11\", 12, FieldType.BIT, 11);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_12 = Field.create(\"UNUSEDBIT_7_12\", 12, FieldType.BIT, 12);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_13 = Field.create(\"UNUSEDBIT_7_13\", 12, FieldType.BIT, 13);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_14 = Field.create(\"UNUSEDBIT_7_14\", 12, FieldType.BIT, 14);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_15 = Field.create(\"UNUSEDBIT_7_15\", 12, FieldType.BIT, 15);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_16 = Field.create(\"UNUSEDBIT_7_16\", 12, FieldType.BIT, 16);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_17 = Field.create(\"UNUSEDBIT_7_17\", 12, FieldType.BIT, 17);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_18 = Field.create(\"UNUSEDBIT_7_18\", 12, FieldType.BIT, 18);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_19 = Field.create(\"UNUSEDBIT_7_19\", 12, FieldType.BIT, 19);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_20 = Field.create(\"UNUSEDBIT_7_20\", 12, FieldType.BIT, 20);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_21 = Field.create(\"UNUSEDBIT_7_21\", 12, FieldType.BIT, 21);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_22 = Field.create(\"UNUSEDBIT_7_22\", 12, FieldType.BIT, 22);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_23 = Field.create(\"UNUSEDBIT_7_23\", 12, FieldType.BIT, 23);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_24 = Field.create(\"UNUSEDBIT_7_24\", 12, FieldType.BIT, 24);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_25 = Field.create(\"UNUSEDBIT_7_25\", 12, FieldType.BIT, 25);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_26 = Field.create(\"UNUSEDBIT_7_26\", 12, FieldType.BIT, 26);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_27 = Field.create(\"UNUSEDBIT_7_27\", 12, FieldType.BIT, 27);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_28 = Field.create(\"UNUSEDBIT_7_28\", 12, FieldType.BIT, 28);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_29 = Field.create(\"UNUSEDBIT_7_29\", 12, FieldType.BIT, 29);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_30 = Field.create(\"UNUSEDBIT_7_30\", 12, FieldType.BIT, 30);\n" +
-                        "\tpublic static final Field UNUSEDBIT_7_31 = Field.create(\"UNUSEDBIT_7_31\", 12, FieldType.BIT, 31);\n",
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 12, FieldType.BIT, 0);\n",
                 javaFieldsConsumer.getContent());
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
