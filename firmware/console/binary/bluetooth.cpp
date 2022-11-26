@@ -311,10 +311,12 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	// 3) check pin code
 	if (strlen(pinCode) != 4) {
 		efiPrintf("Wrong <pincode> parameter! 4 digits expected! %s", usage);
+		return;
 	}
 	for (int i = 0; i < 4; i++) {
 		if (!isdigit(pinCode[i])) {
 			efiPrintf("<pincode> should contain digits only %s", usage);
+			return;
 		}
 	}
 
