@@ -143,7 +143,7 @@ void Gm4l6xTransmissionController::setPcState(gear_e gear) {
 		return;
 	}
 
-	float duty = 0.01f * interpolate2d(engine->fuelComputer->sdAirMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
+	float duty = 0.01f * interpolate2d(engine->fuelComputer.sdAirMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
 	pcPwm.setSimplePwmDutyCycle(duty);
 }
 

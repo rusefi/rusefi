@@ -458,11 +458,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
-	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer->stoichiometricRatio;
+	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
-	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer->stoichiometricRatio;
+	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -576,7 +576,7 @@ static void updateFuelCorrections() {
 
 static void updateFuelResults() {
 	// todo: kill outputChannel while taking care of gauge name and scale!
-	engine->outputChannels.chargeAirMass = engine->fuelComputer->sdAirMassInOneCylinder;
+	engine->outputChannels.chargeAirMass = engine->fuelComputer.sdAirMassInOneCylinder;
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;
