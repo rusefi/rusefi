@@ -941,7 +941,7 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 
 void doInitElectronicThrottle() {
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-	bool anyEtbConfigured = false;
+	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
 	// todo: rename etbFunctions to something-without-etb for same reason?
@@ -960,10 +960,15 @@ void doInitElectronicThrottle() {
 
 		auto pid = getEtbPidForFunction(func);
 
-		anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		bool etbConfigured = controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		if (i == 0) {
+		    engineConfiguration->etb1configured = etbConfigured;
+		} else if (i == 1) {
+		    engineConfiguration->etb2configured = etbConfigured;
+		}
 	}
 
-	if (!anyEtbConfigured) {
+	if (!engineConfiguration->etb1configured && !engineConfiguration->etb2configured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
 		if (shouldInitThrottles) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
