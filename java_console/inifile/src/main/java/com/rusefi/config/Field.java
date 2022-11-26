@@ -27,6 +27,7 @@ public class Field {
     private final int bitOffset;
     private final String[] options;
     private double scale = 1;
+    private int baseOffset;
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -266,6 +267,11 @@ public class Field {
 
     public Field setScale(double scale) {
         this.scale = scale;
+        return this;
+    }
+
+    public Field setBaseOffset(int baseOffset) {
+        this.baseOffset = baseOffset;
         return this;
     }
 
