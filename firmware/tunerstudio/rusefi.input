@@ -3885,11 +3885,11 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
-		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate
-		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2
+		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate,   { etb1configured == 1}
+		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, { etb2configured == 1}
 		field = "Second step"
-		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
-		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
+		commandButton = "Start ETB PID Autotune", cmd_etb_autotune,       { etb1configured == 1 || etb2configured == 1 }
+		commandButton = "Stop ETB PID Autotune",  cmd_etb_autotune_stop,  { etb1configured == 1 || etb2configured == 1 }
 
 		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
 		field = "Debug mode",							debugMode
