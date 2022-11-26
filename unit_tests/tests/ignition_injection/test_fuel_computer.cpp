@@ -42,8 +42,7 @@ TEST(FuelComputer, LambdaLookup) {
 TEST(FuelComputer, FlexFuel) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	MockVp3d lambdaTable;
-	FuelComputer dut(lambdaTable);
+	FuelComputer dut;
 
 	// easier values for testing
 	engineConfiguration->stoichRatioPrimary = 15;
