@@ -5,7 +5,7 @@ import com.rusefi.output.JavaFieldsConsumer;
 
 public class TestJavaFieldsConsumer extends JavaFieldsConsumer {
     public TestJavaFieldsConsumer(ReaderState state) {
-        super(state);
+        super(state, 0);
     }
 
     @Override

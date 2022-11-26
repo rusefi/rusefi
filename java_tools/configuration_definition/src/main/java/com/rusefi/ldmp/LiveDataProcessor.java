@@ -78,7 +78,7 @@ public class LiveDataProcessor {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        ConfigurationConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
@@ -107,7 +107,9 @@ public class LiveDataProcessor {
                     state.addPrepend(extraPrepend);
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
-                state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
+
+                int baseOffset = outputsSections.getBaseOffset();
+                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
