@@ -53,8 +53,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 
 	persistent_config_s pc;
 	memset(&pc, 0, sizeof(pc));
-	lambda_Map3D_t lambdaMap;
-	Engine e(lambdaMap);
+	Engine e;
 	Engine* engine = &e;
 	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 

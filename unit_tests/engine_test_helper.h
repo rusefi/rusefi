@@ -97,7 +97,6 @@ public:
 	void moveTimeForwardSec(float deltaTimeSec);
 	efitimeus_t getTimeNowUs();
 
-	lambda_Map3D_t lambdaMap;
 	Engine engine;
 	persistent_config_s persistentConfig;
 

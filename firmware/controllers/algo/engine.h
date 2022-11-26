@@ -90,7 +90,7 @@ class IEtbController;
 
 class Engine final : public TriggerStateListener {
 public:
-	Engine(const lambda_Map3D_t& lambdaMap);
+	Engine();
 
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;

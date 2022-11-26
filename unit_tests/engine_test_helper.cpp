@@ -71,12 +71,9 @@ int EngineTestHelper::getWarningCounter() {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
-	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig),
-	engine(lambdaMap)
+	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
 	memset(&persistentConfig, 0, sizeof(persistentConfig));
-    // todo: make this smarter, currently code duplication with production test
-	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);

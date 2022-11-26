@@ -96,8 +96,7 @@
 /**
  * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
-extern lambda_Map3D_t lambdaMap;
-CCM_OPTIONAL Engine ___engine(lambdaMap);
+Engine ___engine CCM_OPTIONAL;
 
 #else // EFI_UNIT_TEST
 
