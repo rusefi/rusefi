@@ -48,7 +48,7 @@ public class LiveDataProcessor {
 
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor();
 
-        int sensorTsPosition = liveDataProcessor.handleYaml(data, null);
+        int sensorTsPosition = liveDataProcessor.handleYaml(data);
         liveDataProcessor.writeFiles();
 
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
@@ -74,7 +74,7 @@ public class LiveDataProcessor {
         void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr) throws IOException;
     }
 
-    private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
+    private int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
