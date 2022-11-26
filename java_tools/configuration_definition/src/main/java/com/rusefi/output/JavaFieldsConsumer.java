@@ -26,9 +26,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return content.toString();
     }
 
-    private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) {
-        content.append("\tpublic static final Field ");
+    private void writeJavaFieldName(String nameWithPrefix, int tsPosition) {
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
+
+        content.append("\tpublic static final Field ");
         content.append(nameWithPrefix.toUpperCase());
         content.append(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
                 + tsPosition + ", ");
@@ -72,14 +73,14 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String nameWithPrefix = prefix + configField.getName();
 
                 if (configField.isBit()) {
-                    writeJavaFieldName(nameWithPrefix, tsPosition, 1);
+                    writeJavaFieldName(nameWithPrefix, tsPosition);
                     content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
 
                 if (TypesHelper.isFloat(configField.getType())) {
-                    writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
+                    writeJavaFieldName(nameWithPrefix, tsPosition);
                     content.append("FieldType.FLOAT)" + terminateField());
                 } else {
                     String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
@@ -92,7 +93,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     }
 
 
-                    writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
+                    writeJavaFieldName(nameWithPrefix, tsPosition);
                     if (isStringField(configField)) {
                         String custom = state.tsCustomLine.get(configField.getType());
                         String[] tokens = custom.split(",");
