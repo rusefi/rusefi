@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 26 05:37:37 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 26 16:22:20 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -461,12 +461,12 @@ public class TsOutputs {
 	public static final Field IDLEAIRVALVEPOSITION = Field.create("IDLEAIRVALVEPOSITION", 82, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field ETBTARGET = Field.create("ETBTARGET", 84, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field ETB1DUTYCYCLE = Field.create("ETB1DUTYCYCLE", 86, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field ETB1ERROR = Field.create("ETB1ERROR", 88, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 90, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 92, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 94, FieldType.INT16).setScale(0.005).setBaseOffset(0);
-	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 96, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TUNECRC16 = Field.create("TUNECRC16", 98, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELTANKLEVEL = Field.create("FUELTANKLEVEL", 88, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TOTALFUELCONSUMPTION = Field.create("TOTALFUELCONSUMPTION", 90, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELFLOWRATE = Field.create("FUELFLOWRATE", 92, FieldType.INT16).setScale(0.005).setBaseOffset(0);
+	public static final Field TPS2VALUE = Field.create("TPS2VALUE", 94, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field TUNECRC16 = Field.create("TUNECRC16", 96, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_98 = Field.create("ALIGNMENTFILL_AT_98", 98, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field KNOCKLEVEL = Field.create("KNOCKLEVEL", 100, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SECONDS = Field.create("SECONDS", 104, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMODE = Field.create("ENGINEMODE", 108, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -923,12 +923,12 @@ public class TsOutputs {
 	IDLEAIRVALVEPOSITION,
 	ETBTARGET,
 	ETB1DUTYCYCLE,
-	ETB1ERROR,
 	FUELTANKLEVEL,
 	TOTALFUELCONSUMPTION,
 	FUELFLOWRATE,
 	TPS2VALUE,
 	TUNECRC16,
+	ALIGNMENTFILL_AT_98,
 	KNOCKLEVEL,
 	SECONDS,
 	ENGINEMODE,
