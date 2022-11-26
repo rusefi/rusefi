@@ -192,14 +192,17 @@ static void runCommands() {
 	chThdSleepMilliseconds(10);	// safety
 	tsChannel->start(baudRates[setBaudIdx]);
 
-	chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
+	if (btModuleType == BLUETOOTH_HC_05)
+		chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
+	else
+		chsnprintf(tmp, sizeof(tmp), "AT+NAME%s\r\n", btName);
 	btWrite(tmp);
 	if (btWaitOk() != 0) {
 		goto cmdFailed;
 	}
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 		/* BLE broadcast name */
-		chsnprintf(tmp, sizeof(tmp), "AT+NAMB=%s\r\n", btName);
+		chsnprintf(tmp, sizeof(tmp), "AT+NAMB%s\r\n", btName);
 		btWrite(tmp);
 		if (btWaitOk() != 0) {
 			goto cmdFailed;
