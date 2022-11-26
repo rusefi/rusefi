@@ -90,7 +90,7 @@ class IEtbController;
 
 class Engine final : public TriggerStateListener {
 public:
-	Engine();
+	Engine(const lambda_Map3D_t& lambdaMap);
 
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
@@ -115,8 +115,8 @@ public:
 	PinRepository pinRepository;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
-	// we have pointers mixed with... not pointers (reference?) between different controllers
-	IFuelComputer *fuelComputer = nullptr;
+
+	FuelComputer fuelComputer;
 
 	type_list<
 		Mockable<InjectorModel>,

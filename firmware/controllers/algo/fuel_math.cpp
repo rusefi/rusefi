@@ -176,9 +176,9 @@ static float getBaseFuelMass(int rpm) {
 	auto airmass = model->getAirmass(rpm);
 
 	// Plop some state for others to read
-	engine->fuelComputer->sdAirMassInOneCylinder = airmass.CylinderAirmass;
+	engine->fuelComputer.sdAirMassInOneCylinder = airmass.CylinderAirmass;
 	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
-	engine->engineState.ignitionLoad = engine->fuelComputer->getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
+	engine->engineState.ignitionLoad = engine->fuelComputer.getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
 	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
 	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
@@ -186,7 +186,7 @@ static float getBaseFuelMass(int rpm) {
 	// convert g/s -> kg/h
 	engine->engineState.airflowEstimate = gramPerMs * 3600000 /* milliseconds per hour */ / 1000 /* grams per kg */;;
 
-	float baseFuelMass = engine->fuelComputer->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
+	float baseFuelMass = engine->fuelComputer.getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
 	// Fudge it by the global correction factor
 	baseFuelMass *= engineConfiguration->globalFuelCorrection;
@@ -330,16 +330,12 @@ float getInjectionMass(int rpm) {
 #endif
 }
 
-static FuelComputer fuelComputer;
-
 /**
  * @brief	Initialize fuel map data structure
  * @note this method has nothing to do with fuel map VALUES - it's job
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap() {
-	engine->fuelComputer = &fuelComputer;
-
 	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
 }
 

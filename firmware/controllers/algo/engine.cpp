@@ -260,7 +260,7 @@ void Engine::updateSwitchInputs() {
 #endif // EFI_GPIO_HARDWARE
 }
 
-Engine::Engine() {
+Engine::Engine(const lambda_Map3D_t& lambdaMap) : fuelComputer(lambdaMap) {
 	reset();
 }
 
