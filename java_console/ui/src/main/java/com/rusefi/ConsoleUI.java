@@ -62,6 +62,7 @@ public class ConsoleUI {
     }
 
     public ConsoleUI(String port) {
+        log.info("init...");
         tabbedPane = new TabbedPanel(uiContext);
         this.port = port;
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
@@ -167,6 +168,7 @@ public class ConsoleUI {
         });
 
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
+        log.info("showFrame");
         mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
     }
 
