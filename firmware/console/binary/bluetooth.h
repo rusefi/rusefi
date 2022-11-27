@@ -12,10 +12,10 @@
 #include "tunerstudio_io.h"
 
 
-// The Bluetooth setup procedure will wait 10 seconds for the user to disconnect the UART cable.
+// The Bluetooth setup procedure will wait (TS_COMMUNICATION_TIMEOUT + 3) seconds for the user to disconnect BT.
 // This is required because the BT setup procedure reads a response from the module during the communication.
 // Thus any bytes sent from the Console Software may interfere with the procedure.
-#define BLUETOOTH_COMMAND_TIMEOUT TIME_MS2I(10000)
+#define BLUETOOTH_SILENT_TIMEOUT TIME_MS2I(3000)
 
 // Supported Bluetooth module types
 typedef enum {

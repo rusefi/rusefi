@@ -26,7 +26,7 @@
 #define EFI_BLUETOOTH_SETUP_DEBUG TRUE
 #endif
 
-static bool btProcessIsStarted = false;
+static volatile bool btSetupIsRequested = false;
 
 bluetooth_module_e btModuleType;
 static int setBaudIdx = -1;
@@ -39,10 +39,6 @@ static const unsigned int baudRateCodes[] = {	8,		4,		6,		2,		3,		5,		7 };
 static const int btModuleTimeout = TIME_MS2I(500);
 
 static SerialTsChannelBase *tsChannel;
-
-static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
-static thread_t *btThread = nullptr;
-static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
 
 static void btWrite(const char *str)
 {
@@ -106,12 +102,6 @@ static void runCommands() {
 	char tmp[64];
 	size_t baudIdx = 0;
 	bool baudFound = false;
-
-	if (!btProcessIsStarted)
-		return;
-	
-	efiPrintf("Sleeping...");
-	chThdSleepMilliseconds(1000);	// safety
 
 	// find current baudrate
 	while (baudFound == false) {
@@ -232,37 +222,6 @@ cmdFailed:
 	efiPrintf("FAIL! Command %s failed", tmp);
 }
 
-static THD_FUNCTION(btThreadEntryPoint, arg) {
-	(void) arg;
-	chRegSetThreadName("bluetooth thread");
-
-	efiPrintf("*** Bluetooth module setup procedure ***");
-
-	/* JDY33 supports disconnect on request */
-	if (btModuleType != BLUETOOTH_JDY_3x) {
-		efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
-		efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
-		efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
-	}
-
-	// now wait
-	chSysLock();
-	btProcessIsStarted = true;
-	msg_t msg = chThdSuspendTimeoutS(&btThreadRef, BLUETOOTH_COMMAND_TIMEOUT);
-	chSysUnlock();
-	
-	if (msg == MSG_TIMEOUT) {
-		// timeout waiting for silence on uart...
-		efiPrintf("The Bluetooth module init procedure is cancelled (timeout)!");
-	} else {
-		// call this when the thread is resumed (after the disconnect)
-		runCommands();
-	}
-
-	// release the command
-	btProcessIsStarted = false;
-}
-
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_<hc05/hc06/bk/jdy> <baud> <name> <pincode>";
 
@@ -277,7 +236,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 		return;
 	}
 
-	if (btProcessIsStarted) {
+	if (btSetupIsRequested) {
 		efiPrintf("The Bluetooth module init procedure is already started!");
 		return;
 	}
@@ -323,19 +282,30 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	strncpy(btPinCode, pinCode, 4);
 
 	btModuleType = moduleType;
-
-	// create a thread to execute these commands after TS disconnected
-	// See bluetoothSoftwareDisconnectNotify
-	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
+	btSetupIsRequested = true;
 }
 
 // Called after 1S of silence on BT UART...
 void bluetoothSoftwareDisconnectNotify() {
-	if (btProcessIsStarted) {
-		// start communication with the module
-		chThdResume(&btThreadRef, MSG_OK);
-		// wait the thread to finish
-		chThdWait(btThread);
+	if (btSetupIsRequested) {
+		efiPrintf("*** Bluetooth module setup procedure ***");
+
+		/* JDY33 supports disconnect on request */
+		if (btModuleType != BLUETOOTH_JDY_3x) {
+			efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
+			efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
+			efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+		}
+
+		uint8_t tmp[1];
+		if (tsChannel->readTimeout(tmp, 1, BLUETOOTH_SILENT_TIMEOUT) != 0) {
+			efiPrintf("The Bluetooth module init procedure is cancelled (wait for silent timeout)!");
+			btSetupIsRequested = false;
+			return;
+		}
+
+		runCommands();
+		btSetupIsRequested = false;
 	}
 }
 
