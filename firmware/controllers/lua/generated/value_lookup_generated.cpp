@@ -412,8 +412,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->stoichRatioSecondary;
 	if (strEqualCaseInsensitive(name, "etbMaximumPosition"))
 		return engineConfiguration->etbMaximumPosition;
-	if (strEqualCaseInsensitive(name, "sdCardPeriodMs"))
-		return engineConfiguration->sdCardPeriodMs;
+	if (strEqualCaseInsensitive(name, "sdCardLogFrequency"))
+		return engineConfiguration->sdCardLogFrequency;
 	if (strEqualCaseInsensitive(name, "mapMinBufferLength"))
 		return engineConfiguration->mapMinBufferLength;
 	if (strEqualCaseInsensitive(name, "idlePidDeactivationTpsThreshold"))
@@ -1501,9 +1501,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->etbMaximumPosition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "sdCardPeriodMs"))
+	if (strEqualCaseInsensitive(name, "sdCardLogFrequency"))
 	{
-		engineConfiguration->sdCardPeriodMs = (int)value;
+		engineConfiguration->sdCardLogFrequency = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "mapMinBufferLength"))
