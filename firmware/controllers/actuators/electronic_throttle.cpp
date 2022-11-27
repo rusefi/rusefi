@@ -498,7 +498,6 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		m_shouldResetPid = false;
 	}
 
-	// Only allow autotune with stopped engine, and on the first throttle
 	if (m_isAutotune) {
 		return getClosedLoopAutotune(target, observation);
 	} else {
@@ -569,6 +568,7 @@ void EtbController::update() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
+	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
 	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
 		&& engine->etbAutoTune
