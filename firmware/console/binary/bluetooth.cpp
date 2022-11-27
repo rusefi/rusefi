@@ -34,8 +34,20 @@ static char btName[20 + 1];
 static char btPinCode[4 + 1];
 
 // JDY-33 has 9: 128000 which we do not
-static const unsigned int baudRates[] = 	{	115200, 9600, 	38400,	2400,	4800,	19200,	57600 };
-static const unsigned int baudRateCodes[] = {	8,		4,		6,		2,		3,		5,		7 };
+static const struct {
+	uint32_t rate;
+	uint8_t code;
+} baudRates[] = {
+	//most popular first
+	{115200, 8},
+	{9600, 4},
+	{38400, 6},
+	{2400, 2},
+	{4800, 3},
+	{19200, 5},
+	{57600, 7}
+};
+
 static const int btModuleTimeout = TIME_MS2I(500);
 
 static void btWrite(TsChannelBase* tsChannel, const char *str)
@@ -112,8 +124,8 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 			return;
 		}
 
-		efiPrintf("Restarting at %d", baudRates[baudIdx]);
-		tsChannel->start(baudRates[baudIdx]);
+		efiPrintf("Restarting at %d", baudRates[baudIdx].rate);
+		tsChannel->start(baudRates[baudIdx].rate);
 		chThdSleepMilliseconds(10);	// safety
 
 		/* Ping BT module */
@@ -165,9 +177,9 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 	}
 
 	if (btModuleType == BLUETOOTH_HC_05)
-		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx]);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
+		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx].rate);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
 	else
-		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRateCodes[setBaudIdx]);
+		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRates[setBaudIdx].code);
 	btWrite(tsChannel, tmp);
 	if (btWaitOk(tsChannel) != 0) {
 		goto cmdFailed;
@@ -176,7 +188,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 	/* restart with new baud */
 	tsChannel->stop();
 	chThdSleepMilliseconds(10);	// safety
-	tsChannel->start(baudRates[setBaudIdx]);
+	tsChannel->start(baudRates[setBaudIdx].rate);
 
 	if (btModuleType == BLUETOOTH_HC_05)
 		chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
@@ -244,7 +256,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	// find a known baud rate in our list
 	setBaudIdx = -1;
 	for (size_t i = 0; i < efi::size(baudRates); i++) {
-		if (baudRates[i] == baud) {
+		if ((int)baudRates[i].rate == baud) {
 			setBaudIdx = i;
 			break;
 		}
