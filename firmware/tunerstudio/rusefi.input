@@ -3485,7 +3485,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable SD Card",						isSdCardEnabled
 		field = "CS Pin",								sdCardCsPin			@@if_ts_show_sd_pins
 		field = "SPI",									sdCardSpiDevice		@@if_ts_show_sd_pins
-		field = "Write Period",							sdCardPeriodMs
+		field = "SD logger rate",						sdCardLogFrequency
 
 	dialog = gpsReceiver, "GPS Receiver"
 		field = "gps RX",								gps_rx_pin
