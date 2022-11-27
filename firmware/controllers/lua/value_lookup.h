@@ -27,9 +27,9 @@ struct plain_get_float_s {
 	float *value;
 };
 
-template<typename T>
-T* findPair(const char *name, T array[], size_t count) {
-	for (int i = 0;i<count;i++) {
+template<typename T, size_t TCount>
+T* findPair(const char *name, T array[TCount], size_t count) {
+	for (size_t i = 0; i < TCount; i++) {
 		T *current = &array[i];
 		if (strEqualCaseInsensitive(name, current->token)) {
 			return current;

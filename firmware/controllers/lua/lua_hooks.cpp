@@ -436,7 +436,11 @@ struct LuaSensor final : public StoredValueSensor {
 		StoredValueSensor::invalidate();
 	}
 
-	void showInfo(const char*) const {}
+	void showInfo(const char* sensorName) const override {
+		const auto value = get();
+		efiPrintf("Sensor \"%s\": Lua sensor: Valid: %s Converted value %.2f", sensorName, boolToString(value.Valid), value.Value);
+	}
+
 private:
 	bool m_isRedundant = false;
 };
