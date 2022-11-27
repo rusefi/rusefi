@@ -481,7 +481,7 @@ static void setDefaultEngineConfiguration() {
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 
-	engineConfiguration->sdCardPeriodMs = 50;
+	engineConfiguration->sdCardLogFrequency = 50;
 
 	engineConfiguration->mapMinBufferLength = 1;
 	engineConfiguration->vvtActivationDelayMs = 6000;

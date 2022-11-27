@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger\trigger_state.txt Sat Nov 26 00:29:02 EST 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Nov 27 13:14:51 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -100,7 +100,7 @@ public class TriggerState {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10015;
+	public static final int FLASH_DATA_VERSION = 10016;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;

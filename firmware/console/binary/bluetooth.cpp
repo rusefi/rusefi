@@ -121,9 +121,9 @@ static void runCommands() {
 		if (chThdShouldTerminateX() || (baudIdx == efi::size(baudRates))) {
 			if (baudIdx == efi::size(baudRates)) {
 				efiPrintf("Failed to find current BT module baudrate");
-		        return;
 			}
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
+			return;
 		}
 
 		efiPrintf("Restarting at %d", baudRates[baudIdx]);
@@ -192,14 +192,17 @@ static void runCommands() {
 	chThdSleepMilliseconds(10);	// safety
 	tsChannel->start(baudRates[setBaudIdx]);
 
-	chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
+	if (btModuleType == BLUETOOTH_HC_05)
+		chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
+	else
+		chsnprintf(tmp, sizeof(tmp), "AT+NAME%s\r\n", btName);
 	btWrite(tmp);
 	if (btWaitOk() != 0) {
 		goto cmdFailed;
 	}
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 		/* BLE broadcast name */
-		chsnprintf(tmp, sizeof(tmp), "AT+NAMB=%s\r\n", btName);
+		chsnprintf(tmp, sizeof(tmp), "AT+NAMB%s\r\n", btName);
 		btWrite(tmp);
 		if (btWaitOk() != 0) {
 			goto cmdFailed;
@@ -308,10 +311,12 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	// 3) check pin code
 	if (strlen(pinCode) != 4) {
 		efiPrintf("Wrong <pincode> parameter! 4 digits expected! %s", usage);
+		return;
 	}
 	for (int i = 0; i < 4; i++) {
 		if (!isdigit(pinCode[i])) {
 			efiPrintf("<pincode> should contain digits only %s", usage);
+			return;
 		}
 	}
 
