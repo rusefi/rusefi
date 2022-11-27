@@ -2,6 +2,8 @@
 
 #include "error_accumulator.h"
 
+// todo: shall we rename to StatsIntegrator or SomethingIntegrator assuming we see not "Error Accumulator" usages?
+// todo: ValueIntegrator maybe?
 float ErrorAccumulator::accumulate(float error) {
 	// We only care about the absolute value of the error
 	error = absF(error);
