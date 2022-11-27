@@ -24,7 +24,7 @@ using namespace luaaa;
 #include "trigger_emulator_algo.h"
 
 #if EFI_PROD_CODE
-#include "electronic_throttle_impl.h"
+#include "electronic_throttle.h"
 #endif // EFI_PROD_CODE
 
 #if EFI_SENT_SUPPORT

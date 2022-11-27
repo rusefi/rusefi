@@ -40,6 +40,8 @@ public class JniUnitTest {
 
         assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
 
+        assertEquals(0.25096, getValue(engineLogic.getOutputs(), Sensor.sdAirMassInOneCylinder), 0.0001);
+
         engineLogic.setEngineType(engine_type_e_MRE_MIATA_NB2_MAP);
         assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
     }
