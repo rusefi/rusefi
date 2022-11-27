@@ -114,6 +114,7 @@ static plain_get_float_s getF_plain[] = {
 	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
 	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
 	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
+	{"etbDutyThreshold", &engineConfiguration->etbDutyThreshold},
 	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
 	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
 	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
@@ -145,6 +146,7 @@ static plain_get_float_s getF_plain[] = {
 	{"auxLinear2.v2", &engineConfiguration->auxLinear2.v2},
 	{"auxLinear2.value2", &engineConfiguration->auxLinear2.value2},
 	{"etbMinimumPosition", &engineConfiguration->etbMinimumPosition},
+	{"etbDutyShutdownThreshold", &engineConfiguration->etbDutyShutdownThreshold},
 };
 
 plain_get_float_s * findFloat(const char *name) {

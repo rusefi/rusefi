@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 04:43:27 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 05:49:52 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.27.all.snap_49547";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.27.all.snap_30459";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
@@ -2147,10 +2147,7 @@ public class Fields {
 	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2085, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2086, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2087, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSEDF1 = Field.create("SORRYUNUSEDF1", 2088, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSEDF2 = Field.create("SORRYUNUSEDF2", 2089, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSEDF3 = Field.create("SORRYUNUSEDF3", 2090, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSEDF4 = Field.create("SORRYUNUSEDF4", 2091, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ETBDUTYTHRESHOLD = Field.create("ETBDUTYTHRESHOLD", 2088, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2092, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2094, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTTPS = Field.create("COASTINGFUELCUTTPS", 2096, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2434,7 +2431,8 @@ public class Fields {
 	public static final Field VINNUMBER = Field.create("VINNUMBER", 3770, 17, FieldType.STRING).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3787 = Field.create("ALIGNMENTFILL_AT_3787", 3787, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3788, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3852, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ETBDUTYSHUTDOWNTHRESHOLD = Field.create("ETBDUTYSHUTDOWNTHRESHOLD", 3852, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3856, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3552,10 +3550,7 @@ public class Fields {
 	SORRYUNUSED1,
 	SORRYUNUSED2,
 	SORRYUNUSED3,
-	SORRYUNUSEDF1,
-	SORRYUNUSEDF2,
-	SORRYUNUSEDF3,
-	SORRYUNUSEDF4,
+	ETBDUTYTHRESHOLD,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,
 	COASTINGFUELCUTTPS,
@@ -3836,6 +3831,7 @@ public class Fields {
 	VINNUMBER,
 	ALIGNMENTFILL_AT_3787,
 	HIGHSPEEDOFFSETS,
+	ETBDUTYSHUTDOWNTHRESHOLD,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,
