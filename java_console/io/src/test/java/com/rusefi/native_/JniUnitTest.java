@@ -27,8 +27,7 @@ public class JniUnitTest {
 
         assertEquals(TS_FILE_VERSION, (int) getValue(engineLogic.getOutputs(), Sensor.FIRMWARE_VERSION));
 
-        // huh? assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
-        assertEquals(0.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
+        assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
 
         double veValue = getValue(engineLogic.getOutputs(), Sensor.veValue);
         assertTrue("veValue", veValue > 40 && veValue < 90);
@@ -40,6 +39,8 @@ public class JniUnitTest {
         assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPMValue));
 
         assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
+
+        assertEquals(0.25096, getValue(engineLogic.getOutputs(), Sensor.sdAirMassInOneCylinder), 0.0001);
 
         engineLogic.setEngineType(engine_type_e_MRE_MIATA_NB2_MAP);
         assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));

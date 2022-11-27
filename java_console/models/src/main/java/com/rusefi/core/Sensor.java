@@ -94,6 +94,7 @@ public enum Sensor implements BinaryLogEntry {
 
     // Fuel system
     afrTarget(GAUGE_NAME_TARGET_AFR, SensorCategory.FUEL, FieldType.INT16, FuelComputer.TARGETAFR, 1.0 / 1000, 0, 20, ""),
+    sdAirMassInOneCylinder(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.FLOAT, FuelComputer.SDAIRMASSINONECYLINDER, 1.0, 0, 15, "g"),
 
     // Knock
 //    knockLevel(GAUGE_NAME_KNOCK_LEVEL, SensorCategory.DEBUG, FieldType.FLOAT, 108, 0, 5),
