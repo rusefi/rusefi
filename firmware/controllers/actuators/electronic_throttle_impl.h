@@ -86,6 +86,9 @@ private:
 	// todo: rename to m_targetErrorAccumulator
 	ErrorAccumulator m_errorAccumulator;
 
+	ErrorAccumulator m_dutyIntegrator;
+	float prevOutput;
+
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
 

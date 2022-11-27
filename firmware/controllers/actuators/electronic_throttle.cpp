@@ -208,6 +208,8 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
 
+	m_dutyIntegrator.init(engineConfiguration->etbDutyThreshold, etbPeriodSeconds);
+
 	reset();
 
 	return true;
@@ -511,7 +513,11 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		}
 
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, observation, etbPeriodSeconds);
+        float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
+        m_dutyErrorAccumulator.accumulate(prevOutput - output);
+		prevOutput = output;
+		etbDutyRateOfChange =
+		return output;
 	}
 }
 
