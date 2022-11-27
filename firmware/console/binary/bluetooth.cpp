@@ -121,9 +121,9 @@ static void runCommands() {
 		if (chThdShouldTerminateX() || (baudIdx == efi::size(baudRates))) {
 			if (baudIdx == efi::size(baudRates)) {
 				efiPrintf("Failed to find current BT module baudrate");
-		        return;
 			}
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
+			return;
 		}
 
 		efiPrintf("Restarting at %d", baudRates[baudIdx]);
