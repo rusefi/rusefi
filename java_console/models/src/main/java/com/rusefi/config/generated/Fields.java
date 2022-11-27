@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 05:49:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 13:15:30 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -360,7 +360,7 @@ public class Fields {
 	public static final int etb_function_e_ETB_Throttle2 = 2;
 	public static final int etb_function_e_ETB_Wastegate = 4;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 10015;
+	public static final int FLASH_DATA_VERSION = 10016;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.27.all.snap_30459";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.27.all.snap_12382";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1260;
@@ -1598,7 +1598,7 @@ public class Fields {
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 849, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 850, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field ETBMAXIMUMPOSITION = Field.create("ETBMAXIMUMPOSITION", 851, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SDCARDPERIODMS = Field.create("SDCARDPERIODMS", 852, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field SDCARDLOGFREQUENCY = Field.create("SDCARDLOGFREQUENCY", 852, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPOSITIONSENSOR = Field.create("IDLEPOSITIONSENSOR", 854, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_855 = Field.create("ALIGNMENTFILL_AT_855", 855, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 856, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3012,7 +3012,7 @@ public class Fields {
 	MC33972SPIDEVICE,
 	STOICHRATIOSECONDARY,
 	ETBMAXIMUMPOSITION,
-	SDCARDPERIODMS,
+	SDCARDLOGFREQUENCY,
 	IDLEPOSITIONSENSOR,
 	ALIGNMENTFILL_AT_855,
 	DEBUGMAPAVERAGING,

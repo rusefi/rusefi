@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Nov 27 05:49:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Nov 27 13:14:53 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1919,11 +1919,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t etbMaximumPosition;
 	/**
-	 * SD card logging period, in milliseconds
-	ms
+	 * Rate the ECU will log to the SD card, in hz (log lines per second).
+	hz
 	 * offset 852
 	 */
-	int16_t sdCardPeriodMs;
+	uint16_t sdCardLogFrequency;
 	/**
 	 * offset 854
 	 */
@@ -5098,4 +5098,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Nov 27 05:49:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sun Nov 27 13:14:53 UTC 2022
