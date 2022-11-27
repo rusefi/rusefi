@@ -73,14 +73,13 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEventOld *event,
 }
 
 bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
-		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
 		action_s action,
 		float currentPhase, float nextPhase) {
 	event->enginePhase = angle;
 
-	if (event->shouldSchedule(trgEventIndex, currentPhase, nextPhase)) {
+	if (event->shouldSchedule(TRIGGER_EVENT_UNDEFINED, currentPhase, nextPhase)) {
 		// if we're due now, just schedule the event
 		scheduleByAngle(
 			&event->scheduling,
