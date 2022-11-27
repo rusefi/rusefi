@@ -46,10 +46,10 @@ public class JniUnitTest {
         assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
     }
 
-    private double getField(EngineLogic engineLogic, Field gearratio1) {
+    private double getField(EngineLogic engineLogic, Field field) {
         byte[] configuration = engineLogic.getConfiguration();
         assertNotNull("configuration", configuration);
-        return gearratio1.getValue(new ConfigurationImage(configuration), gearratio1.getScale());
+        return field.getValue(new ConfigurationImage(configuration), field.getScale());
     }
 
     private double getValue(byte[] outputs, Sensor sensor) {
