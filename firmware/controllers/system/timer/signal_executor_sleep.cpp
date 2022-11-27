@@ -33,6 +33,12 @@ bool printSchedulerDebug = true;
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
+struct CallbackContext
+{
+	scheduling_s scheduling = nullptr;
+	bool shouldFree = false;
+};
+
 void SleepExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	scheduleForLater(msg, scheduling, timeUs - getTimeNowUs(), action);
 }
@@ -41,18 +47,24 @@ void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* schedul
 	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
-static void timerCallback(scheduling_s *scheduling) {
+static void timerCallback(CallbackContext* ctx) {
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printSchedulerDebug) {
-		if (scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)scheduling->action.getArgument(), (int)scheduling,
+		if (ctx->scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
+			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)ctx->scheduling->action.getArgument(), (int)scheduling,
 				(int)getTimeNowUs());
 		} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
 		}
 	}
 #endif // EFI_PRINTF_FUEL_DETAILS
-	scheduling->action.execute();
+	ctx->scheduling->action.execute();
+
+	if (ctx->shouldFree) {
+		delete ctx->scheduling;
+	}
+
+	delete ctx;
 }
 
 static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
@@ -66,6 +78,13 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 
 	chibios_rt::CriticalSectionLocker csl;
+
+	auto ctx = new CallbackContext;
+	if (!scheduling) {
+		scheduling = new scheduling_s;
+		ctx->shouldFree = true;
+	}
+	ctx->scheduling = scheduling;
 
 	scheduling->action = action;
 	int isArmed = chVTIsArmedI(&scheduling->timer);
@@ -84,7 +103,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	}
 #endif /* EFI_SIMULATOR */
 
-	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, scheduling);
+	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, ctx);
 }
 
 void SleepExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
