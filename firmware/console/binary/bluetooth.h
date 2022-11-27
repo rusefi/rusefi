@@ -38,11 +38,6 @@ typedef enum {
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode);
 
 /**
- * Cancel Bluetooth procedure
- */
-void bluetoothCancel(void);
-
-/**
  * Called by runBinaryProtocolLoop() if a connection disconnect is detected.
  * Bluetooth init code needs to make sure that there's no interference of the BT module and USB-UART (connected to PC)
  */

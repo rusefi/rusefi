@@ -118,10 +118,8 @@ static void runCommands() {
 		tsChannel->stop();
 		chThdSleepMilliseconds(10);	// safety
 
-		if (chThdShouldTerminateX() || (baudIdx == efi::size(baudRates))) {
-			if (baudIdx == efi::size(baudRates)) {
-				efiPrintf("Failed to find current BT module baudrate");
-			}
+		if (baudIdx == efi::size(baudRates)) {
+			efiPrintf("Failed to find current BT module baudrate");
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 			return;
 		}
@@ -280,7 +278,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	}
 
 	if (btProcessIsStarted) {
-		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
+		efiPrintf("The Bluetooth module init procedure is already started!");
 		return;
 	}
 
@@ -339,19 +337,6 @@ void bluetoothSoftwareDisconnectNotify() {
 		// wait the thread to finish
 		chThdWait(btThread);
 	}
-}
-
-void bluetoothCancel() {
-	if (!btProcessIsStarted) {
-		efiPrintf("The Bluetooth module init procedure was not started! Nothing to cancel!");
-		return;
-	}
-	
-	// terminate thread
-	chThdTerminate(btThread);
-	
-	btProcessIsStarted = false;
-	efiPrintf("The Bluetooth module init procedure is cancelled!");
 }
 
 #endif /* EFI_BLUETOOTH_SETUP */

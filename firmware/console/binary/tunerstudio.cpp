@@ -838,7 +838,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
 		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
 	});
-	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 }
 
