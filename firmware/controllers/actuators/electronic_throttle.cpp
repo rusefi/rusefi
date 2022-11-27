@@ -7,20 +7,6 @@
  *
  * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
- * todo: make this more universal if/when we get other hardware options
- *
- * May 2020 two vehicles have driver 500 miles each
- * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
- *           by the way 9201 does not like getting above 8khz - it starts to get warm
- * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
- * Apr 2019 two-wire TLE7209 support added
- * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30 on BOSCH 0280750009
- * Jan 2019 actually driven around the block but still need some work.
- * Jan 2017 status:
- * Electronic throttle body with it's spring is definitely not linear - both P and I factors of PID are required to get any results
- *  PID implementation tested on a bench only
- *  it is believed that more than just PID would be needed, as is this is probably
- *  not usable on a real vehicle. Needs to be tested :)
  *
  * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
  *
