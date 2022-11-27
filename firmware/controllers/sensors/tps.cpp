@@ -20,20 +20,24 @@ void grabTPSIsWideOpen() {
 }
 
 void grabPedalIsUp() {
-#if EFI_PROD_CODE
 	/**
 	 * search for 'maintainConstantValue' to find how this TS magic works
 	 */
 	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMin;
 	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
-#endif /* EFI_PROD_CODE */
 }
 
 void grabPedalIsWideOpen() {
-#if EFI_PROD_CODE
 	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMax;
 	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
-#endif /* EFI_PROD_CODE */
+}
+
+bool isTps2Error() {
+    return !Sensor::get(SensorType::Tps2).Valid && Sensor::hasSensor(SensorType::Tps2Primary);
+}
+
+bool isPedalError() {
+    return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
