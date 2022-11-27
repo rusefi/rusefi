@@ -155,6 +155,7 @@ public class DfuFlasher {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.append("SUCCESS!");
             wnd.append("Please power cycle device to exit DFU mode");
+            wnd.setSuccessState();
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(wnd);

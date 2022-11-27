@@ -60,6 +60,10 @@ public class StatusWindow implements StatusConsumer {
         copyContentToClipboard();
     }
 
+    public void setSuccessState() {
+        logTextArea.setBackground(LIGHT_GREEN);
+    }
+
     public JFrame getFrame() {
         return frameHelper.getFrame();
     }
