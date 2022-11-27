@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH snap_15658
-#define TS_SIGNATURE "rusEFI 2022.11.26.hellen-gm-e67.snap_15658"
+#define TS_SIGNATURE "rusEFI 2022.11.27.hellen-gm-e67.snap_15658"
