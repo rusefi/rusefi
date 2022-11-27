@@ -83,6 +83,7 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+	// todo: rename to m_targetErrorAccumulator
 	ErrorAccumulator m_errorAccumulator;
 
 	// Pedal -> target map
