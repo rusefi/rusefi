@@ -509,14 +509,15 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		// Allow up to 10 percent-seconds of error
 		if (etbIntegralError > 10.0f) {
 			// TODO: figure out how to handle uncalibrated ETB 
-			//getLimpManager()->etbProblem();
+			//getLimpManager()->reportEtbProblem();
 		}
 
 		// Normal case - use PID to compute closed loop part
         float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
-        m_dutyErrorAccumulator.accumulate(prevOutput - output);
+        etbDutyRateOfChange = m_dutyIntegrator.accumulate(prevOutput - output);
 		prevOutput = output;
-		etbDutyRateOfChange =
+
+		bool isInputError = !Sensor::get(SensorType::Tps1).Valid || isTps2Error() || isPedalError();
 		return output;
 	}
 }
