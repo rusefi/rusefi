@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Nov 23 01:41:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Nov 27 23:27:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -134,8 +134,12 @@ struct electronic_throttle_s {
 	/**
 	offset 28 bit 31 */
 	bool unusedBit_8_31 : 1 {};
+	/**
+	 * offset 32
+	 */
+	float etbDutyRateOfChange = (float)0;
 };
-static_assert(sizeof(electronic_throttle_s) == 32);
+static_assert(sizeof(electronic_throttle_s) == 36);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Nov 23 01:41:35 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Nov 27 23:27:34 UTC 2022
