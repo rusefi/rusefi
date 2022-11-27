@@ -27,8 +27,7 @@ public class JniUnitTest {
 
         assertEquals(TS_FILE_VERSION, (int) getValue(engineLogic.getOutputs(), Sensor.FIRMWARE_VERSION));
 
-        // huh? assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
-        assertEquals(0.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
+        assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
 
         double veValue = getValue(engineLogic.getOutputs(), Sensor.veValue);
         assertTrue("veValue", veValue > 40 && veValue < 90);
