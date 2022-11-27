@@ -58,7 +58,7 @@ public:
     }
 
 public:
-    volatile int currentIndexRead;	// FIFO "tail"
+    int currentIndexRead;	// FIFO "tail"
 };
 
 template<typename T, size_t maxSize>

@@ -59,7 +59,7 @@ public:
 	SimplePwm wboHeaterControl;
 
 	// Chip diagnostics register contents
-	volatile int diag = 0;
+	int diag = 0;
 
 	efitick_t startHeatingNt;
 	efitick_t prevNt;
@@ -68,32 +68,32 @@ public:
 	pid_s heaterPidConfig;
 	Pid heaterPid;
 
-	volatile cj125_mode_e mode = CJ125_MODE_NONE;
+	cj125_mode_e mode = CJ125_MODE_NONE;
 
 	// Amplification coefficient, needed by cjGetAfr()
-	volatile float amplCoeff = 0.0f;
+	float amplCoeff = 0.0f;
 	// Calculated Lambda-value
-	volatile float lambda = 1.0f;
+	float lambda = 1.0f;
 
 	// Current values
 	// lambda
-	volatile float vUa = 0.0f;
+	float vUa = 0.0f;
 	// heater
-	volatile float vUr = 0.0f;
+	float vUr = 0.0f;
 
 	// Calibration values
 	// lambda
-	volatile float vUaCal = 0.0f;
+	float vUaCal = 0.0f;
 	// header
-	volatile float vUrCal = 0.0f;
+	float vUrCal = 0.0f;
 
 	OutputPin wboHeaterPin;
 	OutputPin cj125Cs;
 
 	// Used by CJ125 driver state machine
-	volatile cj125_state_e state = CJ125_INIT;
+	cj125_state_e state = CJ125_INIT;
 	// Last Error code
-	volatile cj125_error_e errorCode = CJ125_NO_ERROR;
+	cj125_error_e errorCode = CJ125_NO_ERROR;
 
 	void setError(cj125_error_e errCode);
 	bool isWorkingState(void) const;
