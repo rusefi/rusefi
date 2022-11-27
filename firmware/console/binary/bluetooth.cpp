@@ -38,9 +38,7 @@ static const unsigned int baudRates[] = 	{	115200, 9600, 	38400,	2400,	4800,	192
 static const unsigned int baudRateCodes[] = {	8,		4,		6,		2,		3,		5,		7 };
 static const int btModuleTimeout = TIME_MS2I(500);
 
-static SerialTsChannelBase *tsChannel;
-
-static void btWrite(const char *str)
+static void btWrite(TsChannelBase* tsChannel, const char *str)
 {
 	/* Just a wrapper for debug purposes */
 #if EFI_BLUETOOTH_SETUP_DEBUG
@@ -49,7 +47,7 @@ static void btWrite(const char *str)
 	tsChannel->write((uint8_t *)str, strlen(str));
 }
 
-static int btReadLine(char *str, size_t max_len)
+static int btReadLine(TsChannelBase* tsChannel, char *str, size_t max_len)
 {
 	size_t len = 0;
 
@@ -80,14 +78,14 @@ static int btReadLine(char *str, size_t max_len)
 	return len;
 }
 
-static int btWaitOk(void)
+static int btWaitOk(SerialTsChannelBase* tsChannel)
 {
 	int len;
 	int ret = -1;
 	char tmp[16];
 
 	/* wait for '+OK\r\n' */
-	len = btReadLine(tmp, sizeof(tmp));
+	len = btReadLine(tsChannel, tmp, sizeof(tmp));
 	if (len == 5) {
 		if (strncmp(tmp, "+OK", 3) == 0)
 			ret = 0;
@@ -98,7 +96,7 @@ static int btWaitOk(void)
 
 // Main communication code
 // We assume that the user has disconnected the software before starting the code.
-static void runCommands() {
+static void runCommands(SerialTsChannelBase* tsChannel) {
 	char tmp[64];
 	size_t baudIdx = 0;
 	bool baudFound = false;
@@ -119,13 +117,13 @@ static void runCommands() {
 		chThdSleepMilliseconds(10);	// safety
 
 		/* Ping BT module */
-		btWrite("AT\r\n");
-		if (btWaitOk() == 0) {
+		btWrite(tsChannel, "AT\r\n");
+		if (btWaitOk(tsChannel) == 0) {
 			baudFound = true;
 		} else if (btModuleType == BLUETOOTH_JDY_3x) {
 			/* try to diconnect in case device already configured and in silence mode */
-			btWrite("AT+DISC\r\n");
-			if (btWaitOk() == 0) {
+			btWrite(tsChannel, "AT+DISC\r\n");
+			if (btWaitOk(tsChannel) == 0) {
 				efiPrintf("JDY33 disconnected");
 				chThdSleepMilliseconds(10);	// safety
 				baudFound = true;
@@ -139,39 +137,39 @@ static void runCommands() {
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 #if EFI_BLUETOOTH_SETUP_DEBUG
 		/* Debug, get version, current settings */
-		btWrite("AT+VERSION\r\n");
-		btReadLine(tmp, sizeof(tmp));
+		btWrite(tsChannel, "AT+VERSION\r\n");
+		btReadLine(tsChannel, tmp, sizeof(tmp));
 
-		btWrite("AT+BAUD\r\n");
-		btReadLine(tmp, sizeof(tmp));
+		btWrite(tsChannel, "AT+BAUD\r\n");
+		btReadLine(tsChannel, tmp, sizeof(tmp));
 
-		btWrite("AT+TYPE\r\n");
-		btReadLine(tmp, sizeof(tmp));
+		btWrite(tsChannel, "AT+TYPE\r\n");
+		btReadLine(tsChannel, tmp, sizeof(tmp));
 
-		btWrite("AT+PIN\r\n");
-		btReadLine(tmp, sizeof(tmp));
+		btWrite(tsChannel, "AT+PIN\r\n");
+		btReadLine(tsChannel, tmp, sizeof(tmp));
 #endif
 
 		/* JDY33 specific settings */
 		/* Reset to defaults */
-		btWrite("AT+DEFAULT\r\n");
-		btWaitOk();
+		btWrite(tsChannel, "AT+DEFAULT\r\n");
+		btWaitOk(tsChannel);
 
 		/* No serial port status output */
-		btWrite("AT+ENLOG0\r\n");
-		btWaitOk();
+		btWrite(tsChannel, "AT+ENLOG0\r\n");
+		btWaitOk(tsChannel);
 
 		/* SPP connection with no password */
-		btWrite("AT+TYPE0\r\n");
-		btWaitOk();
+		btWrite(tsChannel, "AT+TYPE0\r\n");
+		btWaitOk(tsChannel);
 	}
 
 	if (btModuleType == BLUETOOTH_HC_05)
 		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx]);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
 	else
 		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRateCodes[setBaudIdx]);
-	btWrite(tmp);
-	if (btWaitOk() != 0) {
+	btWrite(tsChannel, tmp);
+	if (btWaitOk(tsChannel) != 0) {
 		goto cmdFailed;
 	}
 
@@ -184,15 +182,15 @@ static void runCommands() {
 		chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
 	else
 		chsnprintf(tmp, sizeof(tmp), "AT+NAME%s\r\n", btName);
-	btWrite(tmp);
-	if (btWaitOk() != 0) {
+	btWrite(tsChannel, tmp);
+	if (btWaitOk(tsChannel) != 0) {
 		goto cmdFailed;
 	}
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 		/* BLE broadcast name */
 		chsnprintf(tmp, sizeof(tmp), "AT+NAMB%s\r\n", btName);
-		btWrite(tmp);
-		if (btWaitOk() != 0) {
+		btWrite(tsChannel, tmp);
+		if (btWaitOk(tsChannel) != 0) {
 			goto cmdFailed;
 		}
 	}
@@ -202,15 +200,15 @@ static void runCommands() {
 	else
 		chsnprintf(tmp, sizeof(tmp), "AT+PIN%s\r\n", btPinCode);
 
-	btWrite(tmp);
-	if (btWaitOk() != 0) {
+	btWrite(tsChannel, tmp);
+	if (btWaitOk(tsChannel) != 0) {
 		goto cmdFailed;
 	}
 
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 		/* Now reset module to apply new settings */
-		btWrite("AT+RESET\r\n");
-		if (btWaitOk() != 0) {
+		btWrite(tsChannel, "AT+RESET\r\n");
+		if (btWaitOk(tsChannel) != 0) {
 			efiPrintf("JDY33 fialed to reset");
 		}
 	}
@@ -230,8 +228,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 		return;
 	}
 
-	tsChannel = getBluetoothChannel();
-	if (tsChannel == nullptr) {
+	if (getBluetoothChannel() == nullptr) {
 		efiPrintf("No Bluetooth channel configured! Check your board config.");
 		return;
 	}
@@ -286,7 +283,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 }
 
 // Called after 1S of silence on BT UART...
-void bluetoothSoftwareDisconnectNotify() {
+void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 	if (btSetupIsRequested) {
 		efiPrintf("*** Bluetooth module setup procedure ***");
 
@@ -304,7 +301,7 @@ void bluetoothSoftwareDisconnectNotify() {
 			return;
 		}
 
-		runCommands();
+		runCommands(tsChannel);
 		btSetupIsRequested = false;
 	}
 }

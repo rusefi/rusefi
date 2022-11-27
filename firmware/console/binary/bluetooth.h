@@ -41,5 +41,5 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
  * Called by runBinaryProtocolLoop() if a connection disconnect is detected.
  * Bluetooth init code needs to make sure that there's no interference of the BT module and USB-UART (connected to PC)
  */
-void bluetoothSoftwareDisconnectNotify();
+void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel);
 

@@ -482,7 +482,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		if (tsChannel == getBluetoothChannel()) {
 			// no data in a whole second means time to disconnect BT
 			// assume there's connection loss and notify the bluetooth init code
-			bluetoothSoftwareDisconnectNotify();
+			bluetoothSoftwareDisconnectNotify(getBluetoothChannel());
 		}
 #endif  /* EFI_BLUETOOTH_SETUP */
 		tsChannel->in_sync = false;
