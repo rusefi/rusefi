@@ -540,10 +540,15 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			return;
 		}
 
-		auto period = engineConfiguration->sdCardPeriodMs;
-		if (period > 0) {
-			chThdSleepMilliseconds(period);
+		auto freq = engineConfiguration->sdCardLogFrequency;
+		if (freq > 250) {
+			freq = 250;
+		} else if (freq < 1) {
+			freq = 1;
 		}
+
+		auto period = 1e6 / freq;
+		chThdSleepMicroseconds((int)period);
 	}
 }
 
