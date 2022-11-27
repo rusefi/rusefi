@@ -80,7 +80,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNI
 	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
 	EngineTestHelper* eth = getEth();
 	updateTunerStudioState();
-	memcpy(buf, (const void*)&eth->engine.outputChannels, sizeof(TunerStudioOutputChannels));
+	copyRange((uint8_t*)buf, getLiveDataFragments(), 0, TS_TOTAL_OUTPUT_SIZE);
 	env->ReleaseByteArrayElements(retVal, buf, 0);
 
 	return retVal;

@@ -143,7 +143,7 @@ const electronic_throttle_s* getLiveDataAddr(size_t) {
 #if EFI_UNIT_TEST
 FragmentList getLiveDataFragments() {
     // todo: would same runtime be optimized into static during firmware build?
-    FragmentEntry fragments[] = {
+    static FragmentEntry fragments[] = {
     // This header is generated - do not edit by hand!
     #include "live_data_fragments.h"
     };
