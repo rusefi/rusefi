@@ -198,6 +198,7 @@ TEST(etb, initializationNoPrimarySensor) {
 	Sensor::resetAllMocks();
 
 	EtbController dut;
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Needs pedal for init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
@@ -469,6 +470,7 @@ TEST(etb, setpointNoPedalMap) {
 }
 
 TEST(etb, setpointIdleValveController) {
+	EngineTestHelper eth(TEST_ENGINE);
 	EtbController etb;
 
 	etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, false);
@@ -488,6 +490,7 @@ TEST(etb, setpointIdleValveController) {
 }
 
 TEST(etb, setpointWastegateController) {
+	EngineTestHelper eth(TEST_ENGINE);
 	EtbController etb;
 
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
@@ -583,6 +586,7 @@ TEST(etb, etbTpsSensor) {
 
 	// Test wastegate control
 	{
+//    	EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 33.0f);
@@ -590,6 +594,7 @@ TEST(etb, etbTpsSensor) {
 
 	// Test idle valve control
 	{
+//    	EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 66.0f);
@@ -738,6 +743,7 @@ TEST(etb, setOutputLimpHome) {
 }
 
 TEST(etb, closedLoopPid) {
+// huh? how is this breaking the test?   	EngineTestHelper eth(TEST_ENGINE);
 	pid_s pid = {};
 	pid.pFactor = 5;
 	pid.maxValue = 75;
