@@ -4,12 +4,6 @@ class TriggerScheduler : public EngineModule {
 public:
 	void schedule(AngleBasedEventBase* event, angle_t angle, action_s action);
 
-	bool scheduleOrQueue(AngleBasedEventOld *event,
-			     uint32_t trgEventIndex,
-			     efitick_t edgeTimestamp,
-			     angle_t angle,
-			     action_s action);
-
 	bool scheduleOrQueue(AngleBasedEventNew *event,
 			     efitick_t edgeTimestamp,
 			     angle_t angle,

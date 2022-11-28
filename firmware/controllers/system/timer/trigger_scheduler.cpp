@@ -12,70 +12,12 @@ void TriggerScheduler::schedule(AngleBasedEventBase* event, angle_t angle, actio
 	schedule(event, action);
 }
 
-void TriggerScheduler::schedule(AngleBasedEventBase* event, action_s action) {
-	// Not due at this tooth, add to the list to execute later
-	event->action = action;
-
-	{
-		chibios_rt::CriticalSectionLocker csl;
-
-		// TODO: This is O(n), consider some other way of detecting if in a list,
-		// and consider doubly linked or other list tricks.
-
-		if (!assertNotInList(m_angleBasedEventsHead, event)) {
-			// Use Append to retain some semblance of event ordering in case of
-			// time skew.  Thus on events are always followed by off events.
-			LL_APPEND2(m_angleBasedEventsHead, event, nextToothEvent);
-		}
-	}
-}
-
 /**
  * Schedules 'action' to occur at engine cycle angle 'angle'.
  *
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
-bool TriggerScheduler::scheduleOrQueue(AngleBasedEventOld *event,
-		uint32_t trgEventIndex,
-		efitick_t edgeTimestamp,
-		angle_t angle,
-		action_s action) {
-	event->setAngle(angle);
-
-	/**
-	 * Here's the status as of Jan 2020:
-	 * Once we hit the last trigger tooth prior to needed event, schedule it by time.  We use
-	 * as much trigger position angle as possible and only use less precise RPM-based time
-	 * calculation for the last portion of the angle, the one between two teeth closest to the
-	 * desired angle moment.
-	 */
-	if (event->shouldSchedule(trgEventIndex, 0, 0)) {
-		/**
-		 * Spark should be fired before the next trigger event - time-based delay is best precision possible
-		 */
-		scheduling_s * sDown = &event->scheduling;
-
-		scheduleByAngle(
-			sDown,
-			edgeTimestamp,
-			event->position.angleOffsetFromTriggerEvent,
-			action
-		);
-
-		return true;
-	} else {
-		schedule(event, action);
-
-		engine->outputChannels.systemEventReuse++; // not atomic/not volatile but good enough for just debugging
-#if SPARK_EXTREME_LOGGING
-		efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d",
-			  trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* SPARK_EXTREME_LOGGING */
-		return false;
-	}
-}
-
 bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
 		efitick_t edgeTimestamp,
 		angle_t angle,
@@ -94,9 +36,27 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEventNew *event,
 
 		return true;
 	} else {
+		// If not due now, add it to the queue to be scheduled later
 		schedule(event, action);
 
 		return false;
+	}
+}
+
+void TriggerScheduler::schedule(AngleBasedEventBase* event, action_s action) {
+	event->action = action;
+
+	{
+		chibios_rt::CriticalSectionLocker csl;
+
+		// TODO: This is O(n), consider some other way of detecting if in a list,
+		// and consider doubly linked or other list tricks.
+
+		if (!assertNotInList(m_angleBasedEventsHead, event)) {
+			// Use Append to retain some semblance of event ordering in case of
+			// time skew.  Thus on events are always followed by off events.
+			LL_APPEND2(m_angleBasedEventsHead, event, nextToothEvent);
+		}
 	}
 }
 
