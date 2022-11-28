@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Sun Nov 27 23:27:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Mon Nov 28 03:48:35 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -15,6 +15,8 @@ public class ElectronicThrottle {
 	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 24, FieldType.FLOAT).setBaseOffset(1216);
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 28, FieldType.BIT, 0).setBaseOffset(1216);
 	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 32, FieldType.FLOAT).setBaseOffset(1216);
+	public static final Field ETBINPUTERRORCOUNTER = Field.create("ETBINPUTERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1216);
+	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1216);
 	public static final Field[] VALUES = {
 	IDLEPOSITION,
 	TRIM,
@@ -25,5 +27,7 @@ public class ElectronicThrottle {
 	ETBCURRENTADJUSTEDTARGET,
 	ETBREVLIMITACTIVE,
 	ETBDUTYRATEOFCHANGE,
+	ETBINPUTERRORCOUNTER,
+	ALIGNMENTFILL_AT_38,
 	};
 }
