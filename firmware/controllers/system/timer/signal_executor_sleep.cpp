@@ -58,7 +58,12 @@ static void timerCallback(CallbackContext* ctx) {
 		}
 	}
 #endif // EFI_PRINTF_FUEL_DETAILS
-	ctx->scheduling->action.execute();
+
+	// Grab the action but clear it in the event so we can reschedule from the action's execution
+	action_s action = ctx->scheduling->action;
+	ctx->scheduling->action = {};
+
+	action.execute();
 
 	if (ctx->shouldFree) {
 		delete ctx->scheduling;
