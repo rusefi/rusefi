@@ -35,7 +35,7 @@ bool printSchedulerDebug = true;
 
 struct CallbackContext
 {
-	scheduling_s scheduling = nullptr;
+	scheduling_s* scheduling = nullptr;
 	bool shouldFree = false;
 };
 
