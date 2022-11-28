@@ -63,13 +63,14 @@ static void timerCallback(CallbackContext* ctx) {
 	action_s action = ctx->scheduling->action;
 	ctx->scheduling->action = {};
 
-	action.execute();
-
+	// Clean up any memory we allocated
 	if (ctx->shouldFree) {
 		delete ctx->scheduling;
 	}
-
 	delete ctx;
+
+	// Lastly, actually execute the action
+	action.execute();
 }
 
 static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
@@ -87,6 +88,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	auto ctx = new CallbackContext;
 	if (!scheduling) {
 		scheduling = new scheduling_s;
+		chVTObjectInit(&scheduling->timer);
 		ctx->shouldFree = true;
 	}
 	ctx->scheduling = scheduling;
