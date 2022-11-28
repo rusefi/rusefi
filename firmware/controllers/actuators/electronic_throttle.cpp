@@ -520,6 +520,8 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 
         // seems good enough to simply check for both TPS sensors
 		bool isInputError = !Sensor::get(SensorType::Tps1).Valid || isTps2Error() || isPedalError();
+		// current basic implementation is to check for input error counter only while engine is not running
+		// we can make this logic smarter one day later
 		if (Sensor::getOrZero(SensorType::Rpm) == 0 && wasInputError != isInputError) {
 		    wasInputError = isInputError;
 		    etbInputErrorCounter++;
@@ -569,8 +571,8 @@ void EtbController::update() {
 	}
 
 	if ((engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently())
-	        ||
-			engine->engineState.lua.luaDisableEtb) {
+	        || (etbInputErrorCounter > 50)
+	        || engine->engineState.lua.luaDisableEtb) {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable();
