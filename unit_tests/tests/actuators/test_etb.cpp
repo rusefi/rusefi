@@ -762,6 +762,8 @@ TEST(etb, closedLoopPid) {
 	EtbController etb;
 	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
 
+    // todo: second part dirty hack :(
+	engineConfiguration = nullptr;
 	// Disable autotune for now
 	Engine e;
 	EngineTestHelperBase base(&e, nullptr, nullptr);
@@ -775,7 +777,6 @@ TEST(etb, closedLoopPid) {
 	// Test PID limiting
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 70).value_or(-1), -60);
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
-	engineConfiguration = nullptr;
 }
 
 TEST(etb, openLoopThrottle) {
