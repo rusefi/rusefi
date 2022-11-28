@@ -87,7 +87,7 @@ private:
 	ErrorAccumulator m_errorAccumulator;
 
 	ErrorAccumulator m_dutyIntegrator;
-	float prevOutput;
+	float prevOutput = 0;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
