@@ -73,6 +73,7 @@ public:
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
+    bool wasInputError = false;
 
 	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }

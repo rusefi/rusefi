@@ -518,7 +518,6 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
         etbDutyRateOfChange = m_dutyIntegrator.accumulate(prevOutput - output);
 		prevOutput = output;
 
-        static bool wasInputError = false; // 'static' meaning it's a global variable just with limited visibility
 		bool isInputError = !Sensor::get(SensorType::Tps1).Valid || isTps2Error() || isPedalError();
 		if (Sensor::getOrZero(SensorType::Rpm) == 0 && wasInputError != isInputError) {
 		    wasInputError = isInputError;
