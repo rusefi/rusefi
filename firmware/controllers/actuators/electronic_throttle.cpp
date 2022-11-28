@@ -208,7 +208,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
 
-//	m_dutyIntegrator.init(engineConfiguration->etbDutyThreshold, etbPeriodSeconds);
+	m_dutyIntegrator.init(engineConfiguration->etbDutyThreshold, etbPeriodSeconds);
 
 	reset();
 
