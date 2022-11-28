@@ -23,3 +23,6 @@ void grabTPSIsClosed();
 void grabTPSIsWideOpen();
 void grabPedalIsUp();
 void grabPedalIsWideOpen();
+
+bool isTps2Error();
+bool isPedalError();

@@ -16,7 +16,7 @@ TEST(misc, testIgnitionPlanning) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	engine->periodicFastCallback();
-	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer->targetAFR);
+	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer.targetAFR);
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }
@@ -33,7 +33,7 @@ TEST(misc, testEngineMath) {
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";
 
-	IFuelComputer *fuelComputer = engine->fuelComputer;
+	auto fuelComputer = &engine->fuelComputer;
 
 	Sensor::setMockValue(SensorType::Clt, 300);
 	Sensor::setMockValue(SensorType::Iat, 350);

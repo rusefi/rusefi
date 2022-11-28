@@ -30,14 +30,9 @@ public:
 // This class is a usable implementation of a fuel model that reads real configuration
 class FuelComputer final : public FuelComputerBase {
 public:
-	FuelComputer(const ValueProvider3D& lambdaTable);
-
 	float getStoichiometricRatio() const override;
 	float getTargetLambda(int rpm, float load) const override;
 	float getTargetLambdaLoadAxis(float defaultLoad) const override;
-
-private:
-	const ValueProvider3D* const m_lambdaTable;
 };
 
 float getLoadOverride(float defaultLoad, load_override_e overrideMode);

@@ -48,7 +48,7 @@ public class LiveDataProcessor {
 
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor();
 
-        int sensorTsPosition = liveDataProcessor.handleYaml(data, null);
+        int sensorTsPosition = liveDataProcessor.handleYaml(data);
         liveDataProcessor.writeFiles();
 
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
@@ -74,11 +74,11 @@ public class LiveDataProcessor {
         void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr) throws IOException;
     }
 
-    private int handleYaml(Map<String, Object> data, EntryHandler _handler) throws IOException {
+    private int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
         String tsOutputsDestination = "console/binary/";
 
-        ConfigurationConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
         ConfigurationConsumer dataLogConsumer = new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini");
 
@@ -107,7 +107,9 @@ public class LiveDataProcessor {
                     state.addPrepend(extraPrepend);
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
-                state.addJavaDestination("../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName);
+
+                int baseOffset = outputsSections.getBaseOffset();
+                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;

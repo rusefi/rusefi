@@ -18,8 +18,8 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
     private final LazyFile javaFields;
     private final String className;
 
-    public FileJavaFieldsConsumer(ReaderState state, String javaDestination) {
-        super(state);
+    public FileJavaFieldsConsumer(ReaderState state, String javaDestination, int baseOffset) {
+        super(state, baseOffset);
         javaFields = new LazyFile(javaDestination);
         String className = new File(javaDestination).getName();
         this.className = className.substring(0, className.indexOf('.'));

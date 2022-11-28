@@ -45,7 +45,6 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.idleAirValvePosition, "Idle Air Valve", "%", 1},
 	{engine->outputChannels.etbTarget, "ETB Target", "%", 2},
 	{engine->outputChannels.etb1DutyCycle, "ETB Duty", "%", 1},
-	{engine->outputChannels.etb1Error, "ETB Error", "%", 3},
 	{engine->outputChannels.fuelTankLevel, "Fuel level", "%", 0},
 	{engine->outputChannels.totalFuelConsumption, "fuel: Total consumed", "grams", 1},
 	{engine->outputChannels.fuelFlowRate, "fuel: Flow rate", "gram/s", 3},

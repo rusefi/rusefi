@@ -26,7 +26,6 @@
 #define rpmMax 8000
 
 fuel_Map3D_t veMap;
-lambda_Map3D_t lambdaMap;
 
 #define tpMin 0
 #define tpMax 100
@@ -119,6 +118,4 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 
 void initSpeedDensity() {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
-//	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
-	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);
 }

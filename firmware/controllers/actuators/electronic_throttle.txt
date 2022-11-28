@@ -12,5 +12,7 @@ float luaAdjustment;"ETB: luaAdjustment"
     float etbCurrentAdjustedTarget;;"%", 1, 0, -10000, 10000, 3
 
 	bit etbRevLimitActive
+	float etbDutyRateOfChange
+	uint16_t etbInputErrorCounter;"ETB inputs error counter"
 
 end_struct

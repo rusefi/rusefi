@@ -19,7 +19,10 @@ public:
 	void reset();
 
 private:
+    // more or less threshold parameter
 	float m_ignoreError = 0;
-	float m_errorIntegral = 0;
+	// time parameter
 	float m_dt = 0;
+	// current state
+	float m_errorIntegral = 0;
 };

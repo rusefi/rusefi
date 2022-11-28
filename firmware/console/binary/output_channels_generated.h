@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 06 00:27:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 26 16:22:20 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -393,41 +393,41 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
-	 * ETB Error
-	%
-	 * offset 88
-	 */
-	scaled_channel<int16_t, 100, 1> etb1Error = (int16_t)0;
-	/**
 	 * Fuel level
 	%
-	 * offset 90
+	 * offset 88
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
-	 * offset 92
+	 * offset 90
 	 */
 	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
-	 * offset 94
+	 * offset 92
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	%
-	 * offset 96
+	 * offset 94
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
-	 * offset 98
+	 * offset 96
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 98
+	 */
+	uint8_t alignmentFill_at_98[2];
 	/**
 	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	Volts
@@ -1375,4 +1375,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 06 00:27:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 26 16:22:20 UTC 2022

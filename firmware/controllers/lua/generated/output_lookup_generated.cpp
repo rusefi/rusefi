@@ -133,8 +133,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.etbTarget;
 	if (strEqualCaseInsensitive(name, "etb1DutyCycle"))
 		return engine->outputChannels.etb1DutyCycle;
-	if (strEqualCaseInsensitive(name, "etb1Error"))
-		return engine->outputChannels.etb1Error;
 	if (strEqualCaseInsensitive(name, "fuelTankLevel"))
 		return engine->outputChannels.fuelTankLevel;
 	if (strEqualCaseInsensitive(name, "totalFuelConsumption"))

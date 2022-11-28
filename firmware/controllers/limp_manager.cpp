@@ -174,7 +174,7 @@ void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
 }
 
-void LimpManager::etbProblem() {
+void LimpManager::reportEtbProblem() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
 	setFaultRevLimit(1500);
 }
