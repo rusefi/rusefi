@@ -26,6 +26,7 @@ public:
 	schfunc_t getCallback() const;
 	void * getArgument() const;
 
+	// Actions with a callback set are truthy, all others are falsy
 	operator bool() const {
 		return callback != nullptr;
 	}
