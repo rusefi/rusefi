@@ -201,8 +201,8 @@ void HpfpController::scheduleNextCycle() {
 		/**
 		 * We are good to use just one m_event instance because new events are scheduled when we turn off valve.
 		 */
-		engine->module<TriggerScheduler>()->scheduleOrQueue(
-			&m_event, TRIGGER_EVENT_UNDEFINED, 0,
+		engine->module<TriggerScheduler>()->schedule(
+			&m_event,
 			di_nextStart,
 			{ pinTurnOn, this });
 
@@ -211,8 +211,8 @@ void HpfpController::scheduleNextCycle() {
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
-		engine->module<TriggerScheduler>()->scheduleOrQueue(
-			&m_event, TRIGGER_EVENT_UNDEFINED, 0, lobe,
+		engine->module<TriggerScheduler>()->schedule(
+			&m_event, lobe,
 			{ pinTurnOff, this });
 	}
 }
