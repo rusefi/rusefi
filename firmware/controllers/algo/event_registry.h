@@ -23,6 +23,8 @@ struct AngleBasedEventBase {
 	 */
 	AngleBasedEventBase *nextToothEvent = nullptr;
 
+	virtual void setAngle(angle_t angle) = 0;
+
 	virtual bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const = 0;
 	virtual float getAngleFromNow(float currentPhase) const = 0;
 
@@ -44,6 +46,7 @@ public:
 struct AngleBasedEventOld : public AngleBasedEventBase {
 	event_trigger_position_s position;
 
+	void setAngle(angle_t angle) override;
 	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
 	float getAngleFromNow(float currentPhase) const override;
 
@@ -53,7 +56,9 @@ struct AngleBasedEventOld : public AngleBasedEventBase {
 struct AngleBasedEventNew : public AngleBasedEventBase {
 	float enginePhase;
 
+	void setAngle(angle_t angle) override;
 	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
+	bool shouldSchedule(float currentPhase, float nextPhase) const;
 	float getAngleFromNow(float currentPhase) const override;
 };
 
