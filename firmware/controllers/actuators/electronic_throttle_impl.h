@@ -71,6 +71,8 @@ public:
 	void setLuaAdjustment(percent_t adjustment) override;
 	float getLuaAdjustment() const;
 
+	float prevOutput = 0;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
@@ -90,7 +92,6 @@ private:
 
 	ExpAverage m_dutyRocAverage;
 	ExpAverage m_dutyAverage;
-	float prevOutput = 0;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
