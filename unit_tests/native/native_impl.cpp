@@ -26,6 +26,7 @@ static EngineTestHelper* getEth() {
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
   (JNIEnv *, jobject) {
+  printf("[native] resetTest\n");
   ethPtr = nullptr;
 }
 
