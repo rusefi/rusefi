@@ -32,6 +32,7 @@ public class LogicdataStreamFile extends StreamFile {
 	private static final int FLAG_NOTEMPTY_LONG = 3;
 	private static final int FLAG_EMPTY = 5;
 
+	//looks these magic numbers are version-specific
 	private static final int LOGIC4 = 0x40FD;
 	private static final int LOGIC8 = 0x673B;
 
@@ -152,10 +153,12 @@ public class LogicdataStreamFile extends StreamFile {
     private void writeHeader() throws IOException {
         writeByte(magic);
 
+		// maybe wrong? We saw 0x13 instead of expected 0x0A in real file
 		stream.writeVarLength(title.length());
 		stream.writeString(title);
         stream.flush();
 
+		// maybe wrong? We saw 0x18 in real file
 		stream.writeVarLength(BLOCK);
 		stream.writeVarLength(SUB);
 		stream.writeVarLength(frequency);

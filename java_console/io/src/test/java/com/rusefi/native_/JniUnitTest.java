@@ -27,6 +27,8 @@ public class JniUnitTest {
 
         assertEquals(TS_FILE_VERSION, (int) getValue(engineLogic.getOutputs(), Sensor.FIRMWARE_VERSION));
 
+        assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.afrTarget));
+
         double veValue = getValue(engineLogic.getOutputs(), Sensor.veValue);
         assertTrue("veValue", veValue > 40 && veValue < 90);
 
@@ -38,14 +40,16 @@ public class JniUnitTest {
 
         assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
 
+        assertEquals(0.25096, getValue(engineLogic.getOutputs(), Sensor.sdAirMassInOneCylinder), 0.0001);
+
         engineLogic.setEngineType(engine_type_e_MRE_MIATA_NB2_MAP);
         assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
     }
 
-    private double getField(EngineLogic engineLogic, Field gearratio1) {
+    private double getField(EngineLogic engineLogic, Field field) {
         byte[] configuration = engineLogic.getConfiguration();
         assertNotNull("configuration", configuration);
-        return gearratio1.getValue(new ConfigurationImage(configuration), gearratio1.getScale());
+        return field.getValue(new ConfigurationImage(configuration), field.getScale());
     }
 
     private double getValue(byte[] outputs, Sensor sensor) {

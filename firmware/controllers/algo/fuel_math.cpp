@@ -35,7 +35,6 @@
 #include "lua_hooks.h"
 
 extern fuel_Map3D_t veMap;
-extern lambda_Map3D_t lambdaMap;
 static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL

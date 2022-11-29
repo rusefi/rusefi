@@ -22,6 +22,10 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         return tsOutput.getContent();
     }
 
+    public int getBaseOffset() {
+        return sensorTsPosition;
+    }
+
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");

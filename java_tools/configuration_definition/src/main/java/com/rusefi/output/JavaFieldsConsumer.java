@@ -15,18 +15,21 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
     protected final ReaderState state;
+    private final int baseOffset;
 
-    public JavaFieldsConsumer(ReaderState state) {
+    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
         this.state = state;
+        this.baseOffset = baseOffset;
     }
 
     public String getContent() {
         return content.toString();
     }
 
-    private void writeJavaFieldName(String nameWithPrefix, int tsPosition, double scale) {
-        content.append("\tpublic static final Field ");
+    private void writeJavaFieldName(String nameWithPrefix, int tsPosition) {
         allFields.append("\t" + nameWithPrefix.toUpperCase() + "," + EOL);
+
+        content.append("\tpublic static final Field ");
         content.append(nameWithPrefix.toUpperCase());
         content.append(" = Field.create(\"" + nameWithPrefix.toUpperCase() + "\", "
                 + tsPosition + ", ");
@@ -70,15 +73,17 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String nameWithPrefix = prefix + configField.getName();
 
                 if (configField.isBit()) {
-                    writeJavaFieldName(nameWithPrefix, tsPosition, 1);
-                    content.append("FieldType.BIT, " + bitIndex + ");" + EOL);
+                    if (!configField.getName().startsWith(DataLogConsumer.UNUSED)) {
+                        writeJavaFieldName(nameWithPrefix, tsPosition);
+                        content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
+                    }
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
 
                 if (TypesHelper.isFloat(configField.getType())) {
-                    writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
-                    content.append("FieldType.FLOAT);" + EOL);
+                    writeJavaFieldName(nameWithPrefix, tsPosition);
+                    content.append("FieldType.FLOAT)" + terminateField());
                 } else {
                     String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
                     if (enumOptions == null)
@@ -90,7 +95,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     }
 
 
-                    writeJavaFieldName(nameWithPrefix, tsPosition, configField.autoscaleSpecNumber());
+                    writeJavaFieldName(nameWithPrefix, tsPosition);
                     if (isStringField(configField)) {
                         String custom = state.tsCustomLine.get(configField.getType());
                         String[] tokens = custom.split(",");
@@ -103,7 +108,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                         content.append(", " + configField.getType());
                     }
                     content.append(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
-                            ";" + EOL);
+                            terminateField());
                 }
 
                 tsPosition += configField.getSize(next);
@@ -112,5 +117,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             }
         };
         fieldsStrategy.run(state, structure, 0);
+    }
+
+    private String terminateField() {
+        return ".setBaseOffset(" + baseOffset + ")" +
+                ";" + EOL;
     }
 }

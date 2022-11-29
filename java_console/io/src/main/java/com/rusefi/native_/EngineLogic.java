@@ -2,6 +2,9 @@ package com.rusefi.native_;
 
 /**
  * Native interface allowing java to invoke rusEFI unit_tests library
+ *
+ * See com_rusefi_native__EngineLogic.h
+ * See native_impl.cpp
  */
 public class EngineLogic {
     public native String getVersion();

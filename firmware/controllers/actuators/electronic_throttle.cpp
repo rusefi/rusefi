@@ -7,20 +7,6 @@
  *
  * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
- * todo: make this more universal if/when we get other hardware options
- *
- * May 2020 two vehicles have driver 500 miles each
- * Sep 2019 two-wire TLE9201 official driving around the block! https://www.youtube.com/watch?v=1vCeICQnbzI
- *           by the way 9201 does not like getting above 8khz - it starts to get warm
- * May 2019 two-wire TLE7209 now behaves same as three-wire VNH2SP30 "eBay red board" on BOSCH 0280750009
- * Apr 2019 two-wire TLE7209 support added
- * Mar 2019 best results so far achieved with three-wire H-bridges like VNH2SP30 on BOSCH 0280750009
- * Jan 2019 actually driven around the block but still need some work.
- * Jan 2017 status:
- * Electronic throttle body with it's spring is definitely not linear - both P and I factors of PID are required to get any results
- *  PID implementation tested on a bench only
- *  it is believed that more than just PID would be needed, as is this is probably
- *  not usable on a real vehicle. Needs to be tested :)
  *
  * https://raw.githubusercontent.com/wiki/rusefi/rusefi_documentation/oem_docs/VAG/Bosch_0280750009_pinout.jpg
  *
@@ -221,6 +207,8 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
+
+	m_dutyIntegrator.init(engineConfiguration->etbDutyThreshold, etbPeriodSeconds);
 
 	reset();
 
@@ -512,16 +500,8 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		m_shouldResetPid = false;
 	}
 
-	// Only report the 0th throttle
-	if (m_function == ETB_Throttle1) {
-#if EFI_TUNER_STUDIO
-		// Error is positive if the throttle needs to open further
-		engine->outputChannels.etb1Error = target - observation;
-#endif /* EFI_TUNER_STUDIO */
-	}
-
-	// Only allow autotune with stopped engine, and on the first throttle
 	if (m_isAutotune) {
+		etbInputErrorCounter = 0;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		// Check that we're not over the error limit
@@ -530,11 +510,23 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		// Allow up to 10 percent-seconds of error
 		if (etbIntegralError > 10.0f) {
 			// TODO: figure out how to handle uncalibrated ETB 
-			//getLimpManager()->etbProblem();
+			//getLimpManager()->reportEtbProblem();
 		}
 
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, observation, etbPeriodSeconds);
+        float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
+        etbDutyRateOfChange = m_dutyIntegrator.accumulate(prevOutput - output);
+		prevOutput = output;
+
+        // seems good enough to simply check for both TPS sensors
+		bool isInputError = !Sensor::get(SensorType::Tps1).Valid || isTps2Error() || isPedalError();
+		// current basic implementation is to check for input error counter only while engine is not running
+		// we can make this logic smarter one day later
+		if (Sensor::getOrZero(SensorType::Rpm) == 0 && wasInputError != isInputError) {
+		    wasInputError = isInputError;
+		    etbInputErrorCounter++;
+		}
+		return output;
 	}
 }
 
@@ -579,8 +571,8 @@ void EtbController::update() {
 	}
 
 	if ((engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently())
-	        ||
-			engine->engineState.lua.luaDisableEtb) {
+	        || (etbInputErrorCounter > 50)
+	        || engine->engineState.lua.luaDisableEtb) {
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable();
@@ -591,6 +583,7 @@ void EtbController::update() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
+	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
 	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
 		&& engine->etbAutoTune
@@ -886,10 +879,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
 	// voltage, not ADC like with TPS
-	engineConfiguration->throttlePedalUpVoltage = 0;
-	engineConfiguration->throttlePedalWOTVoltage = 5;
-	engineConfiguration->throttlePedalSecondaryUpVoltage = 5.0;
-	engineConfiguration->throttlePedalSecondaryWOTVoltage = 0.0;
+	setPPSCalibration(0, 5, 5, 0);
 
 	engineConfiguration->etb = {
 		1,		// Kp
@@ -952,7 +942,7 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 
 void doInitElectronicThrottle() {
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-	bool anyEtbConfigured = false;
+	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
 	// todo: rename etbFunctions to something-without-etb for same reason?
@@ -971,10 +961,15 @@ void doInitElectronicThrottle() {
 
 		auto pid = getEtbPidForFunction(func);
 
-		anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		bool etbConfigured = controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		if (i == 0) {
+		    engineConfiguration->etb1configured = etbConfigured;
+		} else if (i == 1) {
+		    engineConfiguration->etb2configured = etbConfigured;
+		}
 	}
 
-	if (!anyEtbConfigured) {
+	if (!engineConfiguration->etb1configured && !engineConfiguration->etb2configured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
 		if (shouldInitThrottles) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");

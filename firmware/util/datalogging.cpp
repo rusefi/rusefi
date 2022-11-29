@@ -78,12 +78,6 @@ void Logging::appendFast(const char *text) {
 }
 
 void Logging::appendPrintf(const char *fmt, ...) {
-#if EFI_UNIT_TEST
-	va_list ap;
-	va_start(ap, fmt);
-	vsprintf(buffer, fmt, ap);
-	va_end(ap);
-#else
 	efiAssertVoid(CUSTOM_APPEND_STACK, getCurrentRemainingStack() > 128, "lowstck#4");
 
 	size_t available = remainingSize();
@@ -98,8 +92,6 @@ void Logging::appendPrintf(const char *fmt, ...) {
 	linePointer += (written > available) ? available : written;
 	// ensure buffer is always null terminated
 	buffer[bufferSize - 1] = '\0';
-
-#endif // EFI_UNIT_TEST
 }
 
 void Logging::appendFloat(float value, int precision) {

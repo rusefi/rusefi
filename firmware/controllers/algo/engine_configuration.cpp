@@ -481,7 +481,7 @@ static void setDefaultEngineConfiguration() {
 	// Don't enable, but set default address
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 
-	engineConfiguration->sdCardPeriodMs = 50;
+	engineConfiguration->sdCardLogFrequency = 50;
 
 	engineConfiguration->mapMinBufferLength = 1;
 	engineConfiguration->vvtActivationDelayMs = 6000;
@@ -588,14 +588,16 @@ static void setDefaultEngineConfiguration() {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
-	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
-	engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(5);
+	setTPS1Calibration(convertVoltageTo10bitADC(0),
+			convertVoltageTo10bitADC(5),
+			convertVoltageTo10bitADC(5),
+			convertVoltageTo10bitADC(0));
+
 	engineConfiguration->tps2Min = convertVoltageTo10bitADC(0);
 	engineConfiguration->tps2Max = convertVoltageTo10bitADC(5);
-	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(0);
-	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(5);
+	engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(0);
+
 	engineConfiguration->idlePositionMin = PACK_MULT_VOLTAGE * 0;
 	engineConfiguration->idlePositionMax = PACK_MULT_VOLTAGE * 5;
 	engineConfiguration->wastegatePositionMin = PACK_MULT_VOLTAGE * 0;

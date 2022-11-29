@@ -6,7 +6,7 @@
 
 #include <cstdint>
 
-struct TsChannelBase;
+class TsChannelBase;
 
 typedef enum {
 	TS_PLAIN = 0,

@@ -16,7 +16,7 @@ TEST(misc, testIgnitionPlanning) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	engine->periodicFastCallback();
-	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer->targetAFR);
+	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer.targetAFR);
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }

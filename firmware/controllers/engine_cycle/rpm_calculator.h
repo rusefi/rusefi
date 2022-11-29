@@ -52,7 +52,7 @@ public:
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
-	bool isStopped() const;
+	bool isStopped() const override;
 	/**
 	 * Returns true if the engine is spinning up
 	 */
@@ -60,7 +60,7 @@ public:
 	/**
 	 * Returns true if the engine is cranking OR spinning up
 	 */
-	bool isCranking() const;
+	bool isCranking() const override;
 	/**
 	 * Returns true if the engine is running and not cranking
 	 */
@@ -118,7 +118,7 @@ public:
 	 * This is a performance optimization: let's pre-calculate this each time RPM changes
 	 * NaN while engine is not spinning
 	 */
-	volatile floatus_t oneDegreeUs = NAN;
+	floatus_t oneDegreeUs = NAN;
 
 	floatus_t getOneDegreeUs() override {
 		return oneDegreeUs;
@@ -150,11 +150,11 @@ private:
 	 * This counter is incremented with each revolution of one of the shafts. Could be
 	 * crankshaft could be camshaft.
 	 */
-	volatile uint32_t revolutionCounterSinceBoot = 0;
+	uint32_t revolutionCounterSinceBoot = 0;
 	/**
 	 * Same as the above, but since the engine started spinning
 	 */
-	volatile uint32_t revolutionCounterSinceStart = 0;
+	uint32_t revolutionCounterSinceStart = 0;
 
 	spinning_state_e state = STOPPED;
 

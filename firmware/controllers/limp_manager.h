@@ -97,8 +97,8 @@ public:
 
 	bool allowTriggerInput() const;
 
-	// Other subsystems call these APIs to indicate a problem has occured
-	void etbProblem();
+	// Other subsystems call these APIs to indicate a problem has occurred
+	void reportEtbProblem();
 	void fatalError();
 
 private:

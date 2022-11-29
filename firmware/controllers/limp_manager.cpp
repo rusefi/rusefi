@@ -174,9 +174,9 @@ void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
 }
 
-void LimpManager::etbProblem() {
+void LimpManager::reportEtbProblem() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
-	setFaultRevLimit(1500);
+	setFaultRevLimit(/*rpm*/1500);
 }
 
 void LimpManager::fatalError() {
@@ -185,7 +185,7 @@ void LimpManager::fatalError() {
 	m_allowInjection.clear(ClearReason::Fatal);
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
-	setFaultRevLimit(0);
+	setFaultRevLimit(/*rpm*/0);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {

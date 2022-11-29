@@ -36,15 +36,15 @@ class cyclic_buffer
     int getSize() const;
     int getCount() const;
     void clear();
-    volatile T elements[maxSize];
-    volatile uint16_t currentIndex;
+    T elements[maxSize];
+    uint16_t currentIndex;
 
   protected:
     uint16_t size;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
-    volatile size_t count;
+    size_t count;
 };
 
 template<typename T, size_t maxSize>

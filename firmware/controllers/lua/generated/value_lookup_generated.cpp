@@ -114,6 +114,7 @@ static plain_get_float_s getF_plain[] = {
 	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
 	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
 	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
+	{"etbDutyThreshold", &engineConfiguration->etbDutyThreshold},
 	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
 	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
 	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
@@ -145,6 +146,7 @@ static plain_get_float_s getF_plain[] = {
 	{"auxLinear2.v2", &engineConfiguration->auxLinear2.v2},
 	{"auxLinear2.value2", &engineConfiguration->auxLinear2.value2},
 	{"etbMinimumPosition", &engineConfiguration->etbMinimumPosition},
+	{"etbDutyShutdownThreshold", &engineConfiguration->etbDutyShutdownThreshold},
 };
 
 plain_get_float_s * findFloat(const char *name) {
@@ -360,8 +362,12 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->verboseTLE8888;
 	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
 		return engineConfiguration->enableVerboseCanTx;
+	if (strEqualCaseInsensitive(name, "etb1configured"))
+		return engineConfiguration->etb1configured;
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 		return engineConfiguration->isCJ125Enabled;
+	if (strEqualCaseInsensitive(name, "etb2configured"))
+		return engineConfiguration->etb2configured;
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
 		return engineConfiguration->measureMapOnlyInOneCylinder;
 	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
@@ -406,8 +412,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->stoichRatioSecondary;
 	if (strEqualCaseInsensitive(name, "etbMaximumPosition"))
 		return engineConfiguration->etbMaximumPosition;
-	if (strEqualCaseInsensitive(name, "sdCardPeriodMs"))
-		return engineConfiguration->sdCardPeriodMs;
+	if (strEqualCaseInsensitive(name, "sdCardLogFrequency"))
+		return engineConfiguration->sdCardLogFrequency;
 	if (strEqualCaseInsensitive(name, "mapMinBufferLength"))
 		return engineConfiguration->mapMinBufferLength;
 	if (strEqualCaseInsensitive(name, "idlePidDeactivationTpsThreshold"))
@@ -1370,9 +1376,19 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableVerboseCanTx = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "etb1configured"))
+	{
+		engineConfiguration->etb1configured = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
 	{
 		engineConfiguration->isCJ125Enabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "etb2configured"))
+	{
+		engineConfiguration->etb2configured = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
@@ -1485,9 +1501,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->etbMaximumPosition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "sdCardPeriodMs"))
+	if (strEqualCaseInsensitive(name, "sdCardLogFrequency"))
 	{
-		engineConfiguration->sdCardPeriodMs = (int)value;
+		engineConfiguration->sdCardLogFrequency = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "mapMinBufferLength"))
