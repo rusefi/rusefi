@@ -11,9 +11,6 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static String getHeaderText(FieldIteratorWithOffset iterator) {
         ConfigField configField = iterator.cf;
         if (configField.isBit()) {
-            if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
-                return "";
-            }
             String comment = "\t/**" + EOL + packComment(configField.getCommentContent(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
