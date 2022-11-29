@@ -608,6 +608,9 @@ void EtbController::autoCalibrateTps() {
  * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
  */
 #include "periodic_thread_controller.h"
+#else
+#define chThdSleepMilliseconds(x) {}
+#endif // EFI_UNIT_TEST
 
 #include <utility>
 
@@ -692,6 +695,8 @@ static EtbImpl<EtbController2> etb2(throttle2TrimTable);
 
 static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
+
+#if !EFI_UNIT_TEST
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
