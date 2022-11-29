@@ -57,6 +57,14 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallba
 
 /*
  * Class:     com_rusefi_native__EngineLogic
+ * Method:    invokeEtbCycle
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
  * Method:    getOutputs
  * Signature: ()[B
  */

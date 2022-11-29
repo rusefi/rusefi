@@ -19,5 +19,7 @@ public class EngineLogic {
 
     public native void invokePeriodicCallback();
 
+    public native void invokeEtbCycle();
+
     public native byte[] getOutputs();
 }
