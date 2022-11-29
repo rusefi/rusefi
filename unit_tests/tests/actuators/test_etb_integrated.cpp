@@ -5,6 +5,7 @@
 
 TEST(etb, integrated) {
 	EngineTestHelper eth(TEST_ENGINE);
+	etbPidReset(); // ETB controlles are global shared instances :(
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_3;
@@ -17,14 +18,11 @@ TEST(etb, integrated) {
 
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 
-
 	initTps();
 	doInitElectronicThrottle();
 
 	EtbController *etb = (EtbController*)engine->etbControllers[0];
 	etb->update();
-
-
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
 	ASSERT_EQ(etb->prevOutput, 100);
