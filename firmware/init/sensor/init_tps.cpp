@@ -7,6 +7,7 @@
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
+#include "auto_generated_sensor.h"
 
 #ifndef MAX_TPS_PPS_DISCREPANCY
 #define MAX_TPS_PPS_DISCREPANCY 5.0f
@@ -127,6 +128,9 @@ public:
 		} else {
 			// not ford TPS
 			m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond);
+#if EFI_UNIT_TEST
+printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
+#endif
 			m_redund.Register();
 		}
 	}
