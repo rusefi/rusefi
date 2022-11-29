@@ -46,6 +46,13 @@ public class JniUnitTest {
         assertEquals(2.45, getField(engineLogic, Fields.GEARRATIO1));
     }
 
+    @Test
+    public void testEtbStuff() {
+        JniSandbox.loadLibrary();
+
+        EngineLogic engineLogic = new EngineLogic();
+    }
+
     private double getField(EngineLogic engineLogic, Field field) {
         byte[] configuration = engineLogic.getConfiguration();
         assertNotNull("configuration", configuration);

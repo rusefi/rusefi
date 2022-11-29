@@ -75,6 +75,18 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallba
     eth->engine.periodicFastCallback();
 }
 
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
+  (JNIEnv *, jobject) {
+  EngineTestHelper* eth = getEth();
+  Engine *engine = &eth->engine;
+
+	for (int i = 0; i < ETB_COUNT; i++) {
+		if (auto etb = engine->etbControllers[i]) {
+			etb->update();
+		}
+	}
+}
+
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
 	jbyteArray retVal = env->NewByteArray(TS_TOTAL_OUTPUT_SIZE);
 	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
