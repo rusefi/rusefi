@@ -31,8 +31,6 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - SD logging rate is now set with hz instead of ms period #4553
 
-## November 2022 Release - "Day 267"
-
 ### Added
  - VVT minimum RPM setting #4545
  - Fuel/spark cut codes to TS indicators #4592
