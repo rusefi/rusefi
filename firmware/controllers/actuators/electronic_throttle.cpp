@@ -788,7 +788,6 @@ static void etbReset() {
 }
 #endif /* EFI_PROD_CODE */
 
-#if !EFI_UNIT_TEST
 /**
  * set etb_p X
  */
@@ -834,8 +833,6 @@ void etbAutocal(size_t throttleIndex) {
 		etb->autoCalibrateTps();
 	}
 }
-
-#endif /* !EFI_UNIT_TEST */
 
 /**
  * This specific throttle has default position of about 7% open
