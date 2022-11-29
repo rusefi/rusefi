@@ -36,5 +36,5 @@ TEST(etb, integrated) {
 	float destination;
 	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
 	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
-	ASSERT_EQ(destination, 0); // huh? what is broken here?
+	ASSERT_EQ(destination, -75);
 }
