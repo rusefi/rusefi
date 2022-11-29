@@ -203,7 +203,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 	}
 	if (btModuleType == BLUETOOTH_JDY_3x) {
 		/* BLE broadcast name */
-		chsnprintf(tmp, sizeof(tmp), "AT+NAMB%s\r\n", btName);
+		chsnprintf(tmp, sizeof(tmp), "AT+NAMB%s-BLE\r\n", btName);
 		btWrite(tsChannel, tmp);
 		if (btWaitOk(tsChannel) != 0) {
 			goto cmdFailed;
