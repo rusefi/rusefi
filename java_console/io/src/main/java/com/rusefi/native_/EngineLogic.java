@@ -17,6 +17,8 @@ public class EngineLogic {
 
     public native void setEngineType(int engineType);
 
+    public native void initTps();
+
     public native void invokePeriodicCallback();
 
     public native void invokeEtbCycle();
