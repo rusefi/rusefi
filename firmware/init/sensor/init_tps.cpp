@@ -57,10 +57,11 @@ private:
 	bool configure(const TpsConfig& cfg) {
 		// Only configure if we have a channel
 		if (!isAdcChannelValid(cfg.channel)) {
-	printf("Configured NO\n");
+#if EFI_UNIT_TEST
+	printf("Configured NO hardware %s\n", name());
+#endif
 			return false;
 		}
-	printf("Configured YES\n");
 
 		float scaledClosed = cfg.closed / m_func.getDivideInput();
 		float scaledOpen = cfg.open / m_func.getDivideInput();
@@ -72,7 +73,6 @@ private:
 			firmwareError(OBD_TPS_Configuration, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
 					cfg.open,
 					cfg.closed);
-	printf("Configured split\n");
 			return false;
 		}
 
@@ -82,7 +82,9 @@ private:
 			cfg.min, cfg.max
 		);
 
-	printf("Configured true\n");
+#if EFI_UNIT_TEST
+	printf("Configured YES %s\n", name());
+#endif
 		return true;
 	}
 
