@@ -43,9 +43,15 @@ JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfigurati
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration(JNIEnv *env, jobject instance,
 		jbyteArray data, jint offset, jint size) {
+	EngineTestHelper* eth = getEth();
 
-	printf("[native] setConfiguration %d %d\n", offset, size);
-//	printf("[native] engine %d %d\n", engineConfiguration->engineType);
+	printf("[native] setConfiguration offset=%d size=%d\n", offset, size);
+	jbyte *buf = env->GetByteArrayElements(data, NULL);
+	int printSize = size > 4 ? 4 : size;
+	for (int i = 0;i < printSize;i++) {
+    	printf("[native] buf[%d] %x\n", i, buf[i]);
+	}
+	memcpy(((uint8_t*)&eth->persistentConfig.engineConfiguration) + offset, buf, size);
 }
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
