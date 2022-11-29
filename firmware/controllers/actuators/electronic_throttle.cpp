@@ -215,6 +215,9 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 
 void EtbController::reset() {
 	m_shouldResetPid = true;
+	etbDutyRateOfChange = etbDutyAverage = 0;
+	m_dutyRocAverage.reset();
+	m_dutyAverage.reset();
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -740,12 +743,11 @@ static void showEtbInfo() {
 #endif /* EFI_PROD_CODE */
 }
 
-static void etbPidReset() {
+void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
 			controller->reset();
 		}
-		
 	}
 }
 

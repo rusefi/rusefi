@@ -119,6 +119,8 @@ private:
 	Timer m_luaAdjustmentTimer;
 };
 
+void etbPidReset();
+
 class EtbController1 : public EtbController { };
 
 class EtbController2 : public EtbController {
