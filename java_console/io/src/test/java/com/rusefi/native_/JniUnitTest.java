@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.enums.SensorType;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
@@ -15,6 +16,11 @@ import static com.rusefi.core.FileUtil.littleEndianWrap;
 import static junit.framework.Assert.*;
 
 public class JniUnitTest {
+    @Before
+    public void reset() {
+        new EngineLogic().resetTest();
+    }
+
     @Test
     public void run() {
         JniSandbox.loadLibrary();

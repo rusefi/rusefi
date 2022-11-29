@@ -17,6 +17,14 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion
 
 /*
  * Class:     com_rusefi_native__EngineLogic
+ * Method:    resetTest
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
  * Method:    setSensor
  * Signature: (Ljava/lang/String;D)V
  */
