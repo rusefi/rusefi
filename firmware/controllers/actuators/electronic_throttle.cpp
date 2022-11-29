@@ -208,8 +208,6 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
 
-	m_dutyIntegrator.init(engineConfiguration->etbDutyThreshold, etbPeriodSeconds);
-
 	reset();
 
 	return true;
@@ -223,6 +221,8 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
+    m_dutyRocAverage.init(engineConfiguration->etbRocExpAverageLength);
+    m_dutyAverage.init(engineConfiguration->etbExpAverageLength);
 }
 
 void EtbController::showStatus() {
@@ -515,7 +515,9 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 
 		// Normal case - use PID to compute closed loop part
         float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
-        etbDutyRateOfChange = m_dutyIntegrator.accumulate(prevOutput - output);
+        etbDutyAverage = m_dutyAverage.average(output);
+
+        etbDutyAverage = m_dutyRocAverage.average(prevOutput - output);
 		prevOutput = output;
 
         // seems good enough to simply check for both TPS sensors

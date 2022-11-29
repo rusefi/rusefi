@@ -14,6 +14,7 @@
 #include "efi_pid.h"
 #include "error_accumulator.h"
 #include "electronic_throttle_generated.h"
+#include "exp_average.h"
 
 /**
  * Hard code ETB update speed.
@@ -87,7 +88,8 @@ private:
 	// todo: rename to m_targetErrorAccumulator
 	ErrorAccumulator m_errorAccumulator;
 
-	ErrorAccumulator m_dutyIntegrator;
+	ExpAverage m_dutyRocAverage;
+	ExpAverage m_dutyAverage;
 	float prevOutput = 0;
 
 	// Pedal -> target map
