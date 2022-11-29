@@ -7,10 +7,10 @@ package com.rusefi.native_;
  * See native_impl.cpp
  */
 public class EngineLogic {
-    public native String getVersion();
+    public static native String getVersion();
 
     // huh? I am having trouble making this method static?
-    public native void resetTest();
+    public static native void resetTest();
 
     public native void setSensor(String sensorTypeName, double value);
 

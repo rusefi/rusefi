@@ -13,7 +13,7 @@ extern "C" {
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_rusefi_native__EngineLogic
@@ -21,7 +21,7 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_rusefi_native__EngineLogic

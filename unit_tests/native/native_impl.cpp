@@ -25,12 +25,12 @@ static EngineTestHelper* getEth() {
 }
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
-  (JNIEnv *, jobject) {
+  (JNIEnv *, jclass) {
   printf("[native] resetTest\n");
   ethPtr = nullptr;
 }
 
-JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jobject) {
+JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jclass) {
 	const char msg[60] = "Hello from unit tests";
 	const char* fileName = msg;
 	jstring result = env->NewStringUTF(msg);
@@ -115,6 +115,12 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_initTps
 	getEth();// just to make sure we have initialized
     initTps();
 }
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_initTps2
+  (JNIEnv *, jobject) {
+	printf("[native] initTps2\n");
+}
+
 
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
 	jbyteArray retVal = env->NewByteArray(TS_TOTAL_OUTPUT_SIZE);
