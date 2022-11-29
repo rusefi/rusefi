@@ -41,7 +41,7 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
     public void endFile() throws IOException {
         if (withC_Defines)
             cHeader.write(variableRegistry.getDefinesSection());
-        cHeader.write(getContent());
+        cHeader.write(getContent().toString());
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + state.getHeader() + EOL);
         cHeader.close();
