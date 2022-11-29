@@ -163,6 +163,9 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 
 		btWrite(tsChannel, "AT+LADDR\r\n");
 		btReadLine(tsChannel, tmp, sizeof(tmp));
+
+		btWrite(tsChannel, "AT+STAT\r\n");
+		btReadLine(tsChannel, tmp, sizeof(tmp));
 #endif
 
 		/* JDY33 specific settings */
