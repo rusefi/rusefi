@@ -1008,11 +1008,9 @@ void initElectronicThrottle() {
 		return;
 	}
 
-#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = etbControllers[i];
 	}
-#endif
 
 #if EFI_PROD_CODE
 	addConsoleAction("etbinfo", showEtbInfo);
