@@ -518,7 +518,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
         float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
         etbDutyAverage = m_dutyAverage.average(output);
 
-        etbDutyAverage = m_dutyRocAverage.average(prevOutput - output);
+        etbDutyRateOfChange = m_dutyRocAverage.average(output - prevOutput);
 		prevOutput = output;
 
         // seems good enough to simply check for both TPS sensors
