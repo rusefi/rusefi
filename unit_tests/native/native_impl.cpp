@@ -24,6 +24,11 @@ static EngineTestHelper* getEth() {
 	return ethPtr.get();
 }
 
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
+  (JNIEnv *, jobject) {
+  ethPtr = nullptr;
+}
+
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jobject) {
 	const char msg[60] = "Hello from unit tests";
 	const char* fileName = msg;
