@@ -21,5 +21,7 @@ public class EngineLogic {
 
     public native void invokeEtbCycle();
 
+    public native void burnRequest();
+
     public native byte[] getOutputs();
 }
