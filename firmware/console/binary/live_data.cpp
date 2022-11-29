@@ -4,7 +4,7 @@
 
 #include "tunerstudio.h"
 #include "wideband_state_generated.h"
-#include "electronic_throttle_generated.h"
+#include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
 #include "fuel_computer.h"
 
@@ -136,8 +136,8 @@ const ignition_state_s* getLiveDataAddr() {
 
 template<>
 const electronic_throttle_s* getLiveDataAddr(size_t) {
-	// return engine->etbControllers[0];
-	return nullptr;
+	EtbController *etb = (EtbController *)engine->etbControllers[0];
+	return etb;
 }
 
 #if EFI_UNIT_TEST
