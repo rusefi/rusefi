@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 13:15:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 01:05:58 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3676,7 +3676,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2085
 	 */
-	int8_t sorryUnused[3];
+	int8_t sorryUnused[1];
+	/**
+	 * offset 2086
+	 */
+	int16_t etbExpAverageLength;
 	/**
 	 * offset 2088
 	 */
@@ -3812,7 +3816,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2496
 	 */
-	int16_t unused2496;
+	int16_t etbRocExpAverageLength;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	cycles
@@ -5098,4 +5102,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 27 13:15:30 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 01:05:58 UTC 2022

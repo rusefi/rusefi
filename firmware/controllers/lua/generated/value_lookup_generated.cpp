@@ -780,6 +780,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->vvtControlMinRpm;
 	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
 		return engineConfiguration->launchFuelAdderPercent;
+	if (strEqualCaseInsensitive(name, "etbExpAverageLength"))
+		return engineConfiguration->etbExpAverageLength;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
 		return engineConfiguration->coastingFuelCutRpmHigh;
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmLow"))
@@ -804,6 +806,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idleTimingPid.minValue;
 	if (strEqualCaseInsensitive(name, "idleTimingPid.maxValue"))
 		return engineConfiguration->idleTimingPid.maxValue;
+	if (strEqualCaseInsensitive(name, "etbRocExpAverageLength"))
+		return engineConfiguration->etbRocExpAverageLength;
 	if (strEqualCaseInsensitive(name, "tpsAccelFractionPeriod"))
 		return engineConfiguration->tpsAccelFractionPeriod;
 	if (strEqualCaseInsensitive(name, "idlerpmpid_iTermMin"))
@@ -2421,6 +2425,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "etbExpAverageLength"))
+	{
+		engineConfiguration->etbExpAverageLength = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
 	{
 		engineConfiguration->coastingFuelCutRpmHigh = (int)value;
@@ -2479,6 +2488,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "idleTimingPid.maxValue"))
 	{
 		engineConfiguration->idleTimingPid.maxValue = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "etbRocExpAverageLength"))
+	{
+		engineConfiguration->etbRocExpAverageLength = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsAccelFractionPeriod"))

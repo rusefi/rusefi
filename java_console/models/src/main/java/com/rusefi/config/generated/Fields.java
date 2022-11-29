@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 00:44:25 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 01:05:58 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.11.29.all.snap_4734";
+	public static final String TS_SIGNATURE = "rusEFI 2022.11.29.all.snap_31198";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1268;
@@ -2145,8 +2145,7 @@ public class Fields {
 	public static final Field SENTINPUTPINS1 = Field.create("SENTINPUTPINS1", 2082, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHFUELADDERPERCENT = Field.create("LAUNCHFUELADDERPERCENT", 2084, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SORRYUNUSED1 = Field.create("SORRYUNUSED1", 2085, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSED2 = Field.create("SORRYUNUSED2", 2086, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SORRYUNUSED3 = Field.create("SORRYUNUSED3", 2087, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ETBEXPAVERAGELENGTH = Field.create("ETBEXPAVERAGELENGTH", 2086, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBDUTYTHRESHOLD = Field.create("ETBDUTYTHRESHOLD", 2088, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTRPMHIGH = Field.create("COASTINGFUELCUTRPMHIGH", 2092, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTRPMLOW = Field.create("COASTINGFUELCUTRPMLOW", 2094, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2204,7 +2203,7 @@ public class Fields {
 	public static final Field IDLETIMINGPID_PERIODMS = Field.create("IDLETIMINGPID_PERIODMS", 2490, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 2492, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 2494, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSED2496 = Field.create("UNUSED2496", 2496, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ETBROCEXPAVERAGELENGTH = Field.create("ETBROCEXPAVERAGELENGTH", 2496, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 2498, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 2500, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 2504, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3548,8 +3547,7 @@ public class Fields {
 	SENTINPUTPINS1,
 	LAUNCHFUELADDERPERCENT,
 	SORRYUNUSED1,
-	SORRYUNUSED2,
-	SORRYUNUSED3,
+	ETBEXPAVERAGELENGTH,
 	ETBDUTYTHRESHOLD,
 	COASTINGFUELCUTRPMHIGH,
 	COASTINGFUELCUTRPMLOW,
@@ -3606,7 +3604,7 @@ public class Fields {
 	IDLETIMINGPID_PERIODMS,
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
-	UNUSED2496,
+	ETBROCEXPAVERAGELENGTH,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
