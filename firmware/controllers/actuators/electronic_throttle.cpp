@@ -223,6 +223,7 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	}
     m_dutyRocAverage.init(engineConfiguration->etbRocExpAverageLength);
     m_dutyAverage.init(engineConfiguration->etbExpAverageLength);
+    doInitElectronicThrottle();
 }
 
 void EtbController::showStatus() {
@@ -555,10 +556,12 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 }
 
 void EtbController::update() {
+#if !EFI_UNIT_TEST
 	// If we didn't get initialized, fail fast
 	if (!m_motor) {
 		return;
 	}
+#endif // EFI_UNIT_TEST
 
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
@@ -944,6 +947,11 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 
 void doInitElectronicThrottle() {
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+
+#if EFI_UNIT_TEST
+	printf("doInitElectronicThrottle %s\n", boolToString(shouldInitThrottles));
+#endif // EFI_UNIT_TEST
+
 	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB

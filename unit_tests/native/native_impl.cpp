@@ -10,6 +10,7 @@
 #include "auto_generated_sensor.h"
 #include "tunerstudio.h"
 #include "live_data.h"
+#include "init.h"
 
 #include <memory>
 
@@ -17,6 +18,7 @@ static std::unique_ptr<EngineTestHelper> ethPtr;
 
 static EngineTestHelper* getEth() {
 	if (!ethPtr) {
+	    printf("make_unique<EngineTestHelper>(TEST_ENGINE)\n");
 		ethPtr = std::make_unique<EngineTestHelper>(TEST_ENGINE);
 	}
 	return ethPtr.get();
@@ -97,7 +99,15 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_burnRequest
   (JNIEnv *, jobject) {
 	printf("[native] onBurnRequest\n");
+	getEth();// just to make sure we have initialized
     onBurnRequest();
+}
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_initTps
+  (JNIEnv *, jobject) {
+	printf("[native] initTps\n");
+	getEth();// just to make sure we have initialized
+    initTps();
 }
 
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {

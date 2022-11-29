@@ -51,6 +51,26 @@ public class JniUnitTest {
         JniSandbox.loadLibrary();
 
         EngineLogic engineLogic = new EngineLogic();
+
+        engineLogic.setSensor(SensorType.Tps1Primary.name(), 30);
+        engineLogic.setSensor(SensorType.Tps1Secondary.name(), 30);
+
+        engineLogic.burnRequest(); // hack: this is here to initialize engine helper prior to mocking sensors
+
+        engineLogic.setSensor(SensorType.AcceleratorPedalPrimary.name(), 40);
+        engineLogic.setSensor(SensorType.AcceleratorPedalSecondary.name(), 40);
+
+        engineLogic.setConfiguration(new byte[]{3}, Fields.TPS1_1ADCCHANNEL.getTotalOffset(), 1);
+        engineLogic.setConfiguration(new byte[]{3}, Fields.TPS1_2ADCCHANNEL.getTotalOffset(), 1);
+        engineLogic.setConfiguration(new byte[]{3}, Fields.THROTTLEPEDALPOSITIONADCCHANNEL.getTotalOffset(), 1);
+        engineLogic.setConfiguration(new byte[]{3}, Fields.THROTTLEPEDALPOSITIONSECONDADCCHANNEL.getTotalOffset(), 1);
+
+        engineLogic.initTps();
+        engineLogic.burnRequest();
+        System.out.println("engineLogic.invokeEtbCycle");
+        engineLogic.invokeEtbCycle();
+
+        assertEquals(120.36, getValue(engineLogic.getOutputs(), Sensor.etb1DutyCycle));
     }
 
     private double getField(EngineLogic engineLogic, Field field) {
