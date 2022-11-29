@@ -65,6 +65,14 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
 
 /*
  * Class:     com_rusefi_native__EngineLogic
+ * Method:    burnRequest
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_burnRequest
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
  * Method:    getOutputs
  * Signature: ()[B
  */

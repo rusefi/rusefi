@@ -80,11 +80,18 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
   EngineTestHelper* eth = getEth();
   Engine *engine = &eth->engine;
 
+	printf("[native] invokeEtbCycle\n");
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
 			etb->update();
 		}
 	}
+}
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_burnRequest
+  (JNIEnv *, jobject) {
+	printf("[native] onBurnRequest\n");
+    onBurnRequest();
 }
 
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
