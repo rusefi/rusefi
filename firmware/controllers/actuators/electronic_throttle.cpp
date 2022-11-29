@@ -902,11 +902,9 @@ void setDefaultEtbParameters() {
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
-#if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
 		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
-#endif
 }
 
 #if EFI_PROD_CODE && 0
