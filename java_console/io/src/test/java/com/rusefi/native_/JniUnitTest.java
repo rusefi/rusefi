@@ -18,17 +18,16 @@ import static junit.framework.Assert.*;
 public class JniUnitTest {
     @Before
     public void reset() {
-//        new EngineLogic().resetTest();
+        JniSandbox.loadLibrary();
+        EngineLogic.resetTest();
     }
 
     @Test
     public void run() {
-        JniSandbox.loadLibrary();
-
-        EngineLogic engineLogic = new EngineLogic();
-        String version = engineLogic.getVersion();
+        String version = EngineLogic.getVersion();
         assertTrue("Got " + version, version.contains("Hello"));
 
+        EngineLogic engineLogic = new EngineLogic();
         engineLogic.invokePeriodicCallback();
 
         assertEquals(TS_FILE_VERSION, (int) getValue(engineLogic.getOutputs(), Sensor.FIRMWARE_VERSION));
@@ -54,8 +53,6 @@ public class JniUnitTest {
 
     @Test
     public void testEtbStuff() {
-        JniSandbox.loadLibrary();
-
         EngineLogic engineLogic = new EngineLogic();
 
         engineLogic.setSensor(SensorType.Tps1Primary.name(), 30);
@@ -71,12 +68,12 @@ public class JniUnitTest {
         engineLogic.setConfiguration(new byte[]{3}, Fields.THROTTLEPEDALPOSITIONADCCHANNEL.getTotalOffset(), 1);
         engineLogic.setConfiguration(new byte[]{3}, Fields.THROTTLEPEDALPOSITIONSECONDADCCHANNEL.getTotalOffset(), 1);
 
-//        engineLogic.initTps();
-//        engineLogic.burnRequest();
-//        System.out.println("engineLogic.invokeEtbCycle");
-//        engineLogic.invokeEtbCycle();
-//
-//        assertEquals(120.36, getValue(engineLogic.getOutputs(), Sensor.etb1DutyCycle));
+        engineLogic.initTps();
+        engineLogic.burnRequest();
+        System.out.println("engineLogic.invokeEtbCycle");
+        engineLogic.invokeEtbCycle();
+
+        assertEquals(120.36, getValue(engineLogic.getOutputs(), Sensor.etb1DutyCycle));
     }
 
     private double getField(EngineLogic engineLogic, Field field) {
