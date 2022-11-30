@@ -3,8 +3,7 @@
 #include "electronic_throttle_impl.h"
 #include "live_data.h"
 
-TEST(etb, integrated) {
-	EngineTestHelper eth(TEST_ENGINE);
+static EtbController * initEtbIntegratedTest() {
 	etbPidReset(); // ETB controlles are global shared instances :(
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
@@ -20,8 +19,13 @@ TEST(etb, integrated) {
 
 	initTps();
 	doInitElectronicThrottle();
+	return (EtbController*)engine->etbControllers[0];
+}
 
-	EtbController *etb = (EtbController*)engine->etbControllers[0];
+TEST(etb, integrated) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EtbController *etb = initEtbIntegratedTest();
+
 	etb->update();
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
@@ -37,4 +41,18 @@ TEST(etb, integrated) {
 	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
 	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
 	ASSERT_EQ(destination, -75);
+}
+
+
+
+TEST(etb, integratedTpsJitter) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EtbController *etb = initEtbIntegratedTest();
+
+	ASSERT_FALSE(isTps1Error());
+	ASSERT_FALSE(isTps2Error());
+	ASSERT_FALSE(isPedalError());
+
+	etb->update();
+
 }
