@@ -1348,7 +1348,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
     brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
     int8_t launchFuelAdderPercent
-	int8_t[1 iterate] sorryUnused
+	int8_t tpsErrorCode
 	int16_t etbExpAverageLength
 	float etbDutyThreshold
 
