@@ -8,6 +8,7 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
