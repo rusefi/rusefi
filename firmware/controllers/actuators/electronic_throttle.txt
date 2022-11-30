@@ -16,4 +16,6 @@ float luaAdjustment;"ETB: luaAdjustment"
 	float etbDutyAverage
 	uint16_t etbInputErrorCounter;"ETB inputs error counter"
 
+	int8_t etbErrorCode
+
 end_struct

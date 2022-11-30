@@ -4,6 +4,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import com.rusefi.newparse.parsing.Type;
 
 import java.util.TreeSet;
 
@@ -156,8 +157,11 @@ public class TsOutput {
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
-            if (isConstantsSection)
+            if (isConstantsSection) {
+                if (configField.getType().equalsIgnoreCase(Type.U16.cType) || configField.getType().equalsIgnoreCase(Type.S16.cType))
+                    return quote("") + ", 1, 0, 0, 32000, 0";
                 return quote("") + ", 1, 0, 0, 100, 0";
+            }
             return quote("") + ", 1, 0";
         }
         try {

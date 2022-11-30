@@ -14,8 +14,7 @@ public:
 		setOutput(outputValue);
 	}
 
-private:
-	expected<TOutput> getOutput() {
+	virtual expected<TOutput> getOutput() {
 		expected<TInput> setpoint = getSetpoint();
 		// If we don't know the setpoint, return failure.
 		if (!setpoint) {
@@ -42,6 +41,7 @@ private:
 
 		return openLoopResult.Value + closedLoopResult.Value;
 	}
+private:
 
 	// Get the setpoint: where should the controller put the plant?
 	virtual expected<TInput> getSetpoint() = 0;

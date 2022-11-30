@@ -160,9 +160,10 @@ static percent_t directPwmValue = NAN;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) {
+bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool hasPedal) {
 	if (function == ETB_None) {
 		// if not configured, don't init.
+		etbErrorCode = (int8_t)TpsState::NotConfigured;
 		return false;
 	}
 
@@ -172,12 +173,14 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	// If we are a throttle, require redundant TPS sensor
 	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
 		// We don't need to init throttles, so nothing to do here.
-		if (!initializeThrottles) {
+		if (!hasPedal) {
+			etbErrorCode = (int8_t)TpsState::PpsError;
 			return false;
 		}
 
 		// If no sensor is configured for this throttle, skip initialization.
 		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
+			etbErrorCode = (int8_t)TpsState::TpsError;
 			return false;
 		}
 
@@ -188,6 +191,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 				Sensor::getSensorName(m_positionSensor)
 			);
 
+			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
 
@@ -196,7 +200,7 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 				OBD_TPS_Configuration,
 				"Use of electronic throttle requires accelerator pedal to be redundant."
 			);
-
+			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
 	}
@@ -518,13 +522,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		}
 
 		// Normal case - use PID to compute closed loop part
-        float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
-        etbDutyAverage = m_dutyAverage.average(output);
-
-        etbDutyRateOfChange = m_dutyRocAverage.average(output - prevOutput);
-		prevOutput = output;
-
-		return output;
+		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
 }
 
@@ -536,7 +534,9 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	}
 #endif
 
-	if (!m_motor) return;
+	if (!m_motor) {
+		return;
+	}
 
 	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
 	if (getLimpManager()->allowElectronicThrottle()
@@ -567,12 +567,21 @@ void EtbController::update() {
 
 	if (!cisnan(directPwmValue)) {
 		m_motor->set(directPwmValue);
+		etbErrorCode = (int8_t)TpsState::Manual;
 		return;
 	}
 
-	if ((engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently())
-	        || (etbInputErrorCounter > 50)
-	        || engine->engineState.lua.luaDisableEtb) {
+	TpsState localReason = TpsState::None;
+	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+		localReason = TpsState::Setting;
+	} else if (etbInputErrorCounter > 50) {
+		localReason = TpsState::InputJitter;
+	} else if (engine->engineState.lua.luaDisableEtb) {
+		localReason = TpsState::Lua;
+	}
+
+	if (localReason != TpsState::None) {
+		etbErrorCode = (int8_t)localReason;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable();
@@ -613,6 +622,19 @@ void EtbController::update() {
 
 
 	ClosedLoopController::update();
+}
+
+expected<percent_t> EtbController::getOutput() {
+	// total open + closed loop parts
+	expected<percent_t> output = ClosedLoopController::getOutput();
+	if (!output) {
+		return output;
+	}
+    etbDutyAverage = m_dutyAverage.average(output.Value);
+
+    etbDutyRateOfChange = m_dutyRocAverage.average(output.Value - prevOutput);
+	prevOutput = output.Value;
+	return output;
 }
 
 void EtbController::autoCalibrateTps() {
@@ -887,6 +909,9 @@ void setBoschVNH2SP30Curve() {
 void setDefaultEtbParameters() {
 	engineConfiguration->etbIdleThrottleRange = 5;
 
+	engineConfiguration->etbExpAverageLength = 100;
+	engineConfiguration->etbRocExpAverageLength = 100;
+
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);
 
@@ -963,10 +988,10 @@ static pid_s* getEtbPidForFunction(etb_function_e function) {
 }
 
 void doInitElectronicThrottle() {
-	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+	bool hasPedal = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
 #if EFI_UNIT_TEST
-	printf("doInitElectronicThrottle %s\n", boolToString(shouldInitThrottles));
+	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
 #endif // EFI_UNIT_TEST
 
 	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
@@ -988,7 +1013,7 @@ void doInitElectronicThrottle() {
 
 		auto pid = getEtbPidForFunction(func);
 
-		bool etbConfigured = controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
+		bool etbConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
 		if (i == 0) {
 		    engineConfiguration->etb1configured = etbConfigured;
 		} else if (i == 1) {
@@ -998,7 +1023,7 @@ void doInitElectronicThrottle() {
 
 	if (!engineConfiguration->etb1configured && !engineConfiguration->etb2configured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
-		if (shouldInitThrottles) {
+		if (hasPedal) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
 		}
 

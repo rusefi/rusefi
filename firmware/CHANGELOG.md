@@ -43,11 +43,13 @@ Release template (copy/paste this for new release):
  - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
  - Add fuel adder to launch #4777
  - 3-cylinder Benelli trigger
+ - ETB input jitter protection #4832
 
 ### Fixed
  - Fuel Priming reset fix #4627
  - Slower than expected RPM information was slowing engine start #4629
  - Fix 36-2-1 trigger (Mitsubishi 4B11, etc) #4635
+ - Improve injection phase table defaults #4808
 
 ### Removed
  - Idle timing deadzone #4729

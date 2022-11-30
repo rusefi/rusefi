@@ -237,6 +237,8 @@ extern bool_t debugSignalExecutor;
 TEST(misc, testRpmCalculator) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
+	setTable(config->injectionPhase, -180.0f);
+
 	engine->tdcMarkEnabled = false;
 
 	// These tests were written when the default target AFR was 14.0, so replicate that
@@ -606,6 +608,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
@@ -853,6 +856,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 
 TEST(big, testTwoWireBatch) {
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -881,6 +885,7 @@ TEST(big, testTwoWireBatch) {
 
 TEST(big, testSequential) {
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -908,6 +913,7 @@ TEST(big, testSequential) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	setTestBug299(&eth);

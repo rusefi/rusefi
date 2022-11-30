@@ -34,6 +34,7 @@ public:
 
 	// Update the controller's state: read sensors, send output, etc
 	void update() override;
+	expected<percent_t> getOutput() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
