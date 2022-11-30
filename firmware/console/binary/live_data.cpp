@@ -140,9 +140,10 @@ const electronic_throttle_s* getLiveDataAddr(size_t) {
 	return etb;
 }
 
-#if EFI_UNIT_TEST
 FragmentList getLiveDataFragments() {
-    // todo: would same runtime be optimized into static during firmware build?
+    // currently we initialize the array on first invocation
+    // this is quite a hack in terms of order of execution in real firmware code!
+    // todo: this still only allows for ONE unit test to work properly?!
     static FragmentEntry fragments[] = {
     // This header is generated - do not edit by hand!
     #include "live_data_fragments.h"
@@ -150,15 +151,3 @@ FragmentList getLiveDataFragments() {
 
 	return { fragments, efi::size(fragments) };
 }
-#else
-
-static const FragmentEntry fragments[] = {
-// This header is generated - do not edit by hand!
-#include "live_data_fragments.h"
-};
-
-FragmentList getLiveDataFragments() {
-	return { fragments, efi::size(fragments) };
-}
-
-#endif
