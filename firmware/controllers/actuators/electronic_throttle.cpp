@@ -522,13 +522,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		}
 
 		// Normal case - use PID to compute closed loop part
-        float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
-        etbDutyAverage = m_dutyAverage.average(output);
-
-        etbDutyRateOfChange = m_dutyRocAverage.average(output - prevOutput);
-		prevOutput = output;
-
-		return output;
+		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
 }
 
@@ -621,6 +615,19 @@ void EtbController::update() {
 
 
 	ClosedLoopController::update();
+}
+
+expected<percent_t> EtbController::getOutput() {
+	// total open + closed loop parts
+	expected<percent_t> output = ClosedLoopController::getOutput();
+	if (!output) {
+		return output;
+	}
+    etbDutyAverage = m_dutyAverage.average(output.Value);
+
+    etbDutyRateOfChange = m_dutyRocAverage.average(output.Value - prevOutput);
+	prevOutput = output.Value;
+	return output;
 }
 
 void EtbController::autoCalibrateTps() {
