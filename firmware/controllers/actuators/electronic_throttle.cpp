@@ -598,6 +598,7 @@ void EtbController::update() {
 		if (isInputError && !hadTpsError) {
 			etbInputErrorCounter++;
 
+			// TODO: decide on correct criteria here
 			// allow X TPS errors before we give up
 			// if (etbInputErrorCounter > X) {
 			// 	getLimpManager()->reportEtbProblem();
