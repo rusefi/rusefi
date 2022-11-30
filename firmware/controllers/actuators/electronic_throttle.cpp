@@ -902,6 +902,9 @@ void setBoschVNH2SP30Curve() {
 void setDefaultEtbParameters() {
 	engineConfiguration->etbIdleThrottleRange = 5;
 
+	engineConfiguration->etbExpAverageLength = 100;
+	engineConfiguration->etbRocExpAverageLength = 100;
+
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);
 
