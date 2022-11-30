@@ -525,7 +525,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		prevOutput = output;
 
         // seems good enough to simply check for both TPS sensors
-		bool isInputError = !Sensor::get(SensorType::Tps1).Valid || isTps2Error() || isPedalError();
+		bool isInputError = isTps1Error() || isTps2Error() || isPedalError();
 		// current basic implementation is to check for input error counter only while engine is not running
 		// we can make this logic smarter one day later
 		if (Sensor::getOrZero(SensorType::Rpm) == 0 && wasInputError != isInputError) {
