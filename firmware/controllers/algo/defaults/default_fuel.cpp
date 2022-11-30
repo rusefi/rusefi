@@ -81,20 +81,11 @@ static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	setTable(config->veTable, 80);
 
-//	setRpmTableBin(engineConfiguration->ve2RpmBins, FUEL_RPM_COUNT);
-//	setLinearCurve(engineConfiguration->ve2LoadBins, 10, 300, 1);
-//	ve2Map.setAll(0.81);
-
-	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
-
 	setRpmTableBin(config->baroCorrRpmBins, BARO_CORR_SIZE);
 	setLinearCurve(config->baroCorrPressureBins, 75, 105, 1);
-	for (int i = 0; i < BARO_CORR_SIZE;i++) {
-		for (int j = 0; j < BARO_CORR_SIZE;j++) {
-			// Default baro table is all 1.0, we can't recommend a reasonable default here
-			config->baroCorrTable[i][j] = 1;
-		}
-	}
+
+	// Default baro table is all 1.0, we can't recommend a reasonable default here
+	setTable(config->baroCorrTable, 1);
 }
 
 static void setDefaultFuelCutParameters() {
@@ -168,6 +159,8 @@ static void setDefaultLambdaTable() {
 	};
 	copyArray(config->lambdaLoadBins, mapBins);
 
+	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
+
 	static constexpr float rowValues[] = {
 		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
 		1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
@@ -238,8 +231,11 @@ void setDefaultFuel() {
 	setFuelTablesLoadBin(10, 160);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
 	setDefaultVETable();
-	setTable(config->injectionPhase, -180.0f);
 	setDefaultLambdaTable();
+
+	// -400 will close the injector just before TDC at the end of the exhaust stroke,
+	// around the time the intake valve opens.
+	setTable(config->injectionPhase, -400.0f);
 
 	// Charge temperature estimation
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
