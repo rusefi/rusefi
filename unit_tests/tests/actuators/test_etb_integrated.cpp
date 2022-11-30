@@ -21,7 +21,7 @@ static EtbController * initEtbIntegratedTest() {
 }
 
 TEST(etb, integrated) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
@@ -47,7 +47,7 @@ TEST(etb, integrated) {
 
 
 TEST(etb, integratedTpsJitter) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	ASSERT_FALSE(isTps1Error());
