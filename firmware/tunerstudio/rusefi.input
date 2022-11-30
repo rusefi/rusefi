@@ -3216,6 +3216,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output mode",				malfunctionIndicatorPinMode
 		field = "Warning Period",									warningPeriod
 
+	dialog = tachSettings, "Tachometer output"
+		field = "Output",									tachOutputPin
+		field = "Output mode",							tachOutputPinMode
+		field = "Pulse Mode",							tachPulseDurationAsDutyCycle
+		field = "Pulse duration",						tachPulseDuractionMs
+		field = "Pulse per Rev",						tachPulsePerRev
+
     dialog = outputsDialogLeft
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
@@ -3477,12 +3484,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Smoothing factor",						slowAdcAlpha
 
-	dialog = tachSettings, "Tachometer output"
-		field = "Output",									tachOutputPin
-		field = "Output mode",							tachOutputPinMode
-		field = "Pulse Mode",							tachPulseDurationAsDutyCycle
-		field = "Pulse duration",						tachPulseDuractionMs
-		field = "Pulse per Rev",						tachPulsePerRev
 
 
 ;			Board->Connection
