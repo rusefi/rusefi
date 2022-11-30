@@ -65,5 +65,5 @@ TEST(etb, integratedTpsJitter) {
 	Sensor::setInvalidMockValue(SensorType::Tps1);
 	etb->update();
 
-	ASSERT_EQ(1, etb->etbInputErrorCounter);
+	ASSERT_EQ(2, etb->etbInputErrorCounter);
 }
