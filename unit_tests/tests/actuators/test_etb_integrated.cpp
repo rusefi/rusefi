@@ -65,20 +65,29 @@ TEST(etb, intermittentTps) {
 	etb->update();
 
 	EXPECT_EQ(0, etb->etbInputErrorCounter);
+	EXPECT_EQ(0, etb->etbErrorCode);
 
 	int badCount = 0;
 
 	// Do some bad/good/bad/good cycles, make sure count keeps up
-	for (size_t i = 0; i < 10; i++) {
+	for (size_t i = 0; i < 50; i++) {
 		Sensor::setInvalidMockValue(SensorType::Tps1);
 		ASSERT_TRUE(isTps1Error());
 		etb->update();
 
 		badCount++;
 		EXPECT_EQ(badCount, etb->etbInputErrorCounter);
+		EXPECT_EQ(0, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
 		ASSERT_FALSE(isTps1Error());
 		etb->update();
 	}
+
+	// 51st bad TPS should set etbErrorCode
+	Sensor::setInvalidMockValue(SensorType::Tps1);
+	ASSERT_TRUE(isTps1Error());
+	etb->update();
+
+	EXPECT_NE(0, etb->etbErrorCode);
 }

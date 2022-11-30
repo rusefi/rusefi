@@ -571,27 +571,6 @@ void EtbController::update() {
 		return;
 	}
 
-	TpsState localReason = TpsState::None;
-	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
-		localReason = TpsState::Setting;
-	} else if (etbInputErrorCounter > 50) {
-		localReason = TpsState::InputJitter;
-	} else if (engine->engineState.lua.luaDisableEtb) {
-		localReason = TpsState::Lua;
-	}
-
-	if (localReason != TpsState::None) {
-		etbErrorCode = (int8_t)localReason;
-		// If engine is stopped and so configured, skip the ETB update entirely
-		// This is quieter and pulls less power than leaving it on all the time
-		m_motor->disable();
-		return;
-	}
-
-
-	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
-
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
 	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
@@ -606,12 +585,6 @@ void EtbController::update() {
 		// If we have an error that's new, increment the counter
 		if (isInputError && !hadTpsError) {
 			etbInputErrorCounter++;
-
-			// TODO: decide on correct criteria here
-			// allow X TPS errors before we give up
-			// if (etbInputErrorCounter > X) {
-			// 	getLimpManager()->reportEtbProblem();
-			// }
 		}
 
 		hadTpsError = isInputError;
@@ -620,6 +593,27 @@ void EtbController::update() {
 		etbInputErrorCounter = 0;
 	}
 
+	TpsState localReason = TpsState::None;
+	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+		localReason = TpsState::EngineStopped;
+	} else if (etbInputErrorCounter > 50) {
+		localReason = TpsState::IntermittentTps;
+	} else if (engine->engineState.lua.luaDisableEtb) {
+		localReason = TpsState::Lua;
+	}
+
+	etbErrorCode = (int8_t)localReason;
+
+	if (localReason != TpsState::None) {
+		// If engine is stopped and so configured, skip the ETB update entirely
+		// This is quieter and pulls less power than leaving it on all the time
+		m_motor->disable();
+		return;
+	}
+
+
+	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	ClosedLoopController::update();
 }
