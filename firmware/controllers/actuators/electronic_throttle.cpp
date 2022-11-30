@@ -589,19 +589,25 @@ void EtbController::update() {
 		&& engine->etbAutoTune
 		&& m_function == ETB_Throttle1;
 
-	if (!m_isAutotune) {
-		// note that ClosedLoopController has it's own setpoint error validation so ours with the counter has to be here
-		// seems good enough to simply check for both TPS sensors
-		int errorState = (isTps1Error() ? 1 : 0) + (isTps2Error() ? 2 : 0)
-				+ (isPedalError() ? 4 : 0);
+	bool shouldCheckTpsFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
 
-		// current basic implementation is to check for input error counter only while engine is not running
-		// we can make this logic smarter one day later
-		if (Sensor::getOrZero(SensorType::Rpm) == 0
-				&& prevErrorState != errorState) {
-			prevErrorState = errorState;
+	if (!m_isAutotune && shouldCheckTpsFunction) {
+		bool isInputError = !Sensor::get(m_positionSensor).Valid;
+
+		// If we have an error that's new, increment the counter
+		if (isInputError && !hadTpsError) {
 			etbInputErrorCounter++;
+
+			// allow X TPS errors before we give up
+			// if (etbInputErrorCounter > X) {
+			// 	getLimpManager()->reportEtbProblem();
+			// }
 		}
+
+		hadTpsError = isInputError;
+	} else {
+		// Either sensors are expected to not work, or autotune is running, so reset the error counter
+		etbInputErrorCounter = 0;
 	}
 
 

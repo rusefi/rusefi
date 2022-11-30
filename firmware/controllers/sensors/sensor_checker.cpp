@@ -146,7 +146,9 @@ static obd_code_e getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 void SensorChecker::onSlowCallback() {
 	// Don't check when the ignition is off, or when it was just turned on (let things stabilize)
 	// TODO: also inhibit checking if we just did a flash burn, since that blocks the ECU for a few seconds.
-	if (!m_ignitionIsOn || !m_timeSinceIgnOff.hasElapsedSec(5)) {
+	bool shouldCheck = m_ignitionIsOn && m_timeSinceIgnOff.hasElapsedSec(5);
+	m_analogSensorsShouldWork = shouldCheck;
+	if (shouldCheck)
 		return;
 	}
 
@@ -158,11 +160,12 @@ void SensorChecker::onSlowCallback() {
 	check(SensorType::Tps2Secondary);
 	check(SensorType::Tps2);
 
-	check(SensorType::Tps2);
-	check(SensorType::Tps2Primary);
-	check(SensorType::Tps2Secondary);
+	check(SensorType::AcceleratorPedalPrimary);
+	check(SensorType::AcceleratorPedalSecondary);
+	check(SensorType::AcceleratorPedal);
 
 	check(SensorType::Map);
+	check(SensorType::Map2);
 
 	check(SensorType::Clt);
 	check(SensorType::Iat);
