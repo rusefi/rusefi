@@ -9,6 +9,7 @@
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	EngineTestHelper eth(TEST_ENGINE);
+	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	engineConfiguration->cranking.baseFuel = 12;

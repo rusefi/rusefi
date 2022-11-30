@@ -8,6 +8,7 @@
 
 TEST(issues, issueOneCylinderSpecialCase968) {
 	EngineTestHelper eth(GY6_139QMB);
+	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
 	// set injection_mode 1
