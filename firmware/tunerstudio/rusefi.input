@@ -239,7 +239,7 @@ enable2ndByteCanID = false
 	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off"
 
 ; TpsState
-	etbCutCodeList = bits, U08, [0:7], "None", "engine off setting", "TPS error", "PPS error", "Input noise", "PID noise", "Lua"
+	etbCutCodeList = bits, U08, [0:7], "None", "engine off setting", "TPS error", "PPS error", "Input noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy"
 
 [ConstantsExtensions]
 	; defaultValue is used to provide TunerStudio with a value to use in the case of
