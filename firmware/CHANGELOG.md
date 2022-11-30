@@ -43,6 +43,7 @@ Release template (copy/paste this for new release):
  - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
  - Add fuel adder to launch #4777
  - 3-cylinder Benelli trigger
+ - ETB input jitter protection #4832
 
 ### Fixed
  - Fuel Priming reset fix #4627
