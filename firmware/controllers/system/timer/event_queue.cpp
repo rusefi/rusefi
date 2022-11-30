@@ -36,7 +36,9 @@ scheduling_s* EventQueue::getFreeScheduling() {
 		m_freelist = retVal->nextScheduling_s;
 		retVal->nextScheduling_s = nullptr;
 
+#if EFI_PROD_CODE
 		getTunerStudioOutputChannels()->schedulingUsedCount++;
+#endif
 	}
 
 	return retVal;
@@ -48,7 +50,9 @@ void EventQueue::tryReturnScheduling(scheduling_s* sched) {
 		sched->nextScheduling_s = m_freelist;
 		m_freelist = sched;
 
+#if EFI_PROD_CODE
 		getTunerStudioOutputChannels()->schedulingUsedCount--;
+#endif
 	}
 }
 
