@@ -389,7 +389,7 @@
 #define TS_PRIMARY_PORT UARTD3
 #endif
 
-#undef TS_SECONDARY_PORT
+//#undef TS_SECONDARY_PORT
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

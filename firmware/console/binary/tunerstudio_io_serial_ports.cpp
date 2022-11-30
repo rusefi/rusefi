@@ -37,7 +37,7 @@ class SerialTsChannel;
 #endif // EFI_USE_UART_DMA
 		SerialTsChannel> primaryChannel(TS_PRIMARY_PORT);
 #endif // TS_PRIMARY_PORT
-
+#pragma message("TS_FIRST_CHANNEL")
 	struct PrimaryChannelThread : public TunerstudioThread {
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
 
@@ -70,6 +70,7 @@ class SerialTsChannel;
 		SerialTsChannel> secondaryChannel(TS_SECONDARY_PORT);
 #endif // TS_SECONDARY_PORT
 
+#pragma message("TS_SECOND_CHANNEL")
 
 	struct SecondaryChannelThread : public TunerstudioThread {
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }

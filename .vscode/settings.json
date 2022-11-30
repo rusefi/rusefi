@@ -28,4 +28,5 @@
 		"hardware/": true,
 		"firmware/ChibiOS/demos": true,
 	},
+	"cortex-debug.variableUseNaturalFormat": false,
 }

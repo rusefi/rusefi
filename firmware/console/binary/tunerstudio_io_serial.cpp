@@ -6,6 +6,7 @@
 
 #if HAS_PRIMARY || HAS_SECONDARY
 #if HAL_USE_SERIAL
+#pragma message("HAL_USE_SERIAL")
 void SerialTsChannel::start(uint32_t baud) {
 	SerialConfig cfg = {
 		#if EFI_PROD_CODE
@@ -34,6 +35,7 @@ size_t SerialTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 #endif // HAL_USE_SERIAL
 
 #if HAL_USE_UART
+#pragma message("HAL_USE_UART")
 void UartTsChannel::start(uint32_t baud) {
 	m_config = { 
 		.txend1_cb 		= NULL,

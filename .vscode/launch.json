@@ -76,7 +76,8 @@
 			"servertype": "openocd",
 			"configFiles": ["interface/stlink.cfg", "target/stm32f4x.cfg"],
 			"rtos": "auto",
-			"runToMain": true
+			"armToolchainPath": "/home/sanci/bin/gcc-arm-none-eabi-10.3-2021.10/bin/",
+			"stm32cubeprogrammer": "/home/sanci/bin/Stm32CubeProgrammer/bin",
 		},
 		{
 			"name": "Debug F7x6",
