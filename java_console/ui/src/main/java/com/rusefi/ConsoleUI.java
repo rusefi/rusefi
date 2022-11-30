@@ -128,7 +128,10 @@ public class ConsoleUI {
         if (!linkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
+            /**
+             * re-enable under https://github.com/rusefi/rusefi/issues/4842
             tabbedPane.addTab("Live Data", new LiveDataPane(uiContext).getContent());
+             */
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 

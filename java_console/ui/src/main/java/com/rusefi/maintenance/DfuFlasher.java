@@ -83,7 +83,7 @@ public class DfuFlasher {
             if (signature.get() == null) {
                 wnd.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
-                wnd.setErrorState(true);
+                wnd.setErrorState();
                 return null;
             }
             boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
@@ -100,7 +100,7 @@ public class DfuFlasher {
             }).getSerialPort();
             if (port == null) {
                 wnd.append("*** ERROR *** rusEFI serial port not detected");
-                wnd.setErrorState(true);
+                wnd.setErrorState();
                 return null;
             } else {
                 wnd.append("Detected rusEFI on " + port + "\n");
@@ -136,7 +136,7 @@ public class DfuFlasher {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(wnd);
         if (!driverIsHappy) {
             wnd.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
-            wnd.setErrorState(true);
+            wnd.setErrorState();
             return;
         }
 
@@ -148,25 +148,26 @@ public class DfuFlasher {
                     DFU_BINARY, wnd, stdout);
         } catch (FileNotFoundException e) {
             wnd.append("ERROR: " + e);
-            wnd.setErrorState(true);
+            wnd.setErrorState();
             return;
         }
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.append("SUCCESS!");
             wnd.append("Please power cycle device to exit DFU mode");
+            wnd.setSuccessState();
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(wnd);
             wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(wnd);
-            wnd.setErrorState(true);
+            wnd.setErrorState();
         } else {
             wnd.append(stdout.length() + " / " + errorResponse.length());
             appendWindowsVersion(wnd);
             appendDeviceReport(wnd);
-            wnd.setErrorState(true);
+            wnd.setErrorState();
         }
     }
 

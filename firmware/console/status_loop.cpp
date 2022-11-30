@@ -438,12 +438,12 @@ static void updateThrottles() {
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	engine->outputChannels.TPS2Value = tps2.value_or(0);
 	// If we don't have a TPS2 at all, don't turn on the failure light
-	engine->outputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
+	engine->outputChannels.isTps2Error = isTps2Error();
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
 	// Only report fail if you have one (many people don't)
-	engine->outputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+	engine->outputChannels.isPedalError = isPedalError();
 
 	// TPS 1 pri/sec split
 	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
@@ -458,11 +458,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	engine->outputChannels.lambdaValue = lambdaValue;
-	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer->stoichiometricRatio;
+	engine->outputChannels.AFRValue = lambdaValue * engine->fuelComputer.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	engine->outputChannels.lambdaValue2 = lambda2Value;
-	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer->stoichiometricRatio;
+	engine->outputChannels.AFRValue2 = lambda2Value * engine->fuelComputer.stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -576,7 +576,7 @@ static void updateFuelCorrections() {
 
 static void updateFuelResults() {
 	// todo: kill outputChannel while taking care of gauge name and scale!
-	engine->outputChannels.chargeAirMass = engine->fuelComputer->sdAirMassInOneCylinder;
+	engine->outputChannels.chargeAirMass = engine->fuelComputer.sdAirMassInOneCylinder;
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;

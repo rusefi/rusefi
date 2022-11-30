@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * As of Nov 2022 this implementation is not used in prod :(
+ */
 public class TsWriter {
     // matches strings in the form of @@MY_var_123@@
     private static final Pattern VAR = Pattern.compile("@@([a-zA-Z0-9_]+?)@@");

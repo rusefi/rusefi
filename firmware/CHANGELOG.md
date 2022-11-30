@@ -28,7 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## November 2022 Release - "Day 267"
+### Breaking Changes
+ - SD logging rate is now set with hz instead of ms period #4553
 
 ### Added
  - VVT minimum RPM setting #4545

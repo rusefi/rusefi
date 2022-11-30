@@ -2,7 +2,9 @@ package com.rusefi.core;
 
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
+import com.rusefi.config.generated.EngineState;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.FuelComputer;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.sensor_logs.BinaryLogEntry;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +57,7 @@ public enum Sensor implements BinaryLogEntry {
 //
 //    // fuel math
 //    CHARGE_AIR_MASS("airmass", SensorCategory.OPERATIONS, FieldType.UINT16, 44, 0.001, 0, 3, "g/cyl"),
-//    crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
+    crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, EngineState.CRANKINGFUEL_BASEFUEL, 1, 0, 30, "ms"),
     baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, TsOutputs.BASEFUEL, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, TsOutputs.FUELRUNNING, 1.0 / PACK_MULT_FUEL_MASS, 0, 15, "ms"),
 //    actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, 54, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
@@ -91,6 +93,8 @@ public enum Sensor implements BinaryLogEntry {
 //    etb1Error(GAUGE_NAME_ETB_ERROR, SensorCategory.OTHERS, FieldType.INT16, 96, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
     // Fuel system
+    afrTarget(GAUGE_NAME_TARGET_AFR, SensorCategory.FUEL, FieldType.INT16, FuelComputer.TARGETAFR, 1.0 / 1000, 0, 20, ""),
+    sdAirMassInOneCylinder(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.FLOAT, FuelComputer.SDAIRMASSINONECYLINDER, 1.0, 0, 15, "g"),
 
     // Knock
 //    knockLevel(GAUGE_NAME_KNOCK_LEVEL, SensorCategory.DEBUG, FieldType.FLOAT, 108, 0, 5),
@@ -186,7 +190,7 @@ public enum Sensor implements BinaryLogEntry {
     Sensor(String name, SensorCategory category, FieldType type, Field field, double scale, double minValue, double maxValue, String units) {
         this.name = name == null ? name() : name;
         this.type = type;
-        this.offset = field.getOffset();
+        this.offset = field.getTotalOffset();
         this.scale = scale;
         this.category = category;
         this.units = units;

@@ -113,6 +113,9 @@ public:
 	 */
 	static void setMockValue(SensorType type, float value, bool mockRedundant = false);
 
+
+	static void setInvalidMockValue(SensorType type);
+
 	/*
 	 * Mock a value for a particular sensor.
 	 */

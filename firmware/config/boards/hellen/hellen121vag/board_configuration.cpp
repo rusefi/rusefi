@@ -11,7 +11,7 @@
  */
 
 #include "pch.h"
-#include "electronic_throttle_impl.h"
+#include "electronic_throttle.h"
 #include "hellen_meta.h"
 #include "defaults.h"
 

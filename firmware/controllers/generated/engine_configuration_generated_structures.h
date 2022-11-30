@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 24 03:16:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 01:05:58 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1703,14 +1703,14 @@ struct engine_configuration_s {
 	bool enableVerboseCanTx : 1 {};
 	/**
 	offset 764 bit 15 */
-	bool unusedAlteOnOff : 1 {};
+	bool etb1configured : 1 {};
 	/**
 	 * enable cj125/disable cj125
 	offset 764 bit 16 */
 	bool isCJ125Enabled : 1 {};
 	/**
 	offset 764 bit 17 */
-	bool unused764b17 : 1 {};
+	bool etb2configured : 1 {};
 	/**
 	 * Useful for individual intakes
 	offset 764 bit 18 */
@@ -1919,11 +1919,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t etbMaximumPosition;
 	/**
-	 * SD card logging period, in milliseconds
-	ms
+	 * Rate the ECU will log to the SD card, in hz (log lines per second).
+	hz
 	 * offset 852
 	 */
-	int16_t sdCardPeriodMs;
+	uint16_t sdCardLogFrequency;
 	/**
 	 * offset 854
 	 */
@@ -3676,11 +3676,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 2085
 	 */
-	int8_t sorryUnused[3];
+	int8_t sorryUnused[1];
+	/**
+	 * offset 2086
+	 */
+	int16_t etbExpAverageLength;
 	/**
 	 * offset 2088
 	 */
-	int8_t sorryUnusedF[4];
+	float etbDutyThreshold;
 	/**
 	 * This sets the RPM above which fuel cut is active.
 	rpm
@@ -3812,7 +3816,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2496
 	 */
-	int16_t unused2496;
+	int16_t etbRocExpAverageLength;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	cycles
@@ -4318,10 +4322,14 @@ struct engine_configuration_s {
 	 */
 	uint16_t highSpeedOffsets[HIGH_SPEED_COUNT];
 	/**
-	units
 	 * offset 3852
 	 */
-	uint8_t mainUnusedEnd[160];
+	float etbDutyShutdownThreshold;
+	/**
+	units
+	 * offset 3856
+	 */
+	uint8_t mainUnusedEnd[156];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5094,4 +5102,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 24 03:16:32 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 29 01:05:58 UTC 2022

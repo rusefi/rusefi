@@ -4,7 +4,7 @@
 
 #include "tunerstudio.h"
 #include "wideband_state_generated.h"
-#include "electronic_throttle_generated.h"
+#include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
 #include "fuel_computer.h"
 
@@ -57,7 +57,7 @@ const ac_control_s* getLiveDataAddr() {
 
 template<>
 const fuel_computer_s* getLiveDataAddr() {
-	return engine->fuelComputer;
+	return &engine->fuelComputer;
 }
 
 template<>
@@ -136,13 +136,19 @@ const ignition_state_s* getLiveDataAddr() {
 
 template<>
 const electronic_throttle_s* getLiveDataAddr(size_t) {
-	// return engine->etbControllers[0];
-	return nullptr;
+	EtbController *etb = (EtbController *)engine->etbControllers[0];
+	return etb;
 }
 
 #if EFI_UNIT_TEST
 FragmentList getLiveDataFragments() {
-	return { nullptr, 0 };
+    // todo: would same runtime be optimized into static during firmware build?
+    static FragmentEntry fragments[] = {
+    // This header is generated - do not edit by hand!
+    #include "live_data_fragments.h"
+    };
+
+	return { fragments, efi::size(fragments) };
 }
 #else
 

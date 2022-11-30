@@ -1,17 +1,10 @@
 #pragma once
 
-#define TRIGGER_EVENT_UNDEFINED INT32_MAX
-
 class TriggerScheduler : public EngineModule {
 public:
-	bool scheduleOrQueue(AngleBasedEventOld *event,
-			     uint32_t trgEventIndex,
-			     efitick_t edgeTimestamp,
-			     angle_t angle,
-			     action_s action);
+	void schedule(AngleBasedEventBase* event, angle_t angle, action_s action);
 
 	bool scheduleOrQueue(AngleBasedEventNew *event,
-			     uint32_t trgEventIndex,
 			     efitick_t edgeTimestamp,
 			     angle_t angle,
 			     action_s action,
@@ -26,6 +19,8 @@ public:
 	AngleBasedEventBase * getElementAtIndexForUnitTest(int index);
 
 private:
+	void schedule(AngleBasedEventBase* event, action_s action);
+
 	bool assertNotInList(AngleBasedEventBase *head, AngleBasedEventBase *element);
 
 	/**

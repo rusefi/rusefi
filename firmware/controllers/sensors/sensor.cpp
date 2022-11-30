@@ -11,9 +11,15 @@ public:
 		return m_sensor;
 	}
 
+	void setInvalidMockValue() {
+		m_useMock = true;
+		m_valid = false;
+	}
+
 	void setMockValue(float value, bool mockRedundant) {
 		m_mockValue = value;
 		m_useMock = true;
+		m_valid = true;
 		m_mockRedundant = mockRedundant;
 	}
 
@@ -47,6 +53,9 @@ public:
 	SensorResult get() const {
 		// Check if mock
 		if (m_useMock) {
+			if (!m_valid) {
+				return unexpected;
+			}
 			return m_mockValue;
 		}
 
@@ -111,6 +120,7 @@ public:
 
 private:
 	bool m_useMock = false;
+	bool m_valid = false;
 	bool m_mockRedundant = false;
 	float m_mockValue;
 	Sensor* m_sensor = nullptr;
@@ -183,6 +193,14 @@ void Sensor::unregister() {
 	const auto entry = getEntryForType(type);
 
 	return entry ? entry->hasSensor() : false;
+}
+
+void Sensor::setInvalidMockValue(SensorType type) {
+	auto entry = getEntryForType(type);
+
+	if (entry) {
+		entry->setInvalidMockValue();
+	}
 }
 
 /*static*/ void Sensor::setMockValue(SensorType type, float value, bool mockRedundant) {

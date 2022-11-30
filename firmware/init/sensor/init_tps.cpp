@@ -7,6 +7,7 @@
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
+#include "auto_generated_sensor.h"
 
 #ifndef MAX_TPS_PPS_DISCREPANCY
 #define MAX_TPS_PPS_DISCREPANCY 5.0f
@@ -56,6 +57,9 @@ private:
 	bool configure(const TpsConfig& cfg) {
 		// Only configure if we have a channel
 		if (!isAdcChannelValid(cfg.channel)) {
+#if EFI_UNIT_TEST
+	printf("Configured NO hardware %s\n", name());
+#endif
 			return false;
 		}
 
@@ -78,6 +82,9 @@ private:
 			cfg.min, cfg.max
 		);
 
+#if EFI_UNIT_TEST
+	printf("Configured YES %s\n", name());
+#endif
 		return true;
 	}
 
@@ -123,6 +130,9 @@ public:
 		} else {
 			// not ford TPS
 			m_redund.configure(MAX_TPS_PPS_DISCREPANCY, !hasSecond);
+#if EFI_UNIT_TEST
+printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
+#endif
 			m_redund.Register();
 		}
 	}
@@ -165,6 +175,7 @@ static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
+    efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
 	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
 	percent_t max = engineConfiguration->tpsErrorDetectionTooHigh;
 

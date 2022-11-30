@@ -54,13 +54,14 @@ public class StatusWindow implements StatusConsumer {
         return content;
     }
 
-    public void setErrorState(boolean isErrorState) {
-        if (isErrorState) {
-            logTextArea.setBackground(LIGHT_RED);
-            copyContentToClipboard();
-        } else {
-            logTextArea.setBackground(LIGHT_GREEN);
-        }
+
+    public void setErrorState() {
+        logTextArea.setBackground(LIGHT_RED);
+        copyContentToClipboard();
+    }
+
+    public void setSuccessState() {
+        logTextArea.setBackground(LIGHT_GREEN);
     }
 
     public JFrame getFrame() {

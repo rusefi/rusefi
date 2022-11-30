@@ -13,7 +13,15 @@ extern "C" {
  * Signature: ()Ljava/lang/String;
  */
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion
-  (JNIEnv *, jobject);
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    resetTest
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_resetTest
+  (JNIEnv *, jclass);
 
 /*
  * Class:     com_rusefi_native__EngineLogic
@@ -49,10 +57,34 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setEngineType
 
 /*
  * Class:     com_rusefi_native__EngineLogic
+ * Method:    initTps
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_initTps
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
  * Method:    invokePeriodicCallback
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    invokeEtbCycle
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokeEtbCycle
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    burnRequest
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_burnRequest
   (JNIEnv *, jobject);
 
 /*
