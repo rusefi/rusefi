@@ -26,7 +26,6 @@ enum class ClearReason : uint8_t {
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
 };
 
-
 enum class TpsState : uint8_t {
 	None, // 0
 	Setting,
@@ -34,8 +33,7 @@ enum class TpsState : uint8_t {
 	PpsError, // 3
 	InputJitter,
 	PidJitter,
-
-	// keep this list in sync with etbCutCodeList
+	// keep this list in sync with etbCutCodeList in rusefi.input!
 };
 
 // Only allows clearing the value, but never resetting it.
