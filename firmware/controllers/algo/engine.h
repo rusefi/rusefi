@@ -115,8 +115,8 @@ public:
 	PinRepository pinRepository;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
-	// we have pointers mixed with... not pointers (reference?) between different controllers
-	IFuelComputer *fuelComputer = nullptr;
+
+	FuelComputer fuelComputer;
 
 	type_list<
 		Mockable<InjectorModel>,

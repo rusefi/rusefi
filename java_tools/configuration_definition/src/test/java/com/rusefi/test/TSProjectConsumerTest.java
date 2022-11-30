@@ -61,10 +61,10 @@ public class TSProjectConsumerTest {
                 "periodMs = scalar, S16, 20, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "; total TS size = 24\n", tsProjectConsumer.getContent());
 
-        assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT).setScale(1.0);\n" +
-                        "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 4, FieldType.INT).setScale(1.0);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(0.1);\n" +
-                        "\tpublic static final Field ALIGNMENTFILL_AT_22 = Field.create(\"ALIGNMENTFILL_AT_22\", 22, FieldType.INT8).setScale(1.0);\n",
+        assertEquals("\tpublic static final Field PERIODMS2 = Field.create(\"PERIODMS2\", 0, FieldType.INT).setScale(1.0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field AFRTABLE = Field.create(\"AFRTABLE\", 4, FieldType.INT).setScale(1.0).setBaseOffset(0);\n" +
+                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 20, FieldType.INT16).setScale(0.1).setBaseOffset(0);\n" +
+                        "\tpublic static final Field ALIGNMENTFILL_AT_22 = Field.create(\"ALIGNMENTFILL_AT_22\", 22, FieldType.INT8).setScale(1.0).setBaseOffset(0);\n",
                 javaFieldsConsumer.getContent());
 
 

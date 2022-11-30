@@ -11,7 +11,7 @@
 # needed to exit DFU mode.
 #
 
-dfu-util --alt 0 --download deliver/rusefi.dfu --reset
+dfu-util --alt 0 --download deliver/rusefi.dfu -s :leave
 
 # For Windows the batch file flash_dfu.bat runs the equivalent command
 #   DfuSeCommand.exe -c -d --fn deliver/rusefi.dfu

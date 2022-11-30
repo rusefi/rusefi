@@ -107,6 +107,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_boost.cpp \
 	tests/actuators/test_dc_motor.cpp \
 	tests/actuators/test_etb.cpp \
+	tests/actuators/test_etb_integrated.cpp \
 	tests/actuators/test_fan_control.cpp \
 	tests/actuators/test_fuel_pump.cpp \
 	tests/actuators/test_gppwm.cpp \

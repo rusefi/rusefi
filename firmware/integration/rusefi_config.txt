@@ -93,7 +93,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10015
+#define FLASH_DATA_VERSION 10016
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -767,9 +767,9 @@ bit is_enabled_spi_2
 	bit useLcdScreen
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
-	bit unusedAlteOnOff
+	bit etb1configured
 	bit isCJ125Enabled;enable cj125/disable cj125
-	bit unused764b17
+	bit etb2configured
 	bit measureMapOnlyInOneCylinder;Useful for individual intakes
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
@@ -834,7 +834,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 
 
 custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3" 
-	int16_t sdCardPeriodMs;SD card logging period, in milliseconds;"ms", 1, 0, 0, 30000, 0
+	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
 	adc_channel_e idlePositionSensor;
 	Gpio debugMapAveraging;
 	output_pin_e starterRelayDisablePin;
@@ -1348,8 +1348,9 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
     brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
     int8_t launchFuelAdderPercent
-	int8_t[3 iterate] sorryUnused
-	int8_t[4 iterate] sorryUnusedF
+	int8_t[1 iterate] sorryUnused
+	int16_t etbExpAverageLength
+	float etbDutyThreshold
 
 	int16_t coastingFuelCutRpmHigh;This sets the RPM above which fuel cut is active.;"rpm", 1, 0, 0, 5000, 0
 	int16_t coastingFuelCutRpmLow;This sets the RPM below which fuel cut is deactivated, this prevents jerking or issues transitioning to idle;"rpm", 1, 0, 0, 5000, 0
@@ -1388,7 +1389,7 @@ tChargeMode_e tChargeMode;
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
 
-	int16_t unused2496
+	int16_t etbRocExpAverageLength
 
 	int16_t tpsAccelFractionPeriod;A delay in cycles between fuel-enrich. portions;"cycles", 1, 0, 0, 500, 0
 	float tpsAccelFractionDivisor;A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef", 1, 0, 0, 100, 2
@@ -1537,7 +1538,8 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 #define HIGH_SPEED_COUNT 32
 uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
 
-uint8_t[160] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+float etbDutyShutdownThreshold
+uint8_t[156] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

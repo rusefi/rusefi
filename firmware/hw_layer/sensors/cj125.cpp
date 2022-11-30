@@ -252,7 +252,7 @@ public:
 		return cjReadRegister(reg);
 	}
 
-	void WriteRegister(uint8_t regAddr, uint8_t regValue) {
+	void WriteRegister(uint8_t regAddr, uint8_t regValue) override {
 		cjWriteRegister(regAddr, regValue);
 	}
 };

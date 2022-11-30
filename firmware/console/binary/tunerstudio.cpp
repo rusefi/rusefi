@@ -113,8 +113,8 @@ static void resetTs() {
 static void printTsStats(void) {
 #if EFI_PROD_CODE
 #ifdef EFI_CONSOLE_RX_BRAIN_PIN
-	efiPrintf("Primary UART RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
-	efiPrintf("Primary UART TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
+	efiPrintf("Primary UART RX %s", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
+	efiPrintf("Primary UART TX %s", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
 #endif
 
 	if (false) {
@@ -482,7 +482,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		if (tsChannel == getBluetoothChannel()) {
 			// no data in a whole second means time to disconnect BT
 			// assume there's connection loss and notify the bluetooth init code
-			bluetoothSoftwareDisconnectNotify();
+			bluetoothSoftwareDisconnectNotify(getBluetoothChannel());
 		}
 #endif  /* EFI_BLUETOOTH_SETUP */
 		tsChannel->in_sync = false;
@@ -838,7 +838,6 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
 		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
 	});
-	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 }
 

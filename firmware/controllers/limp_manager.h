@@ -26,6 +26,20 @@ enum class ClearReason : uint8_t {
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
 };
 
+enum class TpsState : uint8_t {
+	None, // 0
+	Setting,
+	TpsError,
+	PpsError, // 3
+	InputJitter,
+	PidJitter,
+	Lua, // 6
+	Manual,
+	NotConfigured,
+	Redundancy, // 9
+	// keep this list in sync with etbCutCodeList in rusefi.input!
+};
+
 // Only allows clearing the value, but never resetting it.
 class Clearable {
 public:
@@ -97,8 +111,8 @@ public:
 
 	bool allowTriggerInput() const;
 
-	// Other subsystems call these APIs to indicate a problem has occured
-	void etbProblem();
+	// Other subsystems call these APIs to indicate a problem has occurred
+	void reportEtbProblem();
 	void fatalError();
 
 private:

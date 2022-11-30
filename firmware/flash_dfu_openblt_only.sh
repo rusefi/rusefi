@@ -4,4 +4,4 @@
 # User should prefer to flash composite image,
 # see flash_dfu.sh/flash_dfu.bat
 
-sudo dfu-util --alt 0 --download deliver/openblt.dfu --reset
+sudo dfu-util --alt 0 --download deliver/openblt.dfu -s :leave

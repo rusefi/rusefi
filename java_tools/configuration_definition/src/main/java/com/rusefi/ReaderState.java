@@ -343,7 +343,7 @@ public class ReaderState {
     }
 
     public void addJavaDestination(String fileName) {
-        destinations.add(new FileJavaFieldsConsumer(this, fileName));
+        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0));
     }
 
     public void addPrepend(String fileName) {

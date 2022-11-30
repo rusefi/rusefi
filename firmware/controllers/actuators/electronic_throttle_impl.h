@@ -14,6 +14,7 @@
 #include "efi_pid.h"
 #include "error_accumulator.h"
 #include "electronic_throttle_generated.h"
+#include "exp_average.h"
 
 /**
  * Hard code ETB update speed.
@@ -70,9 +71,12 @@ public:
 	void setLuaAdjustment(percent_t adjustment) override;
 	float getLuaAdjustment() const;
 
+	float prevOutput = 0;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
+    int prevErrorState = false;
 
 	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
@@ -83,7 +87,11 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+	// todo: rename to m_targetErrorAccumulator
 	ErrorAccumulator m_errorAccumulator;
+
+	ExpAverage m_dutyRocAverage;
+	ExpAverage m_dutyAverage;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
@@ -110,6 +118,8 @@ private:
 
 	Timer m_luaAdjustmentTimer;
 };
+
+void etbPidReset();
 
 class EtbController1 : public EtbController { };
 

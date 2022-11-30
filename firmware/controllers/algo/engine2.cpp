@@ -197,7 +197,7 @@ void EngineState::periodicFastCallback() {
 
 void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
-	float newTCharge = engine->fuelComputer->getTCharge(rpm, tps);
+	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;

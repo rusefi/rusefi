@@ -235,7 +235,11 @@ enable2ndByteCanID = false
 
 	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
+; ClearReason
 	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off"
+
+; TpsState
+	etbCutCodeList = bits, U08, [0:7], "None", "engine off setting", "TPS error", "PPS error", "Input noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy"
 
 [ConstantsExtensions]
 	; defaultValue is used to provide TunerStudio with a value to use in the case of
@@ -1336,6 +1340,9 @@ gaugeCategory = Throttle Body (incl. ETB)
 	etbTargetGauge	= etbTarget,	@@GAUGE_NAME_ETB_TARGET@@, "%",	0,	100,	0,	0,	100,	100,	1,	1
 	etbErrorGauge		= etb1Error,	@@GAUGE_NAME_ETB_ERROR@@,  "%",	-20,  20,	-10,	-5,	5,	10,  2, 0
 	etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,					"%",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbDutyRateOfChangeGauge  = etbDutyRateOfChange, "ETB temp: duty ROC",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
+	etbDutyAverageGauge  = etbDutyAverage, "ETB temp: average",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
+	etbInputErrorCounterGauge = etbInputErrorCounter, "ETB temp: input error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
 
 gaugeCategory = Sensors - Raw
 	rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -1461,6 +1468,7 @@ gaugeCategory = GPPWM Outputs
 	indicator =					{ isTriggerError},			"Trigger OK",		"Trigger ERR",  white,  black,	red,  black
 	indicator = { fuelCutReason  != 0 }, "Injection OK", { Fuel cut: bitStringValue(fuelIgnCutCodeList, fuelCutReason)}, white, black, yellow, black
 	indicator = { sparkCutReason != 0 }, "Ignition OK",  { Ign cut: bitStringValue(fuelIgnCutCodeList, sparkCutReason)}, white, black, yellow, black
+	indicator = { etbErrorCode != 0 }, "ETB OK",  { ETB: bitStringValue(etbCutCodeList, etbErrorCode)}, white, black, yellow, black
 
 	; this is required so that the "config error" feature works in TS
 	; DO NOT CHANGE THIS LINE - TS is looking for an indicator with particular text/styling
@@ -1570,13 +1578,13 @@ menuDialog = main
 
 		groupMenu = "VE blend tables"
 		groupChildMenu = veBlend1Cfg,		"Adder 1 bias", 0, {isInjectionEnabled}
-		groupChildMenu = veBlend1Table,		"Ignition adder 1", 0, { isInjectionEnabled && veBlends1_blendParameter != 0 }
+		groupChildMenu = veBlend1Table,		"VE adder 1", 0, { isInjectionEnabled && veBlends1_blendParameter != 0 }
 		groupChildMenu = veBlend2Cfg,		"Adder 2 bias", 0, {isInjectionEnabled}
-		groupChildMenu = veBlend2Table,		"Ignition adder 2", 0, { isInjectionEnabled && veBlends2_blendParameter != 0 }
+		groupChildMenu = veBlend2Table,		"VE adder 2", 0, { isInjectionEnabled && veBlends2_blendParameter != 0 }
 		groupChildMenu = veBlend3Cfg,		"Adder 3 bias", 0, {isInjectionEnabled}
-		groupChildMenu = veBlend3Table,		"Ignition adder 3", 0, { isInjectionEnabled && veBlends3_blendParameter != 0 }
+		groupChildMenu = veBlend3Table,		"VE adder 3", 0, { isInjectionEnabled && veBlends3_blendParameter != 0 }
 		groupChildMenu = veBlend4Cfg,		"Adder 4 bias", 0, {isInjectionEnabled}
-		groupChildMenu = veBlend4Table,		"Ignition adder 4", 0, { isInjectionEnabled && veBlends4_blendParameter != 0 }
+		groupChildMenu = veBlend4Table,		"VE adder 4", 0, { isInjectionEnabled && veBlends4_blendParameter != 0 }
 
 		subMenu = tChargeSettings,			"Charge temperature estimation", 0, {isInjectionEnabled == 1}
 		subMenu = baroCorrTbl,				"Barometric pressure correction", 0, {isInjectionEnabled == 1 && fuelAlgorithm == @@engine_load_mode_e_LM_SPEED_DENSITY@@}
@@ -2360,34 +2368,82 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		panel = multisparkDwellParams
 
 	dialog = ignAdder1Cfg, "Ignition adder 1 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the base ignition table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in 5.0 degrees of ignition timing added."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", ignBlends1_blendParameter
 		panel = ignAdder1Bias
 
 	dialog = ignAdder2Cfg, "Ignition adder 2 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the base ignition table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in 5.0 degrees of ignition timing added."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", ignBlends2_blendParameter
 		panel = ignAdder2Bias
 
 	dialog = ignAdder3Cfg, "Ignition adder 3 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the base ignition table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in 5.0 degrees of ignition timing added."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", ignBlends3_blendParameter
 		panel = ignAdder3Bias
 
 	dialog = ignAdder4Cfg, "Ignition adder 4 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the base ignition table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in 5.0 degrees of ignition timing added."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", ignBlends4_blendParameter
 		panel = ignAdder4Bias
 
 	dialog = veBlend1Cfg, "VE blend 1 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the VE table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the VE."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", veBlends1_blendParameter
 		panel = veBlend2Bias
 
 	dialog = veBlend2Cfg, "VE blend 2 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the VE table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the VE."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", veBlends2_blendParameter
 		panel = veBlend2Bias
 
 	dialog = veBlend3Cfg, "VE blend 3 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the VE table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the VE."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", veBlends3_blendParameter
 		panel = veBlend3Bias
 
 	dialog = veBlend4Cfg, "VE blend 4 config"
+		field = "#The bias table controls how much of the blend table"
+		field = "#is mixed in to the VE table. For example, a value of"
+		field = "#+10 in the table, with 50 as the current bias will result"
+		field = "#in +5.0 added to the VE."
+		field = "#The X axis of the bias table is controlled by the selected blend"
+		field = "#parameter below."
 		field = "Blend parameter", veBlends4_blendParameter
 		panel = veBlend4Bias
 
@@ -2436,7 +2492,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Secondary sensor",				tps1_2AdcChannel, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
-		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, { etb1configured == 1}
 
 	dialog = tpsNum2, "Throttle Body #2"
 		field = "Primary sensor",				tps2_1AdcChannel
@@ -2445,7 +2501,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Secondary sensor",				tps2_2AdcChannel, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
-		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@ && tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@}
+		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, { etb2configured == 1}
 
 	dialog = tpsLimits, "TPS Limits"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
@@ -3165,6 +3221,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Output mode",				malfunctionIndicatorPinMode
 		field = "Warning Period",									warningPeriod
 
+	dialog = tachSettings, "Tachometer output"
+		field = "Output",									tachOutputPin
+		field = "Output mode",							tachOutputPinMode
+		field = "Pulse Mode",							tachPulseDurationAsDutyCycle
+		field = "Pulse duration",						tachPulseDuractionMs
+		field = "Pulse per Rev",						tachPulsePerRev
+
     dialog = outputsDialogLeft
 		panel = mainRelayDialog
 		panel = fuelPumpDialog
@@ -3426,12 +3489,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Analog divider ratio",					analogInputDividerCoefficient@@if_ts_show_analog_divider
 		field = "Smoothing factor",						slowAdcAlpha
 
-	dialog = tachSettings, "Tachometer output"
-		field = "Output",									tachOutputPin
-		field = "Output mode",							tachOutputPinMode
-		field = "Pulse Mode",							tachPulseDurationAsDutyCycle
-		field = "Pulse duration",						tachPulseDuractionMs
-		field = "Pulse per Rev",						tachPulsePerRev
 
 
 ;			Board->Connection
@@ -3485,7 +3542,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Enable SD Card",						isSdCardEnabled
 		field = "CS Pin",								sdCardCsPin			@@if_ts_show_sd_pins
 		field = "SPI",									sdCardSpiDevice		@@if_ts_show_sd_pins
-		field = "Write Period",							sdCardPeriodMs
+		field = "SD logger rate",						sdCardLogFrequency
 
 	dialog = gpsReceiver, "GPS Receiver"
 		field = "gps RX",								gps_rx_pin
@@ -3877,6 +3934,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "PWM Frequency",						etbFreq
 		field = "Minimum ETB position",					etbMinimumPosition
 		field = "Maximum ETB position",					etbMaximumPosition
+		field = "TEMP etbExpAverageLength",             etbExpAverageLength
+		field = "TEMP etbRocExpAverageLength",          etbRocExpAverageLength
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
@@ -3885,11 +3944,11 @@ dialog = tcuControls, "Transmission Settings"
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
-		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate
-		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2
+		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate,   { etb1configured == 1}
+		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, { etb2configured == 1}
 		field = "Second step"
-		commandButton = "Start ETB PID Autotune", cmd_etb_autotune
-		commandButton = "Stop ETB PID Autotune", cmd_etb_autotune_stop
+		commandButton = "Start ETB PID Autotune", cmd_etb_autotune,       { etb1configured == 1 || etb2configured == 1 }
+		commandButton = "Stop ETB PID Autotune",  cmd_etb_autotune_stop,  { etb1configured == 1 || etb2configured == 1 }
 
 		field = "!Set debug mode below to 'ETB Autotune' to show more detail"
 		field = "Debug mode",							debugMode
@@ -4137,6 +4196,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "boardUseD4PullDown",						boardUseD4PullDown
 		field = "boardUseD5PullDown",						boardUseD5PullDown
 		field = "SENT input 1",								sentInputPins1
+		field = "etbDutyThreshold",                         etbDutyThreshold
+		field = "etbDutyShutdownThreshold",                 etbDutyShutdownThreshold
 
 	dialog = parkingLot, "Experimental/Broken"
 		field = "I understand ECU Locking",				yesUnderstandLocking

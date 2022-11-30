@@ -400,7 +400,7 @@ static void initConfigActions() {
 void commonInitEngineController() {
 	initInterpolation();
 
-#if EFI_SIMULATOR
+#if EFI_SIMULATOR || EFI_UNIT_TEST
 	printf("commonInitEngineController\n");
 #endif
 

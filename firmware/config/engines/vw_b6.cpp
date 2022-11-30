@@ -9,7 +9,7 @@
 
 #include "vw_b6.h"
 #include "table_helper.h"
-#include "electronic_throttle_impl.h"
+#include "electronic_throttle.h"
 #include "mre_meta.h"
 #include "defaults.h"
 #include "proteus_meta.h"

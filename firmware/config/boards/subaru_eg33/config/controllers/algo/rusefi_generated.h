@@ -387,7 +387,7 @@
 #define etb_function_e_ETB_Throttle2 2
 #define etb_function_e_ETB_Wastegate 4
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 10015
+#define FLASH_DATA_VERSION 10016
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -993,7 +993,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH snap_11298
+#define SIGNATURE_HASH snap_54590
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1268,12 +1268,12 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.11.26.subaru_eg33_f7.snap_11298"
+#define TS_SIGNATURE "rusEFI 2022.11.30.subaru_eg33_f7.snap_54590"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1260
+#define TS_TOTAL_OUTPUT_SIZE 1272
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
