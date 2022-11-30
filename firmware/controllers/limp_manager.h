@@ -33,7 +33,10 @@ enum class TpsState : uint8_t {
 	PpsError, // 3
 	InputJitter,
 	PidJitter,
-	Lua
+	Lua, // 6
+	Manual,
+	NotConfigured,
+	Redundancy, // 9
 	// keep this list in sync with etbCutCodeList in rusefi.input!
 };
 
