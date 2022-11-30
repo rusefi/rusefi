@@ -148,7 +148,7 @@ void SensorChecker::onSlowCallback() {
 	// TODO: also inhibit checking if we just did a flash burn, since that blocks the ECU for a few seconds.
 	bool shouldCheck = m_ignitionIsOn && m_timeSinceIgnOff.hasElapsedSec(5);
 	m_analogSensorsShouldWork = shouldCheck;
-	if (shouldCheck)
+	if (shouldCheck) {
 		return;
 	}
 
