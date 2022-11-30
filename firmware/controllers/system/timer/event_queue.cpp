@@ -35,6 +35,8 @@ scheduling_s* EventQueue::getFreeScheduling() {
 	if (retVal) {
 		m_freelist = retVal->nextScheduling_s;
 		retVal->nextScheduling_s = nullptr;
+
+		getTunerStudioOutputChannels()->schedulingUsedCount++;
 	}
 
 	return retVal;
@@ -45,6 +47,8 @@ void EventQueue::tryReturnScheduling(scheduling_s* sched) {
 	if (sched >= &m_pool[0] && sched <= &m_pool[efi::size(m_pool) - 1]) {
 		sched->nextScheduling_s = m_freelist;
 		m_freelist = sched;
+
+		getTunerStudioOutputChannels()->schedulingUsedCount--;
 	}
 }
 
@@ -59,6 +63,8 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 
 		// If still null, the free list is empty and all schedulings in the pool have been expended.
 		if (!scheduling) {
+			// TODO: should we warn or error here?
+
 			return false;
 		}
 	}
