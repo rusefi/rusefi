@@ -725,15 +725,6 @@ static EtbImpl<EtbController2> etb2(throttle2TrimTable);
 static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 
-template<>
-const electronic_throttle_s* getLiveData(size_t idx) {
-	if (idx >= efi::size(etbControllers)) {
-		return nullptr;
-	}
-
-	return etbControllers[idx];
-}
-
 #if !EFI_UNIT_TEST
 
 struct EtbThread final : public PeriodicController<512> {
@@ -1150,3 +1141,16 @@ void setProteusHitachiEtbDefaults() {
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+template<>
+const electronic_throttle_s* getLiveData(size_t idx) {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	if (idx >= efi::size(etbControllers)) {
+		return nullptr;
+	}
+
+	return etbControllers[idx];
+#else
+	return nullptr;
+#endif
+}
