@@ -30,18 +30,18 @@ TEST(etb, integrated) {
 	etb->update();
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
-	ASSERT_EQ(etb->prevOutput, 100);
-	ASSERT_EQ(etb->etbDutyAverage, 50);
+	ASSERT_NEAR(etb->prevOutput, 120.363, EPS3D);
+	ASSERT_NEAR(etb->etbDutyAverage, 60.1813, EPS3D);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
-	ASSERT_EQ(etb->etbDutyAverage, -25);
-	ASSERT_EQ(etb->etbDutyRateOfChange, -75);
+	ASSERT_NEAR(etb->etbDutyAverage, -9.89286, EPS3D);
+	ASSERT_NEAR(etb->etbDutyRateOfChange, -70.074, EPS3D);
 
 	float destination;
 	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
 	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
-	ASSERT_EQ(destination, -75);
+	ASSERT_NEAR(destination, -70.074, EPS3D);
 }
 
 
