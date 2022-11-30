@@ -267,6 +267,9 @@ public class ConfigField {
         return name;
     }
 
+    /**
+     * @see com.rusefi.newparse.parsing.Type
+     */
     public String getType() {
         return type;
     }
