@@ -1342,7 +1342,7 @@ gaugeCategory = Throttle Body (incl. ETB)
 	etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,					"%",	-100, 100,	-75,	-50,	50,	75,  0, 0
 	etbDutyRateOfChangeGauge  = etbDutyRateOfChange, "ETB duty rate of change",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
 	etbDutyAverageGauge  = etbDutyAverage, "ETB average duty",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
-	etbInputErrorCounterGauge = etbInputErrorCounter, "ETB temp: input error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbInputErrorCounterGauge = etbInputErrorCounter, "ETB sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
 
 gaugeCategory = Sensors - Raw
 	rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -3934,8 +3934,8 @@ dialog = tcuControls, "Transmission Settings"
 		field = "PWM Frequency",						etbFreq
 		field = "Minimum ETB position",					etbMinimumPosition
 		field = "Maximum ETB position",					etbMaximumPosition
-		field = "TEMP etbExpAverageLength",             etbExpAverageLength
-		field = "TEMP etbRocExpAverageLength",          etbRocExpAverageLength
+		field = "Duty Averaging Length",                etbExpAverageLength
+		field = "Rote of change Averaging Length",      etbRocExpAverageLength
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
