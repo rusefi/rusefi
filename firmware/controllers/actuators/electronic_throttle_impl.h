@@ -96,6 +96,8 @@ private:
 	ExpAverage m_dutyRocAverage;
 	ExpAverage m_dutyAverage;
 
+	Timer m_jamDetectTimer;
+
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
 
