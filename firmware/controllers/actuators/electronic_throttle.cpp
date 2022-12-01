@@ -624,9 +624,9 @@ expected<percent_t> EtbController::getOutput() {
 	if (!output) {
 		return output;
 	}
-    etbDutyAverage = m_dutyAverage.average(output.Value);
+    etbDutyAverage = m_dutyAverage.average(absF(output.Value));
 
-    etbDutyRateOfChange = m_dutyRocAverage.average(output.Value - prevOutput);
+    etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
 	prevOutput = output.Value;
 	return output;
 }
