@@ -62,7 +62,7 @@ TEST(etb, intermittentTps) {
 
 	etb->update();
 
-	EXPECT_EQ(0, etb->etbInputErrorCounter);
+	EXPECT_EQ(0, etb->etbTpsErrorCounter);
 	EXPECT_EQ(0, etb->etbErrorCode);
 
 	int badCount = 0;
@@ -74,7 +74,7 @@ TEST(etb, intermittentTps) {
 		etb->update();
 
 		badCount++;
-		EXPECT_EQ(badCount, etb->etbInputErrorCounter);
+		EXPECT_EQ(badCount, etb->etbTpsErrorCounter);
 		EXPECT_EQ(0, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
@@ -92,9 +92,9 @@ TEST(etb, intermittentTps) {
 
 TEST(etb, intermittentPps) {
 	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
-	EtbController *etb = initEtbIntegratedTest();
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
+	EtbController *etb = initEtbIntegratedTest();
 
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
@@ -108,7 +108,7 @@ TEST(etb, intermittentPps) {
 
 	etb->update();
 
-	EXPECT_EQ(0, etb->etbInputErrorCounter);
+	EXPECT_EQ(0, etb->etbPpsErrorCounter);
 	EXPECT_EQ(0, etb->etbErrorCode);
 
 	int badCount = 0;
@@ -120,7 +120,7 @@ TEST(etb, intermittentPps) {
 		etb->update();
 
 		badCount++;
-		EXPECT_EQ(badCount, etb->etbInputErrorCounter);
+		EXPECT_EQ(badCount, etb->etbPpsErrorCounter);
 		EXPECT_EQ(0, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
@@ -129,8 +129,8 @@ TEST(etb, intermittentPps) {
 	}
 
 	// 51st bad TPS should set etbErrorCode
-	Sensor::setInvalidMockValue(SensorType::Tps1);
-	ASSERT_TRUE(isTps1Error());
+	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
+	ASSERT_TRUE(isPedalError());
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);

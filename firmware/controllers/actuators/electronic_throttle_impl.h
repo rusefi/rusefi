@@ -79,6 +79,7 @@ protected:
 	bool m_isAutocal = false;
 
 	bool hadTpsError = false;
+	bool hadPpsError = false;
 
 	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }

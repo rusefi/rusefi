@@ -222,6 +222,8 @@ void EtbController::reset() {
 	etbDutyRateOfChange = etbDutyAverage = 0;
 	m_dutyRocAverage.reset();
 	m_dutyAverage.reset();
+	etbTpsErrorCounter = 0;
+	etbPpsErrorCounter = 0;
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -509,7 +511,6 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	if (m_isAutotune) {
-		etbInputErrorCounter = 0;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		// Check that we're not over the error limit
@@ -577,27 +578,39 @@ void EtbController::update() {
 		&& engine->etbAutoTune
 		&& m_function == ETB_Throttle1;
 
-	bool shouldCheckTpsFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
+	bool shouldCheckSensorFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
 
-	if (!m_isAutotune && shouldCheckTpsFunction) {
-		bool isInputError = !Sensor::get(m_positionSensor).Valid;
+	if (!m_isAutotune && shouldCheckSensorFunction) {
+		bool isTpsError = !Sensor::get(m_positionSensor).Valid;
 
 		// If we have an error that's new, increment the counter
-		if (isInputError && !hadTpsError) {
-			etbInputErrorCounter++;
+		if (isTpsError && !hadTpsError) {
+			etbTpsErrorCounter++;
 		}
 
-		hadTpsError = isInputError;
+		hadTpsError = isTpsError;
+
+		bool isPpsError = !Sensor::get(SensorType::AcceleratorPedal).Valid;
+
+		// If we have an error that's new, increment the counter
+		if (isPpsError && !hadPpsError) {
+			etbPpsErrorCounter++;
+		}
+
+		hadPpsError = isPpsError;
 	} else {
 		// Either sensors are expected to not work, or autotune is running, so reset the error counter
-		etbInputErrorCounter = 0;
+		etbTpsErrorCounter = 0;
+		etbPpsErrorCounter = 0;
 	}
 
 	TpsState localReason = TpsState::None;
 	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
 		localReason = TpsState::EngineStopped;
-	} else if (etbInputErrorCounter > 50) {
+	} else if (etbTpsErrorCounter > 50) {
 		localReason = TpsState::IntermittentTps;
+	} else if (etbPpsErrorCounter > 50) {
+		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
 		localReason = TpsState::Lua;
 	}
