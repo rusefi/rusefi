@@ -14,7 +14,8 @@ float luaAdjustment;"ETB: luaAdjustment"
 	bit etbRevLimitActive
 	float etbDutyRateOfChange
 	float etbDutyAverage
-	uint16_t etbInputErrorCounter;"ETB inputs error counter"
+	uint16_t etbTpsErrorCounter;"ETB TPS error counter"
+	uint16_t etbPpsErrorCounter;"ETB pedal error counter"
 
 	int8_t etbErrorCode
 
