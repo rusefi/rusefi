@@ -85,7 +85,7 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 }
 
 void initializeToyota4_1(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	int w = 10;
 
