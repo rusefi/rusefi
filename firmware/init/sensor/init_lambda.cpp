@@ -26,7 +26,7 @@ static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
 template <>
-const wideband_state_s* getLiveDataAddr(size_t idx) {
+const wideband_state_s* getLiveData(size_t idx) {
 #if EFI_CAN_SUPPORT
 	switch (idx) {
 		case 0: return &aem1;

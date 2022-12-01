@@ -9,17 +9,17 @@
 #include "fuel_computer.h"
 
 template<>
-const output_channels_s* getLiveDataAddr() {
+const output_channels_s* getLiveData(size_t) {
 	return &engine->outputChannels;
 }
 
 template<>
-const knock_controller_s* getLiveDataAddr() {
+const knock_controller_s* getLiveData(size_t) {
 	return &engine->module<KnockController>().unmock();
 }
 
 template<>
-const high_pressure_fuel_pump_s* getLiveDataAddr() {
+const high_pressure_fuel_pump_s* getLiveData(size_t) {
 #if EFI_HPFP
 	return &engine->module<HpfpController>().unmock();
 #else
@@ -28,7 +28,7 @@ const high_pressure_fuel_pump_s* getLiveDataAddr() {
 }
 
 template<>
-const launch_control_state_s* getLiveDataAddr() {
+const launch_control_state_s* getLiveData(size_t) {
 #if EFI_LAUNCH_CONTROL
 	return &engine->launchController;
 #else
@@ -37,12 +37,12 @@ const launch_control_state_s* getLiveDataAddr() {
 }
 
 template<>
-const injector_model_s* getLiveDataAddr() {
+const injector_model_s* getLiveData(size_t) {
 	return &engine->module<InjectorModel>().unmock();
 }
 
 template<>
-const boost_control_s* getLiveDataAddr() {
+const boost_control_s* getLiveData(size_t) {
 #if EFI_BOOST_CONTROL
 	return &engine->boostController;
 #else
@@ -51,17 +51,17 @@ const boost_control_s* getLiveDataAddr() {
 }
 
 template<>
-const ac_control_s* getLiveDataAddr() {
+const ac_control_s* getLiveData(size_t) {
 	return &engine->module<AcController>().unmock();
 }
 
 template<>
-const fuel_computer_s* getLiveDataAddr() {
+const fuel_computer_s* getLiveData(size_t) {
 	return &engine->fuelComputer;
 }
 
 template<>
-const fan_control_s* getLiveDataAddr(size_t idx) {
+const fan_control_s* getLiveData(size_t idx) {
 	switch (idx) {
 		case 0: return &engine->fan1;
 		case 1: return &engine->fan2;
@@ -70,32 +70,32 @@ const fan_control_s* getLiveDataAddr(size_t idx) {
 }
 
 template<>
-const fuel_pump_control_s* getLiveDataAddr() {
+const fuel_pump_control_s* getLiveData(size_t) {
 	return &engine->module<FuelPumpController>().unmock();
 }
 
 template<>
-const main_relay_s* getLiveDataAddr() {
+const main_relay_s* getLiveData(size_t) {
 	return &engine->module<MainRelayController>().unmock();
 }
 
 template<>
-const engine_state_s* getLiveDataAddr() {
+const engine_state_s* getLiveData(size_t) {
 	return &engine->engineState;
 }
 
 template<>
-const tps_accel_state_s* getLiveDataAddr() {
+const tps_accel_state_s* getLiveData(size_t) {
 	return &engine->tpsAccelEnrichment;
 }
 
 template<>
-const trigger_central_s* getLiveDataAddr() {
+const trigger_central_s* getLiveData(size_t) {
 	return &engine->triggerCentral;
 }
 
 template<>
-const trigger_state_s* getLiveDataAddr(size_t idx) {
+const trigger_state_s* getLiveData(size_t idx) {
 #if EFI_SHAFT_POSITION_INPUT
 	switch (idx) {
 		case 0: return &engine->triggerCentral.triggerState;
@@ -111,7 +111,7 @@ const trigger_state_s* getLiveDataAddr(size_t idx) {
 }
 
 template<>
-const trigger_state_primary_s* getLiveDataAddr() {
+const trigger_state_primary_s* getLiveData(size_t) {
 #if EFI_SHAFT_POSITION_INPUT
 	return &engine->triggerCentral.triggerState;
 #else
@@ -120,34 +120,25 @@ const trigger_state_primary_s* getLiveDataAddr() {
 }
 
 template<>
-const wall_fuel_state_s* getLiveDataAddr() {
+const wall_fuel_state_s* getLiveData(size_t) {
 	return &engine->injectionEvents.elements[0].wallFuel;
 }
 
 template<>
-const idle_state_s* getLiveDataAddr() {
+const idle_state_s* getLiveData(size_t) {
 	return &engine->module<IdleController>().unmock();
 }
 
 template<>
-const ignition_state_s* getLiveDataAddr() {
+const ignition_state_s* getLiveData(size_t) {
 	return &engine->ignitionState;
 }
 
-template<>
-const electronic_throttle_s* getLiveDataAddr(size_t) {
-	EtbController *etb = (EtbController *)engine->etbControllers[0];
-	return etb;
-}
+static const FragmentEntry fragments[] = {
+// This header is generated - do not edit by hand!
+#include "live_data_fragments.h"
+};
 
 FragmentList getLiveDataFragments() {
-    // currently we initialize the array on first invocation
-    // this is quite a hack in terms of order of execution in real firmware code!
-    // todo: this still only allows for ONE unit test to work properly?!
-    static FragmentEntry fragments[] = {
-    // This header is generated - do not edit by hand!
-    #include "live_data_fragments.h"
-    };
-
 	return { fragments, efi::size(fragments) };
 }
