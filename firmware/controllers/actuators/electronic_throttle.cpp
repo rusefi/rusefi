@@ -628,6 +628,24 @@ expected<percent_t> EtbController::getOutput() {
 
     etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
 	prevOutput = output.Value;
+
+	float integrator = absF(m_pid.getIntegration());
+	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
+
+	if (integratorLimit != 0) {
+		auto nowNt = getTimeNowNt();
+
+		if (integrator > integratorLimit) {
+			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
+				// ETB is jammed!
+			}
+		} else {
+			m_jamDetectTimer.reset(getTimeNowNt());
+		}
+
+		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
+	}
+
 	return output;
 }
 

@@ -18,4 +18,6 @@ float luaAdjustment;"ETB: luaAdjustment"
 
 	int8_t etbErrorCode
 
+	uint16_t jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
+
 end_struct
