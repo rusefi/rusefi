@@ -1,0 +1,103 @@
+-- this controls onCanRx rate as well!
+setTickRate(100)
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+
+VWTP_OUT = 0x200
+VWTP_IN = 0x201
+VWTP_TESTER = 0x300
+
+local ecuId = 0
+
+local currentState = 0
+
+STATE_GOT_FIRST_RESPONSE = 1
+STATE_GOT_SECOND_RESPONSE = 2
+
+function onCanHello(bus, id, dlc, data)
+	-- here we handle 201 packets
+	print('Got Hello Response ' ..arrayToString(data))
+	ecuId = data[5] * 256 + data[6]
+
+	print('From ECU ' ..ecuId)
+	txCan(1, ecuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
+	currentState = STATE_GOT_FIRST_RESPONSE
+end
+
+
+
+function onCanTester(bus, id, dlc, data)
+	-- here we handle 300 packets
+
+	print('Got from tester ' ..arrayToString(data))
+
+
+	if currentState == STATE_GOT_FIRST_RESPONSE then
+		if data[1] == 0xA1 then
+			print ("Happy 300 packet")
+			currentState = STATE_GOT_SECOND_RESPONSE
+			txCan(1, ecuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		end
+		return
+	end
+
+
+	if data[1] == 0xA8 then
+		print ("They said Bye-Bye")
+		return
+	end
+
+
+	if data[1] == 0x10 then
+		print ("Sending ACK B1")
+		txCan(1, ecuId, 0, { 0xB1 })
+		txCan(1, ecuId, 0, { 0x11, 0x00, 0x02, 0x21, 0x01 })
+		return
+	end
+
+
+
+	-- 	if currentState == STATE_GOT_SECOND_RESPONSE then
+	-- end
+
+	print('Got unexpected ' ..arrayToString(data))
+
+
+
+end
+
+canRxAdd(VWTP_IN, onCanHello)
+canRxAdd(VWTP_TESTER, onCanTester)
+
+
+txCan(1, VWTP_OUT, 0, { 0x01, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
+
+
+function onTick()
+end
+
