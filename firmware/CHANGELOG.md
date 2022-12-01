@@ -43,7 +43,7 @@ Release template (copy/paste this for new release):
  - GCC11 is the suggested compiler now, GCC9 no longer supported #4680
  - Add fuel adder to launch #4777
  - 3-cylinder Benelli trigger
- - ETB input jitter protection #4832
+ - ETB intermittent sensors protection #4832
  - ETB output average and rate of change gauges #4833
 
 ### Fixed
