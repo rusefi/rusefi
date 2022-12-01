@@ -18,9 +18,7 @@ static EtbController * initEtbIntegratedTest() {
 	initTps();
 	doInitElectronicThrottle();
 
-	EtbController *etb = (EtbController*)engine->etbControllers[0];
-	etb->etbInputErrorCounter = 0; // ETB controlles are global shared instances :(
-	return etb;
+	return (EtbController*)engine->etbControllers[0];
 }
 
 TEST(etb, integrated) {
