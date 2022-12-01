@@ -133,6 +133,5 @@ TEST(etb, intermittentPps) {
 	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
 	ASSERT_TRUE(isPedalError());
 	etb->update();
-
 	EXPECT_NE(0, etb->etbErrorCode);
 }
