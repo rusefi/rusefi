@@ -17,7 +17,10 @@ static EtbController * initEtbIntegratedTest() {
 
 	initTps();
 	doInitElectronicThrottle();
-	return (EtbController*)engine->etbControllers[0];
+
+	EtbController *etb = (EtbController*)engine->etbControllers[0];
+	etb->etbInputErrorCounter = 0; // ETB controlles are global shared instances :(
+	return etb;
 }
 
 TEST(etb, integrated) {
@@ -44,7 +47,6 @@ TEST(etb, integrated) {
 	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
 
-
 TEST(etb, integratedTpsJitter) {
 	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
@@ -64,5 +66,21 @@ TEST(etb, integratedTpsJitter) {
 	Sensor::setInvalidMockValue(SensorType::Tps1);
 	etb->update();
 
+	ASSERT_EQ(2, etb->etbInputErrorCounter);
+}
+
+TEST(etb, intermittentPps) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EtbController *etb = initEtbIntegratedTest();
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 25.0f, true);
+
+	ASSERT_FALSE(isTps1Error());
+	ASSERT_FALSE(isTps2Error());
+	ASSERT_FALSE(isPedalError());
+	etb->update();
+	ASSERT_EQ(1, etb->etbInputErrorCounter);
+
+	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
+	etb->update();
 	ASSERT_EQ(2, etb->etbInputErrorCounter);
 }
