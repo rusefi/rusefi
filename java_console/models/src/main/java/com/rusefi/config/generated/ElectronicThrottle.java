@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Nov 30 03:24:57 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Thu Dec 01 03:34:59 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -16,9 +16,10 @@ public class ElectronicThrottle {
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 28, FieldType.BIT, 0).setBaseOffset(1216);
 	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 32, FieldType.FLOAT).setBaseOffset(1216);
 	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 36, FieldType.FLOAT).setBaseOffset(1216);
-	public static final Field ETBINPUTERRORCOUNTER = Field.create("ETBINPUTERRORCOUNTER", 40, FieldType.INT16).setScale(1.0).setBaseOffset(1216);
-	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1216);
-	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1216);
+	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 40, FieldType.INT16).setScale(1.0).setBaseOffset(1216);
+	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 42, FieldType.INT16).setScale(1.0).setBaseOffset(1216);
+	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1216);
+	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1216);
 	public static final Field[] VALUES = {
 	IDLEPOSITION,
 	TRIM,
@@ -30,8 +31,9 @@ public class ElectronicThrottle {
 	ETBREVLIMITACTIVE,
 	ETBDUTYRATEOFCHANGE,
 	ETBDUTYAVERAGE,
-	ETBINPUTERRORCOUNTER,
+	ETBTPSERRORCOUNTER,
+	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
-	ALIGNMENTFILL_AT_43,
+	ALIGNMENTFILL_AT_45,
 	};
 }

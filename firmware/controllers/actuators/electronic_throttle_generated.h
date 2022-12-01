@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Nov 30 03:24:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Thu Dec 01 03:34:59 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -143,22 +143,27 @@ struct electronic_throttle_s {
 	 */
 	float etbDutyAverage = (float)0;
 	/**
-	 * "ETB inputs error counter"
+	 * "ETB TPS error counter"
 	 * offset 40
 	 */
-	uint16_t etbInputErrorCounter = (uint16_t)0;
+	uint16_t etbTpsErrorCounter = (uint16_t)0;
 	/**
+	 * "ETB pedal error counter"
 	 * offset 42
+	 */
+	uint16_t etbPpsErrorCounter = (uint16_t)0;
+	/**
+	 * offset 44
 	 */
 	int8_t etbErrorCode = (int8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 43
+	 * offset 45
 	 */
-	uint8_t alignmentFill_at_43[1];
+	uint8_t alignmentFill_at_45[3];
 };
-static_assert(sizeof(electronic_throttle_s) == 44);
+static_assert(sizeof(electronic_throttle_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Nov 30 03:24:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Thu Dec 01 03:34:59 UTC 2022
