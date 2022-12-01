@@ -28,15 +28,16 @@ enum class ClearReason : uint8_t {
 
 enum class TpsState : uint8_t {
 	None, // 0
-	Setting,
+	EngineStopped,
 	TpsError,
 	PpsError, // 3
-	InputJitter,
+	IntermittentTps,
 	PidJitter,
 	Lua, // 6
 	Manual,
 	NotConfigured,
 	Redundancy, // 9
+	IntermittentPps,
 	// keep this list in sync with etbCutCodeList in rusefi.input!
 };
 
