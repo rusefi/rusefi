@@ -35,15 +35,14 @@ TEST(etb, integrated) {
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
-	ASSERT_NEAR(etb->etbDutyAverage, -9.89286, EPS3D);
-	ASSERT_NEAR(etb->etbDutyRateOfChange, -70.074, EPS3D);
+	ASSERT_NEAR(etb->etbDutyAverage, 70.0741, EPS3D);
+	ASSERT_NEAR(etb->etbDutyRateOfChange, 130.2554, EPS3D);
 
 	float destination;
 	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
 	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
-	ASSERT_NEAR(destination, -70.074, EPS3D);
+	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
-
 
 
 TEST(etb, integratedTpsJitter) {
