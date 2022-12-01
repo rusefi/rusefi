@@ -20,6 +20,7 @@ static EtbController * initEtbIntegratedTest() {
 
 	EtbController *etb = (EtbController*)engine->etbControllers[0];
 	etb->etbInputErrorCounter = 0; // ETB controlles are global shared instances :(
+	etb->prevErrorState = false;
 	return etb;
 }
 
@@ -78,9 +79,9 @@ TEST(etb, intermittentPps) {
 	ASSERT_FALSE(isTps2Error());
 	ASSERT_FALSE(isPedalError());
 	etb->update();
-	ASSERT_EQ(1, etb->etbInputErrorCounter);
+	ASSERT_EQ(0, etb->etbInputErrorCounter);
 
 	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
 	etb->update();
-	ASSERT_EQ(2, etb->etbInputErrorCounter);
+	ASSERT_EQ(1, etb->etbInputErrorCounter);
 }
