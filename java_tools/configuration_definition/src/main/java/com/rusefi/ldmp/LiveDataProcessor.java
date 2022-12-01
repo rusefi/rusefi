@@ -167,9 +167,9 @@ public class LiveDataProcessor {
 
             if (outputNamesArr.length < 2) {
                 fragmentsContent
-                        .append("getLiveDataAddr<")
+                        .append("decl_frag<")
                         .append(type)
-                        .append(">(),\n");
+                        .append(">{},\n");
             } else {
                 for (int i = 0; i < outputNamesArr.length; i++) {
                     if (i != 0) {
@@ -178,11 +178,11 @@ public class LiveDataProcessor {
                     }
 
                     fragmentsContent
-                            .append("getLiveDataAddr<")
+                            .append("decl_frag<")
                             .append(type)
-                            .append(">(")
+                            .append(", ")
                             .append(i)
-                            .append("),\t// ")
+                            .append(">{},\t// ")
                             .append(outputNamesArr[i])
                             .append("\n");
                 }

@@ -60,9 +60,10 @@
 
 #include "pch.h"
 
+#include "electronic_throttle_impl.h"
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
-#include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
@@ -1151,3 +1152,16 @@ void setProteusHitachiEtbDefaults() {
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+template<>
+const electronic_throttle_s* getLiveData(size_t idx) {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	if (idx >= efi::size(etbControllers)) {
+		return nullptr;
+	}
+
+	return etbControllers[idx];
+#else
+	return nullptr;
+#endif
+}
