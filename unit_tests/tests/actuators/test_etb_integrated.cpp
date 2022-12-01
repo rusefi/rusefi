@@ -59,8 +59,6 @@ TEST(etb, intermittentTps) {
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
 	ASSERT_FALSE(isTps1Error());
-	ASSERT_FALSE(isTps2Error());
-	ASSERT_TRUE(isPedalError());
 
 	etb->update();
 
@@ -81,6 +79,52 @@ TEST(etb, intermittentTps) {
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
 		ASSERT_FALSE(isTps1Error());
+		etb->update();
+	}
+
+	// 51st bad TPS should set etbErrorCode
+	Sensor::setInvalidMockValue(SensorType::Tps1);
+	ASSERT_TRUE(isTps1Error());
+	etb->update();
+
+	EXPECT_NE(0, etb->etbErrorCode);
+}
+
+TEST(etb, intermittentPps) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EtbController *etb = initEtbIntegratedTest();
+
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
+
+	// Tell the sensor checker that the ignition is on
+	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
+	engine->module<SensorChecker>()->onSlowCallback();
+	timeNowUs += 10e6;
+	engine->module<SensorChecker>()->onSlowCallback();
+
+	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
+
+	ASSERT_FALSE(isPedalError());
+
+	etb->update();
+
+	EXPECT_EQ(0, etb->etbInputErrorCounter);
+	EXPECT_EQ(0, etb->etbErrorCode);
+
+	int badCount = 0;
+
+	// Do some bad/good/bad/good cycles, make sure count keeps up
+	for (size_t i = 0; i < 50; i++) {
+		Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
+		ASSERT_TRUE(isPedalError());
+		etb->update();
+
+		badCount++;
+		EXPECT_EQ(badCount, etb->etbInputErrorCounter);
+		EXPECT_EQ(0, etb->etbErrorCode);
+
+		Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
+		ASSERT_FALSE(isPedalError());
 		etb->update();
 	}
 
