@@ -60,9 +60,10 @@
 
 #include "pch.h"
 
+#include "electronic_throttle_impl.h"
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
-#include "electronic_throttle_impl.h"
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
@@ -522,13 +523,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		}
 
 		// Normal case - use PID to compute closed loop part
-        float output = m_pid.getOutput(target, observation, etbPeriodSeconds);
-        etbDutyAverage = m_dutyAverage.average(output);
-
-        etbDutyRateOfChange = m_dutyRocAverage.average(output - prevOutput);
-		prevOutput = output;
-
-		return output;
+		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
 }
 
@@ -621,6 +616,19 @@ void EtbController::update() {
 
 
 	ClosedLoopController::update();
+}
+
+expected<percent_t> EtbController::getOutput() {
+	// total open + closed loop parts
+	expected<percent_t> output = ClosedLoopController::getOutput();
+	if (!output) {
+		return output;
+	}
+    etbDutyAverage = m_dutyAverage.average(absF(output.Value));
+
+    etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
+	prevOutput = output.Value;
+	return output;
 }
 
 void EtbController::autoCalibrateTps() {
@@ -895,6 +903,9 @@ void setBoschVNH2SP30Curve() {
 void setDefaultEtbParameters() {
 	engineConfiguration->etbIdleThrottleRange = 5;
 
+	engineConfiguration->etbExpAverageLength = 100;
+	engineConfiguration->etbRocExpAverageLength = 100;
+
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);
 
@@ -1141,3 +1152,16 @@ void setProteusHitachiEtbDefaults() {
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+template<>
+const electronic_throttle_s* getLiveData(size_t idx) {
+#if EFI_ELECTRONIC_THROTTLE_BODY
+	if (idx >= efi::size(etbControllers)) {
+		return nullptr;
+	}
+
+	return etbControllers[idx];
+#else
+	return nullptr;
+#endif
+}

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 30 18:28:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Dec 01 00:54:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3678,6 +3678,7 @@ struct engine_configuration_s {
 	 */
 	int8_t sorryUnused[1];
 	/**
+	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 2086
 	 */
 	uint16_t etbExpAverageLength;
@@ -3814,6 +3815,7 @@ struct engine_configuration_s {
 	 */
 	pid_s idleTimingPid;
 	/**
+	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 2496
 	 */
 	int16_t etbRocExpAverageLength;
@@ -5102,4 +5104,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 30 18:28:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Dec 01 00:54:25 UTC 2022

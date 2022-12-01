@@ -17,11 +17,15 @@ static EtbController * initEtbIntegratedTest() {
 
 	initTps();
 	doInitElectronicThrottle();
-	return (EtbController*)engine->etbControllers[0];
+
+	EtbController *etb = (EtbController*)engine->etbControllers[0];
+	etb->etbInputErrorCounter = 0; // ETB controlles are global shared instances :(
+	etb->prevErrorState = false;
+	return etb;
 }
 
 TEST(etb, integrated) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 40);
@@ -30,24 +34,22 @@ TEST(etb, integrated) {
 	etb->update();
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
-	ASSERT_EQ(etb->prevOutput, 100);
-	ASSERT_EQ(etb->etbDutyAverage, 50);
+	ASSERT_NEAR(etb->prevOutput, 120.363, EPS3D);
+	ASSERT_NEAR(etb->etbDutyAverage, 60.1813, EPS3D);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
-	ASSERT_EQ(etb->etbDutyAverage, -25);
-	ASSERT_EQ(etb->etbDutyRateOfChange, -75);
+	ASSERT_NEAR(etb->etbDutyAverage, 70.0741, EPS3D);
+	ASSERT_NEAR(etb->etbDutyRateOfChange, 130.2554, EPS3D);
 
 	float destination;
 	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
 	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
-	ASSERT_EQ(destination, -75);
+	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
 
-
-
 TEST(etb, integratedTpsJitter) {
-	EngineTestHelper eth(TEST_ENGINE); // we have a distractor so cannot move EngineTestHelper into utility method
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
 
 	ASSERT_FALSE(isTps1Error());
@@ -66,4 +68,20 @@ TEST(etb, integratedTpsJitter) {
 	etb->update();
 
 	ASSERT_EQ(2, etb->etbInputErrorCounter);
+}
+
+TEST(etb, intermittentPps) {
+	EngineTestHelper eth(TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
+	EtbController *etb = initEtbIntegratedTest();
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 25.0f, true);
+
+	ASSERT_FALSE(isTps1Error());
+	ASSERT_FALSE(isTps2Error());
+	ASSERT_FALSE(isPedalError());
+	etb->update();
+	ASSERT_EQ(0, etb->etbInputErrorCounter);
+
+	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
+	etb->update();
+	ASSERT_EQ(1, etb->etbInputErrorCounter);
 }

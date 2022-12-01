@@ -30,6 +30,7 @@ public:
 
 
 	// ClosedLoopController mocks
+	MOCK_METHOD(expected<percent_t>, getOutput, (), (override));
 	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (override));
 	MOCK_METHOD(expected<percent_t>, observePlant, (), (const, override));
 	MOCK_METHOD(expected<percent_t>, getOpenLoop, (percent_t setpoint), (override));
