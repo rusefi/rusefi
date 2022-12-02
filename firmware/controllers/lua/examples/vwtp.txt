@@ -34,6 +34,8 @@ VWTP_TESTER = 0x300
 
 local ecuId = 0
 
+local sendCounter = 2
+
 local currentState = 0
 
 STATE_GOT_FIRST_RESPONSE = 1
@@ -49,22 +51,41 @@ function onCanHello(bus, id, dlc, data)
 	currentState = STATE_GOT_FIRST_RESPONSE
 end
 
-
+local packetCounter = 1
 
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
 	print('Got from tester ' ..arrayToString(data))
 
+	if data[1] == 0xA3 then
+		print ("Keep-alive")
+		txCan(1, ecuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
-	if currentState == STATE_GOT_FIRST_RESPONSE then
-		if data[1] == 0xA1 then
-			print ("Happy 300 packet")
-			currentState = STATE_GOT_SECOND_RESPONSE
-			txCan(1, ecuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		-- request group 1
+		reqFirst = 0x10 + sendCounter
+		print("Requesting group 1 again with counter " ..sendCounter)
+		txCan(1, ecuId, 0, { reqFirst, 0x00, 0x02, 0x21, 0x01 })
+
+		sendCounter = sendCounter + 1
+		print("incremented " ..sendCounter)
+		if sendCounter == 16 then
+			sendCounter = 0
 		end
+		print("overflow " ..sendCounter)
+
 		return
 	end
+
+	-- 	if currentState == STATE_GOT_FIRST_RESPONSE then
+
+	if data[1] == 0xA1 then
+		print ("Happy 300 packet")
+		currentState = STATE_GOT_SECOND_RESPONSE
+		txCan(1, ecuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		return
+	end
+	-- 	end
 
 
 	if data[1] == 0xA8 then
@@ -73,14 +94,42 @@ function onCanTester(bus, id, dlc, data)
 	end
 
 
-	if data[1] == 0x10 then
-		print ("Sending ACK B1")
-		txCan(1, ecuId, 0, { 0xB1 })
+	if data[1] == 0x10 and dlc == 5 then
+		ackPacket = 0xB0 + packetCounter
+		print ("Sending ACK B1 " ..ackPacket)
+		txCan(1, ecuId, 0, { ackPacket })
+		-- request group 1
 		txCan(1, ecuId, 0, { 0x11, 0x00, 0x02, 0x21, 0x01 })
 		return
 	end
 
+	top4 = math.floor(data[1] / 16)
 
+	if top4 == 0xB then
+		print("Got ACK")
+		return
+	end
+
+	print ("Top4 " ..top4)
+
+	if top4 == 2 or top4 == 1 then
+		print ("Looks like payload " ..data[1])
+
+		packetCounter = packetCounter + 1
+		if packetCounter > 15 then
+			packetCounter = 0
+			print ("???packetCounter = " ..packetCounter)
+		end
+		print ("packetCounter = " ..packetCounter)
+
+		if top4 == 1 then
+			ackPacket = 0xB0 + packetCounter
+			print ("Sending packet ACK " ..ackPacket)
+			txCan(1, ecuId, 0, { ackPacket })
+		end
+
+		return
+	end
 
 	-- 	if currentState == STATE_GOT_SECOND_RESPONSE then
 	-- end
