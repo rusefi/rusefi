@@ -19,6 +19,7 @@ jobs:
         build-target: [
             alphax-2chan,
             alphax-4chan,
+            alphax-8chan,
             harley81,
             hellen72,
             hellen81,
@@ -76,6 +77,10 @@ jobs:
           - build-target: alphax-4chan
             folder: hellen/alphax-4chan
             ini-file: rusefi_alphax-4chan.ini
+
+          - build-target: alphax-8chan
+            folder: hellen/alphax-8chan
+            ini-file: rusefi_alphax-8chan.ini
 
           - build-target: harley81
             folder: hellen/harley81
