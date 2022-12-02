@@ -1,0 +1,14 @@
+pins:
+  - pin: 26D
+    function: Power GND
+    type: gnd
+
+info:
+  title: AlphaX 8chan
+  name: AlphaX 8chan
+  image:
+    file: 8chan-D.jpg
+  pins:
+    - pin: 26D
+      x: 233
+      y: 175
