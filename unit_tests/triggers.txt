@@ -5128,7 +5128,7 @@ event 125 0 0 680.00
 event 126 0 1 710.00
 event 127 0 0 710.00
 TRIGGERTYPE 73 6 TT_VVT_TOYOTA_4_1 0.00
-knownOperationMode=true
+knownOperationMode=false
 crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
@@ -5137,12 +5137,12 @@ gapsCount=1
 gapFrom.0=1.500000
 gapTo.0=2.500000
 # end of meta section
-event 0 0 0 0.00
-event 1 0 1 160.00
-event 2 0 0 180.00
-event 3 0 1 340.00
-event 4 0 0 360.00
-event 5 0 1 700.00
+event 0 0 1 0.00
+event 1 0 0 0.00
+event 2 0 1 180.00
+event 3 0 0 180.00
+event 4 0 1 360.00
+event 5 0 0 360.00
 TRIGGERTYPE 74 96 TT_GM_24x_2 48.00
 knownOperationMode=true
 crankBased=true
