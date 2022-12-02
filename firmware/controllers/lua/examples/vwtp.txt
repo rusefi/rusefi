@@ -42,7 +42,7 @@ STATE_GOT_SECOND_RESPONSE = 2
 function onCanHello(bus, id, dlc, data)
 	-- here we handle 201 packets
 	print('Got Hello Response ' ..arrayToString(data))
-	ecuId = data[5] * 256 + data[6]
+	ecuId = data[6] * 256 + data[5]
 
 	print('From ECU ' ..ecuId)
 	txCan(1, ecuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
