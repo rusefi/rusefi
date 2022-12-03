@@ -7,7 +7,10 @@ import com.rusefi.core.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
@@ -58,13 +61,42 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
     public String getContent() {
         StringBuilder getterBody = new StringBuilder();
+
+        StringBuilder switchBody = new StringBuilder();
+
+        HashMap<Integer, AtomicInteger> hashConflicts = new HashMap<>();
         for (Pair<String, String> pair : getterPairs) {
-            getterBody.append(getCompareName(pair.first));
-            getterBody.append("\t\treturn " + pair.second + ";\n");
+            hashConflicts.computeIfAbsent(HashUtil.hash(pair.first), integer -> new AtomicInteger(0)).incrementAndGet();
         }
 
+
+        for (Pair<String, String> pair : getterPairs) {
+            String returnLine = "\t\treturn " + pair.second + ";\n";
+
+            int hash = HashUtil.hash(pair.first);
+            if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append("\t\tcase " + hash + ":\n");
+                switchBody.append("\t" + returnLine);
+
+            } else {
+
+                getterBody.append(getCompareName(pair.first));
+
+                getterBody.append(returnLine);
+            }
+        }
+
+        String fullSwitch = switchBody.length() == 0 ? "" :
+                ("\tint hash = djb2lowerCase(name);\n" +
+
+                        "\tswitch(hash) {\n" + switchBody + "\t}\n");
+
         return FILE_HEADER +
-                "float getOutputValueByName(const char *name) {\n" + getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;
+                "float getOutputValueByName(const char *name) {\n" +
+                fullSwitch +
+
+
+                getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;
     }
 
 }
