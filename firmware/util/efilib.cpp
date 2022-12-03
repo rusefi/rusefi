@@ -236,8 +236,6 @@ float atoff(const char *param) {
 	return integerPart + decimal / divider;
 }
 
-#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
-
 bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
@@ -255,6 +253,19 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 */
 int mytolower(const char c) {
   return TO_LOWER(c);
+}
+
+
+int djb2lowerCase(const char *str) {
+	unsigned long hash = 5381;
+	int c;
+
+	while (c = *str++) {
+		c = TO_LOWER(c);
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	}
+
+	return hash;
 }
 
 bool strEqual(const char *str1, const char *str2) {
