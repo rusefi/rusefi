@@ -64,17 +64,21 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
         StringBuilder getterBody = getGetters(switchBody, getterPairs);
 
-        String fullSwitch = switchBody.length() == 0 ? "" :
-                ("\tint hash = djb2lowerCase(name);\n" +
-
-                        "\tswitch(hash) {\n" + switchBody + "\t}\n");
+        String fullSwitch = wrapSwitchStatement(switchBody);
 
         return FILE_HEADER +
                 "float getOutputValueByName(const char *name) {\n" +
                 fullSwitch +
-
-
                 getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;
+    }
+
+    @NotNull
+    static String wrapSwitchStatement(StringBuilder switchBody) {
+        String fullSwitch = switchBody.length() == 0 ? "" :
+                ("\tint hash = djb2lowerCase(name);\n" +
+
+                        "\tswitch(hash) {\n" + switchBody + "\t}\n");
+        return fullSwitch;
     }
 
     @NotNull

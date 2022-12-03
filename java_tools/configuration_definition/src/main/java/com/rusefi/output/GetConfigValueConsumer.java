@@ -140,12 +140,15 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     @NotNull
     public String getComleteGetterBody() {
-        StringBuilder getterBody = new StringBuilder();
-        for (Pair<String, String> pair : getterPairs) {
-            getterBody.append(getCompareName(pair.first));
-            getterBody.append("\t\treturn " + pair.second + ";\n");
-        }
-        return GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
+        StringBuilder switchBody = new StringBuilder();
+
+        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, getterPairs);
+
+        String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
+
+        return GET_METHOD_HEADER +
+                fullSwitch +
+                getterBody + GET_METHOD_FOOTER;
     }
 
     @NotNull

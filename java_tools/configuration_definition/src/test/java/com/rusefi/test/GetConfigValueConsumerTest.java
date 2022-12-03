@@ -5,8 +5,6 @@ import com.rusefi.ReaderState;
 import com.rusefi.output.GetConfigValueConsumer;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 
 public class GetConfigValueConsumerTest {
@@ -78,8 +76,11 @@ public class GetConfigValueConsumerTest {
                 "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
                 "\t\t}\n" +
                 "\t}\n" +
-                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
-                "\t\treturn config->iat.adcChannel;\n" +
+                "\tint hash = djb2lowerCase(name);\n" +
+                "\tswitch(hash) {\n" +
+                "\t\tcase -1237776078:\n" +
+                "\t\t\treturn config->iat.adcChannel;\n" +
+                "\t}\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getComleteGetterBody());
     }
@@ -166,24 +167,27 @@ public class GetConfigValueConsumerTest {
                 "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
                 "\t\t}\n" +
                 "\t}\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.config.map.sensor.hwChannel\"))\n" +
-                "\t\treturn config->clt.config.map.sensor.hwChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
-                "\t\treturn config->clt.adcChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
-                "\t\treturn config->issue_294_31;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
-                "\t\treturn config->baseFuel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"speedToRpmRatio\"))\n" +
-                "\t\treturn config->speedToRpmRatio;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"afr_typet\"))\n" +
-                "\t\treturn config->afr_typet;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"vehicleSpeedKph\"))\n" +
-                "\t\treturn config->vehicleSpeedKph;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"isForcedInduction\"))\n" +
-                "\t\treturn config->isForcedInduction;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
-                "\t\treturn config->enableFan1WithAc;\n" +
+                "\tint hash = djb2lowerCase(name);\n" +
+                "\tswitch(hash) {\n" +
+                "\t\tcase 581685574:\n" +
+                "\t\t\treturn config->clt.config.map.sensor.hwChannel;\n" +
+                "\t\tcase -1144186889:\n" +
+                "\t\t\treturn config->clt.adcChannel;\n" +
+                "\t\tcase -1571463185:\n" +
+                "\t\t\treturn config->issue_294_31;\n" +
+                "\t\tcase 727098956:\n" +
+                "\t\t\treturn config->baseFuel;\n" +
+                "\t\tcase -685727673:\n" +
+                "\t\t\treturn config->speedToRpmRatio;\n" +
+                "\t\tcase 1694412179:\n" +
+                "\t\t\treturn config->afr_typet;\n" +
+                "\t\tcase -1925174695:\n" +
+                "\t\t\treturn config->vehicleSpeedKph;\n" +
+                "\t\tcase -617915487:\n" +
+                "\t\t\treturn config->isForcedInduction;\n" +
+                "\t\tcase -298185774:\n" +
+                "\t\t\treturn config->enableFan1WithAc;\n" +
+                "\t}\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getHeaderAndGetter());
     }
