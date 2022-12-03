@@ -1342,7 +1342,8 @@ gaugeCategory = Throttle Body (incl. ETB)
 	etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,					"%",	-100, 100,	-75,	-50,	50,	75,  0, 0
 	etbDutyRateOfChangeGauge  = etbDutyRateOfChange, "ETB duty rate of change",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
 	etbDutyAverageGauge  = etbDutyAverage, "ETB average duty",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
-	etbInputErrorCounterGauge = etbInputErrorCounter, "ETB sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbTpsErrorCounterGauge = etbTpsErrorCounter, "TPS sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbPpsErrorCounterGauge = etbPpsErrorCounter, "PPS sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
 
 gaugeCategory = Sensors - Raw
 	rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
