@@ -4,13 +4,13 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
@@ -60,31 +60,9 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     public String getContent() {
-        StringBuilder getterBody = new StringBuilder();
-
         StringBuilder switchBody = new StringBuilder();
 
-        HashMap<Integer, AtomicInteger> hashConflicts = new HashMap<>();
-        for (Pair<String, String> pair : getterPairs) {
-            hashConflicts.computeIfAbsent(HashUtil.hash(pair.first), integer -> new AtomicInteger(0)).incrementAndGet();
-        }
-
-
-        for (Pair<String, String> pair : getterPairs) {
-            String returnLine = "\t\treturn " + pair.second + ";\n";
-
-            int hash = HashUtil.hash(pair.first);
-            if (hashConflicts.get(hash).get() == 1) {
-                switchBody.append("\t\tcase " + hash + ":\n");
-                switchBody.append("\t" + returnLine);
-
-            } else {
-
-                getterBody.append(getCompareName(pair.first));
-
-                getterBody.append(returnLine);
-            }
-        }
+        StringBuilder getterBody = getGetters(switchBody, getterPairs);
 
         String fullSwitch = switchBody.length() == 0 ? "" :
                 ("\tint hash = djb2lowerCase(name);\n" +
@@ -97,6 +75,35 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
 
                 getterBody + GetConfigValueConsumer.GET_METHOD_FOOTER;
+    }
+
+    @NotNull
+    static StringBuilder getGetters(StringBuilder switchBody, List<Pair<String, String>> getterPairs1) {
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs1);
+
+        StringBuilder getterBody = new StringBuilder();
+        for (Pair<String, String> pair : getterPairs1) {
+            String returnLine = "\t\treturn " + pair.second + ";\n";
+
+            int hash = HashUtil.hash(pair.first);
+            if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append("\t\tcase " + hash + ":\n");
+                switchBody.append("\t" + returnLine);
+            } else {
+                getterBody.append(getCompareName(pair.first));
+                getterBody.append(returnLine);
+            }
+        }
+        return getterBody;
+    }
+
+    @NotNull
+    static HashMap<Integer, AtomicInteger> getHashConflicts(List<Pair<String, String>> getterPairs1) {
+        HashMap<Integer, AtomicInteger> hashConflicts = new HashMap<>();
+        for (Pair<String, String> pair : getterPairs1) {
+            hashConflicts.computeIfAbsent(HashUtil.hash(pair.first), integer -> new AtomicInteger(0)).incrementAndGet();
+        }
+        return hashConflicts;
     }
 
 }
