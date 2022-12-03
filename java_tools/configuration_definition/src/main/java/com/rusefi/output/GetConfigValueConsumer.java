@@ -3,11 +3,14 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import com.rusefi.core.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
@@ -51,7 +54,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "\t}\n" +
             "\n";
     private static final String SET_METHOD_FOOTER = "}\n";
-    private final StringBuilder getterBody = new StringBuilder();
+    private final List<Pair<String, String>> getterPairs = new ArrayList<>();
     private final StringBuilder setterBody = new StringBuilder();
     private final StringBuilder allFloatAddresses = new StringBuilder(
             "static plain_get_float_s getF_plain[] = {\n");
@@ -105,8 +108,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (TypesHelper.isFloat(cf.getType())) {
             allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
         } else {
-            getterBody.append(getCompareName(userName));
-            getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
+            getterPairs.add(new Pair<>(userName, javaName + cf.getName()));
 
             setterBody.append(getCompareName(userName));
             String str = getAssignment(cf, javaName, "(int)");
@@ -138,6 +140,11 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     @NotNull
     public String getComleteGetterBody() {
+        StringBuilder getterBody = new StringBuilder();
+        for (Pair<String, String> pair : getterPairs) {
+            getterBody.append(getCompareName(pair.first));
+            getterBody.append("\t\treturn " + pair.second + ";\n");
+        }
         return GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
     }
 
