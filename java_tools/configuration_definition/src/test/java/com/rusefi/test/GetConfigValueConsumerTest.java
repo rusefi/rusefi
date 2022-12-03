@@ -30,14 +30,9 @@ public class GetConfigValueConsumerTest {
 
         assertEquals(
                 "float getConfigValueByName(const char *name) {\n" +
-                "\t{\n" +
-                "\t\tplain_get_float_s * known = findFloat(name);\n" +
-                "\t\tif (known != nullptr) {\n" +
-                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
-                "\t\t}\n" +
-                "\t}\n" +
-                "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getComleteGetterBody());
+                        "\t{\n" +
+                        "\treturn EFI_ERROR_CODE;\n" +
+                        "}\n", getConfigValueConsumer.getComleteGetterBody());
     }
 
     @Test
@@ -71,13 +66,10 @@ public class GetConfigValueConsumerTest {
 
         assertEquals("float getConfigValueByName(const char *name) {\n" +
                 "\t{\n" +
-                "\t\tplain_get_float_s * known = findFloat(name);\n" +
-                "\t\tif (known != nullptr) {\n" +
-                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
-                "\t\t}\n" +
-                "\t}\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
+                "\t\tcase -672272162:\n" +
+                "\t\t\treturn config->iat.config.tempC_1;\n" +
                 "\t\tcase -1237776078:\n" +
                 "\t\t\treturn config->iat.adcChannel;\n" +
                 "\t}\n" +
@@ -162,21 +154,26 @@ public class GetConfigValueConsumerTest {
                 "}\n" +
                 "float getConfigValueByName(const char *name) {\n" +
                 "\t{\n" +
-                "\t\tplain_get_float_s * known = findFloat(name);\n" +
-                "\t\tif (known != nullptr) {\n" +
-                "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
-                "\t\t}\n" +
-                "\t}\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
+                "\t\tcase -1832527325:\n" +
+                "\t\t\treturn config->clt.config.tempC_1;\n" +
+                "\t\tcase 1819278123:\n" +
+                "\t\t\treturn config->clt.config.map.sensor.highValue;\n" +
                 "\t\tcase 581685574:\n" +
                 "\t\t\treturn config->clt.config.map.sensor.hwChannel;\n" +
+                "\t\tcase 382574846:\n" +
+                "\t\t\treturn config->clt.config.injector.flow;\n" +
+                "\t\tcase -653172717:\n" +
+                "\t\t\treturn config->clt.config.bias_resistor;\n" +
                 "\t\tcase -1144186889:\n" +
                 "\t\t\treturn config->clt.adcChannel;\n" +
                 "\t\tcase -1571463185:\n" +
                 "\t\t\treturn config->issue_294_31;\n" +
                 "\t\tcase 727098956:\n" +
                 "\t\t\treturn config->baseFuel;\n" +
+                "\t\tcase -1120008897:\n" +
+                "\t\t\treturn config->afr_type;\n" +
                 "\t\tcase -685727673:\n" +
                 "\t\t\treturn config->speedToRpmRatio;\n" +
                 "\t\tcase 1694412179:\n" +
