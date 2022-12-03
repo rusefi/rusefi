@@ -1,4 +1,25 @@
 pins:
+  - pin: aux_ls1
+    class: outputs
+# H144_OUT_PWM2
+    id: C6
+    ts_name: Aux Low 1
+    function: Aux Low 1
+
+  - pin: aux_ls2
+    class: outputs
+    # H144_OUT_PWM3
+    id: C7
+    ts_name: Aux Low 2
+    function: Aux Low 2
+
+  - pin: aux_ls3
+    class: outputs
+    # H144_OUT_PWM4
+    id: C8
+    ts_name: Aux Low 3
+    function: Aux Low 3
+
   - pin: 1a
     function: GND
     type: GND
