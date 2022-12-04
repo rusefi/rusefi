@@ -51,6 +51,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<Pair<String, String>> getterPairs = new ArrayList<>();
+    private final List<Pair<String, String>> setterPairs = new ArrayList<>();
     private final StringBuilder setterBody = new StringBuilder();
     private final StringBuilder allFloatAddresses = new StringBuilder(
             "static plain_get_float_s getF_plain[] = {\n");
@@ -107,6 +108,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
         } else {
 
+            setterPairs.add(new Pair<>(userName, javaName + cf.getName()));
+
             setterBody.append(getCompareName(userName));
             String str = getAssignment(cf, javaName, "(int)");
             setterBody.append(str);
@@ -132,11 +135,11 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         return FILE_HEADER +
                 getFloatsSections() +
                 FIND_METHOD +
-                getComleteGetterBody();
+                getCompleteGetterBody();
     }
 
     @NotNull
-    public String getComleteGetterBody() {
+    public String getCompleteGetterBody() {
         StringBuilder switchBody = new StringBuilder();
 
         StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, getterPairs);
@@ -154,13 +157,16 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     public String getSetterBody() {
+
+
+
         return setterBody.toString();
     }
 
     public String getContent() {
         return getHeaderAndGetter()
                 +
-                SET_METHOD_HEADER + setterBody + SET_METHOD_FOOTER
+                SET_METHOD_HEADER + getSetterBody() + SET_METHOD_FOOTER
                 ;
     }
 }
