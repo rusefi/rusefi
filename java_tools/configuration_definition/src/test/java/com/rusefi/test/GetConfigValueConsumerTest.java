@@ -52,10 +52,13 @@ public class GetConfigValueConsumerTest {
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
         state.readBufferedReader(test, getConfigValueConsumer);
 
-        assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
+        assertEquals("\tint hash = djb2lowerCase(name);\n" +
+                "\tswitch(hash) {\n" +
+                "\t\tcase -1237776078:\n" +
                 "\t{\n" +
                 "\t\tconfig->iat.adcChannel = (int)value;\n" +
                 "\t\treturn;\n" +
+                "\t}\n" +
                 "\t}\n", getConfigValueConsumer.getSetterBody());
 
         assertEquals(
