@@ -22,6 +22,8 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final List<Pair<String, String>> getterPairs = new ArrayList<>();
     private final String fileName;
 
+    public String currentSectionPrefix = "engine->outputChannels";
+
     public GetOutputValueConsumer(String fileName) {
         this.fileName = fileName;
     }
@@ -46,7 +48,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
 
         String userName = prefix + cf.getName();
-        String javaName = "engine->outputChannels." + prefix;
+        String javaName = currentSectionPrefix + "." + prefix;
 
         getterPairs.add(new Pair<>(userName, javaName + cf.getName()));
 
