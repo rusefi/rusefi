@@ -23,12 +23,6 @@ public class GetConfigValueConsumerTest {
         state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals(
-                "static plain_get_float_s getF_plain[] = {\n" +
-                        "};\n\n"
-                , getConfigValueConsumer.getFloatsSections());
-
-
-        assertEquals(
                 "float getConfigValueByName(const char *name) {\n" +
                         "\t{\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
@@ -54,18 +48,17 @@ public class GetConfigValueConsumerTest {
 
         assertEquals("\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
+                "\t\tcase -672272162:\n" +
+                "\t{\n" +
+                "\t\tconfig->iat.config.tempC_1 = value;\n" +
+                "\t\treturn;\n" +
+                "\t}\n" +
                 "\t\tcase -1237776078:\n" +
                 "\t{\n" +
                 "\t\tconfig->iat.adcChannel = (int)value;\n" +
                 "\t\treturn;\n" +
                 "\t}\n" +
                 "\t}\n", getConfigValueConsumer.getSetterBody());
-
-        assertEquals(
-                "static plain_get_float_s getF_plain[] = {\n" +
-                "\t{\"iat.config.tempC_1\", &engineConfiguration->iat.config.tempC_1},\n" +
-                "};\n" +
-                "\n", getConfigValueConsumer.getFloatsSections());
 
         assertEquals("float getConfigValueByName(const char *name) {\n" +
                 "\t{\n" +
@@ -137,24 +130,6 @@ public class GetConfigValueConsumerTest {
 
         assertEquals("#include \"pch.h\"\n" +
                 "#include \"value_lookup.h\"\n" +
-                "static plain_get_float_s getF_plain[] = {\n" +
-                "\t{\"clt.config.tempC_1\", &engineConfiguration->clt.config.tempC_1},\n" +
-                "\t{\"clt.config.map.sensor.highValue\", &engineConfiguration->clt.config.map.sensor.highValue},\n" +
-                "\t{\"clt.config.injector.flow\", &engineConfiguration->clt.config.injector.flow},\n" +
-                "\t{\"clt.config.bias_resistor\", &engineConfiguration->clt.config.bias_resistor},\n" +
-                "\t{\"afr_type\", &engineConfiguration->afr_type},\n" +
-                "};\n" +
-                "\n" +
-                "plain_get_float_s * findFloat(const char *name) {\n" +
-                "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
-                "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
-                "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
-                "\t\t\treturn currentF;\n" +
-                "\t\t}\n" +
-                "\t\tcurrentF++;\n" +
-                "\t}\n" +
-                "\treturn nullptr;\n" +
-                "}\n" +
                 "float getConfigValueByName(const char *name) {\n" +
                 "\t{\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
