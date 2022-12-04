@@ -1713,6 +1713,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
+		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
 		subMenu = luaOutputs,				"Lua Script PWM Outputs"
 
 		groupMenu = "Lua Calibrations"
@@ -3719,6 +3720,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = scriptSettingDialog, "Script Settings", border
 		panel = scriptSetting,	East
+
+	dialog = luaDigitalInputsDialog, "Lua Digital Inputs"
+		field = "Digital #1",							luaDigitalInputPins1
+		field = "Digital #2",							luaDigitalInputPins2
+		field = "Digital #3",							luaDigitalInputPins3
+		field = "Digital #4",							luaDigitalInputPins4
+		field = "Digital #5",							luaDigitalInputPins5
+		field = "Digital #6",							luaDigitalInputPins6
+		field = "Digital #7",							luaDigitalInputPins7
+		field = "Digital #8",							luaDigitalInputPins8
 
 	dialog = auxInputsDialog, "Lua Analog Inputs"
 		field = "ADC #1",								auxAnalogInputs1
