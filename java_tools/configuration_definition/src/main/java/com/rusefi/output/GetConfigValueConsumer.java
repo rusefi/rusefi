@@ -27,8 +27,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "#include \"value_lookup.h\"\n";
 
     private static final String GET_METHOD_HEADER =
-            "float getConfigValueByName(const char *name) {\n" +
-                    "\t{\n";
+            "float getConfigValueByName(const char *name) {\n";
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
     private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n" +

@@ -24,7 +24,6 @@ public class GetConfigValueConsumerTest {
 
         assertEquals(
                 "float getConfigValueByName(const char *name) {\n" +
-                        "\t{\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
                         "}\n", getConfigValueConsumer.getCompleteGetterBody());
     }
@@ -61,7 +60,6 @@ public class GetConfigValueConsumerTest {
                 "\t}\n", getConfigValueConsumer.getSetterBody());
 
         assertEquals("float getConfigValueByName(const char *name) {\n" +
-                "\t{\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
                 "\t\tcase -672272162:\n" +
@@ -131,7 +129,6 @@ public class GetConfigValueConsumerTest {
         assertEquals("#include \"pch.h\"\n" +
                 "#include \"value_lookup.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
-                "\t{\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
                 "\t\tcase -1832527325:\n" +
