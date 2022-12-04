@@ -82,11 +82,11 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static StringBuilder getGetters(StringBuilder switchBody, List<Pair<String, String>> getterPairs1) {
-        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs1);
+    static StringBuilder getGetters(StringBuilder switchBody, List<Pair<String, String>> getterPairs) {
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
 
         StringBuilder getterBody = new StringBuilder();
-        for (Pair<String, String> pair : getterPairs1) {
+        for (Pair<String, String> pair : getterPairs) {
             String returnLine = "\t\treturn " + pair.second + ";\n";
 
             int hash = HashUtil.hash(pair.first);
