@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
+import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -27,21 +28,19 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "#include \"value_lookup.h\"\n";
     private static final String FIND_METHOD =
             "plain_get_float_s * findFloat(const char *name) {\n" +
-            "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
-            "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
-            "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
-            "\t\t\treturn currentF;\n" +
-            "\t\t}\n" +
-            "\t\tcurrentF++;\n" +
-            "\t}\n" +
-            "\treturn nullptr;\n" +
-            "}\n";
+                    "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
+                    "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
+                    "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
+                    "\t\t\treturn currentF;\n" +
+                    "\t\t}\n" +
+                    "\t\tcurrentF++;\n" +
+                    "\t}\n" +
+                    "\treturn nullptr;\n" +
+                    "}\n";
 
     private static final String GET_METHOD_HEADER =
-            "float getConfigValueByName(const char *name) {\n"            +
-            "\t{\n"
-
-            ;
+            "float getConfigValueByName(const char *name) {\n" +
+                    "\t{\n";
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
     private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n" +
@@ -143,7 +142,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, getterPairs);
 
-        String fullSwitch = GetOutputValueConsumer.wrapSwitchStatement(switchBody);
+        String fullSwitch = wrapSwitchStatement(switchBody);
 
         return GET_METHOD_HEADER +
                 fullSwitch +
@@ -156,21 +155,29 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     public String getSetterBody() {
+        StringBuilder switchBody = new StringBuilder();
+
         StringBuilder setterBody = new StringBuilder();
         HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(setterPairs);
 
         for (Pair<String, String> pair : setterPairs) {
 
-//            int hash = HashUtil.hash(pair.first);
-//            if (hashConflicts.get(hash).get() == 1) {
-
-            setterBody.append(getCompareName(pair.first));
+            int hash = HashUtil.hash(pair.first);
             String str = getAssignment("(int)", pair.second);
-            setterBody.append(str);
+            if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append("\t\tcase " + hash + ":\n");
+                switchBody.append(str);
+
+            } else {
+
+                setterBody.append(getCompareName(pair.first));
+                setterBody.append(str);
+            }
         }
 
+        String fullSwitch = wrapSwitchStatement(switchBody);
 
-        return setterBody.toString();
+        return fullSwitch + setterBody;
     }
 
     public String getContent() {
