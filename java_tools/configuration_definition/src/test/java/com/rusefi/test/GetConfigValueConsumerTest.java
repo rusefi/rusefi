@@ -72,13 +72,6 @@ public class GetConfigValueConsumerTest {
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n" +
                 "void setConfigValueByName(const char *name, float value) {\n" +
-                "\t{\n" +
-                "\t\tplain_get_float_s * known = findFloat(name);\n" +
-                "\t\tif (known != nullptr) {\n" +
-                "\t\t\t*(float*)hackEngineConfigurationPointer(known->value) = value;\n" +
-                "\t\t}\n" +
-                "\t}\n" +
-                "\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
                 "\t\tcase -672272162:\n" +
