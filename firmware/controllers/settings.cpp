@@ -844,10 +844,9 @@ static void getValue(const char *paramStr) {
 	}
 
 	{
-		plain_get_float_s * known = findFloat(paramStr);
-		if (known != nullptr) {
-			float value = *known->value;
-			efiPrintf("%s value: %.2f", known->token, value);
+		float value = getConfigValueByName(paramStr);
+		if (value != EFI_ERROR_CODE) {
+			efiPrintf("%s value: %.2f", paramStr, value);
 			return;
 		}
 	}
