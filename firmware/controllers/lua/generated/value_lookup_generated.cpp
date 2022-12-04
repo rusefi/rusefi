@@ -1013,13 +1013,6 @@ float getConfigValueByName(const char *name) {
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
-	{
-		plain_get_float_s * known = findFloat(name);
-		if (known != nullptr) {
-			*(float*)hackEngineConfigurationPointer(known->value) = value;
-		}
-	}
-
 	int hash = djb2lowerCase(name);
 	switch(hash) {
 		case -920133784:
