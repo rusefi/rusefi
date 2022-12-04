@@ -9,6 +9,105 @@ info:
   image:
     file: 8chan-C.jpg
   pins:
+    - pin: 1C
+      x: 75
+      y: 90
+    - pin: 2C
+      x: 95
+      y: 90
+    - pin: 3C
+      x: 120
+      y: 90
+    - pin: 4C
+      x: 145
+      y: 90
+    - pin: 5C
+      x: 165
+      y: 90
+    - pin: 6C
+      x: 190
+      y: 90
+    - pin: 7C
+      x: 215
+      y: 90
+    - pin: 8C
+      x: 240
+      y: 90
+    - pin: 9C
+      x: 265
+      y: 90
+    - pin: 10C
+      x: 85
+      y: 120
+    - pin: 11C
+      x: 105
+      y: 120
+    - pin: 12C
+      x: 130
+      y: 120
+    - pin: 13C
+      x: 155
+      y: 120
+    - pin: 14C
+      x: 180
+      y: 120
+    - pin: 15C
+      x: 205
+      y: 120
+    - pin: 16C
+      x: 225
+      y: 120
+    - pin: 17C
+      x: 245
+      y: 120
+    - pin: 18C
+      x: 85
+      y: 150
+    - pin: 19C
+      x: 110
+      y: 150
+    - pin: 20C
+      x: 130
+      y: 150
+    - pin: 21C
+      x: 155
+      y: 150
+    - pin: 22C
+      x: 180
+      y: 150
+    - pin: 23C
+      x: 205
+      y: 150
+    - pin: 24C
+      x: 225
+      y: 150
+    - pin: 25C
+      x: 245
+      y: 150
+    - pin: 26C
+      x: 95
+      y: 180
+    - pin: 27C
+      x: 90
+      y: 180
+    - pin: 28C
+      x: 120
+      y: 180
+    - pin: 29C
+      x: 140
+      y: 180
+    - pin: 30C
+      x: 170
+      y: 180
+    - pin: 31C
+      x: 195
+      y: 180
+    - pin: 32C
+      x: 220
+      y: 180
+    - pin: 33C
+      x: 245
+      y: 180
     - pin: 34C
-      x: 264
-      y: 172
+      x: 265
+      y: 180
