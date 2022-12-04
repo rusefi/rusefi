@@ -30,14 +30,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "float getConfigValueByName(const char *name) {\n";
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n" +
-            "\t{\n" +
-            "\t\tplain_get_float_s * known = findFloat(name);\n" +
-            "\t\tif (known != nullptr) {\n" +
-            "\t\t\t*(float*)hackEngineConfigurationPointer(known->value) = value;\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "\n";
+    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<Tuple<String>> variables = new ArrayList<>();
     private final String outputFileName;
