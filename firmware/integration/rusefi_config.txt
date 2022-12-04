@@ -112,11 +112,11 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 750
 
-#define AUX_ANALOG_INPUT_COUNT 8
 #define SENT_INPUT_COUNT 1
 
 #define LUA_PWM_COUNT 8
 #define LUA_ANALOG_INPUT_COUNT 8
+#define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 2
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
@@ -1267,7 +1267,8 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t fan2ExtraIdle;Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale primingDelay;Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
-	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
+; todo: rename to luaAnalogInputs
+	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
@@ -1539,7 +1540,8 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
 
 float etbDutyShutdownThreshold
-uint8_t[156] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+Gpio[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
+uint8_t[140] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
