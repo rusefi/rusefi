@@ -59,6 +59,42 @@ public class GetConfigValueConsumerTest {
                 "\t}\n" +
                 "\t}\n", getConfigValueConsumer.getSetterBody());
 
+        assertEquals("#include \"pch.h\"\n" +
+                "#include \"value_lookup.h\"\n" +
+                "float getConfigValueByName(const char *name) {\n" +
+                "\tint hash = djb2lowerCase(name);\n" +
+                "\tswitch(hash) {\n" +
+                "\t\tcase -672272162:\n" +
+                "\t\t\treturn config->iat.config.tempC_1;\n" +
+                "\t\tcase -1237776078:\n" +
+                "\t\t\treturn config->iat.adcChannel;\n" +
+                "\t}\n" +
+                "\treturn EFI_ERROR_CODE;\n" +
+                "}\n" +
+                "void setConfigValueByName(const char *name, float value) {\n" +
+                "\t{\n" +
+                "\t\tplain_get_float_s * known = findFloat(name);\n" +
+                "\t\tif (known != nullptr) {\n" +
+                "\t\t\t*(float*)hackEngineConfigurationPointer(known->value) = value;\n" +
+                "\t\t}\n" +
+                "\t}\n" +
+                "\n" +
+                "\tint hash = djb2lowerCase(name);\n" +
+                "\tswitch(hash) {\n" +
+                "\t\tcase -672272162:\n" +
+                "\t{\n" +
+                "\t\tconfig->iat.config.tempC_1 = value;\n" +
+                "\t\treturn;\n" +
+                "\t}\n" +
+                "\t\tcase -1237776078:\n" +
+                "\t{\n" +
+                "\t\tconfig->iat.adcChannel = (int)value;\n" +
+                "\t\treturn;\n" +
+                "\t}\n" +
+                "\t}\n" +
+                "}\n", getConfigValueConsumer.getContent());
+
+
         assertEquals("float getConfigValueByName(const char *name) {\n" +
                 "\tint hash = djb2lowerCase(name);\n" +
                 "\tswitch(hash) {\n" +
