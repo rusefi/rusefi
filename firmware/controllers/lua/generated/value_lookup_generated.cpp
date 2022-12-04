@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "value_lookup.h"
 float getConfigValueByName(const char *name) {
-	{
 	int hash = djb2lowerCase(name);
 	switch(hash) {
 		case -920133784:
