@@ -58,7 +58,6 @@
 #define antiLagActivationMode_e_auto_enum 0="SWITCH_INPUT_ANTILAG",1="ALWAYS_ON_ANTILAG"
 #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
 #define antiLagActivationMode_e_SWITCH_INPUT_ANTILAG 0
-#define AUX_ANALOG_INPUT_COUNT 8
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
@@ -863,6 +862,7 @@
 #define LOG_DELIMITER "`"
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define LUA_ANALOG_INPUT_COUNT 8
+#define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 2
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
@@ -993,7 +993,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH snap_60836
+#define SIGNATURE_HASH snap_17504
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1268,7 +1268,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.12.04.subaru_eg33_f7.snap_60836"
+#define TS_SIGNATURE "rusEFI 2022.12.04.subaru_eg33_f7.snap_17504"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Nov 27 13:14:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Dec 04 18:18:32 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -10,7 +10,6 @@ public class FuelComputer {
 	public static final int AFTERSTART_DECAY_CURVE_SIZE = 8;
 	public static final int AFTERSTART_ENRICH_CURVE_SIZE = 8;
 	public static final int AFTERSTART_HOLD_CURVE_SIZE = 8;
-	public static final int AUX_ANALOG_INPUT_COUNT = 8;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
@@ -263,6 +262,7 @@ public class FuelComputer {
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
+	public static final int LUA_DIGITAL_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 2;
 	public static final int LUA_PWM_COUNT = 8;
 	public static final int LUA_SCRIPT_SIZE = 8000;
