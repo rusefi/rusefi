@@ -10,10 +10,13 @@ import org.jetbrains.annotations.Nullable;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
+import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -52,7 +55,6 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<Pair<String, String>> getterPairs = new ArrayList<>();
     private final List<Pair<String, String>> setterPairs = new ArrayList<>();
-    private final StringBuilder setterBody = new StringBuilder();
     private final StringBuilder allFloatAddresses = new StringBuilder(
             "static plain_get_float_s getF_plain[] = {\n");
     private final String outputFileName;
@@ -110,9 +112,6 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
             setterPairs.add(new Pair<>(userName, javaName + cf.getName()));
 
-            setterBody.append(getCompareName(userName));
-            String str = getAssignment(cf, javaName, "(int)");
-            setterBody.append(str);
         }
 
 
@@ -120,8 +119,8 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    private String getAssignment(ConfigField cf, String javaName, String cast) {
-        return "\t{\n" + "\t\t" + javaName + cf.getName() + " = " + cast +
+    private String getAssignment(String cast, String value) {
+        return "\t{\n" + "\t\t" + value + " = " + cast +
                 "value;\n" +
                 "\t\treturn;\n\t}\n";
     }
@@ -157,7 +156,18 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     public String getSetterBody() {
+        StringBuilder setterBody = new StringBuilder();
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(setterPairs);
 
+        for (Pair<String, String> pair : setterPairs) {
+
+//            int hash = HashUtil.hash(pair.first);
+//            if (hashConflicts.get(hash).get() == 1) {
+
+            setterBody.append(getCompareName(pair.first));
+            String str = getAssignment("(int)", pair.second);
+            setterBody.append(str);
+        }
 
 
         return setterBody.toString();
