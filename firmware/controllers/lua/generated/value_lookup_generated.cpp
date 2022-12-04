@@ -1,171 +1,7 @@
 #include "pch.h"
 #include "value_lookup.h"
-static plain_get_float_s getF_plain[] = {
-	{"injector.flow", &engineConfiguration->injector.flow},
-	{"cranking.baseFuel", &engineConfiguration->cranking.baseFuel},
-	{"ignitionDwellForCrankingMs", &engineConfiguration->ignitionDwellForCrankingMs},
-	{"map.sensor.lowValue", &engineConfiguration->map.sensor.lowValue},
-	{"map.sensor.highValue", &engineConfiguration->map.sensor.highValue},
-	{"clt.config.tempC_1", &engineConfiguration->clt.config.tempC_1},
-	{"clt.config.tempC_2", &engineConfiguration->clt.config.tempC_2},
-	{"clt.config.tempC_3", &engineConfiguration->clt.config.tempC_3},
-	{"clt.config.resistance_1", &engineConfiguration->clt.config.resistance_1},
-	{"clt.config.resistance_2", &engineConfiguration->clt.config.resistance_2},
-	{"clt.config.resistance_3", &engineConfiguration->clt.config.resistance_3},
-	{"clt.config.bias_resistor", &engineConfiguration->clt.config.bias_resistor},
-	{"iat.config.tempC_1", &engineConfiguration->iat.config.tempC_1},
-	{"iat.config.tempC_2", &engineConfiguration->iat.config.tempC_2},
-	{"iat.config.tempC_3", &engineConfiguration->iat.config.tempC_3},
-	{"iat.config.resistance_1", &engineConfiguration->iat.config.resistance_1},
-	{"iat.config.resistance_2", &engineConfiguration->iat.config.resistance_2},
-	{"iat.config.resistance_3", &engineConfiguration->iat.config.resistance_3},
-	{"iat.config.bias_resistor", &engineConfiguration->iat.config.bias_resistor},
-	{"knockBandCustom", &engineConfiguration->knockBandCustom},
-	{"specs.displacement", &engineConfiguration->specs.displacement},
-	{"cylinderBore", &engineConfiguration->cylinderBore},
-	{"crankingTimingAngle", &engineConfiguration->crankingTimingAngle},
-	{"fixedModeTiming", &engineConfiguration->fixedModeTiming},
-	{"globalTriggerAngleOffset", &engineConfiguration->globalTriggerAngleOffset},
-	{"analogInputDividerCoefficient", &engineConfiguration->analogInputDividerCoefficient},
-	{"vbattDividerCoeff", &engineConfiguration->vbattDividerCoeff},
-	{"fanOnTemperature", &engineConfiguration->fanOnTemperature},
-	{"fanOffTemperature", &engineConfiguration->fanOffTemperature},
-	{"driveWheelRevPerKm", &engineConfiguration->driveWheelRevPerKm},
-	{"idle_derivativeFilterLoss", &engineConfiguration->idle_derivativeFilterLoss},
-	{"airByRpmTaper", &engineConfiguration->airByRpmTaper},
-	{"globalFuelCorrection", &engineConfiguration->globalFuelCorrection},
-	{"adcVcc", &engineConfiguration->adcVcc},
-	{"mapCamDetectionAnglePosition", &engineConfiguration->mapCamDetectionAnglePosition},
-	{"afr.v1", &engineConfiguration->afr.v1},
-	{"afr.value1", &engineConfiguration->afr.value1},
-	{"afr.v2", &engineConfiguration->afr.v2},
-	{"afr.value2", &engineConfiguration->afr.value2},
-	{"baroSensor.lowValue", &engineConfiguration->baroSensor.lowValue},
-	{"baroSensor.highValue", &engineConfiguration->baroSensor.highValue},
-	{"manIdlePosition", &engineConfiguration->manIdlePosition},
-	{"idle_antiwindupFreq", &engineConfiguration->idle_antiwindupFreq},
-	{"compressionRatio", &engineConfiguration->compressionRatio},
-	{"boostPid.pFactor", &engineConfiguration->boostPid.pFactor},
-	{"boostPid.iFactor", &engineConfiguration->boostPid.iFactor},
-	{"boostPid.dFactor", &engineConfiguration->boostPid.dFactor},
-	{"turbochargerFilter", &engineConfiguration->turbochargerFilter},
-	{"launchActivateDelay", &engineConfiguration->launchActivateDelay},
-	{"turboSpeedSensorMultiplier", &engineConfiguration->turboSpeedSensorMultiplier},
-	{"knockDetectionWindowStart", &engineConfiguration->knockDetectionWindowStart},
-	{"knockDetectionWindowEnd", &engineConfiguration->knockDetectionWindowEnd},
-	{"idleStepperReactionTime", &engineConfiguration->idleStepperReactionTime},
-	{"noAccelAfterHardLimitPeriodSecs", &engineConfiguration->noAccelAfterHardLimitPeriodSecs},
-	{"tachPulseDuractionMs", &engineConfiguration->tachPulseDuractionMs},
-	{"wwaeTau", &engineConfiguration->wwaeTau},
-	{"alternatorControl.pFactor", &engineConfiguration->alternatorControl.pFactor},
-	{"alternatorControl.iFactor", &engineConfiguration->alternatorControl.iFactor},
-	{"alternatorControl.dFactor", &engineConfiguration->alternatorControl.dFactor},
-	{"etb.pFactor", &engineConfiguration->etb.pFactor},
-	{"etb.iFactor", &engineConfiguration->etb.iFactor},
-	{"etb.dFactor", &engineConfiguration->etb.dFactor},
-	{"mapErrorDetectionTooLow", &engineConfiguration->mapErrorDetectionTooLow},
-	{"mapErrorDetectionTooHigh", &engineConfiguration->mapErrorDetectionTooHigh},
-	{"idleRpmPid.pFactor", &engineConfiguration->idleRpmPid.pFactor},
-	{"idleRpmPid.iFactor", &engineConfiguration->idleRpmPid.iFactor},
-	{"idleRpmPid.dFactor", &engineConfiguration->idleRpmPid.dFactor},
-	{"wwaeBeta", &engineConfiguration->wwaeBeta},
-	{"throttlePedalUpVoltage", &engineConfiguration->throttlePedalUpVoltage},
-	{"throttlePedalWOTVoltage", &engineConfiguration->throttlePedalWOTVoltage},
-	{"targetVBatt", &engineConfiguration->targetVBatt},
-	{"alternatorOffAboveTps", &engineConfiguration->alternatorOffAboveTps},
-	{"tpsAccelEnrichmentThreshold", &engineConfiguration->tpsAccelEnrichmentThreshold},
-	{"tpsDecelEnleanmentThreshold", &engineConfiguration->tpsDecelEnleanmentThreshold},
-	{"tpsDecelEnleanmentMultiplier", &engineConfiguration->tpsDecelEnleanmentMultiplier},
-	{"slowAdcAlpha", &engineConfiguration->slowAdcAlpha},
-	{"throttlePedalSecondaryUpVoltage", &engineConfiguration->throttlePedalSecondaryUpVoltage},
-	{"throttlePedalSecondaryWOTVoltage", &engineConfiguration->throttlePedalSecondaryWOTVoltage},
-	{"boostCutPressure", &engineConfiguration->boostCutPressure},
-	{"fixedTiming", &engineConfiguration->fixedTiming},
-	{"mapLowValueVoltage", &engineConfiguration->mapLowValueVoltage},
-	{"mapHighValueVoltage", &engineConfiguration->mapHighValueVoltage},
-	{"egoValueShift", &engineConfiguration->egoValueShift},
-	{"tChargeMinRpmMinTps", &engineConfiguration->tChargeMinRpmMinTps},
-	{"tChargeMinRpmMaxTps", &engineConfiguration->tChargeMinRpmMaxTps},
-	{"tChargeMaxRpmMinTps", &engineConfiguration->tChargeMaxRpmMinTps},
-	{"tChargeMaxRpmMaxTps", &engineConfiguration->tChargeMaxRpmMaxTps},
-	{"fuelReferencePressure", &engineConfiguration->fuelReferencePressure},
-	{"postCrankingFactor", &engineConfiguration->postCrankingFactor},
-	{"postCrankingDurationSec", &engineConfiguration->postCrankingDurationSec},
-	{"auxTempSensor1.config.tempC_1", &engineConfiguration->auxTempSensor1.config.tempC_1},
-	{"auxTempSensor1.config.tempC_2", &engineConfiguration->auxTempSensor1.config.tempC_2},
-	{"auxTempSensor1.config.tempC_3", &engineConfiguration->auxTempSensor1.config.tempC_3},
-	{"auxTempSensor1.config.resistance_1", &engineConfiguration->auxTempSensor1.config.resistance_1},
-	{"auxTempSensor1.config.resistance_2", &engineConfiguration->auxTempSensor1.config.resistance_2},
-	{"auxTempSensor1.config.resistance_3", &engineConfiguration->auxTempSensor1.config.resistance_3},
-	{"auxTempSensor1.config.bias_resistor", &engineConfiguration->auxTempSensor1.config.bias_resistor},
-	{"auxTempSensor2.config.tempC_1", &engineConfiguration->auxTempSensor2.config.tempC_1},
-	{"auxTempSensor2.config.tempC_2", &engineConfiguration->auxTempSensor2.config.tempC_2},
-	{"auxTempSensor2.config.tempC_3", &engineConfiguration->auxTempSensor2.config.tempC_3},
-	{"auxTempSensor2.config.resistance_1", &engineConfiguration->auxTempSensor2.config.resistance_1},
-	{"auxTempSensor2.config.resistance_2", &engineConfiguration->auxTempSensor2.config.resistance_2},
-	{"auxTempSensor2.config.resistance_3", &engineConfiguration->auxTempSensor2.config.resistance_3},
-	{"auxTempSensor2.config.bias_resistor", &engineConfiguration->auxTempSensor2.config.bias_resistor},
-	{"etbWastegatePid.pFactor", &engineConfiguration->etbWastegatePid.pFactor},
-	{"etbWastegatePid.iFactor", &engineConfiguration->etbWastegatePid.iFactor},
-	{"etbWastegatePid.dFactor", &engineConfiguration->etbWastegatePid.dFactor},
-	{"idlePidActivationTime", &engineConfiguration->idlePidActivationTime},
-	{"oilPressure.v1", &engineConfiguration->oilPressure.v1},
-	{"oilPressure.value1", &engineConfiguration->oilPressure.value1},
-	{"oilPressure.v2", &engineConfiguration->oilPressure.v2},
-	{"oilPressure.value2", &engineConfiguration->oilPressure.value2},
-	{"auxFrequencyFilter", &engineConfiguration->auxFrequencyFilter},
-	{"etbDutyThreshold", &engineConfiguration->etbDutyThreshold},
-	{"highPressureFuel.v1", &engineConfiguration->highPressureFuel.v1},
-	{"highPressureFuel.value1", &engineConfiguration->highPressureFuel.value1},
-	{"highPressureFuel.v2", &engineConfiguration->highPressureFuel.v2},
-	{"highPressureFuel.value2", &engineConfiguration->highPressureFuel.value2},
-	{"lowPressureFuel.v1", &engineConfiguration->lowPressureFuel.v1},
-	{"lowPressureFuel.value1", &engineConfiguration->lowPressureFuel.value1},
-	{"lowPressureFuel.v2", &engineConfiguration->lowPressureFuel.v2},
-	{"lowPressureFuel.value2", &engineConfiguration->lowPressureFuel.value2},
-	{"tChargeAirCoefMin", &engineConfiguration->tChargeAirCoefMin},
-	{"tChargeAirCoefMax", &engineConfiguration->tChargeAirCoefMax},
-	{"tChargeAirFlowMax", &engineConfiguration->tChargeAirFlowMax},
-	{"tChargeAirIncrLimit", &engineConfiguration->tChargeAirIncrLimit},
-	{"tChargeAirDecrLimit", &engineConfiguration->tChargeAirDecrLimit},
-	{"hip9011Gain", &engineConfiguration->hip9011Gain},
-	{"idleTimingPid.pFactor", &engineConfiguration->idleTimingPid.pFactor},
-	{"idleTimingPid.iFactor", &engineConfiguration->idleTimingPid.iFactor},
-	{"idleTimingPid.dFactor", &engineConfiguration->idleTimingPid.dFactor},
-	{"tpsAccelFractionDivisor", &engineConfiguration->tpsAccelFractionDivisor},
-	{"etbIdleThrottleRange", &engineConfiguration->etbIdleThrottleRange},
-	{"idleRpmPid2.pFactor", &engineConfiguration->idleRpmPid2.pFactor},
-	{"idleRpmPid2.iFactor", &engineConfiguration->idleRpmPid2.iFactor},
-	{"idleRpmPid2.dFactor", &engineConfiguration->idleRpmPid2.dFactor},
-	{"auxLinear1.v1", &engineConfiguration->auxLinear1.v1},
-	{"auxLinear1.value1", &engineConfiguration->auxLinear1.value1},
-	{"auxLinear1.v2", &engineConfiguration->auxLinear1.v2},
-	{"auxLinear1.value2", &engineConfiguration->auxLinear1.value2},
-	{"auxLinear2.v1", &engineConfiguration->auxLinear2.v1},
-	{"auxLinear2.value1", &engineConfiguration->auxLinear2.value1},
-	{"auxLinear2.v2", &engineConfiguration->auxLinear2.v2},
-	{"auxLinear2.value2", &engineConfiguration->auxLinear2.value2},
-	{"etbMinimumPosition", &engineConfiguration->etbMinimumPosition},
-	{"etbDutyShutdownThreshold", &engineConfiguration->etbDutyShutdownThreshold},
-};
-
-plain_get_float_s * findFloat(const char *name) {
-	plain_get_float_s *currentF = &getF_plain[0];
-	while (currentF < getF_plain + efi::size(getF_plain)) {
-		if (strEqualCaseInsensitive(name, currentF->token)) {
-			return currentF;
-		}
-		currentF++;
-	}
-	return nullptr;
-}
 float getConfigValueByName(const char *name) {
 	{
-		plain_get_float_s * known = findFloat(name);
-		if (known != nullptr) {
-			return *(float*)hackEngineConfigurationPointer(known->value);
-		}
-	}
 	int hash = djb2lowerCase(name);
 	switch(hash) {
 		case -920133784:
@@ -188,6 +24,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->multisparkMaxSparkingAngle;
 		case 726613349:
 			return engineConfiguration->multisparkMaxExtraSparkCount;
+		case 1542550121:
+			return engineConfiguration->injector.flow;
 		case -617915487:
 			return engineConfiguration->isForcedInduction;
 		case -1284354759:
@@ -258,30 +96,88 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tpsErrorDetectionTooLow;
 		case -838808073:
 			return engineConfiguration->tpsErrorDetectionTooHigh;
+		case -781044761:
+			return engineConfiguration->cranking.baseFuel;
 		case -1717336209:
 			return engineConfiguration->cranking.rpm;
+		case -589710926:
+			return engineConfiguration->ignitionDwellForCrankingMs;
 		case 401321850:
 			return engineConfiguration->etbRevLimitStart;
 		case 399466905:
 			return engineConfiguration->etbRevLimitRange;
+		case -1307181880:
+			return engineConfiguration->map.sensor.lowValue;
+		case -1434278346:
+			return engineConfiguration->map.sensor.highValue;
+		case -1832527325:
+			return engineConfiguration->clt.config.tempC_1;
+		case -1832527324:
+			return engineConfiguration->clt.config.tempC_2;
+		case -1832527323:
+			return engineConfiguration->clt.config.tempC_3;
+		case -5328869:
+			return engineConfiguration->clt.config.resistance_1;
+		case -5328868:
+			return engineConfiguration->clt.config.resistance_2;
+		case -5328867:
+			return engineConfiguration->clt.config.resistance_3;
+		case -653172717:
+			return engineConfiguration->clt.config.bias_resistor;
+		case -672272162:
+			return engineConfiguration->iat.config.tempC_1;
+		case -672272161:
+			return engineConfiguration->iat.config.tempC_2;
+		case -672272160:
+			return engineConfiguration->iat.config.tempC_3;
+		case -1014418506:
+			return engineConfiguration->iat.config.resistance_1;
+		case -1014418505:
+			return engineConfiguration->iat.config.resistance_2;
+		case -1014418504:
+			return engineConfiguration->iat.config.resistance_3;
+		case 406607630:
+			return engineConfiguration->iat.config.bias_resistor;
 		case 1226423210:
 			return engineConfiguration->launchTimingRetard;
 		case -1310663509:
 			return engineConfiguration->hip9011PrescalerAndSDO;
+		case -1738843157:
+			return engineConfiguration->knockBandCustom;
+		case -962678774:
+			return engineConfiguration->specs.displacement;
 		case -601272985:
 			return engineConfiguration->specs.cylindersCount;
+		case 1425664391:
+			return engineConfiguration->cylinderBore;
 		case -1976636992:
 			return engineConfiguration->boostControlMinRpm;
 		case -1976634808:
 			return engineConfiguration->boostControlMinTps;
 		case -1976642929:
 			return engineConfiguration->boostControlMinMap;
+		case 2071041633:
+			return engineConfiguration->crankingTimingAngle;
 		case -2079960526:
 			return engineConfiguration->gapTrackingLengthOverride;
 		case 1408421157:
 			return engineConfiguration->maxIdleVss;
 		case -855687130:
 			return engineConfiguration->minOilPressureAfterStart;
+		case -1965056926:
+			return engineConfiguration->fixedModeTiming;
+		case -295413160:
+			return engineConfiguration->globalTriggerAngleOffset;
+		case 1779689293:
+			return engineConfiguration->analogInputDividerCoefficient;
+		case -1311217456:
+			return engineConfiguration->vbattDividerCoeff;
+		case -853358747:
+			return engineConfiguration->fanOnTemperature;
+		case 4686563:
+			return engineConfiguration->fanOffTemperature;
+		case 991724096:
+			return engineConfiguration->driveWheelRevPerKm;
 		case 296563315:
 			return engineConfiguration->canSleepPeriodMs;
 		case 171869155:
@@ -290,18 +186,42 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->HD44780width;
 		case -777537519:
 			return engineConfiguration->HD44780height;
+		case -1269130308:
+			return engineConfiguration->idle_derivativeFilterLoss;
 		case 274318471:
 			return engineConfiguration->trailingSparkAngle;
 		case 1212570205:
 			return engineConfiguration->trigger.customTotalToothCount;
 		case 387956265:
 			return engineConfiguration->trigger.customSkippedToothCount;
+		case 2070727975:
+			return engineConfiguration->airByRpmTaper;
 		case -1730107688:
 			return engineConfiguration->failedMapFallback;
 		case -1965075262:
 			return engineConfiguration->boostControlSafeDutyCycle;
+		case 1371979578:
+			return engineConfiguration->globalFuelCorrection;
+		case -244496183:
+			return engineConfiguration->adcVcc;
+		case 1958105647:
+			return engineConfiguration->mapCamDetectionAnglePosition;
+		case -241663117:
+			return engineConfiguration->afr.v1;
+		case 1273287930:
+			return engineConfiguration->afr.value1;
+		case -241663116:
+			return engineConfiguration->afr.v2;
+		case 1273287931:
+			return engineConfiguration->afr.value2;
+		case 1474689568:
+			return engineConfiguration->baroSensor.lowValue;
+		case 173166222:
+			return engineConfiguration->baroSensor.highValue;
 		case -568903712:
 			return engineConfiguration->idle.solenoidFrequency;
+		case 1401746228:
+			return engineConfiguration->manIdlePosition;
 		case 1989648303:
 			return engineConfiguration->knockRetardAggression;
 		case -938609466:
@@ -314,6 +234,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->vssToothCount;
 		case -47286421:
 			return engineConfiguration->triggerSimulatorFrequency;
+		case -524949197:
+			return engineConfiguration->idle_antiwindupFreq;
 		case 1129109559:
 			return engineConfiguration->mc33_t_min_boost;
 		case 1933500210:
@@ -332,6 +254,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->idlePositionMax;
 		case 1467553180:
 			return engineConfiguration->tunerStudioSerialSpeed;
+		case 355839382:
+			return engineConfiguration->compressionRatio;
 		case -1465119085:
 			return engineConfiguration->fordInjectorSmallPulseSlope;
 		case -722238362:
@@ -494,6 +418,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->useRawOutputToDriveIdleStepper;
 		case -1056203297:
 			return engineConfiguration->verboseCan2;
+		case 1421783686:
+			return engineConfiguration->boostPid.pFactor;
+		case 971442495:
+			return engineConfiguration->boostPid.iFactor;
+		case -1190930054:
+			return engineConfiguration->boostPid.dFactor;
 		case 1435801342:
 			return engineConfiguration->boostPid.offset;
 		case -945021094:
@@ -514,8 +444,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->launchBoostDuty;
 		case -163078708:
 			return engineConfiguration->hardCutRpmRange;
+		case 983814707:
+			return engineConfiguration->turbochargerFilter;
 		case -1340834204:
 			return engineConfiguration->launchTpsThreshold;
+		case -1153051360:
+			return engineConfiguration->launchActivateDelay;
 		case 1887120139:
 			return engineConfiguration->stft.maxIdleRegionRpm;
 		case 1673018859:
@@ -660,14 +594,34 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tempBooleanForVerySpecialLogic;
 		case -1492464952:
 			return engineConfiguration->engineChartSize;
+		case -1056007485:
+			return engineConfiguration->turboSpeedSensorMultiplier;
 		case 1683471850:
 			return engineConfiguration->acIdleRpmBump;
 		case 1322924702:
 			return engineConfiguration->warningPeriod;
+		case -339821344:
+			return engineConfiguration->knockDetectionWindowStart;
+		case -1562133783:
+			return engineConfiguration->knockDetectionWindowEnd;
+		case 1145888170:
+			return engineConfiguration->idleStepperReactionTime;
 		case -1077032999:
 			return engineConfiguration->idleStepperTotalSteps;
+		case -66405381:
+			return engineConfiguration->noAccelAfterHardLimitPeriodSecs;
 		case 1556302698:
 			return engineConfiguration->mapAveragingSchedulingAtIndex;
+		case 58931511:
+			return engineConfiguration->tachPulseDuractionMs;
+		case -390306941:
+			return engineConfiguration->wwaeTau;
+		case -1993968289:
+			return engineConfiguration->alternatorControl.pFactor;
+		case 1850657816:
+			return engineConfiguration->alternatorControl.iFactor;
+		case -311714733:
+			return engineConfiguration->alternatorControl.dFactor;
 		case 1983046327:
 			return engineConfiguration->alternatorControl.offset;
 		case -1995686573:
@@ -676,6 +630,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->alternatorControl.minValue;
 		case -1623166029:
 			return engineConfiguration->alternatorControl.maxValue;
+		case 196797309:
+			return engineConfiguration->etb.pFactor;
+		case -253543882:
+			return engineConfiguration->etb.iFactor;
+		case 1879050865:
+			return engineConfiguration->etb.dFactor;
 		case -423426795:
 			return engineConfiguration->etb.offset;
 		case 1580101425:
@@ -692,10 +652,20 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tps2Max;
 		case -2142425790:
 			return engineConfiguration->tachPulsePerRev;
+		case 9388880:
+			return engineConfiguration->mapErrorDetectionTooLow;
+		case 309682334:
+			return engineConfiguration->mapErrorDetectionTooHigh;
 		case 48235288:
 			return engineConfiguration->multisparkSparkDuration;
 		case 617337449:
 			return engineConfiguration->multisparkDwell;
+		case -2146434132:
+			return engineConfiguration->idleRpmPid.pFactor;
+		case 1698191973:
+			return engineConfiguration->idleRpmPid.iFactor;
+		case -464180576:
+			return engineConfiguration->idleRpmPid.dFactor;
 		case -103982236:
 			return engineConfiguration->idleRpmPid.offset;
 		case 1562875200:
@@ -704,10 +674,20 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->idleRpmPid.minValue;
 		case 1935395744:
 			return engineConfiguration->idleRpmPid.maxValue;
+		case 4130389:
+			return engineConfiguration->wwaeBeta;
+		case -2130836456:
+			return engineConfiguration->throttlePedalUpVoltage;
+		case 2099527693:
+			return engineConfiguration->throttlePedalWOTVoltage;
 		case -664540020:
 			return engineConfiguration->startUpFuelPumpDuration;
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
+		case 1160967565:
+			return engineConfiguration->targetVBatt;
+		case -1166743424:
+			return engineConfiguration->alternatorOffAboveTps;
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
 		case -2065814304:
@@ -720,12 +700,24 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->coastingFuelCutVssHigh;
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
+		case 1313479950:
+			return engineConfiguration->tpsAccelEnrichmentThreshold;
 		case -2114430012:
 			return engineConfiguration->totalGearsCount;
 		case -999870619:
 			return engineConfiguration->uartConsoleSerialSpeed;
+		case -965453331:
+			return engineConfiguration->tpsDecelEnleanmentThreshold;
+		case 1164012327:
+			return engineConfiguration->tpsDecelEnleanmentMultiplier;
+		case 70789688:
+			return engineConfiguration->slowAdcAlpha;
 		case 781749924:
 			return engineConfiguration->auxSerialSpeed;
+		case -1564912640:
+			return engineConfiguration->throttlePedalSecondaryUpVoltage;
+		case -699822859:
+			return engineConfiguration->throttlePedalSecondaryWOTVoltage;
 		case 578933872:
 			return engineConfiguration->mc33_hpfp_i_peak;
 		case 578657622:
@@ -748,8 +740,26 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->benchTestCount;
 		case -1992436143:
 			return engineConfiguration->benchTestOnTime;
+		case -1992945039:
+			return engineConfiguration->boostCutPressure;
+		case -1359134883:
+			return engineConfiguration->fixedTiming;
+		case -137390524:
+			return engineConfiguration->mapLowValueVoltage;
+		case -1084262094:
+			return engineConfiguration->mapHighValueVoltage;
+		case 280323355:
+			return engineConfiguration->egoValueShift;
 		case -224532684:
 			return engineConfiguration->crankingIACposition;
+		case -557658095:
+			return engineConfiguration->tChargeMinRpmMinTps;
+		case -566786093:
+			return engineConfiguration->tChargeMinRpmMaxTps;
+		case -599338669:
+			return engineConfiguration->tChargeMaxRpmMinTps;
+		case -608466667:
+			return engineConfiguration->tChargeMaxRpmMaxTps;
 		case 1397079021:
 			return engineConfiguration->fan1ExtraIdle;
 		case 799798215:
@@ -758,10 +768,50 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->fan2ExtraIdle;
 		case 1506446058:
 			return engineConfiguration->primingDelay;
+		case -395416807:
+			return engineConfiguration->fuelReferencePressure;
+		case -1297058729:
+			return engineConfiguration->postCrankingFactor;
+		case 1183263609:
+			return engineConfiguration->postCrankingDurationSec;
+		case -1104834801:
+			return engineConfiguration->auxTempSensor1.config.tempC_1;
+		case -1104834800:
+			return engineConfiguration->auxTempSensor1.config.tempC_2;
+		case -1104834799:
+			return engineConfiguration->auxTempSensor1.config.tempC_3;
+		case 629168263:
+			return engineConfiguration->auxTempSensor1.config.resistance_1;
+		case 629168264:
+			return engineConfiguration->auxTempSensor1.config.resistance_2;
+		case 629168265:
+			return engineConfiguration->auxTempSensor1.config.resistance_3;
+		case -1189603841:
+			return engineConfiguration->auxTempSensor1.config.bias_resistor;
+		case -900025104:
+			return engineConfiguration->auxTempSensor2.config.tempC_1;
+		case -900025103:
+			return engineConfiguration->auxTempSensor2.config.tempC_2;
+		case -900025102:
+			return engineConfiguration->auxTempSensor2.config.tempC_3;
+		case 1988973320:
+			return engineConfiguration->auxTempSensor2.config.resistance_1;
+		case 1988973321:
+			return engineConfiguration->auxTempSensor2.config.resistance_2;
+		case 1988973322:
+			return engineConfiguration->auxTempSensor2.config.resistance_3;
+		case 734290080:
+			return engineConfiguration->auxTempSensor2.config.bias_resistor;
 		case -430252676:
 			return engineConfiguration->knockSamplingDuration;
 		case 2016887022:
 			return engineConfiguration->etbFreq;
+		case 1746193407:
+			return engineConfiguration->etbWastegatePid.pFactor;
+		case 1295852216:
+			return engineConfiguration->etbWastegatePid.iFactor;
+		case -866520333:
+			return engineConfiguration->etbWastegatePid.dFactor;
 		case 794879319:
 			return engineConfiguration->etbWastegatePid.offset;
 		case 1170565107:
@@ -774,16 +824,30 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->stepperMinDutyCycle;
 		case -1188944476:
 			return engineConfiguration->stepperMaxDutyCycle;
+		case -1562952959:
+			return engineConfiguration->idlePidActivationTime;
+		case -613392361:
+			return engineConfiguration->oilPressure.v1;
+		case -505257058:
+			return engineConfiguration->oilPressure.value1;
+		case -613392360:
+			return engineConfiguration->oilPressure.v2;
+		case -505257057:
+			return engineConfiguration->oilPressure.value2;
 		case 871106583:
 			return engineConfiguration->fan2OnTemperature;
 		case 1077467605:
 			return engineConfiguration->fan2OffTemperature;
+		case 383307083:
+			return engineConfiguration->auxFrequencyFilter;
 		case 1470846937:
 			return engineConfiguration->vvtControlMinRpm;
 		case -904771683:
 			return engineConfiguration->launchFuelAdderPercent;
 		case -86185846:
 			return engineConfiguration->etbExpAverageLength;
+		case -275312941:
+			return engineConfiguration->etbDutyThreshold;
 		case 1272017572:
 			return engineConfiguration->coastingFuelCutRpmHigh;
 		case 168701078:
@@ -796,10 +860,44 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->pidExtraForLowRpm;
 		case -1494043213:
 			return engineConfiguration->coastingFuelCutMap;
+		case 2032707103:
+			return engineConfiguration->highPressureFuel.v1;
+		case -1898025562:
+			return engineConfiguration->highPressureFuel.value1;
+		case 2032707104:
+			return engineConfiguration->highPressureFuel.v2;
+		case -1898025561:
+			return engineConfiguration->highPressureFuel.value2;
+		case -474791503:
+			return engineConfiguration->lowPressureFuel.v1;
+		case 764445240:
+			return engineConfiguration->lowPressureFuel.value1;
+		case -474791502:
+			return engineConfiguration->lowPressureFuel.v2;
+		case 764445241:
+			return engineConfiguration->lowPressureFuel.value2;
+		case 2115625312:
+			return engineConfiguration->tChargeAirCoefMin;
+		case 2115625058:
+			return engineConfiguration->tChargeAirCoefMax;
+		case 1590125629:
+			return engineConfiguration->tChargeAirFlowMax;
+		case -1128797750:
+			return engineConfiguration->tChargeAirIncrLimit;
+		case 670644444:
+			return engineConfiguration->tChargeAirDecrLimit;
+		case 929810608:
+			return engineConfiguration->hip9011Gain;
 		case -1725192476:
 			return engineConfiguration->etb_iTermMin;
 		case -1725192730:
 			return engineConfiguration->etb_iTermMax;
+		case -1411996731:
+			return engineConfiguration->idleTimingPid.pFactor;
+		case -1862337922:
+			return engineConfiguration->idleTimingPid.iFactor;
+		case 270256825:
+			return engineConfiguration->idleTimingPid.dFactor;
 		case -2033984419:
 			return engineConfiguration->idleTimingPid.offset;
 		case 29505657:
@@ -812,12 +910,16 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->etbRocExpAverageLength;
 		case 1117566701:
 			return engineConfiguration->tpsAccelFractionPeriod;
+		case 68539114:
+			return engineConfiguration->tpsAccelFractionDivisor;
 		case -1742418701:
 			return engineConfiguration->idlerpmpid_iTermMin;
 		case 1762426578:
 			return engineConfiguration->stoichRatioPrimary;
 		case -1742418955:
 			return engineConfiguration->idlerpmpid_iTermMax;
+		case -54532767:
+			return engineConfiguration->etbIdleThrottleRange;
 		case 1455224910:
 			return engineConfiguration->triggerCompCenterVolt;
 		case -25671212:
@@ -826,6 +928,12 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->triggerCompHystMax;
 		case -953183719:
 			return engineConfiguration->triggerCompSensorSatRpm;
+		case 2018252734:
+			return engineConfiguration->idleRpmPid2.pFactor;
+		case 1567911543:
+			return engineConfiguration->idleRpmPid2.iFactor;
+		case -594461006:
+			return engineConfiguration->idleRpmPid2.dFactor;
 		case 1844327734:
 			return engineConfiguration->idleRpmPid2.offset;
 		case 1558588306:
@@ -880,8 +988,28 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->hpfpTargetDecay;
 		case 288250022:
 			return engineConfiguration->vvtActivationDelayMs;
+		case -1415669996:
+			return engineConfiguration->auxLinear1.v1;
+		case -65154789:
+			return engineConfiguration->auxLinear1.value1;
+		case -1415669995:
+			return engineConfiguration->auxLinear1.v2;
+		case -65154788:
+			return engineConfiguration->auxLinear1.value2;
+		case -1415634059:
+			return engineConfiguration->auxLinear2.v1;
+		case -396384772:
+			return engineConfiguration->auxLinear2.value1;
+		case -1415634058:
+			return engineConfiguration->auxLinear2.v2;
+		case -396384771:
+			return engineConfiguration->auxLinear2.value2;
+		case -1855700175:
+			return engineConfiguration->etbMinimumPosition;
 		case -243078627:
 			return engineConfiguration->tuneHidingKey;
+		case -1743759953:
+			return engineConfiguration->etbDutyShutdownThreshold;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -893,1789 +1021,2522 @@ void setConfigValueByName(const char *name, float value) {
 		}
 	}
 
-	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
+	int hash = djb2lowerCase(name);
+	switch(hash) {
+		case -920133784:
 	{
 		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchRpm"))
+		case -776106289:
 	{
 		engineConfiguration->launchRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+		case 1176614802:
 	{
 		engineConfiguration->rpmHardLimit = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
+		case 46918724:
 	{
 		engineConfiguration->engineSnifferRpmThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
+		case -775882810:
 	{
 		engineConfiguration->multisparkMaxRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "maxAcRpm"))
+		case 1569359006:
 	{
 		engineConfiguration->maxAcRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "maxAcTps"))
+		case 1569361190:
 	{
 		engineConfiguration->maxAcTps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "maxAcClt"))
+		case 1569342546:
 	{
 		engineConfiguration->maxAcClt = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxSparkingAngle"))
+		case 402092253:
 	{
 		engineConfiguration->multisparkMaxSparkingAngle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
+		case 726613349:
 	{
 		engineConfiguration->multisparkMaxExtraSparkCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isForcedInduction"))
+		case 1542550121:
+	{
+		engineConfiguration->injector.flow = value;
+		return;
+	}
+		case -617915487:
 	{
 		engineConfiguration->isForcedInduction = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useFordRedundantTps"))
+		case -1284354759:
 	{
 		engineConfiguration->useFordRedundantTps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isVerboseAuxPid1"))
+		case 563123475:
 	{
 		engineConfiguration->isVerboseAuxPid1 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "overrideTriggerGaps"))
+		case 1362186948:
 	{
 		engineConfiguration->overrideTriggerGaps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableFan1WithAc"))
+		case -298185774:
 	{
 		engineConfiguration->enableFan1WithAc = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableFan2WithAc"))
+		case 993282195:
 	{
 		engineConfiguration->enableFan2WithAc = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "disableFan1WhenStopped"))
+		case -1132710384:
 	{
 		engineConfiguration->disableFan1WhenStopped = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "disableFan2WhenStopped"))
+		case -311454863:
 	{
 		engineConfiguration->disableFan2WhenStopped = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableTrailingSparks"))
+		case -1409016614:
 	{
 		engineConfiguration->enableTrailingSparks = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isCJ125Verbose"))
+		case 119246268:
 	{
 		engineConfiguration->isCJ125Verbose = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cj125isUaDivided"))
+		case 1627431605:
 	{
 		engineConfiguration->cj125isUaDivided = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cj125isLsu49"))
+		case -1780521945:
 	{
 		engineConfiguration->cj125isLsu49 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb_use_two_wires"))
+		case -1334689362:
 	{
 		engineConfiguration->etb_use_two_wires = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
+		case 1097520823:
 	{
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useEeprom"))
+		case -1572546086:
 	{
 		engineConfiguration->useEeprom = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
+		case 291489190:
 	{
 		engineConfiguration->cj125isUrDivided = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
+		case -264572349:
 	{
 		engineConfiguration->useCicPidForIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
+		case -1279270887:
 	{
 		engineConfiguration->useTLE8888_cranking_hack = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "kickStartCranking"))
+		case 1156367906:
 	{
 		engineConfiguration->kickStartCranking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
+		case -418454384:
 	{
 		engineConfiguration->useSeparateIdleTablesForCrankingTaper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
+		case -338157684:
 	{
 		engineConfiguration->launchControlEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "rollingLaunchEnabled"))
+		case -905762494:
 	{
 		engineConfiguration->rollingLaunchEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "antiLagEnabled"))
+		case -933524784:
 	{
 		engineConfiguration->antiLagEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useRunningMathForCranking"))
+		case -54973711:
 	{
 		engineConfiguration->useRunningMathForCranking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "displayLogicLevelsInEngineSniffer"))
+		case 1616873838:
 	{
 		engineConfiguration->displayLogicLevelsInEngineSniffer = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useTLE8888_stepper"))
+		case -647008743:
 	{
 		engineConfiguration->useTLE8888_stepper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableMapEstimationTableFallback"))
+		case 1992465535:
 	{
 		engineConfiguration->enableMapEstimationTableFallback = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "usescriptTableForCanSniffingFiltering"))
+		case 671821024:
 	{
 		engineConfiguration->usescriptTableForCanSniffingFiltering = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseCan"))
+		case -1073210355:
 	{
 		engineConfiguration->verboseCan = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "artificialTestMisfire"))
+		case -1528619572:
 	{
 		engineConfiguration->artificialTestMisfire = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "issue_294_31"))
+		case -1571463185:
 	{
 		engineConfiguration->issue_294_31 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsMin"))
+		case 513872736:
 	{
 		engineConfiguration->tpsMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsMax"))
+		case 513872482:
 	{
 		engineConfiguration->tpsMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsErrorDetectionTooLow"))
+		case 625338761:
 	{
 		engineConfiguration->tpsErrorDetectionTooLow = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsErrorDetectionTooHigh"))
+		case -838808073:
 	{
 		engineConfiguration->tpsErrorDetectionTooHigh = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cranking.rpm"))
+		case -781044761:
+	{
+		engineConfiguration->cranking.baseFuel = value;
+		return;
+	}
+		case -1717336209:
 	{
 		engineConfiguration->cranking.rpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbRevLimitStart"))
+		case -589710926:
+	{
+		engineConfiguration->ignitionDwellForCrankingMs = value;
+		return;
+	}
+		case 401321850:
 	{
 		engineConfiguration->etbRevLimitStart = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbRevLimitRange"))
+		case 399466905:
 	{
 		engineConfiguration->etbRevLimitRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchTimingRetard"))
+		case -1307181880:
+	{
+		engineConfiguration->map.sensor.lowValue = value;
+		return;
+	}
+		case -1434278346:
+	{
+		engineConfiguration->map.sensor.highValue = value;
+		return;
+	}
+		case -1832527325:
+	{
+		engineConfiguration->clt.config.tempC_1 = value;
+		return;
+	}
+		case -1832527324:
+	{
+		engineConfiguration->clt.config.tempC_2 = value;
+		return;
+	}
+		case -1832527323:
+	{
+		engineConfiguration->clt.config.tempC_3 = value;
+		return;
+	}
+		case -5328869:
+	{
+		engineConfiguration->clt.config.resistance_1 = value;
+		return;
+	}
+		case -5328868:
+	{
+		engineConfiguration->clt.config.resistance_2 = value;
+		return;
+	}
+		case -5328867:
+	{
+		engineConfiguration->clt.config.resistance_3 = value;
+		return;
+	}
+		case -653172717:
+	{
+		engineConfiguration->clt.config.bias_resistor = value;
+		return;
+	}
+		case -672272162:
+	{
+		engineConfiguration->iat.config.tempC_1 = value;
+		return;
+	}
+		case -672272161:
+	{
+		engineConfiguration->iat.config.tempC_2 = value;
+		return;
+	}
+		case -672272160:
+	{
+		engineConfiguration->iat.config.tempC_3 = value;
+		return;
+	}
+		case -1014418506:
+	{
+		engineConfiguration->iat.config.resistance_1 = value;
+		return;
+	}
+		case -1014418505:
+	{
+		engineConfiguration->iat.config.resistance_2 = value;
+		return;
+	}
+		case -1014418504:
+	{
+		engineConfiguration->iat.config.resistance_3 = value;
+		return;
+	}
+		case 406607630:
+	{
+		engineConfiguration->iat.config.bias_resistor = value;
+		return;
+	}
+		case 1226423210:
 	{
 		engineConfiguration->launchTimingRetard = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hip9011PrescalerAndSDO"))
+		case -1310663509:
 	{
 		engineConfiguration->hip9011PrescalerAndSDO = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "specs.cylindersCount"))
+		case -1738843157:
+	{
+		engineConfiguration->knockBandCustom = value;
+		return;
+	}
+		case -962678774:
+	{
+		engineConfiguration->specs.displacement = value;
+		return;
+	}
+		case -601272985:
 	{
 		engineConfiguration->specs.cylindersCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostControlMinRpm"))
+		case 1425664391:
+	{
+		engineConfiguration->cylinderBore = value;
+		return;
+	}
+		case -1976636992:
 	{
 		engineConfiguration->boostControlMinRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostControlMinTps"))
+		case -1976634808:
 	{
 		engineConfiguration->boostControlMinTps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostControlMinMap"))
+		case -1976642929:
 	{
 		engineConfiguration->boostControlMinMap = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "gapTrackingLengthOverride"))
+		case 2071041633:
+	{
+		engineConfiguration->crankingTimingAngle = value;
+		return;
+	}
+		case -2079960526:
 	{
 		engineConfiguration->gapTrackingLengthOverride = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "maxIdleVss"))
+		case 1408421157:
 	{
 		engineConfiguration->maxIdleVss = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "minOilPressureAfterStart"))
+		case -855687130:
 	{
 		engineConfiguration->minOilPressureAfterStart = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "canSleepPeriodMs"))
+		case -1965056926:
+	{
+		engineConfiguration->fixedModeTiming = value;
+		return;
+	}
+		case -295413160:
+	{
+		engineConfiguration->globalTriggerAngleOffset = value;
+		return;
+	}
+		case 1779689293:
+	{
+		engineConfiguration->analogInputDividerCoefficient = value;
+		return;
+	}
+		case -1311217456:
+	{
+		engineConfiguration->vbattDividerCoeff = value;
+		return;
+	}
+		case -853358747:
+	{
+		engineConfiguration->fanOnTemperature = value;
+		return;
+	}
+		case 4686563:
+	{
+		engineConfiguration->fanOffTemperature = value;
+		return;
+	}
+		case 991724096:
+	{
+		engineConfiguration->driveWheelRevPerKm = value;
+		return;
+	}
+		case 296563315:
 	{
 		engineConfiguration->canSleepPeriodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "byFirmwareVersion"))
+		case 171869155:
 	{
 		engineConfiguration->byFirmwareVersion = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "HD44780width"))
+		case -526236296:
 	{
 		engineConfiguration->HD44780width = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "HD44780height"))
+		case -777537519:
 	{
 		engineConfiguration->HD44780height = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "trailingSparkAngle"))
+		case -1269130308:
+	{
+		engineConfiguration->idle_derivativeFilterLoss = value;
+		return;
+	}
+		case 274318471:
 	{
 		engineConfiguration->trailingSparkAngle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "trigger.customTotalToothCount"))
+		case 1212570205:
 	{
 		engineConfiguration->trigger.customTotalToothCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
+		case 387956265:
 	{
 		engineConfiguration->trigger.customSkippedToothCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "failedMapFallback"))
+		case 2070727975:
+	{
+		engineConfiguration->airByRpmTaper = value;
+		return;
+	}
+		case -1730107688:
 	{
 		engineConfiguration->failedMapFallback = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostControlSafeDutyCycle"))
+		case -1965075262:
 	{
 		engineConfiguration->boostControlSafeDutyCycle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idle.solenoidFrequency"))
+		case 1371979578:
+	{
+		engineConfiguration->globalFuelCorrection = value;
+		return;
+	}
+		case -244496183:
+	{
+		engineConfiguration->adcVcc = value;
+		return;
+	}
+		case 1958105647:
+	{
+		engineConfiguration->mapCamDetectionAnglePosition = value;
+		return;
+	}
+		case -241663117:
+	{
+		engineConfiguration->afr.v1 = value;
+		return;
+	}
+		case 1273287930:
+	{
+		engineConfiguration->afr.value1 = value;
+		return;
+	}
+		case -241663116:
+	{
+		engineConfiguration->afr.v2 = value;
+		return;
+	}
+		case 1273287931:
+	{
+		engineConfiguration->afr.value2 = value;
+		return;
+	}
+		case 1474689568:
+	{
+		engineConfiguration->baroSensor.lowValue = value;
+		return;
+	}
+		case 173166222:
+	{
+		engineConfiguration->baroSensor.highValue = value;
+		return;
+	}
+		case -568903712:
 	{
 		engineConfiguration->idle.solenoidFrequency = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockRetardAggression"))
+		case 1401746228:
+	{
+		engineConfiguration->manIdlePosition = value;
+		return;
+	}
+		case 1989648303:
 	{
 		engineConfiguration->knockRetardAggression = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockRetardReapplyRate"))
+		case -938609466:
 	{
 		engineConfiguration->knockRetardReapplyRate = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
+		case -495855925:
 	{
 		engineConfiguration->vssFilterReciprocal = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vssGearRatio"))
+		case -213773345:
 	{
 		engineConfiguration->vssGearRatio = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vssToothCount"))
+		case -1958312328:
 	{
 		engineConfiguration->vssToothCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
+		case -47286421:
 	{
 		engineConfiguration->triggerSimulatorFrequency = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_min_boost"))
+		case -524949197:
+	{
+		engineConfiguration->idle_antiwindupFreq = value;
+		return;
+	}
+		case 1129109559:
 	{
 		engineConfiguration->mc33_t_min_boost = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
+		case 1933500210:
 	{
 		engineConfiguration->acIdleExtraOffset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "finalGearRatio"))
+		case -869432403:
 	{
 		engineConfiguration->finalGearRatio = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tcuInputSpeedSensorTeeth"))
+		case -2116746650:
 	{
 		engineConfiguration->tcuInputSpeedSensorTeeth = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
+		case 2097342691:
 	{
 		engineConfiguration->wastegatePositionMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "wastegatePositionMax"))
+		case 2097342437:
 	{
 		engineConfiguration->wastegatePositionMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlePositionMin"))
+		case -1256791716:
 	{
 		engineConfiguration->idlePositionMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlePositionMax"))
+		case -1256791970:
 	{
 		engineConfiguration->idlePositionMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tunerStudioSerialSpeed"))
+		case 1467553180:
 	{
 		engineConfiguration->tunerStudioSerialSpeed = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseSlope"))
+		case 355839382:
+	{
+		engineConfiguration->compressionRatio = value;
+		return;
+	}
+		case -1465119085:
 	{
 		engineConfiguration->fordInjectorSmallPulseSlope = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "is_enabled_spi_1"))
+		case -722238362:
 	{
 		engineConfiguration->is_enabled_spi_1 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "is_enabled_spi_2"))
+		case -722238361:
 	{
 		engineConfiguration->is_enabled_spi_2 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "is_enabled_spi_3"))
+		case -722238360:
 	{
 		engineConfiguration->is_enabled_spi_3 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isSdCardEnabled"))
+		case -1603423011:
 	{
 		engineConfiguration->isSdCardEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "rusefiVerbose29b"))
+		case 2043354390:
 	{
 		engineConfiguration->rusefiVerbose29b = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isEngineControlEnabled"))
+		case 630961411:
 	{
 		engineConfiguration->isEngineControlEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isHip9011Enabled"))
+		case -2119647784:
 	{
 		engineConfiguration->isHip9011Enabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
+		case -956913549:
 	{
 		engineConfiguration->isVerboseAlternator = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseQuad"))
+		case -1055678778:
 	{
 		engineConfiguration->verboseQuad = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useStepperIdle"))
+		case -920116109:
 	{
 		engineConfiguration->useStepperIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enabledStep1Limiter"))
+		case -2068213709:
 	{
 		engineConfiguration->enabledStep1Limiter = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useTpicAdvancedMode"))
+		case -1037977635:
 	{
 		engineConfiguration->useTpicAdvancedMode = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useLcdScreen"))
+		case -538782875:
 	{
 		engineConfiguration->useLcdScreen = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseTLE8888"))
+		case -1251676000:
 	{
 		engineConfiguration->verboseTLE8888 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
+		case 1643181024:
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb1configured"))
+		case -432676169:
 	{
 		engineConfiguration->etb1configured = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
+		case -28818575:
 	{
 		engineConfiguration->isCJ125Enabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb2configured"))
+		case 1804769272:
 	{
 		engineConfiguration->etb2configured = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
+		case -1236202550:
 	{
 		engineConfiguration->measureMapOnlyInOneCylinder = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
+		case -2104625325:
 	{
 		engineConfiguration->stepperForceParkingEveryRestart = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isFasterEngineSpinUpEnabled"))
+		case 2048390406:
 	{
 		engineConfiguration->isFasterEngineSpinUpEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutEnabled"))
+		case 1570088896:
 	{
 		engineConfiguration->coastingFuelCutEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useIacTableForCoasting"))
+		case -2101952506:
 	{
 		engineConfiguration->useIacTableForCoasting = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useNoiselessTriggerDecoder"))
+		case 957244017:
 	{
 		engineConfiguration->useNoiselessTriggerDecoder = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useIdleTimingPidControl"))
+		case 11736566:
 	{
 		engineConfiguration->useIdleTimingPidControl = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "disableEtbWhenEngineStopped"))
+		case -2096650725:
 	{
 		engineConfiguration->disableEtbWhenEngineStopped = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "is_enabled_spi_4"))
+		case -722238359:
 	{
 		engineConfiguration->is_enabled_spi_4 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "pauseEtbControl"))
+		case -24313313:
 	{
 		engineConfiguration->pauseEtbControl = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alignEngineSnifferAtTDC"))
+		case 1836072195:
 	{
 		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useETBforIdleControl"))
+		case -1854539309:
 	{
 		engineConfiguration->useETBforIdleControl = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleIncrementalPidCic"))
+		case 1064399425:
 	{
 		engineConfiguration->idleIncrementalPidCic = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableAemXSeries"))
+		case 259909218:
 	{
 		engineConfiguration->enableAemXSeries = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseCanBaseAddress"))
+		case 6238478:
 	{
 		engineConfiguration->verboseCanBaseAddress = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_hvolt"))
+		case 1182499943:
 	{
 		engineConfiguration->mc33_hvolt = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "minimumBoostClosedLoopMap"))
+		case 596585178:
 	{
 		engineConfiguration->minimumBoostClosedLoopMap = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vehicleWeight"))
+		case 1549866701:
 	{
 		engineConfiguration->vehicleWeight = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlePidRpmUpperLimit"))
+		case 1962548154:
 	{
 		engineConfiguration->idlePidRpmUpperLimit = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "applyNonlinearBelowPulse"))
+		case 119460051:
 	{
 		engineConfiguration->applyNonlinearBelowPulse = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stoichRatioSecondary"))
+		case 1945443830:
 	{
 		engineConfiguration->stoichRatioSecondary = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbMaximumPosition"))
+		case -786901709:
 	{
 		engineConfiguration->etbMaximumPosition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "sdCardLogFrequency"))
+		case -773841334:
 	{
 		engineConfiguration->sdCardLogFrequency = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mapMinBufferLength"))
+		case -561715997:
 	{
 		engineConfiguration->mapMinBufferLength = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlePidDeactivationTpsThreshold"))
+		case 1490213215:
 	{
 		engineConfiguration->idlePidDeactivationTpsThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stepperParkingExtraSteps"))
+		case -509113657:
 	{
 		engineConfiguration->stepperParkingExtraSteps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps1SecondaryMin"))
+		case -1312968487:
 	{
 		engineConfiguration->tps1SecondaryMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps1SecondaryMax"))
+		case -1312968741:
 	{
 		engineConfiguration->tps1SecondaryMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "antiLagRpmTreshold"))
+		case -47392967:
 	{
 		engineConfiguration->antiLagRpmTreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "startCrankingDuration"))
+		case 644409862:
 	{
 		engineConfiguration->startCrankingDuration = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "clutchUpPinInverted"))
+		case -1171325035:
 	{
 		engineConfiguration->clutchUpPinInverted = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "clutchDownPinInverted"))
+		case -675074552:
 	{
 		engineConfiguration->clutchDownPinInverted = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useHbridgesToDriveIdleStepper"))
+		case 13806936:
 	{
 		engineConfiguration->useHbridgesToDriveIdleStepper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkEnable"))
+		case -1074393096:
 	{
 		engineConfiguration->multisparkEnable = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableLaunchRetard"))
+		case -1583589783:
 	{
 		engineConfiguration->enableLaunchRetard = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "unfinishedenableLaunchBoost"))
+		case -246028069:
 	{
 		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "unfinishedlaunchDisableBySpeed"))
+		case 963548365:
 	{
 		engineConfiguration->unfinishedlaunchDisableBySpeed = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableCanVss"))
+		case 245947066:
 	{
 		engineConfiguration->enableCanVss = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableInnovateLC2"))
+		case 1382521617:
 	{
 		engineConfiguration->enableInnovateLC2 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "showHumanReadableWarning"))
+		case 2046602309:
 	{
 		engineConfiguration->showHumanReadableWarning = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
+		case 1838375282:
 	{
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vvtBooleanForVerySpecialCases"))
+		case -376859614:
 	{
 		engineConfiguration->vvtBooleanForVerySpecialCases = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
+		case -1724873939:
 	{
 		engineConfiguration->enableSoftwareKnock = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
+		case 1540420600:
 	{
 		engineConfiguration->verboseVVTDecoding = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "invertCamVVTSignal"))
+		case 1081026348:
 	{
 		engineConfiguration->invertCamVVTSignal = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "consumeObdSensors"))
+		case 950993889:
 	{
 		engineConfiguration->consumeObdSensors = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl1"))
+		case 1509355728:
 	{
 		engineConfiguration->knockBankCyl1 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl2"))
+		case 1509355729:
 	{
 		engineConfiguration->knockBankCyl2 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl3"))
+		case 1509355730:
 	{
 		engineConfiguration->knockBankCyl3 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl4"))
+		case 1509355731:
 	{
 		engineConfiguration->knockBankCyl4 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl5"))
+		case 1509355732:
 	{
 		engineConfiguration->knockBankCyl5 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl6"))
+		case 1509355733:
 	{
 		engineConfiguration->knockBankCyl6 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl7"))
+		case 1509355734:
 	{
 		engineConfiguration->knockBankCyl7 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl8"))
+		case 1509355735:
 	{
 		engineConfiguration->knockBankCyl8 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl9"))
+		case 1509355736:
 	{
 		engineConfiguration->knockBankCyl9 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl10"))
+		case -1730868480:
 	{
 		engineConfiguration->knockBankCyl10 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl11"))
+		case -1730868479:
 	{
 		engineConfiguration->knockBankCyl11 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockBankCyl12"))
+		case -1730868478:
 	{
 		engineConfiguration->knockBankCyl12 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tcuEnabled"))
+		case 1997663388:
 	{
 		engineConfiguration->tcuEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "canBroadcastUseChannelTwo"))
+		case 1181153770:
 	{
 		engineConfiguration->canBroadcastUseChannelTwo = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useRawOutputToDriveIdleStepper"))
+		case 839486731:
 	{
 		engineConfiguration->useRawOutputToDriveIdleStepper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseCan2"))
+		case -1056203297:
 	{
 		engineConfiguration->verboseCan2 = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostPid.offset"))
+		case 1421783686:
+	{
+		engineConfiguration->boostPid.pFactor = value;
+		return;
+	}
+		case 971442495:
+	{
+		engineConfiguration->boostPid.iFactor = value;
+		return;
+	}
+		case -1190930054:
+	{
+		engineConfiguration->boostPid.dFactor = value;
+		return;
+	}
+		case 1435801342:
 	{
 		engineConfiguration->boostPid.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostPid.periodMs"))
+		case -945021094:
 	{
 		engineConfiguration->boostPid.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostPid.minValue"))
+		case 777954680:
 	{
 		engineConfiguration->boostPid.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostPid.maxValue"))
+		case -572500550:
 	{
 		engineConfiguration->boostPid.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boostPwmFrequency"))
+		case -1990709262:
 	{
 		engineConfiguration->boostPwmFrequency = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchSpeedThreshold"))
+		case -1743747394:
 	{
 		engineConfiguration->launchSpeedThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchTimingRpmRange"))
+		case 906908772:
 	{
 		engineConfiguration->launchTimingRpmRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchFuelAdded"))
+		case 975838686:
 	{
 		engineConfiguration->launchFuelAdded = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchBoostDuty"))
+		case -232786835:
 	{
 		engineConfiguration->launchBoostDuty = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hardCutRpmRange"))
+		case -163078708:
 	{
 		engineConfiguration->hardCutRpmRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchTpsThreshold"))
+		case 983814707:
+	{
+		engineConfiguration->turbochargerFilter = value;
+		return;
+	}
+		case -1340834204:
 	{
 		engineConfiguration->launchTpsThreshold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.maxIdleRegionRpm"))
+		case -1153051360:
+	{
+		engineConfiguration->launchActivateDelay = value;
+		return;
+	}
+		case 1887120139:
 	{
 		engineConfiguration->stft.maxIdleRegionRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.maxOverrunLoad"))
+		case 1673018859:
 	{
 		engineConfiguration->stft.maxOverrunLoad = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.minPowerLoad"))
+		case -1942479387:
 	{
 		engineConfiguration->stft.minPowerLoad = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.deadband"))
+		case -1157123369:
 	{
 		engineConfiguration->stft.deadband = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.minClt"))
+		case -81412933:
 	{
 		engineConfiguration->stft.minClt = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.minAfr"))
+		case -81415311:
 	{
 		engineConfiguration->stft.minAfr = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.maxAfr"))
+		case -90543309:
 	{
 		engineConfiguration->stft.maxAfr = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stft.startupDelay"))
+		case 1028902582:
 	{
 		engineConfiguration->stft.startupDelay = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps2SecondaryMin"))
+		case 18659930:
 	{
 		engineConfiguration->tps2SecondaryMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps2SecondaryMax"))
+		case 18659676:
 	{
 		engineConfiguration->tps2SecondaryMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "disablePrimaryUart"))
+		case 825184089:
 	{
 		engineConfiguration->disablePrimaryUart = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fuelClosedLoopCorrectionEnabled"))
+		case 1611799720:
 	{
 		engineConfiguration->fuelClosedLoopCorrectionEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isVerboseIAC"))
+		case -546057276:
 	{
 		engineConfiguration->isVerboseIAC = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseTachPullUp"))
+		case 885690524:
 	{
 		engineConfiguration->boardUseTachPullUp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
+		case -1457484942:
 	{
 		engineConfiguration->boardUseTempPullUp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "yesUnderstandLocking"))
+		case -1985448683:
 	{
 		engineConfiguration->yesUnderstandLocking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "silentTriggerError"))
+		case 582390322:
 	{
 		engineConfiguration->silentTriggerError = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
+		case -1816997974:
 	{
 		engineConfiguration->useLinearCltSensor = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "canReadEnabled"))
+		case -528008450:
 	{
 		engineConfiguration->canReadEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "canWriteEnabled"))
+		case 2104472173:
 	{
 		engineConfiguration->canWriteEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useLinearIatSensor"))
+		case 667504645:
 	{
 		engineConfiguration->useLinearIatSensor = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUse2stepPullDown"))
+		case -1470758947:
 	{
 		engineConfiguration->boardUse2stepPullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tachPulseDurationAsDutyCycle"))
+		case 99110078:
 	{
 		engineConfiguration->tachPulseDurationAsDutyCycle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isAlternatorControlEnabled"))
+		case -1771449111:
 	{
 		engineConfiguration->isAlternatorControlEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "invertPrimaryTriggerSignal"))
+		case -587700301:
 	{
 		engineConfiguration->invertPrimaryTriggerSignal = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "invertSecondaryTriggerSignal"))
+		case -1944260329:
 	{
 		engineConfiguration->invertSecondaryTriggerSignal = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cutFuelOnHardLimit"))
+		case -794334344:
 	{
 		engineConfiguration->cutFuelOnHardLimit = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "cutSparkOnHardLimit"))
+		case -1087585075:
 	{
 		engineConfiguration->cutSparkOnHardLimit = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchFuelCutEnable"))
+		case -980843809:
 	{
 		engineConfiguration->launchFuelCutEnable = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchSparkCutEnable"))
+		case -1829995308:
 	{
 		engineConfiguration->launchSparkCutEnable = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseCrankPullUp"))
+		case 1280316843:
 	{
 		engineConfiguration->boardUseCrankPullUp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseCamPullDown"))
+		case 1304425152:
 	{
 		engineConfiguration->boardUseCamPullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseCamVrPullUp"))
+		case -94892331:
 	{
 		engineConfiguration->boardUseCamVrPullUp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseD2PullDown"))
+		case 1868156805:
 	{
 		engineConfiguration->boardUseD2PullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseD3PullDown"))
+		case -472498042:
 	{
 		engineConfiguration->boardUseD3PullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseD4PullDown"))
+		case 1481814407:
 	{
 		engineConfiguration->boardUseD4PullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
+		case -858840440:
 	{
 		engineConfiguration->boardUseD5PullDown = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseIsoTp"))
+		case -487204662:
 	{
 		engineConfiguration->verboseIsoTp = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "engineSnifferFocusOnInputs"))
+		case 465982216:
 	{
 		engineConfiguration->engineSnifferFocusOnInputs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchActivateInverted"))
+		case -1884116782:
 	{
 		engineConfiguration->launchActivateInverted = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "twoStroke"))
+		case 38719415:
 	{
 		engineConfiguration->twoStroke = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "skippedWheelOnCam"))
+		case 1538579992:
 	{
 		engineConfiguration->skippedWheelOnCam = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbNeutralPosition"))
+		case 1664668368:
 	{
 		engineConfiguration->etbNeutralPosition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isInjectionEnabled"))
+		case 1917301199:
 	{
 		engineConfiguration->isInjectionEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isIgnitionEnabled"))
+		case -1354884979:
 	{
 		engineConfiguration->isIgnitionEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
+		case -1491889938:
 	{
 		engineConfiguration->isCylinderCleanupEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "complexWallModel"))
+		case -2018683234:
 	{
 		engineConfiguration->complexWallModel = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
+		case -1934896346:
 	{
 		engineConfiguration->alwaysInstantRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
+		case 285726462:
 	{
 		engineConfiguration->isMapAveragingEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "overrideCrankingIacSetting"))
+		case -1500666851:
 	{
 		engineConfiguration->overrideCrankingIacSetting = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForIdle"))
+		case 216872574:
 	{
 		engineConfiguration->useSeparateAdvanceForIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isWaveAnalyzerEnabled"))
+		case -726159643:
 	{
 		engineConfiguration->isWaveAnalyzerEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useSeparateVeForIdle"))
+		case -1997438905:
 	{
 		engineConfiguration->useSeparateVeForIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "verboseTriggerSynchDetails"))
+		case -325018342:
 	{
 		engineConfiguration->verboseTriggerSynchDetails = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isManualSpinningMode"))
+		case -795241238:
 	{
 		engineConfiguration->isManualSpinningMode = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
+		case -1248413509:
 	{
 		engineConfiguration->twoWireBatchInjection = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
+		case 454615641:
 	{
 		engineConfiguration->twoWireBatchIgnition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useFixedBaroCorrFromMap"))
+		case 201676494:
 	{
 		engineConfiguration->useFixedBaroCorrFromMap = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForCranking"))
+		case 685453869:
 	{
 		engineConfiguration->useSeparateAdvanceForCranking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useAdvanceCorrectionsForCranking"))
+		case 1060606307:
 	{
 		engineConfiguration->useAdvanceCorrectionsForCranking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "flexCranking"))
+		case -563973567:
 	{
 		engineConfiguration->flexCranking = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useIacPidMultTable"))
+		case -364626778:
 	{
 		engineConfiguration->useIacPidMultTable = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isBoostControlEnabled"))
+		case -1832431020:
 	{
 		engineConfiguration->isBoostControlEnabled = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchSmoothRetard"))
+		case -954321508:
 	{
 		engineConfiguration->launchSmoothRetard = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "isPhaseSyncRequiredForIgnition"))
+		case -1543452424:
 	{
 		engineConfiguration->isPhaseSyncRequiredForIgnition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useCltBasedRpmLimit"))
+		case 939816194:
 	{
 		engineConfiguration->useCltBasedRpmLimit = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "forceO2Heating"))
+		case -389678699:
 	{
 		engineConfiguration->forceO2Heating = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "invertVvtControlIntake"))
+		case 755512282:
 	{
 		engineConfiguration->invertVvtControlIntake = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "invertVvtControlExhaust"))
+		case -1331668704:
 	{
 		engineConfiguration->invertVvtControlExhaust = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "useBiQuadOnAuxSpeedSensors"))
+		case 1486014321:
 	{
 		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialLogic"))
+		case -153724425:
 	{
 		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "engineChartSize"))
+		case -1492464952:
 	{
 		engineConfiguration->engineChartSize = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "acIdleRpmBump"))
+		case -1056007485:
+	{
+		engineConfiguration->turboSpeedSensorMultiplier = value;
+		return;
+	}
+		case 1683471850:
 	{
 		engineConfiguration->acIdleRpmBump = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "warningPeriod"))
+		case 1322924702:
 	{
 		engineConfiguration->warningPeriod = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleStepperTotalSteps"))
+		case -339821344:
+	{
+		engineConfiguration->knockDetectionWindowStart = value;
+		return;
+	}
+		case -1562133783:
+	{
+		engineConfiguration->knockDetectionWindowEnd = value;
+		return;
+	}
+		case 1145888170:
+	{
+		engineConfiguration->idleStepperReactionTime = value;
+		return;
+	}
+		case -1077032999:
 	{
 		engineConfiguration->idleStepperTotalSteps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mapAveragingSchedulingAtIndex"))
+		case -66405381:
+	{
+		engineConfiguration->noAccelAfterHardLimitPeriodSecs = value;
+		return;
+	}
+		case 1556302698:
 	{
 		engineConfiguration->mapAveragingSchedulingAtIndex = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alternatorControl.offset"))
+		case 58931511:
+	{
+		engineConfiguration->tachPulseDuractionMs = value;
+		return;
+	}
+		case -390306941:
+	{
+		engineConfiguration->wwaeTau = value;
+		return;
+	}
+		case -1993968289:
+	{
+		engineConfiguration->alternatorControl.pFactor = value;
+		return;
+	}
+		case 1850657816:
+	{
+		engineConfiguration->alternatorControl.iFactor = value;
+		return;
+	}
+		case -311714733:
+	{
+		engineConfiguration->alternatorControl.dFactor = value;
+		return;
+	}
+		case 1983046327:
 	{
 		engineConfiguration->alternatorControl.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alternatorControl.periodMs"))
+		case -1995686573:
 	{
 		engineConfiguration->alternatorControl.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alternatorControl.minValue"))
+		case -272710799:
 	{
 		engineConfiguration->alternatorControl.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alternatorControl.maxValue"))
+		case -1623166029:
 	{
 		engineConfiguration->alternatorControl.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb.offset"))
+		case 196797309:
+	{
+		engineConfiguration->etb.pFactor = value;
+		return;
+	}
+		case -253543882:
+	{
+		engineConfiguration->etb.iFactor = value;
+		return;
+	}
+		case 1879050865:
+	{
+		engineConfiguration->etb.dFactor = value;
+		return;
+	}
+		case -423426795:
 	{
 		engineConfiguration->etb.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb.periodMs"))
+		case 1580101425:
 	{
 		engineConfiguration->etb.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb.minValue"))
+		case -991890097:
 	{
 		engineConfiguration->etb.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb.maxValue"))
+		case 1952621969:
 	{
 		engineConfiguration->etb.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "airTaperRpmRange"))
+		case -174866119:
 	{
 		engineConfiguration->airTaperRpmRange = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps2Min"))
+		case -224184878:
 	{
 		engineConfiguration->tps2Min = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tps2Max"))
+		case -224185132:
 	{
 		engineConfiguration->tps2Max = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tachPulsePerRev"))
+		case -2142425790:
 	{
 		engineConfiguration->tachPulsePerRev = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkSparkDuration"))
+		case 9388880:
+	{
+		engineConfiguration->mapErrorDetectionTooLow = value;
+		return;
+	}
+		case 309682334:
+	{
+		engineConfiguration->mapErrorDetectionTooHigh = value;
+		return;
+	}
+		case 48235288:
 	{
 		engineConfiguration->multisparkSparkDuration = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "multisparkDwell"))
+		case 617337449:
 	{
 		engineConfiguration->multisparkDwell = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid.offset"))
+		case -2146434132:
+	{
+		engineConfiguration->idleRpmPid.pFactor = value;
+		return;
+	}
+		case 1698191973:
+	{
+		engineConfiguration->idleRpmPid.iFactor = value;
+		return;
+	}
+		case -464180576:
+	{
+		engineConfiguration->idleRpmPid.dFactor = value;
+		return;
+	}
+		case -103982236:
 	{
 		engineConfiguration->idleRpmPid.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid.periodMs"))
+		case 1562875200:
 	{
 		engineConfiguration->idleRpmPid.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid.minValue"))
+		case -1009116322:
 	{
 		engineConfiguration->idleRpmPid.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid.maxValue"))
+		case 1935395744:
 	{
 		engineConfiguration->idleRpmPid.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "startUpFuelPumpDuration"))
+		case 4130389:
+	{
+		engineConfiguration->wwaeBeta = value;
+		return;
+	}
+		case -2130836456:
+	{
+		engineConfiguration->throttlePedalUpVoltage = value;
+		return;
+	}
+		case 2099527693:
+	{
+		engineConfiguration->throttlePedalWOTVoltage = value;
+		return;
+	}
+		case -664540020:
 	{
 		engineConfiguration->startUpFuelPumpDuration = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlePidRpmDeadZone"))
+		case -528043591:
 	{
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "afterCrankingIACtaperDuration"))
+		case 1160967565:
+	{
+		engineConfiguration->targetVBatt = value;
+		return;
+	}
+		case -1166743424:
+	{
+		engineConfiguration->alternatorOffAboveTps = value;
+		return;
+	}
+		case 671504531:
 	{
 		engineConfiguration->afterCrankingIACtaperDuration = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "iacByTpsTaper"))
+		case -2065814304:
 	{
 		engineConfiguration->iacByTpsTaper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
+		case -1164331270:
 	{
 		engineConfiguration->tpsAccelLookback = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutVssLow"))
+		case 329016035:
 	{
 		engineConfiguration->coastingFuelCutVssLow = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutVssHigh"))
+		case -2027523439:
 	{
 		engineConfiguration->coastingFuelCutVssHigh = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "noFuelTrimAfterDfcoTime"))
+		case 1286770247:
 	{
 		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "totalGearsCount"))
+		case 1313479950:
+	{
+		engineConfiguration->tpsAccelEnrichmentThreshold = value;
+		return;
+	}
+		case -2114430012:
 	{
 		engineConfiguration->totalGearsCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "uartConsoleSerialSpeed"))
+		case -999870619:
 	{
 		engineConfiguration->uartConsoleSerialSpeed = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "auxSerialSpeed"))
+		case -965453331:
+	{
+		engineConfiguration->tpsDecelEnleanmentThreshold = value;
+		return;
+	}
+		case 1164012327:
+	{
+		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
+		return;
+	}
+		case 70789688:
+	{
+		engineConfiguration->slowAdcAlpha = value;
+		return;
+	}
+		case 781749924:
 	{
 		engineConfiguration->auxSerialSpeed = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_peak"))
+		case -1564912640:
+	{
+		engineConfiguration->throttlePedalSecondaryUpVoltage = value;
+		return;
+	}
+		case -699822859:
+	{
+		engineConfiguration->throttlePedalSecondaryWOTVoltage = value;
+		return;
+	}
+		case 578933872:
 	{
 		engineConfiguration->mc33_hpfp_i_peak = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold"))
+		case 578657622:
 	{
 		engineConfiguration->mc33_hpfp_i_hold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold_off"))
+		case 944657936:
 	{
 		engineConfiguration->mc33_hpfp_i_hold_off = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_hpfp_max_hold"))
+		case 663037299:
 	{
 		engineConfiguration->mc33_hpfp_max_hold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
+		case 337194154:
 	{
 		engineConfiguration->stepperDcInvertedPins = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "canOpenBLT"))
+		case -631762165:
 	{
 		engineConfiguration->canOpenBLT = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "can2OpenBLT"))
+		case -1514354211:
 	{
 		engineConfiguration->can2OpenBLT = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "injectorFlowAsMassFlow"))
+		case 444648859:
 	{
 		engineConfiguration->injectorFlowAsMassFlow = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
+		case -1655178001:
 	{
 		engineConfiguration->benchTestOffTime = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "benchTestCount"))
+		case -204721234:
 	{
 		engineConfiguration->benchTestCount = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "benchTestOnTime"))
+		case -1992436143:
 	{
 		engineConfiguration->benchTestOnTime = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "crankingIACposition"))
+		case -1992945039:
+	{
+		engineConfiguration->boostCutPressure = value;
+		return;
+	}
+		case -1359134883:
+	{
+		engineConfiguration->fixedTiming = value;
+		return;
+	}
+		case -137390524:
+	{
+		engineConfiguration->mapLowValueVoltage = value;
+		return;
+	}
+		case -1084262094:
+	{
+		engineConfiguration->mapHighValueVoltage = value;
+		return;
+	}
+		case 280323355:
+	{
+		engineConfiguration->egoValueShift = value;
+		return;
+	}
+		case -224532684:
 	{
 		engineConfiguration->crankingIACposition = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fan1ExtraIdle"))
+		case -557658095:
+	{
+		engineConfiguration->tChargeMinRpmMinTps = value;
+		return;
+	}
+		case -566786093:
+	{
+		engineConfiguration->tChargeMinRpmMaxTps = value;
+		return;
+	}
+		case -599338669:
+	{
+		engineConfiguration->tChargeMaxRpmMinTps = value;
+		return;
+	}
+		case -608466667:
+	{
+		engineConfiguration->tChargeMaxRpmMaxTps = value;
+		return;
+	}
+		case 1397079021:
 	{
 		engineConfiguration->fan1ExtraIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "alternatorPwmFrequency"))
+		case 799798215:
 	{
 		engineConfiguration->alternatorPwmFrequency = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fan2ExtraIdle"))
+		case 1464880398:
 	{
 		engineConfiguration->fan2ExtraIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "primingDelay"))
+		case 1506446058:
 	{
 		engineConfiguration->primingDelay = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "knockSamplingDuration"))
+		case -395416807:
+	{
+		engineConfiguration->fuelReferencePressure = value;
+		return;
+	}
+		case -1297058729:
+	{
+		engineConfiguration->postCrankingFactor = value;
+		return;
+	}
+		case 1183263609:
+	{
+		engineConfiguration->postCrankingDurationSec = value;
+		return;
+	}
+		case -1104834801:
+	{
+		engineConfiguration->auxTempSensor1.config.tempC_1 = value;
+		return;
+	}
+		case -1104834800:
+	{
+		engineConfiguration->auxTempSensor1.config.tempC_2 = value;
+		return;
+	}
+		case -1104834799:
+	{
+		engineConfiguration->auxTempSensor1.config.tempC_3 = value;
+		return;
+	}
+		case 629168263:
+	{
+		engineConfiguration->auxTempSensor1.config.resistance_1 = value;
+		return;
+	}
+		case 629168264:
+	{
+		engineConfiguration->auxTempSensor1.config.resistance_2 = value;
+		return;
+	}
+		case 629168265:
+	{
+		engineConfiguration->auxTempSensor1.config.resistance_3 = value;
+		return;
+	}
+		case -1189603841:
+	{
+		engineConfiguration->auxTempSensor1.config.bias_resistor = value;
+		return;
+	}
+		case -900025104:
+	{
+		engineConfiguration->auxTempSensor2.config.tempC_1 = value;
+		return;
+	}
+		case -900025103:
+	{
+		engineConfiguration->auxTempSensor2.config.tempC_2 = value;
+		return;
+	}
+		case -900025102:
+	{
+		engineConfiguration->auxTempSensor2.config.tempC_3 = value;
+		return;
+	}
+		case 1988973320:
+	{
+		engineConfiguration->auxTempSensor2.config.resistance_1 = value;
+		return;
+	}
+		case 1988973321:
+	{
+		engineConfiguration->auxTempSensor2.config.resistance_2 = value;
+		return;
+	}
+		case 1988973322:
+	{
+		engineConfiguration->auxTempSensor2.config.resistance_3 = value;
+		return;
+	}
+		case 734290080:
+	{
+		engineConfiguration->auxTempSensor2.config.bias_resistor = value;
+		return;
+	}
+		case -430252676:
 	{
 		engineConfiguration->knockSamplingDuration = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbFreq"))
+		case 2016887022:
 	{
 		engineConfiguration->etbFreq = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbWastegatePid.offset"))
+		case 1746193407:
+	{
+		engineConfiguration->etbWastegatePid.pFactor = value;
+		return;
+	}
+		case 1295852216:
+	{
+		engineConfiguration->etbWastegatePid.iFactor = value;
+		return;
+	}
+		case -866520333:
+	{
+		engineConfiguration->etbWastegatePid.dFactor = value;
+		return;
+	}
+		case 794879319:
 	{
 		engineConfiguration->etbWastegatePid.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbWastegatePid.periodMs"))
+		case 1170565107:
 	{
 		engineConfiguration->etbWastegatePid.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbWastegatePid.minValue"))
+		case -1401426415:
 	{
 		engineConfiguration->etbWastegatePid.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbWastegatePid.maxValue"))
+		case 1543085651:
 	{
 		engineConfiguration->etbWastegatePid.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stepperMinDutyCycle"))
+		case -1147263902:
 	{
 		engineConfiguration->stepperMinDutyCycle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stepperMaxDutyCycle"))
+		case -1188944476:
 	{
 		engineConfiguration->stepperMaxDutyCycle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fan2OnTemperature"))
+		case -1562952959:
+	{
+		engineConfiguration->idlePidActivationTime = value;
+		return;
+	}
+		case -613392361:
+	{
+		engineConfiguration->oilPressure.v1 = value;
+		return;
+	}
+		case -505257058:
+	{
+		engineConfiguration->oilPressure.value1 = value;
+		return;
+	}
+		case -613392360:
+	{
+		engineConfiguration->oilPressure.v2 = value;
+		return;
+	}
+		case -505257057:
+	{
+		engineConfiguration->oilPressure.value2 = value;
+		return;
+	}
+		case 871106583:
 	{
 		engineConfiguration->fan2OnTemperature = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fan2OffTemperature"))
+		case 1077467605:
 	{
 		engineConfiguration->fan2OffTemperature = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vvtControlMinRpm"))
+		case 383307083:
+	{
+		engineConfiguration->auxFrequencyFilter = value;
+		return;
+	}
+		case 1470846937:
 	{
 		engineConfiguration->vvtControlMinRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchFuelAdderPercent"))
+		case -904771683:
 	{
 		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbExpAverageLength"))
+		case -86185846:
 	{
 		engineConfiguration->etbExpAverageLength = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmHigh"))
+		case -275312941:
+	{
+		engineConfiguration->etbDutyThreshold = value;
+		return;
+	}
+		case 1272017572:
 	{
 		engineConfiguration->coastingFuelCutRpmHigh = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutRpmLow"))
+		case 168701078:
 	{
 		engineConfiguration->coastingFuelCutRpmLow = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutTps"))
+		case -1494035092:
 	{
 		engineConfiguration->coastingFuelCutTps = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutClt"))
+		case -1494053736:
 	{
 		engineConfiguration->coastingFuelCutClt = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "pidExtraForLowRpm"))
+		case 1414346958:
 	{
 		engineConfiguration->pidExtraForLowRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "coastingFuelCutMap"))
+		case -1494043213:
 	{
 		engineConfiguration->coastingFuelCutMap = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb_iTermMin"))
+		case 2032707103:
+	{
+		engineConfiguration->highPressureFuel.v1 = value;
+		return;
+	}
+		case -1898025562:
+	{
+		engineConfiguration->highPressureFuel.value1 = value;
+		return;
+	}
+		case 2032707104:
+	{
+		engineConfiguration->highPressureFuel.v2 = value;
+		return;
+	}
+		case -1898025561:
+	{
+		engineConfiguration->highPressureFuel.value2 = value;
+		return;
+	}
+		case -474791503:
+	{
+		engineConfiguration->lowPressureFuel.v1 = value;
+		return;
+	}
+		case 764445240:
+	{
+		engineConfiguration->lowPressureFuel.value1 = value;
+		return;
+	}
+		case -474791502:
+	{
+		engineConfiguration->lowPressureFuel.v2 = value;
+		return;
+	}
+		case 764445241:
+	{
+		engineConfiguration->lowPressureFuel.value2 = value;
+		return;
+	}
+		case 2115625312:
+	{
+		engineConfiguration->tChargeAirCoefMin = value;
+		return;
+	}
+		case 2115625058:
+	{
+		engineConfiguration->tChargeAirCoefMax = value;
+		return;
+	}
+		case 1590125629:
+	{
+		engineConfiguration->tChargeAirFlowMax = value;
+		return;
+	}
+		case -1128797750:
+	{
+		engineConfiguration->tChargeAirIncrLimit = value;
+		return;
+	}
+		case 670644444:
+	{
+		engineConfiguration->tChargeAirDecrLimit = value;
+		return;
+	}
+		case 929810608:
+	{
+		engineConfiguration->hip9011Gain = value;
+		return;
+	}
+		case -1725192476:
 	{
 		engineConfiguration->etb_iTermMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etb_iTermMax"))
+		case -1725192730:
 	{
 		engineConfiguration->etb_iTermMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleTimingPid.offset"))
+		case -1411996731:
+	{
+		engineConfiguration->idleTimingPid.pFactor = value;
+		return;
+	}
+		case -1862337922:
+	{
+		engineConfiguration->idleTimingPid.iFactor = value;
+		return;
+	}
+		case 270256825:
+	{
+		engineConfiguration->idleTimingPid.dFactor = value;
+		return;
+	}
+		case -2033984419:
 	{
 		engineConfiguration->idleTimingPid.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleTimingPid.periodMs"))
+		case 29505657:
 	{
 		engineConfiguration->idleTimingPid.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleTimingPid.minValue"))
+		case 1752481431:
 	{
 		engineConfiguration->idleTimingPid.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleTimingPid.maxValue"))
+		case 402026201:
 	{
 		engineConfiguration->idleTimingPid.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "etbRocExpAverageLength"))
+		case 481957934:
 	{
 		engineConfiguration->etbRocExpAverageLength = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsAccelFractionPeriod"))
+		case 1117566701:
 	{
 		engineConfiguration->tpsAccelFractionPeriod = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlerpmpid_iTermMin"))
+		case 68539114:
+	{
+		engineConfiguration->tpsAccelFractionDivisor = value;
+		return;
+	}
+		case -1742418701:
 	{
 		engineConfiguration->idlerpmpid_iTermMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "stoichRatioPrimary"))
+		case 1762426578:
 	{
 		engineConfiguration->stoichRatioPrimary = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idlerpmpid_iTermMax"))
+		case -1742418955:
 	{
 		engineConfiguration->idlerpmpid_iTermMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "triggerCompCenterVolt"))
+		case -54532767:
+	{
+		engineConfiguration->etbIdleThrottleRange = value;
+		return;
+	}
+		case 1455224910:
 	{
 		engineConfiguration->triggerCompCenterVolt = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "triggerCompHystMin"))
+		case -25671212:
 	{
 		engineConfiguration->triggerCompHystMin = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "triggerCompHystMax"))
+		case -25671466:
 	{
 		engineConfiguration->triggerCompHystMax = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "triggerCompSensorSatRpm"))
+		case -953183719:
 	{
 		engineConfiguration->triggerCompSensorSatRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid2.offset"))
+		case 2018252734:
+	{
+		engineConfiguration->idleRpmPid2.pFactor = value;
+		return;
+	}
+		case 1567911543:
+	{
+		engineConfiguration->idleRpmPid2.iFactor = value;
+		return;
+	}
+		case -594461006:
+	{
+		engineConfiguration->idleRpmPid2.dFactor = value;
+		return;
+	}
+		case 1844327734:
 	{
 		engineConfiguration->idleRpmPid2.offset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid2.periodMs"))
+		case 1558588306:
 	{
 		engineConfiguration->idleRpmPid2.periodMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid2.minValue"))
+		case -1013403216:
 	{
 		engineConfiguration->idleRpmPid2.minValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "idleRpmPid2.maxValue"))
+		case 1931108850:
 	{
 		engineConfiguration->idleRpmPid2.maxValue = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_i_boost"))
+		case -371707639:
 	{
 		engineConfiguration->mc33_i_boost = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_i_peak"))
+		case 379679459:
 	{
 		engineConfiguration->mc33_i_peak = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_i_hold"))
+		case 379403209:
 	{
 		engineConfiguration->mc33_i_hold = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_max_boost"))
+		case -486240071:
 	{
 		engineConfiguration->mc33_t_max_boost = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_peak_off"))
+		case -893360504:
 	{
 		engineConfiguration->mc33_t_peak_off = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_peak_tot"))
+		case -893354748:
 	{
 		engineConfiguration->mc33_t_peak_tot = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_bypass"))
+		case 1281862911:
 	{
 		engineConfiguration->mc33_t_bypass = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_hold_off"))
+		case -2086522258:
 	{
 		engineConfiguration->mc33_t_hold_off = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mc33_t_hold_tot"))
+		case -2086516502:
 	{
 		engineConfiguration->mc33_t_hold_tot = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "maxCamPhaseResolveRpm"))
+		case -2070332548:
 	{
 		engineConfiguration->maxCamPhaseResolveRpm = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "dfcoDelay"))
+		case 1676700208:
 	{
 		engineConfiguration->dfcoDelay = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "acDelay"))
+		case 483010008:
 	{
 		engineConfiguration->acDelay = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "fordInjectorSmallPulseBreakPoint"))
+		case -1032938305:
 	{
 		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpCamLobes"))
+		case -1256141959:
 	{
 		engineConfiguration->hpfpCamLobes = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpPeakPos"))
+		case 1145081382:
 	{
 		engineConfiguration->hpfpPeakPos = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpMinAngle"))
+		case 1494394654:
 	{
 		engineConfiguration->hpfpMinAngle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpPumpVolume"))
+		case 334494733:
 	{
 		engineConfiguration->hpfpPumpVolume = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpActivationAngle"))
+		case -81483444:
 	{
 		engineConfiguration->hpfpActivationAngle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "issFilterReciprocal"))
+		case -413489794:
 	{
 		engineConfiguration->issFilterReciprocal = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpPidP"))
+		case 436500704:
 	{
 		engineConfiguration->hpfpPidP = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpPidI"))
+		case 436500697:
 	{
 		engineConfiguration->hpfpPidI = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "hpfpTargetDecay"))
+		case 1025426144:
 	{
 		engineConfiguration->hpfpTargetDecay = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
+		case 288250022:
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tuneHidingKey"))
+		case -1415669996:
+	{
+		engineConfiguration->auxLinear1.v1 = value;
+		return;
+	}
+		case -65154789:
+	{
+		engineConfiguration->auxLinear1.value1 = value;
+		return;
+	}
+		case -1415669995:
+	{
+		engineConfiguration->auxLinear1.v2 = value;
+		return;
+	}
+		case -65154788:
+	{
+		engineConfiguration->auxLinear1.value2 = value;
+		return;
+	}
+		case -1415634059:
+	{
+		engineConfiguration->auxLinear2.v1 = value;
+		return;
+	}
+		case -396384772:
+	{
+		engineConfiguration->auxLinear2.value1 = value;
+		return;
+	}
+		case -1415634058:
+	{
+		engineConfiguration->auxLinear2.v2 = value;
+		return;
+	}
+		case -396384771:
+	{
+		engineConfiguration->auxLinear2.value2 = value;
+		return;
+	}
+		case -1855700175:
+	{
+		engineConfiguration->etbMinimumPosition = value;
+		return;
+	}
+		case -243078627:
 	{
 		engineConfiguration->tuneHidingKey = (int)value;
 		return;
+	}
+		case -1743759953:
+	{
+		engineConfiguration->etbDutyShutdownThreshold = value;
+		return;
+	}
 	}
 }
