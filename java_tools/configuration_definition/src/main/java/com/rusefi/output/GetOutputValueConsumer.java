@@ -82,7 +82,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static StringBuilder getGetters(StringBuilder switchBody, List<Pair<String, String>> getterPairs) {
+    static StringBuilder getGetters(StringBuilder switchBody, List<? extends Pair<String, String>> getterPairs) {
         HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
 
         StringBuilder getterBody = new StringBuilder();
@@ -102,7 +102,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static HashMap<Integer, AtomicInteger> getHashConflicts(List<Pair<String, String>> getterPairs1) {
+    static HashMap<Integer, AtomicInteger> getHashConflicts(List<? extends Pair<String, String>> getterPairs1) {
         HashMap<Integer, AtomicInteger> hashConflicts = new HashMap<>();
         for (Pair<String, String> pair : getterPairs1) {
             hashConflicts.computeIfAbsent(HashUtil.hash(pair.first), integer -> new AtomicInteger(0)).incrementAndGet();

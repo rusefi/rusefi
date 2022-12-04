@@ -3,7 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
-import com.rusefi.core.Pair;
+import com.rusefi.core.Tuple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,7 +18,6 @@ import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
 import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
-import static com.rusefi.output.JavaSensorsConsumer.quote;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
@@ -26,17 +25,6 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
     static final String FILE_HEADER = "#include \"pch.h\"\n" +
             "#include \"value_lookup.h\"\n";
-    private static final String FIND_METHOD =
-            "plain_get_float_s * findFloat(const char *name) {\n" +
-                    "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
-                    "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
-                    "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
-                    "\t\t\treturn currentF;\n" +
-                    "\t\t}\n" +
-                    "\t\tcurrentF++;\n" +
-                    "\t}\n" +
-                    "\treturn nullptr;\n" +
-                    "}\n";
 
     private static final String GET_METHOD_HEADER =
             "float getConfigValueByName(const char *name) {\n" +
@@ -52,10 +40,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             "\t}\n" +
             "\n";
     private static final String SET_METHOD_FOOTER = "}\n";
-    private final List<Pair<String, String>> getterPairs = new ArrayList<>();
-    private final List<Pair<String, String>> setterPairs = new ArrayList<>();
-    private final StringBuilder allFloatAddresses = new StringBuilder(
-            "static plain_get_float_s getF_plain[] = {\n");
+    private final List<Tuple<String>> variables = new ArrayList<>();
     private final String outputFileName;
 
     public GetConfigValueConsumer(String outputFileName) {
@@ -102,16 +87,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-
-        getterPairs.add(new Pair<>(userName, javaName + cf.getName()));
-
-        if (TypesHelper.isFloat(cf.getType())) {
-            allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
-        } else {
-
-            setterPairs.add(new Pair<>(userName, javaName + cf.getName()));
-
-        }
+        variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
 
 
         return "";
@@ -131,8 +107,6 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     public String getHeaderAndGetter() {
         return FILE_HEADER +
-                getFloatsSections() +
-                FIND_METHOD +
                 getCompleteGetterBody();
     }
 
@@ -140,7 +114,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getCompleteGetterBody() {
         StringBuilder switchBody = new StringBuilder();
 
-        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, getterPairs);
+        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables);
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
@@ -149,21 +123,19 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
                 getterBody + GET_METHOD_FOOTER;
     }
 
-    @NotNull
-    public String getFloatsSections() {
-        return allFloatAddresses + "};\n\n";
-    }
-
     public String getSetterBody() {
         StringBuilder switchBody = new StringBuilder();
 
         StringBuilder setterBody = new StringBuilder();
-        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(setterPairs);
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(variables);
 
-        for (Pair<String, String> pair : setterPairs) {
+        for (Tuple<String> pair : variables) {
+
+            String cast = TypesHelper.isFloat(pair.third) ? "" : "(int)";
+
 
             int hash = HashUtil.hash(pair.first);
-            String str = getAssignment("(int)", pair.second);
+            String str = getAssignment(cast, pair.second);
             if (hashConflicts.get(hash).get() == 1) {
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append(str);
