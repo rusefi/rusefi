@@ -32,7 +32,7 @@ public class GetConfigValueConsumerTest {
                 "float getConfigValueByName(const char *name) {\n" +
                         "\t{\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
-                        "}\n", getConfigValueConsumer.getComleteGetterBody());
+                        "}\n", getConfigValueConsumer.getCompleteGetterBody());
     }
 
     @Test
@@ -74,7 +74,7 @@ public class GetConfigValueConsumerTest {
                 "\t\t\treturn config->iat.adcChannel;\n" +
                 "\t}\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getComleteGetterBody());
+                "}\n", getConfigValueConsumer.getCompleteGetterBody());
     }
 
     @Test
