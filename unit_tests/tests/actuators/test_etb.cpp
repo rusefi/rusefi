@@ -198,7 +198,6 @@ TEST(etb, initializationNoPrimarySensor) {
 	Sensor::resetAllMocks();
 
 	EtbController dut;
-	EngineTestHelper eth(TEST_ENGINE);
 
 	// Needs pedal for init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
@@ -470,7 +469,6 @@ TEST(etb, setpointNoPedalMap) {
 }
 
 TEST(etb, setpointIdleValveController) {
-	EngineTestHelper eth(TEST_ENGINE);
 	EtbController etb;
 
 	etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, false);
@@ -490,7 +488,6 @@ TEST(etb, setpointIdleValveController) {
 }
 
 TEST(etb, setpointWastegateController) {
-	EngineTestHelper eth(TEST_ENGINE);
 	EtbController etb;
 
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
@@ -561,10 +558,6 @@ TEST(etb, setpointLuaAdder) {
 }
 
 TEST(etb, etbTpsSensor) {
-    static engine_configuration_s localConfig;
-// huh? how is this breaking the test?   	EngineTestHelper eth(TEST_ENGINE);
-    engineConfiguration = &localConfig;
-
 	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 	Sensor::setMockValue(SensorType::Tps2, 75.0f, true);
@@ -590,6 +583,7 @@ TEST(etb, etbTpsSensor) {
 
 	// Test wastegate control
 	{
+		EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 33.0f);
@@ -597,11 +591,11 @@ TEST(etb, etbTpsSensor) {
 
 	// Test idle valve control
 	{
+		EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 66.0f);
 	}
-	engineConfiguration = nullptr;
 }
 
 TEST(etb, setOutputInvalid) {
@@ -746,9 +740,6 @@ TEST(etb, setOutputLimpHome) {
 }
 
 TEST(etb, closedLoopPid) {
-    static engine_configuration_s localConfig;
-// huh? how is this breaking the test?   	EngineTestHelper eth(TEST_ENGINE);
-    engineConfiguration = &localConfig;
 	pid_s pid = {};
 	pid.pFactor = 5;
 	pid.maxValue = 75;
@@ -762,8 +753,6 @@ TEST(etb, closedLoopPid) {
 	EtbController etb;
 	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
 
-    // todo: second part dirty hack :(
-	engineConfiguration = nullptr;
 	// Disable autotune for now
 	Engine e;
 	EngineTestHelperBase base(&e, nullptr, nullptr);
@@ -777,6 +766,10 @@ TEST(etb, closedLoopPid) {
 	// Test PID limiting
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 70).value_or(-1), -60);
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
+}
+
+TEST(etb, jamDetection) {
+
 }
 
 TEST(etb, openLoopThrottle) {
