@@ -652,6 +652,8 @@ expected<percent_t> EtbController::getOutput() {
 		if (integrator > integratorLimit) {
 			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
 				// ETB is jammed!
+
+				// TODO: do something about it!
 			}
 		} else {
 			m_jamDetectTimer.reset(getTimeNowNt());
