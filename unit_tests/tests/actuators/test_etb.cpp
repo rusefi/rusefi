@@ -583,7 +583,6 @@ TEST(etb, etbTpsSensor) {
 
 	// Test wastegate control
 	{
-		EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 33.0f);
@@ -591,7 +590,6 @@ TEST(etb, etbTpsSensor) {
 
 	// Test idle valve control
 	{
-		EngineTestHelper eth(TEST_ENGINE);
 		EtbController etb;
 		etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, true);
 		EXPECT_EQ(etb.observePlant().Value, 66.0f);
@@ -768,8 +766,57 @@ TEST(etb, closedLoopPid) {
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
 }
 
-TEST(etb, jamDetection) {
+extern int timeNowUs;
 
+TEST(etb, jamDetection) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	pid_s pid = {};
+
+	// I-only since we're testing out the integrator
+	pid.pFactor = 0;
+	pid.iFactor = 1;
+	pid.dFactor = 0;
+	pid.maxValue = 50;
+	pid.minValue = -50;
+
+	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	// Limit of 5%, 1 second
+	engineConfiguration->etbJamIntegratorLimit = 5;
+	engineConfiguration->etbJamTimeout = 1;
+
+	EtbController etb;
+	etb.init(ETB_Throttle1, nullptr, &pid, nullptr, true);
+
+	timeNowUs = 0;
+
+	// Reset timer while under integrator limit
+	EXPECT_EQ(etb.getPidState().iTerm, 0);
+	etb.checkOutput(0);
+	EXPECT_EQ(etb.jamTimer, 0);
+	EXPECT_FALSE(etb.jamDetected);
+
+	for (size_t i = 0; i < ETB_LOOP_FREQUENCY; i++) {
+		// Error of 10, should accumulate 10 integrator per second
+		etb.getClosedLoop(50, 40);
+	}
+
+	EXPECT_NEAR(etb.getPidState().iTerm, 10.0f, 1e-3);
+
+	// Just under time limit, no jam yet
+	timeNowUs = 0.9e6;
+	etb.checkOutput(0);
+	EXPECT_NEAR(etb.jamTimer, 0.9f, 1e-3);
+	EXPECT_FALSE(etb.jamDetected);
+
+	// Above the time limit, jam detected!
+	timeNowUs = 1.1e6;
+	etb.checkOutput(0);
+	EXPECT_TRUE(etb.jamDetected);
 }
 
 TEST(etb, openLoopThrottle) {
