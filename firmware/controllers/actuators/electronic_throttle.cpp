@@ -629,19 +629,20 @@ void EtbController::update() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	ClosedLoopController::update();
+	auto output = ClosedLoopController::update();
+
+	if (!output) {
+		return;
+	}
+
+	checkOutput(output.Value);
 }
 
-expected<percent_t> EtbController::getOutput() {
-	// total open + closed loop parts
-	expected<percent_t> output = ClosedLoopController::getOutput();
-	if (!output) {
-		return output;
-	}
-    etbDutyAverage = m_dutyAverage.average(absF(output.Value));
+void EtbController::checkOutput(percent_t output) {
+	etbDutyAverage = m_dutyAverage.average(absF(output));
 
-    etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
-	prevOutput = output.Value;
+	etbDutyRateOfChange = m_dutyRocAverage.average(absF(output - prevOutput));
+	prevOutput = output;
 
 	float integrator = absF(m_pid.getIntegration());
 	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
@@ -652,17 +653,17 @@ expected<percent_t> EtbController::getOutput() {
 		if (integrator > integratorLimit) {
 			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
 				// ETB is jammed!
+				jamDetected = true;
 
 				// TODO: do something about it!
 			}
 		} else {
 			m_jamDetectTimer.reset(getTimeNowNt());
+			jamDetected = false;
 		}
 
 		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
 	}
-
-	return output;
 }
 
 void EtbController::autoCalibrateTps() {
