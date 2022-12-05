@@ -3,15 +3,21 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import com.rusefi.core.Tuple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
-import static com.rusefi.output.JavaSensorsConsumer.quote;
+import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
+import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
@@ -19,42 +25,14 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
     static final String FILE_HEADER = "#include \"pch.h\"\n" +
             "#include \"value_lookup.h\"\n";
-    private static final String FIND_METHOD =
-            "plain_get_float_s * findFloat(const char *name) {\n" +
-            "\tplain_get_float_s *currentF = &getF_plain[0];\n" +
-            "\twhile (currentF < getF_plain + efi::size(getF_plain)) {\n" +
-            "\t\tif (strEqualCaseInsensitive(name, currentF->token)) {\n" +
-            "\t\t\treturn currentF;\n" +
-            "\t\t}\n" +
-            "\t\tcurrentF++;\n" +
-            "\t}\n" +
-            "\treturn nullptr;\n" +
-            "}\n";
 
     private static final String GET_METHOD_HEADER =
-            "float getConfigValueByName(const char *name) {\n"            +
-            "\t{\n" +
-            "\t\tplain_get_float_s * known = findFloat(name);\n" +
-            "\t\tif (known != nullptr) {\n" +
-            "\t\t\treturn *(float*)hackEngineConfigurationPointer(known->value);\n" +
-            "\t\t}\n" +
-            "\t}\n"
-            ;
+            "float getConfigValueByName(const char *name) {\n";
 
     static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n" +
-            "\t{\n" +
-            "\t\tplain_get_float_s * known = findFloat(name);\n" +
-            "\t\tif (known != nullptr) {\n" +
-            "\t\t\t*(float*)hackEngineConfigurationPointer(known->value) = value;\n" +
-            "\t\t}\n" +
-            "\t}\n" +
-            "\n";
+    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
-    private final StringBuilder getterBody = new StringBuilder();
-    private final StringBuilder setterBody = new StringBuilder();
-    private final StringBuilder allFloatAddresses = new StringBuilder(
-            "static plain_get_float_s getF_plain[] = {\n");
+    private final List<Tuple<String>> variables = new ArrayList<>();
     private final String outputFileName;
 
     public GetConfigValueConsumer(String outputFileName) {
@@ -101,25 +79,15 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-
-        if (TypesHelper.isFloat(cf.getType())) {
-            allFloatAddresses.append("\t{" + quote(userName) + ", &engineConfiguration->" + userName + "},\n");
-        } else {
-            getterBody.append(getCompareName(userName));
-            getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
-
-            setterBody.append(getCompareName(userName));
-            String str = getAssignment(cf, javaName, "(int)");
-            setterBody.append(str);
-        }
+        variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
 
 
         return "";
     }
 
     @NotNull
-    private String getAssignment(ConfigField cf, String javaName, String cast) {
-        return "\t{\n" + "\t\t" + javaName + cf.getName() + " = " + cast +
+    private String getAssignment(String cast, String value) {
+        return "\t{\n" + "\t\t" + value + " = " + cast +
                 "value;\n" +
                 "\t\treturn;\n\t}\n";
     }
@@ -131,29 +99,55 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     public String getHeaderAndGetter() {
         return FILE_HEADER +
-                getFloatsSections() +
-                FIND_METHOD +
-                getComleteGetterBody();
+                getCompleteGetterBody();
     }
 
     @NotNull
-    public String getComleteGetterBody() {
-        return GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
-    }
+    public String getCompleteGetterBody() {
+        StringBuilder switchBody = new StringBuilder();
 
-    @NotNull
-    public String getFloatsSections() {
-        return allFloatAddresses + "};\n\n";
+        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables);
+
+        String fullSwitch = wrapSwitchStatement(switchBody);
+
+        return GET_METHOD_HEADER +
+                fullSwitch +
+                getterBody + GET_METHOD_FOOTER;
     }
 
     public String getSetterBody() {
-        return setterBody.toString();
+        StringBuilder switchBody = new StringBuilder();
+
+        StringBuilder setterBody = new StringBuilder();
+        HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(variables);
+
+        for (Tuple<String> pair : variables) {
+
+            String cast = TypesHelper.isFloat(pair.third) ? "" : "(int)";
+
+
+            int hash = HashUtil.hash(pair.first);
+            String str = getAssignment(cast, pair.second);
+            if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append("\t\tcase " + hash + ":\n");
+                switchBody.append(str);
+
+            } else {
+
+                setterBody.append(getCompareName(pair.first));
+                setterBody.append(str);
+            }
+        }
+
+        String fullSwitch = wrapSwitchStatement(switchBody);
+
+        return fullSwitch + setterBody;
     }
 
     public String getContent() {
         return getHeaderAndGetter()
                 +
-                SET_METHOD_HEADER + setterBody + SET_METHOD_FOOTER
+                SET_METHOD_HEADER + getSetterBody() + SET_METHOD_FOOTER
                 ;
     }
 }

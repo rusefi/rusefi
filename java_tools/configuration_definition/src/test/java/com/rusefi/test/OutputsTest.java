@@ -147,12 +147,15 @@ public class OutputsTest {
                 "#include \"pch.h\"\n" +
                         "#include \"value_lookup.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
-                        "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
-                        "\t\treturn engine->outputChannels.issue_294_31;\n" +
-                        "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
-                        "\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
-                        "\tif (strEqualCaseInsensitive(name, \"hwChannel\"))\n" +
-                        "\t\treturn engine->outputChannels.hwChannel;\n" +
+                        "\tint hash = djb2lowerCase(name);\n" +
+                        "\tswitch(hash) {\n" +
+                        "\t\tcase -1571463185:\n" +
+                        "\t\t\treturn engine->outputChannels.issue_294_31;\n" +
+                        "\t\tcase -298185774:\n" +
+                        "\t\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
+                        "\t\tcase -709106787:\n" +
+                        "\t\t\treturn engine->outputChannels.hwChannel;\n" +
+                        "\t}\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
                         "}\n", outputValueConsumer.getContent());
     }

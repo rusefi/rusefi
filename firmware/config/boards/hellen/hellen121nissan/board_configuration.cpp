@@ -152,7 +152,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->luaOutputPins[0] = Gpio::G5; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[0] = H144_OUT_IO4; // 104 ETB Relay
+	engineConfiguration->luaOutputPins[1] = H144_OUT_PWM2; // aux LS1, upstream oxygen heaters
 
 	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 

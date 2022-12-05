@@ -14,6 +14,9 @@ setTickRate(100)
 t = Timer.new()
 t : reset()
 
+HEATER_OUTOUT_INDEX = 1
+startPwm(HEATER_OUTOUT_INDEX, 1, 0)
+
 globalAcOut = 0
 
 function getTwoBytesMSB(data, offset, factor)
@@ -73,6 +76,7 @@ function onTick()
 
 
 	if rpmValue > 250 then
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 1)
 		if cltValue <= 80 then
 			txCan(1, OUT_1F9, 0, fanPayloadOff)
 		elseif cltValue < 85 then
@@ -83,6 +87,7 @@ function onTick()
 			txCan(1, OUT_1F9, 0, fanPayloadHi)
 		end
 	else
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 0)
 		txCan(1, OUT_1F9, 0, fanPayloadOff)
 	end
 	-- print('CLT temp' ..cltValue)

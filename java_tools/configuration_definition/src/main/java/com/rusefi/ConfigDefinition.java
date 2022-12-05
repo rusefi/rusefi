@@ -110,9 +110,6 @@ public class ConfigDefinition {
                 case "-field_lookup_file":
                     state.destinations.add(new GetConfigValueConsumer(args[i + 1]));
                     break;
-                case "-output_lookup_file":
-                    state.destinations.add(new GetOutputValueConsumer(args[i + 1]));
-                    break;
                 case "-readfile":
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
