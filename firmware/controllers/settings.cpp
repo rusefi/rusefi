@@ -1107,12 +1107,15 @@ void printDateTime() {
 
 void setDateTime(const char * const isoDateTime) {
 #if EFI_RTC
-	if (strlen(isoDateTime) > 0) {
+	if (strlen(isoDateTime) >= 19 && isoDateTime[10] == 'T') {
 		efidatetime_t dateTime;
-		if (sscanf("%04u-%02u-%02uT%02u:%02u:%02u", isoDateTime,
-					&dateTime.year, &dateTime.month, &dateTime.day,
-					&dateTime.hour, &dateTime.minute, &dateTime.second)
-				== 6) { // 6 fields to properly scan
+		int scanned = sscanf(isoDateTime, "%4lu", &dateTime.year);
+		scanned += sscanf(isoDateTime + 5, "%2hhu", &dateTime.month);
+		scanned += sscanf(isoDateTime + 8, "%2hhu", &dateTime.day);
+		scanned += sscanf(isoDateTime + 11, "%2hhu", &dateTime.hour);
+		scanned += sscanf(isoDateTime + 14, "%2hhu", &dateTime.minute);
+		scanned += sscanf(isoDateTime + 17, "%2hhu", &dateTime.second);
+		if (scanned == 6) { // 6 fields to properly scan
 			setRtcDateTime(&dateTime);
 			return;
 		}
