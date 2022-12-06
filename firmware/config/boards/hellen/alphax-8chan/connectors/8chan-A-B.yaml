@@ -1,4 +1,115 @@
 pins:
+
+  - pin: 1A
+    # H144_LS_4
+    id: D10
+    function: Injector 4
+    class: outputs
+    type: inj
+    ts_name: 1A - Injector 4
+    color: blue
+
+  - pin: 2A
+    # H144_LS_3
+    id: D11
+    function: Injector 3
+    class: outputs
+    type: inj
+    ts_name: 2A - Injector 3
+    color: blue
+
+  - pin: 3A
+    # H144_LS_2
+    id: G8
+    function: Injector 2 Output
+    class: outputs
+    type: inj
+    ts_name: 3A - Injector 2
+    color: blue
+
+  - pin: 4A
+    # H144_LS_1
+    id: G7
+    function: Injector 1 Output
+    class: outputs
+    type: inj
+    ts_name: 4A - Injector 1
+    color: blue
+
+  - pin: 5A
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: 10A
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    function: Smart Ignition 4 Output
+    type: ign
+    ts_name: 10A - Ignition 4
+    color: yellow
+
+  - pin: 11A
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    function: Smart Ignition 3 Output
+    type: ign
+    ts_name: 11A - Ignition 3
+    color: yellow
+
+
+  - pin: 12A
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    function: Smart Ignition 2 Output
+    type: ign
+    ts_name: 12A - Ignition 2
+    color: yellow
+
+
+  - pin: 13A
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    function: Smart Ignition 1
+    type: ign
+    ts_name: 13A - Ignition 1
+    color: yellow
+
+
+  - pin: 18A
+    function: VVT control 4
+    class: outputs
+    type: inj
+    ts_name: 18A - VVT control 4
+    color: blue
+
+  - pin: 19A
+    function: VVT control 3
+    class: outputs
+    type: inj
+    ts_name: 19A - VVT control 3
+    color: blue
+
+  - pin: 20A
+    function: VVT control 2
+    class: outputs
+    type: inj
+    ts_name: 20A - VVT control 2
+    color: blue
+
+
+  - pin: 21A
+    function: VVT control 1
+    class: outputs
+    type: inj
+    ts_name: 21A - VVT control 1
+    color: blue
+
+
   - pin: 34A
     function: Power GND
     type: gnd
