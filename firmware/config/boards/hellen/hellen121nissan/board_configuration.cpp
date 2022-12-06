@@ -154,6 +154,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->luaOutputPins[0] = H144_OUT_IO4; // 104 ETB Relay
 	engineConfiguration->luaOutputPins[1] = H144_OUT_PWM2; // aux LS1, upstream oxygen heaters
+//	engineConfiguration->auxAnalogInputs[0] = EFI_ADC_10; // aux analog input 1, upstream oxygen signal
 
 	setPPSCalibration(0.75, 4.45, 0.43, 2.20);
 
