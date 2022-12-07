@@ -37,4 +37,13 @@ public class MiscTest extends RusefiTestBase {
         // wow sometimes my utility closet is pretty warm?
         assertTrue(message, mcuTemp < 52);
     }
+
+	@Test
+	public void testSetDate() {
+		// set some random time
+		ecu.sendCommand("date 2022-12-07T11:14:22");
+
+		// If things are going to crash, let it happen in this test
+		Thread.sleepSeconds(5);
+	}
 }
