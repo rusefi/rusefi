@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#include "trigger_scope.h"
+
 static BigBufferHandle buffer;
 
 static bool isRunning = false;
@@ -19,7 +21,19 @@ void triggerScopeDisable() {
 	engine->outputChannels.triggerScopeReady = false;
 }
 
+static int theta = 0;
+
 // Retrieve the trace buffer
-const BigBufferHandle triggerScopeGetBuffer() {
-	return std::move(buffer);
+const BigBufferHandle& triggerScopeGetBuffer() {
+	if (buffer) {
+		for (size_t i = 0; i < buffer.size(); i++)
+		{
+			buffer.get<uint8_t>()[i] = 128 + 100 * sin((float)theta / 50);
+			theta++;
+		}
+	}
+
+	// engine->outputChannels.triggerScopeReady = false;
+
+	return buffer;
 }

@@ -31,11 +31,16 @@ public:
 	}
 
 	template <class TBuffer>
+	const TBuffer* get() const {
+		return reinterpret_cast<TBuffer*>(m_bufferPtr);
+	}
+
+	template <class TBuffer>
 	TBuffer* get() {
 		return reinterpret_cast<TBuffer*>(m_bufferPtr);
 	}
 
-	size_t size() {
+	size_t size() const {
 		return BIG_BUFFER_SIZE;
 	}
 

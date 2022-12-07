@@ -2,4 +2,4 @@
 
 void triggerScopeEnable();
 void triggerScopeDisable();
-const BigBufferHandle triggerScopeGetBuffer();
+const BigBufferHandle& triggerScopeGetBuffer();

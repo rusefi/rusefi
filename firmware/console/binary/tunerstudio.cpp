@@ -767,7 +767,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			break;
 		case TS_TRIGGER_SCOPE_READ:
 			{
-				auto buffer = triggerScopeGetBuffer();
+				const auto& buffer = triggerScopeGetBuffer();
 
 				if (buffer) {
 					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
