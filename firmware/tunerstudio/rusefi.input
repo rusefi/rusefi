@@ -113,7 +113,7 @@ enable2ndByteCanID = false
 	loggerDef = compositeLogger, "Trigger Logger", composite
 		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x01"
 		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x02"
-		dataReadCommand = "@#TS_GET_LOGGER_GET_BUFFER#@"
+		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x03"
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
@@ -133,6 +133,16 @@ enable2ndByteCanID = false
 		; it seems that TS also needs to know the diff.size of a tooth
 		calcField = toothTime,			"ToothTime",	"ms", { time - pastValue(time, 1) }
 
+	loggerDef = triggerScope, "Trigger Oscilloscope", csv
+		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x04"
+		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x05"
+		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x06"
+		dataReadTimeout = 1000
+		dataReadyCondition = { triggerScopeReady }
+		continuousRead = true
+
+		recordDef = 0, 0, 1
+		recordField = channelA, "Channel 1", 0, 8, {5/256}, "v", 1
 
 [VeAnalyze]
 

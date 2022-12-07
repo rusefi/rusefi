@@ -10,6 +10,7 @@ enum class BigBufferUser {
 	None,
 	EngineSniffer,
 	PerfTrace,
+	TriggerScope,
 };
 
 #include <memory>

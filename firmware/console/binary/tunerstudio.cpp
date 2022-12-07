@@ -747,6 +747,35 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
+		case TS_COMPOSITE_READ:
+			{
+				auto toothBuffer = GetToothLoggerBuffer();
+
+				if (toothBuffer) {
+					tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+				} else {
+					// TS asked for a tooth logger buffer, but we don't have one to give it.
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+				}
+			}
+			break;
+		case TS_TRIGGER_SCOPE_ENABLE:
+			triggerScopeEnable();
+			break;
+		case TS_TRIGGER_SCOPE_ENABLE:
+			break;
+		case TS_TRIGGER_SCOPE_READ:
+			{
+				auto buffer = triggerScopeGetBuffer();
+
+				if (buffer) {
+					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
+				} else {
+					// TS asked for a tooth logger buffer, but we don't have one to give it.
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+				}
+			}
+			break;
 		default:
 			// dunno what that was, send NAK
 			return false;
@@ -756,10 +785,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-		EnableToothLoggerIfNotEnabled();
-		// falls through
-	case TS_GET_LOGGER_GET_BUFFER:
 		{
+			EnableToothLoggerIfNotEnabled();
+
 			auto toothBuffer = GetToothLoggerBuffer();
 
 			if (toothBuffer) {
