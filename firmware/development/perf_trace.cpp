@@ -12,12 +12,6 @@
 #error ENABLE_PERF_TRACE must be defined!
 #endif
 
-// Disable the buffer if we're not enabled at all
-#if !ENABLE_PERF_TRACE
-#undef TRACE_BUFFER_LENGTH
-#define TRACE_BUFFER_LENGTH 1
-#endif
-
 enum class EPhase : char
 {
 	Start,
