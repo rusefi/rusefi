@@ -38,12 +38,12 @@ public class MiscTest extends RusefiTestBase {
         assertTrue(message, mcuTemp < 52);
     }
 
-	@Test
-	public void testSetDate() {
-		// set some random time
-		ecu.sendCommand("date 2022-12-07T11:14:22");
+    @Test
+    public void testSetDate() {
+        // set some random time
+        ecu.sendCommand("date 2022-12-07T11:14:22");
 
-		// If things are going to crash, let it happen in this test
-		Thread.sleepSeconds(5);
-	}
+        // If things are going to crash, let it happen in this test
+        sleepSeconds(5);
+    }
 }
