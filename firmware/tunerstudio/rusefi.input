@@ -1413,10 +1413,10 @@ gaugeCategory = GPPWM Outputs
 
 ;						wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
 #if LAMBDA
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
