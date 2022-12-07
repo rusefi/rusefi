@@ -1,7 +1,6 @@
+#include "pch.h"
 
 #include "big_buffer.h"
-
-#include <cstddef>
 
 static BigBufferUser s_currentUser;
 static uint8_t s_bigBuffer[BIG_BUFFER_SIZE];

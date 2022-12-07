@@ -13,8 +13,6 @@ enum class BigBufferUser {
 	TriggerScope,
 };
 
-#include <memory>
-
 class BigBufferHandle {
 public:
 	BigBufferHandle() = default;
