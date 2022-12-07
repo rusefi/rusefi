@@ -144,11 +144,7 @@ void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) 
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
 	if (unusedStack < desiredStackUnusedSize) {
-#ifdef HARDWARE_CI
-		firmwareError(code, "Stack low on %s: %d", msg, unusedStack);
-#else // not HARDWARE_CI
 		warning(code, "Stack low on %s: %d", msg, unusedStack);
-#endif // HARDWARE_CI
 	}
 #else
 	(void)msg; (void)code; (void)desiredStackUnusedSize;

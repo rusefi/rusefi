@@ -17,6 +17,11 @@ public class RusefiTestBase {
         ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
     }
 
+    @After
+    public void checkStackUsage() {
+        ecu.sendCommand("threadsinfo");
+    }
+
     protected EngineChart nextChart() {
         return TestingUtils.nextChart(ecu.commandQueue);
     }

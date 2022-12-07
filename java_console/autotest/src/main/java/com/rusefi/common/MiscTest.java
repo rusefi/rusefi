@@ -46,11 +46,5 @@ public class MiscTest extends RusefiTestBase {
 
         // If things are going to crash, let it happen in this test
         sleepSeconds(5);
-
-        // set some random time
-        ecu.sendCommand("set date 2021-12-07T11:14:22");
-
-        // If things are going to crash, let it happen in this test
-        sleepSeconds(5);
     }
 }
