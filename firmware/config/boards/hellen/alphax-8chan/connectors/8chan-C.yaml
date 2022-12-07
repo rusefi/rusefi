@@ -1,10 +1,20 @@
 pins:
-
+  - pin: 17A
+    function: Analog Ground
+    color: black
+    type: gnd
 
   - pin: 18C
     function: ETB positive
     type: etb
     color: purple
+
+
+  - pin: 22C
+    function: Power Ground
+    color: black
+    type: gnd
+
 
 
   - pin: 23C
@@ -14,6 +24,11 @@ pins:
     function: TPS Sensor Input
     ts_name: 23C - TPS
     color: orange
+
+  - pin: 25C
+    function: Power Ground
+    color: black
+    type: gnd
 
 
   - pin: 26C
