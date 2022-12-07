@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
-import org.junit.Before;
+import org.junit.*;
 
 public class RusefiTestBase {
     protected EcuTestHelper ecu;
