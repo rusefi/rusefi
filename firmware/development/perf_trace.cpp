@@ -8,14 +8,9 @@
 
 #include "pch.h"
 
-
 #ifndef ENABLE_PERF_TRACE
 #error ENABLE_PERF_TRACE must be defined!
 #endif
-
-#ifndef TRACE_BUFFER_LENGTH
-#define TRACE_BUFFER_LENGTH 2048
-#endif /* TRACE_BUFFER_LENGTH */
 
 // Disable the buffer if we're not enabled at all
 #if !ENABLE_PERF_TRACE
