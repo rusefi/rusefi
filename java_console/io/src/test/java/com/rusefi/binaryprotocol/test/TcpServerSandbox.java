@@ -102,22 +102,24 @@ public class TcpServerSandbox {
         } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
             stream.sendPacket(BinaryProtocolServer.createCrcResponse(TOTALLY_EMPTY_CONFIGURATION));
         } else if (command == Fields.TS_SET_LOGGER_SWITCH) {
-            stream.sendPacket(TS_OK.getBytes());
-        } else if (command == Fields.TS_GET_LOGGER_GET_BUFFER) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            baos.write(TS_OK.charAt(0));
-            LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
-            int count = 256;
-            dout.writeShort(count * 5);
+            if (payload[1] == Fields.TS_COMPOSITE_READ) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                baos.write(TS_OK.charAt(0));
+                LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
+                int count = 256;
+                dout.writeShort(count * 5);
 
-            for (int i = 0; i < count; i++) {
-                baos.write(i);
-                baos.write(0);
-                baos.write(0);
-                baos.write(0);
-                baos.write(100);
+                for (int i = 0; i < count; i++) {
+                    baos.write(i);
+                    baos.write(0);
+                    baos.write(0);
+                    baos.write(0);
+                    baos.write(100);
+                }
+                stream.sendPacket(baos.toByteArray());
+            } else {
+                stream.sendPacket(TS_OK.getBytes());
             }
-            stream.sendPacket(baos.toByteArray());
         } else if (command == Fields.TS_OUTPUT_COMMAND) {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
