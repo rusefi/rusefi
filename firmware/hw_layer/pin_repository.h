@@ -12,9 +12,9 @@
 
 #include "global.h"
 #include "io_pins.h"
+#include "efi_gpio.h"
 
 #ifdef __cplusplus
-#include "efi_gpio.h"
 
 class PinRepository {
 	public:
@@ -22,7 +22,7 @@ class PinRepository {
 	 * Class constructors are a great way to have simple initialization sequence
 	 */
 	PinRepository();
-	int totalPinsUsed = 0;
+	const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 };
 
 #endif /* __cplusplus */
@@ -32,7 +32,7 @@ bool isBrainPinValid(brain_pin_e brainPin);
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
-EXTERNC void tle8888_dump_regs(void);
+void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag);
 
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
@@ -54,9 +54,12 @@ EXTERNC void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
 int getPortPinIndex(ioportid_t port, ioportmask_t pin);
 ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(brain_pin_e brainPin);
+int brainPin_to_index(brain_pin_e brainPin);
 unsigned int getBrainPinOnchipNum(void);
 unsigned int getBrainPinTotalNum(void);
-void initBrainUsedPins(void);
+const char *hwPortname(brain_pin_e brainPin);
+// the main usage for human-readable board-specific pin reference is convenience of error messages in case of pin conflict.
+const char * getBoardSpecificPinName(brain_pin_e brainPin);
 
 #ifdef __cplusplus
 const char* & getBrainUsedPin(unsigned int idx);

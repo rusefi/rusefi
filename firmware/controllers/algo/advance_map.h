@@ -5,15 +5,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "ignition_state_generated.h"
+
 #pragma once
 
-#include "engine.h"
-
-angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);
+angle_t getAdvance(int rpm, float engineLoad);
+angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad);
 float getInitialAdvance(int rpm, float map, float advanceMax);
-void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX);
-angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+angle_t getAdvanceCorrections(int rpm);
+size_t getMultiSparkCount(int rpm);
+
+class IgnitionState : public ignition_state_s {
+public:
+	floatms_t getSparkDwell(int rpm);
+};

@@ -7,6 +7,10 @@
 
 #pragma once
 
-#include "trigger_structure.h"
+class TriggerWaveform;
 
 void setVwConfiguration(TriggerWaveform *s);
+/**
+ * I know Skoda was not owned by VAG back than but that's OK
+ */
+void setSkodaFavorit(TriggerWaveform *s);

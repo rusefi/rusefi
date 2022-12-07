@@ -1,0 +1,3 @@
+struct_no_prefix trigger_state_primary_s
+	bit m_hasSynchronizedPhase
+end_struct

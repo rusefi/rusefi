@@ -15,7 +15,7 @@ Cygwin packages that need to be installed:
 - subversion
 - doxygen
 - zip
-- ncftp
+- sshpass
 - wget
 - ccache
 - graphviz

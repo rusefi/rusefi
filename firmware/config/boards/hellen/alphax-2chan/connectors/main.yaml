@@ -1,0 +1,286 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
+pins:
+  - pin: A1
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: A2
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: A2 Battery Sense
+    type: 12v
+    color: red
+  
+  - pin: A3
+    # H144_OUT_PWM2
+    id: C6
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    type: ls
+    ts_name: A3 - Fuel Pump
+    color: purple
+
+  - pin: A4
+    # H144_OUT_PWM3
+    id: C7
+    class: outputs
+    function: Tachometer Output
+    ts_name: A4 - Tachometer
+    color: purple
+
+  - pin: A5
+    function: Sensor Ground
+    type: gnd
+    color: brown
+
+  - pin: A6
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    function: Smart Ignition A Output
+    type: ign
+    ts_name: A6 - Ignition A
+    color: yellow
+
+  - pin: A7
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    function: Smart Ignition B Output
+    type: ign
+    ts_name: A7 - Ignition B
+    color: yellow
+
+  - pin: A8
+    # H144_LS_1
+    id: G7
+    function: Injector A Output
+    class: outputs
+    type: inj
+    ts_name: A8 - Injector A
+    color: blue
+
+  - pin: B1
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: On-board MAP
+    # H144_IN_MAP3
+    id: EFI_ADC_2
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    color: orange
+
+  - pin: B2
+    # H144_IN_MAP2 AIN10 PC1
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: B2 - MAP
+    color: orange
+
+  - pin: B3
+    # H144_IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: B3 - IAT
+    color: orange
+
+  - pin: B4
+    # H144_IN_O2S2 AIN12 PA1
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: B4 - O2
+    color: orange
+
+  - pin: B5
+    # H144_IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: TPS Sensor Input
+    ts_name: B5 - TPS
+    color: orange
+
+  - pin: B6
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
+
+  - pin: B7
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: B7 - CLT
+    color: orange
+
+  - pin: B8
+    # H144_LS_2
+    id: G8
+    function: Injector B Output
+    class: outputs
+    type: inj
+    ts_name: B8 - Injector B
+    color: blue
+
+  - pin: C1
+    # H144_OUT_PWM4
+    id: C8
+    class: outputs
+    function: Fan Relay or 5A Power Output (low)
+    type: ls
+    ts_name: C1 - Fan Relay
+    color: purple
+
+  - pin: C2
+    # H144_IN_D_3
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
+    function: Crank Sensor -
+    type: hall
+    ts_name: C2 - Crank- (hall)
+    color: white
+
+  - pin: C3
+    # H144_IN_D_1
+    id: [E12, E12]
+    class: [event_inputs, switch_inputs]
+    function: Crank Sensor +
+    type: hall
+    ts_name: C3 - Crank+ (hall)
+    color: gray
+
+  - pin: C2C3
+    # H144_IN_CRANK
+    id: B1
+    class: event_inputs
+    function: Crank Sensor (VR)
+    type: hall
+    ts_name: C2/C3 Crank Sensor VR
+    color: gray
+
+  - pin: C4
+    # H144_IN_VSS
+    id: F11
+    class: switch_inputs
+    function: 2Step Digital Input
+    type: hall
+    ts_name: C4 - 2Step/Digital
+    color: gray
+
+  - pin: C5
+    function: CAN bus high (CANH)
+    type: can
+    color: green
+
+  - pin: C6
+    function: CAN bus low (CANL)
+    type: can
+    color: blue
+
+  - pin: C7
+    # H144_IN_CAM
+    id: [A6, A6, EFI_ADC_6]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    function: Camshaft HALL Sensor or Generic Digital Input
+    type: hall
+    ts_name: C7 - CAM Hall/Digital
+    color: brown
+
+  - pin: C8
+    # H144_OUT_PWM1
+    id: D13
+    class: outputs
+    function: Idle Output (low)
+    type: ls
+    ts_name: C8 - Idle
+    color: purple
+
+info:
+  title: AlphaX 2chan
+  name: AlphaX 2chan
+  board_url: https://rusefi.com/s/2chan
+  image:
+    file: alphax-2chan.jpg
+  pins:
+    - pin: A8
+      x: 316
+      y: 239
+    - pin: A7
+      x: 413
+      y: 239
+    - pin: A6
+      x: 489
+      y: 239
+    - pin: A5
+      x: 564
+      y: 239
+    - pin: A4
+      x: 635
+      y: 239
+    - pin: A3
+      x: 710
+      y: 239
+    - pin: A2
+      x: 786
+      y: 239
+    - pin: A1
+      x: 882
+      y: 239
+
+    - pin: B8
+      x: 316
+      y: 352
+    - pin: B7
+      x: 413
+      y: 352
+    - pin: B6
+      x: 489
+      y: 352
+    - pin: B5
+      x: 564
+      y: 352
+    - pin: B4
+      x: 635
+      y: 352
+    - pin: B3
+      x: 710
+      y: 352
+    - pin: B2
+      x: 786
+      y: 352
+    - pin: B1
+      x: 882
+      y: 352
+
+    - pin: C8
+      x: 316
+      y: 466
+    - pin: C7
+      x: 413
+      y: 466
+    - pin: C6
+      x: 489
+      y: 466
+    - pin: C5
+      x: 564
+      y: 466
+    - pin: C4
+      x: 635
+      y: 466
+    - pin: C3
+      x: 710
+      y: 466
+    - pin: C2
+      x: 786
+      y: 466
+    - pin: C1
+      x: 882
+      y: 466

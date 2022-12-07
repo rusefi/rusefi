@@ -6,9 +6,7 @@
  * @author  andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
-#include "pin_repository.h"
+#include "pch.h"
 
 #if HAL_USE_ADC || defined(__DOXYGEN__)
 
@@ -33,116 +31,116 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	// todo: replace this with an array :)
 	switch (hwChannel) {
 	case EFI_ADC_0:
-		return GPIOB_0;
+		return Gpio::B0;
 	case EFI_ADC_1:
-		return GPIOB_1;
+		return Gpio::B1;
 	case EFI_ADC_2:
-		return GPIOB_2;
+		return Gpio::B2;
 	case EFI_ADC_3:
-		return GPIOB_3;
+		return Gpio::B3;
 	case EFI_ADC_4:
-		return GPIOB_4;
+		return Gpio::B4;
 	case EFI_ADC_5:
-		return GPIOB_5;
+		return Gpio::B5;
 	case EFI_ADC_6:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_7:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_8:
-		return GPIOB_8;
+		return Gpio::B8;
 	case EFI_ADC_9:
-		return GPIOB_9;
+		return Gpio::B9;
 	case EFI_ADC_10:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_11:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_12:
-		return GPIOB_12;
+		return Gpio::B12;
 	case EFI_ADC_13:
-		return GPIOB_13;
+		return Gpio::B13;
 	case EFI_ADC_14:
-		return GPIOB_14;
+		return Gpio::B14;
 	case EFI_ADC_15:
-		return GPIOB_15;
+		return Gpio::B15;
 	case EFI_ADC_16:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_17:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_18:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_19:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_20:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_21:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_22:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_23:
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	case EFI_ADC_24:
-		return GPIOC_10;
+		return Gpio::C10;
 	case EFI_ADC_25:
-		return GPIOC_9;
+		return Gpio::C9;
 	case EFI_ADC_26:
-		return GPIOC_8;
+		return Gpio::C8;
 	case EFI_ADC_27:
-		return GPIOC_7;
+		return Gpio::C7;
 	case EFI_ADC_28:
-		return GPIOC_5;
+		return Gpio::C5;
 	case EFI_ADC_29:
-		return GPIOC_4;
+		return Gpio::C4;
 	case EFI_ADC_30:
-		return GPIOC_3;
+		return Gpio::C3;
 	case EFI_ADC_31:
-		return GPIOC_2;
+		return Gpio::C2;
 	default:
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
 	switch (pin) {
-	case GPIOB_0:
+	case Gpio::B0:
 		return EFI_ADC_0;
-	case GPIOB_1:
+	case Gpio::B1:
 		return EFI_ADC_1;
-	case GPIOB_2:
+	case Gpio::B2:
 		return EFI_ADC_2;
-	case GPIOB_3:
+	case Gpio::B3:
 		return EFI_ADC_3;
-	case GPIOB_4:
+	case Gpio::B4:
 		return EFI_ADC_4;
-	case GPIOB_5:
+	case Gpio::B5:
 		return EFI_ADC_5;
-	case GPIOB_8:
+	case Gpio::B8:
 		return EFI_ADC_8;
-	case GPIOB_9:
+	case Gpio::B9:
 		return EFI_ADC_9;
-	case GPIOB_12:
+	case Gpio::B12:
 		return EFI_ADC_12;
-	case GPIOB_13:
+	case Gpio::B13:
 		return EFI_ADC_13;
-	case GPIOB_14:
+	case Gpio::B14:
 		return EFI_ADC_14;
-	case GPIOB_15:
+	case Gpio::B15:
 		return EFI_ADC_15;
-	case GPIOC_10:
+	case Gpio::C10:
 		return EFI_ADC_24;
-	case GPIOC_9:
+	case Gpio::C9:
 		return EFI_ADC_25;
-	case GPIOC_8:
+	case Gpio::C8:
 		return EFI_ADC_26;
-	case GPIOC_7:
+	case Gpio::C7:
 		return EFI_ADC_27;
-	case GPIOC_5:
+	case Gpio::C5:
 		return EFI_ADC_28;
-	case GPIOC_4:
+	case Gpio::C4:
 		return EFI_ADC_29;
-	case GPIOC_3:
+	case Gpio::C3:
 		return EFI_ADC_30;
-	case GPIOC_2:
+	case Gpio::C2:
 		return EFI_ADC_31;
 	default:
 		return EFI_ADC_ERROR;

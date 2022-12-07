@@ -9,8 +9,29 @@
 #pragma once
 
 #include "fifo_buffer.h"
+#include "can_listener.h"
+#include "can_msg_tx.h"
 
-#define CAN_TX_ID 0x102
+#if EFI_PROD_CODE | EFI_SIMULATOR
+#define can_msg_t msg_t
+#define can_sysinterval_t sysinterval_t
+#define CAN_MSG_OK MSG_OK
+#define CAN_MSG_TIMEOUT MSG_TIMEOUT
+#else
+#include "can_mocks.h"
+#endif /* EFI_UNIT_TEST */
+
+
+#define CAN_TIME_IMMEDIATE ((can_sysinterval_t)0)
+
+// most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
+#define CAN_FIFO_BUF_SIZE 76
+#define CAN_FIFO_FRAME_SIZE 8
+
+#define CAN_FLOW_STATUS_OK 0
+#define CAN_FLOW_STATUS_WAIT_MORE 1
+#define CAN_FLOW_STATUS_ABORT 2
+
 
 enum IsoTpFrameType {
 	ISO_TP_FRAME_SINGLE = 0,
@@ -33,10 +54,17 @@ public:
 	int separationTime;
 };
 
+// We need an abstraction layer for unit-testing
+class ICanStreamer {
+public:
+	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) = 0;
+	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) = 0;
+};
+
 class CanStreamerState {
 public:
-	fifo_buffer<uint8_t, 64> rxFifoBuf;
-	fifo_buffer<uint8_t, 64> txFifoBuf;
+	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> rxFifoBuf;
+	fifo_buffer<uint8_t, CAN_FIFO_BUF_SIZE> txFifoBuf;
 
 #if defined(TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME)
 	// used to restore the original packet with CRC
@@ -47,21 +75,70 @@ public:
 	int waitingForNumBytes = 0;
 	int waitingForFrameIndex = 0;
 
-	event_listener_t el;
+	ICanStreamer *streamer;
 	
 public:
-	int sendFrame(CANDriver *canp, const IsoTpFrameHeader & header, const uint8_t *data, int num);
-	int receiveFrame(CANDriver *canp, CANRxFrame *rxmsg, uint8_t *buf, int num);
+	CanStreamerState(ICanStreamer *s) : streamer(s) {}
+
+	int sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout);
+	int receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can_sysinterval_t timeout);
 	int getDataFromFifo(uint8_t *rxbuf, size_t &numBytes);
 	// returns the number of bytes sent
-	int sendDataTimeout(CANDriver *canp, const uint8_t *txbuf, int numBytes, sysinterval_t timeout);
+	int sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout);
+
+	// streaming support for TS I/O (see tunerstudio_io.cpp)
+	can_msg_t streamAddToTxTimeout(size_t *np, const uint8_t *txbuf, can_sysinterval_t timeout);
+	can_msg_t streamFlushTx(can_sysinterval_t timeout);
+	can_msg_t streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can_sysinterval_t timeout);
 };
 
-void canInit(CANDriver *canp);
+class CanRxMessage {
+public:
+	CanRxMessage() {}
+	CanRxMessage(const CANRxFrame &f) {
+		frame = f;
+	}
+	CanRxMessage(const CanRxMessage& msg) : frame(msg.frame) {}
+	CanRxMessage& operator=(const CanRxMessage& msg) {
+		frame = msg.frame;
+		return *this;
+	}
+
+public:
+	CANRxFrame frame;
+};
+
+class CanTsListener : public CanListener {
+public:
+	CanTsListener()
+		: CanListener(CAN_ECU_SERIAL_RX_ID)
+	{
+	}
+
+	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt);
+
+	bool get(CanRxMessage &item, int timeout) {
+		return rxFifo.get(item, timeout);
+	}
+
+protected:
+	fifo_buffer_sync<CanRxMessage, CAN_FIFO_FRAME_SIZE> rxFifo;
+};
+
+#if HAL_USE_CAN
+class CanStreamer : public ICanStreamer {
+public:
+	void init();
+
+	virtual can_msg_t transmit(canmbx_t mailbox, const CanTxMessage *ctfp, can_sysinterval_t timeout) override;
+	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) override;
+};
+
+void canStreamInit(void);
 
 // we don't have canStreamSendTimeout() because we need to "bufferize" the stream and send it in fixed-length packets
-msg_t canAddToTxStreamTimeout(CANDriver *canp, size_t *np, const uint8_t *txbuf, sysinterval_t timeout);
-msg_t canFlushTxStream(CANDriver *canp, sysinterval_t timeout);
+msg_t canStreamAddToTxTimeout(size_t *np, const uint8_t *txbuf, sysinterval_t timeout);
+msg_t canStreamFlushTx(sysinterval_t timeout);
 
-msg_t canStreamReceiveTimeout(CANDriver *canp, size_t *np, uint8_t *rxbuf, sysinterval_t timeout);
-
+msg_t canStreamReceiveTimeout(size_t *np, uint8_t *rxbuf, sysinterval_t timeout);
+#endif /* HAL_USE_CAN */

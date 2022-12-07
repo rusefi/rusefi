@@ -4,24 +4,20 @@ import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
-import com.rusefi.ui.FuelTunePane;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 
 import javax.swing.*;
 import java.awt.*;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
 
-
-//    public final RomEditorPane romEditorPane;
     public final SettingsTab settingsTab;
     public final LogDownloader logsManager;
-    public final FuelTunePane fuelTunePane;
     public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
     public final JTabbedPane tabbedPane = new JTabbedPane() {
@@ -60,8 +56,7 @@ public class TabbedPanel {
             if (message.startsWith(Fields.CRITICAL_PREFIX))
                 criticalError = message;
         });
-        fuelTunePane = new FuelTunePane(uiContext, getConfig().getRoot().getChild("fueltune"));
-//        romEditorPane = new RomEditorPane(uiContext);
+
         settingsTab = new SettingsTab(uiContext);
         logsManager = new LogDownloader(uiContext);
     }

@@ -1,0 +1,228 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
+pins:
+# extension header pins
+  - pin: PPS1
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: PPS1
+
+  - pin: Aux PPS2
+# H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Aux PPS2
+
+  - pin: Aux TPS2
+# H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: Aux TPS2
+
+  - pin: Aux TPS3
+# H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Aux TPS3
+
+# Solder pads
+  - pin: VIN5
+    id: [EFI_ADC_0, A0]
+    class: [analog_inputs, switch_inputs]
+    ts_name: VIN5
+
+  - pin: VIN6
+    id: [EFI_ADC_1, A1]
+    class: [analog_inputs, switch_inputs]
+    ts_name: VIN6
+
+# Normal connector pins
+  - pin: 1
+    id: G14
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    ts_name: 1 - OUT_PUMP
+
+  - pin: 2
+    # H144_OUT_PWM8
+    id: D12
+    class: outputs
+    ts_name: 2 - IdleC
+
+  - pin: 3
+    id: D9
+    function: Injector 5 Output
+    class: outputs
+    ts_name: 3 - INJ_5
+    type: inj
+
+  - pin: 4
+    id: F12
+    function: Injector 6 Output
+    class: outputs
+    ts_name: 4 - INJ_6
+    type: inj
+
+  - pin: 5
+    id: D10
+    function: Injector 4 Output
+    class: outputs
+    ts_name: 5 - INJ_4
+    type: inj
+
+  - pin: 7
+    id: F13
+    function: Injector 7/VVT Output
+    class: outputs
+    ts_name: 7 - INJ_7/VVT
+    type: inj
+
+  - pin: 8
+    ts_name: CEL
+
+  - pin: 16
+    id: [B1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 16 - CRANK
+    function: Crankshaft Sensor
+
+  - pin: 17
+    id: [A6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 17 - CAM
+    function: Camshaft Sensor
+
+  - pin: 23
+    id: E3
+    class: outputs
+    ts_name: 23 - Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 24
+    id: B8
+    class: outputs
+    ts_name: 24 - Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 25
+    id: E2
+    class: outputs
+    ts_name: 25 - Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 27
+    id: D3
+    class: outputs
+    ts_name: 27 - MAIN
+    function: Main relay control
+    type: ls
+
+  - pin: 29
+# H144_OUT_PWM5
+    id: C9
+    class: outputs
+    ts_name: 29 - Idle
+
+  - pin: 31
+    id: D11
+    function: Injector 3 Output
+    class: outputs
+    ts_name: 31 - INJ_3
+    type: inj
+
+  - pin: 32
+    id: G8
+    function: Injector 2 Output
+    class: outputs
+    ts_name: 32 - INJ_2
+    type: inj
+
+  - pin: 33
+    id: G7
+    function: Injector 1 Output
+    class: outputs
+    ts_name: 33 - INJ_1
+    type: inj
+
+  - pin: 35
+    id: F14
+    function: Injector 8 Output
+    class: outputs
+    ts_name: 35 - INJ_8
+    type: inj
+
+  - pin: 41
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 41 - MAF
+    function: MAF sensor
+
+  - pin: 47
+# H144_OUT_PWM7
+    id: D15
+    class: outputs
+    ts_name: 47 - Tach
+
+  - pin: 50
+    id: C13
+    class: outputs
+    ts_name: 50 - Coil 1
+    function: Coil 1
+    type: ign
+
+
+  - pin: 51
+    id: E5
+    class: outputs
+    ts_name: 51 - Coil 2
+    function: Coil 2
+    type: ign
+
+  - pin: 52
+    id: E4
+    class: outputs
+    ts_name: 52 - Coil 3
+    function: Coil 3
+    type: ign
+
+  - pin: 56
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 56 - Battery Sense
+
+  - pin: 73
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 73 - TPS
+
+  - pin: 77
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 77 - IAT
+    function: IAT sensor
+
+  - pin: 78
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 78 - CLT
+    function: CLT sensor
+
+  - pin: Aux MAP
+# H144_IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Aux MAP
+
+  - pin: Aux BARO
+# H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Aux BARO
+
+info:
+  title: Hellen 88 BMW
+  pins:

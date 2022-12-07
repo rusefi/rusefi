@@ -9,7 +9,7 @@
 
 #include "engine_configuration.h"
 #include "pwm_generator_logic.h"
-#include "pid.h"
+#include "efi_pid.h"
 
 typedef enum {
 	CJ125_LSU_42 = 0,
@@ -55,12 +55,11 @@ class CJ125 {
 public:
 	CJ125();
 	Cj125SpiStream *spi = nullptr;
-	Logging *logger = nullptr;
 
 	SimplePwm wboHeaterControl;
 
 	// Chip diagnostics register contents
-	volatile int diag = 0;
+	int diag = 0;
 
 	efitick_t startHeatingNt;
 	efitick_t prevNt;
@@ -69,44 +68,44 @@ public:
 	pid_s heaterPidConfig;
 	Pid heaterPid;
 
-	volatile cj125_mode_e mode = CJ125_MODE_NONE;
+	cj125_mode_e mode = CJ125_MODE_NONE;
 
 	// Amplification coefficient, needed by cjGetAfr()
-	volatile float amplCoeff = 0.0f;
+	float amplCoeff = 0.0f;
 	// Calculated Lambda-value
-	volatile float lambda = 1.0f;
+	float lambda = 1.0f;
 
 	// Current values
 	// lambda
-	volatile float vUa = 0.0f;
+	float vUa = 0.0f;
 	// heater
-	volatile float vUr = 0.0f;
+	float vUr = 0.0f;
 
 	// Calibration values
 	// lambda
-	volatile float vUaCal = 0.0f;
+	float vUaCal = 0.0f;
 	// header
-	volatile float vUrCal = 0.0f;
+	float vUrCal = 0.0f;
 
 	OutputPin wboHeaterPin;
 	OutputPin cj125Cs;
 
 	// Used by CJ125 driver state machine
-	volatile cj125_state_e state = CJ125_INIT;
+	cj125_state_e state = CJ125_INIT;
 	// Last Error code
-	volatile cj125_error_e errorCode = CJ125_NO_ERROR;
+	cj125_error_e errorCode = CJ125_NO_ERROR;
 
-	void setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setError(cj125_error_e errCode);
 	bool isWorkingState(void) const;
-	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX);
-	bool cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void SetHeater(float value);
+	void SetIdleHeater();
+	void StartHeaterControl();
+	bool cjIdentify();
 	void printDiag();
-	void calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void calibrate();
 	void cjSetMode(cj125_mode_e m);
 	bool isValidState() const;
-	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void cjInitPid();
 };
 
 // Heater params for Idle(cold), Preheating and Control stages

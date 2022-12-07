@@ -1,8 +1,0 @@
-EESchema-DOCLIB  Version 2.0  Date: Вс 13 июл 2014 16:43:20
-#
-$CMP STM32F103C8
-D STM8S105C4(C6), 8-bit microcontroller, 16MHz, 16(32)KB Flash, 2KB RAM, VQFP48
-K STM8
-$ENDCMP
-#
-#End Doc Library

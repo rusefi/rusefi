@@ -1,7 +1,6 @@
-#include "functional_sensor.h"
-#include "global.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "functional_sensor.h"
 
 struct DoublerFunc final : public SensorConverter {
 	SensorResult convert(float input) const {
@@ -65,6 +64,5 @@ TEST_F(SensorConverted, TestInvalid) {
 	{
 		auto s = Sensor::get(SensorType::Clt);
 		EXPECT_FALSE(s.Valid);
-		EXPECT_FLOAT_EQ(s.Value, 0);
 	}
 }

@@ -19,17 +19,17 @@ typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
 #define DL_OUTPUT_BUFFER 200
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 100
+#define FIRMWARE_ID "UNIT_TEST"
 
 // just a stub implementation for unit tests
-#define EXPECTED_REMAINING_STACK 1
 #define getCurrentRemainingStack() (999999)
 
-// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
-#include "engine_configuration_generated_structures.h"
+#define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)
+#define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
 
 
 #ifdef __cplusplus
+#include "mock-threads.h"
 // todo: include it right here? #include "unit_test_framework.h"
 extern "C"
 {
@@ -42,8 +42,6 @@ typedef int bool_t;
 typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
-
-void print(const char *fmt, ...);
 
 #define TICKS_IN_MS 100
 
@@ -64,30 +62,9 @@ void print(const char *fmt, ...);
 
 #define CCM_OPTIONAL
 
-#define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s & activeConfiguration
-
-#define EXTERN_CONFIG
-
-#define DEFINE_CONFIG_PARAM(x, y) , x y
-#define PASS_CONFIG_PARAM(x) , x
-
-/**
- * this macro provides references to engine from EngineTestHelper
- */
-#define EXPAND_EngineTestHelper \
-	    Engine *engine = &eth.engine; \
-		EXPAND_Engine
-
-#define WITH_ENGINE_TEST_HELPER_SENS(x, sensorvals) \
-	EngineTestHelper eth(x, sensorvals); \
-	EXPAND_EngineTestHelper;
-
-#define WITH_ENGINE_TEST_HELPER(x) \
-	EngineTestHelper eth(x, std::unordered_map<SensorType, float>{}); \
-	EXPAND_EngineTestHelper;
-
-#define CONFIG_PARAM(x) (x)
+#define chSysLock() {}
+#define chSysUnlock() {}
+#define osalThreadDequeueNextI(x, y) {}
 
 #ifdef __cplusplus
 namespace chibios_rt {
@@ -97,3 +74,6 @@ namespace chibios_rt {
 #endif
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }
+
+#define chsnprintf snprintf
+#define chvsnprintf vsnprintf

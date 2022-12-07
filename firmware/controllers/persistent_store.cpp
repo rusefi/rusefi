@@ -21,22 +21,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
+
 #if !EFI_UNIT_TEST
 #include "sensor_chart.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
-#include "engine_controller.h"
 
 persistent_config_container_s persistentState CCM_OPTIONAL;
 
-persistent_config_s *config = &persistentState.persistentConfiguration;
+#else // EFI_UNIT_TEST
 
-/**
- * todo: it really looks like these fields should become 'static', i.e. private
- * the whole 'extern ...' pattern is less then perfect, I guess the 'God object' Engine
- * would be a smaller evil. Whatever is needed should be passed into methods/modules/files as an explicit parameter.
- */
-engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
+persistent_config_s * config;
+engine_configuration_s * engineConfiguration;
 
 #endif /* EFI_UNIT_TEST */

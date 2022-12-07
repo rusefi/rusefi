@@ -11,17 +11,13 @@
  * 3) CJ125 internal wideband controller is known to work with both 4.2 and 4.9
  *
  */
-#include "ego.h"
-#include "interpolation.h"
-#include "engine.h"
-#include "adc_inputs.h"
+#include "pch.h"
+
 #include "cyclic_buffer.h"
 
 #if EFI_CJ125
 #include "cj125.h"
 #endif /* EFI_CJ125 */
-
-EXTERN_ENGINE;
 
 #ifdef EFI_NARROW_EGO_AVERAGING
 // Needed by narrow EGOs (see updateEgoAverage()).
@@ -38,7 +34,7 @@ static int totalEgoCnt = 0;
 static int prevEgoCnt = 0;
 
 // todo: move it to engineConfiguration
-static const float stoichAfr = 14.7f;
+static const float stoichAfr = STOICH_RATIO;
 static const float maxAfrDeviation = 5.0f;	// 9.7..19.7
 static const int minAvgSize = (EGO_AVG_BUF_SIZE / 2);	// ~0.6 sec for 20ms period of 'fast' callback, and it matches a lag time of most narrow EGOs
 static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer
@@ -48,9 +44,9 @@ static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer
 static float lastAfr = stoichAfr;
 #endif
 
-void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initEgoAveraging() {
 	// Our averaging is intended for use only with Narrow EGOs.
-	if (CONFIG(afr_type) == ES_NarrowBand) {
+	if (engineConfiguration->afr_type == ES_NarrowBand) {
 		totalEgoCnt = prevEgoCnt = 0;
 		egoAfrBuf.clear();
 		useAveraging = true;
@@ -91,18 +87,18 @@ static float updateEgoAverage(float afr) {
 	return egoAfrSum / float(totalEgoCnt - startAvgCnt);
 }
 #else
-void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initEgoAveraging() {
 }
 #endif
 
-bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(enableAemXSeries) || CONFIG(enableInnovateLC2)) {
+bool hasAfrSensor() {
+	if (engineConfiguration->enableAemXSeries || engineConfiguration->enableInnovateLC2) {
 		return true;
 	}
 
 #if EFI_CJ125 && HAL_USE_SPI
-	if (CONFIG(isCJ125Enabled)) {
-		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (engineConfiguration->isCJ125Enabled) {
+		return cjHasAfrSensor();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
@@ -110,27 +106,27 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 extern float InnovateLC2AFR;
 
-float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getAfr() {
 #if EFI_AUX_SERIAL
-	if (CONFIG(enableInnovateLC2))
+	if (engineConfiguration->enableInnovateLC2)
 		return InnovateLC2AFR;
 #endif
 
 #if EFI_CJ125 && HAL_USE_SPI
-	if (CONFIG(isCJ125Enabled)) {
-		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (engineConfiguration->isCJ125Enabled) {
+		return cjGetAfr();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
-	afr_sensor_s * sensor = &CONFIG(afr);
+	afr_sensor_s * sensor = &engineConfiguration->afr;
 
 	if (!isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
 		return 0;
 	}
 
-	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
+	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
-	if (CONFIG(afr_type) == ES_NarrowBand) {
-		float afr = interpolate2d("narrow", volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
+	if (engineConfiguration->afr_type == ES_NarrowBand) {
+		float afr = interpolate2d(volts, config->narrowToWideOxygenBins, config->narrowToWideOxygen);
 #ifdef EFI_NARROW_EGO_AVERAGING
 		if (useAveraging)
 			afr = updateEgoAverage(afr);
@@ -188,7 +184,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 	}
 }
 
-void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	CONFIG(afr_type) = type;
+void setEgoSensor(ego_sensor_e type) {
+	engineConfiguration->afr_type = type;
 	initEgoSensor(&engineConfiguration->afr, type);
 }

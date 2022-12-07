@@ -7,29 +7,17 @@
  * @author andreika, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_math.h"
-#include "tps.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 #if 0
 char __debugBuffer[80];
 int __debugEnabled = 0;
 #endif
 
-void setBoardConfigurationOverrides(void) {
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+void setBoardOverrides() {
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -44,7 +32,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
@@ -76,19 +63,18 @@ void setBoardConfigurationOverrides(void) {
 
 	engineConfiguration->clt.adcChannel = EFI_ADC_14;
 
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::E7;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
 	engineConfiguration->tle6240spiDevice = SPI_DEVICE_1;
-	engineConfiguration->tle6240_cs = GPIOB_0;
+	engineConfiguration->tle6240_cs = Gpio::B0;
 	
 	// todo:
 	int i;
-	for (i = 0; i < INJECTION_PIN_COUNT; i++)
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	for (i = 0; i < IGNITION_PIN_COUNT; i++)
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
@@ -99,23 +85,19 @@ void setBoardConfigurationOverrides(void) {
 	setSerialConfigurationOverrides();
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = true;
-	engineConfiguration->binarySerialTxPin = GPIOC_7;
-	engineConfiguration->binarySerialRxPin = GPIOC_6;
-//	engineConfiguration->consoleSerialTxPin = GPIOA_10;
-//	engineConfiguration->consoleSerialRxPin = GPIOA_11;
+void setSerialConfigurationOverrides() {
+	engineConfiguration->binarySerialTxPin = Gpio::C7;
+	engineConfiguration->binarySerialRxPin = Gpio::C6;
+//	engineConfiguration->consoleSerialTxPin = Gpio::A10;
+//	engineConfiguration->consoleSerialRxPin = Gpio::A11;
 	engineConfiguration->tunerStudioSerialSpeed = SERIAL_SPEED;
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
-void setAdcChannelOverrides(void) {
+void setAdcChannelOverrides() {
 	// on Kinetis, ADC_FAST & SLOW are not really "fast" or "slow", 
 	// they are just different ADC numbers with different sets of channels
 	removeChannel("VBatt", engineConfiguration->vbattAdcChannel);
@@ -123,4 +105,16 @@ void setAdcChannelOverrides(void) {
 	
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+}
+
+#include <setjmp.h>
+
+void longjmp(jmp_buf /*env*/, int /*status*/) {
+	// noop, but noreturn
+	while (1) { }
+}
+
+int setjmp(jmp_buf /*env*/) {
+	// Fake return 0, not implemented
+	return 0;
 }

@@ -6,51 +6,38 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "allsensors.h"
-#include "fsio_impl.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
+#include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
-	GPIOD_7,
-	GPIOG_9,
-	GPIOG_10,
-	GPIOG_11,
-	GPIOG_12,
-	GPIOG_13,
-	GPIOG_14,
-	GPIOB_4,
-	GPIOB_5,
-	GPIOB_6,
-	GPIOB_7,
-	GPIOB_8
+	PROTEUS_LS_1,
+	PROTEUS_LS_2,
+	PROTEUS_LS_3,
+	PROTEUS_LS_4,
+	PROTEUS_LS_5,
+	PROTEUS_LS_6,
+	PROTEUS_LS_7,
+	PROTEUS_LS_8,
+	PROTEUS_LS_9,
+	PROTEUS_LS_10,
+	PROTEUS_LS_11,
+	PROTEUS_LS_12
 };
 
 static const brain_pin_e ignPins[] = {
-	GPIOD_4,
-	GPIOD_3,
-	GPIOC_9,
-	GPIOC_8,
-	GPIOC_7,
-	GPIOG_8,
-	GPIOG_7,
-	GPIOG_6,
-	GPIOG_5,
-	GPIOG_4,
-	GPIOG_3,
-	GPIOG_2,
+	PROTEUS_IGN_1,
+	PROTEUS_IGN_2,
+	PROTEUS_IGN_3,
+	PROTEUS_IGN_4,
+	PROTEUS_IGN_5,
+	PROTEUS_IGN_6,
+	PROTEUS_IGN_7,
+	PROTEUS_IGN_8,
+	PROTEUS_IGN_9,
+	PROTEUS_IGN_10,
+	PROTEUS_IGN_11,
+	PROTEUS_IGN_12,
 };
-
-static const ConfigOverrides configOverrides = {
-	.canTxPin = GPIOD_1,
-	.canRxPin = GPIOD_0,
-};
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
 
 static void setInjectorPins() {
 	copyArray(engineConfiguration->injectionPins, injPins);
@@ -62,14 +49,11 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides(void) {
-}
-
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
-	CONFIG(communicationLedPin) = GPIOE_4;
-	CONFIG(runningLedPin) = GPIOE_5;
-	CONFIG(warningLedPin) = GPIOE_6;
+	engineConfiguration->communicationLedPin = Gpio::E4;
+	engineConfiguration->runningLedPin = Gpio::E5;
+	engineConfiguration->warningLedPin = Gpio::E6;
 }
 
 static void setupVbatt() {
@@ -94,23 +78,23 @@ static void setupEtb() {
 
 	// Throttle #1
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIOD_12;
+	engineConfiguration->etbIo[0].controlPin = Gpio::D12;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_10;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::D10;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = GPIOD_11;
+	engineConfiguration->etbIo[0].disablePin = Gpio::D11;
 	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
 	// Throttle #2
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin1 = GPIOD_13;
+	engineConfiguration->etbIo[1].controlPin = Gpio::D13;
 	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = GPIOD_9;
+	engineConfiguration->etbIo[1].directionPin1 = Gpio::D9;
 	// Disable pin
-	engineConfiguration->etbIo[1].disablePin = GPIOD_8;
+	engineConfiguration->etbIo[1].disablePin = Gpio::D8;
 	// Unused
-	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].directionPin2 = Gpio::Unassigned;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
@@ -120,93 +104,104 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 #if VR_HW_CHECK_MODE
 	// set_trigger_input_pin 0 PE7
-	// GPIOE_7:  "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
-	// GPIOE_8:  "VR 2"
-	engineConfiguration->camInputs[0] = GPIOE_8;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_VR_2;
 #else
 	// Digital channel 1 as default - others not set
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 #endif
 
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
-	// CLT = Analog Temp 3 = PB0
-	engineConfiguration->clt.adcChannel = EFI_ADC_8;
-	engineConfiguration->clt.config.bias_resistor = 2700;
 
-	// IAT = Analog Temp 2 = PC5
-	engineConfiguration->iat.adcChannel = EFI_ADC_15;
-	engineConfiguration->iat.config.bias_resistor = 2700;
-
-	// TPS = Analog volt 2 = PC1
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
-
-	// MAP = Analog volt 1 = PC0
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_IAT;
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_TPS;
+	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
 	// pin #28 WBO AFR "Analog Volt 10"
 	engineConfiguration->afr.hwChannel = EFI_ADC_5;
 }
 
 static void setupSdCard() {
-	engineConfiguration->isSdCardEnabled = true;
-
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOD_2;
+	engineConfiguration->sdCardCsPin = Gpio::D2;
 
 	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3mosiPin = Gpio::C12;
 }
 
-void setPinConfigurationOverrides(void) {
-}
+void setBoardConfigOverrides() {
+	setupSdCard();
+	setLedPins();
+	setupVbatt();
 
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
-}
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
 
+	engineConfiguration->canTxPin = Gpio::D1;
+	engineConfiguration->canRxPin = Gpio::D0;
+
+#if defined(STM32F4) || defined(STM32F7)
+	engineConfiguration->can2RxPin = Gpio::B12;
+	engineConfiguration->can2TxPin = Gpio::B13;
+#endif
+
+	engineConfiguration->lps25BaroSensorScl = Gpio::B10;
+	engineConfiguration->lps25BaroSensorSda = Gpio::B11;
+}
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  *
  * See also setDefaultEngineConfiguration
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
-	setLedPins();
-	setupVbatt();
 	setupEtb();
-	setupSdCard();
+
+	engineConfiguration->isSdCardEnabled = true;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
+
+	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
-	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+#if HW_PROTEUS & EFI_PROD_CODE
+	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
+	engineConfiguration->fanPin = PROTEUS_LS_15;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
+#endif // HW_PROTEUS
+
+	// If we're running as hardware CI, borrow a few extra pins for that
+#ifdef HARDWARE_CI
+	engineConfiguration->triggerSimulatorPins[0] = Gpio::G3;
+	engineConfiguration->triggerSimulatorPins[1] = Gpio::G2;
+#endif
+}
+
+void boardPrepareForStop() {
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
+
+int getBoardMetaOutputsCount() {
+    return efi::size(PROTEUS_OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return PROTEUS_OUTPUTS;
 }

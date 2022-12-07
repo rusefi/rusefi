@@ -1,0 +1,193 @@
+pins:
+  - pin: 34A
+    function: Power GND
+    type: gnd
+
+info:
+  title: AlphaX 8chan
+  name: AlphaX 8chan
+  board_url: https://rusefi.com/s/8chan
+  image:
+    file: 8chan-A-B.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180
+
+    - pin: 1B
+      x: 425
+      y: 90
+    - pin: 2B
+      x: 450
+      y: 90
+    - pin: 3B
+      x: 475
+      y: 90
+    - pin: 4B
+      x: 500
+      y: 90
+    - pin: 5B
+      x: 525
+      y: 90
+    - pin: 6B
+      x: 550
+      y: 90
+    - pin: 7B
+      x: 575
+      y: 90
+    - pin: 8B
+      x: 435
+      y: 120
+    - pin: 9B
+      x: 460
+      y: 120
+    - pin: 10B
+      x: 485
+      y: 120
+    - pin: 11B
+      x: 510
+      y: 120
+    - pin: 12B
+      x: 535
+      y: 120
+    - pin: 13B
+      x: 560
+      y: 120
+    - pin: 14B
+      x: 435
+      y: 150
+    - pin: 15B
+      x: 460
+      y: 150
+    - pin: 16B
+      x: 485
+      y: 150
+    - pin: 17B
+      x: 510
+      y: 150
+    - pin: 18B
+      x: 535
+      y: 150
+    - pin: 19B
+      x: 560
+      y: 150
+    - pin: 20B
+      x: 425
+      y: 180
+    - pin: 21B
+      x: 450
+      y: 180
+    - pin: 22B
+      x: 475
+      y: 180
+    - pin: 23B
+      x: 500
+      y: 180
+    - pin: 24B
+      x: 525
+      y: 180
+    - pin: 25B
+      x: 550
+      y: 180
+    - pin: 26B
+      x: 575
+      y: 180

@@ -17,15 +17,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
-#include "thermistors.h"
 #include "mazda_miata_vvt.h"
 
-EXTERN_CONFIG;
-
-static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
+static void common2jz() {
+	setFrankensoConfiguration(); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -33,27 +32,25 @@ static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	engineConfiguration->ignitionPins[0] = GPIOE_14;
-	engineConfiguration->ignitionPins[1] = GPIOC_7;
-	engineConfiguration->ignitionPins[2] = GPIOC_9;
-	engineConfiguration->ignitionPins[3] = GPIOE_10;
-	engineConfiguration->ignitionPins[4] = GPIOE_8;
-	engineConfiguration->ignitionPins[5] = GPIOE_12;
+	engineConfiguration->ignitionPins[0] = Gpio::E14;
+	engineConfiguration->ignitionPins[1] = Gpio::C7;
+	engineConfiguration->ignitionPins[2] = Gpio::C9;
+	engineConfiguration->ignitionPins[3] = Gpio::E10;
+	engineConfiguration->ignitionPins[4] = Gpio::E8;
+	engineConfiguration->ignitionPins[5] = Gpio::E12;
 
 
-	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
-	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
-	engineConfiguration->injectionPins[2] = GPIOB_8; // #3
-	engineConfiguration->injectionPins[3] = GPIOB_7; // #4
-	engineConfiguration->injectionPins[4] = GPIOE_3; // #5
-	engineConfiguration->injectionPins[5] = GPIOE_4; // #6
+	engineConfiguration->injectionPins[0] = Gpio::B9; // #1
+	engineConfiguration->injectionPins[1] = Gpio::E2; // #2
+	engineConfiguration->injectionPins[2] = Gpio::B8; // #3
+	engineConfiguration->injectionPins[3] = Gpio::B7; // #4
+	engineConfiguration->injectionPins[4] = Gpio::E3; // #5
+	engineConfiguration->injectionPins[5] = Gpio::E4; // #6
 
-	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
 	// chartsize 450
 	engineConfiguration->engineChartSize = 450;
-
-	//	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->map.sensor.type = MT_CUSTOM;
 
@@ -68,49 +65,21 @@ static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
-	engineConfiguration->trigger.type = TT_2JZ_1_12;
-
-//// temporary while I am fixing trigger bug
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-//	//set trigger_type 16
-//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-//	engineConfiguration->trigger.customTotalToothCount = 36;
-//	engineConfiguration->trigger.customSkippedToothCount = 2;
-//
-//	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
-//	engineConfiguration->twoWireBatchIgnition = true;
-//
-//	engineConfiguration->crankingInjectionMode = IM_BATCH;
-//	engineConfiguration->injectionMode = IM_BATCH;
-//	engineConfiguration->twoWireBatchInjection = true;
-
-//	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-//	engineConfiguration->triggerInputPins[1] = GPIOC_6;
-
-	engineConfiguration->isSdCardEnabled = false;
-
-
-}
-
 /**
  * TOYOTA_2JZ_GTE_VVTi
  * set engine_type 44
  */
-void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setToyota_2jz_vics() {
+	common2jz();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
+	engineConfiguration->triggerInputPins[0] = Gpio::A5; // crank sensor
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code
 
-	engineConfiguration->camInputs[0] = GPIOC_6;
-	engineConfiguration->vvtMode = VVT_2JZ;
+	engineConfiguration->camInputs[0] = Gpio::C6;
+	engineConfiguration->vvtMode[0] = VVT_2JZ;
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo
@@ -120,21 +89,18 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->twoWireBatchIgnition = true;
 	engineConfiguration->twoWireBatchInjection = true;
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_TOYOTA);
-	strcpy(CONFIG(engineCode), "2JZ");
-	strcpy(CONFIG(vehicleName), "VVT example");
-
-
-	engineConfiguration->debugMode = DBG_VVT;
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
+	strcpy(engineConfiguration->engineCode, "2JZ");
+	strcpy(engineConfiguration->vehicleName, "VVT example");
 
 	// todo: these magic values would be hardcoded once we find out proper magic values
-	engineConfiguration->fsio_setting[14] = 175 - 45;
-	engineConfiguration->fsio_setting[15] = 175 + 45;
+	//	engineConfiguration->scriptSetting[4] = 175 - 45;
+	//	engineConfiguration->scriptSetting[5] = 175 + 45;
 
-	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
 
 	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
-	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaNB2VVTSettings();
 }
 
 

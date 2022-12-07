@@ -1,0 +1,39 @@
+#
+# See https://github.com/rusefi/rusefi/wiki/Connector-Mapping
+#
+
+name: Generate Interactive Pinouts
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Install prerequisite software
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        misc/actions/pinouts-install.sh
+        echo "::add-path::`pwd`/yqdir/"
+
+    - name: Set FTP variables
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      run: |
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
+        fi
+
+    - name: Generate documentation
+      run: bash ./misc/jenkins/generate_pinouts/gen_upload_pinouts.sh

@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="TriggerImage all" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.trigger.TriggerImage" />
+    <module name="java_tools.ui.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rusefi.trigger.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

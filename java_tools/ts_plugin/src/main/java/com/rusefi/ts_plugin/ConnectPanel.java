@@ -102,7 +102,7 @@ public class ConnectPanel {
     }
 
     private void tryToConnect(ConnectionStateListener connectionStateListener) {
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             status.setText("rusEFI not found");
             connect.setEnabled(true);
@@ -116,7 +116,7 @@ public class ConnectPanel {
                     });
                 }
 
-                public void onConnectionFailed() {
+                public void onConnectionFailed(String message) {
                 }
             });
         }

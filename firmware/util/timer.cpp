@@ -1,8 +1,17 @@
+#include "pch.h"
+
 #include "timer.h"
-#include "global.h"
+
+Timer::Timer() {
+	init();
+}
 
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();
+}
+
+void Timer::init() {
+	m_lastReset = INT64_MIN / 8;
 }
 
 void Timer::reset(efitick_t nowNt) {
@@ -10,11 +19,11 @@ void Timer::reset(efitick_t nowNt) {
 }
 
 bool Timer::hasElapsedSec(float seconds) const {
-	return hasElapsedMs(seconds * 1e3);
+	return hasElapsedMs(seconds * 1000);
 }
 
 bool Timer::hasElapsedMs(float milliseconds) const {
-	return hasElapsedUs(milliseconds * 1e3);
+	return hasElapsedUs(milliseconds * 1000);
 }
 
 bool Timer::hasElapsedUs(float microseconds) const {
@@ -35,22 +44,30 @@ float Timer::getElapsedSeconds() const {
 }
 
 float Timer::getElapsedSeconds(efitick_t nowNt) const {
-	auto delta = nowNt - m_lastReset;
+	return 1 / US_PER_SECOND_F * getElapsedUs(nowNt);
+}
+
+float Timer::getElapsedUs() const {
+	return getElapsedUs(getTimeNowNt());
+}
+
+float Timer::getElapsedUs(efitick_t nowNt) const {
+	auto deltaNt = nowNt - m_lastReset;
 
 	// Yes, things can happen slightly in the future if we get a lucky interrupt between
 	// the timestamp and this subtraction, that updates m_lastReset to what's now "the future",
 	// resulting in a negative delta.
-	if (delta < 0) {
+	if (deltaNt < 0) {
 		return 0;
 	}
 
-	if (delta > UINT32_MAX - 1) {
-		delta = UINT32_MAX - 1;
+	if (deltaNt > UINT32_MAX - 1) {
+		deltaNt = UINT32_MAX - 1;
 	}
 
-	auto delta32 = (uint32_t)delta;
+	auto delta32 = (uint32_t)deltaNt;
 
-	return 1e-6 * NT2US(delta32);
+	return NT2US(delta32);
 }
 
 float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {

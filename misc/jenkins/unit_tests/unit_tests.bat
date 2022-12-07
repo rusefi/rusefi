@@ -7,7 +7,6 @@ pwd
 
 rem Prior to running unit tests we build real hardware firmware
 
-
 git submodule update --init
 
 cd firmware
@@ -20,9 +19,10 @@ echo We are in root folder
 pwd
 
 cd unit_tests
+rem Clean build is needed since some file renames would produce a broken incremental build
 
 rem Only here we are building unit_tests
-call compile.bat
+call clean_compile.bat
 pwd
 ls -l build
 if not exist build/rusefi_test.exe echo ERROR: FAILED TO COMPILE UNIT TESTS
@@ -30,12 +30,10 @@ if not exist build/rusefi_test.exe exit -1
 
 echo "TIMESTAMP %date% %time% Unit tests build looks good, now executing unit tests"
 
-cd build
-call rusefi_test.exe
+call build\rusefi_test.exe
 IF NOT ERRORLEVEL 0 echo ERROR: UNIT TEST FAILED
 IF NOT ERRORLEVEL 0 EXIT /B 1
 
-cd ..
 cd ..
 
 echo Back to root folder

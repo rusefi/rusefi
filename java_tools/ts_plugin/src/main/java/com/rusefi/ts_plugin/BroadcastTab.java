@@ -2,7 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.tools.VehicleToken;
@@ -39,7 +39,7 @@ public class BroadcastTab {
             }
 
             new Thread(() -> {
-                String autoDetectedPort = PortDetector.autoDetectSerial(null);
+                String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
                 SwingUtilities.invokeLater(() -> {
                     startBroadcasting(authToken, autoDetectedPort);
                 });

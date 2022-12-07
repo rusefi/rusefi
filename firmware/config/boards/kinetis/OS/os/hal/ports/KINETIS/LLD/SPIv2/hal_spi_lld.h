@@ -115,11 +115,6 @@
 /*===========================================================================*/
 
 /**
- * @brief   Type of a structure representing an SPI driver.
- */
-typedef struct SPIDriver SPIDriver;
-
-/**
  * @brief   SPI notification callback type.
  *
  * @param[in] spip      pointer to the @p SPIDriver object triggering the
@@ -128,96 +123,34 @@ typedef struct SPIDriver SPIDriver;
 typedef void (*spicallback_t)(SPIDriver *spip);
 
 /**
- * @brief   Driver configuration structure.
+ * @brief   Low level fields of the SPI configuration structure.
  */
-typedef struct {
-#if (SPI_SUPPORTS_CIRCULAR == TRUE) || defined(__DOXYGEN__)
-  /**
-   * @brief   Enables the circular buffer mode.
-   */
-  bool                      circular;
-#endif
-  /**
-   * @brief Operation complete callback or @p NULL.
-   */
-  spicallback_t             end_cb;
-  /* End of the mandatory fields.*/
-  /**
-   * @brief The chip select line port - when not using pcs.
-   */
-  ioportid_t                ssport;
-  /**
-   * @brief The chip select line pad number - when not using pcs.
-   */
-  uint16_t                  sspad;
-  /**
-   * @brief SPI CR1 register initialization data.
-   */
-  uint16_t                  cr1;
-  /**
-   * @brief SPI CR2 register initialization data.
-   */
-  uint16_t                  cr2;
-} SPIConfig;
+#define spi_lld_config_fields                                               \
+  /* The chip select port. */                                               \
+  ioportid_t                ssport;                                         \
+  /* The chip select pad number. */                                         \
+  uint_fast8_t              sspad;                                          \
+  /* SPI CR1 register initialization data.*/                                \
+  uint16_t                  cr1;                                            \
+  /* SPI CR2 register initialization data.*/                                \
+  uint16_t                  cr2
 
 /**
- * @brief   Structure representing a SPI driver.
+ * @brief   Low level fields of the SPI driver structure.
  */
-struct SPIDriver {
-  /**
-   * @brief Driver state.
-   */
-  spistate_t                state;
-  /**
-   * @brief Current configuration data.
-   */
-  const SPIConfig           *config;
-#if SPI_USE_WAIT || defined(__DOXYGEN__)
-  /**
-   * @brief Waiting thread.
-   */
-  thread_reference_t        thread;
-#endif /* SPI_USE_WAIT */
-#if SPI_USE_MUTUAL_EXCLUSION || defined(__DOXYGEN__)
-  /**
-   * @brief Mutex protecting the bus.
-   */
-  mutex_t                   mutex;
-#endif /* SPI_USE_MUTUAL_EXCLUSION */
-#if defined(SPI_DRIVER_EXT_FIELDS)
-  SPI_DRIVER_EXT_FIELDS
-#endif
-  /* End of the mandatory fields.*/
-
-  /**
-   * @brief Pointer to the SPIx registers block.
-   */
-  LPSPI_Type               *spi;
-
-  /**
-   * @brief Master or Slave.
-   */
-  bool isMaster;
-
-  /**
-   * @brief Stores the data for SPI master transfer.
-   */
-  lpspi_transfer_t handleXfer;
-  
-  /**
-   * @brief Transfer flags (including kLPSPI_MasterPcs*) for this SPI config.
-   */
-  int32_t flags;
-
-  /**
-   * @brief IRQ callback handle for SPI master non-blocking transfer.
-   */
-  lpspi_master_handle_t masterHandle;
-  /**
-   * @brief IRQ callback handle for SPI slave non-blocking transfer.
-   */
-  lpspi_slave_handle_t slaveHandle;
-};
+#define spi_lld_driver_fields                                               \
+  /* Pointer to the SPIx registers block. */                                \
+  LPSPI_Type               *spi;                                            \
+  /* Master or Slave. */                                                    \
+  bool isMaster;                                                            \
+  /* Stores the data for SPI master transfer. */                            \
+  lpspi_transfer_t handleXfer;                                              \
+  /* Transfer flags (including kLPSPI_MasterPcs*) for this SPI config. */   \
+  int32_t flags;                                                            \
+  /* IRQ callback handle for SPI master non-blocking transfer. */           \
+  lpspi_master_handle_t masterHandle;                                       \
+  /* IRQ callback handle for SPI slave non-blocking transfer. */            \
+  lpspi_slave_handle_t slaveHandle
 
 /*===========================================================================*/
 /* Driver macros.                                                            */

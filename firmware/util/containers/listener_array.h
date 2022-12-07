@@ -9,7 +9,6 @@
 
 #include <stddef.h>
 #include "rusefi_types.h"
-#include "error_handling.h"
 
 // todo: reorder parameters for consistency?
 typedef void (*IntIntVoidListener)(int value1, int value2, void *arg);

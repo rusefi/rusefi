@@ -2,7 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
-import com.rusefi.SignatureHelper;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -12,7 +12,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -42,7 +42,6 @@ public class ControllerConnectionState {
     private final SensorsHolder sensorsHolder = new SensorsHolder();
     private final Birthday birthday = new Birthday();
     private int outputRoundAroundDuration;
-    private final IniFileModel iniFileModel = new IniFileModel();
 
     public ControllerConnectionState(Socket clientSocket, UserDetailsResolver userDetailsResolver) {
         this.clientSocket = clientSocket;
@@ -110,9 +109,10 @@ public class ControllerConnectionState {
         Pair<String, String> p = SignatureHelper.getUrl(sessionDetails.getControllerInfo().getSignature());
         if (p == null)
             throw new IOException("Invalid signature response");
-        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
-        if (localFileName == null)
-            throw new IOException("Unable to download " + p.second);
+//        todo: revisit https://github.com/rusefi/rusefi/issues/4462 if ever uncommenting
+//        String localFileName = SignatureHelper.downloadIfNotAvailable(p);
+//        if (localFileName == null)
+//            throw new IOException("Unable to download " + p.second + " from " + p.first);
 //        iniFileModel.readIniFile(localFileName);
 
         controllerKey = new ControllerKey(userDetails.getUserId(), sessionDetails.getControllerInfo());
@@ -128,15 +128,19 @@ public class ControllerConnectionState {
     }
 
     public void getOutputs() throws IOException {
-        byte[] commandPacket = GetOutputsCommand.createRequest();
+        // TODO: why is this logic duplicated from BinaryProtocol?
+        byte[] commandPacket = new byte[5];
+        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
         long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 
-        byte[] packet = incomingData.getPacket("msg", true);
+        byte[] packet = incomingData.getPacket("msg");
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
-        if (packet.length != 1 + Fields.TS_OUTPUT_SIZE)
+        if (packet.length != 1 + Fields.TS_TOTAL_OUTPUT_SIZE)
             throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }

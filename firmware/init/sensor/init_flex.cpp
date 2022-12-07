@@ -1,22 +1,19 @@
+#include "pch.h"
+
 #include "init.h"
-#include "pin_repository.h"
-#include "engine.h"
+#include "frequency_sensor.h"
 #include "flex_sensor.h"
 
-EXTERN_ENGINE;
-
-static FlexFuelSensor flexSensor;
+static FrequencySensor flexSensor(SensorType::FuelEthanolPercent, MS2NT(500));
+static FlexConverter converter;
 
 // https://rusefi.com/forum/viewtopic.php?p=37452&sid=829804c90d5b2e1fecd1b900cf1b1811#p37452
 
-void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	auto pin = CONFIG(flexSensorPin);
+void initFlexSensor() {
+	// 0.01 means filter bandwidth of ~1hz with ~100hz sensor
+	flexSensor.initIfValid(engineConfiguration->flexSensorPin, converter, 0.01f);
+}
 
-	// Nothing to do if no sensor configured
-	if (!isBrainPinValid(pin)) {
-		return;
-	}
-
-	flexSensor.init(pin);
-	flexSensor.Register();
+void deInitFlexSensor() {
+	flexSensor.deInit();
 }

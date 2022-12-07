@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+}
+
+defaultTasks 'jar'
+
+apply from: '../../android/dependencies.gradle'
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'rusefi.Bin2Header'
+        )
+    }
+}

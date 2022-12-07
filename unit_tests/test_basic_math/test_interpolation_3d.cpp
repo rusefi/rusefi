@@ -5,26 +5,69 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <stdlib.h>
 
-#include "interpolation.h"
-#include "global.h"
-#include "unit_test_framework.h"
+#include "efi_interpolation.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
+scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 300, 400, 500};
+
 float mafBins[4] = { 1, 2, 3, 4 };
+scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
 
-float map0[4] = { 1, 2, 3, 4 };
-float map1[4] = { 2, 3, 4, 5 };
-float map2[4] = { 3, 4, 200, 300 };
-float map3[4] = { 4, 200, 500, 600 };
-float map4[4] = { 4, 200, 500, 600 };
+scaled_channel<uint32_t, 10000, 3> mapScaledChannel[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
-float *map[5] = { map0, map1, map2, map3, map4 };
-
+float map[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
 static float getValue(float rpm, float maf) {
-	return interpolate3d(rpm, rpmBins, 5, maf, mafBins, 4, map);
+	Map3D<5, 4, float, float, float> x1;
+	x1.init(map, mafBins, rpmBins);
+	float result1 = x1.getValue(rpm, maf);
+
+
+	Map3D<5, 4, float, float, int> x2;
+	x2.init(map, mafBinsScaledInt, rpmBins);
+	float result2 = x2.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result2);
+
+
+	Map3D<5, 4, float, float, uint8_t> x3;
+	x3.init(map, mafBinsScaledByte, rpmBins);
+	float result3 = x3.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result3);
+
+	Map3D<5, 4, float, uint8_t, float> x4;
+	x4.init(map, mafBins, rpmBinsScaledByte);
+	float result4 = x4.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result4);
+
+	float result5 = interpolate3d(
+		map,
+		mafBinsScaledInt, maf,
+		rpmBinsScaledByte, rpm
+	);
+	EXPECT_NEAR_M4(result1, result5);
+
+	// Test with values stored in scaled bytes
+	Map3D<5, 4, uint32_t, float, float> x6;
+	x6.init(mapScaledChannel, mafBins, rpmBins);
+	float result6 = x6.getValue(rpm, maf);
+	EXPECT_NEAR(result1, result6, 1e-3);
+
+	return result1;
 }
 
 static void newTestToComfirmInterpolation() {
@@ -35,80 +78,78 @@ static void newTestToComfirmInterpolation() {
 //__200_|__3|__4|
 //______|__2|__3|_LOAD
 
-	map2[1] = 10;
+	map[1][2] = 10;
+	mapScaledChannel[1][2] = 10;
 
 
 	// let's start by testing corners
-	ASSERT_EQ(3, getValue(/*rpm*/200, 2));
-	ASSERT_NEAR( 4,  getValue(/*rpm*/200, 3), EPS4D) << "low rpm high load";
+	EXPECT_NEAR_M4(3, getValue(/*rpm*/200, 2));
+	EXPECT_NEAR_M4(4, getValue(/*rpm*/200, 3)) << "low rpm high load";
 
-	ASSERT_EQ(10, getValue(/*rpm*/300, 2));
-	ASSERT_EQ(200, getValue(/*rpm*/300, 3));
+	EXPECT_NEAR_M4(10, getValue(/*rpm*/300, 2));
+	EXPECT_NEAR_M4(200, getValue(/*rpm*/300, 3));
 
 	// now testing middles of cell sides
-	assertEqualsM("low rpm middle", 3.5, getValue(/*rpm*/200, 2.5));
-	ASSERT_EQ( 105,  getValue(/*rpm*/300, 2.5)) << "high rpm      ";
+	EXPECT_NEAR_M4(3.5, getValue(/*rpm*/200, 2.5)) << "low rpm middle";
+	EXPECT_NEAR_M4(105, getValue(/*rpm*/300, 2.5)) << "high rpm";
 
-	assertEqualsM("low load middle", 6.5, getValue(/*rpm*/250, 2));
-	ASSERT_NEAR( 102,  getValue(/*rpm*/250, 3), EPS4D) << "               ";
+	EXPECT_NEAR_M4(6.5, getValue(/*rpm*/250, 2)) << "low load middle";
+	EXPECT_NEAR_M4(102, getValue(/*rpm*/250, 3));
 
 	// slowly go from middle side towards center
-	assertEqualsM("middle @ 2.1  ",16.05, getValue(/*rpm*/250, 2.1));
-	assertEqualsM("middle @ 2.2   ",25.6, getValue(/*rpm*/250, 2.2));
-	assertEqualsM("middle @ 2.3  ",35.15, getValue(/*rpm*/250, 2.3));
+	EXPECT_NEAR_M4(16.05, getValue(/*rpm*/250, 2.1)) << "middle @ 2.1";
+	EXPECT_NEAR_M4(25.6, getValue(/*rpm*/250, 2.2)) << "middle @ 2.2";
+	EXPECT_NEAR_M4(35.15, getValue(/*rpm*/250, 2.3)) << "middle @ 2.3";
 
-	assertEqualsM("middle cell    ", 54.25, getValue(/*rpm*/250, 2.5));
+	EXPECT_NEAR_M4(54.25, getValue(/*rpm*/250, 2.5)) << "middle cell";
 
 	// issue #604: interpolation outside of the table
 	// X above the range
-	assertEqualsM("800 @ 2.1  ",230, getValue(/*rpm*/800, 2.1));
-	assertEqualsM("800 @ 2.3  ",290, getValue(/*rpm*/800, 2.3));
-	assertEqualsM("800 @ 3.3  ",530, getValue(/*rpm*/800, 3.3));
+	EXPECT_NEAR_M4(230, getValue(/*rpm*/800, 2.1)) << "800 @ 2.1";
+	EXPECT_NEAR_M4(290, getValue(/*rpm*/800, 2.3)) << "800 @ 2.3";
+	EXPECT_NEAR_M4(530, getValue(/*rpm*/800, 3.3)) << "800 @ 3.3";
 
 	// X below the range
-	assertEqualsM("-810 @ 2.1  ",2.1, getValue(/*rpm*/-810, 2.1));
-	assertEqualsM("-820 @ 2.3  ",2.3, getValue(/*rpm*/-820, 2.3));
+	EXPECT_NEAR_M4(2.1, getValue(/*rpm*/-810, 2.1)) << "-810 @ 2.1";
+	EXPECT_NEAR_M4(2.3, getValue(/*rpm*/-820, 2.3)) << "-820 @ 2.3";
 
 	// Y above the range
-	ASSERT_EQ( 330,  getValue(/*rpm*/310, 12.1)) << "310 @ 12.1  ";
-	ASSERT_EQ( 360,  getValue(/*rpm*/320, 12.3)) << "320 @ 12.3  ";
+	EXPECT_NEAR_M4(330, getValue(/*rpm*/310, 12.1)) << "310 @ 12.1";
+	EXPECT_NEAR_M4(360, getValue(/*rpm*/320, 12.3)) << "320 @ 12.3";
 
 	// Y below the range
-	assertEqualsM("310 @ -12.1  ", 3.1, getValue(/*rpm*/310, -12.1));
-	assertEqualsM("320 @ -12.3  ", 3.2, getValue(/*rpm*/320, -12.3));
+	EXPECT_NEAR_M4(3.1, getValue(/*rpm*/310, -12.1)) << "310 @ -12.1";
+	EXPECT_NEAR_M4(3.2, getValue(/*rpm*/320, -12.3)) << "320 @ -12.3";
 }
 
 TEST(misc, testInterpolate3d) {
-	printf("*************************************************** testInterpolate3d\r\n");
-
 	printf("*** no interpolation here 1\r\n");
-	ASSERT_FLOAT_EQ(2, getValue(100, 2));
+	EXPECT_NEAR_M4(2, getValue(100, 2));
 
 	printf("*** no interpolation here 2\r\n");
-	ASSERT_NEAR(5, getValue(200, 4), EPS4D);
+	EXPECT_NEAR_M4(5, getValue(200, 4));
 
 	printf("*** rpm interpolated value expected1\r\n");
-	ASSERT_FLOAT_EQ(2.5, getValue(150, 2));
+	EXPECT_NEAR_M4(2.5, getValue(150, 2));
 
 	printf("*** rpm interpolated value expected2\r\n");
-	ASSERT_FLOAT_EQ(102, getValue(250, 3));
+	EXPECT_NEAR_M4(102, getValue(250, 3));
 
 	printf("*** both rpm and maf interpolated value expected\r\n");
-	ASSERT_FLOAT_EQ(361, getValue(335.3, 3.551));
+	EXPECT_NEAR_M4(361, getValue(335.3, 3.551));
 
 	printf("*** both rpm and maf interpolated value expected 2\r\n");
-	ASSERT_FLOAT_EQ(203.6, getValue(410.01, 2.012));
+	EXPECT_NEAR_M4(203.6, getValue(410.01, 2.012));
 
 	printf("*** both rpm and maf interpolated value expected 3\r\n");
-	ASSERT_FLOAT_EQ(600, getValue(1000000, 1000));
+	EXPECT_NEAR_M4(600, getValue(1000000, 1000));
 
 	printf("*** both rpm and maf interpolated value expected 4\r\n");
 
-	ASSERT_FLOAT_EQ(4, getValue(410.01, -1));
+	EXPECT_NEAR_M4(4, getValue(410.01, -1));
 
 
-	ASSERT_FLOAT_EQ(1, getValue(-1, -1));
+	EXPECT_NEAR_M4(1, getValue(-1, -1));
 
 	newTestToComfirmInterpolation();
-
 }

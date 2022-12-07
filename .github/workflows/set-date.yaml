@@ -17,9 +17,16 @@ jobs:
     if: ${{ github.repository == 'rusefi/rusefi' }}
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+
+    - name: Install Tools
+      run: sudo apt-get install subversion
+
+    - name: Update version header in git
+      working-directory: ./firmware/
+      run: bash update_version.sh
 
     - name: Write Date File
       run: |

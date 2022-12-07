@@ -10,14 +10,16 @@
 
 #pragma once
 
-#include "engine.h"
-void initAlternatorCtrl(Logging *sharedLogger);
-void startAlternatorPin(void);
-void stopAlternatorPin(void);
+void initAlternatorCtrl();
+
 void setAltPFactor(float p);
 void setAltIFactor(float p);
 void setAltDFactor(float p);
 void showAltInfo(void);
-void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+class AlternatorController : public EngineModule {
+public:
+	void onFastCallback() override;
+};
 
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);

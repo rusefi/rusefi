@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
-void initAuxValves(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initAuxValves();
+void recalculateAuxValveTiming();
 void auxPlainPinTurnOn(AuxActor *current);

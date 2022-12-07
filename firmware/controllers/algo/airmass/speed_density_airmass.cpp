@@ -1,9 +1,5 @@
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "speed_density_airmass.h"
-#include "perf_trace.h"
-
-EXTERN_ENGINE;
 
 AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);
@@ -11,37 +7,43 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
-	float tChargeK = ENGINE(engineState.sd.tChargeK);
+	float tChargeK = engine->engineState.sd.tChargeK;
 	if (cisnan(tChargeK)) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return {};
 	}
 
-	auto map = Sensor::get(SensorType::Map);
-	if (!map) {
-		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "map not ready"); // this could happen during HW CI during configuration reset
-		return {};
-	}
+	auto map = getMap(rpm);
 
-	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float ve = getVe(rpm, map);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map.Value + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
-
-	float ve = getVe(rpm, adjustedMap);
-
-	float airMass = getAirmassImpl(ve, adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = getAirmassImpl(ve, map, tChargeK);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
+	printf("getSpeedDensityAirmass map=%.2f\n", map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {
 		airMass,
-		map.Value,	// AFR/VE table Y axis
+		map,	// AFR/VE table Y axis
 	};
+}
+
+float SpeedDensityAirmass::getMap(int rpm) const {
+	float fallbackMap;
+	if (engineConfiguration->enableMapEstimationTableFallback) {
+	// if the map estimation table is enabled, estimate map based on the TPS and RPM
+		fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
+	} else {
+		fallbackMap = engineConfiguration->failedMapFallback;
+	}
+
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.fallbackMap = fallbackMap;
+#endif // EFI_TUNER_STUDIO
+
+	return Sensor::get(SensorType::Map).value_or(fallbackMap);
 }

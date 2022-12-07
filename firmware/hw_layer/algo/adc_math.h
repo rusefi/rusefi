@@ -10,14 +10,18 @@
 
 #pragma once
 
-#include "engine_configuration.h"
+#if EFI_PROD_CODE
+#include "port_mpu_util.h"
+#include "rusefi_hw_enums.h"
+#else // not EFI_PROD_CODE
 #define ADC_MAX_VALUE 4095
+#endif
 
 #define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
-float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getVoltage(const char *msg, adc_channel_e channel);
 
-float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getVoltageDivided(const char *msg, adc_channel_e channel);
 

@@ -14,8 +14,6 @@
     limitations under the License.
 */
 
-#include "global.h"
-
 #if EFI_PERF_METRICS
 #include "test.h"
 

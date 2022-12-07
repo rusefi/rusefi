@@ -1,23 +1,30 @@
+#include "pch.h"
+
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
-
-#include "engine.h"
-
-#include "sensor.h"
-#include "engine_math.h"
 #include "deadband.h"
 
-EXTERN_ENGINE;
+struct FuelingBank {
+	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
+};
 
-ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
+static FuelingBank banks[STFT_BANK_COUNT];
 
 static Deadband<25> idleDeadband;
 static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
 
+static SensorType getSensorForBankIndex(size_t index) {
+	switch (index) {
+		case 0: return SensorType::Lambda1;
+		case 1: return SensorType::Lambda2;
+		default: return SensorType::Invalid;
+	}
+}
+
 size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
-	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm * RPM_1_BYTE_PACKING_MULT))
+	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm))
 	{
 		return 0;
 	}
@@ -38,21 +45,22 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	return 3;
 }
 
-static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	const auto& cfg = CONFIG(stft);
+static bool shouldCorrect() {
+#if EFI_SHAFT_POSITION_INPUT
+	const auto& cfg = engineConfiguration->stft;
 
 	// User disable bit
-	if (!CONFIG(fuelClosedLoopCorrectionEnabled)) {
+	if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
 		return false;
 	}
 
 	// Don't correct if not running
-	if (!ENGINE(rpmCalculator).isRunning()) {
+	if (!engine->rpmCalculator.isRunning()) {
 		return false;
 	}
 
 	// Startup delay - allow O2 sensor to warm up, etc
-	if (cfg.startupDelay > ENGINE(engineState.running.timeSinceCrankingInSecs)) {
+	if (cfg.startupDelay > engine->engineState.running.timeSinceCrankingInSecs) {
 		return false;
 	}
 
@@ -64,42 +72,57 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// If all was well, then we're enabled!
 	return true;
+#else
+	return false;
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
-bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	const auto& cfg = CONFIG(stft);
+bool shouldUpdateCorrection(SensorType sensor) {
+	const auto& cfg = engineConfiguration->stft;
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
-	auto afr = Sensor::get(SensorType::Lambda1).value_or(0) * 14.7f;
-	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
+	auto afr = Sensor::get(sensor).value_or(0) * STOICH_RATIO;
+	if (!afr || afr < cfg.minAfr || afr > cfg.maxAfr) {
+		return false;
+	}
+
+	// Pause correction if DFCO was active recently
+	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
+	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {
 		return false;
 	}
 
 	return true;
 }
 
-float fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!shouldCorrect(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return 1.0f;
+ClosedLoopFuelResult fuelClosedLoopCorrection() {
+	if (!shouldCorrect()) {
+		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
+	size_t binIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
-		tsOutputChannels.debugIntField1 = binIdx;
-	}
+	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;
 #endif // EFI_TUNER_STUDIO
 
-	auto& cell = cells[binIdx];
+	ClosedLoopFuelResult result;
 
-	// todo: push configuration at startup
-	cell.configure(&CONFIG(stft.cellCfgs[binIdx]));
+	for (int i = 0; i < STFT_BANK_COUNT; i++) {
+		auto& cell = banks[i].cells[binIdx];
 
-	if (shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude) PASS_ENGINE_PARAMETER_SUFFIX);
+		SensorType sensor = getSensorForBankIndex(i);
+
+		// todo: push configuration at startup
+		cell.configure(&engineConfiguration->stft.cellCfgs[binIdx], sensor);
+
+		if (shouldUpdateCorrection(sensor)) {
+			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
+		}
+
+		result.banks[i] = cell.getAdjustment();
 	}
 
-	return cell.getAdjustment();
+	return result;
 }

@@ -1,5 +1,4 @@
-ext.libs = [
-        junit      : "junit:junit:4.13",
-        annotations: "org.jetbrains:annotations:16.0.1",
-        javaxJson  : "javax.json:javax.json-api:1.1.4"
-]
+ext {
+  libs = [
+  ]
+}

@@ -21,8 +21,6 @@
 
 #if EFI_BOSCH_YAW
 
-EXTERN_ENGINE;
-
 void initBoschYawRateSensor() {
 
 }

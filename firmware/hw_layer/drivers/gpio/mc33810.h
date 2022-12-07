@@ -14,6 +14,7 @@
 
 #include "efifeatures.h"
 #include <hal.h>
+#include "rusefi_types.h"
 
 #define MC33810_OUTPUTS				8
 #define MC33810_DIRECT_OUTPUTS		8
@@ -22,8 +23,10 @@
 #define MC33810_POLL_INTERVAL_MS	100
 
 struct mc33810_config {
+#if HAL_USE_SPI
 	SPIDriver	*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	/* First 4 is injector drivers, then 4 ignition pre-drivers */
 	struct {
 		ioportid_t		port;
@@ -35,14 +38,4 @@ struct mc33810_config {
 	} en;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-int mc33810_add(brain_pin_e base, unsigned int index, const struct mc33810_config *cfg);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);

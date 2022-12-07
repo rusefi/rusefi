@@ -9,8 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;
@@ -51,8 +52,6 @@ void CdmState::onNewSignal(int currentRevolution) {
 
 #include "digital_input_exti.h"
 
-EXTERN_ENGINE;
-
 static CdmState instance;
 
 int getCurrentCdmValue(int currentRevolution) {
@@ -69,16 +68,16 @@ static void extIonCallback(void *arg) {
         UNUSED(arg);
         instance.totalCdmEvents++;
 
-        int currentRevolution = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+        int currentRevolution = engine->triggerCentral.triggerState.getCrankSynchronizationCounter();
         instance.onNewSignal(currentRevolution);
 }
 
 void cdmIonInit(void) {
-	if (!isBrainPinValid(CONFIG(cdmInputPin))) {
+	if (!isBrainPinValid(engineConfiguration->cdmInputPin)) {
 		return;
 	}
 
-	efiExtiEnablePin("ion", CONFIG(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
+	efiExtiEnablePin("ion", engineConfiguration->cdmInputPin, PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
 }
 
 #endif /* EFI_CDM_INTEGRATION */

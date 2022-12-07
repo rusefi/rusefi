@@ -11,10 +11,7 @@
 # needed to exit DFU mode.
 #
 
-# Future: Consider if creating a build/rusefi.dfu install file is more
-# or less descriptive than multiple command line parameters.
-
-dfu-util --alt 0 --download build/rusefi.bin --dfuse-address 0x08000000 --reset
+dfu-util --alt 0 --download deliver/rusefi.dfu -s :leave
 
 # For Windows the batch file flash_dfu.bat runs the equivalent command
-#   DfuSeCommand.exe -c -d --fn build/rusefi.dfu
+#   DfuSeCommand.exe -c -d --fn deliver/rusefi.dfu

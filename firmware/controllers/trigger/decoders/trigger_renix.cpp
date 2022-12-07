@@ -8,6 +8,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_renix.h"
 
 static void commonRenix(TriggerWaveform *s) {
@@ -17,25 +19,25 @@ static void commonRenix(TriggerWaveform *s) {
 
 	float currentAngle = 0;
 	for (int i = 0;i < 20;i++) {
-		s->addEventAngle(currentAngle + tooth / 2, T_PRIMARY, TV_RISE);
-		s->addEventAngle(currentAngle + tooth, T_PRIMARY, TV_FALL);
+		s->addEventAngle(currentAngle + tooth / 2, TriggerValue::RISE);
+		s->addEventAngle(currentAngle + tooth, TriggerValue::FALL);
 		currentAngle += tooth;
 	}
 
-	s->addEventAngle(currentAngle + tooth, T_PRIMARY, TV_RISE);
+	s->addEventAngle(currentAngle + tooth, TriggerValue::RISE);
 
 	// float math error accumulates at this point so we have to spell out 180
-	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
+	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL);
 }
 
 // TT_RENIX_44_2_2
 void initializeRenix44_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 	commonRenix(s);
 }
 
 // TT_RENIX_66_2_2_2
 void initializeRenix66_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 	commonRenix(s);
 }

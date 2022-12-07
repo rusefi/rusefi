@@ -1,18 +1,21 @@
 package com.rusefi.ui.util;
 
-import com.rusefi.StartupFrame;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
@@ -54,6 +57,7 @@ public class UiUtils {
     }
 
     private static BufferedImage getScreenShot(Component component) {
+        AutoupdateUtil.assertAwtThread();
         // http://stackoverflow.com/questions/5853879/swing-obtain-image-of-jframe/5853992
         BufferedImage image = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
         // call the Component's paint method, using
@@ -63,7 +67,11 @@ public class UiUtils {
     }
 
     public static void setPauseButtonText(JButton pauseButton, boolean isPaused) {
-        pauseButton.setText(isPaused ? RESUME.getMessage() : PAUSE.getMessage());
+        setPauseButtonText(pauseButton, isPaused, "");
+    }
+
+    public static void setPauseButtonText(JButton pauseButton, boolean isPaused, String suffix) {
+        pauseButton.setText((isPaused ? RESUME.getMessage() : PAUSE.getMessage()) + suffix);
     }
 
     public static void centerWindow(Window w) {
@@ -136,7 +144,12 @@ public class UiUtils {
 
     @NotNull
     public static JButton createPauseButton() {
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        return createPauseButton("");
+    }
+
+    @NotNull
+    public static JButton createPauseButton(String suffix) {
+        final JButton pauseButton = new JButton(PAUSE.getMessage() + suffix);
         pauseButton.setMnemonic('p');
         return pauseButton;
     }
@@ -146,5 +159,36 @@ public class UiUtils {
         JButton clearButton = new JButton(CLEAR.getMessage());
         clearButton.setMnemonic('c');
         return clearButton;
+    }
+
+    public static void installPopupMenu(JPopupMenu menu, JComponent component) {
+        component.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                pop(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                pop(e);
+            }
+
+            private void pop(MouseEvent e) {
+                if (e.isPopupTrigger())
+                    menu.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+    }
+
+    @NotNull
+    public static JMenuItem createCopyMenu(final JTextComponent control) {
+        JMenuItem copy = new JMenuItem("Copy");
+        copy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                control.copy();
+            }
+        });
+        return copy;
     }
 }

@@ -7,19 +7,27 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "closed_loop_controller.h"
 #include "rusefi_types.h"
+#include "engine_configuration.h"
 
-void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initElectronicThrottle();
+void doInitElectronicThrottle();
 
-void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEtbIdlePosition(percent_t pos);
+void setEtbWastegatePosition(percent_t pos);
+void setEtbLuaAdjustment(percent_t adjustment);
+void setHitachiEtbCalibration();
 
-void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+// these two sensors use same plug but have different calibrations and even rotate in different directions
+void set18919_AM810_pedal_position_sensor();
+void setToyota89281_33010_pedal_position_sensor();
+
+void setBoschVAGETB();
+
+void setDefaultEtbBiasCurve();
+void setDefaultEtbParameters();
+void setBoschVNH2SP30Curve();
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);
@@ -27,7 +35,7 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
-void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setProteusHitachiEtbDefaults();
 
 void etbAutocal(size_t throttleIndex);
 
@@ -36,10 +44,8 @@ struct pid_s;
 class ValueProvider3D;
 struct pid_state_s;
 
-class IEtbController : public ClosedLoopController<percent_t, percent_t> {
+class IEtbController : public ClosedLoopController<percent_t, percent_t>  {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// Initialize the throttle.
 	// returns true if the throttle was initialized, false otherwise.
 	virtual bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles = true) = 0;
@@ -47,7 +53,10 @@ public:
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
+	virtual expected<percent_t> getOutput() = 0;
 	virtual void autoCalibrateTps() = 0;
 
 	virtual const pid_state_s* getPidState() const = 0;
+
+	virtual void setLuaAdjustment(percent_t adjustment) = 0;
 };

@@ -8,25 +8,20 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "os_access.h"
-#include "pwm_generator_logic.h"
-#include "perf_trace.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "engine.h"
 #endif // EFI_PROD_CODE
 
 // 1% duty cycle
 #define ZERO_PWM_THRESHOLD 0.01
 
-SimplePwm::SimplePwm() {
-	waveInstance.init(pinStates);
-	sr[0] = waveInstance;
-	init(_switchTimes, sr);
+SimplePwm::SimplePwm()
+{
+	seq.waveCount = 1;
+	seq.phaseCount = 2;
 }
 
 SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
@@ -40,20 +35,11 @@ PwmConfig::PwmConfig() {
 	periodNt = NAN;
 	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
-	phaseCount = 0;
 	pwmCycleCallback = nullptr;
 	stateChangeCallback = nullptr;
 	executor = nullptr;
 	name = "[noname]";
 	arg = this;
-}
-
-PwmConfig::PwmConfig(float *st, SingleChannelStateSequence *waves) : PwmConfig() {
-	multiChannelStateSequence.init(st, waves);
-}
-
-void PwmConfig::init(float *st, SingleChannelStateSequence *waves) {
-	multiChannelStateSequence.init(st, waves);
 }
 
 /**
@@ -70,10 +56,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle %.2f", name, dutyCycle);
+		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
+		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
 
@@ -99,7 +85,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		mode = PM_FULL;
 	} else {
 		mode = PM_NORMAL;
-		multiChannelStateSequence.setSwitchTime(0, dutyCycle);
+		seq.setSwitchTime(0, dutyCycle);
 	}
 }
 
@@ -110,10 +96,10 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	efiAssert(CUSTOM_ERR_ASSERT, state->safe.phaseIndex < PWM_PHASE_MAX_COUNT, "phaseIndex range", 0);
 	int iteration = state->safe.iteration;
 	// we handle PM_ZERO and PM_FULL separately
-	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence.getSwitchTime(state->safe.phaseIndex) : 1;
+	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence->getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
-	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
+	efiPrintf("iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif /* DEBUG_PWM */
 
 	/**
@@ -123,7 +109,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
+	efiPrintf("start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
 	return state->safe.startNt + timeToSwitchNt;
 }
@@ -156,7 +142,14 @@ void PwmConfig::handleCycleStart() {
 		pwmCycleCallback(this);
 	}
 		// Compute the maximum number of iterations without overflowing a uint32_t worth of timestamp
-		uint32_t iterationLimit = (0xFFFFFFFF / periodNt) - 2;
+		uint32_t iterationLimitInt32 = (0xFFFFFFFF / periodNt) - 2;
+
+		// Maximum number of iterations that don't lose precision due to 32b float (~7 decimal significant figures)
+		// We want at least 0.01% timing precision (aka 1/10000 cycle, 0.072 degree for trigger stimulator), which
+		// means we can't do any more than 2^23 / 10000 cycles = 838 iterations before a reset
+		uint32_t iterationLimitFloat = 838;
+
+		uint32_t iterationLimit = minI(iterationLimitInt32, iterationLimitFloat);
 
 		efiAssertVoid(CUSTOM_ERR_6580, periodNt != 0, "period not initialized");
 		efiAssertVoid(CUSTOM_ERR_6580, iterationLimit > 0, "iterationLimit invalid");
@@ -170,7 +163,7 @@ void PwmConfig::handleCycleStart() {
 
 			forceCycleStart = false;
 #if DEBUG_PWM
-			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
+			efiPrintf("state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 		}
 }
@@ -184,8 +177,8 @@ efitick_t PwmConfig::togglePwmState() {
 	}
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
+	efiPrintf("togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
+	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
 	if (cisnan(periodNt)) {
@@ -210,7 +203,7 @@ efitick_t PwmConfig::togglePwmState() {
 	int cbStateIndex;
 	if (mode == PM_NORMAL) {
 		// callback state index is offset by one. todo: why? can we simplify this?
-		cbStateIndex = safe.phaseIndex == 0 ? phaseCount - 1 : safe.phaseIndex - 1;
+		cbStateIndex = safe.phaseIndex == 0 ? multiChannelStateSequence->phaseCount - 1 : safe.phaseIndex - 1;
 	} else if (mode == PM_ZERO) {
 		cbStateIndex = 0;
 	} else {
@@ -224,7 +217,7 @@ efitick_t PwmConfig::togglePwmState() {
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
-	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
+	efiPrintf("%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
 	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once
@@ -232,7 +225,7 @@ efitick_t PwmConfig::togglePwmState() {
 	bool isVeryBehindSchedule = nextSwitchTimeNt < getTimeNowNt() - MS2NT(10);
 
 	safe.phaseIndex++;
-	if (isVeryBehindSchedule || safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
+	if (isVeryBehindSchedule || safe.phaseIndex == multiChannelStateSequence->phaseCount || mode != PM_NORMAL) {
 		safe.phaseIndex = 0; // restart
 		safe.iteration++;
 
@@ -269,7 +262,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
+	state->executor->scheduleByTimestampNt(state->name, &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 
@@ -277,21 +270,10 @@ static void timerCallback(PwmConfig *state) {
  * Incoming parameters are potentially just values on current stack, so we have to copy
  * into our own permanent storage, right?
  */
-void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes, int waveCount, pin_state_t *const *pinStates) {
-	state->phaseCount = phaseCount;
-
-	for (int phaseIndex = 0; phaseIndex < phaseCount; phaseIndex++) {
-		state->multiChannelStateSequence.setSwitchTime(phaseIndex, switchTimes[phaseIndex]);
-
-		for (int channelIndex = 0; channelIndex < waveCount; channelIndex++) {
-//			print("output switch time index (%d/%d) at %.2f to %d\r\n", phaseIndex, channelIndex,
-//					switchTimes[phaseIndex], pinStates[waveIndex][phaseIndex]);
-			pin_state_t value = pinStates[channelIndex][phaseIndex];
-			state->multiChannelStateSequence.channels[channelIndex].setState(phaseIndex, value);
-		}
-	}
+void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) {
+	state->multiChannelStateSequence = seq;
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence.checkSwitchTimes(phaseCount, 1);
+		state->multiChannelStateSequence->checkSwitchTimes(1);
 	}
 }
 
@@ -300,31 +282,27 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTime
  * See also startSimplePwm
  */
 void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
-		const int phaseCount,
-		float const *switchTimes,
-		const int waveCount,
-		pin_state_t *const*pinStates, pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
+		MultiChannelStateSequence const * seq,
+		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	UNUSED(msg);
 	this->executor = executor;
 	isStopRequested = false;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
-	if (phaseCount == 0) {
+	if (seq->phaseCount == 0) {
 		firmwareError(CUSTOM_ERR_PWM_1, "signal length cannot be zero");
 		return;
 	}
-	if (phaseCount > PWM_PHASE_MAX_COUNT) {
+	if (seq->phaseCount > PWM_PHASE_MAX_COUNT) {
 		firmwareError(CUSTOM_ERR_PWM_2, "too many phases in PWM");
 		return;
 	}
-	efiAssertVoid(CUSTOM_ERR_6583, waveCount > 0, "waveCount should be positive");
+	efiAssertVoid(CUSTOM_ERR_6583, seq->waveCount > 0, "waveCount should be positive");
 
 	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;
 
-	multiChannelStateSequence.waveCount = waveCount;
-
-	copyPwmParameters(this, phaseCount, switchTimes, waveCount, pinStates);
+	copyPwmParameters(this, seq);
 
 	safe.phaseIndex = 0;
 	safe.periodNt = -1;
@@ -335,37 +313,39 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 }
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
-		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
-		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
+		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
 
-	float switchTimes[] = { dutyCycle, 1 };
-	pin_state_t pinStates0[] = { TV_FALL, TV_RISE };
-	state->setSimplePwmDutyCycle(dutyCycle);
-
-	pin_state_t *pinStates[1] = { pinStates0 };
+	state->seq.setSwitchTime(0, dutyCycle);
+	state->seq.setSwitchTime(1, 1);
+	state->seq.setChannelState(0, 0, TriggerValue::FALL);
+	state->seq.setChannelState(0, 1, TriggerValue::RISE);
 
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
-	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	state->setSimplePwmDutyCycle(dutyCycle);
+	state->weComplexInit(msg, executor, &state->seq, NULL, (pwm_gen_callback*)applyPinState);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
-		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		float dutyCycle) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
 }
 
+/**
+ * @param dutyCycle value between 0 and 1
+ */
 void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
@@ -391,7 +371,7 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 #if EFI_PROD_CODE
 	if (!engine->isPwmEnabled) {
-		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
+		for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 			OutputPin *output = state->outputPins[channelIndex];
 			output->setValue(0);
 		}
@@ -400,10 +380,10 @@ void applyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 #endif // EFI_PROD_CODE
 
 	efiAssertVoid(CUSTOM_ERR_6663, stateIndex < PWM_PHASE_MAX_COUNT, "invalid stateIndex");
-	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence.waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
-	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence.waveCount; channelIndex++) {
+	efiAssertVoid(CUSTOM_ERR_6664, state->multiChannelStateSequence->waveCount <= PWM_PHASE_MAX_WAVE_PER_PWM, "invalid waveCount");
+	for (int channelIndex = 0; channelIndex < state->multiChannelStateSequence->waveCount; channelIndex++) {
 		OutputPin *output = state->outputPins[channelIndex];
-		int value = state->multiChannelStateSequence.getChannelState(channelIndex, stateIndex);
-		output->setValue(value);
+		TriggerValue value = state->multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
+		output->setValue(value == TriggerValue::RISE);
 	}
 }

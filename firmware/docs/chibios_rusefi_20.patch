@@ -1,0 +1,333 @@
+diff -uwr Chibios.20_original/.git/FETCH_HEAD Chibios.20_rusefi/.git/FETCH_HEAD
+--- Chibios.20_original/.git/FETCH_HEAD	2021-01-10 12:25:35.549331500 -0500
++++ Chibios.20_rusefi/.git/FETCH_HEAD	2021-01-10 12:25:36.370659800 -0500
+@@ -1,4 +1,4 @@
+-d96c2af163e53c456bdd885c52056d20545b6dde		branch 'stable_20.3.x' of https://github.com/rusefi/ChibiOS
++0b4897475aceea4ae791f104297d334911a5adf7		branch 'stable_20.3.x.rusefi' of https://github.com/rusefi/ChibiOS
+ bbb700257e3e932f60e12e8a2c7dc2120cea3e26	not-for-merge	branch 'master' of https://github.com/rusefi/ChibiOS
+ a4b2c113e74e026dfc7cc02060b32ab3f047ae8d	not-for-merge	branch 'revert-10-master' of https://github.com/rusefi/ChibiOS
+ e61ff3aa1c1fd0f1057e08ae4551abbc01595550	not-for-merge	branch 'stable_1.0.x' of https://github.com/rusefi/ChibiOS
+@@ -14,7 +14,7 @@
+ c807840cdcec4e09b3fd0d2268370d9a317f0b90	not-for-merge	branch 'stable_2.2.x' of https://github.com/rusefi/ChibiOS
+ 062803674562e117754c051992535d69a3762573	not-for-merge	branch 'stable_2.4.x' of https://github.com/rusefi/ChibiOS
+ 0b0e793cc832373af431029878bc4b6f8c3e5fa5	not-for-merge	branch 'stable_2.6.x' of https://github.com/rusefi/ChibiOS
+-0b4897475aceea4ae791f104297d334911a5adf7	not-for-merge	branch 'stable_20.3.x.rusefi' of https://github.com/rusefi/ChibiOS
++d96c2af163e53c456bdd885c52056d20545b6dde	not-for-merge	branch 'stable_20.3.x' of https://github.com/rusefi/ChibiOS
+ 7596c99a218929e8c93341e2afa353134b64e233	not-for-merge	branch 'stable_3.0.x' of https://github.com/rusefi/ChibiOS
+ 93fdc45672692a73b3734b0e77f5978944477a2b	not-for-merge	branch 'stable_rusefi' of https://github.com/rusefi/ChibiOS
+ 454717f06820c73845dac29dc95b72fbe7165704	not-for-merge	branch 'trunk' of https://github.com/rusefi/ChibiOS
+diff -uwr Chibios.20_original/.git/HEAD Chibios.20_rusefi/.git/HEAD
+--- Chibios.20_original/.git/HEAD	2021-01-09 18:01:23.040248200 -0500
++++ Chibios.20_rusefi/.git/HEAD	2021-01-09 17:58:02.260312800 -0500
+@@ -1 +1 @@
+-ref: refs/heads/stable_20.3.x
++ref: refs/heads/stable_20.3.x.rusefi
+diff -uwr Chibios.20_original/.git/ORIG_HEAD Chibios.20_rusefi/.git/ORIG_HEAD
+--- Chibios.20_original/.git/ORIG_HEAD	2021-01-10 12:25:35.585422000 -0500
++++ Chibios.20_rusefi/.git/ORIG_HEAD	2021-01-10 12:25:36.407332200 -0500
+@@ -1 +1 @@
+-d96c2af163e53c456bdd885c52056d20545b6dde
++df4bd5b74baae726ae7c47948dacd557a3430a2d
+diff -uwr Chibios.20_original/.git/config Chibios.20_rusefi/.git/config
+--- Chibios.20_original/.git/config	2021-01-09 18:01:23.044248500 -0500
++++ Chibios.20_rusefi/.git/config	2021-01-09 17:58:02.264312400 -0500
+@@ -8,6 +8,6 @@
+ [remote "origin"]
+ 	url = https://github.com/rusefi/ChibiOS
+ 	fetch = +refs/heads/*:refs/remotes/origin/*
+-[branch "stable_20.3.x"]
++[branch "stable_20.3.x.rusefi"]
+ 	remote = origin
+-	merge = refs/heads/stable_20.3.x
++	merge = refs/heads/stable_20.3.x.rusefi
+Binary files Chibios.20_original/.git/index and Chibios.20_rusefi/.git/index differ
+diff -uwr Chibios.20_original/.git/logs/HEAD Chibios.20_rusefi/.git/logs/HEAD
+--- Chibios.20_original/.git/logs/HEAD	2021-01-09 18:01:23.042248300 -0500
++++ Chibios.20_rusefi/.git/logs/HEAD	2021-01-10 12:25:36.444333900 -0500
+@@ -1 +1,3 @@
+-0000000000000000000000000000000000000000 d96c2af163e53c456bdd885c52056d20545b6dde rusefillc <sdfsdfqsf2334234234> 1610233283 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 d96c2af163e53c456bdd885c52056d20545b6dde rusefillc <sdfsdfqsf2334234234> 1610233082 -0500	clone: from https://github.com/rusefi/ChibiOS
++d96c2af163e53c456bdd885c52056d20545b6dde df4bd5b74baae726ae7c47948dacd557a3430a2d rusefillc <sdfsdfqsf2334234234> 1610233767 -0500	pull: Fast-forward
++df4bd5b74baae726ae7c47948dacd557a3430a2d 0b4897475aceea4ae791f104297d334911a5adf7 rusefillc <sdfsdfqsf2334234234> 1610299536 -0500	pull: Fast-forward
+Only in Chibios.20_original/.git/logs/refs/heads: stable_20.3.x
+Only in Chibios.20_rusefi/.git/logs/refs/heads: stable_20.3.x.rusefi
+diff -uwr Chibios.20_original/.git/logs/refs/remotes/origin/HEAD Chibios.20_rusefi/.git/logs/refs/remotes/origin/HEAD
+--- Chibios.20_original/.git/logs/refs/remotes/origin/HEAD	2021-01-09 18:01:23.039248400 -0500
++++ Chibios.20_rusefi/.git/logs/refs/remotes/origin/HEAD	2021-01-09 17:58:02.259304600 -0500
+@@ -1 +1 @@
+-0000000000000000000000000000000000000000 bbb700257e3e932f60e12e8a2c7dc2120cea3e26 rusefillc <sdfsdfqsf2334234234> 1610233283 -0500	clone: from https://github.com/rusefi/ChibiOS
++0000000000000000000000000000000000000000 bbb700257e3e932f60e12e8a2c7dc2120cea3e26 rusefillc <sdfsdfqsf2334234234> 1610233082 -0500	clone: from https://github.com/rusefi/ChibiOS
+Only in Chibios.20_rusefi/.git/logs/refs/remotes/origin: stable_20.3.x
+diff -uwr Chibios.20_original/.git/logs/refs/remotes/origin/stable_20.3.x.rusefi Chibios.20_rusefi/.git/logs/refs/remotes/origin/stable_20.3.x.rusefi
+--- Chibios.20_original/.git/logs/refs/remotes/origin/stable_20.3.x.rusefi	2021-01-10 12:25:35.548331700 -0500
++++ Chibios.20_rusefi/.git/logs/refs/remotes/origin/stable_20.3.x.rusefi	2021-01-10 12:25:36.369659600 -0500
+@@ -1,2 +1,2 @@
+-d96c2af163e53c456bdd885c52056d20545b6dde df4bd5b74baae726ae7c47948dacd557a3430a2d rusefillc <sdfsdfqsf2334234234> 1610233766 -0500	pull: fast-forward
+-df4bd5b74baae726ae7c47948dacd557a3430a2d 0b4897475aceea4ae791f104297d334911a5adf7 rusefillc <sdfsdfqsf2334234234> 1610299535 -0500	pull: fast-forward
++d96c2af163e53c456bdd885c52056d20545b6dde df4bd5b74baae726ae7c47948dacd557a3430a2d rusefillc <sdfsdfqsf2334234234> 1610233767 -0500	pull: fast-forward
++df4bd5b74baae726ae7c47948dacd557a3430a2d 0b4897475aceea4ae791f104297d334911a5adf7 rusefillc <sdfsdfqsf2334234234> 1610299536 -0500	pull: fast-forward
+Only in Chibios.20_original/.git/objects/pack: pack-668cff25d611c7199e7543d5cdd7c5662f4aa17b.idx
+Only in Chibios.20_original/.git/objects/pack: pack-668cff25d611c7199e7543d5cdd7c5662f4aa17b.pack
+Only in Chibios.20_rusefi/.git/objects/pack: pack-bbcef4de2c0001c4f9864417bebcfd4e562d8838.idx
+Only in Chibios.20_rusefi/.git/objects/pack: pack-bbcef4de2c0001c4f9864417bebcfd4e562d8838.pack
+diff -uwr Chibios.20_original/.git/packed-refs Chibios.20_rusefi/.git/packed-refs
+--- Chibios.20_original/.git/packed-refs	2021-01-09 18:01:23.036248500 -0500
++++ Chibios.20_rusefi/.git/packed-refs	2021-01-09 17:58:02.255613700 -0500
+@@ -14,7 +14,6 @@
+ c807840cdcec4e09b3fd0d2268370d9a317f0b90 refs/remotes/origin/stable_2.2.x
+ 062803674562e117754c051992535d69a3762573 refs/remotes/origin/stable_2.4.x
+ 0b0e793cc832373af431029878bc4b6f8c3e5fa5 refs/remotes/origin/stable_2.6.x
+-d96c2af163e53c456bdd885c52056d20545b6dde refs/remotes/origin/stable_20.3.x
+ d96c2af163e53c456bdd885c52056d20545b6dde refs/remotes/origin/stable_20.3.x.rusefi
+ 7596c99a218929e8c93341e2afa353134b64e233 refs/remotes/origin/stable_3.0.x
+ 93fdc45672692a73b3734b0e77f5978944477a2b refs/remotes/origin/stable_rusefi
+Only in Chibios.20_original/.git/refs/heads: stable_20.3.x
+Only in Chibios.20_rusefi/.git/refs/heads: stable_20.3.x.rusefi
+Only in Chibios.20_rusefi/.git/refs/remotes/origin: stable_20.3.x
+diff -uwr Chibios.20_original/os/ex/devices/ST/lis302dl.c Chibios.20_rusefi/os/ex/devices/ST/lis302dl.c
+--- Chibios.20_original/os/ex/devices/ST/lis302dl.c	2021-01-09 18:01:24.595494400 -0500
++++ Chibios.20_rusefi/os/ex/devices/ST/lis302dl.c	2021-01-09 18:09:27.076407000 -0500
+@@ -332,7 +332,7 @@
+ static msg_t acc_set_full_scale(LIS302DLDriver *devp, lis302dl_acc_fs_t fs) {
+   float newfs, scale;
+   uint8_t i, cr;
+-  msg_t msg;
++  msg_t msg = MSG_OK;
+ 
+   osalDbgCheck(devp != NULL);
+ 
+diff -uwr Chibios.20_original/os/hal/include/hal_uart.h Chibios.20_rusefi/os/hal/include/hal_uart.h
+--- Chibios.20_original/os/hal/include/hal_uart.h	2021-01-09 18:01:24.844428300 -0500
++++ Chibios.20_rusefi/os/hal/include/hal_uart.h	2021-01-09 18:09:27.077428300 -0500
+@@ -299,6 +299,26 @@
+ }
+ 
+ /**
++ * @brief   Common ISR code for RX half-transfer data.
++ * @details This code handles the portable part of the ISR code:
++ *          - Callback invocation.
++ *          - Waiting thread wakeup, if any.
++ *          - Driver state transitions.
++ *          .
++ * @note    This macro is meant to be used in the low level drivers
++ *          implementation only.
++ *
++ * @param[in] uartp     pointer to the @p UARTDriver object
++ * @param[in] full      flag set to 1 for the second half, and 0 for the first half
++ *
++ * @notapi
++ */
++#define _uart_rx_half_isr_code(uartp, full) {                               \
++  if ((uartp)->config->rxhalf_cb != NULL)                                   \
++    (uartp)->config->rxhalf_cb(uartp, full);                                \
++}
++
++/**
+  * @brief   Common ISR code for RX error.
+  * @details This code handles the portable part of the ISR code:
+  *          - Callback invocation.
+diff -uwr Chibios.20_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c Chibios.20_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c
+--- Chibios.20_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2021-01-09 18:01:25.031427200 -0500
++++ Chibios.20_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.c	2021-01-09 18:09:27.078405700 -0500
+@@ -262,6 +262,11 @@
+   /* Mustn't ever set TCIE here - if done, it causes an immediate
+      interrupt.*/
+   cr1 = USART_CR1_UE | USART_CR1_PEIE | USART_CR1_TE | USART_CR1_RE;
++
++  /* Add Idle interrupt if needed */
++  if (uartp->config->timeout_cb != NULL)
++    cr1 |= USART_CR1_IDLEIE;
++
+   u->CR1 = uartp->config->cr1 | cr1;
+ 
+   /* Starting the receiver idle loop.*/
+@@ -290,6 +295,15 @@
+        received character and then the driver stays in the same state.*/
+     _uart_rx_idle_code(uartp);
+   }
++  /* DMA half-transter interrupt handling - for the 1st/2nd half transfers. */
++  else if (uartp->config->rxhalf_cb != NULL) {
++    if ((flags & STM32_DMA_ISR_HTIF) != 0) {
++      _uart_rx_half_isr_code(uartp, 0);
++    }
++    else if ((flags & STM32_DMA_ISR_TCIF) != 0) {
++      _uart_rx_half_isr_code(uartp, 1);
++    }
++  }
+   else {
+     /* Receiver in active state, a callback is generated, if enabled, after
+        a completed transfer.*/
+@@ -975,8 +989,14 @@
+   /* RX DMA channel preparation.*/
+   dmaStreamSetMemory0(uartp->dmarx, rxbuf);
+   dmaStreamSetTransactionSize(uartp->dmarx, n);
+-  dmaStreamSetMode(uartp->dmarx, uartp->dmarxmode  | STM32_DMA_CR_DIR_P2M |
+-                                 STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE);
++
++  uint32_t mode = STM32_DMA_CR_DIR_P2M | STM32_DMA_CR_MINC | STM32_DMA_CR_TCIE;
++
++  /* DMA half-transfer interrupt & circular mode, if needed */
++  if (uartp->config->rxhalf_cb != NULL)
++    mode |= STM32_DMA_CR_HTIE | STM32_DMA_CR_CIRC;
++
++  dmaStreamSetMode(uartp->dmarx, uartp->dmarxmode | mode);
+ 
+   /* Starting transfer.*/
+   dmaStreamEnable(uartp->dmarx);
+diff -uwr Chibios.20_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h Chibios.20_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h
+--- Chibios.20_original/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2021-01-09 18:01:25.032427700 -0500
++++ Chibios.20_rusefi/os/hal/ports/STM32/LLD/USARTv1/hal_uart_lld.h	2021-01-09 18:09:27.078405700 -0500
+@@ -578,6 +578,14 @@
+ typedef void (*uartecb_t)(UARTDriver *uartp, uartflags_t e);
+ 
+ /**
++ * @brief   Receive Half-transfer UART notification callback type.
++ *
++ * @param[in] uartp     pointer to the @p UARTDriver object
++ * @param[in] full      flag set to 1 for the second half, and 0 for the first half
++ */
++typedef void (*uarthcb_t)(UARTDriver *uartp, uartflags_t full);
++
++/**
+  * @brief   Driver configuration structure.
+  * @note    It could be empty on some architectures.
+  */
+@@ -625,6 +633,11 @@
+    * @brief Initialization value for the CR3 register.
+    */
+   uint16_t                  cr3;
++  /* Additional (optional) handlers. Placed here for the struct compatibility.*/
++  /**
++   * @brief Half-transfer receive buffer callback.
++   */
++  uarthcb_t                 rxhalf_cb;
+ } UARTConfig;
+ 
+ /**
+diff -uwr Chibios.20_original/os/hal/src/hal_mmc_spi.c Chibios.20_rusefi/os/hal/src/hal_mmc_spi.c
+--- Chibios.20_original/os/hal/src/hal_mmc_spi.c	2021-01-09 18:01:25.109427500 -0500
++++ Chibios.20_rusefi/os/hal/src/hal_mmc_spi.c	2021-01-10 12:25:36.436332200 -0500
+@@ -31,6 +31,8 @@
+ 
+ #if (HAL_USE_MMC_SPI == TRUE) || defined(__DOXYGEN__)
+ 
++#define MMC_WAIT_RETRY 3000
++
+ /*===========================================================================*/
+ /* Driver local definitions.                                                 */
+ /*===========================================================================*/
+@@ -172,6 +174,10 @@
+       return;
+     }
+   }
++#if MMC_NICE_WAITING == TRUE
++  int waitCounter = 0;
++#endif
++
+   /* Looks like it is a long wait.*/
+   while (true) {
+     spiReceive(mmcp->config->spip, 1, buf);
+@@ -181,6 +187,10 @@
+ #if MMC_NICE_WAITING == TRUE
+     /* Trying to be nice with the other threads.*/
+     osalThreadSleepMilliseconds(1);
++    if (++waitCounter == MMC_WAIT_RETRY) {
++    	// it's time to give up, this MMC card is not working property
++    	break;
++    }
+ #endif
+   }
+ }
+@@ -356,6 +366,9 @@
+   uint8_t buf[1];
+ 
+   spiSelect(mmcp->config->spip);
++#if MMC_NICE_WAITING == TRUE
++  int waitCounter = 0;
++#endif
+   while (true) {
+     spiReceive(mmcp->config->spip, 1, buf);
+     if (buf[0] == 0xFFU) {
+@@ -364,6 +377,10 @@
+ #if MMC_NICE_WAITING == TRUE
+     /* Trying to be nice with the other threads.*/
+     osalThreadSleepMilliseconds(1);
++    if (++waitCounter == MMC_WAIT_RETRY) {
++    	// it's time to give up, this MMC card is not working property
++    	break;
++    }
+ #endif
+   }
+   spiUnselect(mmcp->config->spip);
+diff -uwr Chibios.20_original/os/rt/include/chdebug.h Chibios.20_rusefi/os/rt/include/chdebug.h
+--- Chibios.20_original/os/rt/include/chdebug.h	2021-01-09 18:01:25.165428500 -0500
++++ Chibios.20_rusefi/os/rt/include/chdebug.h	2021-01-10 12:25:36.437332000 -0500
+@@ -61,8 +61,8 @@
+ /*===========================================================================*/
+ 
+ #if CH_DBG_SYSTEM_STATE_CHECK == TRUE
+-#define _dbg_enter_lock() (ch.dbg.lock_cnt = (cnt_t)1)
+-#define _dbg_leave_lock() (ch.dbg.lock_cnt = (cnt_t)0)
++#define _dbg_enter_lock() do {ch.dbg.lock_cnt = (cnt_t)1; ON_LOCK_HOOK;} while(0)
++#define _dbg_leave_lock() do {ON_UNLOCK_HOOK; ch.dbg.lock_cnt = (cnt_t)0;} while(0)
+ #endif
+ 
+ /* When the state checker feature is disabled then the following functions
+diff -uwr Chibios.20_original/os/various/cpp_wrappers/syscalls_cpp.cpp Chibios.20_rusefi/os/various/cpp_wrappers/syscalls_cpp.cpp
+--- Chibios.20_original/os/various/cpp_wrappers/syscalls_cpp.cpp	2021-01-09 18:01:25.192427800 -0500
++++ Chibios.20_rusefi/os/various/cpp_wrappers/syscalls_cpp.cpp	2021-01-10 12:25:36.437332000 -0500
+@@ -19,8 +19,8 @@
+    return 1;
+ }
+ 
+-#undef errno
+-extern int errno;
++//#undef errno
++//extern int errno;
+ int _kill(int pid, int sig) {
+   (void)pid;
+   (void)sig;
+diff -uwr Chibios.20_original/os/various/cpp_wrappers/syscalls_cpp.hpp Chibios.20_rusefi/os/various/cpp_wrappers/syscalls_cpp.hpp
+--- Chibios.20_original/os/various/cpp_wrappers/syscalls_cpp.hpp	2021-01-09 18:01:25.192427800 -0500
++++ Chibios.20_rusefi/os/various/cpp_wrappers/syscalls_cpp.hpp	2021-01-10 12:25:36.438332400 -0500
+@@ -8,6 +8,6 @@
+ void __cxa_guard_release (__guard *);
+ void __cxa_guard_abort (__guard *);
+ 
+-void *__dso_handle = NULL;
++//void *__dso_handle = NULL;
+ 
+ #endif /* SYSCALLS_CPP_HPP_ */
+diff -uwr Chibios.20_original/os/various/syscalls.c Chibios.20_rusefi/os/various/syscalls.c
+--- Chibios.20_original/os/various/syscalls.c	2021-01-09 18:01:25.272773700 -0500
++++ Chibios.20_rusefi/os/various/syscalls.c	2021-01-09 18:09:27.079382600 -0500
+@@ -169,29 +169,4 @@
+   return 1;
+ }
+ 
+-/***************************************************************************/
+-
+-__attribute__((used))
+-void _exit(int status) {
+-  (void) status;
+-  chSysHalt("exit");
+-  abort();
+-}
+-
+-/***************************************************************************/
+-
+-__attribute__((used))
+-int _kill(int pid, int sig) {
+-  (void) pid;
+-  (void) sig;
+-  return -1;
+-}
+-
+-/***************************************************************************/
+-
+-__attribute__((used))
+-int _getpid(void) {
+-
+-  return 1;
+-}
+ /*** EOF ***/

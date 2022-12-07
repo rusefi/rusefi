@@ -3,6 +3,9 @@ rem auto-detects connected running rusEfi serial port and send text 'reboot' com
 rem flashes DFU
 rem
 
+echo Sending rusEFI DFU request
 java -jar ../java_console_binary/rusefi_console.jar reboot_dfu
-sleep 10
-..\misc\install\DfuSe\DfuSeCommand.exe -c -d --fn deliver/rusefi.dfu
+echo Now sleeping before DFU
+sleep 5
+echo Invoking DFU process
+call flash_dfu.bat

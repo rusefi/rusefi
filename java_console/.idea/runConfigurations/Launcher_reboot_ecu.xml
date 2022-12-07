@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Launcher reboot_ecu" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.Launcher" />
+    <module name="ui" />
+    <option name="PROGRAM_PARAMETERS" value="reboot_ecu" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

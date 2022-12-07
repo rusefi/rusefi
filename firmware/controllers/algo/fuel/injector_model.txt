@@ -1,0 +1,7 @@
+struct_no_prefix injector_model_s
+float m_deadtime;injectorLag(VBatt)\nthis value depends on a slow-changing VBatt value, so\nwe update it once in a while
+
+float pressureDelta;fuel: injector pressureDelta;"kPa", 1, 0, -10000, 10000, 1
+float pressureRatio;fuel: injector pressureRatio;"", 1, 0, -10000, 10000, 3
+
+end_struct

@@ -1,10 +1,8 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
 import com.rusefi.FileLog;
-import com.rusefi.PaneSettings;
 import com.rusefi.core.Sensor;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.DetachedSensor;
@@ -13,14 +11,14 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+
 
 /**
  * Date: 2/5/13
@@ -30,7 +28,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 public class GaugesPanel {
     private static final Sensor[] DEFAULT_LAYOUT = {
-            Sensor.RPM,
+            Sensor.RPMValue,
             Sensor.MAF,
             Sensor.CLT,
             Sensor.IAT,
@@ -39,14 +37,13 @@ public class GaugesPanel {
             Sensor.MAP,
             Sensor.tCharge,
             Sensor.baseFuel,
-            Sensor.cltCorrection,
-            Sensor.iatCorrection,
+            Sensor.runningFuel,
 
-            Sensor.injectorLagMs,
+            Sensor.etbTarget,
             Sensor.lastErrorCode,
             Sensor.Lambda,
             Sensor.VBATT,
-            Sensor.VSS,
+            Sensor.vehicleSpeedKph,
 
     };
     private static final String GAUGES_ROWS = "gauges_rows";
@@ -58,12 +55,6 @@ public class GaugesPanel {
     private static final int DEFAULT_ROWS = 3;
     private static final int DEFAULT_COLUMNS = 3;
     public static boolean IS_PAUSED; // dirty but works for not
-
-    static {
-        int expected = SizeSelectorPanel.WIDTH * SizeSelectorPanel.HEIGHT;
-        if (DEFAULT_LAYOUT.length != expected)
-            throw new IllegalStateException("Invalid gauges panel size " + DEFAULT_LAYOUT.length + " while " + expected  + " expected");
-    }
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final GaugesGrid gauges;
@@ -79,7 +70,7 @@ public class GaugesPanel {
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
-    public GaugesPanel(UIContext uiContext, final Node config, PaneSettings paneSettings) {
+    public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
@@ -101,7 +92,7 @@ public class GaugesPanel {
 
         content.add(middleSplitPanel, BorderLayout.CENTER);
 
-        content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
+        content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
 
         applyShowFlags();
         final int splitLocation = config.getIntProperty(SPLIT_LOCATION, -1);
@@ -139,21 +130,15 @@ public class GaugesPanel {
         JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
 
         final JPopupMenu selectorMenu = new JPopupMenu();
-        selectorMenu.add(new SizeSelectorPanel(new SizeSelectorPanel.SizeSelectorListener() {
-            @Override
-            public void onSelected(int row, int column) {
-                System.out.println("new size " + row + "/" + column);
-                setSensorGridDimensions(row, column);
-            }
+        selectorMenu.add(new SizeSelectorPanel((row, column) -> {
+            System.out.println("new size " + row + "/" + column);
+            setSensorGridDimensions(row, column);
         }));
 
         JButton selector = new JButton("O");
-        selector.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Component c = (Component) e.getSource();
-                selectorMenu.show(c, -1, c.getHeight());
-            }
+        selector.addActionListener(e -> {
+            Component c = (Component) e.getSource();
+            selectorMenu.show(c, -1, c.getHeight());
         });
         rightUpperPanel.add(selector);
 
@@ -166,29 +151,23 @@ public class GaugesPanel {
     private JPopupMenu createMenu(final Node config) {
         JPopupMenu menu = new JPopupMenu();
         final JCheckBoxMenuItem saveDetailedLogs = new JCheckBoxMenuItem("Save detailed logs");
-        saveDetailedLogs.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FileLog.suspendLogging = !saveDetailedLogs.isSelected();
-                getConfig().getRoot().setBoolProperty(DISABLE_LOGS, FileLog.suspendLogging);
-            }
+        saveDetailedLogs.addActionListener(e -> {
+            FileLog.suspendLogging = !saveDetailedLogs.isSelected();
+            getConfig().getRoot().setBoolProperty(DISABLE_LOGS, FileLog.suspendLogging);
         });
         saveDetailedLogs.setSelected(!FileLog.suspendLogging);
 
         final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
         final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
         showRpmItem.setSelected(showRpmPanel);
-        ActionListener showCheckboxListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showRpmPanel = showRpmItem.isSelected();
-                showMessagesPanel = showCommandsItem.isSelected();
-                config.setProperty(SHOW_RPM, showRpmPanel);
-                config.setProperty(SHOW_MESSAGES, showMessagesPanel);
-                applyShowFlags();
-                // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
-                middleSplitPanel.setDividerLocation(0.5);
-            }
+        ActionListener showCheckboxListener = e -> {
+            showRpmPanel = showRpmItem.isSelected();
+            showMessagesPanel = showCommandsItem.isSelected();
+            config.setProperty(SHOW_RPM, showRpmPanel);
+            config.setProperty(SHOW_MESSAGES, showMessagesPanel);
+            applyShowFlags();
+            // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
+            middleSplitPanel.setDividerLocation(0.5);
         };
         showRpmItem.addActionListener(showCheckboxListener);
         showCommandsItem.addActionListener(showCheckboxListener);
@@ -203,7 +182,7 @@ public class GaugesPanel {
     }
 
     private void prepareMessagesPanel() {
-        MessagesPanel mp = new MessagesPanel(null);
+        MessagesPanel mp = new MessagesPanel(null, config);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
     }
@@ -220,13 +199,11 @@ public class GaugesPanel {
     }
 
     private Component createPauseButton() {
-        final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IS_PAUSED = !IS_PAUSED;
-                UiUtils.setPauseButtonText(pauseButton, IS_PAUSED);
-            }
+        String suffix = " Gauges";
+        final JButton pauseButton = UiUtils.createPauseButton(suffix);
+        pauseButton.addActionListener(e -> {
+            IS_PAUSED = !IS_PAUSED;
+            UiUtils.setPauseButtonText(pauseButton, IS_PAUSED, suffix);
         });
         return pauseButton;
     }
@@ -234,13 +211,10 @@ public class GaugesPanel {
     @NotNull
     private JButton createSaveImageButton() {
         JButton saveImageButton = UiUtils.createSaveImageButton();
-        saveImageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String fileName = Logger.getDate() + "_gauges.png";
+        saveImageButton.addActionListener(e -> {
+            String fileName = FileLog.getDate() + "_gauges.png";
 
-                UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
-            }
+            UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
         });
         return saveImageButton;
     }

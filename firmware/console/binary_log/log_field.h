@@ -1,17 +1,33 @@
 #pragma once
 
-#include "scaled_channel.h"
+#include "efi_scaled_channel.h"
 #include <cstdint>
 #include <cstddef>
 
 struct Writer;
 class LogField {
 public:
-	template <typename TValue, int TMult = 1>
-	LogField(const scaled_channel<TValue, TMult>& toRead, const char* name, const char* units, int8_t digits)
-		: m_type(resolveType<TValue>())
-		, m_multiplier(TMult)
-		, m_addr(reinterpret_cast<const char*>(&toRead))
+	// Scaled channels, memcpys data directly and describes format in header
+	template <typename TValue, int TMult, int TDiv>
+	constexpr LogField(const scaled_channel<TValue, TMult, TDiv>& toRead,
+			   const char* name, const char* units, int8_t digits)
+		: m_multiplier(float(TDiv) / TMult)
+		, m_addr(toRead.getFirstByteAddr())
+		, m_type(resolveType<TValue>())
+		, m_digits(digits)
+		, m_size(sizeForType(resolveType<TValue>()))
+		, m_name(name)
+		, m_units(units)
+	{
+	}
+
+	// Non-scaled channel, works for plain arithmetic types (int, float, uint8_t, etc)
+	template <typename TValue, typename = typename std::enable_if<std::is_arithmetic_v<TValue>>::type>
+	constexpr LogField(TValue& toRead,
+			   const char* name, const char* units, int8_t digits)
+		: m_multiplier(1)
+		, m_addr(&toRead)
+		, m_type(resolveType<TValue>())
 		, m_digits(digits)
 		, m_size(sizeForType(resolveType<TValue>()))
 		, m_name(name)
@@ -30,7 +46,7 @@ public:
 		F32 = 7,
 	};
 
-	size_t getSize() const {
+	constexpr size_t getSize() const {
 		return m_size;
 	}
 
@@ -43,9 +59,9 @@ public:
 
 private:
 	template<typename T>
-	static Type resolveType();
+	static constexpr Type resolveType();
 
-	static size_t sizeForType(Type t) {
+	static constexpr size_t sizeForType(Type t) {
 		switch (t) {
 			case Type::U08:
 			case Type::S08:
@@ -59,11 +75,11 @@ private:
 		}
 	}
 
-	const Type m_type;
 	const float m_multiplier;
-	const char* const m_addr;
+	const void* const m_addr;
+	const Type m_type;
 	const int8_t m_digits;
-	const size_t m_size;
+	const uint8_t m_size;
 
 	const char* const m_name;
 	const char* const m_units;

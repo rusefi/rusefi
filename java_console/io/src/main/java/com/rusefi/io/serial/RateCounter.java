@@ -5,6 +5,7 @@ import com.rusefi.Timeouts;
 import java.util.LinkedList;
 
 public class RateCounter {
+    private final static int MAGIC_DURATION = Timeouts.SECOND;
 
     private final LinkedList<Pair> timeStamps = new LinkedList<>();
 
@@ -16,7 +17,7 @@ public class RateCounter {
     }
 
     public synchronized int getCurrentRate(long now) {
-        long threshold = now - Timeouts.SECOND;
+        long threshold = now - MAGIC_DURATION;
 
         while (!timeStamps.isEmpty() && timeStamps.peekFirst().timestamp < threshold)
             timeStamps.removeFirst();
@@ -27,12 +28,16 @@ public class RateCounter {
         return result;
     }
 
+    public synchronized int getSizeForUnitTest() {
+        return timeStamps.size();
+    }
+
     public void add() {
         add(System.currentTimeMillis());
     }
 
-    public synchronized void add(long now) {
-        timeStamps.add(new Pair(now, 1));
+    public synchronized void add(long timestamp) {
+        timeStamps.add(new Pair(timestamp, 1));
     }
 
     private static class Pair {

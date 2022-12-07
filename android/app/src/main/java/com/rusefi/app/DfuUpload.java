@@ -5,8 +5,8 @@ import android.widget.TextView;
 
 import com.rusefi.Listener;
 import com.rusefi.dfu.DfuImage;
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,12 +29,12 @@ public class DfuUpload {
         localDfuImageFileName = localFolder + File.separator + DFU_FILE_NAME;
     }
 
-    void fileOperation(final TextView mResultView) {
+    void downloadFileIfNotPresent(final TextView mResultView) {
         if (new File(this.localFullFile).exists()) {
-            mResultView.append(this.BUNDLE_FILE + " found!\n");
+            mResultView.append(BUNDLE_FILE + " found!\n");
             uncompressFile(this.localFullFile, this.localFolder, this.localDfuImageFileName, mResultView);
         } else {
-            mResultView.append(this.BUNDLE_FILE + " not found!\n");
+            mResultView.append(BUNDLE_FILE + " not found!\n");
 
             new Thread(new Runnable() {
                 @Override
@@ -43,30 +43,15 @@ public class DfuUpload {
                         ConnectionAndMeta c = new ConnectionAndMeta(BUNDLE_FILE).invoke(ConnectionAndMeta.BASE_URL_LATEST);
                         ConnectionAndMeta.downloadFile(localFullFile, c, new ConnectionAndMeta.DownloadProgressListener() {
                             @Override
-                            public void onPercentage(final int currentProgress) {
-                                mResultView.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        mResultView.append("Downloading " + currentProgress + "\n");
-                                    }
-                                });
+                            public void onPercentage(final int currentPercentage) {
+                                mResultView.post(() -> mResultView.append("Downloaded " + currentPercentage + "%\n"));
                             }
                         });
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Downloaded! " + "\n");
-                            }
-                        });
+                        mResultView.post(() -> mResultView.append("Downloaded! " + "\n"));
                         uncompressFile(localFullFile, localFolder, localDfuImageFileName, mResultView);
 
-                    } catch (IOException | KeyManagementException | NoSuchAlgorithmException e) {
-                        mResultView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                mResultView.append("Error downloading " + e + "\n");
-                            }
-                        });
+                    } catch (IOException e) {
+                        mResultView.post(() -> mResultView.append("Error downloading " + e + "\n"));
                     }
                 }
             }).start();

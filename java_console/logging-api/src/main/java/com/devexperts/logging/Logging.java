@@ -65,7 +65,7 @@ public class Logging {
 	 * overrides the value of {@link #LOG_FILE_PROPERTY} system property.
 	 */
 	public static void configureLogFile(String log_file) {
-		reportErrors(IMPL, IMPL.configureLogFile(log_file));
+		reportErrors(IMPL, IMPL.configureLogFileAndConsole(log_file));
 	}
 
 	// ========== Instance =========
@@ -190,7 +190,7 @@ public class Logging {
 				// failed to configure with passed class name
 				impl = null;
 				if (!(t instanceof LinkageError) && !(t.getCause() instanceof LinkageError)) {
-					errors.put(className + " link", new IllegalStateException(t));
+//					errors.put(className + " link", new IllegalStateException(t));
 				}
 			}
 		}
@@ -217,7 +217,7 @@ public class Logging {
 				// failed to configure log4j2
 				impl = null;
 				if (!(t instanceof LinkageError) && !(t.getCause() instanceof LinkageError)) {
-					errors.put("log4j2 link", new IllegalStateException(t));
+					//errors.put("log4j2 link", new IllegalStateException(t));
 				}
 			}
 		}

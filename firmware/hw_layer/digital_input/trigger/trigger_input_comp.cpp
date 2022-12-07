@@ -7,18 +7,13 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
  
-#include "global.h"
+#include "pch.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_USE_COMP) || defined(__DOXYGEN__)
 
 #include "hal_comp.h"
 
 #include "trigger_input.h"
-#include "digital_input_icu.h"
-
-EXTERN_ENGINE;
-
-static Logging *logger;
 
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;
@@ -44,7 +39,7 @@ static void setHysteresis(COMPDriver *comp, int sign) {
 		toothCnt = 0;
 		prevNt = nowNt;
 #ifdef TRIGGER_COMP_EXTREME_LOGGING
-		scheduleMsg(logger, "* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
+		efiPrintf("* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
 #endif /* TRIGGER_COMP_EXTREME_LOGGING */
 	}
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
@@ -56,22 +51,16 @@ static void comp_shaft_callback(COMPDriver *comp) {
 	
 	uint32_t status = comp_lld_get_status(comp);
 	int isPrimary = (comp == EFI_COMP_PRIMARY_DEVICE);
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
+
 	trigger_event_e signal;
 	if (status & COMP_IRQ_RISING) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-		hwHandleShaftSignal(signal, stamp);
+		hwHandleShaftSignal(isPrimary ? 0 : 1, true, stamp);
 		// shift the threshold down a little bit to avoid false-triggering (threshold hysteresis)
 		setHysteresis(comp, -1);
 	}
 
 	if (status & COMP_IRQ_FALLING) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-		hwHandleShaftSignal(signal, stamp);
+		hwHandleShaftSignal(isPrimary ? 0 : 1, false, stamp);
 		// shift the threshold up a little bit to avoid false-triggering (threshold hysteresis)
 		setHysteresis(comp, 1);
 	}
@@ -83,9 +72,9 @@ static void comp_cam_callback(COMPDriver *comp) {
 	efitick_t stamp = getTimeNowNt();
 
 	if (isRising) {
-		hwHandleVvtCamSignal(TV_RISE, stamp);
+		hwHandleVvtCamSignal(TriggerValue::RISE, stamp, index);
 	} else {
-		hwHandleVvtCamSignal(TV_FALL, stamp);
+		hwHandleVvtCamSignal(TriggerValue::FALL, stamp, index);
 	}
 }
 #endif
@@ -98,42 +87,41 @@ static COMPConfig comp_shaft_cfg = {
 
 static bool isCompEnabled = false;
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void turnOnTriggerInputPins() {
 	compInit();
 	compStart(EFI_COMP_PRIMARY_DEVICE, &comp_shaft_cfg);
 
 	applyNewTriggerInputPins();
 }
 
-static int getDacValue(uint8_t voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static int getDacValue(uint8_t voltage) {
 	constexpr float maxDacValue = 255.0f;	// 8-bit DAC
-	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / CONFIG(adcVcc), 1.0f);
+	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / engineConfiguration->adcVcc, 1.0f);
 }
 
 void startTriggerInputPins(void) {
 	//efiAssertVoid(CUSTOM_ERR_, !isCompEnabled, "isCompEnabled");
 	if (isCompEnabled) {
-		scheduleMsg(logger, "startTIPins(): already enabled!");
+		efiPrintf("startTIPins(): already enabled!");
 		return;
 	}
 
-	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt) PASS_ENGINE_PARAMETER_SUFFIX);	// usually 2.5V resistor divider
+	centeredDacValue = getDacValue(engineConfiguration->triggerCompCenterVolt);	// usually 2.5V resistor divider
 	
-	dacHysteresisMin = getDacValue(CONFIG(triggerCompHystMin) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~20mV
-	dacHysteresisMax = getDacValue(CONFIG(triggerCompHystMax) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~300mV
+	dacHysteresisMin = getDacValue(engineConfiguration->triggerCompHystMin);	// usually ~20mV
+	dacHysteresisMax = getDacValue(engineConfiguration->triggerCompHystMax);	// usually ~300mV
 	dacHysteresisDelta = dacHysteresisMin;
 	
 	// 20 rpm (60_2) = 1000*60/((2*60)*20) = 25 ms for 1 tooth event
-	float satRpm = CONFIG(triggerCompSensorSatRpm) * RPM_1_BYTE_PACKING_MULT;
-	hystUpdatePeriodNumEvents = ENGINE(triggerCentral.triggerShape).getSize();	// = 116 for "60-2" trigger wheel
+	float satRpm = engineConfiguration->triggerCompSensorSatRpm;
+	hystUpdatePeriodNumEvents = engine->triggerCentral.triggerShape.getSize();	// = 116 for "60-2" trigger wheel
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
 	
-	scheduleMsg(logger, "startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
+	efiPrintf("startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
 		centeredDacValue, dacHysteresisMin, dacHysteresisMax, satRpm, saturatedVrFreqNt * 1000.0f, hystUpdatePeriodNumEvents);
 #ifdef EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS
-	scheduleMsg(logger, "startTIPins(): ADAPTIVE_HYSTERESIS enabled!");
+	efiPrintf("startTIPins(): ADAPTIVE_HYSTERESIS enabled!");
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
 		
 	int channel = EFI_COMP_TRIGGER_CHANNEL; // todo: use getInputCaptureChannel(hwPin);
@@ -153,16 +141,16 @@ void startTriggerInputPins(void) {
 
 void stopTriggerInputPins(void) {
 	if (!isCompEnabled) {
-		scheduleMsg(logger, "stopTIPins(): already disabled!");
+		efiPrintf("stopTIPins(): already disabled!");
 		return;
 	}
 
-	scheduleMsg(logger, "stopTIPins();");
+	efiPrintf("stopTIPins();");
 
 	compDisable(EFI_COMP_PRIMARY_DEVICE);
 	isCompEnabled = false;
 #if 0
-	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
+	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		if (isConfigurationChanged(bc.triggerInputPins[i])) {
 			turnOffTriggerInputPin(activeConfiguration.bc.triggerInputPins[i]);
 		}

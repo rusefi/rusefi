@@ -1,53 +1,35 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
+import com.rusefi.FileLog;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MessagesView {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(Logger.DATE_PATTERN);
-    private static final int MAX_SIZE = 50000;
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(FileLog.DATE_PATTERN);
 
     private final Style bold;
     private final Style italic;
+    private final Node config;
 
     private boolean isPaused;
 
     protected final JTextPane messages = new JTextPane();
     public final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    public MessagesView() {
+    public MessagesView(Node config) {
+        this.config = config;
         messages.setEditable(false);
 
-        JPopupMenu menu = createPopupMenu();
-
-        messages.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                pop(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                pop(e);
-            }
-
-            private void pop(MouseEvent e) {
-                if (e.isPopupTrigger())
-                    menu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        });
+        UiUtils.installPopupMenu(createPopupMenu(), messages);
 
         StyledDocument d = (StyledDocument) messages.getDocument();
         bold = d.addStyle("StyleName", null);
@@ -81,14 +63,7 @@ public class MessagesView {
         menu.add(selectAll);
 does not work? maybe wrong UI colors since control is not editable?
 */
-        JMenuItem copy = new JMenuItem("Copy");
-        copy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messages.copy();
-            }
-        });
-        menu.add(copy);
+        menu.add(UiUtils.createCopyMenu(messages));
 
         menu.add(new JPopupMenu.Separator());
 
@@ -105,8 +80,9 @@ does not work? maybe wrong UI colors since control is not editable?
 
     private void append(String line, Class clazz) {
         Document d = messages.getDocument();
-        if (d.getLength() > MAX_SIZE)
-            clearMessages(d);
+        int logSizeControl = LogSizeControl.getValue(config);
+        if (d.getLength() > logSizeControl)
+            clearMessages(d, logSizeControl);
         try {
             d.insertString(d.getLength(), line + "\r\n", getStyle(clazz));
             messages.select(d.getLength(), d.getLength());
@@ -129,9 +105,9 @@ does not work? maybe wrong UI colors since control is not editable?
     }
 
 
-    private void clearMessages(Document d) {
+    private void clearMessages(Document d, int logSizeControl) {
         try {
-            d.remove(0, d.getLength());
+            d.remove(0, d.getLength() - logSizeControl / 2);
         } catch (BadLocationException e) {
             throw new IllegalStateException(e);
         }
@@ -139,7 +115,7 @@ does not work? maybe wrong UI colors since control is not editable?
 
     public void clear() {
         Document d = messages.getDocument();
-        clearMessages(d);
+        clearMessages(d, 0);
     }
 
     public void setPaused(boolean isPaused) {

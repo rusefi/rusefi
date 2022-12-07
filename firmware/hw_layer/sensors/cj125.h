@@ -91,7 +91,7 @@
 #define CJ125_VOLTAGE_TO_16BIT_FACTOR	4096.0f
 
 #define CJ125_PUMP_SHUNT_RESISTOR		61.9f
-#define CJ125_STOICH_RATIO				14.7f
+#define CJ125_STOICH_RATIO				STOICH_RATIO
 #define CJ125_PUMP_CURRENT_FACTOR		1000.0f
 
 // Returned if there's no valid measurement
@@ -102,10 +102,10 @@
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(Logging *shared DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initCJ125();
 
 void cjRestart(void);
 void cjStartCalibration(void);
-float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool cjHasAfrSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void cj125defaultPinout(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+float cjGetAfr();
+bool cjHasAfrSensor();
+void cj125defaultPinout();

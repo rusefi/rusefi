@@ -7,19 +7,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 #include <math.h>
-#include "efilib.h"
 #include "datalogging.h"
 #include "histogram.h"
-#include "error_handling.h"
 
+// also known as bool2string and boolean2string
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
-}
-
-int minI(int i1, int i2) {
-	return i1 < i2 ? i1 : i2;
 }
 
 /*
@@ -37,30 +34,6 @@ float efiRound(float value, float precision) {
 	efiAssert(CUSTOM_ERR_ASSERT, precision != 0, "zero precision", NAN);
 	float a = round(value / precision);
 	return fixNegativeZero(a * precision);
-}
-
-float absF(float value) {
-	return value > 0 ? value : -value;
-}
-
-int absI(int32_t value) {
-	return value >= 0 ? value : -value;
-}
-
-int maxI(int i1, int i2) {
-	return i1 > i2 ? i1 : i2;
-}
-
-float maxF(float i1, float i2) {
-	return i1 > i2 ? i1 : i2;
-}
-
-float minF(float i1, float i2) {
-	return i1 < i2 ? i1 : i2;
-}
-
-float clampF(float min, float clamp, float max) {
-	return maxF(min, minF(clamp, max));
 }
 
 uint32_t efiStrlen(const char *param) {
@@ -112,7 +85,7 @@ int atoi(const char *string) {
 	// todo: use stdlib '#include <stdlib.h> '
 	int len = strlen(string);
 	if (len == 0) {
-		return -ERROR_CODE;
+		return -ATOI_ERROR_CODE;
 	}
 	if (string[0] == '-') {
 		return -atoi(string + 1);
@@ -122,7 +95,7 @@ int atoi(const char *string) {
 	for (int i = 0; i < len; i++) {
 		char ch = string[i];
 		if (ch < '0' || ch > '9') {
-			return ERROR_CODE;
+			return ATOI_ERROR_CODE;
 		}
 		int c = ch - '0';
 		result = result * 10 + c;
@@ -189,14 +162,7 @@ static char* itoa_signed(char *p, int num, unsigned radix) {
  * @return pointer at the end zero symbol after the digits
  */
 char* itoa10(char *p, int num) {
-// todo: unit test
 	return itoa_signed(p, num, 10);
-}
-
-#define EPS 0.0001
-
-bool isSameF(float v1, float v2) {
-	return absF(v1 - v2) < EPS;
 }
 
 int efiPow10(int param) {
@@ -237,7 +203,7 @@ float atoff(const char *param) {
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
 #if ! EFI_SIMULATOR
-		print("NAN from [%s]\r\n", string);
+		efiPrintf("NAN from [%s]", string);
 #endif
 		return (float) NAN;
 	}
@@ -248,19 +214,19 @@ float atoff(const char *param) {
 	if (dotIndex == -1) {
 		// just an integer
 		int result = atoi(string);
-		if (absI(result) == ERROR_CODE)
+		if (absI(result) == ATOI_ERROR_CODE)
 			return (float) NAN;
 		return (float) result;
 	}
 	// todo: this needs to be fixed
 	string[dotIndex] = 0;
 	int integerPart = atoi(string);
-	if (absI(integerPart) == ERROR_CODE)
+	if (absI(integerPart) == ATOI_ERROR_CODE)
 		return (float) NAN;
 	string += (dotIndex + 1);
 	int decimalLen = strlen(string);
 	int decimal = atoi(string);
-	if (absI(decimal) == ERROR_CODE)
+	if (absI(decimal) == ATOI_ERROR_CODE)
 		return (float) NAN;
 	float divider = 1.0;
 	// todo: reuse 'pow10' function which we have anyway
@@ -269,8 +235,6 @@ float atoff(const char *param) {
 	}
 	return integerPart + decimal / divider;
 }
-
-#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
 
 bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 	int len1 = strlen(str1);
@@ -289,6 +253,19 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 */
 int mytolower(const char c) {
   return TO_LOWER(c);
+}
+
+
+int djb2lowerCase(const char *str) {
+	unsigned long hash = 5381;
+	int c;
+
+	while ( (c = *str++) ) {
+		c = TO_LOWER(c);
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	}
+
+	return hash;
 }
 
 bool strEqual(const char *str1, const char *str2) {
@@ -313,12 +290,12 @@ void printHistogram(Logging *logging, histogram_s *histogram) {
 	int len = hsReport(histogram, report);
 
 	logging->reset();
-	appendMsgPrefix(logging);
+	logging.append(PROTOCOL_MSG LOG_DELIMITER);
 	logging.appendPrintf("histogram %s *", histogram->name);
 	for (int i = 0; i < len; i++)
 	logging.appendPrintf("%d ", report[i]);
 	logging.appendPrintf("*");
-	appendMsgPostfix(logging);
+	logging.append(LOG_DELIMITER);
 	scheduleLogging(logging);
 #else
 	UNUSED(logging);
@@ -333,67 +310,21 @@ float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, f
 	return (decrLimitPerSec <= 0.0f) ? newValue : oldValue - minF(oldValue - newValue, decrLimitPerSec * secsPassed);
 }
 
-constexpr float constant_e = 2.71828f;
+bool isPhaseInRange(float test, float current, float next) {
+	bool afterCurrent = test >= current;
+	bool beforeNext = test < next;
 
-// 'constexpr' is a keyword that tells the compiler
-// "yes, this thing, it's a 'pure function' that only depends on its inputs and has no side effects"
-// like how const is a constant value, constexpr is a constant expression
-// so if somewhere you used it in a way that it could determine the exact arguments to the function at compile time, it will _run_ the function at compile time, and cook in the result as a constant
-constexpr float expf_taylor_impl(float x, uint8_t n)
-{
-	if (x < -2)
-	{
-		return 0.818f;
+	if (next > current) {
+		// we're not near the end of the cycle, comparison is simple
+		// 0            |------------------------|       720
+		//            next                    current
+		return afterCurrent && beforeNext;
+	} else {
+		// we're near the end of the cycle so we have to check the wraparound
+		// 0 -----------|                        |------ 720
+		//            next                    current
+		// Check whether test is after current (ie, between current tooth and end of cycle)
+		// or if test if before next (ie, between start of cycle and next tooth)
+		return afterCurrent || beforeNext;
 	}
-	else if (x > 0)
-	{
-		return 1;
-	}
-
-	x = x + 1;
-
-	float x_power = x;
-	int fac = 1;
-	float sum = 1;
-
-	for (int i = 1; i <= n; i++)
-	{
-		fac *= i;
-		sum += x_power / fac;
-
-		x_power *= x;
-	}
-
-	return sum / constant_e;
-}
-
-float expf_taylor(float x)
-{
-	return expf_taylor_impl(x, 4);
-}
-
-float tanf_taylor(float x) {
-	// This exists because the "normal" implementation, tanf, pulls in like 6kb of
-	// code and loookup tables
-
-	// This is only specified from [0, pi/2 - 0.01)
-	// Inside that range it has an error of less than 0.1%, and it gets worse as theta -> pi/2
-
-	// Precompute some exponents of x
-	float x2 = x * x;
-	float x3 = x2 * x;
-	float x4 = x3 * x;
-	float x5 = x4 * x;
-	float x6 = x5 * x;
-	// x7 not used
-	float x8 = x6 * x2;
-
-	// 3-term Taylor Series for sin(theta)
-	float sin_val = x - (x3 / 6) + (x5 / 120);
-
-	// 5-term Taylor Series for cos(theta)
-	float cos_val = 1 - (x2 / 2) + (x4 / 24) - (x6 / 720) + (x8 / 40320);
-
-	// tan = sin / cos
-	return sin_val / cos_val;
 }

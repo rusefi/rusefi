@@ -1,17 +1,13 @@
-#include "engine_test_helper.h"
-#include "engine_controller.h"
-#include "launch_control.h"
-#include "vehicle_speed.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "launch_control.h"
 
 TEST(LaunchControl, TpsCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 
 	// Should return false with failed sensor
 	Sensor::resetMockValue(SensorType::DriverThrottleIntent);
@@ -28,28 +24,26 @@ TEST(LaunchControl, TpsCondition) {
 
 
 TEST(LaunchControl, VSSCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	// Test Speed trashold
+	// Test Speed threshold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
-	setMockVehicleSpeed(10);
+    engineConfiguration->launchSpeedThreshold = 30;
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
     EXPECT_TRUE(dut.isInsideSpeedCondition());
 
-	setMockVehicleSpeed(40);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	EXPECT_FALSE(dut.isInsideSpeedCondition());
 
 }
 
 TEST(LaunchControl, RPMCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	engineConfiguration->launchRpm = 3000;
 
@@ -59,10 +53,9 @@ TEST(LaunchControl, RPMCondition) {
 }
 
 TEST(LaunchControl, SwitchInputCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	//activation based on VSS
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -70,7 +63,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//active by switch
 	engineConfiguration->launchActivationMode = SWITCH_INPUT_LAUNCH;
-	engineConfiguration->launchActivatePin = GPIOG_1;
+	engineConfiguration->launchActivatePin = Gpio::G1;
 	setMockState(engineConfiguration->launchActivatePin, true);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
@@ -79,116 +72,124 @@ TEST(LaunchControl, SwitchInputCondition) {
 
 	//by clutch
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->clutchDownPin = GPIOG_2;
+	engineConfiguration->clutchDownPin = Gpio::G2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs();
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs();
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
+	engineConfiguration->clutchDownPinInverted = true;
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs();
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs();
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 }
 
 TEST(LaunchControl, CombinedCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	//check VSS normal usage
-	engineConfiguration->launchActivationMode=ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
+
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
+	engineConfiguration->launchTpsThreshold = 10;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
-	setMockVehicleSpeed(10);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+	Sensor::setMockValue(SensorType::Rpm,  1200);
 
     EXPECT_FALSE(dut.isLaunchConditionMet(1200));
 
-	engine->rpmCalculator.mockRpm = 3200;
+    Sensor::setMockValue(SensorType::Rpm,  3200);
 	EXPECT_TRUE(dut.isLaunchConditionMet(3200));
 
-	setMockVehicleSpeed(40);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	EXPECT_FALSE(dut.isLaunchConditionMet(3200));
 
 }
 
+static void setDefaultLaunchParameters() {
+	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
+//	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
+	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
+	engineConfiguration->launchSparkCutEnable = true;
+	engineConfiguration->launchFuelCutEnable = false;
+	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
+	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
+	engineConfiguration->launchFuelAdded = 10; // Extra fuel in % when launch are triggered
+	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
+	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
+//	engineConfiguration->enableLaunchRetard = true;
+// dead code todo	engineConfiguration->enableLaunchBoost = true;
+	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
+	// dead code todo	engineConfiguration->antiLagRpmTreshold = 3000;
+}
+
 TEST(LaunchControl, CompleteRun) {
-	bool spark, fuel;
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	LoggingWithStorage logger("test");
-
-	initLaunchControl(&logger,PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLaunchControl();
 
 	//load default config
-	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultLaunchParameters();
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
+    engineConfiguration->launchSpeedThreshold = 30;
+
 	engineConfiguration->launchRpm = 3000;
-	engineConfiguration->launchTpsTreshold = 10;
-	engineConfiguration->launchControlEnabled = 1; 
+	engineConfiguration->launchTpsThreshold = 10;
+	engineConfiguration->launchControlEnabled = true;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
-	setMockVehicleSpeed(10);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
+	Sensor::setMockValue(SensorType::Rpm, 1200);
 
-	//update condition check
-    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
+
 
 	//check if we have some sort of cut? we should not have at this point
-	spark = false;
-	fuel = false;
-	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 
-	engine->rpmCalculator.mockRpm = 3510;
+	Sensor::setMockValue(SensorType::Rpm, 3510);
 	//update condition check
-    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 
 
 	//we have a 3 seconds delay to actually enable it!
-	eth.smartMoveTimeForwardSeconds(1);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
-	spark = false;
-	fuel = false;
-	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardAndInvokeEventsSec(1);
+	engine->launchController.update();
 	
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
-	eth.smartMoveTimeForwardSeconds(3);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
-	spark = false;
-	fuel = false;
-	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardAndInvokeEventsSec(3);
+	engine->launchController.update();
 
-	EXPECT_TRUE(spark);
-	EXPECT_FALSE(fuel);
 
-	setMockVehicleSpeed(40);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
-	spark = false;
-	fuel = false;
-	applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+	EXPECT_TRUE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
+
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
+	engine->launchController.update();
+
+
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 }

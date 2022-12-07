@@ -1,3 +1,7 @@
+/**
+ * @file closed_loop_controller.h
+ */
+
 #pragma once
 
 #include "expected.h"
@@ -10,8 +14,7 @@ public:
 		setOutput(outputValue);
 	}
 
-private:
-	expected<TOutput> getOutput() {
+	virtual expected<TOutput> getOutput() {
 		expected<TInput> setpoint = getSetpoint();
 		// If we don't know the setpoint, return failure.
 		if (!setpoint) {
@@ -38,15 +41,16 @@ private:
 
 		return openLoopResult.Value + closedLoopResult.Value;
 	}
+private:
 
 	// Get the setpoint: where should the controller put the plant?
-	virtual expected<TInput> getSetpoint() const = 0;
+	virtual expected<TInput> getSetpoint() = 0;
 
 	// Get the current observation: what is the current state of the world?
 	virtual expected<TInput> observePlant() const = 0;
 
 	// Get the open-loop output: output state based on only the setpoint
-	virtual expected<TOutput> getOpenLoop(TInput setpoint) const = 0;
+	virtual expected<TOutput> getOpenLoop(TInput setpoint) = 0;
 
 	// Get the closed-loop output: output state based on setpoint and observation
 	virtual expected<TOutput> getClosedLoop(TInput setpoint, TInput observation) = 0;

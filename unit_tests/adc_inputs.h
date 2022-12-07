@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "rusefi_hw_enums.h"
+
 static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
 		return false;
@@ -21,5 +23,9 @@ static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 		return true;
 	}
 }
+
+#define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
+#define GPT_FREQ_FAST 100000
+#define GPT_PERIOD_FAST 10
 
 #include "boards.h"

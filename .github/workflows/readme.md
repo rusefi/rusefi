@@ -25,3 +25,5 @@ This is not a complete diagram of all workflows, nor does it show everything tha
           +              +                       +                 +
 Firmware Push            Gen Config      Unit Tests       Firmware PR
 ```
+
+https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation

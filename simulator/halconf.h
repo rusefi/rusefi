@@ -28,6 +28,9 @@
 #ifndef _HALCONF_H_
 #define _HALCONF_H_
 
+#define _CHIBIOS_HAL_CONF_
+#define _CHIBIOS_HAL_CONF_VER_7_1_
+
 /*#include "mcuconf.h"*/
 
 /**
@@ -55,7 +58,7 @@
  * @brief   Enables the CAN subsystem.
  */
 #if !defined(HAL_USE_CAN) || defined(__DOXYGEN__)
-#define HAL_USE_CAN                 FALSE
+#define HAL_USE_CAN                 !EFI_SIM_IS_WINDOWS
 #endif
 
 /**

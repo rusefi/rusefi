@@ -31,6 +31,7 @@ pwd
 echo "Invoking $COMPILE_SCRIPT"
 
 bash $COMPILE_SCRIPT
+[ $? -eq 0 ] || { echo "ERROR invoking $COMPILE_SCRIPT"; exit 1; }
 
 echo "We are in"
 pwd

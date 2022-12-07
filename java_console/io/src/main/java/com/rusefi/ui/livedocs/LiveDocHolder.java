@@ -1,31 +1,26 @@
 package com.rusefi.ui.livedocs;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.enums.live_data_e;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public abstract class LiveDocHolder {
-    private final LiveDataContext id;
-    private final RefreshActionsMap actions;
+    private final live_data_e id;
+    private final RefreshActions action;
 
-    public LiveDocHolder(LiveDataContext id, RefreshActionsMap actions) {
+    public LiveDocHolder(live_data_e id, RefreshActions action) {
         this.id = id;
-        this.actions = actions;
+        this.action = action;
     }
 
-    public RefreshActionsMap getActions() {
-        return actions;
-    }
-
-    public void update(BinaryProtocol binaryProtocol, LiveDataContext context, byte[] response) {
-        for (RefreshActions action : actions.getActions().get(context))
-            action.refresh(binaryProtocol, response);
+    public void update(byte[] response) {
+        action.refresh(response);
     }
 
     public abstract boolean isVisible();
 
-    public LiveDataContext getId() {
+    public live_data_e getId() {
         return id;
     }
 

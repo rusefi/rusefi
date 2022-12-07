@@ -2,7 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.AbstractIoStream;
 import etch.util.CircularByteBuffer;
@@ -24,52 +24,47 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  */
 @ThreadSafe
 public class IncomingDataBuffer {
-    private static final Logging log = getLogging(IoStream.class);
+    private static final Logging log = getLogging(IncomingDataBuffer.class);
 
-    private static final int BUFFER_SIZE = 32768;
-    private static String loggingPrefix;
-    /**
-     * buffer for response bytes from controller
-     */
-    private final CircularByteBuffer cbb;
-    private final AbstractIoStream.StreamStats streamStats;
-
-    public IncomingDataBuffer(AbstractIoStream.StreamStats streamStats) {
-        this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
-        this.cbb = new CircularByteBuffer(BUFFER_SIZE);
+    static {
+        log.configureDebugEnabled(false);
     }
 
-    public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream) {
-        IncomingDataBuffer.loggingPrefix = loggingPrefix;
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(stream.getStreamStats());
-        stream.setInputListener(incomingData::addData);
-        return incomingData;
+    private static final int BUFFER_SIZE = 32768;
+    private final String loggingPrefix;
+
+    /**
+     * buffer for queued response bytes from controller
+     */
+    private final CircularByteBuffer cbb = new CircularByteBuffer(BUFFER_SIZE);
+    private final AbstractIoStream.StreamStats streamStats;
+
+    public IncomingDataBuffer(String loggingPrefix, AbstractIoStream.StreamStats streamStats) {
+        this.loggingPrefix = loggingPrefix;
+        this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
     }
 
     public byte[] getPacket(String msg) throws EOFException {
-        return getPacket(msg, false, System.currentTimeMillis());
-    }
-
-    public byte[] getPacket(String msg, boolean allowLongResponse) throws EOFException {
-        return getPacket(msg, allowLongResponse, System.currentTimeMillis());
+        return getPacket(msg, System.currentTimeMillis());
     }
 
     /**
      * why does this method return NULL in case of timeout?!
      * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
      */
-    public byte[] getPacket(String msg, boolean allowLongResponse, long start) throws EOFException {
+    public byte[] getPacket(String msg, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
-        if (isTimeout)
+        if (isTimeout) {
+            if (Bug3923.obscene)
+                log.info("Timeout waiting for header");
             return null;
+        }
 
         int packetSize = swap16(getShort());
         // if (log.debugEnabled())
         //     log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
-        if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
-            throw new IllegalArgumentException(packetSize + " packet while not allowLongResponse");
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
         if (isTimeout)
@@ -77,15 +72,19 @@ public class IncomingDataBuffer {
 
         byte[] packet = new byte[packetSize];
         getData(packet);
+
+        // Compare the sent and computed CRCs, make sure they match!
         int packetCrc = swap32(getInt());
         int actualCrc = getCrc32(packet);
-
-        boolean isCrcOk = actualCrc == packetCrc;
-        if (!isCrcOk) {
-            if (log.debugEnabled())
-                log.debug(String.format("CRC mismatch %x: vs %x", actualCrc, packetCrc));
+        if (actualCrc != packetCrc) {
+            String errorMessage = String.format("CRC mismatch on recv packet for %s: got %x but expected %x", msg, actualCrc, packetCrc);
+            System.out.println(errorMessage);
+            log.warn(errorMessage);
             return null;
         }
+        if (Bug3923.obscene && packet.length < 10)
+            log.info("got packet: " + Arrays.toString(packet));
+
         onPacketArrived();
         // if (log.debugEnabled())
         //     log.trace("packet arrived: " + Arrays.toString(packet) + ": crc OK");
@@ -98,15 +97,16 @@ public class IncomingDataBuffer {
     }
 
     public void addData(byte[] freshData) {
-        //log.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
-                log.error("IncomingDataBuffer: buffer overflow not expected");
-                cbb.clear();
+                log.error("buffer overflow not expected");
+                throw new IllegalStateException("buffer overflow not expected");
             }
             cbb.put(freshData);
             cbb.notifyAll();
         }
+        if (log.debugEnabled() || Bug3923.obscene)
+            log.info(freshData.length + " byte(s) arrived, total " + cbb.length());
     }
 
     /**
@@ -127,7 +127,7 @@ public class IncomingDataBuffer {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());
                 if (timeout <= 0) {
-                    log.info(loggingMessage + ": timeout. Got only " + cbb.length());
+                    log.info(loggingMessage + ": timeout " + timeoutMs + "ms. Got only " + cbb.length() + "byte(s) while expecting " + count);
                     return true; // timeout. Sad face.
                 }
                 try {
@@ -140,7 +140,13 @@ public class IncomingDataBuffer {
         return false; // looks good!
     }
 
-    public void dropPending() {
+    public int getPendingCount() {
+        synchronized (cbb) {
+            return cbb.length();
+        }
+    }
+
+    public int dropPending() {
         // todo: when exactly do we need this logic?
         synchronized (cbb) {
             int pending = cbb.length();
@@ -148,8 +154,9 @@ public class IncomingDataBuffer {
                 log.error("dropPending: Unexpected pending data: " + pending + " byte(s)");
                 byte[] bytes = new byte[pending];
                 cbb.get(bytes);
-                log.error("data: " + Arrays.toString(bytes));
+                log.error("DROPPED FROM BUFFER: " + IoStream.printByteArray(bytes));
             }
+            return pending;
         }
     }
 
@@ -163,20 +170,28 @@ public class IncomingDataBuffer {
     public int getShort() throws EOFException {
         streamStats.onArrived(2);
         synchronized (cbb) {
-            return cbb.getShort();
+            int result = cbb.getShort();
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info("Consumed short, " + cbb.length() + " remaining");
+            return result;
         }
     }
 
     public int getInt() throws EOFException {
         streamStats.onArrived(4);
         synchronized (cbb) {
-            return cbb.getInt();
+            int result = cbb.getInt();
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info("Consumed int, " + cbb.length() + " remaining");
+            return result;
         }
     }
 
     public void getData(byte[] packet) {
         synchronized (cbb) {
             cbb.get(packet);
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info(packet.length + " consumed, " + cbb.length() + " remaining");
         }
         streamStats.onArrived(packet.length);
     }

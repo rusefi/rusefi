@@ -29,18 +29,16 @@ import java.util.Date;
  * @see EngineReport
  */
 public class UpDownImage extends JPanel {
-    private static final int TIMESCALE_MULT = (int) (100 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 100ms
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+    private static final int TIMESCALE_MULT = (int) (20 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 20ms
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
-    public static final Color ENGINE_CYCLE_COLOR = Color.green;
+    public static final Color ENGINE_CYCLE_COLOR = new Color(0, 153, 0);
     private static final BasicStroke TIME_SCALE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
             new float[]{7.0f, 21.0f}, 0.0f);
     private static final BasicStroke ENGINE_CYCLE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
             new float[]{21.0f, 7.0f}, 0.0f);
 
-    private long lastUpdateTime;
-    private EngineReport engineReport;
+    public EngineReport engineReport;
     private StringBuilder revolutions;
     private final String name;
     private TimeAxisTranslator translator;
@@ -49,21 +47,18 @@ public class UpDownImage extends JPanel {
      * firmware is sending {@link Fields#PROTOCOL_OUTPIN}
      */
     private String pin = "NO PIN";
-    private long mouseEnterTime;
+
     /**
      * we have variable color depending on signal name
      */
     private Color signalBody = Color.lightGray;
-    private Color signalBorder = Color.blue;
+    private Color signalBorder = Color.GRAY;
 
-    private final Timer repaintTimer = new Timer(1000, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            UiUtils.trueRepaint(UpDownImage.this);
-        }
-    });
-    public boolean showMouseOverText = true;
-    private int currentMouseX = -100;
+    private boolean renderText = true;
+
+    public void setRenderText(boolean renderText) {
+        this.renderText = renderText;
+    }
 
     public UpDownImage(final String name) {
         this(EngineReport.MOCK, name);
@@ -92,21 +87,6 @@ public class UpDownImage extends JPanel {
         setWaveReport(wr, null);
         setOpaque(true);
         translator = createTranslator();
-        addMouseMotionListener(new MouseAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                currentMouseX = e.getX();
-                UiUtils.trueRepaint(UpDownImage.this);
-            }
-        });
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                mouseEnterTime = System.currentTimeMillis();
-                UiUtils.trueRepaint(UpDownImage.this);
-                repaintTimer.restart();
-            }
-        });
     }
 
     public UpDownImage setTranslator(TimeAxisTranslator translator) {
@@ -114,10 +94,9 @@ public class UpDownImage extends JPanel {
         return this;
     }
 
-    public TimeAxisTranslator createTranslator() {
-        return new TimeAxisTranslator() {
+    private final TimeAxisTranslator _translator = new TimeAxisTranslator() {
             @Override
-            public int timeToScreen(int time, int width) {
+            public int timeToScreen(double time, int width) {
                 return UpDownImage.this.engineReport.getTimeAxisTranslator().timeToScreen(time, width);
             }
 
@@ -141,14 +120,15 @@ public class UpDownImage extends JPanel {
                 return "TimeAxisTranslator";
             }
         };
+
+    public TimeAxisTranslator createTranslator() {
+        return this._translator;
     }
 
     public void setWaveReport(EngineReport wr, StringBuilder revolutions) {
         this.engineReport = wr;
         propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
-        lastUpdateTime = System.currentTimeMillis();
-        UiUtils.trueRepaint(this);
     }
 
     private void propagateDwellIntoSensor(EngineReport wr) {
@@ -171,43 +151,38 @@ public class UpDownImage extends JPanel {
         g.setColor(getBackground());
         g.fillRect(0, 0, d.width, d.height);
 
-        if (showMouseOverText)
+        if (this.renderText) {
             paintScaleLines(g2, d);
+        }
 
         drawStartOfRevolution(g2, d);
+
+        d.height = (int)(0.95 * d.height);
 
         for (EngineReport.UpDown upDown : engineReport.getList())
             paintUpDown(d, upDown, g);
 
-
         g2.setColor(Color.black);
 
         int line = 0;
-        boolean justEntered = System.currentTimeMillis() - mouseEnterTime < 1000;
-        Font f = getFont();
-        if (justEntered) {
-            g.setFont(f.deriveFont(Font.BOLD, f.getSize() * 3));
-            g.setColor(Color.red);
-        }
-        if (showMouseOverText) {
-            String mouseOverText = NameUtil.getUiName(name);
-            if (pin != null)
-                mouseOverText += "/" + pin;
-            g.drawString(mouseOverText, 5, ++line * LINE_SIZE + (justEntered ? 30 : 0));
-        }
-        if (justEntered) {
-            // revert font & color
-            g.setFont(f);
-            g.setColor(Color.black);
+
+        if (!this.renderText) {
+            return;
         }
 
-        if (showMouseOverText) {
-            g.drawString("Showing " + engineReport.getList().size() + " events", 5, ++line * LINE_SIZE);
-            // todo: this has to be broken in case of real engine since 'SYS_TICKS_PER_MS' here is not correct?
-//            g.drawString("Total seconds: " + (duration / EngineReport.SYS_TICKS_PER_MS / 1000.0), 5, ++line * LINE_SIZE);
-            g.drawString(FORMAT.format(new Date(lastUpdateTime)), 5, ++line * LINE_SIZE);
+        String mouseOverText = NameUtil.getUiName(name);
+
+        // if we have a pin name, append that
+        if (pin != null) {
+            mouseOverText += "/" + pin;
         }
 
+        g.drawString(mouseOverText, 5, ++line * LINE_SIZE);
+
+        // When the row gets small, omit event count
+        if (d.height > 40) {
+            g.drawString(engineReport.getList().size() + " events", 5, ++line * LINE_SIZE);
+        }
     }
 
     private void drawStartOfRevolution(Graphics2D g2, Dimension d) {
@@ -215,6 +190,8 @@ public class UpDownImage extends JPanel {
             return;
 
         RevolutionLog time2rpm = RevolutionLog.parseRevolutions(revolutions);
+
+        Stroke oldStroke = g2.getStroke();
 
         g2.setStroke(ENGINE_CYCLE_STROKE);
         for (int time : time2rpm.keySet()) {
@@ -228,6 +205,8 @@ public class UpDownImage extends JPanel {
                 g2.rotate(-Math.PI / 2);
             }
         }
+
+        g2.setStroke(oldStroke);
     }
 
     protected boolean isShowTdcLabel() {
@@ -239,9 +218,6 @@ public class UpDownImage extends JPanel {
      */
     private void paintScaleLines(Graphics2D g2, Dimension d) {
         int fromMs = translator.getMinTime() / TIMESCALE_MULT;
-        g2.setStroke(TIME_SCALE_STROKE);
-        g2.setColor(TIME_SCALE_COLOR);
-
         int toMs = translator.getMaxTime() / TIMESCALE_MULT;
 
         if (toMs - fromMs > d.getWidth() / 5) {
@@ -253,62 +229,79 @@ public class UpDownImage extends JPanel {
             return;
         }
 
-        for (int ms = fromMs; ms <= toMs; ms++) {
+        Stroke oldStroke = g2.getStroke();
+        g2.setStroke(TIME_SCALE_STROKE);
+        g2.setColor(TIME_SCALE_COLOR);
+
+        // start at +1 so we don't render a line at the left edge
+        for (int ms = fromMs + 1; ms <= toMs; ms++) {
             int tick = ms * TIMESCALE_MULT;
             int x = translator.timeToScreen(tick, d.width);
             g2.drawLine(x, 0, x, d.height);
         }
+
+        g2.setStroke(oldStroke);
     }
 
     private void paintUpDown(Dimension d, EngineReport.UpDown upDown, Graphics g) {
         int x1 = translator.timeToScreen(upDown.upTime, d.width);
         int x2 = translator.timeToScreen(upDown.downTime, d.width);
 
-        int y = (int) (0.2 * d.height);
-
+        // Draw the filled in rectangle body
         g.setColor(signalBody);
-        g.fillRect(x1, y, x2 - x1, d.height - y);
+        g.fillRect(x1, 0, x2 - x1, d.height);
 
+        // Draw the outline box
         g.setColor(signalBorder);
-        g.drawLine(x1, y, x2, y);
-        g.drawLine(x1, y, x1, d.height);
-        g.drawLine(x2, y, x2, d.height);
+        g.drawLine(x1, 0, x2, 0);
+        g.drawLine(x1, 0, x1, d.height);
+        g.drawLine(x2, 0, x2, d.height);
+        g.drawLine(x1, d.height, x2, d.height);
 
-        if (showMouseOverText) {
-            g.setColor(Color.red);
-            String durationString = String.format(" %.2fms", upDown.getDuration() / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS);
-            g.drawString(durationString, x1, (int) (0.5 * d.height));
-
-            double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
-            double toAngle = time2rpm.getCrankAngleByTime(upDown.downTime);
-
-            String fromAngleStr = RevolutionLog.angle2string(fromAngle);
-
-            g.setColor(Color.darkGray);
-            if (upDown.upTriggerCycleIndex != -1) {
-                g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
-//            System.out.println("digital_event," + upDown.upIndex + "," + fromAngleStr);
-            }
-            if (upDown.downTriggerCycleIndex != -1) {
-                g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
-//            System.out.println("digital_event," + upDown.downIndex + "," + toAngleStr);
-            }
-
-            int offset = 3;
-            g.setColor(Color.black);
-            g.drawString(fromAngleStr, x1 + offset, (int) (0.75 * d.height));
-
-            g.setColor(Color.black);
-
-            if (Math.abs(x1 - currentMouseX) < 5) {
-                double angleDuration = toAngle - fromAngle;
-                String durationStr = RevolutionLog.angle2string(angleDuration);
-                g.drawString(durationStr, x1 + offset, (int) (1.0 * d.height));
-            } else {
-                String toAngleStr = RevolutionLog.angle2string(toAngle);
-                g.drawString(toAngleStr, x1 + offset, (int) (1.0 * d.height));
-            }
+        // No text if shorter than 25px
+        if (d.height < 25) {
+            return;
         }
+
+        if (!this.renderText) {
+            return;
+        }
+
+        final int duration = upDown.getDuration();
+
+        // don't render duration for zero duration or for trigger
+        if (duration != 0 && upDown.upTriggerCycleIndex == -1) {
+            g.setColor(Color.red);
+            String durationString = String.format(" %.2fms", duration / EngineReport.ENGINE_SNIFFER_TICKS_PER_MS);
+            g.drawString(durationString, x1, 15);
+        }
+
+        if (upDown.upTriggerCycleIndex != -1) {
+            g.setColor(Color.darkGray);
+            g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
+        }
+
+        // Skip second index if invalid or equal to start index
+        if (upDown.downTriggerCycleIndex != -1 && upDown.upTriggerCycleIndex != upDown.downTriggerCycleIndex) {
+            g.setColor(Color.darkGray);
+            g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
+        }
+
+        // No angle text if shorter than 50px
+        if (d.height < 50) {
+            return;
+        }
+
+        int offset = 3;
+        g.setColor(Color.black);
+
+        double fromAngle = time2rpm.getCrankAngleByTime(upDown.upTime);
+        String fromAngleStr = RevolutionLog.angle2string(fromAngle);
+        g.drawString(fromAngleStr, x1 + offset, (int) (0.5 * d.height));
+
+        double toAngle = time2rpm.getCrankAngleByTime(upDown.downTime);
+        String toAngleStr = RevolutionLog.angle2string(toAngle);
+        g.drawString(toAngleStr, x1 + offset, (int) (0.75 * d.height));
     }
 
     public void setRevolutions(StringBuilder revolutions) {

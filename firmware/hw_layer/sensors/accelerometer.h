@@ -7,18 +7,16 @@
 
 #pragma once
 
-#include "engine.h"
+void configureAccelerometerPins();
 
-void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initAccelerometer();
 
 /**
  * Acceleration/braking
  */
-float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getLongitudinalAcceleration();
 /**
  * Turns
  */
-float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getTransverseAcceleration();
 

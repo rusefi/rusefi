@@ -7,4 +7,5 @@
 
 #pragma once
 
-void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMreVwPassatB6();
+void setProteusVwPassatB6();

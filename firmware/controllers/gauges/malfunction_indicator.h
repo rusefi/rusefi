@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 #if EFI_MALFUNCTION_INDICATOR
 
 bool isMilEnabled();

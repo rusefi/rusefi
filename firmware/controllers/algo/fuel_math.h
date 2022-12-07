@@ -7,30 +7,29 @@
 
 #pragma once
 
-#include "engine.h"
-#include "airmass.h"
+#include "rusefi_types.h"
 
-void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initFuelMap();
 
 /**
  * @return baseFuel with CLT and IAT corrections
  */
-floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getRunningFuel(float baseFuel);
 
-float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
-angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getBaroCorrection();
+int getNumberOfInjections(injection_mode_e mode);
+angle_t getInjectionOffset(float rpm, float load);
+float getIatFuelCorrection();
 
-float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX);
-floatms_t getInjectionDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCltFuelCorrection();
+angle_t getCltTimingCorrection();
+float getCrankingFuel(float baseFuel);
+float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart);
+float getInjectionMass(int rpm);
+percent_t getInjectorDutyCycle(int rpm);
 
-float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getStandardAirCharge();
+float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad);
 
-// convert injection duration (Ms/Nt) to fuel rate (L/h)
-float getFuelRate(floatms_t totalInjDuration, efitick_t timePeriod DECLARE_ENGINE_PARAMETER_SUFFIX);
+struct AirmassModelBase;
+AirmassModelBase* getAirmassModel(engine_load_mode_e mode);

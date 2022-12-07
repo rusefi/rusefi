@@ -32,12 +32,11 @@
 
 #define SIGN_FLAG 0x80000000L
 
+// todo: numChannels 7 or numChannels 8 does not work? :(
 #define numChannels 6
 #define reservedDurationInSamples 10
 
-#define MAX_STRING_SIZE 40
-
-static char channelNames[][MAX_STRING_SIZE] = { "Primary", "Secondary", "TDC",
+static const char *channelNames[] = { "Primary", "Secondary", "TDC",
 		"Sync", "Coil", "Injector", "Channel 6", "Channel 7" };
 
 static int CHANNEL_FLAGS[] = { 0x13458b, 0x0000ff, 0x00a0f9, 0x00ffff, 0x00ff00,
@@ -371,7 +370,7 @@ static void writeChannelDataFooter() {
 	write(numChannels);
 }
 
-static int getChannelState(int ch, CompositeEvent *event) {
+static int getChannelState(int ch, const CompositeEvent* event) {
 	switch (ch) {
 	case 0:
 		return event->primaryTrigger;
@@ -389,7 +388,8 @@ static int getChannelState(int ch, CompositeEvent *event) {
 	return -1;
 }
 
-static void writeEvents(CompositeEvent *events, int count) {
+static void writeEvents(const std::vector<CompositeEvent>& events) {
+	int count = events.size();
 	// we need at least 2 records
 	if (count < 2)
 		return;
@@ -410,7 +410,7 @@ static void writeEvents(CompositeEvent *events, int count) {
 		int deltaCount = 0;
 
 		for (int i = 0; i < count; i++) {
-			CompositeEvent *event = &events[i];
+			const CompositeEvent* event = &events[i];
 
 			int chState = getChannelState(ch, event);
 			int ts = event->timestamp;
@@ -486,12 +486,12 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(const char * fileName, CompositeEvent *events, int count) {
+void writeFile(const char * fileName, const std::vector<CompositeEvent>& events) {
 
 	ptr = fopen(fileName, "wb");
 
 	writeHeader();
-	writeEvents(events, count);
+	writeEvents(events);
 	writeFooter();
 
 	fclose(ptr);

@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -7,25 +8,35 @@ import com.rusefi.core.EngineState;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
-import com.rusefi.ui.storage.Node;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.preferences.storage.Node;
+import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.util.IoUtils;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.TimeZone;
+import javax.swing.*;
+import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.ZoneOffset;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
+    private static final Logging log = getLogging(Launcher.class);
+
+    @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
+
     /**
      * @see StartupFrame
      */
     private final FrameHelper frame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
-            FileLog.MAIN.logLine("onWindowOpened");
+            log.info("onWindowOpened");
             windowOpenedHandler();
         }
 
@@ -38,7 +49,7 @@ public class MainFrame {
             /**
              * here we would close the log file
              */
-            FileLog.MAIN.logLine("onWindowClosed");
+            log.info("onWindowClosed");
             FileLog.MAIN.close();
         }
     };
@@ -46,43 +57,50 @@ public class MainFrame {
     public ConnectionFailedListener listener;
 
     public MainFrame(ConsoleUI consoleUI, TabbedPanel tabbedPane) {
-        this.consoleUI = consoleUI;
-
+        this.consoleUI = Objects.requireNonNull(consoleUI);
         this.tabbedPane = tabbedPane;
-        listener = () -> {
+        listener = (String s) -> {
         };
     }
 
     private void windowOpenedHandler() {
         setTitle();
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                setTitle();
-                UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
-                if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                    long unixGmtTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    consoleUI.uiContext.getCommandQueue().write("set " +
-                                    Fields.CMD_DATE +
-                                    " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
-                            InvocationConfirmationListener.VOID, false);
-                }
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+            setTitle();
+            UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
+            if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
+                LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
+                String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
+                                " " + isoDateTime, CommandQueue.DEFAULT_TIMEOUT,
+                        InvocationConfirmationListener.VOID, false));
             }
-        });
+        }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String errorMessage) {
+                log.error("onConnectionFailed " + errorMessage);
+                String message = "This copy of rusEFI console is not compatible with this version of firmware\r\n" +
+                        errorMessage;
+                JOptionPane.showMessageDialog(frame.getFrame(), message);
             }
 
             @Override
             public void onConnectionEstablished() {
-                tabbedPane.settingsTab.showContent();
-                tabbedPane.logsManager.showContent();
-                tabbedPane.fuelTunePane.showContent();
-                new BinaryProtocolServer().start(linkManager);
+                ConnectionWatchdog.init(linkManager);
+
+                SwingUtilities.invokeLater(() -> {
+                    tabbedPane.settingsTab.showContent();
+                    tabbedPane.logsManager.showContent();
+                    /**
+                     * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
+                     * before launching new instance
+                     */
+                    new BinaryProtocolServer().start(linkManager);
+                });
+
             }
         });
 
@@ -102,7 +120,9 @@ public class MainFrame {
 
     private void setTitle() {
         String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.port);
+        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
+        String signature = bp == null ? "not loaded" : bp.signature;
+        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature);
     }
 
     private void windowClosedHandler() {
@@ -118,6 +138,6 @@ public class MainFrame {
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         if (bp != null && !bp.isClosed)
             bp.close(); // it could be that serial driver wants to be closed explicitly
-        System.exit(0);
+        IoUtils.exit("windowClosedHandler", 0);
     }
 }

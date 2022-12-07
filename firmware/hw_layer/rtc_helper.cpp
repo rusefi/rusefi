@@ -6,67 +6,88 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include <string.h> 
-#include <time.h>
-#include "global.h"
-#include "os_access.h"
-#include "os_util.h"
+#include "pch.h"
+
+#include <string.h>
+
 #include "rtc_helper.h"
 
 #if EFI_RTC
-static LoggingWithStorage logger("RTC");
-static RTCDateTime timespec;
+#include "rusefi_types.h"
+#endif // EFI_RTC
 
-extern bool rtcWorks;
+#if EFI_PROD_CODE
+#include <sys/time.h>
 
-#endif /* EFI_RTC */
+// Lua needs this function, but we don't necessarily have to implement it
+extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
+	(void)tv; (void)tzvp;
+	return 0;
+}
+#endif // EFI_PROD_CODE
 
-void date_set_tm(struct tm *timp) {
-	(void)timp;
 #if EFI_RTC
-        rtcConvertStructTmToDateTime(timp, 0, &timespec);
+void initRtc() {
+	efiPrintf("initRtc()");
+	printDateTime(); // this would test RTC, see 'rtcWorks' variable, see #311
+}
+
+static const char * const monthAbbrs[] = {
+	"Jan", "Feb", "Mar",
+	"Apr", "May", "Jun",
+	"Jul", "Aug", "Sep",
+	"Oct", "Nov", "Dec"
+};
+
+void printRtcDateTime() {
+	efidatetime_t dateTime = getRtcDateTime();
+	// prints the date like: 19 sep 2022 21:19:55
+	efiPrintf("Current RTC time: %02u %s %04u %02u:%02u:%02u",
+			dateTime.day, monthAbbrs[dateTime.month - 1], dateTime.year,
+			dateTime.hour, dateTime.minute, dateTime.second);
+}
+
+void setRtcDateTime(efidatetime_t const * const dateTime) {
+	RTCDateTime timespec = convertRtcDateTimeFromEfi(dateTime);
 	rtcSetTime(&RTCD1, &timespec);
-#endif /* EFI_RTC */
 }
 
-void date_get_tm(struct tm *timp) {
-#if EFI_RTC
+efidatetime_t getRtcDateTime() {
+	RTCDateTime timespec;
 	rtcGetTime(&RTCD1, &timespec);
-        rtcConvertDateTimeToStructTm(&timespec, timp, NULL);
-#endif /* EFI_RTC */
+	return convertRtcDateTimeToEfi(&timespec);
 }
 
-static time_t GetTimeUnixSec(void) {
-#if EFI_RTC
-  struct tm tim;
+efidatetime_t convertRtcDateTimeToEfi(RTCDateTime const * const timespec) {
+	uint32_t second = timespec->millisecond / 1000;
+	uint16_t minute = second / 60;
+	second -= minute * 60;
+	uint8_t hour = minute / 60;
+	minute -= hour * 60;
 
-  rtcGetTime(&RTCD1, &timespec);
-  rtcConvertDateTimeToStructTm(&timespec, &tim, NULL);
-  return mktime(&tim);
-#else
-  return (time_t)0;
-#endif
+	efidatetime_t const dateTime = {
+		.year = timespec->year + RTC_BASE_YEAR,
+		.month = (uint8_t)timespec->month,
+		.day = (uint8_t)timespec->day,
+		.hour = hour,
+		.minute = (uint8_t)minute,
+		.second = (uint8_t)second,
+	};
+	return dateTime;
 }
 
-static void SetTimeUnixSec(time_t unix_time) {
-#if EFI_RTC
-  struct tm tim;
-
-#if defined __GNUC__
-  struct tm *canary;
-  /* If the conversion is successful the function returns a pointer
-     to the object the result was written into.*/
-  canary = localtime_r(&unix_time, &tim);
-  osalDbgCheck(&tim == canary);
-#else
-  struct tm *t = localtime(&unix_time);
-  memcpy(&tim, t, sizeof(struct tm));
-#endif
-
-  rtcConvertStructTmToDateTime(&tim, 0, &timespec);
-  rtcSetTime(&RTCD1, &timespec);
-#endif
+RTCDateTime convertRtcDateTimeFromEfi(efidatetime_t const * const dateTime) {
+	RTCDateTime timespec;
+	timespec.year = dateTime->year - RTC_BASE_YEAR; // ChibiOS year origin is e.g. 1980
+	timespec.month = dateTime->month; // [1..12]
+	timespec.day = dateTime->day; // [1..31]
+	timespec.millisecond = (((dateTime->hour * 60) + dateTime->minute) * 60 + dateTime->second) * 1000; // ms since midnight
+	timespec.dayofweek = RTC_DAY_CATURDAY; // CATURDAY: 0 ... ?
+	timespec.dstflag = 0; // 0 ... ?
+	return timespec;
 }
+
+// TODO(nms): move to e.g. efitime ?
 
 static void put2(int offset, char *lcd_str, int value) {
 	static char buff[_MAX_FILLER];
@@ -80,6 +101,8 @@ static void put2(int offset, char *lcd_str, int value) {
 		lcd_str[offset + 1] = buff[1];
 	}
 }
+#endif // EFI_RTC
+
 
 /**
  * @return true if we seem to know current date, false if no valid RTC state
@@ -87,27 +110,26 @@ static void put2(int offset, char *lcd_str, int value) {
 bool dateToStringShort(char *lcd_str) {
 #if EFI_RTC
 	strcpy(lcd_str, "000000_000000\0");
-	struct tm timp;
-	date_get_tm(&timp);
-	if (timp.tm_year < 116 || timp.tm_year > 130) {
+	efidatetime_t dateTime = getRtcDateTime();
+	if (dateTime.year < 2016 || dateTime.year > 2030) {
 		// 2016 to 2030 is the valid range
 		lcd_str[0] = 0;
 		return false;
 	}
 
-	put2(0, lcd_str, timp.tm_year % 100); // Years since 1900 - format as just the last two digits
-	put2(2, lcd_str, timp.tm_mon + 1);     // months since January	0-11
-	put2(4, lcd_str, timp.tm_mday);        // day of the month	1-31
+	put2(0, lcd_str, dateTime.year % 100);		// year, format as just the last two digits
+	put2(2, lcd_str, dateTime.month);		    // month	1-12
+	put2(4, lcd_str, dateTime.day);				// day of the month	1-31
 
-	put2(7, lcd_str, timp.tm_hour);        // hours since midnight	0-23
-	put2(9, lcd_str, timp.tm_min);        // Minutes
-	put2(11, lcd_str, timp.tm_sec);        // seconds
+	put2(7, lcd_str, dateTime.hour);			// hours since midnight	0-23
+	put2(9, lcd_str, dateTime.minute);			// minutes
+	put2(11, lcd_str, dateTime.second);			// seconds
 
 	return true;
-#else
+#else // EFI_RTC
 	lcd_str[0] = 0;
 	return false;
-#endif
+#endif // EFI_RTC
 }
 
 void dateToString(char *lcd_str) {
@@ -118,56 +140,14 @@ void dateToString(char *lcd_str) {
 	// this would require a temporary mem stream - see datalogging and other existing usages
 
 	strcpy(lcd_str, "00/00 00:00:00\0");
-	struct tm timp;
-	date_get_tm(&timp);			// get RTC date/time
+	efidatetime_t dateTime = getRtcDateTime();
 	
-	put2(0, lcd_str, timp.tm_mon + 1);
-	put2(3, lcd_str, timp.tm_mday);
-	put2(6, lcd_str, timp.tm_hour);
-	put2(9, lcd_str, timp.tm_min);
-	put2(12, lcd_str, timp.tm_sec);
-
-#else
+	put2(0, lcd_str, dateTime.month);
+	put2(3, lcd_str, dateTime.day);
+	put2(6, lcd_str, dateTime.hour);
+	put2(9, lcd_str, dateTime.minute);
+	put2(12, lcd_str, dateTime.second);
+#else // EFI_RTC
 	lcd_str[0] = 0;
-#endif /* EFI_RTC */
-}
-
-#if EFI_RTC
-void printDateTime(void) {
-	static time_t unix_time;
-	struct tm timp;
-	
-	unix_time = GetTimeUnixSec();
-	if (unix_time == -1) {
-		scheduleMsg(&logger, "incorrect time in RTC cell");
-	} else {
-		scheduleMsg(&logger, "%D - unix time", unix_time);
-		date_get_tm(&timp);
-
-		appendMsgPrefix(&logger);
-		logger.appendPrintf( "Current RTC localtime is: %04u-%02u-%02u %02u:%02u:%02u w=%d", timp.tm_year + 1900, timp.tm_mon + 1, timp.tm_mday, timp.tm_hour,
-				timp.tm_min, timp.tm_sec, rtcWorks);
-		appendMsgPostfix(&logger);
-		scheduleLogging(&logger);
-	}
-}
-
-void setDateTime(const char *strDate) {
-	if (strlen(strDate) > 0) {
-		time_t unix_time = atoi(strDate);
-		if (unix_time > 0) {
-			SetTimeUnixSec(unix_time);
-			printDateTime();
-			return;
-		}
-	}
-	scheduleMsg(&logger, "date_set Date parameter %s is wrong\r\n", strDate);
-}
-#endif /* EFI_RTC */
-
-void initRtc(void) {
-#if EFI_RTC
-	GetTimeUnixSec(); // this would test RTC, see 'rtcWorks' variable, see #311
-	printMsg(&logger, "initRtc()");
-#endif /* EFI_RTC */
+#endif // EFI_RTC
 }

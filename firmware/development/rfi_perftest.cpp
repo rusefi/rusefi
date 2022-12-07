@@ -7,47 +7,42 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "rfi_perftest.h"
-#include "engine_math.h"
 #include "fuel_math.h"
 
 #include "eficonsole.h"
 #include "time.h"
-#include "efi_gpio.h"
 
 #include "console_io.h"
-#include "engine.h"
 
 #if EFI_PERF_METRICS
 #include "test.h"
-
-static Logging* logger;
 
 static void testSystemCalls(const int count) {
 	time_t start, time;
 	long result = 0;
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count / 2; i++) {
 //		setPinValue(&testOutput, 0);
 //		setPinValue(&testOutput, 1);
 	}
 
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	// Finished 100000 iterations of 'setPinValue()' in 120ms
 //	prin("Finished %d iterations of 'setPinValue()' in %dms\r\n", count, time);
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++)
 		result += chTimeNow();
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (result != 0) {
 		// Finished 100000 iterations of 'chTimeNow()' in 33ms
-		scheduleMsg(logger, "Finished %d iterations of 'chTimeNow()' in %dms", count, time);
+		efiPrintf("Finished %d iterations of 'chTimeNow()' in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++) {
 		chSysLock()
 		;
@@ -55,18 +50,18 @@ static void testSystemCalls(const int count) {
 		chSysUnlock()
 		;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (result != 0) {
 		// Finished 100000 iterations of 'chTimeNow()' with chSysLock in 144ms
-		scheduleMsg(logger, "Finished %d iterations of 'chTimeNow()' with chSysLock in %dms", count, time);
+		efiPrintf("Finished %d iterations of 'chTimeNow()' with chSysLock in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++)
-		result += currentTimeMillis();
-	time = currentTimeMillis() - start;
+		result += getTimeNowMs();
+	time = getTimeNowMs() - start;
 	if (result != 0)
-		scheduleMsg(logger, "Finished %d iterations of 'currentTimeMillis' in %dms", count, time);
+		efiPrintf("Finished %d iterations of 'getTimeNowMs' in %dms", count, time);
 }
 
 static Engine testEngine;
@@ -75,185 +70,185 @@ static void testRusefiMethods(const int count) {
 	time_t start, time;
 	int tempi = 1;
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempi != 0)
-		scheduleMsg(logger, "Finished %d iterations of getBaseFuel in %dms", count, time);
+		efiPrintf("Finished %d iterations of getBaseFuel in %dms", count, time);
 
-//	start = currentTimeMillis();
+//	start = getTimeNowMs();
 //	for (int i = 0; i < count; i++)
 //		tempi += getInjectionDuration(1200, NULL); // todo
-//	time = currentTimeMillis() - start;
+//	time = getTimeNowMs() - start;
 //	if (tempi != 0)
-//		scheduleMsg(logger, "Finished %d iterations of getFuelMs in %dms", count, time);
+//		efiPrintf("Finished %d iterations of getFuelMs in %dms", count, time);
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++) {
 		testEngine.updateSlowSensors();
 		tempi += testEngine.engineState.clt;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempi != 0)
-		scheduleMsg(logger, "Finished %d iterations of updateSlowSensors in %dms", count, time);
+		efiPrintf("Finished %d iterations of updateSlowSensors in %dms", count, time);
 }
 
 static void testMath(const int count) {
 	time_t start, time;
 
 	int64_t temp64 = 0;
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int64_t i = 0; i < count; i++) {
 		temp64 += i;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (temp64 != 0) {
-		scheduleMsg(logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+		efiPrintf("Finished %d iterations of int64_t summation in %dms", count, time);
 	}
 
 	temp64 = 1;
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int64_t i = 0; i < count; i++) {
 		temp64 *= i;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (temp64 == 0) {
-		scheduleMsg(logger, "Finished %d iterations of int64_t multiplication in %dms", count, time);
+		efiPrintf("Finished %d iterations of int64_t multiplication in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++)
 		;
-	time = currentTimeMillis() - start;
-	scheduleMsg(logger, "Finished %d iterations of empty loop in %dms", count, time);
+	time = getTimeNowMs() - start;
+	efiPrintf("Finished %d iterations of empty loop in %dms", count, time);
 
 	uint32_t tempi = 1;
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	for (int i = 0; i < count; i++) {
 		tempi += tempi;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempi == 0) {
 		// 11ms is 1848000 ticks
 		// 18.48 ticks per iteration
 		// Finished 100000 iterations of uint32_t summation in 11ms
-		scheduleMsg(logger, "Finished %d iterations of uint32_t summation in %dms", count, time);
+		efiPrintf("Finished %d iterations of uint32_t summation in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempi = 1;
 	for (int i = 0; i < count; i++) {
 		tempi += (tempi + 100) / 130;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempi != 0) {
 		// Finished 100000 iterations of uint32_t division in 16ms
-		scheduleMsg(logger, "Finished %d iterations of uint32_t division in %dms", count, time);
+		efiPrintf("Finished %d iterations of uint32_t division in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	temp64 = 1;
 	for (int i = 0; i < count; i++) {
 		temp64 += temp64;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (temp64 == 0) {
 		//  Finished 100000 iterations of int64_t summation in 21ms
-		scheduleMsg(logger, "Finished %d iterations of int64_t summation in %dms", count, time);
+		efiPrintf("Finished %d iterations of int64_t summation in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	temp64 = 1;
 	for (int i = 0; i < count; i++) {
 		temp64 += (temp64 + 100) / 130;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (temp64 != 0) {
 		// Finished 100000 iterations of int64_t division in 181ms
-		scheduleMsg(logger, "Finished %d iterations of int64_t division in %dms", count, time);
+		efiPrintf("Finished %d iterations of int64_t division in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	float tempf = 1;
 	for (int i = 0; i < count; i++) {
 		tempf += tempf;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempf != 0) {
-		scheduleMsg(logger, "Finished %d iterations of float summation in %dms", count, time);
+		efiPrintf("Finished %d iterations of float summation in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempf = 1;
 	for (int i = 0; i < count; i++) {
 		tempf += tempf * 130.0f;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempf != 0) {
 		//  ms =  ticks
 		//  ticks per iteration
 		// Finished 100000 iterations of float division in ms
-		scheduleMsg(logger, "Finished %d iterations of float multiplication in %dms", count, time);
+		efiPrintf("Finished %d iterations of float multiplication in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempf = 1;
 	for (int i = 0; i < count; i++) {
 		tempf += (tempf + 100) / 130.0;
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempf != 0) {
 		// 65 ms = 10920000 ticks
 		// 109.2 ticks per iteration
 		// Finished 100000 iterations of float division in 65ms
-		scheduleMsg(logger, "Finished %d iterations of float division in %dms", count, time);
+		efiPrintf("Finished %d iterations of float division in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempf = 1;
 	for (int i = 0; i < count; i++) {
 		tempf += logf(tempf);
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempf != 0) {
 		// Finished 100000 iterations of float log in 191ms
-		scheduleMsg(logger, "Finished %d iterations of float log in %dms", count, time);
+		efiPrintf("Finished %d iterations of float log in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	double tempd = 1;
 	for (int i = 0; i < count; i++)
 		tempd += tempd / 2;
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double summation in 80ms
-		scheduleMsg(logger, "Finished %d iterations of double summation in %dms", count, time);
+		efiPrintf("Finished %d iterations of double summation in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempd = 1;
 	for (int i = 0; i < count; i++)
 		tempd += (tempd + 100) / 130.0;
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double division in 497ms
-		scheduleMsg(logger, "Finished %d iterations of double division in %dms", count, time);
+		efiPrintf("Finished %d iterations of double division in %dms", count, time);
 	}
 
-	start = currentTimeMillis();
+	start = getTimeNowMs();
 	tempd = 1;
 	for (int i = 0; i < count; i++) {
 		tempd += log(tempd);
 	}
-	time = currentTimeMillis() - start;
+	time = getTimeNowMs() - start;
 	if (tempd != 0) {
 		// Finished 100000 iterations of double log in 242ms
-		scheduleMsg(logger, "Finished %d iterations of double log in %dms", count, time);
+		efiPrintf("Finished %d iterations of double log in %dms", count, time);
 	}
 }
 
 static void runTests(const int count) {
-	scheduleMsg(logger, "Running tests: %d", count);
+	efiPrintf("Running tests: %d", count);
 	testRusefiMethods(count / 10);
 	testSystemCalls(count);
 	testMath(count);
@@ -267,17 +262,17 @@ static int rtcStartTime;
 
 #include "chrtclib.h"
 
-static void timeInfo(void) {
-	scheduleMsg(logger, "chTimeNow as seconds = %d", getTimeNowSeconds());
-	scheduleMsg(logger, "hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
+static void timeInfo() {
+	efiPrintf("chTimeNow as seconds = %d", getTimeNowS());
+	efiPrintf("hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
 
 #if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
-	scheduleMsg(logger, "unix seconds = %d", unix);
+	efiPrintf("unix seconds = %d", unix);
 #endif
 }
 
-static void runChibioTest(void) {
+static void runChibioTest() {
 	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
 	print("EFI_EMULATE_POSITION_SENSORS=%d\r\n", EFI_EMULATE_POSITION_SENSORS);
 	print("EFI_ANALOG_SENSORS=%d\r\n", EFI_ANALOG_SENSORS);
@@ -297,8 +292,7 @@ static void runChibioTest(void) {
 	TestThread(getConsoleChannel());
 }
 
-void initTimePerfActions(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initTimePerfActions() {
 #if EFI_RTC
 	rtcStartTime = rtcGetTimeUnixSec(&RTCD1);
 #endif

@@ -3,7 +3,17 @@ plugins {
 }
 
 dependencies {
+    implementation project(':logging-api')
+    implementation project(':ecu_io')
+
+    // todo: what's the relationship with global_libs.javaxJson?
+    implementation 'org.glassfish:javax.json:1.1.4'
+    implementation 'org.takes:takes:1.20'
+
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation global_libs.jsr305
+
+    testImplementation testFixtures(project(':ecu_io'))
+    testImplementation ts_plugin_libs.httpcore
 }

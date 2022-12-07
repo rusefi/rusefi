@@ -1,8 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.FileLog;
-import com.rusefi.InfixConverter;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -10,7 +8,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.JTextFieldWithWidth;
 
 import javax.swing.*;
@@ -29,11 +27,11 @@ import java.util.function.Function;
 /**
  * Date: 3/20/13
  * Andrey Belomutskiy, (c) 2013-2020
+ * @see com.rusefi.CommandControl for hard-coded commands
  */
 public class AnyCommand {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
-    private static final String DECODE_RPN = "decode_rpn";
 
     private final UIContext uiContext;
     private final JTextComponent text;
@@ -53,16 +51,11 @@ public class AnyCommand {
         content.add(text);
         JButton go = new JButton("Go");
         go.setContentAreaFilled(false);
-        go.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                send();
-            }
-        });
+        go.addActionListener(e -> send());
         content.add(go);
 
         uiContext.getCommandQueue().addListener(command -> {
-            if (listenToCommands && !reentrant)
+            if (listenToCommands && !reentrant && !RecentCommands.isBoringCommand(command))
                 text.setText(command);
         });
 
@@ -129,29 +122,15 @@ public class AnyCommand {
             listener.onSend();
         int timeout = CommandQueue.getTimeout(cmd);
         reentrant = true;
-        uiContext.getCommandQueue().write(cmd.toLowerCase(), timeout);
+        uiContext.getCommandQueue().write(cmd, timeout);
         reentrant = false;
     }
 
     public static String prepareCommand(String rawCommand, LinkManager linkManager) {
         try {
-            if (rawCommand.startsWith("eval" + " ")) {
-                String result = prepareEvalCommand(rawCommand);
-                if (result.equals(rawCommand)) {
-                    // result was not translated
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
-                }
-                return result;
-            } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
+            if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
                 handleStimulationSelfCheck(rawCommand, linkManager);
                 return null;
-            } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
-                handleDecodeRpn(rawCommand);
-                return null;
-            } else if (rawCommand.toLowerCase().startsWith("set_fsio_expression" + " ")) {
-                return prepareSetFsioCommand(rawCommand);
             } else {
                 return rawCommand;
             }
@@ -192,51 +171,6 @@ public class AnyCommand {
                 EcuTestHelper.assertRpmDoesNotJump(rpm, settleTime, durationTime, callback, linkManager.getCommandQueue());
             }
         }).start();
-    }
-
-    private static String prepareSetFsioCommand(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 3);
-        if (parts.length != 3)
-            return rawCommand; // let's ignore invalid command
-        return "set_rpn_expression " + parts[1] + " " + quote(infix2postfix(unquote(parts[2])));
-    }
-
-    private static void handleDecodeRpn(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 2);
-        if (parts.length != 2) {
-            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Failed to parse, one argument expected");
-            return;
-        }
-        String argument = unquote(parts[1]);
-        String humanForm = InfixConverter.getHumanInfixFormOrError(argument);
-        MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
-    }
-
-    public static String prepareEvalCommand(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 2);
-        if (parts.length != 2)
-            return rawCommand; // let's ignore invalid command
-
-        try {
-            return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
-        } catch (IllegalArgumentException e) {
-            return rawCommand;
-        }
-    }
-
-    private static String quote(String s) {
-        return "\"" + s + "\"";
-    }
-
-    private static String infix2postfix(String infixExpression) {
-        return DoubleEvaluator.process(infixExpression).getPosftfixExpression();
-    }
-
-    public static String unquote(String quoted) {
-        quoted = quoted.trim().replace('\u201C', '"').replace('\u201D', '"');
-        if (quoted.charAt(0) == '"')
-            return quoted.substring(1, quoted.length() - 1);
-        return quoted; // ignoring invalid input
     }
 
     private static boolean isValidInput(String text) {
@@ -286,12 +220,7 @@ public class AnyCommand {
         });
 
         final AtomicInteger index = new AtomicInteger();
-        command.listener = new Listener() {
-            @Override
-            public void onSend() {
-                index.set(0);
-            }
-        };
+        command.listener = () -> index.set(0);
 
         text.addKeyListener(new KeyAdapter() {
             @Override

@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include "global.h"
-
 /* Error codes */
 
 /** @brief Flash operation successful */
@@ -15,12 +13,26 @@
 /** @brief Flash operation error because of denied access, corrupted memory.*/
 #define FLASH_RETURN_NO_PERMISSION -1
 
+/** @brief Flash operation error */
+#define FLASH_RETURN_OPERROR -2
+
+/** @brief Flash write protection error */
+#define FLASH_RETURN_WPERROR -3
+
+/** @brief Flash alignment error */
+#define FLASH_RETURN_ALIGNERROR -4
+
+/** @brief Flash programming parallelism error */
+#define FLASH_RETURN_PPARALLERROR -5
+
+/** @brief Flash erase sequence error */
+#define FLASH_RETURN_ESEQERROR -6
+
+/** @brief Flash programming sequence error */
+#define FLASH_RETURN_PSEQERROR -7
+
 /** @brief Flash operation error because of bad flash, corrupted memory */
 #define FLASH_RETURN_BAD_FLASH -11
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 /**
  * @brief Maximum program/erase parallelism
@@ -35,8 +47,8 @@ extern "C" {
  * 11 to program 64 bits per step
  */
 // Warning, flashdata_t must be unsigned!!!
-#if defined(STM32F4XX) || defined(STM32F7XX)
-#define FLASH_CR_PSIZE_MASK         FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1
+#if defined(STM32F4XX) || defined(STM32H7XX)
+#define FLASH_CR_PSIZE_MASK         (FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1)
 #if ((STM32_VDD >= 270) && (STM32_VDD <= 360))
 #define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1
 typedef uint32_t flashdata_t;
@@ -52,7 +64,23 @@ typedef uint8_t flashdata_t;
 #else
 #error "invalid VDD voltage specified"
 #endif
-#endif /* defined(STM32F4XX) */
+#endif /* defined(STM32F4XX) || defined(STM32H7XX) */
+
+#if defined(STM32F7XX)
+#define FLASH_CR_PSIZE_MASK         (FLASH_CR_PSIZE_0 | FLASH_CR_PSIZE_1)
+#if ((STM32_VDD >= 270) && (STM32_VDD <= 300))
+#define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_1
+typedef uint32_t flashdata_t;
+#elif (STM32_VDD >= 210) && (STM32_VDD < 360)
+#define FLASH_CR_PSIZE_VALUE        FLASH_CR_PSIZE_0
+typedef uint16_t flashdata_t;
+#elif (STM32_VDD >= 170) && (STM32_VDD < 360)
+#define FLASH_CR_PSIZE_VALUE        ((uint32_t)0x00000000)
+typedef uint8_t flashdata_t;
+#else
+#error "invalid VDD voltage specified"
+#endif
+#endif /* defined(STM32F7XX) */
 
 /** @brief Address in the flash memory */
 typedef uintptr_t flashaddr_t;
@@ -118,14 +146,14 @@ bool intFlashIsErased(flashaddr_t address, size_t size);
 bool intFlashCompare(flashaddr_t address, const char* buffer, size_t size);
 
 /**
- * @brief Copy data from the flash memory to a @p buffer.
- * @warning The @p buffer must be at least @p size bytes long.
- * @param address First address of the flash memory to be copied.
- * @param buffer Buffer to copy to.
+ * @brief Copy data from the flash memory to a @p destination.
+ * @warning The @p destination must be at least @p size bytes long.
+ * @param source First address of the flash memory to be copied.
+ * @param destination Buffer to copy to.
  * @param size Size of the data to be copied in bytes.
  * @return FLASH_RETURN_SUCCESS if successfully copied.
  */
-int intFlashRead(flashaddr_t address, char* buffer, size_t size);
+int intFlashRead(flashaddr_t source, char* destination, size_t size);
 
 /**
  * @brief Copy data from a @p buffer to the flash memory.
@@ -138,8 +166,3 @@ int intFlashRead(flashaddr_t address, char* buffer, size_t size);
  * @return FLASH_RETURN_NO_PERMISSION   Access denied.
  */
 int intFlashWrite(flashaddr_t address, const char* buffer, size_t size);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-

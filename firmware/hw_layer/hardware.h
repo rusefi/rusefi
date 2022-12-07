@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include "global.h"
+void startHardware();
+void stopHardware();
 
 #if HAL_USE_SPI
 
@@ -44,12 +45,17 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #ifdef __cplusplus
 
+void applyNewHardwareSettings();
+
+// Initialize hardware that doesn't require configuration to be loaded
+void initHardwareNoConfig();
+
+// Initialize hardware with configuration loaded
+void initHardware();
+
 #if EFI_PROD_CODE
-#include "engine.h"
 #include "debounce.h"
 
-void applyNewHardwareSettings(void);
-void initHardware(Logging *logging);
 #endif /* EFI_PROD_CODE */
 
 void showBor(void);

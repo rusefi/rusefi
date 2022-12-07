@@ -1,8 +1,8 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
-import com.rusefi.FileLog;
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
@@ -18,23 +18,25 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.rusefi.IoUtil.getEnableCommand;
+import static com.rusefi.IoUtil.*;
+import static com.rusefi.config.generated.Fields.CMD_DATE;
 import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
-import static com.rusefi.IoUtil.getDisableCommand;
-import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
  * This UI element displays an array of buttons, each for one of the recently used commands
  */
 
 public class RecentCommands {
+    private final static Logging log = Logging.getLogging(RecentCommands.class);
+
     private final static int NUMBER_OF_COMMANDS = 40;
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
     private static final String STOPENGINE = "stopengine";
     private static final String SHOWCONFIG = "showconfig";
     private static final String HELP = "help";
-    private static final String ANALOGINFO = "analoginfo";
+    private static final String SENSORINFO = "sensorinfo";
     private static final String IDLEINFO = "idleinfo";
     private static final String ALTINFO = "altinfo";
     private static final String TPSINFO = "tpsinfo";
@@ -45,7 +47,6 @@ public class RecentCommands {
     private static final String SPEEDINFO = "speedinfo";
     private static final String joystickINFO = "joystickinfo";
     private static final String FUELINFO = "fuelinfo";
-    private static final String TEMPINFO = "tempinfo";
     private static final String HIPINFO = "hipinfo";
     private static final String SDINFO = "sdinfo";
     private static final String FSIOINFO = "fsioinfo";
@@ -58,7 +59,7 @@ public class RecentCommands {
         ImageIcon infoIcon = AutoupdateUtil.loadIcon("info.png");
         COMMAND_ICONS.put(SHOWCONFIG, infoIcon);
         COMMAND_ICONS.put(HELP, AutoupdateUtil.loadIcon("help.jpg"));
-        COMMAND_ICONS.put(ANALOGINFO, infoIcon);
+        COMMAND_ICONS.put(SENSORINFO, infoIcon);
         COMMAND_ICONS.put(CMD_TRIGGERINFO, AutoupdateUtil.loadIcon("trigger.jpg"));
         COMMAND_ICONS.put(IDLEINFO, infoIcon);
         COMMAND_ICONS.put(ALTINFO, AutoupdateUtil.loadIcon("alternator.jpg"));
@@ -69,7 +70,6 @@ public class RecentCommands {
         COMMAND_ICONS.put(joystickINFO, AutoupdateUtil.loadIcon("joystick.png"));
         COMMAND_ICONS.put(CANINFO, infoIcon);
         COMMAND_ICONS.put(FUELINFO, infoIcon);
-        COMMAND_ICONS.put(TEMPINFO, infoIcon);
         COMMAND_ICONS.put(HIPINFO, AutoupdateUtil.loadIcon("knock.jpg"));
         COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(FSIOINFO, infoIcon);
@@ -119,7 +119,7 @@ public class RecentCommands {
         add(HELP);
         add(SHOWCONFIG);
         add(STOPENGINE);
-        add(ANALOGINFO);
+        add(SENSORINFO);
         add(CMD_TRIGGERINFO);
         add(TSINFO);
         add(SPEEDINFO);
@@ -147,7 +147,6 @@ public class RecentCommands {
         add(MAPINFO);
         add(ACCELINFO);
         add(FUELINFO);
-        add(TEMPINFO);
         add(HIPINFO);
         add(SDINFO);
         add(FSIOINFO);
@@ -155,6 +154,10 @@ public class RecentCommands {
     }
 
     public void add(String command) {
+        if (isBoringCommand(command)) {
+            // not useful to remember this one
+            return;
+        }
         synchronized (entries) {
             entries.put(new Entry(command), null);
         }
@@ -181,8 +184,7 @@ public class RecentCommands {
                 });
 
                 synchronized (entries) {
-                    Set<Entry> sorted = new TreeSet<>();
-                    sorted.addAll(entries.keySet());
+                    Set<Entry> sorted = new TreeSet<>(entries.keySet());
 
                     for (Entry entry : sorted) {
                         content.add(createButton(uiContext, reentrant, entry.command));
@@ -192,6 +194,10 @@ public class RecentCommands {
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());
+    }
+
+    public static boolean isBoringCommand(String command) {
+        return command.startsWith(getSetCommand(CMD_DATE));
     }
 
     public static JComponent createButton(UIContext uiContext, final AtomicBoolean reentrant, final String command) {
@@ -286,7 +292,7 @@ public class RecentCommands {
                     String fileName = fc.getSelectedFile().getAbsolutePath();
                     String report;
                     try {
-                        report = AverageAnglesUtil.runUtil(fileName, FileLog.LOGGER);
+                        report = AverageAnglesUtil.runUtil(fileName);
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }

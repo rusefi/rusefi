@@ -11,7 +11,10 @@
 #include "electronic_throttle.h"
 
 #include "sensor.h"
-#include "pid.h"
+#include "efi_pid.h"
+#include "error_accumulator.h"
+#include "electronic_throttle_generated.h"
+#include "exp_average.h"
 
 /**
  * Hard code ETB update speed.
@@ -22,9 +25,7 @@
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
-class Logging;
-
-class EtbController : public IEtbController {
+class EtbController : public IEtbController, public electronic_throttle_s {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
 	void setIdlePosition(percent_t pos) override;
@@ -32,26 +33,27 @@ public:
 	void reset() override;
 
 	// Update the controller's state: read sensors, send output, etc
-	void update();
+	void update() override;
+	expected<percent_t> getOutput() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
 	void onConfigurationChange(pid_s* previousConfiguration);
 	
 	// Print this throttle's status.
-	void showStatus(Logging* logger);
+	void showStatus();
 
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
 
-	expected<percent_t> getSetpoint() const override;
-	expected<percent_t> getSetpointEtb() const;
+	expected<percent_t> getSetpoint() override;
+	expected<percent_t> getSetpointEtb();
 	expected<percent_t> getSetpointWastegate() const;
 	expected<percent_t> getSetpointIdleValve() const;
 
-	expected<percent_t> getOpenLoop(percent_t target) const override;
+	expected<percent_t> getOpenLoop(percent_t target) override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
-	expected<percent_t> getClosedLoopAutotune(percent_t actualThrottlePosition);
+	expected<percent_t> getClosedLoopAutotune(percent_t setpoint, percent_t actualThrottlePosition);
 
 	void setOutput(expected<percent_t> outputValue) override;
 
@@ -61,9 +63,23 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
+	// Override if this throttle needs special per-throttle adjustment (bank-to-bank trim, for example)
+	virtual percent_t getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
+		return 0;
+	}
+
+	// Lua throttle adjustment
+	void setLuaAdjustment(percent_t adjustment) override;
+	float getLuaAdjustment() const;
+
+	float prevOutput = 0;
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
+
+	bool hadTpsError = false;
+	bool hadPpsError = false;
 
 	etb_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
@@ -74,12 +90,20 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+	// todo: rename to m_targetErrorAccumulator
+	ErrorAccumulator m_errorAccumulator;
+
+	ExpAverage m_dutyRocAverage;
+	ExpAverage m_dutyAverage;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
 	float m_wastegatePosition = 0;
+
+	// This is set if automatic PID cal shoudl be run
+	bool m_isAutotune = false;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;
@@ -94,4 +118,23 @@ private:
 
 	uint8_t m_autotuneCounter = 0;
 	uint8_t m_autotuneCurrentParam = 0;
+
+	Timer m_luaAdjustmentTimer;
+};
+
+void etbPidReset();
+
+class EtbController1 : public EtbController { };
+
+class EtbController2 : public EtbController {
+public:
+	EtbController2(const ValueProvider3D& throttle2TrimTable)
+		: m_throttle2Trim(throttle2TrimTable)
+	{
+	}
+
+	percent_t getThrottleTrim(float rpm, percent_t /*targetPosition*/) const override;
+
+private:
+	const ValueProvider3D& m_throttle2Trim;
 };

@@ -1,9 +1,11 @@
 package com.rusefi.autoupdate;
 
-import com.rusefi.shared.ConnectionAndMeta;
-import com.rusefi.shared.FileUtil;
-import com.rusefi.ui.storage.PersistentConfiguration;
-import com.rusefi.ui.util.FrameHelper;
+import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
+import com.rusefi.core.FileUtil;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.core.ui.FrameHelper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,30 +21,32 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
-    private static final String TITLE = "rusEFI Bundle Updater 20200607";
-    private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
+    private static final String LOGO_PATH = "/com/rusefi/";
+    private static final String LOGO = LOGO_PATH + "logo.png";
+    private static final String TITLE = "rusEFI Bundle Updater 20221125";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
-        String bundleFullName = readBundleFullName();
+        String bundleFullName = BundleUtil.readBundleFullName();
 
         if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             System.out.println("Release update requested");
             handleBundle(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
-            return;
-        }
-
-        System.out.println("Latest update requested");
-        UpdateMode mode = getMode();
-        if (mode != UpdateMode.NEVER) {
-            if (bundleFullName != null) {
-                System.out.println("Handling " + bundleFullName);
-                handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
-            }
         } else {
-            System.out.println("Update mode: NEVER");
+            UpdateMode mode = getMode();
+            if (mode != UpdateMode.NEVER) {
+                System.out.println("Snapshot requested");
+                if (bundleFullName != null) {
+                    System.out.println("Handling " + bundleFullName);
+                    handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
+                } else {
+                    System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName");
+                }
+            } else {
+                System.out.println("Update mode: NEVER");
+            }
         }
         startConsole(args);
     }
@@ -102,8 +106,17 @@ public class Autoupdate {
             System.out.println("Downloaded " + file.length() + " bytes");
 
             FileUtil.unzip(zipFileName, new File(".."));
-        } catch (Exception e) {
-            System.err.println(e);
+        } catch (ReportedIOException e) {
+            // we had already reported error with a UI dialog when we had parent frame
+            System.err.println("Error downloading bundle: " + e);
+        } catch (IOException e) {
+            // we are here if error happened while we did not have UI frame
+            // todo: open frame prior to network connection and keep frame opened while uncompressing?
+            System.err.println("Error downloading bundle: " + e);
+            if (!AutoupdateUtil.runHeadless) {
+                JOptionPane.showMessageDialog(null, "Error downloading " + e, "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -127,7 +140,11 @@ public class Autoupdate {
                 frameClosed.countDown();
             }
         };
-        frameHelper.getFrame().setTitle(TITLE);
+        JFrame frame = frameHelper.getFrame();
+        frame.setTitle(TITLE);
+        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        if (icon != null)
+            frame.setIconImage(icon.getImage());
         JPanel choice = new JPanel(new BorderLayout());
 
         choice.add(new JLabel("Do you want to update bundle to latest version?"), BorderLayout.NORTH);
@@ -140,7 +157,7 @@ public class Autoupdate {
             @Override
             public void actionPerformed(ActionEvent e) {
                 PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.NEVER.toString());
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(never);
@@ -150,7 +167,7 @@ public class Autoupdate {
         no.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(no);
@@ -160,7 +177,7 @@ public class Autoupdate {
             @Override
             public void actionPerformed(ActionEvent e) {
                 doUpdate.set(true);
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(once);
@@ -172,7 +189,7 @@ public class Autoupdate {
             public void actionPerformed(ActionEvent e) {
                 PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.ALWAYS.toString());
                 doUpdate.set(true);
-                frameHelper.getFrame().dispose();
+                frame.dispose();
             }
         });
         middle.add(always);
@@ -186,20 +203,6 @@ public class Autoupdate {
             // ignore
         }
         return doUpdate.get();
-    }
-
-    public static String readBundleFullName() {
-        try {
-            BufferedReader r = new BufferedReader(new FileReader(BUNDLE_NAME_FILE));
-            String fullName = r.readLine();
-            fullName = fullName.trim();
-            if (fullName.length() < 3)
-                return null; // just paranoia check
-            return fullName;
-        } catch (IOException e) {
-            System.err.println("Error reading " + BUNDLE_NAME_FILE);
-            return null;
-        }
     }
 
     enum UpdateMode {

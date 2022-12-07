@@ -1,0 +1,825 @@
+#
+# todo: what's the deal with dual mode A/C switch?
+# todo: what's the deal with dual mode Power Steering Switch? and a few others?
+#
+
+pins:
+  - pin: 2A
+# INJ1 Q312
+    id: G7
+    class: outputs
+    ts_name: 2A - INJ_1
+    function: Injector #1
+    type: inj
+    color: orange Y1
+
+  - pin: 2B
+    id: D12
+    class: outputs
+    ts_name: 2B - ECF (PWM8)
+    function: Engine Radiator Fan
+    color: orange B4
+    type: ls
+
+  - pin: 2C
+    id: D9
+    class: outputs
+    ts_name: 2C - AC Fan / INJ_5
+    function: AC Radiator fan
+    type: inj
+
+  - pin: 2D
+#INJ2 Q305
+    id: G8
+    class: outputs
+    ts_name: 2D - INJ_2
+    function: Injector #2
+    type: inj
+    color: blue Y1
+
+ #- pin: 2E
+ #  id: C7 
+ #  class: outputs
+ #  ts_name: 2E - COIL_A2 (PWM2)
+ #  function: EGR Valve #1 Coil
+ #  type: ls
+
+ # - pin: 2F
+ #  id: C6
+ #  class: outputs
+ #  ts_name: 2E - COIL_A1 (PWM1)
+ #  function: EGR Valve #2 Coil
+ #  type: ls
+
+  - pin: 2G
+#INJ3 Q309
+    id: D11
+    class: outputs
+    ts_name: 2G - INJ_3
+    function: Injector #3
+    type: inj
+    color: white Y1
+
+#  - pin: 2H
+    #    id: C9
+    #    class: outputs
+    #  ts_name: 2H - COIL_B2 (PWM4)
+    #  function: EGR Valve #3 Coil
+  #  type: ls
+
+ # - pin: 2I
+ #  id: C8
+  # class: outputs
+  # ts_name: 2I - COIL_B1 (PWM3)
+  # function: EGR Valve #4 Coil
+ # type: ls
+
+  - pin: 2J
+#INJ4 Q310
+    id: D10
+    class: outputs
+    ts_name: 2J - INJ_4
+    function: Injector #4
+    type: inj
+    color: green Y1
+
+  - pin: 2K
+    id: H15
+    class: outputs
+    ts_name: 2K - AC (O4)
+    function: A/C Relay
+    type: ls
+
+  - pin: 2M
+    id: G2
+    class: outputs
+    ts_name: 2M - FPUMP (O9)
+    function: Fuel Pump Relay
+    type: ls
+    color: red B4
+
+  - pin: 2N
+    id: F12
+    class: outputs
+    ts_name: 2N - VTSC / INJ_6
+    function: VTCS Control
+    type: inj
+
+  - pin: 2O
+    id: E4
+    class: outputs
+    ts_name: 2O - IGN_3
+    type: ign
+
+  - pin: 2P
+    function: IAC (positive) idle, +12v wired to main relay via 4AF
+    color: red, short wire
+
+  - pin: 2Q
+    id: D14
+    class: outputs
+    ts_name: 2Q - IDLE (PWM5)
+    function: IAC (negative) idle, with diode
+    type: ls
+    color: blue B4
+
+  - pin: 2R
+    id: G4
+    class: outputs
+    ts_name: 2R - CE (O11)
+    function: MIL Control
+    type: ls
+    color: white Y1
+
+  - pin: 3A
+    function: Injector GND
+    type: gnd
+    color: black Y1
+
+  - pin: 3B
+    function: PCM (ECU) GND
+    type: gnd
+    color: black W4, sliced for MAP
+
+  - pin: 3C
+    id: F13
+    class: outputs
+    ts_name: 3C - Purge Solenoid / INJ_7
+    function: Purge Control Solenoid
+    type: inj
+
+  - pin: 3D
+    id: F14
+    class: outputs
+    ts_name: 3D - EGR Solenoid / INJ_8
+    function: EGR Boost sens. sol.
+    type: inj
+
+  - pin: 3E
+    id: G3
+    class: outputs
+    ts_name: 3E - CANIST (O10)
+    function: CDCV (EVAP canister purge valve) Control
+    type: ls
+
+  - pin: 3F
+    id: I8
+    class: outputs
+    ts_name: 3F - IGN_1 (1&4)
+    function: Coil #1
+    type: ign
+    color: white B4
+
+  - pin: 3H
+    id: I2
+    class: outputs
+    ts_name: 3H - MAIN (O1)
+    function: Main relay control
+    type: ls
+    color: white or red, R5
+
+  - pin: 3I
+    id: E5
+    class: outputs
+    ts_name: 3I - IGN_2 (2&3)
+    function: Coil #2
+    type: ign
+    color: orange B4
+
+  - pin: 3J
+    id: H14
+    class: outputs
+    ts_name: 3J - O2H (O3)
+    function: Front O2 sens. heater GND
+    type: ls
+
+  - pin: 3K
+    function: NC
+
+  - pin: 3L
+    id: [I6, EFI_ADC_1]
+    class: [outputs, analog_inputs]
+    ts_name: 3L - IGN_7 / AFR
+    type: ign
+
+  - pin: 3M
+    id: D15
+    class: outputs
+    ts_name: 3M - ALTERN (PWM6)
+    function: PWM signal to control alternator field voltage
+    type: ls
+    color: orange R5
+
+  - pin: 3N
+    id: E3
+    class: outputs
+    ts_name: 3N - IGN_4
+    type: ign
+
+  - pin: 3O
+    id: D13
+    class: outputs
+    ts_name: 3O - TACH (PWM7)
+    function: Tach Out
+    type: ls
+    color: green B4
+
+  - pin: 3P
+    id: A9
+    class: outputs
+    ts_name: 3P - O2H2 (O7)
+    function: Rear O2 sensor heater
+    type: ls
+
+  - pin: 3Q
+    function: K-Line (serial comm.)
+
+  - pin: 3S
+    function: Immobilizer comm.
+
+  - pin: 3T
+# H144_IN_VSS
+    id: F11
+    class: event_inputs
+    ts_name: 3T - VSS (D5)
+    function: VSS in
+    color: blue W3
+
+  - pin: 3U
+    id: H13
+    class: outputs
+    ts_name: 3U - AWARN (O2)
+    function: Alternator Warning Light
+    type: ls
+
+  - pin: 3V
+    id: [A6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 3V - CAM (A19)
+    function: Camshaft Sensor
+    color: blue W3
+
+  - pin: 3W
+    function: NC
+
+  - pin: 3X
+    function: NC
+
+  - pin: 3Y
+    id: [B1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 3Y - CRANK (A24)
+    function: Crankshaft Sensor
+    color: white W3
+
+  - pin: 3Z
+    id: E2
+    class: outputs
+    ts_name: 3Z - IGN_5 / GNDA
+    type: ign
+
+  - pin: 4A
+    function: Ground
+    type: gnd
+    color: black W4
+
+  - pin: 4B
+    id: [F9]
+    class: [switch_inputs]
+    ts_name: 4B - Brake/RES1 (A7)
+    function: Brake Switch
+
+  - pin: 4C    
+    function: Power Steering Switch
+
+  - pin: 4D
+    function: VVT Oil Control Valve pos. +12v wired to main relay via 4AF, short wire
+
+  - pin: 4E
+    function: DTM switching (Diagnostic Terminal?)
+
+  - pin: 4F
+    id: [B0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4F - AC_PRES/AUX1 (A23)
+    function: A/C Pressure In
+
+  - pin: 4H
+    id: E14
+    class: event_inputs
+    ts_name: 4H - Neutral
+    function: Neutral Switch
+
+  - pin: 4I
+  # H176_IN_RES3 
+    id: F8
+    class: switch_inputs
+    ts_name: 4I - Clutch rev D
+    function: Clutch Switch
+    
+  - pin: 4I
+  # H176_IN_D1 
+    id: E13
+    class: switch_inputs
+    ts_name: 4I - Clutch rev E/F
+    function: Clutch Switch
+
+  - pin: 4J
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4J - VTCS/AUX4 (A20)
+    function: VTCS ca. switch
+
+  - pin: 4K
+    id: I5
+    class: outputs
+    ts_name: 4K - IGN_6 / +5V_MAP
+    type: ign
+
+  - pin: 4L
+    function: Sensor +5V
+    color: red W3, sliced for MAP
+
+# EFI_ADC_5 same as VBATTT
+# channel 5 on ADC1/2 is VBATT, and channel 5 on ADC3 is knock
+# knock configuration is hard-coded at the moment, we only use this entry for interactive pinout
+  - pin: 4M
+#    id: EFI_ADC_5
+#    class: analog_inputs
+#    ts_name: 4M - KNOCK (A6)
+    function: Knock sens. in
+    color: white R5
+
+  - pin: 4N
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 4N - IAT (A14)
+    function: IAT sensor
+    color: green B2
+
+  - pin: 4O
+    function: Sensor GND
+    type: gnd
+    color: black B2
+
+  - pin: 4P
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 4P - CLT (A11)
+    function: CLT sensor
+    color: blue B2
+
+  - pin: 4Q
+    function: NC
+
+  - pin: 4R
+    id: I0
+    class: outputs
+    ts_name: 4R - VVT (O5)
+    function: VVT Oil Control Valve neg.
+    type: ls
+    color: white B2
+
+# on one hand we need unique TS name for pin
+# on another hand we need clarity for interactive pinout
+
+  - pin: 4S_4T
+    # this entry for TS
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 4S/4T - Alternator voltage
+
+  - pin: 4S
+    # this entry for interactive pinout
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
+    function: +12V engine fuse 15A, ECU power source, run/start
+    color: red B2
+
+  - pin: 4T
+    # this entry for interactive pinout
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
+    function: Alternator output voltage
+
+  - pin: 4U
+    id: [I7, EFI_ADC_11]
+    class: [outputs, analog_inputs]
+    ts_name: 4U - MAP2/Ign8 (A10)
+    function: NC, extra main relay for diode
+    color: red, short wire
+    type: ign
+
+  - pin: int_map
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP (A15)
+
+  - pin: 4V
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 4V - TPS (A17)
+    function: TPS sensor input
+    color: green B2
+
+#  - pin: 4W
+ #   id: EFI_ADC_0
+#    class: analog_inputs
+ #   ts_name: 4W - O2S (A13)
+#    function: Front O2 Sensor Signal
+
+  - pin: 4X
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 4X - MAF (A9)
+    function: MAF sensor
+    color: orange B2
+
+  - pin: 4Z
+    function: ECU - TCM, Communication for A/T
+
+  - pin: 4AA
+# huh?   id: EFI_ADC_9
+# huh?    class: analog_inputs
+# huh?    ts_name: 4AA - O2S2 (A12)
+    function: Rear O2 Sensor Signal
+
+  - pin: 4AB   
+    function: Fuel Tank Pressure Sensor, PPS
+
+  - pin: 4AC
+    function: ECU - TCM, Communication for A/T
+
+  - pin: 4AD
+    # huh?  id: EFI_ADC_14
+    # huh?   class: analog_inputs
+    # huh?   ts_name: 4AD - FUEL_LEVEL (A21)
+    function: Fuel Level Sensor
+
+  - pin: 4AE
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: 4AE - EGR/MAP4 (A22)
+    function: EGR Boost Pressure Sensor
+
+  - pin: 4AF
+    function: +12v from main relay
+
+  - pin: 4AG
+    function: Bat+ (Hot all times), 12v 10A fuse from battery
+
+  - pin: 4AH
+    function: Evap
+    
+  - pin: 5A     
+    id: [C0]
+    class: [switch_inputs]
+    ts_name: 5A - Pressure Input
+    function: in_map1
+
+#  - pin: 5B
+    #    id: F8
+    #  class: switch_inputs
+    #   ts_name: 5B - IN RES3
+    #  function: options port in_res3
+    
+  - pin: 5C    
+    id: E15
+    class: event_inputs
+    ts_name: 5C - Digital Input
+    function: digital
+
+  - pin: 5D    
+    id: F5
+    class: switch_inputs
+    ts_name: 5D - SENSOR INPUT
+    function: Optional sensor input
+   
+  - pin: 5E
+    id: C9
+    class: outputs
+    ts_name: 5E - SOLENOID OUTPUT
+    function: Output
+
+ # - pin: 5F
+ #   id: H13
+ #   class: outputs
+ #   ts_name: 5F - HIGHSIDE OUTPUT
+ #   function: high output
+    
+  - pin: 5H     
+    function: GND
+
+  - pin: 5I
+    id: E12
+    class: event_inputs
+    ts_name: 5I - Digital Input
+    function: digital
+    
+  - pin: 5J
+        
+#  - pin: 5K
+#    id: F14
+ #   class: outputs
+ #   ts_name: 5K - BOOST OUT
+ #   function: BOOST OUT
+#    type: inj
+  
+  - pin: 5L
+    function: +5v
+  
+  - pin: 5M
+    id: [C4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 5M - PPS2 OR TEMPERATURE SENSOR
+    function: PPS
+    
+  - pin: 5N 
+    id: [A0, EFI_ADC_0]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 5N - TPS2
+    function: TPS
+
+  - pin: 5O    
+    function: TPS
+    
+  - pin: 5P
+    id: [A3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 5P - PPS1   
+    
+  - pin: 5R     
+    function: +5V
+
+  - pin: 5S    
+    function: +5v
+    
+  - pin: 5T    
+    function: GND
+
+  - pin: 5U    
+    function: GND
+   
+  - pin: 5V     
+    function: +12V
+
+  - pin: 5W    
+    function: +12V
+    
+  - pin: 5X     
+    function: GND
+
+  - pin: 5Z    
+    Function: WBO_Vs/Ip
+    
+  - pin: 5AA    
+    function: WBO_Vs
+    
+  - pin: 5AB     
+    function: WBO_R_TRIM
+  
+  - pin: 5AC    
+    function: WBO_Ip
+  
+  - pin: 5AD
+    function: WBO_H- 
+    
+  - pin: 5AE
+    function: WBO_H+
+    
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN  
+
+
+info:
+  title: Hellen Miata NB2
+  image:
+    file: main.jpg
+  pins:
+    - pin: 2A
+      x: 2259
+      y: 220
+    - pin: 2D
+      x: 2187
+      y: 220
+    - pin: 2G
+      x: 2115
+      y: 220
+    - pin: 2J
+      x: 2043
+      y: 220
+    - pin: 2M
+      x: 1971
+      y: 220
+    - pin: 2P
+      x: 1899
+      y: 220
+    - pin: 3A
+      x: 1722
+      y: 220
+    - pin: 3D
+      x: 1643
+      y: 220
+    - pin: 3J
+      x: 1490
+      y: 220
+    - pin: 3M
+      x: 1398
+      y: 220
+    - pin: 3P
+      x: 1309
+      y: 220
+    - pin: 3U
+      x: 1212
+      y: 220
+    - pin: 3X
+      x: 1131
+      y: 220
+    - pin: 4A
+      x: 965
+      y: 220
+    - pin: 4D
+      x: 876
+      y: 220
+    - pin: 4L
+      x: 710
+      y: 220
+    - pin: 4O
+      x: 618
+      y: 220
+    - pin: 4R
+      x: 531
+      y: 220
+    - pin: 4U
+      x: 434
+      y: 220
+    - pin: 4Z
+      x: 352
+      y: 220
+    - pin: 4AC
+      x: 257
+      y: 220
+    - pin: 4AF
+      x: 166
+      y: 220
+    - pin: 2B
+      x: 2261
+      y: 350
+    - pin: 2E
+      x: 2193
+      y: 350
+    - pin: 2H
+      x: 2116
+      y: 350
+    - pin: 2K
+      x: 2044
+      y: 350
+    - pin: 2N
+      x: 1968
+      y: 350
+    - pin: 2Q
+      x: 1905
+      y: 350
+    - pin: 3B
+      x: 1726
+      y: 350
+    - pin: 3E
+      x: 1644
+      y: 350
+    - pin: 3H
+      x: 1572
+      y: 350
+    - pin: 3K
+      x: 1498
+      y: 350
+    - pin: 3N
+      x: 1423
+      y: 350
+    - pin: 3Q
+      x: 1356
+      y: 350
+    - pin: 3S
+      x: 1281
+      y: 350
+    - pin: 3V
+      x: 1206
+      y: 350
+    - pin: 3Y
+      x: 1132
+      y: 350
+    - pin: 4B
+      x: 976
+      y: 350
+    - pin: 4E
+      x: 904
+      y: 350
+    - pin: 4H
+      x: 829
+      y: 350
+    - pin: 4J
+      x: 758
+      y: 350
+    - pin: 4M
+      x: 685
+      y: 350
+    - pin: 4P
+      x: 616
+      y: 350
+    - pin: 4S
+      x: 536
+      y: 350
+    - pin: 4V
+      x: 463
+      y: 350
+    - pin: 4X
+      x: 398
+      y: 350
+    - pin: 4AA
+      x: 321
+      y: 350
+    - pin: 4AD
+      x: 254
+      y: 350
+    - pin: 4AG
+      x: 174
+      y: 350
+    - pin: 2C
+      x: 2263
+      y: 486
+    - pin: 2F
+      x: 2189
+      y: 486
+    - pin: 2I
+      x: 2114
+      y: 486
+    - pin: 2O
+      x: 1973
+      y: 486
+    - pin: 2R
+      x: 1895
+      y: 486
+    - pin: 3C
+      x: 1726
+      y: 486
+    - pin: 3F
+      x: 1640
+      y: 486
+    - pin: 3I
+      x: 1568
+      y: 486
+    - pin: 3L
+      x: 1494
+      y: 486
+    - pin: 3O
+      x: 1421
+      y: 486
+    - pin: 3T
+      x: 1277
+      y: 486
+    - pin: 3W
+      x: 1203
+      y: 486
+    - pin: 3Z
+      x: 1129
+      y: 486
+    - pin: 4C
+      x: 974
+      y: 486
+    - pin: 4F
+      x: 900
+      y: 486
+    - pin: 4I
+      x: 828
+      y: 486
+    - pin: 4K
+      x: 760
+      y: 486
+    - pin: 4N
+      x: 682
+      y: 486
+    - pin: 4T
+      x: 535
+      y: 486
+    - pin: 4W
+      x: 467
+      y: 486
+    - pin: 4AB
+      x: 314
+      y: 486
+    - pin: 4AE
+      x: 247
+      y: 486
+    - pin: 4AH
+      x: 169
+      y: 486

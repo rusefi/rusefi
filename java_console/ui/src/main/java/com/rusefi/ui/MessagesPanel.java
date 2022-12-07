@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
 
@@ -15,27 +15,29 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see AnyCommand
+ * @see MessagesView
  */
 public class MessagesPanel {
     private static final String FONT_SIZE = "font_size";
     private static final String FONT_NAME = "font_name";
 
-    private final MessagesView messagesView = new MessagesView();
+    private final MessagesView messagesView;
 
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+    private final JButton pauseButton = UiUtils.createPauseButton();
 
-    public MessagesPanel(JComponent extraButton) {
+    public MessagesPanel(JComponent extraButton, Node config) {
         JPanel middlePanel = new JPanel(new BorderLayout());
+        messagesView = new MessagesView(config);
         middlePanel.add(messagesView.messagesScroll, BorderLayout.CENTER);
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
-        final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(event -> setPaused(pauseButton, !messagesView.isPaused()));
+        pauseButton.addActionListener(event -> setPaused(!messagesView.isPaused()));
 
         JButton clearButton = UiUtils.createClearButton();
         clearButton.addActionListener(event -> {
             messagesView.clear();
-            setPaused(pauseButton, false);
+            setPaused(false);
         });
 
         buttonPanel.add(clearButton);
@@ -44,7 +46,7 @@ public class MessagesPanel {
             buttonPanel.add(extraButton);
     }
 
-    private void setPaused(JButton pauseButton, boolean isPaused) {
+    public void setPaused(boolean isPaused) {
         messagesView.setPaused(isPaused);
         UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused());
     }

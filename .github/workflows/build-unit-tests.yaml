@@ -1,4 +1,4 @@
-name: Unit Test CI
+name: Unit Tests
 
 on: [push,pull_request]
 
@@ -8,10 +8,10 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-20.04, macos-latest]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
       with:
         submodules: recursive
         fetch-depth: 0
@@ -20,17 +20,20 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
-    - name: Generate Configs
-      working-directory: ./firmware/
-      run: bash gen_config_default.sh
+    - name: Install required software (ubuntu)
+      if: ${{ matrix.os != 'macos-latest' }}
+      run: |
+        sudo apt-get update
+        sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
 
-    - name: Generate Enums
-      working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
+    - name: Install required software (macos)
+      if: ${{ matrix.os == 'macos-latest' }}
+      run: |
+        brew install mtools zip dosfstools
 
-    - name: Generate Live Documentation
+    - name: Generate Configs, Enums & Live Documentation
       working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
+      run: ./gen_default_everything.sh
 
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
@@ -39,51 +42,40 @@ jobs:
 
     - name: Build Tests
       working-directory: ./unit_tests/
-      run: make -j4
-      
+      run: make -j4 COVERAGE=yes
+
     - name: Run Tests
-      run: ./unit_tests/build/rusefi_test
-
-    - name: Install Coverage Tools
-      if: ${{ matrix.os != 'macos-latest' }}
-      run: sudo apt-get install ncftp lcov
-
-    - name: Generate Code Coverage
-      if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
-      run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
 
-    # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
-    - name: Commit fresh triggers.txt
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && matrix.os != 'macos-latest' }}
+    - name: Set FTP variables
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      #
-      # we have minor drama - looks like unit_tests are invoked from root folder while a more natural is to invoke those
-      # from 'unit_tests' folder
-      # as a work-around to leverage unit_tests/.gitignore we move those files into expected folder for now
-      #
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub build-unit-tests Action"
-        mv triggers.txt unit_tests
-        mv *.logicdata  unit_tests
-        git add unit_tests/triggers.txt
-        git status
-        OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
-        echo "$OUT"
-        if echo "$OUT" | grep 'nothing to commit'; then
-          echo "::set-env name=NOCOMMIT::true"
-          exit 0
-        elif echo "$OUT" | grep 'changed'; then
-          exit 0
-        else
-          exit 1
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
         fi
 
-    - name: Push configs
-      if: ${{github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' && matrix.os != 'macos-latest'}}
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ github.token }}
-        branch: master
+    - name: Generate Code Coverage
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      working-directory: ./unit_tests/
+      run: ./ci_gcov.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }}
+
+    - name: Run Tests (sharded)
+      working-directory: ./unit_tests/
+      run: bash ./run_sharded_tests.sh
+
+    - name: Rebuild Tests For Valgrind
+      # Valgrind isn't compatible with address sanitizer, so we have to rebuild the code
+      if: ${{ matrix.os != 'macos-latest' }}
+      working-directory: ./unit_tests/
+      run: |
+        make clean
+        make -j4 SANITIZE=no
+
+    - name: Run Tests (Valgrind)
+      if: ${{ matrix.os != 'macos-latest' }}
+      working-directory: ./unit_tests/
+      run: valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=no --show-error-list=yes build/rusefi_test

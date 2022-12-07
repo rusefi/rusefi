@@ -5,32 +5,32 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(sensors, test2jz) {
+	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	WITH_ENGINE_TEST_HELPER(TOYOTA_2JZ_GTE_VVTi);
+	eth.setTriggerType(TT_ONE);
 
-
-	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
-
-	ASSERT_EQ( 0,  GET_RPM()) << "test2jz RPM";
-	for (int i = 0; i < 3;i++) {
-		eth.fireRise(25);
-		ASSERT_EQ( 0,  GET_RPM()) << "test2jz RPM at " << i;
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
+	for (int i = 0; i < 2;i++) {
+		eth.fireRise(12.5);
+		eth.fireFall(12.5);
+		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM at " << i;
 	}
-	eth.fireRise(25);
+	eth.fireRise(12.5);
+	eth.fireFall(12.5);
 	// first time we have RPM
-	ASSERT_EQ(2400,  GET_RPM()) << "test2jz RPM";
+	ASSERT_EQ(2400,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TriggerValue::FALL, getTimeNowNt(), 0);
+	hwHandleVvtCamSignal(TriggerValue::RISE, getTimeNowNt(), 0);
 
-	// currentPosition
-	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition, EPS3D);
+	// Expected angle is 12.5ms + 3ms of a 25ms revolution = 15.5/25 = 223.2 degrees from the sync point
+	// Minus 155 degree trigger offset = 68.2
+	ASSERT_NEAR(68.2f, engine->triggerCentral.currentVVTEventPosition[0][0], EPS3D);
 }

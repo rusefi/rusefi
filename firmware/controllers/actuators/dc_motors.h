@@ -8,16 +8,15 @@
 #pragma once
 
 #include <cstddef>
-#include "global.h"
 
 class DcMotor;
-class Logger;
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX);
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires);
+DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index);
 
 // Manual control of motors for use by console commands
 void setDcMotorFrequency(size_t index, int hz);
 void setDcMotorDuty(size_t index, float duty);
 
-void showDcMotorInfo(Logging* logger, int i);
+void showDcMotorInfo(int i);
 

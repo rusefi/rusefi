@@ -1,15 +1,19 @@
-CONTROLLERS_ALGO_SRC = $(PROJECT_DIR)/controllers/algo/nmea.c
 
 CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enums.cpp \
+	$(GENERATED_ENUMS_DIR)/auto_generated_commonenum.cpp \
+	$(GENERATED_ENUMS_DIR)/auto_generated_enginetypes.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel_math.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
+	$(PROJECT_DIR)/controllers/algo/wall_fuel.cpp \
 	$(PROJECT_DIR)/controllers/algo/launch_control.cpp \
 	$(PROJECT_DIR)/controllers/algo/dynoview.cpp \
+	$(PROJECT_DIR)/controllers/algo/runtime_state.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine2.cpp \
+	$(PROJECT_DIR)/controllers/algo/gear_detector.cpp \
 	$(PROJECT_DIR)/controllers/gauges/lcd_menu_tree.cpp \
 	$(PROJECT_DIR)/controllers/algo/event_registry.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/airmass.cpp \
@@ -19,3 +23,10 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/airmass/speed_density_base.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/fuel_computer.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel/injector_model.cpp \
+	$(PROJECT_DIR)/controllers/algo/fuel/dfco.cpp \
+	$(PROJECT_DIR)/controllers/algo/nmea.cpp \
+	$(PROJECT_DIR)/controllers/algo/odometer.cpp \
+	$(PROJECT_DIR)/controllers/algo/defaults/default_base_engine.cpp \
+	$(PROJECT_DIR)/controllers/algo/defaults/default_cranking.cpp \
+	$(PROJECT_DIR)/controllers/algo/defaults/default_fuel.cpp \
+	$(PROJECT_DIR)/controllers/algo/defaults/default_ignition.cpp \

@@ -9,4 +9,5 @@
 
 #include "engine_configuration.h"
 
-void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoMazdaMiataNA8Configuration();
+void setHellenMiata96();

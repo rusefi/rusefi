@@ -12,7 +12,7 @@ import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tools.online.ProxyClient;
 import net.jcip.annotations.GuardedBy;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.net.BindException;
 import java.util.*;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -299,7 +298,7 @@ public class Backend implements Closeable {
         for (ControllerConnectionState client : clients) {
             // todo: at the moment we use current OutputChannel layout - a better way would be to take
             // todo: OutputChannel from .ini file based on controller signature
-            int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPM);
+            int rpm = (int) client.getSensorsHolder().getValue(Sensor.RPMValue);
             double clt = client.getSensorsHolder().getValue(Sensor.CLT);
             UserDetails owner = client.getTwoKindSemaphore().getOwner();
             SessionDetails sessionDetails = client.getSessionDetails();

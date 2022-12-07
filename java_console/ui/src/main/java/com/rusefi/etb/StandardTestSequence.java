@@ -28,7 +28,7 @@ public class StandardTestSequence {
                 metric.reset();
             }
         };
-        TestSequenceStep result = first_step.addNext(secondStep)
+        return first_step.addNext(secondStep)
                 .addNext(uiContext, 10 * SECOND, 4 /*position*/, onEachStep, condition)
                 .addNext(uiContext, 5 * SECOND, 6, /*position*/onEachStep, condition)
                 .addNext(uiContext, 5 * SECOND, 8, /*position*/onEachStep, condition)
@@ -63,6 +63,5 @@ public class StandardTestSequence {
                 .addNext(uiContext, 10 * SECOND, 4, /*position*/onEachStep, condition)
                 .addNext(uiContext, 10 * SECOND, 0, /*position*/onEachStep, condition)
                 ;
-        return result;
     }
 }

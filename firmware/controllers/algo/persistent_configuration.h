@@ -7,13 +7,11 @@
 
 #pragma once
 
-#include "globalaccess.h"
-#include "crc.h"
 #include "engine_configuration_generated_structures.h"
 
 typedef struct {
 	int version;
 	int size;
 	persistent_config_s persistentConfiguration;
-	crc_t value;
+	uint32_t value;
 } persistent_config_container_s;

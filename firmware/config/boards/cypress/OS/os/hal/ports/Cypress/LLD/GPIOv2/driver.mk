@@ -1,0 +1,7 @@
+ifeq ($(CYPRESS_CONTRIB),)
+  CYPRESS_CONTRIB = $(CHIBIOS_CONTRIB)
+endif
+
+PLATFORMSRC_CONTRIB += ${CYPRESS_CONTRIB}/os/hal/ports/Cypress/LLD/GPIOv2/hal_pal_lld.c
+
+PLATFORMINC_CONTRIB += ${CYPRESS_CONTRIB}/os/hal/ports/Cypress/LLD/GPIOv2

@@ -27,7 +27,7 @@ public class Wizard {
         Component getContent();
     }
 
-    abstract class WizardStepImpl implements WizardStep {
+    abstract static class WizardStepImpl implements WizardStep {
         protected WizardStep nextStep;
 
         public WizardStepImpl() {
@@ -133,7 +133,7 @@ public class Wizard {
 
         @Override
         public Component getContent() {
-            double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+            double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
             if (rpm == 0) {
                 return Wizard.this.getContent(nextStep);
             }

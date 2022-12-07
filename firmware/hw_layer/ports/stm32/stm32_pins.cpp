@@ -6,17 +6,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
-#include "pin_repository.h"
-#include "io_pins.h"
+#include "pch.h"
+
 #include "smart_gpio.h"
 
 #if EFI_GPIO_HARDWARE
-
-// todo: move this into PinRepository class
-static const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 
 #define PORT_SIZE 16
 
@@ -44,6 +38,21 @@ static ioportid_t ports[] = {GPIOA,
 #else
 		nullptr,
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+		GPIOI,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+		GPIOJ,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+		GPIOK,
+#else
+		nullptr,
+#endif /* STM32_HAS_GPIOK */
 };
 
 /**
@@ -74,6 +83,18 @@ const char *portname(ioportid_t GPIOx) {
 	if (GPIOx == GPIOH)
 		return "PH";
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (GPIOx == GPIOI)
+		return "PI";
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (GPIOx == GPIOJ)
+		return "PJ";
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (GPIOx == GPIOK)
+		return "PK";
+#endif /* STM32_HAS_GPIOK */
 	return "unknown";
 }
 
@@ -103,16 +124,28 @@ static int getPortIndex(ioportid_t port) {
 	if (port == GPIOH)
 		return 7;
 #endif /* STM32_HAS_GPIOH */
+#if STM32_HAS_GPIOI
+	if (port == GPIOI)
+		return 8;
+#endif /* STM32_HAS_GPIOI */
+#if STM32_HAS_GPIOJ
+	if (port == GPIOJ)
+		return 9;
+#endif /* STM32_HAS_GPIOJ */
+#if STM32_HAS_GPIOK
+	if (port == GPIOK)
+		return 10;
+#endif /* STM32_HAS_GPIOK */
 	firmwareError(CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }
 
 ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 int getBrainPinIndex(brain_pin_e brainPin) {
-	return (brainPin - GPIOA_0) % PORT_SIZE;
+	return (brainPin - Gpio::A0) % PORT_SIZE;
 }
 
 int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
@@ -121,11 +154,16 @@ int getPortPinIndex(ioportid_t port, ioportmask_t pin) {
 }
 
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
+	(void)msg;
+
 	if (!isBrainPinValid(brainPin)) {
-		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid brain_pin_e: %d", msg, brainPin);
+/*
+ *  https://github.com/dron0gus please help
+		firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid Gpio: %d", msg, brainPin);
+ */
 		return GPIO_NULL;
 	}
-	return ports[(brainPin - GPIOA_0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 /**
@@ -139,30 +177,30 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 	if (brain_pin_is_onchip(brainPin))
 		return getBrainPinIndex(brainPin);
 
-	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip brain_pin_e: %d", msg, brainPin);
+	firmwareError(CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip Gpio: %d", msg, brainPin);
 	return EFI_ERROR_CODE;
 }
 
 /**
- * Parse string representation of physical pin into brain_pin_e ordinal.
+ * Parse string representation of physical pin into Gpio ordinal.
  *
- * @return GPIO_UNASSIGNED for "none", GPIO_INVALID for invalid entry
+ * @return Gpio::Unassigned for "none", Gpio::Invalid for invalid entry
  */
 brain_pin_e parseBrainPin(const char *str) {
 	if (strEqual(str, "none"))
-		return GPIO_UNASSIGNED;
+		return Gpio::Unassigned;
 	// todo: create method toLowerCase?
 	if (str[0] != 'p' && str[0] != 'P') {
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 	char port = str[1];
 	brain_pin_e basePin;
 	if (port >= 'a' && port <= 'z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + PORT_SIZE * (port - 'a'));
+		basePin = Gpio::A0 + PORT_SIZE * (port - 'a');
 	} else if (port >= 'A' && port <= 'Z') {
-		basePin = (brain_pin_e) ((int) GPIOA_0 + PORT_SIZE * (port - 'A'));
+		basePin = Gpio::A0 + PORT_SIZE * (port - 'A');
 	} else {
-		return GPIO_INVALID;
+		return Gpio::Invalid;
 	}
 	const char *pinStr = str + 2;
 	int pin = atoi(pinStr);
@@ -171,20 +209,6 @@ brain_pin_e parseBrainPin(const char *str) {
 
 unsigned int getBrainPinOnchipNum(void) {
 	return BRAIN_PIN_ONCHIP_PINS;
-}
-
-unsigned int getBrainPinTotalNum(void) {
-	return BRAIN_PIN_TOTAL_PINS;
-}
-
-void initBrainUsedPins(void) {
-	memset(PIN_USED, 0, sizeof(PIN_USED));
-}
-
-const char* & getBrainUsedPin(unsigned int idx) {
-	/* if (idx >= getBrainPinTotalNum())
-		return NULL; */
-	return PIN_USED[idx];
 }
 
 #endif /* EFI_GPIO_HARDWARE */

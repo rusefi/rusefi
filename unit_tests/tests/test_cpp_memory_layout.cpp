@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
 
 // in C++ struct is pretty much a class just fields are public by default
 struct TestParent {
@@ -37,7 +37,7 @@ public:
 };
 
 
-TEST(misc, cppPlainStructMemoryLayout) {
+TEST(CppMemoryLayout, PlainStruct) {
 	TestPlainChild c;
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
@@ -55,15 +55,12 @@ TEST(misc, cppPlainStructMemoryLayout) {
 
 static int valueWePointAt;
 
-TEST(misc, cppVirtualStructMemoryLayout) {
+TEST(CppMemoryLayout, VirtualStruct) {
 	TestChildWithVirtual c;
-
-	int pointerSize = sizeof(int*);
-
 
 	// '4' in case of 32 bit target
 	// '8' in case of 64 bit target
-	int MAGIC_VTABLE_SIZE = pointerSize;
+	int MAGIC_VTABLE_SIZE = sizeof(void*);
 
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
@@ -85,7 +82,7 @@ TEST(misc, cppVirtualStructMemoryLayout) {
 
 }
 
-TEST(misc, cppPlainExtraFieldsStructMemoryLayout) {
+TEST(CppMemoryLayout, PlainExtraFieldsStruct) {
 	TestPlainChildExtraFields c;
 
 	ASSERT_EQ(sizeof(c), sizeof(TestParent) + 8);
@@ -95,4 +92,13 @@ TEST(misc, cppPlainExtraFieldsStructMemoryLayout) {
 	memcpy(&destimationInt, &c, 4);
 	ASSERT_EQ(540, destimationInt);
 	ASSERT_EQ(0, (uintptr_t)&c.field0 - (uintptr_t)&c);
+}
+
+TEST(CppMemoryLayout, structSize) {
+	ASSERT_EQ(1, sizeof(adc_channel_e)) << "adc_channel_e enum size";
+	ASSERT_EQ(1, sizeof(pin_input_mode_e)) << "pin_input_mode_e enum size";
+	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "pin_output_mode_e enum size";
+	ASSERT_EQ(2, sizeof(brain_pin_e)) << "brain_pin_e enum size";
+	ASSERT_EQ(12, sizeof(air_pressure_sensor_config_s));
+	ASSERT_EQ(TOTAL_CONFIG_SIZE, sizeof(persistent_config_s));
 }

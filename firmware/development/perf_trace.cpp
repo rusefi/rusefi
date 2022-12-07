@@ -6,12 +6,22 @@
  * See JsonOutput.java in rusEfi console
  */
 
+#include "pch.h"
 
-#include "efifeatures.h"
-#include "perf_trace.h"
-#include "efitime.h"
-#include "os_util.h"
-#include "big_buffer.h"
+
+#ifndef ENABLE_PERF_TRACE
+#error ENABLE_PERF_TRACE must be defined!
+#endif
+
+#ifndef TRACE_BUFFER_LENGTH
+#define TRACE_BUFFER_LENGTH 2048
+#endif /* TRACE_BUFFER_LENGTH */
+
+// Disable the buffer if we're not enabled at all
+#if !ENABLE_PERF_TRACE
+#undef TRACE_BUFFER_LENGTH
+#define TRACE_BUFFER_LENGTH 1
+#endif
 
 enum class EPhase : char
 {

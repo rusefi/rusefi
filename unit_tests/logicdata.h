@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <vector>
+
 struct CompositeEvent {
     int timestamp;
     bool primaryTrigger;
@@ -17,4 +19,4 @@ struct CompositeEvent {
     bool injector;
 };
 
-void writeFile(const char * fileName, CompositeEvent *events, int count);
+void writeFile(const char * fileName, const std::vector<CompositeEvent>& events);

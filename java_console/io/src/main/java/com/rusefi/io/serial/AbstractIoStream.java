@@ -1,5 +1,6 @@
 package com.rusefi.io.serial;
 
+import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 
 import java.io.IOException;
@@ -8,9 +9,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
-    protected StreamStats streamStats = new StreamStats();
+    protected final StreamStats streamStats = new StreamStats();
     private final AtomicInteger bytesOut = new AtomicInteger();
     private long latestActivity;
+
+    public IncomingDataBuffer createDataBuffer(String loggingPrefix) {
+        IncomingDataBuffer incomingData = new IncomingDataBuffer(loggingPrefix, getStreamStats());
+        setInputListener(incomingData::addData);
+        return incomingData;
+    }
 
     @Override
     public StreamStats getStreamStats() {

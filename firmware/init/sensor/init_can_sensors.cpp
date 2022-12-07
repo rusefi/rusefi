@@ -1,19 +1,17 @@
 /**
  * @file	init_can_sensors.cpp
+ * body control unit use-case: inject many sensors from external ECU via ODB-II request/response
+ * this is totally different from Lua "set" sensor method
  *
  * @date March 31, 2020
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "pin_repository.h"
-#include "engine_configuration.h"
+#include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 #include "can_sensor.h"
 #include "can.h"
-
-EXTERN_CONFIG
-;
 
 CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,
@@ -46,7 +44,7 @@ ObdCanSensor<1, 0> obdTpsSensor(
 //);
 
 void initCanSensors() {
-	if (CONFIG(consumeObdSensors)) {
+	if (engineConfiguration->consumeObdSensors) {
 //		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
 		registerCanSensor(obdCltSensor);
@@ -54,4 +52,4 @@ void initCanSensors() {
 		registerCanSensor(obdTpsSensor);
 	}
 }
-#endif // EFI_CAN_SUPPORT
+#endif // EFI_PROD_CODE && EFI_CAN_SUPPORT

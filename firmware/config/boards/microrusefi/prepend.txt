@@ -1,12 +1,17 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/microrusefi"
+
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
 
-//Jokeri says it's better with full pinout just in case
-//#define ts_show_full_pinout false
+
+
 
 #define ts_show_lcd false
 #define ts_show_joystick false
-#define ts_show_egt false
+
+! https://rusefi.com/forum/viewtopic.php?p=43270#p43270
+#define ts_show_egt true
+
 #define ts_show_gps false
 #define ts_show_etb_pins false
 #define ts_show_analog_divider false
@@ -18,8 +23,11 @@
 #define ts_show_main_relay_microRusEFI_message true
 #define ts_show_can2 false
 #define ts_show_software_knock true
+#define ts_show_hardware_simulator false
+#define ts_show_sd_pins true
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
 
 #define show_test_presets false
 #define show_Frankenso_presets false
-#define show_Hellen_presets false
-#define show_Proteus_presets false
+#define show_microRusEFI_presets true

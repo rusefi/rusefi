@@ -1,13 +1,13 @@
 package com.rusefi.config.test;
 
+import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class FieldTest {
     @Test
@@ -30,17 +30,39 @@ public class FieldTest {
     }
 
     @Test
-    public void testPrecisionDependingOnScale() {
-        assertEquals("0.12302",  Field.niceToString(0.12302, 4));
-        assertEquals("0.1232",  Field.niceToString(0.12317, 3));
+    public void setBooleanValue() {
+        byte[] config = new byte[Fields.persistent_config_s_size];
+        ConfigurationImage ci = new ConfigurationImage(config);
 
-        assertEquals("1234567.1",  Field.niceToString(1234567.123, 4));
-        assertEquals("10000.0",  Field.niceToString(10000.00002, 4));
-        assertEquals("0.002",  Field.niceToString(0.002, 4));
-        assertEquals("12.302",  Field.niceToString(12.302, 4));
-        assertEquals("12.302",  Field.niceToString(12.302, 3));
-        assertEquals("12.31",  Field.niceToString(12.312, 2));
-        assertEquals("123.02",  Field.niceToString(123.02, 4));
+        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
+        assertFalse(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
+        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
+
+        Fields.OVERRIDETRIGGERGAPS.setValue(config, true);
+
+        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
+        assertTrue(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
+        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
+
+        Fields.OVERRIDETRIGGERGAPS.setValue(config, false);
+
+        assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));
+        assertFalse(Fields.OVERRIDETRIGGERGAPS.getBooleanValue(ci));
+        assertFalse(Fields.ENABLEFAN1WITHAC.getBooleanValue(ci));
+    }
+
+    @Test
+    public void testPrecisionDependingOnScale() {
+        assertEquals("0.12302", Field.niceToString(0.12302, 4));
+        assertEquals("0.1232", Field.niceToString(0.12317, 3));
+
+        assertEquals("1234567.1", Field.niceToString(1234567.123, 4));
+        assertEquals("10000.0", Field.niceToString(10000.00002, 4));
+        assertEquals("0.002", Field.niceToString(0.002, 4));
+        assertEquals("12.302", Field.niceToString(12.302, 4));
+        assertEquals("12.302", Field.niceToString(12.302, 3));
+        assertEquals("12.31", Field.niceToString(12.312, 2));
+        assertEquals("123.02", Field.niceToString(123.02, 4));
     }
 
 }

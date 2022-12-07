@@ -1,0 +1,511 @@
+#
+# CONNECTOR MAPPING NEEDED
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+#
+
+pins:
+  - pin: p18_p22
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Aux P18/P22
+    type: hs
+    ts_name: P18/P22
+
+  - pin: 1A
+    id: D12
+    class: outputs
+    ts_name: 1A - ECF
+    function: Engine Radiator Fan   
+    type: ls
+  
+  - pin: 1B
+    id: A9
+    class: outputs
+    ts_name: 1B - AC Fan Relay
+    function: AC Fan Relay
+
+  - pin: 1C
+    function: CAN bus high
+    type: can
+         
+  - pin: 1E
+    id: G4
+    class: outputs
+    ts_name: 1E - Check Engine Light
+    function: Check Engine Light
+    type: ls
+      
+  - pin: 1G
+    id: G11
+    class: outputs
+    ts_name: 1G - AC Relay
+    function: A/C Relay
+    type: ls
+    
+  - pin: 1J    
+    function: CAN -
+    type: ls
+    
+  - pin: 1K
+    id: [C5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 1K - AC Switch
+    function: A/C Pressure In
+    
+  - pin: 1L
+    id: E13
+    class: switch_inputs
+    ts_name: 1L - Clutch
+    function: Clutch Switch
+    
+  - pin: 1M
+    # H144_IN_VSS
+    id: F11
+    class: event_inputs
+    ts_name: 1M - VSS
+    function: VSS in
+
+  - pin: 1O
+    function: GND
+   
+  - pin: 1Q
+    id: [F9]
+    class: [switch_inputs]
+    ts_name: 1Q - Brake/RES1
+    function: Brake Switch
+    
+  - pin: 1S
+#    id: F7
+#    class: analog_inputs
+#    ts_name: 2M - KNOCK
+    function: Knock sens. in
+    
+  - pin: 1U
+    id: G2
+    class: outputs
+    ts_name: 1U - Fuel Pump
+    function: Fuel Pump Relay
+    type: ls
+    
+  - pin: 2A
+    id: [B0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 2A - Pressure Input
+    function: FTP input
+    
+  - pin: 2B
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 2B - MAF
+    function: MAF sensor
+    
+  - pin: 2C
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: 2C - O2S
+    function: Front O2 Sensor Signal
+    
+  - pin: 2D
+    id: F3
+    class: switch_inputs
+    ts_name: 2D - O2S2
+    function: Rear O2 Sensor Signal
+        
+  - pin: 2F
+# H144_IN_TPS
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 2F - TPS
+    function: TPS sensor input
+    
+  - pin: 2G
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 2G - Coolant
+    function: CLT sensor
+        
+  - pin: 2i
+    function: +5v
+    
+  - pin: 2K
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 2B - IAT
+    function: IAT sensor
+    
+  - pin: 2O
+    function: GND
+    
+  - pin: 3A
+    function: GND
+    
+  - pin: 3B
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 3B - Battery Sense
+    function: ECU power in start & run
+    type: 12V
+    
+  - pin: 3C
+    function: GND
+    
+  - pin: 3D
+    function: GND
+    
+  - pin: int_map
+# H144_IN_MAP3
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP
+    
+  - pin: 3F
+    id: [B1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 3F - CRANK
+    function: Crankshaft Sensor
+    
+  - pin: 3G
+    id: [A6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 3G - CAM
+    function: Camshaft Sensor
+    
+  - pin: 3I    
+    function: +12V
+    
+  - pin: 3L
+    id: D13
+    class: outputs
+    ts_name: 3L - TACH
+    function: Tach Out
+    type: ls
+    
+  - pin: 3N
+    id: C13
+    class: outputs
+    ts_name: 3N - IGN_1 (1&4)
+    function: Coil #1
+    type: ign
+    
+  - pin: 3Q
+    id: D14
+    class: outputs
+    ts_name: 3Q - IDLE
+    function: IAC (negative), with diode
+    type: ls
+    
+  - pin: 3R
+    id: E5
+    class: outputs
+    ts_name: 3R - IGN_2 (2&3)
+    function: Coil #2
+    type: ign
+    
+  - pin: 3S
+    id: [A7, EFI_ADC_7]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 3S - EGR BOOST IN
+    function: EGR BOOST
+    
+  - pin: 3U
+    id: G7
+    class: outputs
+    ts_name: 3U - INJ_1
+    function: Injector #1
+    type: inj
+    
+  - pin: 3V
+    id: G8
+    class: outputs
+    ts_name: 3V - INJ_2
+    function: Injector #2
+    type: inj 
+  
+  - pin: 3W
+    id: D11
+    class: outputs
+    ts_name: 3W - INJ_3
+    function: Injector #3
+    type: inj
+    
+  - pin: 3X
+    id: D10
+    class: outputs
+    ts_name: 3X - INJ_4
+    function: Injector #4
+    type: inj
+    
+  - pin: 3Z
+    id: G13
+    class: outputs
+    ts_name: 3Z - O2H2
+    function: Rear O2 sensor heater
+    type: ls
+    
+  - pin: 4A
+    function: GND   
+    
+  - pin: 4B
+    id: E12
+    class: event_inputs
+    ts_name: 4B - DIGITAL/FLEX
+    function: DIGITAL
+    
+  - pin: 4C
+    id: [C4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 4C - IN TEMP/PPS2
+    function: TEMP OR PPS2
+    
+  - pin: 4D
+    id: F12
+    class: outputs
+    ts_name: 4D - BOOST OUT
+    function: BOOST OUT
+    type: inj
+       
+  - pin: 4E
+    id: D9
+    class: outputs
+    ts_name: 4E - VVT
+    function: VVT Oil Control Valve neg.
+    type: ls
+    
+  - pin: 4F
+    function: +5V
+    
+  - pin: 4G
+    function: WBO
+    
+  - pin: 4H
+    function: WBO
+    
+  - pin: 4I
+    function: WBO
+    
+  - pin: 4J
+    function: WBO
+    
+  - pin: 4K
+    function: WBO
+    
+  - pin: 4L
+    function: WBO
+    
+  - pin: int_pps1
+    id: [A3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: PPS1
+    
+  - pin: int_tps2
+    id: [A1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: TPS1
+    
+  - pin: int_etb+
+    id: C7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: C8
+    class: outputs
+    ts_name: ETB -
+    
+  - pin: int_etb_EN
+    id: C6
+    class: outputs
+    ts_name: ETB EN
+ 
+
+info:
+  title: Hellen Miata NB1
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1A
+      x: 3122
+      y: 220
+    - pin: 1B
+      x: 3122
+      y: 350
+
+    - pin: 1C
+      x: 2038
+      y: 220
+    - pin: 1D
+      x: 2038
+      y: 350
+
+    - pin: 1E
+      x: 2950
+      y: 250
+    - pin: 1F
+      x: 2950
+      y: 376
+
+    - pin: 1G
+      x: 3624
+      y: 250
+    - pin: 1H
+      x: 3624
+      y: 376
+
+    - pin: 1I
+      x: 3508
+      y: 250
+    - pin: 1J
+      x: 3508
+      y: 376
+
+    - pin: 1M
+      x: 3284
+      y: 250
+    - pin: 1N
+      x: 3284
+      y: 376
+
+    - pin: 1R
+      x: 3062
+      y: 376
+
+    - pin: 1S
+      x: 2435
+      y: 250
+    - pin: 1T
+      x: 2435
+      y: 376
+      
+    - pin: 1U
+      x: 2368
+      y: 220
+    - pin: 1V
+      x: 2368
+      y: 350
+      
+    - pin: 2A
+      x: 2616
+      y: 352
+      
+    - pin: 2B
+      x: 2616
+      y: 544
+
+    - pin: 2C
+      x: 2506
+      y: 352
+      
+    - pin: 2D
+      x: 2506
+      y: 544
+
+    - pin: 2E
+      x: 2396
+      y: 352
+      
+    - pin: 2F
+      x: 2396
+      y: 544
+
+    - pin: 2G
+      x: 2286
+      y: 352
+      
+    - pin: 2H
+      x: 2286
+      y: 544
+
+    - pin: 2I
+      x: 2176
+      y: 352
+      
+    - pin: 2J
+      x: 2176
+      y: 544
+  
+    - pin: 2K
+      x: 2066
+      y: 352
+      
+    - pin: 2L
+      x: 2066
+      y: 544
+
+    - pin: 2M
+      x: 1956
+      y: 352
+      
+    - pin: 2N
+      x: 1956
+      y: 544
+
+    - pin: 2O
+      x: 1846
+      y: 352
+      
+    - pin: 2P
+      x: 1846
+      y: 544
+
+    - pin: 3A
+      x: 1604
+      y: 312
+    - pin: 3B
+      x: 1604
+      y: 512
+
+    - pin: 3C
+      x: 1488
+      y: 312
+    - pin: 3D
+      x: 1488
+      y: 512
+
+    - pin: 3E
+      x: 1368
+      y: 360
+    - pin: 3F
+      x: 1368
+      y: 552
+
+    - pin: 3G
+      x: 1256
+      y: 360
+
+    - pin: 3I
+      x: 1140
+      y: 360
+    - pin: 3J
+      x: 1140
+      y: 552
+
+    - pin: 3O
+      x: 807
+      y: 360
+    - pin: 3P
+      x: 807
+      y: 552
+
+    - pin: 3Q
+      x: 690
+      y: 360
+
+
+    - pin: 3U
+      x: 460
+      y: 312
+    - pin: 3V
+      x: 460
+      y: 512
+
+    - pin: 3W
+      x: 330
+      y: 312
+
+    - pin: 3Y
+      x: 200
+      y: 312
+    - pin: 3Z
+      x: 200
+      y: 512

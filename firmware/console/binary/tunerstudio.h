@@ -9,9 +9,6 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
@@ -29,46 +26,42 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
-// SD protocol file removal is one of the stack consuming use-cases
-#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
+void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
-/**
- * handle non CRC wrapped command
- */
-bool handlePlainCommand(ts_channel_s *tsChannel, uint8_t command);
+uint8_t* getWorkingPageAddr();
 
-/**
- * this command is part of protocol initialization
- */
-void handleQueryCommand(ts_channel_s *tsChannel, ts_response_format_e mode);
+#if EFI_TUNER_STUDIO
+#include "thread_controller.h"
+#include "thread_priority.h"
 
-char *getWorkingPageAddr();
+void updateTunerStudioState();
 
-void tunerStudioDebug(const char *msg);
-void tunerStudioError(const char *msg);
-
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
-void printTsStats(void);
 void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
-void syncTunerStudioCopy(void);
-void runBinaryProtocolLoop(ts_channel_s *tsChannel);
 
-#if defined __GNUC__
-// GCC
-#define pre_packed
-#define post_packed __attribute__((packed))
-#else
-// IAR
-#define pre_packed __packed
-#define post_packed
-#endif
-
-typedef pre_packed struct
-post_packed {
+typedef struct {
 	short int offset;
 	short int count;
 } TunerStudioWriteChunkRequest;
+
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
+
+class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
+public:
+	TunerstudioThread(const char* name)
+		: ThreadController(name, PRIO_CONSOLE)
+	{
+	}
+
+	// Initialize and return the channel to use for this thread.
+	virtual TsChannelBase* setupChannel() = 0;
+
+	void ThreadTask() override;
+
+};
+#endif
 
 #endif /* EFI_TUNER_STUDIO */

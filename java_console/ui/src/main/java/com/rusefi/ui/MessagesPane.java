@@ -1,18 +1,19 @@
 package com.rusefi.ui;
 
-import ZoeloeSoft.projects.JFontChooser.JFontChooser;
-import com.rusefi.ConsoleUI;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
 import com.rusefi.ui.widgets.IdleLabel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * One of console top level tabs
+ * @see MessagesPanel
+ */
 public class MessagesPane {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands";
 
@@ -23,14 +24,13 @@ public class MessagesPane {
             return new Dimension(250, size.height);
         }
     };
-    private final JButton fontButton = new JButton("Font");
     private final AnyCommand command;
 
     public MessagesPane(UIContext uiContext, final Node config) {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         command = AnyCommand.createArea(uiContext, config, config.getProperty(AnyCommand.KEY), true, false);
-        final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
+        final MessagesPanel upperPanel = new MessagesPanel(command.getContent(), config);
         upperPanel.loadFont(config);
 
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -41,7 +41,8 @@ public class MessagesPane {
 
         upperPanel.getButtonPanel().add(new RpmLabel(uiContext, 2).getContent());
         topPanel.add(upperPanel.getButtonPanel());
-        topPanel.add(fontButton);
+//        JButton fontButton = new JButton("Font");
+//        topPanel.add(fontButton);
         topPanel.add(new URLLabel(EngineSnifferPanel.HELP_TEXT, HELP_URL));
         content.add(topPanel, BorderLayout.NORTH);
 
@@ -49,11 +50,11 @@ public class MessagesPane {
 
         statsPanel.add(new RpmLabel(uiContext).getContent());
         statsPanel.add(new IdleLabel());
-        statsPanel.add(new WarningPanel().getPanel());
+        statsPanel.add(new WarningPanel(config).getPanel(config));
 
         content.add(statsPanel, BorderLayout.SOUTH);
 
-        fontButton.addActionListener(new ActionListener() {
+        /*fontButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFontChooser fc = new JFontChooser(ConsoleUI.getFrame());
@@ -62,7 +63,7 @@ public class MessagesPane {
                     upperPanel.setFont(fc.getFont(), config);
                 }
             }
-        });
+        });*/
     }
 
     public JComponent getContent() {
@@ -70,11 +71,6 @@ public class MessagesPane {
     }
 
     public ActionListener getTabSelectedListener() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                command.requestFocus();
-            }
-        };
+        return e -> command.requestFocus();
     }
 }

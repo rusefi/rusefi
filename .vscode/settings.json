@@ -20,13 +20,12 @@
 		"**/build/lst": true,
 		"**/build/obj": true,
 		"hardware/": true,
-		"misc/": true,
 	},
 	"search.exclude": {
 		"**/.dep": true,
 		"**/build/lst": true,
 		"**/build/obj": true,
 		"hardware/": true,
-		"misc/": true,
+		"firmware/ChibiOS/demos": true,
 	},
 }

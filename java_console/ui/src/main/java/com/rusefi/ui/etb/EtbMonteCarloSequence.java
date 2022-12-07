@@ -11,8 +11,8 @@ import com.rusefi.ui.UIContext;
 import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.romraider.util.ThreadUtil.sleep;
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 import static com.rusefi.etb.TestSequenceStep.count;
 import static com.rusefi.ui.etb.DirectDrivePanel.CANCEL_DIRECT_DRIVE_COMMAND;
@@ -79,7 +79,7 @@ public class EtbMonteCarloSequence {
                 boolean shouldRun = currentValue < bestResultSoFar;
                 if (!shouldRun) {
                     MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                            "Two much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
+                            "Too much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
 
                 }
                 return shouldRun;

@@ -2,6 +2,8 @@ plugins {
     id 'java'
 }
 
+ apply from: '../../java_tools/dependencies.gradle'
+
 dependencies {
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation global_libs.jsr305
 }

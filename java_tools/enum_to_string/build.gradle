@@ -1,0 +1,51 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+defaultTasks 'shadowJar'
+
+dependencies {
+    api project(':logging')
+}
+
+/*
+ don't use it, otherwise
+ you'll get jar only with
+ enum_to_string classes
+ for the full jar with logging*
+ use shadowJar task
+*/
+jar {
+    archivesBaseName = 'enum2string'
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'com.rusefi.EnumToString'
+        )
+    }
+}
+
+shadowJar {
+    /*
+     to exclude suffix '-all'
+     in resulting archive file name
+    */
+    archiveBaseName = 'enum2string'
+    archiveClassifier = ''
+
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        inheritFrom project.tasks.jar.manifest
+    }
+
+    /*
+     to keep only classes from logging
+     and logging-api as in build.xml
+    */
+    dependencies {
+        exclude(dependency(global_libs.jsr305))
+        exclude(dependency(global_libs.junit))
+        exclude(dependency(global_libs.annotations))
+    }
+}

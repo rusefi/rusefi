@@ -1,12 +1,8 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
-apply from: '../../android/dependencies.gradle'
-
 dependencies {
-    implementation project(':logging-api')
-    implementation libs.annotations
-
-    testImplementation libs.junit
+    api project(':logging-api')
+    api project(':core_io')
 }

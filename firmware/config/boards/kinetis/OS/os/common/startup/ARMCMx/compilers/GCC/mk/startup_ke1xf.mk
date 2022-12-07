@@ -16,7 +16,8 @@ STARTUPINC = $(KINETIS_CONTRIB)/os/common/startup/ARMCMx/devices/KE1xF \
              $(CHIBIOS)/os/common/ext/CMSIS/include \
              $(CHIBIOS)/os/common/ext/ARM/CMSIS/Core/Include
 
-STARTUPLD  = $(KINETIS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/ld
+STARTUPLD_KINETIS  = $(KINETIS_CONTRIB)/os/common/startup/ARMCMx/compilers/GCC/ld
+STARTUPLD = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/ld
 
 # Shared variables
 ALLXASMSRC += $(STARTUPASM)

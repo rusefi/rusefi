@@ -5,9 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <stdlib.h>
-#include "global.h"
-#include "unit_test_framework.h"
 
 /**
  * ASSERT_xxx macro could only be used from inside 'void' methods - for cases where non-void methods are asserting, these

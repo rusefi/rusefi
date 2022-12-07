@@ -5,9 +5,6 @@
  *
  * Simulator and unit tests have their own version of this header
  *
- * While this header contains 'EXTERN_ENGINE' and 'DECLARE_ENGINE_PARAMETER_SIGNATURE' magic,
- * this header is not allowed to actually include higher-level engine related headers
- *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
@@ -34,6 +31,7 @@ typedef unsigned int time_t;
 
 #ifdef __cplusplus
 #include "eficonsole.h"
+#include <ch.hpp>
 #endif /* __cplusplus */
 
 
@@ -61,15 +59,6 @@ typedef unsigned int time_t;
 
 #define EFI_ERROR_CODE 0xffffffff
 
-#if EFI_USE_CCM && defined __GNUC__
-#define MAIN_RAM __attribute__((section(".ram0")))
-#elif defined __GNUC__
-#define MAIN_RAM
-#else
-#define MAIN_RAM @ ".ram0"
-#endif
-
-
 /**
  * rusEfi is placing some of data structures into CCM memory simply
  * in order to use that memory - no magic about which RAM is faster etc.
@@ -78,22 +67,28 @@ typedef unsigned int time_t;
  *
  * Please note that DMA does not work with CCM memory
  */
-#if defined(STM32F7XX)
-#define CCM_RAM ".ram3"
-#define NO_CACHE CCM_OPTIONAL
-#else /* defined(STM32F4XX) */
-#define CCM_RAM ".ram4"
-#define NO_CACHE
-#endif /* defined(STM32F4XX) */
-
-#if EFI_USE_CCM
-#if defined __GNUC__
-#define CCM_OPTIONAL __attribute__((section(CCM_RAM)))
-#else // non-gcc
-#define CCM_OPTIONAL @ CCM_RAM
-#endif
-#else /* !EFI_USE_CCM */
+#if defined(STM32F4XX)
+// CCM memory is 64k
+#define CCM_OPTIONAL __attribute__((section(".ram4")))
+#define SDRAM_OPTIONAL __attribute__((section(".ram7")))
+#define NO_CACHE	// F4 has no cache, do nothing
+#elif defined(STM32F7XX)
+// DTCM memory is 128k
+#define CCM_OPTIONAL __attribute__((section(".ram3")))
+//TODO: update LD file!
+#define SDRAM_OPTIONAL __attribute__((section(".ram7")))
+// SRAM2 is 16k and set to disable dcache
+#define NO_CACHE __attribute__((section(".ram2")))
+#elif defined(STM32H7XX)
+// DTCM memory is 128k
+#define CCM_OPTIONAL __attribute__((section(".ram5")))
+//TODO: update LD file!
+#define SDRAM_OPTIONAL __attribute__((section(".ram8")))
+// SRAM3 is 32k and set to disable dcache
+#define NO_CACHE __attribute__((section(".ram3")))
+#else /* this MCU doesn't need these */
 #define CCM_OPTIONAL
-#endif /* EFI_USE_CCM */
+#define NO_CACHE
+#endif
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}

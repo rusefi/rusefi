@@ -7,18 +7,14 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
-#include "efitime.h"
 #include "rusefi_enums.h"
-#include "engine.h"
+#include "expected.h"
+#include "trigger_structure.h"
 
 #if EFI_UNIT_TEST
 #include "logicdata.h"
-int copyCompositeEvents(CompositeEvent *events);
+const std::vector<CompositeEvent>& getCompositeEvents();
 #endif // EFI_UNIT_TEST
-
-int getCompositeRecordCount();
 
 void EnableToothLoggerIfNotEnabled();
 
@@ -29,13 +25,13 @@ void EnableToothLogger();
 void DisableToothLogger();
 
 // A new tooth has arrived! Log to the buffer if enabled.
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
 
-void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerTopDeadCenter(efitick_t timestamp);
 
-void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerCoilState(efitick_t timestamp, bool state);
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerInjectorState(efitick_t timestamp, bool state);
 
 struct ToothLoggerBuffer
 {
@@ -44,4 +40,5 @@ struct ToothLoggerBuffer
 };
 
 // Get a reference to the buffer
-ToothLoggerBuffer GetToothLoggerBuffer();
+// Returns unexpected if no buffer is available
+expected<ToothLoggerBuffer> GetToothLoggerBuffer();

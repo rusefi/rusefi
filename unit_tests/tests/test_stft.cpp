@@ -1,12 +1,7 @@
+#include "pch.h"
 
-#include "engine_test_helper.h"
 #include "closed_loop_fuel_cell.h"
 #include "closed_loop_fuel.h"
-
-#include "engine.h"
-
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::Return;
@@ -14,7 +9,7 @@ using ::testing::StrictMock;
 
 class MockClCell : public ClosedLoopFuelCellBase {
 public:
-	MOCK_METHOD(float, getLambdaError, (DECLARE_ENGINE_PARAMETER_SIGNATURE), (const));
+	MOCK_METHOD(float, getLambdaError, (), (const));
 	MOCK_METHOD(float, getMaxAdjustment, (), (const));
 	MOCK_METHOD(float, getMinAdjustment, (), (const));
 	MOCK_METHOD(float, getIntegratorGain, (), (const));
@@ -24,10 +19,10 @@ TEST(ClosedLoopCell, TestDeadband) {
 	StrictMock<MockClCell> cl;
 
 	// Error is more than deadtime, so nothing else should be called
-	EXPECT_CALL(cl, getLambdaError(_, _, _))
+	EXPECT_CALL(cl, getLambdaError())
 		.WillOnce(Return(0.05f));
 
-	cl.update(0.1f, true, nullptr, nullptr, nullptr);
+	cl.update(0.1f, true);
 
 	// Should be zero adjustment
 	EXPECT_FLOAT_EQ(cl.getAdjustment(), 1.0f);
@@ -36,7 +31,7 @@ TEST(ClosedLoopCell, TestDeadband) {
 TEST(ClosedLoopFuelCell, AdjustRate) {
 	StrictMock<MockClCell> cl;
 
-	EXPECT_CALL(cl, getLambdaError(_, _, _))
+	EXPECT_CALL(cl, getLambdaError())
 		.WillOnce(Return(0.1f));
 	EXPECT_CALL(cl, getMinAdjustment())
 		.WillOnce(Return(-0.2f));
@@ -45,7 +40,7 @@ TEST(ClosedLoopFuelCell, AdjustRate) {
 	EXPECT_CALL(cl, getIntegratorGain())
 		.WillOnce(Return(2.0f));
 
-	cl.update(0.0f, false, nullptr, nullptr, nullptr);
+	cl.update(0.0f, false);
 
 	// Should have integrated 0.2 * dt
 	// dt = 1000.0f / FAST_CALLBACK_PERIOD_MS
@@ -56,7 +51,7 @@ TEST(ClosedLoopFuel, CellSelection) {
 	stft_s cfg;
 
 	// Sensible region config
-	cfg.maxIdleRegionRpm = 1500 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxIdleRegionRpm = 1500;
 	cfg.minPowerLoad = 80;
 	cfg.maxOverrunLoad = 30;
 
@@ -82,17 +77,17 @@ TEST(ClosedLoopFuel, CellSelection) {
 }
 
 TEST(ClosedLoopFuel, afrLimits) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	engineConfiguration->stft.minAfr = 100;  // 10.0 AFR
-	engineConfiguration->stft.maxAfr = 180;  // 18.0 AFR
+	engineConfiguration->stft.minAfr = 10;  // 10.0 AFR
+	engineConfiguration->stft.maxAfr = 18;  // 18.0 AFR
 
 	Sensor::setMockValue(SensorType::Lambda1, 0.1f);
-	EXPECT_FALSE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
-	EXPECT_TRUE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_TRUE(shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 2.0f);
-	EXPECT_FALSE(shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
 }

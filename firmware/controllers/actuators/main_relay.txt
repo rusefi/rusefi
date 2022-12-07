@@ -1,0 +1,6 @@
+struct_no_prefix main_relay_s
+	bit isBenchTest
+	bit hasIgnitionVoltage
+	bit mainRelayState
+	bit delayedShutoffRequested
+end_struct

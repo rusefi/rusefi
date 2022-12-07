@@ -8,5 +8,5 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setSachs();
 

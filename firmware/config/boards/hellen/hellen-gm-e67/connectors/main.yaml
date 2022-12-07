@@ -1,0 +1,508 @@
+pins:
+
+#
+# some AUX apparently?
+#
+  - pin: J4_4
+    # H144_OUT_PWM5
+    id: C9
+    class: outputs
+    ts_name: J4_4 Wastegate Solenoid
+    function: Wastegate Solenoid
+
+  - pin: J4_4
+    # H144_OUT_IO1
+    id: D3
+    class: outputs
+    ts_name: J4_5 Error Light
+    function: Error Light Output
+
+  - pin: J7_1
+    # H_SPI3_MOSI
+    id: C12
+    class: outputs
+    ts_name: J7_1 AUX
+    function: J7_1 AUX
+
+  - pin: J7_2
+    # H_SPI3_MISO
+    id: C11
+    class: outputs
+    ts_name: J7_2 AUX
+    function: J7_2 AUX
+
+  - pin: J7_3
+    # H_SPI3_SCK
+    id: C10
+    class: outputs
+    ts_name: J7_3 AUX
+    function: J7_3 AUX
+
+  - pin: J7_4
+    # H_SPI3_CS
+    id: A15
+    class: outputs
+    ts_name: J7_4 AUX
+    function: J7_4 AUX
+
+  - pin: J7_5
+    # H144_UART2_TX
+    id: D5
+    class: outputs
+    ts_name: J7_5 AUX
+    function: J7_5 AUX
+
+  - pin: J7_6
+    # H144_UART2_RX
+    id: D6
+    class: outputs
+    ts_name: J7_6 AUX
+    function: J7_6 AUX
+
+  - pin: J7_7
+    # H144_UART1_RX
+    id: E0
+    class: outputs
+    ts_name: J7_7 AUX
+    function: J7_7 AUX
+
+  - pin: J7_8
+    # H144_UART1_TX
+    id: E1
+    class: outputs
+    ts_name: J7_8 AUX
+    function: J7_8 AUX
+
+  #
+  # start of BLACK
+  #
+
+  - pin: K1
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    type: ign
+    ts_name: C2-1 - IGN 1
+    function: Coil 1
+
+
+
+  - pin: K16
+    # H144_LS_3
+    id: D11
+    class: outputs
+    ts_name: C2-16 INJ 3
+    function: injector output 3
+    type: inj
+
+  - pin: K17
+    # H144_IGN_8
+    id: E6
+    class: outputs
+    ts_name: C2-17 - IGN 8
+    function: igniter
+    type: ign
+
+  - pin: K18
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    ts_name: C2-18 - IGN 4
+    function: igniter
+    type: ign
+
+  - pin: K32
+    # H144_LS_2
+    id: G8
+    class: outputs
+    ts_name: C2-32 INJ 2
+    function: injector output 2
+    type: inj
+
+  - pin: K33
+    # H144_IGN_7
+    id: B9
+    class: outputs
+    ts_name: C2-33 - IGN 7
+    function: igniter
+    type: ign
+
+  - pin: K34
+    # H144_IGN_5
+    id: E2
+    class: outputs
+    ts_name: C2-34 - IGN 5
+    function: igniter
+    type: ign
+
+  - pin: K48
+    # H144_LS_8
+    id: F14
+    class: outputs
+    ts_name: C2-48 INJ 8
+    function: injector output 8
+    type: inj
+
+  - pin: K49
+    # H144_LS_5
+    id: D9
+    class: outputs
+    ts_name: C2-49 INJ 5
+    function: injector output 5
+    type: inj
+
+  - pin: K52
+    # H144_LS_6
+    id: F12
+    class: outputs
+    ts_name: C2-52 INJ 6
+    function: injector output 6
+    type: inj
+
+  - pin: K53
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    ts_name: C2-53 - IGN 2
+    function: igniter
+    type: ign
+
+  - pin: K54
+    # H144_IGN_6
+    id: B8
+    class: outputs
+    ts_name: C2-54 - IGN 6
+    function: igniter
+    type: ign
+
+  - pin: K55
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    ts_name: C2-55 - IGN 3
+    function: igniter
+    type: ign
+
+  - pin: K59
+    # H144_IN_SENS4
+    id: F6
+    class: event_inputs
+    ts_name: C2-59 - Cam
+    function: Cam Sensor Input
+    type: ls
+    color: purple
+
+  - pin: K60
+    # H144_IN_O2S2
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: C2-60 - Oil Pressure
+    function: Oil Pressure
+    type: av
+    color: purple
+
+  - pin: K63
+    # H144_IN_SENS2
+    id: F4
+    class: event_inputs
+    ts_name: C2-63 - Crank
+    function: Crank Input
+    type: ls
+    color: purple
+
+  - pin: K64
+    # H144_IN_TPS
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: C2-64 - TPS1
+    function: TPS1
+    type: av
+    color: purple
+
+  - pin: K65
+    # H144_IN_MAP1
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: C2-65 - Trans Fluids
+    function: Trans Fluids Temperature
+    type: av
+    color: purple
+
+  - pin: K66
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: C2-66 - TPS2
+    function: TPS2
+    type: av
+    color: purple
+
+  - pin: K70
+    # H144_LS_4
+    id: D10
+    class: outputs
+    ts_name: C2-70 INJ 4
+    function: injector output 4
+    type: inj
+
+  - pin: K71
+    # H144_LS_7
+    id: F13
+    class: outputs
+    ts_name: C2-71 INJ 7
+    function: injector output 7
+    type: inj
+
+  - pin: K72
+    # H144_LS_1
+    id: G7
+    class: outputs
+    ts_name: C2-72 INJ 1
+    function: injectpr output 1
+    type: inj
+
+  - pin: K73
+    function: GND
+    type: GND
+
+#
+# end of BLACK
+#
+
+#
+# start of GREY
+#
+  - pin: G7
+    # H144_OUT_PWM1
+    id: D13
+    class: outputs
+    function: Alternator Enable
+    type: hs
+    ts_name: C3-7 - Alternator Enable
+
+  - pin: G16
+    # H144_OUT_IO9
+    id: G13
+    class: outputs
+    function: Coolant Pump
+    type: hs
+    ts_name: C3-16 - Coolant Pump
+
+  - pin: G33
+    function: CAN bus low
+    type: can
+
+  - pin: G49
+    # H144_OUT_IO12
+    id: A8
+    class: outputs
+    function: Radiator Fan Relay
+    type: hs
+    ts_name: C3-49 - Fan Relay
+
+  - pin: G53
+    function: CAN bus high
+    type: can
+
+  - pin: G55
+    # H144_IN_CLT
+    id: EFI_ADC_12
+    type: av
+    class: analog_inputs
+    ts_name: C3-55 - CLT
+    function: CLT
+    color: purple
+
+  - pin: G56
+    # H144_IN_IAT
+    id: EFI_ADC_13
+    type: av
+    class: analog_inputs
+    ts_name: C3-56 - IAT
+    function: IAT
+    color: purple
+
+  - pin: G57
+    # H144_IN_AUX4
+    id: EFI_ADC_7
+    type: av
+    class: analog_inputs
+    ts_name: C3-57 - A/C Pressure
+    function: A/C Pressure
+    color: purple
+
+  - pin: G58
+    # H144_IN_MAP3
+    id: EFI_ADC_2
+    type: av
+    class: analog_inputs
+    ts_name: C3-58 - Baro
+    function: Baro Pressure
+    color: purple
+
+  - pin: G59
+    # H144_IN_MAP2
+    id: EFI_ADC_11
+    type: av
+    class: analog_inputs
+    ts_name: C3-59 - MAP
+    function: MAP
+    color: purple
+
+  - pin: G66
+    # H144_IN_VSS
+    id: F11
+    class: switch_inputs
+    function: Vehicle Speed Sensor Input Pos
+    type: hall
+    ts_name: C3-66 - VSS Input
+    color: gray
+
+  - pin: G67
+    function: Vehicle Speed Sensor Input Neg
+    color: gray
+
+#
+# end of GREY
+#
+
+
+
+#
+# start of BLUE
+#
+  - pin: U7
+#H144_IN_RES2
+    id: F10
+    class: switch_inputs
+    ts_name: C1-7 Stop/Brake Pedal
+    function: Stop/Brake Pedal switch input
+    type: din
+
+  - pin: U12
+    # H144_OUT_IO11
+    id: G2
+    class: outputs
+    function: MIL Check Engine
+    type: hs
+    ts_name: C1-12 Check Engine
+
+  - pin: U13
+    # H144_OUT_IO5
+    id: D2
+    class: outputs
+    function: Fuel Pump Relay Output
+    type: hs
+    ts_name: C1-13 - Fuel Pump
+
+  - pin: U14
+    function: stm32 BOOT
+
+  - pin: U19
+# H144_IN_VBATT
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: C1-19 Battery Sense
+    type: 12v
+
+  - pin: U25
+    # H144_OUT_PWM7
+    id: D15
+    class: outputs
+    function: Tachometer Output
+    type: hs
+    ts_name: C1-25 Tach
+
+  - pin: U26
+    # H144_OUT_IO6
+    id: G11
+    class: outputs
+    ts_name: C1-26 - Starter Relay
+    function: Starter Relay
+    type: ls
+    color: purple
+
+  - pin: U39
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    ts_name: C1-39 - VSS Output
+    function: VSS Output
+    type: hs
+    color: purple
+
+  - pin: U40
+    # H144_OUT_IO3
+    id: G14
+    class: outputs
+    ts_name: C1-40 - MAIN
+    function: Main relay control
+    type: ls
+    color: purple
+
+  - pin: U44
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: Primary Fuel Level
+    ts_name: C1-44 Primary Fuel Level
+
+  - pin: U45
+    # H144_IN_CAM_ANALOG
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: Secondary Fuel Level
+    ts_name: C1-45 Secondary Fuel Level
+
+  - pin: U46
+    # H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Vac Sense
+    ts_name: C1-46 Vac Sense
+
+  - pin: U47
+    # H144_IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: C1-47 - PPS1
+    function: PPS1 analog input
+    type: av
+
+  - pin: U49
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: C1-49 - PPS2
+    function: PPS2 analog input
+    type: av
+
+  - pin: U56
+    # H144_OUT_IO8
+    id: G4
+    class: outputs
+    ts_name: C1-56 - Starter Enable
+    function: Starter Enable
+    type: ls
+    color: purple
+#
+# end of BLUE
+#
+
+info:
+  id: GM-E67
+  title: Hellen GM E67
+  name: Hellen GM E67
+  board_url: https://rusefi.com/s/gm-e67
+  image:
+    file: main.jpg
+  pins:
+    - pin: U12
+      x: 1119
+      y: 424
+
+    - pin: U19
+      x: 1095
+      y: 234
+

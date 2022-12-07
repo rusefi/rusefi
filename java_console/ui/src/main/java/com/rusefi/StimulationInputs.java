@@ -9,6 +9,7 @@ import java.awt.*;
  * 8/13/14
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class StimulationInputs {
     static final int DEFAULT_RPM_MIN = 800;
     static final int DEFAULT_RPM_MAX = 7000;
@@ -19,8 +20,6 @@ public class StimulationInputs {
 
     private final ValueRangeControl rpmRange = new ValueRangeControl("RPM", DEFAULT_RPM_MIN, 413.333374, DEFAULT_RPM_MAX);
     private final ValueRangeControl cltRange = new ValueRangeControl("CLR r", 100, 100, 100);
-    private final ValueRangeControl iatRange = new ValueRangeControl("IAT r", 100, 100, 9900);
-    private final ValueRangeControl tpsRange = new ValueRangeControl("TPS", 1, 0.1, 4.5);
 
     public StimulationInputs(EcuStimulator ecuStimulator) {
 
@@ -32,7 +31,9 @@ public class StimulationInputs {
         content.add(rpmRange.getContent());
         content.add(elRange.getContent());
         content.add(cltRange.getContent());
+        ValueRangeControl iatRange = new ValueRangeControl("IAT r", 100, 100, 9900);
         content.add(iatRange.getContent());
+        ValueRangeControl tpsRange = new ValueRangeControl("TPS", 1, 0.1, 4.5);
         content.add(tpsRange.getContent());
 
         content.add(new JLabel("EL resistance"));
@@ -83,3 +84,4 @@ public class StimulationInputs {
     }
 }
 
+*/

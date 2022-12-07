@@ -4,7 +4,7 @@ import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.ByteReader;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.shared.FileUtil;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -33,10 +33,9 @@ public class TcpIoStream extends AbstractIoStream {
         if (socket == null)
             throw new NullPointerException("socket");
         this.socket = socket;
-        InputStream input = new BufferedInputStream(socket.getInputStream());
-        this.output = new BufferedOutputStream(socket.getOutputStream());
-        this.input = input;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
+        input = new BufferedInputStream(socket.getInputStream());
+        output = new BufferedOutputStream(socket.getOutputStream());
+        dataBuffer = createDataBuffer(loggingPrefix);
     }
 
     @NotNull
@@ -58,11 +57,6 @@ public class TcpIoStream extends AbstractIoStream {
             }
         }
         FileUtil.close(socket);
-    }
-
-    @Override
-    public String getLoggingPrefix() {
-        return loggingPrefix;
     }
 
     @Override

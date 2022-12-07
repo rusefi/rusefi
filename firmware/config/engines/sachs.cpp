@@ -8,26 +8,21 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "sachs.h"
-#include "allsensors.h"
-#include "engine_math.h"
 
-EXTERN_CONFIG;
-
-void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setSachs() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
 
-	setOperationMode(engineConfiguration, TWO_STROKE);
+	setTwoStrokeOperationMode();
 	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
-	 // set injection_offset 0
-	engineConfiguration->extraInjectionOffset = 0;
-
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 
 	/**
 	 * 50/2 trigger
@@ -35,8 +30,6 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 50;
 	engineConfiguration->trigger.customSkippedToothCount = 2;
-
-	engineConfiguration->useSerialPort = false;
 
 	// Frankenstein analog input #1: PA1 adc1 MAP
 	// Frankenstein analog input #2: PA3 adc3 TPS
@@ -75,20 +68,15 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Frankenstein: low side - out #11: PB8
 	// Frankenstein: low side - out #12: PB9
 
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::A5;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
-	engineConfiguration->injectionPins[0] = GPIOC_15;
+	engineConfiguration->injectionPins[0] = Gpio::C15;
 
-	engineConfiguration->fuelPumpPin = GPIOE_6;
+	engineConfiguration->fuelPumpPin = Gpio::E6;
 
 	// todo: extract a method? figure out something smarter
-	setTimingRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
-	setLinearCurve(config->veRpmBins, 15000, 7000, 1);
-	setLinearCurve(config->lambdaRpmBins, 15000, 7000, 1);
-
-	engineConfiguration->hasFrequencyReportingMapSensor = true;
-	engineConfiguration->frequencyReportingMapInputPin = GPIOC_6;
-	engineConfiguration->mapFrequency100Kpa = 159;
-	engineConfiguration->mapFrequency0Kpa = 80;
+	setTimingRpmBin(800, 15000);
+	setLinearCurve(config->veRpmBins, 7000, 15000, 1);
+	setLinearCurve(config->lambdaRpmBins, 500, 7000, 1);
 }

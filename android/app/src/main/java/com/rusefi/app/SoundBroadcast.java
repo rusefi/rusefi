@@ -32,7 +32,7 @@ public class SoundBroadcast {
         Thread streamThread = new Thread(new Runnable() {
             @Override
             public void run() {
-
+/*
                 AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, channelConfig, audioFormat, minBufSize * 10);
                 if (NoiseSuppressor.isAvailable()) {
                     NoiseSuppressor.create(recorder.getAudioSessionId()).setEnabled(true);
@@ -48,6 +48,7 @@ public class SoundBroadcast {
                     int bytes = recorder.read(buffer, 0, buffer.length);
 
                 }
+*/
             }
         });
         streamThread.start();

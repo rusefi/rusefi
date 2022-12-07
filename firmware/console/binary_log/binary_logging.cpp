@@ -3,70 +3,55 @@
  * See also mlq_file_format.txt
  */
 
+#include "pch.h"
+
 #include "binary_logging.h"
-#include "tunerstudio_outputs.h"
 #include "log_field.h"
-#include "efilib.h"
-#include "efitime.h"
-#include "crc.h"
 #include "buffered_writer.h"
+#include "tunerstudio.h"
 
 #define TIME_PRECISION 1000
 
 // floating number of seconds with millisecond precision
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
-// todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
-// todo: make this logic smarter
-static const LogField fields[] = {
-	{tsOutputChannels.rpm, GAUGE_NAME_RPM, "rpm", 0},
-	{packedTime, GAUGE_NAME_TIME, "sec", 0},
-	{tsOutputChannels.totalTriggerErrorCounter, GAUGE_NAME_TRG_ERR, "err", 0},
-	{tsOutputChannels.vehicleSpeedKph, GAUGE_NAME_VVS, "kph", 0},
-	{tsOutputChannels.internalMcuTemperature, GAUGE_NAME_CPU_TEMP, "C", 0},
-	{tsOutputChannels.coolantTemperature, GAUGE_NAME_CLT, "C", 1},
-	{tsOutputChannels.intakeAirTemperature, GAUGE_NAME_IAT, "C", 1},
-	{tsOutputChannels.throttlePosition, GAUGE_NAME_TPS, "%", 2},
-	{tsOutputChannels.throttle2Position, GAUGE_NAME_TPS2, "%", 2},
-	{tsOutputChannels.pedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
-	{tsOutputChannels.manifoldAirPressure, GAUGE_NAME_MAP, "kPa", 1},
-	{tsOutputChannels.airFuelRatio, GAUGE_NAME_AFR, "afr", 2},
-	{tsOutputChannels.airFuelRatio2, GAUGE_NAME_AFR2, "afr", 2},
-	{tsOutputChannels.lambda, GAUGE_NAME_LAMBDA, "", 3},
-	{tsOutputChannels.lambda2, GAUGE_NAME_LAMBDA2, "", 3},
-	{tsOutputChannels.vBatt, GAUGE_NAME_VBAT, "v", 2},
-	{tsOutputChannels.oilPressure, GAUGE_NAME_OIL_PRESSURE, GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS, 0},
-	{tsOutputChannels.lowFuelPressure, GAUGE_NAME_FUEL_PRESSURE_LOW, GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS, 0},
-	{tsOutputChannels.highFuelPressure, GAUGE_NAME_FUEL_PRESSURE_HIGH, GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS, 0},
-	{tsOutputChannels.vvtPosition, GAUGE_NAME_VVT, "deg", 1},
-	{tsOutputChannels.chargeAirMass, GAUGE_NAME_AIR_MASS, "g", 3},
-	{tsOutputChannels.currentTargetAfr, GAUGE_NAME_TARGET_AFR, "afr", 2},
-	{tsOutputChannels.targetLambda, GAUGE_NAME_TARGET_LAMBDA, "", 3},
-	{tsOutputChannels.fuelBase, GAUGE_NAME_FUEL_BASE, "ms", 3},
-	{tsOutputChannels.fuelRunning, GAUGE_NAME_FUEL_RUNNING, "ms", 3},
-	{tsOutputChannels.actualLastInjection, GAUGE_NAME_FUEL_LAST_INJECTION, "ms", 3},
-	{tsOutputChannels.injectorDutyCycle, GAUGE_NAME_FUEL_INJ_DUTY, "%", 0},
-	{tsOutputChannels.veValue, GAUGE_NAME_FUEL_VE, "%", 1},
-	{tsOutputChannels.tCharge, "tCharge", "C", 1},
-	{tsOutputChannels.injectorLagMs, GAUGE_NAME_INJECTOR_LAG, "ms", 3},
-	{tsOutputChannels.shortTermFuelTrim, GAUGE_NAME_FUEL_PID_CORR, "%", 3},
-	{tsOutputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "ms", 3},
-	{tsOutputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
-	{tsOutputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
-	{tsOutputChannels.sparkDwell, GAUGE_COIL_DWELL_TIME, "ms", 1},
-	{tsOutputChannels.coilDutyCycle, GAUGE_NAME_DWELL_DUTY, "%", 0},
-	{tsOutputChannels.idlePosition, GAUGE_NAME_IAC, "%", 1},
-	{tsOutputChannels.etbTarget, "ETB Target", "%", 2},
-	{tsOutputChannels.etb1DutyCycle, "ETB Duty", "%", 1},
-	{tsOutputChannels.etb1Error, "ETB Error", "%", 3},
-	{tsOutputChannels.fuelTankLevel, "fuel level", "%", 0},
-	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
-	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
-	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
-	{tsOutputChannels.flexPercent, GAUGE_NAME_FLEX, "%", 1},
-};
+// The list of logged fields lives in a separate file so it can eventually be tool-generated
+#include "log_fields_generated.h"
 
-void writeHeader(Writer& outBuffer) {
+static constexpr uint16_t computeFieldsRecordLength() {
+	uint16_t recLength = 0;
+	for (size_t i = 0; i < efi::size(fields); i++) {
+		recLength += fields[i].getSize();
+	}
+
+	return recLength;
+}
+
+#if EFI_FILE_LOGGING
+static uint64_t binaryLogCount = 0;
+
+extern bool main_loop_started;
+
+void writeSdLogLine(Writer& bufferedWriter) {
+	if (!main_loop_started)
+		return;
+
+	if (binaryLogCount == 0) {
+		writeFileHeader(bufferedWriter);
+	} else {
+		updateTunerStudioState();
+		writeBlock(bufferedWriter);
+	}
+
+	binaryLogCount++;
+}
+
+#endif /* EFI_FILE_LOGGING */
+
+
+static constexpr uint16_t recordLength = computeFieldsRecordLength();
+
+void writeFileHeader(Writer& outBuffer) {
 	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
@@ -94,17 +79,13 @@ void writeHeader(Writer& outBuffer) {
 	buffer[17] = headerSize & 0xFF;
 
 	// Record length - length of a single data record: sum size of all fields
-	uint16_t recLength = 0;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		recLength += fields[i].getSize();
-	}
-
-	buffer[18] = recLength >> 8;
-	buffer[19] = recLength & 0xFF;
+	buffer[18] = recordLength >> 8;
+	buffer[19] = recordLength & 0xFF;
 
 	// Number of logger fields
-	buffer[20] = 0;
-	buffer[21] = efi::size(fields);
+	int fieldsCount = efi::size(fields);
+	buffer[20] = fieldsCount >> 8;
+	buffer[21] = fieldsCount;
 
 	outBuffer.write(buffer, MLQ_HEADER_SIZE);
 
@@ -116,7 +97,11 @@ void writeHeader(Writer& outBuffer) {
 
 static uint8_t blockRollCounter = 0;
 
-size_t writeBlock(char* buffer) {
+//static efitimeus_t prevSdCardLineTime = 0;
+
+void writeBlock(Writer& outBuffer) {
+	static char buffer[16];
+
 	// Offset 0 = Block type, standard data block in this case
 	buffer[0] = 0;
 
@@ -124,31 +109,30 @@ size_t writeBlock(char* buffer) {
 	buffer[1] = blockRollCounter++;
 
 	// Offset 2, size 2 = Timestamp at 10us resolution
-	uint16_t timestamp = getTimeNowUs() / 10;
+	efitimeus_t nowUs = getTimeNowUs();
+	uint16_t timestamp = nowUs / 10;
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
 
-	packedTime = currentTimeMillis() * 1.0 / TIME_PRECISION;
+	outBuffer.write(buffer, 4);
 
-	// Offset 4 = field data
-	const char* dataBlockStart = buffer + 4;
-	char* dataBlock = buffer + 4;
-	for (size_t i = 0; i < efi::size(fields); i++) {
-		size_t entrySize = fields[i].writeData(dataBlock);
+	// todo: add a log field for SD card period
+//	prevSdCardLineTime = nowUs;
 
-		// Increment pointer to next entry
-		dataBlock += entrySize;
-	}
+	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
-	size_t dataBlockSize = dataBlock - dataBlockStart;
-
-	// "CRC" at the end is just the sum of all bytes
 	uint8_t sum = 0;
-	for (size_t i = 0; i < dataBlockSize; i++) {
-		sum += dataBlockStart[i];
-	}
-	*dataBlock = sum;
+	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
+		size_t entrySize = fields[fieldIndex].writeData(buffer);
 
-	// Total size has 4 byte header + 1 byte checksum
-	return dataBlockSize + 5;
+		for (size_t byteIndex = 0; byteIndex < entrySize; byteIndex++) {
+			// "CRC" at the end is just the sum of all bytes
+			sum += buffer[byteIndex];
+		}
+		outBuffer.write(buffer, entrySize);
+	}
+
+	buffer[0] = sum;
+	// 1 byte checksum footer
+	outBuffer.write(buffer, 1);
 }

@@ -22,9 +22,8 @@
 #include "chprintf.h"
 #include "cli_registry.h"
 #include "eficonsole.h"
+#include <ch.hpp>
 #endif /* __cplusplus */
-
-#define efiSetPadMode(msg, brainPin, mode) {}
 
 #define hasOsPanicError() (FALSE)
 
@@ -45,8 +44,6 @@
 
 // project-wide default thread stack size
 #define UTILITY_THREAD_STACK_SIZE 1384
-
-extern BaseChannel serialAdapterInstance;
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
 

@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+configurations {
+    // not sure what is this and why but it's huge
+    all*.exclude group: 'com.ibm.icu', module: 'icu4j'
+}
+
+dependencies {
+    implementation project(':shared_ui')
+    implementation project(':autotest')
+    implementation project(':luaformatter')
+    implementation project(':config_definition')
+    implementation global_libs.antlr
+    implementation 'com.miglayout:miglayout-swing:4.1'
+    implementation files('../lib/dfu/dfu_java.jar')
+    implementation files('../lib/SteelSeries-3.9.30.jar')
+    implementation files('../lib/trident-6.2.jar')
+    implementation files('../lib/dfu/IntelHexParser.jar')
+
+    testImplementation global_libs.mockito
+    testImplementation testFixtures(project(':ecu_io'))
+}
+
+shadowJar {
+    archivesBaseName = 'rusefi_console'
+    archiveClassifier = ''
+
+    manifest {
+        attributes(
+                'Main-Class': 'com.rusefi.Launcher'
+        )
+    }
+}

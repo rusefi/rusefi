@@ -1,8 +1,12 @@
 package com.rusefi.config;
 
+import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -22,7 +26,11 @@ public class Field {
     private final FieldType type;
     private final int bitOffset;
     private final String[] options;
-    // todo: add multiplier support!
+    private double scale = 1;
+    /**
+     * LiveData fragments go one after another in the overall "outputs" region
+     */
+    private int baseOffset;
 
     public Field(String name, int offset, FieldType type) {
         this(name, offset, type, NO_BIT_OFFSET);
@@ -49,10 +57,17 @@ public class Field {
         this.options = options;
     }
 
+    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
+        Field field = findFieldOrNull(values, instancePrefix, fieldName);
+        if (field == null)
+            throw new IllegalStateException("No field: " + fieldName);
+        return field;
+    }
+
     /**
      * Finds field by name, ignoring case
      */
-    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
+    public static Field findFieldOrNull(Field[] values, String instancePrefix, String fieldName) {
         Objects.requireNonNull(fieldName);
         for (Field f : values) {
             if (fieldName.equalsIgnoreCase(f.getName()))
@@ -66,7 +81,7 @@ public class Field {
                     return f;
             }
         }
-        throw new IllegalStateException("No field: " + fieldName);
+        return null;
     }
 
     public static int getStructureSize(Field[] values) {
@@ -111,8 +126,15 @@ public class Field {
         return type.getLoadCommand() + " " + getOffset();
     }
 
+    /**
+     * todo: replace all (?) usages with #getTotalOffset?
+     */
     public int getOffset() {
         return offset;
+    }
+
+    public int getTotalOffset() {
+        return baseOffset + offset;
     }
 
     public String[] getOptions() {
@@ -147,6 +169,41 @@ public class Field {
         return options[ordinal];
     }
 
+    // todo: move universal setValue one day
+    public void setValueU32(byte[] content, int value) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
+        try {
+            dout.writeInt(value);
+            byte[] src = baos.toByteArray();
+            System.arraycopy(src, 0, content, getOffset(), 4);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setValue(byte[] content, boolean value) {
+        ByteBuffer wrapped = FileUtil.littleEndianWrap(content, 0, content.length);
+        if (bitOffset != NO_BIT_OFFSET) {
+            int packed = wrapped.getInt();
+            int thisBit = (value ? 1 : 0) << bitOffset;
+            int mask = 1 << bitOffset;
+            int newValue = (packed & ~mask) | thisBit;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
+            // wow worst way to modify an integer in byte array? :)
+            try {
+                dout.writeInt(newValue);
+//                dout.flush();
+                byte[] src = baos.toByteArray();
+                System.arraycopy(src, 0, content, getOffset(), 4);
+                baos.close();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
     /**
      * each usage is a potential bug?! we are supposed to have explicit multiplier for each field
      */
@@ -159,7 +216,7 @@ public class Field {
     // todo: rename to getNumberValue?
     @NotNull
     public Double getValue(ConfigurationImage ci, double multiplier) {
-        Objects.requireNonNull(ci);
+        Objects.requireNonNull(ci, "ConfigurationImage");
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
         if (bitOffset != NO_BIT_OFFSET) {
@@ -189,13 +246,11 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type, int bitOffset) {
-        Field field = new Field(name, offset, type, bitOffset);
-        return field;
+        return new Field(name, offset, type, bitOffset);
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
-        Field field = new Field(name, offset, type, options);
-        return field;
+        return new Field(name, offset, type, options);
     }
 
     public static Field create(String name, int offset, int stringSize, FieldType type) {
@@ -203,8 +258,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type) {
-        Field field = new Field(name, offset, type);
-        return field;
+        return new Field(name, offset, type);
     }
 
     public String getStringValue(ConfigurationImage image) {
@@ -215,5 +269,23 @@ public class Field {
         byte[] bytes = new byte[stringSize];
         bb.get(bytes);
         return new String(bytes).trim();
+    }
+
+    public boolean getBooleanValue(ConfigurationImage ci) {
+        return getValue(ci) != 0.0;
+    }
+
+    public Field setScale(double scale) {
+        this.scale = scale;
+        return this;
+    }
+
+    public Field setBaseOffset(int baseOffset) {
+        this.baseOffset = baseOffset;
+        return this;
+    }
+
+    public double getScale() {
+        return scale;
     }
 }

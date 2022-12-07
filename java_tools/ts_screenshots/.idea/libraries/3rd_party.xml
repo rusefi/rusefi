@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="3rd_party">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/zip4j_1.3.1.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

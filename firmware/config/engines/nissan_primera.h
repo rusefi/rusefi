@@ -9,5 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setNissanPrimeraEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setNissanPrimeraEngineConfiguration_360(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setNissanPrimeraEngineConfiguration();

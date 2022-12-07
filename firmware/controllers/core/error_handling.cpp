@@ -5,82 +5,86 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
-#include "os_access.h"
-#include "perf_trace.h"
+#include "pch.h"
 
-static char warningBuffer[ERROR_BUFFER_SIZE];
+#include "backup_ram.h"
+
+static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 
-#if EFI_SIMULATOR || EFI_PROD_CODE
-//todo: move into simulator global
-#include "memstreams.h"
-class ErrorState {
-public:
-	/**
-	 * Class constructors are a great way to have simple initialization sequence
-	 */
-	ErrorState();
-	MemoryStream warningStream;
-	MemoryStream firmwareErrorMessageStream;
-};
-
-ErrorState::ErrorState() {
-	/**
-	 * these methods only change RAM state of data structures without any HAL access thus safe in contructor
-	 */
-	msObjectInit(&warningStream, (uint8_t *) warningBuffer, ERROR_BUFFER_SIZE, 0);
-	msObjectInit(&firmwareErrorMessageStream, criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), 0);
-}
-
-static ErrorState errorState;
-
-#endif /* EFI_SIMULATOR || EFI_PROD_CODE */
-
 #if EFI_HD44780_LCD
-#include "lcd_HD44780.h"
+#include "HD44780.h"
 #endif /* EFI_HD44780_LCD */
 
-static LoggingWithStorage logger("error handling");
-
-EXTERN_ENGINE;
-
-#define WARNING_PREFIX "WARNING: "
-
 extern int warningEnabled;
-extern bool main_loop_started;
 
 bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-#if EFI_TUNER_STUDIO && !defined(EFI_NO_CONFIG_WORKING_COPY)
-extern persistent_config_s configWorkingCopy;
-#endif
-
-char *getFirmwareError(void) {
-	return (char*) criticalErrorMessageBuffer;
+const char* getCriticalErrorMessage(void) {
+	return criticalErrorMessageBuffer;
 }
 
 #if EFI_PROD_CODE
+void checkLastBootError() {
+	auto sramState = getBackupSram();
+	
+	switch (sramState->Cookie) {
+	case ErrorCookie::FirmwareError:
+		efiPrintf("Last boot had firmware error: %s", sramState->ErrorString);
+		break;
+	case ErrorCookie::HardFault: {
+		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->FaultType, sramState->FaultAddress, sramState->Csfr);
+
+		// Print out the context as a sequence of uintptr
+		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->FaultCtx);
+		for (size_t i = 0; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
+			efiPrintf("Fault ctx %d: %x", i, data[i]);
+		}
+
+		break;
+	}
+	default:
+		// No cookie stored or invalid cookie (ie, backup RAM contains random garbage)
+		break;
+	}
+
+	// Reset cookie so we don't print it again.
+	sramState->Cookie = ErrorCookie::None;
+
+	if (sramState->BootCountCookie != 0xdeadbeef) {
+		sramState->BootCountCookie = 0xdeadbeef;
+		sramState->BootCount = 0;
+	}
+
+	efiPrintf("Power cycle count: %d", sramState->BootCount);
+	sramState->BootCount++;
+}
+
+void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
+	auto sramState = getBackupSram();
+	sramState->Cookie = ErrorCookie::HardFault;
+	sramState->FaultType = type;
+	sramState->FaultAddress = faultAddress;
+	sramState->Csfr = csfr;
+	memcpy(&sramState->FaultCtx, ctx, sizeof(port_extctx));
+}
 
 extern ioportid_t criticalErrorLedPort;
 extern ioportmask_t criticalErrorLedPin;
 extern uint8_t criticalErrorLedState;
-
-/**
- * low-level function is used here to reduce stack usage
- */
-#define ON_CRITICAL_ERROR() \
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState); \
-		turnAllPinsOff(); \
-		enginePins.communicationLedPin.setValue(1);
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+#if EFI_PROD_CODE
+	// Attempt to break in to the debugger, if attached
+	__asm volatile("BKPT #0\n");
+#endif
+
 	if (hasOsPanicError())
 		return;
 	dbg_panic_file = file;
@@ -89,56 +93,36 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	ch.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
-#if EFI_PROD_CODE
-	ON_CRITICAL_ERROR();
-#else
+#if !EFI_PROD_CODE
 	printf("chDbgPanic3 %s %s%d", msg, file, line);
 	exit(-1);
-#endif
+#else // EFI_PROD_CODE
 
 #if EFI_HD44780_LCD
 	lcdShowPanicMessage((char *) msg);
 #endif /* EFI_HD44780_LCD */
 
-	if (!main_loop_started) {
-		print("%s %s %s:%d\r\n", CRITICAL_PREFIX, msg, file, line);
-//		chThdSleepSeconds(1);
-		chSysHalt("Main loop did not start");
-	}
-}
+	firmwareError(OBD_PCM_Processor_Fault, "assert fail %s %s:%d", msg, file, line);
 
-// todo: look into chsnprintf
-// todo: move to some util file & reuse for 'firmwareError' method
-static void printToStream(MemoryStream *stream, const char *fmt, va_list ap) {
-	stream->eos = 0; // reset
-	chvprintf((BaseSequentialStream *) stream, fmt, ap);
+	// If on the main thread, longjmp back to the init process so we can keep USB alive
+	if (chThdGetSelfX()->threadId == 0) {
+		// Force unlock, since we may be throwing-under-lock
+		chSysUnconditionalUnlock();
 
-	// Terminate, but don't write past the end of the buffer
-	int terminatorLocation = minI(stream->eos, stream->size - 1);
-	stream->buffer[terminatorLocation] = '\0';
-}
+		// there was a port_disable in chSysHalt, reenable interrupts so USB works
+		port_enable();
 
-static void printWarning(const char *fmt, va_list ap) {
-	logger.reset(); // todo: is 'reset' really needed here?
-	appendMsgPrefix(&logger);
+		__NO_RETURN void onAssertionFailure();
+		onAssertionFailure();
+	} else {
+		// Not the main thread.
+		// All hope is now lost.
 
-	logger.append(WARNING_PREFIX);
-
-	printToStream(&errorState.warningStream, fmt, ap);
-
-	if (CONFIG(showHumanReadableWarning)) {
-#if EFI_TUNER_STUDIO
- #if defined(EFI_NO_CONFIG_WORKING_COPY)
-  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
- #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
- #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-#endif /* EFI_TUNER_STUDIO */
+		// Reboot!
+		NVIC_SystemReset();
 	}
 
-	logger.append(warningBuffer);
-	logger.append(DELIMETER);
-	scheduleLogging(&logger);
+#endif // EFI_PROD_CODE
 }
 
 #else
@@ -160,18 +144,25 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
-	engine->engineState.warnings.addWarningCode(code);
+	// we just had this same warning, let's not spam
+	if (engine->engineState.warnings.isWarningNow(code) || !warningEnabled) {
+		return true;
+	}
 
-	// todo: move this logic into WarningCodeState?
-	efitimesec_t now = getTimeNowSeconds();
-	if (engine->engineState.warnings.isWarningNow(now, false) || !warningEnabled)
-		return true; // we just had another warning, let's not spam
-	engine->engineState.warnings.timeOfPreviousWarning = now;
+	engine->engineState.warnings.addWarningCode(code);
 
 	va_list ap;
 	va_start(ap, fmt);
-	printWarning(fmt, ap);
+	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
+
+	if (engineConfiguration->showHumanReadableWarning) {
+#if EFI_TUNER_STUDIO
+  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
+#endif /* EFI_TUNER_STUDIO */
+	}
+
+	efiPrintf("WARNING: %s", warningBuffer);
 #else
 	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
 	unitTestWarningCodeState.addWarningCode(code);
@@ -186,7 +177,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	return false;
 }
 
-char *getWarningMessage(void) {
+const char* getWarningMessage(void) {
 	return warningBuffer;
 }
 
@@ -244,42 +235,46 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #if EFI_PROD_CODE
 	if (hasFirmwareErrorFlag)
 		return;
-	engine->limpManager.fatalError();
+	getLimpManager()->fatalError();
 	engine->engineState.warnings.addWarningCode(code);
 #ifdef EFI_PRINT_ERRORS_AS_WARNINGS
 	va_list ap;
 	va_start(ap, fmt);
-	printWarning(fmt, ap);
+	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 #endif
-	ON_CRITICAL_ERROR()
-	;
+	palWritePad(criticalErrorLedPort, criticalErrorLedPin, criticalErrorLedState);
+	turnAllPinsOff();
+	enginePins.communicationLedPin.setValue(1);
+
 	hasFirmwareErrorFlag = true;
 	if (indexOf(fmt, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
-		 * because chvprintf might be causing an error
+		 * chvsnprintf could cause an overflow if we're already low
 		 */
 		strncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer) - 1);
 		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
-		// todo: look into chsnprintf once on Chibios 3
-		errorState.firmwareErrorMessageStream.eos = 0; // reset
 		va_list ap;
 		va_start(ap, fmt);
-		chvprintf((BaseSequentialStream *) &errorState.firmwareErrorMessageStream, fmt, ap);
+		chvsnprintf(criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), fmt, ap);
 		va_end(ap);
-		// todo: reuse warning buffer helper method
-		errorState.firmwareErrorMessageStream.buffer[errorState.firmwareErrorMessageStream.eos] = 0; // need to terminate explicitly
 	}
-	int size = strlen((char*)criticalErrorMessageBuffer);
+
+	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
 	static char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), " %d@%s", getRusEfiVersion(), FIRMWARE_ID);
 
-	if (size + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
-		strcpy((char*)(criticalErrorMessageBuffer) + size, versionBuffer);
+	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
+		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
 
+	auto sramState = getBackupSram();
+	if (sramState != nullptr) {
+		strncpy(sramState->ErrorString, criticalErrorMessageBuffer, efi::size(sramState->ErrorString));
+		sramState->Cookie = ErrorCookie::FirmwareError;
+	}
 #else
 
 	char errorBuffer[200];
@@ -296,4 +291,3 @@ void firmwareError(obd_code_e code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR */
 #endif
 }
-

@@ -11,8 +11,8 @@
 #pragma once
 
 #include "state_sequence.h"
-#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
+#include <rusefi/isnan.h>
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
 
@@ -30,10 +30,10 @@
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle2(angle, msg, code, engineCycle)			   	    	    \
+#define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
-		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \
+		   firmwareError(CUSTOM_ERR_ANGLE, "a NaN %s", msg);                \
 		   angle = 0;                                                       \
 	    }                                                                   \
 		assertAngleRange(angle, msg, code);	   					            \
@@ -47,36 +47,11 @@
 			angle -= engineCycleDurationLocalCopy;   						\
 	}
 
-/**
- * This structure defines an angle position in relation to specific tooth within trigger shape
- */
-class event_trigger_position_s {
-public:
-	size_t triggerEventIndex = 0;
-
-	angle_t angleOffsetFromTriggerEvent = 0;
-
-	void setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX);
-};
-
-#define TRIGGER_CHANNEL_COUNT 3
-
-class trigger_shape_helper {
-public:
-	trigger_shape_helper();
-
-	SingleChannelStateSequence channels[TRIGGER_CHANNEL_COUNT];
-private:
-	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
-};
-
-class Engine;
-class TriggerState;
+class TriggerDecoderBase;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
-#define GAP_TRACKING_LENGTH 18
+#include "sync_edge.h"
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -85,8 +60,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
-			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const TriggerConfiguration& triggerConfig);
 	void setShapeDefinitionError(bool value);
 
 	/**
@@ -94,6 +68,11 @@ public:
 	 * one primary channel tooth each raising (or falling depending on configuration) front would synchronize
 	 */
 	bool isSynchronizationNeeded;
+
+	/**
+	 * trigger meta information: is second wheel mounted on crank shaft ('false') or cam shaft ('true')
+	 */
+	bool isSecondWheelCam;
 	/**
 	 * number of consecutive trigger gaps needed to synchronize
 	 */
@@ -107,33 +86,16 @@ public:
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire
 	 */
-	bool needSecondTriggerInput;
+	bool needSecondTriggerInput = false;
 	/**
 	 * true value here means that we do not have a valid trigger configuration
 	 */
-	bool shapeDefinitionError;
-
-	/**
-	 * https://github.com/rusefi/rusefi/issues/898
-	 * User can choose for example Miata trigger which is not compatible with useOnlyRisingEdgeForTrigger option
-	 * Such contradictory configuration causes a very hard to identify issue and for the sake of usability it's better to
-	 * just crash with a very visible fatal error
-	 *
-	 * One day a nicer implementation could be simply ignoring 'useOnlyRisingEdgeForTrigger' in case of 'bothFrontsRequired'
-	 */
-	bool bothFrontsRequired;
+	bool shapeDefinitionError = false;
 
 	/**
 	 * this variable is incremented after each trigger shape redefinition
-	 * See also
 	 */
 	int version = 0;
-
-	/**
-	 * duty cycle for each individual trigger channel
-	 */
-	float expectedDutyCycle[PWM_PHASE_MAX_WAVE_PER_PWM];
-
 
 	/**
 	 * Depending on trigger shape, we use betweeb one and three previous gap ranges to detect synchronizaiton.
@@ -167,33 +129,40 @@ public:
 	 * See also gapBothDirections
 	 */
 	bool useOnlyPrimaryForSync;
-	/**
-	 * Should we use falls or rises for gap ratio detection?
-	 */
-	bool useRiseEdge;
-	/**
-	 * This is about selecting signal edges within particular trigger channels.
-	 * Should we measure gaps with both fall and rise signal edges?
-	 * See also useOnlyPrimaryForSync
-	 */
-	bool gapBothDirections;
 
-	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
+	// Which edge(s) to consider for finding the sync point: rise, fall, or both
+	SyncEdge syncEdge;
+
+	// If true, falling edges should be fully ignored on this trigger shape.
+	bool useOnlyRisingEdges;
+
+	void calculateExpectedEventCounts();
+
+	size_t getExpectedEventCount(TriggerWheel channelIndex) const;
 
 	/**
 	 * This is used for signal validation
 	 */
-	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	size_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 #if EFI_UNIT_TEST
 	/**
 	 * These signals are used for trigger export only
 	 */
-	int triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
-	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
+	TriggerWheel triggerSignalIndeces[PWM_PHASE_MAX_COUNT];
+	TriggerValue triggerSignalStates[PWM_PHASE_MAX_COUNT];
+	// see also 'doesTriggerImplyOperationMode'
+	bool knownOperationMode = true;
 #endif
 
-	MultiChannelStateSequence wave;
+	/**
+	 * wave.phaseCount is total count of shaft events per CAM or CRANK shaft revolution.
+	 * TODO this should be migrated to CRANKshaft revolution, this would go together
+	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
+	 * but name is supposed to hint at the fact that decoders should not be assigning to it
+	 * Please use "getSize()" function to read this value
+	 */
+	MultiChannelStateSequenceWithData<PWM_PHASE_MAX_COUNT> wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?
@@ -202,40 +171,39 @@ public:
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
 	/**
-	 * This is a pretty questionable option which is considered by 'addEvent' method
+	 * @param angle (0..1]
 	 */
-	bool invertOnAdd;
-	/**
-	 * Total count of shaft events per CAM or CRANK shaft revolution.
-	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
-	 * but name is supposed to hint at the fact that decoders should not be assigning to it
-	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
+	void addEvent(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+	/* (0..720] angle range
+	 * Deprecated! many usages should be replaced by addEvent360
 	 */
-	unsigned int privateTriggerDefinitionSize;
-
-	bool useOnlyRisingEdgeForTriggerTemp;
-
-	/* 0..1 angle range */
-	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
-	/* 0..720 angle range
-	 * Deprecated!
-	 */
-	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEvent720(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
 	/**
+	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
+	 */
+	void addEvent360(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
+
+	/**
+	 * This version of the method is best when same wheel could be mounted either on crank or cam
+	 *
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
-	 * For example, 0..180 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 *
+	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
+	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
+	 *
+	 * @param angle (0..360] or (0..720] depending on configuration
 	 */
-	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+	void addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex = TriggerWheel::T_PRIMARY);
 
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated?
 	 */
-	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
-	operation_mode_e getOperationMode() const;
+	void addEventClamped(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex, float filterLeft, float filterRight);
+	operation_mode_e getWheelOperationMode() const;
 
-	void initialize(operation_mode_e operationMode);
+	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);
 	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
@@ -249,7 +217,6 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
@@ -259,6 +226,9 @@ public:
 
 	angle_t getCycleDuration() const;
 
+	// Returns true if this trigger alone can fully sync the current engine for sequential mode.
+	bool needsDisambiguation() const;
+
 	/**
 	 * index of synchronization event within TriggerWaveform
 	 * See findTriggerZeroEventIndex()
@@ -266,21 +236,13 @@ public:
 	int triggerShapeSynchPointIndex;
 
 	void initializeSyncPoint(
-			TriggerState& state,
-			const TriggerConfiguration& triggerConfiguration,
-			const trigger_config_s& triggerConfig
-			);
+			TriggerDecoderBase& state,
+			const TriggerConfiguration& triggerConfiguration
+		);
+
+	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
 private:
-	trigger_shape_helper h;
-
-	int findAngleIndex(TriggerFormDetails *details, float angle) const;
-
-	/**
-	 * Working buffer for 'wave' instance
-	 * Values are in the 0..1 range
-	 */
-	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
@@ -302,27 +264,11 @@ private:
  */
 class TriggerFormDetails {
 public:
-	TriggerFormDetails();
+	void prepareEventAngles(TriggerWaveform *shape);
+
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
-	/**
-	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
-	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
-	 */
-	int triggerIndexByAngle[720];
+	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
-
-void findTriggerPosition(
-		TriggerWaveform *shape,
-		TriggerFormDetails *details,
-		event_trigger_position_s *position,
-		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
-
-void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
-
-#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape.x)
-
-#define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)

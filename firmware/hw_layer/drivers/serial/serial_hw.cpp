@@ -6,59 +6,53 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_AUX_SERIAL
 
 #include "serial.h"
-#include "engine_configuration.h"
-#include "pin_repository.h"
 #include "serial_hw.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "engine.h"
-
-EXTERN_ENGINE;
 
 static bool isSerialEnabled = false;
 static bool isSerialTXEnabled = false;
 static bool isSerialRXEnabled = false;
-static LoggingWithStorage logger("SERIAL driver");
 
 static SerialConfig uartCfg;
 static SerialRead serialRead;
 
-static void auxInfo(void) {
+static void auxInfo() {
 	if (!isSerialEnabled) {
-		scheduleMsg(&logger, "AUX Serial is not enabled, please enable & restart");
+		efiPrintf("AUX Serial is not enabled, please enable & restart");
 		return;
 	}
 
-	scheduleMsg(&logger, "AUX Serial TX %s", hwPortname(CONFIG(auxSerialTxPin)));
-	scheduleMsg(&logger, "AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
+	efiPrintf("AUX Serial TX %s", hwPortname(engineConfiguration->auxSerialTxPin));
+	efiPrintf("AUX Serial RX %s", hwPortname(engineConfiguration->auxSerialRxPin));
 }
 
-void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engineConfiguration->auxSerialTxPin = CONFIG(auxSerialTxPin);
-	engineConfiguration->auxSerialRxPin = CONFIG(auxSerialRxPin);
-	engineConfiguration->auxSerialSpeed = CONFIG(auxSerialSpeed);
+void enableAuxSerial() {
+	engineConfiguration->auxSerialTxPin = engineConfiguration->auxSerialTxPin;
+	engineConfiguration->auxSerialRxPin = engineConfiguration->auxSerialRxPin;
+	engineConfiguration->auxSerialSpeed = engineConfiguration->auxSerialSpeed;
 	
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
 	sdStart(AUX_SERIAL_DEVICE, &uartCfg);
 
-	scheduleMsg(&logger, "AUX Serial started");
+	efiPrintf("AUX Serial started");
 }
 
-void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopAuxSerialPins() {
 	efiSetPadUnused(activeConfiguration.auxSerialTxPin);
 	efiSetPadUnused(activeConfiguration.auxSerialRxPin);
 }
 
-void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(auxSerialTxPin))
-		efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
-	if (CONFIG(auxSerialRxPin))
-		efiSetPadMode("AuxSerial RX", CONFIG(auxSerialRxPin), PAL_MODE_ALTERNATE(8));
+void startAuxSerialPins() {
+	if (isBrainPinValid(engineConfiguration->auxSerialTxPin))
+		efiSetPadMode("AuxSerial TX", engineConfiguration->auxSerialTxPin, PAL_MODE_ALTERNATE(8));
+	if (isBrainPinValid(engineConfiguration->auxSerialRxPin))
+		efiSetPadMode("AuxSerial RX", engineConfiguration->auxSerialRxPin, PAL_MODE_ALTERNATE(8));
 
 	enableAuxSerial();
 }
@@ -66,28 +60,32 @@ void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initAuxSerial(void) {
 	addConsoleAction("auxinfo", auxInfo);
 
-	isSerialEnabled =
-		(CONFIG(auxSerialTxPin)) || // we need at least one pin set
-		(CONFIG(auxSerialRxPin));
+	isSerialRXEnabled = isBrainPinValid(engineConfiguration->auxSerialRxPin);
+	isSerialTXEnabled = isBrainPinValid(engineConfiguration->auxSerialTxPin);
 
-	isSerialRXEnabled = CONFIG(auxSerialRxPin);
-	isSerialTXEnabled = CONFIG(auxSerialTxPin);
+	isSerialEnabled =
+		isSerialRXEnabled || // we need at least one pin set
+		isSerialTXEnabled;
 
 	// exit if no pin is configured
 	if (!isSerialEnabled)
 		return;
 
 	// Validate pins 
-	if (isSerialTXEnabled && !isValidSerialTxPin(CONFIG(auxSerialTxPin)))
+	if (isSerialTXEnabled && !isValidSerialTxPin(engineConfiguration->auxSerialTxPin)) {
+		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux TX pin");
 		return;
+	}
 
-	if (isSerialRXEnabled && !isValidSerialRxPin(CONFIG(auxSerialRxPin)))
+	if (isSerialRXEnabled && !isValidSerialRxPin(engineConfiguration->auxSerialRxPin)) {
+		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux RX pin");
 		return;
+	}
 
 	startAuxSerialPins();
 
 	if (isSerialRXEnabled)
-		serialRead.Start();
+		serialRead.start();
 }
 
 #endif // EFI_AUX_SERIAL

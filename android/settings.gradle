@@ -1,13 +1,17 @@
 include ':app'
-include ':shared_io'
-project(':shared_io').projectDir = new File('../java_console/shared_io')
+include ':core_io'
+project(':core_io').projectDir = new File('../java_console/shared_io')
+include ':core_ui'
+project(':core_ui').projectDir = new File('../java_console/core_ui')
+include ':shared_ui'
+project(':shared_ui').projectDir = new File('../java_console/shared_ui')
 include ':ecu_io'
 project(':ecu_io').projectDir = new File('../java_console/io')
+include ':logging'
+project(':logging').projectDir = new File('../java_console/logging')
 include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
 include ':inifile'
 project(':inifile').projectDir = new File('../java_console/inifile')
 include ':models'
 project(':models').projectDir = new File('../java_console/models')
-include ':autoupdate'
-project(':autoupdate').projectDir = new File('../java_console/autoupdate')

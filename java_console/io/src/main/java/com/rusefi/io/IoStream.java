@@ -25,8 +25,6 @@ import static com.devexperts.logging.Logging.getLogging;
  * 5/11/2015.
  */
 public interface IoStream extends WriteStream, Closeable, StreamStatistics {
-    Logging log = getLogging(IoStream.class);
-
     static String printHexBinary(byte[] data) {
         if (data == null)
             return "(null)";
@@ -39,6 +37,18 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
             r.append(' ');
         }
         return r.toString();
+    }
+
+    static String printByteArray(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : data) {
+            if (Character.isJavaIdentifierPart(b)) {
+                sb.append((char) b);
+            } else {
+                sb.append(' ');
+            }
+        }
+        return printHexBinary(data) + sb;
     }
 
     @NotNull
@@ -85,19 +95,17 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
 
     void close();
 
-    String getLoggingPrefix();
-
     IncomingDataBuffer getDataBuffer();
 
     default short readShort() throws EOFException {
         return getDataBuffer().readShort();
     }
 
-    default byte[] sendAndGetPacket(byte[] packet, String message, boolean allowLongResponse) throws IOException {
+    default byte[] sendAndGetPacket(byte[] packet, String message) throws IOException {
         // synchronization is needed for example to help SD card download to live with gauge poker
         synchronized (this) {
             sendPacket(packet);
-            return getDataBuffer().getPacket(message, allowLongResponse);
+            return getDataBuffer().getPacket(message);
         }
     }
 }

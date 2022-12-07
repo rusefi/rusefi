@@ -2,12 +2,6 @@ ifeq ($(KINETIS_CONTRIB),)
   KINETIS_CONTRIB = $(CHIBIOS_CONTRIB)
 endif
 
-ifeq ($(USE_SMART_BUILD),yes)
-ifneq ($(findstring HAL_USE_SPI TRUE,$(HALCONF)),)
 PLATFORMSRC_CONTRIB += ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD/SPIv2/hal_spi_lld.c
-endif
-else
-PLATFORMSRC_CONTRIB += ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD/SPIv2/hal_spi_lld.c
-endif
 
 PLATFORMINC_CONTRIB += ${KINETIS_CONTRIB}/os/hal/ports/KINETIS/LLD/SPIv2

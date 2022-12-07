@@ -1,14 +1,14 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
+import com.rusefi.FileLog;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.util.JTextFieldWithWidth;
-import net.ericaro.surfaceplotter.DefaultSurfaceModel;
-import net.ericaro.surfaceplotter.JSurfacePanel;
-import net.ericaro.surfaceplotter.Mapper;
-import net.ericaro.surfaceplotter.surface.SurfaceModel;
+//import net.ericaro.surfaceplotter.DefaultSurfaceModel;
+//import net.ericaro.surfaceplotter.JSurfacePanel;
+//import net.ericaro.surfaceplotter.Mapper;
+//import net.ericaro.surfaceplotter.surface.SurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +21,7 @@ import static com.rusefi.models.Utils.parseIntWithReason;
  * Date: 1/22/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class ChartHelper {
     private ChartHelper() {
     }
@@ -40,7 +41,7 @@ public class ChartHelper {
         saveImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String fileName = Logger.getDate() + "_3d.png";
+                String fileName = FileLog.getDate() + "_3d.png";
 
                 UiUtils.saveImageWithPrompt(fileName, result, jsp);
             }
@@ -142,3 +143,4 @@ public class ChartHelper {
         sm.setYMax(yRange.getMax());
     }
 }
+*/

@@ -11,7 +11,9 @@
 #include "global.h"
 #include "adc_math.h"
 
+#ifndef SLOW_ADC_RATE
 #define SLOW_ADC_RATE 500
+#endif
 
 static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
@@ -30,6 +32,12 @@ static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
+typedef enum {
+	ADC_OFF = 0,
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
+} adc_channel_mode_e;
+
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
@@ -43,38 +51,42 @@ adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(int lastAdcCounter = 0);
+void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 // get a number of completed slowADC samples
 int getSlowAdcCounter();
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
-void printFullAdcReportIfNeeded(Logging *log);
+void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
 void removeChannel(const char *name, adc_channel_e setting);
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
-#ifndef ADC_BUF_DEPTH_SLOW
-#define ADC_BUF_DEPTH_SLOW      8
-#endif /* ADC_BUF_DEPTH_SLOW */
-
-#ifndef ADC_BUF_DEPTH_FAST
-#define ADC_BUF_DEPTH_FAST      4
-#endif /* ADC_BUF_DEPTH_FAST */
-
-// todo: preprocessor way of doing 'max'?
-// max(ADC_BUF_DEPTH_SLOW, ADC_BUF_DEPTH_FAST)
-#define MAX_ADC_GRP_BUF_DEPTH 8
-
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
-// todo: migrate to adcToVoltageInputDividerCoefficient
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
-#else
-#define getAdcValue(msg, channel) 0
-#endif /* HAL_USE_ADC */
+#if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
+/**
+ * 8000 RPM is 133Hz
+ * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
+ */
+// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
+// todo: continuous mode. todo: look into our options
+#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
 
+// This callback is called by the ADC driver when a new fast ADC sample is ready
+void onFastAdcComplete(adcsample_t* samples);
+
+
+using FastAdcToken = size_t;
+
+FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
+adcsample_t getFastAdc(FastAdcToken token);
+#endif // HAL_USE_ADC
+
+void printFullAdcReport(void);

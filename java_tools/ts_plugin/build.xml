@@ -11,11 +11,19 @@
     <target name="compile">
         <mkdir dir="build/classes"/>
 
+        <resources id="libs">
+        <string>lib/mockito-all-1.10.19.jar</string>
+            <string>${console_path}/../java_tools/configuration_definition/lib/snakeyaml.jar</string>
+            <string>${console_path}/lib/javacan-core.jar</string>
+        </resources>
+        <pathconvert property="lib_list" refid="libs" pathsep=":" />
+
         <javac debug="yes"
                destdir="build/classes"
-               classpath="${console_path}/lib/log4j-api-2.13.3.jar:${console_path}/lib/log4j-core-2.13.3.jar:${console_path}/lib/jsr305-2.0.1.jar:${console_path}/lib/jcip-annotations-1.0.jar:${console_path}/lib/annotations.jar:${console_path}/lib/jSerialComm.jar:${console_path}/lib/junit.jar:${console_path}/lib/json-simple-1.1.1.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
+               classpath="${lib_list}:${console_path}/lib/log4j-api-2.13.3.jar:${console_path}/lib/log4j-core-2.13.3.jar:${console_path}/lib/jsr305-2.0.1.jar:${console_path}/lib/jcip-annotations-1.0.jar:${console_path}/lib/annotations.jar:${console_path}/lib/jSerialComm.jar:${console_path}/lib/junit.jar:${console_path}/lib/json-simple-1.1.1.jar:${console_path}/lib/annotations.jar:${launcher_path}/lib/TunerStudioPluginAPI.jar:${console_path}/lib/httpclient.jar:${console_path}/lib/httpmime.jar:${console_path}/lib/httpcore.jar"
         >
             <src path="${console_path}/shared_ui/src"/>
+            <src path="${console_path}/core_ui/src/main/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/shared_io/src/main/java"/>
             <src path="${console_path}/inifile/src"/>
@@ -36,7 +44,7 @@
         <delete file="${jar_file}"/>
 
         <copy todir="build/classes">
-            <fileset dir="../ts_plugin_launcher/resources" includes="**/*.png"/>
+            <fileset dir="../ts_plugin_launcher/src/main/resources" includes="**/*.png"/>
             <fileset dir="${console_path}/shared_ui/resources" includes="**/*.png"/>
         </copy>
 
@@ -55,6 +63,7 @@
             <zipfileset src="../../java_console/lib/httpclient.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/httpmime.jar" includes="**/*.class"/>
+            <zipfileset src="../../java_console/lib/javacan-core.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/json-simple-1.1.1.jar" includes="**/*.class"/>
             <zipfileset src="../../java_console/lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
 <!--            <zipfileset src="lib/commons-logging.jar" includes="**/*.class"/>-->

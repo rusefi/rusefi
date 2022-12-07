@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 static void doRevolution(EngineTestHelper& eth, int periodMs) {
 	float halfToothTime = (periodMs / 6.0f) / 2;
@@ -28,21 +28,21 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 
 // https://github.com/rusefi/rusefi/issues/1592
 TEST(fuelControl, transitionIssue1592) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(400))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(500))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// This is easiest to trip on a wheel that requires sync
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+	eth.setTriggerType(TT_TOOTHED_WHEEL);
+    setCamOperationMode();
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-	extern fuel_Map3D_t fuelPhaseMap;
-	fuelPhaseMap.setAll(0);
+	setTable(config->injectionPhase, 0.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
 
@@ -50,7 +50,7 @@ TEST(fuelControl, transitionIssue1592) {
 
 	// Yes, this is a ton of fuel but it makes the repro easier
 	engineConfiguration->cranking.baseFuel = 213.6;
-	engineConfiguration->cranking.rpm = 500;
+	engineConfiguration->cranking.rpm = 501;
 
 	// Test the transition from batch cranking to sequential running
 	engineConfiguration->crankingInjectionMode = IM_BATCH;
@@ -58,7 +58,7 @@ TEST(fuelControl, transitionIssue1592) {
 
 
 	// First sync point will schedule cranking pulse since we're in "faster spin up" mode
-	doRevolution(eth, 150);
+	doRevolution(eth, 240);
 
 	{
 		// Injector 2 should be scheduled to open then close

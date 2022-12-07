@@ -18,8 +18,6 @@
 constexpr uint8_t lc2_header_mask = 162;
 constexpr uint16_t lc2_pcklen_mask = 383;
 
-class Logging;
-
 typedef enum {UNKNOWN, HEADER_FOUND, IDENTIFIED} innovate_serial_id_state_t;
 
 extern uint8_t ser_buffer[SERBUFFLEN]; //buffer for incoming serial data

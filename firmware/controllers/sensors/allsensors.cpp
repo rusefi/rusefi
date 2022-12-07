@@ -7,23 +7,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 ButtonDebounce acDebounce("ac_switch");
 
-void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	initMapDecoder(sharedLogger PASS_ENGINE_PARAMETER_SUFFIX);
-	acDebounce.init(15, CONFIG(acSwitch), CONFIG(acSwitchMode));
+void initSensors() {
+	initMapDecoder();
+	acDebounce.init(15, engineConfiguration->acSwitch, engineConfiguration->acSwitchMode);
 }
 
-bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool getAcToggle() {
 	return acDebounce.readPinState();
 }
 
-bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return (isBrainPinValid(CONFIG(acSwitch)));
+bool hasAcToggle() {
+	return isBrainPinValid(engineConfiguration->acSwitch);
 }

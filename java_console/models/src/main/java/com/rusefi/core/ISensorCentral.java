@@ -5,12 +5,10 @@ package com.rusefi.core;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public interface ISensorCentral extends ISensorHolder {
-    void setAnySensorListener(SensorCentral.SensorListener2 anySensorListener);
-
-    public class ListenerToken {
-        private ISensorCentral sensorCentralInstance;
-        private Sensor sensor;
-        private SensorCentral.SensorListener listener;
+    class ListenerToken {
+        private final ISensorCentral sensorCentralInstance;
+        private final Sensor sensor;
+        private final SensorCentral.SensorListener listener;
 
         public ListenerToken(ISensorCentral instance, Sensor sensor, SensorCentral.SensorListener listener) {
             this.sensorCentralInstance = instance;

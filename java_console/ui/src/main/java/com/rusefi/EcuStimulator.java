@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -8,12 +7,10 @@ import com.rusefi.file.TableGenerator;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import com.rusefi.test.EcuStimulatorSandbox;
-import com.rusefi.ui.ChartHelper;
+//import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;
-import com.rusefi.ui.widgets.PotCommand;
+//import com.rusefi.ui.widgets.PotCommand;
 import com.rusefi.ui.widgets.RpmCommand;
-import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,9 +27,8 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Date: 3/24/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see EcuStimulatorSandbox
  */
+/*
 public class EcuStimulator {
     private static final String DELIMITER = ",";
     private static final long SLEEP_TIME = 300;
@@ -80,7 +76,7 @@ public class EcuStimulator {
 //        if (1 == 1)
 //            return;
 
-        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + Logger.getDate() + ".csv";
+        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + FileLog.getDate() + ".csv";
         FileLog.MAIN.logLine("Wring to " + csvFileName);
 
         final BufferedWriter csv;
@@ -121,7 +117,7 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
 
-        TableGenerator.writeAsC(data, C_PREFIX, "map" + Logger.getDate() + ".c");
+        TableGenerator.writeAsC(data, C_PREFIX, "map" + FileLog.getDate() + ".c");
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {
@@ -141,6 +137,7 @@ public class EcuStimulator {
         /**
          * Let's give the firmware some time to react
          */
+/*
         sleepRuntime(SLEEP_TIME);
 
         statusLabel.setText("RPM " + rpm + ", el " + engineLoad + ", CLT " + clt);
@@ -148,6 +145,7 @@ public class EcuStimulator {
         /**
          * We are making a number of measurements and then we take the middle one
          */
+/*
         MultipleMeasurements r = waitForMultipleResults(dwellSensor, null);
         List<Double> dwells = r.getDwells();
         List<Double> advances = r.getAdvances();
@@ -164,7 +162,7 @@ public class EcuStimulator {
         double advance = advances.get(MEASURES / 2);
 
 //        if (dwell > 40)
-//            throw new IllegalStateException("Unexpected value, how comes? " + dwell);
+//            throw new IllegalStateException("Unexpected value, how come? " + dwell);
 
         log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell + ", adv=" + advance);
 
@@ -306,10 +304,11 @@ public class EcuStimulator {
         }
         LinkManager.engineState.timeListeners.remove(listener);
          */
+/*
         return result;
     }
 
-    private class MultipleMeasurements {
+    private static class MultipleMeasurements {
         private List<Double> dwells = new ArrayList<>(MEASURES);
         private List<Double> advances = new ArrayList<>(MEASURES);
 
@@ -322,3 +321,4 @@ public class EcuStimulator {
         }
     }
 }
+*/

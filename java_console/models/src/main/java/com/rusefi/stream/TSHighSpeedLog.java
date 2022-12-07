@@ -1,14 +1,14 @@
 package com.rusefi.stream;
 
 import com.rusefi.composite.CompositeEvent;
-import com.rusefi.rusEFIVersion;
+import com.rusefi.core.rusEFIVersion;
 
 import java.io.*;
 import java.util.List;
 
 public class TSHighSpeedLog extends StreamFile {
     private final String fileName;
-    private int prevTime = 0;
+    private long prevTime = 0;
 
     public TSHighSpeedLog(String fileName) {
         this.fileName = fileName;
@@ -16,8 +16,8 @@ public class TSHighSpeedLog extends StreamFile {
 
     private static void writeHeader(Writer writer) throws IOException {
         writer.write("#Firmware: console" + rusEFIVersion.CONSOLE_VERSION + " firmware " + rusEFIVersion.firmwareVersion.get() + "\n");
-        writer.write("PriLevel,SecLevel,Trigger,Sync,Time,ToothTime\n" +
-                "Flag,Flag,Flag,Flag,ms,ms\n");
+        writer.write("PriLevel,SecLevel,Trigger,Sync,Time,ToothTime,coil,inj\n" +
+                "Flag,Flag,Flag,Flag,ms,ms,Flag,Flag\n");
     }
 
     @Override
@@ -29,8 +29,12 @@ public class TSHighSpeedLog extends StreamFile {
             }
             for (CompositeEvent event : events) {
                 writer.write(event.isPrimaryTriggerAsInt() + "," + event.isSecondaryTriggerAsInt() + "," + event.isTrgAsInt() + "," + event.isSyncAsInt() + ",");
-                int delta = event.getTimestamp() - prevTime;
-                writer.write(event.getTimestamp() / 1000.0 + "," + delta / 1000.0 + "\n");
+                long delta = event.getTimestamp() - prevTime;
+                writer.write(event.getTimestamp() / 1000.0 + "," + delta / 1000.0);
+
+                writer.write("," + event.isCoil() + "," + event.isInjector());
+
+                writer.write("\n");
                 prevTime = event.getTimestamp();
             }
             writer.flush();

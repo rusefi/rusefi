@@ -7,6 +7,7 @@
 
 #pragma once
 
-void runRusEfi(void);
-void rebootNow(void);
+__NO_RETURN void runRusEfi();
+__NO_RETURN void rebootNow();
 
+void preHalInit();

@@ -11,15 +11,11 @@ import org.jetbrains.annotations.NotNull;
 public interface LinkConnector extends LinkDecoder {
     LinkConnector VOID = new LinkConnector() {
         @Override
-        public void connectAndReadConfiguration(ConnectionStateListener listener) {
+        public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
         }
 
         @Override
         public void send(String command, boolean fireEvent) {
-        }
-
-        @Override
-        public void restart() {
         }
 
         @Override
@@ -37,17 +33,12 @@ public interface LinkConnector extends LinkDecoder {
             }
 
             @Override
-            public void connectAndReadConfiguration(ConnectionStateListener listener) {
+            public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
                 throw new UnsupportedOperationException();
             }
 
             @Override
             public void send(String command, boolean fireEvent) {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public void restart() {
                 throw new UnsupportedOperationException();
             }
 
@@ -58,11 +49,9 @@ public interface LinkConnector extends LinkDecoder {
         };
     }
 
-    void connectAndReadConfiguration(ConnectionStateListener listener);
+    void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
-
-    void restart();
 
     BinaryProtocol getBinaryProtocol();
 

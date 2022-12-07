@@ -1,5 +1,5 @@
-#pragma once
-#include <gtest/gtest.h>
+#include "pch.h"
+
 #include "deadband.h"
 
 TEST(Deadband, OutsideDeadband) {
@@ -35,4 +35,21 @@ TEST(Deadband, InsideDeadband) {
 
 	// Now it should flip back
 	EXPECT_TRUE(d.gt(0, -5.01));
+}
+
+TEST(Hysteresis, basic) {
+	Hysteresis h;
+
+	// Below 'rising', should stay false
+	EXPECT_FALSE(h.test(15, 30, 20));
+	EXPECT_FALSE(h.test(25, 30, 20));
+
+	// over 'rising', should go true
+	EXPECT_TRUE(h.test(31, 30, 20));
+
+	// drop back below 'rising', should stay true
+	EXPECT_TRUE(h.test(25, 30, 20));
+
+	// drop below 'falling', should go false
+	EXPECT_FALSE(h.test(15, 30, 20));
 }

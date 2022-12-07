@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
@@ -9,16 +10,16 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.rusefi.CommandControl.TEST;
+import static com.rusefi.config.generated.Fields.*;
 
 public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
     private final UIContext uiContext;
 
-    public BenchTestPane(UIContext uiContext) {
+    public BenchTestPane(UIContext uiContext, PersistentConfiguration config) {
         this.uiContext = uiContext;
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -32,7 +33,6 @@ public class BenchTestPane {
         content.add(createMILTest());
         content.add(createIdleTest());
         content.add(createStarterTest());
-        content.add(createDizzyTest());
         content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
@@ -45,18 +45,16 @@ public class BenchTestPane {
                 return Fields.CMD_REBOOT_DFU;
             }
         }.getContent());
-        content.add(new MessagesView().messagesScroll);
+        content.add(new MessagesView(config.getRoot()).messagesScroll);
     }
 
     private Component grabPerformanceTrace() {
         JButton button = new JButton("Grab PTrace");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
-                PerformanceTraceHelper.grabPerformanceTrace(bp);
-            }
+        ActionListener actionListener = e -> uiContext.getLinkManager().COMMUNICATION_EXECUTOR.execute(() -> {
+            BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
+            PerformanceTraceHelper.grabPerformanceTrace(button, bp);
         });
+        button.addActionListener(actionListener);
         return UiUtils.wrap(button);
     }
 
@@ -80,23 +78,18 @@ public class BenchTestPane {
         return panel.getContent();
     }
 
-    private Component createDizzyTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Dizzy", "dizzy.jpg", TEST, "dizzybench");
-        return panel.getContent();
-    }
-
     private Component createStarterTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Starter", "", TEST, Fields.CMD_STARTER_BENCH);
+        CommandControl panel = new FixedCommandControl(uiContext, "Starter", "", TEST, CMD_STARTER_BENCH);
         return panel.getContent();
     }
 
     private Component createFanTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, "fanbench");
+        CommandControl panel = new FixedCommandControl(uiContext, "Radiator Fan", "radiator_fan.jpg", TEST, CMD_FAN_BENCH);
         return panel.getContent();
     }
 
     private Component createAcRelayTest() {
-        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, "acrelaybench");
+        CommandControl panel = new FixedCommandControl(uiContext, "A/C Compressor Relay", ".jpg", TEST, CMD_AC_RELAY_BENCH);
         return panel.getContent();
     }
 
@@ -106,7 +99,7 @@ public class BenchTestPane {
     }
 
     private Component createSparkTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.IGNITION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -117,7 +110,7 @@ public class BenchTestPane {
     }
 
     private Component createInjectorTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.INJECTION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {

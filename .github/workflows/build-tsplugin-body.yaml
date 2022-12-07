@@ -1,4 +1,4 @@
-name: rusEFI TS Plugin Body
+name: TS Plugin
 
 on: [push,pull_request]
 
@@ -7,23 +7,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - uses: actions/setup-java@v1
+      - uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: '8'
 
       - name: Test Compiler
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install ncftp
+        run: sudo apt-get install sshpass
 
       - name: Build TS plugin body
         working-directory: ./java_tools/ts_plugin
         run: ant
 
       - name: Upload plugin body
-        working-directory: ./java_tools/ts_plugin
-        run: ./upload_plugin.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        working-directory: .
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate java_tools/ts_plugin/build/jar/rusefi_plugin_body.jar
+

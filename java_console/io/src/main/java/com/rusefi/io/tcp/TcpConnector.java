@@ -1,17 +1,24 @@
 package com.rusefi.io.tcp;
 
+import com.devexperts.logging.Logging;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * @author Andrey Belomutskiy
  *         3/3/14
  */
 public class TcpConnector {
+    private static final Logging log = getLogging(TcpConnector.class);
+
     public final static int DEFAULT_PORT = 29001;
-    private static final String LOCALHOST = "localhost";
+    public static final String LOCALHOST = "localhost";
 
     public static boolean isTcpPort(String port) {
         try {
@@ -61,16 +68,17 @@ public class TcpConnector {
     }
 
     public static Collection<String> getAvailablePorts() {
-        return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.<String>emptyList();
+        return isTcpPortOpened() ? Collections.singletonList("" + DEFAULT_PORT) : Collections.emptyList();
     }
 
     public static boolean isTcpPortOpened() {
+        long now = System.currentTimeMillis();
         try {
             Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
             s.close();
             return true;
         } catch (IOException e) {
-            System.out.println("Connection refused in getAvailablePorts(): simulator not running");
+            log.info("Connection refused in getAvailablePorts(): simulator not running in " + (System.currentTimeMillis() - now) + "ms");
             return false;
         }
     }

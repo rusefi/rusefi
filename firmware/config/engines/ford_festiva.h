@@ -8,4 +8,4 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFordEscortGt();

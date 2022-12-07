@@ -1,5 +1,5 @@
 package com.rusefi.io;
 
 public interface ConnectionFailedListener {
-    void onConnectionFailed();
+    void onConnectionFailed(String s);
 }

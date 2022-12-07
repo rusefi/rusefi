@@ -41,30 +41,11 @@
 #define STM32_LSECLK                32768U
 #endif
 
-#if !defined(STM32_HSECLK)
-#define STM32_HSECLK                8000000U
-#endif
-
 /*
  * Board voltages.
  * Required for performance limits calculation.
  */
 #define STM32_VDD                   300U
-
-/*
- * MCU type as defined in the ST header.
- * this declaration would cause stm32_registry.h to define STM32F40_41xxx and STM32F4XX automatically
- *
- * See also STM32F4xx_MCUCONF is defined in mcuconf.h
- */
-#if !defined(_FROM_ASM_)
-#if defined(STM32F469xx) && defined(STM32F405xx)
-#error "Both STM32F469xx and STM32F405xx cannot be defined"
-#endif
-#if !defined(STM32F405xx) && !defined(STM32F469xx)
-#error "You must define STM32F469xx or STM32F405xx for Prometheus board"
-#endif
-#endif /* _FROM_ASM_ */
 
 /*
  * IO pins assignments.

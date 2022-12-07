@@ -1,11 +1,13 @@
 package com.rusefi.ui.config;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.DfuHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +16,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.nio.ByteBuffer;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public abstract class BaseConfigField {
+    private static final Logging log = getLogging(BaseConfigField.class);
+
     protected final JLabel status = new JLabel("P");
     private final JPanel panel = new JPanel(new BorderLayout());
     private final UIContext uiContext;
@@ -49,7 +55,7 @@ public abstract class BaseConfigField {
 
     protected void sendValue(Field field, String newValue) {
         String msg = field.setCommand() + " " + newValue;
-        FileLog.MAIN.logLine("Sending " + msg);
+        log.info("Sending " + msg);
         uiContext.getCommandQueue().write(msg);
         status.setText("S");
         status.setToolTipText("Storing...");

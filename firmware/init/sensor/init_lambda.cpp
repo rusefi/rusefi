@@ -1,18 +1,13 @@
+#include "pch.h"
+
 #include "init.h"
 #include "adc_subscription.h"
-#include "engine.h"
-#include "error_handling.h"
-#include "global.h"
 #include "function_pointer_sensor.h"
-#include "ego.h"
-
-EXTERN_ENGINE;
+#include "live_data.h"
 
 struct GetAfrWrapper {
-	DECLARE_ENGINE_PTR;
-
 	float getLambda() {
-		return getAfr(PASS_ENGINE_PARAMETER_SIGNATURE) / 14.7f;
+		return getAfr() / 14.7f;
 	}
 };
 
@@ -23,17 +18,34 @@ static FunctionPointerSensor lambdaSensor(SensorType::Lambda1,
 	return afrWrapper.getLambda();
 });
 
-#if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
+
+#if EFI_CAN_SUPPORT
 static AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
-void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&afrWrapper);
+template <>
+const wideband_state_s* getLiveData(size_t idx) {
+#if EFI_CAN_SUPPORT
+	switch (idx) {
+		case 0: return &aem1;
+		case 1: return &aem2;
+	}
+#endif
+
+	return nullptr;
+}
+
+void initLambda() {
 
 #if EFI_CAN_SUPPORT
-	if (CONFIG(enableAemXSeries)) {
+	if (engineConfiguration->enableAemXSeries) {
+		if (!engineConfiguration->canWriteEnabled || !engineConfiguration->canReadEnabled) {
+			firmwareError(OBD_PCM_Processor_Fault, "CAN read and write are required to use CAN wideband.");
+			return;
+		}
+
 		registerCanSensor(aem1);
 		registerCanSensor(aem2);
 

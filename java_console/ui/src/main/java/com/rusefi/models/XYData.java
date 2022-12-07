@@ -1,6 +1,5 @@
 package com.rusefi.models;
 
-import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +26,7 @@ public class XYData {
     private double maxYValue;
     private double minYValue;
 
-    String date = Logger.getDate();
+    String date = FileLog.getDate();
 
     public XYData() {
         clear();

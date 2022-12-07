@@ -19,9 +19,6 @@
 #define EFI_INTERNAL_ADC TRUE
 #define EFI_ANALOG_SENSORS TRUE
 
-// Console I/O features to monitor formulas and pin state
-#define EFI_FSIO TRUE
-
 // Log crank/cam sensor events, a frequently needed diag for new installations
 #define EFI_TOOTH_LOGGER TRUE
 
@@ -44,14 +41,6 @@
 #define EFI_CAN_SUPPORT TRUE
 
 // Internal MCU features
-
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
-// Support USB Mass Storage Devices
-// Typically off as it requires USB OTG and power output.
-#define HAL_USE_USB_MSD FALSE
-
 
 // Hardware feature and chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
@@ -87,13 +76,13 @@
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_MC33810_COUNT	0
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
  * CH_DBG_ENABLE_CHECKS
  * CH_DBG_ENABLE_ASSERTS
- * CH_DBG_ENABLE_TRACE
  * in chconf.h
  *
  */
@@ -101,19 +90,8 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
-#define EFI_ICU_INPUTS TRUE
-
 #ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
-
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
+#define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */
 
 #ifndef HAL_TRIGGER_USE_ADC
@@ -169,8 +147,6 @@
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
 
-#define EFI_DENSO_ADC FALSE
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif
@@ -192,7 +168,9 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
-#define EFI_FUEL_PUMP TRUE
+#ifndef EFI_TCU
+#define EFI_TCU TRUE
+#endif
 
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
@@ -231,8 +209,6 @@
  */
 //#define EFI_UART_GPS FALSE
 
-#define EFI_SERVO TRUE
-
 #define EFI_ELECTRONIC_THROTTLE_BODY TRUE
 
 
@@ -246,7 +222,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
@@ -258,11 +234,6 @@
  */
 
 #define EFI_SPI3_AF 6
-
-#define EFI_I2C_SCL_BRAIN_PIN GPIOB_6
-
-#define EFI_I2C_SDA_BRAIN_PIN GPIOB_7
-#define EFI_I2C_AF 4
 
 /**
  * Patched version of ChibiOS/RT support extra details in the system error messages
@@ -314,7 +285,7 @@
 #endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
-#define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14
+#define LED_CRITICAL_ERROR_BRAIN_PIN Gpio::D14
 #endif
 #ifndef LED_ERROR_BRAIN_PIN_MODE
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
@@ -334,15 +305,8 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
-/**
- * This is the size of the MemoryStream used by chvprintf
- */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
-
-
 // Enable file logging (like SD card) logic
 #define EFI_FILE_LOGGING FALSE
-#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 
 #define EFI_USB_SERIAL TRUE
 
@@ -360,15 +324,14 @@
 #undef TS_SERIAL_DEVICE
 #undef TS_UART_MODE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
-//#define EFI_CONSOLE_USB_DEVICE SDU1
 #define EFI_UART_ECHO_TEST_MODE TRUE
 
 // USART3 is Alternate Function 7, UART4 is AF8
 // todo: start using consoleSerial{Tx,Rx}Pin
 #define EFI_CONSOLE_AF 7
 #define TS_SERIAL_AF 7
-#define EFI_CONSOLE_TX_BRAIN_PIN GPIOC_10
-#define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::C11
 
 // todo: document the limitations of DMA mode for the UART.
 #undef TS_UART_DMA_MODE

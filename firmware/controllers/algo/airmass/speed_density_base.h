@@ -11,12 +11,15 @@
 
 #include "airmass.h"
 
-float idealGasLaw(float volume, float pressure, float temperature);
+/**
+ * @returns mass of air in cylinder
+ */
+mass_t idealGasLaw(float volume, float pressure, float temperature);
 
-class SpeedDensityBase : public AirmassModelBase {
+class SpeedDensityBase : public AirmassVeModelBase {
 protected:
-	explicit SpeedDensityBase(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
+	explicit SpeedDensityBase(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
 public:
-	static float getAirmassImpl(float ve, float manifoldPressure, float temperature DECLARE_ENGINE_PARAMETER_SUFFIX);
+	static mass_t getAirmassImpl(float ve, float manifoldPressure, float temperature);
 };

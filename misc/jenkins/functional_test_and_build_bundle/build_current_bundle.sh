@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # This script would compile firmware, dev console and win32 simulator into a single bundle file
-# This script depends on Cygwin tools: zip
+# This script depends on: zip
 
 SCRIPT_NAME="build_current_bundle"
 ROOT_FOLDER=$(pwd)
 echo "$SCRIPT_NAME Entering ROOT_FOLDER=$ROOT_FOLDER"
 
-echo "$SCRIPT_NAME.sh: Hello rusEfi build full bundle"
+echo "$SCRIPT_NAME.sh: Hello rusEFI build full bundle"
 date "+%a %D %T.%2S"
 
 export BUNDLE_NAME="default"
@@ -57,11 +57,9 @@ cd ..
 
 # At root folder here
 
-bash misc/jenkins/build_java_console.sh
-[ -e java_console_binary/rusefi_console.jar ] || { echo "rusefi_console.jar build FAILED"; exit 1; }
+bash misc/jenkins/build_java_console.sh || { echo "rusefi_console.jar build FAILED"; exit 1; }
 
-bash misc/jenkins/build_simulator.sh
-[ -e simulator/build/rusefi_simulator.exe ] || { echo "rusefi_simulator.exe build FAILED"; exit 1; }
+bash misc/jenkins/build_simulator.sh || { echo "rusefi_simulator.exe build FAILED"; exit 1; }
 
 STM_ARCH="stm32f407"
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
@@ -72,6 +70,7 @@ export FOLDER="temp/$FOLDER"
 echo "$SCRIPT_NAME: folder variable3=$FOLDER"
 
 pwd
+# DfuFlasher.java validates this prefix
 export BUNDLE_FULL_NAME="rusefi_bundle"
 bash misc/jenkins/build_working_folder.sh
 [ $? -eq 0 ] || { echo "$SCRIPT_NAME: ERROR: invoking build_working_folder.sh"; exit 1; }

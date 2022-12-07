@@ -6,17 +6,12 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "engine.h"
-#include "pin_repository.h"
-#include "os_util.h"
-
-EXTERN_ENGINE;
 
 void baseMCUInit(void) {
 }
@@ -77,43 +72,43 @@ static int getSpiAf(SPIDriver *driver) {
 brain_pin_e getMisoPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1misoPin);
+		return engineConfiguration->spi1misoPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2misoPin);
+		return engineConfiguration->spi2misoPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3misoPin);
+		return engineConfiguration->spi3misoPin;
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getMosiPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1mosiPin);
+		return engineConfiguration->spi1mosiPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2mosiPin);
+		return engineConfiguration->spi2mosiPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3mosiPin);
+		return engineConfiguration->spi3mosiPin;
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 brain_pin_e getSckPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1sckPin);
+		return engineConfiguration->spi1sckPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2sckPin);
+		return engineConfiguration->spi2sckPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3sckPin);
+		return engineConfiguration->spi3sckPin;
 	default:
 		break;
 	}
-	return GPIO_UNASSIGNED;
+	return Gpio::Unassigned;
 }
 
 void turnOnSpi(spi_device_e device) {
@@ -197,19 +192,19 @@ BOR_Result_t BOR_Set(BOR_Level_t BORValue) {
 #if EFI_CAN_SUPPORT || defined(__DOXYGEN__)
 
 static bool isValidCan1RxPin(brain_pin_e pin) {
-	return pin == GPIOA_11 || pin == GPIOB_8 || pin == GPIOD_0;
+	return pin == Gpio::A11 || pin == Gpio::B8 || pin == Gpio::D0;
 }
 
 static bool isValidCan1TxPin(brain_pin_e pin) {
-	return pin == GPIOA_12 || pin == GPIOB_9 || pin == GPIOD_1;
+	return pin == Gpio::A12 || pin == Gpio::B9 || pin == Gpio::D1;
 }
 
 static bool isValidCan2RxPin(brain_pin_e pin) {
-	return pin == GPIOB_5 || pin == GPIOB_12;
+	return pin == Gpio::B5 || pin == Gpio::B12;
 }
 
 static bool isValidCan2TxPin(brain_pin_e pin) {
-	return pin == GPIOB_6 || pin == GPIOB_13;
+	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
 bool isValidCanTxPin(brain_pin_e pin) {
@@ -220,7 +215,7 @@ bool isValidCanRxPin(brain_pin_e pin) {
    return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
 }
 
-CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
       return &CAND1;
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
@@ -229,6 +224,10 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 }
 
 #endif /* EFI_CAN_SUPPORT */
+
+bool allowFlashWhileRunning() {
+	return false;
+}
 
 size_t flashSectorSize(flashsector_t sector) {
 	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
@@ -260,6 +259,44 @@ uintptr_t getFlashAddrSecondCopy() {
 /*static*/ hardware_pwm* hardware_pwm::tryInitPin(const char*, brain_pin_e, float, float) {
 	// TODO: implement me!
 	return nullptr;
+}
+
+void portInitAdc() {
+	// Init slow ADC
+	adcStart(&ADCD1, NULL);
+
+	// Init fast ADC (MAP sensor)
+	adcStart(&ADCD2, NULL);
+}
+
+float getMcuTemperature() {
+	// TODO: implement me!
+	return 0;
+}
+
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	// TODO: implement me!
+	return true;
+}
+
+static constexpr FastAdcToken invalidToken = (FastAdcToken)(-1);
+
+FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	// TODO: implement me!
+	return invalidToken;
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	// TODO: implement me!
+	return 0;
 }
 
 #endif /* EFI_PROD_CODE */

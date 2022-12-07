@@ -1,28 +1,13 @@
-#include "global.h"
-#include "engine.h"
-#include "adc_inputs.h"
-#include "maf.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
-
-/**
- * @return MAF sensor voltage
- */
-float getMafVoltage(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX);
+static int addMafPoint(persistent_config_s *config, int index, float kgHrValue, float voltage) {
+	config->mafDecoding[index] = kgHrValue;
+	config->mafDecodingBins[index] = voltage;
+	return index + 1;
 }
 
-bool hasMafSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return isAdcChannelValid(engineConfiguration->mafAdcChannel);
-}
-
-/**
- * @return kg/hour value
- */
-float getRealMaf(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float volts = getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	return interpolate2d("maf", volts, config->mafDecodingBins, config->mafDecoding);
+static int addMafPointByVoltage(persistent_config_s *config, int index, float voltage, float kgHrValue) {
+	return addMafPoint(config, index, kgHrValue, voltage);
 }
 
 static void fillTheRest(persistent_config_s *e, int i) {
@@ -30,16 +15,8 @@ static void fillTheRest(persistent_config_s *e, int i) {
 	 * unrealistic values just to make binary search happy
 	 */
 	while (i < MAF_DECODING_COUNT) {
-		e->mafDecoding[i] = 200;
-		e->mafDecodingBins[i] = 10 + i;
-		i++;
+		i = addMafPoint(e, i, 3000, 2010 + i);
 	}
-}
-
-static int addMafPoint(persistent_config_s *e, int i, float kgHrValue, float voltage) {
-	e->mafDecoding[i] = kgHrValue;
-	e->mafDecodingBins[i] = voltage;
-	return i + 1;
 }
 
 /**
@@ -143,4 +120,27 @@ void setMazdaMiataNAMaf(persistent_config_s *e) {
   i= addMafPoint(e, i, 81.067862, 5.000000);
   
   fillTheRest(e, i);
+}
+
+void setNissanMAF0031(persistent_config_s *e) {
+	int i = 0;
+	  // I am copy-pasting from a spreadsheet, it works better if voltage goes first
+	i = addMafPointByVoltage(e, i, 0.29, 3.1768838175);
+	i = addMafPointByVoltage(e, i, 0.49, 3.6987752861);
+	i = addMafPointByVoltage(e, i, 0.72, 5.8013108424);
+	i = addMafPointByVoltage(e, i, 1, 11.1849);
+	i = addMafPointByVoltage(e, i, 1.37, 24.5646673361);
+	i = addMafPointByVoltage(e, i, 1.66, 41.453048941);
+	i = addMafPointByVoltage(e, i, 1.91, 61.5847903829);
+	i = addMafPointByVoltage(e, i, 2.09, 79.7924502089);
+	i = addMafPointByVoltage(e, i, 2.34, 110.961012317);
+	i = addMafPointByVoltage(e, i, 2.89, 208.198652496);
+	i = addMafPointByVoltage(e, i, 3.11, 260.1030585044);
+	i = addMafPointByVoltage(e, i, 3.54, 387.150427974);
+	i = addMafPointByVoltage(e, i, 3.81, 486.5363959026);
+	i = addMafPointByVoltage(e, i, 4, 566.628);
+	i = addMafPointByVoltage(e, i, 4.32, 722.3485684449);
+	i = addMafPointByVoltage(e, i, 4.65, 913.0847954331);
+	i = addMafPointByVoltage(e, i, 4.98, 1137.8746972553);
+	fillTheRest(e, i);
 }

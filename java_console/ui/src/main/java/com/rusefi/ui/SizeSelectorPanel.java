@@ -14,8 +14,6 @@ public class SizeSelectorPanel extends JPanel {
     public static final int WIDTH = 5;
     public static final int HEIGHT = 3;
 
-    private List<Element> elements = new ArrayList<>();
-
     private int selectedRow = 1;
     private int selectedColumn = 1;
 
@@ -41,12 +39,11 @@ public class SizeSelectorPanel extends JPanel {
                 sizeSelectorListener.onSelected(selected.row, selected.column);
             }
         };
-//        addMouseListener(listener);
+
         for (int r = 1; r <= HEIGHT; r++) {
             for (int c = 1; c <= WIDTH; c++) {
                 Element e = new Element(r, c);
                 e.addMouseListener(listener);
-                elements.add(e);
                 add(e);
             }
         }

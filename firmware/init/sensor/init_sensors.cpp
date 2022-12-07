@@ -2,45 +2,124 @@
  * @file init_sensorss.cpp
  */
 
+#include "pch.h"
+
 #include "init.h"
 #include "cli_registry.h"
-#include "sensor.h"
 
-static void initSensorCli(Logging* logger);
+static void initSensorCli();
 
-void initNewSensors(Logging* logger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_CAN_SUPPORT
+void initIfValid(const char* msg, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
+	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
+#endif
+}
+
+void deInitIfValid(const char* msg, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
+	efiSetPadUnused(pin);
+#endif
+}
+
+static void initOldAnalogInputs() {
+	initIfValid("AFR", engineConfiguration->afr.hwChannel);
+	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
+	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
+	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
+}
+
+static void deInitOldAnalogInputs() {
+	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
+	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
+	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
+	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
+}
+
+void initNewSensors() {
+#if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
 
-	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
-	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initVbatt();
+	initMap();
+	initTps();
+	initOilPressure();
+	initThermistors();
+	initLambda();
+	initFlexSensor();
+	initBaro();
+	initAuxSensors();
+	initVehicleSpeedSensor();
+	initTurbochargerSpeedSensor();
+	initAuxSpeedSensors();
+	initInputShaftSpeedSensor();
+
+	#if !EFI_UNIT_TEST
+		initFuelLevel();
+		initMaf();
+	#endif
+
+	initOldAnalogInputs();
 
 	// Init CLI functionality for sensors (mocking)
-	initSensorCli(logger);
+	initSensorCli();
+
+#if defined(HARDWARE_CI) && !defined(HW_PROTEUS)
+	chThdSleepMilliseconds(100);
+
+	if (Sensor::getOrZero(SensorType::BatteryVoltage) < 8) {
+		// Fake that we have battery voltage, some tests rely on it
+		Sensor::setMockValue(SensorType::BatteryVoltage, 10);
+	}
+#endif
 }
 
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
+void stopSensors() {
+	deInitOldAnalogInputs();
+
+	deinitTps();
+	deinitOilPressure();
+	deinitVbatt();
+	deinitThermistors();
+	deInitFlexSensor();
+	deInitVehicleSpeedSensor();
+	deinitTurbochargerSpeedSensor();
+	deinitAuxSpeedSensors();
+	deinitMap();
+	deinitInputShaftSpeedSensor();
 }
 
-static Logging* s_logger;
+void reconfigureSensors() {
+	initMap();
+	initTps();
+	initOilPressure();
+	initVbatt();
+	initThermistors();
+	initFlexSensor();
+	initVehicleSpeedSensor();
+	initTurbochargerSpeedSensor();
+	initInputShaftSpeedSensor();
+
+	initOldAnalogInputs();
+}
 
 // Mocking/testing helpers
-static void initSensorCli(Logging* logger) {
-	s_logger = logger;
-
+static void initSensorCli() {
 	addConsoleActionIF("set_sensor_mock", Sensor::setMockValue);
 	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
-	addConsoleAction("show_sensors", []() { Sensor::showAllSensorInfo(s_logger); });
-	addConsoleActionI("show_sensor", 
+	addConsoleAction("show_sensors", Sensor::showAllSensorInfo);
+	addConsoleActionI("show_sensor",
 		[](int idx) {
-			Sensor::showInfo(s_logger, static_cast<SensorType>(idx));
+			Sensor::showInfo(static_cast<SensorType>(idx));
 		});
 }

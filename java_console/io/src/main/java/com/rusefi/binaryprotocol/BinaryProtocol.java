@@ -2,39 +2,29 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.SignatureHelper;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.Timeouts;
-import com.rusefi.composite.CompositeEvent;
-import com.rusefi.composite.CompositeParser;
+import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
-import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.*;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.stream.LogicdataStreamFile;
-import com.rusefi.stream.StreamFile;
-import com.rusefi.stream.TSHighSpeedLog;
-import com.rusefi.stream.VcdStreamFile;
+import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -57,7 +47,6 @@ public class BinaryProtocol {
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
-    private static final int HIGH_RPM_DELAY = Integer.getInteger("high_speed_logger_time", 10);
     /**
      * This properly allows to switch to non-CRC32 mode
      * todo: finish this feature, assuming we even need it.
@@ -68,30 +57,19 @@ public class BinaryProtocol {
     private final IoStream stream;
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
+    public String signature;
+    public boolean isGoodOutputChannels;
 
-    private BinaryProtocolState state = new BinaryProtocolState();
+    private final BinaryProtocolState state = new BinaryProtocolState();
 
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
 
-    public static final int COMPOSITE_OFF_RPM = Integer.getInteger("high_speed_logger_rpm", 300);
-
-    /**
-     * Composite logging turns off after 10 seconds of RPM above 300
-     */
-    private boolean needCompositeLogger;
-    private boolean isCompositeLoggerEnabled;
-    private long lastLowRpmTime = System.currentTimeMillis();
-
-    private List<StreamFile> compositeLogs = new ArrayList<>();
-    public static boolean DISABLE_LOCAL_CACHE;
+    BinaryProtocolLogger binaryProtocolLogger;
+    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
 
     public static String findCommand(byte command) {
         switch (command) {
-            case Fields.TS_SD_R_COMMAND:
-                return "SD_R_COMMAND";
-            case Fields.TS_SD_W_COMMAND:
-                return "SD_W_COMMAND";
             case Fields.TS_PAGE_COMMAND:
                 return "PAGE";
             case Fields.TS_COMMAND_F:
@@ -119,58 +97,23 @@ public class BinaryProtocol {
         }
     }
 
-    private void createCompositesIfNeeded() {
-        if (!compositeLogs.isEmpty())
-            return;
-        compositeLogs.addAll(Arrays.asList(
-                new VcdStreamFile(getFileName("rusEFI_trigger_log_", ".vcd")),
-                new LogicdataStreamFile(getFileName("rusEFI_trigger_log_", ".logicdata")),
-                new TSHighSpeedLog(getFileName("rusEFI_trigger_log_"))
-        ));
-    }
-
     public IoStream getStream() {
         return stream;
     }
 
     public boolean isClosed;
 
-    public CommunicationLoggingListener communicationLoggingListener = CommunicationLoggingListener.VOID;
+    public CommunicationLoggingListener communicationLoggingListener;
 
-    public byte[] getCurrentOutputs() {
-        return state.getCurrentOutputs();
-    }
-
-    public void setCurrentOutputs(byte[] currentOutputs) {
-        state.setCurrentOutputs(currentOutputs);
-    }
-
-    private SensorCentral.SensorListener rpmListener;
-
-    private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
-
-    public BinaryProtocol(LinkManager linkManager, IoStream stream, IncomingDataBuffer dataBuffer) {
+    public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
         this.stream = stream;
 
-        communicationLoggingListener = new CommunicationLoggingListener() {
-            @Override
-            public void onPortHolderMessage(Class clazz, String message) {
-                linkManager.messageListener.postMessage(clazz, message);
-            }
-        };
+        communicationLoggingListener = linkManager.messageListener::postMessage;
 
-        incomingData = dataBuffer;
-        Runtime.getRuntime().addShutdownHook(hook);
-        needCompositeLogger = linkManager.getCompositeLogicEnabled();
-        rpmListener = value -> {
-            if (value <= COMPOSITE_OFF_RPM) {
-                needCompositeLogger = linkManager.getCompositeLogicEnabled();
-                lastLowRpmTime = System.currentTimeMillis();
-            } else if (System.currentTimeMillis() - lastLowRpmTime > HIGH_RPM_DELAY * Timeouts.SECOND) {
-                needCompositeLogger = false;
-            }
-        };
+        incomingData = stream.getDataBuffer();
+        binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
+        binaryProtocolLogger.needCompositeLogger = linkManager.getCompositeLogicEnabled();
     }
 
     public static void sleep(long millis) {
@@ -179,16 +122,6 @@ public class BinaryProtocol {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    @NotNull
-    public static String getFileName(String prefix) {
-        return getFileName(prefix, ".csv");
-    }
-
-    @NotNull
-    public static String getFileName(String prefix, String fileType) {
-        return Logger.DIR + prefix + Logger.getDate() + fileType;
     }
 
     public void doSend(final String command, boolean fireEvent) throws InterruptedException {
@@ -223,33 +156,62 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
+    public static String getSignature(IoStream stream) throws IOException {
+        HelloCommand.send(stream);
+        return HelloCommand.getHelloResponse(stream.getDataBuffer());
+    }
+
     /**
-     * this method would switch controller to binary protocol and read configuration snapshot from controller
+     * this method reads configuration snapshot from controller
      *
      * @return true if everything fine
      */
-    public boolean connectAndReadConfiguration(DataListener listener) {
+    public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
-            HelloCommand.send(stream);
-            String response = HelloCommand.getHelloResponse(incomingData);
-            System.out.println("Got " + response);
-            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(response));
+            signature = getSignature(stream);
+            log.info("Got " + signature + " signature");
+            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
-            return false;
+            return "Failed to read signature " + e;
         }
-//        switchToBinaryProtocol();
-        readImage(Fields.TOTAL_CONFIG_SIZE);
-        if (isClosed)
-            return false;
 
-        startTextPullThread(listener);
-        SensorCentral.getInstance().addListener(Sensor.RPM, rpmListener);
-        return true;
+        String errorMessage = validateConfigVersion();
+        if (errorMessage != null)
+            return errorMessage;
+
+        readImage(arguments, Fields.TOTAL_CONFIG_SIZE);
+        if (isClosed)
+            return "Failed to read calibration";
+
+        startPullThread(listener);
+        binaryProtocolLogger.start();
+        return null;
     }
 
-    private void startTextPullThread(final DataListener listener) {
+    /**
+     * @return null if everything is good, error message otherwise
+     */
+    private String validateConfigVersion() {
+        int requestSize = 4;
+        byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
+
+        String msg = "load TS_CONFIG_VERSION";
+        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, msg);
+        if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+            close();
+            return "Failed to " + msg;
+        }
+        int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
+        if (actualVersion != TS_FILE_VERSION) {
+            log.error("Got TS_CONFIG_VERSION " + actualVersion);
+            return "Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected";
+        }
+        return null;
+    }
+
+    private void startPullThread(final DataListener textListener) {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
+            log.info("Current queue size: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
@@ -260,43 +222,29 @@ public class BinaryProtocol {
                         linkManager.submit(new Runnable() {
                             @Override
                             public void run() {
-                                if (requestOutputChannels())
+                                isGoodOutputChannels = requestOutputChannels();
+                                if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
-                                compositeLogic();
-                                String text = requestPendingMessages();
-                                if (text != null)
-                                    listener.onDataArrived((text + "\r\n").getBytes());
-                                LiveDocsRegistry.INSTANCE.refresh(BinaryProtocol.this);
+                                binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
+                                if (linkManager.isNeedPullText()) {
+                                    String text = requestPendingMessages();
+                                    if (text != null)
+                                        textListener.onDataArrived((text + "\r\n").getBytes());
+                                }
+                                if (linkManager.isNeedPullLiveData()) {
+                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
+                                    LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
+                                }
                             }
                         });
                     }
                     sleep(Timeouts.TEXT_PULL_PERIOD);
                 }
-                log.info("Stopping text pull");
+                log.info("Port shutdown: Stopping text pull");
             }
         };
         Thread tr = THREAD_FACTORY.newThread(textPull);
         tr.start();
-    }
-
-    private void compositeLogic() {
-        if (needCompositeLogger) {
-            getComposite();
-        } else if (isCompositeLoggerEnabled) {
-            byte packet[] = new byte[2];
-            packet[0] = Fields.TS_SET_LOGGER_SWITCH;
-            packet[1] = Fields.TS_COMPOSITE_DISABLE;
-            executeCommand(packet, "disable composite");
-            isCompositeLoggerEnabled = false;
-            closeComposites();
-        }
-    }
-
-    private void closeComposites() {
-        for (StreamFile composite : compositeLogs) {
-            composite.close();
-        }
-        compositeLogs.clear();
     }
 
     private void dropPending() {
@@ -324,7 +272,7 @@ public class BinaryProtocol {
             byte[] newBytes = newVersion.getRange(range.first, size);
             log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), range.first, size);
+            writeData(newVersion.getContent(), 0, range.first, size);
 
             offset = range.second;
         }
@@ -332,21 +280,21 @@ public class BinaryProtocol {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws IOException {
+    private byte[] receivePacket(String msg) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            return incomingData.getPacket(msg, allowLongResponse, start);
+            return incomingData.getPacket(msg, start);
         }
     }
 
     /**
      * read complete tune from physical data stream
      */
-    public void readImage(int size) {
+    public void readImage(Arguments arguments, int size) {
         ConfigurationImage image = getAndValidateLocallyCached();
 
         if (image == null) {
-            image = readFullImageFromController(size);
+            image = readFullImageFromController(arguments, size);
             if (image == null)
                 return;
         }
@@ -355,8 +303,16 @@ public class BinaryProtocol {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
+    public static class Arguments {
+        final boolean saveFile;
+
+        public Arguments(boolean saveFile) {
+            this.saveFile = saveFile;
+        }
+    }
+
     @Nullable
-    private ConfigurationImage readFullImageFromController(int size) {
+    private ConfigurationImage readFullImageFromController(Arguments arguments, int size) {
         ConfigurationImage image;
         image = new ConfigurationImage(size);
 
@@ -372,17 +328,16 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
-            byte packet[] = new byte[5];
-            packet[0] = Fields.TS_READ_COMMAND;
-            putShort(packet, 1, swap16(offset));
-            putShort(packet, 3, swap16(requestSize));
+            byte[] packet = new byte[4];
+            ByteRange.packOffsetAndSize(offset, requestSize, packet);
 
-            byte[] response = executeCommand(packet, "load image offset=" + offset);
+            byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
-                String code = (response == null || response.length == 0) ? "empty" : "code " + getCode(response);
-                String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
+                String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
+                String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
+                // todo: looks like forever retry? that's weird
                 continue;
             }
 
@@ -392,12 +347,14 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        try {
-            ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-            Msq tune = MsqFactory.valueOf(image);
-            tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
-        } catch (Exception e) {
-            System.err.println("Ignoring " + e);
+        if (arguments != null && arguments.saveFile) {
+            try {
+                ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                Msq tune = MsqFactory.valueOf(image);
+                tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+            } catch (Exception e) {
+                System.err.println("Ignoring " + e);
+            }
         }
         return image;
     }
@@ -413,12 +370,14 @@ public class BinaryProtocol {
                 return "OUT_OF_RANGE";
             case TS_RESPONSE_FRAMING_ERROR:
                 return "FRAMING_ERROR";
+            case TS_RESPONSE_UNDERRUN:
+                return "TS_RESPONSE_UNDERRUN";
         }
         return Integer.toString(b);
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
-        if (DISABLE_LOCAL_CACHE)
+        if (DISABLE_LOCAL_CONFIGURATION_CACHE)
             return null;
         ConfigurationImage localCached;
         try {
@@ -432,30 +391,43 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte packet[] = new byte[5];
-            packet[0] = Fields.TS_CRC_CHECK_COMMAND;
-            putShort(packet, 1, swap16(/*offset = */ 0));
-            putShort(packet, 3, swap16(localCached.getSize()));
-            byte[] response = executeCommand(packet, "get CRC32");
+            int crcFromController = getCrcFromController(localCached.getSize());
 
-            if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
-                ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
-                // that's unusual - most of the protocol is LITTLE_ENDIAN
-                bb.order(ByteOrder.BIG_ENDIAN);
-                int crcFromController = bb.getInt();
-                log.info(String.format("From rusEFI tune CRC32 0x%x %d\n", crcFromController, crcFromController));
-                short crc16FromController = (short) crcFromController;
-                log.info(String.format("From rusEFI tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-                if (crcOfLocallyCachedConfiguration == crcFromController) {
-                    return localCached;
-                }
+            if (crcOfLocallyCachedConfiguration == crcFromController) {
+                return localCached;
             }
+
         }
         return null;
     }
 
-    public byte[] executeCommand(byte[] packet, String msg) {
-        return executeCommand(packet, msg, false);
+    public int getCrcFromController(int configSize) {
+        byte[] packet = createCrcCommand(configSize);
+        byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
+
+        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
+            ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
+            // that's unusual - most of the protocol is LITTLE_ENDIAN
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int crc32FromController = bb.getInt();
+            short crc16FromController = (short) crc32FromController;
+
+            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crc32FromController, crc32FromController));
+            log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
+            return crc32FromController;
+        } else {
+            return  -1;
+        }
+    }
+
+    public static byte[] createCrcCommand(int size) {
+        byte[] packet = new byte[4];
+        ByteRange.packOffsetAndSize(0, size, packet);
+        return packet;
+    }
+
+    public byte[] executeCommand(char opcode, String msg) {
+        return executeCommand(opcode, null, msg);
     }
 
     /**
@@ -463,15 +435,28 @@ public class BinaryProtocol {
      *
      * @return null in case of IO issues
      */
-    public byte[] executeCommand(byte[] packet, String msg, boolean allowLongResponse) {
+    public byte[] executeCommand(char opcode, byte[] packet, String msg) {
         if (isClosed)
             return null;
-        try {
-            LinkManager.assertCommunicationThread();
-            dropPending();
 
-            sendPacket(packet);
-            return receivePacket(msg, allowLongResponse);
+        byte[] fullRequest;
+
+        if (packet != null) {
+            fullRequest = new byte[packet.length + 1];
+            System.arraycopy(packet, 0, fullRequest, 1, packet.length);
+        } else {
+            fullRequest = new byte[1];
+        }
+
+        fullRequest[0] = (byte)opcode;
+
+        try {
+            linkManager.assertCommunicationThread();
+            dropPending();
+            if (Bug3923.obscene)
+                log.info("Sending opcode " + opcode + " payload " + packet.length);
+            sendPacket(fullRequest);
+            return receivePacket(msg);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
             close();
@@ -483,25 +468,21 @@ public class BinaryProtocol {
         if (isClosed)
             return;
         isClosed = true;
-        SensorCentral.getInstance().removeListener(Sensor.RPM, rpmListener);
+        binaryProtocolLogger.close();
         stream.close();
-        closeComposites();
-        Runtime.getRuntime().removeShutdownHook(hook);
     }
 
-    public void writeData(byte[] content, Integer offset, int size) {
+    public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte packet[] = new byte[5 + size];
-        packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
-        putShort(packet, 1, swap16(offset));
-        putShort(packet, 3, swap16(size));
+        byte[] packet = new byte[4 + size];
+        ByteRange.packOffsetAndSize(ecuOffset, size, packet);
 
-        System.arraycopy(content, offset, packet, 7, size);
+        System.arraycopy(content, contentOffset, packet, 4, size);
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(packet, "writeImage");
+            byte[] response = executeCommand(Fields.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -518,7 +499,7 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(new byte[]{Fields.TS_BURN_COMMAND}, "burn");
+            byte[] response = executeCommand(Fields.TS_BURN_COMMAND, "burn");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -543,18 +524,17 @@ public class BinaryProtocol {
         stream.sendPacket(command);
     }
 
-
     /**
      * This method blocks until a confirmation is received or {@link Timeouts#BINARY_IO_TIMEOUT} is reached
      *
      * @return true in case of timeout, false if got proper confirmation
      */
     private boolean sendTextCommand(String text) {
-        byte[] command = getTextCommandBytes(text);
+        byte[] command = getTextCommandBytesOnlyText(text);
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(command, "execute", false);
+            byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
@@ -571,11 +551,15 @@ public class BinaryProtocol {
         return command;
     }
 
+    public static byte[] getTextCommandBytesOnlyText(String text) {
+        return text.getBytes();
+    }
+
     private String requestPendingMessages() {
         if (isClosed)
             return null;
         try {
-            byte[] response = executeCommand(new byte[]{Fields.TS_GET_TEXT}, "text", true);
+            byte[] response = executeCommand(Fields.TS_GET_TEXT, "text");
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             return new String(response, 1, response.length - 1);
@@ -585,43 +569,42 @@ public class BinaryProtocol {
         }
     }
 
-    public void getComposite() {
-        if (isClosed)
-            return;
-
-        byte packet[] = new byte[1];
-        packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
-        // get command would enable composite logging in controller but we need to turn it off from our end
-        // todo: actually if console gets disconnected composite logging might end up enabled in controller?
-        isCompositeLoggerEnabled = true;
-
-        byte[] response = executeCommand(packet, "composite log", true);
-        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
-            List<CompositeEvent> events = CompositeParser.parse(response);
-            createCompositesIfNeeded();
-            for (StreamFile composite : compositeLogs)
-                composite.append(events);
-        }
-    }
-
     public boolean requestOutputChannels() {
         if (isClosed)
             return false;
 
-        byte[] packet = GetOutputsCommand.createRequest();
+        // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
+        //  of the reassembled packet.
+        byte[] reassemblyBuffer = new byte[TS_TOTAL_OUTPUT_SIZE + 1];
+        reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
 
-        byte[] response = executeCommand(packet, "output channels", false);
-        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
-            return false;
+        int reassemblyIdx = 0;
+        int remaining = TS_TOTAL_OUTPUT_SIZE;
 
-        state.setCurrentOutputs(response);
+        while (remaining > 0) {
+            // If less than one full chunk left, do a smaller read
+            int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-        SensorCentral.getInstance().grabSensorValues(response);
+            byte[] response = executeCommand(
+                Fields.TS_OUTPUT_COMMAND,
+                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                "output channels"
+            );
+
+            if (response == null || response.length != (chunkSize + 1) || response[0] != Fields.TS_RESPONSE_OK) {
+                return false;
+            }
+
+            // Copy this chunk in to the reassembly buffer
+            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+            reassemblyIdx += chunkSize;
+            remaining -= chunkSize;
+        }
+
+        state.setCurrentOutputs(reassemblyBuffer);
+
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer);
         return true;
-    }
-
-    public void setRange(byte[] src, int scrPos, int offset, int count) {
-        state.setRange(src, scrPos, offset, count);
     }
 
     public BinaryProtocolState getBinaryProtocolState() {

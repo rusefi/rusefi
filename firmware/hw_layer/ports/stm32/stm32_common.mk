@@ -1,13 +1,24 @@
-HW_LAYER_EMS += $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb/usbcfg.c \
-	            $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb/usbconsole.c \
-				$(PROJECT_DIR)/hw_layer/ports/stm32/flash_int.c \
+HW_STM32_PORT_DIR = $(PROJECT_DIR)/hw_layer/ports/stm32
 
 HW_LAYER_EMS_CPP += \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_pins.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_common.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/backup_ram.cpp \
-	$(PROJECT_DIR)/hw_layer/ports/stm32/microsecond_timer_stm32.cpp \
+    $(HW_STM32_PORT_DIR)/serial_over_usb/usbconsole.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_pins.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_common.cpp \
+	$(HW_STM32_PORT_DIR)/stm32_icu.cpp \
+	$(HW_STM32_PORT_DIR)/backup_ram.cpp \
+	$(HW_STM32_PORT_DIR)/microsecond_timer_stm32.cpp \
+	$(HW_STM32_PORT_DIR)/osc_detector.cpp \
+	$(HW_STM32_PORT_DIR)/flash_int.cpp \
+	$(HW_STM32_PORT_DIR)/serial_over_usb/usbcfg.cpp
 
-RUSEFIASM = $(PROJECT_DIR)/hw_layer/ports/stm32/rusEfiStartup.S
+RUSEFIASM = \
+	$(HW_STM32_PORT_DIR)/rusEfiStartup.S
 
-HW_INC += $(PROJECT_DIR)/hw_layer/ports/stm32 $(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb
+HW_INC += \
+	$(HW_STM32_PORT_DIR) \
+	$(HW_STM32_PORT_DIR)/serial_over_usb
+
+ifeq ($(EFI_HAS_EXT_SDRAM), yes)
+	USE_OPT += -Wl,--defsym=STM32_HAS_SDRAM=1
+	DDEFS += -DEFI_HAS_EXT_SDRAM
+endif

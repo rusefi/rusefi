@@ -5,106 +5,103 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_chrysler.h"
 #include "trigger_universal.h"
 
 void initDodgeRam(TriggerWaveform *s) {
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = true;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->isSynchronizationNeeded = false;
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720);
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06, -25, 360, 0, 720);
 
-	s->addEvent720(360, T_PRIMARY, TV_RISE);
+	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	addSkippedToothTriggerEvents(T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
+	addSkippedToothTriggerEvents(TriggerWheel::T_SECONDARY, s, 8, 0, 0.06, 360 - 25, 360, 0, 720);
 
-	s->addEvent720(720, T_PRIMARY, TV_FALL);
-	s->useOnlyPrimaryForSync = true;
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
-void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
-	s->useRiseEdge = true;
+void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->setTriggerSynchronizationGap(3);
-	int m = CRANK_MODE_MULTIPLIER;
 
-	s->addEvent720(m * 25, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 30, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 35, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 40, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 45, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 50, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 55, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 60, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 65, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 70, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 75, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 80, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 85, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 90, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 95, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 100, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 105, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 110, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 115, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 120, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 125, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 130, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 135, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 140, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 145,T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 150, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 155, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 160, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 165, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 170, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 175, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 180, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 185, T_PRIMARY, TV_FALL);
+	s->addEvent360(25, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(30, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(35, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(40, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(45, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(50, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(55, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(60, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(65, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(70, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(75, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(80, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(85, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(90, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(95, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(100, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(105, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(110, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(115, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(120, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(125, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(130, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(135, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(140, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(145,TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(150, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(155, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(160, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(165, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(170, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(175, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(185, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	// gap 25
-	s->addEvent720(m * 210, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 215, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 220, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 225, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 230, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 235, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 240, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 245, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 250, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 255, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 260, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 265, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 270, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 275, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 280, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 285, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 290, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 295, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 300, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 305, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 310, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 315, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 320, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 325, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 330, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 335, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 340, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 345, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 350, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 355, T_PRIMARY, TV_FALL);
-	s->addEvent720(m * 360, T_PRIMARY, TV_RISE);
+	s->addEvent360(210, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(215, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(220, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(225, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(230, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(235, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(240, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(245, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(255, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(260, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(265, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(275, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(280, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(285, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(290, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(295, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(300, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(305, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(310, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(315, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(320, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(325, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(330, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(335, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(340, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(345, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(350, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(355, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
 void configureNeon2003TriggerWaveformCam(TriggerWaveform *s) {
 // todo: move sync point so that two channel does not have false trigger issues
 	bool useOnlyPrimary = true;
 
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useRiseEdge = true;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
 
 	s->tdcPosition = 496;
 
@@ -126,26 +123,25 @@ gap=1.43/0.71
 
 	float EPS_ANGLE = 0.3;
 
-	s->useOnlyPrimaryForSync = true;
 
 	if (useOnlyPrimary) {
-		s->addEvent720(144, T_PRIMARY, TV_RISE);
-		s->addEvent720(180, T_PRIMARY, TV_FALL);
+		s->addEvent720(144, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(216, T_PRIMARY, TV_RISE);
-		s->addEvent720(252, T_PRIMARY, TV_FALL);
+		s->addEvent720(216, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(252, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(288, T_PRIMARY, TV_RISE);
-		s->addEvent720(324, T_PRIMARY, TV_FALL);
+		s->addEvent720(288, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(324, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(360, T_PRIMARY, TV_RISE); // width = 144
-		s->addEvent720(504, T_PRIMARY, TV_FALL); // width = 36
-		s->addEvent720(540, T_PRIMARY, TV_RISE);
-		s->addEvent720(576, T_PRIMARY, TV_FALL);
-		s->addEvent720(612, T_PRIMARY, TV_RISE);
-		s->addEvent720(648, T_PRIMARY, TV_FALL);
-		s->addEvent720(684, T_PRIMARY, TV_RISE);
-		s->addEvent720(720, T_PRIMARY, TV_FALL);
+		s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // width = 144
+		s->addEvent720(504, TriggerValue::FALL, TriggerWheel::T_PRIMARY); // width = 36
+		s->addEvent720(540, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(576, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		s->addEvent720(612, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(648, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		s->addEvent720(684, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	} else {
 		/**
@@ -154,176 +150,178 @@ gap=1.43/0.71
 		 *
 		 */
 
-		s->addEvent720(25, T_SECONDARY, TV_FALL);
-		s->addEvent720(30, T_SECONDARY, TV_RISE);
-		s->addEvent720(35, T_SECONDARY, TV_FALL);
-		s->addEvent720(40, T_SECONDARY, TV_RISE);
-		s->addEvent720(45, T_SECONDARY, TV_FALL);
-		s->addEvent720(50, T_SECONDARY, TV_RISE);
-		s->addEvent720(55, T_SECONDARY, TV_FALL);
-		s->addEvent720(60, T_SECONDARY, TV_RISE);
-		s->addEvent720(65, T_SECONDARY, TV_FALL);
-		s->addEvent720(70, T_SECONDARY, TV_RISE);
-		s->addEvent720(75, T_SECONDARY, TV_FALL);
-		s->addEvent720(80, T_SECONDARY, TV_RISE);
-		s->addEvent720(85, T_SECONDARY, TV_FALL);
-		s->addEvent720(90, T_SECONDARY, TV_RISE);
-		s->addEvent720(95, T_SECONDARY, TV_FALL);
-		s->addEvent720(100, T_SECONDARY, TV_RISE);
-		s->addEvent720(105, T_SECONDARY, TV_FALL);
-		s->addEvent720(110, T_SECONDARY, TV_RISE);
-		s->addEvent720(115, T_SECONDARY, TV_FALL);
-		s->addEvent720(120, T_SECONDARY, TV_RISE);
-		s->addEvent720(125, T_SECONDARY, TV_FALL);
-		s->addEvent720(130, T_SECONDARY, TV_RISE);
-		s->addEvent720(135, T_SECONDARY, TV_FALL);
-		s->addEvent720(140, T_SECONDARY, TV_RISE);
+		s->useOnlyPrimaryForSync = true;
 
-		s->addEvent720(144, T_PRIMARY, TV_RISE);
+		s->addEvent720(25, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(30, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(35, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(40, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(45, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(50, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(55, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(60, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(65, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(70, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(75, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(80, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(85, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(90, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(95, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(100, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(105, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(110, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(115, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(120, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(125, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(130, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(135, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(140, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(145,T_SECONDARY, TV_FALL);
-		s->addEvent720(150, T_SECONDARY, TV_RISE);
-		s->addEvent720(155, T_SECONDARY, TV_FALL);
-		s->addEvent720(160, T_SECONDARY, TV_RISE);
-		s->addEvent720(165, T_SECONDARY, TV_FALL);
-		s->addEvent720(170, T_SECONDARY, TV_RISE);
-		s->addEvent720(175, T_SECONDARY, TV_FALL);
-		s->addEvent720(180 - EPS_ANGLE, T_SECONDARY, TV_RISE);
+		s->addEvent720(144, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(180, T_PRIMARY, TV_FALL);
+		s->addEvent720(145,TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(150, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(155, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(160, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(165, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(170, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(175, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(180 - EPS_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(185, T_SECONDARY, TV_FALL);
-		s->addEvent720(210, T_SECONDARY, TV_RISE);
-		s->addEvent720(215, T_SECONDARY, TV_FALL);
+		s->addEvent720(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(216, T_PRIMARY, TV_RISE);
+		s->addEvent720(185, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(210, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(215, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(220, T_SECONDARY, TV_RISE);
-		s->addEvent720(225, T_SECONDARY, TV_FALL);
-		s->addEvent720(230, T_SECONDARY, TV_RISE);
-		s->addEvent720(235, T_SECONDARY, TV_FALL);
-		s->addEvent720(240, T_SECONDARY, TV_RISE);
-		s->addEvent720(245, T_SECONDARY, TV_FALL);
-		s->addEvent720(250, T_SECONDARY, TV_RISE);
+		s->addEvent720(216, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(252, T_PRIMARY, TV_FALL);
+		s->addEvent720(220, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(225, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(230, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(235, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(240, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(245, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(250, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(255, T_SECONDARY, TV_FALL);
+		s->addEvent720(252, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(260, T_SECONDARY, TV_RISE);
-		s->addEvent720(265, T_SECONDARY, TV_FALL);
-		s->addEvent720(270, T_SECONDARY, TV_RISE);
-		s->addEvent720(275, T_SECONDARY, TV_FALL);
-		s->addEvent720(280, T_SECONDARY, TV_RISE);
-		s->addEvent720(285, T_SECONDARY, TV_FALL);
+		s->addEvent720(255, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(288, T_PRIMARY, TV_RISE);
+		s->addEvent720(260, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(265, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(270, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(275, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(280, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(285, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(290, T_SECONDARY, TV_RISE);
-		s->addEvent720(295, T_SECONDARY, TV_FALL);
-		s->addEvent720(300, T_SECONDARY, TV_RISE);
-		s->addEvent720(305, T_SECONDARY, TV_FALL);
-		s->addEvent720(310, T_SECONDARY, TV_RISE);
-		s->addEvent720(315, T_SECONDARY, TV_FALL);
-		s->addEvent720(320, T_SECONDARY, TV_RISE);
+		s->addEvent720(288, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(324, T_PRIMARY, TV_FALL);
+		s->addEvent720(290, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(295, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(300, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(305, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(310, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(315, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(320, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(325, T_SECONDARY, TV_FALL);
-		s->addEvent720(330, T_SECONDARY, TV_RISE);
-		s->addEvent720(335, T_SECONDARY, TV_FALL);
-		s->addEvent720(340, T_SECONDARY, TV_RISE);
-		s->addEvent720(345, T_SECONDARY, TV_FALL);
-		s->addEvent720(350, T_SECONDARY, TV_RISE);
-		s->addEvent720(355, T_SECONDARY, TV_FALL);
-		s->addEvent720(360 - EPS_ANGLE, T_SECONDARY, TV_RISE);
+		s->addEvent720(324, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(360, T_PRIMARY, TV_RISE);
+		s->addEvent720(325, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(330, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(335, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(340, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(345, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(350, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(355, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(360 - EPS_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(385, T_SECONDARY, TV_FALL);
-		s->addEvent720(390, T_SECONDARY, TV_RISE);
-		s->addEvent720(395, T_SECONDARY, TV_FALL);
-		s->addEvent720(400, T_SECONDARY, TV_RISE);
-		s->addEvent720(405, T_SECONDARY, TV_FALL);
-		s->addEvent720(410, T_SECONDARY, TV_RISE);
-		s->addEvent720(415, T_SECONDARY, TV_FALL);
-		s->addEvent720(420, T_SECONDARY, TV_RISE);
-		s->addEvent720(425, T_SECONDARY, TV_FALL);
-		s->addEvent720(430, T_SECONDARY, TV_RISE);
-		s->addEvent720(435, T_SECONDARY, TV_FALL);
-		s->addEvent720(440, T_SECONDARY, TV_RISE);
-		s->addEvent720(445, T_SECONDARY, TV_FALL);
-		s->addEvent720(450, T_SECONDARY, TV_RISE);
-		s->addEvent720(455, T_SECONDARY, TV_FALL);
-		s->addEvent720(460, T_SECONDARY, TV_RISE);
-		s->addEvent720(465, T_SECONDARY, TV_FALL);
-		s->addEvent720(470, T_SECONDARY, TV_RISE);
-		s->addEvent720(475, T_SECONDARY, TV_FALL);
-		s->addEvent720(480, T_SECONDARY, TV_RISE);
-		s->addEvent720(485, T_SECONDARY, TV_FALL);
-		s->addEvent720(490, T_SECONDARY, TV_RISE);
-		s->addEvent720(495, T_SECONDARY, TV_FALL);
-		s->addEvent720(500, T_SECONDARY, TV_RISE);
+		s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(504, T_PRIMARY, TV_FALL);
+		s->addEvent720(385, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(390, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(395, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(400, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(405, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(410, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(415, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(420, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(425, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(430, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(435, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(440, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(445, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(450, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(455, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(460, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(465, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(470, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(475, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(480, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(485, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(490, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(495, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(500, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(505, T_SECONDARY, TV_FALL);
-		s->addEvent720(510, T_SECONDARY, TV_RISE);
-		s->addEvent720(515, T_SECONDARY, TV_FALL);
-		s->addEvent720(520, T_SECONDARY, TV_RISE);
-		s->addEvent720(525, T_SECONDARY, TV_FALL);
-		s->addEvent720(530, T_SECONDARY, TV_RISE);
-		s->addEvent720(535, T_SECONDARY, TV_FALL);
-		s->addEvent720(540 - EPS_ANGLE, T_SECONDARY, TV_RISE);
+		s->addEvent720(504, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(540, T_PRIMARY, TV_RISE);
+		s->addEvent720(505, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(510, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(515, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(520, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(525, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(530, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(535, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(540 - EPS_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(545, T_SECONDARY, TV_FALL);
-		s->addEvent720(570, T_SECONDARY, TV_RISE);
-		s->addEvent720(575, T_SECONDARY, TV_FALL);
+		s->addEvent720(540, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-		s->addEvent720(576, T_PRIMARY, TV_FALL);
-		s->addEvent720(580, T_SECONDARY, TV_RISE);
-		s->addEvent720(585, T_SECONDARY, TV_FALL);
-		s->addEvent720(590, T_SECONDARY, TV_RISE);
-		s->addEvent720(595, T_SECONDARY, TV_FALL);
-		s->addEvent720(600, T_SECONDARY, TV_RISE);
-		s->addEvent720(605, T_SECONDARY, TV_FALL);
-		s->addEvent720(610, T_SECONDARY, TV_RISE);
+		s->addEvent720(545, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(570, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(575, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(612, T_PRIMARY, TV_RISE);
-		s->addEvent720(615, T_SECONDARY, TV_FALL);
-		s->addEvent720(620, T_SECONDARY, TV_RISE);
-		s->addEvent720(625, T_SECONDARY, TV_FALL);
-		s->addEvent720(630, T_SECONDARY, TV_RISE);
-		s->addEvent720(635, T_SECONDARY, TV_FALL);
-		s->addEvent720(640, T_SECONDARY, TV_RISE);
-		s->addEvent720(645, T_SECONDARY, TV_FALL);
+		s->addEvent720(576, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		s->addEvent720(580, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(585, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(590, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(595, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(600, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(605, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(610, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(648, T_PRIMARY, TV_FALL);
-		s->addEvent720(650, T_SECONDARY, TV_RISE);
-		s->addEvent720(655, T_SECONDARY, TV_FALL);
-		s->addEvent720(660, T_SECONDARY, TV_RISE);
-		s->addEvent720(665, T_SECONDARY, TV_FALL);
-		s->addEvent720(670, T_SECONDARY, TV_RISE);
-		s->addEvent720(675, T_SECONDARY, TV_FALL);
-		s->addEvent720(680, T_SECONDARY, TV_RISE);
+		s->addEvent720(612, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(615, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(620, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(625, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(630, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(635, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(640, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(645, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-		s->addEvent720(684, T_PRIMARY, TV_RISE);
-		s->addEvent720(685, T_SECONDARY, TV_FALL);
-		s->addEvent720(690, T_SECONDARY, TV_RISE);
-		s->addEvent720(695, T_SECONDARY, TV_FALL);
-		s->addEvent720(700, T_SECONDARY, TV_RISE);
-		s->addEvent720(705, T_SECONDARY, TV_FALL);
-		s->addEvent720(710, T_SECONDARY, TV_RISE);
-		s->addEvent720(715, T_SECONDARY, TV_FALL);
-		s->addEvent720(720 - EPS_ANGLE, T_SECONDARY, TV_RISE);
-		s->addEvent720(720, T_PRIMARY, TV_FALL);
+		s->addEvent720(648, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+		s->addEvent720(650, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(655, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(660, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(665, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(670, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(675, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(680, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+
+		s->addEvent720(684, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEvent720(685, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(690, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(695, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(700, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(705, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(710, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(715, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+		s->addEvent720(720 - EPS_ANGLE, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+		s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	}
 }
 
 void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->tdcPosition = 150;
 
 	float w = 7;
@@ -334,120 +332,122 @@ void configureDodgeStratusTriggerWaveform(TriggerWaveform *s) {
 	float base = 0;
 	// 2 teeth
 	float angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// 3 teeth
 	angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// 2 teeth
 	angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// just one
 	angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// 3 teeth
 	angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	angle += g;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	base += 120;
 	// just one again
 	angle = base + 120.0 - w;
-	s->addEvent720(angle, T_PRIMARY, TV_RISE);
-	s->addEvent720(angle + w, T_PRIMARY, TV_FALL);
+	s->addEvent720(angle, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(angle + w, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
 static void configureNeon1995TriggerWaveformCommon(bool withCam, TriggerWaveform *s) {
-	trigger_wheel_e crank = withCam ? T_SECONDARY : T_PRIMARY;
+	s->useOnlyPrimaryForSync = withCam;
+	
+	TriggerWheel crank = withCam ? TriggerWheel::T_SECONDARY : TriggerWheel::T_PRIMARY;
 
 	// voodoo magic - we always need 720 at the end
 	int base = withCam ? 720 - 560 : 360 - 135;
 
 	float m = withCam ? 1 : 2;
 
-	s->addEvent720(m * (base - 120), crank, TV_RISE);
-	s->addEvent720(m * (base - 116), crank, TV_FALL);
-	s->addEvent720(m * (base - 720 + 616), crank, TV_RISE);
-	s->addEvent720(m * (base - 100), crank, TV_FALL);
-	s->addEvent720(m * (base - 720 + 643), crank, TV_RISE);
-	s->addEvent720(m * (base - 720 + 648), crank, TV_FALL);
-	s->addEvent720(m * (base - 720 + 671), crank, TV_RISE);
-	s->addEvent720(m * (base - 44), crank, TV_FALL);
+	s->addEvent720(m * (base - 120), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base - 116), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base - 720 + 616), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base - 100), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base - 720 + 643), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base - 720 + 648), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base - 720 + 671), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base - 44), TriggerValue::FALL, crank);
 
 	if (withCam) {
-		s->addEvent720(base + 0, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + 0, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	}
-	s->addEvent720(m * (base + 20), crank, TV_RISE);
-	s->addEvent720(m * (base + 60), crank, TV_FALL);
-	s->addEvent720(m * (base + 75), crank, TV_RISE);
-	s->addEvent720(m * (base + 79), crank, TV_FALL);
-	s->addEvent720(m * (base + 101), crank, TV_RISE);
-	s->addEvent720(m * (base + 106), crank, TV_FALL);
-	s->addEvent720(m * (base + 130), crank, TV_RISE);
-	s->addEvent720(m * (base + 135), crank, TV_FALL);
+	s->addEvent720(m * (base + 20), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base + 60), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base + 75), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base + 79), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base + 101), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base + 106), TriggerValue::FALL, crank);
+	s->addEvent720(m * (base + 130), TriggerValue::RISE, crank);
+	s->addEvent720(m * (base + 135), TriggerValue::FALL, crank);
 
 	if (withCam) {
-		s->addEvent720(base + 200, T_PRIMARY, TV_RISE); // width = 150
+		s->addEvent720(base + 200, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // width = 150
 
-		s->addEvent720(base + 236, crank, TV_RISE);
-		s->addEvent720(base + 239, crank, TV_FALL);
-		s->addEvent720(base + 250, crank, TV_RISE);
-		s->addEvent720(base + 255, crank, TV_FALL);
-		s->addEvent720(base + 277, crank, TV_RISE);
-		s->addEvent720(base + 282, crank, TV_FALL);
-		s->addEvent720(base + 305, crank, TV_RISE);
-		s->addEvent720(base + 310, crank, TV_FALL);
+		s->addEvent720(base + 236, TriggerValue::RISE, crank);
+		s->addEvent720(base + 239, TriggerValue::FALL, crank);
+		s->addEvent720(base + 250, TriggerValue::RISE, crank);
+		s->addEvent720(base + 255, TriggerValue::FALL, crank);
+		s->addEvent720(base + 277, TriggerValue::RISE, crank);
+		s->addEvent720(base + 282, TriggerValue::FALL, crank);
+		s->addEvent720(base + 305, TriggerValue::RISE, crank);
+		s->addEvent720(base + 310, TriggerValue::FALL, crank);
 
-	s->addEvent720(base + 374, crank, TV_RISE);
-
-//	if (withCam)
-		s->addEvent720(base + 395, T_PRIMARY, TV_FALL); // width =
-
-	s->addEvent720(base + 418, crank, TV_FALL);
-	s->addEvent720(base + 436, crank, TV_RISE);
-	s->addEvent720(base + 441, crank, TV_FALL);
-	s->addEvent720(base + 463, crank, TV_RISE);
-	s->addEvent720(base + 468, crank, TV_FALL);
-	s->addEvent720(base + 492, crank, TV_RISE);
-	s->addEvent720(base + 497, crank, TV_FALL);
+	s->addEvent720(base + 374, TriggerValue::RISE, crank);
 
 //	if (withCam)
-		s->addEvent720(base + 560, T_PRIMARY, TV_RISE); // width =
+		s->addEvent720(base + 395, TriggerValue::FALL, TriggerWheel::T_PRIMARY); // width =
+
+	s->addEvent720(base + 418, TriggerValue::FALL, crank);
+	s->addEvent720(base + 436, TriggerValue::RISE, crank);
+	s->addEvent720(base + 441, TriggerValue::FALL, crank);
+	s->addEvent720(base + 463, TriggerValue::RISE, crank);
+	s->addEvent720(base + 468, TriggerValue::FALL, crank);
+	s->addEvent720(base + 492, TriggerValue::RISE, crank);
+	s->addEvent720(base + 497, TriggerValue::FALL, crank);
+
+//	if (withCam)
+		s->addEvent720(base + 560, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // width =
 
 	}
 }
 
 void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 	s->setTriggerSynchronizationGap(3.79);
 
 	s->tdcPosition = 279;
@@ -457,105 +457,100 @@ void configureNeon1995TriggerWaveformOnlyCrank(TriggerWaveform *s) {
 
 
 void configureNeon1995TriggerWaveform(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 
 	s->setTriggerSynchronizationGap(0.8227);
 
-	s->useRiseEdge = false;
-
-
-	s->initialState[T_PRIMARY] = TV_RISE;
+	s->initialState[(int)TriggerWheel::T_PRIMARY] = TriggerValue::RISE;
 
 	configureNeon1995TriggerWaveformCommon(true, s);
-
-	s->useOnlyPrimaryForSync = true;
 }
 
 void initJeep18_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 581;
 
 	float off = 212;
 
-	s->addEvent720(534 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(536 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(554 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(556 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(574 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(576 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(594 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(596 - 720 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(534 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(536 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(554 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(556 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(574 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(576 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(594 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(596 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(654 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(656 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(674 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(676 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(694 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(696 - 720 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(714 - 720 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(716 - 720 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(654 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(656 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(674 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(676 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(694 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(696 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(714 - 720 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(716 - 720 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 
-	s->addEvent720(54 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(56 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(74 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(76 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(94 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(96 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(114 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(116 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(54 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(56 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(74 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(76 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(94 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(96 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(114 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(116 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(148 + off, T_PRIMARY, TV_RISE); // 360
+	s->addEvent720(148 + off, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // 360
 
-	s->addEvent720(174 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(176 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(194 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(196 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(214 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(216 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(234 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(236 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(174 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(176 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(194 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(196 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(214 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(216 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(234 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(236 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(294 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(296 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(314 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(316 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(334 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(336 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(354 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(356 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(294 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(296 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(314 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(316 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(334 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(336 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(354 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(356 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(414 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(416 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(434 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(436 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(454 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(456 + off, T_SECONDARY, TV_FALL);
-	s->addEvent720(474 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(476 + off, T_SECONDARY, TV_FALL);
+	s->addEvent720(414 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(416 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(434 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(436 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(454 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(456 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(474 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(476 + off, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(508 + off, T_PRIMARY, TV_FALL); // 720
+	s->addEvent720(508 + off, TriggerValue::FALL, TriggerWheel::T_PRIMARY); // 720
 
 }
 
 static void add4cylblock(int off, TriggerWaveform *s) {
-	s->addEvent720(114 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(114 + off + 2, T_SECONDARY, TV_FALL);
+	s->addEvent720(114 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(114 + off + 2, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(134 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(134 + off + 2, T_SECONDARY, TV_FALL);
+	s->addEvent720(134 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(134 + off + 2, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(154 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(154 + off + 2, T_SECONDARY, TV_FALL);
+	s->addEvent720(154 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(154 + off + 2, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(174 + off, T_SECONDARY, TV_RISE);
-	s->addEvent720(174 + off + 2, T_SECONDARY, TV_FALL);
+	s->addEvent720(174 + off, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(174 + off + 2, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 }
 
 // TT_JEEP_4_CYL
 void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	s->isSynchronizationNeeded = false;
 	s->tdcPosition = 720 - 236;
 
@@ -564,17 +559,17 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s) {
 	add4cylblock(offset - 180, s);
 	add4cylblock(offset, s);
 
-	s->addEvent720(236 + offset, T_PRIMARY, TV_RISE); // 360
+	s->addEvent720(236 + offset, TriggerValue::RISE, TriggerWheel::T_PRIMARY); // 360
 
 	add4cylblock(offset + 180, s);
 	add4cylblock(offset + 360, s);
 
-	s->addEvent720(596 + offset, T_PRIMARY, TV_FALL); // 720
+	s->addEvent720(596 + offset, TriggerValue::FALL, TriggerWheel::T_PRIMARY); // 720
 
 }
 
 void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
@@ -588,24 +583,23 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	float base = 0;
 
 	for (int i = 0; i < 14; i++) {
-		s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEventAngle(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEventAngle(base + narrow / 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEventAngle(base + narrow, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 		base += narrow;
 	}
 
-	s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
+	s->addEventAngle(base + narrow / 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	base += narrow / 2;
-	s->addEventAngle(base + wide, T_PRIMARY, TV_FALL);
+	s->addEventAngle(base + wide, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	base += wide;
 
 	for (int i = 0; i < 16; i++) {
-		s->addEventAngle(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEventAngle(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEventAngle(base + narrow / 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addEventAngle(base + narrow, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 		base += narrow;
 	}
 
 	// one small tooth at the end of the engine cycle
-	s->addEventAngle(s->getCycleDuration() - narrow / 2, T_PRIMARY, TV_RISE);
-	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
-	s->useOnlyPrimaryForSync = true;
+	s->addEventAngle(s->getCycleDuration() - narrow / 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }

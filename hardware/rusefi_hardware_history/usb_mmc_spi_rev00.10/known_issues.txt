@@ -1,1 +1,0 @@
-1) this version has two .drl files - because of that this board fails with oshpark!

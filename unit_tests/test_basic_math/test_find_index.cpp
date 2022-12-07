@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine_math.h"
-#include "interpolation.h"
-#include "unit_test_framework.h"
+#include "pch.h"
+#include "efi_interpolation.h"
 
 static void testIndex(const int expected, const float array[], int size, float value) {
 	ASSERT_EQ(expected, findIndex(array, size, value));
@@ -64,31 +62,6 @@ TEST(misc, testFindIndex) {
 		printf("Middle\r\n");
 		testIndex(2, array4, size4, 3);
 	}
-}
-
-TEST(misc, testInterpolate2d) {
-	printf("*************************************************** testInterpolate2d\r\n");
-
-	float bins4[] = { 1, 2, 3, 4 };
-	float values4[] = { 1, 20, 30, 400 };
-
-	int result;
-
-	printf("Left size\r\n");
-	result = interpolate2d("t", 0, bins4, values4);
-	ASSERT_EQ(1, result);
-
-	printf("Right size\r\n");
-	result = interpolate2d("t", 10, bins4, values4);
-	ASSERT_EQ(400, result);
-
-	printf("Middle1\r\n");
-	result = interpolate2d("t", 3, bins4, values4);
-	ASSERT_EQ(30, result);
-
-	printf("Middle1\r\n");
-	result = interpolate2d("t", 3.5, bins4, values4);
-	ASSERT_EQ(215, result);
 }
 
 TEST(misc, testSetTableValue) {

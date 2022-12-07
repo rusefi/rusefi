@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.autoupdate.AutoupdateUtil;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ public class EraseChip {
     private static final String ERASE_COMMAND_SUFFIX = " -c init -c targets -c \"halt\" -c \"flash erase_address 0x08000000 " + FLASH_SIZE + "\" -c shutdown";
 
     private final JButton button = new JButton("ST-LINK Erase Chip", AutoupdateUtil.loadIcon("erase.png"));
-    private StatusWindow wnd = new StatusWindow();
+    private final StatusWindow wnd = new StatusWindow();
 
     public EraseChip() {
         button.addActionListener(new AbstractAction() {

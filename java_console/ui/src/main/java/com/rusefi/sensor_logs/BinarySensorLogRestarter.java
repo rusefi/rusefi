@@ -10,8 +10,12 @@ import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class BinarySensorLogRestarter implements SensorLog {
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("BinarySensorLogRestarter"));
@@ -27,7 +31,7 @@ public class BinarySensorLogRestarter implements SensorLog {
 
     @Override
     public synchronized void writeSensorLogLine() {
-        double rpm = SensorCentral.getInstance().getValue(Sensor.RPM);
+        double rpm = SensorCentral.getInstance().getValue(Sensor.RPMValue);
         if (rpm > 200) {
             seenRunning = System.currentTimeMillis();
         }
@@ -37,9 +41,15 @@ public class BinarySensorLogRestarter implements SensorLog {
         }
 
         if (logger == null) {
-            logger = new BinarySensorLog();
+            Collection<Sensor> sensorsForLogging = filterOutSensorsWithoutType(SensorLogger.SENSORS);
+
+            logger = new BinarySensorLog<>(sensor -> SensorCentral.getInstance().getValue(sensor), sensorsForLogging);
         }
         logger.writeSensorLogLine();
+    }
+
+    private static Collection<Sensor> filterOutSensorsWithoutType(Sensor[] sensors) {
+        return Arrays.stream(sensors).filter(sensor -> sensor.getType() != null).collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override

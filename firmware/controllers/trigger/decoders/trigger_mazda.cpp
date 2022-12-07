@@ -18,37 +18,41 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pch.h"
+
 #include "trigger_mazda.h"
 
+#define NB_CRANK_MAGIC 70
+
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
-	s->useRiseEdge = false;
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+	s->isSecondWheelCam = true;
 
-	s->bothFrontsRequired = true;
+	// nominal gap is 0.325
+	s->setTriggerSynchronizationGap2(0.1, 0.5);
+	// nominal gap is ~1.52
+	s->setSecondTriggerSynchronizationGap2(0.5, 2.3);
 
-	s->tdcPosition = 294;
-
-	s->isSynchronizationNeeded = true;
+	s->tdcPosition = 5.181;
 
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
 	 */
-	s->addEvent720(52.960405, T_SECONDARY, TV_RISE);
-	s->addEvent720(122.635956, T_SECONDARY, TV_FALL);
+	s->addEvent720(52.960405, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(122.635956, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(216.897031, T_PRIMARY, TV_RISE);
-	s->addEvent720(232.640068, T_SECONDARY, TV_RISE);
-	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);
-	s->addEvent720(302.646323, T_SECONDARY, TV_FALL);
+	s->addEvent720(216.897031, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(232.640068, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(288.819688, TriggerValue::FALL, TriggerWheel::T_PRIMARY);		// <-- This edge is the sync point
+	s->addEvent720(302.646323, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(412.448056, T_SECONDARY, TV_RISE);
-	s->addEvent720(482.816719, T_SECONDARY, TV_FALL);
+	s->addEvent720(412.448056, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(482.816719, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(577.035495, T_PRIMARY, TV_RISE);
-	s->addEvent720(592.878113, T_SECONDARY, TV_RISE);
-	s->addEvent720(662.899708, T_SECONDARY, TV_FALL);
-	s->addEvent720(720.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(577.035495, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(592.878113, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(662.899708, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->useOnlyPrimaryForSync = true;
 }
 
@@ -58,63 +62,56 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	 * Note how we use 0..180 range while defining FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR trigger
 	 * Note that only half of the physical wheel is defined here!
 	 */
-	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	s->tdcPosition = 60 + 655;
 
-	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	// 384
-	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
-	// 400
-	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
-	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
-	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
+	// Nominal gap 70/110 = 0.636
+	s->setTriggerSynchronizationGap2(0.35f, 1.15f);
+	// Nominal gap 110/70 = 1.571
+	s->setSecondTriggerSynchronizationGap2(0.8f, 1.8f);
+
+	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f - 4, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEventAngle(180.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+}
+
+static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, TriggerWheel const channelIndex) {
+	s->addEvent720(angle, TriggerValue::RISE, channelIndex);
+	s->addEvent720(angle + 4, TriggerValue::FALL, channelIndex);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Fall);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
-	s->useRiseEdge = false;
-	s->bothFrontsRequired = true;
 	s->useOnlyPrimaryForSync = true;
-	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 
 	s->tdcPosition = 276;
 
 	/**
 	 * cam sensor is primary, crank sensor is secondary
 	 */
-	s->addEvent720(20.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(20.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(offset + 66.0f, T_SECONDARY,  TV_RISE);
-	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f, TriggerWheel::T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 
-	s->addEvent720(340.0f, T_PRIMARY, TV_RISE);
-	s->addEvent720(360.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(340.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(360.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(380.0f, T_PRIMARY, TV_RISE);
-	s->addEvent720(400.0f, T_PRIMARY, TV_FALL);
+	s->addEvent720(380.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(400.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f + 360, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540, TriggerWheel:: T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, TriggerWheel:: T_SECONDARY);
 
-	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
-}
-
-void initializeMazdaMiataNb1Shape(TriggerWaveform *s) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, 0);
+	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 }
 
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
@@ -122,72 +119,103 @@ void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 }
 
 void configureMazdaProtegeSOHC(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 //	s->initialState[0] = 1;
 
 //	float w = 720 / 4 * 0.215;
 	float a = 5;
 
-	s->bothFrontsRequired = true;
-
 	float z = 0.093;
 	a = 180;
-	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
-	s->addEvent720(a, T_PRIMARY, TV_FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	a += 180;
-	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
-	s->addEvent720(a, T_PRIMARY, TV_FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	a += 180;
-	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
-	s->addEvent720(a, T_PRIMARY, TV_FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	a += 180;
-	s->addEvent720(a - z * 720, T_PRIMARY, TV_RISE);
-	s->addEvent720(a, T_PRIMARY, TV_FALL);
+	s->addEvent720(a - z * 720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(a, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->isSynchronizationNeeded = false;
 	s->shapeWithoutTdc = true;
 }
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useOnlyPrimaryForSync = true;
-
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	s->isSecondWheelCam = true;
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
-	s->addEvent720(95.329254, T_PRIMARY, TV_RISE);
+	s->addEvent720(95.329254, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(95.329254 + 14.876692, T_SECONDARY, TV_RISE);
-	s->addEvent720(95.329254 + 82.693557, T_SECONDARY, TV_FALL);
+	s->addEvent720(95.329254 + 14.876692, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 82.693557, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 137.119154, T_PRIMARY, TV_FALL);
+	s->addEvent720(95.329254 + 137.119154, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(95.329254 + 192.378308, T_SECONDARY, TV_RISE);
-	s->addEvent720(95.329254 + 261.556418, T_SECONDARY, TV_FALL);
+	s->addEvent720(95.329254 + 192.378308, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 261.556418, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 373.060597, T_SECONDARY, TV_RISE);
-	s->addEvent720(95.329254 + 443.503184, T_SECONDARY, TV_FALL);
+	s->addEvent720(95.329254 + 373.060597, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(95.329254 + 443.503184, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
-	s->addEvent720(95.329254 + 555.349776, T_SECONDARY, TV_RISE);
-	s->addEvent720(720, T_SECONDARY, TV_FALL);
+	s->addEvent720(95.329254 + 555.349776, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
 
 	s->tdcPosition = 137.119154;
 	s->isSynchronizationNeeded = false;
 }
 
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
-	s->setTriggerSynchronizationGap2(8.50 * 0.75, 14.0);
+	// Nominal gap is 8.92
+	s->setTriggerSynchronizationGap2(6, 20);
+	// Nominal gap is 0.128
+	s->setSecondTriggerSynchronizationGap2(0.04f, 0.2f);
 
+	s->addEvent720(325, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(360, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(325, T_PRIMARY, TV_FALL);
-	s->addEvent720(360, T_PRIMARY, TV_RISE);
+	s->addEvent720(641, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(679, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
-	s->addEvent720(641, T_PRIMARY, TV_FALL);
-	s->addEvent720(677, T_PRIMARY, TV_RISE);
+	s->addEvent720(700, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent720(720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+}
 
-	s->addEvent720(700, T_PRIMARY, TV_FALL);
-	s->addEvent720(720, T_PRIMARY, TV_RISE);
+// https://rusefi.com/forum/viewtopic.php?f=17&t=2417
+// Cam pattern for intake/exhaust on all Skyactiv-G (and maybe -D/-X)
+void initializeMazdaSkyactivCam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+    // wide
+	s->addEvent360(50, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(70, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    // narrow
+	s->addEvent360(80, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(90, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    // wide
+	s->addEvent360(140, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(160, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+    // narrow
+	s->addEvent360(170, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    // wide
+	s->addEvent360(250, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+    // wide
+	s->addEvent360(340, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+
+	s->setTriggerSynchronizationGap(0.43);
+	s->setSecondTriggerSynchronizationGap(0.78);
+	s->setThirdTriggerSynchronizationGap(1.12); // 3rd gap is not required but let's have it for some resiliency
 }

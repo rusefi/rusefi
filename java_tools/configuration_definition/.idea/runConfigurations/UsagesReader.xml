@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UsagesReader" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.rusefi.ldmp.UsagesReader" />
+    <module name="configuration_definition" />
+    <option name="PROGRAM_PARAMETERS" value="integration/LiveData.yaml" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../firmware" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="com.rusefi.ldmp.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

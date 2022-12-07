@@ -1,15 +1,14 @@
 package com.rusefi.ui.livedocs;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.io.commands.ByteRange;
 import com.rusefi.ldmp.StateDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rusefi.binaryprotocol.IoHelper.putShort;
-import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 /**
  * Singleton map of all live documentation entities. Using this registry we know all the entities to update periodically.
@@ -24,35 +23,46 @@ public enum LiveDocsRegistry {
         liveDocs.add(holder);
     }
 
-    public void refresh(BinaryProtocol binaryProtocol) {
+    public void refresh(LiveDataProvider liveDataProvider) {
         for (LiveDocHolder holder : liveDocs) {
             boolean visible = holder.isVisible();
             if (visible) {
-                for (LiveDataContext context : holder.getActions().getActions().keySet()) {
-                    refresh(binaryProtocol, holder, context);
-                }
+                live_data_e context = holder.getId();
+                refresh(holder, context, liveDataProvider);
             }
         }
     }
 
-    private void refresh(BinaryProtocol binaryProtocol, LiveDocHolder holder, LiveDataContext context) {
-        int liveDocRequestId = context.getId();
-        Field[] values = StateDictionary.INSTANCE.getFields("refresh", context);
-        int size = Field.getStructureSize(values);
+    private void refresh(LiveDocHolder holder, live_data_e context, LiveDataProvider liveDataProvider) {
 
-        byte[] packet = new byte[5];
-        packet[0] = Fields.TS_GET_STRUCT;
-        putShort(packet, 1, swap16(liveDocRequestId)); // offset
-        putShort(packet, 3, swap16(size));
-
-        byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc");
-        if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
+        byte[] response = liveDataProvider.provide(context);
+        if (response == null)
             return;
 
-        byte[] response = new byte[size];
-
-        System.arraycopy(responseWithCode, 1, response, 0, size);
-
-        holder.update(binaryProtocol, context, response);
+        holder.update(response);
     }
+
+    @NotNull
+    public static LiveDataProvider getLiveDataProvider() {
+        return context -> {
+            Field[] values = StateDictionary.INSTANCE.getFields(context);
+            int size = Field.getStructureSize(values);
+            byte[] packet = new byte[4];
+            int offset = context.ordinal();
+            ByteRange.packOffsetAndSize(offset, size, packet);
+
+            int structOffset = StateDictionary.INSTANCE.getOffset(context);
+            byte[] overallOutputs = SensorCentral.getInstance().getResponse();
+
+            byte[] response = new byte[size];
+
+            System.arraycopy(overallOutputs, structOffset, overallOutputs, 0, size);
+            return response;
+        };
+    }
+
+    public interface LiveDataProvider {
+        byte[] provide(live_data_e context);
+    }
+
 }

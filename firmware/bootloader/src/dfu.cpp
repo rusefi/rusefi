@@ -1,13 +1,13 @@
-#include "global.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "efi_gpio.h"
 
 #include "flash_int.h"
 
 #include "dfu.h"
 
 // Communication vars
-static ts_channel_s blTsChannel;
+static UartTsChannel blTsChannel(TS_PRIMARY_PORT);
 static uint8_t buffer[DFU_BUFFER_SIZE];
 // Use short timeout for the first data packet, and normal timeout for the rest
 static int sr5Timeout = DFU_SR5_TIMEOUT_FIRST;
@@ -18,15 +18,18 @@ static uint8_t bootloaderVirtualPageBuffer[BOOTLOADER_SIZE];
 
 // needed by DFU protocol (DFU_DEVICE_ID_CMD)
 static uint32_t getMcuRevision() {
-	return DBGMCU->IDCODE & MCU_REVISION_MASK;	// =0x413 for F407, =0x434 for F469.
+	// =0x413 for F407
+	// =0x419 for F42xxx and F43xxx
+	// =0x434 for F469
+	return DBGMCU->IDCODE & MCU_REVISION_MASK;
 }
 
 static bool getByte(uint8_t *b) {
-	return sr5ReadDataTimeout(&blTsChannel, b, 1, sr5Timeout) == 1;
+	return blTsChannel.readTimeout(b, 1, sr5Timeout) == 1;
 }
 
 static void sendByte(uint8_t b) {
-	 sr5WriteData(&blTsChannel, &b, 1);
+	blTsChannel.write(&b, 1, true);
 }
 
 static uint8_t dfuCalcChecksum(const uint8_t *buf, uint8_t size) {  
@@ -51,7 +54,7 @@ static bool isInVirtualPageBuffer(uint32_t addr) {
 // Returns true if all 5 bytes are received and checksum is correct, and false otherwise.
 static bool readAddress(uint32_t *addr) {
 	uint8_t buf[5];	// 4 bytes+checksum
-	if (sr5ReadDataTimeout(&blTsChannel, buf, 5, sr5Timeout) != 5)
+	if (blTsChannel.readTimeout(buf, 5, sr5Timeout) != 5)
 		return false;
 	if (dfuCalcChecksum(buf, 4) != buf[4])
 		return false;
@@ -74,7 +77,7 @@ static uint16_t bufToInt16(uint8_t *buf) {
 	return (buf[0] << 8) | buf[1];
 }
 
-static void prepareInterruptsForJump(void) {
+static void prepareInterruptsForJump() {
 #ifdef STM32F4
 	// interrupt control
 	SCB->ICSR &= ~SCB_ICSR_PENDSVSET_Msk;
@@ -109,7 +112,7 @@ void dfuJumpToApp(uint32_t addr) {
     chSysHalt("dfuJumpToApp FAIL");
 }
 
-static void dfuHandleGetList(void) {
+static void dfuHandleGetList() {
 	static const uint8_t cmdsInfo[] = { DFU_VERSION_NUMBER, DFU_GET_LIST_CMD, DFU_DEVICE_ID_CMD, DFU_READ_CMD, DFU_GO_CMD, 
 		DFU_WRITE_CMD, DFU_ERASE_CMD };
 	size_t numBytes = sizeof(cmdsInfo);
@@ -119,7 +122,7 @@ static void dfuHandleGetList(void) {
 	sendByte(DFU_ACK_BYTE);						
 }
 
-static void dfuHandleDeviceId(void) {
+static void dfuHandleDeviceId() {
 	uint32_t mcuRev = getMcuRevision();
 	sendByte(0x01); // the number of bytes to be send - 1
     // send 12 bit MCU revision
@@ -128,7 +131,7 @@ static void dfuHandleDeviceId(void) {
 	sendByte(DFU_ACK_BYTE);
 }
 
-static void dfuHandleGo(void) {
+static void dfuHandleGo() {
 	uint32_t addr;
 	
 	if (!readAddress(&addr)) {
@@ -140,7 +143,7 @@ static void dfuHandleGo(void) {
 	dfuJumpToApp(addr);
 }
 
-static void dfuHandleRead(void) {
+static void dfuHandleRead() {
 	uint32_t addr;
 
 	if (!readAddress(&addr)) {
@@ -168,10 +171,10 @@ static void dfuHandleRead(void) {
 		intFlashRead(addr, (char *)buffer, numBytes);
 
 	// transmit data
-	sr5WriteData(&blTsChannel, (uint8_t *)buffer, numBytes);
+	blTsChannel.write(buffer, numBytes, true);
 }
 
-static void dfuHandleWrite(void) {
+static void dfuHandleWrite() {
 	uint32_t addr;
 
 	if (!readAddress(&addr)) {
@@ -185,7 +188,7 @@ static void dfuHandleWrite(void) {
 	int numBytes = buffer[0] + 1;
 	int numBytesAndChecksum = numBytes + 1;	// +1 byte of checkSum
 	// receive data
-	if (sr5ReadDataTimeout(&blTsChannel, buffer + 1, numBytesAndChecksum, sr5Timeout) != numBytesAndChecksum)
+	if (blTsChannel.readTimeout(buffer + 1, numBytesAndChecksum, sr5Timeout) != numBytesAndChecksum)
 		return;
 	// don't write corrupted data!
 	if (dfuCalcChecksum(buffer, numBytesAndChecksum) != buffer[numBytesAndChecksum]) {
@@ -203,7 +206,7 @@ static void dfuHandleWrite(void) {
 	sendByte(DFU_ACK_BYTE);
 }
 
-static void dfuHandleErase(void) {
+static void dfuHandleErase() {
 	int numSectors;
 	if (!getByte(buffer))
     	return;
@@ -217,7 +220,7 @@ static void dfuHandleErase(void) {
 		numSectorData = (numSectors + 1) * 2 + 1;
 	uint8_t *sectorList = buffer + 2;
 	// read sector data & checksum
-	if (sr5ReadDataTimeout(&blTsChannel, sectorList, numSectorData, sr5Timeout) != numSectorData)
+	if (blTsChannel.readTimeout(sectorList, numSectorData, sr5Timeout) != numSectorData)
 		return;
 	// verify checksum
 	if (dfuCalcChecksum(buffer, 2 + numSectorData - 1) != buffer[2 + numSectorData - 1]) {
@@ -311,6 +314,6 @@ bool dfuStartLoop(void) {
     return wasCommand;
 }		
 
-ts_channel_s *getTsChannel() {
+SerialTsChannelBase *getTsChannel() {
 	return &blTsChannel;
 }

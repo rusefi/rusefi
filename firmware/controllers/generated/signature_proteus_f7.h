@@ -1,8 +1,6 @@
 //
-// was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
+// was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_BOARD proteus_f7
-#define SIGNATURE_DATE 2021.01.09
-#define SIGNATURE_HASH 2854294808
-#define TS_SIGNATURE "rusEFI 2021.01.09.proteus_f7.2854294808"
+#define SIGNATURE_HASH snap_23244
+#define TS_SIGNATURE "rusEFI 2022.12.04.proteus_f7.snap_23244"

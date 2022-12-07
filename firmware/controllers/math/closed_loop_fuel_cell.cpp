@@ -1,16 +1,13 @@
-#include "closed_loop_fuel_cell.h"
-#include "engine.h"
-#include "engine_configuration_generated_structures.h"
-#include "sensor.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "closed_loop_fuel_cell.h"
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
-void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnitude DECLARE_ENGINE_PARAMETER_SUFFIX)
+void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnitude)
 {
 	// Compute how far off target we are
-	float lambdaError = getLambdaError(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float lambdaError = getLambdaError();
 
 	// If we're within the deadband, make no adjustment.
 	if (absF(lambdaError) < lambdaDeadband) {
@@ -48,15 +45,15 @@ float ClosedLoopFuelCellBase::getAdjustment() const {
 	return 1.0f + m_adjustment;
 }
 
-float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
-	auto lambda = Sensor::get(SensorType::Lambda1);
+float ClosedLoopFuelCellImpl::getLambdaError() const {
+	auto lambda = Sensor::get(m_lambdaSensor);
 
 	// Failed sensor -> no error
 	if (!lambda) {
 		return 0;
 	}
 
-	return lambda.Value - ENGINE(engineState.targetLambda);
+	return lambda.Value - engine->fuelComputer.targetLambda;
 }
 
 #define MAX_ADJ (0.25f)
@@ -89,10 +86,8 @@ float ClosedLoopFuelCellImpl::getIntegratorGain() const {
 		return 0.0f;
 	}
 
-	float timeConstant = m_config->timeConstant * 0.1f;
-
 	// Clamp to reasonable limits - 100ms to 100s
-	timeConstant = maxF(0.1f, minF(timeConstant, 100));
+	float timeConstant = maxF(0.1f, minF(m_config->timeConstant, 100));
 
 	return 1 / timeConstant;
 }

@@ -2,12 +2,12 @@
  * @file boards/skeleton/board_configuration.cpp
  *
  *
- * @brief Example configuration defaults for a RusEFI board
+ * @brief Example configuration defaults for a rusEFI board
  *
  * @author Donald Becker November 2019
  * @author Hugo Becker November 2019
  *
- * This file is an example of board-specific firmware for RusEFI.
+ * This file is an example of board-specific firmware for rusEFI.
  * It contains the unique code need for the setup of a specific board.
  * 
  * This file must contain the configuration for the hard-wired aspects
@@ -20,21 +20,13 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardConfigurationOverrides(void);
- *  void setPinConfigurationOverrides(void);
- *  void setSerialConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration();
+ *  void setPinConfigurationOverrides();
  *
  * Future: Clean up the distinction between these functions.
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
-#include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.
@@ -42,13 +34,13 @@ EXTERN_ENGINE;
 // This shows a SPI connected TLE8888.
 static void setupTle8888() {
 	// Enable the SPI channel and set up the SPI pins
-	CONFIG(is_enabled_spi_3) = true;
-	engineConfiguration->spi3mosiPin = GPIOB_5;
-	engineConfiguration->spi3misoPin = GPIOB_4;
-	engineConfiguration->spi3sckPin = GPIOB_3;
+	engineConfiguration->is_enabled_spi_3 = true;
+	engineConfiguration->spi3mosiPin = Gpio::B5;
+	engineConfiguration->spi3misoPin = Gpio::B4;
+	engineConfiguration->spi3sckPin = Gpio::B3;
 
 	// SPI chip select is often independent of the SPI pin limitations
-	engineConfiguration->tle8888_cs = GPIOD_5;
+	engineConfiguration->tle8888_cs = Gpio::D5;
 
 	// Set SPI device
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_3;
@@ -66,9 +58,9 @@ static void setupTle9201Etb() {
 	// This chip has PWM/DIR, not dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 	// PWM and DIR pins
-	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
-	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin = Gpio::C7;
+	engineConfiguration->etbIo[0].directionPin1 = Gpio::A8;
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 }
 
 // Configure key sensors inputs.
@@ -79,19 +71,18 @@ static void setupDefaultSensorInputs() {
 	// Engine rotation position sensors
 	// Trigger is our primary timing signal, and usually comes from the crank.
 	// trigger inputs up TRIGGER_SUPPORTED_CHANNELS (2)
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[0] = Gpio::C6;
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// A secondary Cam signal up to CAM_INPUTS_COUNT (4)
-	engineConfiguration->camInputs[0] = GPIOA_5;
+	engineConfiguration->camInputs[0] = Gpio::A5;
 
 	// Throttle Body Position Sensors, second channel is a check/fail-safe
 	// tps = "20 - AN volt 5"
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	// Throttle pedal inputs
 	// Idle/Up/Closed (no pressure on pedal) pin
-	engineConfiguration->throttlePedalUpPin = GPIO_UNASSIGNED;
+	engineConfiguration->throttlePedalUpPin = Gpio::Unassigned;
 	// If the ETB has analog feedback we can use it for closed loop control.
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_2;
   
@@ -114,19 +105,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
 // Future: configure USART3 for LIN bus and UART4 for console
-void setSerialConfigurationOverrides(void) {
-	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
-}
-
-
 /**
  * @brief   Board-specific configuration overrides.
  *
@@ -134,37 +113,36 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration() {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
-	engineConfiguration->triggerErrorPin = GPIOE_1;
-	engineConfiguration->communicationLedPin = GPIOE_2;
-	engineConfiguration->runningLedPin = GPIOE_4;
-	engineConfiguration->warningLedPin = GPIOE_5;
-	engineConfiguration->checkEngineLedPin = GPIOE_6;
-	engineConfiguration->errorLedPin = GPIOE_7;
+	engineConfiguration->triggerErrorPin = Gpio::E1;
+	engineConfiguration->communicationLedPin = Gpio::E2;
+	engineConfiguration->runningLedPin = Gpio::E4;
+	engineConfiguration->warningLedPin = Gpio::E5;
+	engineConfiguration->errorLedPin = Gpio::E7;
 
 	// Set injector pins and the pin output mode
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
-	engineConfiguration->injectionPins[0] = GPIOE_14;
-	engineConfiguration->injectionPins[1] = GPIOE_13;
-	engineConfiguration->injectionPins[2] = GPIOE_12;
-	engineConfiguration->injectionPins[3] = GPIOE_11;
+	engineConfiguration->injectionPins[0] = Gpio::E14;
+	engineConfiguration->injectionPins[1] = Gpio::E13;
+	engineConfiguration->injectionPins[2] = Gpio::E12;
+	engineConfiguration->injectionPins[3] = Gpio::E11;
 	// Disable the remainder only when they may never be assigned
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}
 
 	// Do the same for ignition outputs
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-	engineConfiguration->ignitionPins[0] = GPIOD_4;
-	engineConfiguration->ignitionPins[1] = GPIOD_3;
-	engineConfiguration->ignitionPins[2] = GPIOD_2;
-	engineConfiguration->ignitionPins[3] = GPIOD_1;
+	engineConfiguration->ignitionPins[0] = Gpio::D4;
+	engineConfiguration->ignitionPins[1] = Gpio::D3;
+	engineConfiguration->ignitionPins[2] = Gpio::D2;
+	engineConfiguration->ignitionPins[3] = Gpio::D1;
 	// Disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}
 
 	// Board-specific scaling values to convert ADC fraction to Volts.
@@ -195,26 +173,20 @@ void setBoardConfigurationOverrides(void) {
 
 	// Configure the TLE8888 half bridges (pushpull, lowside, or high-low)
 	// TLE8888_IN11 -> TLE8888_OUT21
-	// TLE8888_PIN_21: "35 - GP Out 1"
-	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
+	// Gpio::TLE8888_PIN_21: "35 - GP Out 1"
+	engineConfiguration->fuelPumpPin = Gpio::TLE8888_PIN_21;
 
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
-	// TLE8888_PIN_4: "3 - Lowside 2"
-	engineConfiguration->idle.solenoidPin = TLE8888_PIN_5;
+	// Gpio::TLE8888_PIN_4: "3 - Lowside 2"
+	engineConfiguration->idle.solenoidPin = Gpio::TLE8888_PIN_5;
 
 
-	// TLE8888_PIN_22: "34 - GP Out 2"
-	engineConfiguration->fanPin = TLE8888_PIN_22;
+	// Gpio::TLE8888_PIN_22: "34 - GP Out 2"
+	engineConfiguration->fanPin = Gpio::TLE8888_PIN_22;
 
 	// The "required" hardware is done - set some reasonable input defaults
 	setupDefaultSensorInputs();
-
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -226,9 +198,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /*
  * Local variables:
  *  c-basic-indent: 4

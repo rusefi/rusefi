@@ -5,86 +5,59 @@
  *      Author: Ola Ruud
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
-#include "vehicle_speed.h"
 #include "launch_control.h"
-#include "io_pins.h"
-#include "engine_configuration.h"
-#include "engine_controller.h"
 #include "periodic_task.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "sensor.h"
-#include "engine_math.h"
-#include "efi_gpio.h"
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
-
-static bool isInit = false;
-static Logging *logger;
-
-LaunchControlBase launchInstance;
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-EXTERN_ENGINE;
-
-static int retardThresholdRpm;
+#include "tinymt32.h"
 
 /**
  * We can have active condition from switch or from clutch.
  * In case we are dependent on VSS we just return true.
  */
-bool LaunchControlBase::isInsideSwitchCondition() const {
-	switch (CONFIG(launchActivationMode)) {
-	case SWITCH_INPUT_LAUNCH:
-		if (isBrainPinValid(CONFIG(launchActivatePin))) {
-			//todo: we should take into consideration if this sw is pulled high or low!
-			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
-		}
-		return engine->launchActivatePinState;
+bool LaunchControlBase::isInsideSwitchCondition() {
+	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
+	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
 
-	case CLUTCH_INPUT_LAUNCH:
-		if (isBrainPinValid(CONFIG(clutchDownPin))) {
-			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
-			
-			if (CONFIG(clutchDownPinMode) == PI_PULLDOWN)
-			{
-				return !engine->clutchDownState;
-			} else {
-				return engine->clutchDownState;
-			}
+
+	if (isSwitchActivated) {
+#if !EFI_SIMULATOR
+		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
+			launchActivatePinState = engineConfiguration->launchActivateInverted ^ efiReadPin(engineConfiguration->launchActivatePin);
+		}
+#endif // EFI_PROD_CODE
+		return launchActivatePinState;
+	} else if (isClutchActivated) {
+		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
+			return engine->engineState.clutchDownState;
 		} else {
 			return false;
 		}
-		
-	default:
+	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
 }
 
 /**
- * Returns True in case Vehicle speed is less then trashold. 
- * This condiiion would only return true based on speed if DisablebySpeed is true
+ * Returns True in case Vehicle speed is less then threshold.
+ * This condition would only return true based on speed if DisablebySpeed is true
  * The condition logic is written in that way, that if we do not use disable by speed
  * then we have to return true, and trust that we would disable by other condition!
  */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
-	int speed = getVehicleSpeed();
+	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
-	return (CONFIG(launchSpeedTreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
+	return (engineConfiguration->launchSpeedThreshold > speed) || (!(engineConfiguration->launchActivationMode ==  ALWAYS_ACTIVE_LAUNCH));
 }
 
 /**
- * Returns false if TPS is invalid or TPS > preset trashold
+ * Returns false if TPS is invalid or TPS > preset threshold
  */
 bool LaunchControlBase::isInsideTpsCondition() const {
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -94,122 +67,95 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 		return false;
 	}
 
-	return CONFIG(launchTpsTreshold) < tps.Value;
+    // todo: should this be 'launchTpsThreshold <= tps.Value' so that nicely calibrated TPS of zero does not prevent launch?
+	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
 /**
  * Condition is true as soon as we are above LaunchRpm
  */
 bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
-	int launchRpm = CONFIG(launchRpm);
+	int launchRpm = engineConfiguration->launchRpm;
 	return (launchRpm < rpm);
 }
 
-bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
+bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
-	bool activateSwitchCondition = isInsideSwitchCondition();
-	bool rpmCondition = isInsideRPMCondition(rpm);
-	bool speedCondition = isInsideSpeedCondition();
-	bool tpsCondition = isInsideTpsCondition();
-
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField1 = rpmCondition;
-		tsOutputChannels.debugIntField2 = tpsCondition;
-		tsOutputChannels.debugIntField3 = speedCondition;
-		tsOutputChannels.debugIntField4 = activateSwitchCondition;
-	}
-#endif /* EFI_TUNER_STUDIO */
+	activateSwitchCondition = isInsideSwitchCondition();
+	rpmCondition = isInsideRPMCondition(rpm);
+	speedCondition = isInsideSpeedCondition();
+	tpsCondition = isInsideTpsCondition();
 
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
-void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	launchInstance.update();
+LaunchControlBase::LaunchControlBase() {
+	launchActivatePinState = false;
+	isLaunchCondition = false;
+}
+
+bool LaunchControlBase::getFuelCoefficient() const {
+    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0 : 0);
 }
 
 void LaunchControlBase::update() {
-
-	if (!CONFIG(launchControlEnabled)) {
+	if (!engineConfiguration->launchControlEnabled) {
 		return;
 	}
 
-#if ! EFI_UNIT_TEST
-	if(!isInit) {
-		return;
-	}
-#endif
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	combinedConditions = isLaunchConditionMet(rpm);
 
-	int rpm = GET_RPM();
-	bool combinedConditions = isLaunchConditionMet(rpm);
-	float timeDelay = CONFIG(launchActivateDelay);
-
-	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
-	//and still recalculat in case user changed the values
-	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
-	                     CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
+	//and still recalculate in case user changed the values
+	retardThresholdRpm = engineConfiguration->launchRpm
+	/*
+	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
+	or it is supposed to be referencing 'launchTimingRpmRange'?
+	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
+*/
+	         + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
 		m_launchTimer.reset();
-		engine->isLaunchCondition = false;
-		engine->setLaunchBoostDuty = false;
-		engine->applyLaunchControlRetard = false;
-		engine->applyLaunchExtraFuel = false;
+		isLaunchCondition = false;
 	} else {
 		// If conditions are met...
-		if (m_launchTimer.hasElapsedMs(timeDelay*1000) && combinedConditions) {
-			engine->isLaunchCondition = true;           // ...enable launch!
-			engine->applyLaunchExtraFuel = true;
-		}
-		if (CONFIG(enableLaunchBoost)) {
-			engine->setLaunchBoostDuty = true;           // ...enable boost!
-		}
-		if (CONFIG(enableLaunchRetard)) {
-			engine->applyLaunchControlRetard = true;    // ...enable retard!
-		}
+		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
+	}
+}
+
+bool LaunchControlBase::isLaunchRpmRetardCondition() const {
+	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
+}
+
+bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
+	return isLaunchRpmRetardCondition() && engineConfiguration->launchSparkCutEnable;
+}
+
+bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
+	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
+}
+
+void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
+	this->targetSkipRatio = targetSkipRatio;
+}
+
+static tinymt32_t tinymt;
+
+bool SoftSparkLimiter::shouldSkip()  {
+	if (targetSkipRatio == 0 || wasJustSkipped) {
+		wasJustSkipped = false;
+		return false;
 	}
 
-#if EFI_TUNER_STUDIO
-	if (CONFIG(debugMode) == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField5 = engine->clutchDownState;
-		tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
-		tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
-		tsOutputChannels.debugFloatField3 = combinedConditions;
-	}
-#endif /* EFI_TUNER_STUDIO */
+	float r = tinymt32_generate_float(&tinymt);
+	wasJustSkipped = r < 2 * targetSkipRatio;
+	return wasJustSkipped;
 }
 
-void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
-	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
-	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
-	engineConfiguration->launchSparkCutEnable = true;
-	engineConfiguration->launchFuelCutEnable = false;
-	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
-	engineConfiguration->launchSpeedTreshold = 10; //maximum speed allowed before disable launch
-	engineConfiguration->launchFuelAdded = 10; // Extra fuel in % when launch are triggered
-	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
-	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
-	engineConfiguration->enableLaunchRetard = true;
-	engineConfiguration->enableLaunchBoost = true;
-	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
-	engineConfiguration->antiLagRpmTreshold = 3000;
-
-}
-
-void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
-		*limitedSpark = engineConfiguration->launchSparkCutEnable;
-		*limitedFuel = engineConfiguration->launchFuelCutEnable;
-	} 
-}
-
-void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
-	INJECT_ENGINE_REFERENCE(&launchInstance);
-
-	isInit = true;
+void initLaunchControl() {
+    tinymt32_init(&tinymt, 1345135);
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

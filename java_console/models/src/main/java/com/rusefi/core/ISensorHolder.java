@@ -1,8 +1,8 @@
 package com.rusefi.core;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+
+import static com.rusefi.core.FileUtil.littleEndianWrap;
 
 public interface ISensorHolder {
     default void grabSensorValues(byte[] response) {
@@ -17,8 +17,7 @@ public interface ISensorHolder {
             if (offset + size > response.length) {
                 throw new IllegalArgumentException(sensor + String.format(" but %d+%d in %d", offset, size, response.length));
             }
-            ByteBuffer bb = ByteBuffer.wrap(response, offset, size);
-            bb.order(ByteOrder.LITTLE_ENDIAN);
+            ByteBuffer bb = littleEndianWrap(response, offset, size);
 
             double rawValue = sensor.getValueForChannel(bb);
             double scaledValue = rawValue * sensor.getScale();

@@ -9,4 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFordInline6();

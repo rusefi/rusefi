@@ -1,1 +1,0 @@
-'s' for 'short', this folder is used to make shorter links

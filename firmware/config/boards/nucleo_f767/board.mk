@@ -1,12 +1,16 @@
 # List of all the board related files.
-BOARDSRC = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
-BOARDSRC_CPP = $(PROJECT_DIR)/config/boards/nucleo_f767/board_configuration.cpp
 
-# Required include directories
-BOARDINC = $(PROJECT_DIR)/config/boards/nucleo_f767 $(PROJECT_DIR)/config/stm32f7ems
-CONFDIR=config/stm32f7ems
+# F429 and F767 Nucleo are indeed the same board with a different chip fitted - so recycle the F429 config
+BOARDCPPSRC = $(PROJECT_DIR)/config/boards/nucleo_f429/board_configuration.cpp
 
-LDSCRIPT= $(PROJECT_DIR)/config/boards/nucleo_f767/STM32F76xxI.ld
+# reducing flash consumption for EFI_ETHERNET to fit
+DDEFS += -DEFI_FILE_LOGGING=FALSE -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANALYZER=FALSE -DEFI_ENABLE_ASSERTS=FALSE
 
-# Override DEFAULT_ENGINE_TYPE
-DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS -DSTM32F767xx
+DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
+
+# Enable ethernet
+LWIP = yes
+DDEFS += -DEFI_ETHERNET=TRUE
+
+DDEFS += -DFIRMWARE_ID=\"nucleo_f767\"
+DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS

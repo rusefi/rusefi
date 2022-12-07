@@ -1,0 +1,12 @@
+#
+# sudo systemctl enable rusefi
+#
+
+[Unit]
+Description=rusEFI systemd
+
+[Service]
+ExecStart=/rw/startup_root.sh
+
+[Install]
+WantedBy=multi-user.target

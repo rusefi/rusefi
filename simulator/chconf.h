@@ -29,7 +29,7 @@
 #define CHCONF_H
 
 #define _CHIBIOS_RT_CONF_
-#define _CHIBIOS_RT_CONF_VER_5_1_
+#define _CHIBIOS_RT_CONF_VER_6_1_
 
 #define CHPRINTF_USE_FLOAT          	TRUE
 
@@ -373,6 +373,50 @@
 #endif
 
 /**
+ * @brief   Pipes APIs.
+ * @details If enabled then the pipes APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_PIPES)
+#define CH_CFG_USE_PIPES                    FALSE
+#endif
+
+/**
+ * @brief   Objects Caches APIs.
+ * @details If enabled then the objects caches APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_OBJ_CACHES)
+#define CH_CFG_USE_OBJ_CACHES               FALSE
+#endif
+
+/**
+ * @brief   Delegate threads APIs.
+ * @details If enabled then the delegate threads APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_DELEGATES)
+#define CH_CFG_USE_DELEGATES                FALSE
+#endif
+
+/**
+ * @brief   Jobs Queues APIs.
+ * @details If enabled then the jobs queues APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_JOBS)
+#define CH_CFG_USE_JOBS                     FALSE
+#endif
+
+/**
  * @brief   Dynamic Threads APIs.
  * @details If enabled then the dynamic threads creation APIs are included
  *          in the kernel.
@@ -489,7 +533,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_CHECKS)
-#define CH_DBG_ENABLE_CHECKS                FALSE
+#define CH_DBG_ENABLE_CHECKS                TRUE
 #endif
 
 /**
@@ -501,7 +545,7 @@
  * @note    The default is @p FALSE.
  */
 #if !defined(CH_DBG_ENABLE_ASSERTS)
-#define CH_DBG_ENABLE_ASSERTS               FALSE
+#define CH_DBG_ENABLE_ASSERTS               TRUE
 #endif
 
 /**
@@ -592,6 +636,7 @@
  * @details User fields added to the end of the @p thread_t structure.
  */
 #define CH_CFG_THREAD_EXTRA_FIELDS                                          \
+  unsigned char threadId;                                                   \
   /* Add threads custom fields here.*/
 
 /**
@@ -682,7 +727,7 @@
  *          the system is halted.
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
-		  printf("chSysHalt\r\n");                                          \
+		  printf("chSysHalt: %s\r\n", reason);                              \
 		  exit(-1);                                                         \
 }
 

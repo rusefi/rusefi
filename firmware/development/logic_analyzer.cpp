@@ -11,30 +11,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "logic_analyzer.h"
-#include "os_access.h"
+
 #include "eficonsole.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "os_util.h"
-#include "engine_math.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
+#include "digital_input_exti.h"
 
 #if EFI_LOGIC_ANALYZER
 
-EXTERN_ENGINE;
-
 #define CHART_RESET_DELAY 1
-#define MAX_ICU_COUNT 5
-
-#if EFI_ENGINE_SNIFFER
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
 
 /**
  * Difference between current 1st trigger event and previous 1st trigger event.
@@ -42,22 +31,50 @@ extern WaveChart waveChart;
 static volatile uint32_t engineCycleDurationUs;
 static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
-static int waveReaderCount = 0;
-static WaveReader readers[MAX_ICU_COUNT];
+class WaveReader {
+public:
+	void onFallEvent();
 
-static Logging * logger;
+	ioline_t line = 0;
 
-static void ensureInitialized(WaveReader *reader) {
-	/*may be*/UNUSED(reader);
-	efiAssertVoid(CUSTOM_ERR_6654, reader->hw != NULL && reader->hw->started, "wave analyzer NOT INITIALIZED");
-}
+	int laIndex;
+	volatile int fallEventCounter = 0;
+	volatile int riseEventCounter = 0;
 
-static void waAnaWidthCallback(WaveReader *reader) {
+	int currentRevolutionCounter = 0;
+
+	/**
+	 * Total ON time during last engine cycle
+	 */
+	efitimeus_t prevTotalOnTimeUs = 0;
+
+	efitimeus_t totalOnTimeAccumulatorUs = 0;
+
+	volatile efitimeus_t lastActivityTimeUs = 0; // timestamp in microseconds ticks
+	/**
+	 * time of signal fall event, in microseconds
+	 */
+	volatile efitimeus_t periodEventTimeUs = 0;
+	volatile efitimeus_t widthEventTimeUs = 0; // time of signal rise in microseconds
+
+	volatile efitimeus_t signalPeriodUs = 0; // period between two signal rises in microseconds
+
+	/**
+	 * offset from engine cycle start in microseconds
+	 */
+	volatile efitimeus_t waveOffsetUs = 0;
+	volatile efitimeus_t last_wave_low_widthUs = 0; // time period in systimer ticks
+	volatile efitimeus_t last_wave_high_widthUs = 0; // time period in systimer ticks
+};
+
+static WaveReader readers[LOGIC_ANALYZER_CHANNEL_COUNT];
+
+static void riseCallback(WaveReader *reader) {
 	efitick_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSnifferEvent(reader->name, PROTOCOL_ES_UP);
+	addEngineSnifferLogicAnalyzerEvent(reader->laIndex, FrontDirection::UP);
 
 	uint32_t width = nowUs - reader->periodEventTimeUs;
 	reader->last_wave_low_widthUs = width;
@@ -71,7 +88,7 @@ void WaveReader::onFallEvent() {
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	assertIsrContext(CUSTOM_ERR_6670);
-	addEngineSnifferEvent(name, PROTOCOL_ES_DOWN);
+	addEngineSnifferLogicAnalyzerEvent(laIndex, FrontDirection::DOWN);
 
 	efitick_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
@@ -97,15 +114,22 @@ void WaveReader::onFallEvent() {
 	periodEventTimeUs = nowUs;
 }
 
-static void waIcuPeriodCallback(WaveReader *reader) {
-	reader->onFallEvent();
+void logicAnalyzerCallback(void* arg, efitick_t /*stamp*/) {
+	WaveReader* instance = reinterpret_cast<WaveReader*>(arg);
+
+	bool rise = palReadLine(instance->line) == PAL_HIGH;
+
+	if (rise) {
+		riseCallback(instance);
+	} else {
+		instance->onFallEvent();
+	}
 }
 
-static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
+static void initWave(size_t index) {
+	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
-	waveReaderCount++;
-	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
+	efiAssertVoid(CUSTOM_ERR_6655, index < efi::size(readers), "too many ICUs");
 	WaveReader *reader = &readers[index];
 
 	if (!isBrainPinValid(brainPin)) {
@@ -113,29 +137,20 @@ static void initWave(const char *name, int index) {
 		 *  in case we are running, and we select none for a channel that was running, 
 		 *  this way we ensure that we do not get false report from that channel 
 		 **/
-		reader->hw = nullptr;
+		reader->line = 0;
 		return;
 	}
-		
 
-	reader->name = name;
+	reader->laIndex = index;
 
-	reader->hw = startDigitalCapture("wave input", brainPin);
+	reader->line = PAL_LINE(getHwPort("logic", brainPin), getHwPin("logic", brainPin));
 
-	if (reader->hw != NULL) {
-		reader->hw->setWidthCallback((VoidInt)(void*) waAnaWidthCallback, (void*) reader);
+	efiExtiEnablePin("logic", brainPin, PAL_EVENT_MODE_BOTH_EDGES, logicAnalyzerCallback, (void*)reader);
 
-		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
-	}
-
-	scheduleMsg(logger, "wave%d input on %s", index, hwPortname(brainPin));
+	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
 }
 
-WaveReader::WaveReader() {
-	hw = nullptr;
-}
-
-void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;
@@ -147,70 +162,65 @@ void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efiti
 }
 
 static float getSignalOnTime(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	if (getTimeNowUs() - reader->lastActivityTimeUs > 4 * US_PER_SECOND) {
+	WaveReader& reader = readers[index];
+
+	if (getTimeNowUs() - reader.lastActivityTimeUs > 4 * US_PER_SECOND) {
 		return 0.0f; // dwell time has expired
 	}
-	return reader->last_wave_high_widthUs / 1000.0f;
+	return reader.last_wave_high_widthUs / 1000.0f;
 }
 
-static efitime_t getWaveOffset(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->waveOffsetUs;
+static efitimeus_t getWaveOffset(int index) {
+	return readers[index].waveOffsetUs;
 }
 
 static float getSignalPeriodMs(int index) {
-	WaveReader *reader = &readers[index];
-	ensureInitialized(reader);
-	return reader->signalPeriodUs / 1000.0f;
+	return readers[index].signalPeriodUs / 1000.0f;
 }
 
 static void reportWave(Logging *logging, int index) {
-	if (readers[index].hw == nullptr) {
+	if (readers[index].line == 0) {
 		return;
 	}
-	if (readers[index].hw->started) {
+
 //	int counter = getEventCounter(index);
 //	debugInt2(logging, "ev", index, counter);
 
-		float dwellMs = getSignalOnTime(index);
-		float periodMs = getSignalPeriodMs(index);
+	float dwellMs = getSignalOnTime(index);
+	float periodMs = getSignalPeriodMs(index);
 
-		logging->appendPrintf("duty%d%s", index, DELIMETER);
-		logging->appendFloat(100.0f * dwellMs / periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+	logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(100.0f * dwellMs / periodMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
 
-		/**
-		 * that's the ON time of the LAST signal
-		 */
-		logging->appendPrintf("dwell%d%s", index, DELIMETER);
-		logging->appendFloat(dwellMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+	/**
+	 * that's the ON time of the LAST signal
+	 */
+	logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(dwellMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
 
-		/**
-		 * that's the total ON time during the previous engine cycle
-		 */
-		logging->appendPrintf("total_dwell%d%s", index, DELIMETER);
-		logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-		logging->appendPrintf("%s", DELIMETER);
+	/**
+	 * that's the total ON time during the previous engine cycle
+	 */
+	logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
 
-		logging->appendPrintf("period%d%s", index, DELIMETER);
-		logging->appendFloat(periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+	logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
+	logging->appendFloat(periodMs, 2);
+	logging->appendPrintf("%s", LOG_DELIMITER);
 
-		uint32_t offsetUs = getWaveOffset(index);
-		int rpm = GET_RPM();
-		if (rpm != 0) {
-			float oneDegreeUs = getOneDegreeTimeUs(rpm);
+	efitimeus_t offsetUs = getWaveOffset(index);
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	if (rpm != 0) {
+		float oneDegreeUs = getOneDegreeTimeUs(rpm);
 
-			logging->appendPrintf("advance%d%s", index, DELIMETER);
-			float angle = (offsetUs / oneDegreeUs) - tdcPosition();
-			fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
-			logging->appendFloat(angle, 3);
-			logging->appendPrintf("%s", DELIMETER);
-		}
+		logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
+		float angle = (offsetUs / oneDegreeUs) - tdcPosition();
+		fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
+		logging->appendFloat(angle, 3);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 	}
 }
 
@@ -220,11 +230,10 @@ void printWave(Logging *logging) {
 }
 
 void showWaveInfo(void) {
-	scheduleMsg(logger, "logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
+	efiPrintf("logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
 }
 
-void initWaveAnalyzer(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initWaveAnalyzer() {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -233,10 +242,9 @@ void initWaveAnalyzer(Logging *sharedLogger) {
 }
 
 void startLogicAnalyzerPins() {
-	initWave(PROTOCOL_WA_CHANNEL_1, 0);
-	initWave(PROTOCOL_WA_CHANNEL_2, 1);
-	initWave(PROTOCOL_WA_CHANNEL_3, 2);
-	initWave(PROTOCOL_WA_CHANNEL_4, 3);
+	for (size_t index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
+		initWave(index);
+	}
 }
 
 void stopLogicAnalyzerPins() {
@@ -244,46 +252,37 @@ void stopLogicAnalyzerPins() {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
 		if (isBrainPinValid(brainPin)) {
-			stopDigitalCapture("wave input", brainPin);
+			efiExtiDisablePin(brainPin);
 		}
 	}
 }
 
-void getChannelFreqAndDuty(int index, float *duty, int *freq) {
-
-	float high,period;
-
-	if ((duty == nullptr) || (freq == nullptr)) {
-		return;
-	}
-
-	if (readers[index].hw == nullptr) {
-		*duty = 0.0;
-		*freq = 0;
+template <typename TFreq>
+static void getChannelFreqAndDuty(int index, float& duty, TFreq& freq) {
+	if (readers[index].line == 0) {
+		duty = 0.0;
+		freq = 0;
 	} else {
-		high = getSignalOnTime(index);
-		period = getSignalPeriodMs(index);
+		float high = getSignalOnTime(index);
+		float period = getSignalPeriodMs(index);
 
-		if ((period != 0) && (readers[index].hw->started)) {
+		if (period != 0) {
 
-			*duty = (high * 1000.0f) /(period * 10.0f);
-			*freq = (int)(1 / (period / 1000.0f));
+			duty = (high * 1000.0f) /(period * 10.0f);
+			freq = (int)(1 / (period / 1000.0f));
 		} else {		
-			*duty = 0.0;
-			*freq = 0;
+			duty = 0.0;
+			freq = 0;
 		}
 	}
-
 }
 
 void reportLogicAnalyzerToTS() {
-#if EFI_TUNER_STUDIO	
-	int tmp;
-	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
-	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
-	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
-	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+#if EFI_TUNER_STUDIO
+	getChannelFreqAndDuty(0, engine->outputChannels.debugFloatField1, engine->outputChannels.debugIntField1);
+	getChannelFreqAndDuty(1, engine->outputChannels.debugFloatField2, engine->outputChannels.debugIntField2);
+	getChannelFreqAndDuty(2, engine->outputChannels.debugFloatField3, engine->outputChannels.debugIntField3);
+	getChannelFreqAndDuty(3, engine->outputChannels.debugFloatField4, engine->outputChannels.debugIntField4);
 #endif	
 }
 

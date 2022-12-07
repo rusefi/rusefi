@@ -1,7 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.core.Sensor;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.widgets.JPanelWithListener;
 import com.rusefi.ui.widgets.SensorGauge;
 
@@ -48,7 +48,7 @@ public class GaugesGridElement {
         });
 
         wrapper.add(new SensorLiveGraph(config.getChild("top"), defaultSensor, switchToGauge));
-        wrapper.add(new SensorLiveGraph(config.getChild("bottom"), Sensor.RPM, switchToGauge));
+        wrapper.add(new SensorLiveGraph(config.getChild("bottom"), Sensor.RPMValue, switchToGauge));
         return wrapper;
     }
 

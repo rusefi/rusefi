@@ -8,22 +8,34 @@
 #pragma once
 
 #include <stdint.h>
+#ifdef __cplusplus
+#include <rusefi/arrays.h>
+#endif
+
+#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
+int djb2lowerCase(const char *str);
 
 #define _MAX_FILLER 11
 
 // http://en.wikipedia.org/wiki/Endianness
 
-#define SWAP_UINT16(x) (((x) << 8) | ((x) >> 8))
+static inline uint16_t SWAP_UINT16(uint16_t x)
+{
+	return ((x << 8) | (x >> 8));
+}
 
-#define SWAP_UINT32(x) ((((x) >> 24) & 0xff) | (((x) << 8) & 0xff0000) | (((x) >> 8) & 0xff00) | (((x) << 24) & 0xff000000))
+static inline uint32_t SWAP_UINT32(uint32_t x)
+{
+	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
+			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
+}
 
 #define BIT(n) (UINT32_C(1) << (n))
 
-// we also have efi::size which probably does not work for C code
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+#define HUMAN_OFFSET 1
 
-// human-readable IDs start from 1 while computer-readbale indexes start from 0
-#define ID2INDEX(id) ((id) - 1)
+// human-readable IDs start from 1 while computer-readable indices start from 0
+#define ID2INDEX(id) ((id) - HUMAN_OFFSET)
 
 // number of milliseconds in one period of given frequency (per second)
 #define frequency2periodMs(freq) ((1000.0f) / (freq))
@@ -31,7 +43,7 @@
 // number of microseconds in one period of given frequency (per second)
 #define frequency2periodUs(freq) ((1000000.0f) / (freq))
 
-#define ERROR_CODE 311223344
+#define ATOI_ERROR_CODE 311223344
 
 #define Q(x) #x
 #define QUOTE(x) Q(x)
@@ -53,21 +65,15 @@ float atoff(const char *string);
 int atoi(const char *string);
 
 #define UNUSED(x) (void)(x)
-  
-int absI(int32_t value);
-float absF(float value);
+
 /**
  * Rounds value to specified precision.
  * @param precision some pow of 10 value - for example, 100 for two digit precision
  */
 float efiRound(float value, float precision);
-int maxI(int i1, int i2);
-int minI(int i1, int i2);
-float maxF(float i1, float i2);
-float minF(float i1, float i2);
+
+// sometimes known as 'itoa'
 char* itoa10(char *p, int num);
-bool isSameF(float v1, float v2);
-float clampF(float min, float clamp, float max);
 
 /**
  * clamps value into the [0, 100] range
@@ -80,95 +86,39 @@ bool strEqual(const char *str1, const char *str2);
 // Currently used by air-interp. tCharge mode (see EngineState::updateTChargeK()).
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed);
 
-// @brief Compute e^x using a 4th order taylor expansion centered at x=-1.  Provides
-// bogus results outside the range -2 < x < 0.
-float expf_taylor(float x);
-
-// @brief Compute tan(theta) using a ratio of the Taylor series for sin and cos
-// Valid for the range [0, pi/2 - 0.01]
-float tanf_taylor(float theta);
+bool isPhaseInRange(float test, float current, float next);
 
 #ifdef __cplusplus
 }
 
 #include <cstddef>
+#include <cstring>
 
 #define IS_NEGATIVE_ZERO(value) (__builtin_signbit(value) && value==0)
 #define fixNegativeZero(value) (IS_NEGATIVE_ZERO(value) ? 0 : value)
 
-// C++ helpers go here
-namespace efi
-{
-template <typename T, size_t N>
-constexpr size_t size(const T(&)[N]) {
-    return N;
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
+
+template <typename T>
+bool isInRange(T min, T val, T max) {
+	return val >= min && val <= max;
 }
 
-template <class _Ty>
-struct remove_reference {
-    using type = _Ty;
-};
-
-template <class _Ty>
-struct remove_reference<_Ty&> {
-    using type = _Ty;
-};
-
-template <class _Ty>
-struct remove_reference<_Ty&&> {
-    using type = _Ty;
-};
-
-template <class _Ty>
-using remove_reference_t = typename remove_reference<_Ty>::type;
-
-// FUNCTION TEMPLATE move
-template <class _Ty>
-constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
-    return static_cast<remove_reference_t<_Ty>&&>(_Arg);
+static constexpr size_t operator-(Gpio a, Gpio b) {
+	return (size_t)a - (size_t)b;
 }
 
-} // namespace efi
-
-#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg)
-
-#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg, failedResult)
-
-/**
- * Copies an array from src to dest.  The lengths of the arrays must match.
- */
-template <typename TElement, size_t N>
-constexpr void copyArray(TElement (&dest)[N], const TElement (&src)[N]) {
-	for (size_t i = 0; i < N; i++) {
-		dest[i] = src[i];
-	}
+static constexpr Gpio operator-(Gpio a, size_t b) {
+	return (Gpio)((size_t)a - b);
 }
 
-/**
- * Copies an array from src to the beginning of dst.  If dst is larger
- * than src, then only the elements copied from src will be touched.
- * Any remaining elements at the end will be untouched.
- */
-template <typename TElement, size_t NSrc, size_t NDest>
-constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[NSrc]) {
-	static_assert(NDest >= NSrc, "Source array must be larger than destination.");
+static constexpr Gpio operator+(Gpio a, size_t b) {
+	return (Gpio)((size_t)a + b);
+}
 
-	for (size_t i = 0; i < NSrc; i++) {
-		dest[i] = src[i];
-	}
+static constexpr Gpio operator+(size_t a, Gpio b) {
+	// addition is commutative, just use the other operator
+	return b + a;
 }
 
 #endif /* __cplusplus */
-
-#if defined(__cplusplus) && defined(__OPTIMIZE__)
-#include <type_traits>
-// "g++ -O2" version, adds more strict type check and yet no "strict-aliasing" warnings!
-#define cisnan(f) ({ \
-	static_assert(sizeof(f) == sizeof(int32_t)); \
-	union cisnanu_t { std::remove_reference_t<decltype(f)> __f; int32_t __i; } __cisnan_u = { f }; \
-	__cisnan_u.__i == 0x7FC00000; \
-})
-#else
-// "g++ -O0" or other C++/C compilers
-#define cisnan(f) (*(((int*) (&f))) == 0x7FC00000)
-#endif /* __cplusplus && __OPTIMIZE__ */

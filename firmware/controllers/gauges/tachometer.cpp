@@ -8,11 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pin_repository.h"
-#include "tachometer.h"
-#include "pwm_generator_logic.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "tachometer.h"
 
 static SimplePwm tachControl("tach"); 
 static float tachFreq;  
@@ -30,14 +28,14 @@ float getTachDuty() {
 
 static bool tachHasInit = false;
 
-void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void tachSignalCallback() {
 	// Only do anything if tach enabled
 	if (!tachHasInit) {
 		return;
 	}
 
 	// How many tach pulse periods do we have?
-	int periods = CONFIG(tachPulsePerRev);
+	int periods = engineConfiguration->tachPulsePerRev;
 
 	if (periods == 0 || periods > 10) {
 		firmwareError(CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %d", periods);
@@ -45,16 +43,16 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	// What is the angle per tach output period?
-	float cycleTimeMs = 60000.0f / GET_RPM();
+	float cycleTimeMs = 60000.0f / Sensor::getOrZero(SensorType::Rpm);
 	float periodTimeMs = cycleTimeMs / periods;
 	tachFreq = 1000.0f / periodTimeMs;
 	
-	if (CONFIG(tachPulseDurationAsDutyCycle)) {
+	if (engineConfiguration->tachPulseDurationAsDutyCycle) {
 		// Simple case - duty explicitly set
-		duty = CONFIG(tachPulseDuractionMs);
+		duty = engineConfiguration->tachPulseDuractionMs;
 	} else {
 		// Constant high-time mode - compute the correct duty cycle
-		duty = CONFIG(tachPulseDuractionMs) / periodTimeMs;
+		duty = engineConfiguration->tachPulseDuractionMs / periodTimeMs;
 	}
 
 	// In case Freq is under 1Hz, we stop pwm to avoid warnings!
@@ -66,9 +64,9 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tachControl.setFrequency(tachFreq);
 }
 
-void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTachometer() {
 	tachHasInit = false;
-	if (!isBrainPinValid(CONFIG(tachOutputPin))) {
+	if (!isBrainPinValid(engineConfiguration->tachOutputPin)) {
 		return;
 	}
 

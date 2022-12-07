@@ -1,47 +1,5 @@
-#include "global.h"
-#include "sensor.h"
-#include "efilib.h"
-#include "loggingcentral.h"
-
-static const char* s_sensorNames[] = {
-	"Invalid",
-	"CLT",
-	"IAT",
-	"RPM",
-	"MAP",
-	"MAF",
-
-	"Oil Pressure",
-
-	"Fuel Pressure (LP)",
-	"Fuel Pressure (HP)",
-	"Fuel Pressure (injector)",
-
-	"TPS 1",
-	"TPS 1 Primary",
-	"TPS 1 Secondary",
-
-	"TPS 2",
-	"TPS 2 Primary",
-	"TPS 2 Secondary",
-
-	"Acc Pedal",
-	"Acc Pedal Primary",
-	"Acc Pedal Secondary",
-
-	"Driver Acc Intent",
-
-	"Aux Temp 1",
-	"Aux Temp 2",
-
-	"Lambda 1",
-	"Lambda 2",
-
-	"Wastegate Position",
-	"Idle Valve Position",
-
-	"Flex Fuel",
-};
+#include "pch.h"
+#include "auto_generated_sensor.h"
 
 // This struct represents one sensor in the registry.
 // It stores whether the sensor should use a mock value,
@@ -53,9 +11,15 @@ public:
 		return m_sensor;
 	}
 
+	void setInvalidMockValue() {
+		m_useMock = true;
+		m_valid = false;
+	}
+
 	void setMockValue(float value, bool mockRedundant) {
 		m_mockValue = value;
 		m_useMock = true;
+		m_valid = true;
 		m_mockRedundant = mockRedundant;
 	}
 
@@ -71,7 +35,7 @@ public:
 
 	bool Register(Sensor* sensor) {
 		// If there's somebody already here - a consumer tried to double-register a sensor
-		if (m_sensor) {
+		if (m_sensor && m_sensor != sensor) {
 			// This sensor has already been registered. Don't re-register it.
 			firmwareError(CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
@@ -82,39 +46,51 @@ public:
 		}
 	}
 
+	void unregister() {
+		m_sensor = nullptr;
+	}
+
 	SensorResult get() const {
 		// Check if mock
 		if (m_useMock) {
+			if (!m_valid) {
+				return unexpected;
+			}
 			return m_mockValue;
 		}
 
 		// Get the sensor out of the entry
 		const Sensor *s = m_sensor;
 		if (s) {
+			// If this sensor says it doesn't exist, return unexpected
+			if (!s->hasSensor()) {
+				return UnexpectedCode::Configuration;
+			}
+
 			// If we found the sensor, ask it for a result.
 			return s->get();
 		}
 
 		// We've exhausted all valid ways to return something - sensor not found.
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
-	void showInfo(Logging* logger, const char* sensorName) const {
+	void showInfo(const char* sensorName) const {
 		if (m_useMock) {
-			scheduleMsg(logger, "Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
+			efiPrintf("Sensor \"%s\" mocked with value %.2f", sensorName, m_mockValue);
 		} else {
 			const auto sensor = m_sensor;
 
 			if (sensor) {
-				sensor->showInfo(logger, sensorName);
+				sensor->showInfo(sensorName);
 			} else {
-				scheduleMsg(logger, "Sensor \"%s\" is not configured.", sensorName);
+				efiPrintf("Sensor \"%s\" is not configured.", sensorName);
 			}
 		}
 	}
 
 	bool hasSensor() const {
-		return m_useMock || m_sensor;
+		return m_useMock || (m_sensor && m_sensor->hasSensor());
 	}
 
 	float getRaw() const {
@@ -144,6 +120,7 @@ public:
 
 private:
 	bool m_useMock = false;
+	bool m_valid = false;
 	bool m_mockRedundant = false;
 	float m_mockValue;
 	Sensor* m_sensor = nullptr;
@@ -151,10 +128,12 @@ private:
 
 static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::PlaceholderLast)] = {};
 
-static_assert(efi::size(s_sensorNames) == efi::size(s_sensorRegistry));
-
 bool Sensor::Register() {
 	return s_sensorRegistry[getIndex()].Register(this);
+}
+
+void Sensor::unregister() {
+	s_sensorRegistry[getIndex()].unregister();
 }
 
 /*static*/ void Sensor::resetRegistry() {
@@ -176,17 +155,23 @@ bool Sensor::Register() {
 	return &s_sensorRegistry[index];
 }
 
+#if EFI_UNIT_TEST
+// scary nullable return result thus you probably do not need this in production code
 /*static*/ const Sensor *Sensor::getSensorOfType(SensorType type) {
 	auto entry = getEntryForType(type);
 	return entry ? entry->getSensor() : nullptr;
 }
+#endif // EFI_UNIT_TEST
 
+/**
+ * @returns NotNull: sensor result or UnexpectedCode::Configuration if sensor is not registered
+ */
 /*static*/ SensorResult Sensor::get(SensorType type) {
 	const auto entry = getEntryForType(type);
 
 	// Check if this is a valid sensor entry
 	if (!entry) {
-		return unexpected;
+		return UnexpectedCode::Configuration;
 	}
 
 	return entry->get();
@@ -208,6 +193,14 @@ bool Sensor::Register() {
 	const auto entry = getEntryForType(type);
 
 	return entry ? entry->hasSensor() : false;
+}
+
+void Sensor::setInvalidMockValue(SensorType type) {
+	auto entry = getEntryForType(type);
+
+	if (entry) {
+		entry->setInvalidMockValue();
+	}
 }
 
 /*static*/ void Sensor::setMockValue(SensorType type, float value, bool mockRedundant) {
@@ -243,24 +236,46 @@ bool Sensor::Register() {
 }
 
 /*static*/ const char* Sensor::getSensorName(SensorType type) {
-	return s_sensorNames[static_cast<size_t>(type)];
+	return getSensorType(type);
+}
+
+/*static*/ bool Sensor::s_inhibitSensorTimeouts = false;
+
+/*static*/ void Sensor::inhibitTimeouts(bool inhibit) {
+	Sensor::s_inhibitSensorTimeouts = inhibit;
 }
 
 // Print information about all sensors
-/*static*/ void Sensor::showAllSensorInfo(Logging* logger) {
+/*static*/ void Sensor::showAllSensorInfo() {
 	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
 		auto& entry = s_sensorRegistry[i];
-		const char* name = s_sensorNames[i];
+		const char* name = getSensorType((SensorType)i);
 
-		entry.showInfo(logger, name);
+		entry.showInfo(name);
 	}
 }
 
 // Print information about a particular sensor
-/*static*/ void Sensor::showInfo(Logging* logger, SensorType type) {
+/*static*/ void Sensor::showInfo(SensorType type) {
 	auto entry = getEntryForType(type);
 
 	if (entry) {
-		entry->showInfo(logger, getSensorName(type));
+		entry->showInfo(getSensorName(type));
 	}
+}
+
+/**
+ * this is definitely not the fastest implementation possible but good enough for now?
+ * todo: some sort of hashmap in the future?
+ */
+SensorType findSensorTypeByName(const char *name) {
+	for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+		SensorType type = (SensorType)i;
+		const char *sensorName = getSensorType(type);
+		if (strEqualCaseInsensitive(sensorName, name)) {
+			return type;
+		}
+	}
+
+	return SensorType::Invalid;
 }

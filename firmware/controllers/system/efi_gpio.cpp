@@ -6,84 +6,90 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
-#include "os_access.h"
-#include "drivers/gpio/gpio_ext.h"
-#include "perf_trace.h"
-#include "engine_controller.h"
+#include "pch.h"
+#include "engine_sniffer.h"
 
-#if EFI_GPIO_HARDWARE
-#include "pin_repository.h"
-#include "io_pins.h"
-#endif /* EFI_GPIO_HARDWARE */
+#include "drivers/gpio/gpio_ext.h"
+
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-EXTERN_ENGINE;
-
-#if EFI_ENGINE_SNIFFER
-#include "engine_sniffer.h"
-extern WaveChart waveChart;
-#endif /* EFI_ENGINE_SNIFFER */
-
 // todo: clean this mess, this should become 'static'/private
 EnginePins enginePins;
-static Logging* logger;
 
-static pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
+pin_output_mode_e DEFAULT_OUTPUT = OM_DEFAULT;
 pin_output_mode_e INVERTED_OUTPUT = OM_INVERTED;
 
-static const char *sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
+static const char* const sparkNames[] = { "Coil 1", "Coil 2", "Coil 3", "Coil 4", "Coil 5", "Coil 6", "Coil 7", "Coil 8",
 		"Coil 9", "Coil 10", "Coil 11", "Coil 12"};
 
+static const char* const trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trail 4", "Trail 5", "Trail 6", "Trail 7", "Trail 8",
+		"Trail 9", "Trail 10", "Trail 11", "Trail 12"};
+
+static const char* const trailShortNames[] = { "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "rA", "rB", "rD" };
+
+const char *vvtNames[] = {
+		PROTOCOL_VVT1_NAME,
+		PROTOCOL_VVT2_NAME,
+		PROTOCOL_VVT3_NAME,
+		PROTOCOL_VVT4_NAME};
+
+const char *laNames[] = {
+		PROTOCOL_WA_CHANNEL_1,
+		PROTOCOL_WA_CHANNEL_2,
+		PROTOCOL_WA_CHANNEL_3,
+		PROTOCOL_WA_CHANNEL_4};
+
 // these short names are part of engine sniffer protocol
-static const char *sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
+static const char* const sparkShortNames[] = { PROTOCOL_COIL1_SHORT_NAME, "c2", "c3", "c4", "c5", "c6", "c7", "c8",
 		"c9", "cA", "cB", "cD"};
 
-static const char *injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
+static const char* const injectorNames[] = { "Injector 1", "Injector 2", "Injector 3", "Injector 4", "Injector 5", "Injector 6",
 		"Injector 7", "Injector 8", "Injector 9", "Injector 10", "Injector 11", "Injector 12"};
 
-static const char *injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
+static const char* const injectorShortNames[] = { PROTOCOL_INJ1_SHORT_NAME, "i2", "i3", "i4", "i5", "i6", "i7", "i8",
 		"j9", "iA", "iB", "iC"};
 
-static const char *auxValveShortNames[] = { "a1", "a2"};
+static const char* const auxValveShortNames[] = { "a1", "a2"};
 
 static RegisteredOutputPin * registeredOutputHead = nullptr;
 
-RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, short pinOffset,
-		short pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
+RegisteredNamedOutputPin::RegisteredNamedOutputPin(const char *name, size_t pinOffset,
+		size_t pinModeOffset) : RegisteredOutputPin(name, pinOffset, pinModeOffset) {
 }
 
-RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, short pinOffset,
-		short pinModeOffset) {
-	this->registrationName = registrationName;
-	this->pinOffset = pinOffset;
-	this->pinModeOffset = pinModeOffset;
+RegisteredOutputPin::RegisteredOutputPin(const char *registrationName, size_t pinOffset,
+		size_t pinModeOffset)
+	: next(registeredOutputHead)
+	, registrationName(registrationName)
+	, m_pinOffset(static_cast<uint16_t>(pinOffset))
+	, m_pinModeOffset(static_cast<uint16_t>(pinModeOffset))
+	{
 	// adding into head of the list is so easy and since we do not care about order that's what we shall do
-	this->next = registeredOutputHead;
 	registeredOutputHead = this;
 }
 
 bool RegisteredOutputPin::isPinConfigurationChanged() {
 #if EFI_PROD_CODE
-	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[pinOffset]));
-	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
+	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[m_pinOffset]));
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
 
-    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[pinModeOffset]));
-    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+    pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[m_pinModeOffset]));
+    pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
     return curPin != newPin || curMode != newMode;
 #else
     return true;
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
-    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
+void RegisteredOutputPin::init() {
+	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
+    pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
 
     if (isPinConfigurationChanged()) {
 		this->initPin(registrationName, newPin, newMode);
@@ -96,11 +102,15 @@ void RegisteredOutputPin::unregister() {
 	}
 }
 
-#define CONFIG_OFFSET(x) x##_offset
+#define CONFIG_OFFSET(x) (offsetof(engine_configuration_s, x))
 // todo: pin and pinMode should be combined into a composite entity
 // todo: one of the impediments is code generator hints handling (we need custom hints and those are not handled nice for fields of structs?)
 #define CONFIG_PIN_OFFSETS(x) CONFIG_OFFSET(x##Pin), CONFIG_OFFSET(x##PinMode)
 
+// offset of X within engineConfiguration, plus offset of Y within X
+// decltype(engine_configuration_s::x) resolves the typename of the struct X inside engineConfiguration
+#define CONFIG_OFFSET2(x, y) (offsetof(engine_configuration_s, x) + offsetof(decltype(engine_configuration_s::x), y))
+#define CONFIG_PIN_OFFSETS2(x, y) CONFIG_OFFSET2(x, y##Pin), CONFIG_OFFSET2(x, y##PinMode)
 
 EnginePins::EnginePins() :
 		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
@@ -108,28 +118,31 @@ EnginePins::EnginePins() :
 		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
 		starterRelayDisable("Starter Disable Relay", CONFIG_PIN_OFFSETS(starterRelayDisable)),
 		fanRelay("Fan Relay", CONFIG_PIN_OFFSETS(fan)),
+		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
 	    boostPin("Boost", CONFIG_PIN_OFFSETS(boostControl)),
-		idleSolenoidPin("Idle Valve", idle_solenoidPin_offset, idle_solenoidPinMode_offset),
-		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), idle_solenoidPinMode_offset),
+		idleSolenoidPin("Idle Valve", CONFIG_OFFSET2(idle, solenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
+		secondIdleSolenoidPin("Idle Valve#2", CONFIG_OFFSET(secondSolenoidPin), CONFIG_OFFSET2(idle, solenoidPinMode)),
 		alternatorPin("Alternator control", CONFIG_PIN_OFFSETS(alternatorControl)),
 		checkEnginePin("checkEnginePin", CONFIG_PIN_OFFSETS(malfunctionIndicator)),
 		tachOut("tachOut", CONFIG_PIN_OFFSETS(tachOutput)),
-		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
-		hipCs("hipCs", CONFIG_PIN_OFFSETS(hip9011Cs))
+		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError))
 {
 	tachOut.name = PROTOCOL_TACH_NAME;
 	hpfpValve.name = PROTOCOL_HPFP_NAME;
 
-	static_assert(efi::size(sparkNames) >= IGNITION_PIN_COUNT, "Too many ignition pins");
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
+	static_assert(efi::size(trailNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
+	static_assert(efi::size(injectorNames) >= MAX_CYLINDER_COUNT, "Too many injection pins");
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+		enginePins.coils[i].coilIndex = i;
 		enginePins.coils[i].name = sparkNames[i];
 		enginePins.coils[i].shortName = sparkShortNames[i];
-	}
 
-	static_assert(efi::size(injectorNames) >= INJECTION_PIN_COUNT, "Too many injection pins");
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+		enginePins.trailingCoils[i].name = trailNames[i];
+		enginePins.trailingCoils[i].shortName = trailShortNames[i];
+
 		enginePins.injectors[i].injectorIndex = i;
 		enginePins.injectors[i].name = injectorNames[i];
 		enginePins.injectors[i].shortName = injectorShortNames[i];
@@ -145,7 +158,6 @@ EnginePins::EnginePins() :
  * Sets the value of the pin. On this layer the value is assigned as is, without any conversion.
  */
 
-#if EFI_PROD_CODE
 #define unregisterOutputIfPinChanged(output, pin) {                                \
 	if (isConfigurationChanged(pin)) {                                             \
 		(output).deInit();                        \
@@ -158,15 +170,12 @@ EnginePins::EnginePins() :
 	}                                                                              \
 }
 
-#endif /* EFI_PROD_CODE */
-
 bool EnginePins::stopPins() {
 	bool result = false;
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		result |= coils[i].stop();
-	}
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
 		result |= injectors[i].stop();
+		result |= trailingCoils[i].stop();
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		result |= auxValve[i].stop();
@@ -176,20 +185,16 @@ bool EnginePins::stopPins() {
 
 void EnginePins::unregisterPins() {
 	stopInjectionPins();
-    stopIgnitionPins();
+	stopIgnitionPins();
+	stopAuxValves();
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-#if EFI_PROD_CODE
+
 	// todo: add pinMode
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
-
-	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
-	}
-#endif /* EFI_PROD_CODE */
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
@@ -199,16 +204,14 @@ void EnginePins::unregisterPins() {
 }
 
 void EnginePins::debug() {
-#if EFI_PROD_CODE
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		scheduleMsg(logger, "%s %d", pin->registrationName, pin->currentLogicValue);
+		efiPrintf("%s %d", pin->registrationName, pin->currentLogicValue);
 		pin = pin->next;
 	}
-#endif // EFI_PROD_CODE
 }
 
-void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EnginePins::startPins() {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
@@ -217,64 +220,78 @@ void EnginePins::startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
+		pin->init();
 		pin = pin->next;
 	}
 }
 
 void EnginePins::reset() {
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		injectors[i].reset();
-	}
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
 		coils[i].reset();
+		trailingCoils[i].reset();
 	}
 }
 
-void EnginePins::stopIgnitionPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
+void EnginePins::stopIgnitionPins() {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.coils[i], ignitionPins[i], ignitionPinMode);
+		unregisterOutputIfPinOrModeChanged(enginePins.trailingCoils[i], trailingCoilPins[i], ignitionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::stopInjectionPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+void EnginePins::stopInjectionPins() {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		unregisterOutputIfPinOrModeChanged(enginePins.injectors[i], injectionPins[i], injectionPinMode);
 	}
-#endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startAuxValves(void) {
+void EnginePins::stopAuxValves() {
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
+		NamedOutputPin *output = &enginePins.auxValve[i];
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			(output)->deInit();
+		}
+	}
+}
+
+void EnginePins::startAuxValves() {
 #if EFI_PROD_CODE
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
-		output->initPin(output->name, engineConfiguration->auxValves[i]);
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-void EnginePins::startIgnitionPins(void) {
-#if EFI_PROD_CODE
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		NamedOutputPin *output = &enginePins.coils[i];
-		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
-			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
+		// todo: do we need auxValveMode and reuse code?
+		if (isConfigurationChanged(auxValves[i])) {
+			output->initPin(output->name, engineConfiguration->auxValves[i]);
 		}
 	}
 #endif /* EFI_PROD_CODE */
 }
 
-void EnginePins::startInjectionPins(void) {
+void EnginePins::startIgnitionPins() {
+#if EFI_PROD_CODE
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
+		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
+			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], &engineConfiguration->ignitionPinMode);
+		}
+
+		NamedOutputPin *output = &enginePins.coils[i];
+		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
+			output->initPin(output->name, engineConfiguration->ignitionPins[i], &engineConfiguration->ignitionPinMode);
+		}
+	}
+#endif /* EFI_PROD_CODE */
+}
+
+void EnginePins::startInjectionPins() {
 #if EFI_PROD_CODE
 	// todo: should we move this code closer to the injection logic?
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
-			output->initPin(output->name, CONFIG(injectionPins)[i],
-					&CONFIG(injectionPinMode));
+			output->initPin(output->name, engineConfiguration->injectionPins[i],
+					&engineConfiguration->injectionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -295,7 +312,16 @@ const char *NamedOutputPin::getShortName() const {
 	return shortName == nullptr ? name : shortName;
 }
 
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif // EFI_UNIT_TEST
+
 void NamedOutputPin::setHigh() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes high", name);
+	}
+#endif // EFI_UNIT_TEST
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -304,29 +330,30 @@ void NamedOutputPin::setHigh() {
 	setValue(true);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_UP);
+    addEngineSnifferOutputPinEvent(this, FrontDirection::UP);
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
 void NamedOutputPin::setLow() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes low", name);
+	}
+#endif // EFI_UNIT_TEST
+
 	// turn off the output
 	setValue(false);
 
 #if EFI_ENGINE_SNIFFER
-	addEngineSnifferEvent(getShortName(), PROTOCOL_ES_DOWN);
+	addEngineSnifferOutputPinEvent(this, FrontDirection::DOWN);
 #endif /* EFI_ENGINE_SNIFFER */
-}
-
-InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
-	reset();
-	injectorIndex = -1;
 }
 
 bool NamedOutputPin::stop() {
 #if EFI_GPIO_HARDWARE
 	if (isInitialized() && getLogicValue()) {
 		setValue(false);
-		scheduleMsg(logger, "turning off %s", name);
+		efiPrintf("turning off %s", name);
 		return true;
 	}
 #endif /* EFI_GPIO_HARDWARE */
@@ -346,6 +373,44 @@ void InjectorOutputPin::reset() {
 
 IgnitionOutputPin::IgnitionOutputPin() {
 	reset();
+}
+
+void IgnitionOutputPin::setHigh() {
+	NamedOutputPin::setHigh();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = true;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = true;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = true;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = true;
+		break;
+	}
+}
+
+void IgnitionOutputPin::setLow() {
+	NamedOutputPin::setLow();
+	// this is NASTY but what's the better option? bytes? At cost of 22 extra bytes in output status packet?
+	switch (coilIndex) {
+	case 0:
+		engine->outputChannels.coilState1 = false;
+		break;
+	case 1:
+		engine->outputChannels.coilState2 = false;
+		break;
+	case 2:
+		engine->outputChannels.coilState3 = false;
+		break;
+	case 3:
+		engine->outputChannels.coilState4 = false;
+		break;
+	}
 }
 
 void IgnitionOutputPin::reset() {
@@ -382,6 +447,11 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
+	if (brainPin == Gpio::Unassigned || brainPin == Gpio::Invalid) {
+	    // todo: make 'setOnchipValue' or 'reportsetOnchipValueError' virtual and override for NamedOutputPin?
+		warning(CUSTOM_ERR_6586, "attempting to change unassigned pin");
+		return;
+	}
 	palWritePad(port, pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
@@ -391,6 +461,14 @@ void OutputPin::setValue(int logicValue) {
 // todo: https://github.com/rusefi/rusefi/issues/1638
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
+
+#if EFI_UNIT_TEST
+	unitTestTurnedOnCounter++;
+
+	if (verboseMode) {
+		efiPrintf("pin goes %d", logicValue);
+	}
+#endif // EFI_UNIT_TEST
 
 	// Always store the current logical value of the pin (so it can be
 	// used internally even if not connected to a real hardware pin)
@@ -436,19 +514,27 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+brain_pin_diag_e OutputPin::getDiag() const {
+#if BOARD_EXT_GPIOCHIPS > 0
+	return gpiochips_getDiag(brainPin);
+#else
+	return PIN_OK;
+#endif
+}
+
+void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI
-	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
+	enginePins.sdCsPin.initPin("SD CS", engineConfiguration->sdCardCsPin);
 #endif /* HAL_USE_SPI */
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+	enginePins.debugTriggerSync.initPin("debug: sync", engineConfiguration->debugTriggerSync);
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
+	enginePins.o2heater.initPin("O2 heater", engineConfiguration->o2heaterPin);
 
 #endif /* EFI_GPIO_HARDWARE */
 }
@@ -457,13 +543,23 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 	initPin(msg, brainPin, &DEFAULT_OUTPUT);
 }
 
-void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode) {
+void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
+#if EFI_UNIT_TEST
+	unitTestTurnedOnCounter = 0;
+#endif
+
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
 
 	// Enter a critical section so that other threads can't change the pin state out from underneath us
 	chibios_rt::CriticalSectionLocker csl;
+
+	if (!forceInitWithFatalError && hasFirmwareError()) {
+		// Don't allow initializing more pins if we have a fatal error.
+		// Pins should have just been reset, so we shouldn't try to init more.
+		return;
+	}
 
 	// Check that this OutputPin isn't already assigned to another pin (reinit is allowed to change mode)
 	// To avoid this error, call deInit() first
@@ -529,11 +625,13 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 				? !actualValue 
 				: actualValue;
 
+#ifndef DISABLE_PIN_STATE_VALIDATION
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				firmwareError(OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
 				OutputPin::deInit();
 			}
+#endif
 		}
 	}
 #endif /* EFI_GPIO_HARDWARE */
@@ -552,14 +650,14 @@ void OutputPin::deInit() {
 	ext = false;
 #endif // (BOARD_EXT_GPIOCHIPS > 0)
 
-	scheduleMsg(logger, "unregistering %s", hwPortname(brainPin));
+	efiPrintf("unregistering %s", hwPortname(brainPin));
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	efiSetPadUnused(brainPin);
 #endif /* EFI_GPIO_HARDWARE */
 
 	// Clear the pin so that it won't get set any more
-	brainPin = GPIO_UNASSIGNED;
+	brainPin = Gpio::Unassigned;
 }
 
 #if EFI_GPIO_HARDWARE
@@ -574,8 +672,7 @@ uint8_t criticalErrorLedState;
 #define LED_ERROR_BRAIN_PIN_MODE DEFAULT_OUTPUT
 #endif /* LED_ERROR_BRAIN_PIN_MODE */
 
-void initPrimaryPins(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initPrimaryPins() {
 #if EFI_PROD_CODE
 	enginePins.errorLedPin.initPin("led: CRITICAL status", LED_CRITICAL_ERROR_BRAIN_PIN, &(LED_ERROR_BRAIN_PIN_MODE));
 	criticalErrorLedPort = getHwPort("CRITICAL", LED_CRITICAL_ERROR_BRAIN_PIN);
@@ -588,15 +685,13 @@ void initPrimaryPins(Logging *sharedLogger) {
 
 /**
  * This method is part of fatal error handling.
- * Please note that worst case scenario the pins might get re-enabled by some other code :(
  * The whole method is pretty naive, but that's at least something.
  */
 void turnAllPinsOff(void) {
-	for (int i = 0; i < INJECTION_PIN_COUNT; i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
-	}
-	for (int i = 0; i < IGNITION_PIN_COUNT; i++) {
 		enginePins.coils[i].setValue(false);
+		enginePins.trailingCoils[i].setValue(false);
 	}
 }
 #endif /* EFI_GPIO_HARDWARE */

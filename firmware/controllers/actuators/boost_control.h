@@ -6,23 +6,18 @@
  */
 #pragma once
 
-#include "engine.h"
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
-#include "pid.h"
+#include "efi_pid.h"
+#include "boost_control_generated.h"
 
-class SimplePwm;
+struct IPwm;
 
-class BoostController : public ClosedLoopController<float, percent_t>, public PeriodicTimerController {
+class BoostController : public boost_control_s, public ClosedLoopController<float, percent_t>  {
 public:
-	DECLARE_ENGINE_PTR;
-
-	void init(SimplePwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
-
-	// PeriodicTimerController implementation
-	int getPeriodMs() override;
-	void PeriodicTask() override;
-	void reset();
+	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
+	void update();
+	void resetLua();
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
@@ -30,24 +25,26 @@ public:
 
 	// Helpers for individual parts of boost control
 	expected<float> observePlant() const override;
-	expected<float> getSetpoint() const override;
+	expected<float> getSetpoint() override;
 
-	expected<percent_t> getOpenLoop(float target) const override;
+	expected<percent_t> getOpenLoop(float target) override;
 	expected<percent_t> getClosedLoop(float target, float manifoldPressure) override;
 
 	void setOutput(expected<percent_t> outputValue) override;
 
 private:
-	bool m_shouldResetPid = false;
+	percent_t getClosedLoopImpl(float target, float manifoldPressure);
+
 	Pid m_pid;
 
 	const ValueProvider3D* m_openLoopMap = nullptr;
 	const ValueProvider3D* m_closedLoopTargetMap = nullptr;
-	SimplePwm* m_pwm = nullptr;
+	IPwm* m_pwm = nullptr;
 };
 
 void startBoostPin();
-void stopBoostPin();
-void initBoostCtrl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initBoostCtrl();
+void setDefaultBoostParameters();
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
+
+void updateBoostControl();

@@ -13,6 +13,5 @@
 
 #include "engine_configuration.h"
 
-void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setMiata1990(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void common079721_2351();
+void setFrankensteinMiata1996();

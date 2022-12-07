@@ -1,5 +1,10 @@
+/**
+ * @file binary_logging.h
+ */
+
 #include <cstddef>
 
 struct Writer;
-void writeHeader(Writer& buffer);
-size_t writeBlock(char* buffer);
+void writeFileHeader(Writer& buffer);
+void writeSdLogLine(Writer& buffer);
+void writeBlock(Writer& outBuffer);

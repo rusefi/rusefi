@@ -5,10 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "biquad.h"
-#include "error_handling.h"
+#include "pch.h"
 
-#include "efilib.h"
+#include "biquad.h"
 
 Biquad::Biquad() {
 // Default to passthru
@@ -23,7 +22,7 @@ void Biquad::reset() {
 }
 
 static float getK(float samplingFrequency, float cutoff) {
-	return tanf_taylor(3.14159f * cutoff / samplingFrequency);
+	return tanf_taylor(CONST_PI * cutoff / samplingFrequency);
 }
 
 static float getNorm(float K, float Q) {
@@ -31,7 +30,7 @@ static float getNorm(float K, float Q) {
 }
 
 void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2 * centerFrequency, "Invalid biquad parameters");
+	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * centerFrequency, "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, centerFrequency);
 	float norm = getNorm(K, Q);
@@ -44,7 +43,7 @@ void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, f
 }
 
 void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, float Q) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2 * cutoffFrequency, "Invalid biquad parameters");
+	efiAssertVoid(OBD_PCM_Processor_Fault, samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
 
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);
@@ -58,6 +57,9 @@ void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, fl
 
 float Biquad::filter(float input) {
 	float result = input * a0 + z1;
+	if (engineConfiguration->verboseQuad) {
+		efiPrintf("input %f, a0 %f, z1 %f, result %f", input, a0, z1, result);
+	}
 	z1 = input * a1 + z2 - b1 * result;
 	z2 = input * a2 - b2 * result;
 	return result;

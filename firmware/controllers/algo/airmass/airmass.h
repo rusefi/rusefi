@@ -1,22 +1,21 @@
 #pragma once
 
-#include "engine.h"
-
+#include "rusefi_types.h"
 class ValueProvider3D;
 
 struct AirmassResult {
-	float CylinderAirmass = 0;
-	float EngineLoadPercent = 100;
+	mass_t CylinderAirmass = 0;
+	percent_t EngineLoadPercent = 100;
 };
 
-class AirmassModelBase {
-public:
-	DECLARE_ENGINE_PTR;
-
-	explicit AirmassModelBase(const ValueProvider3D& veTable);
+struct AirmassModelBase {
 	virtual AirmassResult getAirmass(int rpm) = 0;
+};
 
-protected:
+class AirmassVeModelBase : public AirmassModelBase {
+public:
+	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
+
 	// Retrieve the user-calibrated volumetric efficiency from the table
 	float getVe(int rpm, percent_t load) const;
 

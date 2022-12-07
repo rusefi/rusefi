@@ -12,7 +12,8 @@
 #include <cstdint>
 #include <cstddef>
 
-#include "os_access.h"
+#include "can_category.h"
+#include "can.h"
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -28,17 +29,23 @@ public:
 	/**
 	 * Create a new CAN message, with the specified extended ID.
 	 */
-	explicit CanTxMessage(uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
+	explicit CanTxMessage(CanCategory category, uint32_t eid, uint8_t dlc = 8, bool isExtended = false);
 
 	/**
 	 * Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	 */
 	~CanTxMessage();
 
+    CanCategory category;
+
+#if EFI_CAN_SUPPORT
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
-	static void setDevice(CANDriver* device);
+	static void setDevice(CANDriver* device1, CANDriver* device2);
+#endif // EFI_CAN_SUPPORT
+
+	size_t busIndex = 0;
 
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
@@ -55,11 +62,23 @@ public:
 	 */
 	void setBit(size_t byteIdx, size_t bitIdx);
 
+	void setDlc(uint8_t dlc);
+
+#if HAL_USE_CAN || EFI_UNIT_TEST
+	const CANTxFrame *getFrame() const {
+		return &m_frame;
+	}
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
+
 protected:
+#if HAL_USE_CAN || EFI_UNIT_TEST
 	CANTxFrame m_frame;
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 private:
-	static CANDriver* s_device;
+#if EFI_CAN_SUPPORT
+	static CANDriver* s_devices[2];
+#endif // EFI_CAN_SUPPORT
 };
 
 /**
@@ -68,11 +87,14 @@ private:
 template <typename TData>
 class CanTxTyped final : public CanTxMessage
 {
-	static_assert(sizeof(TData) == sizeof(CANTxFrame::data8));
+#if EFI_CAN_SUPPORT
+	static_assert(sizeof(TData) <= sizeof(CANTxFrame::data8));
+#endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid) { }
+	explicit CanTxTyped(CanCategory category, uint32_t id, bool isExtended) : CanTxMessage(category, id, sizeof(TData), isExtended) { }
 
+#if EFI_CAN_SUPPORT
 	/**
 	 * Access members of the templated type.  
 	 * 
@@ -87,12 +109,13 @@ public:
 	TData& get() {
 		return *reinterpret_cast<TData*>(&m_frame.data8);
 	}
+#endif // EFI_CAN_SUPPORT
 };
 
 template <typename TData>
-void transmitStruct(uint32_t eid)
+void transmitStruct(CanCategory category, uint32_t id, bool isExtended)
 {
-	CanTxTyped<TData> frame(eid);
+	CanTxTyped<TData> frame(category, id, isExtended);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

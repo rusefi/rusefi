@@ -14,5 +14,6 @@
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="shared_io" exported="" />
     <orderEntry type="module" module-name="logging-api" />
+    <orderEntry type="module" module-name="proxy_server" />
   </component>
 </module>

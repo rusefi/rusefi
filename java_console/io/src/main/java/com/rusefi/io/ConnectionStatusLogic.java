@@ -28,7 +28,7 @@ public class ConnectionStatusLogic {
     }
 
     public static ConnectionStatusLogic INSTANCE = new ConnectionStatusLogic();
-    private List<Listener> listeners = new CopyOnWriteArrayList<>();
+    private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
     private ConnectionStatusLogic() {
         SensorCentral.getInstance().addListener(Sensor.TIME_SECONDS, value -> markConnected());

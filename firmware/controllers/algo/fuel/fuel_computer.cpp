@@ -1,33 +1,36 @@
+#include "pch.h"
+
+#include "engine_configuration.h"
+#include "sensor.h"
+#include "error_handling.h"
+#include "efi_interpolation.h"
+#include "table_helper.h"
+#include "fuel_math.h"
 #include "fuel_computer.h"
-#include "map.h"
 
-EXTERN_ENGINE;
-
-mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
+mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
 	load = getTargetLambdaLoadAxis(load);
 	
 	float stoich = getStoichiometricRatio();
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
-	ENGINE(engineState.currentAfrLoad) = load;
-	ENGINE(engineState.targetLambda) = lambda;
-	ENGINE(engineState.targetAFR) = afr;
-	ENGINE(engineState.stoichiometricRatio) = stoich;
+	afrTableYAxis = load;
+	targetLambda = lambda;
+	targetAFR = afr;
+	stoichiometricRatio = stoich;
 
 	return airmass / afr;
 }
 
-FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&lambdaTable) {}
-
 float FuelComputer::getStoichiometricRatio() const {
-	// TODO: vary this with ethanol content/configured setting/whatever
-	float primary = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
+	float primary = engineConfiguration->stoichRatioPrimary;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
+		// todo: fatal in July of 2023
 		// 14.7 = E0 gasoline AFR
-		primary = 14.7f;
+		engineConfiguration->stoichRatioPrimary = primary = STOICH_RATIO;
 	}
 
 	// Without an ethanol/flex sensor, return primary configured stoich ratio
@@ -35,12 +38,13 @@ float FuelComputer::getStoichiometricRatio() const {
 		return primary;
 	}
 
-	float secondary = (float)CONFIG(stoichRatioSecondary) / PACK_MULT_AFR_CFG;
+	float secondary = engineConfiguration->stoichRatioSecondary;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (secondary < 5) {
 		// 9.0 = E100 ethanol AFR
-		secondary = 9.0f;
+		// todo: fatal in July of 2023
+		engineConfiguration->stoichRatioSecondary = secondary = 9.0f;
 	}
 
 	auto flex = Sensor::get(SensorType::FuelEthanolPercent);
@@ -51,17 +55,20 @@ float FuelComputer::getStoichiometricRatio() const {
 	return interpolateClamped(0, primary, 100, secondary, flex.Value);
 }
 
-float FuelComputer::getTargetLambda(int rpm, float load) const {
-	efiAssert(OBD_PCM_Processor_Fault, m_lambdaTable != nullptr, "AFR table null", 0);
 
-	return m_lambdaTable->getValue(rpm, load);
+float FuelComputer::getTargetLambda(int rpm, float load) const {
+	return interpolate3d(
+		config->lambdaTable,
+		config->lambdaLoadBins, load,
+		config->lambdaRpmBins, rpm
+	);
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
-	return getLoadOverride(defaultLoad, CONFIG(afrOverrideMode) PASS_ENGINE_PARAMETER_SUFFIX);
+	return getLoadOverride(defaultLoad, engineConfiguration->afrOverrideMode);
 }
 
-float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float IFuelComputer::getLoadOverride(float defaultLoad, load_override_e overrideMode) const {
 	switch(overrideMode) {
 		case AFR_None: return defaultLoad;
 		// MAP default to 200kpa - failed MAP goes rich
@@ -69,7 +76,7 @@ float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENG
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
 		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
-		case AFR_CylFilling: return 100 * ENGINE(engineState.sd.airMassInOneCylinder) / ENGINE(standardAirCharge);
+		case AFR_CylFilling: return 100 * sdAirMassInOneCylinder / getStandardAirCharge();
 		default: return 0;
 	}
 }

@@ -1,0 +1,293 @@
+pins:
+  - id: B14
+    class: outputs
+    ts_name: Low Side 1 (B14 v2.1 ONLY)
+    
+  - id: B15
+    class: outputs
+    ts_name: Low Side 2 (B15 v2.1 ONLY)
+    
+  - id: F13
+    class: outputs
+    ts_name: Low Side 1 (F13)
+    
+  - id: F14
+    class: outputs
+    ts_name: Low Side 2 (F14)
+
+  - id: D8
+    class: outputs
+    ts_name: Low Side 3 (D8)
+    
+  - id: D9
+    class: outputs
+    ts_name: Low Side 4 (D9)
+    
+  - id: D10
+    class: outputs
+    ts_name: Low Side 5 (D10)
+    
+  - id: D11
+    class: outputs
+    ts_name: Low Side 6 (D11)
+    
+  - id: D12
+    class: outputs
+    ts_name: Low Side 7 (D12)
+    
+  - id: D13
+    class: outputs
+    ts_name: Low Side 8 (D13)
+    
+  - id: D14
+    class: outputs
+    ts_name: Low Side 9 (D14)
+    
+  - id: D15
+    class: outputs
+    ts_name: Low Side 10 (D15)
+    
+  - id: G2
+    class: outputs
+    ts_name: Low Side 11 (G2)
+    
+  - id: G3
+    class: outputs
+    ts_name: Low Side 12 (G3)
+    
+  - id: G4
+    class: outputs
+    ts_name: Low Side 13 (G4)
+    
+  - id: G5
+    class: outputs
+    ts_name: Low Side 14 (G5)
+    
+  - id: G6
+    class: outputs
+    ts_name: Low Side 15 (G6)
+    
+  - id: G7
+    class: outputs
+    ts_name: Low Side 16 (G7)
+    
+  - id: G8
+    class: outputs
+    ts_name: Low Side 17 (G8)
+    
+  - id: C6
+    class: outputs
+    ts_name: Low Side 18 (C6)
+    
+  - id: C7
+    class: outputs
+    ts_name: Low Side 19 (C7)
+    
+  - id: A8
+    class: outputs
+    ts_name: Low Side 20 (A8)
+    
+  - id: D5
+    class: outputs
+    ts_name: Low Side 21 (D5)
+    
+  - id: D4
+    class: outputs
+    ts_name: Low Side 22 (D4)
+    
+  - id: D3
+    class: outputs
+    ts_name: Low Side 23 (D3)
+    
+  - id: A15
+    class: outputs
+    ts_name: Low Side 24 (A15)
+        
+  - id: E15
+    class: outputs
+    ts_name: High Side 1 (E15)
+        
+  - id: E14
+    class: outputs
+    ts_name: High Side 2 (E14)
+        
+  - id: E13
+    class: outputs
+    ts_name: High Side 3 (E13)
+        
+  - id: E12
+    class: outputs
+    ts_name: High Side 4 (E12)
+        
+  - id: E11
+    class: outputs
+    ts_name: High Side 5 (E11)
+        
+  - id: F15
+    class: outputs
+    ts_name: High Side 6 (F15)
+        
+  - id: G0
+    class: outputs
+    ts_name: High Side 7 (G0)
+        
+  - id: G1
+    class: outputs
+    ts_name: High Side 8 (G1)
+        
+  - id: E7
+    class: outputs
+    ts_name: High Side 9 (E7)
+        
+  - id: E10
+    class: outputs
+    ts_name: High Side 10 (E10)
+        
+  - id: E9
+    class: outputs
+    ts_name: High Side 11 (E9)
+        
+  - id: E8
+    class: outputs
+    ts_name: High Side 12 (E8)
+        
+  - id: F7
+    class: outputs
+    ts_name: StepEr Direction (F7)
+        
+  - id: F8
+    class: outputs
+    ts_name: StepEr Control (F8)
+        
+  - id: F9
+    class: outputs
+    ts_name: StepEr Disable (F9)
+        
+  - id: B7
+    class: outputs
+    ts_name: DBW Disable (B7)
+        
+  - id: B8
+    class: outputs
+    ts_name: DBW Control (B8)
+        
+  - id: B9
+    class: outputs
+    ts_name: DBW Direction (B9)
+    
+  - id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: On-board Battery Sense (A0)
+    
+  - id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: Analog Inputs 1 (A1)
+    
+  - id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: Analog Inputs 2 (A2)
+    
+  - id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: Analog Inputs 3 (A3)
+    
+  - id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: Analog Inputs 4 (A4)
+    
+  - id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: On-board MAP (A5)
+    
+  - id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: Analog Inputs 6 (A6)
+    
+  - id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Analog Inputs 7 (A7)
+    
+  - id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: On-board BARO (B0) 
+    
+  - id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: Analog Inputs 9 (B1)
+    
+  - id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: Analog Inputs 10 (C0)
+    
+  - id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Primary On-board O2 (C1)
+    
+  - id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: Secondary On-board O2 (C2)    
+    
+  - id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: Analog Inputs 13 (C3)
+    
+  - id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Analog Inputs 14 (C4)
+    
+  - id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Analog Inputs 15 (C5)    
+
+  - id: [E2, E2]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 1 (E2)
+
+  - id: [E3, E3]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 2 (E3)
+
+  - id: [E4, E4]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 3 (E4)
+
+  - id: [E5, E5]
+    class: [switch_inputs, event_inputs]
+    ts_name: VR/Hall 4 (E5)
+
+  - id: [F5, F5]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 1 (F5)
+
+  - id: [F4, F4]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 2 (F4)
+
+  - id: [F3, F3]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 3 (F3)
+
+  - id: [F2, F2]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 4 (F2)
+
+  - id: [F1, F1]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 5 (F1)
+
+  - id: [F0, F0]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 6 (F0)
+
+  - id: [E6, E6]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 7 (E6)
+
+  - id: [C13, C13]
+    class: [switch_inputs, event_inputs]
+    ts_name: Digital Input 8 (C13)
+
+info:
+  title: Core8
+  name: Core8
+  board_url: https://rusefi.com/s/core8

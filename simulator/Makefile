@@ -14,40 +14,57 @@
 
 
 CHIBIOS = ../firmware/ChibiOS
+CHIBIOS_CONTRIB= ../firmware/ChibiOS-Contrib
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 RULESFILE = $(RULESPATH)/rules.mk
+
+PROJECT_CPU=simulator
 
 include ../firmware/rusefi.mk
 RULESFILE = ../firmware/rusefi_rules.mk
 
+# Configure precompiled header
+PCH_DIR = $(PROJECT_DIR)/pch
+PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = simulator
+
 # used by USE_SMART_BUILD
 CONFDIR = .
 
+ifneq ($(OS),Windows_NT)
+  SANITIZE = yes
+else
+  SANITIZE = no
+endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
-# this config if debugging is needed, but the binary is about 50M
-#  USE_OPT = -Wall     -ggdb     -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g3 -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
-# this config producec a smaller binary file
-# 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
-# see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2    -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
-	ifeq ($(OS),Windows_NT)
-	else
- 	 USE_OPT +=  -m32
-	endif
+# If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
+  USE_OPT += -O2
+#  USE_OPT += -O0 -g
+
+  ifeq ($(OS),Windows_NT)
+    USE_OPT += -DEFI_SIM_IS_WINDOWS=1
+  else
+    USE_OPT += -m32 -DEFI_SIM_IS_WINDOWS=0
+  endif
 endif
 
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
 
+# Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
+ifeq ($(SANITIZE),yes)
+  USE_OPT += -fsanitize=address
+endif
+
 ifeq ($(CCACHE_DIR),)
- $(info No CCACHE_DIR)
+  $(info No CCACHE_DIR)
 else
- $(info CCACHE_DIR is ${CCACHE_DIR})
- CCPREFIX=ccache
+  $(info CCACHE_DIR is ${CCACHE_DIR})
+  CCPREFIX=ccache
 endif
 
 # C specific options here (added to USE_OPT).
@@ -57,7 +74,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti
+  USE_CPPOPT = -std=c++2a -Wno-register -fno-rtti
 endif
 
 # Enable this if you want the linker to remove unused code and data.
@@ -83,7 +100,7 @@ endif
 # If enabled, this option makes the build process faster by not compiling
 # modules not used in the current configuration.
 ifeq ($(USE_SMART_BUILD),)
-  USE_SMART_BUILD = yes
+  USE_SMART_BUILD = no
 endif
 
 #
@@ -112,16 +129,24 @@ PROJECT_DIR = ../firmware
 
 # Imported source files and paths
 
+# Configure libfirmware Paths/Includes
+RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
+include $(RUSEFI_LIB)/util/util.mk
+include $(RUSEFI_LIB)/pt2001/pt2001.mk
+
+# Licensing files.
+include $(CHIBIOS)/os/license/license.mk
 # Startup files.
 # HAL-OSAL files (optional).
 include $(CHIBIOS)/os/hal/hal.mk
 include $(CHIBIOS)/os/hal/boards/simulator/board.mk
-include $(CHIBIOS)/os/hal/osal/rt/osal.mk
+include $(CHIBIOS)/os/hal/osal/rt-nil/osal.mk
 # RTOS files (optional).
 include $(CHIBIOS)/os/rt/rt.mk
 include $(CHIBIOS)/os/common/ports/SIMIA32/compilers/GCC/port.mk
 # Other files (optional).
-include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+include $(CHIBIOS)/os/hal/lib/streams/streams.mk
+#include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
 
 ifeq ($(OS),Windows_NT)
   include ${CHIBIOS}/os/hal/ports/simulator/win32/platform.mk
@@ -131,85 +156,46 @@ endif
 
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =  ${PORTSRC} \
-        ${KERNSRC} \
-        ${HALSRC} \
-        ${PLATFORMSRC} \
-        $(SYSTEMSRC) \
-        $(CONSOLESRC) \
-        $(CONTROLLERS_ALGO_SRC) \
-        $(CONTROLLERS_CORE_SRC) \
-        $(CONTROLLERS_SENSORS_SRC) \
-        $(ENGINES_SRC) \
-        $(BOARDSRC) \
-        $(CHIBIOS)/os/hal/lib/streams/memstreams.c \
-        $(CHIBIOS)/os/hal/lib/streams/chprintf.c \
-        $(UTILSRC) \
-        main.c
+CSRC =  $(ALLCSRC) \
+  $(RUSEFI_LIB_C)
+
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(UTILSRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
-	$(PROJECT_DIR)/development/sensor_chart.cpp \
-	$(HW_LAYER_EMS_CPP) \
-	$(HW_SENSORS_SRC) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
-	$(CONSOLE_SRC_CPP) \
-	$(INIT_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
-	$(DEV_SIMULATOR_SRC_CPP) \
-	$(ENGINES_SRC_CPP) \
-	simulator/rusEfiFunctionalTest.cpp \
-	simulator/framework.cpp \
-	simulator/boards.cpp \
-	$(TEST_SRC_CPP)
+CPPSRC = $(ALLCPPSRC) \
+  $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
+  $(PROJECT_DIR)/development/sensor_chart.cpp \
+  $(HW_LAYER_DRIVERS_CPP) \
+  $(HW_LAYER_DRIVERS_CORE_CPP) \
+  $(CONSOLE_SRC_CPP) \
+  $(DEV_SIMULATOR_SRC_CPP) \
+  simulator/rusEfiFunctionalTest.cpp \
+  simulator/can/hal_can_lld.cpp \
+  simulator/framework.cpp \
+  simulator/boards.cpp \
+  $(TEST_SRC_CPP) \
+  $(RUSEFI_LIB_CPP) \
+  main.cpp
 
 
 # List ASM source files here
 ASMSRC = $(PORTASM)
 
 INCDIR = . \
-          $(CHIBIOS)/os/license \
-          $(PORTINC) \
-          $(KERNINC) \
-          $(OSALINC) \
-          $(HALINC) \
-          $(CHCPPINC) \
-          $(PLATFORMINC) \
-          $(BOARDINC) \
-          $(UTIL_INC) \
-          $(PROJECT_DIR)/init \
-          $(CONSOLE_INC) \
-          $(PROJECT_DIR)/config/engines \
-          $(PROJECT_DIR)/ext_algo \
-         $(HW_LAYER_DRIVERS_INC) \
-          $(HW_LAYER_INC) $(HW_SENSORS_INC) \
-          $(PROJECT_DIR)/hw_layer/algo \
-          $(PROJECT_DIR)/hw_layer/drivers/can \
-          $(HW_SENSORS_INC) \
- 	$(DEVELOPMENT_DIR) \
-    $(CONTROLLERS_INC) \
-          ${CHIBIOS}/os/various \
-          $(CHIBIOS)/os/hal/lib/streams \
-          simulator
+  $(PCH_DIR) \
+  $(ALLINC) \
+  $(CHIBIOS)/os/various/cpp_wrappers \
+  $(PROJECT_DIR)/hw_layer/drivers/can \
+  ${CHIBIOS}/os/various \
+  $(CHIBIOS)/os/hal/lib/streams \
+  $(RUSEFI_LIB_INC) \
+  simulator/can \
+  simulator
 
 # List ASM source files here
 ASMSRC =
@@ -241,10 +227,10 @@ CPPC = $(CCPREFIX) $(TRGT)g++
 # Enable loading with g++ only if you need C++ runtime support.
 # NOTE: You can use C++ even without C++ support if you are careful. C++
 #       runtime support makes code size explode.
-#LD   = $(TRGT)gcc
-LD   = $(TRGT)g++
+#LD   = $(CC)
+LD   = $(CPPC)
 CP   = $(TRGT)objcopy
-AS   = $(TRGT)gcc -x assembler-with-cpp
+AS   = $(CC) -x assembler-with-cpp
 AR   = $(TRGT)ar
 OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
@@ -267,6 +253,8 @@ CPPWARN = -Wall -Wextra -Wundef
 
 # List all user C define here, like -D_DEBUG=1
 UDEFS = -DSIMULATOR
+DDEFS += -DFIRMWARE_ID=\"simulator\"
+
 
 # Define ASM defines here
 UADEFS =
@@ -284,8 +272,15 @@ else
 ULIBS =
 endif
 
+ifeq ($(SANITIZE),yes)
+	ULIBS += -fsanitize=address
+endif
+
 #
 # End of user defines
 ##############################################################################
 
 include $(RULESPATH)/rules.mk
+
+# Enable precompiled header
+include $(PROJECT_DIR)/rusefi_pch.mk

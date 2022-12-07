@@ -5,33 +5,25 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 
 #include "cyclic_buffer.h"
-#include "global.h"
 #include "histogram.h"
 
 #include "malfunction_central.h"
 #include "cli_registry.h"
-#include "unit_test_framework.h"
-#include "engine_controller.h"
 
 #include "nmea.h"
 #include "mmc_card.h"
 #include "lcd_menu_tree.h"
-#include "crc.h"
 #include "fl_stack.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
-#include "efilib.h"
 
-#include "gtest/gtest.h"
-
-TEST(util, isLogFileName) {
-	ASSERT_FALSE(isLogFile("aaaa"));
-	ASSERT_FALSE(isLogFile("aaa.mlq"));
-	ASSERT_TRUE (isLogFile("aaaa.mlg"));
-	ASSERT_FALSE(isLogFile("aaaa.aaa"));
+TEST(util, testitoa) {
+	char buffer[12];
+	itoa10(buffer, 239);
+	ASSERT_TRUE(strEqual(buffer, "239"));
 }
 
 TEST(util, negativeZero) {
@@ -42,15 +34,19 @@ TEST(util, negativeZero) {
 	ASSERT_FALSE(IS_NEGATIVE_ZERO(0.0));
 }
 
+TEST(util, crc8) {
+	const uint8_t crc8_tab[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
+
+	ASSERT_EQ(0xB, crc8(crc8_tab, 8));
+}
+
 TEST(util, crc) {
 	ASSERT_EQ(4, efiRound(4.4, 1));
 	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));
-
-	print("*************************************** testCrc\r\n");
+	ASSERT_FLOAT_EQ(0.2, efiRound(0.2345, 0.1));
 
 	const char * A = "A";
 
-	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
 	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32 1", 0xd3d99e8b, c);
@@ -74,8 +70,6 @@ TEST(util, cyclicBufferContains) {
 
 TEST(util, cyclicBuffer) {
 	cyclic_buffer<int> sb;
-
-	print("*************************************** testCyclicBuffer\r\n");
 
 	{
 		sb.add(10);
@@ -102,8 +96,6 @@ TEST(util, cyclicBuffer) {
 }
 
 TEST(util, histogram) {
-	print("******************************************* testHistogram\r\n");
-
 	initHistogramsModule();
 
 	ASSERT_EQ(80, histogramGetIndex(239));
@@ -145,33 +137,30 @@ TEST(util, histogram) {
 }
 
 static void testMalfunctionCentralRemoveNonExistent() {
-	print("******************************************* testMalfunctionCentralRemoveNonExistent\r\n");
 	clearWarnings();
 
 	// this should not crash
-	removeError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	removeError(OBD_TPS1_Correlation);
 }
 
 static void testMalfunctionCentralSameElementAgain() {
 	clearWarnings();
-	print("******************************************* testMalfunctionCentralSameElementAgain\r\n");
 	error_codes_set_s localCopy;
 
-	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
-	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
+	addError(OBD_TPS1_Correlation);
+	addError(OBD_TPS1_Correlation);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(1, localCopy.count);
 }
 
 static void testMalfunctionCentralRemoveFirstElement() {
 	clearWarnings();
-	print("******************************************* testMalfunctionCentralRemoveFirstElement\r\n");
 	error_codes_set_s localCopy;
 
-	obd_code_e firstElement = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
+	obd_code_e firstElement = OBD_TPS1_Correlation;
 	addError(firstElement);
 
-	obd_code_e secondElement = OBD_Intake_Air_Temperature_Circuit_Malfunction;
+	obd_code_e secondElement = OBD_TPS2_Correlation;
 	addError(secondElement);
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(2, localCopy.count);
@@ -189,7 +178,6 @@ TEST(misc, testMalfunctionCentral) {
 	testMalfunctionCentralSameElementAgain();
 	testMalfunctionCentralRemoveFirstElement();
 
-	print("******************************************* testMalfunctionCentral\r\n");
 	clearWarnings();
 
 	error_codes_set_s localCopy;
@@ -198,7 +186,7 @@ TEST(misc, testMalfunctionCentral) {
 	getErrorCodes(&localCopy);
 	ASSERT_EQ(0, localCopy.count);
 
-	obd_code_e code = OBD_Engine_Coolant_Temperature_Circuit_Malfunction;
+	obd_code_e code = OBD_TPS1_Correlation;
 	// let's add one error and validate
 	addError(code);
 
@@ -212,7 +200,7 @@ TEST(misc, testMalfunctionCentral) {
 	ASSERT_EQ(1, localCopy.count);
 	ASSERT_EQ(code, localCopy.error_codes[0]);
 
-	code = OBD_Intake_Air_Temperature_Circuit_Malfunction;
+	code = OBD_TPS2_Correlation;
 	addError(code);
 	getErrorCodes(&localCopy);
 	// todo:	ASSERT_EQ(2, localCopy.count);
@@ -249,6 +237,16 @@ static void testEchoSSS(const char *first, const char *second, const char *third
 	lastThird = third;
 }
 
+static float fFirst;
+static float fSecond;
+static float fThird;
+
+static void testEchoFFF(float first, float second, float third) {
+	fFirst = first;
+	fSecond = second;
+	fThird = third;
+}
+
 #define UNKNOWN_COMMAND "dfadasdasd"
 
 static loc_t GPSdata;
@@ -256,8 +254,6 @@ static loc_t GPSdata;
 static char nmeaMessage[1000];
 
 TEST(misc, testGpsParser) {
-	print("******************************************* testGpsParser\r\n");
-
 	strcpy(nmeaMessage, "");
 	gps_location(&GPSdata, nmeaMessage);
 
@@ -288,12 +284,12 @@ TEST(misc, testGpsParser) {
 	assertEqualsM("3 speed", 11.2, GPSdata.speed);
 //	ASSERT_EQ( 0,  GPSdata.altitude) << "3 altitude";  // GPRMC not overwrite altitude
 	ASSERT_EQ( 0,  GPSdata.course) << "3 course";
-	ASSERT_EQ( 2006,  GPSdata.GPStm.tm_year + 1900) << "3 GPS yy";
-	ASSERT_EQ( 12,  GPSdata.GPStm.tm_mon) << "3 GPS mm";
-	ASSERT_EQ( 26,  GPSdata.GPStm.tm_mday) << "3 GPS yy";
-	ASSERT_EQ( 11,  GPSdata.GPStm.tm_hour) << "3 GPS hh";
-	ASSERT_EQ( 16,  GPSdata.GPStm.tm_min) << "3 GPS mm";
-	ASSERT_EQ( 9,  GPSdata.GPStm.tm_sec) << "3 GPS ss";
+	ASSERT_EQ( 2006,  GPSdata.time.year + 1900) << "3 GPS yy";
+	ASSERT_EQ( 12,  GPSdata.time.month) << "3 GPS mm";
+	ASSERT_EQ( 26,  GPSdata.time.day) << "3 GPS dd";
+	ASSERT_EQ( 11,  GPSdata.time.hour) << "3 GPS hh";
+	ASSERT_EQ( 16,  GPSdata.time.minute) << "3 GPS mm";
+	ASSERT_EQ( 9,  GPSdata.time.second) << "3 GPS ss";
 
 	// check again first one
 	// we need to pass a mutable string, not a constant because the parser would be modifying the string
@@ -310,7 +306,6 @@ TEST(misc, testGpsParser) {
 static char buffer[300];
 
 TEST(misc, testConsoleLogic) {
-	print("******************************************* testConsoleLogic\r\n");
 	resetConsoleActions();
 
 	helpCommand();
@@ -338,32 +333,32 @@ TEST(misc, testConsoleLogic) {
 	strcpy(buffer, "sdasdafasd asd");
 	handleConsoleLine(buffer);
 
-	print("\r\naddConsoleActionI\r\n");
+	printf("\r\naddConsoleActionI\r\n");
 	addConsoleActionI("echoi", testEchoI);
 	strcpy(buffer, "echoi 239");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(239, lastInteger);
 
-	print("\r\naddConsoleActionI 240 with two spaces\r\n");
+	printf("\r\naddConsoleActionI 240 with two spaces\r\n");
 	strcpy(buffer, "echoi  240");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(240, lastInteger);
 
 
-	print("\r\naddConsoleActionII\r\n");
+	printf("\r\naddConsoleActionII\r\n");
 	addConsoleActionII("echoii", testEchoII);
 	strcpy(buffer, "echoii 22 239");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(22, lastInteger);
 	ASSERT_EQ(239, lastInteger2);
 
-	print("\r\naddConsoleActionII three spaces\r\n");
+	printf("\r\naddConsoleActionII three spaces\r\n");
 	strcpy(buffer, "echoii   21   220");
 	handleConsoleLine(buffer);
 	ASSERT_EQ(21, lastInteger);
 	ASSERT_EQ(220, lastInteger2);
 
-	print("\r\addConsoleActionSSS\r\n");
+	printf("\r\addConsoleActionSSS\r\n");
 	addConsoleActionSSS("echosss", testEchoSSS);
 	strcpy(buffer, "echosss 111 222 333");
 	handleConsoleLine(buffer);
@@ -374,12 +369,19 @@ TEST(misc, testConsoleLogic) {
 	handleConsoleLine(buffer);
 	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
 
+	printf("\r\addConsoleActionFFF\r\n");
+	addConsoleActionFFF("echofff", testEchoFFF);
+	strcpy(buffer, "echofff 1.0 2 00003.0");
+	handleConsoleLine(buffer);
+
+	ASSERT_EQ(1.0, fFirst);
+	ASSERT_EQ(2.0, fSecond);
+	ASSERT_EQ(3.0, fThird);
+
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
 TEST(misc, testFLStack) {
-	print("******************************************* testFLStack\r\n");
-
 	FLStack<int, 4> stack;
 	ASSERT_EQ(0, stack.size());
 
@@ -410,7 +412,6 @@ TEST(misc, testFLStack) {
 static char buff[32];
 
 TEST(misc, testMisc) {
-	print("******************************************* testMisc\r\n");
 	strcpy(buff, "  ab  ");
 	// we need a mutable array here
 	ASSERT_TRUE(strEqual("ab", efiTrim(buff)));
@@ -434,8 +435,6 @@ TEST(misc, testMisc) {
 }
 
 TEST(misc, testMenuTree) {
-	print("******************************************* testMenuTree\r\n");
-
 	MenuItem ROOT(NULL, NULL);
 
 	MenuTree tree(&ROOT);
@@ -497,14 +496,100 @@ TEST(misc, testMenuTree) {
 }
 
 int getRusEfiVersion(void) {
-	return 776655;
+	return TS_FILE_VERSION;
 }
 
-TEST(util, datalogging) {
-	char LOGGING_BUFFER[1000];
-	Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+TEST(util, PeakDetect) {
+	constexpr int startTime = 50;
+	constexpr int timeout = 100;
+	PeakDetect<int, timeout> dut;
 
-	printCurrentState(&logger, 239, "DEFAULT_FRANKENSO", "ID");
-//	printf("Got [%s]\r\n", LOGGING_BUFFER);
-//	ASSERT_STREQ("rusEfiVersion,776655@321ID DEFAULT_FRANKENSO 239,", LOGGING_BUFFER);
+	// Set a peak
+	EXPECT_EQ(dut.detect(1000, startTime), 1000);
+
+	// Smaller value at the same time is ignored
+	EXPECT_EQ(dut.detect(500, startTime), 1000);
+
+	// Larger value at the same time raises the peak
+	EXPECT_EQ(dut.detect(1500, startTime), 1500);
+
+	// Small value at almost the timeout is ignored
+	EXPECT_EQ(dut.detect(500, startTime + timeout - 1), 1500);
+
+	// Small value past the timeout is used
+	EXPECT_EQ(dut.detect(500, startTime + timeout + 1), 500);
+}
+
+TEST(util, WrapAround62) {
+	// Random test
+	{
+		WrapAround62 t;
+		uint32_t source = 0;
+		uint64_t actual = 0;
+
+		// Test random progression, positive and negative.
+		uint32_t seed = time(NULL);
+		printf("Testing with seed 0x%08x\n", seed);
+		srand(seed);
+		for (unsigned i = 0; i < 10000; i++) {
+			int32_t delta = rand();
+			if (delta < 0) {
+				delta = ~delta;
+			}
+			delta -= RAND_MAX >> 1;
+
+			// Cap negative test
+			if (delta < 0 && -delta > actual) {
+				delta = -actual;
+			}
+
+			source += delta;
+			actual += delta;
+
+			uint64_t next = t.update(source);
+			EXPECT_EQ(actual, next);
+		}
+	}
+
+	// More pointed test for expected edge conditions
+	{
+		WrapAround62 t;
+
+		EXPECT_EQ(t.update(0x03453455), 0x003453455LL);
+		EXPECT_EQ(t.update(0x42342323), 0x042342323LL);
+		EXPECT_EQ(t.update(0x84356345), 0x084356345LL);
+		EXPECT_EQ(t.update(0x42342323), 0x042342323LL);
+		EXPECT_EQ(t.update(0x84356345), 0x084356345LL);
+		EXPECT_EQ(t.update(0xC5656565), 0x0C5656565LL);
+		EXPECT_EQ(t.update(0x01122112), 0x101122112LL); // Wrap around!
+		EXPECT_EQ(t.update(0xC5656565), 0x0C5656565LL);
+		EXPECT_EQ(t.update(0x84356345), 0x084356345LL);
+		EXPECT_EQ(t.update(0xC5656565), 0x0C5656565LL);
+		EXPECT_EQ(t.update(0x01122112), 0x101122112LL); // Wrap around!
+		EXPECT_EQ(t.update(0x42342323), 0x142342323LL);
+		EXPECT_EQ(t.update(0x84356345), 0x184356345LL);
+		EXPECT_EQ(t.update(0x42342323), 0x142342323LL);
+		EXPECT_EQ(t.update(0x84356345), 0x184356345LL);
+		EXPECT_EQ(t.update(0xC5656565), 0x1C5656565LL);
+		EXPECT_EQ(t.update(0x01122112), 0x201122112LL); // Wrap around!
+		EXPECT_EQ(t.update(0xC5656565), 0x1C5656565LL);
+		EXPECT_EQ(t.update(0x84356345), 0x184356345LL);
+		EXPECT_EQ(t.update(0xC5656565), 0x1C5656565LL);
+		EXPECT_EQ(t.update(0x01122112), 0x201122112LL); // Wrap around!
+		EXPECT_EQ(t.update(0xC5656565), 0x1C5656565LL);
+		EXPECT_EQ(t.update(0x84356345), 0x184356345LL);
+		EXPECT_EQ(t.update(0x42342323), 0x142342323LL);
+		EXPECT_EQ(t.update(0x01122112), 0x101122112LL);
+		EXPECT_EQ(t.update(0x84356345), 0x084356345LL);
+		EXPECT_EQ(t.update(0x42342323), 0x042342323LL);
+		EXPECT_EQ(t.update(0x03453455), 0x003453455LL);
+	}
+}
+
+TEST(util, isInRange) {
+	EXPECT_FALSE(isInRange(5, 4, 10));
+	EXPECT_TRUE(isInRange(5, 5, 10));
+	EXPECT_TRUE(isInRange(5, 7, 10));
+	EXPECT_TRUE(isInRange(5, 10, 10));
+	EXPECT_FALSE(isInRange(5, 11, 10));
 }

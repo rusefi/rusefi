@@ -52,11 +52,7 @@ public class InternetStatus {
             HttpURLConnection urlConn = (HttpURLConnection) urlServer.openConnection();
             urlConn.setConnectTimeout(3000); //<- 3Seconds Timeout
             urlConn.connect();
-            if (urlConn.getResponseCode() == 200) {
-                return true;
-            } else {
-                return false;
-            }
+            return urlConn.getResponseCode() == 200;
         } catch (IOException e1) {
             return false;
         }

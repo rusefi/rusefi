@@ -12,10 +12,10 @@
 #include "global.h"
 #include "io_pins.h"
 #include "engine_configuration.h"
-#include "smart_gpio.h"
+#include "injection_gpio.h"
 
-void initPrimaryPins(Logging *sharedLogger);
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initPrimaryPins();
+void initOutputPins();
 
 #if EFI_GPIO_HARDWARE
 void turnAllPinsOff(void);
@@ -23,115 +23,19 @@ void turnAllPinsOff(void);
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */
 
-// Used if you want a function to be virtual only for unit testing purposes
-#if EFI_UNIT_TEST
-#define TEST_VIRTUAL virtual
-#else
-#define TEST_VIRTUAL
-#endif
 
 #ifdef __cplusplus
-/**
- * @brief   Single output pin reference and state
- */
-class OutputPin {
-public:
-	OutputPin();
-	/**
-	 * initializes pin & registers it in pin repository
-	 * outputMode being a pointer allow us to change configuration (for example invert logical pin) in configuration and get resuts applied
-	 * away, or at least I hope that's why
-	 */
-	void initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode);
-	/**
-	 * same as above, with DEFAULT_OUTPUT mode
-	 */
-	void initPin(const char *msg, brain_pin_e brainPin);
 
-	/**
-	 * dissociates pin from this output and un-registers it in pin repository
-	 */
-	void deInit();
-
-	bool isInitialized();
-
-	bool getAndSet(int logicValue);
-	TEST_VIRTUAL void setValue(int logicValue);
-	void toggle();
-	bool getLogicValue() const;
-
-#if EFI_GPIO_HARDWARE
-	ioportid_t port = 0;
-	uint8_t pin = 0;
-#endif /* EFI_GPIO_HARDWARE */
-
-	brain_pin_e brainPin = GPIO_UNASSIGNED;
-
-#if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
-	/* used for external pins */
-	bool ext = false;
-#endif /* EFI_GPIO_HARDWARE */
-
-	int8_t currentLogicValue = INITIAL_PIN_STATE;
-	/**
-	 * we track current pin status so that we do not touch the actual hardware if we want to write new pin bit
-	 * which is same as current pin value. This maybe helps in case of status leds, but maybe it's a total over-engineering
-	 */
-private:
-	// todo: inline this method?
-	void setDefaultPinState(const pin_output_mode_e *defaultState);
-	void setOnchipValue(int electricalValue);
-
-	// 4 byte pointer is a bit of a memory waste here
-	const pin_output_mode_e *modePtr = nullptr;
-};
-
-/**
- * OutputPin which is reported on Engine Sniffer
- */
-class NamedOutputPin : public virtual OutputPin {
-public:
-	NamedOutputPin();
-	explicit NamedOutputPin(const char *name);
-	void setHigh();
-	void setLow();
-	const char *getName() const;
-	const char *getShortName() const;
-	/**
-	 * @return true if pin was stopped
-	 */
-	bool stop();
-	// todo: char pointer is a bit of a memory waste here, we can reduce RAM usage by software-based getName() method
-	const char *name = nullptr;
-	/**
-	 * rusEfi Engine Sniffer protocol uses these short names to reduce bytes usage
-	 */
-	const char *shortName = nullptr;
-};
-
-class InjectorOutputPin final : public NamedOutputPin {
-public:
-	InjectorOutputPin();
-	void reset();
-
-	void open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-
-	int8_t getOverlappingCounter() const { return overlappingCounter; }
-
-	// todo: re-implement this injectorIndex via address manipulation to reduce memory usage?
-	int8_t injectorIndex;
-
-private:
-	int8_t overlappingCounter;
-};
 
 class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
+	void setHigh() override;
+	void setLow() override;
 	void reset();
 	int signalFallSparkId;
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
+	int8_t coilIndex;
 };
 
 /**
@@ -139,26 +43,26 @@ public:
  */
 class RegisteredOutputPin : public virtual OutputPin {
 public:
-	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
-	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	RegisteredOutputPin(const char *registrationName, size_t pinOffset, size_t pinModeOffset);
+	void init();
 	void unregister();
-	RegisteredOutputPin *next;
+	RegisteredOutputPin* const next;
 	const char *registrationName;
 private:
-	short pinOffset;
-	short pinModeOffset;
+	const uint16_t m_pinOffset;
+	const uint16_t m_pinModeOffset;
 	bool isPinConfigurationChanged();
 };
 
 class RegisteredNamedOutputPin : public RegisteredOutputPin, public NamedOutputPin {
 public:
-		RegisteredNamedOutputPin(const char *name, short pinOffset, short pinModeOffset);
+		RegisteredNamedOutputPin(const char *name, size_t pinOffset, size_t pinModeOffset);
 };
 
 class EnginePins {
 public:
 	EnginePins();
-	void startPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void startPins();
 	void reset();
 	static void debug();
 	bool stopPins();
@@ -174,10 +78,14 @@ public:
 	RegisteredOutputPin starterRelayDisable;
 
 	RegisteredOutputPin fanRelay;
+	RegisteredOutputPin fanRelay2;
+
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
 	OutputPin o2heater;
+	OutputPin luaOutputPins[LUA_PWM_COUNT];
+
 	/**
 	 * brain board RED LED by default
 	 */
@@ -198,16 +106,19 @@ public:
 
 	RegisteredNamedOutputPin tachOut;
 
-	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
-	RegisteredOutputPin hipCs;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;
 
-	InjectorOutputPin injectors[INJECTION_PIN_COUNT];
-	IgnitionOutputPin coils[IGNITION_PIN_COUNT];
+	InjectorOutputPin injectors[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin coils[MAX_CYLINDER_COUNT];
+	IgnitionOutputPin trailingCoils[MAX_CYLINDER_COUNT];
 	NamedOutputPin auxValve[AUX_DIGITAL_VALVE_COUNT];
 	OutputPin tcuSolenoids[TCU_SOLENOID_COUNT];
+	OutputPin tcuTccOnoffSolenoid;
+	OutputPin tcuTccPwmSolenoid;
+	OutputPin tcuPcSolenoid;
+	OutputPin tcu32Solenoid;
 
 private:
 	void startInjectionPins();
@@ -216,6 +127,7 @@ private:
 
 	void stopInjectionPins();
 	void stopIgnitionPins();
+	void stopAuxValves();
 };
 
 #endif /* __cplusplus */
@@ -244,6 +156,7 @@ const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */
 
-void printSpiConfig(Logging *logging, const char *msg, spi_device_e device);
+void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
-const char *hwPortname(brain_pin_e brainPin);
+
+extern EnginePins enginePins;

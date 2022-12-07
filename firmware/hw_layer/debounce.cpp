@@ -5,13 +5,12 @@
  * @date Aug 31, 2020
  * @author David Holdeman, (c) 2020
  */
+#include "pch.h"
+
 #include "debounce.h"
-#include "pin_repository.h"
-#include "engine_configuration.h"
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
-static Logging *logger;
 
 ButtonDebounce::ButtonDebounce(const char *name)
 	: m_name(name)
@@ -58,7 +57,7 @@ void ButtonDebounce::stopConfiguration () {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
     if (*m_pin != active_pin || *m_mode != active_mode) {
 #else
-    if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && (*m_pin != 0 || *m_mode != 0))) {
+    if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && ((int)(*m_pin) != 0 || (int)(*m_mode) != 0))) {
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #if EFI_PROD_CODE
     	efiSetPadUnused(active_pin);
@@ -118,17 +117,15 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        scheduleMsg(logger, "%s timeLast %d", listItem->m_name, listItem->timeLast);
-        scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
+        efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
+        efiPrintf("physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
 #endif
 
         listItem = listItem->nextDebounce;
     }
 }
 
-void initButtonDebounce(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initButtonDebounce() {
 #if !EFI_UNIT_TEST
 	addConsoleAction("debounce", ButtonDebounce::debug);
 #endif /* EFI_UNIT_TEST */

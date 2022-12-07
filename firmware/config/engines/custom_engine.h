@@ -8,22 +8,35 @@
 #pragma once
 
 #include "engine_configuration.h"
-
-void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoConfiguration();
 void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration);
 void disableLCD(engine_configuration_s *engineConfiguration);
 void runSchedulingPrecisionTestIfNeeded(void);
-void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoBoardTestConfiguration();
+void setEtbTestConfiguration();
+void setTle8888TestConfiguration();
+void setL9779TestConfiguration();
 
-void setIssue898(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEepromTestConfiguration();
 
-void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setTestQuadCam();
 
-void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void mreBoardNewTest();
+void mreSecondaryCan();
+void mreBCM();
 
-void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+/**
+ * PROTEUS_QC_TEST_BOARD
+ * set engine_type 42
+ */
+void proteusBoardTest();
+void proteusLuaDemo();
+void proteusHarley();
+
+void setTest33816EngineConfiguration();
+void setBoschHDEV_5_injectors();
+void setHellen72etb();
+void setRotary();
+void setVrThresholdTest();
+
+void detectBoardType();

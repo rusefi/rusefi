@@ -1,6 +1,6 @@
 package com.rusefi.tools;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
@@ -14,10 +14,13 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Pair;
 import com.rusefi.core.ResponseBuffer;
+import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.stream.PCanIoStream;
+import com.rusefi.io.stream.SocketCANIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
@@ -26,6 +29,7 @@ import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,15 +41,24 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
     public static final String SET_AUTH_TOKEN = "set_auth_token";
     public static final String RUS_EFI_NOT_DETECTED = "rusEFI not detected";
-    private static Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private static Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private static final Map<String, String> toolsHelp = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+
+    private static final StatusConsumer statusListener = new StatusConsumer() {
+        final Logging log = getLogging(CANConnectorStartup.class);
+        @Override
+        public void append(String message) {
+            log.info(message);
+        }
+    };
 
     static {
         registerTool("help", args -> printTools(), "Print this help.");
@@ -59,13 +72,17 @@ public class ConsoleTools {
         registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
         registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
 
-        registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
-        registerTool("decompile_fsio_line", ConsoleTools::invokeDecompileExpressionTool, "Convert a line from RPN form.");
-        registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
-
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
+        registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
+        registerTool("pcan_connector", strings -> {
 
+            PCanIoStream stream = PCanIoStream.createStream();
+            CANConnectorStartup.start(stream, statusListener);
+        }, "Connect your rusEFI ECU using PCAN CAN-bus adapter");
+        if (!FileLog.isWindows()) {
+            registerTool("socketcan_connector", strings -> CANConnectorStartup.start(SocketCANIoStream.create(), statusListener), "Connect your rusEFI ECU using SocketCAN CAN-bus adapter");
+        }
         registerTool("print_auth_token", args -> printAuthToken(), "Print current rusEFI Online authentication token.");
         registerTool("print_vehicle_token", args -> printVehicleToken(), "Prints vehicle access token.");
         registerTool(SET_AUTH_TOKEN, ConsoleTools::setAuthToken, "Set rusEFI Online authentication token.");
@@ -83,8 +100,23 @@ public class ConsoleTools {
         registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
+        registerTool("send_command", new ConsoleTool() {
+            @Override
+            public void runTool(String[] args) throws Exception {
+                String command = args[1];
+                System.out.println("Sending command " + command);
+                sendCommand(command);
+            }
+        }, "Sends command specified as second argument");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
-        registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+        registerTool(Fields.CMD_REBOOT_DFU, args -> {
+            sendCommand(Fields.CMD_REBOOT_DFU);
+            /**
+             * AndreiKA reports that auto-detect fails to interrupt communication threads while in native code
+             * See https://github.com/rusefi/rusefi/issues/3300
+             */
+            System.exit(0);
+        }, "Sends a command to switch rusEFI controller into DFU mode.");
     }
 
     private static void localProxy(String[] strings) throws IOException {
@@ -100,7 +132,7 @@ public class ConsoleTools {
             public void onActivity() {
 
             }
-        });
+        }, StatusConsumer.ANONYMOUS);
 
     }
 
@@ -131,7 +163,7 @@ public class ConsoleTools {
 
     private static void printCrc(ConfigurationImage image) {
         for (int i = 0; i < Fields.ERROR_BUFFER_SIZE; i++)
-            image.getContent()[Fields.warning_message_offset + i] = 0;
+            image.getContent()[Fields.WARNING_MESSAGE.getOffset() + i] = 0;
         int crc32 = getCrc32(image.getContent());
         int crc16 = crc32 & 0xFFFF;
         System.out.printf("tune_CRC32_hex=0x%x\n", crc32);
@@ -184,11 +216,6 @@ public class ConsoleTools {
         FiringOrderTSLogic.invoke(args[1]);
     }
 
-    private static void runCompileTool(String[] args) throws IOException {
-        int returnCode = invokeCompileFileTool(args);
-        System.exit(returnCode);
-    }
-
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
@@ -239,7 +266,7 @@ public class ConsoleTools {
 
     public static void startAndConnect(final Function<LinkManager, Void> onConnectionEstablished) {
 
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -252,7 +279,7 @@ public class ConsoleTools {
             }
 
             @Override
-            public void onConnectionFailed() {
+            public void onConnectionFailed(String s) {
 
             }
         });
@@ -260,7 +287,7 @@ public class ConsoleTools {
 
     private static void readTune() {
         startAndConnect(linkManager -> {
-            System.out.println("Loaded! Exiting");;
+            System.out.println("Loaded! Exiting");
             System.exit(0);
             return null;
         });
@@ -301,33 +328,6 @@ public class ConsoleTools {
         }, "callback");
     }
 
-    private static int invokeCompileFileTool(String[] args) throws IOException {
-        /**
-         * re-packaging array which contains input and output file names
-         */
-        return CompileTool.run(Arrays.asList(args).subList(1, args.length));
-    }
-
-
-    private static void invokeDecompileExpressionTool(String[] args) {
-        if (args.length != 2) {
-            System.err.println("input RPN parameter expected");
-            System.exit(-1);
-        }
-        String rpn = args[1];
-        String humanForm = InfixConverter.getHumanInfixFormOrError(rpn);
-        System.out.println(humanForm);
-    }
-
-    private static void invokeCompileExpressionTool(String[] args) {
-        if (args.length != 2) {
-            System.err.println("input expression parameter expected");
-            System.exit(-1);
-        }
-        String expression = args[1];
-        System.out.println(DoubleEvaluator.process(expression).getPosftfixExpression());
-    }
-
     public static boolean runTool(String[] args) throws Exception {
         if (args == null || args.length == 0)
             return false;
@@ -342,7 +342,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
@@ -367,7 +367,8 @@ public class ConsoleTools {
     }
 
     static void detect(String[] strings) throws IOException {
-        String autoDetectedPort = autoDetectPort();
+        SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = detectResult.getSerialPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -377,13 +378,13 @@ public class ConsoleTools {
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes);
         // skipping response
-        incomingData.getPacket("", true);
+        incomingData.getPacket("");
 
         sleep(300);
         stream.sendPacket(new byte[]{Fields.TS_GET_TEXT});
         sleep(300);
 
-        byte[] response = incomingData.getPacket("", true);
+        byte[] response = incomingData.getPacket("");
         if (response == null) {
             System.out.println("No response");
             return;
@@ -396,8 +397,10 @@ public class ConsoleTools {
             EngineState.ValueCallback<String> callback = new EngineState.ValueCallback<String>() {
                 @Override
                 public void onUpdate(String value) {
-                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX))
-                        messages.append(value + "\n");
+                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX)) {
+                        messages.append(value);
+                        messages.append("\n");
+                    }
                 }
             };
             while (!unpack.isEmpty()) {
@@ -413,9 +416,9 @@ public class ConsoleTools {
         });
         responseBuffer.append(textResponse + "\r\n", LinkManager.ENCODER);
 
-        System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
+        System.out.println("Signature: " + detectResult.getSignature());
         System.out.println("It says " + messages);
-        Pair<String, String> stringPair = SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE);
+        Pair<String, String> stringPair = SignatureHelper.getUrl(detectResult.getSignature());
         if (stringPair != null)
             System.out.println("Ini file: " + stringPair.first);
         System.exit(0);

@@ -1,14 +1,7 @@
 /**
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "engine.h"
-#include "tps.h"
-#include "sensor.h"
-#if EFI_PROD_CODE
-#include "settings.h"
-#endif /* EFI_PROD_CODE */
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
@@ -27,15 +20,28 @@ void grabTPSIsWideOpen() {
 }
 
 void grabPedalIsUp() {
-#if EFI_PROD_CODE
-	engineConfiguration->throttlePedalUpVoltage = Sensor::getRaw(SensorType::AcceleratorPedal);
-	printTPSInfo();
-#endif /* EFI_PROD_CODE */
+	/**
+	 * search for 'maintainConstantValue' to find how this TS magic works
+	 */
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMin;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 }
 
 void grabPedalIsWideOpen() {
-#if EFI_PROD_CODE
-	engineConfiguration->throttlePedalWOTVoltage = Sensor::getRaw(SensorType::AcceleratorPedal);
-	printTPSInfo();
-#endif /* EFI_PROD_CODE */
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMax;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+}
+
+bool isTps1Error() {
+	return !Sensor::get(SensorType::Tps1).Valid;
+}
+
+bool isTps2Error() {
+    return !Sensor::get(SensorType::Tps2).Valid && Sensor::hasSensor(SensorType::Tps2Primary);
+}
+
+bool isPedalError() {
+    return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }

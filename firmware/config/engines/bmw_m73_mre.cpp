@@ -60,18 +60,16 @@
  *
  */
 
+#include "pch.h"
+
 #include "bmw_m73.h"
-#include "fsio_impl.h"
 
-EXTERN_CONFIG;
-
-void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setEngineBMW_M73_microRusEfi() {
+	 m73engine();
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
-	CONFIG(isFasterEngineSpinUpEnabled) = true;
-
-	strcpy(CONFIG(vehicleName), "microRusEFIx2");
+	strcpy(engineConfiguration->vehicleName, "microRusEFIx2");
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -82,52 +80,33 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
-
-
-	CONFIG(debugMode) = DBG_ELECTRONIC_THROTTLE_PID;
 	engineConfiguration->etb.pFactor = 2.00;
 	engineConfiguration->etb.iFactor = 0.35;
 
-	// set debug_mode 37
 	// 22 - AN Temp 4, orange wire
-	CONFIG(startStopButtonPin) = GPIOA_3;
+	engineConfiguration->startStopButtonPin = Gpio::A3;
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// "43 - GP Out 4"
-	CONFIG(starterControlPin) = TLE8888_PIN_24;
+	engineConfiguration->starterControlPin = Gpio::TLE8888_PIN_24;
 #endif /* BOARD_TLE8888_COUNT */
 
 
-	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_7;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canWriteEnabled = true;
-	CONFIG(enableVerboseCanTx) = true;
+	engineConfiguration->enableVerboseCanTx = true;
 
 
 	// do I have VR wires flipped?
 	engineConfiguration->trigger.type = TT_60_2_VW;
 
-	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
-	engineConfiguration->cranking.rpm = 280;
-
-	CONFIG(crankingTimingAngle) = 30;
-
-	// I am too lazy to add MAP sensor
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
-
-	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 15;
-
 	//set tps_min 891
-	CONFIG(tpsMin) = 891;
+	engineConfiguration->tpsMin = 891;
 	//set tps_max 177
-	CONFIG(tpsMax) = 177;
+	engineConfiguration->tpsMax = 177;
 
 }

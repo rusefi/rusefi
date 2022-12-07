@@ -1,0 +1,12 @@
+struct_no_prefix trigger_state_s
+	uint32_t crankSynchronizationCounter;Crank sync counter\nUsually matches crank revolutions
+    float vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
+    float vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
+    float triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
+    float triggerActualSyncGapRatio;trigger: unused field?
+
+    uint8_t triggerStateIndex
+    uint8_t vvtCounter
+	uint8_t camResyncCounter
+	uint8_t vvtStateIndex
+end_struct

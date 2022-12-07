@@ -1,3 +1,7 @@
+/**
+ * @file buffered_writer.h
+ */
+
 #pragma once
 
 #include <cstring>

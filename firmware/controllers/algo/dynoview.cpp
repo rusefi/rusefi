@@ -5,30 +5,19 @@
  * @author Alexandru Miculescu, (c) 2012-2020
  */
 
-#include "engine.h"
-#include "pin_repository.h"
+#include "pch.h"
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
-#include "vehicle_speed.h"
 
-static Logging *logger;
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-EXTERN_ENGINE;
-
-DynoView dynoInstance;
+static DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {
 
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed();
+    speed = Sensor::getOrZero(SensorType::VehicleSpeed);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
@@ -56,12 +45,12 @@ void DynoView::update(vssSrc src) {
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
-	    if (CONFIG(debugMode) == DBG_LOGIC_ANALYZER) {
-		    tsOutputChannels.debugIntField1 = deltaTime;
-		    tsOutputChannels.debugFloatField1 = vss;
-		    tsOutputChannels.debugFloatField2 = speed;
-		    tsOutputChannels.debugFloatField3 = deltaSpeed;
-            tsOutputChannels.debugFloatField4 = acceleration;
+	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
+		    engine->outputChannels.debugIntField1 = deltaTime;
+		    engine->outputChannels.debugFloatField1 = vss;
+		    engine->outputChannels.debugFloatField2 = speed;
+		    engine->outputChannels.debugFloatField3 = deltaSpeed;
+            engine->outputChannels.debugFloatField4 = acceleration;
 	    }
 #endif /* EFI_TUNER_STUDIO */        
         updateHP();
@@ -79,7 +68,7 @@ void DynoView::update(vssSrc src) {
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
+        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;
@@ -103,11 +92,11 @@ void DynoView::updateHP() {
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
     if (acceleration != 0) {
-        engineForce = CONFIG(vehicleWeight) * acceleration;
+        engineForce = engineConfiguration->vehicleWeight * acceleration;
         enginePower = engineForce * (vss / 3.6);
         engineHP = enginePower / 746;
-        if (isValidRpm(GET_RPM())) { 
-            engineTorque = ((engineHP * 5252) / GET_RPM());  
+        if (Sensor::getOrZero(SensorType::Rpm) > 0) {
+            engineTorque = ((engineHP * 5252) / Sensor::getOrZero(SensorType::Rpm));
         }
     } else {
         //we should calculate static power
@@ -142,11 +131,11 @@ int DynoView::getEngineTorque() {
 }
 
 
-float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getDynoviewAcceleration() {
     return dynoInstance.getAcceleration();
 }
 
-int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int getDynoviewPower() {
     return dynoInstance.getEnginePower();
 }
 
@@ -154,27 +143,23 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Periodic update function called from SlowCallback.
  * Only updates if we have Vss from input pin.
  */
-void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-        (!CONFIG(enableCanVss))) {
-        dynoInstance.update(ICU);
-    }
+void updateDynoView() {
+	if (isBrainPinValid(engineConfiguration->vehicleSpeedSensorInputPin) &&
+		(!engineConfiguration->enableCanVss)) {
+		dynoInstance.update(ICU);
+	}
 }
 
 /**
  * This function is called after every CAN msg received, we process it
  * as soon as we can to be more acurate.
  */ 
-void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (!CONFIG(enableCanVss)) {
+void updateDynoViewCan() {
+    if (!engineConfiguration->enableCanVss) {
         return;
     }
     
     dynoInstance.update(CAN);
-}
-
-void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
 }
 
 #endif /* EFI_DYNO_VIEW */

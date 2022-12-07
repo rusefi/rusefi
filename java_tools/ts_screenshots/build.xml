@@ -15,8 +15,8 @@
                 target="${javac.target}"
                 destdir="build/classes"
                 classpath="../../java_console/lib/junit.jar:../../java_console/lib/annotations.jar:lib/TunerStudioMS.jar">
-            <src path="screen/src"/>
-            <src path="../../java_console/inifile/src"/>
+            <src path="screen/src/main/java"/>
+            <src path="../../java_console/inifile/src/main/java"/>
         </javac>
 
 

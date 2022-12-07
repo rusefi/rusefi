@@ -1,11 +1,10 @@
-#include "start_stop.h"
-#include "engine.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "start_stop.h"
 
 ButtonDebounce startStopButtonDebounce("start_button");
 
-void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initStartStopButton() {
 	/* startCrankingDuration is efitimesec_t, so we need to multiply it by 1000 to get milliseconds*/
-	startStopButtonDebounce.init((CONFIG(startCrankingDuration)*1000), CONFIG(startStopButtonPin), CONFIG(startStopButtonMode));
+	startStopButtonDebounce.init((engineConfiguration->startCrankingDuration*1000), engineConfiguration->startStopButtonPin, engineConfiguration->startStopButtonMode);
 }

@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -20,7 +19,6 @@ import static com.devexperts.logging.Logging.getLogging;
 public class EngineState {
     private static final Logging log = getLogging(EngineState.class);
 
-    public static final String SEPARATOR = ",";
     public static final String PACKING_DELIMITER = ":";
     public static final Class<EngineState> ENGINE_STATE_CLASS = EngineState.class;
     private final Object lock = new Object();
@@ -38,7 +36,7 @@ public class EngineState {
 
         public StringActionPair(String key, ValueCallback<String> second) {
             super(key, second);
-            prefix = key.toLowerCase() + SEPARATOR;
+            prefix = key.toLowerCase() + Fields.LOG_DELIMITER;
         }
 
         @Override
@@ -87,24 +85,26 @@ public class EngineState {
      * @return null in case of error, line message if valid packed ine
      * @see #packString(String)
      */
-    public static String unpackString(String message, Logger logger) {
+/*
+    public static String unpackString(String message) {
         String prefix = "line" + PACKING_DELIMITER;
         /**
          * If we get this tag we have probably connected to the wrong port
          * todo: as of 2019 this logic maybe makes no sense any more since pure text protocol was reduce/removed?
          */
+/*
         if (message.contains(Fields.PROTOCOL_TEST_RESPONSE_TAG)) {
             JOptionPane.showMessageDialog(null, "Are you sure you are not connected to TS port?");
             return null;
         }
         if (!message.startsWith(prefix)) {
-            logger.info("EngineState: unexpected header: " + message + " while looking for " + prefix);
+            log.info("EngineState: unexpected header: " + message + " while looking for " + prefix);
             return null;
         }
         message = message.substring(prefix.length());
         int delimiterIndex = message.indexOf(PACKING_DELIMITER);
         if (delimiterIndex == -1) {
-            logger.info("Delimiter not found in: " + message);
+            log.info("Delimiter not found in: " + message);
             return null;
         }
         String lengthToken = message.substring(0, delimiterIndex);
@@ -112,18 +112,18 @@ public class EngineState {
         try {
             expectedLen = Integer.parseInt(lengthToken);
         } catch (NumberFormatException e) {
-            logger.info("invalid len: " + lengthToken);
+            log.info("invalid len: " + lengthToken);
             return null;
         }
 
         String response = message.substring(delimiterIndex + 1);
         if (response.length() != expectedLen) {
-            logger.info("message len does not match header: " + message);
+            log.info("message len does not match header: " + message);
             response = null;
         }
         return response;
     }
-
+*/
     /**
      * @param response input string
      * @param listener obviously
@@ -137,13 +137,13 @@ public class EngineState {
         }
         if (originalResponse.length() == response.length()) {
             log.info("EngineState.unknown: " + response);
-            int keyEnd = response.indexOf(SEPARATOR);
+            int keyEnd = response.indexOf(Fields.LOG_DELIMITER);
             if (keyEnd == -1) {
                 // discarding invalid line
                 return "";
             }
             String unknownKey = response.substring(0, keyEnd);
-            int valueEnd = response.indexOf(SEPARATOR, keyEnd + 1);
+            int valueEnd = response.indexOf(Fields.LOG_DELIMITER, keyEnd + 1);
             if (valueEnd == -1) {
                 // discarding invalid line
                 return "";
@@ -151,25 +151,25 @@ public class EngineState {
             String value = response.substring(keyEnd, valueEnd);
             log.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
-            response = response.substring(valueEnd + SEPARATOR.length());
+            response = response.substring(valueEnd + Fields.LOG_DELIMITER.length());
         }
         return response;
     }
 
     public static String skipToken(String string) {
-        int keyEnd = string.indexOf(SEPARATOR);
+        int keyEnd = string.indexOf(Fields.LOG_DELIMITER);
         if (keyEnd == -1) {
             // discarding invalid line
             return "";
         }
-        return string.substring(keyEnd + SEPARATOR.length());
+        return string.substring(keyEnd + Fields.LOG_DELIMITER.length());
     }
 
     public static String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
         if (startWithIgnoreCase(response, pair.prefix)) {
             String key = pair.first;
             int beginIndex = key.length() + 1;
-            int endIndex = response.indexOf(SEPARATOR, beginIndex);
+            int endIndex = response.indexOf(Fields.LOG_DELIMITER, beginIndex);
             if (endIndex == -1)
                 endIndex = response.length();
 
@@ -180,7 +180,7 @@ public class EngineState {
 
             response = response.substring(endIndex);
             if (!response.isEmpty())
-                response = response.substring(1); // skipping the separator
+                response = response.substring(1); // skipping the Fields.LOG_DELIMITER
             return response;
         }
         return response;

@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
@@ -8,7 +8,7 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.storage.Node;
+import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.AnyCommand;
@@ -20,11 +20,14 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Date: 12/21/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SensorSnifferPane {
+    private static final Logging log = getLogging(SensorSnifferPane.class);
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
     private final TreeMap<Double, Double> values = new TreeMap<>();
@@ -78,7 +81,7 @@ public class SensorSnifferPane {
                                           @Override
                                           public void actionPerformed(ActionEvent e) {
                                               int rpm = RpmModel.getInstance().getValue();
-                                              String fileName = Logger.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
+                                              String fileName = FileLog.getDate() + "_rpm_" + rpm + "_sensor" + ".png";
 
                                               UiUtils.saveImageWithPrompt(fileName, upperPanel, canvas);
                                           }
@@ -111,8 +114,7 @@ public class SensorSnifferPane {
         content.add(lowerPanel, BorderLayout.SOUTH);
 
         lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
-        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Every XXX engine cycles").getContent());
-        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {
@@ -129,10 +131,9 @@ public class SensorSnifferPane {
         List<Double> keys = new ArrayList<>(values.keySet());
         minX = keys.get(0);
         maxX = keys.get(keys.size() - 1);
-        FileLog.MAIN.logLine("Analog chart from " + minX + " to " + maxX);
+        log.info("Analog chart from " + minX + " to " + maxX);
 
-        TreeSet<Double> sortedValues = new TreeSet<>();
-        sortedValues.addAll(values.values());
+        TreeSet<Double> sortedValues = new TreeSet<>(values.values());
         List<Double> values = new ArrayList<>(sortedValues);
 
         minY = values.get(0);
