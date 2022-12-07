@@ -1,0 +1,13 @@
+pins:
+
+info:
+  id: Honda-K
+  title: Hellen Honda K
+  name: Hellen Honda K
+  board_url: https://rusefi.com/s/honda-k
+  image:
+    file: main.jpg
+  pins:
+    - pin: U12
+      x: 1119
+      y: 424

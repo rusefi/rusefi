@@ -231,24 +231,6 @@ pins:
     ts_name: 69 - TPS 2
     function: TPS 2 sensor input  
 
-  - pin: P66
-    # IN_MAP1 AIN9 PC0
-    id: EFI_ADC_10
-    class: analog_inputs
-    ts_name: Aux P66
-
-  - pin: P67
-    # AIN10 PC1
-    id: EFI_ADC_11
-    class: analog_inputs
-    ts_name: Aux P67
-
-  - pin: P68
-    # H144_IN_MAP3 AIN15 A15 PA2
-    id: EFI_ADC_2
-    class: analog_inputs
-    ts_name: Aux P68
-
   - pin: 73a
     id: EFI_ADC_12
     class: analog_inputs
