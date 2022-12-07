@@ -17,6 +17,9 @@ void triggerScopeEnable() {
 }
 
 void triggerScopeDisable() {
+	// we're done with the buffer - let somebody else have it
+	buffer = {};
+
 	isRunning = false;
 	engine->outputChannels.triggerScopeReady = false;
 }

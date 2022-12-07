@@ -8,7 +8,7 @@
 
 enum class BigBufferUser {
 	None,
-	EngineSniffer,
+	ToothLogger,
 	PerfTrace,
 	TriggerScope,
 };
