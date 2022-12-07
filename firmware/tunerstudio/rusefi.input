@@ -142,7 +142,7 @@ enable2ndByteCanID = false
 		continuousRead = true
 
 		recordDef = 0, 0, 1
-		recordField = channelA, "Channel 1", 0, 8, {5/256}, "v", 1
+		recordField = channelA, "Channel 1", 0, 8, {5/256}, "v", 1, 0, 5
 
 [VeAnalyze]
 
