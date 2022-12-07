@@ -41,6 +41,12 @@ pins:
     type: 12v
     color: red
 
+  - pin: 7A
+    function: Analog Ground
+    color: black
+    type: gnd
+
+
   - pin: 10A
     # H144_IGN_4
     id: E3
@@ -109,8 +115,31 @@ pins:
     ts_name: 21A - VVT control 1
     color: blue
 
+  - pin: 24A
+    function: Analog Ground
+    color: black
+    type: gnd
+
+  - pin: 25A
+    function: Power Ground
+    color: black
+    type: gnd
+
+  - pin: 32A
+    function: +5v sensors
 
   - pin: 34A
+    function: Power GND
+    type: gnd
+
+  - pin: 2B
+    function: ECU power supply from ignition key
+    class: analog_inputs
+    id: EFI_ADC_5
+    ts_name: Battery Sense
+    type: 12v
+
+  - pin: 26B
     function: Power GND
     type: gnd
 
