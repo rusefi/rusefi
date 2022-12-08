@@ -81,7 +81,7 @@ int indexOf(const char *string, char ch) {
 }
 
 // string to integer
-int atoi(char const * const string) {
+int atoi(const char *string) {
 	int len = strlen(string);
 	if (len == 0) {
 		return -ATOI_ERROR_CODE;

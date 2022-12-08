@@ -62,7 +62,7 @@ int efiPow10(int param);
 bool startsWith(const char *line, const char *prefix);
 int indexOf(const char *string, char ch);
 float atoff(const char *string);
-int atoi(char const * const string);
+int atoi(char const *string);
 
 #define UNUSED(x) (void)(x)
 

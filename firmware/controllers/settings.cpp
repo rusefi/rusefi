@@ -1105,7 +1105,7 @@ void printDateTime() {
 #endif // EFI_RTC
 }
 
-void setDateTime(char const * const isoDateTime) {
+void setDateTime(const char * const isoDateTime) {
 #if EFI_RTC
 	if (strlen(isoDateTime) >= 19 && isoDateTime[10] == 'T') {
 		efidatetime_t dateTime;

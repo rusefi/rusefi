@@ -20,4 +20,4 @@ void setEngineType(int value);
 void readPin(const char *pinName);
 
 void printDateTime();
-void setDateTime(char const * const isoDateTime);
+void setDateTime(const char * const isoDateTime);
