@@ -1109,13 +1109,19 @@ void setDateTime(const char * const isoDateTime) {
 #if EFI_RTC
 	if (strlen(isoDateTime) >= 19 && isoDateTime[10] == 'T') {
 		efidatetime_t dateTime;
-		int scanned = sscanf(isoDateTime, "%4lu", &dateTime.year);
-		scanned += sscanf(isoDateTime + 5, "%2hhu", &dateTime.month);
-		scanned += sscanf(isoDateTime + 8, "%2hhu", &dateTime.day);
-		scanned += sscanf(isoDateTime + 11, "%2hhu", &dateTime.hour);
-		scanned += sscanf(isoDateTime + 14, "%2hhu", &dateTime.minute);
-		scanned += sscanf(isoDateTime + 17, "%2hhu", &dateTime.second);
-		if (scanned == 6) { // 6 fields to properly scan
+		dateTime.year = atoi(isoDateTime);
+		dateTime.month = atoi(isoDateTime + 5);
+		dateTime.day = atoi(isoDateTime + 8);
+		dateTime.hour = atoi(isoDateTime + 11);
+		dateTime.minute = atoi(isoDateTime + 14);
+		dateTime.second = atoi(isoDateTime + 17);
+		if (dateTime.year != ATOI_ERROR_CODE &&
+				dateTime.month >= 1 && dateTime.month <= 12 &&
+				dateTime.day >= 1 && dateTime.day <= 31 &&
+				dateTime.hour <= 23 &&
+				dateTime.minute <= 59 &&
+				dateTime.second <= 59) {
+			// doesn't concern about leap years or seconds; ChibiOS doesn't support (added) leap seconds anyway
 			setRtcDateTime(&dateTime);
 			return;
 		}
