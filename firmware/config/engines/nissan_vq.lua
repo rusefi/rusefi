@@ -2,6 +2,7 @@
 	strncpy(config->luaScript, R"(
 
 IN_284 = 0x284 -- 644
+IN_285 = 0x285 -- 645
 IN_285 = 0x285
 IN_35D = 0x35d
 
@@ -112,6 +113,14 @@ function onCanRxAc(bus, id, dlc, data)
 
 end
 
+function onCanRxWheelSpeed1(bus, id, dlc, data)
+end
+
+function onCanRxWheelSpeed2(bus, id, dlc, data)
+end
+
+canRxAdd(IN_284, onCanRxWheelSpeed1)
+canRxAdd(IN_285, onCanRxWheelSpeed2)
 canRxAdd(IN_35D, onCanRxAbs1)
 canRxAdd(IN_35D, onCanRxAc)
 
