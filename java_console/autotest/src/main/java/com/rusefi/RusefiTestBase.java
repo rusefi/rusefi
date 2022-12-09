@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
-import org.junit.Before;
+import org.junit.*;
 
 public class RusefiTestBase {
     protected EcuTestHelper ecu;
@@ -15,6 +15,11 @@ public class RusefiTestBase {
     @Before
     public void startUp() {
         ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
+    }
+
+    @After
+    public void checkStackUsage() {
+        ecu.sendCommand("threadsinfo");
     }
 
     protected EngineChart nextChart() {

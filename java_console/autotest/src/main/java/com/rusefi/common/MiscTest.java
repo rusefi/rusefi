@@ -7,6 +7,7 @@ import com.rusefi.core.SensorCentral;
 import org.junit.Test;
 
 import static com.devexperts.util.TimeUtil.SECOND;
+import static com.rusefi.IoUtil.sleepSeconds;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -36,5 +37,14 @@ public class MiscTest extends RusefiTestBase {
         assertTrue(message, mcuTemp > 10);
         // wow sometimes my utility closet is pretty warm?
         assertTrue(message, mcuTemp < 52);
+    }
+
+    @Test
+    public void testSetDate() {
+        // set some random time
+        ecu.sendCommand("set date 2022-12-07T11:14:22");
+
+        // If things are going to crash, let it happen in this test
+        sleepSeconds(5);
     }
 }

@@ -82,7 +82,6 @@ int indexOf(const char *string, char ch) {
 
 // string to integer
 int atoi(const char *string) {
-	// todo: use stdlib '#include <stdlib.h> '
 	int len = strlen(string);
 	if (len == 0) {
 		return -ATOI_ERROR_CODE;
@@ -95,7 +94,11 @@ int atoi(const char *string) {
 	for (int i = 0; i < len; i++) {
 		char ch = string[i];
 		if (ch < '0' || ch > '9') {
-			return ATOI_ERROR_CODE;
+			if (i > 0) {
+				break;
+			} else {
+				return ATOI_ERROR_CODE;
+			}
 		}
 		int c = ch - '0';
 		result = result * 10 + c;
