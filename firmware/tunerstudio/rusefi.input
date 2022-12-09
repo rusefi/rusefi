@@ -141,8 +141,13 @@ enable2ndByteCanID = false
 		dataReadyCondition = { triggerScopeReady }
 		continuousRead = true
 
-		recordDef = 0, 0, 1
-		recordField = channelA, "Channel 1", 0, 8, {5/256}, "v", 1, 0, 5
+		recordDef = 0, 0, 4
+		recordField = lowBits1, "low", 0, 8, 1, "" , hidden
+		recordField = highBits1, "high", 8, 8, 1, "" , hidden
+		calcField = channel1, "Channel 1", "v", { 6.6 / 4096 * ( lowBits1 * 256 + highBits1 ) }
+		recordField = lowBits2, "low2", 16, 8, 1, "" , hidden
+		recordField = highBits2, "high2", 24, 8, 1, "" , hidden
+		calcField = channel2, "Channel 2", "v", { 6.6 / 4096 * ( lowBits2 * 256 + highBits2 ) }
 
 [VeAnalyze]
 
