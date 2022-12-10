@@ -103,11 +103,6 @@ static void testDodgeNeonDecoder() {
 //	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 }
 
-static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
-	assertEqualsM("eventIndex", eventIndex, position->triggerEventIndex);
-	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
-}
-
 TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
@@ -147,17 +142,6 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	TriggerWaveform * shape = &engine->triggerCentral.triggerShape;
 
 	ASSERT_EQ( 0,  shape->getTriggerWaveformSynchPointIndex()) << "triggerShapeSynchPointIndex";
-
-	event_trigger_position_s position;
-	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	position.setAngle(0);
-	assertTriggerPosition(&position, 0, 0);
-
-	position.setAngle(200);
-	assertTriggerPosition(&position, 2, 80);
-
-	position.setAngle(360);
-	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
 

@@ -308,30 +308,11 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	return event;
 }
 
-const AngleBasedEventBase * EngineTestHelper::assertTriggerEvent(const char *msg,
-		int index, AngleBasedEventBase *expected,
-		void *callback,
-		int triggerEventIndex, angle_t angleOffsetFromTriggerEvent) {
-	AngleBasedEventBase * event2 =
-		engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
-
-	auto event = event2->asOld();
-
-	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
-
-	assertEqualsM4(msg, " trigger", triggerEventIndex, event->position.triggerEventIndex);
-	assertEqualsM4(msg, " angle", angleOffsetFromTriggerEvent, event->position.angleOffsetFromTriggerEvent);
-	return event;
-}
-
-const AngleBasedEventBase * EngineTestHelper::assertTriggerEvent(const char *msg,
-		int index, AngleBasedEventBase *expected,
+const AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
+		int index, AngleBasedEvent *expected,
 		void *callback,
 		angle_t enginePhase) {
-	AngleBasedEventBase * event2 =
-		engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
-
-	auto event = event2->asNew();
+	auto event = engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
 
 	if (callback) {
 		assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
