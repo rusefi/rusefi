@@ -123,4 +123,31 @@ static constexpr Gpio operator+(size_t a, Gpio b) {
 	return b + a;
 }
 
+namespace efi
+{
+template <class _Ty>
+struct remove_reference {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+using remove_reference_t = typename remove_reference<_Ty>::type;
+
+// FUNCTION TEMPLATE move
+template <class _Ty>
+constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
+    return static_cast<remove_reference_t<_Ty>&&>(_Arg);
+}
+}
+
 #endif /* __cplusplus */
