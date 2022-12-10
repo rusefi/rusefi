@@ -23,7 +23,7 @@ TEST(Actuators, AuxValves) {
 	eth.assertTriggerEvent("a3", 3, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
 
 	// Execute the first one, ensure scheduling for the "close" event happens
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(1000, 0, 0, 0, 1);
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(1000, 0, 0, 1);
 
 	// Old head should now be missing - we just ran it
 	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);

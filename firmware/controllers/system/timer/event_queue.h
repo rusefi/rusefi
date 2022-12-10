@@ -14,9 +14,9 @@
 #define QUEUE_LENGTH_LIMIT 1000
 
 // templates do not accept field names so we use a macro here
-#define assertNotInListMethodBody(T, head, element, field)                  \
+#define assertNotInListMethodBody(head, element, field)                     \
 	/* this code is just to validate state, no functional load*/            \
-	T * current;                                                            \
+	decltype(head) current;                                                 \
 	int counter = 0;                                                        \
 	LL_FOREACH2(head, current, field) {                                     \
 		if (++counter > QUEUE_LENGTH_LIMIT) {                               \
