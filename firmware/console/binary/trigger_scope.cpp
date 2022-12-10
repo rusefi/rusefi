@@ -59,7 +59,7 @@ static_assert(2 * sizeof(adcsample_t) * sampleCount < BIG_BUFFER_SIZE);
 static void startSampling(void* = nullptr) {
 	chibios_rt::CriticalSectionLocker csl;
 
-	if (buffer) {
+	if (buffer && !engineConfiguration->enableSoftwareKnock) {
 		// Cancel if ADC isn't ready
 		if (!((TRIGGER_SCOPE_ADC.state == ADC_READY) ||
 				(TRIGGER_SCOPE_ADC.state == ADC_COMPLETE) ||
