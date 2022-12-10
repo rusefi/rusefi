@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 10 03:55:29 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 10 12:40:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1151,6 +1151,7 @@ public class Fields {
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
+	public static final int TS_COMPOSITE_READ = 3;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20210312;
@@ -1158,7 +1159,6 @@ public class Fields {
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
-	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
 	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
@@ -1182,10 +1182,13 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.10.all.snap_49823";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.10.all.snap_59789";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1276;
+	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
+	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
+	public static final int TS_TRIGGER_SCOPE_READ = 6;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;

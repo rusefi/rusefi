@@ -7,6 +7,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.sd_present;
 		case 708639006:
 			return engine->outputChannels.sd_logging_internal;
+		case -770506808:
+			return engine->outputChannels.triggerScopeReady;
 		case -1441751117:
 			return engine->outputChannels.isFanOn;
 		case 438683128:
