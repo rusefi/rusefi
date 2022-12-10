@@ -333,7 +333,9 @@ const AngleBasedEventBase * EngineTestHelper::assertTriggerEvent(const char *msg
 
 	auto event = event2->asNew();
 
-	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+	if (callback) {
+		assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+	}
 
 	assertEqualsM4(msg, " angle", enginePhase, event->enginePhase);
 	return event;
