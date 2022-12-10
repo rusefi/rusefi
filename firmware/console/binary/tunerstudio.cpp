@@ -759,6 +759,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				}
 			}
 			break;
+#ifdef TRIGGER_SCOPE
 		case TS_TRIGGER_SCOPE_ENABLE:
 			triggerScopeEnable();
 			break;
@@ -777,6 +778,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				}
 			}
 			break;
+#endif // TRIGGER_SCOPE
 		default:
 			// dunno what that was, send NAK
 			return false;

@@ -49,6 +49,7 @@
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
+#include "trigger_scope.h"
 #include "init.h"
 #if EFI_MC33816
 #include "mc33816.h"
@@ -524,6 +525,10 @@ void initHardware() {
 #if EFI_SOFTWARE_KNOCK
 	initSoftwareKnock();
 #endif /* EFI_SOFTWARE_KNOCK */
+
+#ifdef TRIGGER_SCOPE
+	initTriggerScope();
+#endif // TRIGGER_SCOPE
 
 #if HAL_USE_SPI
 	initSpiModules(engineConfiguration);
