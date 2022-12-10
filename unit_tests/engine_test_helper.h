@@ -84,7 +84,8 @@ public:
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitimeus_t expectedTimestamp);
 	scheduling_s * assertScheduling(const char *msg, int index, scheduling_s *expected, void *callback, efitimeus_t expectedTimestamp);
 
-	AngleBasedEventBase * assertTriggerEvent(const char *msg, int index, AngleBasedEventBase *expected, void *callback, int triggerEventIndex, angle_t angleOffsetFromTriggerEvent);
+	const AngleBasedEventBase* assertTriggerEvent(const char *msg, int index, AngleBasedEventBase *expected, void *callback, int triggerEventIndex, angle_t angleOffsetFromTriggerEvent);
+	const AngleBasedEventBase* assertTriggerEvent(const char *msg, int index, AngleBasedEventBase *expected, void *callback, angle_t enginePhase);
 
 	void assertEvent(const char *msg, int index, void *callback, efitimeus_t momentX, InjectionEvent *event);
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
