@@ -14,15 +14,30 @@ TEST(Actuators, AuxValves) {
 
 	EngineTestHelper eth(NISSAN_PRIMERA);
 
-	engine->needTdcCallback = false;
+	// Engine must be "spinning" for scheduleByAngle to work
+	engine->rpmCalculator.setRpmValue(1000);
 
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
-	engineConfiguration->isInjectionEnabled = false;
+	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 0);
+	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
+	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
+	eth.assertTriggerEvent("a3", 3, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
 
-	eth.fireTriggerEvents2(2 /* count */ , 600 /* ms */);
-	ASSERT_EQ( 100,  round(Sensor::getOrZero(SensorType::Rpm))) << "spinning-RPM#1";
+	// Execute the first one, ensure scheduling for the "close" event happens
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(1000, 0, 0, 0, 1);
 
-	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 7, 86);
-	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 3, 86);
-	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 5, 86);
+	// Old head should now be missing - we just ran it
+	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
+	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
+	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
+
+	// Execute the action it put on the regular scheduler
+	eth.executeUntil(999999);
+
+	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
+	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
+	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
+	// same event is back at the end of the list
+	eth.assertTriggerEvent("a0", 3, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 0);
+	// PLUS the turn off event!
+	eth.assertTriggerEvent("off", 4, &engine->auxValves[0][0].close, nullptr, 30);
 }
