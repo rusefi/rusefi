@@ -139,7 +139,6 @@ struct_no_prefix engine_configuration_s
 #define TOOTH_PACKET_SIZE 2
 #define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
 
-#define COMPOSITE_PACKET_COUNT 1000
 #define COMPOSITE_PACKET_SIZE 5
 
 #define MAP_ANGLE_SIZE 8
