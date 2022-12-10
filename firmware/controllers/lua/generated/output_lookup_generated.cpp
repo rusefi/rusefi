@@ -471,6 +471,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.rawMaf2;
 		case 1663359009:
 			return engine->outputChannels.mafMeasured2;
+		case 967311941:
+			return engine->outputChannels.schedulingUsedCount;
 		case 995190836:
 			return engine->fuelComputer.afrTableYAxis;
 		case -734904659:
