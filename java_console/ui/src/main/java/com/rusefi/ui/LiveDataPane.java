@@ -42,7 +42,7 @@ public class LiveDataPane {
     private final JPanel content = new JPanel(new BorderLayout());
     private boolean isPaused;
 
-    public LiveDataPane(UIContext uiContext) {
+    private LiveDataPane(UIContext uiContext) {
         long start = System.currentTimeMillis();
 
         JPanel vertical = new JPanel(new MigLayout("wrap 1", "[grow,fill]"));
@@ -139,6 +139,16 @@ public class LiveDataPane {
 
         content.add(bottomPanel, BorderLayout.SOUTH);
         log.info("created in " + (System.currentTimeMillis() - start) + "ms");
+    }
+
+    public static InitOnFirstPaintPanel createLazy(UIContext uiContext) {
+        InitOnFirstPaintPanel panel = new InitOnFirstPaintPanel() {
+            @Override
+            protected JPanel createContent() {
+                return new LiveDataPane(uiContext).getContent();
+            }
+        };
+        return panel;
     }
 
     @NotNull
