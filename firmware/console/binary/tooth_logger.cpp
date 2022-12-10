@@ -75,8 +75,9 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-static constexpr size_t bufferCount = 4;
-static constexpr size_t entriesPerBuffer = COMPOSITE_PACKET_COUNT / bufferCount;
+static constexpr size_t entriesPerBuffer = 250;
+static constexpr size_t totalEntryCount = BIG_BUFFER_SIZE / sizeof(composite_logger_s);
+static constexpr size_t bufferCount = totalEntryCount / entriesPerBuffer;
 
 struct CompositeBuffer {
 	composite_logger_s buffer[entriesPerBuffer];
@@ -84,7 +85,7 @@ struct CompositeBuffer {
 	Timer startTime;
 };
 
-static CompositeBuffer buffers[bufferCount] CCM_OPTIONAL;
+static CompositeBuffer* buffers = nullptr;
 static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers CCM_OPTIONAL;
 static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> filledBuffers CCM_OPTIONAL;
 
@@ -96,11 +97,20 @@ static void setToothLogReady(bool value) {
 #endif // EFI_TUNER_STUDIO
 }
 
+static BigBufferHandle bufferHandle;
+
 void EnableToothLogger() {
 	chibios_rt::CriticalSectionLocker csl;
 
+	bufferHandle = getBigBuffer(BigBufferUser::ToothLogger);
+	if (!bufferHandle) {
+		return;
+	}
+
+	buffers = bufferHandle.get<CompositeBuffer>();
+
 	// Reset all buffers
-	for (size_t i = 0; i < efi::size(buffers); i++) {
+	for (size_t i = 0; i < bufferCount; i++) {
 		buffers[i].nextIdx = 0;
 	}
 
@@ -112,7 +122,7 @@ void EnableToothLogger() {
 	while (MSG_TIMEOUT != filledBuffers.fetchI(&dummy)) ;
 
 	// Put all buffers in the free list
-	for (size_t i = 0; i < efi::size(buffers); i++) {
+	for (size_t i = 0; i < bufferCount; i++) {
 		freeBuffers.postI(&buffers[i]);
 	}
 
@@ -126,6 +136,12 @@ void EnableToothLogger() {
 }
 
 void DisableToothLogger() {
+	chibios_rt::CriticalSectionLocker csl;
+
+	// Release the big buffer for another user
+	bufferHandle = {};
+	buffers = nullptr;
+
 	ToothLoggerEnabled = false;
 	setToothLogReady(false);
 }
