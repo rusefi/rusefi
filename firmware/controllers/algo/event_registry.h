@@ -14,6 +14,7 @@
 #include "trigger_structure.h"
 
 struct AngleBasedEventOld;
+struct AngleBasedEventNew;
 
 struct AngleBasedEventBase {
 	scheduling_s scheduling;
@@ -28,7 +29,10 @@ struct AngleBasedEventBase {
 	virtual bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const = 0;
 	virtual float getAngleFromNow(float currentPhase) const = 0;
 
-	virtual AngleBasedEventOld* asOld() { return nullptr; }
+	// Virtual functions to get these as old/new variants, since we don't have RTTI for dynamic casts to work
+	// (this is poor man's RTTI)
+	virtual const AngleBasedEventOld* asOld() const { return nullptr; }
+	virtual const AngleBasedEventNew* asNew() const { return nullptr; }
 };
 
 /**
@@ -50,7 +54,7 @@ struct AngleBasedEventOld : public AngleBasedEventBase {
 	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
 	float getAngleFromNow(float currentPhase) const override;
 
-	AngleBasedEventOld* asOld() override { return this; }
+	virtual const AngleBasedEventOld* asOld() const override { return this; }
 };
 
 struct AngleBasedEventNew : public AngleBasedEventBase {
@@ -60,6 +64,8 @@ struct AngleBasedEventNew : public AngleBasedEventBase {
 	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
 	bool shouldSchedule(float currentPhase, float nextPhase) const;
 	float getAngleFromNow(float currentPhase) const override;
+
+	virtual const AngleBasedEventNew* asNew() const override { return this; }
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
