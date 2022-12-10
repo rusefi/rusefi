@@ -24,7 +24,7 @@ StoredValueSensor luaGauges[] = {
 };
 
 
-static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
+static_assert(efi::size(auxSensors) == LUA_ANALOG_INPUT_COUNT);
 static_assert(efi::size(luaGauges) == LUA_GAUGE_COUNT);
 
 void initAuxSensors() {

@@ -1338,11 +1338,12 @@ gaugeCategory = Throttle Body (incl. ETB)
 	TPS2Gauge		= TPS2Value,	"Throttle position #2",			"%",		0,	100,		0,		0,	100,	100,	1,	1
 
 	etbTargetGauge	= etbTarget,	@@GAUGE_NAME_ETB_TARGET@@, "%",	0,	100,	0,	0,	100,	100,	1,	1
-	etbErrorGauge		= etb1Error,	@@GAUGE_NAME_ETB_ERROR@@,  "%",	-20,  20,	-10,	-5,	5,	10,  2, 0
+	etbErrorGauge		= etbStatus_error,	@@GAUGE_NAME_ETB_ERROR@@,  "%",	-20,  20,	-10,	-5,	5,	10,  2, 0
 	etbDutyCycleGauge  = etb1DutyCycle, @@GAUGE_NAME_ETB_DUTY@@,					"%",	-100, 100,	-75,	-50,	50,	75,  0, 0
 	etbDutyRateOfChangeGauge  = etbDutyRateOfChange, "ETB duty rate of change",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
 	etbDutyAverageGauge  = etbDutyAverage, "ETB average duty",					"",	-100, 100,	-75,	-50,	50,	75,  0, 3
-	etbInputErrorCounterGauge = etbInputErrorCounter, "ETB sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbTpsErrorCounterGauge = etbTpsErrorCounter, "TPS sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
+	etbPpsErrorCounterGauge = etbPpsErrorCounter, "PPS sensor error counter",					"",	-100, 100,	-75,	-50,	50,	75,  0, 0
 
 gaugeCategory = Sensors - Raw
 	rawTps1PrimaryGauge  = rawTps1Primary, "Raw TPS 1 Primary", "V", 0, 5, 0, 0, 5, 5, 3, 0
@@ -1412,10 +1413,10 @@ gaugeCategory = GPPWM Outputs
 
 ;						wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
 #if LAMBDA
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
@@ -1712,6 +1713,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,			"Lua Analog Inputs"
+		subMenu = luaDigitalInputsDialog,   "Lua Digital Inputs"
 		subMenu = luaOutputs,				"Lua Script PWM Outputs"
 
 		groupMenu = "Lua Calibrations"
@@ -3718,6 +3720,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 
 	dialog = scriptSettingDialog, "Script Settings", border
 		panel = scriptSetting,	East
+
+	dialog = luaDigitalInputsDialog, "Lua Digital Inputs"
+		field = "Digital #1",							luaDigitalInputPins1
+		field = "Digital #2",							luaDigitalInputPins2
+		field = "Digital #3",							luaDigitalInputPins3
+		field = "Digital #4",							luaDigitalInputPins4
+		field = "Digital #5",							luaDigitalInputPins5
+		field = "Digital #6",							luaDigitalInputPins6
+		field = "Digital #7",							luaDigitalInputPins7
+		field = "Digital #8",							luaDigitalInputPins8
 
 	dialog = auxInputsDialog, "Lua Analog Inputs"
 		field = "ADC #1",								auxAnalogInputs1

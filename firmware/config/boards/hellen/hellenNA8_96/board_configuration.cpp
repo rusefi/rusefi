@@ -1,8 +1,8 @@
 /**
- * @file boards/hellen/hellen-nb1/board_configuration.cpp
+ * @file board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen-nb1 board
+ * @brief Configuration defaults for the hellen-na8-96 board
  *
  * See http://rusefi.com/s/hellenNB1
  *

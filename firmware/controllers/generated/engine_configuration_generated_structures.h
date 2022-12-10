@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 01 00:55:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 04 18:19:20 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3411,7 +3411,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1748
 	 */
-	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
+	adc_channel_e auxAnalogInputs[LUA_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 1756
 	 */
@@ -4328,10 +4328,14 @@ struct engine_configuration_s {
 	 */
 	float etbDutyShutdownThreshold;
 	/**
-	units
 	 * offset 3856
 	 */
-	uint8_t mainUnusedEnd[156];
+	Gpio luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
+	/**
+	units
+	 * offset 3872
+	 */
+	uint8_t mainUnusedEnd[140];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5104,4 +5108,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 01 00:55:04 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 04 18:19:20 UTC 2022

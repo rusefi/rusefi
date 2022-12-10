@@ -497,7 +497,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
     case TT_VVT_TOYOTA_4_1:
-    	initializeToyota4_1(this);
+		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
     case TT_VVT_MITSUBISHI_6G75:

@@ -1,0 +1,333 @@
+pins:
+
+  - pin: 1A
+    # H144_LS_4
+    id: D10
+    function: Injector 4
+    class: outputs
+    type: inj
+    ts_name: 1A - Injector 4
+    color: blue
+
+  - pin: 2A
+    # H144_LS_3
+    id: D11
+    function: Injector 3
+    class: outputs
+    type: inj
+    ts_name: 2A - Injector 3
+    color: blue
+
+  - pin: 3A
+    # H144_LS_2
+    id: G8
+    function: Injector 2 Output
+    class: outputs
+    type: inj
+    ts_name: 3A - Injector 2
+    color: blue
+
+  - pin: 4A
+    # H144_LS_1
+    id: G7
+    function: Injector 1 Output
+    class: outputs
+    type: inj
+    ts_name: 4A - Injector 1
+    color: blue
+
+  - pin: 5A
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: 7A
+    function: Analog Ground
+    color: black
+    type: gnd
+
+
+  - pin: 10A
+    # H144_IGN_4
+    id: E3
+    class: outputs
+    function: Smart Ignition 4 Output
+    type: ign
+    ts_name: 10A - Ignition 4
+    color: yellow
+
+  - pin: 11A
+    # H144_IGN_3
+    id: E4
+    class: outputs
+    function: Smart Ignition 3 Output
+    type: ign
+    ts_name: 11A - Ignition 3
+    color: yellow
+
+
+  - pin: 12A
+    # H144_IGN_2
+    id: E5
+    class: outputs
+    function: Smart Ignition 2 Output
+    type: ign
+    ts_name: 12A - Ignition 2
+    color: yellow
+
+
+  - pin: 13A
+    # H144_IGN_1
+    id: C13
+    class: outputs
+    function: Smart Ignition 1
+    type: ign
+    ts_name: 13A - Ignition 1
+    color: yellow
+
+
+  - pin: 18A
+    function: VVT control 4
+    class: outputs
+    type: inj
+    ts_name: 18A - VVT control 4
+    color: blue
+
+  - pin: 19A
+    function: VVT control 3
+    class: outputs
+    type: inj
+    ts_name: 19A - VVT control 3
+    color: blue
+
+  - pin: 20A
+    function: VVT control 2
+    class: outputs
+    type: inj
+    ts_name: 20A - VVT control 2
+    color: blue
+
+
+  - pin: 21A
+    function: VVT control 1
+    class: outputs
+    type: inj
+    ts_name: 21A - VVT control 1
+    color: blue
+
+  - pin: 24A
+    function: Analog Ground
+    color: black
+    type: gnd
+
+  - pin: 25A
+    function: Power Ground
+    color: black
+    type: gnd
+
+  - pin: 32A
+    function: +5v sensors
+
+  - pin: 34A
+    function: Power GND
+    type: gnd
+
+  - pin: 2B
+    function: ECU power supply from ignition key
+    class: analog_inputs
+    id: EFI_ADC_5
+    ts_name: Battery Sense
+    type: 12v
+
+  - pin: 26B
+    function: Power GND
+    type: gnd
+
+info:
+  title: AlphaX 8chan
+  name: AlphaX 8chan
+  board_url: https://rusefi.com/s/8chan
+  image:
+    file: 8chan-A-B.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180
+
+    - pin: 1B
+      x: 425
+      y: 90
+    - pin: 2B
+      x: 450
+      y: 90
+    - pin: 3B
+      x: 475
+      y: 90
+    - pin: 4B
+      x: 500
+      y: 90
+    - pin: 5B
+      x: 525
+      y: 90
+    - pin: 6B
+      x: 550
+      y: 90
+    - pin: 7B
+      x: 575
+      y: 90
+    - pin: 8B
+      x: 435
+      y: 120
+    - pin: 9B
+      x: 460
+      y: 120
+    - pin: 10B
+      x: 485
+      y: 120
+    - pin: 11B
+      x: 510
+      y: 120
+    - pin: 12B
+      x: 535
+      y: 120
+    - pin: 13B
+      x: 560
+      y: 120
+    - pin: 14B
+      x: 435
+      y: 150
+    - pin: 15B
+      x: 460
+      y: 150
+    - pin: 16B
+      x: 485
+      y: 150
+    - pin: 17B
+      x: 510
+      y: 150
+    - pin: 18B
+      x: 535
+      y: 150
+    - pin: 19B
+      x: 560
+      y: 150
+    - pin: 20B
+      x: 425
+      y: 180
+    - pin: 21B
+      x: 450
+      y: 180
+    - pin: 22B
+      x: 475
+      y: 180
+    - pin: 23B
+      x: 500
+      y: 180
+    - pin: 24B
+      x: 525
+      y: 180
+    - pin: 25B
+      x: 550
+      y: 180
+    - pin: 26B
+      x: 575
+      y: 180

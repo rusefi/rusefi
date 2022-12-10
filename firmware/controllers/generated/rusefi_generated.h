@@ -49,7 +49,6 @@
 #define antiLagActivationMode_e_auto_enum 0="SWITCH_INPUT_ANTILAG",1="ALWAYS_ON_ANTILAG"
 #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
 #define antiLagActivationMode_e_SWITCH_INPUT_ANTILAG 0
-#define AUX_ANALOG_INPUT_COUNT 8
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define BANKS_COUNT 2
 #define BARO_CORR_SIZE 4
@@ -899,6 +898,7 @@
 #define LOG_DELIMITER "`"
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define LUA_ANALOG_INPUT_COUNT 8
+#define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 2
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
@@ -1027,7 +1027,7 @@
 #define SENT_INPUT_COUNT 1
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH snap_2229
+#define SIGNATURE_HASH snap_49823
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1175,7 +1175,7 @@
 #define trigger_type_e_UNUSED_29 29
 #define trigger_type_e_UNUSED_34 34
 #define TRIGGER_TYPE_WITH_SECOND_WHEEL trigger_type == 1 || trigger_type == 2 || trigger_type == 3 || trigger_type == 4 || trigger_type == 11 || trigger_type == 15 || trigger_type == 16 || trigger_type == 19 || trigger_type == 25 || trigger_type == 28 || trigger_type == 29 || trigger_type == 31 || trigger_type == 34 || trigger_type == 35 || trigger_type == 36 || trigger_type == 37 || trigger_type == 40 || trigger_type == 49 || trigger_type == 50 || trigger_type == 53 || trigger_type == 54 || trigger_type == 63 || trigger_type == 64
-#define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69
+#define TRIGGER_TYPE_WITHOUT_KNOWN_LOCATION trigger_type == 8 || trigger_type == 9 || trigger_type == 17 || trigger_type == 18 || trigger_type == 23 || trigger_type == 48 || trigger_type == 69 || trigger_type == 73
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define TriggerWheel_T_PRIMARY 0
 #define TriggerWheel_T_SECONDARY 1
@@ -1301,7 +1301,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.12.01.all.snap_2229"
+#define TS_SIGNATURE "rusEFI 2022.12.10.all.snap_49823"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
