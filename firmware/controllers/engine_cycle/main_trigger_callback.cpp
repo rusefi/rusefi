@@ -155,7 +155,7 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	if (isScheduled) {
+if (isScheduled) {
 #if EFI_PRINTF_FUEL_DETAILS
 		if (printFuelDebug) {
 			InjectorOutputPin *output = outputs[0];
@@ -183,9 +183,9 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 		angleFromNow += getEngineState()->engineCycle;
 	}
 
-	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, angleFromNow, startAction);
+	efitick_t startTime = scheduleByAngle(nullptr, nowNt, angleFromNow, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
-	getExecutorInterface()->scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
+	getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, turnOffTime, endAction);
 
 #if EFI_UNIT_TEST
 		printf("scheduling injection angle=%.2f/delay=%.2f injectionDuration=%.2f\r\n", angleFromNow, NT2US(startTime - nowNt), injectionDuration);
