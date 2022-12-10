@@ -67,40 +67,6 @@ static void testDodgeNeonDecoder() {
 	TriggerDecoderBase state("test");
 
 	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
-
-//	int r = 0;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "2 shaft_is_synchronized"; // still no synchronization
-
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "3 shaft_is_synchronized"; // still no synchronization
-//
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "4 shaft_is_synchronized"; // still no synchronization
-//
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-//	ASSERT_FALSE(state.shaft_is_synchronized); // still no synchronization
-//
-//	printf("2nd camshaft revolution\r\n");
-//	r = 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_TRUE(state.shaft_is_synchronized);
-//	ASSERT_EQ(0, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	ASSERT_EQ(1, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-//	ASSERT_EQ(2, state.current_index);
-//
-//	printf("3rd camshaft revolution\r\n");
-//	r = 2 * 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	ASSERT_EQ( 3,  state.current_index) << "current index";
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_TRUE(state.shaft_is_synchronized);
-//	ASSERT_EQ( 0,  state.current_index) << "current index";
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
 }
 
 TEST(trigger, testSomethingWeird) {
