@@ -200,11 +200,10 @@ void InjectionEvent::onTriggerTooth(int rpm, efitick_t nowNt, float currentPhase
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
+static void handleFuel(int rpm, efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
-	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < getTriggerCentral()->engineCycleEventCount, "handleFuel/event index");
 
 	LimpState limitedFuelState = getLimpManager()->allowInjection();
 
@@ -226,7 +225,7 @@ static void handleFuel(uint32_t trgEventIndex, int rpm, efitick_t nowNt, float c
 
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
-		efiPrintf("handleFuel ind=%d %d", trgEventIndex, getRevolutionCounter());
+		efiPrintf("handleFuel [%.1f, %.1f) %d", currentPhase, nextPhase, getRevolutionCounter());
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
@@ -282,10 +281,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(trgEventIndex, rpm, edgeTimestamp, currentPhase, nextPhase);
+	handleFuel(rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, trgEventIndex, edgeTimestamp, currentPhase, nextPhase);
+		rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle

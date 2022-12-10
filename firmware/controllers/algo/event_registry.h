@@ -13,59 +13,20 @@
 #include "fl_stack.h"
 #include "trigger_structure.h"
 
-struct AngleBasedEventOld;
-struct AngleBasedEventNew;
-
-struct AngleBasedEventBase {
+struct AngleBasedEvent {
 	scheduling_s scheduling;
 	action_s action;
 	/**
 	 * Trigger-based scheduler maintains a linked list of all pending tooth-based events.
 	 */
-	AngleBasedEventBase *nextToothEvent = nullptr;
+	AngleBasedEvent *nextToothEvent = nullptr;
 
-	virtual void setAngle(angle_t angle) = 0;
-
-	virtual bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const = 0;
-	virtual float getAngleFromNow(float currentPhase) const = 0;
-
-	// Virtual functions to get these as old/new variants, since we don't have RTTI for dynamic casts to work
-	// (this is poor man's RTTI)
-	virtual const AngleBasedEventOld* asOld() const { return nullptr; }
-	virtual const AngleBasedEventNew* asNew() const { return nullptr; }
-};
-
-/**
- * This structure defines an angle position in relation to specific tooth within trigger shape
- */
-class event_trigger_position_s {
-public:
-	size_t triggerEventIndex = 0;
-
-	angle_t angleOffsetFromTriggerEvent = 0;
-
-	void setAngle(angle_t angle);
-};
-
-struct AngleBasedEventOld : public AngleBasedEventBase {
-	event_trigger_position_s position;
-
-	void setAngle(angle_t angle) override;
-	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
-	float getAngleFromNow(float currentPhase) const override;
-
-	virtual const AngleBasedEventOld* asOld() const override { return this; }
-};
-
-struct AngleBasedEventNew : public AngleBasedEventBase {
 	float enginePhase;
 
-	void setAngle(angle_t angle) override;
-	bool shouldSchedule(uint32_t trgEventIndex, float currentPhase, float nextPhase) const override;
-	bool shouldSchedule(float currentPhase, float nextPhase) const;
-	float getAngleFromNow(float currentPhase) const override;
+	void setAngle(angle_t angle);
 
-	virtual const AngleBasedEventNew* asNew() const override { return this; }
+	bool shouldSchedule(float currentPhase, float nextPhase) const;
+	float getAngleFromNow(float currentPhase) const;
 };
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
@@ -75,7 +36,7 @@ public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
-	AngleBasedEventNew sparkEvent;
+	AngleBasedEvent sparkEvent;
 
 	scheduling_s trailingSparkCharge;
 	scheduling_s trailingSparkFire;
@@ -125,8 +86,8 @@ public:
 	int valveIndex;
 	angle_t extra;
 
-	AngleBasedEventNew open;
-	AngleBasedEventNew close;
+	AngleBasedEvent open;
+	AngleBasedEvent close;
 };
 
 
