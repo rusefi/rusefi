@@ -233,7 +233,7 @@ pins:
     color: black
 
   - pin: 35
-    function: MAP/MAF Sensor Analog Gnd
+    function: MAP/MAF Sensor Analog GND
     color: black
     type: gnd
 
