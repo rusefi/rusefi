@@ -19,6 +19,7 @@ jobs:
         build-target: [
             alphax-2chan,
             alphax-4chan,
+            alphax-8chan,
             harley81,
             hellen72,
             hellen81,
@@ -77,6 +78,10 @@ jobs:
             folder: hellen/alphax-4chan
             ini-file: rusefi_alphax-4chan.ini
 
+          - build-target: alphax-8chan
+            folder: hellen/alphax-8chan
+            ini-file: rusefi_alphax-8chan.ini
+
           - build-target: harley81
             folder: hellen/harley81
             ini-file: rusefi_harley81.ini
@@ -100,6 +105,7 @@ jobs:
           - build-target: hellen-gm-e67
             folder: hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini
+            skip-rate: 90
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
@@ -127,6 +133,7 @@ jobs:
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
+            skip-rate: 90
 
           - build-target: cypress
             folder: cypress

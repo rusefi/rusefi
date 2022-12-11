@@ -11,7 +11,7 @@ struct_no_prefix output_channels_s
 
 bit sd_present
 bit sd_logging_internal
-bit unusedb4;
+bit triggerScopeReady
 bit unusedb5;
 bit isFanOn;radiator fan
 bit isO2HeaterOn;
@@ -322,7 +322,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 5, 2
 
 	uint16_t ISSValue;@@GAUGE_NAME_ISS@@;"RPM",1, 0, 0, 8000, 0
 
-	int16_t[AUX_ANALOG_INPUT_COUNT iterate] autoscale rawAnalogInput;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t[LUA_DIGITAL_INPUT_COUNT iterate] autoscale rawAnalogInput;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint8_t[4 iterate] autoscale gppwmOutput;GPPWM Output;"%", 0.5, 0, 0, 100, 2
 
 	int16_t autoscale rawBattery;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -365,5 +365,7 @@ float mapFast
 	uint16_t autoscale rawMaf2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale mafMeasured2;@@GAUGE_NAME_AIR_FLOW_MEASURED_2@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
 
-	uint8_t[138 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t schedulingUsedCount;;"",1,0,0,0,0
+
+	uint8_t[136 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

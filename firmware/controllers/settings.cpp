@@ -789,65 +789,12 @@ void scheduleStopEngine(void) {
 	doScheduleStopEngine();
 }
 
-const plain_get_short_s getS_plain[] = {
-		{"idle_pid_min", (uint16_t *)&engineConfiguration->idleRpmPid.minValue},
-		{"idle_pid_max", (uint16_t *)&engineConfiguration->idleRpmPid.maxValue},
-};
-
-static plain_get_integer_s getI_plain[] = {
-//		{"cranking_rpm", &engineConfiguration->cranking.rpm},
-//		{"cranking_injection_mode", setCrankingInjectionMode},
-//		{"injection_mode", setInjectionMode},
-//		{"sensor_chart_mode", setSensorChartMode},
-//		{"tpsErrorDetectionTooLow", setTpsErrorDetectionTooLow},
-//		{"tpsErrorDetectionTooHigh", setTpsErrorDetectionTooHigh},
-//		{"fixed_mode_timing", setFixedModeTiming},
-//		{"timing_mode", setTimingMode},
-//		{"engine_type", setEngineType},
-		{"warning_period", (int*)&engineConfiguration->warningPeriod},
-//		{"hard_limit", &engineConfiguration->rpmHardLimit},
-//		{"firing_order", setFiringOrder},
-//		{"injection_pin_mode", setInjectionPinMode},
-//		{"ignition_pin_mode", setIgnitionPinMode},
-//		{"idle_pin_mode", setIdlePinMode},
-//		{"fuel_pump_pin_mode", setFuelPumpPinMode},
-//		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
-//		{"operation_mode", setOM},
-		{"debug_mode", (int*)&engineConfiguration->debugMode},
-		{"cranking_iac", &engineConfiguration->crankingIACposition},
-		{"trigger_type", (int*)&engineConfiguration->trigger.type},
-//		{"idle_solenoid_freq", setIdleSolenoidFrequency},
-//		{"tps_accel_len", setTpsAccelLen},
-//		{"bor", setBor},
-//		{"can_mode", setCanType},
-//		{"idle_rpm", setTargetIdleRpm},
-};
-
-static plain_get_integer_s *findInt(const char *name) {
-	plain_get_integer_s *currentI = &getI_plain[0];
-	while (currentI < getI_plain + efi::size(getI_plain)) {
-		if (strEqualCaseInsensitive(name, currentI->token)) {
-			return currentI;
-		}
-		currentI++;
-	}
-	return nullptr;
-}
-
 static void getValue(const char *paramStr) {
-	{
-		plain_get_integer_s *known = findInt(paramStr);
-		if (known != nullptr) {
-			efiPrintf("%s value: %d", known->token, *known->value);
-			return;
-		}
-	}
 
 	{
-		plain_get_float_s * known = findFloat(paramStr);
-		if (known != nullptr) {
-			float value = *known->value;
-			efiPrintf("%s value: %.2f", known->token, value);
+		float value = getConfigValueByName(paramStr);
+		if (value != EFI_ERROR_CODE) {
+			efiPrintf("%s value: %.2f", paramStr, value);
 			return;
 		}
 	}
@@ -1160,12 +1107,21 @@ void printDateTime() {
 
 void setDateTime(const char * const isoDateTime) {
 #if EFI_RTC
-	if (strlen(isoDateTime) > 0) {
+	if (strlen(isoDateTime) >= 19 && isoDateTime[10] == 'T') {
 		efidatetime_t dateTime;
-		if (sscanf("%04u-%02u-%02uT%02u:%02u:%02u", isoDateTime,
-					&dateTime.year, &dateTime.month, &dateTime.day,
-					&dateTime.hour, &dateTime.minute, &dateTime.second)
-				== 6) { // 6 fields to properly scan
+		dateTime.year = atoi(isoDateTime);
+		dateTime.month = atoi(isoDateTime + 5);
+		dateTime.day = atoi(isoDateTime + 8);
+		dateTime.hour = atoi(isoDateTime + 11);
+		dateTime.minute = atoi(isoDateTime + 14);
+		dateTime.second = atoi(isoDateTime + 17);
+		if (dateTime.year != ATOI_ERROR_CODE &&
+				dateTime.month >= 1 && dateTime.month <= 12 &&
+				dateTime.day >= 1 && dateTime.day <= 31 &&
+				dateTime.hour <= 23 &&
+				dateTime.minute <= 59 &&
+				dateTime.second <= 59) {
+			// doesn't concern about leap years or seconds; ChibiOS doesn't support (added) leap seconds anyway
 			setRtcDateTime(&dateTime);
 			return;
 		}

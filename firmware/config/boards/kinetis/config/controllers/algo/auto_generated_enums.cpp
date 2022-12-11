@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Sat Apr 30 02:29:49 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Fri Dec 02 04:10:58 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -260,10 +260,42 @@ case EFI_ADC_14:
   return "EFI_ADC_14";
 case EFI_ADC_15:
   return "EFI_ADC_15";
+case EFI_ADC_16:
+  return "EFI_ADC_16";
+case EFI_ADC_17:
+  return "EFI_ADC_17";
+case EFI_ADC_18:
+  return "EFI_ADC_18";
+case EFI_ADC_19:
+  return "EFI_ADC_19";
 case EFI_ADC_2:
   return "EFI_ADC_2";
+case EFI_ADC_20:
+  return "EFI_ADC_20";
+case EFI_ADC_21:
+  return "EFI_ADC_21";
+case EFI_ADC_22:
+  return "EFI_ADC_22";
+case EFI_ADC_23:
+  return "EFI_ADC_23";
+case EFI_ADC_24:
+  return "EFI_ADC_24";
+case EFI_ADC_25:
+  return "EFI_ADC_25";
+case EFI_ADC_26:
+  return "EFI_ADC_26";
+case EFI_ADC_27:
+  return "EFI_ADC_27";
+case EFI_ADC_28:
+  return "EFI_ADC_28";
+case EFI_ADC_29:
+  return "EFI_ADC_29";
 case EFI_ADC_3:
   return "EFI_ADC_3";
+case EFI_ADC_30:
+  return "EFI_ADC_30";
+case EFI_ADC_31:
+  return "EFI_ADC_31";
 case EFI_ADC_4:
   return "EFI_ADC_4";
 case EFI_ADC_5:

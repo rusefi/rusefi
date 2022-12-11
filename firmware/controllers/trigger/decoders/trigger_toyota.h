@@ -11,5 +11,3 @@ class TriggerWaveform;
 
 // TT_2JZ_3_34
 void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s);
-
-void initializeToyota4_1(TriggerWaveform *s);

@@ -21,12 +21,57 @@ extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
+EventQueue::EventQueue(efitick_t lateDelay)
+	: lateDelay(lateDelay)
+{
+	for (size_t i = 0; i < efi::size(m_pool); i++) {
+		tryReturnScheduling(&m_pool[i]);
+	}
+}
+
+scheduling_s* EventQueue::getFreeScheduling() {
+	auto retVal = m_freelist;
+
+	if (retVal) {
+		m_freelist = retVal->nextScheduling_s;
+		retVal->nextScheduling_s = nullptr;
+
+#if EFI_PROD_CODE
+		getTunerStudioOutputChannels()->schedulingUsedCount++;
+#endif
+	}
+
+	return retVal;
+}
+
+void EventQueue::tryReturnScheduling(scheduling_s* sched) {
+	// Only return this scheduling to the free list if it's from the correct pool
+	if (sched >= &m_pool[0] && sched <= &m_pool[efi::size(m_pool) - 1]) {
+		sched->nextScheduling_s = m_freelist;
+		m_freelist = sched;
+
+#if EFI_PROD_CODE
+		getTunerStudioOutputChannels()->schedulingUsedCount--;
+#endif
+	}
+}
 
 /**
  * @return true if inserted into the head of the list
  */
 bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
+
+	if (!scheduling) {
+		scheduling = getFreeScheduling();
+
+		// If still null, the free list is empty and all schedulings in the pool have been expended.
+		if (!scheduling) {
+			// TODO: should we warn or error here?
+
+			return false;
+		}
+	}
 
 #if EFI_UNIT_TEST
 	assertListIsSorted();
@@ -209,6 +254,9 @@ bool EventQueue::executeOne(efitick_t now) {
 	// Grab the action but clear it in the event so we can reschedule from the action's execution
 	auto action = current->action;
 	current->action = {};
+
+	tryReturnScheduling(current);
+	current = nullptr;
 
 #if EFI_UNIT_TEST
 	printf("QUEUE: execute current=%d param=%d\r\n", (uintptr_t)current, (uintptr_t)action.getArgument());

@@ -2,6 +2,7 @@
 	strncpy(config->luaScript, R"(
 
 IN_284 = 0x284 -- 644
+IN_285 = 0x285 -- 645
 IN_285 = 0x285
 IN_35D = 0x35d
 
@@ -13,6 +14,9 @@ OUT_23E = 0x23E -- 574
 setTickRate(100)
 t = Timer.new()
 t : reset()
+
+HEATER_OUTOUT_INDEX = 1
+startPwm(HEATER_OUTOUT_INDEX, 1, 0)
 
 globalAcOut = 0
 
@@ -73,6 +77,7 @@ function onTick()
 
 
 	if rpmValue > 250 then
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 1)
 		if cltValue <= 80 then
 			txCan(1, OUT_1F9, 0, fanPayloadOff)
 		elseif cltValue < 85 then
@@ -83,6 +88,7 @@ function onTick()
 			txCan(1, OUT_1F9, 0, fanPayloadHi)
 		end
 	else
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 0)
 		txCan(1, OUT_1F9, 0, fanPayloadOff)
 	end
 	-- print('CLT temp' ..cltValue)
@@ -107,6 +113,14 @@ function onCanRxAc(bus, id, dlc, data)
 
 end
 
+function onCanRxWheelSpeed1(bus, id, dlc, data)
+end
+
+function onCanRxWheelSpeed2(bus, id, dlc, data)
+end
+
+canRxAdd(IN_284, onCanRxWheelSpeed1)
+canRxAdd(IN_285, onCanRxWheelSpeed2)
 canRxAdd(IN_35D, onCanRxAbs1)
 canRxAdd(IN_35D, onCanRxAc)
 

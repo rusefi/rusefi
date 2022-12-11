@@ -38,8 +38,6 @@ T* findPair(const char *name, T array[TCount], size_t count) {
 	return nullptr;
 }
 
-plain_get_float_s * findFloat(const char *name);
-
 float getConfigValueByName(const char *name);
 void setConfigValueByName(const char *name, float value);
 float getOutputValueByName(const char *name);

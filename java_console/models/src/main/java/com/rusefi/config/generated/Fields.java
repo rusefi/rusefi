@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 01 03:35:38 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 10 22:22:45 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -48,7 +48,6 @@ public class Fields {
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
 	public static final int antiLagActivationMode_e_SWITCH_INPUT_ANTILAG = 0;
-	public static final int AUX_ANALOG_INPUT_COUNT = 8;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
 	public static final int BANKS_COUNT = 2;
 	public static final int BARO_CORR_SIZE = 4;
@@ -155,7 +154,6 @@ public class Fields {
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -862,6 +860,7 @@ public class Fields {
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
+	public static final int LUA_DIGITAL_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 2;
 	public static final int LUA_PWM_COUNT = 8;
 	public static final int LUA_SCRIPT_SIZE = 8000;
@@ -1151,6 +1150,7 @@ public class Fields {
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
+	public static final int TS_COMPOSITE_READ = 3;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20210312;
@@ -1158,7 +1158,6 @@ public class Fields {
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
-	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
 	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
@@ -1182,10 +1181,13 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.01.all.snap_2229";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.10.all.snap_57900";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1276;
+	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
+	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
+	public static final int TS_TRIGGER_SCOPE_READ = 6;
 	public static final int TsCalMode_EtbKd = 5;
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
@@ -2431,7 +2433,15 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_3787 = Field.create("ALIGNMENTFILL_AT_3787", 3787, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3788, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBDUTYSHUTDOWNTHRESHOLD = Field.create("ETBDUTYSHUTDOWNTHRESHOLD", 3852, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3856, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS1 = Field.create("LUADIGITALINPUTPINS1", 3856, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS2 = Field.create("LUADIGITALINPUTPINS2", 3858, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS3 = Field.create("LUADIGITALINPUTPINS3", 3860, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS4 = Field.create("LUADIGITALINPUTPINS4", 3862, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS5 = Field.create("LUADIGITALINPUTPINS5", 3864, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS6 = Field.create("LUADIGITALINPUTPINS6", 3866, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS7 = Field.create("LUADIGITALINPUTPINS7", 3868, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINS8 = Field.create("LUADIGITALINPUTPINS8", 3870, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3872, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3830,6 +3840,14 @@ public class Fields {
 	ALIGNMENTFILL_AT_3787,
 	HIGHSPEEDOFFSETS,
 	ETBDUTYSHUTDOWNTHRESHOLD,
+	LUADIGITALINPUTPINS1,
+	LUADIGITALINPUTPINS2,
+	LUADIGITALINPUTPINS3,
+	LUADIGITALINPUTPINS4,
+	LUADIGITALINPUTPINS5,
+	LUADIGITALINPUTPINS6,
+	LUADIGITALINPUTPINS7,
+	LUADIGITALINPUTPINS8,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

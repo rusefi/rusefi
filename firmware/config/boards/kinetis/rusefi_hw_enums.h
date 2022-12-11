@@ -173,7 +173,23 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_13 = 14,
 	EFI_ADC_14 = 15,
 	EFI_ADC_15 = 16,
-	EFI_ADC_LAST_CHANNEL = 17,	// Please keep this in sync with the last valid channel index!
+	EFI_ADC_16 = 17,
+	EFI_ADC_17 = 18,
+	EFI_ADC_18 = 19,
+	EFI_ADC_19 = 20,
+	EFI_ADC_20 = 21,
+	EFI_ADC_21 = 22,
+	EFI_ADC_22 = 23,
+	EFI_ADC_23 = 24,
+	EFI_ADC_24 = 25,
+	EFI_ADC_25 = 26,
+	EFI_ADC_26 = 27,
+	EFI_ADC_27 = 28,
+	EFI_ADC_28 = 29,
+	EFI_ADC_29 = 30,
+	EFI_ADC_30 = 31,
+	EFI_ADC_31 = 32,
+	EFI_ADC_LAST_CHANNEL = 33,	// Please keep this in sync with the last valid channel index!
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;

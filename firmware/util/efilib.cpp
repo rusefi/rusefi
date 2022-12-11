@@ -82,7 +82,6 @@ int indexOf(const char *string, char ch) {
 
 // string to integer
 int atoi(const char *string) {
-	// todo: use stdlib '#include <stdlib.h> '
 	int len = strlen(string);
 	if (len == 0) {
 		return -ATOI_ERROR_CODE;
@@ -95,7 +94,11 @@ int atoi(const char *string) {
 	for (int i = 0; i < len; i++) {
 		char ch = string[i];
 		if (ch < '0' || ch > '9') {
-			return ATOI_ERROR_CODE;
+			if (i > 0) {
+				break;
+			} else {
+				return ATOI_ERROR_CODE;
+			}
 		}
 		int c = ch - '0';
 		result = result * 10 + c;
@@ -236,8 +239,6 @@ float atoff(const char *param) {
 	return integerPart + decimal / divider;
 }
 
-#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
-
 bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 	int len1 = strlen(str1);
 	int len2 = strlen(str2);
@@ -255,6 +256,19 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 */
 int mytolower(const char c) {
   return TO_LOWER(c);
+}
+
+
+int djb2lowerCase(const char *str) {
+	unsigned long hash = 5381;
+	int c;
+
+	while ( (c = *str++) ) {
+		c = TO_LOWER(c);
+		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	}
+
+	return hash;
 }
 
 bool strEqual(const char *str1, const char *str2) {

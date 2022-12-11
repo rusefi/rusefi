@@ -74,6 +74,7 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "tooth_logger.h"
+#include "trigger_scope.h"
 #include "electronic_throttle.h"
 #include "live_data.h"
 
@@ -366,7 +367,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_IO_TEST_COMMAND
 			|| command == TS_GET_SCATTERED_GET_COMMAND
 			|| command == TS_SET_LOGGER_SWITCH
-			|| command == TS_GET_LOGGER_GET_BUFFER
 			|| command == TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
@@ -747,6 +747,36 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		case TS_COMPOSITE_DISABLE:
 			DisableToothLogger();
 			break;
+		case TS_COMPOSITE_READ:
+			{
+				auto toothBuffer = GetToothLoggerBuffer();
+
+				if (toothBuffer) {
+					tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+				} else {
+					// TS asked for a tooth logger buffer, but we don't have one to give it.
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+				}
+			}
+			break;
+		case TS_TRIGGER_SCOPE_ENABLE:
+			triggerScopeEnable();
+			break;
+		case TS_TRIGGER_SCOPE_DISABLE:
+			triggerScopeDisable();
+			break;
+		case TS_TRIGGER_SCOPE_READ:
+			{
+				const auto& buffer = triggerScopeGetBuffer();
+
+				if (buffer) {
+					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
+				} else {
+					// TS asked for a tooth logger buffer, but we don't have one to give it.
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+				}
+			}
+			break;
 		default:
 			// dunno what that was, send NAK
 			return false;
@@ -756,10 +786,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-		EnableToothLoggerIfNotEnabled();
-		// falls through
-	case TS_GET_LOGGER_GET_BUFFER:
 		{
+			EnableToothLoggerIfNotEnabled();
+
 			auto toothBuffer = GetToothLoggerBuffer();
 
 			if (toothBuffer) {
@@ -780,7 +809,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size, true);
+			tsChannel->sendResponse(TS_CRC, trace.get<uint8_t>(), trace.size(), true);
 		}
 
 		break;

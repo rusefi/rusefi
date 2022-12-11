@@ -1,10 +1,8 @@
 /**
- * @file boards/hellen/hellen-nb1/board_configuration.cpp
+ * @file board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen-nb1 board
- *
- * See http://rusefi.com/s/hellenNB1
+ * @brief Configuration defaults for the hellen-gm-e67 board
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020

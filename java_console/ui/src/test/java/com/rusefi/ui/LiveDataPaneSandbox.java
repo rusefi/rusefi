@@ -7,6 +7,8 @@ import javax.swing.*;
 public class LiveDataPaneSandbox {
     public static void main(String[] args) {
         UIContext uiContext = new UIContext();
-        new FrameHelper(WindowConstants.EXIT_ON_CLOSE).showFrame(new LiveDataPane(uiContext).getContent());
+        InitOnFirstPaintPanel panel = LiveDataPane.createLazy(uiContext);
+
+        new FrameHelper(WindowConstants.EXIT_ON_CLOSE).showFrame(panel.getContent());
     }
 }
