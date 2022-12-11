@@ -11,7 +11,7 @@ struct_no_prefix output_channels_s
 
 bit sd_present
 bit sd_logging_internal
-bit unusedb4;
+bit triggerScopeReady
 bit unusedb5;
 bit isFanOn;radiator fan
 bit isO2HeaterOn;
@@ -365,5 +365,7 @@ float mapFast
 	uint16_t autoscale rawMaf2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale mafMeasured2;@@GAUGE_NAME_AIR_FLOW_MEASURED_2@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 1
 
-	uint8_t[138 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t schedulingUsedCount;;"",1,0,0,0,0
+
+	uint8_t[136 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

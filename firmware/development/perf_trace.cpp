@@ -6,22 +6,10 @@
  * See JsonOutput.java in rusEfi console
  */
 
-
 #include "pch.h"
-
 
 #ifndef ENABLE_PERF_TRACE
 #error ENABLE_PERF_TRACE must be defined!
-#endif
-
-#ifndef TRACE_BUFFER_LENGTH
-#define TRACE_BUFFER_LENGTH 2048
-#endif /* TRACE_BUFFER_LENGTH */
-
-// Disable the buffer if we're not enabled at all
-#if !ENABLE_PERF_TRACE
-#undef TRACE_BUFFER_LENGTH
-#define TRACE_BUFFER_LENGTH 1
 #endif
 
 enum class EPhase : char
@@ -44,11 +32,18 @@ struct TraceEntry
 // Ensure that the struct is the size we think it is - the binary layout is important
 static_assert(sizeof(TraceEntry) == 8);
 
+#define TRACE_BUFFER_LENGTH (BIG_BUFFER_SIZE / sizeof(TraceEntry))
+
 // This buffer stores a trace - we write the full buffer once, then disable tracing
-static TraceEntry s_traceBuffer[TRACE_BUFFER_LENGTH];
+static BigBufferHandle s_traceBuffer;
 static size_t s_nextIdx = 0;
 
 static bool s_isTracing = false;
+
+static void stopTrace() {
+	s_isTracing = false;
+	s_nextIdx = 0;
+}
 
 static void perfEventImpl(PE event, EPhase phase)
 {
@@ -58,7 +53,7 @@ static void perfEventImpl(PE event, EPhase phase)
 	}
 	
 	// Bail if we aren't tracing
-	if (!s_isTracing) {
+	if (!s_isTracing || !s_traceBuffer) {
 		return;
 	}
 
@@ -79,8 +74,7 @@ static void perfEventImpl(PE event, EPhase phase)
 
 		idx = s_nextIdx++;
 		if (s_nextIdx >= TRACE_BUFFER_LENGTH) {
-			s_nextIdx = 0;
-			s_isTracing = false;
+			stopTrace();
 		}
 
 		// Restore previous interrupt state - don't restore if they weren't enabled
@@ -90,7 +84,7 @@ static void perfEventImpl(PE event, EPhase phase)
 	}
 
 	// We can safely write data out of the lock, our spot is reserved
-	volatile TraceEntry& entry = s_traceBuffer[idx];
+	volatile TraceEntry& entry = s_traceBuffer.get<TraceEntry>()[idx];
 
 	entry.Event = event;
 	entry.Phase = phase;
@@ -122,12 +116,14 @@ void perfEventInstantGlobal(PE event) {
 }
 
 void perfTraceEnable() {
+	s_traceBuffer = getBigBuffer(BigBufferUser::PerfTrace);
 	s_isTracing = true;
 }
 
-const TraceBufferResult perfTraceGetBuffer() {
+const BigBufferHandle perfTraceGetBuffer() {
 	// stop tracing if you try to get the buffer early
-	s_isTracing = false;
+	stopTrace();
 
-	return {reinterpret_cast<const uint8_t*>(s_traceBuffer), sizeof(s_traceBuffer)};
+	// transfer ownership of the buffer to the caller
+	return efi::move(s_traceBuffer);
 }

@@ -113,7 +113,7 @@ enable2ndByteCanID = false
 	loggerDef = compositeLogger, "Trigger Logger", composite
 		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x01"
 		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x02"
-		dataReadCommand = "@#TS_GET_LOGGER_GET_BUFFER#@"
+		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x03"
 		dataReadTimeout = 10000 ; time in ms
 		dataReadyCondition = { toothLogReady }
 		continuousRead = true
@@ -133,6 +133,17 @@ enable2ndByteCanID = false
 		; it seems that TS also needs to know the diff.size of a tooth
 		calcField = toothTime,			"ToothTime",	"ms", { time - pastValue(time, 1) }
 
+	loggerDef = triggerScope, "Trigger Oscilloscope", csv
+		startCommand = "@#TS_SET_LOGGER_SWITCH#@\x04"
+		stopCommand  = "@#TS_SET_LOGGER_SWITCH#@\x05"
+		dataReadCommand = "@#TS_SET_LOGGER_SWITCH#@\x06"
+		dataReadTimeout = 1000
+		dataReadyCondition = { triggerScopeReady }
+		continuousRead = true
+
+		recordDef = 0, 0, 2
+		recordField = channel1, "Channel 1", 0, 8, {6.6 / 255}, "v"
+		recordField = channel2, "Channel 2", 8, 8, {6.6 / 255}, "v"
 
 [VeAnalyze]
 
@@ -1413,10 +1424,10 @@ gaugeCategory = GPPWM Outputs
 
 ;						wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
 #if LAMBDA
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
+	wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, running_coolantTemperatureCoefficient, egoCorrectionForVeAnalyze
 	lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 

@@ -6,6 +6,8 @@
  */
 #pragma once
 
+#include "big_buffer.h"
+
 #include <cstdint>
 #include <cstddef>
 
@@ -79,14 +81,8 @@ void perfEventInstantGlobal(PE event);
 // Enable one buffer's worth of perf tracing, and retrieve the buffer size in bytes
 void perfTraceEnable();
 
-struct TraceBufferResult
-{
-	const uint8_t* const Buffer;
-	const size_t Size;
-};
-
 // Retrieve the trace buffer
-const TraceBufferResult perfTraceGetBuffer();
+const BigBufferHandle perfTraceGetBuffer();
 
 #if ENABLE_PERF_TRACE
 class ScopePerf

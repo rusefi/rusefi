@@ -248,6 +248,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.luaGauges[1], "luaGauges 2", "value", 3},
 	{engine->outputChannels.rawMaf2, "rawMaf2", "V", 3},
 	{engine->outputChannels.mafMeasured2, "MAF #2", "kg/h", 1},
+	{engine->outputChannels.schedulingUsedCount, "schedulingUsedCount", "", 0},
 	{engine->fuelComputer.afrTableYAxis, "afrTableYAxis", "%", 0},
 	{engine->fuelComputer.targetLambda, "fuel: target lambda", "", 3},
 	{engine->fuelComputer.targetAFR, "fuel: target AFR", "ratio", 2},

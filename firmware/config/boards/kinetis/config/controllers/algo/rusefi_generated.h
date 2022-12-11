@@ -161,7 +161,6 @@
 #define CMD_TRIGGERINFO "triggerinfo"
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
-#define COMPOSITE_PACKET_COUNT 1000
 #define COMPOSITE_PACKET_SIZE 5
 #define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define CRANKING_ADVANCE_CURVE_SIZE 4
@@ -1027,7 +1026,7 @@
 #define SENT_INPUT_COUNT 1
 #define show_Frankenso_presets true
 #define show_test_presets true
-#define SIGNATURE_HASH snap_16246
+#define SIGNATURE_HASH snap_10865
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1222,6 +1221,7 @@
 #define TS_COMMAND_F_char F
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_ENABLE 1
+#define TS_COMPOSITE_READ 3
 #define TS_CRC_CHECK_COMMAND 'k'
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
@@ -1234,8 +1234,6 @@
 #define TS_GET_CONFIG_ERROR_char e
 #define TS_GET_FIRMWARE_VERSION 'V'
 #define TS_GET_FIRMWARE_VERSION_char V
-#define TS_GET_LOGGER_GET_BUFFER 'L'
-#define TS_GET_LOGGER_GET_BUFFER_char L
 #define TS_GET_OUTPUTS_SIZE '4'
 #define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
@@ -1301,12 +1299,15 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.12.04.kin.snap_16246"
+#define TS_SIGNATURE "rusEFI 2022.12.11.kin.snap_10865"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
 #define TS_TOTAL_OUTPUT_SIZE 1276
+#define TS_TRIGGER_SCOPE_DISABLE 5
+#define TS_TRIGGER_SCOPE_ENABLE 4
+#define TS_TRIGGER_SCOPE_READ 6
 #define TsCalMode_EtbKd 5
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3

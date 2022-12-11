@@ -9,5 +9,6 @@
 
 #include "engine_configuration.h"
 
+void setHondaK();
 void setProteusHondaElement2003();
 void setProteusHondaOBD2A();

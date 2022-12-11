@@ -1,4 +1,33 @@
 pins:
+
+  - pin: 4D
+    function: +5v sensors
+
+  - pin: 5D
+    function: Analog Ground
+    color: black
+    type: gnd
+
+  - pin: 22D
+    function: CAN2 bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 23D
+    function: CAN2 bus low (CANL)
+    type: can
+    color: green
+
+  - pin: 24D
+    function: CAN1 bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 25D
+    function: CAN1 bus low (CANL)
+    type: can
+    color: green
+
   - pin: 26D
     function: Power GND
     type: gnd
