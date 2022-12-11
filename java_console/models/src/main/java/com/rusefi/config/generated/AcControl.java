@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Dec 04 18:18:32 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sat Dec 10 22:21:58 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -71,7 +71,6 @@ public class AcControl {
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
-	public static final int COMPOSITE_PACKET_COUNT = 1000;
 	public static final int COMPOSITE_PACKET_SIZE = 5;
 	public static final String CONSOLE_DATA_PROTOCOL_TAG = " @";
 	public static final int CRANKING_ADVANCE_CURVE_SIZE = 4;
@@ -355,6 +354,7 @@ public class AcControl {
 	public static final char TS_COMMAND_F = 'F';
 	public static final int TS_COMPOSITE_DISABLE = 2;
 	public static final int TS_COMPOSITE_ENABLE = 1;
+	public static final int TS_COMPOSITE_READ = 3;
 	public static final char TS_CRC_CHECK_COMMAND = 'k';
 	public static final char TS_EXECUTE = 'E';
 	public static final int TS_FILE_VERSION = 20210312;
@@ -362,7 +362,6 @@ public class AcControl {
 	public static final char TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY = '8';
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
-	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
 	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_PROTOCOL_VERSION_COMMAND_F = 'F';
 	public static final char TS_GET_SCATTERED_GET_COMMAND = '9';
@@ -388,6 +387,9 @@ public class AcControl {
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
+	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
+	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
+	public static final int TS_TRIGGER_SCOPE_READ = 6;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int VE_BLEND_COUNT = 4;
 	public static final int VEHICLE_INFO_SIZE = 32;

@@ -14,9 +14,9 @@
 #define QUEUE_LENGTH_LIMIT 1000
 
 // templates do not accept field names so we use a macro here
-#define assertNotInListMethodBody(T, head, element, field)                  \
+#define assertNotInListMethodBody(head, element, field)                     \
 	/* this code is just to validate state, no functional load*/            \
-	T * current;                                                            \
+	decltype(head) current;                                                 \
 	int counter = 0;                                                        \
 	LL_FOREACH2(head, current, field) {                                     \
 		if (++counter > QUEUE_LENGTH_LIMIT) {                               \
@@ -44,7 +44,7 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	EventQueue(efitick_t lateDelay = 0) : lateDelay(lateDelay) {}
+	explicit EventQueue(efitick_t lateDelay = 0);
 
 	/**
 	 * O(size) - linear search in sorted linked list
@@ -61,11 +61,17 @@ public:
 	scheduling_s *getElementAtIndexForUnitText(int index);
 	scheduling_s * getHead();
 	void assertListIsSorted() const;
+
+	scheduling_s* getFreeScheduling();
+	void tryReturnScheduling(scheduling_s* sched);
 private:
 	/**
 	 * this list is sorted
 	 */
 	scheduling_s *head = nullptr;
 	const efitick_t lateDelay;
+
+	scheduling_s* m_freelist = nullptr; 
+	scheduling_s m_pool[64];
 };
 

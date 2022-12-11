@@ -28,7 +28,7 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## December 2022 Release - "Day 281"
+## December 2022 Release - "Day 289"
 
 ### Breaking Changes
  - SD logging rate is now set with hz instead of ms period #4553

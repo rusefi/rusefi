@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 04 18:18:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 10 23:00:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -42,7 +42,7 @@ struct output_channels_s {
 	bool sd_logging_internal : 1 {};
 	/**
 	offset 0 bit 2 */
-	bool unusedb4 : 1 {};
+	bool triggerScopeReady : 1 {};
 	/**
 	offset 0 bit 3 */
 	bool unusedb5 : 1 {};
@@ -1364,7 +1364,11 @@ struct output_channels_s {
 	/**
 	 * offset 608
 	 */
-	uint8_t unusedAtTheEnd[138];
+	uint16_t schedulingUsedCount = (uint16_t)0;
+	/**
+	 * offset 610
+	 */
+	uint8_t unusedAtTheEnd[136];
 	/**
 	 * need 4 byte alignment
 	units
@@ -1375,4 +1379,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 04 18:18:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 10 23:00:29 UTC 2022
