@@ -1,5 +1,36 @@
 pins:
 
+  - pin: A2
+    function: +12V from main relay
+    type: 12v
+    color: red
+  - pin: A3
+    function: +12V from main relay
+    type: 12v
+    color: red
+  - pin: A4
+    function: Power GND
+    type: gnd
+  - pin: A5
+    function: Power GND
+    type: gnd
+  - pin: A7
+    ts_name: A7 - CRANK
+    function: Crankshaft Sensor
+
+  - pin: E9
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: E9 - Ignition Key Voltage
+    function: +12V engine ECU power source, run/start
+    color: red
+  - pin: E31
+    class: outputs
+    function: MIL Check Engine
+    ts_name: E31 Check Engine
+
+
 info:
   id: Honda-K
   title: Hellen Honda K
