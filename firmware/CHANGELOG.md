@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Electronic throttle supply voltage compensation, giving more consistent behavior as battery voltage changes #4838
+
 ## December 2022 Release - "Day 289"
 
 ### Breaking Changes
