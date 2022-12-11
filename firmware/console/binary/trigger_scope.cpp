@@ -35,10 +35,8 @@ static const uint32_t smpr2 =
 	ADC_SMPR2_SMP_AN8(TRIGGER_SCOPE_SAMPLE_TIME) |
 	ADC_SMPR2_SMP_AN9(TRIGGER_SCOPE_SAMPLE_TIME);
 
-// TODO: can we sample in 8 bit mode instead and save some memory?
-
 static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 2, &completionCallback, nullptr,
-	0,
+	ADC_CR1_RES_1,	// Sample in 8-bit mode
 	ADC_CR2_SWSTART,
 	// sample times for channels 10...18
 	smpr1,
@@ -54,7 +52,7 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 2, &completionCallbac
 };
 
 static constexpr size_t sampleCount = 1000;
-static_assert(2 * sizeof(adcsample_t) * sampleCount < BIG_BUFFER_SIZE);
+static_assert(2 * sizeof(uint8_t) * sampleCount < BIG_BUFFER_SIZE);
 
 static void startSampling(void* = nullptr) {
 	chibios_rt::CriticalSectionLocker csl;
@@ -107,6 +105,11 @@ void initTriggerScope() {
 	// Trigger scope and knock currently mutually exclusive
 	if (!engineConfiguration->enableSoftwareKnock) {
 		adcStart(&TRIGGER_SCOPE_ADC, nullptr);
+
+		// Manually set ADC DMA to byte mode, as we'll be taking 8 bit samples
+		// Defaults are to sample at 12 bits, and DMA 16-bit words
+		ADCD3.dmamode &= ~(STM32_DMA_CR_PSIZE_MASK | STM32_DMA_CR_MSIZE_MASK);
+		ADCD3.dmamode |= STM32_DMA_CR_PSIZE_BYTE | STM32_DMA_CR_MSIZE_BYTE;
 
 		efiSetPadMode("knock ch1", TRIGGER_SCOPE_PIN_CH1, PAL_MODE_INPUT_ANALOG);
 #if TRIGGER_SCOPE_HAS_CH2
