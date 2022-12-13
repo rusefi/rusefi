@@ -142,8 +142,8 @@ enable2ndByteCanID = false
 		continuousRead = true
 
 		recordDef = 0, 0, 2
-		recordField = channel1, "Channel 1", 0, 8, {6.6 / 255}, "v"
-		recordField = channel2, "Channel 2", 8, 8, {6.6 / 255}, "v"
+		recordField = channel1, @@TS_TRIGGER_SCOPE_CHANNEL_1_NAME@@, 0, 8, {6.6 / 255}, "v"
+		recordField = channel2, @@TS_TRIGGER_SCOPE_CHANNEL_2_NAME@@, 8, 8, {6.6 / 255}, "v"
 
 [VeAnalyze]
 
