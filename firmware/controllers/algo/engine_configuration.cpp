@@ -371,7 +371,7 @@ void setDefaultGppwmParameters() {
 }
 
 static void setDefaultEngineNoiseTable() {
-	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+	setRpmTableBin(engineConfiguration->knockNoiseRpmBins);
 
 	engineConfiguration->knockSamplingDuration = 45;
 
@@ -520,17 +520,17 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable1RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->vvtTable1RpmBins);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable2RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->vvtTable2RpmBins);
 	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable1RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable1RpmBins);
 	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable2RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable2RpmBins);
 	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable3RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable3RpmBins);
 	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable4RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable4RpmBins);
 
 	setDefaultEngineNoiseTable();
 
