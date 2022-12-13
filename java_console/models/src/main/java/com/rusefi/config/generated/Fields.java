@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 11 04:26:31 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 13 20:05:24 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1014,6 +1014,7 @@ public class Fields {
 	public static final int TORQUE_CURVE_SIZE = 6;
 	public static final int TOTAL_CONFIG_SIZE = 22800;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
+	public static final int TPS_TPS_ACCEL_CLT_CORR_TABLE = 4;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int TransmissionControllerMode_Gm4l6x = 2;
 	public static final int TransmissionControllerMode_None = 0;
@@ -1181,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.11.all.snap_35005";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.13.all.snap_13716";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1276;
@@ -2351,7 +2352,8 @@ public class Fields {
 	public static final Field ACDELAY = Field.create("ACDELAY", 3122, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3123 = Field.create("ALIGNMENTFILL_AT_3123", 3123, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FORDINJECTORSMALLPULSEBREAKPOINT = Field.create("FORDINJECTORSMALLPULSEBREAKPOINT", 3124, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3126, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSTSPCORRVALUES = Field.create("TPSTSPCORRVALUES", 3126, FieldType.INT8).setScale(0.02).setBaseOffset(0);
+	public static final Field UNUSED4080 = Field.create("UNUSED4080", 3130, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3131, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3132, FieldType.INT8, hpfp_cam_e).setScale(1.0).setBaseOffset(0);
@@ -2441,7 +2443,8 @@ public class Fields {
 	public static final Field LUADIGITALINPUTPINS6 = Field.create("LUADIGITALINPUTPINS6", 3866, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINS7 = Field.create("LUADIGITALINPUTPINS7", 3868, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINS8 = Field.create("LUADIGITALINPUTPINS8", 3870, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3872, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSTSPCORRVALUESBINS = Field.create("TPSTSPCORRVALUESBINS", 3872, FieldType.INT8).setScale(50.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3876, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3759,6 +3762,7 @@ public class Fields {
 	ACDELAY,
 	ALIGNMENTFILL_AT_3123,
 	FORDINJECTORSMALLPULSEBREAKPOINT,
+	TPSTSPCORRVALUES,
 	UNUSED4080,
 	HPFPCAMLOBES,
 	HPFPCAM,
@@ -3848,6 +3852,7 @@ public class Fields {
 	LUADIGITALINPUTPINS6,
 	LUADIGITALINPUTPINS7,
 	LUADIGITALINPUTPINS8,
+	TPSTSPCORRVALUESBINS,
 	MAINUNUSEDEND,
 	ETBBIASBINS,
 	ETBBIASVALUES,

@@ -992,7 +992,7 @@
 #define show_Frankenso_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH snap_20839
+#define SIGNATURE_HASH snap_60494
 #define specs_s_size 12
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4"
 #define spi_device_e_SPI_DEVICE_1 1
@@ -1042,6 +1042,7 @@
 #define TORQUE_CURVE_SIZE 6
 #define TOTAL_CONFIG_SIZE 22800
 #define TPS_2_BYTE_PACKING_MULT 100
+#define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
 #define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
 #define TransmissionControllerMode_auto_enum 0="None",2="Gm4l6x",1="SimpleTransmissionController"
@@ -1266,7 +1267,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2022.12.11.subaru_eg33_f7.snap_20839"
+#define TS_SIGNATURE "rusEFI 2022.12.13.subaru_eg33_f7.snap_60494"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

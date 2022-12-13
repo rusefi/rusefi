@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Dec 04 18:18:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 13 20:04:44 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4036,9 +4036,14 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseBreakPoint;
 	/**
+	multiplier
 	 * offset 3126
 	 */
-	int8_t unused4080[5];
+	scaled_channel<uint8_t, 50, 1> tpsTspCorrValues[TPS_TPS_ACCEL_CLT_CORR_TABLE];
+	/**
+	 * offset 3130
+	 */
+	int8_t unused4080;
 	/**
 	lobes/cam
 	 * offset 3131
@@ -4332,10 +4337,15 @@ struct engine_configuration_s {
 	 */
 	Gpio luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
 	/**
-	units
+	RPM
 	 * offset 3872
 	 */
-	uint8_t mainUnusedEnd[140];
+	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
+	/**
+	units
+	 * offset 3876
+	 */
+	uint8_t mainUnusedEnd[136];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5108,4 +5118,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Dec 04 18:18:33 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 13 20:04:44 UTC 2022
