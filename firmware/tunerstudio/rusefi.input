@@ -416,6 +416,14 @@ enable2ndByteCanID = false
 		yBins		= dwellVoltageCorrValues
 		gauge		= VBattGauge
 
+	curve = tpsTspRpmCorrection, "Transient RPM correction"
+		columnLabel = "RPM", "Multiplier"
+		xAxis		=  6, 16, 11
+		yAxis		=  0, 3, 7
+		xBins		= tpsTspCorrValuesBins, RPMValue
+		yBins		= tpsTspCorrValues
+		gauge		= RPMGauge
+
 	curve = primingPulse, "Priming pulse fuel mass"
 		columnLabel = "Coolant", "Prime Pulse"
 		xAxis		=  -40, 120, 9
@@ -1622,6 +1630,7 @@ menuDialog = main
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl,			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
+		subMenu = tpsTspRpmCorrection,      "TPS/TPS extra fuelRPM correction", 0, {isInjectionEnabled == 1}
 
 		groupMenu = "Wall wetting AE"
 		groupChildMenu = wwTauCurves, "Evap time", 0, { complexWallModel != 0 }
