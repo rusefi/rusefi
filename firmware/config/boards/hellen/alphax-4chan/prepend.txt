@@ -24,3 +24,6 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_Hellen_presets true
+
+#define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "C2/C3 Crank VR"
+#define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "E5/E6 Cam VR"

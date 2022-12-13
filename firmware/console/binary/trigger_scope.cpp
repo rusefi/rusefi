@@ -51,8 +51,7 @@ static const ADCConversionGroup adcConvGroupCh1 = { FALSE, 2, &completionCallbac
 	ADC_SQR3_SQ1_N(TRIGGER_SCOPE_ADC_CH1) | ADC_SQR3_SQ2_N(TRIGGER_SCOPE_ADC_CH2)
 };
 
-static constexpr size_t sampleCount = 1000;
-static_assert(2 * sizeof(uint8_t) * sampleCount < BIG_BUFFER_SIZE);
+static constexpr size_t sampleCount = BIG_BUFFER_SIZE / (2 * sizeof(uint8_t));
 
 static void startSampling(void* = nullptr) {
 	chibios_rt::CriticalSectionLocker csl;

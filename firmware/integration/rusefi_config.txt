@@ -2112,6 +2112,10 @@ end_struct
 #define TS_TRIGGER_SCOPE_DISABLE 5
 #define TS_TRIGGER_SCOPE_READ 6
 
+! Generic channel names, your board may want to override these
+#define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
+#define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
+
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"
 
