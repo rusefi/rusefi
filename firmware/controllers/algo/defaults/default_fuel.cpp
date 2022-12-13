@@ -230,6 +230,10 @@ void setDefaultFuel() {
 	// Tables
 	setFuelTablesLoadBin(10, 160);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
+
+	setRpmTableBin(engineConfiguration->tpsTspCorrValuesBins, TPS_TPS_ACCEL_CLT_CORR_TABLE);
+	setLinearCurve(engineConfiguration->tpsTspCorrValuesBins, 1, 1);
+
 	setDefaultVETable();
 	setDefaultLambdaTable();
 

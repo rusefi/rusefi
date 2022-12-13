@@ -493,6 +493,8 @@ bool validateConfig() {
 		return false;
 	}
 
+	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
+
 	// Fueling
 	{
 		ensureArrayIsAscending("VE load", config->veLoadBins);
@@ -509,6 +511,8 @@ bool validateConfig() {
 
 		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
 		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
+
+		ensureArrayIsAscendingOrDefault("TPS TPS RPM correction", engineConfiguration->tpsTspCorrValuesBins);
 	}
 
 	// Ignition
