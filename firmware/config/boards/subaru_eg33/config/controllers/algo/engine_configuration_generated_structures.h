@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Dec 13 20:04:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Dec 14 03:42:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3674,9 +3674,11 @@ struct engine_configuration_s {
 	 */
 	int8_t launchFuelAdderPercent;
 	/**
+	 * Time required to detect a stuck throttle.
+	sec
 	 * offset 2085
 	 */
-	int8_t sorryUnused[1];
+	scaled_channel<uint8_t, 50, 1> etbJamTimeout;
 	/**
 	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 2086
@@ -4041,9 +4043,10 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 50, 1> tpsTspCorrValues[TPS_TPS_ACCEL_CLT_CORR_TABLE];
 	/**
+	%
 	 * offset 3130
 	 */
-	int8_t unused4080;
+	uint8_t etbJamIntegratorLimit;
 	/**
 	lobes/cam
 	 * offset 3131
@@ -5118,4 +5121,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Dec 13 20:04:46 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Wed Dec 14 03:42:45 UTC 2022
