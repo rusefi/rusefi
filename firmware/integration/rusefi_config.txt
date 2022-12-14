@@ -1349,7 +1349,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
     brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
     int8_t launchFuelAdderPercent
-	int8_t[1 iterate] sorryUnused
+	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
 	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	float etbDutyThreshold
 
@@ -1455,7 +1455,7 @@ tChargeMode_e tChargeMode;
 
 	uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
-	int8_t unused4080;;"", 1, 0, 0, 0, 0
+	uint8_t etbJamIntegratorLimit;;"%", 1, 0, 0, 50, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
