@@ -843,6 +843,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->vvtControlMinRpm;
 		case -904771683:
 			return engineConfiguration->launchFuelAdderPercent;
+		case 1057701663:
+			return engineConfiguration->etbJamTimeout;
 		case -86185846:
 			return engineConfiguration->etbExpAverageLength;
 		case -275312941:
@@ -967,6 +969,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->acDelay;
 		case -1032938305:
 			return engineConfiguration->fordInjectorSmallPulseBreakPoint;
+		case -929987018:
+			return engineConfiguration->etbJamIntegratorLimit;
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
 		case 1145081382:
@@ -3115,6 +3119,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
+		case 1057701663:
+	{
+		engineConfiguration->etbJamTimeout = (int)value;
+		return;
+	}
 		case -86185846:
 	{
 		engineConfiguration->etbExpAverageLength = (int)value;
@@ -3423,6 +3432,11 @@ void setConfigValueByName(const char *name, float value) {
 		case -1032938305:
 	{
 		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
+		return;
+	}
+		case -929987018:
+	{
+		engineConfiguration->etbJamIntegratorLimit = (int)value;
 		return;
 	}
 		case -1256141959:
