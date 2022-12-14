@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Dec 13 20:04:43 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Dec 14 00:09:26 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -388,6 +388,8 @@ public class TriggerState {
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
+	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
+	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
 	public static final int TS_TRIGGER_SCOPE_ENABLE = 4;
 	public static final int TS_TRIGGER_SCOPE_READ = 6;
