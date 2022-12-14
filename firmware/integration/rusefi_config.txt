@@ -1082,7 +1082,7 @@ bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2
 bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
-bit unused_1484_bit_38
+bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 bit unused_1484_bit_29
 bit unused_1484_bit_30
 bit tempBooleanForVerySpecialLogic
