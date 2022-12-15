@@ -1552,8 +1552,8 @@ uint8_t alsMinPps;;"", 1, 0, 0, 20000, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 
-uint8_t autoscale tpsSecondaryMaximum;;"%", 0.5, 0, 0, 100, 1
-uint8_t autoscale ppsSecondaryMaximum;;"%", 0.5, 0, 0, 100, 1
+uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use xxx%;"%", 0.5, 0, 0, 100, 1
+uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use xxx%;"%", 0.5, 0, 0, 100, 1
 
 uint8_t[122] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
