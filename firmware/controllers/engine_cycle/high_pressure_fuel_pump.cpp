@@ -84,7 +84,7 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 		m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
 					(FAST_CALLBACK_PERIOD_MS / 1000.)),
 		interpolate3d(engineConfiguration->hpfpTarget,
-			      engineConfiguration->hpfpTargetLoadBins, Sensor::get(SensorType::Map).value_or(0), // TODO: allow other load axis, like we claim to
+			      engineConfiguration->hpfpTargetLoadBins, Sensor::getOrZero(SensorType::Map), // TODO: allow other load axis, like we claim to
 			      engineConfiguration->hpfpTargetRpmBins, rpm));
 
 	auto fuelPressure = Sensor::get(SensorType::FuelPressureHigh);

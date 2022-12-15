@@ -436,7 +436,7 @@ todo: move to shutdown_controller.cpp
 		const float vBattThresholdOn = 8.0f;
 		// we fallback into zero instead of VBAT_FALLBACK_VALUE because it's not safe to false-trigger the "ignition on" event,
 		// and we want to turn on the main relay only when 100% sure.
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(0) > vBattThresholdOn) && !isInShutdownMode()) {
+		if ((Sensor::getOrZero(SensorType::BatteryVoltage) > vBattThresholdOn) && !isInShutdownMode()) {
 			ignitionOnTimeNt = getTimeNowNt();
 			efiPrintf("Ignition voltage detected!");
 			if (stopEngineRequestTimeNt != 0) {
