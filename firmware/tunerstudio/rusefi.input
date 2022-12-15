@@ -4258,7 +4258,12 @@ dialog = tcuControls, "Transmission Settings"
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",							warning_message
 		field = totalGearsCount,								totalGearsCount
+
 		field = "Ford redundant TPS mode",				useFordRedundantTps
+		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
+		field = "Ford redundant PPS mode",				useFordRedundantPps
+		field = "Secondary PPS maximum",				ppsSecondaryMaximum, {useFordRedundantPps}
+
 		field = "consumeObdSensors",						consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",						artificialTestMisfire
 		field = "Always use instant RPM",				alwaysInstantRpm
