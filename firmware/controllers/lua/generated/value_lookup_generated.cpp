@@ -589,6 +589,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->invertVvtControlExhaust;
 		case 1486014321:
 			return engineConfiguration->useBiQuadOnAuxSpeedSensors;
+		case -105464622:
+			return engineConfiguration->sdTriggerLog;
 		case -153724425:
 			return engineConfiguration->tempBooleanForVerySpecialLogic;
 		case -1492464952:
@@ -2496,6 +2498,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1486014321:
 	{
 		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
+		return;
+	}
+		case -105464622:
+	{
+		engineConfiguration->sdTriggerLog = (int)value;
 		return;
 	}
 		case -153724425:
