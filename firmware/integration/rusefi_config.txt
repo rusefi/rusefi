@@ -1544,7 +1544,14 @@ uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, 
 float etbDutyShutdownThreshold
 Gpio[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
-uint8_t[136] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint16_t alsMinRpm;;"", 1, 0, 0, 20000, 0
+uint16_t alsMaxRpm;;"", 1, 0, 0, 20000, 0
+float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
+uint8_t alsMaxClt;;"", 1, 0, 0, 20000, 0
+uint8_t alsMinPps;;"", 1, 0, 0, 20000, 0
+uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
+uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
+uint8_t[124] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
