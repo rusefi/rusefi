@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 15 03:29:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 15 12:38:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2690,8 +2690,9 @@ struct engine_configuration_s {
 	offset 1372 bit 27 */
 	bool useBiQuadOnAuxSpeedSensors : 1 {};
 	/**
+	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 	offset 1372 bit 28 */
-	bool unused_1484_bit_38 : 1 {};
+	bool sdTriggerLog : 1 {};
 	/**
 	offset 1372 bit 29 */
 	bool unused_1484_bit_29 : 1 {};
@@ -5150,4 +5151,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 15 03:29:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Dec 15 12:38:17 UTC 2022

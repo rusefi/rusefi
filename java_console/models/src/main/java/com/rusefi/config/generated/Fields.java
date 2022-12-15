@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 15 03:42:55 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 15 12:38:58 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.15.all.snap_25264";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.15.all.snap_11375";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -1862,6 +1862,7 @@ public class Fields {
 	public static final Field INVERTVVTCONTROLINTAKE = Field.create("INVERTVVTCONTROLINTAKE", 1372, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1372, FieldType.BIT, 27).setBaseOffset(0);
+	public static final Field SDTRIGGERLOG = Field.create("SDTRIGGERLOG", 1372, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1372, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1376, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1380, FieldType.FLOAT).setBaseOffset(0);
@@ -3288,6 +3289,7 @@ public class Fields {
 	INVERTVVTCONTROLINTAKE,
 	INVERTVVTCONTROLEXHAUST,
 	USEBIQUADONAUXSPEEDSENSORS,
+	SDTRIGGERLOG,
 	TEMPBOOLEANFORVERYSPECIALLOGIC,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
