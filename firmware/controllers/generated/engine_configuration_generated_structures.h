@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 14 03:43:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 15 03:30:02 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4345,10 +4345,39 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
 	/**
-	units
 	 * offset 3876
 	 */
-	uint8_t mainUnusedEnd[136];
+	uint16_t alsMinRpm;
+	/**
+	 * offset 3878
+	 */
+	uint16_t alsMaxRpm;
+	/**
+	sec
+	 * offset 3880
+	 */
+	float alsMaxDuration;
+	/**
+	 * offset 3884
+	 */
+	uint8_t alsMaxClt;
+	/**
+	 * offset 3885
+	 */
+	uint8_t alsMinPps;
+	/**
+	 * offset 3886
+	 */
+	uint8_t alsMinTimeBetween;
+	/**
+	 * offset 3887
+	 */
+	uint8_t alsEtbPosition;
+	/**
+	units
+	 * offset 3888
+	 */
+	uint8_t mainUnusedEnd[124];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5121,4 +5150,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 14 03:43:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 15 03:30:02 UTC 2022
