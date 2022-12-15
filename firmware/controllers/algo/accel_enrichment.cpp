@@ -33,7 +33,8 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 		// If disabled, return 0.
 		return 0;
 	}
-	if (!engine->rpmCalculator.isRunning()) {
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	if (rpm == 0) {
 		return 0;
 	}
 
@@ -82,7 +83,13 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-	return extraFuel;
+	float mult = interpolate2d(rpm, engineConfiguration->tpsTspCorrValuesBins,
+						engineConfiguration->tpsTspCorrValues);
+	if (mult != 0 && (mult < 0.01 || mult > 100)) {
+		mult = 1;
+	}
+
+	return extraFuel * mult;
 }
 
 void TpsAccelEnrichment::onEngineCycleTps() {
