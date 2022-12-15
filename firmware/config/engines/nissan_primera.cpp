@@ -13,8 +13,6 @@
 #include "nissan_primera.h"
 
 void setNissanPrimeraEngineConfiguration() {
-	setDefaultFrankensoConfiguration();
-
 	engineConfiguration->trigger.type = TT_NISSAN_SR20VE;
 
 	engineConfiguration->auxValves[0] = Gpio::E14;

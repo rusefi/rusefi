@@ -23,7 +23,7 @@ static void setDefaultCustomMaps() {
 }
 
 void setHonda600() {
-	setDefaultFrankensoConfiguration();
+
 	engineConfiguration->trigger.type = TT_HONDA_CBR_600;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
