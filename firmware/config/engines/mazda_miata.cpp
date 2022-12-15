@@ -106,7 +106,6 @@ static void commonMiataNa() {
 }
 
 void common079721_2351() {
-	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->engineChartSize = 300;
 

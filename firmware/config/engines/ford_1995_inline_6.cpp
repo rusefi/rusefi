@@ -19,8 +19,6 @@
  * @brief Default values for persistent properties
  */
 void setFordInline6() {
-	setDefaultFrankensoConfiguration();
-
 	engineConfiguration->specs.cylindersCount = 6;
 
 	setCamOperationMode();

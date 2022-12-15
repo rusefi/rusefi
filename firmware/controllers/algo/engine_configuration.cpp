@@ -632,11 +632,6 @@ static void setDefaultEngineConfiguration() {
 	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
 }
 
-
-void setDefaultFrankensoConfiguration() {
-
-}
-
 #ifdef CONFIG_RESET_SWITCH_PORT
 // this pin is not configurable at runtime so that we have a reliable way to reset configuration
 #define SHOULD_IGNORE_FLASH() (palReadPad(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN) == 0)

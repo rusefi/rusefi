@@ -255,7 +255,6 @@ static void miataNAcommon() {
  * MIATA_NA6_MAP
  */
 void setMiataNA6_MAP_Frankenso() {
-	setDefaultFrankensoConfiguration();
 	setFrankensoConfiguration();
 	miataNAcommonEngineSettings();
 

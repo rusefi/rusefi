@@ -13,7 +13,6 @@
 #include "sachs.h"
 
 void setSachs() {
-	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
