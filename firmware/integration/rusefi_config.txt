@@ -445,7 +445,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit useFordRedundantTps;On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
 bit enableFan1WithAc;Turn on this fan when AC is on.
@@ -474,7 +474,7 @@ bit enableMapEstimationTableFallback;If enabled, the MAP estimate table will be 
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit issue_294_31,"si_example","nada_example"
+bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 
 !todo: extract these two fields into a structure
