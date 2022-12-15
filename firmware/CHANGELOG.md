@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - VR trigger input oscilloscope for boards with "discrete VR" hardware (AlphaX ECUs, some Hellen) #4885
  - Jammed ETB detection #4873
  - RPM correction/multiplier for Accel Enrich #4760
+ - Tooth logger writes to SD card #4897
 
 ## December 2022 Release - "Day 289"
 

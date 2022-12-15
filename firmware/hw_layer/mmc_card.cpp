@@ -19,6 +19,7 @@
 #include "buffered_writer.h"
 #include "status_loop.h"
 #include "binary_logging.h"
+#include "tooth_logger.h"
 
 static bool fs_ready = false;
 
@@ -182,7 +183,11 @@ static void prepareLogFileName() {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
 	}
 
-	strcat(ptr, DOT_MLG);
+	if (engineConfiguration->sdTriggerLog) {
+		strcat(ptr, ".teeth");
+	} else {
+		strcat(ptr, DOT_MLG);
+	}
 }
 
 /**
@@ -502,6 +507,11 @@ private:
 
 static NO_CACHE SdLogBufferWriter logBuffer;
 
+// Log 'regular' ECU log to MLG file
+static void mlgLogger();
+
+// Log binary trigger log
+static void sdTriggerLogger();
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
@@ -517,6 +527,14 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		engine->outputChannels.sd_logging_internal = true;
 	#endif
 
+	if (engineConfiguration->sdTriggerLog) {
+		sdTriggerLogger();
+	} else {
+		mlgLogger();
+	}
+}
+
+void mlgLogger() {
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
 		// Don't do this check at all if using SDMMC interface instead of SPI
@@ -549,6 +567,18 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 		auto period = 1e6 / freq;
 		chThdSleepMicroseconds((int)period);
+	}
+}
+
+static void sdTriggerLogger() {
+	EnableToothLogger();
+
+	while (true) {
+		auto buffer = GetToothLoggerBuffer();
+
+		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
+
+		ReturnToothLoggerBuffer(buffer);
 	}
 }
 
