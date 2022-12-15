@@ -1858,6 +1858,7 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
+		subMenu = alsDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 
 		menu = "Help"
@@ -2102,6 +2103,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Low flow coefficient", tChargeAirCoefMin
 		field = "High flow coefficient", tChargeAirCoefMax
 		field = "Max air flow", tChargeAirFlowMax
+
+	dialog = alsDialog, "Anti-Lag ALS"
+	    field = "Max Pedal Position", alsMinPps
+	    field = "Max Coolant", alsMaxClt
+		field = "Min RPM", alsMinRpm
+		field = "Max RPM", alsMaxRpm
+		field = "Max Duration", alsMaxDuration
+		field = "Min Timer Between Activations", alsMinTimeBetween
+		field = "ETB Position", alsEtbPosition
 
 	dialog = tChargeSettings, "Charge temperature estimation"
 		panel = tChargeGeneralSettings
