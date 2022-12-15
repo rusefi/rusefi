@@ -1,10 +1,10 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/antilag.txt Thu Dec 15 03:42:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/antilag.txt Wed Dec 14 22:50:16 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
 #include "rusefi_types.h"
-// start of anti_lag_s
-struct anti_lag_s {
+// start of antilag_s
+struct antilag_s {
 	/**
 	offset 0 bit 0 */
 	bool isCltAllowing : 1 {};
@@ -102,7 +102,7 @@ struct anti_lag_s {
 	offset 0 bit 31 */
 	bool unusedBit_1_31 : 1 {};
 };
-static_assert(sizeof(anti_lag_s) == 4);
+static_assert(sizeof(antilag_s) == 4);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/antilag.txt Thu Dec 15 03:42:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/antilag.txt Wed Dec 14 22:50:16 EST 2022
