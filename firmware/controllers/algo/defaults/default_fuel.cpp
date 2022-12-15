@@ -232,7 +232,7 @@ void setDefaultFuel() {
 	setRpmTableBin(config->injPhaseRpmBins);
 
 	setRpmTableBin(engineConfiguration->tpsTspCorrValuesBins);
-	setLinearCurve(engineConfiguration->tpsTspCorrValuesBins, 1, 1);
+	setLinearCurve(engineConfiguration->tpsTspCorrValues, 1, 1);
 
 	setDefaultVETable();
 	setDefaultLambdaTable();
