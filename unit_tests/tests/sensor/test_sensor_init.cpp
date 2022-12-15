@@ -192,6 +192,7 @@ TEST(SensorInit, Clt) {
 
 	// 2003 neon sensor
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
+	engineConfiguration->clt.adcChannel = EFI_ADC_6;
 
 	initThermistors();
 
@@ -220,6 +221,7 @@ TEST(SensorInit, Lambda) {
 
 TEST(SensorInit, Map) {
 	EngineTestHelper eth(TEST_ENGINE);
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
 	initMap();
 
