@@ -7,6 +7,7 @@
 #include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
 #include "fuel_computer.h"
+#include "antilag_generated.h"
 
 template<>
 const output_channels_s* getLiveData(size_t) {
@@ -48,6 +49,11 @@ const boost_control_s* getLiveData(size_t) {
 #else
 	return nullptr;
 #endif
+}
+
+template<>
+const antilag_s* getLiveData(size_t) {
+	return nullptr;
 }
 
 template<>
