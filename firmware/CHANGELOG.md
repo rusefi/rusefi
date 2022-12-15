@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Electronic throttle supply voltage compensation, giving more consistent behavior as battery voltage changes #4838
  - VR trigger input oscilloscope for boards with "discrete VR" hardware (AlphaX ECUs, some Hellen) #4885
  - Jammed ETB detection #4873
+ - RPM correction/multiplier for Accel Enrich #4760
 
 ## December 2022 Release - "Day 289"
 
