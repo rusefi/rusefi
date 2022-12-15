@@ -23,6 +23,7 @@ LDS_idle_state,
 LDS_ignition_state,
 LDS_electronic_throttle,
 LDS_wideband_state,
+LDS_antilag,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define KNOCK_CONTROLLER_BASE_ADDRESS 748
@@ -45,3 +46,4 @@ LDS_wideband_state,
 #define IGNITION_STATE_BASE_ADDRESS 1200
 #define ELECTRONIC_THROTTLE_BASE_ADDRESS 1216
 #define WIDEBAND_STATE_BASE_ADDRESS 1264
+#define ANTILAG_BASE_ADDRESS 1276

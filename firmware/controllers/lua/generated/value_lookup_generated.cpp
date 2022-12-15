@@ -1013,6 +1013,20 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tuneHidingKey;
 		case -1743759953:
 			return engineConfiguration->etbDutyShutdownThreshold;
+		case 1532957848:
+			return engineConfiguration->alsMinRpm;
+		case 1523829850:
+			return engineConfiguration->alsMaxRpm;
+		case 1830002033:
+			return engineConfiguration->alsMaxDuration;
+		case 1523813390:
+			return engineConfiguration->alsMaxClt;
+		case 1532955676:
+			return engineConfiguration->alsMinPps;
+		case -1118241790:
+			return engineConfiguration->alsMinTimeBetween;
+		case -731677323:
+			return engineConfiguration->alsEtbPosition;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3542,6 +3556,41 @@ void setConfigValueByName(const char *name, float value) {
 		case -1743759953:
 	{
 		engineConfiguration->etbDutyShutdownThreshold = value;
+		return;
+	}
+		case 1532957848:
+	{
+		engineConfiguration->alsMinRpm = (int)value;
+		return;
+	}
+		case 1523829850:
+	{
+		engineConfiguration->alsMaxRpm = (int)value;
+		return;
+	}
+		case 1830002033:
+	{
+		engineConfiguration->alsMaxDuration = value;
+		return;
+	}
+		case 1523813390:
+	{
+		engineConfiguration->alsMaxClt = (int)value;
+		return;
+	}
+		case 1532955676:
+	{
+		engineConfiguration->alsMinPps = (int)value;
+		return;
+	}
+		case -1118241790:
+	{
+		engineConfiguration->alsMinTimeBetween = (int)value;
+		return;
+	}
+		case -731677323:
+	{
+		engineConfiguration->alsEtbPosition = (int)value;
 		return;
 	}
 	}

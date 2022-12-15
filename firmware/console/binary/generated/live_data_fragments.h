@@ -27,3 +27,4 @@ decl_frag<electronic_throttle_s, 0>{},	// etb1
 // decl_frag<electronic_throttle_s, 1>{},	// etb2
 decl_frag<wideband_state_s, 0>{},	// wb1
 // decl_frag<wideband_state_s, 1>{},	// wb2
+decl_frag<antilag_s>{},

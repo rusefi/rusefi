@@ -124,3 +124,8 @@ Usages:
     java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
+
+  - name: antilag
+    java: AntiLag.java
+    folder: controllers/actuators
+    output_name: als

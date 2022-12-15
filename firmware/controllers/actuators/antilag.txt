@@ -1,0 +1,5 @@
+struct_no_prefix antilag_s
+
+bit isCltAllowing
+
+end_struct

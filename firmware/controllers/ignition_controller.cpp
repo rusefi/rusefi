@@ -3,7 +3,7 @@
 void IgnitionController::onSlowCallback() {
 	// default to 0 if failed sensor to prevent accidental ign-on if battery
 	// input misconfigured (or the ADC hasn't started yet)
-	auto hasIgnVoltage = Sensor::get(SensorType::BatteryVoltage).value_or(0) > 5;
+	auto hasIgnVoltage = Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
 
 	if (hasIgnVoltage) {
 		m_timeSinceIgnVoltage.reset();

@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_29628
-#define TS_SIGNATURE "rusEFI 2022.12.14.proteus_f7.snap_29628"
+#define SIGNATURE_HASH snap_42438
+#define TS_SIGNATURE "rusEFI 2022.12.15.proteus_f7.snap_42438"

@@ -53,7 +53,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		// User-configured hard RPM limit, either constant or CLT-lookup
 		// todo: migrate to engineState->desiredRpmLimit to get this variable logged
 		float revLimit = engineConfiguration->useCltBasedRpmLimit
-			? interpolate2d(Sensor::get(SensorType::Clt).value_or(0), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
+			? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
 
 		// Require 50 rpm drop before resuming
