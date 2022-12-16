@@ -43,6 +43,11 @@ Usages:
     java: LaunchControl.java
     folder: controllers/algo
 
+  - name: antilag_system_state
+    java: AntilagSystem.java
+    folder: controllers/algo
+    output_name: als
+
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
@@ -124,8 +129,3 @@ Usages:
     java: WidebandController.java
     folder: controllers/sensors/
     output_name: [ "wb1", "wb2" ]
-
-  - name: antilag
-    java: AntiLag.java
-    folder: controllers/actuators
-    output_name: als

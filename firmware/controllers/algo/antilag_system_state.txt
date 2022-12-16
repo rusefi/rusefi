@@ -1,0 +1,14 @@
+struct_no_prefix antilag_system_state_s
+
+bit isAntilagCondition
+bit ALSMinRPMCondition
+bit ALSMaxRPMCondition
+bit ALSMinCLTCondition
+bit ALSMaxCLTCondition
+bit ALSMaxTPSCondition
+bit AntilagcombinedConditions
+bit isALSSwitchActivated
+bit ALSActivatePinState
+bit ALSSwitchCondition
+
+end_struct
