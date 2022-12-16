@@ -21,6 +21,10 @@
 #define EFI_LAUNCH_CONTROL TRUE
 #endif
 
+#ifndef EFI_ANTILAG_SYSTEM
+#define EFI_ANTILAG_SYSTEM TRUE
+#endif
+
 #define EFI_DYNO_VIEW TRUE
 
 #ifndef EFI_CDM_INTEGRATION
