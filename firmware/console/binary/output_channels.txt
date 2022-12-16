@@ -12,7 +12,7 @@ struct_no_prefix output_channels_s
 bit sd_present
 bit sd_logging_internal
 bit triggerScopeReady
-bit unusedb5;
+bit antilagTriggered
 bit isFanOn;radiator fan
 bit isO2HeaterOn;
 bit checkEngine;
