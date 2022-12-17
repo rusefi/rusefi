@@ -299,7 +299,7 @@ public class BinaryProtocol {
                 return;
         }
         setController(image);
-        log.info("Got configuration from controller.");
+        log.info("Got configuration from controller " + size + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
@@ -334,6 +334,9 @@ public class BinaryProtocol {
             byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
+                if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
+                    throw new IllegalStateException("TS_RESPONSE_OUT_OF_RANGE ECU/console version mismatch?");
+                }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
@@ -360,7 +363,7 @@ public class BinaryProtocol {
     }
 
     private static String getCode(byte[] response) {
-        int b = response[0] & 0xff;
+        int b = extractCode(response);
         switch (b) {
             case TS_RESPONSE_CRC_FAILURE:
                 return "CRC_FAILURE";
@@ -374,6 +377,12 @@ public class BinaryProtocol {
                 return "TS_RESPONSE_UNDERRUN";
         }
         return Integer.toString(b);
+    }
+
+    private static int extractCode(byte[] response) {
+        if (response == null || response.length < 1)
+            return -1;
+        return response[0] & 0xff;
     }
 
     private ConfigurationImage getAndValidateLocallyCached() {
