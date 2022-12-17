@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Dec 15 12:38:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Dec 17 04:46:12 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4346,26 +4346,30 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
 	/**
+	rpm
 	 * offset 3876
 	 */
-	uint16_t alsMinRpm;
+	int16_t ALSMinRPM;
 	/**
+	rpm
 	 * offset 3878
 	 */
-	uint16_t alsMaxRpm;
+	int16_t ALSMaxRPM;
 	/**
 	sec
 	 * offset 3880
 	 */
 	float alsMaxDuration;
 	/**
+	C
 	 * offset 3884
 	 */
-	uint8_t alsMaxClt;
+	int8_t ALSMinCLT;
 	/**
+	C
 	 * offset 3885
 	 */
-	uint8_t alsMinPps;
+	int8_t ALSMaxCLT;
 	/**
 	 * offset 3886
 	 */
@@ -4375,10 +4379,40 @@ struct engine_configuration_s {
 	 */
 	uint8_t alsEtbPosition;
 	/**
-	units
+	deg
 	 * offset 3888
 	 */
-	uint8_t mainUnusedEnd[124];
+	int ALSTimingRetard;
+	/**
+	%
+	 * offset 3892
+	 */
+	int ALSIdleAdd;
+	/**
+	%
+	 * offset 3896
+	 */
+	int ALSEtbAdd;
+	/**
+	 * offset 3900
+	 */
+	int ALSSkipRatio;
+	/**
+	%
+	 * offset 3904
+	 */
+	uint8_t ALSMaxDriverThrottleIntent;
+	/**
+	units
+	 * offset 3905
+	 */
+	uint8_t mainUnusedEnd[106];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4011
+	 */
+	uint8_t alignmentFill_at_4011[1];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5151,4 +5185,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Dec 15 12:38:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Dec 17 04:46:12 UTC 2022

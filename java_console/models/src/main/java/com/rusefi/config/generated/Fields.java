@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 17 01:29:26 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 17 04:46:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.17.all.snap_11375";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.17.all.snap_12293";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -2450,11 +2450,17 @@ public class Fields {
 	public static final Field ALSMINRPM = Field.create("ALSMINRPM", 3876, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMAXRPM = Field.create("ALSMAXRPM", 3878, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMAXDURATION = Field.create("ALSMAXDURATION", 3880, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3884, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSMINPPS = Field.create("ALSMINPPS", 3885, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMINCLT = Field.create("ALSMINCLT", 3884, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3885, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3886, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3887, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3888, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSTIMINGRETARD = Field.create("ALSTIMINGRETARD", 3888, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3892, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSETBADD = Field.create("ALSETBADD", 3896, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3900, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXDRIVERTHROTTLEINTENT = Field.create("ALSMAXDRIVERTHROTTLEINTENT", 3904, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3905, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_4011 = Field.create("ALIGNMENTFILL_AT_4011", 4011, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3867,11 +3873,17 @@ public class Fields {
 	ALSMINRPM,
 	ALSMAXRPM,
 	ALSMAXDURATION,
+	ALSMINCLT,
 	ALSMAXCLT,
-	ALSMINPPS,
 	ALSMINTIMEBETWEEN,
 	ALSETBPOSITION,
+	ALSTIMINGRETARD,
+	ALSIDLEADD,
+	ALSETBADD,
+	ALSSKIPRATIO,
+	ALSMAXDRIVERTHROTTLEINTENT,
 	MAINUNUSEDEND,
+	ALIGNMENTFILL_AT_4011,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,
