@@ -1,5 +1,93 @@
 pins:
+  - pin: A8
+    function: R LSU Heater- (white)
+    color: white
 
+  - pin: A7
+    function: R LSU Ip (red)
+    color: red
+
+  - pin: A6
+    function: R LSU Un (black)
+    color: black
+
+  - pin: A5
+    function: R AUX analog in
+    class: analog_inputs
+
+  - pin: A4
+    function: L AUX analog in / 5V out
+    class: analog_inputs
+
+  - pin: A3
+    function: L LSU Ip (red)
+    color: red
+
+  - pin: A2
+    function: L LSU Un (black)
+    color: black
+
+  - pin: A1
+    function: R LSU Heater- (white)
+    color: white
+
+  - pin: B8
+    function: R AUX out OD
+    class: outputs
+
+  - pin: B7
+    function: R LSU Vm (yellow)
+    color: yellow
+
+  - pin: B6
+    function: R LSU Rtrim (green)
+    color: green
+
+  - pin: B5
+    function: AUX analog out 1
+
+  - pin: B4
+    function: AUX analog out 2
+
+  - pin: B3
+    function: L LSU Vm (yellow)
+    color: yellow
+
+  - pin: B2
+    function: L LSU Rtrim (green)
+    color: green
+
+  - pin: B1
+    function: L AUX out OD
+    class: outputs
+
+  - pin: C8
+    function: +12V
+    type: 12v
+    color: red
+
+  - pin: C7
+    function: R EGT+
+
+  - pin: C6
+    function: R EGT-
+
+  - pin: C5
+    function: CAN L
+
+  - pin: C4
+    function: CAN H
+
+  - pin: C3
+    function: L EGT+
+
+  - pin: C2
+    function: L EGT-
+
+  - pin: C1
+    function: GND
+    type: gnd
+    color: black
 
 info:
   title: lambda-x2
