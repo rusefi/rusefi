@@ -40,8 +40,7 @@ const launch_control_state_s* getLiveData(size_t) {
 template<>
 const antilag_system_state_s* getLiveData(size_t) {
 #if EFI_ANTILAG_SYSTEM
-	return nullptr;
-//	return &engine->antilagController;
+	return &engine->antilagController;
 #else
 	return nullptr;
 #endif
