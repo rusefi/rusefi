@@ -253,9 +253,11 @@ void Engine::updateSwitchInputs() {
 	}
 	engine->engineState.clutchUpState = getClutchUpState();
 
+#if EFI_IDLE_CONTROL
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
+#endif // EFI_IDLE_CONTROL
 
 	engine->engineState.brakePedalState = getBrakePedalState();
 
@@ -288,7 +290,9 @@ void Engine::resetLua() {
 #endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
+#if EFI_IDLE_CONTROL
 	module<IdleController>().unmock().luaAdd = 0;
+#endif // EFI_IDLE_CONTROL
 }
 
 /**

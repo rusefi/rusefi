@@ -742,10 +742,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 #endif // EFI_BOOST_CONTROL
+#if EFI_IDLE_CONTROL
 	lua_register(l, "setIdleAdd", [](lua_State* l) {
 		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+#endif
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
