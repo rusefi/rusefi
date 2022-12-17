@@ -8,8 +8,7 @@ import org.junit.Test;
 
 import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.IoUtil.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /*
  This test requires a particular hardware setup connected to a Proteus board.
@@ -27,7 +26,14 @@ public class ProteusAnalogTest extends RusefiTestBase {
         assertTrue(vbatt < 13);
     }
 
-    void setIdlePositionAndAssertTps(int idle, int expectedTps) {
+    // not really 'analog' test is this best but since we are unable to rebuild HW CI :(
+    @Test
+    public void testTextPull() {
+        String text = ecu.getLinkManager().getBinaryProtocol().requestPendingTextMessages();
+        assertNotNull("Not null text protocol response expected", text);
+    }
+
+    private void setIdlePositionAndAssertTps(int idle, int expectedTps) {
         ecu.sendCommand("set idle_position " + idle);
 
         // wait a sec for sensors to update
