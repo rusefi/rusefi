@@ -129,11 +129,13 @@ static void assertCloseTo(const char* msg, float actual, float expected) {
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
+#if EFI_SHAFT_POSITION_INPUT
 	// Re-read config in case it's changed
 	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	efiWatchdog();
 	updateSlowSensors();
@@ -205,13 +207,13 @@ void Engine::periodicSlowCallback() {
 void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
 	getEngineState()->sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 #if EFI_GPIO_HARDWARE
@@ -354,10 +356,12 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 #endif
 
 void Engine::injectEngineReferences() {
+#if EFI_SHAFT_POSITION_INPUT
 	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void Engine::setConfig() {
@@ -367,7 +371,7 @@ void Engine::setConfig() {
 }
 
 void Engine::efiWatchdog() {
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (isRunningPwmTest)
 		return;
 
@@ -413,7 +417,7 @@ void Engine::efiWatchdog() {
 #endif
 
 	enginePins.stopPins();
-#endif
+#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 }
 
 void Engine::checkShutdown() {
@@ -541,14 +545,17 @@ ExecutorInterface *getExecutorInterface() {
 	return &engine->executor;
 }
 
+#if EFI_SHAFT_POSITION_INPUT
 TriggerCentral * getTriggerCentral() {
 	return &engine->triggerCentral;
 }
+#endif // EFI_SHAFT_POSITION_INPUT
 
 LimpManager * getLimpManager() {
 	return &engine->module<LimpManager>().unmock();
 }
 
+#if EFI_ENGINE_CONTROL
 FuelSchedule *getFuelSchedule() {
 	return &engine->injectionEvents;
 }
@@ -556,3 +563,4 @@ FuelSchedule *getFuelSchedule() {
 IgnitionEventList *getIgnitionEvents() {
 	return &engine->ignitionEvents;
 }
+#endif // EFI_ENGINE_CONTROL

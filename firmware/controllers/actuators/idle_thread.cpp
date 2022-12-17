@@ -358,8 +358,10 @@ float IdleController::getIdlePosition(float rpm) {
 }
 
 void IdleController::onSlowCallback() {
+#if EFI_SHAFT_POSITION_INPUT
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
