@@ -28,6 +28,7 @@
 #include "idle_thread.h"
 #include "injector_model.h"
 #include "launch_control.h"
+#include "antilag_system.h"
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
 #include "main_relay.h"
@@ -162,6 +163,11 @@ public:
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
 #endif // EFI_LAUNCH_CONTROL
+
+#if EFI_ANTILAG_SYSTEM
+	AntilagSystemBase antilagController;
+	SoftSparkLimiter ALSsoftSparkLimiter;
+#endif // EFI_ANTILAG_SYSTEM
 
 #if EFI_BOOST_CONTROL
 	BoostController boostController;

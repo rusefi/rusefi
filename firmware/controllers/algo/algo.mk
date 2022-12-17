@@ -8,6 +8,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
 	$(PROJECT_DIR)/controllers/algo/wall_fuel.cpp \
 	$(PROJECT_DIR)/controllers/algo/launch_control.cpp \
+	$(PROJECT_DIR)/controllers/algo/antilag_system.cpp \
 	$(PROJECT_DIR)/controllers/algo/dynoview.cpp \
 	$(PROJECT_DIR)/controllers/algo/runtime_state.cpp \
 	$(PROJECT_DIR)/controllers/algo/engine_configuration.cpp \
