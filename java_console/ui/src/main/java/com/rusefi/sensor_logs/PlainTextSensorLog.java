@@ -58,6 +58,7 @@ public class PlainTextSensorLog implements SensorLog {
                     debugMode = ConfigField.getIntValue(ci, Fields.DEBUGMODE);
                 }
             }
+            // todo: kill debug mode!
             System.out.println("debug mode " + debugMode);
             logFile.write("Time\t");
             for (Sensor sensor : SensorLogger.SENSORS) {
