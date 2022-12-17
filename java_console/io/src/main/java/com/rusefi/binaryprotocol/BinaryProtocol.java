@@ -573,7 +573,7 @@ public class BinaryProtocol {
         return text.getBytes();
     }
 
-    private String requestPendingTextMessages() {
+    public String requestPendingTextMessages() {
         if (isClosed)
             return null;
         try {
