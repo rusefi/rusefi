@@ -606,10 +606,12 @@ void EtbController::update() {
 	}
 
 	TpsState localReason = TpsState::None;
-	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
-		localReason = TpsState::EngineStopped;
-	} else if (etbTpsErrorCounter > 50) {
+	if (etbTpsErrorCounter > 50) {
 		localReason = TpsState::IntermittentTps;
+#if EFI_SHAFT_POSITION_INPUT
+	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+		localReason = TpsState::EngineStopped;
+#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > 50) {
 		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {

@@ -104,9 +104,11 @@ angle_t getAdvanceCorrections(int rpm) {
 		);
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
 	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
+#endif // EFI_SHAFT_POSITION_INPUT
 
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
