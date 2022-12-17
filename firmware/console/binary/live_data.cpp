@@ -7,7 +7,7 @@
 #include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
 #include "fuel_computer.h"
-#include "antilag_generated.h"
+#include "antilag_system_state_generated.h"
 
 template<>
 const output_channels_s* getLiveData(size_t) {
