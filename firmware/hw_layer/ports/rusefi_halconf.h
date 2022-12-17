@@ -31,7 +31,7 @@
 
 // If USB and File logging, enable USB Mass Storage & community
 #define HAL_USE_USB_MSD (EFI_FILE_LOGGING && EFI_USB_SERIAL)
-#define HAL_USE_COMMUNITY (EFI_FILE_LOGGING && EFI_USB_SERIAL)
+#define HAL_USE_COMMUNITY (EFI_FILE_LOGGING && EFI_USB_SERIAL) || HAL_USE_EEPROM
 #define USB_MSD_LUN_COUNT 2
 
 // only the MSD driver requires USB_USE_WAIT
