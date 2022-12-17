@@ -220,20 +220,29 @@ public class BinaryProtocol {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
+                            private final boolean verbose = false; // todo: programmatically detect run under gradle?
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
+                                if (verbose)
+                                    System.out.println("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
                                 if (linkManager.isNeedPullText()) {
-                                    String text = requestPendingMessages();
-                                    if (text != null)
+                                    String text = requestPendingTextMessages();
+                                    if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
+                                        if (verbose)
+                                            System.out.println("textListener");
+                                    }
                                 }
+
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
+                                    if (verbose)
+                                        System.out.println("Got livedata");
                                 }
                             }
                         });
@@ -564,13 +573,19 @@ public class BinaryProtocol {
         return text.getBytes();
     }
 
-    private String requestPendingMessages() {
+    private String requestPendingTextMessages() {
         if (isClosed)
             return null;
         try {
             byte[] response = executeCommand(Fields.TS_GET_TEXT, "text");
-            if (response != null && response.length == 1)
+            if (response == null) {
+                log.error("ERROR: TS_GET_TEXT failed");
+                return null;
+            }
+            if (response != null && response.length == 1) {
+                // todo: what is this sleep doing exactly?
                 Thread.sleep(100);
+            }
             return new String(response, 1, response.length - 1);
         } catch (InterruptedException e) {
             log.error(e.toString());
