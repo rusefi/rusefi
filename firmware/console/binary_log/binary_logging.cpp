@@ -10,6 +10,8 @@
 #include "buffered_writer.h"
 #include "tunerstudio.h"
 
+#if EFI_FILE_LOGGING
+
 #define TIME_PRECISION 1000
 
 // floating number of seconds with millisecond precision
@@ -27,7 +29,6 @@ static constexpr uint16_t computeFieldsRecordLength() {
 	return recLength;
 }
 
-#if EFI_FILE_LOGGING
 static uint64_t binaryLogCount = 0;
 
 extern bool main_loop_started;
