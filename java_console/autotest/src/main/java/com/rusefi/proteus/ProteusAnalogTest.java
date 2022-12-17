@@ -6,6 +6,10 @@ import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.IoUtil.*;
 import static org.junit.Assert.*;
@@ -26,11 +30,18 @@ public class ProteusAnalogTest extends RusefiTestBase {
         assertTrue(vbatt < 13);
     }
 
-    // not really 'analog' test is this best but since we are unable to rebuild HW CI :(
+    // not really 'analog' test. Not the best placement since we are unable to rebuild discovery HW CI :(
     @Test
-    public void testTextPull() {
-        String text = ecu.getLinkManager().getBinaryProtocol().requestPendingTextMessages();
-        assertNotNull("Not null text protocol response expected", text);
+    public void testTextPull() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<String> textReference = new AtomicReference<>();
+        ecu.getLinkManager().submit(() -> {
+            String pendingTextMessages = ecu.getLinkManager().getBinaryProtocol().requestPendingTextMessages();
+            textReference.set(pendingTextMessages);
+            latch.countDown();
+        });
+        latch.await(60, TimeUnit.SECONDS);
+        assertNotNull("Not null text protocol response expected", textReference.get());
     }
 
     private void setIdlePositionAndAssertTps(int idle, int expectedTps) {
