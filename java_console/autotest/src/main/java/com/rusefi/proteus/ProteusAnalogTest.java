@@ -33,6 +33,11 @@ public class ProteusAnalogTest extends RusefiTestBase {
     // not really 'analog' test. Not the best placement since we are unable to rebuild discovery HW CI :(
     @Test
     public void testTextPull() throws InterruptedException {
+        requestText();
+        requestText();
+    }
+
+    private void requestText() throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<String> textReference = new AtomicReference<>();
         ecu.getLinkManager().submit(() -> {
