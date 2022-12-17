@@ -1,6 +1,7 @@
 package com.rusefi.proteus;
 
 import com.rusefi.RusefiTestBase;
+import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
@@ -34,6 +35,13 @@ public class ProteusAnalogTest extends RusefiTestBase {
     @Test
     public void testTextPull() throws InterruptedException {
         requestText();
+        BinaryProtocolLogger logger = new BinaryProtocolLogger(ecu.getLinkManager());
+        ecu.getLinkManager().submit(new Runnable() {
+            @Override
+            public void run() {
+                logger.compositeLogic(ecu.getLinkManager().getBinaryProtocol());
+            }
+        });
         requestText();
     }
 
