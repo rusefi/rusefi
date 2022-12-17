@@ -38,6 +38,16 @@ const launch_control_state_s* getLiveData(size_t) {
 }
 
 template<>
+const antilag_system_state_s* getLiveData(size_t) {
+#if EFI_ANTILAG_SYSTEM
+	return nullptr;
+//	return &engine->antilagController;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
 const injector_model_s* getLiveData(size_t) {
 	return &engine->module<InjectorModel>().unmock();
 }
@@ -49,11 +59,6 @@ const boost_control_s* getLiveData(size_t) {
 #else
 	return nullptr;
 #endif
-}
-
-template<>
-const antilag_s* getLiveData(size_t) {
-	return nullptr;
 }
 
 template<>
