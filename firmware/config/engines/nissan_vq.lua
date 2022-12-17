@@ -33,7 +33,7 @@ function onTick()
     PPS = (PPS == nil and 0 or PPS)
     -- print ("MAF " .. MAF .. " TPS " .. TPS .. " PPS " .. PPS)
     local rpmValue = math.floor(getSensor("RPM") + 0.5)
-	local RPMread = rpmValue / 3.15
+	local RPMread = rpmValue / 3.125
 	local RPMhi = RPMread / 256
 	local RPMlo = RPMread
 	cltValue = getSensor("CLT")
