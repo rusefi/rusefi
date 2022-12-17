@@ -806,6 +806,10 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		}
 
 		break;
+#else // EFI_TOOTH_LOGGER
+	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		break;
 #endif /* EFI_TOOTH_LOGGER */
 #if ENABLE_PERF_TRACE
 	case TS_PERF_TRACE_BEGIN:
@@ -833,7 +837,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	}
 	default:
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		tunerStudioError(tsChannel, "ERROR: ignoring unexpected command");
+static char tsErrorBuff[80];
+		chsnprintf(tsErrorBuff, sizeof(tsErrorBuff), "ERROR: ignoring unexpected command %d [%c]", command, command);
+		tunerStudioError(tsChannel, tsErrorBuff);
 		return false;
 	}
 
