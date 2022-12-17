@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 10 23:00:29 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 17 01:28:43 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -45,7 +45,7 @@ struct output_channels_s {
 	bool triggerScopeReady : 1 {};
 	/**
 	offset 0 bit 3 */
-	bool unusedb5 : 1 {};
+	bool antilagTriggered : 1 {};
 	/**
 	 * radiator fan
 	offset 0 bit 4 */
@@ -1379,4 +1379,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 748);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 10 23:00:29 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 17 01:28:43 UTC 2022
