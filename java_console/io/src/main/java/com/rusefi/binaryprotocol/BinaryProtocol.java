@@ -113,7 +113,6 @@ public class BinaryProtocol {
 
         incomingData = stream.getDataBuffer();
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
-        binaryProtocolLogger.needCompositeLogger = linkManager.getCompositeLogicEnabled();
     }
 
     public static void sleep(long millis) {
