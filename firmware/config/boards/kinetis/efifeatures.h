@@ -7,8 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#ifndef EFIFEATURES_H_
-#define EFIFEATURES_H_
+#pragma once
 
 #define EFI_GPIO_HARDWARE TRUE
 
@@ -27,7 +26,7 @@
 #define EFI_HPFP FALSE
 
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP FALSE
-#define EFI_ENABLE_ENGINE_WARNING TRUE
+#define EFI_ENABLE_ENGINE_WARNING FALSE
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -147,7 +146,7 @@
 #define EFI_LCD FALSE
 
 #ifndef EFI_IDLE_CONTROL
-#define EFI_IDLE_CONTROL TRUE
+#define EFI_IDLE_CONTROL FALSE
 #endif
 
 #define EFI_IDLE_PID_CIC FALSE
@@ -155,7 +154,7 @@
 /**
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
-#define EFI_MAIN_RELAY_CONTROL TRUE
+#define EFI_MAIN_RELAY_CONTROL FALSE
 
 #ifndef EFI_PWM
 #define EFI_PWM FALSE
@@ -355,6 +354,3 @@
 		uart_lld_blocking_send(TS_PRIMARY_PORT, strlen(__debugBuffer), (void *)__debugBuffer); \
 	} \
 }
-
-
-#endif /* EFIFEATURES_H_ */

@@ -140,7 +140,11 @@ const wall_fuel_state_s* getLiveData(size_t) {
 
 template<>
 const idle_state_s* getLiveData(size_t) {
+#if EFI_IDLE_CONTROL
 	return &engine->module<IdleController>().unmock();
+#else
+	return nullptr;
+#endif
 }
 
 template<>
