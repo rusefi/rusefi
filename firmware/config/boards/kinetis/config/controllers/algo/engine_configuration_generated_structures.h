@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:55:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 17 05:11:56 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5181,7 +5181,7 @@ struct persistent_config_s {
 	deg
 	 * offset 21296
 	 */
-	scaled_channel<int16_t, 10, 1> ALSTimingRetard[4][4];
+	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[4][4];
 	/**
 	TPS
 	 * offset 21328
@@ -5219,4 +5219,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:55:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 17 05:11:56 UTC 2022
