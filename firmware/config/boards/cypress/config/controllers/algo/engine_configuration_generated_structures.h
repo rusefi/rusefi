@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:46:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:55:49 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2249,7 +2249,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 984
 	 */
-	switch_input_pin_e antiLagActivatePin;
+	switch_input_pin_e ALSActivatePin;
 	/**
 	 * offset 986
 	 */
@@ -4403,10 +4403,14 @@ struct engine_configuration_s {
 	 */
 	uint8_t ALSMaxDriverThrottleIntent;
 	/**
-	units
 	 * offset 3905
 	 */
-	uint8_t mainUnusedEnd[106];
+	pin_input_mode_e ALSActivatePinMode;
+	/**
+	units
+	 * offset 3906
+	 */
+	uint8_t mainUnusedEnd[105];
 	/**
 	 * need 4 byte alignment
 	units
@@ -5174,15 +5178,45 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[6];
 	/**
+	deg
 	 * offset 21296
+	 */
+	scaled_channel<int16_t, 10, 1> ALSTimingRetard[4][4];
+	/**
+	TPS
+	 * offset 21328
+	 */
+	uint16_t alsIgnRetardLoadBins[4];
+	/**
+	RPM
+	 * offset 21336
+	 */
+	uint16_t alsIgnRetardrpmBins[4];
+	/**
+	deg
+	 * offset 21344
+	 */
+	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[4][4];
+	/**
+	TPS
+	 * offset 21376
+	 */
+	uint16_t alsFuelAdjustmentLoadBins[4];
+	/**
+	RPM
+	 * offset 21384
+	 */
+	uint16_t alsFuelAdjustmentrpmBins[4];
+	/**
+	 * offset 21392
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
 	/**
-	 * offset 22048
+	 * offset 22144
 	 */
 	blend_table_s veBlends[VE_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 22800);
+static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:46:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 04:55:49 UTC 2022
