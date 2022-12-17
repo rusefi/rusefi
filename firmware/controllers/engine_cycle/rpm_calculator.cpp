@@ -19,12 +19,9 @@
 #include "trigger_central.h"
 #include "tooth_logger.h"
 
-#if EFI_PROD_CODE
-#endif /* EFI_PROD_CODE */
-
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
-#endif
+#endif // EFI_SENSOR_CHART
 
 #include "engine_sniffer.h"
 
@@ -62,6 +59,30 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) const {
 float RpmCalculator::getCachedRpm() const {
 	return cachedRpmValue;
 }
+
+operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
+// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
+operation_mode_e RpmCalculator::getOperationMode() const {
+#if EFI_SHAFT_POSITION_INPUT
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return engine->triggerCentral.triggerShape.getWheelOperationMode();
+	} else
+#endif // EFI_SHAFT_POSITION_INPUT
+	{
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
+}
+
 
 #if EFI_SHAFT_POSITION_INPUT
 
@@ -115,26 +136,6 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 			return false;
 		default:
 			return true;
-	}
-}
-
-operation_mode_e lookupOperationMode() {
-	if (engineConfiguration->twoStroke) {
-		return TWO_STROKE;
-	} else {
-		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
-	}
-}
-
-// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
-operation_mode_e RpmCalculator::getOperationMode() const {
-	// Ignore user-provided setting for well known triggers.
-	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
-		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return engine->triggerCentral.triggerShape.getWheelOperationMode();
-	} else {
-		// For example 36-1, could be on either cam or crank, so we have to ask the user
-		return lookupOperationMode();
 	}
 }
 

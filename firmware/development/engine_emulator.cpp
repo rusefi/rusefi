@@ -22,5 +22,7 @@ void initEngineEmulator() {
 	initPotentiometers();
 #endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
+#if EFI_EMULATE_POSITION_SENSORS
 	initTriggerEmulator();
+#endif // EFI_EMULATE_POSITION_SENSORS
 }

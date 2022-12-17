@@ -575,6 +575,7 @@ void mlgLogger() {
 }
 
 static void sdTriggerLogger() {
+#if EFI_TOOTH_LOGGER
 	EnableToothLogger();
 
 	while (true) {
@@ -584,6 +585,7 @@ static void sdTriggerLogger() {
 
 		ReturnToothLoggerBuffer(buffer);
 	}
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 bool isSdCardAlive(void) {
