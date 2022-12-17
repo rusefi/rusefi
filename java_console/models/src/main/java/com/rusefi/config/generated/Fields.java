@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 17 04:56:28 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 17 05:12:38 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.17.all.snap_7066";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.17.all.snap_49899";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
@@ -2621,7 +2621,7 @@ public class Fields {
 	public static final Field MAXKNOCKRETARDTABLE = Field.create("MAXKNOCKRETARDTABLE", 21248, FieldType.INT8).setScale(0.25).setBaseOffset(0);
 	public static final Field MAXKNOCKRETARDLOADBINS = Field.create("MAXKNOCKRETARDLOADBINS", 21284, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXKNOCKRETARDRPMBINS = Field.create("MAXKNOCKRETARDRPMBINS", 21290, FieldType.INT8).setScale(100.0).setBaseOffset(0);
-	public static final Field ALSTIMINGRETARD = Field.create("ALSTIMINGRETARD", 21296, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field ALSTIMINGRETARDTABLE = Field.create("ALSTIMINGRETARDTABLE", 21296, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field ALSIGNRETARDLOADBINS = Field.create("ALSIGNRETARDLOADBINS", 21328, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSIGNRETARDRPMBINS = Field.create("ALSIGNRETARDRPMBINS", 21336, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSFUELADJUSTMENT = Field.create("ALSFUELADJUSTMENT", 21344, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -4051,7 +4051,7 @@ public class Fields {
 	MAXKNOCKRETARDTABLE,
 	MAXKNOCKRETARDLOADBINS,
 	MAXKNOCKRETARDRPMBINS,
-	ALSTIMINGRETARD,
+	ALSTIMINGRETARDTABLE,
 	ALSIGNRETARDLOADBINS,
 	ALSIGNRETARDRPMBINS,
 	ALSFUELADJUSTMENT,
