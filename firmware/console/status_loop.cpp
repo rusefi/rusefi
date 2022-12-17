@@ -765,15 +765,15 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
-		postCanState();
+	postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
-		tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
-		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
+	tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
 #endif /* EFI_CLOCK_LOCKS */
 
 #if EFI_SHAFT_POSITION_INPUT
+	tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 	tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 
