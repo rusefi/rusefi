@@ -1,0 +1,84 @@
+pins:
+
+
+info:
+  title: lambda-x2
+  name: lambda-x2
+  board_url: https://github.com/rusefi/rusefi-hardware/tree/main/lambda-x2
+  image:
+    file: alphax-2chan.jpg
+  pins:
+    - pin: A8
+      x: 316
+      y: 239
+    - pin: A7
+      x: 413
+      y: 239
+    - pin: A6
+      x: 489
+      y: 239
+    - pin: A5
+      x: 564
+      y: 239
+    - pin: A4
+      x: 635
+      y: 239
+    - pin: A3
+      x: 710
+      y: 239
+    - pin: A2
+      x: 786
+      y: 239
+    - pin: A1
+      x: 882
+      y: 239
+
+    - pin: B8
+      x: 316
+      y: 352
+    - pin: B7
+      x: 413
+      y: 352
+    - pin: B6
+      x: 489
+      y: 352
+    - pin: B5
+      x: 564
+      y: 352
+    - pin: B4
+      x: 635
+      y: 352
+    - pin: B3
+      x: 710
+      y: 352
+    - pin: B2
+      x: 786
+      y: 352
+    - pin: B1
+      x: 882
+      y: 352
+
+    - pin: C8
+      x: 316
+      y: 466
+    - pin: C7
+      x: 413
+      y: 466
+    - pin: C6
+      x: 489
+      y: 466
+    - pin: C5
+      x: 564
+      y: 466
+    - pin: C4
+      x: 635
+      y: 466
+    - pin: C3
+      x: 710
+      y: 466
+    - pin: C2
+      x: 786
+      y: 466
+    - pin: C1
+      x: 882
+      y: 466
