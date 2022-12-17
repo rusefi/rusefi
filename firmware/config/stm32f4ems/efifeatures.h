@@ -41,7 +41,9 @@
 
 #define EFI_ACTIVE_CONFIGURATION_IN_FLASH FALSE
 
+#ifndef EFI_MC33816
 #define EFI_MC33816 TRUE
+#endif
 
 #ifndef EFI_HPFP
 #define EFI_HPFP TRUE
