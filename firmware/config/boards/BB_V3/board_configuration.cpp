@@ -137,7 +137,7 @@ void setBoardDefaultConfiguration(void) {
 	setLedPins();
 
 	
-	engineConfiguration->sdCardPeriodMs = 50;
+	//engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = true;
 
 
