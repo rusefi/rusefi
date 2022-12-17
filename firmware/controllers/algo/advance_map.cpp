@@ -63,6 +63,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	}
 
 	// get advance from the separate table for Idle
+#if EFI_IDLE_CONTROL
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
 	    engine->module<IdleController>()->isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
@@ -73,6 +74,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps.Value);
 		}
 	}
+#endif
 
 #if EFI_LAUNCH_CONTROL
 	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
@@ -104,11 +106,11 @@ angle_t getAdvanceCorrections(int rpm) {
 		);
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
 	float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
 
 	engine->engineState.timingPidCorrection = engine->module<IdleController>()->getIdleTimingAdjustment(instantRpm);
-#endif // EFI_SHAFT_POSITION_INPUT
+#endif // EFI_SHAFT_POSITION_INPUT && EFI_IDLE_CONTROL
 
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
