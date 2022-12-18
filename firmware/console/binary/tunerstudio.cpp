@@ -749,7 +749,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			break;
 		case TS_COMPOSITE_READ:
 			{
-				auto toothBuffer = GetToothLoggerBuffer();
+				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 				if (toothBuffer) {
 					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
@@ -793,7 +793,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		{
 			EnableToothLoggerIfNotEnabled();
 
-			auto toothBuffer = GetToothLoggerBuffer();
+			auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 			if (toothBuffer) {
 				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);

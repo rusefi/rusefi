@@ -127,9 +127,9 @@ void DisableToothLogger() {
 	setToothLogReady(false);
 }
 
-CompositeBuffer* GetToothLoggerBuffer() {
+static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	CompositeBuffer* buffer;
-	msg_t msg = filledBuffers.fetch(&buffer, TIME_INFINITE);
+	msg_t msg = filledBuffers.fetch(&buffer, timeout);
 
 	if (msg == MSG_TIMEOUT) {
 		setToothLogReady(false);
@@ -142,6 +142,14 @@ CompositeBuffer* GetToothLoggerBuffer() {
 	}
 
 	return buffer;
+}
+
+CompositeBuffer* GetToothLoggerBufferNonblocking() {
+	return GetToothLoggerBufferImpl(TIME_IMMEDIATE);
+}
+
+CompositeBuffer* GetToothLoggerBufferBlocking() {
+	return GetToothLoggerBufferImpl(TIME_INFINITE);
 }
 
 void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
