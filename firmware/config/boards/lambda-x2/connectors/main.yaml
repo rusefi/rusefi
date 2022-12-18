@@ -28,7 +28,7 @@ pins:
     color: black
 
   - pin: A1
-    function: R LSU Heater- (white)
+    function: L LSU Heater- (white)
     color: white
 
   - pin: B8
