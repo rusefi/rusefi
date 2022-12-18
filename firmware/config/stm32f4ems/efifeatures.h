@@ -275,6 +275,7 @@
 
 /**
  * Do we need file logging (like SD card) logic?
+ * See also USE_FATFS
  */
 #ifndef EFI_FILE_LOGGING
 #define EFI_FILE_LOGGING TRUE
