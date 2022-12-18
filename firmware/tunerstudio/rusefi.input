@@ -3045,26 +3045,38 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Idle Solenoid output(s) Mode",		idle_solenoidPinMode, !useStepperIdle
 		field = "Idle Solenoid Frequency",				idle_solenoidFrequency, !useStepperIdle
 
-	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
-		field = "Two-wire mode",						etb_use_two_wires
+	dialog = etbHbridgeHardwareNo1, "H-Bridge Hardware No1"
 		field = "No1 Direction #1",						etbIo1_directionPin1
 		field = "No1 Direction #2",						etbIo1_directionPin2
 		field = "No1 Control",							etbIo1_controlPin
 		field = "No1 Disable",							etbIo1_disablePin
+
+	dialog = etbHbridgeHardwareNo2, "H-Bridge Hardware No2"
 		field = "No2 Direction #1",						etbIo2_directionPin1
 		field = "No2 Direction #2",						etbIo2_directionPin2
 		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
-	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
-		topicHelp = "stepperHbridgeHardwareHelp"
-		field = "Inverted driver pins",					stepperDcInvertedPins
+	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
+		field = "Two-wire mode",						etb_use_two_wires
+		panel = etbHbridgeHardwareNo1, { etbFunctions1 != @@etb_function_e_ETB_None@@ }
+		panel = etbHbridgeHardwareNo2, { etbFunctions2 != @@etb_function_e_ETB_None@@ }
+
+	dialog = stepperHbridgeHardwareNo1, "H-Bridge Hardware No1"
 		field = "No1 Direction #1",						stepperDcIo1_directionPin1
 		field = "No1 Direction #2",						stepperDcIo1_directionPin2
 		field = "No1 Disable",							stepperDcIo1_disablePin
+
+	dialog = stepperHbridgeHardwareNo2, "H-Bridge Hardware No2"
 		field = "No2 Direction #1",						stepperDcIo2_directionPin1
 		field = "No2 Direction #2",						stepperDcIo2_directionPin2
 		field = "No2 Disable",							stepperDcIo2_disablePin
+	
+	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		topicHelp = "stepperHbridgeHardwareHelp"
+		field = "Inverted driver pins",					stepperDcInvertedPins
+		panel = stepperHbridgeHardwareNo1, { etbFunctions1 != @@etb_function_e_ETB_None@@ }
+		panel = stepperHbridgeHardwareNo2, { etbFunctions2 != @@etb_function_e_ETB_None@@ }
 
 	dialog = idleStepperHw, "Stepper Controller Hardware"
 		topicHelp = "idleStepperHwHelp"
