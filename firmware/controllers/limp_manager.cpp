@@ -68,6 +68,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
 			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
@@ -77,6 +78,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::EnginePhase);
 		allowSpark.clear(ClearReason::EnginePhase);
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {

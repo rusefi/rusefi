@@ -1016,19 +1016,29 @@ float getConfigValueByName(const char *name) {
 		case -1743759953:
 			return engineConfiguration->etbDutyShutdownThreshold;
 		case 1532957848:
-			return engineConfiguration->alsMinRpm;
+			return engineConfiguration->ALSMinRPM;
 		case 1523829850:
-			return engineConfiguration->alsMaxRpm;
+			return engineConfiguration->ALSMaxRPM;
 		case 1830002033:
 			return engineConfiguration->alsMaxDuration;
+		case 1532941388:
+			return engineConfiguration->ALSMinCLT;
 		case 1523813390:
-			return engineConfiguration->alsMaxClt;
-		case 1532955676:
-			return engineConfiguration->alsMinPps;
+			return engineConfiguration->ALSMaxCLT;
 		case -1118241790:
 			return engineConfiguration->alsMinTimeBetween;
 		case -731677323:
 			return engineConfiguration->alsEtbPosition;
+		case 220143119:
+			return engineConfiguration->ALSTimingRetard;
+		case -2021435668:
+			return engineConfiguration->ALSIdleAdd;
+		case 1232469673:
+			return engineConfiguration->ALSEtbAdd;
+		case -1404414917:
+			return engineConfiguration->ALSSkipRatio;
+		case 612659807:
+			return engineConfiguration->ALSMaxDriverThrottleIntent;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -3567,12 +3577,12 @@ void setConfigValueByName(const char *name, float value) {
 	}
 		case 1532957848:
 	{
-		engineConfiguration->alsMinRpm = (int)value;
+		engineConfiguration->ALSMinRPM = (int)value;
 		return;
 	}
 		case 1523829850:
 	{
-		engineConfiguration->alsMaxRpm = (int)value;
+		engineConfiguration->ALSMaxRPM = (int)value;
 		return;
 	}
 		case 1830002033:
@@ -3580,14 +3590,14 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->alsMaxDuration = value;
 		return;
 	}
-		case 1523813390:
+		case 1532941388:
 	{
-		engineConfiguration->alsMaxClt = (int)value;
+		engineConfiguration->ALSMinCLT = (int)value;
 		return;
 	}
-		case 1532955676:
+		case 1523813390:
 	{
-		engineConfiguration->alsMinPps = (int)value;
+		engineConfiguration->ALSMaxCLT = (int)value;
 		return;
 	}
 		case -1118241790:
@@ -3598,6 +3608,31 @@ void setConfigValueByName(const char *name, float value) {
 		case -731677323:
 	{
 		engineConfiguration->alsEtbPosition = (int)value;
+		return;
+	}
+		case 220143119:
+	{
+		engineConfiguration->ALSTimingRetard = (int)value;
+		return;
+	}
+		case -2021435668:
+	{
+		engineConfiguration->ALSIdleAdd = (int)value;
+		return;
+	}
+		case 1232469673:
+	{
+		engineConfiguration->ALSEtbAdd = (int)value;
+		return;
+	}
+		case -1404414917:
+	{
+		engineConfiguration->ALSSkipRatio = (int)value;
+		return;
+	}
+		case 612659807:
+	{
+		engineConfiguration->ALSMaxDriverThrottleIntent = (int)value;
 		return;
 	}
 	}

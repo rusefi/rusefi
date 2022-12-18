@@ -34,6 +34,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return Sensor::get(SensorType::AcceleratorPedal);
 	case GPPWM_Vbatt:
 		return Sensor::get(SensorType::BatteryVoltage);
+#if EFI_SHAFT_POSITION_INPUT
 	case GPPWM_VVT_1I:
 		return engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 	case GPPWM_VVT_1E:
@@ -42,6 +43,13 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
 	case GPPWM_VVT_2E:
 		return engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
+#else
+	case GPPWM_VVT_1I:
+	case GPPWM_VVT_1E:
+	case GPPWM_VVT_2I:
+	case GPPWM_VVT_2E:
+		return 0;
+#endif // EFI_SHAFT_POSITION_INPUT
 	case GPPWM_EthanolPercent:
 		return Sensor::get(SensorType::FuelEthanolPercent);
 	case GPPWM_AuxLinear1:

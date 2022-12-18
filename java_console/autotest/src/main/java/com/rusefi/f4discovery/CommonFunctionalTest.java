@@ -13,12 +13,11 @@ import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.assertNull;
-import static com.rusefi.config.generated.Fields.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * rusEfi firmware simulator functional test suite
+ * rusEFI firmware simulator functional test suite
  * <p/>
  * java -cp rusefi_console.jar com.rusefi.AutoTest
  *

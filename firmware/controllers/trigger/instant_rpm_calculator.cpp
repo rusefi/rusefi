@@ -11,6 +11,8 @@
  */
 #include "engine_state.h"
 
+#if EFI_SHAFT_POSITION_INPUT
+
 InstantRpmCalculator::InstantRpmCalculator() :
 			//https://en.cppreference.com/w/cpp/language/zero_initialization
 			timeOfLastEvent()
@@ -135,3 +137,5 @@ void InstantRpmCalculator::updateInstantRpm(
 	}
 #endif /* EFI_SENSOR_CHART */
 }
+
+#endif // EFI_SHAFT_POSITION_INPUT

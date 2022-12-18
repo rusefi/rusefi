@@ -5,6 +5,7 @@ decl_frag<high_pressure_fuel_pump_s>{},
 decl_frag<injector_model_s>{},
 decl_frag<fuel_computer_s>{},
 decl_frag<launch_control_state_s>{},
+decl_frag<antilag_system_state_s>{},
 decl_frag<boost_control_s>{},
 decl_frag<ac_control_s>{},
 decl_frag<fan_control_s, 0>{},	// fan1
@@ -27,4 +28,3 @@ decl_frag<electronic_throttle_s, 0>{},	// etb1
 // decl_frag<electronic_throttle_s, 1>{},	// etb2
 decl_frag<wideband_state_s, 0>{},	// wb1
 // decl_frag<wideband_state_s, 1>{},	// wb2
-decl_frag<antilag_s>{},

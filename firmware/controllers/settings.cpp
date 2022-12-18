@@ -659,10 +659,12 @@ static void setSpiMode(int index, bool mode) {
 }
 
 static void enableOrDisable(const char *param, bool isEnabled) {
-	if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
-		getTriggerCentral()->hwTriggerInputEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
+	if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
+#if EFI_SHAFT_POSITION_INPUT
+	} else if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
+		getTriggerCentral()->hwTriggerInputEnabled = isEnabled;
+#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
@@ -811,8 +813,10 @@ static void getValue(const char *paramStr) {
 		efiPrintf("tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
 		efiPrintf("global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+#if EFI_SHAFT_POSITION_INPUT
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
 		efiPrintf("trigger_hw_input=%s", boolToString(getTriggerCentral()->hwTriggerInputEnabled));
+#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
 		efiPrintf("is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {

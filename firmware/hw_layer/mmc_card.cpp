@@ -369,10 +369,14 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 }
 #endif /* HAL_USE_MMC_SPI */
 
+#ifndef RE_SDC_MODE
+#define RE_SDC_MODE SDC_MODE_4BIT
+#endif // RE_SDC_MODE
+
 // Some ECUs are wired for SDIO/SDMMC instead of SPI
 #ifdef EFI_SDC_DEVICE
 static const SDCConfig sdcConfig = {
-	SDC_MODE_4BIT
+	RE_SDC_MODE
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
@@ -571,15 +575,17 @@ void mlgLogger() {
 }
 
 static void sdTriggerLogger() {
+#if EFI_TOOTH_LOGGER
 	EnableToothLogger();
 
 	while (true) {
-		auto buffer = GetToothLoggerBuffer();
+		auto buffer = GetToothLoggerBufferBlocking();
 
 		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
 
 		ReturnToothLoggerBuffer(buffer);
 	}
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 bool isSdCardAlive(void) {

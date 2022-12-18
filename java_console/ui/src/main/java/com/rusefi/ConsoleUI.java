@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
@@ -62,6 +63,10 @@ public class ConsoleUI {
     }
 
     public ConsoleUI(String port) {
+        CommandQueue.ERROR_HANDLER = e -> SwingUtilities.invokeLater(() -> {
+            throw new IllegalStateException("Connectivity error", e);
+        });
+
         log.info("init...");
         tabbedPane = new TabbedPanel(uiContext);
         this.port = port;

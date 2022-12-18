@@ -410,7 +410,9 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
+#if EFI_SHAFT_POSITION_INPUT
 	engine->triggerCentral.prepareTriggerShape();
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();

@@ -1,0 +1,172 @@
+pins:
+  - pin: A8
+    function: R LSU Heater- (white)
+    color: white
+
+  - pin: A7
+    function: R LSU Ip (red)
+    color: red
+
+  - pin: A6
+    function: R LSU Un (black)
+    color: black
+
+  - pin: A5
+    function: R AUX analog in
+    class: analog_inputs
+
+  - pin: A4
+    function: L AUX analog in / 5V out
+    class: analog_inputs
+
+  - pin: A3
+    function: L LSU Ip (red)
+    color: red
+
+  - pin: A2
+    function: L LSU Un (black)
+    color: black
+
+  - pin: A1
+    function: R LSU Heater- (white)
+    color: white
+
+  - pin: B8
+    function: R AUX out OD
+    class: outputs
+
+  - pin: B7
+    function: R LSU Vm (yellow)
+    color: yellow
+
+  - pin: B6
+    function: R LSU Rtrim (green)
+    color: green
+
+  - pin: B5
+    function: AUX analog out 1
+
+  - pin: B4
+    function: AUX analog out 2
+
+  - pin: B3
+    function: L LSU Vm (yellow)
+    color: yellow
+
+  - pin: B2
+    function: L LSU Rtrim (green)
+    color: green
+
+  - pin: B1
+    function: L AUX out OD
+    class: outputs
+
+  - pin: C8
+    function: +12V
+    type: 12v
+    color: red
+
+  - pin: C7
+    function: R EGT+
+
+  - pin: C6
+    function: R EGT-
+
+  - pin: C5
+    function: CAN L
+
+  - pin: C4
+    function: CAN H
+
+  - pin: C3
+    function: L EGT+
+
+  - pin: C2
+    function: L EGT-
+
+  - pin: C1
+    function: GND
+    type: gnd
+    color: black
+
+info:
+  title: lambda-x2
+  name: lambda-x2
+  board_url: https://github.com/rusefi/rusefi-hardware/tree/main/lambda-x2
+  image:
+    file: alphax-2chan.jpg
+  pins:
+    - pin: A8
+      x: 316
+      y: 239
+    - pin: A7
+      x: 413
+      y: 239
+    - pin: A6
+      x: 489
+      y: 239
+    - pin: A5
+      x: 564
+      y: 239
+    - pin: A4
+      x: 635
+      y: 239
+    - pin: A3
+      x: 710
+      y: 239
+    - pin: A2
+      x: 786
+      y: 239
+    - pin: A1
+      x: 882
+      y: 239
+
+    - pin: B8
+      x: 316
+      y: 352
+    - pin: B7
+      x: 413
+      y: 352
+    - pin: B6
+      x: 489
+      y: 352
+    - pin: B5
+      x: 564
+      y: 352
+    - pin: B4
+      x: 635
+      y: 352
+    - pin: B3
+      x: 710
+      y: 352
+    - pin: B2
+      x: 786
+      y: 352
+    - pin: B1
+      x: 882
+      y: 352
+
+    - pin: C8
+      x: 316
+      y: 466
+    - pin: C7
+      x: 413
+      y: 466
+    - pin: C6
+      x: 489
+      y: 466
+    - pin: C5
+      x: 564
+      y: 466
+    - pin: C4
+      x: 635
+      y: 466
+    - pin: C3
+      x: 710
+      y: 466
+    - pin: C2
+      x: 786
+      y: 466
+    - pin: C1
+      x: 882
+      y: 466

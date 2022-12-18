@@ -139,15 +139,17 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
+#if EFI_ENGINE_SNIFFER
 	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
-#endif
+#endif // DEBUG_WAVE
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
+#endif /* EFI_ENGINE_SNIFFER */
 }
 
 /**

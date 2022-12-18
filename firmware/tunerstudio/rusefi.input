@@ -2105,10 +2105,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Max air flow", tChargeAirFlowMax
 
 	dialog = alsDialog, "Anti-Lag ALS"
-	    field = "Max Pedal Position", alsMinPps
-	    field = "Max Coolant", alsMaxClt
-		field = "Min RPM", alsMinRpm
-		field = "Max RPM", alsMaxRpm
+	    field = "Max Pedal Position", ALSMaxDriverThrottleIntent
+		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
+		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
+		field = "Min CLT",                          ALSMinCLT,  {antiLagEnabled == 1}
+		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}
 		field = "Max Duration", alsMaxDuration
 		field = "Min Timer Between Activations", alsMinTimeBetween
 		field = "ETB Position", alsEtbPosition

@@ -42,11 +42,11 @@ void setDefaultBaseEngine() {
 	engineConfiguration->failedMapFallback = 60;
 	engineConfiguration->enableMapEstimationTableFallback = false;
 
-	engineConfiguration->alsMinRpm = 400;
-	engineConfiguration->alsMaxRpm = 3200;
+	engineConfiguration->ALSMinRPM = 400;
+	engineConfiguration->ALSMaxRPM = 3200;
 	engineConfiguration->alsMaxDuration = 3.5;
-	engineConfiguration->alsMaxClt = 105;
-	engineConfiguration->alsMinPps = 10;
+	engineConfiguration->ALSMaxCLT = 105;
+//	engineConfiguration->alsMinPps = 10;
 	engineConfiguration->alsMinTimeBetween = 5;
 	engineConfiguration->alsEtbPosition = 30;
 

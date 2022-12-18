@@ -101,6 +101,12 @@ percent_t IdleController::getRunningOpenLoop(float rpm, float clt, SensorResult 
 
 	running += luaAdd;
 
+#if EFI_ANTILAG_SYSTEM 
+if (engine->antilagController.isAntilagCondition) {
+	running += engineConfiguration->ALSIdleAdd;
+}
+#endif /* EFI_ANTILAG_SYSTEM */
+
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
 	iacByTpsTaper = interpolateClamped(
@@ -358,8 +364,10 @@ float IdleController::getIdlePosition(float rpm) {
 }
 
 void IdleController::onSlowCallback() {
+#if EFI_SHAFT_POSITION_INPUT
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
