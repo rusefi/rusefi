@@ -2523,8 +2523,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Primary min",					tpsMin, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Primary max",					tpsMax, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps1_2AdcChannel, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary min",				tps1SecondaryMin, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps1SecondaryMax, {tps1_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		commandButton = "Auto Calibrate ETB 1", cmb_etb_auto_calibrate, { etb1configured == 1}
 
 	dialog = tpsNum2, "Throttle Body #2"
@@ -2532,8 +2532,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Primary min",					tps2Min, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Primary max",					tps2Max, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "Secondary sensor",				tps2_2AdcChannel, {tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
-		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary min",				tps2SecondaryMin, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Secondary max",				tps2SecondaryMax, {tps2_2AdcChannel != @@ADC_CHANNEL_NONE@@ && tps2_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		commandButton = "Auto Calibrate ETB 2", cmb_etb_auto_calibrate_2, { etb2configured == 1}
 
 	dialog = tpsLimits, "TPS Limits"
