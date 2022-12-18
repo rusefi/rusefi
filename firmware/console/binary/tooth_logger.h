@@ -55,7 +55,10 @@ struct CompositeBuffer {
 
 // Get a reference to the buffer
 // Returns nullptr if no buffer is available
-CompositeBuffer* GetToothLoggerBuffer();
+CompositeBuffer* GetToothLoggerBufferNonblocking();
+// Blocks until a buffer is available
+CompositeBuffer* GetToothLoggerBufferBlocking();
+
 // Return a buffer to the pool once its contents have been read
 void ReturnToothLoggerBuffer(CompositeBuffer*);
 
