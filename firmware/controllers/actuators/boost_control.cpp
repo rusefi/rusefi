@@ -34,6 +34,7 @@ void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const 
 void BoostController::resetLua() {
 	luaTargetAdd = 0;
 	luaTargetMult = 1;
+	luaOpenLoopAdd = 0;
 }
 
 void BoostController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -84,9 +85,10 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	efiAssert(OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	openLoopPart = m_openLoopMap->getValue(rpm, tps.Value);
+	openLoopPart = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, tps.Value);
 
 #if EFI_TUNER_STUDIO
+	// todo: why do we still copy this data point?
 	engine->outputChannels.boostControllerOpenLoopPart = openLoopPart;
 #endif
 
