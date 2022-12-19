@@ -235,8 +235,8 @@ void initTps() {
 }
 
 void deinitTps() {
-	bool isFordTps = engineConfiguration->useFordRedundantTps;
-	bool isFordPps = engineConfiguration->useFordRedundantPps;
+	bool isFordTps = activeConfiguration.useFordRedundantTps;
+	bool isFordPps = activeConfiguration.useFordRedundantPps;
 
 	tps1.deinit(isFordTps, &fordTps1);
 	tps2.deinit(isFordTps, &fordTps2);
