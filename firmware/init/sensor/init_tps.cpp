@@ -41,7 +41,7 @@ public:
 		return m_sens.Register();
 	}
 
-	void unsubscribe() {
+	void deinit() {
 		AdcSubscription::UnsubscribeSensor(m_sens);
 	}
 
@@ -137,9 +137,16 @@ printf("init m_redund.Register() %s\n", getSensorType(m_redund.type()));
 		}
 	}
 
-	void unsubscribe() {
-		m_pri.unsubscribe();
-		m_sec.unsubscribe();
+	void deinit(bool isFordTps, RedundantFordTps* fordTps) {
+		m_pri.deinit();
+		m_sec.deinit();
+
+		if (isFordTps && fordTps) {
+			fordTps->unregister();
+		} else {
+			m_redund.unregister();
+		}
+
 	}
 
 private:
@@ -228,10 +235,13 @@ void initTps() {
 }
 
 void deinitTps() {
-	tps1.unsubscribe();
-	tps2.unsubscribe();
-	pedal.unsubscribe();
+	bool isFordTps = engineConfiguration->useFordRedundantTps;
+	bool isFordPps = engineConfiguration->useFordRedundantPps;
 
-	wastegate.unsubscribe();
-	idlePos.unsubscribe();
+	tps1.deinit(isFordTps, &fordTps1);
+	tps2.deinit(isFordTps, &fordTps2);
+	pedal.deinit(isFordTps, &fordPps);
+
+	wastegate.deinit();
+	idlePos.deinit();
 }
