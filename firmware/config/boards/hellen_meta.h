@@ -121,9 +121,11 @@ void detectHellenBoardType();
 
 // AIN16
 #define H144_IN_RES2 Gpio::F10
+#define H144_ADC_IN_RES2 ADC_CHANNEL_IN8
 
 // AIN8
 #define H144_IN_RES3 Gpio::F8
+#define H144_ADC_IN_RES3 ADC_CHANNEL_IN6
 
 
 #define H144_IN_AUX1 EFI_ADC_8

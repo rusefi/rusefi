@@ -1,6 +1,6 @@
 pins:
   - pin: A8
-    function: R LSU Heater- (white)
+    function: R (secord) LSU Heater- (white)
     color: white
 
   - pin: A7
@@ -20,7 +20,7 @@ pins:
     class: analog_inputs
 
   - pin: A3
-    function: L LSU Ip (red)
+    function: L (first) LSU Ip (red)
     color: red
 
   - pin: A2
@@ -28,7 +28,7 @@ pins:
     color: black
 
   - pin: A1
-    function: R LSU Heater- (white)
+    function: L LSU Heater- (white)
     color: white
 
   - pin: B8
