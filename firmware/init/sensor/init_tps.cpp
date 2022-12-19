@@ -185,9 +185,9 @@ void initTps() {
 		bool isFordPps = engineConfiguration->useFordRedundantPps;
 
 		float tpsSecondaryMaximum = engineConfiguration->tpsSecondaryMaximum;
-		if (tpsSecondaryMaximum < 10 || tpsSecondaryMaximum > 90) {
-			// most ford TPS seem to be ~52.6%, default to that if not set
-			tpsSecondaryMaximum = 52.6f;
+		if (tpsSecondaryMaximum < 20) {
+			// don't allow <20% split point
+			tpsSecondaryMaximum = 20;
 		}
 
 		tps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
@@ -201,9 +201,9 @@ void initTps() {
 		);
 
 		float ppsSecondaryMaximum = engineConfiguration->ppsSecondaryMaximum;
-		if (ppsSecondaryMaximum < 10 || ppsSecondaryMaximum > 90) {
-			// most Toyota PPS seem to be ~65%, default to that if not set
-			ppsSecondaryMaximum = 65;
+		if (ppsSecondaryMaximum < 20) {
+			// don't allow <20% split point
+			ppsSecondaryMaximum = 20;
 		}
 
 		// Pedal sensors
