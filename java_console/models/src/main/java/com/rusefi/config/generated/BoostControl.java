@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Sat Dec 17 01:28:44 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Dec 19 16:58:02 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -408,9 +408,10 @@ public class BoostControl {
 	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.FLOAT).setBaseOffset(832);
 	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT).setBaseOffset(832);
 	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT).setBaseOffset(832);
-	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 16, FieldType.INT8).setScale(0.5).setBaseOffset(832);
-	public static final Field ALIGNMENTFILL_AT_17 = Field.create("ALIGNMENTFILL_AT_17", 17, FieldType.INT8).setScale(1.0).setBaseOffset(832);
-	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 18, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(832);
+	public static final Field LUAOPENLOOPADD = Field.create("LUAOPENLOOPADD", 16, FieldType.FLOAT).setBaseOffset(832);
+	public static final Field BOOSTCONTROLLERCLOSEDLOOPPART = Field.create("BOOSTCONTROLLERCLOSEDLOOPPART", 20, FieldType.INT8).setScale(0.5).setBaseOffset(832);
+	public static final Field ALIGNMENTFILL_AT_21 = Field.create("ALIGNMENTFILL_AT_21", 21, FieldType.INT8).setScale(1.0).setBaseOffset(832);
+	public static final Field BOOSTCONTROLTARGET = Field.create("BOOSTCONTROLTARGET", 22, FieldType.INT16).setScale(0.03333333333333333).setBaseOffset(832);
 	public static final Field[] VALUES = {
 	ISTPSINVALID,
 	M_SHOULDRESETPID,
@@ -420,8 +421,9 @@ public class BoostControl {
 	LUATARGETADD,
 	LUATARGETMULT,
 	OPENLOOPPART,
+	LUAOPENLOOPADD,
 	BOOSTCONTROLLERCLOSEDLOOPPART,
-	ALIGNMENTFILL_AT_17,
+	ALIGNMENTFILL_AT_21,
 	BOOSTCONTROLTARGET,
 	};
 }
