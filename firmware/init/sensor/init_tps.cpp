@@ -125,7 +125,7 @@ public:
 
 		if (isFordTps && fordTps) {
 			// we have a secondary
-			fordTps->configure(5.0f, secondaryMaximum);
+			fordTps->configure(MAX_TPS_PPS_DISCREPANCY, secondaryMaximum);
 			fordTps->Register();
 		} else {
 			// not ford TPS
