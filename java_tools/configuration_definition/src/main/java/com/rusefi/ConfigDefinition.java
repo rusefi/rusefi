@@ -107,8 +107,12 @@ public class ConfigDefinition {
                 case KEY_JAVA_DESTINATION:
                     state.addJavaDestination(args[i + 1]);
                     break;
-                case "-field_lookup_file":
-                    state.destinations.add(new GetConfigValueConsumer(args[i + 1]));
+                case "-field_lookup_file": {
+                    String cppFile = args[i + 1];
+                    String mdFile = args[i + 2];
+                    i++;
+                    state.destinations.add(new GetConfigValueConsumer(cppFile, mdFile));
+                }
                     break;
                 case "-readfile":
                     String keyName = args[i + 1];
