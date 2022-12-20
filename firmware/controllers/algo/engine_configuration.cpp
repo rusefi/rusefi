@@ -629,7 +629,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
+    #include "default_script.lua"
 }
 
 #ifdef CONFIG_RESET_SWITCH_PORT
