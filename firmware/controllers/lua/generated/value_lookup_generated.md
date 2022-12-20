@@ -479,7 +479,7 @@ AEM X-Series or rusEFI Wideband
 
 
 ### mc33_hvolt
-
+Boost Voltage
 
 ### minimumBoostClosedLoopMap
 Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
@@ -1412,13 +1412,13 @@ Output Min Duty Cycle
 Output Max Duty Cycle
 
 ### mc33_i_boost
-
+Boost Current
 
 ### mc33_i_peak
-
+Peak Current
 
 ### mc33_i_hold
-
+Hold Current
 
 ### mc33_t_max_boost
 Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.
@@ -1427,7 +1427,7 @@ Maximum allowed boost phase time. If the injector current doesn't reach the thre
 
 
 ### mc33_t_peak_tot
-
+Peak phase duration
 
 ### mc33_t_bypass
 
