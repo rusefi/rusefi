@@ -67,7 +67,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     @Override
     public void endFile() throws IOException {
         writeStringToFile(outputFileName, getContent());
-        writeStringToFile(mdOutputFileName, getContent());
+        writeStringToFile(mdOutputFileName, getMdContent());
     }
 
     private String processConfig(ReaderState readerState, ConfigField cf, String prefix) {
