@@ -795,7 +795,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v", 1, 0, 40, 70, 0
+	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
 output_pin_e acFanPin;Optional Radiator Fan used with A/C
@@ -1424,12 +1424,12 @@ tChargeMode_e tChargeMode;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;;"mA", 1, 0, 1000, 25000, 0
-	uint16_t mc33_i_peak;;"mA", 1, 0, 1000, 20000, 0
-	uint16_t mc33_i_hold;;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_boost;Boost Current;"mA", 1, 0, 1000, 25000, 0
+	uint16_t mc33_i_peak;Peak Current;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_hold;Hold Current;"mA", 1, 0, 1000, 20000, 0
 	uint16_t mc33_t_max_boost;Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_off;;"us", 1, 0, 0, 10000, 0
-	uint16_t mc33_t_peak_tot;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_peak_tot;Peak phase duration;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_bypass;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_hold_off;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_hold_tot;;"us", 1, 0, 0, 10000, 0
