@@ -19,7 +19,7 @@ public class GetConfigValueConsumerTest {
                 "end_struct\n" +
                 "\tdc_io[2 iterate] etbIn\n" +
                 "end_struct\n";
-        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();
         state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals(
@@ -42,7 +42,7 @@ public class GetConfigValueConsumerTest {
                 "end_struct\n" +
                 "ThermistorConf iat;\n" +
                 "end_struct\n";
-        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();
         state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals("\tint hash = djb2lowerCase(name);\n" +
@@ -121,7 +121,7 @@ public class GetConfigValueConsumerTest {
                 "end_struct\n" +
                 "MAP_sensor_config_s map;@see isMapAveragingEnabled\n" +
                 "struct injector_s\n" +
-                "\tfloat flow;+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\\nBy the way, g/s = 0.125997881 * (lb/hr)\\ng/s = 0.125997881 * (cc/min)/10.5\\ng/s = 0.0119997981 * cc/min;\"cm3/min\", 1, 0, 0, 99999, 2\n" +
+                "\tfloat flow;This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\\nBy the way, g/s = 0.125997881 * (lb/hr)\\ng/s = 0.125997881 * (cc/min)/10.5\\ng/s = 0.0119997981 * cc/min;\"cm3/min\", 1, 0, 0, 99999, 2\n" +
                 "\n" +
                 "float[8] battLagCorr;ms delay between injector open and close dead times;\"ms\", 1, 0, 0, 50, 2\n" +
                 "\n" +
@@ -129,7 +129,7 @@ public class GetConfigValueConsumerTest {
                 "\n" +
                 "injector_s injector\n" +
                 "\tint[12 iterate] ignitionPins;\n" +
-                "\tfloat bias_resistor;+Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
+                "\tfloat bias_resistor;Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "end_struct\n" +
                 "struct ThermistorConf @brief Thermistor curve parameters\n" +
                 "\tthermistor_conf_s config;\n" +
@@ -145,14 +145,14 @@ public class GetConfigValueConsumerTest {
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
-                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "bit enableFan1WithAc;Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
         state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
 
 
-        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();
         state.readBufferedReader(test, getConfigValueConsumer);
 
         assertEquals("#include \"pch.h\"\n" +
@@ -191,6 +191,50 @@ public class GetConfigValueConsumerTest {
                 "\t}\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getHeaderAndGetter());
+
+
+        assertEquals("### clt.config.tempC_1\n" +
+                "these values are in Celcius\n" +
+                "\n" +
+                "### clt.config.map.sensor.highValue\n" +
+                "kPa value at high volts\n" +
+                "\n" +
+                "### clt.config.map.sensor.hwChannel\n" +
+                "\n" +
+                "\n" +
+                "### clt.config.injector.flow\n" +
+                "This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\\nBy the way, g/s = 0.125997881 * (lb/hr)\\ng/s = 0.125997881 * (cc/min)/10.5\\ng/s = 0.0119997981 * cc/min\n" +
+                "\n" +
+                "### clt.config.bias_resistor\n" +
+                "Pull-up resistor value on your board\n" +
+                "\n" +
+                "### clt.adcChannel\n" +
+                "\n" +
+                "\n" +
+                "### issue_294_31\n" +
+                "\n" +
+                "\n" +
+                "### baseFuel\n" +
+                "@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections\n" +
+                "\n" +
+                "### afr_type\n" +
+                "PID dTime\n" +
+                "\n" +
+                "### speedToRpmRatio\n" +
+                "s2rpm\n" +
+                "\n" +
+                "### afr_typet\n" +
+                "\n" +
+                "\n" +
+                "### vehicleSpeedKph\n" +
+                "\n" +
+                "\n" +
+                "### isForcedInduction\n" +
+                "Does the vehicle have a turbo or supercharger?\n" +
+                "\n" +
+                "### enableFan1WithAc\n" +
+                "Turn on this fan when AC is on.\n" +
+                "\n", getConfigValueConsumer.getMdContent());
     }
 
     @Test(expected = MaybeSemicolorWasMissedException.class)
@@ -201,7 +245,7 @@ public class GetConfigValueConsumerTest {
         ReaderState state = new ReaderState();
 
 
-        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();
         state.readBufferedReader(test, getConfigValueConsumer);
     }
 }
