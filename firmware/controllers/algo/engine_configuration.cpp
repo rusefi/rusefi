@@ -111,7 +111,7 @@
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
- * we copy actual configuration after reading settings.
+ * we copy actual configuration after reading settings from flash.
  * This is useful to compare old (activeConfiguration) and new (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
