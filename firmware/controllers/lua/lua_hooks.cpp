@@ -839,6 +839,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "getGlobalConfigurationVersion", [](lua_State* l) {
+		lua_pushnumber(l, engine->getGlobalConfigurationVersion());
+		return 1;
+	});
+
 	lua_register(l, "setAcDisabled", [](lua_State* l) {
 		auto value = lua_toboolean(l, 1);
 		engine->module<AcController>().unmock().isDisabledByLua = value;
