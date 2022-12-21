@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Dec 17 01:28:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Wed Dec 21 23:51:25 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -101,8 +101,12 @@ struct antilag_system_state_s {
 	/**
 	offset 0 bit 31 */
 	bool unusedBit_10_31 : 1 {};
+	/**
+	 * offset 4
+	 */
+	float fuelALSCorrection = (float)0;
 };
-static_assert(sizeof(antilag_system_state_s) == 4);
+static_assert(sizeof(antilag_system_state_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Dec 17 01:28:44 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Wed Dec 21 23:51:25 UTC 2022

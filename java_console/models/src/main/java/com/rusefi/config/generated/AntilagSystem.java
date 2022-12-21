@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Sat Dec 17 01:28:44 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Wed Dec 21 23:51:25 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -16,6 +16,7 @@ public class AntilagSystem {
 	public static final Field ISALSSWITCHACTIVATED = Field.create("ISALSSWITCHACTIVATED", 0, FieldType.BIT, 7).setBaseOffset(828);
 	public static final Field ALSACTIVATEPINSTATE = Field.create("ALSACTIVATEPINSTATE", 0, FieldType.BIT, 8).setBaseOffset(828);
 	public static final Field ALSSWITCHCONDITION = Field.create("ALSSWITCHCONDITION", 0, FieldType.BIT, 9).setBaseOffset(828);
+	public static final Field FUELALSCORRECTION = Field.create("FUELALSCORRECTION", 4, FieldType.FLOAT).setBaseOffset(828);
 	public static final Field[] VALUES = {
 	ISANTILAGCONDITION,
 	ALSMINRPMCONDITION,
@@ -27,5 +28,6 @@ public class AntilagSystem {
 	ISALSSWITCHACTIVATED,
 	ALSACTIVATEPINSTATE,
 	ALSSWITCHCONDITION,
+	FUELALSCORRECTION,
 	};
 }
