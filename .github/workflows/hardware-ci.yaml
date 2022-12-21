@@ -8,8 +8,7 @@ jobs:
       # Let all builds finish even if one fails early
       fail-fast: false
       matrix:
-#        build-target: [f407-discovery, proteus_f4]
-        build-target: [proteus_f4]
+        build-target: [f407-discovery, proteus_f4]
 
         include:
           - build-target: f407-discovery
