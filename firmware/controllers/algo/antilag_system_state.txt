@@ -11,4 +11,6 @@ bit isALSSwitchActivated
 bit ALSActivatePinState
 bit ALSSwitchCondition
 
+float fuelALSCorrection
+
 end_struct
