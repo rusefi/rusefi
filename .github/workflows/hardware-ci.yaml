@@ -18,6 +18,8 @@ jobs:
 #            folder: f407-discovery
 #            config-name: all
 #            ini-file: rusefi_f4-disco.ini
+#            openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
+#            serial-device: /dev/serial/by-id/TODO
 
           - build-target: proteus_f4
             script: hardware_ci_proteus
@@ -25,6 +27,8 @@ jobs:
             folder: proteus
             config-name: proteus_f4
             ini-file: rusefi_proteus_f4.ini
+            openocd-script: ../.github/workflows/openocd_ci_proteus.cfg
+            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
 
     runs-on: ${{matrix.runs-on}}
 
@@ -66,7 +70,9 @@ jobs:
       run: make clean
 
     - name: Set EXTRA env
-      run: echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV
+      run: |
+        echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV
+        echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
 
     - name: Build Firmware
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
@@ -76,7 +82,7 @@ jobs:
 
     - name: OpenOCD wipe & flash STM32
       working-directory: ./firmware
-      run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
+      run: openocd -f "${{matrix.openocd-script}}" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "deliver/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
 
     - name: Generate Java (Antlr)
       working-directory: ./java_tools
