@@ -1436,7 +1436,7 @@ Peak phase duration
 
 
 ### mc33_t_hold_tot
-
+Hold phase duration
 
 ### maxCamPhaseResolveRpm
 Below this RPM, use camshaft information to synchronize the crank's position for full sequential operation. Use this if your cam sensor does weird things at high RPM. Set to 0 to disable, and always use cam to help sync crank.
