@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 05:11:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Dec 21 02:27:33 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1799,6 +1799,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t verboseCanBaseAddress;
 	/**
+	 * Boost Voltage
 	v
 	 * offset 788
 	 */
@@ -3926,16 +3927,19 @@ struct engine_configuration_s {
 	 */
 	gppwm_channel gppwm[GPPWM_CHANNELS];
 	/**
+	 * Boost Current
 	mA
 	 * offset 2932
 	 */
 	uint16_t mc33_i_boost;
 	/**
+	 * Peak Current
 	mA
 	 * offset 2934
 	 */
 	uint16_t mc33_i_peak;
 	/**
+	 * Hold Current
 	mA
 	 * offset 2936
 	 */
@@ -3952,6 +3956,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_peak_off;
 	/**
+	 * Peak phase duration
 	us
 	 * offset 2942
 	 */
@@ -3967,6 +3972,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_hold_off;
 	/**
+	 * Hold phase duration
 	us
 	 * offset 2948
 	 */
@@ -5219,4 +5225,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Dec 17 05:11:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Dec 21 02:27:33 UTC 2022
