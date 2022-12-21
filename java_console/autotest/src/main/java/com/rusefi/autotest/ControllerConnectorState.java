@@ -38,7 +38,7 @@ public class ControllerConnectorState {
 
         String port = System.getenv("HARDWARE_CI_SERIAL_DEVICE");
         if (port == null) {
-            String port = System.getProperty("ecu.port");
+            port = System.getProperty("ecu.port");
             if (port == null) {
                 port = PortDetector.autoDetectSerial(null).getSerialPort();
                 if (port == null)
