@@ -18,7 +18,7 @@ jobs:
 #            folder: f407-discovery
 #            config-name: all
 #            ini-file: rusefi_f4-disco.ini
-#            openocd-script: openocd_ci_f4_discovery.cfg
+#            openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
 #            serial-device: /dev/serial/by-id/TODO
 
           - build-target: proteus_f4
@@ -27,7 +27,7 @@ jobs:
             folder: proteus
             config-name: proteus_f4
             ini-file: rusefi_proteus_f4.ini
-            openocd-script: openocd_ci_proteus.cfg
+            openocd-script: ../.github/workflows/openocd_ci_proteus.cfg
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
 
     runs-on: ${{matrix.runs-on}}
