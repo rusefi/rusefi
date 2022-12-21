@@ -12,14 +12,14 @@ jobs:
         build-target: [proteus_f4]
 
         include:
-         - build-target: f407-discovery
-           script: hardware_ci_f4_discovery
-           runs-on: hw-ci-f4-discovery
-           folder: f407-discovery
-           config-name: all
-           ini-file: rusefi_f4-disco.ini
-           openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
-           serial-device: /dev/serial/by-id/TODO
+          - build-target: f407-discovery
+            script: hardware_ci_f4_discovery
+            runs-on: hw-ci-f4-discovery
+            folder: f407-discovery
+            config-name: all
+            ini-file: rusefi_f4-disco.ini
+            openocd-script: ../.github/workflows/openocd_ci_f4_discovery.cfg
+            serial-device: /dev/serial/by-id/TODO
 
           - build-target: proteus_f4
             script: hardware_ci_proteus
