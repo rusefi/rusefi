@@ -522,7 +522,8 @@ end_struct
 
 custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS commonly only used for NA engines\nSpeed Density requires MAP sensor and is the default choice for may installs\nMAF air charge is a cylinder filling based method that uses a mass air flow sensor.;
-uint8_t[3] alignmentFill_at_1
+uint8_t ALSMaxTPS;;"%", 1, 0, 0, 10, 0
+uint8_t[2] unusedHerealignmentFill_at_1
 
 custom injection_mode_e 1 bits, U08, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
@@ -1083,7 +1084,7 @@ bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle incre
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-bit unused_1484_bit_29
+bit ALSActivateInverted
 bit unused_1484_bit_30
 bit tempBooleanForVerySpecialLogic
 
@@ -1551,7 +1552,7 @@ float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
-	int ALSTimingRetard;;"deg", 1, 0, -180, 180, 2
+	uint8_t[4] unusedAlignmentFill_at_33
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	int ALSSkipRatio;;"", 1, 0, 0.1, 2, 1
