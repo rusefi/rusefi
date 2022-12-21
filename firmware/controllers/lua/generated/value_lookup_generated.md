@@ -217,6 +217,9 @@ Number of cylinder the engine has.
 ### cylinderBore
 Cylinder diameter in mm.
 
+### ALSMaxTPS
+
+
 ### boostControlMinRpm
 Minimum RPM to enable boost control. Use this to avoid solenoid noise at idle, and help spool in some cases.
 
@@ -880,6 +883,9 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### sdTriggerLog
 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
+### ALSActivateInverted
+
+
 ### tempBooleanForVerySpecialLogic
 
 
@@ -1535,9 +1541,6 @@ null
 
 
 ### alsEtbPosition
-
-
-### ALSTimingRetard
 
 
 ### ALSIdleAdd

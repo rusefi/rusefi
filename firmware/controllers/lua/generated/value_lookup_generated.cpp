@@ -149,6 +149,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->specs.cylindersCount;
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
+		case 1523832034:
+			return engineConfiguration->ALSMaxTPS;
 		case -1976636992:
 			return engineConfiguration->boostControlMinRpm;
 		case -1976634808:
@@ -591,6 +593,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->useBiQuadOnAuxSpeedSensors;
 		case -105464622:
 			return engineConfiguration->sdTriggerLog;
+		case -1027820105:
+			return engineConfiguration->ALSActivateInverted;
 		case -153724425:
 			return engineConfiguration->tempBooleanForVerySpecialLogic;
 		case -1492464952:
@@ -1029,8 +1033,6 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->alsMinTimeBetween;
 		case -731677323:
 			return engineConfiguration->alsEtbPosition;
-		case 220143119:
-			return engineConfiguration->ALSTimingRetard;
 		case -2021435668:
 			return engineConfiguration->ALSIdleAdd;
 		case 1232469673:
@@ -1408,6 +1410,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1425664391:
 	{
 		engineConfiguration->cylinderBore = value;
+		return;
+	}
+		case 1523832034:
+	{
+		engineConfiguration->ALSMaxTPS = (int)value;
 		return;
 	}
 		case -1976636992:
@@ -2515,6 +2522,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->sdTriggerLog = (int)value;
 		return;
 	}
+		case -1027820105:
+	{
+		engineConfiguration->ALSActivateInverted = (int)value;
+		return;
+	}
 		case -153724425:
 	{
 		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
@@ -3608,11 +3620,6 @@ void setConfigValueByName(const char *name, float value) {
 		case -731677323:
 	{
 		engineConfiguration->alsEtbPosition = (int)value;
-		return;
-	}
-		case 220143119:
-	{
-		engineConfiguration->ALSTimingRetard = (int)value;
 		return;
 	}
 		case -2021435668:

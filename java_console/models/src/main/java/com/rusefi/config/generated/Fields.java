@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 21 02:28:11 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 21 23:33:29 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1182,7 +1182,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.21.all.snap_10258";
+	public static final String TS_SIGNATURE = "rusEFI 2022.12.21.all.snap_31565";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1284;
@@ -1333,7 +1333,8 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 376, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 380, FieldType.INT8, engine_load_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXTPS = Field.create("ALSMAXTPS", 381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHEREALIGNMENTFILL_AT_1 = Field.create("UNUSEDHEREALIGNMENTFILL_AT_1", 382, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 384, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 385, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCONTROLMINRPM = Field.create("BOOSTCONTROLMINRPM", 386, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1863,6 +1864,7 @@ public class Fields {
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1372, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field SDTRIGGERLOG = Field.create("SDTRIGGERLOG", 1372, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field ALSACTIVATEINVERTED = Field.create("ALSACTIVATEINVERTED", 1372, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1372, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1376, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1380, FieldType.FLOAT).setBaseOffset(0);
@@ -2454,7 +2456,7 @@ public class Fields {
 	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3885, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3886, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3887, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSTIMINGRETARD = Field.create("ALSTIMINGRETARD", 3888, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDALIGNMENTFILL_AT_33 = Field.create("UNUSEDALIGNMENTFILL_AT_33", 3888, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3892, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3896, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3900, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2785,7 +2787,8 @@ public class Fields {
 	ALIGNMENTFILL_AT_9,
 	CYLINDERBORE,
 	FUELALGORITHM,
-	ALIGNMENTFILL_AT_1,
+	ALSMAXTPS,
+	UNUSEDHEREALIGNMENTFILL_AT_1,
 	CRANKINGINJECTIONMODE,
 	INJECTIONMODE,
 	BOOSTCONTROLMINRPM,
@@ -3303,6 +3306,7 @@ public class Fields {
 	INVERTVVTCONTROLEXHAUST,
 	USEBIQUADONAUXSPEEDSENSORS,
 	SDTRIGGERLOG,
+	ALSACTIVATEINVERTED,
 	TEMPBOOLEANFORVERYSPECIALLOGIC,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
@@ -3884,7 +3888,7 @@ public class Fields {
 	ALSMAXCLT,
 	ALSMINTIMEBETWEEN,
 	ALSETBPOSITION,
-	ALSTIMINGRETARD,
+	UNUSEDALIGNMENTFILL_AT_33,
 	ALSIDLEADD,
 	ALSETBADD,
 	ALSSKIPRATIO,
