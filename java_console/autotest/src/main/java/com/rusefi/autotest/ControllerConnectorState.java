@@ -36,7 +36,7 @@ public class ControllerConnectorState {
         TestingUtils.isRealHardware = true;
         FileLog.MAIN.start();
 
-        String port = System.getEnv("HARDWARE_CI_SERIAL_DEVICE");
+        String port = System.getenv("HARDWARE_CI_SERIAL_DEVICE");
         if (port == null) {
             String port = System.getProperty("ecu.port");
             if (port == null) {
