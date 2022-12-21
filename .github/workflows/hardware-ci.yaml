@@ -70,7 +70,7 @@ jobs:
       run: make clean
 
     - name: Set EXTRA env
-      run:
+      run: |
         echo "EXTRA_2_PARAMS=-DHARDWARE_CI" >> $GITHUB_ENV
         echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
 
