@@ -15,7 +15,7 @@ void initAntilagSystem();
 class AntilagSystemBase : public antilag_system_state_s {
 public:
 	AntilagSystemBase();
-	// Update the state of the launch control system
+
 	void update();
 
     bool isALSMinRPMCondition() const;
