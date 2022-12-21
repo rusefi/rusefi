@@ -63,14 +63,18 @@ function onTick()
 	boostVoltage = getCalibration("mc33_hvolt")
 	boostCurrent = getCalibration("mc33_i_boost") / 1000.0
 	peakCurrent = getCalibration("mc33_i_peak") / 1000.0
-	print(boostVoltage .." " ..boostCurrent .." " ..peakCurrent)
+	print("boostVoltage " .. boostVoltage .." boostCurrent " ..boostCurrent .." peakCurrent " ..peakCurrent)
+
+	holdCurrent = getCalibration("mc33_i_hold")
+	peakDuration = getCalibration("mc33_t_peak_tot") / 1000.0
+	holdDuration = getCalibration("mc33_t_hold_tot") / 1000.0
+	print("holdCurrent " .. holdCurrent .. " peakDuration " .. peakDuration .." hold duration " ..holdDuration)
 
 	setTwoBytesLsb(data_set_voltage, 1, boostVoltage * FIXED_POINT)
 	setTwoBytesLsb(data_set_voltage, 3, boostCurrent * FIXED_POINT)
 	setTwoBytesLsb(data_set_voltage, 5, peakCurrent * FIXED_POINT)
 	print('Sending ' ..arrayToString(data_set_voltage))
 
-	holdCurrent = getCalibration("mc33_i_hold")
 
 
 	txCan(1, 0x201, 1, data_set_voltage)
