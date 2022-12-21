@@ -332,14 +332,12 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 	
-	if (!engineConfiguration->isSdCardEnabled) {
+	if (!engineConfiguration->isSdCardEnabled || mmcSpiDevice == SPI_NONE) {
 		return nullptr;
 	}
 
 	// Configures and activates the MMC peripheral.
 	mmcSpiDevice = engineConfiguration->sdCardSpiDevice;
-
-	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", nullptr);
 
 	// todo: reuse initSpiCs method?
 	mmc_hs_spicfg.ssport = mmc_ls_spicfg.ssport = getHwPort("mmc", engineConfiguration->sdCardCsPin);
