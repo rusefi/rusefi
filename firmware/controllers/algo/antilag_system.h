@@ -24,19 +24,3 @@ public:
 	bool isAntilagConditionMet();
 	bool isInsideALSSwitchCondition();
 };
-
-/**
- * See also SoftLimiterSandbox.java
- */
-class ALSSoftSparkLimiter {
-public:
-	/**
-	 * targetSkipRatio of '0' means 'do not skip', would always return false
-	 */
-	void setTargetSkipRatio(float ALSSkipRatio);
-
-	bool shouldSkip();
-private:
-	bool wasJustSkipped = false;
-	float ALSSkipRatio = 0;
-};
