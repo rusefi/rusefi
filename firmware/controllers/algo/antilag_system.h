@@ -14,8 +14,6 @@ void initAntilagSystem();
 
 class AntilagSystemBase : public antilag_system_state_s {
 public:
-	AntilagSystemBase();
-
 	void update();
 
     bool isALSMinRPMCondition() const;
@@ -23,7 +21,7 @@ public:
 	bool isALSMinCLTCondition() const;
 	bool isALSMaxCLTCondition() const;
 	bool isALSMaxTPSCondition() const;
-	bool isAntilagConditionMet(int rpm);
+	bool isAntilagConditionMet();
 	bool isInsideALSSwitchCondition();
 };
 
