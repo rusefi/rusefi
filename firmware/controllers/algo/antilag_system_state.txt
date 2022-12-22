@@ -6,11 +6,10 @@ bit ALSMaxRPMCondition
 bit ALSMinCLTCondition
 bit ALSMaxCLTCondition
 bit ALSMaxTPSCondition
-bit AntilagcombinedConditions
 bit isALSSwitchActivated
 bit ALSActivatePinState
 bit ALSSwitchCondition
 
 float fuelALSCorrection
-
+int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 end_struct
