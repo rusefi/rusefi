@@ -129,7 +129,9 @@ float getRunningFuel(float baseFuel) {
 
 	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
+#if EFI_ANTILAG_SYSTEM
 	runningFuel *= (1 + engine->antilagController.fuelALSCorrection);
+#endif /* EFI_ANTILAG_SYSTEM */
 
 #if EFI_LAUNCH_CONTROL
 	runningFuel *= engine->launchController.getFuelCoefficient();
