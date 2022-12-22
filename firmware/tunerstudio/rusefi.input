@@ -1871,12 +1871,12 @@ menuDialog = main
 		subMenu = std_separator
 #		subMenu = smRollingLaunch,			"Rolling Launch"
 #		subMenu = std_separator
-#		subMenu = antiLag,					"Antilag Setup"
+#		subMenu = antiLagDialog,					"Antilag Setup"
 #		subMenu = std_separator
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = alsDialog,                "Anti-Lag ALS"
+		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 
 		menu = "Help"
@@ -4224,7 +4224,7 @@ dialog = tcuControls, "Transmission Settings"
 		field = "Enable Rolling Launch",					rollingLaunchEnabled
 
 					;			Racing Features->Antilag
-	dialog = antiLag, "AntiLag Settings"
+	dialog = antiLagDialog, "AntiLag Settings"
 	    field = "Enable AntiLag",                   antiLagEnabled
 		field = "Activation Mode",          	    antiLagActivationMode
 		field = "Switch Input",                     ALSActivatePin,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
