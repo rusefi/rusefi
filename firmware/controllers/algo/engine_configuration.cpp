@@ -464,7 +464,7 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
-	setLinearCurve(config->alsIgnRetardLoadBins, 0, 10, 5);
+	setLinearCurve(config->alsIgnRetardLoadBins, 0, 100, 5);
 	setRpmTableBin(config->alsIgnRetardrpmBins);
 
 #if EFI_ENGINE_CONTROL
