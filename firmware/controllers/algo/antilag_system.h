@@ -14,8 +14,6 @@ void initAntilagSystem();
 
 class AntilagSystemBase : public antilag_system_state_s {
 public:
-	AntilagSystemBase();
-
 	void update();
 
     bool isALSMinRPMCondition() const;
@@ -23,22 +21,6 @@ public:
 	bool isALSMinCLTCondition() const;
 	bool isALSMaxCLTCondition() const;
 	bool isALSMaxTPSCondition() const;
-	bool isAntilagConditionMet(int rpm);
+	bool isAntilagConditionMet();
 	bool isInsideALSSwitchCondition();
-};
-
-/**
- * See also SoftLimiterSandbox.java
- */
-class ALSSoftSparkLimiter {
-public:
-	/**
-	 * targetSkipRatio of '0' means 'do not skip', would always return false
-	 */
-	void setTargetSkipRatio(float ALSSkipRatio);
-
-	bool shouldSkip();
-private:
-	bool wasJustSkipped = false;
-	float ALSSkipRatio = 0;
 };

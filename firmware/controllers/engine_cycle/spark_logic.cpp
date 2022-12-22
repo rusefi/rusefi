@@ -498,6 +498,14 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 			}
 #endif // EFI_LAUNCH_CONTROL
 
+#if EFI_ANTILAG_SYSTEM
+			if (engine->ALSsoftSparkLimiter.shouldSkip()) {
+				continue;
+			}
+			auto ALSSkipRatio = engineConfiguration->ALSSkipRatio;
+            engine->ALSsoftSparkLimiter.setTargetSkipRatio(ALSSkipRatio);
+#endif // EFI_ANTILAG_SYSTEM
+
 			scheduleSparkEvent(limitedSpark, event, rpm, edgeTimestamp, currentPhase, nextPhase);
 		}
 	}
