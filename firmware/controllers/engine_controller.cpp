@@ -572,8 +572,8 @@ bool validateConfig() {
 
 #if EFI_ANTILAG_SYSTEM
 	// ALS
-	ensureArrayIsAscending("ALS TPS", config->alsIgnRetardLoadBins);
-	ensureArrayIsAscending("ALS RPM", config->alsIgnRetardrpmBins);
+	ensureArrayIsAscendingOrDefault("ALS TPS", config->alsIgnRetardLoadBins);
+	ensureArrayIsAscendingOrDefault("ALS RPM", config->alsIgnRetardrpmBins);
 #endif // EFI_ANTILAG_SYSTEM
 
 	// ETB
