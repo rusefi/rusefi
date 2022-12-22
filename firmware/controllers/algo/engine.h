@@ -166,8 +166,11 @@ public:
 
 #if EFI_ANTILAG_SYSTEM
 	AntilagSystemBase antilagController;
-	SoftSparkLimiter ALSsoftSparkLimiter;
 #endif // EFI_ANTILAG_SYSTEM
+
+#if EFI_ANTILAG_SYSTEM
+	SoftSparkLimiter ALSsoftSparkLimiter;
+#endif /* EFI_ANTILAG_SYSTEM */
 
 #if EFI_BOOST_CONTROL
 	BoostController boostController;

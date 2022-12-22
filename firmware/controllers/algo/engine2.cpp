@@ -192,6 +192,10 @@ void EngineState::periodicFastCallback() {
 #if EFI_LAUNCH_CONTROL
 	engine->launchController.update();
 #endif //EFI_LAUNCH_CONTROL
+
+#if EFI_ANTILAG_SYSTEM
+	engine->antilagController.update();
+#endif //EFI_ANTILAG_SYSTEM
 #endif // EFI_ENGINE_CONTROL
 }
 
