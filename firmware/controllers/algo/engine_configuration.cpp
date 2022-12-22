@@ -466,6 +466,8 @@ static void setDefaultEngineConfiguration() {
 
 	setLinearCurve(config->alsIgnRetardLoadBins, 0, 100, 5);
 	setRpmTableBin(config->alsIgnRetardrpmBins);
+	setLinearCurve(config->alsFuelAdjustmentLoadBins, 0, 100, 5);
+	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();

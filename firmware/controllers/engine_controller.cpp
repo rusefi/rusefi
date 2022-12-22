@@ -572,8 +572,10 @@ bool validateConfig() {
 
 #if EFI_ANTILAG_SYSTEM
 	// ALS
-	ensureArrayIsAscendingOrDefault("ALS TPS", config->alsIgnRetardLoadBins);
-	ensureArrayIsAscendingOrDefault("ALS RPM", config->alsIgnRetardrpmBins);
+	ensureArrayIsAscendingOrDefault("ign ALS TPS", config->alsIgnRetardLoadBins);
+	ensureArrayIsAscendingOrDefault("ign ALS RPM", config->alsIgnRetardrpmBins);
+	ensureArrayIsAscendingOrDefault("fuel ALS TPS", config->alsFuelAdjustmentLoadBins);
+	ensureArrayIsAscendingOrDefault("fuel ALS RPM", config->alsFuelAdjustmentrpmBins);
 #endif // EFI_ANTILAG_SYSTEM
 
 	// ETB
