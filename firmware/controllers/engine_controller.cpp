@@ -570,6 +570,12 @@ bool validateConfig() {
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
 #endif // EFI_BOOST_CONTROL
 
+#if EFI_ANTILAG_SYSTEM
+	// ALS
+	ensureArrayIsAscending("ALS TPS", config->alsIgnRetardLoadBins);
+	ensureArrayIsAscending("ALS RPM", config->alsIgnRetardrpmBins);
+#endif // EFI_ANTILAG_SYSTEM
+
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);

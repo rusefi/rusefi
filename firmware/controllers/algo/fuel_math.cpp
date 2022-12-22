@@ -406,10 +406,11 @@ float getfuelALSCorrection(int rpm, float engineLoad) {
 			config->alsFuelAdjustmentrpmBins, rpm
 	    );
 	    return AlsFuelAdd;	
-    } else {
+    } else
+#endif /* EFI_ANTILAG_SYSTEM */
+    {
 		return 1;
 	}
-#endif /* EFI_ANTILAG_SYSTEM */
 }
 
 #if EFI_ENGINE_CONTROL
