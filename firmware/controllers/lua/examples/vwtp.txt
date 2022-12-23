@@ -1,6 +1,9 @@
 -- this controls onCanRx rate as well!
 setTickRate(100)
 
+mapSensor = Sensor.new("map")
+mapSensor:setTimeout(3000)
+
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
 function toHexString(num)
@@ -101,6 +104,29 @@ function onCanTester(bus, id, dlc, data)
 
 	if top4 == 2 or top4 == 1 then
 		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
+
+		if groupId == 2 and payLoadIndex == 0 then
+            rpmL = data[7]
+            rpmH = data[8]
+            rpm = rpmH * rpmL / 5
+            print(rpmL .. " " .. rpmH .. " " .. rpm)
+		end
+
+		if groupId == 2 and payLoadIndex == 1 then
+            elL = data[3]
+            elH = data[4]
+            el = 100 * elH / elL
+            print(elL .. " " .. elH .. " " .. el)
+        end
+
+		if groupId == 2 and payLoadIndex == 2 then
+            mapL = data[2]
+            mapH = data[3]
+            map = 1000.0 * mapH / mapL
+            print(mapL .. " " .. mapH .. " " .. map)
+            mapSensor : set(map / 10)
+        end
+
 		payLoadIndex = payLoadIndex + 1
 
 
