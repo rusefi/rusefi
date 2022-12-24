@@ -320,6 +320,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 	percent_t targetPosition = idlePosition + getLuaAdjustment();
 
+#if EFI_ANTILAG_SYSTEM 
+    if (engine->antilagController.isAntilagCondition) {
+	    targetPosition += engineConfiguration->ALSEtbAdd;
+    }
+#endif /* EFI_ANTILAG_SYSTEM */
+
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
 	trim = clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
