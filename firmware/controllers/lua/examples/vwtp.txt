@@ -61,9 +61,9 @@ local sendCounter = 2
 local packetCounter = 1
 local payLoadIndex = 0
 
-local groups = { 2, 4 }
+local groups = { 2, 4, 31 }
 -- todo: smarter array size calculation?
-local groupsSize = 2
+local groupsSize = 3
 
 local groupIndex = 1
 
@@ -131,7 +131,7 @@ function onCanTester(bus, id, dlc, data)
 			rpmL = data[7]
 			rpmH = data[8]
 			rpm = rpmH * rpmL / 5
-			print(rpmL .." " ..rpmH .." " ..rpm)
+			print(rpmL .." " ..rpmH .." rpm " ..rpm)
 			rpmSensor : set(rpm)
 		end
 
@@ -139,14 +139,14 @@ function onCanTester(bus, id, dlc, data)
 			elL = data[3]
 			elH = data[4]
 			el = 100 * elH / elL
-			print(elL .." " ..elH .." " ..el)
+			print(elL .." " ..elH .." EL " ..el)
 		end
 
 		if groupId == 2 and payLoadIndex == 2 then
 			mapL = data[2]
 			mapH = data[3]
 			map = 1000.0 * mapH / mapL
-			print(mapL .." " ..mapH .." " ..map)
+			print(mapL .." " ..mapH .." MAP " ..map)
 			mapSensor : set(map / 10)
 		end
 
@@ -154,7 +154,7 @@ function onCanTester(bus, id, dlc, data)
 			cltL = data[6]
 			cltH = data[7]
 			clt = cltL * (cltH - 100) / 10
-			print(cltL .." " ..cltH .." " ..clt)
+			print(cltL .." " ..cltH .." CLT " ..clt)
 			cltSensor : set(clt)
 		end
 
@@ -162,7 +162,7 @@ function onCanTester(bus, id, dlc, data)
 			iatL = data[2]
 			iatH = data[3]
 			iat = iatL * (iatH - 100) / 10
-			print(iatL .." " ..iatH .." " ..iat)
+			print(iatL .." " ..iatH .." IAT " ..iat)
 			iatSensor : set(iat)
 		end
 
