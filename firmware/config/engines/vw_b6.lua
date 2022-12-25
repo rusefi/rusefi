@@ -102,7 +102,16 @@ canMotorInfoCounter = 0
 
 counter = 0
 
+mafSensor = Sensor.new("maf")
+mafCalibrationIndex = findCurveIndex("mafcurve")
+
 function onTick()
+
+    freqValue = getSensor("AuxSpeed1") * 16 or 0
+	mafValue = curve(mafCalibrationIndex, 5)
+--	print(freqValue .. " mafValue=" .. mafValue)
+	mafSensor : set(mafValue)
+
 	counter = (counter + 1) % 16
 
 	rpm = getSensor("RPM") or 0
