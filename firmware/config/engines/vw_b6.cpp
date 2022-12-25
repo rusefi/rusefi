@@ -134,7 +134,7 @@ static void commonPassatB6() {
 }
 
 
-// MAF, grams per second
+// MAF signal frequency after hardware divider x16, Hz
 static const float hardCodedFreqBins[] = {139,
 		152,
 		180,
@@ -143,7 +143,7 @@ static const float hardCodedFreqBins[] = {139,
 		300,
 		365};
 
-// MAF signal frequency, KHz
+// MAF grams per second
 static const float hardCodedGperSValues[] {
 		3.58,
 		4.5,
