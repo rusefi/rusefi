@@ -107,7 +107,7 @@ mafCalibrationIndex = findCurveIndex("mafcurve")
 
 function onTick()
 
-    freqValue = getSensor("AuxSpeed1") * 16 or 0
+    freqValue = getSensor("AuxSpeed1") or 0
 	mafValue = curve(mafCalibrationIndex, 5)
 --	print(freqValue .. " mafValue=" .. mafValue)
 	mafSensor : set(mafValue)
