@@ -38,6 +38,8 @@ public enum Sensor implements BinaryLogEntry {
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, TsOutputs.INTERNALMCUTEMPERATURE, 1, 0, 5, "C"),
     CLT(GAUGE_NAME_CLT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.COOLANT, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
     IAT(GAUGE_NAME_IAT, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.INTAKE, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
+    AuxFreq1("AuxFreq1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.AUXSPEED1, 1, -40, 150, "Hz"),
+    AuxFreq2("AuxFreq2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.AUXSPEED2, 1, -40, 150, "Hz"),
 //    AuxT1("AuxT1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 //    AuxT2("AuxT2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 18, 1.0 / PACK_MULT_TEMPERATURE, -40, 150, "deg C"),
 
@@ -46,7 +48,8 @@ public enum Sensor implements BinaryLogEntry {
     PPS(GAUGE_NAME_THROTTLE_PEDAL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, TsOutputs.THROTTLEPEDALPOSITION, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"), // pedal position sensor
 
     // air flow/mass measurement
-    MAF(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RAWMAF, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
+    MAF_RAE(GAUGE_NAME_MAF + " raw", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RAWMAF, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
+    MAF(GAUGE_NAME_MAF + " raw", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
     MAP(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
     Lambda(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.LAMBDAVALUE, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
