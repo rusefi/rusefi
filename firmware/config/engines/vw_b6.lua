@@ -92,7 +92,7 @@ canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
-canMotor6    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
 canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
 
 setTickRate(100)
@@ -122,7 +122,7 @@ function onTick()
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
-	engineTorque = fakeTorque
+	engineTorque = fakeTorque * 0.9
 	innerTorqWithoutExt = fakeTorque
 	torqueLoss = 10
 	requestedTorque = fakeTorque
@@ -146,6 +146,15 @@ function onTick()
 	setBitRange(motor5Data, 5, 9, fuelCounter)
 	xorChecksum(motor5Data, 8)
 	txCan(1, MOTOR_5, 0, motor5Data)
+
+    actualTorque = fakeTorque
+    feedbackGearbox = 255
+
+    motor6Data[2] = math.floor(engineTorque / 0.39)
+    motor6Data[3] = math.floor(actualTorque / 0.39)
+    motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+    xorChecksum(motor6Data, 1)
+   	txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
 
 	txCan(1, MOTOR_7, 0, canMotor7)
 
