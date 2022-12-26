@@ -49,7 +49,7 @@ public enum Sensor implements BinaryLogEntry {
 
     // air flow/mass measurement
     MAF_RAE(GAUGE_NAME_MAF + " raw", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.RAWMAF, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "Volts"),
-    MAF(GAUGE_NAME_MAF + " raw", SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
+    MAF(GAUGE_NAME_MAF, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAFMEASURED, 1.0 / PACK_MULT_MASS_FLOW, 0, 5, "Volts"),
     MAP(GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.MAPVALUE, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
 
     Lambda(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, TsOutputs.LAMBDAVALUE, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
@@ -97,7 +97,7 @@ public enum Sensor implements BinaryLogEntry {
 
     // Fuel system
     afrTarget(GAUGE_NAME_TARGET_AFR, SensorCategory.FUEL, FieldType.INT16, FuelComputer.TARGETAFR, 1.0 / 1000, 0, 20, ""),
-    sdAirMassInOneCylinder(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.FLOAT, FuelComputer.SDAIRMASSINONECYLINDER, 1.0, 0, 15, "g"),
+    sdAirMassInOneCylinder("sdAirMassInOneCylinder", SensorCategory.FUEL, FieldType.FLOAT, FuelComputer.SDAIRMASSINONECYLINDER, 1.0, 0, 15, "g"),
 
     // Knock
 //    knockLevel(GAUGE_NAME_KNOCK_LEVEL, SensorCategory.DEBUG, FieldType.FLOAT, 108, 0, 5),
@@ -189,6 +189,15 @@ public enum Sensor implements BinaryLogEntry {
     private final FieldType type;
     private final int offset;
     private final double scale;
+
+    static {
+        Set<String> NAMES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+
+        for (Sensor s : Sensor.values()) {
+            if (!NAMES.add(s.name))
+                throw new IllegalArgumentException("Unique name expected " + s.name);
+        }
+    }
 
     Sensor(String name, SensorCategory category, FieldType type, Field field, double scale, double minValue, double maxValue, String units) {
         this.name = name == null ? name() : name;
