@@ -9,12 +9,41 @@ TCU_2 = 0x540
 BRAKE_2 = 0x5A0
 
 
+-- 640
 MOTOR_1 = 0x280
+-- 896
 MOTOR_3 = 0x380
 MOTOR_INFO = 0x580
 MOTOR_5 = 0x480
+-- 1160
 MOTOR_6 = 0x488
 MOTOR_7 = 0x588
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
 
 function onTcu1(bus, id, dlc, data)
     print("onTcu1")
@@ -164,6 +193,8 @@ function onTick()
     motor6Data[2] = math.floor(engineTorque / 0.39)
     motor6Data[3] = math.floor(actualTorque / 0.39)
     motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+    setBitRange(motor6Data, 60, 4, counter16)
+    print("motor6 " .. arrayToString(motor6Data))
     xorChecksum(motor6Data, 1)
    	txCan(1, MOTOR_6, 0, motor6Data)
 
