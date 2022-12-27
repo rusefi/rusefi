@@ -1,7 +1,9 @@
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
 GRA = 0x388
+-- 1088
 TCU_1 = 0x440
+-- 1344
 TCU_2 = 0x540
 BRAKE_2 = 0x5A0
 
@@ -13,9 +15,15 @@ MOTOR_5 = 0x480
 MOTOR_6 = 0x488
 MOTOR_7 = 0x588
 
+function onTcu1(bus, id, dlc, data)
+end
+
+function onTcu2(bus, id, dlc, data)
+end
+
 canRxAdd(AIRBAG)
-canRxAdd(TCU_1)
-canRxAdd(TCU_2)
+canRxAdd(TCU_1, onTcu1)
+canRxAdd(TCU_2, onTcu2)
 canRxAdd(BRAKE_2)
 
 fuelCounter = 0
