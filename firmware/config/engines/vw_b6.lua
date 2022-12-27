@@ -111,7 +111,7 @@ setTickRate(100)
 everySecondTimer = Timer.new()
 canMotorInfoCounter = 0
 
-counter = 0
+counter16 = 0
 
 mafSensor = Sensor.new("maf")
 mafCalibrationIndex = findCurveIndex("mafcurve")
@@ -123,7 +123,7 @@ function onTick()
 --	print(freqValue .. " mafValue=" .. mafValue)
 	mafSensor : set(mafValue)
 
-	counter = (counter + 1) % 16
+	counter16 = (counter16 + 1) % 16
 
 	rpm = getSensor("RPM") or 0
 	clt = getSensor("CLT") or 0
