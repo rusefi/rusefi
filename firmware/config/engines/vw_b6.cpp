@@ -20,6 +20,8 @@ static void commonPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+    setTable(config->injectionPhase, -180.0f);
+
 	engineConfiguration->etbIdleThrottleRange = 10;
 	engineConfiguration->idlePidRpmDeadZone = 500;
 	engineConfiguration->idleMode = IM_AUTO;
