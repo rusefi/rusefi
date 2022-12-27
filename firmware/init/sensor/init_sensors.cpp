@@ -53,7 +53,7 @@ void initNewSensors() {
 	initVbatt();
 	initMap();
 	initTps();
-	initOilPressure();
+	initFluidPressure();
 	initThermistors();
 	initLambda();
 	initFlexSensor();
@@ -88,7 +88,7 @@ void stopSensors() {
 	deInitOldAnalogInputs();
 
 	deinitTps();
-	deinitOilPressure();
+	deinitFluidPressure();
 	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
@@ -102,7 +102,7 @@ void stopSensors() {
 void reconfigureSensors() {
 	initMap();
 	initTps();
-	initOilPressure();
+	initFluidPressure();
 	initVbatt();
 	initThermistors();
 	initFlexSensor();
