@@ -162,7 +162,7 @@ function onTick()
     motor6Data[3] = math.floor(actualTorque / 0.39)
     motor6Data[6] = math.floor(feedbackGearbox / 0.39)
     xorChecksum(motor6Data, 1)
-   	txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
+   	txCan(1, MOTOR_6, 0, motor6Data)
 
 	txCan(1, MOTOR_7, 0, canMotor7)
 
