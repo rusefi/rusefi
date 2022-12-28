@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Thu Dec 22 00:28:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Wed Dec 28 00:47:56 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,7 +22,7 @@ struct antilag_system_state_s {
 	bool ALSMaxCLTCondition : 1 {};
 	/**
 	offset 0 bit 5 */
-	bool ALSMaxTPSCondition : 1 {};
+	bool ALSMaxThrottleIntentCondition : 1 {};
 	/**
 	offset 0 bit 6 */
 	bool isALSSwitchActivated : 1 {};
@@ -120,4 +120,4 @@ struct antilag_system_state_s {
 static_assert(sizeof(antilag_system_state_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Thu Dec 22 00:28:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/antilag_system_state.txt Wed Dec 28 00:47:56 UTC 2022
