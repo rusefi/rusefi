@@ -20,7 +20,8 @@ public:
 	bool isALSMaxRPMCondition() const;
 	bool isALSMinCLTCondition() const;
 	bool isALSMaxCLTCondition() const;
-	bool isALSMaxTPSCondition() const;
-	bool isAntilagConditionMet();
+	bool isALSMaxThrottleIntentCondition() const;
 	bool isInsideALSSwitchCondition();
+    /* enabled and all conditions above */
+	bool isAntilagConditionMet();
 };
