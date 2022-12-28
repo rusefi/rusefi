@@ -54,10 +54,10 @@ bool AntilagSystemBase::isALSMaxCLTCondition() const {
 	return engineConfiguration->ALSMaxCLT > clt;
 }
 
-bool AntilagSystemBase::isALSMaxTPSCondition() const {
-	int tps = Sensor::getOrZero(SensorType::Tps1);
+bool AntilagSystemBase::isALSMaxThrottleIntentCondition() const {
+	int throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 
-	return engineConfiguration->ALSMaxTPS > tps;
+	return engineConfiguration->ALSMaxTPS > throttleIntent;
 }
 
 bool AntilagSystemBase::isAntilagConditionMet() {
@@ -66,18 +66,19 @@ bool AntilagSystemBase::isAntilagConditionMet() {
 	ALSMaxRPMCondition = isALSMaxRPMCondition();
 	ALSMinCLTCondition = isALSMinCLTCondition();
 	ALSMaxCLTCondition = isALSMaxCLTCondition();
-	ALSMaxTPSCondition = isALSMaxTPSCondition();
+	ALSMaxThrottleIntentCondition = isALSMaxThrottleIntentCondition();
 	ALSSwitchCondition = isInsideALSSwitchCondition();
 
-	return ALSMinRPMCondition && ALSMaxRPMCondition && ALSMinCLTCondition && ALSMaxCLTCondition && ALSMaxTPSCondition && ALSSwitchCondition;
+	return ALSMinRPMCondition &&
+	    ALSMaxRPMCondition &&
+	    ALSMinCLTCondition &&
+	    ALSMaxCLTCondition &&
+	    ALSMaxThrottleIntentCondition &&
+	    ALSSwitchCondition;
 }
 
 void AntilagSystemBase::update() {
-	if (!engineConfiguration->antiLagEnabled) {
-		return;
-	}
-
-    isAntilagCondition = isAntilagConditionMet();
+    isAntilagCondition = engineConfiguration->antiLagEnabled && isAntilagConditionMet();
 }
 
 #endif /* EFI_ANTILAG_SYSTEM */

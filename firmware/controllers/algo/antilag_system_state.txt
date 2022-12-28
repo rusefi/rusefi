@@ -5,7 +5,7 @@ bit ALSMinRPMCondition
 bit ALSMaxRPMCondition
 bit ALSMinCLTCondition
 bit ALSMaxCLTCondition
-bit ALSMaxTPSCondition
+bit ALSMaxThrottleIntentCondition
 bit isALSSwitchActivated
 bit ALSActivatePinState
 bit ALSSwitchCondition
