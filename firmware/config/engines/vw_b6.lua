@@ -11,12 +11,19 @@ BRAKE_2 = 0x5A0
 
 -- 640
 MOTOR_1 = 0x280
+-- 644
+MOTOR_BRE = 0x284
+-- 648
+MOTOR_2 = 0x288
 -- 896
 MOTOR_3 = 0x380
-MOTOR_INFO = 0x580
+-- 1152
 MOTOR_5 = 0x480
 -- 1160
 MOTOR_6 = 0x488
+-- 1408 the one with variable payload
+MOTOR_INFO = 0x580
+-- 1416
 MOTOR_7 = 0x588
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
@@ -58,7 +65,7 @@ canRxAdd(TCU_1, onTcu1)
 canRxAdd(TCU_2, onTcu2)
 -- canRxAdd(BRAKE_2)
 
-fuelCounter = 0
+motor5FuelCounter = 0
 
 function setBitRange(data, totalBitIndex, bitWidth, value)
 	local byteIndex = totalBitIndex >> 3
@@ -128,7 +135,7 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
-canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotor1    = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
@@ -168,11 +175,11 @@ function onTick()
 	requestedTorque = fakeTorque
 
 	canMotor1[2] = engineTorque / 0.39
+	setTwoBytes(canMotor1, 2, 4 * rpm)
 	canMotor1[5] = innerTorqWithoutExt / 0.4
 	canMotor1[6] = tps / 0.4
 	canMotor1[7] = torqueLoss / 0.39
 	canMotor1[8] = requestedTorque / 0.39
-	setTwoBytes(canMotor1, 2, 4 * rpm)
 	txCan(1, MOTOR_1, 0, canMotor1)
 
 	desired_wheel_torque = fakeTorque
@@ -183,7 +190,7 @@ function onTick()
 	canMotor3[8] = tps / 0.4
 	txCan(1, MOTOR_3, 0, canMotor3)
 
-	setBitRange(motor5Data, 5, 9, fuelCounter)
+	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
 	xorChecksum(motor5Data, 8)
 	txCan(1, MOTOR_5, 0, motor5Data)
 
@@ -198,7 +205,7 @@ function onTick()
     xorChecksum(motor6Data, 1)
    	txCan(1, MOTOR_6, 0, motor6Data)
 
-	txCan(1, MOTOR_7, 0, canMotor7)
+--	txCan(1, MOTOR_7, 0, canMotor7)
 
     local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
     local connectedToUsb = vbat < 4
@@ -211,7 +218,7 @@ function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
 		everySecondTimer : reset()
 
-		fuelCounter = fuelCounter + 20
+		motor5FuelCounter = motor5FuelCounter + 20
 
 		canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
 		canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
