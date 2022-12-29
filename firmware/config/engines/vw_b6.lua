@@ -136,6 +136,8 @@ function getBitRange(data, bitIndex, bitWidth)
 end
 
 canMotor1    = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motorBreData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor2Data   = { 0x8A, 0x8D, 0x10, 0x04, 0x00, 0x4C, 0xDC, 0x87 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
@@ -147,6 +149,7 @@ setTickRate(100)
 everySecondTimer = Timer.new()
 canMotorInfoCounter = 0
 
+motorBreCounter = 0
 counter16 = 0
 
 mafSensor = Sensor.new("maf")
@@ -181,6 +184,12 @@ function onTick()
 	canMotor1[7] = torqueLoss / 0.39
 	canMotor1[8] = requestedTorque / 0.39
 	txCan(1, MOTOR_1, 0, canMotor1)
+
+	motorBreCounter = (motorBreCounter + 1) % 16
+
+    setBitRange(motorBreData, 8, 4, motorBreCounter)
+    xorChecksum(motorBreData, 1)
+	txCan(1, MOTOR_BRE, 0, motorBreData) -- relay non-TCU message to TCU
 
 	desired_wheel_torque = fakeTorque
 	canMotor3[2] = (iat + 48) / 0.75
