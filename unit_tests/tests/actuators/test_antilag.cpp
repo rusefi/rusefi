@@ -7,7 +7,14 @@ TEST(Actuators, AntiLag) {
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 
+	engineConfiguration->antiLagActivationMode = SWITCH_INPUT_ANTILAG;
 	engine->periodicFastCallback();
+	ASSERT_EQ(1, engine->antilagController.ALSSwitchCondition);
+
+	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
+	engine->periodicFastCallback();
+	ASSERT_EQ(0, engine->antilagController.ALSSwitchCondition);
+
 	ASSERT_EQ(1, engine->antilagController.ALSMinCLTCondition);
 	ASSERT_EQ(1, engine->antilagController.ALSMaxCLTCondition);
 
