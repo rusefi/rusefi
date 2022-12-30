@@ -9,11 +9,12 @@ TEST(Actuators, AntiLag) {
 
 	engineConfiguration->antiLagActivationMode = SWITCH_INPUT_ANTILAG;
 	engine->periodicFastCallback();
-	ASSERT_EQ(1, engine->antilagController.ALSSwitchCondition);
+	// in unit tests we pretend that physical swiych is always OFF
+	ASSERT_EQ(0, engine->antilagController.ALSSwitchCondition);
 
 	engineConfiguration->antiLagActivationMode = ALWAYS_ON_ANTILAG;
 	engine->periodicFastCallback();
-	ASSERT_EQ(0, engine->antilagController.ALSSwitchCondition);
+	ASSERT_EQ(1, engine->antilagController.ALSSwitchCondition);
 
 	ASSERT_EQ(1, engine->antilagController.ALSMinCLTCondition);
 	ASSERT_EQ(1, engine->antilagController.ALSMaxCLTCondition);

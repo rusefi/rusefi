@@ -15,12 +15,14 @@
 #include "advance_map.h"
 
 bool AntilagSystemBase::isInsideALSSwitchCondition() {
-	isALSSwitchActivated = engineConfiguration->antiLagActivationMode != SWITCH_INPUT_ANTILAG;
+	isALSSwitchActivated = engineConfiguration->antiLagActivationMode == SWITCH_INPUT_ANTILAG;
 
 	if (isALSSwitchActivated) {
-	if (isBrainPinValid(engineConfiguration->ALSActivatePin)) {
+		if (isBrainPinValid(engineConfiguration->ALSActivatePin)) {
 #if EFI_PROD_CODE
-		ALSActivatePinState = engineConfiguration->ALSActivateInverted ^ efiReadPin(engineConfiguration->ALSActivatePin);
+			ALSActivatePinState = engineConfiguration->ALSActivateInverted ^ efiReadPin(engineConfiguration->ALSActivatePin);
+#else
+			ALSActivatePinState = false;
 #endif
 		}
 		return ALSActivatePinState;
