@@ -446,7 +446,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit partialSecondaryTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the spedified range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
 bit enableFan1WithAc;Turn on this fan when AC is on.
@@ -475,7 +475,7 @@ bit enableMapEstimationTableFallback;If enabled, the MAP estimate table will be 
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit partialSecondaryPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specified range of the positions we effectively have only one sensor.
 
 
 !todo: extract these two fields into a structure
@@ -1561,7 +1561,7 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	pin_input_mode_e ALSActivatePinMode;
 
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use 65%;"%", 0.5, 0, 0, 100, 1
-	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use xxx%;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use 69%;"%", 0.5, 0, 0, 100, 1
 pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 uint8_t[96] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 

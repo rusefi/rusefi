@@ -188,8 +188,8 @@ void initTps() {
 	percent_t max = engineConfiguration->tpsErrorDetectionTooHigh;
 
 	if (!engineConfiguration->consumeObdSensors) {
-		bool isFordTps = engineConfiguration->useFordRedundantTps;
-		bool isFordPps = engineConfiguration->useFordRedundantPps;
+		bool isFordTps = engineConfiguration->partialSecondaryTps;
+		bool isFordPps = engineConfiguration->partialSecondaryPps;
 
 		float tpsSecondaryMaximum = engineConfiguration->tpsSecondaryMaximum;
 		if (tpsSecondaryMaximum < 20) {
