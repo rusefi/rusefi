@@ -1776,7 +1776,7 @@ int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -720, 720, 1
 uint16_t[4] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
-int16_t[4 x 4] autoscale ALSFuelAdjustment;;"deg", 0.1, 0, -720, 720, 1
+int16_t[4 x 4] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 500, 1
 uint16_t[4] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
 
