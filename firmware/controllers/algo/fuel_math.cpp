@@ -130,7 +130,7 @@ float getRunningFuel(float baseFuel) {
 	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
 #if EFI_ANTILAG_SYSTEM
-	runningFuel *= (1 + engine->antilagController.fuelALSCorrection);
+	runningFuel *= (1 + engine->antilagController.fuelALSCorrection / 100);
 #endif /* EFI_ANTILAG_SYSTEM */
 
 #if EFI_LAUNCH_CONTROL
@@ -395,21 +395,20 @@ float getBaroCorrection() {
 	}
 }
 
-auto tps = Sensor::get(SensorType::Tps1);
-        auto rpm = Sensor::get(SensorType::Rpm);
-float getfuelALSCorrection(int rpm, float engineLoad) {
+percent_t getFuelALSCorrection(int rpm) {
 #if EFI_ANTILAG_SYSTEM
         if (engine->antilagController.isAntilagCondition) {
+        	float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 		    auto AlsFuelAdd = interpolate3d(
 			config->ALSFuelAdjustment,
-			config->alsFuelAdjustmentLoadBins, tps.Value,
+			config->alsFuelAdjustmentLoadBins, throttleIntent,
 			config->alsFuelAdjustmentrpmBins, rpm
 	    );
 	    return AlsFuelAdd;	
     } else
 #endif /* EFI_ANTILAG_SYSTEM */
     {
-		return 1;
+		return 0;
 	}
 }
 
