@@ -148,12 +148,12 @@ private:
 };
 
 // Throttle sensors and redundancy
-static FuncSensPair tps1p(TPS_TS_CONVERSION, SensorType::Tps1Primary);
-static FuncSensPair tps1s(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
-static FuncSensPair tps2p(TPS_TS_CONVERSION, SensorType::Tps2Primary);
-static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
-static RedundantPair tps1(tps1p, tps1s, SensorType::Tps1);
-static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
+static FuncSensPair throttle1Primary(TPS_TS_CONVERSION, SensorType::Tps1Primary);
+static FuncSensPair throttle1Secondary(TPS_TS_CONVERSION, SensorType::Tps1Secondary);
+static RedundantPair throttle1(throttle1Primary, throttle1Secondary, SensorType::Tps1);
+static FuncSensPair throttle2Primary(TPS_TS_CONVERSION, SensorType::Tps2Primary);
+static FuncSensPair throttle2Secondary(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
+static RedundantPair throttle2(throttle2Primary, throttle2Secondary, SensorType::Tps2);
 
 // Pedal sensors and redundancy
 static FuncSensPair pedalPrimary(1, SensorType::AcceleratorPedalPrimary);
@@ -177,13 +177,13 @@ void initTps() {
 		bool isPartialRedundantThrottle = engineConfiguration->partialSecondaryTps;
 		float throttleSecondaryMaximum = engineConfiguration->tpsSecondaryMaximum;
 
-		tps1.init(
+		throttle1.init(
 			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, min, max },
 			{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, min, max },
 			throttleSecondaryMaximum
 		);
 
-		tps2.init(
+		throttle2.init(
 			{ engineConfiguration->tps2_1AdcChannel, (float)engineConfiguration->tps2Min, (float)engineConfiguration->tps2Max, min, max },
 			{ engineConfiguration->tps2_2AdcChannel, (float)engineConfiguration->tps2SecondaryMin, (float)engineConfiguration->tps2SecondaryMax, min, max },
 			throttleSecondaryMaximum
@@ -215,8 +215,8 @@ void initTps() {
 }
 
 void deinitTps() {
-	tps1.deinit();
-	tps2.deinit();
+	throttle1.deinit();
+	throttle2.deinit();
 
 	pedal.deinit();
 
