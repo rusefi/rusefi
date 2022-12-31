@@ -14,7 +14,7 @@
 
 #define TPS_ADC_UNITS_PER_VOLT 200
 
-struct TpsConfig {
+struct SensorConfig {
 	adc_channel_e channel;
 	float closed;
 	float open;
@@ -31,7 +31,7 @@ public:
 		m_sens.setFunction(m_func);
 	}
 
-	bool init(const TpsConfig& cfg) {
+	bool init(const SensorConfig& cfg) {
 		// If the configuration was invalid, don't continue to configure the sensor
 		if (!configure(cfg)) {
 			return false;
@@ -55,7 +55,7 @@ public:
 	}
 
 private:
-	bool configure(const TpsConfig& cfg) {
+	bool configure(const SensorConfig& cfg) {
 		// Only configure if we have a channel
 		if (!isAdcChannelValid(cfg.channel)) {
 #if EFI_UNIT_TEST
@@ -102,7 +102,7 @@ public:
 	{
 	}
 
-	void init(const TpsConfig& primary, const TpsConfig& secondary, bool averageSensors, float secondaryMaximum) {
+	void init(const SensorConfig& primary, const SensorConfig& secondary, bool averageSensors, float secondaryMaximum) {
 		bool hasFirst = m_pri.init(primary);
 		if (!hasFirst) {
 			// no input if we have no first channel
