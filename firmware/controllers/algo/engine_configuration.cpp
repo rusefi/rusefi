@@ -464,9 +464,9 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
-	setLinearCurve(config->alsIgnRetardLoadBins, 0, 100, 5);
+	setLinearCurve(config->alsIgnRetardLoadBins, 2, 10, 1);
 	setRpmTableBin(config->alsIgnRetardrpmBins);
-	setLinearCurve(config->alsFuelAdjustmentLoadBins, 0, 100, 5);
+	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, 1);
 	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
 
 #if EFI_ENGINE_CONTROL
