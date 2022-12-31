@@ -1,0 +1,11 @@
+pins:
+
+info:
+  directory: hellen/hellen-hyundai-196
+  title: Hellen 196 Hyundai
+  image:
+    file: main.jpg
+  pins:
+    - pin: K1
+      x: 1900
+      y: 660
