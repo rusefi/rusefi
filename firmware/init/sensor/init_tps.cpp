@@ -107,17 +107,15 @@ public:
 			return;
 		}
 
-		{
-			// Check that the primary and secondary aren't too close together - if so, the user may have done
-			// an unsafe thing where they wired a single sensor to both inputs. Don't do that!
-			bool hasBothSensors = isAdcChannelValid(primary.channel) && isAdcChannelValid(secondary.channel);
-			bool tooCloseClosed = absF(primary.closed - secondary.closed) < 0.2f;
-			bool tooCloseOpen = absF(primary.open - secondary.open) < 0.2f;
+		// Check that the primary and secondary aren't too close together - if so, the user may have done
+		// an unsafe thing where they wired a single sensor to both inputs. Don't do that!
+		bool hasBothSensors = isAdcChannelValid(primary.channel) && isAdcChannelValid(secondary.channel);
+		bool tooCloseClosed = absF(primary.closed - secondary.closed) < 0.2f;
+		bool tooCloseOpen = absF(primary.open - secondary.open) < 0.2f;
 
-			if (hasBothSensors && tooCloseClosed && tooCloseOpen) {
-				firmwareError(OBD_TPS_Configuration, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
-				return;
-			}
+		if (hasBothSensors && tooCloseClosed && tooCloseOpen) {
+			firmwareError(OBD_TPS_Configuration, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());
+			return;
 		}
 
 		// RedundantSensor::m_secondaryMaximum of zero implies full redundancy (no partial averaging threshold)
@@ -170,7 +168,7 @@ static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
-    efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
+	efiAssertVoid(OBD_PCM_Processor_Fault, engineConfiguration != nullptr, "null engineConfiguration");
 	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
 	percent_t max = engineConfiguration->tpsErrorDetectionTooHigh;
 
