@@ -1,7 +1,6 @@
 struct_no_prefix launch_control_state_s
 
 int retardThresholdRpm
-float fuelALSCorrection
 
 bit combinedConditions
 bit launchActivatePinState
