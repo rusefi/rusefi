@@ -2,7 +2,6 @@
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
-#include "redundant_ford_tps.h"
 #include "fallback_sensor.h"
 #include "frequency_sensor.h"
 #include "Lps25Sensor.h"
@@ -36,15 +35,19 @@ void CanSensorBase::showInfo(const char* sensorName) const {
 #endif // EFI_CAN_SUPPORT
 
 void RedundantSensor::showInfo(const char* sensorName) const {
-	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+	// TODO(nms): print about partial redundancy
+	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s partial secondary: %s (max: %f)",
+		sensorName,
+		getSensorName(m_first),
+		getSensorName(m_second),
+		boolToString(m_ignoreSecond),
+		boolToString(m_partialSecondMaximum == 0),
+		m_partialSecondMaximum
+	);
 }
 
 void FrequencySensor::showInfo(const char* sensorName) const {
 	efiPrintf("FrequencySensor \"%s\" counter %d", sensorName, eventCounter);
-}
-
-void RedundantFordTps::showInfo(const char* sensorName) const {
-	efiPrintf("Sensor \"%s\" is Ford-type redundant TPS combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
 }
 
 void FallbackSensor::showInfo(const char* sensorName) const {
@@ -53,7 +56,7 @@ void FallbackSensor::showInfo(const char* sensorName) const {
 
 void RpmCalculator::showInfo(const char* /*sensorName*/) const {
 #if EFI_SHAFT_POSITION_INPUT
-	efiPrintf("RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f", 
+	efiPrintf("RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f",
 		isStopped(),
 		isSpinningUp(),
 		isCranking(),
