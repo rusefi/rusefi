@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 21 23:33:29 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 31 19:32:06 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5203,7 +5203,7 @@ struct persistent_config_s {
 	 */
 	uint16_t alsIgnRetardrpmBins[4];
 	/**
-	deg
+	percent
 	 * offset 21344
 	 */
 	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[4][4];
@@ -5229,4 +5229,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 21 23:33:29 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 31 19:32:06 UTC 2022
