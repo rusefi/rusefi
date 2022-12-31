@@ -17,7 +17,7 @@ void initFuelMap();
 float getRunningFuel(float baseFuel);
 
 float getBaroCorrection();
-float getfuelALSCorrection(int rpm, float engineLoad);
+percent_t getFuelALSCorrection(int rpm);
 int getNumberOfInjections(injection_mode_e mode);
 angle_t getInjectionOffset(float rpm, float load);
 float getIatFuelCorrection();

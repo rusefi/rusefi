@@ -13,6 +13,7 @@
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
+#include "fuel_math.h"
 
 bool AntilagSystemBase::isInsideALSSwitchCondition() {
 	isALSSwitchActivated = engineConfiguration->antiLagActivationMode == SWITCH_INPUT_ANTILAG;
@@ -32,15 +33,11 @@ bool AntilagSystemBase::isInsideALSSwitchCondition() {
 	}
 }
 
-bool AntilagSystemBase::isALSMinRPMCondition() const {
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
-
+bool AntilagSystemBase::isALSMinRPMCondition(int rpm) const {
 	return engineConfiguration->ALSMinRPM < rpm;
 }
 
-bool AntilagSystemBase::isALSMaxRPMCondition() const {
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
-
+bool AntilagSystemBase::isALSMaxRPMCondition(int rpm) const {
 	return engineConfiguration->ALSMaxRPM > rpm;
 }
 
@@ -62,10 +59,11 @@ bool AntilagSystemBase::isALSMaxThrottleIntentCondition() const {
 	return engineConfiguration->ALSMaxTPS > throttleIntent;
 }
 
-bool AntilagSystemBase::isAntilagConditionMet() {
+bool AntilagSystemBase::isAntilagConditionMet(int rpm) {
 
-	ALSMinRPMCondition = isALSMinRPMCondition();
-	ALSMaxRPMCondition = isALSMaxRPMCondition();
+
+	ALSMinRPMCondition = isALSMinRPMCondition(rpm);
+	ALSMaxRPMCondition = isALSMaxRPMCondition(rpm);
 	ALSMinCLTCondition = isALSMinCLTCondition();
 	ALSMaxCLTCondition = isALSMaxCLTCondition();
 	ALSMaxThrottleIntentCondition = isALSMaxThrottleIntentCondition();
@@ -80,7 +78,12 @@ bool AntilagSystemBase::isAntilagConditionMet() {
 }
 
 void AntilagSystemBase::update() {
-    isAntilagCondition = engineConfiguration->antiLagEnabled && isAntilagConditionMet();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+    isAntilagCondition = engineConfiguration->antiLagEnabled && isAntilagConditionMet(rpm);
+
+#if EFI_ANTILAG_SYSTEM
+	fuelALSCorrection = getFuelALSCorrection(rpm);
+#endif // EFI_ANTILAG_SYSTEM
 }
 
 #endif /* EFI_ANTILAG_SYSTEM */
