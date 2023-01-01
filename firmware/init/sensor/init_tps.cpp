@@ -123,6 +123,7 @@ public:
 		// RedundantSensor::m_secondaryMaximum of zero implies full redundancy (no partial averaging threshold)
 		if (secondaryMaximum != 0 && secondaryMaximum < 20) {
 			// don't allow <20% partial redundancy
+			warning(CUSTOM_INVALID_TPS_SETTING, "Configuration for partial redundant switch-over too low: %.1f %s", secondaryMaximum, m_redund.getSensorName());
 			secondaryMaximum = 20;
 		}
 
