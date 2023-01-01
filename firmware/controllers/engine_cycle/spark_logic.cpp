@@ -498,7 +498,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 			}
 #endif // EFI_LAUNCH_CONTROL
 
-#if EFI_ANTILAG_SYSTEM
+#if EFI_ANTILAG_SYSTEM && EFI_LAUNCH_CONTROL
 			if (engine->ALSsoftSparkLimiter.shouldSkip()) {
 				continue;
 			}
