@@ -44,6 +44,7 @@ for BOARD in \
    "microrusefi mre_f4" \
    "core8 core8" \
    "48way 48way" \
+   "m74_9 m74_9" \
    "s105 s105" \
    "frankenso frankenso_na6" \
    "prometheus prometheus_469" \
