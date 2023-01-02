@@ -417,5 +417,9 @@ public class ConfigField {
             return quote(name);
         return comment;
     }
+
+    public String getCommentTemplated() {
+        return state.variableRegistry.applyVariables(getComment());
+    }
 }
 

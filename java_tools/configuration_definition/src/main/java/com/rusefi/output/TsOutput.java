@@ -69,8 +69,7 @@ public class TsOutput {
 
                 ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    String commentContent = configField.getComment();
-                    commentContent = state.variableRegistry.applyVariables(commentContent);
+                    String commentContent = configField.getCommentTemplated();
                     commentContent = ConfigField.unquote(commentContent);
                     int newLineIndex = commentContent.indexOf("\\n");
                     if (newLineIndex != -1) {
