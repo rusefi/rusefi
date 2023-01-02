@@ -10,6 +10,7 @@ struct LuaAdjustments
 	bit brakePedalState
     bit acRequestState
     bit luaDisableEtb
+    bit luaIgnCut
 
 end_struct
 
