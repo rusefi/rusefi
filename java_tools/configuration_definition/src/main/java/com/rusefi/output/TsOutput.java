@@ -32,8 +32,8 @@ public class TsOutput {
         return tsHeader.toString();
     }
 
-    public StringBuilder getSettingContextHelp() {
-        return settingContextHelp;
+    public String getSettingContextHelp() {
+        return settingContextHelp.toString();
     }
 
     public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {

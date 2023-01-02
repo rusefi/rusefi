@@ -10,8 +10,6 @@ import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.*;
 
 /**
@@ -690,7 +688,7 @@ public class ConfigFieldParserTest {
         assertEquals(
                 "\tpid_afr_type = \"PID dTime\"\n" +
                 "\tpid_isForcedInduction = \"Does the vehicle have a turbo or supercharger?\"\n" +
-                        "\tpid_enableFan1WithAc = \"Turn on this fan when AC is on.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
+                        "\tpid_enableFan1WithAc = \"Turn on this fan when AC is on.\"\n", tsProjectConsumer.getSettingContextHelpForUnitTest());
     }
 
     @Test
