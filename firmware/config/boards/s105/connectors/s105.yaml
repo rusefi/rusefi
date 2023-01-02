@@ -1,9 +1,172 @@
 pins:
-  - pin: 13
-    function: Ignition Switch KL15 / Battery Voltage Analog Input
-    class: analog_inputs
-    ts_name: 13 - IN_VIGN
-    color: red
+  - pin: 1a
+    id: D14
+    function: Ignition coil 4
+    class: outputs
+    ts_name: 1 - IGN_4
+    type: ls
+
+  - pin: 2a
+    id: D12
+    function: Ignition coil 2
+    class: outputs
+    ts_name: 2 - IGN_2
+    type: ls
+
+  - pin: 3a
+    function: Ignition GND
+    type: GND
+
+  - pin: 4a
+    id: D15
+    function: Ignition coil 3
+    class: outputs
+    ts_name: 4 - IGN_3
+    type: ls
+
+  - pin: 5a
+    id: D13
+    function: Ignition coil 1
+    class: outputs
+    ts_name: 5 - IGN_1
+    type: ls
+
+# 6-24 segment
+  - pin: 6a
+    id: D9
+    function: Injector #2
+    class: outputs
+    ts_name: 6 - INJ_2
+    type: ls
+
+  - pin: 7a
+    id: D10
+    function: Injector #3
+    class: outputs
+    ts_name: 7 - INJ_3
+    type: ls
+
+  - pin: 8a
+    id: B8
+    function: Tach Out
+    class: outputs
+    ts_name: na 8 - TACH
+    type: ls
+
+  - pin: 9a
+    id: E0
+    function: Unk Out 1
+    class: outputs
+    ts_name: 9 - Unk Out 1
+    type: ls
+
+  - pin: 10a
+    id: B9
+    function: ECO Out
+    class: outputs
+    ts_name: 10 - ECO Out
+    type: ls
+
+# 25-43 segment
+  - pin: 25a
+    id: D0
+    function: Injector #7
+    class: outputs
+    ts_name: na 25 - INJ_7
+    type: ls
+
+  - pin: 27a
+    id: D8
+    function: Injector #1
+    class: outputs
+    ts_name: 27 - INJ_1
+    type: ls
+
+  - pin: 28a
+    id: C7
+    function: AFR Heater 2
+    class: outputs
+    ts_name: 28 - AFR Heater 2
+    type: ls
+
+  - pin: 29a
+    id: C6
+    function: Recirculation Valve
+    class: outputs
+    ts_name: 29 - EGR
+    type: ls
+
+  - pin: 30a
+    id: E9
+    function: Unk Out 2
+    class: outputs
+    ts_name: na 20 - Unk Out 2
+    type: ls
+
+  - pin: 31a
+    id: E14
+    function: MIL Control
+    class: outputs
+    ts_name: 31 - CEL
+    type: ls
+
+# 44-62 segment
+  - pin: 46a
+    id: B14
+    function: Vapor Absorber Valve
+    class: outputs
+    ts_name: 46 - Absorber
+    type: ls
+
+  - pin: 47a
+    id: D11
+    function: Injector #4
+    class: outputs
+    ts_name: 47 - INJ_4
+    type: ls
+
+  - pin: 48a
+    id: E5
+    function: AFR Heater 1
+    class: outputs
+    ts_name: 48 - AFR Heater 1
+    type: ls
+
+  - pin: 49a
+    id: E6
+    function: Injector #6
+    class: outputs
+    ts_name: na 49 - INJ_6
+    type: ls
+
+  - pin: 50a
+    id: E12
+    function: AUX Starter Relay
+    class: outputs
+    ts_name: 50 - AUX Starter Relay
+    type: ls
+
+# 63-81 segment
+  - pin: 68a
+    id: D6
+    function: Fan Relay #1
+    class: outputs
+    ts_name: na 58 - Fan Relay #1
+    type: ls
+
+  - pin: 69a
+    id: E10
+    function: AC Relay
+    class: outputs
+    ts_name: na 69 - AC Relay
+    type: ls
+
+  - pin: 70a
+    id: D2
+    function: Fuel Pump Relay
+    class: outputs
+    ts_name: 70 - Fuel Pump Relay
+    type: ls
 
 
 info:
