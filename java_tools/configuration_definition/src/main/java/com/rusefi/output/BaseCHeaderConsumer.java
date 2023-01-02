@@ -12,11 +12,11 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         ConfigField configField = iterator.cf;
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
-            String comment = "\t/**" + EOL + packComment(configField.getCommentContent(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
+            String comment = "\t/**" + EOL + packComment(configField.getComment(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
-        String cEntry = getComment(configField.getCommentContent(), iterator.currentOffset, configField.getUnits());
+        String cEntry = getComment(configField.getComment(), iterator.currentOffset, configField.getUnits());
 
         String typeName = configField.getType();
 

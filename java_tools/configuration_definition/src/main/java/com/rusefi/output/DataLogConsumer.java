@@ -15,7 +15,8 @@ import static com.rusefi.VariableRegistry.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 /**
- * here we generate [Outputs] section of TS .ini file
+ * here we generate [Datalog] section of TS .ini file
+ * DataLog section in turn references [OutputChannels] entities
  * @see SdCardFieldsConsumer
  */
 public class DataLogConsumer implements ConfigurationConsumer {

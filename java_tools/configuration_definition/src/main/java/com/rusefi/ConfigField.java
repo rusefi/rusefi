@@ -243,19 +243,14 @@ public class ConfigField {
                 '}';
     }
 
-
-    public String getCommentContent() {
-        if (comment == null || comment.isEmpty())
-            return comment;
-        return comment.trim();
-    }
-
     public int[] getArraySizes() {
         return arraySizes;
     }
 
     public String getComment() {
-        return comment;
+        if (comment == null)
+            return null;
+        return comment.trim();
     }
 
     /**
