@@ -19,6 +19,9 @@ import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quo
  * @see SdCardFieldsConsumer
  */
 public class DataLogConsumer implements ConfigurationConsumer {
+    // https://github.com/rusefi/web_backend/issues/166
+    private static final int MSQ_LENGTH_LIMIT = 34;
+
     public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
     private final StringBuilder tsWriter = new StringBuilder();
@@ -91,6 +94,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
              */
             comment = prefix + unquote(configField.getName());
         }
+        if (comment.length() > MSQ_LENGTH_LIMIT)
+            throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length());
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);

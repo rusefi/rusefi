@@ -17,8 +17,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  */
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
-    // https://github.com/rusefi/web_backend/issues/166
-    private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
@@ -71,13 +69,6 @@ public class TsOutput {
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentTemplated();
                     commentContent = ConfigField.unquote(commentContent);
-                    int newLineIndex = commentContent.indexOf("\\n");
-                    if (newLineIndex != -1) {
-                        // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
-                        commentContent = commentContent.substring(0, newLineIndex);
-                    }
-                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
-                        throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online at " + commentContent.length());
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
 
