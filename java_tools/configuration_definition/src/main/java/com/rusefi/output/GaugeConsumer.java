@@ -21,7 +21,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.stack.isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
-                    (state, configField, prefix) -> handle(readerState, configField, prefix));
+                    (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
             String content = iterator.getContent();
             charArrayWriter.append(content);
@@ -34,8 +34,8 @@ public class GaugeConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ReaderState readerState, ConfigField configField, String prefix) {
-        String comment = getHumanGaugeName("", configField, readerState.variableRegistry);
+    private String handle(ConfigField configField, String prefix) {
+        String comment = getHumanGaugeName("", configField);
         comment = ConfigField.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;

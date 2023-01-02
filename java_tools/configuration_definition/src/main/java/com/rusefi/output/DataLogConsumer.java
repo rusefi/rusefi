@@ -3,7 +3,6 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
-import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +32,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.stack.isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
-                    this::handle);
+                    (configField, prefix, prefix2) -> handle(prefix, prefix2));
             iterator.loop();
             String content = iterator.getContent();
             tsWriter.append(content);
@@ -50,7 +49,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ReaderState state, ConfigField configField, String prefix) {
+    private String handle(ConfigField configField, String prefix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
@@ -69,7 +68,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getHumanGaugeName(prefix, configField, state.variableRegistry);
+        String comment = getHumanGaugeName(prefix, configField);
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
@@ -82,8 +81,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
      * More detailed technical explanation should be placed in consecutive lines
      */
     @NotNull
-    public static String getHumanGaugeName(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
-        String comment = variableRegistry.applyVariables(configField.getComment());
+    public static String getHumanGaugeName(String prefix, ConfigField configField) {
+        String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
         if (comment.isEmpty())
