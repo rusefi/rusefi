@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 22 00:28:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jan 02 22:53:02 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -406,6 +406,7 @@ public class EngineState {
 	public static final Field LUA_BRAKEPEDALSTATE = Field.create("LUA_BRAKEPEDALSTATE", 8, FieldType.BIT, 1).setBaseOffset(888);
 	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2).setBaseOffset(888);
 	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(888);
+	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(888);
 	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.FLOAT).setBaseOffset(888);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(888);
 	public static final Field SD_AIRFLOW = Field.create("SD_AIRFLOW", 20, FieldType.FLOAT).setBaseOffset(888);
@@ -456,6 +457,7 @@ public class EngineState {
 	LUA_BRAKEPEDALSTATE,
 	LUA_ACREQUESTSTATE,
 	LUA_LUADISABLEETB,
+	LUA_LUAIGNCUT,
 	SD_TCHARGE,
 	SD_TCHARGEK,
 	SD_AIRFLOW,
