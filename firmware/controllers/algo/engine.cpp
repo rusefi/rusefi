@@ -285,6 +285,8 @@ void Engine::resetLua() {
 	engineState.lua = {};
 	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
+	engineState.lua.luaDisableEtb = false;
+	engineState.lua.luaIgnCut = false;
 #if EFI_BOOST_CONTROL
 	boostController.resetLua();
 #endif // EFI_BOOST_CONTROL
