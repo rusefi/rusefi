@@ -3,11 +3,10 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 
-import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.rusefi.output.DataLogConsumer.getComment;
+import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class GaugeConsumer implements ConfigurationConsumer {
@@ -36,7 +35,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ReaderState readerState, ConfigField configField, String prefix) {
-        String comment = getComment("", configField, readerState.variableRegistry);
+        String comment = getHumanGaugeName("", configField, readerState.variableRegistry);
         comment = ConfigField.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;
