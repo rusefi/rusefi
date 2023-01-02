@@ -177,15 +177,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
-    // todo: use board ID condition? below D no SD, D and up with SD?
     engineConfiguration->isSdCardEnabled = true;
 
-	engineConfiguration->acSwitch = Gpio::Unassigned;
-	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
-	engineConfiguration->fanPin = H144_OUT_IO11;
 	engineConfiguration->mainRelayPin = H144_OUT_IO10;
+	engineConfiguration->fanPin = H144_OUT_IO11;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
     engineConfiguration->tachOutputPin = H144_OUT_IO13;
-    engineConfiguration->boostControlPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
