@@ -14,6 +14,10 @@ import java.util.TreeSet;
 import static com.rusefi.VariableRegistry.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
+/**
+ * here we generate [Outputs] section of TS .ini file
+ * @see SdCardFieldsConsumer
+ */
 public class DataLogConsumer implements ConfigurationConsumer {
     public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
