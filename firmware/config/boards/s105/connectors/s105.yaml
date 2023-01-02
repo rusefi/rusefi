@@ -146,6 +146,10 @@ pins:
     ts_name: 50 - AUX Starter Relay
     type: ls
 
+  - pin: 60a
+    function: CAN bus high
+    type: can
+
 # 63-81 segment
   - pin: 68a
     id: D6
@@ -168,6 +172,9 @@ pins:
     ts_name: 70 - Fuel Pump Relay
     type: ls
 
+  - pin: 81a
+    function: CAN bus low
+    type: can
 
 info:
   title: S105
