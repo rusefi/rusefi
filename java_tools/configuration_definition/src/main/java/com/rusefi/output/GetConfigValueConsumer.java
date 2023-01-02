@@ -19,6 +19,10 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
 import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 
+/**
+ * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
+ * @see GetOutputValueConsumer
+ */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
