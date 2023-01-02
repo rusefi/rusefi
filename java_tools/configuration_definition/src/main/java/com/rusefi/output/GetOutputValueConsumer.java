@@ -17,6 +17,10 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetConfigValueConsumer.FILE_HEADER;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
+/**
+ * here we generate C++ code needed for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getoutputname implementation
+ * @see GetConfigValueConsumer
+ */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final List<Pair<String, String>> getterPairs = new ArrayList<>();
