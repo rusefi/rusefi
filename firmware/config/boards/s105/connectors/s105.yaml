@@ -119,6 +119,9 @@ pins:
   - pin: 36a
     function: GNDA (MAP, AFR 1)
 
+  - pin: 43a
+    function: Prog Mode
+
 # 44-62 segment
   - pin: 46a
     id: B14
@@ -193,6 +196,9 @@ pins:
     class: outputs
     ts_name: 70 - Fuel Pump Relay
     type: ls
+
+  - pin: 71a
+    function: K-line
 
   - pin: 80a
     function: GND
