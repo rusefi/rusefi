@@ -85,8 +85,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
         String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
-        if (comment.isEmpty())
+        if (comment.isEmpty()) {
+            /**
+             * @see ConfigField#getCommentOrName()
+             */
             comment = prefix + unquote(configField.getName());
+        }
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);

@@ -32,7 +32,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     // also known as TS tooltips
-    public StringBuilder getSettingContextHelp() {
+    public String getSettingContextHelpForUnitTest() {
         return tsOutput.getSettingContextHelp();
     }
 
@@ -56,7 +56,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write(fieldsSection);
         if (tsOutput.getSettingContextHelp().length() > 0) {
             tsHeader.write("[" + SETTING_CONTEXT_HELP + "]" + ToolUtil.EOL);
-            tsHeader.write(tsOutput.getSettingContextHelp().toString() + ToolUtil.EOL + ToolUtil.EOL);
+            tsHeader.write(tsOutput.getSettingContextHelp() + ToolUtil.EOL + ToolUtil.EOL);
             tsHeader.write("; " + SETTING_CONTEXT_HELP_END + ToolUtil.EOL);
         }
         tsHeader.write("; " + CONFIG_DEFINITION_END + ToolUtil.EOL);
