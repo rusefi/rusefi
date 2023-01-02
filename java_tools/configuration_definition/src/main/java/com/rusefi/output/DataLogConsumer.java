@@ -15,7 +15,7 @@ import static com.rusefi.VariableRegistry.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class DataLogConsumer implements ConfigurationConsumer {
-    public static final String UNUSED = "unused";
+    public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
     private final StringBuilder tsWriter = new StringBuilder();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
