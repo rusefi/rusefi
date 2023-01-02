@@ -11,10 +11,10 @@ percent_t deltaTps
 
 bit isAboveAccelThreshold;
 bit isBelowDecelThreshold;
-bit isTimeToResetAccumulator
+bit isTimeToResetAccumulator;Accel: reset time
 bit isFractionalEnrichment
-bit belowEpsilon;
-bit tooShort;
+bit belowEpsilon;Accel: below threshold
+bit tooShort;Accel: too short
 
 float fractionalInjFuel
 
