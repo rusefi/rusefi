@@ -86,9 +86,9 @@ public class ReaderState {
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
-        SystemOut.println("Reading definition from " + this.definitionInputFile);
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(this.definitionInputFile), IoUtils.CHARSET.name()));
-        readBufferedReader(definitionReader, this.destinations);
+        SystemOut.println("Reading definition from " + definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
+        readBufferedReader(definitionReader, destinations);
     }
 
     public void read(Reader reader) throws IOException {

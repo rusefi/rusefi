@@ -48,7 +48,7 @@ float baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@
 struct cranking_fuel_s
 
 floatms_t baseFuel;Fuel: base duration\nDuration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.\nDeprecated. Please use '1'.\nTODO: maybe account for injector flow?
-float coolantTemperatureCoefficient;
+float coolantTemperatureCoefficient;Cranking: CLT coefficient
 float tpsCoefficient
 float durationCoefficient
 floatms_t fuel;Fuel: Actual injection\nduration based on all coefficients.
