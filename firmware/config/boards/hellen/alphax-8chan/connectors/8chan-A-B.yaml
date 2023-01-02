@@ -139,6 +139,15 @@ pins:
     ts_name: Battery Sense
     type: 12v
 
+  - pin: 8B
+    # H144_OUT_IO10
+    id: G12
+    class: outputs
+    ts_name: 8B - Main Relay LS
+    function: Main relay control
+    type: ls
+    color: purple
+
   - pin: 26B
     function: Power GND
     type: gnd
