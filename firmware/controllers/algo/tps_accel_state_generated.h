@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Jan 02 17:57:24 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -32,15 +32,18 @@ struct tps_accel_state_s {
 	offset 20 bit 1 */
 	bool isBelowDecelThreshold : 1 {};
 	/**
+	 * Accel: reset time
 	offset 20 bit 2 */
 	bool isTimeToResetAccumulator : 1 {};
 	/**
 	offset 20 bit 3 */
 	bool isFractionalEnrichment : 1 {};
 	/**
+	 * Accel: below threshold
 	offset 20 bit 4 */
 	bool belowEpsilon : 1 {};
 	/**
+	 * Accel: too short
 	offset 20 bit 5 */
 	bool tooShort : 1 {};
 	/**
@@ -149,4 +152,4 @@ struct tps_accel_state_s {
 static_assert(sizeof(tps_accel_state_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/tps_accel_state.txt Mon Jan 02 17:57:24 UTC 2023
