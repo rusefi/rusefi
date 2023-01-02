@@ -95,7 +95,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
 
         mdContent.append("### " + userName + "\n");
-        mdContent.append(cf.getCommentContent() + "\n\n");
+        mdContent.append(cf.getComment() + "\n\n");
 
 
         return "";
