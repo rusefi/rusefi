@@ -41,7 +41,7 @@ public class SdCardFieldsContent {
     private String getLine(ReaderState readerState, ConfigField configField, String prefix, String name) {
         return "\t{" + home + "." + name +
                 ", "
-                + DataLogConsumer.getComment(prefix, configField, readerState.variableRegistry) +
+                + DataLogConsumer.getHumanGaugeName(prefix, configField, readerState.variableRegistry) +
                 ", " +
                 quote(configField.getUnits()) +
                 ", " +

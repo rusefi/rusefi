@@ -68,7 +68,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getComment(prefix, configField, state.variableRegistry);
+        String comment = getHumanGaugeName(prefix, configField, state.variableRegistry);
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
@@ -76,17 +76,26 @@ public class DataLogConsumer implements ConfigurationConsumer {
         return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }
 
+    /**
+     * Short human-readable field summary as used for gauge names and log file keys taken from the first line of the comment
+     * More detailed technical explanation should be placed in consecutive lines
+     */
     @NotNull
-    public static String getComment(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
+    public static String getHumanGaugeName(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
         String comment = variableRegistry.applyVariables(configField.getComment());
-        String[] comments = comment == null ? new String[0] : unquote(comment).split("\\\\n");
-        comment = (comments.length > 0) ? comments[0] : "";
+        comment = getFirstLine(comment);
 
         if (comment.isEmpty())
             comment = prefix + unquote(configField.getName());
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);
+        return comment;
+    }
+
+    private static String getFirstLine(String comment) {
+        String[] comments = comment == null ? new String[0] : unquote(comment).split("\\\\n");
+        comment = (comments.length > 0) ? comments[0] : "";
         return comment;
     }
 
