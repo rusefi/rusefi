@@ -3,7 +3,7 @@ pins:
     id: D14
     function: Ignition coil 4
     class: outputs
-    ts_name: 1 - IGN_4
+    ts_name: na 1 - IGN_4
     type: ls
 
   - pin: 2a
@@ -21,7 +21,7 @@ pins:
     id: D15
     function: Ignition coil 3
     class: outputs
-    ts_name: 4 - IGN_3
+    ts_name: na 4 - IGN_3
     type: ls
 
   - pin: 5a
@@ -67,6 +67,9 @@ pins:
     ts_name: 10 - ECO Out
     type: ls
 
+  - pin: 17a
+    function: GNDA
+
 # 25-43 segment
   - pin: 25a
     id: D0
@@ -110,6 +113,12 @@ pins:
     ts_name: 31 - CEL
     type: ls
 
+  - pin: 35a
+    function: GNDA (CLT, AFR 2)
+
+  - pin: 36a
+    function: GNDA (MAP, AFR 1)
+
 # 44-62 segment
   - pin: 46a
     id: B14
@@ -146,7 +155,24 @@ pins:
     ts_name: 50 - AUX Starter Relay
     type: ls
 
+  - pin: 51a
+    function: GNDA
+
+  - pin: 53a
+    function: GNDA
+
+  - pin: 54a
+    function: GNDA (MAF)
+
+  - pin: 60a
+    function: CAN bus high
+    type: can
+
 # 63-81 segment
+  - pin: 63a
+    function: +12v (MR)
+    type: vign
+
   - pin: 68a
     id: D6
     function: Fan Relay #1
@@ -168,6 +194,12 @@ pins:
     ts_name: 70 - Fuel Pump Relay
     type: ls
 
+  - pin: 80a
+    function: GND
+
+  - pin: 81a
+    function: CAN bus low
+    type: can
 
 info:
   title: S105
