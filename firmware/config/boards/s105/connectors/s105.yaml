@@ -3,7 +3,7 @@ pins:
     id: D14
     function: Ignition coil 4
     class: outputs
-    ts_name: 1 - IGN_4
+    ts_name: na 1 - IGN_4
     type: ls
 
   - pin: 2a
@@ -21,7 +21,7 @@ pins:
     id: D15
     function: Ignition coil 3
     class: outputs
-    ts_name: 4 - IGN_3
+    ts_name: na 4 - IGN_3
     type: ls
 
   - pin: 5a
