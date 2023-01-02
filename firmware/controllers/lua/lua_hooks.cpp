@@ -780,6 +780,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
 		return 0;
 	});
+	lua_register(l, "setIgnDisabled", [](lua_State* l) {
+		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
+		return 0;
+	});
 #endif // EFI_PROD_CODE
 
 	lua_register(l, "setClutchUpState", [](lua_State* l) {
