@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 15 14:33:13 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jan 02 19:57:36 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -142,6 +142,7 @@ struct cranking_fuel_s {
 	 */
 	floatms_t baseFuel = (floatms_t)0;
 	/**
+	 * Cranking: CLT coefficient
 	 * offset 4
 	 */
 	float coolantTemperatureCoefficient = (float)0;
@@ -440,4 +441,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 156);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Tue Nov 15 14:33:13 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Mon Jan 02 19:57:36 UTC 2023

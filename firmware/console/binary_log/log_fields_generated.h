@@ -269,7 +269,7 @@ static constexpr LogField fields[] = {
 	{engine->engineState.injectorFlowCorrection, "injectorFlowCorrection", "", 0},
 	{engine->engineState.baroCorrection, "fuel: Barometric pressure mult", "", 0},
 	{engine->engineState.crankingFuel.baseFuel, "Fuel: base duration", "", 0},
-	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "crankingFuel.coolantTemperatureCoefficient", "", 0},
+	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Cranking: CLT coefficient", "", 0},
 	{engine->engineState.crankingFuel.tpsCoefficient, "crankingFuel.tpsCoefficient", "", 0},
 	{engine->engineState.crankingFuel.durationCoefficient, "crankingFuel.durationCoefficient", "", 0},
 	{engine->engineState.crankingFuel.fuel, "Fuel: Actual injection", "", 0},
