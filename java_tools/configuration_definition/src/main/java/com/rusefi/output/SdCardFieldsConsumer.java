@@ -5,6 +5,9 @@ import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
 
+/**
+ * @see DataLogConsumer
+ */
 public class SdCardFieldsConsumer implements ConfigurationConsumer {
 
     private final SdCardFieldsContent content = new SdCardFieldsContent();
