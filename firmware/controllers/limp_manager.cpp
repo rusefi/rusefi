@@ -49,6 +49,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #endif
 
+    if (engine->engineState.lua.luaIgnCut) {
+        allowSpark.clear(ClearReason::Lua);
+    }
+
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
 		// todo: migrate to engineState->desiredRpmLimit to get this variable logged

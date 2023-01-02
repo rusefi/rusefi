@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - RPM correction/multiplier for Accel Enrich #4760
  - Tooth logger writes to SD card #4897
  - Antilag #2403
+ - Lua 'setIgnDisabled' function for all kinds of cranking safety systems
 
 ## December 2022 Release - "Day 289"
 
