@@ -5,6 +5,10 @@ HALCONFDIR = $(BOARD_DIR)
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
+# This board has no LSE and HSE oscillators
+DDEFS += -DSTM32_HSE_ENABLED=FALSE
+DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
+
 #This board has no LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
 
