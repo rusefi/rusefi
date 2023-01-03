@@ -24,6 +24,7 @@ using ::testing::_;
 
 extern WarningCodeState unitTestWarningCodeState;
 extern bool printTriggerDebug;
+extern float actualSynchGap;
 
 extern "C" {
 void sendOutConfirmation(char *value, int i);
@@ -155,6 +156,8 @@ TEST(misc, testFordAspire) {
 
 }
 
+extern TriggerDecoderBase initState;
+
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGapRatio = NAN) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
@@ -168,7 +171,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
 	if (!cisnan(expectedGapRatio)) {
-		assertEqualsM2("actual gap ratio", expectedGapRatio, engine->triggerCentral.triggerState.triggerSyncGapRatio, 0.001);
+		assertEqualsM2("actual gap ratio", expectedGapRatio, initState.triggerSyncGapRatio, 0.001);
     }
 }
 
