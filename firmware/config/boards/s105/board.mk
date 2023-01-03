@@ -5,6 +5,9 @@ HALCONFDIR = $(BOARD_DIR)
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
+# This is S105 board
+DDEFS += -DSHORT_BOARD_NAME=s105
+
 # This board has no LSE and HSE oscillators
 DDEFS += -DSTM32_HSE_ENABLED=FALSE
 DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
