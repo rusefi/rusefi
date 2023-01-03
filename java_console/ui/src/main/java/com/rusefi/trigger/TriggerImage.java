@@ -363,14 +363,13 @@ public class TriggerImage {
             }
             g.drawString("     " + tdcMessage, 0, tdcFontSize);
             g.setColor(Color.darkGray);
+            if (image == null)
+                return;
             for (int i = 0; i < gaps.gapFrom.length; i++) {
                 String message = "Sync " + (i + 1) + ": From " + gaps.gapFrom[i] + " to " + gaps.gapTo[i];
                 g.drawString("            " + message, 0, tdcFontSize * (2 + i));
             }
 
-
-            if (image == null)
-                return;
             int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
             g.drawLine(tdcX, 0, tdcX, h);
             Graphics2D g2 = (Graphics2D) g;
