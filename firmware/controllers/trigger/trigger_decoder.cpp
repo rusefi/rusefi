@@ -110,8 +110,6 @@ PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 bool printTriggerTrace = false;
-// todo: migrate to triggerSyncGapRatio or triggerActualSyncGapRatio?
-float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 void TriggerWaveform::initializeSyncPoint(TriggerDecoderBase& state,
@@ -460,10 +458,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
-
-#if EFI_UNIT_TEST
-			actualSynchGap = triggerSyncGapRatio;
-#endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			bool verbose = getTriggerCentral()->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
