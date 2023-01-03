@@ -43,7 +43,10 @@
 #define STM32_NO_INIT                       FALSE
 #define STM32_HSI_ENABLED                   TRUE
 #define STM32_LSI_ENABLED                   TRUE
-#define STM32_HSE_ENABLED                   TRUE
+/* Some boards may have no HSE */
+#ifndef STM32_HSE_ENABLED
+    #define STM32_HSE_ENABLED               TRUE
+#endif
 
 // rusEfi would automatically detect if we have 32768 quartz osc
 // todo: apply LSE patch
