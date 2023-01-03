@@ -167,7 +167,7 @@ pins:
   - pin: 54a
     function: GNDA (MAF)
 
-  - pin: 60a
+  - pin: 62a
     function: CAN bus high
     type: can
 
