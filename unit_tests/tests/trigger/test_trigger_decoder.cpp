@@ -23,8 +23,6 @@
 using ::testing::_;
 
 extern WarningCodeState unitTestWarningCodeState;
-extern bool printTriggerDebug;
-extern float actualSynchGap;
 
 extern "C" {
 void sendOutConfirmation(char *value, int i);
