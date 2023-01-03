@@ -10,3 +10,9 @@ void setBoardDefaultConfiguration() {
     engineConfiguration->runningLedPin = Gpio::Unassigned;
     engineConfiguration->warningLedPin = Gpio::Unassigned;
 }
+
+void setBoardConfigOverrides() {
+    //CAN 1 bus overwrites
+    engineConfiguration->canRxPin = Gpio::A11;
+    engineConfiguration->canTxPin = Gpio::A12;
+}

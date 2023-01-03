@@ -5,8 +5,23 @@ HALCONFDIR = $(BOARD_DIR)
 # List of all the board related files.
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
+# This is S105 board
+DDEFS += -DSHORT_BOARD_NAME=s105
+
+# This board has no LSE and HSE oscillators
+DDEFS += -DSTM32_HSE_ENABLED=FALSE
+DDEFS += -DENABLE_AUTO_DETECT_HSE=FALSE
+
+# This board has 512K STM32F407
+DDEFS += -DMIN_FLASH_SIZE=512
+
 #This board has no LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
+# and no LCD
+DDEFS += -DEFI_HD44780_LCD=FALSE
+
+# No Lua support as we are limited in RAM and ROM
+DDEFS += -DEFI_LUA=FALSE
 
 #This board has no USB wired out
 DDEFS += -DSTM32_USB_USE_OTG1=FALSE
