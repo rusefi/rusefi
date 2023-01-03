@@ -14,6 +14,11 @@ DDEFS += -DMIN_FLASH_SIZE=512
 
 #This board has no LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::Unassigned
+# and no LCD
+DDEFS += -DEFI_HD44780_LCD=FALSE
+
+# No Lua support as we are limited in RAM and ROM
+DDEFS += -DEFI_LUA=FALSE
 
 #This board has no USB wired out
 DDEFS += -DSTM32_USB_USE_OTG1=FALSE
