@@ -584,6 +584,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 
 		toothed_previous_time = nowNt;
+
+#if EFI_UNIT_TEST
+        if (wasSynchronized) {
+            int uiGapIndex = (currentCycle.current_index) % triggerShape.getLength();
+            gapRatio[uiGapIndex] = triggerSyncGapRatio;
+        }
+#endif // EFI_UNIT_TEST
 	}
 
 	if (getShaftSynchronized() && !isValidIndex(triggerShape)) {

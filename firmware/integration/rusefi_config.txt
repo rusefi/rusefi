@@ -215,6 +215,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_GAPS_COUNT "gapsCount"
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
+#define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
