@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Wed Dec 14 00:09:26 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Jan 03 21:14:30 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -347,6 +347,7 @@ public class FuelComputer {
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
+	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
