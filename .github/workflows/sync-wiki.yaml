@@ -41,6 +41,8 @@ jobs:
         # merge, but don't commit the merge
         git merge --no-ff --no-commit best-wiki-git/master
         # unstage the file
+        #    TL;DR bad magic github security policy that causes issues when someone commits a changed workflow file to rusefi/rusefi.wiki.git
+        #    As a workaround we undo any changes to workflow files.
         git reset HEAD .github/workflows/sync-wiki2.yaml .github/workflows/sync-wiki3.yaml
         # revert the file to its original state
         git checkout -- .github/workflows/sync-wiki2.yaml .github/workflows/sync-wiki3.yaml
