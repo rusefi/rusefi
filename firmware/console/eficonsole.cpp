@@ -46,7 +46,7 @@ static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " with OPENBLT");
 #endif
 
-#ifdef ENABLE_AUTO_DETECT_HSE
+#if ENABLE_AUTO_DETECT_HSE
 	extern float hseFrequencyMhz;
 	extern uint8_t autoDetectedRoundedMhz;
 	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
