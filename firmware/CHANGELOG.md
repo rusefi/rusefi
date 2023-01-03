@@ -37,6 +37,9 @@ Release template (copy/paste this for new release):
  - Antilag #2403
  - Lua 'setIgnDisabled' function for all kinds of cranking safety systems
 
+### Fixed
+ - multi-line tooltips in TS #4927
+
 ## December 2022 Release - "Day 289"
 
 ### Breaking Changes
