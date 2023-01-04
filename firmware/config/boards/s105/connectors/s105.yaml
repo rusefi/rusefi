@@ -192,7 +192,7 @@ pins:
     ts_name: 56 MAP
 
   - pin: 59a
-    id: [C13]
+    id: [B3]
     function: Speed input (4.7K Pull-up)
     class: [event_inputs]
     ts_name: 59 - Speed in
