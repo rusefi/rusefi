@@ -203,7 +203,9 @@ pins:
 
 # 63-81 segment
   - pin: 63a
-    function: +12v (MR)
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: +12v (MR) (68K+6.8K divider)
     type: vign
 
   - pin: 68a
