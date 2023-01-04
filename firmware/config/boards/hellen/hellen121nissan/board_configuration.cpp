@@ -23,11 +23,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[4] = H144_LS_5;
 	engineConfiguration->injectionPins[5] = H144_LS_6;
 
-	// Disable remainder
-	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 }
 
@@ -39,11 +34,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[4] = H144_IGN_5;
 	engineConfiguration->ignitionPins[5] = H144_IGN_6;
 	
-	// disable remainder
-	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 

@@ -11,11 +11,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[2] = Gpio::D10;
 	engineConfiguration->injectionPins[3] = Gpio::D11;
 
-	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->injectionPinMode = OM_OPENDRAIN;
 }
 
@@ -24,11 +19,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = Gpio::D12;
 	engineConfiguration->ignitionPins[2] = Gpio::D15;
 	engineConfiguration->ignitionPins[3] = Gpio::D14;
-
-	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
 
 	engineConfiguration->ignitionPinMode = OM_OPENDRAIN;
 }
