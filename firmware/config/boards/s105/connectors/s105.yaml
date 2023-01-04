@@ -159,13 +159,19 @@ pins:
     type: ls
 
   - pin: 51a
-    function: GNDA
+    function: GNDA (Camshaft)
 
   - pin: 53a
     function: GNDA
 
   - pin: 54a
     function: GNDA (MAF)
+
+  - pin: 59a
+    id: [C13]
+    function: Speed input (4.7K Pull-up)
+    class: [event_inputs]
+    ts_name: 59 - Speed in
 
   - pin: 62a
     function: CAN bus high
@@ -199,6 +205,42 @@ pins:
 
   - pin: 71a
     function: K-line
+
+  - pin: 72a
+    id: [C12]
+    function: DIN1 (TBD)
+    class: [switch_inputs]
+    ts_name: 72 - DIN1
+
+  - pin: 73a
+    id: [C11]
+    function: DPH2 (not populated) (TBD)
+    class: [switch_inputs]
+    ts_name: na 72 - DPH2
+
+  - pin: 75a
+    id: [C13]
+    function: Unk digital in (not populated)
+    class: [switch_inputs]
+    ts_name: na 75 - Digital in
+
+  - pin: 76a
+    id: [C10]
+    function: DSTR (4.7K Pull-up) (TBD)
+    class: [switch_inputs]
+    ts_name: 76 - DIN5
+
+  - pin: 77a
+    id: [D4]
+    function: DIN5 (4.7K Pull-down) (TBD)
+    class: [switch_inputs]
+    ts_name: 77 - DIN5
+
+  - pin: 79a
+    id: [B11]
+    function: Camshaft sensor (not populated)
+    class: [event_inputs]
+    ts_name: na 79 - CAM in
 
   - pin: 80a
     function: GND
