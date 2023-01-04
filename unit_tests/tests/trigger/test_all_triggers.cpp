@@ -66,7 +66,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 #if EFI_UNIT_TEST
 extern TriggerDecoderBase initState;
     for (size_t i = 0;i<efi::size(initState.gapRatio);i++) {
-      initState.gapRatio[i] = -1;
+      initState.gapRatio[i] = NAN;
     }
 #endif // EFI_UNIT_TEST
 
