@@ -291,7 +291,8 @@ public class TriggerImage {
         List<TriggerSignal> toShow = new ArrayList<>(signals);
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
-                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720));
+                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720,
+                        s.getGap()));
         }
 
         List<WaveState> waves = new ArrayList<>();
@@ -303,7 +304,7 @@ public class TriggerImage {
             WaveState.trigger_value_e signal = (s.getState() == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
 
             WaveState waveState = waves.get(s.getWaveIndex());
-            waveState.handle(signal, s.getAngle());
+            waveState.handle(signal, s.getAngle(), s.getGap());
         }
         for (WaveState wave : waves)
             wave.wrap();

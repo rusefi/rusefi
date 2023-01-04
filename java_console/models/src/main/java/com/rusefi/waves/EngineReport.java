@@ -21,7 +21,7 @@ import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
  */
 public class EngineReport {
     public static final String ENGINE_CHART = Fields.PROTOCOL_ENGINE_SNIFFER;
-    public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1)));
+    public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1, Double.NaN, Double.NaN)));
     /**
      * number of Engine Sniffer ticks per ms
      */
@@ -135,7 +135,7 @@ public class EngineReport {
                 int downEventIndex = downString.length > 1 ? Integer.parseInt(downString[1]) : -1;
 
 
-                times.add(new UpDown(upTime, upEventIndex, downTime, downEventIndex));
+                times.add(new UpDown(upTime, upEventIndex, downTime, downEventIndex, Double.NaN, Double.NaN));
             } catch (NumberFormatException e) {
                 System.err.println("Invalid? [" + Arrays.toString(upString) + "][" + Arrays.toString(downString) + "]");
             }
@@ -170,12 +170,16 @@ public class EngineReport {
         public final int upTriggerCycleIndex;
         public final int downTime;
         public final int downTriggerCycleIndex;
+        public final double prevGap;
+        public final double gap;
 
-        public UpDown(int upTime, int upIndex, int downTime, int downIndex) {
+        public UpDown(int upTime, int upIndex, int downTime, int downIndex, double prevGap, double gap) {
             this.upTime = upTime;
             this.upTriggerCycleIndex = upIndex;
             this.downTime = downTime;
             this.downTriggerCycleIndex = downIndex;
+            this.prevGap = prevGap;
+            this.gap = gap;
         }
 
         public int getDuration() {

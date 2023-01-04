@@ -180,7 +180,8 @@ public class TriggerWheelInfo {
     private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
         return wheel.stream().map(triggerSignal -> {
             double compressAngle = getCompressedAngle(triggerSignal.getAngle());
-            return new TriggerSignal(triggerSignal.getWaveIndex(), triggerSignal.getState(), compressAngle);
+            return new TriggerSignal(triggerSignal.getWaveIndex(), triggerSignal.getState(), compressAngle,
+                    triggerSignal.getGap());
         }).collect(Collectors.toList());
     }
 
