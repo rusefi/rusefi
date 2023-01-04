@@ -67,6 +67,12 @@ pins:
     ts_name: 10 - ECO Out
     type: ls
 
+  - pin: 16a
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: TPS (22K+41.2K divider, 100K pull-down)
+    ts_name: 16 TPS
+
   - pin: 17a
     function: GNDA
 
@@ -119,6 +125,18 @@ pins:
   - pin: 36a
     function: GNDA (MAP, AFR 1)
 
+  - pin: 39a
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: CLT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 39 CLT
+
+  - pin: 40a
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: IAT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 40 IAT
+
   - pin: 43a
     function: Prog Mode
 
@@ -159,7 +177,7 @@ pins:
     type: ls
 
   - pin: 51a
-    function: GNDA
+    function: GNDA (Camshaft)
 
   - pin: 53a
     function: GNDA
@@ -167,13 +185,27 @@ pins:
   - pin: 54a
     function: GNDA (MAF)
 
+  - pin: 56a
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: MAP (22K+41.2K divider, 100K pull-down)
+    ts_name: 56 MAP
+
+  - pin: 59a
+    id: [B3]
+    function: Speed input (4.7K Pull-up)
+    class: [event_inputs]
+    ts_name: 59 - Speed in
+
   - pin: 62a
     function: CAN bus high
     type: can
 
 # 63-81 segment
   - pin: 63a
-    function: +12v (MR)
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: +12v (MR) (68K+6.8K divider)
     type: vign
 
   - pin: 68a
@@ -199,6 +231,42 @@ pins:
 
   - pin: 71a
     function: K-line
+
+  - pin: 72a
+    id: [C12]
+    function: DIN1 (4.7K Pull-up) (TBD)
+    class: [switch_inputs]
+    ts_name: 72 - DIN1
+
+  - pin: 73a
+    id: [C11]
+    function: DPH2 (not populated) (TBD)
+    class: [switch_inputs]
+    ts_name: na 72 - DPH2
+
+  - pin: 75a
+    id: [C13]
+    function: DCNS (not populated) (TBD)
+    class: [switch_inputs]
+    ts_name: na 75 - DCNS
+
+  - pin: 76a
+    id: [C10]
+    function: DSTR (4.7K Pull-up) (TBD)
+    class: [switch_inputs]
+    ts_name: 76 - DIN5
+
+  - pin: 77a
+    id: [D4]
+    function: DIN5 (4.7K Pull-down) (TBD)
+    class: [switch_inputs]
+    ts_name: 77 - DIN5
+
+  - pin: 79a
+    id: [B11]
+    function: Camshaft sensor (not populated)
+    class: [event_inputs]
+    ts_name: na 79 - CAM in
 
   - pin: 80a
     function: GND
