@@ -6,6 +6,7 @@
 
 #include "init.h"
 #include "cli_registry.h"
+#include "io_pins.h"
 
 static void initSensorCli();
 
