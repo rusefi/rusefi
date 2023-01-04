@@ -67,6 +67,12 @@ pins:
     ts_name: 10 - ECO Out
     type: ls
 
+  - pin: 16a
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: TPS (22K+41.2K divider, 100K pull-down)
+    ts_name: 16 TPS
+
   - pin: 17a
     function: GNDA
 
@@ -119,6 +125,18 @@ pins:
   - pin: 36a
     function: GNDA (MAP, AFR 1)
 
+  - pin: 39a
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: CLT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 39 CLT
+
+  - pin: 40a
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: IAT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 40 IAT
+
   - pin: 43a
     function: Prog Mode
 
@@ -166,6 +184,12 @@ pins:
 
   - pin: 54a
     function: GNDA (MAF)
+
+  - pin: 56a
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: MAP (22K+41.2K divider, 100K pull-down)
+    ts_name: 56 MAP
 
   - pin: 59a
     id: [C13]
