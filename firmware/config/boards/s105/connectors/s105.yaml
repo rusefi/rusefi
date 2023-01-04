@@ -206,6 +206,7 @@ pins:
     id: EFI_ADC_9
     class: analog_inputs
     function: +12v (MR) (68K+6.8K divider)
+    ts_name: 63 VBat
     type: vign
 
   - pin: 68a
