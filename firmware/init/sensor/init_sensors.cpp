@@ -45,6 +45,18 @@ static void deInitOldAnalogInputs() {
 	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
+static void initAuxDigital() {
+	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
+		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], getInputMode(PI_DEFAULT));
+	}
+}
+
+static void deInitAuxDigital() {
+	for (size_t i = 0;i<efi::size(activeConfiguration.luaDigitalInputPins);i++) {
+		brain_pin_markUnused(activeConfiguration.luaDigitalInputPins[i]);
+	}
+}
+
 void initNewSensors() {
 #if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
@@ -70,6 +82,7 @@ void initNewSensors() {
 	#endif
 
 	initOldAnalogInputs();
+	initAuxDigital();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
@@ -85,6 +98,7 @@ void initNewSensors() {
 }
 
 void stopSensors() {
+	deInitAuxDigital();
 	deInitOldAnalogInputs();
 
 	deinitTps();
