@@ -140,6 +140,10 @@ expected<uint32_t> TriggerStimulatorHelper::findTriggerSyncPoint(
 	}
 	shape.setShapeDefinitionError(true);
 
-	firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+    if (engineConfiguration->overrideTriggerGaps) {
+	    firmwareError(CUSTOM_ERR_CUSTOM_GAPS_BAD, "Your custom trigger gaps are not good.");
+	} else {
+	    firmwareError(CUSTOM_ERR_TRIGGER_SYNC, "findTriggerZeroEventIndex() failed");
+	}
 	return unexpected;
 }
