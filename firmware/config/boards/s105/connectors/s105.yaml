@@ -232,7 +232,7 @@ pins:
 
   - pin: 72a
     id: [C12]
-    function: DIN1 (TBD)
+    function: DIN1 (4.7K Pull-up) (TBD)
     class: [switch_inputs]
     ts_name: 72 - DIN1
 
@@ -244,9 +244,9 @@ pins:
 
   - pin: 75a
     id: [C13]
-    function: Unk digital in (not populated)
+    function: DCNS (not populated) (TBD)
     class: [switch_inputs]
-    ts_name: na 75 - Digital in
+    ts_name: na 75 - DCNS
 
   - pin: 76a
     id: [C10]
