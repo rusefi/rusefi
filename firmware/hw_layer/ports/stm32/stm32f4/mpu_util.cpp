@@ -23,11 +23,19 @@ size_t flashSectorSize(flashsector_t sector) {
 	return 0;
 }
 
+#define TM_ID_GetFlashSize()	(*(__IO uint16_t *) (FLASHSIZE_BASE))
+
 uintptr_t getFlashAddrFirstCopy() {
+	/* last 128K sector on 512K devices */
+	if (TM_ID_GetFlashSize() <= 512)
+		return 0x08060000;
 	return 0x080E0000;
 }
 
 uintptr_t getFlashAddrSecondCopy() {
+	/* no second copy on 512K devices */
+	if (TM_ID_GetFlashSize() <= 512)
+		return 0x000000000;
 	return 0x080C0000;
 }
 /*
