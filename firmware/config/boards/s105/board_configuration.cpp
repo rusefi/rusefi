@@ -5,6 +5,10 @@
  * @todo    Add your board-specific code, if any.
  */
 
+/* NOTE:
+ * All outputs are in open drain mode as pull-up to 5V is
+ * used as level shifter for MOSFETs/IGBTs */
+
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::D8;
 	engineConfiguration->injectionPins[1] = Gpio::D9;
@@ -33,10 +37,15 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->warningLedPin = Gpio::Unassigned;
 
 	engineConfiguration->malfunctionIndicatorPin = Gpio::E14;
+	engineConfiguration->malfunctionIndicatorPinMode = OM_OPENDRAIN;
 	engineConfiguration->tachOutputPin = Gpio::B8;	/* not populated by default */
+	engineConfiguration->tachOutputPinMode = OM_OPENDRAIN;
 	//engineConfiguration->idle.solenoidPin = ?
+	engineConfiguration->idle.solenoidPinMode = OM_OPENDRAIN;
 	engineConfiguration->fanPin = Gpio::D6;			/* not populated by default */
+	engineConfiguration->fanPinMode = OM_OPENDRAIN;
 	//engineConfiguration->mainRelayPin = ?;
+	engineConfiguration->mainRelayPinMode = OM_OPENDRAIN;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_2_4_3;
