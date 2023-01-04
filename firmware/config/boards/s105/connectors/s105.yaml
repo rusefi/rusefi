@@ -34,14 +34,14 @@ pins:
 # 6-24 segment
   - pin: 6a
     id: D9
-    function: Injector #2
+    function: Injector 2
     class: outputs
     ts_name: 6 - INJ_2
     type: ls
 
   - pin: 7a
     id: D10
-    function: Injector #3
+    function: Injector 3
     class: outputs
     ts_name: 7 - INJ_3
     type: ls
@@ -79,14 +79,14 @@ pins:
 # 25-43 segment
   - pin: 25a
     id: D0
-    function: Injector #7
+    function: Injector 7
     class: outputs
     ts_name: na 25 - INJ_7
     type: ls
 
   - pin: 27a
     id: D8
-    function: Injector #1
+    function: Injector 1
     class: outputs
     ts_name: 27 - INJ_1
     type: ls
@@ -150,7 +150,7 @@ pins:
 
   - pin: 47a
     id: D11
-    function: Injector #4
+    function: Injector 4
     class: outputs
     ts_name: 47 - INJ_4
     type: ls
@@ -164,7 +164,7 @@ pins:
 
   - pin: 49a
     id: E6
-    function: Injector #6
+    function: Injector 6
     class: outputs
     ts_name: na 49 - INJ_6
     type: ls
@@ -210,9 +210,9 @@ pins:
 
   - pin: 68a
     id: D6
-    function: Fan Relay #1
+    function: Fan Relay 1
     class: outputs
-    ts_name: na 58 - Fan Relay #1
+    ts_name: na 58 - Fan Relay 1
     type: ls
 
   - pin: 69a
