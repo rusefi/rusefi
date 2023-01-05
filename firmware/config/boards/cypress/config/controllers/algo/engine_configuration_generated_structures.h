@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jan 05 02:19:15 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jan 05 12:28:40 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2584,11 +2584,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1371[1];
 	/**
-	 * Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	offset 1372 bit 0 */
 	bool isInjectionEnabled : 1 {};
 	/**
-	 * Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	offset 1372 bit 1 */
 	bool isIgnitionEnabled : 1 {};
 	/**
@@ -5231,4 +5229,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jan 05 02:19:15 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Jan 05 12:28:40 UTC 2023

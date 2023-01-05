@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_6617
-#define TS_SIGNATURE "rusEFI 2023.01.05.cypress.snap_6617"
+#define SIGNATURE_HASH snap_49180
+#define TS_SIGNATURE "rusEFI 2023.01.05.cypress.snap_49180"
