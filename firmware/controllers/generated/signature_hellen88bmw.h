@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_54224
-#define TS_SIGNATURE "rusEFI 2023.01.05.hellen88bmw.snap_54224"
+#define SIGNATURE_HASH snap_56452
+#define TS_SIGNATURE "rusEFI 2023.01.05.hellen88bmw.snap_56452"
