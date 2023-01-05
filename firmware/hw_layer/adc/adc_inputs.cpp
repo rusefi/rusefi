@@ -35,14 +35,14 @@
 #define ADC_BUF_DEPTH_FAST      4
 #endif
 
-#ifndef EFI_NON_UNIFORM_ANALOG_DIVIDER
-#define EFI_NON_UNIFORM_ANALOG_DIVIDER FALSE
-#endif
-
 static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+
+float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
+    return engineConfiguration->analogInputDividerCoefficient;
+}
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {

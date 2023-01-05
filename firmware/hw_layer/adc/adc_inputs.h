@@ -15,12 +15,7 @@
 #define SLOW_ADC_RATE 500
 #endif
 
-#if EFI_NON_UNIFORM_ANALOG_DIVIDER == FALSE
-	#define getAnalogInputDividerCoefficient(ch) (engineConfiguration->analogInputDividerCoefficient)
-#else
-	/* should be implemented in board code */
-	float getAnalogInputDividerCoefficient(adc_channel_e hwChannel);
-#endif
+float getAnalogInputDividerCoefficient(adc_channel_e);
 
 static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
