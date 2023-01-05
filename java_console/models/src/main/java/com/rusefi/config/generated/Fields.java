@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 04 02:23:46 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 05 02:19:58 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1183,7 +1183,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2023.01.04.all.snap_19626";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.05.all.snap_6617";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1288;
@@ -1276,7 +1276,7 @@ public class Fields {
 	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 120, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 120, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 120, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 120, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field ANOTHERUNUSEDHERE444 = Field.create("ANOTHERUNUSEDHERE444", 120, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 120, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 120, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 120, FieldType.BIT, 24).setBaseOffset(0);
@@ -2463,8 +2463,16 @@ public class Fields {
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3900, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMAXDRIVERTHROTTLEINTENT = Field.create("ALSMAXDRIVERTHROTTLEINTENT", 3904, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSACTIVATEPINMODE = Field.create("ALSACTIVATEPINMODE", 3905, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3906, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4011 = Field.create("ALIGNMENTFILL_AT_4011", 4011, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHEREFORYOU = Field.create("UNUSEDHEREFORYOU", 3906, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES1 = Field.create("LUADIGITALINPUTPINMODES1", 3908, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES2 = Field.create("LUADIGITALINPUTPINMODES2", 3909, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES3 = Field.create("LUADIGITALINPUTPINMODES3", 3910, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES4 = Field.create("LUADIGITALINPUTPINMODES4", 3911, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES5 = Field.create("LUADIGITALINPUTPINMODES5", 3912, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES6 = Field.create("LUADIGITALINPUTPINMODES6", 3913, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES7 = Field.create("LUADIGITALINPUTPINMODES7", 3914, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES8 = Field.create("LUADIGITALINPUTPINMODES8", 3915, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3916, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2732,7 +2740,7 @@ public class Fields {
 	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
-	ROLLINGLAUNCHENABLED,
+	ANOTHERUNUSEDHERE444,
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
@@ -3895,8 +3903,16 @@ public class Fields {
 	ALSSKIPRATIO,
 	ALSMAXDRIVERTHROTTLEINTENT,
 	ALSACTIVATEPINMODE,
+	UNUSEDHEREFORYOU,
+	LUADIGITALINPUTPINMODES1,
+	LUADIGITALINPUTPINMODES2,
+	LUADIGITALINPUTPINMODES3,
+	LUADIGITALINPUTPINMODES4,
+	LUADIGITALINPUTPINMODES5,
+	LUADIGITALINPUTPINMODES6,
+	LUADIGITALINPUTPINMODES7,
+	LUADIGITALINPUTPINMODES8,
 	MAINUNUSEDEND,
-	ALIGNMENTFILL_AT_4011,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,

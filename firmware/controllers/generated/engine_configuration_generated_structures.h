@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 31 19:32:06 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 05 02:19:58 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -771,7 +771,7 @@ struct engine_configuration_s {
 	bool launchControlEnabled : 1 {};
 	/**
 	offset 120 bit 21 */
-	bool rollingLaunchEnabled : 1 {};
+	bool anotherUnusedHere444 : 1 {};
 	/**
 	offset 120 bit 22 */
 	bool antiLagEnabled : 1 {};
@@ -4417,16 +4417,18 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e ALSActivatePinMode;
 	/**
-	units
 	 * offset 3906
 	 */
-	uint8_t mainUnusedEnd[105];
+	uint8_t unusedHereForYou[2];
 	/**
-	 * need 4 byte alignment
-	units
-	 * offset 4011
+	 * offset 3908
 	 */
-	uint8_t alignmentFill_at_4011[1];
+	pin_input_mode_e luaDigitalInputPinModes[LUA_DIGITAL_INPUT_COUNT];
+	/**
+	units
+	 * offset 3916
+	 */
+	uint8_t mainUnusedEnd[96];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -5229,4 +5231,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22896);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 31 19:32:06 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 05 02:19:58 UTC 2023
