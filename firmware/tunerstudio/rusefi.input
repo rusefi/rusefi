@@ -3771,7 +3771,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = scriptSettingDialog, "Script Settings", border
 		panel = scriptSetting,	East
 
-	dialog = luaDigitalInputsDialog, "Lua Digital Inputs"
+	dialog = luaDigitalInputsLeftDialog
 		field = "Digital #1",							luaDigitalInputPins1
 		field = "Digital #2",							luaDigitalInputPins2
 		field = "Digital #3",							luaDigitalInputPins3
@@ -3780,6 +3780,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Digital #6",							luaDigitalInputPins6
 		field = "Digital #7",							luaDigitalInputPins7
 		field = "Digital #8",							luaDigitalInputPins8
+
+	dialog = luaDigitalInputsRightDialog
+		field = "Mode #1",							luaDigitalInputPinModes1
+		field = "Mode #2",							luaDigitalInputPinModes2
+		field = "Mode #3",							luaDigitalInputPinModes3
+		field = "Mode #4",							luaDigitalInputPinModes4
+		field = "Mode #5",							luaDigitalInputPinModes5
+		field = "Mode #6",							luaDigitalInputPinModes6
+		field = "Mode #7",							luaDigitalInputPinModes7
+		field = "Mode #8",							luaDigitalInputPinModes8
+
+	dialog = luaDigitalInputsDialog, "Lua Digital Inputs", border
+		panel = luaDigitalInputsLeftDialog,	West
+		panel = luaDigitalInputsRightDialog,	East
 
 	dialog = auxInputsDialog, "Lua Analog Inputs"
 		field = "ADC #1",								auxAnalogInputs1
