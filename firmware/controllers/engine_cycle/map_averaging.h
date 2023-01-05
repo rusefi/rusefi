@@ -12,7 +12,7 @@
 #if EFI_MAP_AVERAGING
 
 #if HAL_USE_ADC
-void mapAveragingAdcCallback(adcsample_t newValue);
+void mapAveragingAdcCallback(float instantVoltage);
 #endif
 
 void initMapAveraging();
