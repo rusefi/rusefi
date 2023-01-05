@@ -492,7 +492,7 @@ static msg_t hipThread(void *arg) {
 			} else {
 				rawValue = instance.rawValue[idx];
 				/* first calculate ouput volts */
-				knockVolts = adcToVolts(rawValue) * engineConfiguration->analogInputDividerCoefficient;
+				knockVolts = adcToVoltsDivided(adcToVolts(rawValue));
 				/* and then normalize */
 				knockNormalized = knockVolts / HIP9011_DESIRED_OUTPUT_VALUE;
 			}
