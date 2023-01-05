@@ -800,10 +800,10 @@ Where is your primary skipped wheel located?
 Expected neutral position
 
 ### isInjectionEnabled
-Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
+
 
 ### isIgnitionEnabled
-Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
+
 
 ### isCylinderCleanupEnabled
 When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
