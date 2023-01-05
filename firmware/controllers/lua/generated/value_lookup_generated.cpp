@@ -67,8 +67,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
 		case -338157684:
 			return engineConfiguration->launchControlEnabled;
-		case -905762494:
-			return engineConfiguration->rollingLaunchEnabled;
+		case 329821802:
+			return engineConfiguration->anotherUnusedHere444;
 		case -933524784:
 			return engineConfiguration->antiLagEnabled;
 		case -54973711:
@@ -1207,9 +1207,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchControlEnabled = (int)value;
 		return;
 	}
-		case -905762494:
+		case 329821802:
 	{
-		engineConfiguration->rollingLaunchEnabled = (int)value;
+		engineConfiguration->anotherUnusedHere444 = (int)value;
 		return;
 	}
 		case -933524784:
