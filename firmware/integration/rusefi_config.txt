@@ -1663,7 +1663,7 @@ float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/h
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -720, 720, 1
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, -60, 200, 0
 uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
