@@ -1867,10 +1867,6 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = std_separator
-#		subMenu = smRollingLaunch,			"Rolling Launch"
-#		subMenu = std_separator
-#		subMenu = antiLagDialog,					"Antilag Setup"
-#		subMenu = std_separator
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
@@ -4230,12 +4226,6 @@ dialog = tcuControls, "Transmission Settings"
 		panel = smLaunchControlWest, West
 		panel = launch_control_stateDialog, East
 
-
-					;			Racing Features->Rolling Launch
-	dialog = smRollingLaunch, "Rolling Launch Settings NOT WORKING"
-		field = "Enable Rolling Launch",					rollingLaunchEnabled
-
-					;			Racing Features->Antilag
 	dialog = antiLagDialog, "AntiLag Settings"
 	    field = "Enable AntiLag",                   antiLagEnabled
 		field = "Activation Mode",          	    antiLagActivationMode
