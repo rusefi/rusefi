@@ -83,3 +83,16 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = Gpio::A11;
 	engineConfiguration->canTxPin = Gpio::A12;
 }
+
+float getAnalogInputDividerCoefficient(adc_channel_e hwChannel)
+{
+	/* MAP or TPS */
+	if ((hwChannel == EFI_ADC_0) ||
+		(hwChannel == EFI_ADC_1)) {
+		// 22K (high) + 41.2K (low) on TPS and MAP
+		return (22.0 + 41.2) / 22.0;
+	}
+
+	// 22K (high) + 22K (low) on IAT and CLT
+	return (22.0 + 22.0) / 22.0;
+}
