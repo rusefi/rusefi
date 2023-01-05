@@ -15,6 +15,13 @@
 #define SLOW_ADC_RATE 500
 #endif
 
+#if EFI_NON_UNIFORM_ANALOG_DIVIDER == FALSE
+	#define getAnalogInputDividerCoefficient(ch) (engineConfiguration->analogInputDividerCoefficient)
+#else
+	/* should be implemented in board code */
+	float getAnalogInputDividerCoefficient(adc_channel_e hwChannel);
+#endif
+
 static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
 		return false;
@@ -66,7 +73,7 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
-#define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
+#define adcToVoltsDivided(adc, hwChannel) (adcToVolts(adc) * getAnalogInputDividerCoefficient(hwChannel))
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
 /**

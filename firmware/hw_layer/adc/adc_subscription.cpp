@@ -86,9 +86,9 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 	    efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
 	}
 
-	// if 0, default to the board's divider coefficient
+	// if 0, default to the board's divider coefficient for given channel
 	if (voltsPerAdcVolt == 0) {
-		voltsPerAdcVolt = engineConfiguration->analogInputDividerCoefficient;
+		voltsPerAdcVolt = getAnalogInputDividerCoefficient(channel);
 	}
 #endif /* EFI_PROD_CODE */
 	// Populate the entry
