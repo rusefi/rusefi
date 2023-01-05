@@ -51,7 +51,7 @@ static void setupEtb() {
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_GP2;
+	engineConfiguration->etbIo[0].disablePin = H144_GP5;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
