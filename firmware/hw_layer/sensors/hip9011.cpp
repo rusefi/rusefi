@@ -311,7 +311,7 @@ void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 	}
 }
 
-void hipAdcCallback(adcsample_t adcValue) {
+void hipAdcCallback(float volts) {
 	/* we read in digital mode */
 	if (instance.adv_mode)
 		return;
@@ -320,7 +320,9 @@ void hipAdcCallback(adcsample_t adcValue) {
 	} else if (instance.state == WAITING_FOR_RESULT_ADC) {
 		/* offload calculations to driver thread */
 		if (instance.channelIdx < HIP_INPUT_CHANNELS) {
-			instance.rawValue[instance.channelIdx] = adcValue;
+			/* normalize to 0..HIP9011_DIGITAL_OUTPUT_MAX */
+			instance.rawValue[instance.channelIdx] =
+				volts * HIP9011_DIGITAL_OUTPUT_MAX / HIP9011_ANALOG_OUTPUT_MAX;
 		}
 		instance.state = NOT_READY;
 		hip_wake_driver();
@@ -483,19 +485,16 @@ static msg_t hipThread(void *arg) {
 
 			/* calculations */
 			if (instance.adv_mode) {
-				/* store for debug */
 				instance.rawValue[idx] = rawValue;
-				/* convert 10 bit integer value to 0.0 .. 1.0 float */
-				knockNormalized = ((float)rawValue) / HIP9011_DIGITAL_OUTPUT_MAX;
-				/* convert to magic volts */
-				knockVolts = knockNormalized * HIP9011_DESIRED_OUTPUT_VALUE;
 			} else {
+				/* get value stored by callback */
 				rawValue = instance.rawValue[idx];
-				/* first calculate ouput volts */
-				knockVolts = adcToVolts(rawValue) * engineConfiguration->analogInputDividerCoefficient;
-				/* and then normalize */
-				knockNormalized = knockVolts / HIP9011_DESIRED_OUTPUT_VALUE;
 			}
+			/* convert 10 bit integer value to 0.0 .. 1.0 float */
+			knockNormalized = ((float)rawValue) / HIP9011_DIGITAL_OUTPUT_MAX;
+			/* convert to magic volts
+			 * TODO: remove conversion to volts */
+			knockVolts = knockNormalized * HIP9011_ANALOG_OUTPUT_MAX;
 
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
