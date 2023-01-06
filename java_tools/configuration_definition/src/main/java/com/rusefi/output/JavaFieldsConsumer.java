@@ -14,7 +14,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
-    protected final ReaderStateImpl state;
+    protected final ReaderState state;
     private final int baseOffset;
 
     public JavaFieldsConsumer(ReaderStateImpl state, int baseOffset) {
