@@ -50,6 +50,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
+    @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
@@ -64,7 +65,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 if (configField.getName().equals(prev.getName())) {
                     return tsPosition;
                 }
-                ConfigStructureImpl cs = configField.getStructureType();
+                ConfigStructure cs = configField.getStructureType();
                 if (cs != null) {
                     String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);

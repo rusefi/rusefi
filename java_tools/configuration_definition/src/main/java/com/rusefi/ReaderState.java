@@ -390,7 +390,7 @@ public class ReaderState implements IReaderState {
         return tsCustomSize;
     }
 
-    public Map<String, ConfigStructureImpl> getStructures() {
+    public Map<String, ? extends ConfigStructure> getStructures() {
         return structures;
     }
 

@@ -65,7 +65,7 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                ConfigStructureImpl cs = configField.getStructureType();
+                ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentTemplated();
                     commentContent = ConfigField.unquote(commentContent);
