@@ -99,7 +99,7 @@ public class ConfigDefinition {
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_WITH_C_DEFINES:
-                    state.withC_Defines = Boolean.parseBoolean(args[i + 1]);
+                    state.setWithC_Defines(Boolean.parseBoolean(args[i + 1]));
                     break;
                 case KEY_C_DEFINES:
                     destCDefinesFileName = args[i + 1];
