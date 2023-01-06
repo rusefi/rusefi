@@ -111,8 +111,8 @@
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
- * we copy actual configuration after reading settings.
- * This is useful to compare old and new configurations in order to apply new settings.
+ * we copy actual configuration after reading settings from flash.
+ * This is useful to compare old/current (activeConfiguration) and new/future (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
  */
@@ -464,6 +464,11 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
+	setLinearCurve(config->alsIgnRetardLoadBins, 2, 10, 1);
+	setRpmTableBin(config->alsIgnRetardrpmBins);
+	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, 1);
+	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
+
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();
 
@@ -629,7 +634,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
+    #include "default_script.lua"
 }
 
 #ifdef CONFIG_RESET_SWITCH_PORT

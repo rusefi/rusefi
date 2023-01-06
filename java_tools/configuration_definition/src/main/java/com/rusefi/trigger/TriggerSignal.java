@@ -4,11 +4,13 @@ public class TriggerSignal {
     private final double angle;
     private final int state;
     private final int waveIndex;
+    private final double gap;
 
-    public TriggerSignal(int waveIndex, int state, double angle) {
+    public TriggerSignal(int waveIndex, int state, double angle, double gap) {
         this.waveIndex = waveIndex;
         this.state = state;
         this.angle = angle;
+        this.gap = gap;
     }
 
     @Override
@@ -30,5 +32,9 @@ public class TriggerSignal {
 
     public int getWaveIndex() {
         return waveIndex;
+    }
+
+    public double getGap() {
+        return gap;
     }
 }

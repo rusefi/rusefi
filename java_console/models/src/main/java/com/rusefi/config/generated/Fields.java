@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 19 00:04:28 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 06 02:30:06 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -14,8 +14,24 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_13 = 14;
 	public static final int adc_channel_e_EFI_ADC_14 = 15;
 	public static final int adc_channel_e_EFI_ADC_15 = 16;
+	public static final int adc_channel_e_EFI_ADC_16 = 17;
+	public static final int adc_channel_e_EFI_ADC_17 = 18;
+	public static final int adc_channel_e_EFI_ADC_18 = 19;
+	public static final int adc_channel_e_EFI_ADC_19 = 20;
 	public static final int adc_channel_e_EFI_ADC_2 = 3;
+	public static final int adc_channel_e_EFI_ADC_20 = 21;
+	public static final int adc_channel_e_EFI_ADC_21 = 22;
+	public static final int adc_channel_e_EFI_ADC_22 = 23;
+	public static final int adc_channel_e_EFI_ADC_23 = 24;
+	public static final int adc_channel_e_EFI_ADC_24 = 25;
+	public static final int adc_channel_e_EFI_ADC_25 = 26;
+	public static final int adc_channel_e_EFI_ADC_26 = 27;
+	public static final int adc_channel_e_EFI_ADC_27 = 28;
+	public static final int adc_channel_e_EFI_ADC_28 = 29;
+	public static final int adc_channel_e_EFI_ADC_29 = 30;
 	public static final int adc_channel_e_EFI_ADC_3 = 4;
+	public static final int adc_channel_e_EFI_ADC_30 = 31;
+	public static final int adc_channel_e_EFI_ADC_31 = 32;
 	public static final int adc_channel_e_EFI_ADC_4 = 5;
 	public static final int adc_channel_e_EFI_ADC_5 = 6;
 	public static final int adc_channel_e_EFI_ADC_6 = 7;
@@ -23,7 +39,7 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_8 = 9;
 	public static final int adc_channel_e_EFI_ADC_9 = 10;
 	public static final int adc_channel_e_EFI_ADC_ERROR = 50;
-	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 17;
+	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 33;
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int afr_sensor_s_size = 20;
@@ -1108,6 +1124,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_TOYOTA_4_1 = 73;
 	public static final int trigger_type_e_UNUSED_29 = 29;
 	public static final int trigger_type_e_UNUSED_34 = 34;
+	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
@@ -1182,10 +1199,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.12.19.all.snap_58915";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.06.all.snap_53064";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1280;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1288;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -1275,7 +1292,7 @@ public class Fields {
 	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 120, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 120, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 120, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 120, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field ANOTHERUNUSEDHERE444 = Field.create("ANOTHERUNUSEDHERE444", 120, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 120, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 120, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 120, FieldType.BIT, 24).setBaseOffset(0);
@@ -1333,7 +1350,8 @@ public class Fields {
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 376, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 380, FieldType.INT8, engine_load_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALSMAXTPS = Field.create("ALSMAXTPS", 381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHEREALIGNMENTFILL_AT_1 = Field.create("UNUSEDHEREALIGNMENTFILL_AT_1", 382, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CRANKINGINJECTIONMODE = Field.create("CRANKINGINJECTIONMODE", 384, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONMODE = Field.create("INJECTIONMODE", 385, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCONTROLMINRPM = Field.create("BOOSTCONTROLMINRPM", 386, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1863,6 +1881,7 @@ public class Fields {
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1372, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1372, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field SDTRIGGERLOG = Field.create("SDTRIGGERLOG", 1372, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field ALSACTIVATEINVERTED = Field.create("ALSACTIVATEINVERTED", 1372, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field TEMPBOOLEANFORVERYSPECIALLOGIC = Field.create("TEMPBOOLEANFORVERYSPECIALLOGIC", 1372, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1376, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1380, FieldType.FLOAT).setBaseOffset(0);
@@ -2454,14 +2473,22 @@ public class Fields {
 	public static final Field ALSMAXCLT = Field.create("ALSMAXCLT", 3885, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMINTIMEBETWEEN = Field.create("ALSMINTIMEBETWEEN", 3886, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBPOSITION = Field.create("ALSETBPOSITION", 3887, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALSTIMINGRETARD = Field.create("ALSTIMINGRETARD", 3888, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDALIGNMENTFILL_AT_33 = Field.create("UNUSEDALIGNMENTFILL_AT_33", 3888, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3892, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3896, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3900, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMAXDRIVERTHROTTLEINTENT = Field.create("ALSMAXDRIVERTHROTTLEINTENT", 3904, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSACTIVATEPINMODE = Field.create("ALSACTIVATEPINMODE", 3905, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3906, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4011 = Field.create("ALIGNMENTFILL_AT_4011", 4011, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHEREFORYOU = Field.create("UNUSEDHEREFORYOU", 3906, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES1 = Field.create("LUADIGITALINPUTPINMODES1", 3908, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES2 = Field.create("LUADIGITALINPUTPINMODES2", 3909, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES3 = Field.create("LUADIGITALINPUTPINMODES3", 3910, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES4 = Field.create("LUADIGITALINPUTPINMODES4", 3911, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES5 = Field.create("LUADIGITALINPUTPINMODES5", 3912, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES6 = Field.create("LUADIGITALINPUTPINMODES6", 3913, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES7 = Field.create("LUADIGITALINPUTPINMODES7", 3914, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field LUADIGITALINPUTPINMODES8 = Field.create("LUADIGITALINPUTPINMODES8", 3915, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3916, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2729,7 +2756,7 @@ public class Fields {
 	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
-	ROLLINGLAUNCHENABLED,
+	ANOTHERUNUSEDHERE444,
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
@@ -2785,7 +2812,8 @@ public class Fields {
 	ALIGNMENTFILL_AT_9,
 	CYLINDERBORE,
 	FUELALGORITHM,
-	ALIGNMENTFILL_AT_1,
+	ALSMAXTPS,
+	UNUSEDHEREALIGNMENTFILL_AT_1,
 	CRANKINGINJECTIONMODE,
 	INJECTIONMODE,
 	BOOSTCONTROLMINRPM,
@@ -3303,6 +3331,7 @@ public class Fields {
 	INVERTVVTCONTROLEXHAUST,
 	USEBIQUADONAUXSPEEDSENSORS,
 	SDTRIGGERLOG,
+	ALSACTIVATEINVERTED,
 	TEMPBOOLEANFORVERYSPECIALLOGIC,
 	ENGINECHARTSIZE,
 	TURBOSPEEDSENSORMULTIPLIER,
@@ -3884,14 +3913,22 @@ public class Fields {
 	ALSMAXCLT,
 	ALSMINTIMEBETWEEN,
 	ALSETBPOSITION,
-	ALSTIMINGRETARD,
+	UNUSEDALIGNMENTFILL_AT_33,
 	ALSIDLEADD,
 	ALSETBADD,
 	ALSSKIPRATIO,
 	ALSMAXDRIVERTHROTTLEINTENT,
 	ALSACTIVATEPINMODE,
+	UNUSEDHEREFORYOU,
+	LUADIGITALINPUTPINMODES1,
+	LUADIGITALINPUTPINMODES2,
+	LUADIGITALINPUTPINMODES3,
+	LUADIGITALINPUTPINMODES4,
+	LUADIGITALINPUTPINMODES5,
+	LUADIGITALINPUTPINMODES6,
+	LUADIGITALINPUTPINMODES7,
+	LUADIGITALINPUTPINMODES8,
 	MAINUNUSEDEND,
-	ALIGNMENTFILL_AT_4011,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,

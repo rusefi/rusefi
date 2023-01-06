@@ -51,10 +51,12 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	sensor.Register();
 }
 
-void initOilPressure() {
+void initFluidPressure() {
 	initFluidPressure(oilpSensorFunc, oilpSensor, engineConfiguration->oilPressure, 10);
 	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, engineConfiguration->lowPressureFuel, 10);
-	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
+	if (isConfigurationChanged(highPressureFuel.hwChannel)) {
+	    initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
+	}
 	initFluidPressure(auxLinear1Func, auxLinear1Sensor, engineConfiguration->auxLinear1, 10);
 	initFluidPressure(auxLinear2Func, auxLinear2Sensor, engineConfiguration->auxLinear2, 10);
 
@@ -67,10 +69,12 @@ void initOilPressure() {
 	injectorPressure.Register();
 }
 
-void deinitOilPressure() {
+void deinitFluidPressure() {
 	AdcSubscription::UnsubscribeSensor(oilpSensor);
 	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow);
-	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
+	if (isConfigurationChanged(highPressureFuel.hwChannel)) {
+	    AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
+	}
 	AdcSubscription::UnsubscribeSensor(auxLinear1Sensor);
 	AdcSubscription::UnsubscribeSensor(auxLinear2Sensor);
 }

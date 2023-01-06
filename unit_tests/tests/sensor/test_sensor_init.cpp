@@ -171,7 +171,7 @@ TEST(SensorInit, OilPressure) {
 	engineConfiguration->oilPressure.value1 = 0;
 	engineConfiguration->oilPressure.value2 = 1000;
 
-	initOilPressure();
+	initFluidPressure();
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::OilPressure));

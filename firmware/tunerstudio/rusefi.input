@@ -169,9 +169,7 @@ enable2ndByteCanID = false
 
 
 ;
-; in order to add new TunerStudio gauge you need to chagne two places
-; 1) add a line here in '[OutputChannels]'
-; 2) in rusEFI firmware make a change to output_channels.txt
+; in order to add new TunerStudio data point you need to change one of *.txt files mentioned in LiveData.yaml
 ;
 [OutputChannels]
 
@@ -247,7 +245,7 @@ enable2ndByteCanID = false
 	wboFaultCodeList = bits, U08, [0:3], "OK", "Unk", "Unk", "failed to heat", "overheat", "underheat", "no supply"
 
 ; ClearReason
-	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off"
+	fuelIgnCutCodeList = bits, U08, [0:7], "None", "fatal error", "setting disabled", "RPM limit", "fault RPM limit", "boost cut", "oil pressure", "stop requested", "ETB problem", "launch control", "max injector duty", "flood clear", "engine sync", "kickstart", "ign off", "Lua"
 
 ; TpsState
 	etbCutCodeList = bits, U08, [0:7], "None", "engine stopped", "TPS error", "PPS error", "TPS noise", "PID noise", "Lua", "Manual", "N/A", "Redundancy", "PPS noise"
@@ -839,6 +837,24 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 		xBins		= scriptTable4RpmBins,  RPMValue
 		yBins		= scriptTable4LoadBins,  fuelingLoad
 		zBins		= scriptTable4
+
+	table = IgnRetardTableALS, IgnRetardALS,  "Ignition adjustment",   1
+      ;       constant, variable
+      xBins       = alsIgnRetardrpmBins,  RPMValue
+      yBins       = alsIgnRetardLoadBins,  TPSValue
+      zBins       = ALSTimingRetardTable
+	  gridHeight  = 4.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = FuelAdderTableALS, FuelAdderALS,  "Fuel adjustment",   1
+      ;       constant, variable
+      xBins       = alsFuelAdjustmentrpmBins,  RPMValue
+      yBins       = alsFuelAdjustmentLoadBins,  TPSValue
+      zBins       = ALSFuelAdjustment
+	  gridHeight  = 4.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
 
 	table = baroCorrTbl,  baroCorrMap,  "Baro Correction",	1
 		;		constant, variable
@@ -1851,14 +1867,10 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = std_separator
-#		subMenu = smRollingLaunch,			"Rolling Launch"
-#		subMenu = std_separator
-#		subMenu = antiLag,					"Antilag Setup"
-#		subMenu = std_separator
 
 		subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = alsDialog,                "Anti-Lag ALS"
+		subMenu = antiLagDialog,                "Anti-Lag ALS"
 		subMenu = rotaryDialog,			"Rotary"
 
 		menu = "Help"
@@ -2103,16 +2115,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Low flow coefficient", tChargeAirCoefMin
 		field = "High flow coefficient", tChargeAirCoefMax
 		field = "Max air flow", tChargeAirFlowMax
-
-	dialog = alsDialog, "Anti-Lag ALS"
-	    field = "Max Pedal Position", ALSMaxDriverThrottleIntent
-		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
-		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
-		field = "Min CLT",                          ALSMinCLT,  {antiLagEnabled == 1}
-		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}
-		field = "Max Duration", alsMaxDuration
-		field = "Min Timer Between Activations", alsMinTimeBetween
-		field = "ETB Position", alsEtbPosition
 
 	dialog = tChargeSettings, "Charge temperature estimation"
 		panel = tChargeGeneralSettings
@@ -3765,7 +3767,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 	dialog = scriptSettingDialog, "Script Settings", border
 		panel = scriptSetting,	East
 
-	dialog = luaDigitalInputsDialog, "Lua Digital Inputs"
+	dialog = luaDigitalInputsLeftDialog
 		field = "Digital #1",							luaDigitalInputPins1
 		field = "Digital #2",							luaDigitalInputPins2
 		field = "Digital #3",							luaDigitalInputPins3
@@ -3774,6 +3776,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "Digital #6",							luaDigitalInputPins6
 		field = "Digital #7",							luaDigitalInputPins7
 		field = "Digital #8",							luaDigitalInputPins8
+
+	dialog = luaDigitalInputsRightDialog
+		field = "Mode #1",							luaDigitalInputPinModes1
+		field = "Mode #2",							luaDigitalInputPinModes2
+		field = "Mode #3",							luaDigitalInputPinModes3
+		field = "Mode #4",							luaDigitalInputPinModes4
+		field = "Mode #5",							luaDigitalInputPinModes5
+		field = "Mode #6",							luaDigitalInputPinModes6
+		field = "Mode #7",							luaDigitalInputPinModes7
+		field = "Mode #8",							luaDigitalInputPinModes8
+
+	dialog = luaDigitalInputsDialog, "Lua Digital Inputs", border
+		panel = luaDigitalInputsLeftDialog,	West
+		panel = luaDigitalInputsRightDialog,	East
 
 	dialog = auxInputsDialog, "Lua Analog Inputs"
 		field = "ADC #1",								auxAnalogInputs1
@@ -4210,16 +4226,22 @@ dialog = tcuControls, "Transmission Settings"
 		panel = smLaunchControlWest, West
 		panel = launch_control_stateDialog, East
 
-
-					;			Racing Features->Rolling Launch
-	dialog = smRollingLaunch, "Rolling Launch Settings NOT WORKING"
-		field = "Enable Rolling Launch",					rollingLaunchEnabled
-
-					;			Racing Features->Rolling Launch
-	dialog = antiLag, "AntiLag Settings NOT WORKING"
-		field = "Enable AntiLag",					antiLagEnabled
-		field = "Activation Mode",				antiLagActivationMode,  {antiLagEnabled == 1}
-		field = "Switch Input",					antiLagActivatePin,  {antiLagActivatePin != 0 || ( antiLagActivationMode == 1 && antiLagEnabled == 1 ) }
+	dialog = antiLagDialog, "AntiLag Settings"
+	    field = "Enable AntiLag",                   antiLagEnabled
+		field = "Activation Mode",          	    antiLagActivationMode
+		field = "Switch Input",                     ALSActivatePin,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
+		field = "ALS Button inverted",				ALSActivateInverted,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
+		field = "ALS Button mode",                  ALSActivatePinMode,  {antiLagActivationMode != @@antiLagActivationMode_e_SWITCH_INPUT_ANTILAG@@ && antiLagEnabled == 1}
+		field = "Max TPS",                          ALSMaxTPS,  {antiLagEnabled == 1}
+		field = "Min RPM",            	    		ALSMinRPM,  {antiLagEnabled == 1}
+		field = "Max RPM",                          ALSMaxRPM,  {antiLagEnabled == 1}
+		field = "Min CLT",                          ALSMinCLT,  {antiLagEnabled == 1}
+		field = "Max CLT",          	    		ALSMaxCLT,  {antiLagEnabled == 1}                 
+		field = "Idle Air Add",                     ALSIdleAdd, {useETBforIdleControl != 1 && antiLagEnabled == 1}
+		field = "ETB Air Add",                      ALSEtbAdd,  {useETBforIdleControl == 1 && antiLagEnabled == 1}
+		field = "Spark Skip Ratio",                 ALSSkipRatio,  {antiLagEnabled == 1}
+		panel = FuelAdderTableALS
+		panel = IgnRetardTableALS
 
 
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
@@ -4270,8 +4292,6 @@ dialog = tcuControls, "Transmission Settings"
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
 		field = "showHumanReadableWarning (affects Burn)",	showHumanReadableWarning
 		field = "Warning Message",							warning_message
-		field = totalGearsCount,								totalGearsCount
-
 		field = "Ford redundant TPS mode",				useFordRedundantTps
 		field = "Secondary TPS maximum",				tpsSecondaryMaximum, {useFordRedundantTps}
 		field = "Ford redundant PPS mode",				useFordRedundantPps

@@ -3,9 +3,15 @@
  */
 #include "pch.h"
 
+// uncomment to test starting from specific trigger
+//#define TEST_FROM_TRIGGER_ID ((int)TT_MAZDA_MIATA_NA)
 // uncomment to test only newest trigger
 //#define TEST_FROM_TRIGGER_ID ((int)TT_UNUSED - 1)
 #define TEST_FROM_TRIGGER_ID 1
+
+#define TEST_TO_TRIGGER_ID TT_UNUSED
+// uncomment to test only one trigger
+//#define TEST_TO_TRIGGER_ID (TEST_FROM_TRIGGER_ID + 1)
 
 struct TriggerExportHelper
 {
@@ -35,7 +41,7 @@ INSTANTIATE_TEST_SUITE_P(
 	AllTriggersFixture,
 	// Test all triggers from the first valid trigger thru the last
 	// (Skip index 0, that's custom toothed wheel which is covered by others)
-	::testing::Range((trigger_type_e)TEST_FROM_TRIGGER_ID, TT_UNUSED)
+	::testing::Range((trigger_type_e)TEST_FROM_TRIGGER_ID, (trigger_type_e)TEST_TO_TRIGGER_ID)
 );
 
 extern bool printTriggerDebug;
@@ -57,6 +63,13 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	Engine* engine = &e;
 	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 
+#if EFI_UNIT_TEST
+extern TriggerDecoderBase initState;
+    for (size_t i = 0;i<efi::size(initState.gapRatio);i++) {
+      initState.gapRatio[i] = NAN;
+    }
+#endif // EFI_UNIT_TEST
+
 	engineConfiguration->trigger.type = tt;
     setCamOperationMode();
 
@@ -75,6 +88,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
 	fprintf(fp, "%s=%d\n", TRIGGER_CYCLE_DURATION, (int)shape->getCycleDuration());
 	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
+	fprintf(fp, "%s=%d\n", "isSynchronizationNeeded", shape->isSynchronizationNeeded);
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->syncronizationRatioFrom[i]);
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->syncronizationRatioTo[i]);
@@ -84,10 +98,12 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	for (size_t i = 0; i < shape->getLength(); i++) {
 		int triggerDefinitionCoordinate = (shape->getTriggerWaveformSynchPointIndex() + i) % shape->getSize();
 
-		fprintf(fp, "event %d %d %d %.2f\n",
+		fprintf(fp, "event %d %d %d %.2f %f\n",
 				i,
 				shape->triggerSignalIndeces[triggerDefinitionCoordinate],
 				shape->triggerSignalStates[triggerDefinitionCoordinate],
-				triggerFormDetails->eventAngles[i]);
+				triggerFormDetails->eventAngles[i],
+				initState.gapRatio[i]
+				);
 	}
 }

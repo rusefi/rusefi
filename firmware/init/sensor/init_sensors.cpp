@@ -6,6 +6,7 @@
 
 #include "init.h"
 #include "cli_registry.h"
+#include "io_pins.h"
 
 static void initSensorCli();
 
@@ -45,6 +46,20 @@ static void deInitOldAnalogInputs() {
 	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
+static void initAuxDigital() {
+#if EFI_PROD_CODE
+	for (size_t i = 0;i<efi::size(engineConfiguration->luaDigitalInputPins);i++) {
+		efiSetPadMode("Lua Digital", engineConfiguration->luaDigitalInputPins[i], getInputMode(PI_DEFAULT));
+	}
+#endif // EFI_PROD_CODE
+}
+
+static void deInitAuxDigital() {
+	for (size_t i = 0;i<efi::size(activeConfiguration.luaDigitalInputPins);i++) {
+		brain_pin_markUnused(activeConfiguration.luaDigitalInputPins[i]);
+	}
+}
+
 void initNewSensors() {
 #if EFI_PROD_CODE && EFI_CAN_SUPPORT
 	initCanSensors();
@@ -53,7 +68,7 @@ void initNewSensors() {
 	initVbatt();
 	initMap();
 	initTps();
-	initOilPressure();
+	initFluidPressure();
 	initThermistors();
 	initLambda();
 	initFlexSensor();
@@ -70,6 +85,7 @@ void initNewSensors() {
 	#endif
 
 	initOldAnalogInputs();
+	initAuxDigital();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
@@ -85,10 +101,11 @@ void initNewSensors() {
 }
 
 void stopSensors() {
+	deInitAuxDigital();
 	deInitOldAnalogInputs();
 
 	deinitTps();
-	deinitOilPressure();
+	deinitFluidPressure();
 	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
@@ -102,7 +119,7 @@ void stopSensors() {
 void reconfigureSensors() {
 	initMap();
 	initTps();
-	initOilPressure();
+	initFluidPressure();
 	initVbatt();
 	initThermistors();
 	initFlexSensor();

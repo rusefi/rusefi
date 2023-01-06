@@ -185,11 +185,11 @@ void onFastAdcComplete(adcsample_t*) {
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-	mapAveragingAdcCallback(getFastAdc(fastMapSampleIndex));
+	mapAveragingAdcCallback(adcToVoltsDivided(getFastAdc(fastMapSampleIndex)));
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
 	if (engineConfiguration->isHip9011Enabled) {
-		hipAdcCallback(getFastAdc(hipSampleIndex));
+		hipAdcCallback(adcToVoltsDivided(getFastAdc(hipSampleIndex)));
 	}
 #endif /* EFI_HIP_9011 */
 }

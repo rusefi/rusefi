@@ -3,7 +3,7 @@
  * @brief C++ main entry point
  *
  * @date Nov 29, 2012
- * @author Andrey Belomutskiy, (c) 2012-2020
+ * @author Andrey Belomutskiy, (c) 2012-2023
  *      http://rusefi.com/
  */
 

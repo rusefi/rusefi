@@ -52,6 +52,18 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 		config->ignitionRpmBins, rpm
 	);
 
+#if EFI_ANTILAG_SYSTEM
+    if (engine->antilagController.isAntilagCondition) {
+	    auto tps = Sensor::get(SensorType::Tps1);
+		engine->antilagController.timingALSCorrection = interpolate3d(
+			config->ALSTimingRetardTable,
+			config->alsIgnRetardLoadBins, tps.Value,
+			config->alsIgnRetardrpmBins, rpm
+		);
+		advanceAngle += engine->antilagController.timingALSCorrection;
+    }
+#endif /* EFI_ANTILAG_SYSTEM */
+
 	// Add any adjustments if configured
 	for (size_t i = 0; i < efi::size(config->ignBlends); i++) {
 		auto result = calculateBlend(config->ignBlends[i], rpm, engineLoad);

@@ -86,7 +86,7 @@ public class OutputsTest {
                 "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
-                "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "bit isBrakePedalDown;is pedal down?\n" +
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
@@ -107,7 +107,7 @@ public class OutputsTest {
                         "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
                         "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
-                        "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
+                        "entry = isBrakePedalDown, \"is pedal down?\", int,    \"%d\"\n" +
                         "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", dataLogConsumer.getContent());
 
     }
@@ -191,7 +191,7 @@ public class OutputsTest {
     }
 
     @Test
-    public void testLongIterate() {
+    public void testLongTooltipsIterate() {
         ReaderState state = new ReaderState();
         String test = "struct total\n" +
                 "\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
@@ -199,9 +199,9 @@ public class OutputsTest {
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals(
-                "\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
-                        "\ttriggerSimulatorPins2 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n" +
-                        "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
+"\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 1\"\n" +
+        "\ttriggerSimulatorPins2 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 2\"\n" +
+        "\ttriggerSimulatorPins3 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 3\"\n", tsProjectConsumer.getSettingContextHelpForUnitTest());
     }
 
     @Test(expected = IllegalStateException.class)

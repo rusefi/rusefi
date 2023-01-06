@@ -158,7 +158,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 
 static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 
-bool readBatch(adcsample_t* convertedSamples, size_t start) {
+static bool readBatch(adcsample_t* convertedSamples, size_t start) {
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later

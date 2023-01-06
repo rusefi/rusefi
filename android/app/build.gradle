@@ -12,7 +12,7 @@ android {
     }
 
     compileSdkVersion 30
-    buildToolsVersion "30.0.0"
+    buildToolsVersion "30.0.2"
     project.archivesBaseName = "rusEFI";
 
     defaultConfig {

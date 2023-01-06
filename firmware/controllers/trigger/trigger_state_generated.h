@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Oct 09 02:21:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Jan 03 12:54:22 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -25,28 +25,23 @@ struct trigger_state_s {
 	 */
 	float triggerSyncGapRatio = (float)0;
 	/**
-	 * trigger: unused field?
 	 * offset 16
-	 */
-	float triggerActualSyncGapRatio = (float)0;
-	/**
-	 * offset 20
 	 */
 	uint8_t triggerStateIndex = (uint8_t)0;
 	/**
-	 * offset 21
+	 * offset 17
 	 */
 	uint8_t vvtCounter = (uint8_t)0;
 	/**
-	 * offset 22
+	 * offset 18
 	 */
 	uint8_t camResyncCounter = (uint8_t)0;
 	/**
-	 * offset 23
+	 * offset 19
 	 */
 	uint8_t vvtStateIndex = (uint8_t)0;
 };
-static_assert(sizeof(trigger_state_s) == 24);
+static_assert(sizeof(trigger_state_s) == 20);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Oct 09 02:21:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Jan 03 12:54:22 UTC 2023

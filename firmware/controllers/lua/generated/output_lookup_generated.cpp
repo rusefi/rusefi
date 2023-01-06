@@ -501,6 +501,8 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.lua.acRequestState;
 		case 2055342630:
 			return engine->engineState.lua.luaDisableEtb;
+		case -802271455:
+			return engine->engineState.lua.luaIgnCut;
 		case -893334680:
 			return engine->engineState.sd.tCharge;
 		case 584726739:

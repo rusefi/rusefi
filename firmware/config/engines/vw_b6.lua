@@ -1,24 +1,73 @@
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
 GRA = 0x388
+-- 1088
 TCU_1 = 0x440
+-- 1344
 TCU_2 = 0x540
+-- 1440
 BRAKE_2 = 0x5A0
 
 
+-- 640
 MOTOR_1 = 0x280
+-- 644
+MOTOR_BRE = 0x284
+-- 648
+MOTOR_2 = 0x288
+-- 896
 MOTOR_3 = 0x380
-MOTOR_INFO = 0x580
+-- 1152
 MOTOR_5 = 0x480
+-- 1160
 MOTOR_6 = 0x488
+-- 1386
+ACC_GRA = 0x56A
+-- 1408 the one with variable payload
+MOTOR_INFO = 0x580
+-- 1416
 MOTOR_7 = 0x588
 
-canRxAdd(AIRBAG)
-canRxAdd(TCU_1)
-canRxAdd(TCU_2)
-canRxAdd(BRAKE_2)
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
-fuelCounter = 0
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+function onTcu1(bus, id, dlc, data)
+	print("onTcu1")
+end
+
+function onTcu2(bus, id, dlc, data)
+	print("onTcu2")
+end
+
+canRxAdd(AIRBAG)
+canRxAdd(TCU_1, onTcu1)
+canRxAdd(TCU_2, onTcu2)
+-- canRxAdd(BRAKE_2)
+
+motor5FuelCounter = 0
 
 function setBitRange(data, totalBitIndex, bitWidth, value)
 	local byteIndex = totalBitIndex >> 3
@@ -88,22 +137,36 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
-canMotor1    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+canMotor1    = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motorBreData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor2Data   = { 0x8A, 0x8D, 0x10, 0x04, 0x00, 0x4C, 0xDC, 0x87 }
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
-canMotor6    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
-canMotor7    = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
+motor7Data   = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
+accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
 
 setTickRate(100)
 
 everySecondTimer = Timer.new()
 canMotorInfoCounter = 0
 
-counter = 0
+motorBreCounter = 0
+accGraCounter = 0
+counter16 = 0
+
+mafSensor = Sensor.new("maf")
+mafCalibrationIndex = findCurveIndex("mafcurve")
 
 function onTick()
-	counter = (counter + 1) % 16
+
+	freqValue = getSensor("AuxSpeed1") or 0
+	mafValue = curve(mafCalibrationIndex, 5)
+	-- 	print(freqValue .. " mafValue=" .. mafValue)
+	mafSensor : set(mafValue)
+
+	counter16 = (counter16 + 1) % 16
 
 	rpm = getSensor("RPM") or 0
 	clt = getSensor("CLT") or 0
@@ -113,18 +176,24 @@ function onTick()
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
-	engineTorque = fakeTorque
+	engineTorque = fakeTorque * 0.9
 	innerTorqWithoutExt = fakeTorque
 	torqueLoss = 10
 	requestedTorque = fakeTorque
 
 	canMotor1[2] = engineTorque / 0.39
+	setTwoBytes(canMotor1, 2, 4 * rpm)
 	canMotor1[5] = innerTorqWithoutExt / 0.4
 	canMotor1[6] = tps / 0.4
 	canMotor1[7] = torqueLoss / 0.39
 	canMotor1[8] = requestedTorque / 0.39
-	setTwoBytes(canMotor1, 2, 4 * rpm)
 	txCan(1, MOTOR_1, 0, canMotor1)
+
+	motorBreCounter = (motorBreCounter + 1) % 16
+
+	setBitRange(motorBreData, 8, 4, motorBreCounter)
+	xorChecksum(motorBreData, 1)
+	txCan(1, MOTOR_BRE, 0, motorBreData) -- relay non-TCU message to TCU
 
 	desired_wheel_torque = fakeTorque
 	canMotor3[2] = (iat + 48) / 0.75
@@ -134,14 +203,31 @@ function onTick()
 	canMotor3[8] = tps / 0.4
 	txCan(1, MOTOR_3, 0, canMotor3)
 
-	setBitRange(motor5Data, 5, 9, fuelCounter)
+	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
 	xorChecksum(motor5Data, 8)
 	txCan(1, MOTOR_5, 0, motor5Data)
 
-	txCan(1, MOTOR_7, 0, canMotor7)
+	actualTorque = fakeTorque
+	feedbackGearbox = 255
 
-    local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
-    local connectedToUsb = vbat < 4
+	motor6Data[2] = math.floor(engineTorque / 0.39)
+	motor6Data[3] = math.floor(actualTorque / 0.39)
+	motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+	setBitRange(motor6Data, 60, 4, counter16)
+	--    print("motor6 " .. arrayToString(motor6Data))
+	xorChecksum(motor6Data, 1)
+	txCan(1, MOTOR_6, 0, motor6Data)
+
+	accGraCounter = (accGraCounter + 1) % 16
+	setBitRange(accGraData, 60, 4, accGraCounter)
+	xorChecksum(accGraData, 1)
+	txCan(1, ACC_GRA, 0, accGraData)
+	print("ACC_GRA " ..arrayToString(accGraData))
+
+	txCan(1, MOTOR_7, 0, motor7Data)
+
+	local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
+	local connectedToUsb = vbat < 4
 
 	if hadIgnitionEvent and timeToTurnOff then
 		-- looks like ignition key was removed
@@ -151,7 +237,7 @@ function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
 		everySecondTimer : reset()
 
-		fuelCounter = fuelCounter + 20
+		motor5FuelCounter = motor5FuelCounter + 20
 
 		canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
 		canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)

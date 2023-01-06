@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sat Dec 17 01:28:44 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Tue Jan 03 21:14:30 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -347,6 +347,7 @@ public class TriggerState {
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
 	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 2;
+	public static final String TRIGGER_WITH_SYNC = "isSynchronizationNeeded";
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TRIM_SIZE = 4;
 	public static final int TS_BLOCK_READ_TIMEOUT = 3000;
@@ -400,21 +401,19 @@ public class TriggerState {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1128);
-	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1128);
-	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 8, FieldType.FLOAT).setBaseOffset(1128);
-	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 12, FieldType.FLOAT).setBaseOffset(1128);
-	public static final Field TRIGGERACTUALSYNCGAPRATIO = Field.create("TRIGGERACTUALSYNCGAPRATIO", 16, FieldType.FLOAT).setBaseOffset(1128);
-	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 20, FieldType.INT8).setScale(1.0).setBaseOffset(1128);
-	public static final Field VVTCOUNTER = Field.create("VVTCOUNTER", 21, FieldType.INT8).setScale(1.0).setBaseOffset(1128);
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 22, FieldType.INT8).setScale(1.0).setBaseOffset(1128);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 23, FieldType.INT8).setScale(1.0).setBaseOffset(1128);
+	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1140);
+	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1140);
+	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 8, FieldType.FLOAT).setBaseOffset(1140);
+	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 12, FieldType.FLOAT).setBaseOffset(1140);
+	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 16, FieldType.INT8).setScale(1.0).setBaseOffset(1140);
+	public static final Field VVTCOUNTER = Field.create("VVTCOUNTER", 17, FieldType.INT8).setScale(1.0).setBaseOffset(1140);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 18, FieldType.INT8).setScale(1.0).setBaseOffset(1140);
+	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 19, FieldType.INT8).setScale(1.0).setBaseOffset(1140);
 	public static final Field[] VALUES = {
 	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,
 	VVTCURRENTPOSITION,
 	TRIGGERSYNCGAPRATIO,
-	TRIGGERACTUALSYNCGAPRATIO,
 	TRIGGERSTATEINDEX,
 	VVTCOUNTER,
 	CAMRESYNCCOUNTER,

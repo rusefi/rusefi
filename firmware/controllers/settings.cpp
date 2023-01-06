@@ -343,13 +343,7 @@ static void setFanSetting(float onTempC, float offTempC) {
 }
 
 static void setWholeTimingMap(float value) {
-	// todo: table helper?
-	efiPrintf("Setting whole timing map to %.2f", value);
-	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
-		for (int r = 0; r < IGN_RPM_COUNT; r++) {
-			config->ignitionTable[l][r] = value;
-		}
-	}
+	setTable(config->ignitionTable, value);
 }
 
 static void setWholePhaseMapCmd(float value) {

@@ -733,12 +733,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 #if EFI_BOOST_CONTROL
-	lua_register(l, "setBoostAdd", [](lua_State* l) {
+	lua_register(l, "setBoostTargetAdd", [](lua_State* l) {
 		engine->boostController.luaTargetAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
-	lua_register(l, "setBoostMult", [](lua_State* l) {
+	lua_register(l, "setBoostTargetMult", [](lua_State* l) {
 		engine->boostController.luaTargetMult = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setBoostDutyAdd", [](lua_State* l) {
+		engine->boostController.luaOpenLoopAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
 #endif // EFI_BOOST_CONTROL
@@ -774,6 +778,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 	lua_register(l, "setEtbDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
+		return 0;
+	});
+	lua_register(l, "setIgnDisabled", [](lua_State* l) {
+		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
 		return 0;
 	});
 #endif // EFI_PROD_CODE
@@ -833,6 +841,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 			incrementGlobalConfigurationVersion();
 		}
 		return 0;
+	});
+
+	lua_register(l, "getGlobalConfigurationVersion", [](lua_State* l) {
+		lua_pushnumber(l, engine->getGlobalConfigurationVersion());
+		return 1;
 	});
 
 	lua_register(l, "setAcDisabled", [](lua_State* l) {

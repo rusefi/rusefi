@@ -19,6 +19,10 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
 import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 
+/**
+ * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
+ * @see GetOutputValueConsumer
+ */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
@@ -34,9 +38,17 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<Tuple<String>> variables = new ArrayList<>();
     private final String outputFileName;
+    private final String mdOutputFileName;
 
-    public GetConfigValueConsumer(String outputFileName) {
+    private final StringBuilder mdContent = new StringBuilder();
+
+    public GetConfigValueConsumer() {
+        this(null, null);
+    }
+
+    public GetConfigValueConsumer(String outputFileName, String mdOutputFileName) {
         this.outputFileName = outputFileName;
+        this.mdOutputFileName = mdOutputFileName;
     }
 
     public static void writeStringToFile(@Nullable String fileName, String content) throws IOException {
@@ -59,6 +71,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     @Override
     public void endFile() throws IOException {
         writeStringToFile(outputFileName, getContent());
+        writeStringToFile(mdOutputFileName, getMdContent());
     }
 
     private String processConfig(ReaderState readerState, ConfigField cf, String prefix) {
@@ -81,6 +94,9 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
 
+        mdContent.append("### " + userName + "\n");
+        mdContent.append(cf.getComment() + "\n\n");
+
 
         return "";
     }
@@ -100,6 +116,10 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getHeaderAndGetter() {
         return FILE_HEADER +
                 getCompleteGetterBody();
+    }
+
+    public String getMdContent() {
+        return mdContent.toString();
     }
 
     @NotNull

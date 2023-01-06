@@ -34,6 +34,12 @@ Release template (copy/paste this for new release):
  - Jammed ETB detection #4873
  - RPM correction/multiplier for Accel Enrich #4760
  - Tooth logger writes to SD card #4897
+ - Antilag #2403
+ - Lua 'setIgnDisabled' function for all kinds of cranking safety systems
+
+### Fixed
+ - multi-line tooltips in TS #4927
+ - Negative temperature values for IAT Corr table #4941
 
 ## December 2022 Release - "Day 289"
 

@@ -215,6 +215,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_GAPS_COUNT "gapsCount"
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
+#define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -465,7 +466,7 @@ bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled;
-bit rollingLaunchEnabled;
+bit anotherUnusedHere444
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
@@ -522,7 +523,8 @@ end_struct
 
 custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS commonly only used for NA engines\nSpeed Density requires MAP sensor and is the default choice for may installs\nMAF air charge is a cylinder filling based method that uses a mass air flow sensor.;
-uint8_t[3] alignmentFill_at_1
+uint8_t ALSMaxTPS;;"%", 1, 0, 0, 10, 0
+uint8_t[2] unusedHerealignmentFill_at_1
 
 custom injection_mode_e 1 bits, U08, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
@@ -795,7 +797,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v", 1, 0, 40, 70, 0
+	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
 output_pin_e acFanPin;Optional Radiator Fan used with A/C
@@ -1054,8 +1056,8 @@ bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skippe
 custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Open Loop"
 	idle_mode_e idleMode;See also idleRpmPid;
 
-	bit isInjectionEnabled;Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
-	bit isIgnitionEnabled;Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
+	bit isInjectionEnabled
+	bit isIgnitionEnabled
 	bit isCylinderCleanupEnabled;When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	bit alwaysInstantRpm
@@ -1083,7 +1085,7 @@ bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle incre
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-bit unused_1484_bit_29
+bit ALSActivateInverted
 bit unused_1484_bit_30
 bit tempBooleanForVerySpecialLogic
 
@@ -1154,7 +1156,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
 	
 	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
-	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 200, 0
+	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
 	
 
 	float targetVBatt;This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
@@ -1424,15 +1426,15 @@ tChargeMode_e tChargeMode;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;;"mA", 1, 0, 1000, 25000, 0
-	uint16_t mc33_i_peak;;"mA", 1, 0, 1000, 20000, 0
-	uint16_t mc33_i_hold;;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_boost;Boost Current;"mA", 1, 0, 1000, 25000, 0
+	uint16_t mc33_i_peak;Peak Current;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_hold;Hold Current;"mA", 1, 0, 1000, 20000, 0
 	uint16_t mc33_t_max_boost;Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_off;;"us", 1, 0, 0, 10000, 0
-	uint16_t mc33_t_peak_tot;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_peak_tot;Peak phase duration;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_bypass;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_hold_off;;"us", 1, 0, 0, 10000, 0
-	uint16_t mc33_t_hold_tot;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_hold_tot;Hold phase duration;"us", 1, 0, 0, 10000, 0
 
 	pin_input_mode_e tcuUpshiftButtonPinMode
 	pin_input_mode_e tcuDownshiftButtonPinMode
@@ -1552,17 +1554,21 @@ float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
 uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
 uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 
-	int ALSTimingRetard;;"deg", 1, 0, -180, 180, 2
+	uint8_t[4] unusedAlignmentFill_at_33
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	int ALSSkipRatio;;"", 1, 0, 0.1, 2, 1
 	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
 	pin_input_mode_e ALSActivatePinMode;
 
+uint8_t[2] unusedHereForYou
+pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
+
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use 65%;"%", 0.5, 0, 0, 100, 1
 	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use xxx%;"%", 0.5, 0, 0, 100, 1
 
-uint8_t[103] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint8_t[94] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+
 
 ! end of engine_configuration_s
 end_struct
@@ -1663,7 +1669,7 @@ float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/h
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -720, 720, 1
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, -60, 200, 0
 uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
@@ -1779,7 +1785,7 @@ int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -720, 720, 1
 uint16_t[4] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
 
-int16_t[4 x 4] autoscale ALSFuelAdjustment;;"deg", 0.1, 0, -720, 720, 1
+int16_t[4 x 4] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 500, 1
 uint16_t[4] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
 uint16_t[4] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
 
