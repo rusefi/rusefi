@@ -45,7 +45,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         }
     }
 
-    private boolean isStringField(ConfigFieldImpl configField) {
+    private boolean isStringField(ConfigField configField) {
         String custom = state.getTsCustomLine().get(configField.getType());
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
@@ -54,9 +54,9 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-                ConfigFieldImpl prev = iterator.getPrev();
-                ConfigFieldImpl configField = iterator.cf;
-                ConfigFieldImpl next = iterator.next;
+                ConfigField prev = iterator.getPrev();
+                ConfigField configField = iterator.cf;
+                ConfigField next = iterator.next;
                 int bitIndex = iterator.bitState.get();
 
                 if (configField.isDirective())

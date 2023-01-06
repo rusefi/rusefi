@@ -115,26 +115,32 @@ public class ConfigFieldImpl implements ConfigField {
         return Integer.parseInt(s);
     }
 
+    @Override
     public ConfigStructure getStructureType() {
         return getState().getStructures().get(getType());
     }
 
+    @Override
     public boolean isArray() {
         return arraySizeVariableName != null || arraySizes.length != 0;
     }
 
+    @Override
     public String getTrueName() {
         return trueName;
     }
 
+    @Override
     public String getFalseName() {
         return falseName;
     }
 
+    @Override
     public boolean isBit() {
         return BOOLEAN_T.equalsIgnoreCase(type);
     }
 
+    @Override
     public boolean isDirective() {
         return DIRECTIVE_T.equalsIgnoreCase(type);
     }
@@ -220,7 +226,8 @@ public class ConfigFieldImpl implements ConfigField {
         return matcher.matches();
     }
 
-    public int getSize(ConfigFieldImpl next) {
+    @Override
+    public int getSize(ConfigField next) {
         if (isBit() && next.isBit()) {
             // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
             return 0;
@@ -243,10 +250,12 @@ public class ConfigFieldImpl implements ConfigField {
                 '}';
     }
 
+    @Override
     public int[] getArraySizes() {
         return arraySizes;
     }
 
+    @Override
     public String getComment() {
         if (comment == null)
             return null;
@@ -258,6 +267,7 @@ public class ConfigFieldImpl implements ConfigField {
      *
      * @see JavaFieldsConsumer#writeJavaFields prefix parameter for structure name
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -265,10 +275,12 @@ public class ConfigFieldImpl implements ConfigField {
     /**
      * @see com.rusefi.newparse.parsing.Type
      */
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public int getElementSize() {
         return isVoid() ? 0 : TypesHelper.getElementSize(state, type);
     }
@@ -276,26 +288,32 @@ public class ConfigFieldImpl implements ConfigField {
     /**
      * this property of array expands field into a bunch of variables like field1 field2 field3 etc
      */
+    @Override
     public boolean isIterate() {
         return isIterate;
     }
 
+    @Override
     public boolean isHasAutoscale() {
         return hasAutoscale;
     }
 
-    public ReaderStateImpl getState() {
+    @Override
+    public ReaderState getState() {
         return state;
     }
 
+    @Override
     public String getTsInfo() {
         return tsInfo;
     }
 
+    @Override
     public boolean isFsioVisible() {
         return fsioVisible;
     }
 
+    @Override
     public String autoscaleSpec() {
         Pair<Integer, Integer> pair = autoscaleSpecPair();
         if (pair == null)
@@ -303,6 +321,7 @@ public class ConfigFieldImpl implements ConfigField {
         return pair.first + ", " + pair.second;
     }
 
+    @Override
     public double autoscaleSpecNumber() {
         Pair<Integer, Integer> pair = autoscaleSpecPair();
         if (pair == null)
@@ -310,6 +329,7 @@ public class ConfigFieldImpl implements ConfigField {
         return 1.0 * pair.second / pair.first;
     }
 
+    @Override
     public Pair<Integer, Integer> autoscaleSpecPair() {
         if (!hasAutoscale) {
             return null;
@@ -351,12 +371,14 @@ public class ConfigFieldImpl implements ConfigField {
         return new Pair<>(mul, div);
     }
 
-    private String[] getTokens() {
+    @Override
+    public String[] getTokens() {
         if (tsInfo == null)
             return new String[0];
         return tsInfo.split(",");
     }
 
+    @Override
     public String getUnits() {
         String[] tokens = getTokens();
         if (tokens.length == 0)
@@ -364,6 +386,7 @@ public class ConfigFieldImpl implements ConfigField {
         return unquote(tokens[0].trim());
     }
 
+    @Override
     public double getMin() {
         String[] tokens = getTokens();
         if (tokens.length < 4)
@@ -371,6 +394,7 @@ public class ConfigFieldImpl implements ConfigField {
         return Double.parseDouble(tokens[3]);
     }
 
+    @Override
     public double getMax() {
         String[] tokens = getTokens();
         if (tokens.length < 5)
@@ -378,6 +402,7 @@ public class ConfigFieldImpl implements ConfigField {
         return Double.parseDouble(tokens[4]);
     }
 
+    @Override
     public int getDigits() {
         String[] tokens = getTokens();
         if (tokens.length < 6)
