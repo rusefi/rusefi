@@ -22,7 +22,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
     // https://github.com/rusefi/web_backend/issues/166
     private static final int MSQ_LENGTH_LIMIT = 34;
 
-    public static final String UNUSED = ConfigStructure.UNUSED_ANYTHING_PREFIX;
+    public static final String UNUSED = ConfigStructureImpl.UNUSED_ANYTHING_PREFIX;
     private final String fileName;
     private final StringBuilder tsWriter = new StringBuilder();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);

@@ -30,7 +30,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
 
     @Override
     public void end() {
-        ConfigStructure cs = cf.getState().getStructures().get(cf.getType());
+        ConfigStructureImpl cs = cf.getState().getStructures().get(cf.getType());
         String content;
         if (cs != null) {
             if (cf.isFromIterate()) {

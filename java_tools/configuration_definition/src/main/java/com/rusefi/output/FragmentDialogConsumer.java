@@ -38,16 +38,16 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
             int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField configField = iterator.cf;
 
-                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
+                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
                     return 0;
 
-                ConfigStructure cs = configField.getStructureType();
+                ConfigStructureImpl cs = configField.getStructureType();
                 if (cs != null) {
                     String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
-                if (configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX))
+                if (configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX))
                     return 0;
 
                 if (configField.isBit()) {
