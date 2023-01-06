@@ -25,7 +25,7 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  */
 public class ReaderState {
     // used to update other files
-    public List<String> inputFiles = new ArrayList<>();
+    private List<String> inputFiles = new ArrayList<>();
 
     private static final Logging log = getLogging(ReaderState.class);
 
@@ -51,6 +51,10 @@ public class ReaderState {
 
     public void setWithC_Defines(boolean withC_Defines) {
         this.withC_Defines = withC_Defines;
+    }
+
+    public List<String> getInputFiles() {
+        return inputFiles;
     }
 
     private static void handleBitLine(ReaderState state, String line) {
@@ -361,5 +365,9 @@ public class ReaderState {
 
     public void addDestination(ConfigurationConsumer... consumers) {
         destinations.addAll(Arrays.asList(consumers));
+    }
+
+    public void addInputFile(String fileName) {
+        inputFiles.add(fileName);
     }
 }
