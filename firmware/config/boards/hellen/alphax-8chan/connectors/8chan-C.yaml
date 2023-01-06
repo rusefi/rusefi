@@ -1,8 +1,25 @@
 pins:
-  - pin: 17A
+  - pin: 17C
     function: Analog Ground
     color: black
     type: gnd
+
+
+  - pin: 6C
+    # H144_IN_IAT + 16 = 14 + 16
+    id: EFI_ADC_30
+    class: analog_inputs
+    function: Temperature 3
+    ts_name: 6C - AT3
+    color: orange
+
+  - pin: 7C
+    # EFI_ADC_12 + 16 = 12 + 16
+    id: EFI_ADC_28
+    class: analog_inputs
+    function: Temperature 4
+    ts_name: 7C - AT4
+    color: orange
 
   - pin: 18C
     function: ETB positive
@@ -25,6 +42,15 @@ pins:
     ts_name: 23C - TPS
     color: orange
 
+  - pin: 24C
+    # H144_IN_AUX1
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: TPS2 Sensor Input
+    ts_name: 24C - TPS2
+    color: orange
+
+
   - pin: 25C
     function: Power Ground
     color: black
@@ -35,6 +61,14 @@ pins:
     function: ETB negative
     type: etb
     color: purple
+
+  - pin: 31C
+    # H144_IN_AUX2
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: PPS2 Sensor Input
+    ts_name: 31C - PPS2
+    color: orange
 
 
   - pin: 34C
