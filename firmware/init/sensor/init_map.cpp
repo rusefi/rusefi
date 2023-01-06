@@ -129,6 +129,6 @@ void initMap() {
 }
 
 void deinitMap() {
-	AdcSubscription::UnsubscribeSensor(slowMapSensor);
-	AdcSubscription::UnsubscribeSensor(baroSensor);
+	AdcSubscription::UnsubscribeSensor(slowMapSensor, engineConfiguration->map.sensor.hwChannel);
+	AdcSubscription::UnsubscribeSensor(baroSensor, engineConfiguration->baroSensor.hwChannel);
 }

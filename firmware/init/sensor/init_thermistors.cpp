@@ -112,8 +112,8 @@ void initThermistors() {
 }
 
 void deinitThermistors() {
-	AdcSubscription::UnsubscribeSensor(clt);
-	AdcSubscription::UnsubscribeSensor(iat);
-	AdcSubscription::UnsubscribeSensor(aux1);
-	AdcSubscription::UnsubscribeSensor(aux2);
+	AdcSubscription::UnsubscribeSensor(clt, engineConfiguration->clt.adcChannel);
+	AdcSubscription::UnsubscribeSensor(iat, engineConfiguration->iat.adcChannel);
+	AdcSubscription::UnsubscribeSensor(aux1, engineConfiguration->auxTempSensor1.adcChannel);
+	AdcSubscription::UnsubscribeSensor(aux2, engineConfiguration->auxTempSensor2.adcChannel);
 }
