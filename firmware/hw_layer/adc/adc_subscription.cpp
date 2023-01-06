@@ -54,12 +54,17 @@ static AdcSubscriptionEntry* findEntry() {
 	// If you passed the same sensor again, resubscribe it with the new parameters
 	auto entry = findEntry(&sensor);
 
-	// If not already registered, get an empty (new) entry
-	if (!entry) {
-		entry = findEntry();
-	} else {
+	if (entry) {
+		// If the channel didn't change, we're already set
+		if (entry->Channel == channel) {
+			return;
+		}
+
 		// avoid updates to this while we're mucking with the configuration
 		entry->Sensor = nullptr;
+	} else {
+		// If not already registered, get an empty (new) entry
+		entry = findEntry();
 	}
 
 	const char* name = sensor.getSensorName();
@@ -112,10 +117,13 @@ static AdcSubscriptionEntry* findEntry() {
 	entry->Channel = EFI_ADC_NONE;
 }
 
-/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor& s, adc_channel_e channel) {
-	// if the new channel is invalid, unsubscribe the old sensor
-	if (!isAdcChannelValid(channel)) {
-		AdcSubscription::UnsubscribeSensor(s);
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor& sensor, adc_channel_e channel) {
+	// Find the old sensor
+	auto entry = findEntry(&sensor);
+
+	// if the channel changed, unsubscribe!
+	if (entry && entry->Channel != channel) {
+		AdcSubscription::UnsubscribeSensor(sensor);
 	}
 }
 
