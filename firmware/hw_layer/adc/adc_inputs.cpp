@@ -398,10 +398,6 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 	if (!isAdcChannelValid(setting)) {
 		return;
 	}
-	if (/*type-limited (int)setting < 0 || */(int)setting>=HW_MAX_ADC_INDEX) {
-		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
-		return;
-	}
 
 	adcHwChannelEnabled[setting] = mode;
 
