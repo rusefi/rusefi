@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.IReaderState;
 
 import java.util.List;
 
@@ -10,13 +10,13 @@ import java.util.List;
  * @see FieldIterator is there a duplication?
  */
 class PerFieldWithStructuresIterator extends FieldIterator {
-    private final ReaderState state;
+    private final IReaderState state;
     private final String prefix;
     private final Strategy strategy;
     private final String prefixSeparator;
     private final StringBuilder sb = new StringBuilder();
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy, String prefixSeparator) {
+    public PerFieldWithStructuresIterator(IReaderState state, List<ConfigField> fields, String prefix, Strategy strategy, String prefixSeparator) {
         super(fields);
         this.state = state;
         this.prefix = prefix;
@@ -24,7 +24,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
         this.prefixSeparator = prefixSeparator;
     }
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy) {
+    public PerFieldWithStructuresIterator(IReaderState state, List<ConfigField> fields, String prefix, Strategy strategy) {
         this(state, fields, prefix, strategy, "_");
     }
 
@@ -55,6 +55,6 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     }
 
     interface Strategy {
-        String process(ReaderState state, ConfigField configField, String prefix);
+        String process(IReaderState state, ConfigField configField, String prefix);
     }
 }

@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.IReaderState;
 
 import java.io.IOException;
 
@@ -19,7 +19,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             public int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField configField = iterator.cf;

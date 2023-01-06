@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.IReaderState;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
                     (state, configField, prefix) -> handle(configField, prefix));

@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.IReaderState;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
 
 
     @Override
-    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             @Override
             int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
