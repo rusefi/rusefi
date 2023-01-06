@@ -36,7 +36,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
 
     @Override
     public void endFile() throws IOException {
-        javaFields.write(state.variableRegistry.getJavaConstants());
+        javaFields.write(state.getVariableRegistry().getJavaConstants());
         javaFields.write(getContent());
 
         allFields.append("\t};" + EOL);

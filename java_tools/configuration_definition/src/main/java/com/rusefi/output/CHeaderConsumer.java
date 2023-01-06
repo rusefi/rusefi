@@ -25,7 +25,7 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
     private final VariableRegistry variableRegistry;
 
     public CHeaderConsumer(ReaderState state, String destCHeader, boolean withC_Defines) {
-        this.variableRegistry = state.variableRegistry;
+        this.variableRegistry = state.getVariableRegistry();
         this.state = state;
         this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);

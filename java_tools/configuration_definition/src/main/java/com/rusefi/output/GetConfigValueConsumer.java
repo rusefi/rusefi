@@ -61,7 +61,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
+        if (state.getStack().isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
                     this::processConfig, ".");
             iterator.loop();

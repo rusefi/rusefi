@@ -46,7 +46,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private boolean isStringField(ConfigField configField) {
-        String custom = state.tsCustomLine.get(configField.getType());
+        String custom = state.getTsCustomLine().get(configField.getType());
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
@@ -85,9 +85,9 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     writeJavaFieldName(nameWithPrefix, tsPosition);
                     content.append("FieldType.FLOAT)" + terminateField());
                 } else {
-                    String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
+                    String enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.FULL_JAVA_ENUM);
                     if (enumOptions == null)
-                        enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
+                        enumOptions = state.getVariableRegistry().get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
 
                     if (enumOptions != null && !existingJavaEnums.contains(configField.getType())) {
                         existingJavaEnums.add(configField.getType());
@@ -97,7 +97,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
                     writeJavaFieldName(nameWithPrefix, tsPosition);
                     if (isStringField(configField)) {
-                        String custom = state.tsCustomLine.get(configField.getType());
+                        String custom = state.getTsCustomLine().get(configField.getType());
                         String[] tokens = custom.split(",");
                         String stringSize = tokens[3].trim();
                         content.append(stringSize + ", FieldType.STRING");

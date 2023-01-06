@@ -32,7 +32,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
         sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition);
 
-        if (readerState.stack.isEmpty()) {
+        if (readerState.getStack().isEmpty()) {
             if (tsOutputsSectionFileName != null) {
                 FileWriter fos = new FileWriter(tsOutputsSectionFileName);
                 fos.write(tsOutput.getContent());

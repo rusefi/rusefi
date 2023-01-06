@@ -89,7 +89,7 @@ public class ConfigField {
         this.type = type;
         this.arraySizeVariableName = arraySizeAsText;
         this.arraySizes = arraySizes;
-        this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
+        this.tsInfo = tsInfo == null ? null : state.getVariableRegistry().applyVariables(tsInfo);
         this.isIterate = isIterate;
         if (tsInfo != null) {
             String[] tokens = getTokens();
@@ -116,7 +116,7 @@ public class ConfigField {
     }
 
     public ConfigStructure getStructureType() {
-        return getState().structures.get(getType());
+        return getState().getStructures().get(getType());
     }
 
     public boolean isArray() {
@@ -178,12 +178,12 @@ public class ConfigField {
         if (matcher.group(5) != null) {
             arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
             arraySizes = new int[2];
-            arraySizes[0] = getSize(state.variableRegistry, matcher.group(3));
-            arraySizes[1] = getSize(state.variableRegistry, matcher.group(5));
+            arraySizes[0] = getSize(state.getVariableRegistry(), matcher.group(3));
+            arraySizes[1] = getSize(state.getVariableRegistry(), matcher.group(5));
         } else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
             arraySizes = new int[1];
-            arraySizes[0] = getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes[0] = getSize(state.getVariableRegistry(), arraySizeAsText);
         } else {
             arraySizes = new int[0];
             arraySizeAsText = null;
@@ -419,7 +419,7 @@ public class ConfigField {
     }
 
     public String getCommentTemplated() {
-        return state.variableRegistry.applyVariables(getComment());
+        return state.getVariableRegistry().applyVariables(getComment());
     }
 }
 

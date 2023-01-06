@@ -13,7 +13,7 @@ public class SdCardFieldsContent {
     public String home = "engine->outputChannels";
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
+        if (state.getStack().isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
                     (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");
             iterator.loop();

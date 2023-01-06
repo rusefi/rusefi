@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.newparse.ParseState;
-import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.SystemOut;
@@ -111,7 +110,7 @@ public class ConfigDefinition {
                     String cppFile = args[i + 1];
                     String mdFile = args[i + 2];
                     i++;
-                    state.destinations.add(new GetConfigValueConsumer(cppFile, mdFile));
+                    state.addDestination(new GetConfigValueConsumer(cppFile, mdFile));
                 }
                     break;
                 case "-readfile":
@@ -119,7 +118,7 @@ public class ConfigDefinition {
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
                     try {
-                        state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
+                        state.getVariableRegistry().register(keyName, IoUtil2.readFile(fileName));
                     } catch (RuntimeException e) {
                         throw new IllegalStateException("While processing " + fileName, e);
                     }
@@ -136,7 +135,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
-                    state.prependFiles.add(args[i + 1]);
+                    state.getPrependFiles().add(args[i + 1]);
                     // don't add this file to the 'inputFiles'
                     break;
                 case KEY_SIGNATURE_DESTINATION:
@@ -146,7 +145,7 @@ public class ConfigDefinition {
                     enumInputFiles.add(args[i + 1]);
                     break;
                 case "-ts_output_name":
-                    state.tsFileOutputName = args[i + 1];
+                    state.setTsFileOutputName(args[i + 1]);
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
@@ -177,12 +176,12 @@ public class ConfigDefinition {
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
         SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
-        ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
+        ExtraUtil.handleFiringOrder(firingEnumFileName, state.getVariableRegistry(), parseState);
 
-        new TriggerWheelTSLogic().execute(triggersInputFolder, state.variableRegistry);
+        new TriggerWheelTSLogic().execute(triggersInputFolder, state.getVariableRegistry());
 
         if (pinoutLogic != null) {
-            pinoutLogic.registerBoardSpecificPinNames(state.variableRegistry, state, parseState);
+            pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), state, parseState);
         }
 
         // Parse the input files
@@ -192,7 +191,7 @@ public class ConfigDefinition {
                 // Ignore duplicates of definitions made during prepend phase
 //                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
-                for (String prependFile : state.prependFiles) {
+                for (String prependFile : state.getPrependFiles()) {
 //                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
                 }
             }
@@ -219,25 +218,25 @@ public class ConfigDefinition {
              * we have '-readfile OUTPUTS_SECTION' in one of .sh files in order to template rusefi.input
              * Same with '-readfile DATALOG_SECTION'
              */
-            state.destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
+            state.addDestination(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini"));
         }
         if (tsInputFileFolder != null) {
-            state.destinations.add(new TSProjectConsumer(tsInputFileFolder, state));
+            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
             tmpRegistry.register(SIGNATURE_HASH, uniqueId.encode());
             tmpRegistry.readPrependValues(signaturePrependFile);
-            state.destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
+            state.addDestination(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (state.destinations.isEmpty())
+        if (state.isDestinationsEmpty())
             throw new IllegalArgumentException("No destinations specified");
 
         state.doJob();
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, state.definitionInputFile);
+            ExtraUtil.writeDefinesToFile(state.getVariableRegistry(), destCDefinesFileName, state.getDefinitionInputFile());
         }
     }
 }

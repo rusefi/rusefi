@@ -14,10 +14,10 @@ public class SdCardFieldsGeneratorTest {
         Actor actor = new Actor() {
             @Override
             public void act(ReaderState state) {
-                state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-                state.variableRegistry.register("GAUGE_NAME_RPM", "\"hello\"");
-                state.variableRegistry.register("GAUGE_NAME_GEAR_RATIO", "ra");
-                state.variableRegistry.register("GAUGE_NAME_CPU_TEMP", "te");
+                state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+                state.getVariableRegistry().register("GAUGE_NAME_RPM", "\"hello\"");
+                state.getVariableRegistry().register("GAUGE_NAME_GEAR_RATIO", "ra");
+                state.getVariableRegistry().register("GAUGE_NAME_CPU_TEMP", "te");
 
             }
         };

@@ -21,10 +21,10 @@ public class TypesHelper {
         Objects.requireNonNull(state);
         if (type == null)
             return 0;
-        if (state != null && state.structures.containsKey(type))
-            return state.structures.get(type).getTotalSize();
-        if (state != null && state.tsCustomSize.containsKey(type))
-            return state.tsCustomSize.get(type);
+        if (state != null && state.getStructures().containsKey(type))
+            return state.getStructures().get(type).getTotalSize();
+        if (state != null && state.getTsCustomSize().containsKey(type))
+            return state.getTsCustomSize().get(type);
         Integer primitiveSize = getPrimitiveSize(type);
         if (primitiveSize != null)
             return primitiveSize;

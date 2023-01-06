@@ -33,7 +33,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        if (readerState.stack.isEmpty()) {
+        if (readerState.getStack().isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
                     (configField, prefix, prefix2) -> handle(prefix, prefix2));
             iterator.loop();
