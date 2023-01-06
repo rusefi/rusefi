@@ -92,20 +92,6 @@ static MenuItem miInjFlow(&miAbout, LL_ING_FLOW);
 static char lcdLineBuffer[30];
 static MemoryStream lcdLineStream;
 
-void onJoystick(joystick_button_e button) {
-	/**
-	 * this method is invoked on EXTI IRQ thread
-	 */
-	if (button == JB_CENTER) {
-		tree.enterSubMenu();
-	} else if (button == JB_BUTTON_D) {
-		tree.nextItem();
-	} else if (button == JB_BUTTON_A) {
-		tree.back();
-	}
-	// actual repaint happends in the repaint loop
-}
-
 char * appendStr(char *ptr, const char *suffix) {
 	for (uint32_t i = 0; i < efiStrlen(suffix); i++) {
 		*ptr++ = suffix[i];

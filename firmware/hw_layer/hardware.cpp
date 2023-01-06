@@ -252,10 +252,6 @@ void applyNewHardwareSettings() {
 	stopSent();
 #endif // EFI_SENT_SUPPORT
 
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	stopJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
-
 #if EFI_CAN_SUPPORT
 	stopCanPins();
 #endif /* EFI_CAN_SUPPORT */
@@ -462,10 +458,6 @@ void stopHardware() {
  * This method is invoked both on ECU start and configuration change
  */
 void startHardware() {
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	startJoystickPins();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
-
 #if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
 
@@ -592,10 +584,6 @@ void initHardware() {
 #if EFI_CDM_INTEGRATION
 	cdmIonInit();
 #endif // EFI_CDM_INTEGRATION
-
-#if (HAL_USE_PAL && EFI_JOYSTICK)
-	initJoystick();
-#endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
 #if EFI_SENT_SUPPORT
 	initSent();

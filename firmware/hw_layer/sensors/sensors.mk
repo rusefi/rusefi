@@ -7,7 +7,6 @@ HW_SENSORS_CPP = \
 	$(HW_SENSORS_DIR)/cj125_logic.cpp \
 	$(HW_SENSORS_DIR)/yaw_rate_sensor.cpp \
 	$(HW_SENSORS_DIR)/accelerometer.cpp \
-	$(HW_SENSORS_DIR)/joystick.cpp \
 	$(HW_SENSORS_DIR)/lps25.cpp \
 	$(HW_SENSORS_DIR)/max31855.cpp \
 	$(HW_SENSORS_DIR)/gps_uart.cpp

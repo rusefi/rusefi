@@ -69,9 +69,6 @@
 // HD44780 Character LCD, the only client of EFI_LCD
 #define EFI_HD44780_LCD FALSE
 #define EFI_LCD FALSE
-// and the closely related joystick input for the LCD menu system.
-#define EFI_JOYSTICK FALSE
-
 
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
