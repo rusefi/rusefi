@@ -164,7 +164,7 @@ public class ConfigFieldParserTest {
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
         ConfigStructure structure = state.getStructures().get("pid_s");
-        ConfigField firstField = structure.cFields.get(0);
+        ConfigField firstField = structure.getcFields().get(0);
         assertEquals("ms", firstField.getUnits());
     }
 

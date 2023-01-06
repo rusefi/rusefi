@@ -23,19 +23,15 @@ public class ConfigStructure {
     public static final String UNUSED_ANYTHING_PREFIX = "unused";
     public static final String UNUSED_BIT_PREFIX = "unusedBit_";
 
-    public final String name;
-    public final String comment;
-    public final boolean withPrefix;
-    /**
-     * We have two different collections because if 'array iterate' feature which is handled differently
-     * in C and TS
-     */
-    public final List<ConfigField> cFields = new ArrayList<>();
-    public final List<ConfigField> tsFields = new ArrayList<>();
+    private final String name;
+    private final String comment;
+    private final boolean withPrefix;
+    private final List<ConfigField> cFields = new ArrayList<>();
+    private final List<ConfigField> tsFields = new ArrayList<>();
 
     private int totalSize;
 
-    public final BitState readingBitState = new BitState();
+    private final BitState readingBitState = new BitState();
 
     private ConfigField cPrevField = ConfigField.VOID;
     private final Set<String> names = new HashSet<>();
@@ -128,5 +124,25 @@ public class ConfigStructure {
 
     public int getTotalSize() {
         return totalSize;
+    }
+
+    public List<ConfigField> getTsFields() {
+        return tsFields;
+    }
+
+    /**
+     * We have two different collections because if 'array iterate' feature which is handled differently
+     * in C and TS
+     */
+    public List<ConfigField> getcFields() {
+        return cFields;
+    }
+
+    public boolean isWithPrefix() {
+        return withPrefix;
+    }
+
+    public String getComment() {
+        return comment;
     }
 }

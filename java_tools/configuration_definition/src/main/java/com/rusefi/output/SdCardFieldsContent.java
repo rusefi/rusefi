@@ -14,7 +14,7 @@ public class SdCardFieldsContent {
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");
             iterator.loop();
             String content = iterator.getContent();

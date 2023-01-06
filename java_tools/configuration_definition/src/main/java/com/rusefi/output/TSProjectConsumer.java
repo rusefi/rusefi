@@ -144,7 +144,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        state.getVariableRegistry().register(structure.name + "_size", structure.getTotalSize());
+        state.getVariableRegistry().register(structure.getName() + "_size", structure.getTotalSize());
         totalTsSize = tsOutput.run(readerState, structure, 0);
 
         if (state.isStackEmpty()) {

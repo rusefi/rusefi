@@ -35,7 +35,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     this::processOutput, ".");
             iterator.loop();
         }
