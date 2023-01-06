@@ -17,7 +17,7 @@ public class TypesHelper {
     private static final String UINT_32_T = "uint32_t";
     private static final String BOOLEAN_T = "boolean";
 
-    public static int getElementSize(ReaderStateImpl state, String type) {
+    public static int getElementSize(ReaderState state, String type) {
         Objects.requireNonNull(state);
         if (type == null)
             return 0;
