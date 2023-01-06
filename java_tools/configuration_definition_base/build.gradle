@@ -1,14 +1,11 @@
 plugins {
     id 'java-library'
-    id 'antlr'
 }
 
 apply from: '../../java_tools/dependencies.gradle'
 
 dependencies {
-    implementation project(':logging')
     api project(':inifile')
     api global_libs.snakeyaml
-    implementation project(':enum_to_string')
-    antlr global_libs.antlr
+    api project(':enum_to_string')
 }
