@@ -9,10 +9,11 @@ RedundantSensor::RedundantSensor(SensorType outputType, SensorType first, Sensor
 {
 }
 
-void RedundantSensor::configure(float maxDifference, bool ignoreSecondSensor, float secondaryMaximum) {
+void RedundantSensor::configure(float maxDifference, bool ignoreSecondSensor, bool averageSensors, float secondMaximum) {
 	m_maxDifference = maxDifference;
 	m_ignoreSecond = ignoreSecondSensor;
-	m_partialSecondMaximum = secondaryMaximum;
+	m_averageSensors = averageSensors;
+	m_secondMaximum = secondMaximum;
 }
 
 SensorResult RedundantSensor::get() const {
@@ -29,7 +30,7 @@ SensorResult RedundantSensor::get() const {
 		return sensor1;
 	}
 
-	// Sensor 2 may be partial, i.e. 0% -> m_partialSecondMaximum%
+	// Sensor 2 may be partial, i.e. 0% -> m_secondMaximum%
 	auto sensor2 = Sensor::get(m_second);
 
 	// If sensor 2 result is invalid, return inconsistency error
@@ -37,38 +38,34 @@ SensorResult RedundantSensor::get() const {
 		return UnexpectedCode::Inconsistent;
 	}
 
-	if (m_partialSecondMaximum == 0) {
-		// Sensor is fully redundant
+	float sensor2Value = sensor2.Value;
 
-		float delta = absF(sensor1.Value - sensor2.Value);
-		if (delta <= m_maxDifference) {
-			// All is well: sensors are valid and values check out, return the average value
-			return (sensor1.Value + sensor2.Value) / 2;
-		}
-	} else {
-		// Sensor is partially redundant; useful for some sensors: e.g. Ford and Toyota ETCS-i
+	// Partial redundancy; useful for some sensors: e.g. Ford and Toyota ETCS-i
+	if (m_secondMaximum != 100) {
+		// scale the second sensor value accordingly, proportioning to the first sensor
+		sensor2Value *= m_secondMaximum / 100;
 
-		// The threshold at which to switch to partial redundancy
-		float threshold = m_partialSecondMaximum - m_maxDifference / 2;
-
-		// The scaled second sensor, proportioning it to the first sensor
-		float scaledSecond = sensor2.Value * m_partialSecondMaximum / 100;
+		// The partial redundancy threshold, slightly less than 100% to avoid issues near full-range
+		float threshold = m_secondMaximum * 0.95;
 
 		// Check second sensor is below partial redundancy switch-over threshold
-		if (scaledSecond <= threshold) {
-			float delta = sensor1.Value - scaledSecond;
-			if (absF(delta) <= m_maxDifference) {
-				// All is well: sensors are valid and values check out, return the average value
-				return (sensor1.Value + scaledSecond) / 2;
-			}
-		} else {
+		if (sensor2Value > threshold) {
 			// Check first sensor is at or above partial redundancy switch-over threshold
-			if (sensor1.Value >= m_partialSecondMaximum - m_maxDifference) {
+			if (sensor1.Value > threshold - m_maxDifference) {
 				return sensor1.Value;
 			}
+
+			// There's a discrepancy: first sensor is out of compliance, return inconsistency error
+			return UnexpectedCode::Inconsistent;
 		}
 	}
 
-	// Fall-through and any other condition indicates an unexpected discrepancy, return inconsistency error
+	float delta = absF(sensor1.Value - sensor2Value);
+	if (delta <= m_maxDifference) {
+		// All is well: sensors are valid and values check out
+		return m_averageSensors ? (sensor1.Value + sensor2Value) / 2 : sensor1.Value;
+	}
+
+	// Any other condition indicates an unexpected discrepancy, return inconsistency error
 	return UnexpectedCode::Inconsistent;
 }

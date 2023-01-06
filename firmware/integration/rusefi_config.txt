@@ -61,7 +61,7 @@
 ! A: That's a template placeholder for field offset within the resulting data structure.
 !
 ! Q: What is "[0:2]"?
-! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
+! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2
 !
 ! Q: how does 'custom' work?
 ! A: let's look at
@@ -446,7 +446,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit partialSecondaryTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the spedified range of the positions we effectively have only one sensor.
+bit tpsSecondaryMonitors;Use primary throttle sensor value directly and secondary to monitor, rather the average of the two values.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
 bit enableFan1WithAc;Turn on this fan when AC is on.
@@ -475,7 +475,7 @@ bit enableMapEstimationTableFallback;If enabled, the MAP estimate table will be 
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit partialSecondaryPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specified range of the positions we effectively have only one sensor.
+bit ppsSecondaryMonitors;Use primary pedal sensor value directly and secondary to monitor, rather the average of the two values.
 
 
 !todo: extract these two fields into a structure
@@ -807,7 +807,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 	spi_device_e l9779spiDevice;
 	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
- 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
+	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
 
 	uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
@@ -1560,8 +1560,8 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
 	pin_input_mode_e ALSActivatePinMode;
 
-	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use 65%;"%", 0.5, 0, 0, 100, 1
-	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use 69%;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~66%;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use ~69%;"%", 0.5, 0, 0, 100, 1
 pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 uint8_t[96] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 

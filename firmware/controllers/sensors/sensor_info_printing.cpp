@@ -36,13 +36,13 @@ void CanSensorBase::showInfo(const char* sensorName) const {
 
 void RedundantSensor::showInfo(const char* sensorName) const {
 	// TODO(nms): print about partial redundancy
-	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s partial secondary: %s (max: %f)",
+	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\": primary only: %s averaging: %s secondary max: %f",
 		sensorName,
 		getSensorName(m_first),
 		getSensorName(m_second),
 		boolToString(m_ignoreSecond),
-		boolToString(m_partialSecondMaximum == 0),
-		m_partialSecondMaximum
+		boolToString(m_averageSensors),
+		m_secondMaximum
 	);
 }
 
