@@ -5,6 +5,8 @@ import com.rusefi.ConfigField;
 import java.util.List;
 
 public interface ConfigStructure {
+    String UNUSED_ANYTHING_PREFIX = "unused";
+
     String getName();
 
     int getTotalSize();

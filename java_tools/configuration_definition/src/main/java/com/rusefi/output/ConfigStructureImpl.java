@@ -17,7 +17,6 @@ import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
  */
 public class ConfigStructureImpl implements ConfigStructure {
     public static final String ALIGNMENT_FILL_AT = "alignmentFill_at_";
-    public static final String UNUSED_ANYTHING_PREFIX = "unused";
     public static final String UNUSED_BIT_PREFIX = "unusedBit_";
 
     private final String name;
