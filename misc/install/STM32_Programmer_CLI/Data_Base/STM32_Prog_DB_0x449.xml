@@ -65,6 +65,7 @@
 				<ErasedValue>0xFF</ErasedValue>
 				<Access>RWE</Access>
 				<FlashSize address="0x1FF0F442" default="0x100000"/>
+				<BootloaderVersion address="0x1FF0EDBE"/>
 				<DBGMCU_CR address="0xE0042004" mask="0x007"/>
 				<DBGMCU_APB1_FZ address="0xE0042008" mask="0x1800"/>
 				<!-- 1MB single Bank -->

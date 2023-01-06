@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - Tooth logger writes to SD card #4897
  - Antilag #2403
  - Lua 'setIgnDisabled' function for all kinds of cranking safety systems
+ - STM32Cube v2.12
 
 ### Fixed
  - multi-line tooltips in TS #4927
