@@ -42,12 +42,16 @@ public class ReaderState {
     // well, technically those should be a builder for state, not this state class itself
     public String tsFileOutputName = "rusefi.ini";
     String definitionInputFile = null;
-    public boolean withC_Defines = true;
+    private boolean withC_Defines = true;
     List<String> prependFiles = new ArrayList<>();
     List<ConfigurationConsumer> destinations = new ArrayList<>();
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
+
+    public void setWithC_Defines(boolean withC_Defines) {
+        this.withC_Defines = withC_Defines;
+    }
 
     private static void handleBitLine(ReaderState state, String line) {
         line = line.substring(BIT.length() + 1).trim();

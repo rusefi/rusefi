@@ -102,7 +102,7 @@ public class LiveDataProcessor {
 
                 ReaderState state = new ReaderState();
                 state.setDefinitionInputFile(folder + File.separator + name + ".txt");
-                state.withC_Defines = withCDefines;
+                state.setWithC_Defines(withCDefines);
 
                 state.addDestination(javaSensorsConsumer,
                         outputsSections,
