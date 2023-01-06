@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
 
 import java.io.IOException;
@@ -22,6 +23,10 @@ public interface ReaderState {
     void addDestination(ConfigurationConsumer... consumers);
 
     VariableRegistry getVariableRegistry();
+
+    Map<String, Integer> getTsCustomSize();
+
+    Map<String, ? extends ConfigStructure> getStructures();
 
     Map<String, String> getTsCustomLine();
 

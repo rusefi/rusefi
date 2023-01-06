@@ -386,10 +386,12 @@ public class ReaderStateImpl implements ReaderState {
         return variableRegistry;
     }
 
+    @Override
     public Map<String, Integer> getTsCustomSize() {
         return tsCustomSize;
     }
 
+    @Override
     public Map<String, ? extends ConfigStructure> getStructures() {
         return structures;
     }

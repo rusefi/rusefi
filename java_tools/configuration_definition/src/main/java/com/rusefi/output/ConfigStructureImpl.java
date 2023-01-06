@@ -1,9 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.BitState;
-import com.rusefi.ConfigFieldImpl;
-import com.rusefi.ReaderStateImpl;
-import com.rusefi.TypesHelper;
+import com.rusefi.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,7 +30,7 @@ public class ConfigStructureImpl implements ConfigStructure {
 
     private final BitState readingBitState = new BitState();
 
-    private ConfigFieldImpl cPrevField = ConfigFieldImpl.VOID;
+    private ConfigField cPrevField = ConfigFieldImpl.VOID;
     private final Set<String> names = new HashSet<>();
 
     public ConfigStructureImpl(String name, String comment, boolean withPrefix) {

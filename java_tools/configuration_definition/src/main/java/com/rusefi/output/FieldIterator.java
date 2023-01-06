@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.BitState;
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class FieldIterator {
     private final List<ConfigFieldImpl> fields;
     BitState bitState = new BitState();
-    private ConfigFieldImpl prev = ConfigFieldImpl.VOID;
+    private ConfigField prev = ConfigFieldImpl.VOID;
     ConfigFieldImpl next;
     ConfigFieldImpl cf;
 
@@ -23,7 +24,7 @@ public class FieldIterator {
     /**
      * return previous field which is not a directive
      */
-    public ConfigFieldImpl getPrev() {
+    public ConfigField getPrev() {
         return prev;
     }
 
