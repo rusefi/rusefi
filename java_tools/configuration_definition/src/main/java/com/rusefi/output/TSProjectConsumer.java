@@ -147,7 +147,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         state.getVariableRegistry().register(structure.name + "_size", structure.getTotalSize());
         totalTsSize = tsOutput.run(readerState, structure, 0);
 
-        if (state.getStack().isEmpty()) {
+        if (state.isStackEmpty()) {
             state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
     }

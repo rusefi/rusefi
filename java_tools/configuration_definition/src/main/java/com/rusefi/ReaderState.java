@@ -23,10 +23,7 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  * Andrey Belomutskiy, (c) 2013-2020
  * 12/19/18
  */
-public class ReaderState {
-    // used to update other files
-    private List<String> inputFiles = new ArrayList<>();
-
+public class ReaderState implements IReaderState {
     private static final Logging log = getLogging(ReaderState.class);
 
     public static final String BIT = "bit";
@@ -34,6 +31,8 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
+    // used to update other files
+    private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructure> stack = new Stack<>();
     private final Map<String, Integer> tsCustomSize = new HashMap<>();
     private final Map<String, String> tsCustomLine = new HashMap<>();
@@ -49,6 +48,7 @@ public class ReaderState {
     private final EnumsReader enumsReader = new EnumsReader();
     private final VariableRegistry variableRegistry = new VariableRegistry();
 
+    @Override
     public void setWithC_Defines(boolean withC_Defines) {
         this.withC_Defines = withC_Defines;
     }
@@ -90,6 +90,7 @@ public class ReaderState {
         structure.addBitField(bitField);
     }
 
+    @Override
     public void doJob() throws IOException {
         for (String prependFile : prependFiles)
             variableRegistry.readPrependValues(prependFile);
@@ -338,18 +339,21 @@ public class ReaderState {
         return quote(string);
     }
 
+    @Override
     public String getHeader() {
         if (headerMessage == null)
             throw new NullPointerException("No header message yet");
         return headerMessage;
     }
 
+    @Override
     public void setDefinitionInputFile(String definitionInputFile) {
         this.definitionInputFile = definitionInputFile;
         headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
         inputFiles.add(definitionInputFile);
     }
 
+    @Override
     public void addCHeaderDestination(String cHeader) {
         destinations.add(new CHeaderConsumer(this, cHeader, withC_Defines));
     }
@@ -358,6 +362,7 @@ public class ReaderState {
         destinations.add(new FileJavaFieldsConsumer(this, fileName, 0));
     }
 
+    @Override
     public void addPrepend(String fileName) {
         if (fileName == null || fileName.isEmpty()) {
             // see LiveDataProcessor use-case with dynamic prepend usage
@@ -367,6 +372,7 @@ public class ReaderState {
         inputFiles.add(fileName);
     }
 
+    @Override
     public void addDestination(ConfigurationConsumer... consumers) {
         destinations.addAll(Arrays.asList(consumers));
     }
@@ -375,12 +381,9 @@ public class ReaderState {
         inputFiles.add(fileName);
     }
 
+    @Override
     public VariableRegistry getVariableRegistry() {
         return variableRegistry;
-    }
-
-    public Stack<ConfigStructure> getStack() {
-        return stack;
     }
 
     public Map<String, Integer> getTsCustomSize() {
@@ -391,31 +394,43 @@ public class ReaderState {
         return structures;
     }
 
+    @Override
     public Map<String, String> getTsCustomLine() {
         return tsCustomLine;
     }
 
+    @Override
     public void setHeaderMessage(String headerMessage) {
         this.headerMessage = headerMessage;
     }
 
+    @Override
     public String getTsFileOutputName() {
         return tsFileOutputName;
     }
 
+    @Override
     public void setTsFileOutputName(String tsFileOutputName) {
         this.tsFileOutputName = tsFileOutputName;
     }
 
+    @Override
     public String getDefinitionInputFile() {
         return definitionInputFile;
     }
 
+    @Override
     public List<String> getPrependFiles() {
         return prependFiles;
     }
 
+    @Override
     public boolean isDestinationsEmpty() {
         return destinations.isEmpty();
+    }
+
+    @Override
+    public boolean isStackEmpty() {
+        return stack.isEmpty();
     }
 }
