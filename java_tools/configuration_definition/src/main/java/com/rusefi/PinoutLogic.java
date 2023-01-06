@@ -46,7 +46,7 @@ public class PinoutLogic {
         return null;
     }
 
-    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state, DefinitionsState parseState) {
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderStateImpl state, DefinitionsState parseState) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -220,7 +220,7 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state, DefinitionsState parseState) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderStateImpl state, DefinitionsState parseState) throws IOException {
         readFiles();
         registerPins(boardName, globalList, registry, state, parseState);
 

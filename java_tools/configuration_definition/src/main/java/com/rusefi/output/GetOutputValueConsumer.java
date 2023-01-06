@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigField;
-import com.rusefi.IReaderState;
+import com.rusefi.ConfigFieldImpl;
+import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +33,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState state, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     (readerState, cf, prefix) -> processOutput(cf, prefix), ".");
@@ -41,7 +41,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String processOutput(ConfigField cf, String prefix) {
+    private String processOutput(ConfigFieldImpl cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 

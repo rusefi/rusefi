@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.BitState;
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.newparse.outputs.OutputChannelWriter;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 public class OutputsTest {
     @Test
     public void generateSomething() throws IOException {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -63,13 +63,13 @@ public class OutputsTest {
      * while we have {@link OutputChannelWriter} here we use the current 'legacy' implementation
      */
     private static OutputsSectionConsumer runOriginalImplementation(String test) {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
 
         return runOriginalImplementation(test, state);
     }
 
     @NotNull
-    private static OutputsSectionConsumer runOriginalImplementation(String test, ReaderState state) {
+    private static OutputsSectionConsumer runOriginalImplementation(String test, ReaderStateImpl state) {
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null);
         state.readBufferedReader(test, tsProjectConsumer);
         return tsProjectConsumer;
@@ -90,7 +90,7 @@ public class OutputsTest {
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_BASE", "hello");
 
@@ -119,7 +119,7 @@ public class OutputsTest {
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",1, 0, 0, 0, 0\n" +
                 "\tuint16_t autoscale baseFuel2;\"line1\\nline2\";\"mg\",1, 0, 0, 0, 0\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         state.readBufferedReader(test, dataLogConsumer);
@@ -139,7 +139,7 @@ public class OutputsTest {
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "int hwChannel;\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
         state.readBufferedReader(test, (outputValueConsumer));
@@ -171,7 +171,7 @@ public class OutputsTest {
                 "\tpid_status_s idleStatus\n" +
                 "end_struct\n";
 
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);
@@ -192,7 +192,7 @@ public class OutputsTest {
 
     @Test
     public void testLongTooltipsIterate() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         String test = "struct total\n" +
                 "\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
                 "end_struct\n";

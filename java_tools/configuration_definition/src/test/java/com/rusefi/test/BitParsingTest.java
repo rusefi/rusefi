@@ -1,25 +1,23 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.TsFileContent;
 import com.rusefi.output.TSProjectConsumer;
 import com.rusefi.util.Output;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static org.junit.Assert.assertTrue;
 
 public class BitParsingTest {
     @Test
     public void testBitParser() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
 
         String inputString = "struct pid_s\n" +
-                ReaderState.BIT + " fieldName\n" +
-                ReaderState.BIT + " fieldName2,\"si\",\"nada\";comment\n" +
+                ReaderStateImpl.BIT + " fieldName\n" +
+                ReaderStateImpl.BIT + " fieldName2,\"si\",\"nada\";comment\n" +
                 "end_struct\n";
 
         StringWriter sw = new StringWriter();

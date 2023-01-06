@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigField;
-import com.rusefi.IReaderState;
+import com.rusefi.ConfigFieldImpl;
+import com.rusefi.ReaderState;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public class SdCardFieldsContent {
 
     public String home = "engine->outputChannels";
 
-    public void handleEndStruct(IReaderState state, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");
@@ -22,7 +22,7 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String processOutput(ConfigField configField, String prefix) {
+    private String processOutput(ConfigFieldImpl configField, String prefix) {
         if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
             return "";
         if (configField.getName().startsWith(ConfigStructureImpl.UNUSED_ANYTHING_PREFIX))
@@ -38,7 +38,7 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String getLine(ConfigField configField, String prefix, String name) {
+    private String getLine(ConfigFieldImpl configField, String prefix, String name) {
         return "\t{" + home + "." + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +

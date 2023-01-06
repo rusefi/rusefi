@@ -38,7 +38,7 @@ public class ConfigDefinition {
 
     public static void main(String[] args) {
         try {
-            doJob(args, new ReaderState());
+            doJob(args, new ReaderStateImpl());
         } catch (Throwable e) {
             SystemOut.println(e);
             e.printStackTrace();
@@ -48,7 +48,7 @@ public class ConfigDefinition {
         SystemOut.close();
     }
 
-    public static void doJob(String[] args, ReaderState state) throws IOException {
+    public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         if (args.length < 2) {
             SystemOut.println("Please specify\r\n"
                     + KEY_DEFINITION + " x\r\n"

@@ -1,10 +1,10 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.JavaFieldsConsumer;
 
 public class TestJavaFieldsConsumer extends JavaFieldsConsumer {
-    public TestJavaFieldsConsumer(ReaderState state) {
+    public TestJavaFieldsConsumer(ReaderStateImpl state) {
         super(state, 0);
     }
 

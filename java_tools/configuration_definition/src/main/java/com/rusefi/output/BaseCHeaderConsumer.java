@@ -9,7 +9,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
 
     private static String getHeaderText(FieldIteratorWithOffset iterator) {
-        ConfigField configField = iterator.cf;
+        ConfigFieldImpl configField = iterator.cf;
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
             String comment = "\t/**" + EOL + packComment(configField.getComment(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
@@ -62,7 +62,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
         if (structure.getComment() != null) {
             content.append("/**" + EOL + packComment(structure.getComment(), "") + EOL + "*/" + EOL);
         }

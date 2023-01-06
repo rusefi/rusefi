@@ -21,11 +21,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     public static final String SETTING_CONTEXT_HELP = "SettingContextHelp";
 
     private final String tsPath;
-    private final ReaderState state;
+    private final ReaderStateImpl state;
     private int totalTsSize;
     private final TsOutput tsOutput;
 
-    public TSProjectConsumer(String tsPath, ReaderState state) {
+    public TSProjectConsumer(String tsPath, ReaderStateImpl state) {
         this.tsPath = tsPath;
         tsOutput = new TsOutput(true);
         this.state = state;
@@ -143,7 +143,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         state.getVariableRegistry().register(structure.getName() + "_size", structure.getTotalSize());
         totalTsSize = tsOutput.run(readerState, structure, 0);
 
