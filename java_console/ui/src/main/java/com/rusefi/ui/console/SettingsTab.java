@@ -153,7 +153,7 @@ public class SettingsTab {
             } else if (field.getOptions() != null) {
                 control = new EnumConfigField(uiContext, field, f.getUiName()).getContent();
             } else {
-                control = new ConfigField(uiContext, field, f.getUiName()).getContent();
+                control = new ConfigUiField(uiContext, field, f.getUiName()).getContent();
             }
 
             dialogBody.add(control);

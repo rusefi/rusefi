@@ -9,7 +9,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.config.ConfigUiField;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class PlainTextSensorLog implements SensorLog {
             if (bp != null) {
                 ConfigurationImage ci = bp.getControllerConfiguration();
                 if (ci != null) {
-                    debugMode = ConfigField.getIntValue(ci, Fields.DEBUGMODE);
+                    debugMode = ConfigUiField.getIntValue(ci, Fields.DEBUGMODE);
                 }
             }
             // todo: kill debug mode!

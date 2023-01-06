@@ -5,7 +5,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.config.ConfigUiField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.core.preferences.storage.Node;
@@ -114,7 +114,7 @@ public class SensorSnifferPane {
         content.add(lowerPanel, BorderLayout.SOUTH);
 
         lowerPanel.add(new EnumConfigField(uiContext, Fields.SENSORCHARTMODE, "Mode").getContent());
-        lowerPanel.add(new ConfigField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
+        lowerPanel.add(new ConfigUiField(uiContext, Fields.SENSORSNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {
