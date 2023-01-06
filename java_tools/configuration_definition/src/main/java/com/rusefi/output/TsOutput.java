@@ -49,12 +49,12 @@ public class TsOutput {
                  */
                 if (!usedNames.add(nameWithPrefix)
                         && !isConstantsSection
-                        && !configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)
-                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                        && !configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)
+                        && !configField.getName().startsWith(ConfigStructureImpl.UNUSED_ANYTHING_PREFIX)) {
                     throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
-                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
+                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
@@ -65,7 +65,7 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                ConfigStructure cs = configField.getStructureType();
+                ConfigStructureImpl cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentTemplated();
                     commentContent = ConfigField.unquote(commentContent);
@@ -78,7 +78,7 @@ public class TsOutput {
                 }
 
                 if (configField.isBit()) {
-                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX)) {
+                    if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
                         tsHeader.append(nameWithPrefix + " = bits, U32,");
                         tsHeader.append(" " + tsPosition + ", [");
                         tsHeader.append(bitIndex + ":" + bitIndex);

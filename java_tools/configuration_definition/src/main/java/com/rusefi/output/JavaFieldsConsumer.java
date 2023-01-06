@@ -64,7 +64,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 if (configField.getName().equals(prev.getName())) {
                     return tsPosition;
                 }
-                ConfigStructure cs = configField.getStructureType();
+                ConfigStructureImpl cs = configField.getStructureType();
                 if (cs != null) {
                     String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);

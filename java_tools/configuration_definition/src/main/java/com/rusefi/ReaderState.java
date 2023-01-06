@@ -33,10 +33,10 @@ public class ReaderState implements IReaderState {
     private static final String STRUCT = "struct ";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
-    private final Stack<ConfigStructure> stack = new Stack<>();
+    private final Stack<ConfigStructureImpl> stack = new Stack<>();
     private final Map<String, Integer> tsCustomSize = new HashMap<>();
     private final Map<String, String> tsCustomLine = new HashMap<>();
-    private final Map<String, ConfigStructure> structures = new HashMap<>();
+    private final Map<String, ConfigStructureImpl> structures = new HashMap<>();
     private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
     private String tsFileOutputName = "rusefi.ini";
@@ -86,7 +86,7 @@ public class ReaderState implements IReaderState {
         ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, trueName, falseName);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
-        ConfigStructure structure = state.stack.peek();
+        ConfigStructureImpl structure = state.stack.peek();
         structure.addBitField(bitField);
     }
 
@@ -193,7 +193,7 @@ public class ReaderState implements IReaderState {
     private void handleEndStruct(List<ConfigurationConsumer> consumers) throws IOException {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
-        ConfigStructure structure = stack.pop();
+        ConfigStructureImpl structure = stack.pop();
         if (log.debugEnabled())
             log.debug("Ending structure " + structure.getName());
         structure.addAlignmentFill(this, 4);
@@ -259,7 +259,7 @@ public class ReaderState implements IReaderState {
     }
 
     private void addBitPadding() {
-        ConfigStructure structure = stack.peek();
+        ConfigStructureImpl structure = stack.peek();
         structure.addBitPadding(this);
     }
 
@@ -279,7 +279,7 @@ public class ReaderState implements IReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
+        ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix);
         state.stack.push(structure);
         if (log.debugEnabled())
             log.debug("Starting structure " + structure.getName());
@@ -301,7 +301,7 @@ public class ReaderState implements IReaderState {
 
         if (state.stack.isEmpty())
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
-        ConfigStructure structure = state.stack.peek();
+        ConfigStructureImpl structure = state.stack.peek();
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
         Integer customTypeSize = state.tsCustomSize.get(cf.getType());
@@ -390,7 +390,7 @@ public class ReaderState implements IReaderState {
         return tsCustomSize;
     }
 
-    public Map<String, ConfigStructure> getStructures() {
+    public Map<String, ConfigStructureImpl> getStructures() {
         return structures;
     }
 
