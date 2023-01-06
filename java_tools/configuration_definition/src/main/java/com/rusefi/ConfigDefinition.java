@@ -123,10 +123,10 @@ public class ConfigDefinition {
                     } catch (RuntimeException e) {
                         throw new IllegalStateException("While processing " + fileName, e);
                     }
-                    state.inputFiles.add(fileName);
+                    state.addInputFile(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
-                    state.inputFiles.add(firingEnumFileName);
+                    state.addInputFile(firingEnumFileName);
                     break;
                 case "-triggerInputFolder":
                     triggersInputFolder = args[i + 1];
@@ -151,15 +151,17 @@ public class ConfigDefinition {
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
                     pinoutLogic = PinoutLogic.create(boardName, PinoutLogic.CONFIG_BOARDS);
-                    if (pinoutLogic != null)
-                        state.inputFiles.addAll(pinoutLogic.getInputFiles());
+                    if (pinoutLogic != null) {
+                        for (String inputFile : pinoutLogic.getInputFiles())
+                            state.addInputFile(inputFile);
+                    }
                     break;
             }
         }
 
         if (tsInputFileFolder != null) {
             // used to update .ini files
-            state.inputFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
+            state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
         if (!enumInputFiles.isEmpty()) {
@@ -172,7 +174,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.inputFiles));
+        FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
         SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
