@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
+import com.rusefi.IReaderState;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.newparse.parsing.Type;
@@ -34,7 +35,7 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
+    public int run(IReaderState state, ConfigStructure structure, int sensorTsPosition) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {

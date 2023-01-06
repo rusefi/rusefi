@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.IReaderState;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ public class SdCardFieldsContent {
 
     public String home = "engine->outputChannels";
 
-    public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(IReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");

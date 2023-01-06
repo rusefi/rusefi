@@ -62,7 +62,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
+    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) {
         if (structure.getComment() != null) {
             content.append("/**" + EOL + packComment(structure.getComment(), "") + EOL + "*/" + EOL);
         }
