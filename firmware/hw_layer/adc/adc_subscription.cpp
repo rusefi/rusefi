@@ -12,6 +12,9 @@
 /*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor&) {
 }
 
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor&, adc_channel_e) {
+}
+
 #else
 
 struct AdcSubscriptionEntry {
@@ -48,17 +51,27 @@ static AdcSubscriptionEntry* findEntry() {
 		return;
 	}
 
-	const char* name = sensor.getSensorName();
-	if (/*type-limited (int)setting < 0 || */(int)channel >= HW_MAX_ADC_INDEX) {
-		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
-		return;
+	// If you passed the same sensor again, resubscribe it with the new parameters
+	auto entry = findEntry(&sensor);
+
+	if (entry) {
+		// If the channel didn't change, we're already set
+		if (entry->Channel == channel) {
+			return;
+		}
+
+		// avoid updates to this while we're mucking with the configuration
+		entry->Sensor = nullptr;
+	} else {
+		// If not already registered, get an empty (new) entry
+		entry = findEntry();
 	}
 
-	auto entry = findEntry();
+	const char* name = sensor.getSensorName();
 
 	// Ensure that a free entry was found
 	if (!entry) {
-		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions");
+		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions subscribing %s", name);
 		return;
 	}
 
@@ -102,6 +115,16 @@ static AdcSubscriptionEntry* findEntry() {
 
 	entry->VoltsPerAdcVolt = 0;
 	entry->Channel = EFI_ADC_NONE;
+}
+
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor& sensor, adc_channel_e channel) {
+	// Find the old sensor
+	auto entry = findEntry(&sensor);
+
+	// if the channel changed, unsubscribe!
+	if (entry && entry->Channel != channel) {
+		AdcSubscription::UnsubscribeSensor(sensor);
+	}
 }
 
 void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
