@@ -149,8 +149,27 @@ pins:
     color: black
     type: gnd
 
+  - pin: 26C
+    function: DC1 positive
+    type: etb
+    color: purple
+
+  - pin: 27C
+    function: DC1 negative
+    type: etb
+    color: purple
+
   - pin: 32A
     function: +5v sensors
+
+  - pin: 33C
+    # H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Analog 3
+    ts_name: 33C - AN3
+    color: orange
+
 
   - pin: 34A
     function: Power GND

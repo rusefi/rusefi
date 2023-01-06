@@ -8,6 +8,30 @@ pins:
     color: black
     type: gnd
 
+  - pin: 8D
+    # H144_IN_AUX3 + 16 = 15 + 16
+    id: EFI_ADC_31
+    class: analog_inputs
+    function: Analog 4
+    ts_name: 8D - AN4
+    color: orange
+
+  - pin: 9D
+    # H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    function: Analog 5
+    ts_name: 9D - AN5
+    color: orange
+
+  - pin: 10D
+    # H144_IN_AUX4 + 16 = 7 + 16
+    id: EFI_ADC_23
+    class: analog_inputs
+    function: Analog 6
+    ts_name: 10D - AN6
+    color: orange
+
   - pin: 22D
     function: CAN2 bus high (CANH)
     type: can
