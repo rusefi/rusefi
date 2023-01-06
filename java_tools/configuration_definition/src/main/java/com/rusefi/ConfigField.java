@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigStructureImpl;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
@@ -115,7 +116,7 @@ public class ConfigField {
         return Integer.parseInt(s);
     }
 
-    public ConfigStructureImpl getStructureType() {
+    public ConfigStructure getStructureType() {
         return getState().getStructures().get(getType());
     }
 
