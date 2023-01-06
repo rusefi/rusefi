@@ -12,6 +12,9 @@
 /*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor&) {
 }
 
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor&, adc_channel_e) {
+}
+
 #else
 
 struct AdcSubscriptionEntry {
@@ -109,7 +112,7 @@ static AdcSubscriptionEntry* findEntry() {
 	entry->Channel = EFI_ADC_NONE;
 }
 
-/*static*/ void AdcSubscription::UnsubscribeSensorIfNoChannel(FunctionalSensor& s, adc_channel_e channel) {
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor& s, adc_channel_e channel) {
 	// if the new channel is invalid, unsubscribe the old sensor
 	if (!isAdcChannelValid(channel)) {
 		AdcSubscription::UnsubscribeSensor(s);

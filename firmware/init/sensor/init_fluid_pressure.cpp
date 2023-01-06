@@ -68,9 +68,9 @@ void initFluidPressure() {
 }
 
 void deinitFluidPressure() {
-	AdcSubscription::UnsubscribeSensorIfNoChannel(oilpSensor, engineConfiguration->oilPressure.hwChannel);
-	AdcSubscription::UnsubscribeSensorIfNoChannel(fuelPressureSensorLow, engineConfiguration->lowPressureFuel.hwChannel);
-	AdcSubscription::UnsubscribeSensorIfNoChannel(fuelPressureSensorHigh, engineConfiguration->highPressureFuel.hwChannel);
-	AdcSubscription::UnsubscribeSensorIfNoChannel(auxLinear1Sensor, engineConfiguration->auxLinear1.hwChannel);
-	AdcSubscription::UnsubscribeSensorIfNoChannel(auxLinear2Sensor, engineConfiguration->auxLinear2.hwChannel);
+	AdcSubscription::UnsubscribeSensor(oilpSensor, engineConfiguration->oilPressure.hwChannel);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow, engineConfiguration->lowPressureFuel.hwChannel);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh, engineConfiguration->highPressureFuel.hwChannel);
+	AdcSubscription::UnsubscribeSensor(auxLinear1Sensor, engineConfiguration->auxLinear1.hwChannel);
+	AdcSubscription::UnsubscribeSensor(auxLinear2Sensor, engineConfiguration->auxLinear2.hwChannel);
 }
