@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
@@ -34,7 +35,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigFieldImpl configField, String prefix) {
+    private String handle(ConfigField configField, String prefix) {
         String comment = getHumanGaugeName("", configField);
         comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty()) {

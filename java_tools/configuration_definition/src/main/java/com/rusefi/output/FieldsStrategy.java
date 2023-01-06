@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
@@ -13,7 +14,7 @@ public abstract class FieldsStrategy {
         return sensorTsPosition;
     }
 
-    protected int writeFields(List<ConfigFieldImpl> tsFields, String prefix, int tsPosition) {
+    protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) {
         FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
             iterator.start(i);

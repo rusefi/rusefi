@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             @Override
             int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-                ConfigFieldImpl configField = iterator.cf;
+                ConfigField configField = iterator.cf;
 
                 if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
                     return 0;

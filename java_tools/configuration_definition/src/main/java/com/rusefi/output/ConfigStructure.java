@@ -1,6 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigFieldImpl;
+import com.rusefi.ConfigField;
 
 import java.util.List;
 
@@ -9,9 +9,9 @@ public interface ConfigStructure {
 
     int getTotalSize();
 
-    List<ConfigFieldImpl> getTsFields();
+    List<ConfigField> getTsFields();
 
-    List<ConfigFieldImpl> getcFields();
+    List<ConfigField> getcFields();
 
     boolean isWithPrefix();
 

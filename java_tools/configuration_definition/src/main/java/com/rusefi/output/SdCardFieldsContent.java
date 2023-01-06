@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
@@ -22,7 +23,7 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String processOutput(ConfigFieldImpl configField, String prefix) {
+    private String processOutput(ConfigField configField, String prefix) {
         if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
             return "";
         if (configField.getName().startsWith(ConfigStructureImpl.UNUSED_ANYTHING_PREFIX))
@@ -38,7 +39,7 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String getLine(ConfigFieldImpl configField, String prefix, String name) {
+    private String getLine(ConfigField configField, String prefix, String name) {
         return "\t{" + home + "." + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField) +

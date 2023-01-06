@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
@@ -38,8 +39,8 @@ public class TsOutput {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
-                ConfigFieldImpl configField = it.cf;
-                ConfigFieldImpl next = it.next;
+                ConfigField configField = it.cf;
+                ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
 
@@ -144,7 +145,7 @@ public class TsOutput {
         return sensorTsPosition;
     }
 
-    private String handleTsInfo(ConfigFieldImpl configField, String tsInfo, int multiplierIndex) {
+    private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
             if (isConstantsSection) {

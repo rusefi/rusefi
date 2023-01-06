@@ -9,7 +9,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
 
     private static String getHeaderText(FieldIteratorWithOffset iterator) {
-        ConfigFieldImpl configField = iterator.cf;
+        ConfigField configField = iterator.cf;
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
             String comment = "\t/**" + EOL + packComment(configField.getComment(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
@@ -34,7 +34,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             }
             cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL;
         }
         return cEntry;
     }

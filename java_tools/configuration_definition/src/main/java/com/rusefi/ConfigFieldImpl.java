@@ -126,6 +126,11 @@ public class ConfigFieldImpl implements ConfigField {
     }
 
     @Override
+    public String getArraySizeVariableName() {
+        return arraySizeVariableName;
+    }
+
+    @Override
     public String getTrueName() {
         return trueName;
     }
@@ -421,14 +426,17 @@ public class ConfigFieldImpl implements ConfigField {
         this.isFromIterate = true;
     }
 
+    @Override
     public String getIterateOriginalName() {
         return iterateOriginalName;
     }
 
+    @Override
     public int getIterateIndex() {
         return iterateIndex;
     }
 
+    @Override
     public boolean isFromIterate() {
         return isFromIterate;
     }
@@ -443,6 +451,7 @@ public class ConfigFieldImpl implements ConfigField {
         return comment;
     }
 
+    @Override
     public String getCommentTemplated() {
         return state.getVariableRegistry().applyVariables(getComment());
     }

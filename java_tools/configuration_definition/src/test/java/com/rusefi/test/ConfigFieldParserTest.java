@@ -1,9 +1,6 @@
 package com.rusefi.test;
 
-import com.rusefi.ConfigFieldImpl;
-import com.rusefi.ReaderStateImpl;
-import com.rusefi.TypesHelper;
-import com.rusefi.VariableRegistry;
+import com.rusefi.*;
 import com.rusefi.output.*;
 import org.junit.Test;
 
@@ -161,7 +158,7 @@ public class ConfigFieldParserTest {
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
         ConfigStructure structure = state.getStructures().get("pid_s");
-        ConfigFieldImpl firstField = structure.getcFields().get(0);
+        ConfigField firstField = structure.getcFields().get(0);
         assertEquals("ms", firstField.getUnits());
     }
 
