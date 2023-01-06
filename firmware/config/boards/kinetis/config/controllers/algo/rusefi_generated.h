@@ -2,7 +2,7 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt
 //
 
-#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",3="EFI_ADC_2",4="EFI_ADC_3",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",17="EFI_ADC_LAST_CHANNEL"
+#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",33="EFI_ADC_LAST_CHANNEL"
 #define adc_channel_e_EFI_ADC_0 1
 #define adc_channel_e_EFI_ADC_1 2
 #define adc_channel_e_EFI_ADC_10 11
@@ -11,8 +11,24 @@
 #define adc_channel_e_EFI_ADC_13 14
 #define adc_channel_e_EFI_ADC_14 15
 #define adc_channel_e_EFI_ADC_15 16
+#define adc_channel_e_EFI_ADC_16 17
+#define adc_channel_e_EFI_ADC_17 18
+#define adc_channel_e_EFI_ADC_18 19
+#define adc_channel_e_EFI_ADC_19 20
 #define adc_channel_e_EFI_ADC_2 3
+#define adc_channel_e_EFI_ADC_20 21
+#define adc_channel_e_EFI_ADC_21 22
+#define adc_channel_e_EFI_ADC_22 23
+#define adc_channel_e_EFI_ADC_23 24
+#define adc_channel_e_EFI_ADC_24 25
+#define adc_channel_e_EFI_ADC_25 26
+#define adc_channel_e_EFI_ADC_26 27
+#define adc_channel_e_EFI_ADC_27 28
+#define adc_channel_e_EFI_ADC_28 29
+#define adc_channel_e_EFI_ADC_29 30
 #define adc_channel_e_EFI_ADC_3 4
+#define adc_channel_e_EFI_ADC_30 31
+#define adc_channel_e_EFI_ADC_31 32
 #define adc_channel_e_EFI_ADC_4 5
 #define adc_channel_e_EFI_ADC_5 6
 #define adc_channel_e_EFI_ADC_6 7
@@ -20,7 +36,7 @@
 #define adc_channel_e_EFI_ADC_8 9
 #define adc_channel_e_EFI_ADC_9 10
 #define adc_channel_e_EFI_ADC_ERROR 50
-#define adc_channel_e_EFI_ADC_LAST_CHANNEL 17
+#define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_enum "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
 #define ADC_CHANNEL_NONE 0
@@ -1301,7 +1317,7 @@
 #define ts_show_vbatt true
 #define ts_show_vr_threshold_2 true
 #define ts_show_vr_threshold_all true
-#define TS_SIGNATURE "rusEFI 2023.01.05.kin.snap_28036"
+#define TS_SIGNATURE "rusEFI 2023.01.06.kin.snap_28036"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

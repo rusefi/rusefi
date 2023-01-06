@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jan 05 17:49:55 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Jan 06 02:30:06 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -14,8 +14,24 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_13 = 14;
 	public static final int adc_channel_e_EFI_ADC_14 = 15;
 	public static final int adc_channel_e_EFI_ADC_15 = 16;
+	public static final int adc_channel_e_EFI_ADC_16 = 17;
+	public static final int adc_channel_e_EFI_ADC_17 = 18;
+	public static final int adc_channel_e_EFI_ADC_18 = 19;
+	public static final int adc_channel_e_EFI_ADC_19 = 20;
 	public static final int adc_channel_e_EFI_ADC_2 = 3;
+	public static final int adc_channel_e_EFI_ADC_20 = 21;
+	public static final int adc_channel_e_EFI_ADC_21 = 22;
+	public static final int adc_channel_e_EFI_ADC_22 = 23;
+	public static final int adc_channel_e_EFI_ADC_23 = 24;
+	public static final int adc_channel_e_EFI_ADC_24 = 25;
+	public static final int adc_channel_e_EFI_ADC_25 = 26;
+	public static final int adc_channel_e_EFI_ADC_26 = 27;
+	public static final int adc_channel_e_EFI_ADC_27 = 28;
+	public static final int adc_channel_e_EFI_ADC_28 = 29;
+	public static final int adc_channel_e_EFI_ADC_29 = 30;
 	public static final int adc_channel_e_EFI_ADC_3 = 4;
+	public static final int adc_channel_e_EFI_ADC_30 = 31;
+	public static final int adc_channel_e_EFI_ADC_31 = 32;
 	public static final int adc_channel_e_EFI_ADC_4 = 5;
 	public static final int adc_channel_e_EFI_ADC_5 = 6;
 	public static final int adc_channel_e_EFI_ADC_6 = 7;
@@ -23,7 +39,7 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_8 = 9;
 	public static final int adc_channel_e_EFI_ADC_9 = 10;
 	public static final int adc_channel_e_EFI_ADC_ERROR = 50;
-	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 17;
+	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 33;
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int afr_sensor_s_size = 20;
@@ -1183,7 +1199,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2023.01.05.all.snap_53064";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.06.all.snap_53064";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1288;
