@@ -85,6 +85,30 @@ pins:
     ts_name: 13A - Ignition 1
     color: yellow
 
+  - pin: 15A
+    # H144_IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: 15A - IAT
+    color: orange
+
+  - pin: 16A
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: 16A - CLT
+    color: orange
+
+  - pin: 17A
+    # IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: PPS Sensor Input
+    ts_name: 17A - PPS
+    color: orange
+
 
   - pin: 18A
     function: VVT control 4
