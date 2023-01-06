@@ -2,7 +2,6 @@ package com.rusefi.output;
 
 import com.rusefi.*;
 import com.rusefi.newparse.DefinitionsState;
-import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.util.SystemOut;
 
@@ -26,7 +25,7 @@ public class SignatureConsumer implements ConfigurationConsumer {
 
         // nasty trick - do not insert signature into live data files
         if (tsPath != null) {
-            parseState.addDefinition(state.variableRegistry,
+            parseState.addDefinition(state.getVariableRegistry(),
                     ConfigDefinition.SIGNATURE_HASH, uniqueId.encode(), Definition.OverwritePolicy.NotAllowed);
         }
     }

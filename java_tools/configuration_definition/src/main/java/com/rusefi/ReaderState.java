@@ -34,20 +34,20 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    public final Stack<ConfigStructure> stack = new Stack<>();
-    public final Map<String, Integer> tsCustomSize = new HashMap<>();
-    public final Map<String, String> tsCustomLine = new HashMap<>();
-    public final Map<String, ConfigStructure> structures = new HashMap<>();
-    public String headerMessage;
+    private final Stack<ConfigStructure> stack = new Stack<>();
+    private final Map<String, Integer> tsCustomSize = new HashMap<>();
+    private final Map<String, String> tsCustomLine = new HashMap<>();
+    private final Map<String, ConfigStructure> structures = new HashMap<>();
+    private String headerMessage;
     // well, technically those should be a builder for state, not this state class itself
-    public String tsFileOutputName = "rusefi.ini";
-    String definitionInputFile = null;
+    private String tsFileOutputName = "rusefi.ini";
+    private String definitionInputFile = null;
     private boolean withC_Defines = true;
-    List<String> prependFiles = new ArrayList<>();
-    List<ConfigurationConsumer> destinations = new ArrayList<>();
+    private final List<String> prependFiles = new ArrayList<>();
+    private final List<ConfigurationConsumer> destinations = new ArrayList<>();
 
     private final EnumsReader enumsReader = new EnumsReader();
-    public final VariableRegistry variableRegistry = new VariableRegistry();
+    private final VariableRegistry variableRegistry = new VariableRegistry();
 
     public void setWithC_Defines(boolean withC_Defines) {
         this.withC_Defines = withC_Defines;
@@ -373,5 +373,49 @@ public class ReaderState {
 
     public void addInputFile(String fileName) {
         inputFiles.add(fileName);
+    }
+
+    public VariableRegistry getVariableRegistry() {
+        return variableRegistry;
+    }
+
+    public Stack<ConfigStructure> getStack() {
+        return stack;
+    }
+
+    public Map<String, Integer> getTsCustomSize() {
+        return tsCustomSize;
+    }
+
+    public Map<String, ConfigStructure> getStructures() {
+        return structures;
+    }
+
+    public Map<String, String> getTsCustomLine() {
+        return tsCustomLine;
+    }
+
+    public void setHeaderMessage(String headerMessage) {
+        this.headerMessage = headerMessage;
+    }
+
+    public String getTsFileOutputName() {
+        return tsFileOutputName;
+    }
+
+    public void setTsFileOutputName(String tsFileOutputName) {
+        this.tsFileOutputName = tsFileOutputName;
+    }
+
+    public String getDefinitionInputFile() {
+        return definitionInputFile;
+    }
+
+    public List<String> getPrependFiles() {
+        return prependFiles;
+    }
+
+    public boolean isDestinationsEmpty() {
+        return destinations.isEmpty();
     }
 }

@@ -19,7 +19,7 @@ public class OutputsTest {
     @Test
     public void generateSomething() throws IOException {
         ReaderState state = new ReaderState();
-        state.variableRegistry.register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
+        state.getVariableRegistry().register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
@@ -91,8 +91,8 @@ public class OutputsTest {
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-        state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
+        state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+        state.getVariableRegistry().register("GAUGE_NAME_FUEL_BASE", "hello");
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         state.readBufferedReader(test, dataLogConsumer);
@@ -124,7 +124,7 @@ public class OutputsTest {
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         state.readBufferedReader(test, dataLogConsumer);
 
-        assertEquals("\"fuel: base mass\"", state.variableRegistry.get("GAUGE_NAME_FUEL_BASE"));
+        assertEquals("\"fuel: base mass\"", state.getVariableRegistry().get("GAUGE_NAME_FUEL_BASE"));
         assertEquals(
                 "entry = baseFuel, \"fuel: base mass\", int,    \"%d\"\n" +
                         "entry = baseFuel2, \"line1\", int,    \"%d\"\n"

@@ -28,10 +28,10 @@ public class EnumAsTsVariable {
         EnumsReader.EnumState state = readerState.getEnumsReader().getEnums().get("firing_order_e");
         assertNotNull(state);
 
-        String data = readerState.variableRegistry.get("firing_order_e_FO_1");
+        String data = readerState.getVariableRegistry().get("firing_order_e_FO_1");
         assertEquals("0", data);
 
-        assertEquals("0", readerState.variableRegistry.applyVariables("@@firing_order_e_FO_1@@"));
-        assertEquals("\\x00\\x00", readerState.variableRegistry.applyVariables("@@firing_order_e_FO_1_16_hex@@"));
+        assertEquals("0", readerState.getVariableRegistry().applyVariables("@@firing_order_e_FO_1@@"));
+        assertEquals("\\x00\\x00", readerState.getVariableRegistry().applyVariables("@@firing_order_e_FO_1_16_hex@@"));
     }
 }

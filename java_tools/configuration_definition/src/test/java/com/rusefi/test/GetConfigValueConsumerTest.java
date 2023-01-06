@@ -148,8 +148,8 @@ public class GetConfigValueConsumerTest {
                 "bit enableFan1WithAc;Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-        state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
+        state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+        state.getVariableRegistry().register("GAUGE_NAME_FUEL_BASE", "hello");
 
 
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();

@@ -90,20 +90,20 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             if (line.contains(TS_CONDITION)) {
                 String token = getToken(line);
-                String strValue = state.variableRegistry.get(token);
+                String strValue = state.getVariableRegistry().get(token);
                 boolean value = Boolean.parseBoolean(strValue);
                 if (!value)
                     continue; // skipping this line
                 line = removeToken(line);
             }
 
-            line = state.variableRegistry.applyVariables(line);
+            line = state.getVariableRegistry().applyVariables(line);
 
             if (isBeforeStartTag)
                 prefix.append(line + ToolUtil.EOL);
 
             if (isAfterEndTag)
-                postfix.append(state.variableRegistry.applyVariables(line) + ToolUtil.EOL);
+                postfix.append(state.getVariableRegistry().applyVariables(line) + ToolUtil.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
@@ -130,7 +130,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     private String getTsFileOutputName(String tsPath) {
-        return tsPath + File.separator + state.tsFileOutputName;
+        return tsPath + File.separator + state.getTsFileOutputName();
     }
 
     public static String getTsFileInputName(String tsPath) {
@@ -144,11 +144,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
+        state.getVariableRegistry().register(structure.name + "_size", structure.getTotalSize());
         totalTsSize = tsOutput.run(readerState, structure, 0);
 
-        if (state.stack.isEmpty()) {
-            state.variableRegistry.register("TOTAL_CONFIG_SIZE", totalTsSize);
+        if (state.getStack().isEmpty()) {
+            state.getVariableRegistry().register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
     }
 

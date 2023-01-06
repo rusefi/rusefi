@@ -163,7 +163,7 @@ public class ConfigFieldParserTest {
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
-        ConfigStructure structure = state.structures.get("pid_s");
+        ConfigStructure structure = state.getStructures().get("pid_s");
         ConfigField firstField = structure.cFields.get(0);
         assertEquals("ms", firstField.getUnits());
     }
@@ -221,7 +221,7 @@ public class ConfigFieldParserTest {
 
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
-                "#define RESULT 14400\n", state.variableRegistry.getDefinesSection());
+                "#define RESULT 14400\n", state.getVariableRegistry().getDefinesSection());
     }
     @Test
     public void expressionInMultiplier() {
@@ -276,7 +276,7 @@ public class ConfigFieldParserTest {
 
         assertEquals("\tpublic static final char SD_r = 'r';\n" +
                         "",
-                state.variableRegistry.getJavaConstants());
+                state.getVariableRegistry().getJavaConstants());
     }
 
     @Test
@@ -293,7 +293,7 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
                         "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
                         "",
-                state.variableRegistry.getJavaConstants());
+                state.getVariableRegistry().getJavaConstants());
     }
 
     @Test
@@ -659,7 +659,7 @@ public class ConfigFieldParserTest {
 
         assertEquals(12, state.parseSize("4*3", ""));
 
-        state.variableRegistry.register("var", 256);
+        state.getVariableRegistry().register("var", 256);
 
         assertEquals(512, state.parseSize("2*@@var@@", ""));
         assertEquals(512, state.parseSize("2x@@var@@", ""));

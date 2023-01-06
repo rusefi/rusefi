@@ -92,8 +92,8 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
-                    String bits = configField.getState().tsCustomLine.get(configField.getType());
+                if (configField.getState().getTsCustomLine().containsKey(configField.getType())) {
+                    String bits = configField.getState().getTsCustomLine().get(configField.getType());
                     if (!bits.startsWith("bits")) {
                         bits = handleTsInfo(configField, bits, 5);
                     }
@@ -102,7 +102,7 @@ public class TsOutput {
                     tsHeader.append(nameWithPrefix + " = " + bits);
 
                     if (!configField.getName().equals(next.getName()))
-                        tsPosition += configField.getState().tsCustomSize.get(configField.getType());
+                        tsPosition += configField.getState().getTsCustomSize().get(configField.getType());
                 } else if (configField.getArraySizes().length == 0) {
                     tsHeader.append(nameWithPrefix + " = scalar, ");
                     tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -138,7 +138,7 @@ public class TsOutput {
         };
         sensorTsPosition = strategy.run(state, structure, sensorTsPosition);
 
-        if (state.stack.isEmpty()) {
+        if (state.getStack().isEmpty()) {
             tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
         }
         return sensorTsPosition;

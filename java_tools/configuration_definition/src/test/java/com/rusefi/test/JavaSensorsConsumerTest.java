@@ -4,17 +4,15 @@ import com.rusefi.ReaderState;
 import com.rusefi.output.JavaSensorsConsumer;
 import org.junit.Test;
 
-import java.io.IOException;
-
 import static org.junit.Assert.assertEquals;
 
 public class JavaSensorsConsumerTest {
     @Test
     public void generateJavaSensors() {
         ReaderState state = new ReaderState();
-        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-        state.variableRegistry.register("GAUGE_NAME_RPM", "\"hello\"");
-        state.variableRegistry.register("GAUGE_NAME_GEAR_RATIO", "ra");
+        state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+        state.getVariableRegistry().register("GAUGE_NAME_RPM", "\"hello\"");
+        state.getVariableRegistry().register("GAUGE_NAME_GEAR_RATIO", "ra");
 
         String outputChannels = "" +
                 "\n" +
