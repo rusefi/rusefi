@@ -138,7 +138,7 @@ public class TsOutput {
         };
         sensorTsPosition = strategy.run(state, structure, sensorTsPosition);
 
-        if (state.getStack().isEmpty()) {
+        if (state.isStackEmpty()) {
             tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
         }
         return sensorTsPosition;
