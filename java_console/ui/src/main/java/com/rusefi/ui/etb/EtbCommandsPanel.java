@@ -4,7 +4,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.BitConfigField;
-import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.config.ConfigUiField;
 import com.rusefi.ui.config.EnumConfigField;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -43,9 +43,9 @@ public class EtbCommandsPanel {
         testParameters.add(new JLabel("set etb_p 1.1"));
 
         testParameters.add(new BitConfigField(uiContext, Fields.PAUSEETBCONTROL, "Pause").getContent());
-        testParameters.add(new ConfigField(uiContext, Fields.ETB_PFACTOR, "pFactor").getContent());
-        testParameters.add(new ConfigField(uiContext, Fields.ETB_IFACTOR, "iFactor").getContent());
-        testParameters.add(new ConfigField(uiContext, Fields.ETB_DFACTOR, "dFactor").getContent());
+        testParameters.add(new ConfigUiField(uiContext, Fields.ETB_PFACTOR, "pFactor").getContent());
+        testParameters.add(new ConfigUiField(uiContext, Fields.ETB_IFACTOR, "iFactor").getContent());
+        testParameters.add(new ConfigUiField(uiContext, Fields.ETB_DFACTOR, "dFactor").getContent());
 
         content.setBorder(BorderFactory.createTitledBorder("Commands"));
 
