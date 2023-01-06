@@ -169,10 +169,10 @@ public class ConfigDefinition {
                 state.read(new FileReader(ef));
             }
 
-            SystemOut.println(state.enumsReader.getEnums().size() + " total enumsReader");
+            SystemOut.println(state.getEnumsReader().getEnums().size() + " total enumsReader");
         }
 
-        ParseState parseState = new ParseState(state.enumsReader);
+        ParseState parseState = new ParseState(state.getEnumsReader());
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
         SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);

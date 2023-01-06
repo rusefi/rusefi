@@ -25,7 +25,7 @@ public class EnumAsTsVariable {
                 "Force_4b_firing_order = ENUM_32_BITS,\n" +
                 "} firing_order_e;")));
 
-        EnumsReader.EnumState state = readerState.enumsReader.getEnums().get("firing_order_e");
+        EnumsReader.EnumState state = readerState.getEnumsReader().getEnums().get("firing_order_e");
         assertNotNull(state);
 
         String data = readerState.variableRegistry.get("firing_order_e_FO_1");

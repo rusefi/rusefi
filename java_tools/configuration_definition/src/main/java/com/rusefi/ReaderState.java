@@ -46,11 +46,15 @@ public class ReaderState {
     List<String> prependFiles = new ArrayList<>();
     List<ConfigurationConsumer> destinations = new ArrayList<>();
 
-    public final EnumsReader enumsReader = new EnumsReader();
+    private final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
 
     public void setWithC_Defines(boolean withC_Defines) {
         this.withC_Defines = withC_Defines;
+    }
+
+    public EnumsReader getEnumsReader() {
+        return enumsReader;
     }
 
     public List<String> getInputFiles() {
