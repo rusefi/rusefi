@@ -40,7 +40,6 @@
 #include "histogram.h"
 #include "gps_uart.h"
 #include "HD44780.h"
-#include "joystick.h"
 #include "sent.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"

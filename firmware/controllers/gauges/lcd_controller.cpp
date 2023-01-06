@@ -25,7 +25,6 @@
 #include "HD44780.h"
 #include "rtc_helper.h"
 #include "svnversion.h"
-#include "joystick.h"
 #include "utlist.h"
 #include "lcd_menu_tree.h"
 #include "memstreams.h"
