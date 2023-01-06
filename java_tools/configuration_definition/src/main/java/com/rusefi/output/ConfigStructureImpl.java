@@ -23,8 +23,8 @@ public class ConfigStructureImpl implements ConfigStructure {
     private final String name;
     private final String comment;
     private final boolean withPrefix;
-    private final List<ConfigFieldImpl> cFields = new ArrayList<>();
-    private final List<ConfigFieldImpl> tsFields = new ArrayList<>();
+    private final List<ConfigField> cFields = new ArrayList<>();
+    private final List<ConfigField> tsFields = new ArrayList<>();
 
     private int totalSize;
 
@@ -126,7 +126,7 @@ public class ConfigStructureImpl implements ConfigStructure {
     }
 
     @Override
-    public List<ConfigFieldImpl> getTsFields() {
+    public List<ConfigField> getTsFields() {
         return tsFields;
     }
 
@@ -135,7 +135,7 @@ public class ConfigStructureImpl implements ConfigStructure {
      * in C and TS
      */
     @Override
-    public List<ConfigFieldImpl> getcFields() {
+    public List<ConfigField> getcFields() {
         return cFields;
     }
 

@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
@@ -41,7 +42,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String processOutput(ConfigFieldImpl cf, String prefix) {
+    private String processOutput(ConfigField cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 

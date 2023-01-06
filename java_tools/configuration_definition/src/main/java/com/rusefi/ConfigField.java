@@ -8,6 +8,8 @@ public interface ConfigField {
 
     boolean isArray();
 
+    String getArraySizeVariableName();
+
     String getTrueName();
 
     String getFalseName();
@@ -53,4 +55,12 @@ public interface ConfigField {
     double getMax();
 
     int getDigits();
+
+    String getIterateOriginalName();
+
+    int getIterateIndex();
+
+    boolean isFromIterate();
+
+    String getCommentTemplated();
 }

@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
@@ -16,7 +17,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     private final String prefixSeparator;
     private final StringBuilder sb = new StringBuilder();
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigFieldImpl> fields, String prefix, Strategy strategy, String prefixSeparator) {
+    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy, String prefixSeparator) {
         super(fields);
         this.state = state;
         this.prefix = prefix;
@@ -24,7 +25,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
         this.prefixSeparator = prefixSeparator;
     }
 
-    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigFieldImpl> fields, String prefix, Strategy strategy) {
+    public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy) {
         this(state, fields, prefix, strategy, "_");
     }
 
@@ -55,6 +56,6 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     }
 
     interface Strategy {
-        String process(ReaderState state, ConfigFieldImpl configField, String prefix);
+        String process(ReaderState state, ConfigField configField, String prefix);
     }
 }

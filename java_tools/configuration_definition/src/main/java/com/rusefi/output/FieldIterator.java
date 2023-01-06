@@ -11,13 +11,13 @@ import java.util.List;
  * @see PerFieldWithStructuresIterator is there a duplication?
  */
 public class FieldIterator {
-    private final List<ConfigFieldImpl> fields;
+    private final List<ConfigField> fields;
     BitState bitState = new BitState();
     private ConfigField prev = ConfigFieldImpl.VOID;
-    ConfigFieldImpl next;
-    ConfigFieldImpl cf;
+    ConfigField next;
+    ConfigField cf;
 
-    public FieldIterator(List<ConfigFieldImpl> fields) {
+    public FieldIterator(List<ConfigField> fields) {
         this.fields = fields;
     }
 

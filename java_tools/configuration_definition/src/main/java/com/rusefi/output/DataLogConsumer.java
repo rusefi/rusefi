@@ -1,5 +1,6 @@
 package com.rusefi.output;
 
+import com.rusefi.ConfigField;
 import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
@@ -52,7 +53,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigFieldImpl configField, String prefix) {
+    private String handle(ConfigField configField, String prefix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
@@ -84,7 +85,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
      * More detailed technical explanation should be placed in consecutive lines
      */
     @NotNull
-    public static String getHumanGaugeName(String prefix, ConfigFieldImpl configField) {
+    public static String getHumanGaugeName(String prefix, ConfigField configField) {
         String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
