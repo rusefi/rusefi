@@ -20,7 +20,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
                     (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
             String content = iterator.getContent();

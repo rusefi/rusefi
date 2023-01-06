@@ -73,8 +73,8 @@ public class TsOutput {
                 }
 
                 if (cs != null) {
-                    String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-                    return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
+                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
                 if (configField.isBit()) {

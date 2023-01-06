@@ -2,14 +2,13 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.IReaderState;
-import com.rusefi.ReaderState;
 
 import java.util.List;
 
 public abstract class FieldsStrategy {
     public int run(IReaderState state, ConfigStructure structure, int sensorTsPosition) {
         if (state.isStackEmpty()) {
-            return writeFields(structure.tsFields, "", sensorTsPosition);
+            return writeFields(structure.getTsFields(), "", sensorTsPosition);
         }
         return sensorTsPosition;
     }
