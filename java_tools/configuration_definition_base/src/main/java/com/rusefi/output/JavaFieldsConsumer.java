@@ -17,7 +17,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     protected final ReaderState state;
     private final int baseOffset;
 
-    public JavaFieldsConsumer(ReaderStateImpl state, int baseOffset) {
+    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
         this.state = state;
         this.baseOffset = baseOffset;
     }
@@ -74,7 +74,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String nameWithPrefix = prefix + configField.getName();
 
                 if (configField.isBit()) {
-                    if (!configField.getName().startsWith(DataLogConsumer.UNUSED)) {
+                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
                         writeJavaFieldName(nameWithPrefix, tsPosition);
                         content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     }

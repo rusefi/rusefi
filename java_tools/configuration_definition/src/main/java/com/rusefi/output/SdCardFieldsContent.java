@@ -1,7 +1,6 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
 import java.io.IOException;
@@ -26,7 +25,7 @@ public class SdCardFieldsContent {
     private String processOutput(ConfigField configField, String prefix) {
         if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
             return "";
-        if (configField.getName().startsWith(ConfigStructureImpl.UNUSED_ANYTHING_PREFIX))
+        if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
             return "";
         if (configField.isBit())
             return "";

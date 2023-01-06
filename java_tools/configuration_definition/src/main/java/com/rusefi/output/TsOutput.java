@@ -51,7 +51,7 @@ public class TsOutput {
                 if (!usedNames.add(nameWithPrefix)
                         && !isConstantsSection
                         && !configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)
-                        && !configField.getName().startsWith(ConfigStructureImpl.UNUSED_ANYTHING_PREFIX)) {
+                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
                     throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
