@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.EnumsReader;
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 public class EnumAsTsVariable {
     @Test
     public void testUseEnumAsVariable() throws IOException {
-        ReaderState readerState = new ReaderState();
+        ReaderStateImpl readerState = new ReaderStateImpl();
         readerState.read(new BufferedReader(new StringReader("" +
                 "typedef enum {\n" +
                 "\tFO_1 = 0,\n" +

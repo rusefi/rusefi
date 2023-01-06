@@ -1,6 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.IReaderState;
+import com.rusefi.ReaderState;
 
 import java.io.*;
 
@@ -27,7 +27,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
         sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition);

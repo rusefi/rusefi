@@ -1,6 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.IReaderState;
+import com.rusefi.ReaderState;
 import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class SdCardFieldsConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState state, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         content.handleEndStruct(state, structure);
     }
 

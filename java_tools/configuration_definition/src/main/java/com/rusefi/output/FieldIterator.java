@@ -1,7 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.BitState;
-import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 
 import java.util.List;
 
@@ -10,20 +10,20 @@ import java.util.List;
  * @see PerFieldWithStructuresIterator is there a duplication?
  */
 public class FieldIterator {
-    private final List<ConfigField> fields;
+    private final List<ConfigFieldImpl> fields;
     BitState bitState = new BitState();
-    private ConfigField prev = ConfigField.VOID;
-    ConfigField next;
-    ConfigField cf;
+    private ConfigFieldImpl prev = ConfigFieldImpl.VOID;
+    ConfigFieldImpl next;
+    ConfigFieldImpl cf;
 
-    public FieldIterator(List<ConfigField> fields) {
+    public FieldIterator(List<ConfigFieldImpl> fields) {
         this.fields = fields;
     }
 
     /**
      * return previous field which is not a directive
      */
-    public ConfigField getPrev() {
+    public ConfigFieldImpl getPrev() {
         return prev;
     }
 
@@ -32,7 +32,7 @@ public class FieldIterator {
         while (nextIndex < fields.size() && fields.get(nextIndex).isDirective())
             nextIndex++;
 
-        next = nextIndex >= fields.size() ? ConfigField.VOID : fields.get(nextIndex);
+        next = nextIndex >= fields.size() ? ConfigFieldImpl.VOID : fields.get(nextIndex);
         cf = fields.get(index);
     }
 

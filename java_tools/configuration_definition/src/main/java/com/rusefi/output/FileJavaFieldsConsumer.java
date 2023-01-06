@@ -1,6 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.ToolUtil;
 import com.rusefi.util.LazyFile;
 
@@ -18,7 +18,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
     private final LazyFile javaFields;
     private final String className;
 
-    public FileJavaFieldsConsumer(ReaderState state, String javaDestination, int baseOffset) {
+    public FileJavaFieldsConsumer(ReaderStateImpl state, String javaDestination, int baseOffset) {
         super(state, baseOffset);
         javaFields = new LazyFile(javaDestination);
         String className = new File(javaDestination).getName();

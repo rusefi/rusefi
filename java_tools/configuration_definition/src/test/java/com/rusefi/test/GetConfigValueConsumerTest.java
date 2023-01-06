@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.MaybeSemicolorWasMissedException;
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetConfigValueConsumer;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class GetConfigValueConsumerTest {
     @Test
     public void testStructArrayAndCharArgument() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         String test = "struct total\n" +
                 "custom lua_script_t 200 string, ASCII, @OFFSET@, 200\n" +
                 "lua_script_t luaScript;\n" +
@@ -30,7 +30,7 @@ public class GetConfigValueConsumerTest {
 
     @Test
     public void generateEmbeddedStruct() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         String test = "struct total\n" +
                 "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
                 "float tempC_1;these values are in Celcius;\"*C\", 1, 0, -40, 200, 1\n" +
@@ -147,7 +147,7 @@ public class GetConfigValueConsumerTest {
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
                 "bit enableFan1WithAc;Turn on this fan when AC is on.\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_BASE", "hello");
 
@@ -242,7 +242,7 @@ public class GetConfigValueConsumerTest {
         String test = "struct total\n" +
                 "uint8_t hello;\"unit\", 1, 0, 0, 100, 0\n" +
                 "end_struct\n";
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
 
 
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer();

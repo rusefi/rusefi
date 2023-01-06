@@ -1,8 +1,8 @@
 package com.rusefi.output;
 
 import com.rusefi.BitState;
-import com.rusefi.ConfigField;
-import com.rusefi.ReaderState;
+import com.rusefi.ConfigFieldImpl;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.TypesHelper;
 
 import java.util.ArrayList;
@@ -10,10 +10,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.rusefi.ConfigField.BOOLEAN_T;
+import static com.rusefi.ConfigFieldImpl.BOOLEAN_T;
 
 /**
- * Mutable representation of a list of related {@link ConfigField}
+ * Mutable representation of a list of related {@link ConfigFieldImpl}
  * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
@@ -26,14 +26,14 @@ public class ConfigStructureImpl implements ConfigStructure {
     private final String name;
     private final String comment;
     private final boolean withPrefix;
-    private final List<ConfigField> cFields = new ArrayList<>();
-    private final List<ConfigField> tsFields = new ArrayList<>();
+    private final List<ConfigFieldImpl> cFields = new ArrayList<>();
+    private final List<ConfigFieldImpl> tsFields = new ArrayList<>();
 
     private int totalSize;
 
     private final BitState readingBitState = new BitState();
 
-    private ConfigField cPrevField = ConfigField.VOID;
+    private ConfigFieldImpl cPrevField = ConfigFieldImpl.VOID;
     private final Set<String> names = new HashSet<>();
 
     public ConfigStructureImpl(String name, String comment, boolean withPrefix) {
@@ -42,7 +42,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         this.withPrefix = withPrefix;
     }
 
-    public void addBitField(ConfigField bitField) {
+    public void addBitField(ConfigFieldImpl bitField) {
         addBoth(bitField);
         this.readingBitState.incrementBitIndex(bitField);
     }
@@ -52,7 +52,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         return name;
     }
 
-    public void addAlignmentFill(ReaderState state, int alignment) {
+    public void addAlignmentFill(ReaderStateImpl state, int alignment) {
         if (alignment == 0)
             return;
         /**
@@ -81,7 +81,7 @@ public class ConfigStructureImpl implements ConfigStructure {
             } else {
                 fillSizeArray = new int[0];
             }
-            ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
+            ConfigFieldImpl fill = new ConfigFieldImpl(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
                     TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, null);
             addBoth(fill);
@@ -89,12 +89,12 @@ public class ConfigStructureImpl implements ConfigStructure {
         totalSize += fillSize;
     }
 
-    public void addBoth(ConfigField cf) {
+    public void addBoth(ConfigFieldImpl cf) {
         addC(cf);
         tsFields.add(cf);
     }
 
-    public void addC(ConfigField cf) {
+    public void addC(ConfigFieldImpl cf) {
         // skip duplicate names - that's the weird use-case of conditional project definition like lambdaTable
         if (cf.getName().equals(cPrevField.getName()))
             return;
@@ -108,16 +108,16 @@ public class ConfigStructureImpl implements ConfigStructure {
         cPrevField = cf;
     }
 
-    public void addTs(ConfigField cf) {
+    public void addTs(ConfigFieldImpl cf) {
         tsFields.add(cf);
     }
 
-    public void addBitPadding(ReaderState readerState) {
+    public void addBitPadding(ReaderStateImpl readerState) {
         if (readingBitState.get() == 0)
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigField bitField = new ConfigField(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
+            ConfigFieldImpl bitField = new ConfigFieldImpl(readerState, UNUSED_BIT_PREFIX + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();
@@ -129,7 +129,7 @@ public class ConfigStructureImpl implements ConfigStructure {
     }
 
     @Override
-    public List<ConfigField> getTsFields() {
+    public List<ConfigFieldImpl> getTsFields() {
         return tsFields;
     }
 
@@ -138,7 +138,7 @@ public class ConfigStructureImpl implements ConfigStructure {
      * in C and TS
      */
     @Override
-    public List<ConfigField> getcFields() {
+    public List<ConfigFieldImpl> getcFields() {
         return cFields;
     }
 

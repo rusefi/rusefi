@@ -7,7 +7,7 @@ package com.rusefi;
 public class BitState {
     private int bitIndex;
 
-    public void incrementBitIndex(ConfigField cf, ConfigField next) {
+    public void incrementBitIndex(ConfigFieldImpl cf, ConfigFieldImpl next) {
         if (!cf.isBit()) {
             bitIndex = 0;
             return;
@@ -15,7 +15,7 @@ public class BitState {
         incrementBitIndex(cf);
     }
 
-    public void incrementBitIndex(ConfigField cf) {
+    public void incrementBitIndex(ConfigFieldImpl cf) {
         if (bitIndex == 32)
             throw new TooManyBitsInARow("Too many bits in a row: " + cf.getName());
         bitIndex++;

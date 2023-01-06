@@ -1,8 +1,7 @@
 package com.rusefi.output;
 
 import com.opensr5.ini.field.IniField;
-import com.rusefi.ConfigField;
-import com.rusefi.IReaderState;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.newparse.parsing.Type;
@@ -35,12 +34,12 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(IReaderState state, ConfigStructure structure, int sensorTsPosition) {
+    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
-                ConfigField configField = it.cf;
-                ConfigField next = it.next;
+                ConfigFieldImpl configField = it.cf;
+                ConfigFieldImpl next = it.next;
                 int bitIndex = it.bitState.get();
                 String nameWithPrefix = prefix + configField.getName();
 
@@ -69,7 +68,7 @@ public class TsOutput {
                 ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
                     String commentContent = configField.getCommentTemplated();
-                    commentContent = ConfigField.unquote(commentContent);
+                    commentContent = ConfigFieldImpl.unquote(commentContent);
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
 
@@ -145,7 +144,7 @@ public class TsOutput {
         return sensorTsPosition;
     }
 
-    private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
+    private String handleTsInfo(ConfigFieldImpl configField, String tsInfo, int multiplierIndex) {
         if (tsInfo == null || tsInfo.trim().isEmpty()) {
             // default units and scale
             if (isConstantsSection) {

@@ -20,7 +20,7 @@ public class SignatureConsumer implements ConfigurationConsumer {
         this.registry = registry;
     }
 
-    public static void storeUniqueBuildId(ReaderState state, DefinitionsState parseState, String tsPath, FirmwareVersion uniqueId) {
+    public static void storeUniqueBuildId(ReaderStateImpl state, DefinitionsState parseState, String tsPath, FirmwareVersion uniqueId) {
         // store a hash as a built-in variable
 
         // nasty trick - do not insert signature into live data files
@@ -31,7 +31,7 @@ public class SignatureConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         ExtraUtil.writeDefinesToFile(registry, destHeader, "by SignatureConsumer");
     }
 }

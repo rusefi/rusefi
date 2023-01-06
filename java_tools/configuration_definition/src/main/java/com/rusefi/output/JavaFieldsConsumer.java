@@ -14,10 +14,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
-    protected final ReaderState state;
+    protected final ReaderStateImpl state;
     private final int baseOffset;
 
-    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
+    public JavaFieldsConsumer(ReaderStateImpl state, int baseOffset) {
         this.state = state;
         this.baseOffset = baseOffset;
     }
@@ -45,18 +45,18 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         }
     }
 
-    private boolean isStringField(ConfigField configField) {
+    private boolean isStringField(ConfigFieldImpl configField) {
         String custom = state.getTsCustomLine().get(configField.getType());
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
     @Override
-    public void handleEndStruct(IReaderState readerState, ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         FieldsStrategy fieldsStrategy = new FieldsStrategy() {
             protected int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-                ConfigField prev = iterator.getPrev();
-                ConfigField configField = iterator.cf;
-                ConfigField next = iterator.next;
+                ConfigFieldImpl prev = iterator.getPrev();
+                ConfigFieldImpl configField = iterator.cf;
+                ConfigFieldImpl next = iterator.next;
                 int bitIndex = iterator.bitState.get();
 
                 if (configField.isDirective())
