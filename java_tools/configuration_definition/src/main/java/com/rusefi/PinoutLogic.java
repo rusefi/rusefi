@@ -64,7 +64,7 @@ public class PinoutLogic {
             }
             PinType listPinType = PinType.find(className);
             String pinType = listPinType.getPinType();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.getEnumsReader().getEnums().get(pinType);
             Objects.requireNonNull(enumList, "Enum for " + pinType);
             Map.Entry<String, Value> kv = find(enumList, id);
             if (kv == null) {
@@ -83,7 +83,7 @@ public class PinoutLogic {
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.getEnumsReader().getEnums().get(pinType);
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getSimpleForm().length() > 0) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
