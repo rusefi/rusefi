@@ -9,10 +9,8 @@ apply from: '../../java_tools/dependencies.gradle'
 defaultTasks 'shadowJar'
 
 dependencies {
-    implementation project(':logging')
     api project(':config_definition_base')
     implementation project(':models')
-    implementation project(':enum_to_string')
     antlr global_libs.antlr
 }
 
