@@ -47,6 +47,7 @@ Release template (copy/paste this for new release):
  - multi-line tooltips in TS #4927
  - Negative temperature values for IAT Corr table #4941
  - DC wastegate #4965
+ - [LSE] RTC (SD log dates) #4556
 
 ## December 2022 Release - "Day 289"
 

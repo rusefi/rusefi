@@ -37,6 +37,10 @@
 #define STM32F407_MCUCONF
 #define STM32F417_MCUCONF
 
+// Allows LSE init to timeout and configure fallback RTC clock source in case
+#define RUSEFI_STM32_LSE_WAIT_MAX           1000000
+#define RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL    STM32_RTCSEL_LSI
+
 /*
  * HAL driver system settings.
  */
@@ -47,11 +51,8 @@
 #ifndef STM32_HSE_ENABLED
     #define STM32_HSE_ENABLED               TRUE
 #endif
-
-// rusEfi would automatically detect if we have 32768 quartz osc
-// todo: apply LSE patch
-#define STM32_LSE_ENABLED                   FALSE
-
+// see RUSEFI_STM32_LSE_WAIT_MAX
+#define STM32_LSE_ENABLED                   TRUE
 #define STM32_CLOCK48_REQUIRED              TRUE
 #define STM32_SW                            STM32_SW_PLL
 #define STM32_PLLSRC                        STM32_PLLSRC_HSI
@@ -62,11 +63,8 @@
 #define STM32_HPRE                          STM32_HPRE_DIV1
 #define STM32_PPRE1                         STM32_PPRE1_DIV4
 #define STM32_PPRE2                         STM32_PPRE2_DIV2
-#if STM32_LSE_ENABLED
- #define STM32_RTCSEL                        STM32_RTCSEL_LSE
-#else
- #define STM32_RTCSEL                        STM32_RTCSEL_LSI
-#endif
+// see RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL
+#define STM32_RTCSEL                        STM32_RTCSEL_LSE
 #ifndef STM32_RTCPRE_VALUE
 #define STM32_RTCPRE_VALUE                  8
 #endif
