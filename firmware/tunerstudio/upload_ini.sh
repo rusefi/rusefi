@@ -28,24 +28,24 @@ echo "[upload_ini] Looking for signature in [$fileName]..."
 sig=$(grep "^\s*signature\s*=" $fileName         | cut -f2 -d "=")
 if [ ! -z "$sig" -a "$sig" != " " ]; then
   echo "* found signature: $sig"
-  if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
-    year=${BASH_REMATCH[1]}
-    month=${BASH_REMATCH[2]}
-    day=${BASH_REMATCH[3]}
-    branch=${BASH_REMATCH[4]}
+  if [[ "$sig" =~ rusEFI\ ([a-zA-Z0-9_-]+)\.([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+) ]]; then
+    branch=${BASH_REMATCH[1]}
+    year=${BASH_REMATCH[2]}
+    month=${BASH_REMATCH[3]}
+    day=${BASH_REMATCH[4]}
     board=${BASH_REMATCH[5]}
     hash=${BASH_REMATCH[6]}
-    path="$year/$month/$day/$branch/$board/$hash.ini"
+    path="$branch/$year/$month/$day/$board/$hash.ini"
     echo "* found path: $path"
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
     sshpass -p $3 sftp -o StrictHostKeyChecking=no $2@$4 <<SSHCMD
 cd rusefi
-mkdir $year
-mkdir $year/$month
-mkdir $year/$month/$day
-mkdir $year/$month/$day/$branch
-mkdir $year/$month/$day/$branch/$board
+mkdir $branch
+mkdir $branch/$year
+mkdir $branch/$year/$month
+mkdir $branch/$year/$month/$day
+mkdir $branch/$year/$month/$day/$board
 put $fileName $path
 SSHCMD
     retVal=$?
