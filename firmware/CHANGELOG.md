@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Breaking Changes
+ - Change ignition IAT correction table to use IAT/load #4948
+
 ### Added
  - Electronic throttle supply voltage compensation, giving more consistent behavior as battery voltage changes #4838
  - VR trigger input oscilloscope for boards with "discrete VR" hardware (AlphaX ECUs, some Hellen) #4885
