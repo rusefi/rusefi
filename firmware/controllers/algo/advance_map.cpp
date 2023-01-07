@@ -105,7 +105,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	return advanceAngle;
 }
 
-angle_t getAdvanceCorrections(int rpm) {
+static angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 
 	if (!iat) {
@@ -113,8 +113,8 @@ angle_t getAdvanceCorrections(int rpm) {
 	} else {
 		engine->engineState.timingIatCorrection = interpolate3d(
 			config->ignitionIatCorrTable,
-			config->ignitionIatCorrLoadBins, iat.Value,
-			config->ignitionIatCorrRpmBins, rpm
+			config->ignitionIatCorrLoadBins, engineLoad,
+			config->ignitionIatCorrTempBins, iat.Value
 		);
 	}
 
@@ -179,7 +179,7 @@ angle_t getAdvance(int rpm, float engineLoad) {
 		&& (!isCranking || engineConfiguration->useAdvanceCorrectionsForCranking);
 
 	if (allowCorrections) {
-		angle_t correction = getAdvanceCorrections(rpm);
+		angle_t correction = getAdvanceCorrections(engineLoad);
 		if (!cisnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}

@@ -93,7 +93,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10016
+#define FLASH_DATA_VERSION 10017
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -1662,9 +1662,9 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -720, 720, 1
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, -60, 200, 0
-uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
+int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
+uint8_t[8] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0, 1000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
 uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 1000, 0
