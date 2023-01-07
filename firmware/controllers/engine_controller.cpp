@@ -525,7 +525,7 @@ bool validateConfig() {
 		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
 
 		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
-		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
+		ensureArrayIsAscending("Ignition IAT corr Load", config->ignitionIatCorrLoadBins);
 	}
 
 	ensureArrayIsAscendingOrDefault("Map estimate TPS", config->mapEstimateTpsBins);

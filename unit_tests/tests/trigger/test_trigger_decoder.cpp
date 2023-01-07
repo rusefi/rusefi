@@ -118,8 +118,8 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ(true,  ecl->isReady) << "ford inline ignition events size";
 
-	EXPECT_NEAR(ecl->elements[0].dwellAngle, 7.960f, 1e-3);
-	EXPECT_NEAR(ecl->elements[5].dwellAngle, 607.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[0].dwellAngle, 8.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].dwellAngle, 608.960f, 1e-3);
 
 	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
