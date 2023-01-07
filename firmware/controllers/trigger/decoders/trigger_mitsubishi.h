@@ -10,6 +10,8 @@
 class TriggerWaveform;
 
 void initializeMitsubishi4g18(TriggerWaveform *s);
+void initializeMitsubishi4g93_both_both(TriggerWaveform *s);
+void initializeMitsubishi4g93_only_first_wheel_both_fronts(TriggerWaveform *s);
 void configureFordAspireTriggerWaveform(TriggerWaveform * s);
 
 void initialize36_2_1_1(TriggerWaveform *s);

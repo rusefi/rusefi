@@ -31,6 +31,38 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->addEvent720(720, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 }
 
+static void addMitsu93(TriggerWaveform *s, bool addSecondary) {
+	float narrowW = 66;
+
+	float offset = addSecondary ? 0 : 120;
+
+	s->addEvent720(offset + 60, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	if (addSecondary)
+		s->addEvent720(offset + 180 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	s->addEvent720(offset + 146, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	if (addSecondary)
+			s->addEvent720(offset + 180, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+
+	if (addSecondary)
+			s->addEvent720(offset + 360 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	if (addSecondary)
+			s->addEvent720(offset + 360, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+
+	s->addEvent720(offset + 421, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	if (addSecondary)
+			s->addEvent720(offset + 540 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	if (addSecondary)
+			s->addEvent720(offset + 540, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+
+	s->addEvent720(offset + 600, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	if (addSecondary)
+			s->addEvent720(offset + 720 - narrowW, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
+	if (addSecondary)
+			s->addEvent720(offset + 720.0, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
+
+	s->useOnlyPrimaryForSync = addSecondary;
+}
+
 /**
  * TT_MITSUBISHI = 11
  */
@@ -39,19 +71,23 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(1.6666);
 
-	s->addEvent720(106.77999999999997, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(120.09999999999998, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(188.0775, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(286.33, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(298.875, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(354.91999999999996, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(366.6825, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(476.45, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(543.9749999999999, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->addEvent720(639.52, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEvent720(653.15, TriggerValue::RISE, TriggerWheel::T_SECONDARY);
-	s->addEvent720(720.0, TriggerValue::FALL, TriggerWheel::T_SECONDARY);
-	s->useOnlyPrimaryForSync = true;
+    addMitsu93(s, true);
+}
+
+void initializeMitsubishi4g93_both_both(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+
+	s->setTriggerSynchronizationGap(3.2);
+
+    addMitsu93(s, true);
+}
+
+void initializeMitsubishi4g93_only_first_wheel_both_fronts(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+
+	s->setTriggerSynchronizationGap(3.2);
+
+    addMitsu93(s, false);
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {

@@ -167,7 +167,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
-	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
+	ASSERT_EQ(synchPointIndex, t->getTriggerWaveformSynchPointIndex()) << "synchPointIndex";
 	if (!cisnan(expectedGapRatio)) {
 		assertEqualsM2("actual gap ratio", expectedGapRatio, initState.triggerSyncGapRatio, 0.001);
     }
@@ -379,7 +379,7 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
 
-	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
+	testTriggerDecoder2("testMitsu", MITSU_4G93, 9, 0.3553, 0.3752);
 	{
 		EngineTestHelper eth(MITSU_4G93);
 
