@@ -80,7 +80,7 @@ static AdcSubscriptionEntry* findEntry() {
 /**
 TODO: this code is similar to initIfValid, what is the plan? shall we extract helper method or else?
  */
-	brain_pin_e pin = getAdcChannelBrainPin(name, channel)
+	brain_pin_e pin = getAdcChannelBrainPin(name, channel);
 	if (pin != Gpio::Invalid) {
 	// todo: external muxes for internal ADC #3350
 	    efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
