@@ -3126,7 +3126,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
 		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
-		field = "Use electronic throttle for idle",			useETBforIdleControl, { throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
+		field = "Use electronic throttle for idle",			useETBforIdleControl, { useETBforIdleControl == 1 || throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "Electronic throttle idle range",			etbIdleThrottleRange, { useETBforIdleControl == 1 }
 		panel = idleHwType
 
