@@ -85,13 +85,12 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 	// todo: external muxes for internal ADC #3350
 	    efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
 	}
-#endif /* EFI_PROD_CODE */
 
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {
 		voltsPerAdcVolt = engineConfiguration->analogInputDividerCoefficient;
 	}
-
+#endif /* EFI_PROD_CODE */
 	// Populate the entry
 	entry->VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry->Channel = channel;
