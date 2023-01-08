@@ -21,7 +21,7 @@ public class SignatureHelper {
             return null;
 
         String fileName = s.getHash() + ".ini";
-        return new Pair("https://rusefi.com/online/ini/rusefi/" + s.getYear() + SLASH +
+        return new Pair("https://rusefi.com/online/ini/rusefi/" + s.getBranch() + SLASH + s.getYear() + SLASH +
                 s.getMonth() + SLASH +
                 s.getDay() + SLASH +
                 s.getBundle() + SLASH +
@@ -58,12 +58,13 @@ public class SignatureHelper {
         if (elements.length != 5)
             return null;
 
-        String year = elements[0];
-        String month = elements[1];
-        String day = elements[2];
-        String bundle = elements[3];
-        String hash = elements[4];
+        String branch = elements[0];
+        String year = elements[1];
+        String month = elements[2];
+        String day = elements[3];
+        String bundle = elements[4];
+        String hash = elements[5];
 
-        return new RusEfiSignature(year, month, day, bundle, hash);
+        return new RusEfiSignature(branch, year, month, day, bundle, hash);
     }
 }
