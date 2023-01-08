@@ -90,7 +90,10 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case EFI_ADC_15:
 		return Gpio::C5;
 	default:
+/* todo: what is upper range ADC is used while lower range ADC is not used? how do we still mark pin used?
+external muxes for internal ADC #3350
 		firmwareError(CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
+*/
 		return Gpio::Invalid;
 	}
 }

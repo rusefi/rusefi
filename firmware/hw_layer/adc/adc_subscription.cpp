@@ -77,7 +77,14 @@ static AdcSubscriptionEntry* findEntry() {
 
 #if EFI_PROD_CODE
 	// Enable the input pin
-	efiSetPadMode(name, getAdcChannelBrainPin(name, channel), PAL_MODE_INPUT_ANALOG);
+/**
+TODO: this code is similar to initIfValid, what is the plan? shall we extract helper method or else?
+ */
+	brain_pin_e pin = getAdcChannelBrainPin(name, channel)
+	if (pin != Gpio::Invalid) {
+	// todo: external muxes for internal ADC #3350
+	    efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+	}
 #endif /* EFI_PROD_CODE */
 
 	// if 0, default to the board's divider coefficient
