@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH snap_46152
-#define TS_SIGNATURE "rusEFI 2023.01.07.hellen154hyundai.snap_46152"
+#define SIGNATURE_HASH snap_52074
+#define TS_SIGNATURE "rusEFI 2023.01.08.hellen154hyundai.snap_52074"
