@@ -332,7 +332,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 	
-	if (!engineConfiguration->isSdCardEnabled || mmcSpiDevice == SPI_NONE) {
+	if (!engineConfiguration->isSdCardEnabled || engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 		return nullptr;
 	}
 
