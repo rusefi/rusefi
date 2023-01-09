@@ -345,7 +345,10 @@ typedef enum {
 	 * see also TT_ONE a bit below
 	 */
 	TT_ONE_PLUS_ONE = 16,
-	// VVT for 2JZ, see VVT_2JZ
+	/**
+	 * VVT for 2JZ
+	 * three evenly spaces teeth
+	 */
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
