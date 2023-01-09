@@ -25,8 +25,8 @@ iatSensor : setTimeout(timeout)
 rpmSensor = Sensor.new("rpm")
 rpmSensor : setTimeout(timeout)
 
-mapSensor = Sensor.new("map")
-mapSensor : setTimeout(timeout)
+ppsSensor = Sensor.new("AcceleratorPedal")
+ppsSensor : setTimeout(timeout)
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
@@ -72,6 +72,8 @@ function onMotor1(bus, id, dlc, data)
 end
 
 function onMotor2(bus, id, dlc, data)
+ clt = getBitRange(data, 8, 8) * 0.75 - 48
+ cltSensor : set(clt)
 end
 
 function onMotor3(bus, id, dlc, data)
@@ -89,10 +91,10 @@ function onMotor5(bus, id, dlc, data)
 
 end
 
-canRxAdd(ECU_BUS, MOTOR_1, onMotor1)
-canRxAdd(ECU_BUS, MOTOR_2, onMotor2)
-canRxAdd(ECU_BUS, MOTOR_3, onMotor3)
-canRxAdd(ECU_BUS, MOTOR_5, onMotor5)
+canRxAdd(1, MOTOR_1, onMotor1)
+canRxAdd(1, MOTOR_2, onMotor2)
+canRxAdd(1, MOTOR_3, onMotor3)
+canRxAdd(1, MOTOR_5, onMotor5)
 
 function onTick()
 end
