@@ -101,7 +101,7 @@ public class TriggerWheelInfo {
                 case TRIGGER_HARDCODED_OPERATION_MODE:
                     hardcodedOperationMode = Boolean.parseBoolean(value);
                     break;
-                case "isSynchronizationNeeded":
+                case TRIGGER_WITH_SYNC:
                     isSynchronizationNeeded = Integer.parseInt(value) > 0;
                     break;
                 default:
