@@ -159,9 +159,14 @@ void configure12ToothCrank(TriggerWaveform* s) {
 
 	s->shapeWithoutTdc = true;
 
-	// Sync after 3 good teeth
-	for (size_t i = 0; i < 3; i++) {
-		s->setTriggerSynchronizationGap3(i, 0.55f, 1.45f);
+	// Sync after 2 good teeth
+	for (size_t i = 0; i < 2; i++) {
+		/**
+		 * https://github.com/rusefi/rusefi/issues/4943#issuecomment-1376289608
+		 * gaps would be nice during running but horrible during running
+		 * Hopefully we do not want variable gap logic yet?
+		 */
+		s->setTriggerSynchronizationGap3(i, 0.2f, 3.4f);
 	}
 
     float width = 360 / 12;
