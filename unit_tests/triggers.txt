@@ -1943,7 +1943,7 @@ event 12 0 1 648.00 1.000000
 event 13 0 0 684.00 nan
 TRIGGERTYPE 33 16 TT_MIATA_VVT 715.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
@@ -2140,7 +2140,7 @@ event 48 1 1 686.00 nan
 event 49 1 0 686.00 nan
 TRIGGERTYPE 38 48 TT_12_TOOTH_CRANK 0.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=30
@@ -2346,7 +2346,7 @@ event 4 0 1 360.00 0.128527
 event 5 0 0 360.00 nan
 TRIGGERTYPE 44 168 TT_RENIX_44_2_2 0.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
@@ -2525,7 +2525,7 @@ event 166 0 1 707.73 nan
 event 167 0 0 707.73 nan
 TRIGGERTYPE 45 252 TT_RENIX_66_2_2_2 0.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=120
@@ -3924,7 +3924,7 @@ event 70 0 1 692.20 nan
 event 71 0 0 703.00 nan
 TRIGGERTYPE 58 120 TT_NISSAN_VQ35 675.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=120
@@ -4141,7 +4141,7 @@ event 40 0 1 616.00 0.375000
 event 41 0 0 616.00 nan
 TRIGGERTYPE 61 128 TT_NISSAN_QR25 585.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
@@ -4508,7 +4508,7 @@ event 8 0 1 595.00 0.305556
 event 9 0 0 595.00 nan
 TRIGGERTYPE 68 128 TT_NISSAN_MR18_CRANK 80.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
@@ -5008,7 +5008,7 @@ event 126 0 1 690.00 nan
 event 127 0 0 690.00 nan
 TRIGGERTYPE 72 128 TT_VVT_MITSUBISHI_6G75 585.00
 knownOperationMode=true
-crankBased=false
+crankBased=true
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=180
