@@ -82,13 +82,18 @@ extern TriggerDecoderBase initState;
 	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
 
 	fprintf(fp, "%s=%s\n", TRIGGER_HARDCODED_OPERATION_MODE, shape->knownOperationMode ? "true" : "false");
-	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, shape->knownOperationMode && (shape->getWheelOperationMode() == FOUR_STROKE_CRANK_SENSOR) ? "true" : "false");
+	operation_mode_e mode = shape->getWheelOperationMode();
+	bool isOneOfCrankShapes = mode == FOUR_STROKE_CRANK_SENSOR ||
+			mode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR ||
+			mode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR ||
+			mode == FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR;
+	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, shape->knownOperationMode && isOneOfCrankShapes ? "true" : "false");
 
 	fprintf(fp, "%s=%s\n", TRIGGER_HAS_SECOND_CHANNEL, shape->needSecondTriggerInput ? "true" : "false");
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
 	fprintf(fp, "%s=%d\n", TRIGGER_CYCLE_DURATION, (int)shape->getCycleDuration());
 	fprintf(fp, "%s=%d\n", TRIGGER_GAPS_COUNT, shape->gapTrackingLength);
-	fprintf(fp, "%s=%d\n", "isSynchronizationNeeded", shape->isSynchronizationNeeded);
+	fprintf(fp, "%s=%d\n", TRIGGER_WITH_SYNC, shape->isSynchronizationNeeded);
 	for (int i = 0; i < shape->gapTrackingLength; i++) {
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_FROM, i, shape->syncronizationRatioFrom[i]);
 		fprintf(fp, "%s.%d=%f\n", TRIGGER_GAP_TO, i, shape->syncronizationRatioTo[i]);

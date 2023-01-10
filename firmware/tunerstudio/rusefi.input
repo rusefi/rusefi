@@ -924,8 +924,8 @@ curve = 32Curve, "3-2 Shift Solenoid Percent by Speed"
 
 	table = ignitionIatCorrTableTbl,  ignitionIatCorrTableMap,  "Ignition Intake Air Temp correction",	1
 		;		constant, variable
-		xBins		= ignitionIatCorrRpmBins,  RPMValue
-		yBins		= ignitionIatCorrLoadBins,  intake
+		xBins		= ignitionIatCorrTempBins,  intake
+		yBins		= ignitionIatCorrLoadBins,  ignitionLoad
 		zBins		= ignitionIatCorrTable
 ;		gridHeight  = 2.0
 		gridOrient  = 250,	0, 340 ; Space 123 rotation of grid in degrees.
@@ -3126,7 +3126,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_
 		field = "!ECU reboot needed to apply these settings"
 		field = "Use Stepper",				useStepperIdle
 		field = "Double Solenoid Mode",		isDoubleSolenoidIdle
-		field = "Use electronic throttle for idle",			useETBforIdleControl, { throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
+		field = "Use electronic throttle for idle",			useETBforIdleControl, { useETBforIdleControl == 1 || throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ }
 		field = "Electronic throttle idle range",			etbIdleThrottleRange, { useETBforIdleControl == 1 }
 		panel = idleHwType
 

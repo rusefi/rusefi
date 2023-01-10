@@ -28,6 +28,8 @@ MOTOR_INFO = 0x580
 -- 1416
 MOTOR_7 = 0x588
 
+TCU_BUS = 1
+
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
 function toHexString(num)
@@ -55,11 +57,11 @@ function arrayToString(arr)
 end
 
 function onTcu1(bus, id, dlc, data)
-	print("onTcu1")
+--	print("onTcu1")
 end
 
 function onTcu2(bus, id, dlc, data)
-	print("onTcu2")
+--	print("onTcu2")
 end
 
 canRxAdd(AIRBAG)
@@ -140,7 +142,10 @@ end
 canMotor1    = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motorBreData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor2Data   = { 0x8A, 0x8D, 0x10, 0x04, 0x00, 0x4C, 0xDC, 0x87 }
+motor2mux = {0x8A, 0xE8, 0x2C, 0x64}
 canMotorInfo = { 0x00, 0x00, 0x00, 0x14, 0x1C, 0x93, 0x48, 0x14 }
+canMotorInfo1= { 0x99, 0x14, 0x00, 0x7F, 0x00, 0xF0, 0x47, 0x01 }
+canMotorInfo3= { 0x9B, 0x14, 0x00, 0x11, 0x1F, 0xE0, 0x0C, 0x46 }
 canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
 motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
@@ -155,9 +160,18 @@ canMotorInfoCounter = 0
 motorBreCounter = 0
 accGraCounter = 0
 counter16 = 0
+motor2counter = 0
 
 mafSensor = Sensor.new("maf")
 mafCalibrationIndex = findCurveIndex("mafcurve")
+
+canMotorInfoTotalCounter = 0
+
+function onAccGra(bus, id, dlc, data)
+  print("onAccGra")
+end
+
+canRxAdd(ECU_BUS, ACC_GRA, onAccGra)
 
 function onTick()
 
@@ -173,6 +187,10 @@ function onTick()
 	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
 	vbat = getSensor("BatteryVoltage") or 0
+
+ if rpm == 0 then
+   canMotorInfoTotalCounter = 0
+ end
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
@@ -194,6 +212,17 @@ function onTick()
 	setBitRange(motorBreData, 8, 4, motorBreCounter)
 	xorChecksum(motorBreData, 1)
 	txCan(1, MOTOR_BRE, 0, motorBreData) -- relay non-TCU message to TCU
+
+ motor2counter = (motor2counter + 1) % 16
+    minTorque = fakeTorque / 2
+    motor2Data[7] = math.floor(minTorque / 0.39)
+
+    brakeBit = rpm < 2000 and 1 or 0
+    setBitRange(motor2Data, 16, 1, brakeBit)
+
+    index = math.floor(motor2counter / 4)
+    motor2Data[1] = motor2mux[1 + index]
+txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 
 	desired_wheel_torque = fakeTorque
 	canMotor3[2] = (iat + 48) / 0.75
@@ -221,8 +250,8 @@ function onTick()
 	accGraCounter = (accGraCounter + 1) % 16
 	setBitRange(accGraData, 60, 4, accGraCounter)
 	xorChecksum(accGraData, 1)
-	txCan(1, ACC_GRA, 0, accGraData)
-	print("ACC_GRA " ..arrayToString(accGraData))
+--	txCan(1, ACC_GRA, 0, accGraData)
+--	print("ACC_GRA " ..arrayToString(accGraData))
 
 	txCan(1, MOTOR_7, 0, motor7Data)
 
@@ -239,9 +268,22 @@ function onTick()
 
 		motor5FuelCounter = motor5FuelCounter + 20
 
-		canMotorInfoCounter = (canMotorInfoCounter + 1) % 8
-		canMotorInfo[1] = 0x90 + (canMotorInfoCounter * 2)
-		txCan(1, MOTOR_INFO, 0, canMotorInfo)
+		canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
+ canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
+ baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
+ canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
+ canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
+ canMotorInfo3[1] = baseByte + (canMotorInfoCounter)
+ mod4 = canMotorInfoCounter % 4
+
+ if (mod4 == 0 or mod4 == 2) then
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo)
+ elseif (mod4 == 1) then
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo1)
+ else
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo3)
+    end
+
 	end
 end
 
