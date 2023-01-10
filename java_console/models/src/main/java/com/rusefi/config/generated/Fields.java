@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:52 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 21:35:27 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1199,10 +1199,10 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2023.01.10.all.snap_24315";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.10.all.snap_20080";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1288;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1292;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -1292,7 +1292,7 @@ public class Fields {
 	public static final Field KICKSTARTCRANKING = Field.create("KICKSTARTCRANKING", 120, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 120, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 120, FieldType.BIT, 20).setBaseOffset(0);
-	public static final Field ANOTHERUNUSEDHERE444 = Field.create("ANOTHERUNUSEDHERE444", 120, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field DONOTFILTERTRIGGEREDGENOISE = Field.create("DONOTFILTERTRIGGEREDGENOISE", 120, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 120, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field USERUNNINGMATHFORCRANKING = Field.create("USERUNNINGMATHFORCRANKING", 120, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 120, FieldType.BIT, 24).setBaseOffset(0);
@@ -2757,7 +2757,7 @@ public class Fields {
 	KICKSTARTCRANKING,
 	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
-	ANOTHERUNUSEDHERE444,
+	DONOTFILTERTRIGGEREDGENOISE,
 	ANTILAGENABLED,
 	USERUNNINGMATHFORCRANKING,
 	DISPLAYLOGICLEVELSINENGINESNIFFER,

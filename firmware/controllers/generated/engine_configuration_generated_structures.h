@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:52 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 21:35:27 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -770,8 +770,9 @@ struct engine_configuration_s {
 	offset 120 bit 20 */
 	bool launchControlEnabled : 1 {};
 	/**
+	 * "Detect double trigger edges"
 	offset 120 bit 21 */
-	bool anotherUnusedHere444 : 1 {};
+	bool doNotFilterTriggerEdgeNoise : 1 {};
 	/**
 	offset 120 bit 22 */
 	bool antiLagEnabled : 1 {};
@@ -5238,4 +5239,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:52 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 21:35:27 UTC 2023

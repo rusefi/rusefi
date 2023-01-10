@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Fri Oct 28 14:08:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -48,8 +48,18 @@ struct trigger_central_s {
 	 * offset 44
 	 */
 	float triggerToothAngleError = (float)0;
+	/**
+	 * offset 48
+	 */
+	uint8_t triggerIgnoredToothCount = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 49
+	 */
+	uint8_t alignmentFill_at_49[3];
 };
-static_assert(sizeof(trigger_central_s) == 48);
+static_assert(sizeof(trigger_central_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Fri Oct 28 14:08:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023

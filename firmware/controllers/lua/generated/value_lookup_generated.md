@@ -94,8 +94,8 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 ### launchControlEnabled
 
 
-### anotherUnusedHere444
-
+### doNotFilterTriggerEdgeNoise
+"Detect double trigger edges"
 
 ### antiLagEnabled
 

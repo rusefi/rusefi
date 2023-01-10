@@ -599,6 +599,8 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.currentEngineDecodedPhase;
 		case -280624712:
 			return engine->triggerCentral.triggerToothAngleError;
+		case 989545496:
+			return engine->triggerCentral.triggerIgnoredToothCount;
 	}
 	return EFI_ERROR_CODE;
 }

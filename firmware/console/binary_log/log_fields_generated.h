@@ -307,4 +307,5 @@ static constexpr LogField fields[] = {
 	{engine->triggerCentral.mapVvt_map_peak, "mapVvt_map_peak", "", 3},
 	{engine->triggerCentral.currentEngineDecodedPhase, "Engine Phase", "deg", 0},
 	{engine->triggerCentral.triggerToothAngleError, "triggerToothAngleError", "deg", 2},
+	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
 };
