@@ -199,6 +199,8 @@ public:
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
 
+	bool isToothExpectedNow(efitick_t timestamp);
+
 	// Time since the last tooth
 	Timer m_lastToothTimer;
 	// Phase of the last tooth relative to the sync point
@@ -206,7 +208,7 @@ private:
 
 	// At what engine phase do we expect the next tooth to arrive?
 	// Used for checking whether your trigger pattern is correct.
-	float expectedNextPhase;
+	expected<float> expectedNextPhase = unexpected;
 };
 
 void triggerInfo(void);
