@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 03:32:08 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:52 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1199,7 +1199,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2023.01.10.all.snap_61833";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.10.all.snap_24315";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1288;
@@ -1301,7 +1301,7 @@ public class Fields {
 	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 120, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 120, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 120, FieldType.BIT, 29).setBaseOffset(0);
-	public static final Field ISSUE_294_31 = Field.create("ISSUE_294_31", 120, FieldType.BIT, 30).setBaseOffset(0);
+	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 120, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field TPSMIN = Field.create("TPSMIN", 124, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSMAX = Field.create("TPSMAX", 126, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSERRORDETECTIONTOOLOW = Field.create("TPSERRORDETECTIONTOOLOW", 128, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -2479,7 +2479,8 @@ public class Fields {
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3900, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSMAXDRIVERTHROTTLEINTENT = Field.create("ALSMAXDRIVERTHROTTLEINTENT", 3904, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSACTIVATEPINMODE = Field.create("ALSACTIVATEPINMODE", 3905, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDHEREFORYOU = Field.create("UNUSEDHEREFORYOU", 3906, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TPSSECONDARYMAXIMUM = Field.create("TPSSECONDARYMAXIMUM", 3906, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field PPSSECONDARYMAXIMUM = Field.create("PPSSECONDARYMAXIMUM", 3907, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINMODES1 = Field.create("LUADIGITALINPUTPINMODES1", 3908, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINMODES2 = Field.create("LUADIGITALINPUTPINMODES2", 3909, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LUADIGITALINPUTPINMODES3 = Field.create("LUADIGITALINPUTPINMODES3", 3910, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
@@ -2765,7 +2766,7 @@ public class Fields {
 	USESCRIPTTABLEFORCANSNIFFINGFILTERING,
 	VERBOSECAN,
 	ARTIFICIALTESTMISFIRE,
-	ISSUE_294_31,
+	USEFORDREDUNDANTPPS,
 	TPSMIN,
 	TPSMAX,
 	TPSERRORDETECTIONTOOLOW,
@@ -3919,7 +3920,8 @@ public class Fields {
 	ALSSKIPRATIO,
 	ALSMAXDRIVERTHROTTLEINTENT,
 	ALSACTIVATEPINMODE,
-	UNUSEDHEREFORYOU,
+	TPSSECONDARYMAXIMUM,
+	PPSSECONDARYMAXIMUM,
 	LUADIGITALINPUTPINMODES1,
 	LUADIGITALINPUTPINMODES2,
 	LUADIGITALINPUTPINMODES3,

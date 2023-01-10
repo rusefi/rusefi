@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jan 07 03:08:29 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:11 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -695,7 +695,7 @@ struct engine_configuration_s {
 	offset 120 bit 0 */
 	bool isForcedInduction : 1 {};
 	/**
-	 * On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+	 * On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 	offset 120 bit 1 */
 	bool useFordRedundantTps : 1 {};
 	/**
@@ -806,8 +806,9 @@ struct engine_configuration_s {
 	offset 120 bit 29 */
 	bool artificialTestMisfire : 1 {};
 	/**
+	 * On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 	offset 120 bit 30 */
-	bool issue_294_31 : 1 {};
+	bool useFordRedundantPps : 1 {};
 	/**
 	offset 120 bit 31 */
 	bool unusedBit_45_31 : 1 {};
@@ -4415,9 +4416,17 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e ALSActivatePinMode;
 	/**
+	 * For Ford TPS, use 53%. For Toyota ETCS-i, use 65%
+	%
 	 * offset 3906
 	 */
-	uint8_t unusedHereForYou[2];
+	scaled_channel<uint8_t, 2, 1> tpsSecondaryMaximum;
+	/**
+	 * For Toyota ETCS-i, use xxx%
+	%
+	 * offset 3907
+	 */
+	scaled_channel<uint8_t, 2, 1> ppsSecondaryMaximum;
 	/**
 	 * offset 3908
 	 */
@@ -5229,4 +5238,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jan 07 03:08:29 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Tue Jan 10 19:59:11 UTC 2023

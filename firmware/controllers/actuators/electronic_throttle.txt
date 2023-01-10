@@ -12,11 +12,15 @@ float luaAdjustment;"ETB: luaAdjustment"
     float etbCurrentAdjustedTarget;;"%", 1, 0, -10000, 10000, 3
 
 	bit etbRevLimitActive
+	bit jamDetected
+
 	float etbDutyRateOfChange
 	float etbDutyAverage
 	uint16_t etbTpsErrorCounter;"ETB TPS error counter"
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter"
 
 	int8_t etbErrorCode
+
+	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
 
 end_struct

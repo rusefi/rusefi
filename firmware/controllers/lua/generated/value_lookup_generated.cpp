@@ -85,8 +85,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->verboseCan;
 		case -1528619572:
 			return engineConfiguration->artificialTestMisfire;
-		case -1571463185:
-			return engineConfiguration->issue_294_31;
+		case -1284359115:
+			return engineConfiguration->useFordRedundantPps;
 		case 513872736:
 			return engineConfiguration->tpsMin;
 		case 513872482:
@@ -1041,6 +1041,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->ALSSkipRatio;
 		case 612659807:
 			return engineConfiguration->ALSMaxDriverThrottleIntent;
+		case -1744146782:
+			return engineConfiguration->tpsSecondaryMaximum;
+		case -727657058:
+			return engineConfiguration->ppsSecondaryMaximum;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -1252,9 +1256,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->artificialTestMisfire = (int)value;
 		return;
 	}
-		case -1571463185:
+		case -1284359115:
 	{
-		engineConfiguration->issue_294_31 = (int)value;
+		engineConfiguration->useFordRedundantPps = (int)value;
 		return;
 	}
 		case 513872736:
@@ -3640,6 +3644,16 @@ void setConfigValueByName(const char *name, float value) {
 		case 612659807:
 	{
 		engineConfiguration->ALSMaxDriverThrottleIntent = (int)value;
+		return;
+	}
+		case -1744146782:
+	{
+		engineConfiguration->tpsSecondaryMaximum = (int)value;
+		return;
+	}
+		case -727657058:
+	{
+		engineConfiguration->ppsSecondaryMaximum = (int)value;
 		return;
 	}
 	}

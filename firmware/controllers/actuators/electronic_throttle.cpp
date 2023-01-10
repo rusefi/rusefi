@@ -269,7 +269,7 @@ expected<percent_t> EtbController::getSetpoint() {
 expected<percent_t> EtbController::getSetpointIdleValve() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 	engine->outputChannels.etbTarget = m_idlePosition;
 #endif // EFI_TUNER_STUDIO
 	return clampF(0, m_idlePosition, 100);
@@ -637,20 +637,41 @@ void EtbController::update() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	ClosedLoopController::update();
+	auto output = ClosedLoopController::update();
+
+	if (!output) {
+		return;
+	}
+
+	checkOutput(output.Value);
 }
 
-expected<percent_t> EtbController::getOutput() {
-	// total open + closed loop parts
-	expected<percent_t> output = ClosedLoopController::getOutput();
-	if (!output) {
-		return output;
-	}
-    etbDutyAverage = m_dutyAverage.average(absF(output.Value));
+void EtbController::checkOutput(percent_t output) {
+	etbDutyAverage = m_dutyAverage.average(absF(output));
 
-    etbDutyRateOfChange = m_dutyRocAverage.average(absF(output.Value - prevOutput));
-	prevOutput = output.Value;
-	return output;
+	etbDutyRateOfChange = m_dutyRocAverage.average(absF(output - prevOutput));
+	prevOutput = output;
+
+	float integrator = absF(m_pid.getIntegration());
+	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
+
+	if (integratorLimit != 0) {
+		auto nowNt = getTimeNowNt();
+
+		if (integrator > integratorLimit) {
+			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
+				// ETB is jammed!
+				jamDetected = true;
+
+				// TODO: do something about it!
+			}
+		} else {
+			m_jamDetectTimer.reset(getTimeNowNt());
+			jamDetected = false;
+		}
+
+		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
+	}
 }
 
 void EtbController::autoCalibrateTps() {
