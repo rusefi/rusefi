@@ -1,6 +1,5 @@
 	strncpy(config->luaScript, R"(
 AIRBAG = 0x050
-GRA = 0x388
 -- 1088
 TCU_1 = 0x440
 -- 1344
@@ -29,6 +28,8 @@ MOTOR_INFO = 0x580
 MOTOR_7 = 0x588
 
 TCU_BUS = 1
+
+fakeTorque = 0
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
@@ -139,7 +140,7 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
-canMotor1    = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+motor1Data   = { 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motorBreData = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor2Data   = { 0x8A, 0x8D, 0x10, 0x04, 0x00, 0x4C, 0xDC, 0x87 }
 motor2mux = {0x8A, 0xE8, 0x2C, 0x64}
@@ -150,7 +151,7 @@ canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
 motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
 motor7Data   = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
-accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
+--accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
 
 setTickRate(100)
 
@@ -171,7 +172,38 @@ function onAccGra(bus, id, dlc, data)
   print("onAccGra")
 end
 
-canRxAdd(ECU_BUS, ACC_GRA, onAccGra)
+canRxAdd(1, ACC_GRA, onAccGra)
+
+function onMotor1(bus, id, dlc, data)
+
+	rpm = getSensor("RPM") or 0
+	clt = getSensor("CLT") or 0
+	iat = getSensor("IAT") or 0
+	tps = getSensor("TPS1") or 0
+	vbat = getSensor("BatteryVoltage") or 0
+
+	fakeTorque = interpolate(0, 6, 100, 60, tps)
+
+	engineTorque = fakeTorque * 0.9
+	innerTorqWithoutExt = fakeTorque
+	torqueLoss = 20
+	requestedTorque = fakeTorque
+
+ motor1Data[2] = engineTorque / 0.39
+ setTwoBytes(motor1Data, 2, rpm / 0.25)
+ motor1Data[5] = innerTorqWithoutExt / 0.4
+ motor1Data[6] = tps / 0.4
+ motor1Data[7] = torqueLoss / 0.39
+ motor1Data[8] = requestedTorque / 0.39
+
+-- print ('MOTOR_1 fakeTorque ' ..fakeTorque)
+-- print ('MOTOR_1 engineTorque ' ..engineTorque ..' RPM ' ..rpm)
+-- print ('MOTOR_1 innerTorqWithoutExt ' ..innerTorqWithoutExt ..' tps ' ..tps)
+
+-- print ('MOTOR_1 torqueLoss ' ..torqueLoss ..' requestedTorque ' ..requestedTorque)
+
+ txCan(TCU_BUS, MOTOR_1, 0, motor1Data)
+end
 
 motorBreCounter = 0
 function onMotorBre(bus, id, dlc, data)
@@ -273,20 +305,7 @@ function onTick()
    canMotorInfoTotalCounter = 0
  end
 
-	fakeTorque = interpolate(0, 6, 100, 60, tps)
-
-	engineTorque = fakeTorque * 0.9
-	innerTorqWithoutExt = fakeTorque
-	torqueLoss = 10
-	requestedTorque = fakeTorque
-
-	canMotor1[2] = engineTorque / 0.39
-	setTwoBytes(canMotor1, 2, 4 * rpm)
-	canMotor1[5] = innerTorqWithoutExt / 0.4
-	canMotor1[6] = tps / 0.4
-	canMotor1[7] = torqueLoss / 0.39
-	canMotor1[8] = requestedTorque / 0.39
-	txCan(1, MOTOR_1, 0, canMotor1)
+onMotor1(0, 0, 0, nil)
 
 onMotorBre(0, 0, 0, nil)
 onMotor2(0, 0, 0, nil)
@@ -295,8 +314,8 @@ onMotor6(0, 0, 0, nil)
 onMotor7(0, 0, 0, nil)
 
 	accGraCounter = (accGraCounter + 1) % 16
-	setBitRange(accGraData, 60, 4, accGraCounter)
-	xorChecksum(accGraData, 1)
+--	setBitRange(accGraData, 60, 4, accGraCounter)
+--	xorChecksum(accGraData, 1)
 --	txCan(1, ACC_GRA, 0, accGraData)
 --	print("ACC_GRA " ..arrayToString(accGraData))
 
