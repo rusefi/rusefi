@@ -57,11 +57,11 @@ function arrayToString(arr)
 end
 
 function onTcu1(bus, id, dlc, data)
-	print("onTcu1")
+--	print("onTcu1")
 end
 
 function onTcu2(bus, id, dlc, data)
-	print("onTcu2")
+--	print("onTcu2")
 end
 
 canRxAdd(AIRBAG)
@@ -167,6 +167,12 @@ mafCalibrationIndex = findCurveIndex("mafcurve")
 
 canMotorInfoTotalCounter = 0
 
+function onAccGra(bus, id, dlc, data)
+  print("onAccGra")
+end
+
+canRxAdd(ECU_BUS, ACC_GRA, onAccGra)
+
 function onTick()
 
 	freqValue = getSensor("AuxSpeed1") or 0
@@ -244,7 +250,7 @@ txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 	accGraCounter = (accGraCounter + 1) % 16
 	setBitRange(accGraData, 60, 4, accGraCounter)
 	xorChecksum(accGraData, 1)
-	txCan(1, ACC_GRA, 0, accGraData)
+--	txCan(1, ACC_GRA, 0, accGraData)
 --	print("ACC_GRA " ..arrayToString(accGraData))
 
 	txCan(1, MOTOR_7, 0, motor7Data)
@@ -263,6 +269,7 @@ txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 		motor5FuelCounter = motor5FuelCounter + 20
 
 		canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
+ canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
  baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
  canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
  canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
