@@ -157,6 +157,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 void configure12ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 
+	// 2JZ would be global trigger offset 65 but same wheel could be Honda, not hard coding for now
 	s->shapeWithoutTdc = true;
 
 	// Sync after 2 good teeth
