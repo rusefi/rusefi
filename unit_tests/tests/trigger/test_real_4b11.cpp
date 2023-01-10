@@ -13,7 +13,6 @@ TEST(real4b11, running) {
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_36_2_1);
 
@@ -50,7 +49,6 @@ TEST(real4b11, runningDoubledEdge) {
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	eth.setTriggerType(TT_36_2_1);
 
