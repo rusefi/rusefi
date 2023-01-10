@@ -34,7 +34,6 @@ public:
 
 	// Update the controller's state: read sensors, send output, etc
 	void update() override;
-	expected<percent_t> getOutput() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
@@ -57,8 +56,10 @@ public:
 
 	void setOutput(expected<percent_t> outputValue) override;
 
+	void checkOutput(percent_t output);
+
 	// Used to inspect the internal PID controller's state
-	const pid_state_s* getPidState() const override { return &m_pid; };
+	const pid_state_s& getPidState() const override { return m_pid; };
 
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
@@ -95,6 +96,8 @@ private:
 
 	ExpAverage m_dutyRocAverage;
 	ExpAverage m_dutyAverage;
+
+	Timer m_jamDetectTimer;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
