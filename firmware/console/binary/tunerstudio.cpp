@@ -749,10 +749,12 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			break;
 		case TS_COMPOSITE_READ:
 			{
-				auto toothBuffer = GetToothLoggerBuffer();
+				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 				if (toothBuffer) {
-					tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+
+					ReturnToothLoggerBuffer(toothBuffer);
 				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
 					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
@@ -791,16 +793,22 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		{
 			EnableToothLoggerIfNotEnabled();
 
-			auto toothBuffer = GetToothLoggerBuffer();
+			auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 			if (toothBuffer) {
-				tsChannel->sendResponse(TS_CRC, toothBuffer.Value.Buffer, toothBuffer.Value.Length, true);
+				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+
+				ReturnToothLoggerBuffer(toothBuffer);
 			} else {
 				// TS asked for a tooth logger buffer, but we don't have one to give it.
 				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 			}
 		}
 
+		break;
+#else // EFI_TOOTH_LOGGER
+	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
 #if ENABLE_PERF_TRACE
@@ -829,7 +837,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	}
 	default:
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		tunerStudioError(tsChannel, "ERROR: ignoring unexpected command");
+static char tsErrorBuff[80];
+		chsnprintf(tsErrorBuff, sizeof(tsErrorBuff), "ERROR: ignoring unexpected command %d [%c]", command, command);
+		tunerStudioError(tsChannel, tsErrorBuff);
 		return false;
 	}
 

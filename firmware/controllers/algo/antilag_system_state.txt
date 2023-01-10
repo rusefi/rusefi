@@ -1,0 +1,15 @@
+struct_no_prefix antilag_system_state_s
+
+bit isAntilagCondition
+bit ALSMinRPMCondition
+bit ALSMaxRPMCondition
+bit ALSMinCLTCondition
+bit ALSMaxCLTCondition
+bit ALSMaxThrottleIntentCondition
+bit isALSSwitchActivated
+bit ALSActivatePinState
+bit ALSSwitchCondition
+
+float fuelALSCorrection
+int16_t autoscale timingALSCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+end_struct

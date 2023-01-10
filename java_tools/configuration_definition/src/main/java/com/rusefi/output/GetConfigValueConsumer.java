@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Tuple;
@@ -14,11 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
+import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetOutputValueConsumer.getHashConflicts;
 import static com.rusefi.output.GetOutputValueConsumer.wrapSwitchStatement;
 
+/**
+ * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
+ * @see GetOutputValueConsumer
+ */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
@@ -34,9 +39,17 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     private static final String SET_METHOD_FOOTER = "}\n";
     private final List<Tuple<String>> variables = new ArrayList<>();
     private final String outputFileName;
+    private final String mdOutputFileName;
 
-    public GetConfigValueConsumer(String outputFileName) {
+    private final StringBuilder mdContent = new StringBuilder();
+
+    public GetConfigValueConsumer() {
+        this(null, null);
+    }
+
+    public GetConfigValueConsumer(String outputFileName, String mdOutputFileName) {
         this.outputFileName = outputFileName;
+        this.mdOutputFileName = mdOutputFileName;
     }
 
     public static void writeStringToFile(@Nullable String fileName, String content) throws IOException {
@@ -49,9 +62,9 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
-                    this::processConfig, ".");
+        if (state.isStackEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
+                    (readerState, cf, prefix) -> processConfig(cf, prefix), ".");
             iterator.loop();
         }
     }
@@ -59,9 +72,10 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     @Override
     public void endFile() throws IOException {
         writeStringToFile(outputFileName, getContent());
+        writeStringToFile(mdOutputFileName, getMdContent());
     }
 
-    private String processConfig(ReaderState readerState, ConfigField cf, String prefix) {
+    private String processConfig(ConfigField cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 
@@ -80,6 +94,9 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
         variables.add(new Tuple<>(userName, javaName + cf.getName(), cf.getType()));
+
+        mdContent.append("### " + userName + "\n");
+        mdContent.append(cf.getComment() + "\n\n");
 
 
         return "";
@@ -100,6 +117,10 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getHeaderAndGetter() {
         return FILE_HEADER +
                 getCompleteGetterBody();
+    }
+
+    public String getMdContent() {
+        return mdContent.toString();
     }
 
     @NotNull

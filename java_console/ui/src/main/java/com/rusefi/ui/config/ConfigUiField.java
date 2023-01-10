@@ -14,11 +14,11 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
-public class ConfigField extends BaseConfigField {
+public class ConfigUiField extends BaseConfigField {
     private final JTextField view = new JTextFieldWithWidth(200);
     private final static DecimalFormat df = new DecimalFormat("0.0000");
 
-    public ConfigField(UIContext uiContext, final Field field, String topLabel) {
+    public ConfigUiField(UIContext uiContext, final Field field, String topLabel) {
         super(uiContext, field);
         createUi(topLabel, view);
         requestInitialValue(field); // this is not in base constructor so that view is created by the time we invoke it
@@ -40,7 +40,7 @@ public class ConfigField extends BaseConfigField {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    sendValue(field, ConfigField.this.view.getText());
+                    sendValue(field, ConfigUiField.this.view.getText());
                 }
             }
         });

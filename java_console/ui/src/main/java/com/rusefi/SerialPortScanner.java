@@ -19,14 +19,13 @@ public enum SerialPortScanner {
 
     private volatile boolean isRunning = true;
 
-    private static final boolean SHOW_PCAN = false;// todo: reimplement with wmic Boolean.parseBoolean(System.getenv().get("RUSEFI_PCAN"));
     private static final boolean SHOW_SOCKETCAN = isLinux();
 
     static final String AUTO_SERIAL = "Auto Serial";
 
     private final Object lock = new Object();
     @NotNull
-    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false);
+    private AvailableHardware knownHardware = new AvailableHardware(Collections.emptyList(), false, false, false);
 
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
@@ -40,31 +39,34 @@ public enum SerialPortScanner {
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
      */
-    private void findAllAvailablePorts(boolean includeSlowTcpLookup) {
+    private void findAllAvailablePorts(boolean includeSlowLookup) {
         List<String> ports = new ArrayList<>();
         boolean dfuConnected;
         boolean stLinkConnected;
+        boolean PCANConnected;
 
         String[] serialPorts = LinkManager.getCommPorts();
         if (serialPorts.length > 0)
             ports.add(AUTO_SERIAL);
         ports.addAll(Arrays.asList(serialPorts));
 
-        if (includeSlowTcpLookup) {
+        if (includeSlowLookup) {
             ports.addAll(TcpConnector.getAvailablePorts());
             dfuConnected = DfuFlasher.detectSTM32BootloaderDriverState(StatusConsumer.VOID);
             stLinkConnected = DfuFlasher.detectStLink(StatusConsumer.VOID);
+            PCANConnected = DfuFlasher.detectPcan(StatusConsumer.VOID);
         } else {
             dfuConnected = false;
             stLinkConnected = false;
+            PCANConnected = false;
         }
-        if (SHOW_PCAN)
+        if (PCANConnected)
             ports.add(LinkManager.PCAN);
         if (SHOW_SOCKETCAN)
             ports.add(LinkManager.SOCKET_CAN);
 
         boolean isListUpdated;
-        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected);
+        AvailableHardware currentHardware = new AvailableHardware(ports, dfuConnected, stLinkConnected, PCANConnected);
         synchronized (lock) {
             isListUpdated = !knownHardware.equals(currentHardware);
             knownHardware = currentHardware;
@@ -106,36 +108,35 @@ public enum SerialPortScanner {
         private final List<String> ports;
         private final boolean dfuFound;
         private final boolean stLinkConnected;
+        private final boolean PCANConnected;
 
-        public <T> AvailableHardware(List<String> ports, boolean dfuFound, boolean stLinkConnected) {
+        public <T> AvailableHardware(List<String> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
             this.ports = ports;
             this.dfuFound = dfuFound;
             this.stLinkConnected = stLinkConnected;
+            this.PCANConnected = PCANConnected;
         }
 
         @NotNull
-        public List<String> getKnownPorts() {
-            return new ArrayList<>(ports);
-        }
+        public List<String> getKnownPorts() {return new ArrayList<>(ports);}
 
         public boolean isDfuFound() {
             return dfuFound;
         }
 
-        public boolean isStLinkConnected() {
-            return stLinkConnected;
-        }
+        public boolean isStLinkConnected() {return stLinkConnected;}
+        public boolean isPCANConnected(){return PCANConnected;}
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             AvailableHardware that = (AvailableHardware) o;
-            return dfuFound == that.dfuFound && stLinkConnected == that.stLinkConnected && ports.equals(that.ports);
+            return dfuFound == that.dfuFound && stLinkConnected == that.stLinkConnected && PCANConnected == that.PCANConnected && ports.equals(that.ports);
         }
 
         public boolean isEmpty() {
-            return !dfuFound && !stLinkConnected && ports.isEmpty();
+            return !dfuFound && !stLinkConnected && !PCANConnected && ports.isEmpty();
         }
     }
 }

@@ -345,7 +345,10 @@ typedef enum {
 	 * see also TT_ONE a bit below
 	 */
 	TT_ONE_PLUS_ONE = 16,
-	// VVT for 2JZ, see VVT_2JZ
+	/**
+	 * VVT for 2JZ
+	 * three evenly spaces teeth
+	 */
 	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
 	TT_ONE = 18,
@@ -507,8 +510,8 @@ typedef enum {
 
 	TT_SUBARU_EZ30 = 12,
 	TT_VVT_MAZDA_SKYACTIV = 13,
-	UNUSED_29 = 29,
-	UNUSED_34 = 34,
+	TT_MITSU_ONLY_TOP_BOTH_FRONTS = 29,
+	TT_MITSU_BOTH_BOTH = 34,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt

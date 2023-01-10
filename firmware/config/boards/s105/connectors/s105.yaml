@@ -1,0 +1,612 @@
+pins:
+  - pin: 1a
+    id: D14
+    function: Ignition coil 4
+    class: outputs
+    ts_name: na 1 - IGN_4
+    type: ls
+
+  - pin: 2a
+    id: D12
+    function: Ignition coil 2
+    class: outputs
+    ts_name: 2 - IGN_2
+    type: ls
+
+  - pin: 3a
+    function: Ignition GND
+    type: GND
+
+  - pin: 4a
+    id: D15
+    function: Ignition coil 3
+    class: outputs
+    ts_name: na 4 - IGN_3
+    type: ls
+
+  - pin: 5a
+    id: D13
+    function: Ignition coil 1
+    class: outputs
+    ts_name: 5 - IGN_1
+    type: ls
+
+# 6-24 segment
+  - pin: 6a
+    id: D9
+    function: Injector 2
+    class: outputs
+    ts_name: 6 - INJ_2
+    type: ls
+
+  - pin: 7a
+    id: D10
+    function: Injector 3
+    class: outputs
+    ts_name: 7 - INJ_3
+    type: ls
+
+  - pin: 8a
+    id: B8
+    function: Tach Out
+    class: outputs
+    ts_name: na 8 - TACH
+    type: ls
+
+  - pin: 9a
+    id: E0
+    function: Unk Out 1
+    class: outputs
+    ts_name: 9 - Unk Out 1
+    type: ls
+
+  - pin: 10a
+    id: B9
+    function: ECO Out
+    class: outputs
+    ts_name: 10 - ECO Out
+    type: ls
+
+  - pin: 16a
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: TPS (22K+41.2K divider, 100K pull-down)
+    ts_name: 16 TPS
+
+  - pin: 17a
+    function: GNDA
+
+# 25-43 segment
+  - pin: 25a
+    id: D0
+    function: Injector 7
+    class: outputs
+    ts_name: na 25 - INJ_7
+    type: ls
+
+  - pin: 27a
+    id: D8
+    function: Injector 1
+    class: outputs
+    ts_name: 27 - INJ_1
+    type: ls
+
+  - pin: 28a
+    id: C7
+    function: AFR Heater 2
+    class: outputs
+    ts_name: 28 - AFR Heater 2
+    type: ls
+
+  - pin: 29a
+    id: C6
+    function: Recirculation Valve
+    class: outputs
+    ts_name: 29 - EGR
+    type: ls
+
+  - pin: 30a
+    id: E9
+    function: Unk Out 2
+    class: outputs
+    ts_name: na 20 - Unk Out 2
+    type: ls
+
+  - pin: 31a
+    id: E14
+    function: MIL Control
+    class: outputs
+    ts_name: 31 - CEL
+    type: ls
+
+  - pin: 35a
+    function: GNDA (CLT, AFR 2)
+
+  - pin: 36a
+    function: GNDA (MAP, AFR 1)
+
+  - pin: 39a
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: CLT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 39 CLT
+
+  - pin: 40a
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: IAT (22K+22K divider, 1.5K pull-up to 3.3V)
+    ts_name: 40 IAT
+
+  - pin: 43a
+    function: Prog Mode
+
+# 44-62 segment
+  - pin: 46a
+    id: B14
+    function: Vapor Absorber Valve
+    class: outputs
+    ts_name: 46 - Absorber
+    type: ls
+
+  - pin: 47a
+    id: D11
+    function: Injector 4
+    class: outputs
+    ts_name: 47 - INJ_4
+    type: ls
+
+  - pin: 48a
+    id: E5
+    function: AFR Heater 1
+    class: outputs
+    ts_name: 48 - AFR Heater 1
+    type: ls
+
+  - pin: 49a
+    id: E6
+    function: Injector 6
+    class: outputs
+    ts_name: na 49 - INJ_6
+    type: ls
+
+  - pin: 50a
+    id: E12
+    function: AUX Starter Relay
+    class: outputs
+    ts_name: 50 - AUX Starter Relay
+    type: ls
+
+  - pin: 51a
+    function: GNDA (Camshaft)
+
+  - pin: 53a
+    function: GNDA
+
+  - pin: 54a
+    function: GNDA (MAF)
+
+  - pin: 56a
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: MAP (22K+41.2K divider, 100K pull-down)
+    ts_name: 56 MAP
+
+  - pin: 59a
+    id: [B3]
+    function: Speed input (4.7K Pull-up)
+    class: [event_inputs]
+    ts_name: 59 - Speed in
+
+  - pin: 62a
+    function: CAN bus high
+    type: can
+
+# 63-81 segment
+  - pin: 63a
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: +12v (MR) (68K+6.8K divider)
+    ts_name: 63 VBat
+    type: vign
+
+  - pin: 68a
+    id: D6
+    function: Fan Relay 1
+    class: outputs
+    ts_name: na 58 - Fan Relay 1
+    type: ls
+
+  - pin: 69a
+    id: E10
+    function: AC Relay
+    class: outputs
+    ts_name: na 69 - AC Relay
+    type: ls
+
+  - pin: 70a
+    id: D2
+    function: Fuel Pump Relay
+    class: outputs
+    ts_name: 70 - Fuel Pump Relay
+    type: ls
+
+  - pin: 71a
+    function: K-line
+
+  - pin: 72a
+    id: [C12]
+    function: DIN1 (4.7K Pull-up) (TBD)
+    class: [switch_inputs]
+    ts_name: 72 - DIN1
+
+  - pin: 73a
+    id: [C11]
+    function: DPH2 (not populated) (TBD)
+    class: [switch_inputs]
+    ts_name: na 72 - DPH2
+
+  - pin: 75a
+    id: [C13]
+    function: DCNS (not populated) (TBD)
+    class: [switch_inputs]
+    ts_name: na 75 - DCNS
+
+  - pin: 76a
+    id: [C10]
+    function: DSTR (4.7K Pull-up) (TBD)
+    class: [switch_inputs]
+    ts_name: 76 - DIN5
+
+  - pin: 77a
+    id: [D4]
+    function: DIN5 (4.7K Pull-down) (TBD)
+    class: [switch_inputs]
+    ts_name: 77 - DIN5
+
+  - pin: 79a
+    id: [B11]
+    function: Camshaft sensor (not populated)
+    class: [event_inputs]
+    ts_name: na 79 - CAM in
+
+  - pin: 80a
+    function: GND
+
+  - pin: 81a
+    function: CAN bus low
+    type: can
+
+info:
+  title: S105
+  name: S105
+  image:
+    file: 121pin.jpg
+  pins:
+    - pin: 1a
+      x: 286
+      y: 582
+
+    - pin: 2a
+      x: 456
+      y: 582
+
+    - pin: 3a
+      x: 375
+      y: 405
+
+    - pin: 4a
+      x: 286
+      y: 250
+
+    - pin: 5a
+      x: 456
+      y: 250
+
+    # 6-24 segment
+    - pin: 6a
+      x: 2193
+      y: 250
+
+    - pin: 7a
+      x: 2113
+      y: 250
+
+    - pin: 8a
+      x: 2033
+      y: 250
+
+    - pin: 9a
+      x: 1953
+      y: 250
+
+    - pin: 10a
+      x: 1873
+      y: 250
+
+    - pin: 11a
+      x: 1793
+      y: 250
+
+    - pin: 12a
+      x: 1713
+      y: 250
+
+    - pin: 13a
+      x: 1633
+      y: 250
+
+    - pin: 14a
+      x: 1553
+      y: 250
+
+    - pin: 15a
+      x: 1473
+      y: 250
+
+    - pin: 16a
+      x: 1393
+      y: 250
+
+    - pin: 17a
+      x: 1313
+      y: 250
+
+    - pin: 18a
+      x: 1233
+      y: 250
+
+    - pin: 19a
+      x: 1153
+      y: 250
+
+    - pin: 20a
+      x: 1073
+      y: 250
+
+    - pin: 21a
+      x: 993
+      y: 250
+
+    - pin: 22a
+      x: 913
+      y: 250
+
+    - pin: 23a
+      x: 833
+      y: 250
+
+    - pin: 24a
+      x: 753
+      y: 250
+
+    # 25-43 segment
+    - pin: 25a
+      x: 2193
+      y: 330
+
+    - pin: 26a
+      x: 2113
+      y: 330
+
+    - pin: 27a
+      x: 2033
+      y: 330
+
+    - pin: 28a
+      x: 1953
+      y: 330
+
+    - pin: 29a
+      x: 1873
+      y: 330
+
+    - pin: 30a
+      x: 1793
+      y: 330
+
+    - pin: 31a
+      x: 1713
+      y: 330
+
+    - pin: 32a
+      x: 1633
+      y: 330
+
+    - pin: 33a
+      x: 1553
+      y: 330
+
+    - pin: 34a
+      x: 1473
+      y: 330
+
+    - pin: 35a
+      x: 1393
+      y: 330
+
+    - pin: 36a
+      x: 1313
+      y: 330
+
+    - pin: 37a
+      x: 1233
+      y: 330
+
+    - pin: 38a
+      x: 1153
+      y: 330
+
+    - pin: 39a
+      x: 1073
+      y: 330
+
+    - pin: 40a
+      x: 993
+      y: 330
+
+    - pin: 41a
+      x: 913
+      y: 330
+
+    - pin: 42a
+      x: 833
+      y: 330
+
+    - pin: 43a
+      x: 753
+      y: 330
+
+    # 44-62 segment
+    - pin: 44a
+      x: 2193
+      y: 495
+
+    - pin: 45a
+      x: 2113
+      y: 495
+
+    - pin: 46a
+      x: 2033
+      y: 495
+
+    - pin: 47a
+      x: 1953
+      y: 495
+
+    - pin: 48a
+      x: 1873
+      y: 495
+
+    - pin: 49a
+      x: 1793
+      y: 495
+
+    - pin: 50a
+      x: 1713
+      y: 495
+
+    - pin: 51a
+      x: 1633
+      y: 495
+
+    - pin: 52a
+      x: 1553
+      y: 495
+
+    - pin: 53a
+      x: 1473
+      y: 495
+
+    - pin: 54a
+      x: 1393
+      y: 495
+
+    - pin: 55a
+      x: 1313
+      y: 495
+
+    - pin: 56a
+      x: 1233
+      y: 495
+
+    - pin: 57a
+      x: 1153
+      y: 495
+
+    - pin: 58a
+      x: 1073
+      y: 495
+
+    - pin: 59a
+      x: 993
+      y: 495
+
+    - pin: 60a
+      x: 913
+      y: 495
+
+    - pin: 61a
+      x: 833
+      y: 495
+
+    - pin: 62a
+      x: 732
+      y: 495
+
+    # 63-81 segment
+    - pin: 63a
+      x: 2193
+      y: 579
+
+    - pin: 64a
+      x: 2113
+      y: 579
+
+    - pin: 65a
+      x: 2033
+      y: 579
+
+    - pin: 66a
+      x: 1953
+      y: 579
+
+    - pin: 67a
+      x: 1873
+      y: 579
+
+    - pin: 68a
+      x: 1793
+      y: 579
+
+    - pin: 69a
+      x: 1713
+      y: 579
+
+    - pin: 70a
+      x: 1633
+      y: 579
+
+    - pin: 71a
+      x: 1553
+      y: 579
+
+    - pin: 72a
+      x: 1473
+      y: 579
+
+    - pin: 73a
+      x: 1393
+      y: 579
+
+    - pin: 74a
+      x: 1313
+      y: 579
+
+    - pin: 75a
+      x: 1233
+      y: 579
+
+    - pin: 76a
+      x: 1153
+      y: 579
+
+    - pin: 77a
+      x: 1073
+      y: 579
+
+    - pin: 78a
+      x: 993
+      y: 579
+
+    - pin: 79a
+      x: 913
+      y: 579
+
+    - pin: 80a
+      x: 833
+      y: 579
+
+    - pin: 81a
+      x: 732
+      y: 579
+

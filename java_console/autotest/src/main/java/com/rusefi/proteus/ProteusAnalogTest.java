@@ -1,15 +1,19 @@
 package com.rusefi.proteus;
 
 import com.rusefi.RusefiTestBase;
+import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+
 import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.IoUtil.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /*
  This test requires a particular hardware setup connected to a Proteus board.
@@ -27,7 +31,33 @@ public class ProteusAnalogTest extends RusefiTestBase {
         assertTrue(vbatt < 13);
     }
 
-    void setIdlePositionAndAssertTps(int idle, int expectedTps) {
+    // not really 'analog' test. Not the best placement since we are unable to rebuild discovery HW CI :(
+    @Test
+    public void testTextPull() throws InterruptedException {
+        requestText();
+        BinaryProtocolLogger logger = new BinaryProtocolLogger(ecu.getLinkManager());
+        ecu.getLinkManager().submit(new Runnable() {
+            @Override
+            public void run() {
+                logger.compositeLogic(ecu.getLinkManager().getBinaryProtocol());
+            }
+        });
+        requestText();
+    }
+
+    private void requestText() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicReference<String> textReference = new AtomicReference<>();
+        ecu.getLinkManager().submit(() -> {
+            String pendingTextMessages = ecu.getLinkManager().getBinaryProtocol().requestPendingTextMessages();
+            textReference.set(pendingTextMessages);
+            latch.countDown();
+        });
+        latch.await(60, TimeUnit.SECONDS);
+        assertNotNull("Not null text protocol response expected", textReference.get());
+    }
+
+    private void setIdlePositionAndAssertTps(int idle, int expectedTps) {
         ecu.sendCommand("set idle_position " + idle);
 
         // wait a sec for sensors to update

@@ -10,6 +10,8 @@
 #include "buffered_writer.h"
 #include "tunerstudio.h"
 
+#if EFI_FILE_LOGGING
+
 #define TIME_PRECISION 1000
 
 // floating number of seconds with millisecond precision
@@ -27,7 +29,6 @@ static constexpr uint16_t computeFieldsRecordLength() {
 	return recLength;
 }
 
-#if EFI_FILE_LOGGING
 static uint64_t binaryLogCount = 0;
 
 extern bool main_loop_started;
@@ -40,14 +41,11 @@ void writeSdLogLine(Writer& bufferedWriter) {
 		writeFileHeader(bufferedWriter);
 	} else {
 		updateTunerStudioState();
-		writeBlock(bufferedWriter);
+		writeSdBlock(bufferedWriter);
 	}
 
 	binaryLogCount++;
 }
-
-#endif /* EFI_FILE_LOGGING */
-
 
 static constexpr uint16_t recordLength = computeFieldsRecordLength();
 
@@ -99,7 +97,7 @@ static uint8_t blockRollCounter = 0;
 
 //static efitimeus_t prevSdCardLineTime = 0;
 
-void writeBlock(Writer& outBuffer) {
+void writeSdBlock(Writer& outBuffer) {
 	static char buffer[16];
 
 	// Offset 0 = Block type, standard data block in this case
@@ -136,3 +134,5 @@ void writeBlock(Writer& outBuffer) {
 	// 1 byte checksum footer
 	outBuffer.write(buffer, 1);
 }
+
+#endif /* EFI_FILE_LOGGING */

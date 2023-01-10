@@ -129,11 +129,13 @@ static void assertCloseTo(const char* msg, float actual, float expected) {
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
+#if EFI_SHAFT_POSITION_INPUT
 	// Re-read config in case it's changed
 	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	efiWatchdog();
 	updateSlowSensors();
@@ -205,13 +207,13 @@ void Engine::periodicSlowCallback() {
 void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
-#if EFI_ENGINE_CONTROL
+#if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
 	getEngineState()->sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 #if EFI_GPIO_HARDWARE
@@ -251,9 +253,11 @@ void Engine::updateSwitchInputs() {
 	}
 	engine->engineState.clutchUpState = getClutchUpState();
 
+#if EFI_IDLE_CONTROL
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
+#endif // EFI_IDLE_CONTROL
 
 	engine->engineState.brakePedalState = getBrakePedalState();
 
@@ -279,13 +283,18 @@ void Engine::reset() {
 void Engine::resetLua() {
 	// todo: https://github.com/rusefi/rusefi/issues/4308
 	engineState.lua = {};
+	engineState.lua.fuelAdd = 0;
 	engineState.lua.fuelMult = 1;
+	engineState.lua.luaDisableEtb = false;
+	engineState.lua.luaIgnCut = false;
 #if EFI_BOOST_CONTROL
 	boostController.resetLua();
 #endif // EFI_BOOST_CONTROL
 	ignitionState.luaTimingAdd = 0;
 	ignitionState.luaTimingMult = 1;
+#if EFI_IDLE_CONTROL
 	module<IdleController>().unmock().luaAdd = 0;
+#endif // EFI_IDLE_CONTROL
 }
 
 /**
@@ -353,10 +362,12 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 #endif
 
 void Engine::injectEngineReferences() {
+#if EFI_SHAFT_POSITION_INPUT
 	triggerCentral.primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 }
 
 void Engine::setConfig() {
@@ -366,7 +377,7 @@ void Engine::setConfig() {
 }
 
 void Engine::efiWatchdog() {
-#if EFI_ENGINE_CONTROL
+#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (isRunningPwmTest)
 		return;
 
@@ -412,7 +423,7 @@ void Engine::efiWatchdog() {
 #endif
 
 	enginePins.stopPins();
-#endif
+#endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 }
 
 void Engine::checkShutdown() {
@@ -436,7 +447,7 @@ todo: move to shutdown_controller.cpp
 		const float vBattThresholdOn = 8.0f;
 		// we fallback into zero instead of VBAT_FALLBACK_VALUE because it's not safe to false-trigger the "ignition on" event,
 		// and we want to turn on the main relay only when 100% sure.
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(0) > vBattThresholdOn) && !isInShutdownMode()) {
+		if ((Sensor::getOrZero(SensorType::BatteryVoltage) > vBattThresholdOn) && !isInShutdownMode()) {
 			ignitionOnTimeNt = getTimeNowNt();
 			efiPrintf("Ignition voltage detected!");
 			if (stopEngineRequestTimeNt != 0) {
@@ -540,14 +551,17 @@ ExecutorInterface *getExecutorInterface() {
 	return &engine->executor;
 }
 
+#if EFI_SHAFT_POSITION_INPUT
 TriggerCentral * getTriggerCentral() {
 	return &engine->triggerCentral;
 }
+#endif // EFI_SHAFT_POSITION_INPUT
 
 LimpManager * getLimpManager() {
 	return &engine->module<LimpManager>().unmock();
 }
 
+#if EFI_ENGINE_CONTROL
 FuelSchedule *getFuelSchedule() {
 	return &engine->injectionEvents;
 }
@@ -555,3 +569,4 @@ FuelSchedule *getFuelSchedule() {
 IgnitionEventList *getIgnitionEvents() {
 	return &engine->ignitionEvents;
 }
+#endif // EFI_ENGINE_CONTROL

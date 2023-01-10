@@ -43,7 +43,7 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 		double value = 0;
 		double stamp = reader.readTimestampAndValues(&value);
 		efitick_t stampUs = (efitick_t)(stamp * 1'000'000);
-		printf("-- %lld %f\r\n", stamp, (float)value);
+//		printf("--simulateTrigger %lld %f\r\n", stamp, (float)value);
 		// convert into mcu-adc voltage
 		value = minF(maxF(value / voltageDiv, 0), adcMaxVoltage);
 		if (trigAdcState.curAdcMode == TRIGGER_ADC_EXTI) {
@@ -53,7 +53,7 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 				logicValue = value > Vih;
 				// we need at least two values to detect an edge
 				if (prevLogicValue != -1) {
-					printf("--> DIGITAL %d %d\r\n", logicValue, prevLogicValue);
+//					printf("--> DIGITAL %d %d\r\n", logicValue, prevLogicValue);
 
 					trigAdcState.digitalCallback(stampUs, true, logicValue > prevLogicValue ? true : false);
 				}
@@ -62,7 +62,7 @@ static void simulateTrigger(TriggerAdcDetector &trigAdcState, CsvReader &reader,
 		} else if (trigAdcState.curAdcMode == TRIGGER_ADC_ADC) {
 			triggerAdcSample_t sampleValue = value * ADC_MAX_VALUE / adcMaxVoltage;
 			
-			printf("--> ANALOG %d\r\n", sampleValue);
+//			printf("--> ANALOG %d\r\n", sampleValue);
 
 			trigAdcState.analogCallback(stampUs, sampleValue);
 		}

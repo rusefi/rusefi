@@ -22,13 +22,15 @@ public class TriggerWheelInfo {
     private final boolean isCrankBased;
     private final boolean hasSecondChannel;
     private final boolean hardcodedOperationMode;
+    private final boolean isSynchronizationNeeded;
     private final TriggerGaps gaps;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
                             boolean isCrankBased,
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
-                            boolean hardcodedOperationMode, TriggerGaps gaps) {
+                            boolean hardcodedOperationMode,
+                            boolean isSynchronizationNeeded, TriggerGaps gaps) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -37,6 +39,7 @@ public class TriggerWheelInfo {
         this.isCrankBased = isCrankBased;
         this.hasSecondChannel = hasSecondChannel;
         this.hardcodedOperationMode = hardcodedOperationMode;
+        this.isSynchronizationNeeded = isSynchronizationNeeded;
         this.gaps = gaps;
     }
 
@@ -57,7 +60,7 @@ public class TriggerWheelInfo {
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
-        int cycleDuration = -1;
+        boolean isSynchronizationNeeded = false;
         TriggerWheelInfo.TriggerGaps gaps = null;
         while (true) {
             line = reader.readLine();
@@ -87,7 +90,7 @@ public class TriggerWheelInfo {
                     isCrankBased = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_CYCLE_DURATION:
-                    cycleDuration = (int)Double.parseDouble(value);
+                    //cycleDuration = (int)Double.parseDouble(value);
                     break;
                 case TRIGGER_IS_SECOND_WHEEL_CAM:
                     isSecondWheelCam = Boolean.parseBoolean(value);
@@ -97,6 +100,9 @@ public class TriggerWheelInfo {
                     break;
                 case TRIGGER_HARDCODED_OPERATION_MODE:
                     hardcodedOperationMode = Boolean.parseBoolean(value);
+                    break;
+                case TRIGGER_WITH_SYNC:
+                    isSynchronizationNeeded = Integer.parseInt(value) > 0;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
@@ -111,6 +117,7 @@ public class TriggerWheelInfo {
                 isSecondWheelCam,
                 hasSecondChannel,
                 hardcodedOperationMode,
+                isSynchronizationNeeded,
                 gaps
         );
     }
@@ -173,7 +180,8 @@ public class TriggerWheelInfo {
     private static List<TriggerSignal> compressAngle(List<TriggerSignal> wheel) {
         return wheel.stream().map(triggerSignal -> {
             double compressAngle = getCompressedAngle(triggerSignal.getAngle());
-            return new TriggerSignal(triggerSignal.getWaveIndex(), triggerSignal.getState(), compressAngle);
+            return new TriggerSignal(triggerSignal.getWaveIndex(), triggerSignal.getState(), compressAngle,
+                    triggerSignal.getGap());
         }).collect(Collectors.toList());
     }
 

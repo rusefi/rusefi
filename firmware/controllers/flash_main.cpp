@@ -185,7 +185,11 @@ void writeToFlashNow(void) {
 #if EFI_STORAGE_INT_FLASH == TRUE
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
-	int result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
+	int result2 = FLASH_RETURN_SUCCESS;
+	/* Only if second copy is supported */
+	if (getFlashAddrSecondCopy()) {
+		result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
+	}
 
 	// handle success/failure
 	isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
@@ -273,6 +277,11 @@ static FlashState readConfiguration() {
 
 	if (firstCopy == FlashState::Ok) {
 		// First copy looks OK, don't even need to check second copy.
+		return firstCopy;
+	}
+
+	/* no second copy? */
+	if (getFlashAddrSecondCopy() == 0x0) {
 		return firstCopy;
 	}
 

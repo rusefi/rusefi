@@ -12,6 +12,7 @@ import java.util.List;
 public class WaveState {
     double unusedDown = Double.NaN;
     double prevUp = Double.NaN;
+    double prevGap = Double.NaN;
 
     public List<EngineReport.UpDown> list = new ArrayList<>();
 
@@ -24,26 +25,27 @@ public class WaveState {
         TV_HIGH
     }
 
-    public void handle(WaveState.trigger_value_e signal, double angle) {
+    public void handle(trigger_value_e signal, double angle, double gap) {
         if (signal == trigger_value_e.TV_LOW) {
             // down signal
             if (Double.isNaN(prevUp)) {
                 // we have down before up, we would need to use it later
                 unusedDown = angle;
             } else {
-                EngineReport.UpDown ud = new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(angle), 0);
+                EngineReport.UpDown ud = new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(angle), 0, prevGap, gap);
                 list.add(ud);
             }
             prevUp = Double.NaN;
         } else {
             // up signal handling
             prevUp = angle;
+            prevGap = gap;
         }
     }
 
     public void wrap() {
         if (!Double.isNaN(unusedDown)) {
-            list.add(0, new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(unusedDown + 720 * (3 + TriggerImage.EXTRA_COUNT)), 0));
+            list.add(0, new EngineReport.UpDown(angleToTime(prevUp), 0, angleToTime(unusedDown + 720 * (3 + TriggerImage.EXTRA_COUNT)), 0, Double.NaN, Double.NaN));
         }
     }
 }

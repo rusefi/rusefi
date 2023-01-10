@@ -5,7 +5,7 @@
 		<Vendor>STMicroelectronics</Vendor>
 		<Type>MPU</Type>
 		<CPU>Cortex-A7</CPU>
-		<Name>STM32MP1</Name>
+		<Name>STM32MP15xx</Name>
 		<Series>STM32MP</Series>
 		<Description>ARM 32-bit Cortex-A7 and ARM 32-bit Cortex-M4  dualprocessor based device, CPU clock up to 600MHz</Description>
 		<!-- Gonfigurations' List -->
@@ -13,7 +13,7 @@
 			<!-- Bootloader Interface -->
 			<Interface name="Bootloader">
 				<Configuration number="0x0">
-					<MultiCore>  <!--  Nothing here just the make sure that the XML file is compliant to the Schema file -->
+					<MultiCore> 
 						<ReadRegister address="0x0" mask="0x0" value="0x4"/>
 					</MultiCore>
 				</Configuration>

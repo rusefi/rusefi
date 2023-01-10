@@ -1,20 +1,18 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.JavaSensorsConsumer;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class JavaSensorsConsumerTest {
     @Test
     public void generateJavaSensors() {
-        ReaderState state = new ReaderState();
-        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-        state.variableRegistry.register("GAUGE_NAME_RPM", "\"hello\"");
-        state.variableRegistry.register("GAUGE_NAME_GEAR_RATIO", "ra");
+        ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+        state.getVariableRegistry().register("GAUGE_NAME_RPM", "\"hello\"");
+        state.getVariableRegistry().register("GAUGE_NAME_GEAR_RATIO", "ra");
 
         String outputChannels = "" +
                 "\n" +
@@ -45,7 +43,7 @@ public class JavaSensorsConsumerTest {
 
     @Test
     public void bitAtTheEndBug() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         String outputChannels =
                 "struct_no_prefix output_channels_s\n" +
                         "bit sd_present\n" +

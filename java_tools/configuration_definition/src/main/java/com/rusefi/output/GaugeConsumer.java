@@ -1,13 +1,13 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
-import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import static com.rusefi.output.DataLogConsumer.getComment;
+import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class GaugeConsumer implements ConfigurationConsumer {
@@ -20,9 +20,9 @@ public class GaugeConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        if (readerState.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
-                    (state, configField, prefix) -> handle(readerState, configField, prefix));
+        if (readerState.isStackEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
+                    (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
             String content = iterator.getContent();
             charArrayWriter.append(content);
@@ -35,9 +35,9 @@ public class GaugeConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ReaderState readerState, ConfigField configField, String prefix) {
-        String comment = getComment("", configField, readerState.variableRegistry);
-        comment = ConfigField.unquote(comment);
+    private String handle(ConfigField configField, String prefix) {
+        String comment = getHumanGaugeName("", configField);
+        comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;
         }

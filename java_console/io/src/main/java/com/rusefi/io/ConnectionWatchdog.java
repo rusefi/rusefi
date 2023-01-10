@@ -18,25 +18,26 @@ public class ConnectionWatchdog {
     private final Timer reconnectTimer;
     private static boolean isCreated;
 
-    private ConnectionWatchdog(int timeoutMs, Runnable action) {
+    private ConnectionWatchdog(int timeoutMs, Runnable restartAction) {
         reconnectTimer = new Timer(timeoutMs, e -> {
-            action.run();
+            restartAction.run();
+            // mark alive right after restart attempt
             onDataArrived();
         });
     }
 
     public synchronized static void init(LinkManager linkManager) {
-        final AtomicBoolean isPending = new AtomicBoolean();
+        final AtomicBoolean isRestartPending = new AtomicBoolean();
 
         if (isCreated)
             return; // only one instance is needed
         isCreated = true;
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            if (isPending.compareAndSet(false, true)) {
+            if (isRestartPending.compareAndSet(false, true)) {
                 linkManager.execute(() -> {
                     log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
                     linkManager.restart();
-                    isPending.set(false);
+                    isRestartPending.set(false);
                 });
             } else {
                 log.info("restart already pending...");

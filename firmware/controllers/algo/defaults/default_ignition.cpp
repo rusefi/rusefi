@@ -14,39 +14,19 @@ static void setDefaultMultisparkParameters() {
 	engineConfiguration->multisparkMaxSparkingAngle = 30;
 }
 
-static constexpr float iatTimingRpmBins[] = { 880, 1260, 1640, 2020, 2400, 2780, 3000, 3380, 3760, 4140, 4520, 5000, 5700, 6500, 7200, 8000 };
-
 static void setDefaultIatTimingCorrection() {
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
+	copyArray(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
+	setLinearCurve(config->ignitionIatCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
 
-	static constexpr int8_t defaultIatCorr[16] = {
-		4,	// -40 deg
-		4,
-		3,
-		2,
-		0,	// 0 deg
-		0,
-		0,
-		0,
-		0,
-		-1,	// 50 deg
-		-2,
-		-4,
-		-4,
-		-4,
-		-4,
-		-4,	// 110 deg
-	};
-
-	// Set each row of the table to the same value (no rpm dependence by default)
-	for (size_t i = 0; i < efi::size(defaultIatCorr); i++) {
-		setArrayValues(config->ignitionIatCorrTable[i], defaultIatCorr[i]);
+	// top 5 rows are the same
+	for (size_t i = 3; i < 8; i++) {
+		//                                                         40  50  60 deg C
+		copyArray(config->ignitionIatCorrTable[i], {0, 0, 0, 0, 0, -1, -2, -3});
 	}
-#else
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
-#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
+
+	// 6th row tapers out
+	//                                                        40  50  60 deg C
+	copyArray(config->ignitionIatCorrTable[2], {0, 0, 0, 0, 0, 0, -1, -2});
 }
 
 static float getAdvanceForRpm(int rpm, float advanceMax) {

@@ -44,8 +44,6 @@ static void setDefaultAspireMaps() {
 }
 
 void setFordAspireEngineConfiguration() {
-	setDefaultFrankensoConfiguration();
-
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 

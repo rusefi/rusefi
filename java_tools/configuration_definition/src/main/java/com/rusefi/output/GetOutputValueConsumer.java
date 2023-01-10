@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Pair;
@@ -12,11 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.output.ConfigStructure.ALIGNMENT_FILL_AT;
+import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
 import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetConfigValueConsumer.FILE_HEADER;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
+/**
+ * here we generate C++ code needed for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getoutputname implementation
+ * @see GetConfigValueConsumer
+ */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final List<Pair<String, String>> getterPairs = new ArrayList<>();
@@ -30,14 +35,14 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
-                    this::processOutput, ".");
+        if (state.isStackEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
+                    (readerState, cf, prefix) -> processOutput(cf, prefix), ".");
             iterator.loop();
         }
     }
 
-    private String processOutput(ReaderState readerState, ConfigField cf, String prefix) {
+    private String processOutput(ConfigField cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 

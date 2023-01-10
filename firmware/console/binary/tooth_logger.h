@@ -33,12 +33,33 @@ void LogTriggerCoilState(efitick_t timestamp, bool state);
 
 void LogTriggerInjectorState(efitick_t timestamp, bool state);
 
-struct ToothLoggerBuffer
-{
-	const uint8_t* const Buffer;
-	const size_t Length;
+typedef struct __attribute__ ((packed)) {
+	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
+	uint32_t timestamp;
+	// unfortunately all these fields are required by TS...
+	bool priLevel : 1;
+	bool secLevel : 1;
+	bool trigger : 1;
+	bool sync : 1;
+	bool coil : 1;
+	bool injector : 1;
+} composite_logger_s;
+
+static constexpr size_t toothLoggerEntriesPerBuffer = 250;
+
+struct CompositeBuffer {
+	composite_logger_s buffer[toothLoggerEntriesPerBuffer];
+	size_t nextIdx;
+	Timer startTime;
 };
 
 // Get a reference to the buffer
-// Returns unexpected if no buffer is available
-expected<ToothLoggerBuffer> GetToothLoggerBuffer();
+// Returns nullptr if no buffer is available
+CompositeBuffer* GetToothLoggerBufferNonblocking();
+// Blocks until a buffer is available
+CompositeBuffer* GetToothLoggerBufferBlocking();
+
+// Return a buffer to the pool once its contents have been read
+void ReturnToothLoggerBuffer(CompositeBuffer*);
+
+#include "big_buffer.h"

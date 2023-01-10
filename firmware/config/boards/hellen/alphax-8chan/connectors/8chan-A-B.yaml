@@ -85,6 +85,30 @@ pins:
     ts_name: 13A - Ignition 1
     color: yellow
 
+  - pin: 15A
+    # H144_IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: 15A - IAT
+    color: orange
+
+  - pin: 16A
+    # H144_IN_CLT AIN11 PC2
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: 16A - CLT
+    color: orange
+
+  - pin: 17A
+    # IN_PPS
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: PPS Sensor Input
+    ts_name: 17A - PPS
+    color: orange
+
 
   - pin: 18A
     function: VVT control 4
@@ -125,8 +149,27 @@ pins:
     color: black
     type: gnd
 
+  - pin: 26C
+    function: DC1 positive
+    type: etb
+    color: purple
+
+  - pin: 27C
+    function: DC1 negative
+    type: etb
+    color: purple
+
   - pin: 32A
     function: +5v sensors
+
+  - pin: 33C
+    # H144_IN_AUX3
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Analog 3
+    ts_name: 33C - AN3
+    color: orange
+
 
   - pin: 34A
     function: Power GND
@@ -138,6 +181,15 @@ pins:
     id: EFI_ADC_5
     ts_name: Battery Sense
     type: 12v
+
+  - pin: 8B
+    # H144_OUT_IO10
+    id: G12
+    class: outputs
+    ts_name: 8B - Main Relay LS
+    function: Main relay control
+    type: ls
+    color: purple
 
   - pin: 26B
     function: Power GND

@@ -22,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
-public class ConfigField {
-    private static final Logging log = getLogging(ConfigField.class);
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, null);
+public class ConfigFieldImpl implements ConfigField {
+    private static final Logging log = getLogging(ConfigFieldImpl.class);
+    public static final ConfigFieldImpl VOID = new ConfigFieldImpl(null, "", null, null, null, new int[0], null, false, false, false, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
@@ -47,7 +47,7 @@ public class ConfigField {
 
     private final String tsInfo;
     private final boolean isIterate;
-    private final ReaderState state;
+    private final ReaderStateImpl state;
     private final boolean fsioVisible;
     private final boolean hasAutoscale;
     private final String trueName;
@@ -59,18 +59,18 @@ public class ConfigField {
     /**
      * todo: one day someone should convert this into a builder
      */
-    public ConfigField(ReaderState state,
-                       String name,
-                       String comment,
-                       String arraySizeAsText,
-                       String type,
-                       int[] arraySizes,
-                       @Nullable String tsInfo,
-                       boolean isIterate,
-                       boolean fsioVisible,
-                       boolean hasAutoscale,
-                       String trueName,
-                       String falseName) {
+    public ConfigFieldImpl(ReaderStateImpl state,
+                           String name,
+                           String comment,
+                           String arraySizeAsText,
+                           String type,
+                           int[] arraySizes,
+                           @Nullable String tsInfo,
+                           boolean isIterate,
+                           boolean fsioVisible,
+                           boolean hasAutoscale,
+                           String trueName,
+                           String falseName) {
         this.fsioVisible = fsioVisible;
         this.hasAutoscale = hasAutoscale;
         this.trueName = trueName == null ? "true" : trueName;
@@ -89,7 +89,7 @@ public class ConfigField {
         this.type = type;
         this.arraySizeVariableName = arraySizeAsText;
         this.arraySizes = arraySizes;
-        this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
+        this.tsInfo = tsInfo == null ? null : state.getVariableRegistry().applyVariables(tsInfo);
         this.isIterate = isIterate;
         if (tsInfo != null) {
             String[] tokens = getTokens();
@@ -115,26 +115,37 @@ public class ConfigField {
         return Integer.parseInt(s);
     }
 
+    @Override
     public ConfigStructure getStructureType() {
-        return getState().structures.get(getType());
+        return getState().getStructures().get(getType());
     }
 
+    @Override
     public boolean isArray() {
         return arraySizeVariableName != null || arraySizes.length != 0;
     }
 
+    @Override
+    public String getArraySizeVariableName() {
+        return arraySizeVariableName;
+    }
+
+    @Override
     public String getTrueName() {
         return trueName;
     }
 
+    @Override
     public String getFalseName() {
         return falseName;
     }
 
+    @Override
     public boolean isBit() {
         return BOOLEAN_T.equalsIgnoreCase(type);
     }
 
+    @Override
     public boolean isDirective() {
         return DIRECTIVE_T.equalsIgnoreCase(type);
     }
@@ -151,7 +162,7 @@ public class ConfigField {
     /**
      * @see ConfigFieldParserTest#testParseLine()
      */
-    public static ConfigField parse(ReaderState state, String line) {
+    public static ConfigFieldImpl parse(ReaderStateImpl state, String line) {
         Matcher matcher = FIELD.matcher(line);
         if (!matcher.matches())
             return null;
@@ -178,12 +189,12 @@ public class ConfigField {
         if (matcher.group(5) != null) {
             arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
             arraySizes = new int[2];
-            arraySizes[0] = getSize(state.variableRegistry, matcher.group(3));
-            arraySizes[1] = getSize(state.variableRegistry, matcher.group(5));
+            arraySizes[0] = getSize(state.getVariableRegistry(), matcher.group(3));
+            arraySizes[1] = getSize(state.getVariableRegistry(), matcher.group(5));
         } else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
             arraySizes = new int[1];
-            arraySizes[0] = getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes[0] = getSize(state.getVariableRegistry(), arraySizeAsText);
         } else {
             arraySizes = new int[0];
             arraySizeAsText = null;
@@ -193,7 +204,7 @@ public class ConfigField {
         boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(7));
 
 
-        ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySizes,
+        ConfigFieldImpl field = new ConfigFieldImpl(state, name, comment, arraySizeAsText, type, arraySizes,
                 tsInfo, isIterate, isFsioVisible, hasAutoscale, null, null);
         if (log.debugEnabled())
             log.debug("type " + type);
@@ -220,6 +231,7 @@ public class ConfigField {
         return matcher.matches();
     }
 
+    @Override
     public int getSize(ConfigField next) {
         if (isBit() && next.isBit()) {
             // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
@@ -243,19 +255,16 @@ public class ConfigField {
                 '}';
     }
 
-
-    public String getCommentContent() {
-        if (comment == null || comment.isEmpty())
-            return comment;
-        return comment.trim();
-    }
-
+    @Override
     public int[] getArraySizes() {
         return arraySizes;
     }
 
+    @Override
     public String getComment() {
-        return comment;
+        if (comment == null)
+            return null;
+        return comment.trim();
     }
 
     /**
@@ -263,6 +272,7 @@ public class ConfigField {
      *
      * @see JavaFieldsConsumer#writeJavaFields prefix parameter for structure name
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -270,10 +280,12 @@ public class ConfigField {
     /**
      * @see com.rusefi.newparse.parsing.Type
      */
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public int getElementSize() {
         return isVoid() ? 0 : TypesHelper.getElementSize(state, type);
     }
@@ -281,26 +293,32 @@ public class ConfigField {
     /**
      * this property of array expands field into a bunch of variables like field1 field2 field3 etc
      */
+    @Override
     public boolean isIterate() {
         return isIterate;
     }
 
+    @Override
     public boolean isHasAutoscale() {
         return hasAutoscale;
     }
 
+    @Override
     public ReaderState getState() {
         return state;
     }
 
+    @Override
     public String getTsInfo() {
         return tsInfo;
     }
 
+    @Override
     public boolean isFsioVisible() {
         return fsioVisible;
     }
 
+    @Override
     public String autoscaleSpec() {
         Pair<Integer, Integer> pair = autoscaleSpecPair();
         if (pair == null)
@@ -308,6 +326,7 @@ public class ConfigField {
         return pair.first + ", " + pair.second;
     }
 
+    @Override
     public double autoscaleSpecNumber() {
         Pair<Integer, Integer> pair = autoscaleSpecPair();
         if (pair == null)
@@ -315,6 +334,7 @@ public class ConfigField {
         return 1.0 * pair.second / pair.first;
     }
 
+    @Override
     public Pair<Integer, Integer> autoscaleSpecPair() {
         if (!hasAutoscale) {
             return null;
@@ -356,12 +376,14 @@ public class ConfigField {
         return new Pair<>(mul, div);
     }
 
-    private String[] getTokens() {
+    @Override
+    public String[] getTokens() {
         if (tsInfo == null)
             return new String[0];
         return tsInfo.split(",");
     }
 
+    @Override
     public String getUnits() {
         String[] tokens = getTokens();
         if (tokens.length == 0)
@@ -369,6 +391,7 @@ public class ConfigField {
         return unquote(tokens[0].trim());
     }
 
+    @Override
     public double getMin() {
         String[] tokens = getTokens();
         if (tokens.length < 4)
@@ -376,6 +399,7 @@ public class ConfigField {
         return Double.parseDouble(tokens[3]);
     }
 
+    @Override
     public double getMax() {
         String[] tokens = getTokens();
         if (tokens.length < 5)
@@ -383,6 +407,7 @@ public class ConfigField {
         return Double.parseDouble(tokens[4]);
     }
 
+    @Override
     public int getDigits() {
         String[] tokens = getTokens();
         if (tokens.length < 6)
@@ -401,14 +426,17 @@ public class ConfigField {
         this.isFromIterate = true;
     }
 
+    @Override
     public String getIterateOriginalName() {
         return iterateOriginalName;
     }
 
+    @Override
     public int getIterateIndex() {
         return iterateIndex;
     }
 
+    @Override
     public boolean isFromIterate() {
         return isFromIterate;
     }
@@ -421,6 +449,11 @@ public class ConfigField {
         if (comment == null || comment.trim().isEmpty())
             return quote(name);
         return comment;
+    }
+
+    @Override
+    public String getCommentTemplated() {
+        return state.getVariableRegistry().applyVariables(getComment());
     }
 }
 

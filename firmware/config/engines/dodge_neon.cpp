@@ -19,8 +19,6 @@
 #include "custom_engine.h"
 
 void setDodgeNeon1995EngineConfiguration() {
-	setDefaultFrankensoConfiguration();
-
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
@@ -110,7 +108,6 @@ void setDodgeNeon1995EngineConfiguration() {
 }
 
 void setDodgeNeonNGCEngineConfiguration() {
-	setDefaultFrankensoConfiguration();
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);

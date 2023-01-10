@@ -9,6 +9,8 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.sd_logging_internal;
 		case -770506808:
 			return engine->outputChannels.triggerScopeReady;
+		case 1155330306:
+			return engine->outputChannels.antilagTriggered;
 		case -1441751117:
 			return engine->outputChannels.isFanOn;
 		case 438683128:
@@ -499,6 +501,8 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.lua.acRequestState;
 		case 2055342630:
 			return engine->engineState.lua.luaDisableEtb;
+		case -802271455:
+			return engine->engineState.lua.luaIgnCut;
 		case -893334680:
 			return engine->engineState.sd.tCharge;
 		case 584726739:

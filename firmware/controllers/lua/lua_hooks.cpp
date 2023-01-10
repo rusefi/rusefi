@@ -680,7 +680,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 #endif // EFI_LAUNCH_CONTROL
 
-#if !EFI_UNIT_TEST
+#if EFI_SHAFT_POSITION_INPUT && !EFI_UNIT_TEST
 	lua_register(l, "selfStimulateRPM", [](lua_State* l) {
 		auto rpm = luaL_checkinteger(l, 1);
 		if (rpm < 1) {
@@ -733,19 +733,25 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 #if EFI_BOOST_CONTROL
-	lua_register(l, "setBoostAdd", [](lua_State* l) {
+	lua_register(l, "setBoostTargetAdd", [](lua_State* l) {
 		engine->boostController.luaTargetAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
-	lua_register(l, "setBoostMult", [](lua_State* l) {
+	lua_register(l, "setBoostTargetMult", [](lua_State* l) {
 		engine->boostController.luaTargetMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+	lua_register(l, "setBoostDutyAdd", [](lua_State* l) {
+		engine->boostController.luaOpenLoopAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 #endif // EFI_BOOST_CONTROL
+#if EFI_IDLE_CONTROL
 	lua_register(l, "setIdleAdd", [](lua_State* l) {
 		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+#endif
 	lua_register(l, "setTimingAdd", [](lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
@@ -772,6 +778,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 	lua_register(l, "setEtbDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
+		return 0;
+	});
+	lua_register(l, "setIgnDisabled", [](lua_State* l) {
+		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
 		return 0;
 	});
 #endif // EFI_PROD_CODE
@@ -833,6 +843,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "getGlobalConfigurationVersion", [](lua_State* l) {
+		lua_pushnumber(l, engine->getGlobalConfigurationVersion());
+		return 1;
+	});
+
 	lua_register(l, "setAcDisabled", [](lua_State* l) {
 		auto value = lua_toboolean(l, 1);
 		engine->module<AcController>().unmock().isDisabledByLua = value;
@@ -872,13 +887,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 		doScheduleStopEngine();
 		return 0;
 	});
-
+#if EFI_SHAFT_POSITION_INPUT
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});
-
+#endif // EFI_SHAFT_POSITION_INPUT
 
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", lua_canRxAdd);

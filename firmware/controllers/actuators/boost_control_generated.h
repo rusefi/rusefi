@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jul 14 13:56:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Dec 19 16:58:02 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -114,25 +114,29 @@ struct boost_control_s {
 	 */
 	float openLoopPart = (float)0;
 	/**
+	 * offset 16
+	 */
+	float luaOpenLoopAdd = (float)0;
+	/**
 	 * @@GAUGE_NAME_BOOST_CLOSED_LOOP@@
 	%
-	 * offset 16
+	 * offset 20
 	 */
 	scaled_channel<int8_t, 2, 1> boostControllerClosedLoopPart = (int8_t)0;
 	/**
 	 * need 4 byte alignment
 	units
-	 * offset 17
+	 * offset 21
 	 */
-	uint8_t alignmentFill_at_17[1];
+	uint8_t alignmentFill_at_21[1];
 	/**
 	 * @@GAUGE_NAME_BOOST_TARGET@@
 	kPa
-	 * offset 18
+	 * offset 22
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 };
-static_assert(sizeof(boost_control_s) == 20);
+static_assert(sizeof(boost_control_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Thu Jul 14 13:56:19 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Dec 19 16:58:02 UTC 2022

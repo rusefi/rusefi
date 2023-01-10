@@ -49,11 +49,15 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #endif
 
+    if (engine->engineState.lua.luaIgnCut) {
+        allowSpark.clear(ClearReason::Lua);
+    }
+
 	{
 		// User-configured hard RPM limit, either constant or CLT-lookup
 		// todo: migrate to engineState->desiredRpmLimit to get this variable logged
 		float revLimit = engineConfiguration->useCltBasedRpmLimit
-			? interpolate2d(Sensor::get(SensorType::Clt).value_or(0), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
+			? interpolate2d(Sensor::getOrZero(SensorType::Clt), engineConfiguration->cltRevLimitRpmBins, engineConfiguration->cltRevLimitRpm)
 			: (float)engineConfiguration->rpmHardLimit;
 
 		// Require 50 rpm drop before resuming
@@ -68,6 +72,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		}
 	}
 
+#if EFI_SHAFT_POSITION_INPUT
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0])
 			&& !engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
@@ -77,6 +82,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowFuel.clear(ClearReason::EnginePhase);
 		allowSpark.clear(ClearReason::EnginePhase);
 	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {

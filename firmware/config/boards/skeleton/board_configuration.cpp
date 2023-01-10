@@ -140,10 +140,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionPins[1] = Gpio::D3;
 	engineConfiguration->ignitionPins[2] = Gpio::D2;
 	engineConfiguration->ignitionPins[3] = Gpio::D1;
-	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
 
 	// Board-specific scaling values to convert ADC fraction to Volts.
 	// It is good practice to make the math explicit, but still simple.

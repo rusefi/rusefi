@@ -1,5 +1,19 @@
 -- this controls onCanRx rate as well!
-setTickRate(100)
+setTickRate(300)
+
+timeout = 3000
+
+cltSensor = Sensor.new("clt")
+cltSensor : setTimeout(timeout)
+
+iatSensor = Sensor.new("iat")
+iatSensor : setTimeout(timeout)
+
+rpmSensor = Sensor.new("rpm")
+rpmSensor : setTimeout(timeout)
+
+mapSensor = Sensor.new("map")
+mapSensor : setTimeout(timeout)
 
 hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
@@ -47,7 +61,11 @@ local sendCounter = 2
 local packetCounter = 1
 local payLoadIndex = 0
 
-local groupId = 2
+local groups = { 2, 4, 31 }
+-- todo: smarter array size calculation?
+local groupsSize = 3
+
+local groupIndex = 1
 
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
@@ -58,9 +76,16 @@ function onCanTester(bus, id, dlc, data)
 		-- 		print ("Keep-alive")
 		txCan(1, ecuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
 
-		-- request group 1
+		groupIndex = groupIndex + 1
+		if groupIndex > groupsSize then
+			groupIndex = 1
+		end
+		groupId = groups[groupIndex]
+		print (groupIndex .." " ..groupId)
+
+
 		reqFirst = 0x10 + sendCounter
-		print("Requesting group X again with counter " ..sendCounter)
+		print("Requesting next group " ..groupId .." with counter " ..sendCounter)
 		txCan(1, ecuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
 
 		sendCounter = sendCounter + 1
@@ -87,8 +112,8 @@ function onCanTester(bus, id, dlc, data)
 		ackPacket = 0xB0 + packetCounter
 		print ("Sending ACK B1 " ..ackPacket)
 		txCan(1, ecuId, 0, { ackPacket })
-		-- request group groupId
-		txCan(1, ecuId, 0, { 0x11, 0x00, 0x02, 0x21, groupId })
+		-- request first group from array
+		txCan(1, ecuId, 0, { 0x11, 0x00, 0x02, 0x21, groups[1] })
 		return
 	end
 
@@ -101,6 +126,46 @@ function onCanTester(bus, id, dlc, data)
 
 	if top4 == 2 or top4 == 1 then
 		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
+
+		if groupId == 2 and payLoadIndex == 0 then
+			rpmL = data[7]
+			rpmH = data[8]
+			rpm = rpmH * rpmL / 5
+			print(rpmL .." " ..rpmH .." rpm " ..rpm)
+			rpmSensor : set(rpm)
+		end
+
+		if groupId == 2 and payLoadIndex == 1 then
+			elL = data[3]
+			elH = data[4]
+			el = 100 * elH / elL
+			print(elL .." " ..elH .." EL " ..el)
+		end
+
+		if groupId == 2 and payLoadIndex == 2 then
+			mapL = data[2]
+			mapH = data[3]
+			map = 1000.0 * mapH / mapL
+			print(mapL .." " ..mapH .." MAP " ..map)
+			mapSensor : set(map / 10)
+		end
+
+		if groupId == 4 and payLoadIndex == 1 then
+			cltL = data[6]
+			cltH = data[7]
+			clt = cltL * (cltH - 100) / 10
+			print(cltL .." " ..cltH .." CLT " ..clt)
+			cltSensor : set(clt)
+		end
+
+		if groupId == 4 and payLoadIndex == 2 then
+			iatL = data[2]
+			iatH = data[3]
+			iat = iatL * (iatH - 100) / 10
+			print(iatL .." " ..iatH .." IAT " ..iat)
+			iatSensor : set(iat)
+		end
+
 		payLoadIndex = payLoadIndex + 1
 
 

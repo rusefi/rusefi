@@ -7,8 +7,8 @@ import java.util.List;
 
 public abstract class FieldsStrategy {
     public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
-        if (state.stack.isEmpty()) {
-            return writeFields(structure.tsFields, "", sensorTsPosition);
+        if (state.isStackEmpty()) {
+            return writeFields(structure.getTsFields(), "", sensorTsPosition);
         }
         return sensorTsPosition;
     }

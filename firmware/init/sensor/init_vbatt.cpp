@@ -23,5 +23,5 @@ void initVbatt() {
 }
 
 void deinitVbatt() {
-	AdcSubscription::UnsubscribeSensor(vbattSensor);
+	AdcSubscription::UnsubscribeSensor(vbattSensor, engineConfiguration->vbattAdcChannel);
 }

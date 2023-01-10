@@ -92,6 +92,13 @@ public:
 	 */
 	void incrementShaftSynchronizationCounter();
 
+#if EFI_UNIT_TEST
+	/**
+	 * used for trigger export only
+	 */
+	float gapRatio[PWM_PHASE_MAX_COUNT * 6];
+#endif // EFI_UNIT_TEST
+
 	int64_t getTotalEventCounter() const;
 
 	expected<TriggerDecodeResult> decodeTriggerEvent(

@@ -16,6 +16,8 @@ include ':version2header'
 project(':version2header').projectDir = new File('version2header')
 include ':bin2header'
 project(':bin2header').projectDir = new File('bin2header')
+include ':config_definition_base'
+project(':config_definition_base').projectDir = new File('configuration_definition_base')
 include ':config_definition'
 project(':config_definition').projectDir = new File('configuration_definition')
 include ':ts_plugin_launcher'

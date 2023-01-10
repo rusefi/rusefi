@@ -139,10 +139,6 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	if (hasFirmwareErrorFlag)
 		return true;
 
-#if EFI_SIMULATOR
-	printf("sim_warning %s\r\n", fmt);
-#endif /* EFI_SIMULATOR */
-
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	// we just had this same warning, let's not spam
 	if (engine->engineState.warnings.isWarningNow(code) || !warningEnabled) {

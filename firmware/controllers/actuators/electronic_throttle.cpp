@@ -320,6 +320,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 	percent_t targetPosition = idlePosition + getLuaAdjustment();
 
+#if EFI_ANTILAG_SYSTEM 
+    if (engine->antilagController.isAntilagCondition) {
+	    targetPosition += engineConfiguration->ALSEtbAdd;
+    }
+#endif /* EFI_ANTILAG_SYSTEM */
+
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
 	trim = clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
@@ -606,10 +612,12 @@ void EtbController::update() {
 	}
 
 	TpsState localReason = TpsState::None;
-	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
-		localReason = TpsState::EngineStopped;
-	} else if (etbTpsErrorCounter > 50) {
+	if (etbTpsErrorCounter > 50) {
 		localReason = TpsState::IntermittentTps;
+#if EFI_SHAFT_POSITION_INPUT
+	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+		localReason = TpsState::EngineStopped;
+#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > 50) {
 		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {

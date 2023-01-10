@@ -67,8 +67,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
 		case -338157684:
 			return engineConfiguration->launchControlEnabled;
-		case -905762494:
-			return engineConfiguration->rollingLaunchEnabled;
+		case 329821802:
+			return engineConfiguration->anotherUnusedHere444;
 		case -933524784:
 			return engineConfiguration->antiLagEnabled;
 		case -54973711:
@@ -149,6 +149,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->specs.cylindersCount;
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
+		case 1523832034:
+			return engineConfiguration->ALSMaxTPS;
 		case -1976636992:
 			return engineConfiguration->boostControlMinRpm;
 		case -1976634808:
@@ -589,6 +591,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->invertVvtControlExhaust;
 		case 1486014321:
 			return engineConfiguration->useBiQuadOnAuxSpeedSensors;
+		case -105464622:
+			return engineConfiguration->sdTriggerLog;
+		case -1027820105:
+			return engineConfiguration->ALSActivateInverted;
 		case -153724425:
 			return engineConfiguration->tempBooleanForVerySpecialLogic;
 		case -1492464952:
@@ -843,6 +849,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->vvtControlMinRpm;
 		case -904771683:
 			return engineConfiguration->launchFuelAdderPercent;
+		case 1057701663:
+			return engineConfiguration->etbJamTimeout;
 		case -86185846:
 			return engineConfiguration->etbExpAverageLength;
 		case -275312941:
@@ -967,6 +975,8 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->acDelay;
 		case -1032938305:
 			return engineConfiguration->fordInjectorSmallPulseBreakPoint;
+		case -929987018:
+			return engineConfiguration->etbJamIntegratorLimit;
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
 		case 1145081382:
@@ -1009,6 +1019,28 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->tuneHidingKey;
 		case -1743759953:
 			return engineConfiguration->etbDutyShutdownThreshold;
+		case 1532957848:
+			return engineConfiguration->ALSMinRPM;
+		case 1523829850:
+			return engineConfiguration->ALSMaxRPM;
+		case 1830002033:
+			return engineConfiguration->alsMaxDuration;
+		case 1532941388:
+			return engineConfiguration->ALSMinCLT;
+		case 1523813390:
+			return engineConfiguration->ALSMaxCLT;
+		case -1118241790:
+			return engineConfiguration->alsMinTimeBetween;
+		case -731677323:
+			return engineConfiguration->alsEtbPosition;
+		case -2021435668:
+			return engineConfiguration->ALSIdleAdd;
+		case 1232469673:
+			return engineConfiguration->ALSEtbAdd;
+		case -1404414917:
+			return engineConfiguration->ALSSkipRatio;
+		case 612659807:
+			return engineConfiguration->ALSMaxDriverThrottleIntent;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -1175,9 +1207,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchControlEnabled = (int)value;
 		return;
 	}
-		case -905762494:
+		case 329821802:
 	{
-		engineConfiguration->rollingLaunchEnabled = (int)value;
+		engineConfiguration->anotherUnusedHere444 = (int)value;
 		return;
 	}
 		case -933524784:
@@ -1378,6 +1410,11 @@ void setConfigValueByName(const char *name, float value) {
 		case 1425664391:
 	{
 		engineConfiguration->cylinderBore = value;
+		return;
+	}
+		case 1523832034:
+	{
+		engineConfiguration->ALSMaxTPS = (int)value;
 		return;
 	}
 		case -1976636992:
@@ -2480,6 +2517,16 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useBiQuadOnAuxSpeedSensors = (int)value;
 		return;
 	}
+		case -105464622:
+	{
+		engineConfiguration->sdTriggerLog = (int)value;
+		return;
+	}
+		case -1027820105:
+	{
+		engineConfiguration->ALSActivateInverted = (int)value;
+		return;
+	}
 		case -153724425:
 	{
 		engineConfiguration->tempBooleanForVerySpecialLogic = (int)value;
@@ -3115,6 +3162,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchFuelAdderPercent = (int)value;
 		return;
 	}
+		case 1057701663:
+	{
+		engineConfiguration->etbJamTimeout = (int)value;
+		return;
+	}
 		case -86185846:
 	{
 		engineConfiguration->etbExpAverageLength = (int)value;
@@ -3425,6 +3477,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
 		return;
 	}
+		case -929987018:
+	{
+		engineConfiguration->etbJamIntegratorLimit = (int)value;
+		return;
+	}
 		case -1256141959:
 	{
 		engineConfiguration->hpfpCamLobes = (int)value;
@@ -3528,6 +3585,61 @@ void setConfigValueByName(const char *name, float value) {
 		case -1743759953:
 	{
 		engineConfiguration->etbDutyShutdownThreshold = value;
+		return;
+	}
+		case 1532957848:
+	{
+		engineConfiguration->ALSMinRPM = (int)value;
+		return;
+	}
+		case 1523829850:
+	{
+		engineConfiguration->ALSMaxRPM = (int)value;
+		return;
+	}
+		case 1830002033:
+	{
+		engineConfiguration->alsMaxDuration = value;
+		return;
+	}
+		case 1532941388:
+	{
+		engineConfiguration->ALSMinCLT = (int)value;
+		return;
+	}
+		case 1523813390:
+	{
+		engineConfiguration->ALSMaxCLT = (int)value;
+		return;
+	}
+		case -1118241790:
+	{
+		engineConfiguration->alsMinTimeBetween = (int)value;
+		return;
+	}
+		case -731677323:
+	{
+		engineConfiguration->alsEtbPosition = (int)value;
+		return;
+	}
+		case -2021435668:
+	{
+		engineConfiguration->ALSIdleAdd = (int)value;
+		return;
+	}
+		case 1232469673:
+	{
+		engineConfiguration->ALSEtbAdd = (int)value;
+		return;
+	}
+		case -1404414917:
+	{
+		engineConfiguration->ALSSkipRatio = (int)value;
+		return;
+	}
+		case 612659807:
+	{
+		engineConfiguration->ALSMaxDriverThrottleIntent = (int)value;
 		return;
 	}
 	}

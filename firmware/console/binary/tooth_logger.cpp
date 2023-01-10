@@ -11,18 +11,6 @@
 
 #if EFI_TOOTH_LOGGER
 
-typedef struct __attribute__ ((packed)) {
-	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
-	uint32_t timestamp;
-	// unfortunately all these fields are required by TS...
-	bool priLevel : 1;
-	bool secLevel : 1;
-	bool trigger : 1;
-	bool sync : 1;
-	bool coil : 1;
-	bool injector : 1;
-} composite_logger_s;
-
 /**
  * Engine idles around 20Hz and revs up to 140Hz, at 60/2 and 8 cylinders we have about 20Khz events
  * If we can read buffer at 50Hz we want buffer to be about 400 elements.
@@ -75,15 +63,8 @@ void DisableToothLogger() {
 
 #else // not EFI_UNIT_TEST
 
-static constexpr size_t entriesPerBuffer = 250;
 static constexpr size_t totalEntryCount = BIG_BUFFER_SIZE / sizeof(composite_logger_s);
-static constexpr size_t bufferCount = totalEntryCount / entriesPerBuffer;
-
-struct CompositeBuffer {
-	composite_logger_s buffer[entriesPerBuffer];
-	size_t nextIdx;
-	Timer startTime;
-};
+static constexpr size_t bufferCount = totalEntryCount / toothLoggerEntriesPerBuffer;
 
 static CompositeBuffer* buffers = nullptr;
 static chibios_rt::Mailbox<CompositeBuffer*, bufferCount> freeBuffers CCM_OPTIONAL;
@@ -146,35 +127,41 @@ void DisableToothLogger() {
 	setToothLogReady(false);
 }
 
-expected<ToothLoggerBuffer> GetToothLoggerBuffer() {
-	chibios_rt::CriticalSectionLocker csl;
-
+static CompositeBuffer* GetToothLoggerBufferImpl(sysinterval_t timeout) {
 	CompositeBuffer* buffer;
-	msg_t msg = filledBuffers.fetchI(&buffer);
+	msg_t msg = filledBuffers.fetch(&buffer, timeout);
 
 	if (msg == MSG_TIMEOUT) {
 		setToothLogReady(false);
-		return unexpected;
+		return nullptr;
 	}
 
 	if (msg != MSG_OK) {
 		// What even happened if we didn't get timeout, but also didn't get OK?
-		return unexpected;
+		return nullptr;
 	}
 
-	size_t entryCount = buffer->nextIdx;
-	buffer->nextIdx = 0;
+	return buffer;
+}
 
-	// Return this buffer to the free list
-	msg = freeBuffers.postI(buffer);
-	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail", unexpected);
+CompositeBuffer* GetToothLoggerBufferNonblocking() {
+	return GetToothLoggerBufferImpl(TIME_IMMEDIATE);
+}
+
+CompositeBuffer* GetToothLoggerBufferBlocking() {
+	return GetToothLoggerBufferImpl(TIME_INFINITE);
+}
+
+void ReturnToothLoggerBuffer(CompositeBuffer* buffer) {
+	chibios_rt::CriticalSectionLocker csl;
+
+	msg_t msg = freeBuffers.postI(buffer);
+	efiAssertVoid(OBD_PCM_Processor_Fault, msg == MSG_OK, "Composite logger post to free buffer fail");
 
 	// If the used list is empty, clear the ready flag
 	if (filledBuffers.getUsedCountI() == 0) {
 		setToothLogReady(false);
 	}
-
-	return ToothLoggerBuffer{ reinterpret_cast<uint8_t*>(buffer->buffer), entryCount * sizeof(composite_logger_s)};
 }
 
 static CompositeBuffer* findBuffer(efitick_t timestamp) {
@@ -190,6 +177,7 @@ static CompositeBuffer* findBuffer(efitick_t timestamp) {
 		// This ensures the user sees *something* even if they don't have enough trigger events
 		// to fill the buffer.
 		buffer->startTime.reset(timestamp);
+		buffer->nextIdx = 0;
 
 		currentBuffer = buffer;
 	}

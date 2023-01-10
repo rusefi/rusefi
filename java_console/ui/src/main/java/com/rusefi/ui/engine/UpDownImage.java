@@ -263,6 +263,12 @@ public class UpDownImage extends JPanel {
             return;
         }
 
+        // '-1' actually means 'not first wheel' it's coming from
+        if (!Double.isNaN(upDown.prevGap))
+            g.drawString(String.format("gap %.2f", upDown.prevGap), x1, d.height / 2);
+        if (!Double.isNaN(upDown.gap))
+            g.drawString(String.format("gap %.2f", upDown.gap), x2, d.height / 2);
+
         if (!this.renderText) {
             return;
         }

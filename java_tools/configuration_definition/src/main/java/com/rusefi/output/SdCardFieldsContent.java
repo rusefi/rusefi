@@ -13,17 +13,17 @@ public class SdCardFieldsContent {
     public String home = "engine->outputChannels";
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
-                    this::processOutput, ".");
+        if (state.isStackEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
+                    (configField, prefix, prefix2) -> processOutput(prefix, prefix2), ".");
             iterator.loop();
             String content = iterator.getContent();
             body.append(content);
         }
     }
 
-    private String processOutput(ReaderState readerState, ConfigField configField, String prefix) {
-        if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT))
+    private String processOutput(ConfigField configField, String prefix) {
+        if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
             return "";
         if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
             return "";
@@ -32,16 +32,16 @@ public class SdCardFieldsContent {
 
         if (configField.isFromIterate()) {
             String name = configField.getIterateOriginalName() + "[" + (configField.getIterateIndex() - 1) + "]";
-            return getLine(readerState, configField, prefix, prefix + name);
+            return getLine(configField, prefix, prefix + name);
         } else {
-            return getLine(readerState, configField, prefix, prefix + configField.getName());
+            return getLine(configField, prefix, prefix + configField.getName());
         }
     }
 
-    private String getLine(ReaderState readerState, ConfigField configField, String prefix, String name) {
+    private String getLine(ConfigField configField, String prefix, String name) {
         return "\t{" + home + "." + name +
                 ", "
-                + DataLogConsumer.getComment(prefix, configField, readerState.variableRegistry) +
+                + DataLogConsumer.getHumanGaugeName(prefix, configField) +
                 ", " +
                 quote(configField.getUnits()) +
                 ", " +

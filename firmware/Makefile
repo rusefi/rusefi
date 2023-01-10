@@ -223,6 +223,7 @@ endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
+$(info CPU_HWLAYER:   $(CPU_HWLAYER))
 $(info CONFDIR:       $(CONFDIR))
 $(info LDSCRIPT:      $(LDSCRIPT))
 

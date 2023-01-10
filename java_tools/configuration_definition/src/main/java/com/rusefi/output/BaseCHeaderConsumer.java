@@ -12,11 +12,11 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         ConfigField configField = iterator.cf;
         if (configField.isBit()) {
             // unused bits are needed for proper struct memsize
-            String comment = "\t/**" + EOL + packComment(configField.getCommentContent(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
+            String comment = "\t/**" + EOL + packComment(configField.getComment(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
-        String cEntry = getComment(configField.getCommentContent(), iterator.currentOffset, configField.getUnits());
+        String cEntry = getComment(configField.getComment(), iterator.currentOffset, configField.getUnits());
 
         String typeName = configField.getType();
 
@@ -34,7 +34,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             }
             cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL;
         }
         return cEntry;
     }
@@ -63,15 +63,15 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
-        if (structure.comment != null) {
-            content.append("/**" + EOL + packComment(structure.comment, "") + EOL + "*/" + EOL);
+        if (structure.getComment() != null) {
+            content.append("/**" + EOL + packComment(structure.getComment(), "") + EOL + "*/" + EOL);
         }
 
-        content.append("// start of " + structure.name + EOL);
-        content.append("struct " + structure.name + " {" + EOL);
+        content.append("// start of " + structure.getName() + EOL);
+        content.append("struct " + structure.getName() + " {" + EOL);
 
-        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(structure.cFields);
-        for (int i = 0; i < structure.cFields.size(); i++) {
+        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(structure.getcFields());
+        for (int i = 0; i < structure.getcFields().size(); i++) {
             iterator.start(i);
             content.append(getHeaderText(iterator));
 
@@ -80,7 +80,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         }
 
         content.append("};" + EOL);
-        content.append("static_assert(sizeof(" + structure.name + ") == " + iterator.currentOffset + ");\n");
+        content.append("static_assert(sizeof(" + structure.getName() + ") == " + iterator.currentOffset + ");\n");
         content.append(EOL);
     }
 

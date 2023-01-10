@@ -84,7 +84,7 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 		m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
 					(FAST_CALLBACK_PERIOD_MS / 1000.)),
 		interpolate3d(engineConfiguration->hpfpTarget,
-			      engineConfiguration->hpfpTargetLoadBins, Sensor::get(SensorType::Map).value_or(0), // TODO: allow other load axis, like we claim to
+			      engineConfiguration->hpfpTargetLoadBins, Sensor::getOrZero(SensorType::Map), // TODO: allow other load axis, like we claim to
 			      engineConfiguration->hpfpTargetRpmBins, rpm));
 
 	auto fuelPressure = Sensor::get(SensorType::FuelPressureHigh);
@@ -146,7 +146,7 @@ void HpfpController::onFastCallback() {
 		m_requested_pump = 0;
 		m_deadtime = 0;
 	} else {
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 		efiAssertVoid(OBD_PCM_Processor_Fault, engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
 #endif // EFI_PROD_CODE
 		// Convert deadtime from ms to degrees based on current RPM

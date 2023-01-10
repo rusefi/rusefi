@@ -72,7 +72,13 @@ void detectHellenBoardType();
 #define H144_GP1 Gpio::D4
 // also IO2/IO5 on rev 0.6
 #define H144_GP2 Gpio::D7
-
+#define H144_GP3 Gpio::G10
+#define H144_GP4 Gpio::G9
+#define H144_GP5 Gpio::G15
+#define H144_GP6 Gpio::D8
+#define H144_GP7 Gpio::F15
+#define H144_GP8 Gpio::E10
+#define H144_GP9 Gpio::F2
 
 #define H144_OUT_IO1 Gpio::D3
 #define H144_OUT_IO2 Gpio::A9
@@ -121,9 +127,11 @@ void detectHellenBoardType();
 
 // AIN16
 #define H144_IN_RES2 Gpio::F10
+#define H144_ADC_IN_RES2 ADC_CHANNEL_IN8
 
 // AIN8
 #define H144_IN_RES3 Gpio::F8
+#define H144_ADC_IN_RES3 ADC_CHANNEL_IN6
 
 
 #define H144_IN_AUX1 EFI_ADC_8

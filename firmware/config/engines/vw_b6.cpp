@@ -20,6 +20,8 @@ static void commonPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+    setTable(config->injectionPhase, -180.0f);
+
 	engineConfiguration->etbIdleThrottleRange = 10;
 	engineConfiguration->idlePidRpmDeadZone = 500;
 	engineConfiguration->idleMode = IM_AUTO;
@@ -39,7 +41,6 @@ static void commonPassatB6() {
 //	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	engineConfiguration->enableAemXSeries = true;
-	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
@@ -135,6 +136,7 @@ static void commonPassatB6() {
 }
 
 
+// MAF signal frequency after hardware divider x16, Hz
 static const float hardCodedFreqBins[] = {139,
 		152,
 		180,
@@ -143,6 +145,7 @@ static const float hardCodedFreqBins[] = {139,
 		300,
 		365};
 
+// MAF grams per second
 static const float hardCodedGperSValues[] {
 		3.58,
 		4.5,
@@ -171,6 +174,7 @@ void setProteusVwPassatB6() {
 			config->scriptCurve1[mi] = 4000;
 		}
 	}
+	strcpy(engineConfiguration->scriptCurveName[0], "MAFcurve");
 
 
 	commonPassatB6();
@@ -211,6 +215,8 @@ void setProteusVwPassatB6() {
 void setMreVwPassatB6() {
 #if HW_MICRO_RUSEFI
 	commonPassatB6();
+
+	engineConfiguration->afr.hwChannel = MRE_IN_ANALOG_VOLT_10;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
 

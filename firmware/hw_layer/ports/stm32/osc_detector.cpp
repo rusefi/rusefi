@@ -16,7 +16,7 @@
 
 #include "pch.h"
 
-#ifdef ENABLE_AUTO_DETECT_HSE
+#if ENABLE_AUTO_DETECT_HSE
 
 float hseFrequencyMhz;
 uint8_t autoDetectedRoundedMhz;

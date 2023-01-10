@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
                 if (!configField.isBit()) {
                     sb.append(configField.getName()).append("(");
 
-                    String string = readerState.variableRegistry.applyVariables(configField.getComment());
+                    String string = configField.getCommentTemplated();
                     if (string == null || string.isEmpty()) {
                         string = quote(configField.getName());
                     } else if (string.charAt(0) != '"') {

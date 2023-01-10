@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.opensr5.ini.field.IniField;
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.newparse.parsing.Type;
@@ -17,8 +18,6 @@ import static com.rusefi.output.JavaSensorsConsumer.quote;
  */
 @SuppressWarnings({"StringConcatenationInsideStringBufferAppend", "DanglingJavadoc"})
 public class TsOutput {
-    // https://github.com/rusefi/web_backend/issues/166
-    private static final int MSQ_LENGTH_LIMIT = 34;
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final boolean isConstantsSection;
     private final StringBuilder tsHeader = new StringBuilder();
@@ -32,8 +31,8 @@ public class TsOutput {
         return tsHeader.toString();
     }
 
-    public StringBuilder getSettingContextHelp() {
-        return settingContextHelp;
+    public String getSettingContextHelp() {
+        return settingContextHelp.toString();
     }
 
     public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
@@ -51,12 +50,12 @@ public class TsOutput {
                  */
                 if (!usedNames.add(nameWithPrefix)
                         && !isConstantsSection
-                        && !configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)
+                        && !configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)
                         && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
                     throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
-                if (configField.getName().startsWith(ConfigStructure.ALIGNMENT_FILL_AT)) {
+                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
                     tsPosition += configField.getSize(next);
                     return tsPosition;
                 }
@@ -69,26 +68,18 @@ public class TsOutput {
 
                 ConfigStructure cs = configField.getStructureType();
                 if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
-                    String commentContent = configField.getCommentContent();
-                    commentContent = state.variableRegistry.applyVariables(commentContent);
-                    commentContent = ConfigField.unquote(commentContent);
-                    int newLineIndex = commentContent.indexOf("\\n");
-                    if (newLineIndex != -1) {
-                        // we might have detailed long comment for header javadoc but need a short field name for logs/rusEFI online
-                        commentContent = commentContent.substring(0, newLineIndex);
-                    }
-                    if (!isConstantsSection && commentContent.length() > MSQ_LENGTH_LIMIT)
-                        throw new IllegalStateException("[" + commentContent + "] is too long for rusEFI online at " + commentContent.length());
+                    String commentContent = configField.getCommentTemplated();
+                    commentContent = ConfigFieldImpl.unquote(commentContent);
                     settingContextHelp.append("\t" + nameWithPrefix + " = " + quote(commentContent) + EOL);
                 }
 
                 if (cs != null) {
-                    String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-                    return writeFields(cs.tsFields, prefix + extraPrefix, tsPosition);
+                    String extraPrefix = cs.isWithPrefix() ? configField.getName() + "_" : "";
+                    return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
                 if (configField.isBit()) {
-                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_BIT_PREFIX)) {
+                    if (!configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX)) {
                         tsHeader.append(nameWithPrefix + " = bits, U32,");
                         tsHeader.append(" " + tsPosition + ", [");
                         tsHeader.append(bitIndex + ":" + bitIndex);
@@ -102,8 +93,8 @@ public class TsOutput {
                     return tsPosition;
                 }
 
-                if (configField.getState().tsCustomLine.containsKey(configField.getType())) {
-                    String bits = configField.getState().tsCustomLine.get(configField.getType());
+                if (configField.getState().getTsCustomLine().containsKey(configField.getType())) {
+                    String bits = configField.getState().getTsCustomLine().get(configField.getType());
                     if (!bits.startsWith("bits")) {
                         bits = handleTsInfo(configField, bits, 5);
                     }
@@ -112,7 +103,7 @@ public class TsOutput {
                     tsHeader.append(nameWithPrefix + " = " + bits);
 
                     if (!configField.getName().equals(next.getName()))
-                        tsPosition += configField.getState().tsCustomSize.get(configField.getType());
+                        tsPosition += configField.getState().getTsCustomSize().get(configField.getType());
                 } else if (configField.getArraySizes().length == 0) {
                     tsHeader.append(nameWithPrefix + " = scalar, ");
                     tsHeader.append(TypesHelper.convertToTs(configField.getType()) + ",");
@@ -148,7 +139,7 @@ public class TsOutput {
         };
         sensorTsPosition = strategy.run(state, structure, sensorTsPosition);
 
-        if (state.stack.isEmpty()) {
+        if (state.isStackEmpty()) {
             tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
         }
         return sensorTsPosition;

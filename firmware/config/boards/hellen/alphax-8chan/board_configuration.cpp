@@ -31,11 +31,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[2] = H144_LS_3;
 	engineConfiguration->injectionPins[3] = H144_LS_4;
 
-	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clutchDownPin = Gpio::Unassigned;
@@ -56,10 +51,18 @@ static void setupEtb() {
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_GP2;
+	engineConfiguration->etbIo[0].disablePin = H144_GP5;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 
+	// PWM pin
+	engineConfiguration->etbIo[1].controlPin = H144_GP4;
+	// DIR pin
+	engineConfiguration->etbIo[1].directionPin1 = H144_GP3;
+	// Disable pin
+	engineConfiguration->etbIo[1].disablePin = Gpio::Unassigned;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = Gpio::Unassigned;
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }
@@ -69,11 +72,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = H144_IGN_3;
 	engineConfiguration->ignitionPins[3] = H144_IGN_4;
-
-	// disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
@@ -177,15 +175,12 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
-    // todo: use board ID condition? below D no SD, D and up with SD?
     engineConfiguration->isSdCardEnabled = true;
 
-	engineConfiguration->acSwitch = Gpio::Unassigned;
-	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
-	engineConfiguration->fanPin = H144_OUT_IO11;
 	engineConfiguration->mainRelayPin = H144_OUT_IO10;
+	engineConfiguration->fanPin = H144_OUT_IO11;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
     engineConfiguration->tachOutputPin = H144_OUT_IO13;
-    engineConfiguration->boostControlPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

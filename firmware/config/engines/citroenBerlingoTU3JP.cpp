@@ -15,8 +15,6 @@
 #include "custom_engine.h"
 
 void setCitroenBerlingoTU3JPConfiguration() {
-	setDefaultFrankensoConfiguration();
-
 	/**
 	 * Base engine setting
 	 */

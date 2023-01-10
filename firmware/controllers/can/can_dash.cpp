@@ -609,11 +609,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x361, 8);
 			/* Fuel pressure */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::FuelPressureLow));
+			tmp =  (uint16_t)((Sensor::getOrZero(SensorType::FuelPressureLow) + 101.3) * 10);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp&0x00ff);
 			/* Oil pressure */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::OilPressure));
+			tmp =  (uint16_t)((Sensor::getOrZero(SensorType::OilPressure) + 101.3) * 10);
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* Engine Demand */
@@ -729,7 +729,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(CanCategory::NBC, 0x368, 8);
 			/* Wideband Sensor 1 */
-			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000);
+			tmp = (uint16_t)(Sensor::getOrZero(SensorType::Lambda1) * 1000 * 14.7);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wideband Sensor 2 */

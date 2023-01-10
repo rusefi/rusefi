@@ -29,15 +29,15 @@ jobs:
       working-directory: ./firmware/
       run: ./gen_default_everything.sh
 
-    - name: Compile Simulator
+    - name: Compile Linux Simulator
       working-directory: ./simulator/
       run: ./compile.sh
 
-    - name: Run Simulator (10 seconds)
+    - name: Run Linux Simulator for 10 seconds
       working-directory: ./simulator/
       run: ./build/rusefi_simulator 10
 
-    - name: Upload built simulator
+    - name: Upload Linux built simulator
       uses: actions/upload-artifact@v3
       with:
         name: rusefi_simulator_linux

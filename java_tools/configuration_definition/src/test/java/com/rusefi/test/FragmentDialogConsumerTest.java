@@ -1,17 +1,15 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.FragmentDialogConsumer;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class FragmentDialogConsumerTest {
     @Test
     public void generateFragmentDialog() {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         String outputChannels = "" +
                 "\n" +
                 "" +

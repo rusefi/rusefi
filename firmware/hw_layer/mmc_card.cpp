@@ -19,6 +19,7 @@
 #include "buffered_writer.h"
 #include "status_loop.h"
 #include "binary_logging.h"
+#include "tooth_logger.h"
 
 static bool fs_ready = false;
 
@@ -182,7 +183,11 @@ static void prepareLogFileName() {
 		ptr = itoa10(&logName[PREFIX_LEN], logFileIndex);
 	}
 
-	strcat(ptr, DOT_MLG);
+	if (engineConfiguration->sdTriggerLog) {
+		strcat(ptr, ".teeth");
+	} else {
+		strcat(ptr, DOT_MLG);
+	}
 }
 
 /**
@@ -327,14 +332,12 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 	
-	if (!engineConfiguration->isSdCardEnabled) {
+	if (!engineConfiguration->isSdCardEnabled || engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 		return nullptr;
 	}
 
 	// Configures and activates the MMC peripheral.
 	mmcSpiDevice = engineConfiguration->sdCardSpiDevice;
-
-	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", nullptr);
 
 	// todo: reuse initSpiCs method?
 	mmc_hs_spicfg.ssport = mmc_ls_spicfg.ssport = getHwPort("mmc", engineConfiguration->sdCardCsPin);
@@ -364,10 +367,14 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 }
 #endif /* HAL_USE_MMC_SPI */
 
+#ifndef RE_SDC_MODE
+#define RE_SDC_MODE SDC_MODE_4BIT
+#endif // RE_SDC_MODE
+
 // Some ECUs are wired for SDIO/SDMMC instead of SPI
 #ifdef EFI_SDC_DEVICE
 static const SDCConfig sdcConfig = {
-	SDC_MODE_4BIT
+	RE_SDC_MODE
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
@@ -502,6 +509,11 @@ private:
 
 static NO_CACHE SdLogBufferWriter logBuffer;
 
+// Log 'regular' ECU log to MLG file
+static void mlgLogger();
+
+// Log binary trigger log
+static void sdTriggerLogger();
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
@@ -517,6 +529,14 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		engine->outputChannels.sd_logging_internal = true;
 	#endif
 
+	if (engineConfiguration->sdTriggerLog) {
+		sdTriggerLogger();
+	} else {
+		mlgLogger();
+	}
+}
+
+void mlgLogger() {
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
 		// Don't do this check at all if using SDMMC interface instead of SPI
@@ -550,6 +570,20 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		auto period = 1e6 / freq;
 		chThdSleepMicroseconds((int)period);
 	}
+}
+
+static void sdTriggerLogger() {
+#if EFI_TOOTH_LOGGER
+	EnableToothLogger();
+
+	while (true) {
+		auto buffer = GetToothLoggerBufferBlocking();
+
+		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
+
+		ReturnToothLoggerBuffer(buffer);
+	}
+#endif /* EFI_TOOTH_LOGGER */
 }
 
 bool isSdCardAlive(void) {

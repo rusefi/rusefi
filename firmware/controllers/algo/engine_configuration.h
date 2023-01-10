@@ -46,7 +46,6 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
-void setDefaultFrankensoConfiguration();
 
 typedef void (*configuration_callback_t)(engine_configuration_s*);
 
