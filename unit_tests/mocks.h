@@ -25,12 +25,11 @@ public:
 	MOCK_METHOD(void, setIdlePosition, (percent_t pos), (override));
 	MOCK_METHOD(void, setWastegatePosition, (percent_t pos), (override));
 	MOCK_METHOD(void, autoCalibrateTps, (), (override));
-	MOCK_METHOD(const pid_state_s*, getPidState, (), (const, override));
+	MOCK_METHOD(const pid_state_s&, getPidState, (), (const, override));
 	MOCK_METHOD(void, setLuaAdjustment, (percent_t adjustment), (override));
 
 
 	// ClosedLoopController mocks
-	MOCK_METHOD(expected<percent_t>, getOutput, (), (override));
 	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (override));
 	MOCK_METHOD(expected<percent_t>, observePlant, (), (const, override));
 	MOCK_METHOD(expected<percent_t>, getOpenLoop, (percent_t setpoint), (override));
