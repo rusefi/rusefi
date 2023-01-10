@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - Antilag #2403
  - Lua 'setIgnDisabled' function for all kinds of cranking safety systems
  - STM32Cube v2.12
+ - detect and ignore doubled trigger edges #4656
 
 ### Fixed
  - multi-line tooltips in TS #4927
