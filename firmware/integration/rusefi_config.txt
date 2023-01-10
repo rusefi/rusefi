@@ -466,7 +466,7 @@ bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled;
-bit anotherUnusedHere444
+bit doNotFilterTriggerEdgeNoise,"without filter","with filter";"Detect double trigger edges"
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
