@@ -55,7 +55,7 @@ public class SignatureHelper {
             return null;
         signature = signature.substring(PREFIX.length()).trim();
         String[] elements = signature.split("\\.");
-        if (elements.length != 5)
+        if (elements.length != 6)
             return null;
 
         String branch = elements[0];
