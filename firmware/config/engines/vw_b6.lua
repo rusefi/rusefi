@@ -173,6 +173,87 @@ end
 
 canRxAdd(ECU_BUS, ACC_GRA, onAccGra)
 
+motorBreCounter = 0
+function onMotorBre(bus, id, dlc, data)
+ motorBreCounter = (motorBreCounter + 1) % 16
+
+    setBitRange(motorBreData, 8, 4, motorBreCounter)
+    xorChecksum(motorBreData, 1)
+
+ txCan(TCU_BUS, MOTOR_BRE, 0, motorBreData)
+end
+
+motor2counter = 0
+function onMotor2(bus, id, dlc, data)
+ motor2counter = (motor2counter + 1) % 16
+
+    minTorque = fakeTorque / 2
+    motor2Data[7] = math.floor(minTorque / 0.39)
+
+--print ( "brake " .. getBitRange(data, 16, 2) .. " " .. rpm)
+
+    brakeBit = rpm < 2000 and 1 or 0
+    setBitRange(motor2Data, 16, 1, brakeBit)
+
+    index = math.floor(motor2counter / 4)
+    motor2Data[1] = motor2mux[1 + index]
+
+ txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
+end
+
+motor5FuelCounter = 0
+function onMotor5(bus, id, dlc, data)
+ setBitRange(motor5Data, 5, 9, motor5FuelCounter)
+ xorChecksum(motor5Data, 8)
+ txCan(TCU_BUS, MOTOR_5, 0, motor5Data)
+end
+
+counter16 = 0
+function onMotor6(bus, id, dlc, data)
+ counter16 = (counter16 + 1) % 16
+
+ -- engineTorque = getBitRange(data, 8, 8) * 0.39
+ -- actualTorque = getBitRange(data, 16, 8) * 0.39
+ -- feedbackGearbox = getBitRange(data, 40, 8) * 0.39
+ engineTorque = fakeTorque * 0.9
+ actualTorque = fakeTorque
+ feedbackGearbox = 255
+
+ motor6Data[2] = math.floor(engineTorque / 0.39)
+ motor6Data[3] = math.floor(actualTorque / 0.39)
+ motor6Data[6] = math.floor(feedbackGearbox / 0.39)
+ setBitRange(motor6Data, 60, 4, counter16)
+
+ xorChecksum(motor6Data, 1)
+ txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
+end
+
+canMotorInfoCounter = 0
+function onMotorInfo(bus, id, dlc, data)
+ canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
+  canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
+-- canMotorInfoCounter = getBitRange(data, 0, 4)
+
+ baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
+ canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
+ canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
+ canMotorInfo3[1] = baseByte + (canMotorInfoCounter)
+ mod4 = canMotorInfoCounter % 4
+
+ if (mod4 == 0 or mod4 == 2) then
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo)
+ elseif (mod4 == 1) then
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo1)
+ else
+     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo3)
+    end
+end
+
+function onMotor7(bus, id, dlc, data)
+ txCan(TCU_BUS, MOTOR_7, 0, motor7Data)
+end
+
+
 function onTick()
 
 	freqValue = getSensor("AuxSpeed1") or 0
@@ -207,53 +288,17 @@ function onTick()
 	canMotor1[8] = requestedTorque / 0.39
 	txCan(1, MOTOR_1, 0, canMotor1)
 
-	motorBreCounter = (motorBreCounter + 1) % 16
-
-	setBitRange(motorBreData, 8, 4, motorBreCounter)
-	xorChecksum(motorBreData, 1)
-	txCan(1, MOTOR_BRE, 0, motorBreData) -- relay non-TCU message to TCU
-
- motor2counter = (motor2counter + 1) % 16
-    minTorque = fakeTorque / 2
-    motor2Data[7] = math.floor(minTorque / 0.39)
-
-    brakeBit = rpm < 2000 and 1 or 0
-    setBitRange(motor2Data, 16, 1, brakeBit)
-
-    index = math.floor(motor2counter / 4)
-    motor2Data[1] = motor2mux[1 + index]
-txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
-
-	desired_wheel_torque = fakeTorque
-	canMotor3[2] = (iat + 48) / 0.75
-	canMotor3[3] = tps / 0.4
-	canMotor3[5] = 0x20
-	setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
-	canMotor3[8] = tps / 0.4
-	txCan(1, MOTOR_3, 0, canMotor3)
-
-	setBitRange(motor5Data, 5, 9, motor5FuelCounter)
-	xorChecksum(motor5Data, 8)
-	txCan(1, MOTOR_5, 0, motor5Data)
-
-	actualTorque = fakeTorque
-	feedbackGearbox = 255
-
-	motor6Data[2] = math.floor(engineTorque / 0.39)
-	motor6Data[3] = math.floor(actualTorque / 0.39)
-	motor6Data[6] = math.floor(feedbackGearbox / 0.39)
-	setBitRange(motor6Data, 60, 4, counter16)
-	--    print("motor6 " .. arrayToString(motor6Data))
-	xorChecksum(motor6Data, 1)
-	txCan(1, MOTOR_6, 0, motor6Data)
+onMotorBre(0, 0, 0, nil)
+onMotor2(0, 0, 0, nil)
+onMotor5(0, 0, 0, nil)
+onMotor6(0, 0, 0, nil)
+onMotor7(0, 0, 0, nil)
 
 	accGraCounter = (accGraCounter + 1) % 16
 	setBitRange(accGraData, 60, 4, accGraCounter)
 	xorChecksum(accGraData, 1)
 --	txCan(1, ACC_GRA, 0, accGraData)
 --	print("ACC_GRA " ..arrayToString(accGraData))
-
-	txCan(1, MOTOR_7, 0, motor7Data)
 
 	local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
 	local connectedToUsb = vbat < 4
@@ -268,21 +313,7 @@ txCan(TCU_BUS, MOTOR_2, 0, motor2Data)
 
 		motor5FuelCounter = motor5FuelCounter + 20
 
-		canMotorInfoCounter = (canMotorInfoCounter + 1) % 16
- canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
- baseByte = canMotorInfoTotalCounter < 6 and 0x80 or 0x90
- canMotorInfo[1]  = baseByte + (canMotorInfoCounter)
- canMotorInfo1[1] = baseByte + (canMotorInfoCounter)
- canMotorInfo3[1] = baseByte + (canMotorInfoCounter)
- mod4 = canMotorInfoCounter % 4
-
- if (mod4 == 0 or mod4 == 2) then
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo)
- elseif (mod4 == 1) then
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo1)
- else
-     txCan(TCU_BUS, MOTOR_INFO, 0, canMotorInfo3)
-    end
+  onMotorInfo(0, 0, 0, nil)
 
 	end
 end
