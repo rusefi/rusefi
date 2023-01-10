@@ -16,8 +16,6 @@
 
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
-	setDefaultFrankensoConfiguration();
-
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 	setCamOperationMode();
 
@@ -60,7 +58,6 @@ void setTestCrankEngineConfiguration() {
 }
 
 void setTestVVTEngineConfiguration() {
-	setDefaultFrankensoConfiguration();
 	setCrankOperationMode();
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;

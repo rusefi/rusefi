@@ -46,7 +46,7 @@ public class PinoutLogic {
         return null;
     }
 
-    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderState state, DefinitionsState parseState) {
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, ReaderStateImpl state, DefinitionsState parseState) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -64,7 +64,7 @@ public class PinoutLogic {
             }
             PinType listPinType = PinType.find(className);
             String pinType = listPinType.getPinType();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.getEnumsReader().getEnums().get(pinType);
             Objects.requireNonNull(enumList, "Enum for " + pinType);
             Map.Entry<String, Value> kv = find(enumList, id);
             if (kv == null) {
@@ -83,7 +83,7 @@ public class PinoutLogic {
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.getEnumsReader().getEnums().get(pinType);
             EnumPair pair = enumToOptionsList(nothingName, enumList, kv.getValue());
             if (pair.getSimpleForm().length() > 0) {
                 // we seem to be here if specific pin category like switch_inputs has no pins
@@ -220,7 +220,7 @@ public class PinoutLogic {
         return new PinoutLogic(boardName, boardYamlFiles);
     }
 
-    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderState state, DefinitionsState parseState) throws IOException {
+    public void registerBoardSpecificPinNames(VariableRegistry registry, ReaderStateImpl state, DefinitionsState parseState) throws IOException {
         readFiles();
         registerPins(boardName, globalList, registry, state, parseState);
 

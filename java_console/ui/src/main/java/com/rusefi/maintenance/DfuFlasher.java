@@ -34,6 +34,7 @@ public class DfuFlasher {
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
     private static final String WMIC_DFU_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STM32%' and Caption like '%Bootloader%'\" get Caption,ConfigManagerErrorCode /format:list";
     private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
+    private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
@@ -177,6 +178,9 @@ public class DfuFlasher {
 
     public static boolean detectStLink(StatusConsumer wnd) {
         return detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
+    }
+    public static boolean detectPcan(StatusConsumer wnd) {
+        return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
     }
 
     private static boolean detectDevice(StatusConsumer wnd, String queryCommand, String pattern) {

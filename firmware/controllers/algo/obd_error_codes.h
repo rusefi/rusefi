@@ -391,7 +391,7 @@ typedef enum {
 	//P0338 Crankshaft Position Sensor A Circuit High Input
 	//P0339 Crankshaft Position Sensor A Circuit Intermittent
 	//P0340 Camshaft Position Sensor Circuit Malfunction
-	 OBD_Camshaft_Position_Sensor_Circuit_Range_Performance = 341,
+	OBD_Camshaft_Position_Sensor_Circuit_Range_Performance = 341,
 	//P0342 Camshaft Position Sensor Circuit Low Input
 	//P0343 Camshaft Position Sensor Circuit High Input
 	//P0344 Camshaft Position Sensor Circuit Intermittent
@@ -1738,7 +1738,7 @@ typedef enum {
 
 	CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED = 6020,
 	CUSTOM_OBD_UNEXPECTED_INJECTION_MODE = 6021,
-	CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION = 6022,
+	CUSTOM_6022 = 6022,
 	CUSTOM_OBD_UNKNOWN_FIRING_ORDER = 6023,
 	CUSTOM_OBD_WRONG_FIRING_ORDER = 6024,
 	CUSTOM_OBD_IGNITION_MODE = 6025,
@@ -2123,7 +2123,7 @@ typedef enum {
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ARTIFICIAL_MISFIRE = 6729,
 
-    CUSTOM_INSTANT_MAP_DECODING = 6899,
+	CUSTOM_INSTANT_MAP_DECODING = 6899,
 	STACK_USAGE_COMMUNICATION = 6900,
 	STACK_USAGE_MIL = 6901,
 	STACK_USAGE_BENCH = 6902,
@@ -2133,10 +2133,11 @@ typedef enum {
 	// 8000-8050 logging errors
 	CUSTOM_OBD_MMC_ERROR = 8000,
 
-    CUSTOM_ERR_CAN_COMMUNICATION = 8900,
+	CUSTOM_ERR_CAN_COMMUNICATION = 8900,
 
 	WATCH_DOG_SECONDS = 8901,
 
+    CUSTOM_ERR_CUSTOM_GAPS_BAD = 8999,
 	CUSTOM_ERR_TRIGGER_SYNC = 9000,
 	CUSTOM_OBD_TRIGGER_WAVEFORM = 9001,
 

@@ -1035,9 +1035,9 @@ static void calculateTriggerSynchPoint(
 	}
 }
 
-void TriggerCentral::updateWaveform() {
-	static TriggerDecoderBase initState("init");
+TriggerDecoderBase initState("init");
 
+void TriggerCentral::updateWaveform() {
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {

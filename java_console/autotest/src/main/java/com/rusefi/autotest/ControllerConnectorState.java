@@ -35,12 +35,16 @@ public class ControllerConnectorState {
          */
         TestingUtils.isRealHardware = true;
         FileLog.MAIN.start();
-        String port = System.getProperty("ecu.port");
+
+        String port = System.getenv("HARDWARE_CI_SERIAL_DEVICE");
         if (port == null) {
-            port = PortDetector.autoDetectSerial(null).getSerialPort();
-            if (port == null)
-                throw new IllegalStateException("ECU serial not detected");
-            System.out.println("Auto-connected to " + port);
+            port = System.getProperty("ecu.port");
+            if (port == null) {
+                port = PortDetector.autoDetectSerial(null).getSerialPort();
+                if (port == null)
+                    throw new IllegalStateException("ECU serial not detected");
+                System.out.println("Auto-connected to " + port);
+            }
         }
 
         IoUtil.realHardwareConnect(linkManager, port);

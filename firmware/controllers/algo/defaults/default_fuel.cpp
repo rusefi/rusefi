@@ -78,10 +78,10 @@ static void setDefaultWarmupFuelEnrichment() {
 }
 
 static void setDefaultVETable() {
-	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
+	setRpmTableBin(config->veRpmBins);
 	setTable(config->veTable, 80);
 
-	setRpmTableBin(config->baroCorrRpmBins, BARO_CORR_SIZE);
+	setRpmTableBin(config->baroCorrRpmBins);
 	setLinearCurve(config->baroCorrPressureBins, 75, 105, 1);
 
 	// Default baro table is all 1.0, we can't recommend a reasonable default here
@@ -159,7 +159,7 @@ static void setDefaultLambdaTable() {
 	};
 	copyArray(config->lambdaLoadBins, mapBins);
 
-	setRpmTableBin(config->lambdaRpmBins, FUEL_RPM_COUNT);
+	setRpmTableBin(config->lambdaRpmBins);
 
 	static constexpr float rowValues[] = {
 		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
@@ -229,7 +229,11 @@ void setDefaultFuel() {
 
 	// Tables
 	setFuelTablesLoadBin(10, 160);
-	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
+	setRpmTableBin(config->injPhaseRpmBins);
+
+	setRpmTableBin(engineConfiguration->tpsTspCorrValuesBins);
+	setLinearCurve(engineConfiguration->tpsTspCorrValues, 1, 1);
+
 	setDefaultVETable();
 	setDefaultLambdaTable();
 

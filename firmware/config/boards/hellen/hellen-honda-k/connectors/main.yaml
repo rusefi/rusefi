@@ -1,0 +1,262 @@
+pins:
+
+  - pin: A2
+    function: +12V from main relay
+    type: 12v
+    color: red
+  - pin: A3
+    function: +12V from main relay
+    type: 12v
+    color: red
+  - pin: A4
+    function: Power GND
+    type: gnd
+  - pin: A5
+    function: Power GND
+    type: gnd
+  - pin: A7
+    ts_name: A7 - CRANK
+    function: Crankshaft Sensor
+  - pin: A8
+    ts_name: --- - INTAKE
+    function: Intake Position
+  - pin: A9
+    ts_name: --- - KNOCK
+    function: Knock Sensor
+  - pin: A10
+    function: ANALOG GND
+    type: gnda
+  - pin: A11
+    function: ANALOG GND
+    type: gnda
+  - pin: A12
+    ts_name: --- - IDLE AIR
+    function: Idle Air
+  - pin: A13
+    ts_name: --- - EGR
+    function: EGR
+  - pin: A14
+    ts_name: --- - O2
+    function: Secondary O2
+  - pin: A15
+    ts_name: --- - TPS
+    function: TPS
+  - pin: A16
+    function: Analog GND
+    type: gnda
+  - pin: A17
+    ts_name: --- - NC
+    function: NC
+  - pin: A18
+    ts_name: --- - VSS
+    function: VSS
+  - pin: A19
+    ts_name: --- - MAP
+    function: MAP Sensor
+  - pin: A20
+    ts_name: --- - 5V Sensor PWR
+    function: 5V Sensor Power
+  - pin: A21
+    ts_name: --- - 5V Sensor PWR
+    function: 5V Sensor Power
+  - pin: A22
+    ts_name: --- - NC
+    function: NC
+  - pin: A23
+    function: Analog GND
+    type: gnda
+  - pin: A24
+    function: Analog GND
+    type: gnda
+  - pin: A25
+    ts_name: --- - VTT CAM HALL
+    function: VTT CAM HALL
+  - pin: A26
+    ts_name: --- - CAM SYNC HALL
+    function: CAM SYNC HALL
+  - pin: A27
+    ts_name: --- - IGN4
+    function: Ignition 4
+  - pin: A28
+    ts_name: --- - IGN3
+    function: Ignition 3
+  - pin: A29
+    ts_name: --- - IGN2
+    function: Ignition 2
+  - pin: A30
+    ts_name: --- - IGN1
+    function: Ignition 1
+  - pin: A31
+    ts_name: --- - NC
+    function: NC
+
+  - pin: B1
+    ts_name: --- - VTC HS
+    function: VTC Hish Side
+  - pin: B2
+    ts_name: --- - INJ4
+    function: Injector 4
+  - pin: B3
+    ts_name: --- - INJ3
+    function: Injector 3
+  - pin: B4
+    ts_name: --- - INJ2
+    function: Injector 2
+  - pin: B5
+    ts_name: --- - INJ1
+    function: Injector 1
+  - pin: B6
+    ts_name: --- - RADIATOR RELAY
+    function: Radiator Relay
+  - pin: B7
+    ts_name: --- - LOCKOUT SOLENOID
+    function: Lockout Solenoid
+  - pin: B8
+    ts_name: --- - CLT
+    function: CLT
+  - pin: B9
+    ts_name: --- - VTEC PRESSURE SW
+    function: VTEC Pressure Switch
+  - pin: B10
+    ts_name: --- - CHARGING LIGHT
+    function: Charging Light
+  - pin: B11
+    ts_name: --- - NC
+    function: NC
+  - pin: B12
+    ts_name: --- - NC
+    function: NC
+  - pin: B13
+    ts_name: --- - ALTERNATOR FIELD
+    function: Alternator Field
+  - pin: B14
+    ts_name: --- - A/T TCU
+    function: A/T TCU
+  - pin: B15
+    ts_name: --- - VTC HS
+    function: VTC High Side
+  - pin: B16
+    ts_name: --- - A/T TCU
+    function: A/T TCU
+  - pin: B17
+    ts_name: --- - IAT
+    function: IAT
+  - pin: B18
+    ts_name: --- - ALTERNATOR CONTROL
+    function: Alternator Control
+  - pin: B19
+    ts_name: --- - NC
+    function: NC
+  - pin: B20
+    ts_name: --- - NC
+    function: NC
+  - pin: B21
+    ts_name: --- - EVAP
+    function: EVAP
+  - pin: B22
+    ts_name: --- - INTAKE RUNNER
+    function: Intake Runner
+  - pin: B24
+    ts_name: --- - NC
+    function: NC
+
+  - pin: E1
+    ts_name: --- - FUEL RELAY
+    function: Fuel Relay
+  - pin: E3
+    function: Power GND
+    type: gnd
+  - pin: E4
+    function: Analog GND
+    type: gnda
+  - pin: E5
+    ts_name: --- - 5V SENSOR POWER
+    function: 5V Sensor Power
+  - pin: E7
+    ts_name: --- - MAIN RELAY CONTROL
+    function: Main Relay Control
+#  - pin: E9
+#    ts_name: --- - MAIN RELAY CONTROL
+#    function: Main Relay Control
+  - pin: E10
+    ts_name: --- - NC
+    function: NC
+  - pin: E11
+    ts_name: --- - NC
+    function: NC
+  - pin: E12
+    ts_name: --- - NC
+    function: NC
+  - pin: E13
+    ts_name: --- - NC
+    function: NC
+  - pin: E14
+    ts_name: --- - TANK PRESSURE
+    function: Tank Pressure
+  - pin: E15
+    ts_name: --- - LOAD SENSOR
+    function: Load Sensor
+  - pin: E16
+    ts_name: --- - STEERING PRESSURE SW
+    function: Steering Pressure Switch
+  - pin: E19
+    ts_name: --- - NC
+    function: NC
+  - pin: E20
+    ts_name: --- - EVAP
+    function: EVAP
+  - pin: E21
+    ts_name: --- - EVAP
+    function: EVAP
+  - pin: E22
+    ts_name: --- - BRAKE
+    function: Brake
+  - pin: E23
+    ts_name: --- - K-LINE
+    function: K-Line
+  - pin: E24
+    ts_name: --- - NC
+    function: NC
+  - pin: E26
+    ts_name: --- - TACHOMETER
+    function: Tachometer
+  - pin: E27
+    ts_name: --- - K-LINE
+    function: K-Line
+  - pin: E28
+    ts_name: --- - NC
+    function: NC
+  - pin: E29
+    ts_name: --- - NC
+    function: NC
+  - pin: E30
+    ts_name: --- - NC
+    function: NC
+  - pin: E31
+    ts_name: --- - CHECK ENGINE
+    function: Check Engine
+
+  - pin: E9
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: E9 - Ignition Key Voltage
+    function: +12V engine ECU power source, run/start
+    color: red
+  - pin: E31
+    class: outputs
+    function: MIL Check Engine
+    ts_name: --- Check Engine
+
+
+info:
+  id: Honda-K
+  title: Hellen Honda K
+  name: Hellen Honda K
+  board_url: https://rusefi.com/s/honda-k
+  image:
+    file: hellen-k.jpg
+  pins:
+    - pin: U12
+      x: 1119
+      y: 424

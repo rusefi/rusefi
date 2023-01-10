@@ -53,6 +53,11 @@ bool TwoPinDcMotor::set(float duty)
 {
 	m_value = duty;
 
+	// For low voltage, voltageRatio will be >1 to boost duty so that motor current stays the same
+	// At high voltage, the inverse will be true to keep behavior always the same.
+	float voltageRatio = 14 / Sensor::get(SensorType::BatteryVoltage).value_or(14);
+	duty *= voltageRatio;
+
 	// If not init, don't try to set
 	if (!m_dir1 || !m_dir2 || !m_enable) {
 		if (m_disable) {

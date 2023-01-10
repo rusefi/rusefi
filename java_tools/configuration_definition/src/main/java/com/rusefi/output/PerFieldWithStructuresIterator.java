@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 
 import java.util.List;
@@ -30,7 +31,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
 
     @Override
     public void end() {
-        ConfigStructure cs = cf.getState().structures.get(cf.getType());
+        ConfigStructure cs = cf.getState().getStructures().get(cf.getType());
         String content;
         if (cs != null) {
             if (cf.isFromIterate()) {
@@ -39,7 +40,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
             } else {
                 // java side of things does not care for 'cs.withPrefix'
                 String extraPrefix = prefix + cf.getName() + prefixSeparator;
-                PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.tsFields, extraPrefix, strategy, prefixSeparator);
+                PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.getTsFields(), extraPrefix, strategy, prefixSeparator);
                 fieldIterator.loop();
                 content = fieldIterator.sb.toString();
             }

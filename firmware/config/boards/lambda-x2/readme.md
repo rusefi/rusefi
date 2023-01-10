@@ -1,0 +1,1 @@
+https://github.com/rusefi/rusefi-hardware/tree/main/lambda-x2

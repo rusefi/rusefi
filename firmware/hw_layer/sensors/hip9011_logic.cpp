@@ -110,7 +110,7 @@ float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float angleWindowWidth) 
 	/**
 	 * TINT = TC * 2 * PI * VOUT
 	 */
-	float integrationTimeUs = timeUs * 2 * CONST_PI * HIP9011_DESIRED_OUTPUT_VALUE;
+	float integrationTimeUs = timeUs * 2 * CONST_PI * HIP9011_ANALOG_OUTPUT_MAX;
 	/**
 	 * rpm = 60 seconds / time
 	 * '60000000' because revolutions per MINUTE in uS conversion

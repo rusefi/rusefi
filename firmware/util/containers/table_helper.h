@@ -190,7 +190,7 @@ void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
 /**
  * initialize RPM table axis using default RPM range
  */
-template<typename kType>
-void setRpmTableBin(kType array[], int size) {
-	setRpmBin(array, size, 800, 7000);
+template<typename TValue, int TSize>
+void setRpmTableBin(TValue (&array)[TSize]) {
+	setRpmBin(array, TSize, 800, 7000);
 }

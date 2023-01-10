@@ -23,8 +23,6 @@
 using ::testing::_;
 
 extern WarningCodeState unitTestWarningCodeState;
-extern bool printTriggerDebug;
-extern float actualSynchGap;
 
 extern "C" {
 void sendOutConfirmation(char *value, int i);
@@ -67,45 +65,6 @@ static void testDodgeNeonDecoder() {
 	TriggerDecoderBase state("test");
 
 	ASSERT_FALSE(state.getShaftSynchronized()) << "1 shaft_is_synchronized";
-
-//	int r = 0;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "2 shaft_is_synchronized"; // still no synchronization
-
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "3 shaft_is_synchronized"; // still no synchronization
-//
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	ASSERT_FALSE(state.shaft_is_synchronized) << "4 shaft_is_synchronized"; // still no synchronization
-//
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-//	ASSERT_FALSE(state.shaft_is_synchronized); // still no synchronization
-//
-//	printf("2nd camshaft revolution\r\n");
-//	r = 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_TRUE(state.shaft_is_synchronized);
-//	ASSERT_EQ(0, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	ASSERT_EQ(1, state.current_index);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-//	ASSERT_EQ(2, state.current_index);
-//
-//	printf("3rd camshaft revolution\r\n");
-//	r = 2 * 720;
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 60);
-//	ASSERT_EQ( 3,  state.current_index) << "current index";
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 210);
-//	ASSERT_TRUE(state.shaft_is_synchronized);
-//	ASSERT_EQ( 0,  state.current_index) << "current index";
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_RISING, r + 420);
-//	processTriggerEvent(&state, shape, &ec->triggerConfig, SHAFT_PRIMARY_FALLING, r + 630);
-}
-
-static void assertTriggerPosition(event_trigger_position_s *position, int eventIndex, float angleOffset) {
-	assertEqualsM("eventIndex", eventIndex, position->triggerEventIndex);
-	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
 }
 
 TEST(trigger, testSomethingWeird) {
@@ -148,17 +107,6 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	ASSERT_EQ( 0,  shape->getTriggerWaveformSynchPointIndex()) << "triggerShapeSynchPointIndex";
 
-	event_trigger_position_s position;
-	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
-	position.setAngle(0);
-	assertTriggerPosition(&position, 0, 0);
-
-	position.setAngle(200);
-	assertTriggerPosition(&position, 2, 80);
-
-	position.setAngle(360);
-	assertTriggerPosition(&position, 6, 0);
-
 	eth.applyTriggerWaveform();
 
 	engine->periodicFastCallback();
@@ -170,8 +118,8 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ(true,  ecl->isReady) << "ford inline ignition events size";
 
-	EXPECT_NEAR(ecl->elements[0].dwellAngle, 7.960f, 1e-3);
-	EXPECT_NEAR(ecl->elements[5].dwellAngle, 607.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[0].dwellAngle, 8.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].dwellAngle, 608.960f, 1e-3);
 
 	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
@@ -206,10 +154,11 @@ TEST(misc, testFordAspire) {
 
 }
 
+extern TriggerDecoderBase initState;
+
 static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPointIndex, float channel1duty, float channel2duty, float expectedGapRatio = NAN) {
 	printf("====================================================================================== testTriggerDecoder2 msg=%s\r\n", msg);
 
-	actualSynchGap = 0; // global variables are bad, let's at least reset state
 	// Some configs use aux valves, which requires this sensor
 	std::unordered_map<SensorType, float> sensorVals = {{SensorType::DriverThrottleIntent, 0}};
 	EngineTestHelper eth(type, sensorVals);
@@ -218,9 +167,9 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
-	assertEqualsM("synchPointIndex", synchPointIndex, t->getTriggerWaveformSynchPointIndex());
+	ASSERT_EQ(synchPointIndex, t->getTriggerWaveformSynchPointIndex()) << "synchPointIndex";
 	if (!cisnan(expectedGapRatio)) {
-		assertEqualsM2("actual gap ratio", expectedGapRatio, actualSynchGap, 0.001);
+		assertEqualsM2("actual gap ratio", expectedGapRatio, initState.triggerSyncGapRatio, 0.001);
     }
 }
 
@@ -430,7 +379,7 @@ TEST(trigger, testTriggerDecoder) {
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
 
-	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
+	testTriggerDecoder2("testMitsu", MITSU_4G93, 9, 0.3553, 0.3752);
 	{
 		EngineTestHelper eth(MITSU_4G93);
 

@@ -1,10 +1,8 @@
 /**
- * @file boards/hellen/hellen-nb1/board_configuration.cpp
+ * @file board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen-nb1 board
- *
- * See http://rusefi.com/s/hellenNB1
+ * @brief Configuration defaults for the h81 board
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -22,11 +20,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[3] = Gpio::Unassigned;
 
-	// Disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clutchDownPin = Gpio::Unassigned;
@@ -40,11 +33,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[1] = H144_IGN_2;
 	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	// disable remainder
-	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }

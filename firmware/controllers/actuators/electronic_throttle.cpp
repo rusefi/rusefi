@@ -223,6 +223,8 @@ void EtbController::reset() {
 	etbDutyRateOfChange = etbDutyAverage = 0;
 	m_dutyRocAverage.reset();
 	m_dutyAverage.reset();
+	etbTpsErrorCounter = 0;
+	etbPpsErrorCounter = 0;
 }
 
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
@@ -317,6 +319,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
 	percent_t targetPosition = idlePosition + getLuaAdjustment();
+
+#if EFI_ANTILAG_SYSTEM 
+    if (engine->antilagController.isAntilagCondition) {
+	    targetPosition += engineConfiguration->ALSEtbAdd;
+    }
+#endif /* EFI_ANTILAG_SYSTEM */
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
@@ -510,7 +518,6 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	if (m_isAutotune) {
-		etbInputErrorCounter = 0;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		// Check that we're not over the error limit
@@ -572,17 +579,54 @@ void EtbController::update() {
 		return;
 	}
 
+	// Only allow autotune with stopped engine, and on the first throttle
+	// Update local state about autotune
+	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
+		&& engine->etbAutoTune
+		&& m_function == ETB_Throttle1;
+
+	bool shouldCheckSensorFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
+
+	if (!m_isAutotune && shouldCheckSensorFunction) {
+		bool isTpsError = !Sensor::get(m_positionSensor).Valid;
+
+		// If we have an error that's new, increment the counter
+		if (isTpsError && !hadTpsError) {
+			etbTpsErrorCounter++;
+		}
+
+		hadTpsError = isTpsError;
+
+		bool isPpsError = !Sensor::get(SensorType::AcceleratorPedal).Valid;
+
+		// If we have an error that's new, increment the counter
+		if (isPpsError && !hadPpsError) {
+			etbPpsErrorCounter++;
+		}
+
+		hadPpsError = isPpsError;
+	} else {
+		// Either sensors are expected to not work, or autotune is running, so reset the error counter
+		etbTpsErrorCounter = 0;
+		etbPpsErrorCounter = 0;
+	}
+
 	TpsState localReason = TpsState::None;
-	if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
-		localReason = TpsState::Setting;
-	} else if (etbInputErrorCounter > 50) {
-		localReason = TpsState::InputJitter;
+	if (etbTpsErrorCounter > 50) {
+		localReason = TpsState::IntermittentTps;
+#if EFI_SHAFT_POSITION_INPUT
+	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+		localReason = TpsState::EngineStopped;
+#endif // EFI_SHAFT_POSITION_INPUT
+	} else if (etbPpsErrorCounter > 50) {
+		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
 		localReason = TpsState::Lua;
 	}
 
+	etbErrorCode = (int8_t)localReason;
+
 	if (localReason != TpsState::None) {
-		etbErrorCode = (int8_t)localReason;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable();
@@ -592,28 +636,6 @@ void EtbController::update() {
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
-
-	// Only allow autotune with stopped engine, and on the first throttle
-	// Update local state about autotune
-	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
-		&& engine->etbAutoTune
-		&& m_function == ETB_Throttle1;
-
-	if (!m_isAutotune) {
-		// note that ClosedLoopController has it's own setpoint error validation so ours with the counter has to be here
-		// seems good enough to simply check for both TPS sensors
-		int errorState = (isTps1Error() ? 1 : 0) + (isTps2Error() ? 2 : 0)
-				+ (isPedalError() ? 4 : 0);
-
-		// current basic implementation is to check for input error counter only while engine is not running
-		// we can make this logic smarter one day later
-		if (Sensor::getOrZero(SensorType::Rpm) == 0
-				&& prevErrorState != errorState) {
-			prevErrorState = errorState;
-			etbInputErrorCounter++;
-		}
-	}
-
 
 	ClosedLoopController::update();
 }
@@ -903,8 +925,8 @@ void setBoschVNH2SP30Curve() {
 void setDefaultEtbParameters() {
 	engineConfiguration->etbIdleThrottleRange = 5;
 
-	engineConfiguration->etbExpAverageLength = 100;
-	engineConfiguration->etbRocExpAverageLength = 100;
+	engineConfiguration->etbExpAverageLength = 50;
+	engineConfiguration->etbRocExpAverageLength = 50;
 
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);

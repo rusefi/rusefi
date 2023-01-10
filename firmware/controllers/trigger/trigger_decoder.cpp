@@ -110,8 +110,6 @@ PrimaryTriggerDecoder::PrimaryTriggerDecoder(const char* name)
 #if ! EFI_PROD_CODE
 bool printTriggerDebug = false;
 bool printTriggerTrace = false;
-// todo: migrate to triggerSyncGapRatio or triggerActualSyncGapRatio?
-float actualSynchGap;
 #endif /* ! EFI_PROD_CODE */
 
 void TriggerWaveform::initializeSyncPoint(TriggerDecoderBase& state,
@@ -461,10 +459,6 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			 */
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
-#if EFI_UNIT_TEST
-			actualSynchGap = triggerSyncGapRatio;
-#endif /* EFI_UNIT_TEST */
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			bool verbose = getTriggerCentral()->isEngineSnifferEnabled && triggerConfiguration.VerboseTriggerSynchDetails;
 
@@ -590,6 +584,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 
 		toothed_previous_time = nowNt;
+
+#if EFI_UNIT_TEST
+        if (wasSynchronized) {
+            int uiGapIndex = (currentCycle.current_index) % triggerShape.getLength();
+            gapRatio[uiGapIndex] = triggerSyncGapRatio;
+        }
+#endif // EFI_UNIT_TEST
 	}
 
 	if (getShaftSynchronized() && !isValidIndex(triggerShape)) {

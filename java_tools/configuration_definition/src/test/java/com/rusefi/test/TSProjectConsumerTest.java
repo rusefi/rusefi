@@ -1,12 +1,10 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
@@ -39,7 +37,7 @@ public class TSProjectConsumerTest {
                 "end_struct\n" +
                 "";
 
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 

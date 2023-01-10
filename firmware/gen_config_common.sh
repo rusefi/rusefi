@@ -13,7 +13,7 @@ COMMON_GEN_CONFIG="
  -firing_order controllers/algo/firing_order.h \
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
- -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
+ -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
  -initialize_to_zero false \
  -prepend console/binary/generated/total_live_data_generated.h \

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Dec 01 00:54:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jan 07 03:08:29 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -771,7 +771,7 @@ struct engine_configuration_s {
 	bool launchControlEnabled : 1 {};
 	/**
 	offset 120 bit 21 */
-	bool rollingLaunchEnabled : 1 {};
+	bool anotherUnusedHere444 : 1 {};
 	/**
 	offset 120 bit 22 */
 	bool antiLagEnabled : 1 {};
@@ -916,9 +916,14 @@ struct engine_configuration_s {
 	 */
 	engine_load_mode_e fuelAlgorithm;
 	/**
+	%
 	 * offset 381
 	 */
-	uint8_t alignmentFill_at_1[3];
+	uint8_t ALSMaxTPS;
+	/**
+	 * offset 382
+	 */
+	uint8_t unusedHerealignmentFill_at_1[2];
 	/**
 	 * This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
 	 * offset 384
@@ -1799,6 +1804,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t verboseCanBaseAddress;
 	/**
+	 * Boost Voltage
 	v
 	 * offset 788
 	 */
@@ -2249,7 +2255,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 984
 	 */
-	switch_input_pin_e antiLagActivatePin;
+	switch_input_pin_e ALSActivatePin;
 	/**
 	 * offset 986
 	 */
@@ -2578,11 +2584,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1371[1];
 	/**
-	 * Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	offset 1372 bit 0 */
 	bool isInjectionEnabled : 1 {};
 	/**
-	 * Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	offset 1372 bit 1 */
 	bool isIgnitionEnabled : 1 {};
 	/**
@@ -2690,11 +2694,12 @@ struct engine_configuration_s {
 	offset 1372 bit 27 */
 	bool useBiQuadOnAuxSpeedSensors : 1 {};
 	/**
+	 * 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 	offset 1372 bit 28 */
-	bool unused_1484_bit_38 : 1 {};
+	bool sdTriggerLog : 1 {};
 	/**
 	offset 1372 bit 29 */
-	bool unused_1484_bit_29 : 1 {};
+	bool ALSActivateInverted : 1 {};
 	/**
 	offset 1372 bit 30 */
 	bool unused_1484_bit_30 : 1 {};
@@ -3148,76 +3153,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1628 bit 8 */
-	bool unusedBit_541_8 : 1 {};
+	bool unusedBit_542_8 : 1 {};
 	/**
 	offset 1628 bit 9 */
-	bool unusedBit_541_9 : 1 {};
+	bool unusedBit_542_9 : 1 {};
 	/**
 	offset 1628 bit 10 */
-	bool unusedBit_541_10 : 1 {};
+	bool unusedBit_542_10 : 1 {};
 	/**
 	offset 1628 bit 11 */
-	bool unusedBit_541_11 : 1 {};
+	bool unusedBit_542_11 : 1 {};
 	/**
 	offset 1628 bit 12 */
-	bool unusedBit_541_12 : 1 {};
+	bool unusedBit_542_12 : 1 {};
 	/**
 	offset 1628 bit 13 */
-	bool unusedBit_541_13 : 1 {};
+	bool unusedBit_542_13 : 1 {};
 	/**
 	offset 1628 bit 14 */
-	bool unusedBit_541_14 : 1 {};
+	bool unusedBit_542_14 : 1 {};
 	/**
 	offset 1628 bit 15 */
-	bool unusedBit_541_15 : 1 {};
+	bool unusedBit_542_15 : 1 {};
 	/**
 	offset 1628 bit 16 */
-	bool unusedBit_541_16 : 1 {};
+	bool unusedBit_542_16 : 1 {};
 	/**
 	offset 1628 bit 17 */
-	bool unusedBit_541_17 : 1 {};
+	bool unusedBit_542_17 : 1 {};
 	/**
 	offset 1628 bit 18 */
-	bool unusedBit_541_18 : 1 {};
+	bool unusedBit_542_18 : 1 {};
 	/**
 	offset 1628 bit 19 */
-	bool unusedBit_541_19 : 1 {};
+	bool unusedBit_542_19 : 1 {};
 	/**
 	offset 1628 bit 20 */
-	bool unusedBit_541_20 : 1 {};
+	bool unusedBit_542_20 : 1 {};
 	/**
 	offset 1628 bit 21 */
-	bool unusedBit_541_21 : 1 {};
+	bool unusedBit_542_21 : 1 {};
 	/**
 	offset 1628 bit 22 */
-	bool unusedBit_541_22 : 1 {};
+	bool unusedBit_542_22 : 1 {};
 	/**
 	offset 1628 bit 23 */
-	bool unusedBit_541_23 : 1 {};
+	bool unusedBit_542_23 : 1 {};
 	/**
 	offset 1628 bit 24 */
-	bool unusedBit_541_24 : 1 {};
+	bool unusedBit_542_24 : 1 {};
 	/**
 	offset 1628 bit 25 */
-	bool unusedBit_541_25 : 1 {};
+	bool unusedBit_542_25 : 1 {};
 	/**
 	offset 1628 bit 26 */
-	bool unusedBit_541_26 : 1 {};
+	bool unusedBit_542_26 : 1 {};
 	/**
 	offset 1628 bit 27 */
-	bool unusedBit_541_27 : 1 {};
+	bool unusedBit_542_27 : 1 {};
 	/**
 	offset 1628 bit 28 */
-	bool unusedBit_541_28 : 1 {};
+	bool unusedBit_542_28 : 1 {};
 	/**
 	offset 1628 bit 29 */
-	bool unusedBit_541_29 : 1 {};
+	bool unusedBit_542_29 : 1 {};
 	/**
 	offset 1628 bit 30 */
-	bool unusedBit_541_30 : 1 {};
+	bool unusedBit_542_30 : 1 {};
 	/**
 	offset 1628 bit 31 */
-	bool unusedBit_541_31 : 1 {};
+	bool unusedBit_542_31 : 1 {};
 	/**
 	 * Time between bench test pulses
 	ms
@@ -3411,7 +3416,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1748
 	 */
-	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
+	adc_channel_e auxAnalogInputs[LUA_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 1756
 	 */
@@ -3674,9 +3679,11 @@ struct engine_configuration_s {
 	 */
 	int8_t launchFuelAdderPercent;
 	/**
+	 * Time required to detect a stuck throttle.
+	sec
 	 * offset 2085
 	 */
-	int8_t sorryUnused[1];
+	scaled_channel<uint8_t, 50, 1> etbJamTimeout;
 	/**
 	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 2086
@@ -3923,16 +3930,19 @@ struct engine_configuration_s {
 	 */
 	gppwm_channel gppwm[GPPWM_CHANNELS];
 	/**
+	 * Boost Current
 	mA
 	 * offset 2932
 	 */
 	uint16_t mc33_i_boost;
 	/**
+	 * Peak Current
 	mA
 	 * offset 2934
 	 */
 	uint16_t mc33_i_peak;
 	/**
+	 * Hold Current
 	mA
 	 * offset 2936
 	 */
@@ -3949,6 +3959,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_peak_off;
 	/**
+	 * Peak phase duration
 	us
 	 * offset 2942
 	 */
@@ -3964,6 +3975,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t mc33_t_hold_off;
 	/**
+	 * Hold phase duration
 	us
 	 * offset 2948
 	 */
@@ -4036,9 +4048,15 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseBreakPoint;
 	/**
+	multiplier
 	 * offset 3126
 	 */
-	int8_t unused4080[5];
+	scaled_channel<uint8_t, 50, 1> tpsTspCorrValues[TPS_TPS_ACCEL_CLT_CORR_TABLE];
+	/**
+	%
+	 * offset 3130
+	 */
+	uint8_t etbJamIntegratorLimit;
 	/**
 	lobes/cam
 	 * offset 3131
@@ -4328,10 +4346,87 @@ struct engine_configuration_s {
 	 */
 	float etbDutyShutdownThreshold;
 	/**
-	units
 	 * offset 3856
 	 */
-	uint8_t mainUnusedEnd[156];
+	Gpio luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
+	/**
+	RPM
+	 * offset 3872
+	 */
+	scaled_channel<uint8_t, 1, 50> tpsTspCorrValuesBins[TPS_TPS_ACCEL_CLT_CORR_TABLE];
+	/**
+	rpm
+	 * offset 3876
+	 */
+	int16_t ALSMinRPM;
+	/**
+	rpm
+	 * offset 3878
+	 */
+	int16_t ALSMaxRPM;
+	/**
+	sec
+	 * offset 3880
+	 */
+	float alsMaxDuration;
+	/**
+	C
+	 * offset 3884
+	 */
+	int8_t ALSMinCLT;
+	/**
+	C
+	 * offset 3885
+	 */
+	int8_t ALSMaxCLT;
+	/**
+	 * offset 3886
+	 */
+	uint8_t alsMinTimeBetween;
+	/**
+	 * offset 3887
+	 */
+	uint8_t alsEtbPosition;
+	/**
+	 * offset 3888
+	 */
+	uint8_t unusedAlignmentFill_at_33[4];
+	/**
+	%
+	 * offset 3892
+	 */
+	int ALSIdleAdd;
+	/**
+	%
+	 * offset 3896
+	 */
+	int ALSEtbAdd;
+	/**
+	 * offset 3900
+	 */
+	int ALSSkipRatio;
+	/**
+	%
+	 * offset 3904
+	 */
+	uint8_t ALSMaxDriverThrottleIntent;
+	/**
+	 * offset 3905
+	 */
+	pin_input_mode_e ALSActivatePinMode;
+	/**
+	 * offset 3906
+	 */
+	uint8_t unusedHereForYou[2];
+	/**
+	 * offset 3908
+	 */
+	pin_input_mode_e luaDigitalInputPinModes[LUA_DIGITAL_INPUT_COUNT];
+	/**
+	units
+	 * offset 3916
+	 */
+	uint8_t mainUnusedEnd[96];
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 
@@ -4746,362 +4841,392 @@ struct persistent_config_s {
 	deg
 	 * offset 16244
 	 */
-	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int8_t, 10, 1> ignitionIatCorrTable[8][8];
 	/**
-	Temperature
-	 * offset 16756
+	C
+	 * offset 16308
 	 */
-	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
+	int8_t ignitionIatCorrTempBins[8];
 	/**
-	RPM
-	 * offset 16820
+	Load
+	 * offset 16316
 	 */
-	uint16_t ignitionIatCorrRpmBins[IGN_RPM_COUNT];
+	scaled_channel<uint8_t, 1, 5> ignitionIatCorrLoadBins[8];
 	/**
 	deg
-	 * offset 16852
+	 * offset 16324
 	 */
 	int16_t injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 17364
+	 * offset 16836
 	 */
 	uint16_t injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 17396
+	 * offset 16868
 	 */
 	uint16_t injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
 	onoff
-	 * offset 17428
+	 * offset 16900
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	kPa
-	 * offset 17488
+	 * offset 16960
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
-	 * offset 18000
+	 * offset 17472
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18032
+	 * offset 17504
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 18064
+	 * offset 17536
 	 */
 	int8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18128
+	 * offset 17600
 	 */
 	uint16_t vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 18144
+	 * offset 17616
 	 */
 	uint16_t vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 18160
+	 * offset 17632
 	 */
 	int8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18224
+	 * offset 17696
 	 */
 	uint16_t vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 18240
+	 * offset 17712
 	 */
 	uint16_t vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	deg
-	 * offset 18256
+	 * offset 17728
 	 */
 	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 18768
+	 * offset 18240
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18800
+	 * offset 18272
 	 */
 	uint16_t ignitionRpmBins[IGN_RPM_COUNT];
 	/**
 	%
-	 * offset 18832
+	 * offset 18304
 	 */
 	scaled_channel<uint16_t, 10, 1> veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
-	 * offset 19344
+	 * offset 18816
 	 */
 	uint16_t veLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 19376
+	 * offset 18848
 	 */
 	uint16_t veRpmBins[FUEL_RPM_COUNT];
 	/**
 	lambda
-	 * offset 19408
+	 * offset 18880
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
-	 * offset 19664
+	 * offset 19136
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 19696
+	 * offset 19168
 	 */
 	uint16_t lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 19728
+	 * offset 19200
 	 */
 	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
-	 * offset 19984
+	 * offset 19456
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	to
-	 * offset 20016
+	 * offset 19488
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	value
-	 * offset 20048
+	 * offset 19520
 	 */
 	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20304
+	 * offset 19776
 	 */
 	int16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20320
+	 * offset 19792
 	 */
 	int16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20336
+	 * offset 19808
 	 */
 	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20400
+	 * offset 19872
 	 */
 	int16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20416
+	 * offset 19888
 	 */
 	int16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20432
+	 * offset 19904
 	 */
 	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20496
+	 * offset 19968
 	 */
 	int16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20512
+	 * offset 19984
 	 */
 	int16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 20528
+	 * offset 20000
 	 */
 	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 20592
+	 * offset 20064
 	 */
 	int16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 20608
+	 * offset 20080
 	 */
 	int16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
-	 * offset 20624
+	 * offset 20096
 	 */
 	uint16_t ignTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 20632
+	 * offset 20104
 	 */
 	uint16_t ignTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 20640
+	 * offset 20112
 	 */
 	cyl_trim_s ignTrims[12];
 	/**
-	 * offset 20832
+	 * offset 20304
 	 */
 	uint16_t fuelTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 20840
+	 * offset 20312
 	 */
 	uint16_t fuelTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 20848
+	 * offset 20320
 	 */
 	cyl_trim_s fuelTrims[12];
 	/**
 	ratio
-	 * offset 21040
+	 * offset 20512
 	 */
 	scaled_channel<uint16_t, 100, 1> crankingFuelCoefE100[CRANKING_CURVE_SIZE];
 	/**
 	Airmass
-	 * offset 21056
+	 * offset 20528
 	 */
 	scaled_channel<uint8_t, 50, 1> tcu_pcAirmassBins[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21064
+	 * offset 20536
 	 */
 	uint8_t tcu_pcValsR[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21072
+	 * offset 20544
 	 */
 	uint8_t tcu_pcValsN[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21080
+	 * offset 20552
 	 */
 	uint8_t tcu_pcVals1[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21088
+	 * offset 20560
 	 */
 	uint8_t tcu_pcVals2[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21096
+	 * offset 20568
 	 */
 	uint8_t tcu_pcVals3[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21104
+	 * offset 20576
 	 */
 	uint8_t tcu_pcVals4[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21112
+	 * offset 20584
 	 */
 	uint8_t tcu_pcVals12[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21120
+	 * offset 20592
 	 */
 	uint8_t tcu_pcVals23[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21128
+	 * offset 20600
 	 */
 	uint8_t tcu_pcVals34[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21136
+	 * offset 20608
 	 */
 	uint8_t tcu_pcVals21[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21144
+	 * offset 20616
 	 */
 	uint8_t tcu_pcVals32[TCU_MAGIC_SIZE];
 	/**
 	%
-	 * offset 21152
+	 * offset 20624
 	 */
 	uint8_t tcu_pcVals43[TCU_MAGIC_SIZE];
 	/**
 	TPS
-	 * offset 21160
+	 * offset 20632
 	 */
 	uint8_t tcu_tccTpsBins[8];
 	/**
 	MPH
-	 * offset 21168
+	 * offset 20640
 	 */
 	uint8_t tcu_tccLockSpeed[8];
 	/**
 	MPH
-	 * offset 21176
+	 * offset 20648
 	 */
 	uint8_t tcu_tccUnlockSpeed[8];
 	/**
 	KPH
-	 * offset 21184
+	 * offset 20656
 	 */
 	uint8_t tcu_32SpeedBins[8];
 	/**
 	%
-	 * offset 21192
+	 * offset 20664
 	 */
 	uint8_t tcu_32Vals[8];
 	/**
 	%
-	 * offset 21200
+	 * offset 20672
 	 */
 	scaled_channel<int8_t, 10, 1> throttle2TrimTable[6][6];
 	/**
 	%
-	 * offset 21236
+	 * offset 20708
 	 */
 	uint8_t throttle2TrimTpsBins[6];
 	/**
 	RPM
-	 * offset 21242
+	 * offset 20714
 	 */
 	scaled_channel<uint8_t, 1, 100> throttle2TrimRpmBins[6];
 	/**
 	deg
-	 * offset 21248
+	 * offset 20720
 	 */
 	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[6][6];
 	/**
 	%
-	 * offset 21284
+	 * offset 20756
 	 */
 	uint8_t maxKnockRetardLoadBins[6];
 	/**
 	RPM
-	 * offset 21290
+	 * offset 20762
 	 */
 	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[6];
 	/**
-	 * offset 21296
+	deg
+	 * offset 20768
+	 */
+	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[4][4];
+	/**
+	TPS
+	 * offset 20800
+	 */
+	uint16_t alsIgnRetardLoadBins[4];
+	/**
+	RPM
+	 * offset 20808
+	 */
+	uint16_t alsIgnRetardrpmBins[4];
+	/**
+	percent
+	 * offset 20816
+	 */
+	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[4][4];
+	/**
+	TPS
+	 * offset 20848
+	 */
+	uint16_t alsFuelAdjustmentLoadBins[4];
+	/**
+	RPM
+	 * offset 20856
+	 */
+	uint16_t alsFuelAdjustmentrpmBins[4];
+	/**
+	 * offset 20864
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
 	/**
-	 * offset 22048
+	 * offset 21616
 	 */
 	blend_table_s veBlends[VE_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 22800);
+static_assert(sizeof(persistent_config_s) == 22368);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Thu Dec 01 00:54:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_subaru_config.sh integration/rusefi_config.txt Sat Jan 07 03:08:29 UTC 2023

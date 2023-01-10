@@ -25,12 +25,19 @@ public class TriggerSignalReader {
             int signalIndex = Integer.parseInt(tokens[2]);
             int signalState = Integer.parseInt(tokens[3]);
             double angle = Double.parseDouble(tokens[4]);
+            double gap = parseDoubleMaybeNaN(tokens[5]);
 
-            TriggerSignal s = new TriggerSignal(signalIndex, signalState, angle);
+            TriggerSignal s = new TriggerSignal(signalIndex, signalState, angle, gap);
 //            System.out.println(s);
             signals.add(s);
             index++;
         }
         return signals;
+    }
+
+    private static double parseDoubleMaybeNaN(String doubleString) {
+        if ("nan".equalsIgnoreCase(doubleString))
+            return Double.NaN;
+        return Double.parseDouble(doubleString);
     }
 }

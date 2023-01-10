@@ -7,6 +7,7 @@
 #include "electronic_throttle_impl.h"
 #include "knock_controller_generated.h"
 #include "fuel_computer.h"
+#include "antilag_system_state_generated.h"
 
 template<>
 const output_channels_s* getLiveData(size_t) {
@@ -31,6 +32,15 @@ template<>
 const launch_control_state_s* getLiveData(size_t) {
 #if EFI_LAUNCH_CONTROL
 	return &engine->launchController;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
+const antilag_system_state_s* getLiveData(size_t) {
+#if EFI_ANTILAG_SYSTEM
+	return &engine->antilagController;
 #else
 	return nullptr;
 #endif
@@ -91,7 +101,11 @@ const tps_accel_state_s* getLiveData(size_t) {
 
 template<>
 const trigger_central_s* getLiveData(size_t) {
+#if EFI_SHAFT_POSITION_INPUT
 	return &engine->triggerCentral;
+#else
+	return nullptr;
+#endif
 }
 
 template<>
@@ -126,7 +140,11 @@ const wall_fuel_state_s* getLiveData(size_t) {
 
 template<>
 const idle_state_s* getLiveData(size_t) {
+#if EFI_IDLE_CONTROL
 	return &engine->module<IdleController>().unmock();
+#else
+	return nullptr;
+#endif
 }
 
 template<>

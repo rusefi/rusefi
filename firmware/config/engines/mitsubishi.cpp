@@ -14,7 +14,6 @@
 #include "mitsubishi.h"
 
 void setMitsubishiConfiguration() {
-	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->trigger.type = TT_MITSUBISHI; // same trigger as 4G63?
 

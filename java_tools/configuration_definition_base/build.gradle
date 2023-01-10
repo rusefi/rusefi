@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../../java_tools/dependencies.gradle'
+
+dependencies {
+    api project(':inifile')
+    api global_libs.snakeyaml
+    api project(':enum_to_string')
+}

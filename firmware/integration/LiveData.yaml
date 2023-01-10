@@ -43,6 +43,12 @@ Usages:
     java: LaunchControl.java
     folder: controllers/algo
 
+  - name: antilag_system_state
+    java: AntilagSystem.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config.txt
+    output_name: als
+
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators

@@ -21,6 +21,10 @@
 #define EFI_LAUNCH_CONTROL TRUE
 #endif
 
+#ifndef EFI_ANTILAG_SYSTEM
+#define EFI_ANTILAG_SYSTEM TRUE
+#endif
+
 #define EFI_DYNO_VIEW TRUE
 
 #ifndef EFI_CDM_INTEGRATION
@@ -37,7 +41,9 @@
 
 #define EFI_ACTIVE_CONFIGURATION_IN_FLASH FALSE
 
+#ifndef EFI_MC33816
 #define EFI_MC33816 TRUE
+#endif
 
 #ifndef EFI_HPFP
 #define EFI_HPFP TRUE
@@ -269,6 +275,7 @@
 
 /**
  * Do we need file logging (like SD card) logic?
+ * See also USE_FATFS
  */
 #ifndef EFI_FILE_LOGGING
 #define EFI_FILE_LOGGING TRUE

@@ -1,10 +1,8 @@
 /**
- * @file boards/hellen/hellen-nb1/board_configuration.cpp
+ * @file board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen-nb1 board
- *
- * See http://rusefi.com/s/hellenNB1
+ * @brief Configuration defaults for the hellen-gm-e67 board
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -25,11 +23,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[6] = H144_LS_7;
 	engineConfiguration->injectionPins[7] = H144_LS_8;
 
-	// Disable remainder
-	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
-
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	engineConfiguration->clutchDownPin = Gpio::C4; // Clutch switch input
@@ -47,11 +40,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[5] = H144_IGN_6;
 	engineConfiguration->ignitionPins[6] = H144_IGN_7;
 	engineConfiguration->ignitionPins[7] = H144_IGN_8;
-
-	// disable remainder
-	for (int i = 8; i < MAX_CYLINDER_COUNT; i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }

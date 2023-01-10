@@ -1,7 +1,6 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.binaryprotocol.IncomingDataBuffer;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -15,5 +14,5 @@ public interface StatusConsumer {
     StatusConsumer VOID = s -> {
     };
 
-    void append(String s);
+    void append(String status);
 }

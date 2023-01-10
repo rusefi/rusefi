@@ -1,0 +1,305 @@
+pins:
+  # Low side outputs
+  - pin: 1
+    id: E5
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 1
+    
+  - pin: 2
+    id: E6
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 2
+
+  - pin: 3
+    id: E0
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 3
+    
+  - pin: 4
+    id: C13
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 4
+    
+  - pin: 5
+    id: E1
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 5
+    
+  - pin: 6
+    id: A15
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 6
+    
+  - pin: 7
+    id: A7
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 7
+    
+  - pin: 8
+    id: B8
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Injector 8
+
+    # Low side
+
+  - pin: 9
+    id: E8
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Boost controler
+
+  - pin: 10
+    id: E9
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Idle valve 1
+
+  - pin: 11
+    id: E12
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Tacho output
+
+  - pin: 12
+    id: E11
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low side output 1
+
+  - pin: 13
+    id: E10
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low side output 2
+
+  - pin: 14
+    id: E13
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Low side output 3
+
+
+  - pin: 15
+    id: E14
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Fan output
+
+  - pin: 16
+    id: E15
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Fuel pump output
+
+  - pin: 17
+    id: B14
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_PWM
+
+  - pin: 18
+    id: D3
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_DIS
+
+  - pin: 19
+    id: D0
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: DBW_DIR
+    
+  # High side
+  
+  - pin: 20
+    id: B9
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 1
+    
+  - pin: 21
+    id: B6
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 2
+    
+  - pin: 22
+    id: B7
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 3
+    
+  - pin: 23
+    id: B3
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 4
+    
+  - pin: 24
+    id: B5
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 5
+    
+  - pin: 25
+    id: D1
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 6
+    
+  - pin: 26
+    id: D4
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 7
+    
+  - pin: 27
+    id: D7
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Ignition 8
+    
+  # SENSORS
+  
+  - pin: 28
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Battery reference voltage
+
+  - pin: 29
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Fuel Pressure-spare analog input 1
+
+  - pin: 30
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Oil pressure-spare analog input 2
+
+  - pin: 31
+    id: EFI_ADC_10
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Iat sensor
+
+  - pin: 32
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Tps sensor
+
+  - pin: 33
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Map sensor
+
+  - pin: 34
+    id: EFI_ADC_13
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Clt sensor
+
+  - pin: 35
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Analog sensor 1
+
+  - pin: 36
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Analog sensor 2
+
+  - pin: 37
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Analog sensor 3
+
+  - pin: 38
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: AFR sensor
+
+  - pin: 39
+    id: [A10, A10]
+    class: [event_inputs, switch_inputs]
+    function: Camshaft Sensor (VR+/Hall)
+    type: hall
+    ts_name: Camshaft Sensor
+
+  - pin: 40
+    id: [A9, A9]
+    class: [event_inputs, switch_inputs]
+    function: Crankshaft Sensor (VR+/Hall)
+    type: hall
+    ts_name: Crankshaft Sensor
+
+  - pin: 41
+    id: [A8, A8]
+    class: [event_inputs, switch_inputs]
+    function: VSS (VR+/Hall)
+    type: hall
+    ts_name: VSS
+
+  - pin: 42
+    id: [D8, D8]
+    class: [event_inputs, switch_inputs]
+    function: CLUTCH_IN
+    type: hall
+    ts_name: Digital input 1
+
+  - pin: 43
+    id: [D10, D10]
+    class: [event_inputs, switch_inputs]
+    function: FLEX_IN
+    type: hall
+    ts_name: Digital input 2
+
+
+
+
+    
+ 
+

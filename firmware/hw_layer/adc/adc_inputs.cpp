@@ -21,8 +21,11 @@
 
 #include "pch.h"
 
-#if HAL_USE_ADC
+float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
+    return engineConfiguration->analogInputDividerCoefficient;
+}
 
+#if HAL_USE_ADC
 
 #include "adc_subscription.h"
 #include "AdcConfiguration.h"
@@ -42,7 +45,7 @@ static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
-	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
+	return getVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
 }
 
 // voltage in MCU universe, from zero to VDD
@@ -295,7 +298,7 @@ adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 
 static void printAdcValue(int channel) {
 	int value = getAdcValue("print", (adc_channel_e)channel);
-	float volts = adcToVoltsDivided(value);
+	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
 	efiPrintf("adc voltage : %.2f", volts);
 }
 
@@ -396,10 +399,6 @@ public:
 
 void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode) {
 	if (!isAdcChannelValid(setting)) {
-		return;
-	}
-	if (/*type-limited (int)setting < 0 || */(int)setting>=HW_MAX_ADC_INDEX) {
-		firmwareError(CUSTOM_INVALID_ADC, "Invalid ADC setting %s", name);
 		return;
 	}
 

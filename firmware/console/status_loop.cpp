@@ -516,7 +516,7 @@ static void updateRawSensors() {
 	engine->outputChannels.luaGauges[0] = Sensor::getOrZero(SensorType::LuaGauge1);
 	engine->outputChannels.luaGauges[1] = Sensor::getOrZero(SensorType::LuaGauge2);
 
-	for (int i = 0;i<AUX_ANALOG_INPUT_COUNT;i++) {
+	for (int i = 0;i<LUA_ANALOG_INPUT_COUNT;i++) {
 		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
 		if (ch != EFI_ADC_NONE) {
 			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", ch);
@@ -765,15 +765,15 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
-		postCanState();
+	postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
-		tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
-		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
+	tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);
 #endif /* EFI_CLOCK_LOCKS */
 
 #if EFI_SHAFT_POSITION_INPUT
+	tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 	tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
 	tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 

@@ -19,6 +19,9 @@ jobs:
         build-target: [
             alphax-2chan,
             alphax-4chan,
+            alphax-8chan,
+            m74_9,
+            s105,
             harley81,
             hellen72,
             hellen81,
@@ -63,6 +66,7 @@ jobs:
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
+            skip-rate: 90
 
           - build-target: hellen81
             folder: hellen/hellen81
@@ -72,10 +76,25 @@ jobs:
           - build-target: alphax-2chan
             folder: hellen/alphax-2chan
             ini-file: rusefi_alphax-2chan.ini
+            skip-rate: 0
 
           - build-target: alphax-4chan
             folder: hellen/alphax-4chan
             ini-file: rusefi_alphax-4chan.ini
+
+          - build-target: alphax-8chan
+            folder: hellen/alphax-8chan
+            ini-file: rusefi_alphax-8chan.ini
+
+          - build-target: s105
+            folder: s105
+            ini-file: rusefi_s105.ini
+            skip-rate: 0
+
+          - build-target: m74_9
+            folder: m74_9
+            ini-file: rusefi_m74_9.ini
+            skip-rate: 0
 
           - build-target: harley81
             folder: hellen/harley81
@@ -100,6 +119,7 @@ jobs:
           - build-target: hellen-gm-e67
             folder: hellen/hellen-gm-e67
             ini-file: rusefi_hellen-gm-e67.ini
+            skip-rate: 90
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
@@ -109,6 +129,7 @@ jobs:
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
             ini-file: rusefi_hellenNA6.ini
+            skip-rate: 90
 
           - build-target: hellen128
             folder: hellen/hellen128
@@ -127,6 +148,7 @@ jobs:
           - build-target: hellen154hyundai
             folder: hellen/hellen154hyundai
             ini-file: rusefi_hellen154hyundai.ini
+            skip-rate: 90
 
           - build-target: cypress
             folder: cypress
@@ -149,12 +171,12 @@ jobs:
           - build-target: mre_f4_debug
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
+            skip-rate: 95
 
           - build-target: mre_f4_recovery
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
-            skip-rate: 90
+            skip-rate: 95
 
           - build-target: mre_f4_hardware_QC_special_build
             folder: microrusefi
@@ -192,6 +214,7 @@ jobs:
           - build-target: proteus_f7_hardware_QC_special_build
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
+            skip-rate: 90
 
           - build-target: proteus_h7
             folder: proteus

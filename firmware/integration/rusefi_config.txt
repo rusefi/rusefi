@@ -93,7 +93,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10016
+#define FLASH_DATA_VERSION 10017
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -112,11 +112,11 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 750
 
-#define AUX_ANALOG_INPUT_COUNT 8
 #define SENT_INPUT_COUNT 1
 
 #define LUA_PWM_COUNT 8
 #define LUA_ANALOG_INPUT_COUNT 8
+#define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 2
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
@@ -139,7 +139,6 @@ struct_no_prefix engine_configuration_s
 #define TOOTH_PACKET_SIZE 2
 #define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
 
-#define COMPOSITE_PACKET_COUNT 1000
 #define COMPOSITE_PACKET_SIZE 5
 
 #define MAP_ANGLE_SIZE 8
@@ -216,6 +215,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_GAPS_COUNT "gapsCount"
 #define TRIGGER_GAP_FROM "gapFrom"
 #define TRIGGER_GAP_TO "gapTo"
+#define TRIGGER_WITH_SYNC "isSynchronizationNeeded"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -251,6 +251,7 @@ struct_no_prefix engine_configuration_s
 
 #define TPS_TPS_ACCEL_TABLE 8
 #define ADC_CHANNEL_NONE 0
+#define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 
 #define BARO_CORR_SIZE 4
 
@@ -445,7 +446,7 @@ end_struct
 injector_s injector
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit useFordRedundantTps;On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
 bit enableFan1WithAc;Turn on this fan when AC is on.
@@ -465,7 +466,7 @@ bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled;
-bit rollingLaunchEnabled;
+bit anotherUnusedHere444
 bit antiLagEnabled;
 bit useRunningMathForCranking,"Fuel Map","Fixed";For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 bit displayLogicLevelsInEngineSniffer;Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
@@ -474,7 +475,7 @@ bit enableMapEstimationTableFallback;If enabled, the MAP estimate table will be 
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit issue_294_31,"si_example","nada_example"
+bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 
 !todo: extract these two fields into a structure
@@ -522,7 +523,8 @@ end_struct
 
 custom engine_load_mode_e 1 bits, U08, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
 engine_load_mode_e fuelAlgorithm;This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS commonly only used for NA engines\nSpeed Density requires MAP sensor and is the default choice for may installs\nMAF air charge is a cylinder filling based method that uses a mass air flow sensor.;
-uint8_t[3] alignmentFill_at_1
+uint8_t ALSMaxTPS;;"%", 1, 0, 0, 10, 0
+uint8_t[2] unusedHerealignmentFill_at_1
 
 custom injection_mode_e 1 bits, U08, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
 injection_mode_e crankingInjectionMode;This is the injection strategy during engine start. See Fuel/Injection settings for more detail. It is suggested to use "Simultaneous".
@@ -583,7 +585,7 @@ adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sen
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Benelli Tre", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "INVALID", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "INVALID", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi 4G93", "EZ30", "INVALID", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Benelli Tre", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM 24x 5 degree", "Honda CBR 600", "4g93 only cam", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "4g93 both fronts", "INVALID", "Subaru 7+6", "Jeep 18-2-2-2", "12 tooth crank", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "Mitsubishi 3A92", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "36-2-1", "36-2-1-1", "INVALID", "INVALID", "GM 24x 3 degree", "trg75"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -795,7 +797,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
-	uint8_t mc33_hvolt;;"v", 1, 0, 40, 70, 0
+	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
 output_pin_e acFanPin;Optional Radiator Fan used with A/C
@@ -947,7 +949,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
     output_pin_e boostControlPin;Wastegate control Solenoid;
 	pin_output_mode_e boostControlPinMode;
-    switch_input_pin_e antiLagActivatePin;
+    switch_input_pin_e ALSActivatePin;
     switch_input_pin_e launchActivatePin;
 
     pid_s boostPid;
@@ -1054,8 +1056,8 @@ bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skippe
 custom idle_mode_e 1 bits, U08, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Open Loop"
 	idle_mode_e idleMode;See also idleRpmPid;
 
-	bit isInjectionEnabled;Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
-	bit isIgnitionEnabled;Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
+	bit isInjectionEnabled
+	bit isIgnitionEnabled
 	bit isCylinderCleanupEnabled;When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	bit alwaysInstantRpm
@@ -1082,8 +1084,8 @@ bit forceO2Heating,"yes","no";If enabled, don't wait for engine start to heat O2
 bit invertVvtControlIntake, "retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
-bit unused_1484_bit_38
-bit unused_1484_bit_29
+bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
+bit ALSActivateInverted
 bit unused_1484_bit_30
 bit tempBooleanForVerySpecialLogic
 
@@ -1154,7 +1156,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
 	
 	int16_t startUpFuelPumpDuration;on IGN voltage detection turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
-	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 200, 0
+	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
 	
 
 	float targetVBatt;This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
@@ -1267,7 +1269,8 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t fan2ExtraIdle;Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale primingDelay;Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
-	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
+! todo: rename to luaAnalogInputs
+	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 custom tle8888_mode_e 1 bits, U08, @OFFSET@, [0:1], "Auto", "SemiAuto", "Manual", "Hall"
@@ -1348,7 +1351,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
     brain_input_pin_e[SENT_INPUT_COUNT iterate] sentInputPins;
 
     int8_t launchFuelAdderPercent
-	int8_t[1 iterate] sorryUnused
+	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
 	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	float etbDutyThreshold
 
@@ -1423,15 +1426,15 @@ tChargeMode_e tChargeMode;
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
 
-	uint16_t mc33_i_boost;;"mA", 1, 0, 1000, 25000, 0
-	uint16_t mc33_i_peak;;"mA", 1, 0, 1000, 20000, 0
-	uint16_t mc33_i_hold;;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_boost;Boost Current;"mA", 1, 0, 1000, 25000, 0
+	uint16_t mc33_i_peak;Peak Current;"mA", 1, 0, 1000, 20000, 0
+	uint16_t mc33_i_hold;Hold Current;"mA", 1, 0, 1000, 20000, 0
 	uint16_t mc33_t_max_boost;Maximum allowed boost phase time. If the injector current doesn't reach the threshold before this time elapses, it is assumed that the injector is missing or has failed open circuit.;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_peak_off;;"us", 1, 0, 0, 10000, 0
-	uint16_t mc33_t_peak_tot;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_peak_tot;Peak phase duration;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_bypass;;"us", 1, 0, 0, 10000, 0
 	uint16_t mc33_t_hold_off;;"us", 1, 0, 0, 10000, 0
-	uint16_t mc33_t_hold_tot;;"us", 1, 0, 0, 10000, 0
+	uint16_t mc33_t_hold_tot;Hold phase duration;"us", 1, 0, 0, 10000, 0
 
 	pin_input_mode_e tcuUpshiftButtonPinMode
 	pin_input_mode_e tcuDownshiftButtonPinMode
@@ -1452,7 +1455,9 @@ tChargeMode_e tChargeMode;
 
 	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
 
-	int8_t[5] unused4080;;"", 1, 0, 0, 0, 0
+	uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+
+	uint8_t etbJamIntegratorLimit;;"%", 1, 0, 0, 50, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
@@ -1539,7 +1544,26 @@ uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave
 
 float etbDutyShutdownThreshold
-uint8_t[156] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+Gpio[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
+	int16_t ALSMinRPM;;"rpm", 1, 0, 0, 20000, 0
+	int16_t ALSMaxRPM;;"rpm", 1, 0, 0, 20000, 0
+float alsMaxDuration;;"sec", 1, 0, 0.01, 100, 2
+	int8_t ALSMinCLT;;"C", 1, 0, 0, 90, 0
+	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
+uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
+uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
+	uint8_t[4] unusedAlignmentFill_at_33
+	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
+	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
+	int ALSSkipRatio;;"", 1, 0, 0.1, 2, 1
+	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
+	pin_input_mode_e ALSActivatePinMode;
+
+	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use 65%;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use xxx%;"%", 0.5, 0, 0, 100, 1
+pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
+uint8_t[96] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1639,9 +1663,9 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -720, 720, 1
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
-uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
+int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
+uint8_t[8] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0, 1000, 0
 
 int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
 uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 1000, 0
@@ -1751,6 +1775,14 @@ uint8_t[6] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
 uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
 uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
 uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
+
+int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -720, 720, 1
+uint16_t[4] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
+uint16_t[4] alsIgnRetardrpmBins;;"RPM",	   1, 0, 0, 25000, 0
+
+int16_t[4 x 4] autoscale ALSFuelAdjustment;;"percent", 0.1, 0, 0, 500, 1
+uint16_t[4] alsFuelAdjustmentLoadBins;;"TPS", 1, 0, 0, 100, 0
+uint16_t[4] alsFuelAdjustmentrpmBins;;"RPM",	1, 0, 0, 25000, 0
 
 struct blend_table_s
 	int16_t[8 x 8] autoscale table;;"", 0.1, 0, -100, 100, 1
@@ -2061,9 +2093,6 @@ end_struct
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_SCATTERED_GET_COMMAND '9'
 
-#define TS_COMPOSITE_ENABLE 1
-#define TS_COMPOSITE_DISABLE 2
-
 ! Performance tracing
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
@@ -2101,7 +2130,18 @@ end_struct
 
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
-#define TS_GET_LOGGER_GET_BUFFER 'L'
+
+#define TS_COMPOSITE_ENABLE 1
+#define TS_COMPOSITE_DISABLE 2
+#define TS_COMPOSITE_READ 3
+
+#define TS_TRIGGER_SCOPE_ENABLE 4
+#define TS_TRIGGER_SCOPE_DISABLE 5
+#define TS_TRIGGER_SCOPE_READ 6
+
+! Generic channel names, your board may want to override these
+#define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
+#define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_INJ1_SHORT_NAME "i1"

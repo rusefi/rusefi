@@ -14,7 +14,7 @@ void initHip9011();
 void startHip9001_pins();
 void stopHip9001_pins();
 #if HAL_USE_ADC
-void hipAdcCallback(adcsample_t value);
+void hipAdcCallback(float volts);
 #endif /* HAL_USE_ADC */
 
 void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt);

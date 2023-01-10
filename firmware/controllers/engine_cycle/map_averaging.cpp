@@ -125,10 +125,8 @@ void MapAverager::stop() {
  * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
  * as fast as possible
  */
-void mapAveragingAdcCallback(adcsample_t adcValue) {
+void mapAveragingAdcCallback(float instantVoltage) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
-
-	float instantVoltage = adcToVoltsDivided(adcValue);
 
 	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 

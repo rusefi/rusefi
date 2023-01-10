@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ConfigFieldImpl;
 
 import java.util.List;
 

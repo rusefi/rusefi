@@ -27,6 +27,7 @@ config/boards/subaru_eg33/config/gen_subaru_config.sh
 for BOARD in \
    "hellen/alphax-2chan alphax-2chan" \
    "hellen/alphax-4chan alphax-4chan" \
+   "hellen/alphax-8chan alphax-8chan" \
    "hellen/harley81 harley81" \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "hellen/hellen121vag hellen121vag" \
@@ -43,6 +44,8 @@ for BOARD in \
    "microrusefi mre_f4" \
    "core8 core8" \
    "48way 48way" \
+   "m74_9 m74_9" \
+   "s105 s105" \
    "frankenso frankenso_na6" \
    "prometheus prometheus_469" \
    "prometheus prometheus_405" \

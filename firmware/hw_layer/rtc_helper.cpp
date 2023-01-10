@@ -29,7 +29,7 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #if EFI_RTC
 void initRtc() {
 	efiPrintf("initRtc()");
-	printDateTime(); // this would test RTC, see 'rtcWorks' variable, see #311
+	printDateTime(); // this would test RTC, see #311
 }
 
 static const char * const monthAbbrs[] = {

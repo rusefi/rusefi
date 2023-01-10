@@ -19,12 +19,9 @@
 #include "trigger_central.h"
 #include "tooth_logger.h"
 
-#if EFI_PROD_CODE
-#endif /* EFI_PROD_CODE */
-
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
-#endif
+#endif // EFI_SENSOR_CHART
 
 #include "engine_sniffer.h"
 
@@ -63,6 +60,47 @@ float RpmCalculator::getCachedRpm() const {
 	return cachedRpmValue;
 }
 
+operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
+// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
+// this is related to 'knownOperationMode' flag
+static bool doesTriggerImplyOperationMode(trigger_type_e type) {
+	switch (type) {
+		case TT_TOOTHED_WHEEL:
+		case TT_ONE:
+		case TT_3_1_CAM:
+		case TT_36_2_2_2:	// TODO: should this one be in this list?
+		case TT_TOOTHED_WHEEL_60_2:
+		case TT_TOOTHED_WHEEL_36_1:
+			// These modes could be either cam or crank speed
+			return false;
+		default:
+			return true;
+	}
+}
+
+// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
+operation_mode_e RpmCalculator::getOperationMode() const {
+#if EFI_SHAFT_POSITION_INPUT
+	// Ignore user-provided setting for well known triggers.
+	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
+		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
+		return engine->triggerCentral.triggerShape.getWheelOperationMode();
+	} else
+#endif // EFI_SHAFT_POSITION_INPUT
+	{
+		// For example 36-1, could be on either cam or crank, so we have to ask the user
+		return lookupOperationMode();
+	}
+}
+
+
 #if EFI_SHAFT_POSITION_INPUT
 
 RpmCalculator::RpmCalculator() :
@@ -99,43 +137,6 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	}
 
 	return true;
-}
-
-// see also in TunerStudio project '[doesTriggerImplyOperationMode] tag
-// this is related to 'knownOperationMode' flag
-static bool doesTriggerImplyOperationMode(trigger_type_e type) {
-	switch (type) {
-		case TT_TOOTHED_WHEEL:
-		case TT_ONE:
-		case TT_3_1_CAM:
-		case TT_36_2_2_2:	// TODO: should this one be in this list?
-		case TT_TOOTHED_WHEEL_60_2:
-		case TT_TOOTHED_WHEEL_36_1:
-			// These modes could be either cam or crank speed
-			return false;
-		default:
-			return true;
-	}
-}
-
-operation_mode_e lookupOperationMode() {
-	if (engineConfiguration->twoStroke) {
-		return TWO_STROKE;
-	} else {
-		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
-	}
-}
-
-// todo: move to triggerCentral/triggerShape since has nothing to do with rotation state!
-operation_mode_e RpmCalculator::getOperationMode() const {
-	// Ignore user-provided setting for well known triggers.
-	if (doesTriggerImplyOperationMode(engineConfiguration->trigger.type)) {
-		// For example for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
-		return engine->triggerCentral.triggerShape.getWheelOperationMode();
-	} else {
-		// For example 36-1, could be on either cam or crank, so we have to ask the user
-		return lookupOperationMode();
-	}
 }
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {

@@ -71,9 +71,11 @@ static void showIdleInfo() {
 		}
 	}
 
+#if EFI_IDLE_CONTROL
 	if (engineConfiguration->idleMode == IM_AUTO) {
 		engine->module<IdleController>().unmock().getIdlePid()->showPidStatus("idle");
 	}
+#endif // EFI_IDLE_CONTROL
 }
 
 void setIdleMode(idle_mode_e value) {
@@ -94,14 +96,16 @@ void setManualIdleValvePosition(int positionPercent) {
 
 #if EFI_PROD_CODE
 static void startInputPinIfValid(const char *msg, brain_pin_e pin, pin_input_mode_e mode) {
-	if (isBrainPinValid(pin)) {
-		efiSetPadMode(msg, pin, getInputMode(mode));
-	}
+	efiSetPadMode(msg, pin, getInputMode(mode));
 }
 #endif // EFI_PROD_CODE
 
 percent_t getIdlePosition() {
+#if EFI_IDLE_CONTROL
 	return engine->module<IdleController>().unmock().currentIdlePosition;
+#else
+    return 0;
+#endif
 }
 
 void startPedalPins() {
@@ -130,7 +134,9 @@ void stopPedalPins() {
 #if ! EFI_UNIT_TEST
 
 static void applyPidSettings() {
+#if EFI_IDLE_CONTROL
 	engine->module<IdleController>().unmock().getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+#endif // EFI_IDLE_CONTROL
 }
 
 void setTargetIdleRpm(int value) {

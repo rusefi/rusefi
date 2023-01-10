@@ -121,7 +121,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
 	// pin #28 WBO AFR "Analog Volt 10"
-	engineConfiguration->afr.hwChannel = EFI_ADC_5;
+	engineConfiguration->afr.hwChannel = PROTEUS_IN_ANALOG_VOLT_10;
 }
 
 static void setupSdCard() {

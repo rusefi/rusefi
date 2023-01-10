@@ -27,7 +27,6 @@
 #include "advance_map.h"
 #include "flash_main.h"
 
-#include "hip9011_logic.h"
 #include "bench_test.h"
 
 #if EFI_MEMS
@@ -112,8 +111,8 @@
 
 /**
  * Current engine configuration. On firmware start we assign empty configuration, then
- * we copy actual configuration after reading settings.
- * This is useful to compare old and new configurations in order to apply new settings.
+ * we copy actual configuration after reading settings from flash.
+ * This is useful to compare old/current (activeConfiguration) and new/future (engineConfiguration) configurations in order to apply new settings.
  *
  * todo: place this field next to 'engineConfiguration'?
  */
@@ -320,19 +319,6 @@ static void setDefaultIdleSpeedTarget() {
 	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
 }
 
-static void setDefaultFrankensoStepperIdleParameters() {
-	engineConfiguration->idle.stepperDirectionPin = Gpio::E10;
-	engineConfiguration->idle.stepperStepPin = Gpio::E12;
-	engineConfiguration->stepperEnablePin = Gpio::E14;
-	engineConfiguration->idleStepperReactionTime = 10;
-	engineConfiguration->idleStepperTotalSteps = 150;
-}
-
-static void setCanFrankensoDefaults() {
-	engineConfiguration->canTxPin = Gpio::B6;
-	engineConfiguration->canRxPin = Gpio::B12;
-}
-
 /**
  * see also setDefaultIdleSpeedTarget()
  */
@@ -371,44 +357,11 @@ void setDefaultGppwmParameters() {
 }
 
 static void setDefaultEngineNoiseTable() {
-	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+	setRpmTableBin(engineConfiguration->knockNoiseRpmBins);
 
 	engineConfiguration->knockSamplingDuration = 45;
 
 	setArrayValues(engineConfiguration->knockBaseNoise, -20);
-}
-
-static void setHip9011FrankensoPinout() {
-	/**
-	 * SPI on PB13/14/15
-	 */
-	//	engineConfiguration->hip9011CsPin = Gpio::D0; // rev 0.1
-
-	engineConfiguration->isHip9011Enabled = true;
-	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
-	engineConfiguration->is_enabled_spi_2 = true;
-	// todo: convert this to rusEfi, hardware-independent enum
-#if EFI_PROD_CODE
-#ifdef EFI_HIP_CS_PIN
-	engineConfiguration->hip9011CsPin = EFI_HIP_CS_PIN;
-#else
-	engineConfiguration->hip9011CsPin = Gpio::B0; // rev 0.4
-#endif
-	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
-
-	engineConfiguration->hip9011IntHoldPin = Gpio::B11;
-	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
-
-	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
-	engineConfiguration->spi2MosiMode = PO_OPENDRAIN; // 4
-	engineConfiguration->spi2MisoMode = PO_PULLUP; // 32
-#endif /* EFI_PROD_CODE */
-
-	engineConfiguration->hip9011Gain = 1;
-
-	if (!engineConfiguration->useTpicAdvancedMode) {
-	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
-	}
 }
 
 /**
@@ -511,6 +464,11 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(config->scriptCurve5Bins, 0, 100, 1);
 	setLinearCurve(config->scriptCurve6Bins, 0, 100, 1);
 
+	setLinearCurve(config->alsIgnRetardLoadBins, 2, 10, 1);
+	setRpmTableBin(config->alsIgnRetardrpmBins);
+	setLinearCurve(config->alsFuelAdjustmentLoadBins, 2, 10, 1);
+	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
+
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection();
 
@@ -520,17 +478,17 @@ static void setDefaultEngineConfiguration() {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable1RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->vvtTable1RpmBins);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable2RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->vvtTable2RpmBins);
 	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable1RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable1RpmBins);
 	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable2RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable2RpmBins);
 	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable3RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable3RpmBins);
 	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable4RpmBins, SCRIPT_TABLE_8);
+	setRpmTableBin(config->scriptTable4RpmBins);
 
 	setDefaultEngineNoiseTable();
 
@@ -676,70 +634,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
-}
-
-/**
- * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
- */
-void setDefaultFrankensoConfiguration() {
-	setDefaultFrankensoStepperIdleParameters();
-	setCanFrankensoDefaults();
-
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
-	engineConfiguration->clt.adcChannel = EFI_ADC_6;
-	engineConfiguration->iat.adcChannel = EFI_ADC_7;
-	engineConfiguration->afr.hwChannel = EFI_ADC_14;
-
-	engineConfiguration->accelerometerSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_2;
-	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
-
-//	engineConfiguration->gps_rx_pin = Gpio::B7;
-//	engineConfiguration->gps_tx_pin = Gpio::B6;
-
-	engineConfiguration->triggerSimulatorPins[0] = Gpio::D1;
-	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
-
-	engineConfiguration->triggerInputPins[0] = Gpio::C6;
-	engineConfiguration->triggerInputPins[1] = Gpio::A5;
-
-	// set this to SPI_DEVICE_3 to enable stimulation
-	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->digitalPotentiometerChipSelect[0] = Gpio::D7;
-	engineConfiguration->digitalPotentiometerChipSelect[1] = Gpio::Unassigned;
-	engineConfiguration->digitalPotentiometerChipSelect[2] = Gpio::D5;
-	engineConfiguration->digitalPotentiometerChipSelect[3] = Gpio::Unassigned;
-
-	engineConfiguration->spi1mosiPin = Gpio::B5;
-	engineConfiguration->spi1misoPin = Gpio::B4;
-	engineConfiguration->spi1sckPin = Gpio::B3; // please note that this pin is also SWO/SWD - Single Wire debug Output
-
-	engineConfiguration->spi2mosiPin = Gpio::B15;
-	engineConfiguration->spi2misoPin = Gpio::B14;
-	engineConfiguration->spi2sckPin = Gpio::B13;
-
-	engineConfiguration->spi3mosiPin = Gpio::B5;
-	engineConfiguration->spi3misoPin = Gpio::B4;
-	engineConfiguration->spi3sckPin = Gpio::B3;
-	
-	// set optional subsystem configs
-#if EFI_MEMS
-	// this would override some values from above
-	configureAccelerometerPins();
-#endif /* EFI_MEMS */
-
-#if EFI_HIP_9011
-	setHip9011FrankensoPinout();
-#endif /* EFI_HIP_9011 */
-
-#if EFI_FILE_LOGGING
-	setDefaultSdCardParameters();
-#endif /* EFI_FILE_LOGGING */
-
-	engineConfiguration->is_enabled_spi_1 = false;
-	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->is_enabled_spi_3 = true;
+    #include "default_script.lua"
 }
 
 #ifdef CONFIG_RESET_SWITCH_PORT

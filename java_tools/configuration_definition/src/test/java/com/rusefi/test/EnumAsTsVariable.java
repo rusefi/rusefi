@@ -1,7 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.EnumsReader;
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertNotNull;
 public class EnumAsTsVariable {
     @Test
     public void testUseEnumAsVariable() throws IOException {
-        ReaderState readerState = new ReaderState();
+        ReaderStateImpl readerState = new ReaderStateImpl();
         readerState.read(new BufferedReader(new StringReader("" +
                 "typedef enum {\n" +
                 "\tFO_1 = 0,\n" +
@@ -25,13 +25,13 @@ public class EnumAsTsVariable {
                 "Force_4b_firing_order = ENUM_32_BITS,\n" +
                 "} firing_order_e;")));
 
-        EnumsReader.EnumState state = readerState.enumsReader.getEnums().get("firing_order_e");
+        EnumsReader.EnumState state = readerState.getEnumsReader().getEnums().get("firing_order_e");
         assertNotNull(state);
 
-        String data = readerState.variableRegistry.get("firing_order_e_FO_1");
+        String data = readerState.getVariableRegistry().get("firing_order_e_FO_1");
         assertEquals("0", data);
 
-        assertEquals("0", readerState.variableRegistry.applyVariables("@@firing_order_e_FO_1@@"));
-        assertEquals("\\x00\\x00", readerState.variableRegistry.applyVariables("@@firing_order_e_FO_1_16_hex@@"));
+        assertEquals("0", readerState.getVariableRegistry().applyVariables("@@firing_order_e_FO_1@@"));
+        assertEquals("\\x00\\x00", readerState.getVariableRegistry().applyVariables("@@firing_order_e_FO_1_16_hex@@"));
     }
 }

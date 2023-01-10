@@ -1,0 +1,2 @@
+w folderze /firmware
+gen_config_board.sh BB_V2 BB_V2

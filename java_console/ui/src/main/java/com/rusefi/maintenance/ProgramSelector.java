@@ -49,7 +49,7 @@ public class ProgramSelector {
         controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, ST_LINK, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, ST_LINK, OPENBLT_CAN , DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
@@ -131,6 +131,8 @@ public class ProgramSelector {
             }
             if (currentHardware.isStLinkConnected())
                 mode.addItem(ST_LINK);
+            if (currentHardware.isPCANConnected())
+                mode.addItem(OPENBLT_CAN);
             // todo: detect PCAN mode.addItem(OPENBLT_CAN);
         }
         if (!currentHardware.getKnownPorts().isEmpty())

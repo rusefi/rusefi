@@ -1,12 +1,10 @@
 package com.rusefi.test;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.TSProjectConsumer;
 
-import java.io.CharArrayWriter;
-
 public class TestTSProjectConsumer extends TSProjectConsumer {
-    public TestTSProjectConsumer(String tsPath, ReaderState state) {
+    public TestTSProjectConsumer(String tsPath, ReaderStateImpl state) {
         super(tsPath, state);
     }
 

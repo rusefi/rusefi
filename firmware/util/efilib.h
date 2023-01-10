@@ -12,6 +12,9 @@
 #include <rusefi/arrays.h>
 #endif
 
+#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
+int djb2lowerCase(const char *str);
+
 #define _MAX_FILLER 11
 
 // http://en.wikipedia.org/wiki/Endianness
@@ -118,6 +121,33 @@ static constexpr Gpio operator+(Gpio a, size_t b) {
 static constexpr Gpio operator+(size_t a, Gpio b) {
 	// addition is commutative, just use the other operator
 	return b + a;
+}
+
+namespace efi
+{
+template <class _Ty>
+struct remove_reference {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+struct remove_reference<_Ty&&> {
+    using type = _Ty;
+};
+
+template <class _Ty>
+using remove_reference_t = typename remove_reference<_Ty>::type;
+
+// FUNCTION TEMPLATE move
+template <class _Ty>
+constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
+    return static_cast<remove_reference_t<_Ty>&&>(_Arg);
+}
 }
 
 #endif /* __cplusplus */

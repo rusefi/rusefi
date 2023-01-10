@@ -2,7 +2,7 @@ package com.rusefi.test;
 
 import static org.junit.Assert.assertEquals;
 
-import com.rusefi.ReaderState;
+import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.SdCardFieldsConsumer;
 import com.rusefi.util.LazyFile;
 
@@ -13,11 +13,11 @@ public class SdCardFieldsGeneratorTest {
     public void outputs() {
         Actor actor = new Actor() {
             @Override
-            public void act(ReaderState state) {
-                state.variableRegistry.register("PACK_MULT_PERCENT", 100);
-                state.variableRegistry.register("GAUGE_NAME_RPM", "\"hello\"");
-                state.variableRegistry.register("GAUGE_NAME_GEAR_RATIO", "ra");
-                state.variableRegistry.register("GAUGE_NAME_CPU_TEMP", "te");
+            public void act(ReaderStateImpl state) {
+                state.getVariableRegistry().register("PACK_MULT_PERCENT", 100);
+                state.getVariableRegistry().register("GAUGE_NAME_RPM", "\"hello\"");
+                state.getVariableRegistry().register("GAUGE_NAME_GEAR_RATIO", "ra");
+                state.getVariableRegistry().register("GAUGE_NAME_CPU_TEMP", "te");
 
             }
         };
@@ -75,11 +75,11 @@ public class SdCardFieldsGeneratorTest {
     }
 
     interface Actor {
-        void act(ReaderState readerState);
+        void act(ReaderStateImpl readerState);
     }
 
     private static void processAndAssert(String input, String expectedOutput, Actor actor) {
-        ReaderState state = new ReaderState();
+        ReaderStateImpl state = new ReaderStateImpl();
         actor.act(state);
 
         SdCardFieldsConsumer consumer = new SdCardFieldsConsumer(LazyFile.TEST);

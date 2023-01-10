@@ -497,7 +497,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
     case TT_VVT_TOYOTA_4_1:
-    	initializeToyota4_1(this);
+		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		break;
 
     case TT_VVT_MITSUBISHI_6G75:
@@ -631,8 +631,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    configureBenelli(this);
         break;
 
-	case UNUSED_29:
-	case UNUSED_34:
+	case TT_MITSU_BOTH_BOTH:
+	    initializeMitsubishi4g93_both_both(this);
+		break;
+	case TT_MITSU_ONLY_TOP_BOTH_FRONTS:
+	    initializeMitsubishi4g93_only_first_wheel_both_fronts(this);
+        break;
 	case TT_1_16:
 		configureOnePlus16(this);
 		break;

@@ -272,22 +272,20 @@ TEST(HPFP, Schedule) {
 
 	hpfp.onFastCallback();
 	// First event was scheduled by setRpmValue with 0 injection mass.  So, it's off.
-	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff,
-			       1, angle0 - 0);
+	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff, 270);
 
 	// Make the previous event happen, schedule the next.
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, 1, tick_per_deg * 0, 0, 0);
+		1000, tick_per_deg * 0, 180, 360);
 	// Mock executor doesn't run events, so we run it manually
 	HpfpController::pinTurnOff(&hpfp);
 
 	// Now we should have a regular on/off event.
-	eth.assertTriggerEvent("h1", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOn,
-			       2, angle1 - 180);
+	eth.assertTriggerEvent("h1", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOn, 450 - 37.6923065f);
 
 	// Make it happen
 	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		1000, 2, tick_per_deg * 180, 0, 0);
+		1000, tick_per_deg * 180, 360, 540);
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.

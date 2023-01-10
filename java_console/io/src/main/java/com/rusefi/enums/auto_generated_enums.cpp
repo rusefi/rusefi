@@ -1,6 +1,6 @@
 #include "global.h"
 #include "live_data_ids.h"
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Fri Oct 07 17:58:29 UTC 2022
+// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sat Dec 17 01:28:44 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -9,6 +9,8 @@ const char *getLive_data_e(live_data_e value){
 switch(value) {
 case LDS_ac_control:
   return "LDS_ac_control";
+case LDS_antilag_system_state:
+  return "LDS_antilag_system_state";
 case LDS_boost_control:
   return "LDS_boost_control";
 case LDS_electronic_throttle:

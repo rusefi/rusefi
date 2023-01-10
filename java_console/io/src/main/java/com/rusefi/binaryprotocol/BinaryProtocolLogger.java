@@ -48,6 +48,7 @@ public class BinaryProtocolLogger {
         };
 
         Runtime.getRuntime().addShutdownHook(hook);
+        needCompositeLogger = linkManager.getCompositeLogicEnabled();
     }
 
     private void createCompositesIfNeeded() {
