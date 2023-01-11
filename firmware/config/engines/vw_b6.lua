@@ -313,6 +313,10 @@ function onCanHello(bus, id, dlc, data)
 	txCan(1, tcuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
 end
 
+local sendCounter = 2
+local packetCounter = 1
+local payLoadIndex = 0
+
 local groups = { 10 }
 -- todo: smarter array size calculation?
 local groupsSize = 1
