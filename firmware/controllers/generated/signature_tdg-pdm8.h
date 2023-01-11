@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH snap_32804
-#define TS_SIGNATURE "rusEFI 2023.01.10.tdg-pdm8.snap_32804"
+#define TS_SIGNATURE "rusEFI 2023.01.11.tdg-pdm8.snap_32804"
