@@ -7,6 +7,9 @@ TCU_2 = 0x540
 -- 1440
 BRAKE_2 = 0x5A0
 
+VWTP_OUT = 0x200
+VWTP_IN = 0x202
+VWTP_TESTER = 0x300
 
 -- 640
 MOTOR_1 = 0x280
@@ -299,6 +302,127 @@ function onMotor7(bus, id, dlc, data)
  txCan(TCU_BUS, MOTOR_7, 0, motor7Data)
 end
 
+local tcuId = 0
+
+function onCanHello(bus, id, dlc, data)
+	-- here we handle 201 packets
+	print('Got Hello Response ' ..arrayToString(data))
+	tcuId = data[6] * 256 + data[5]
+
+	print('From TCU ' ..tcuId)
+	txCan(1, tcuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
+end
+
+local groups = { 10 }
+-- todo: smarter array size calculation?
+local groupsSize = 1
+
+local groupIndex = 1
+
+function onCanTester(bus, id, dlc, data)
+	-- here we handle 300 packets
+
+	-- 	print('Got from tester ' ..arrayToString(data))
+
+	if data[1] == 0xA3 then
+		-- 		print ("Keep-alive")
+		txCan(1, tcuId, 0, { 0xA1, 0x0F, 0x8A, 0xFF, 0x4A, 0xFF })
+
+		groupIndex = groupIndex + 1
+		if groupIndex > groupsSize then
+			groupIndex = 1
+		end
+		groupId = groups[groupIndex]
+		print (groupIndex .." " ..groupId)
+
+
+		reqFirst = 0x10 + sendCounter
+		print("Requesting next group " ..groupId .." with counter " ..sendCounter)
+		txCan(1, tcuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
+
+		sendCounter = sendCounter + 1
+		if sendCounter == 16 then
+			sendCounter = 0
+		end
+		return
+	end
+
+
+	if data[1] == 0xA1 then
+		print ("Happy 300 packet")
+		txCan(1, tcuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		return
+	end
+
+	if data[1] == 0xA8 then
+		print ("They said Bye-Bye")
+		return
+	end
+
+
+	if data[1] == 0x10 and dlc == 5 then
+		ackPacket = 0xB0 + packetCounter
+		print ("Sending ACK B1 " ..ackPacket)
+		txCan(1, tcuId, 0, { ackPacket })
+		-- request first group from array
+		txCan(1, tcuId, 0, { 0x11, 0x00, 0x02, 0x21, groups[1] })
+		return
+	end
+
+	top4 = math.floor(data[1] / 16)
+
+	if top4 == 0xB then
+		-- 		print("Got ACK")
+		return
+	end
+
+	if top4 == 2 or top4 == 1 then
+		print ("Looks like payload index " ..payLoadIndex ..": " ..arrayToString(data))
+
+		if groupId == 2 and payLoadIndex == 0 then
+			L7 = data[7]
+			H9 = data[8]
+			V = 256 * H9 + L7
+			print("V 0 " ..V)
+		end
+
+		if groupId == 2 and payLoadIndex == 1 then
+			L3 = data[3]
+			H4 = data[4]
+			V = 256 * H4 + L3
+			print("V 1 " ..V)
+		end
+
+		if groupId == 2 and payLoadIndex == 2 then
+			L2 = data[2]
+			H3 = data[3]
+			V = 256 * H3 + L2
+			print("V 2 " ..V)
+		end
+
+		payLoadIndex = payLoadIndex + 1
+
+		packetCounter = packetCounter + 1
+		if packetCounter > 15 then
+			packetCounter = 0
+		end
+
+		if top4 == 1 then
+			ackPacket = 0xB0 + packetCounter
+			print ("Sending payload ACK " ..ackPacket)
+			txCan(1, tcuId, 0, { ackPacket })
+			payLoadIndex = 0
+		end
+
+		return
+	end
+
+	print('Got unexpected ' ..arrayToString(data))
+end
+
+canRxAdd(VWTP_IN, onCanHello)
+
+txCan(1, VWTP_OUT, 0, { 0x02, 0xC0, 0x00, 0x10, 0x00, 0x03, 0x01 })
 
 function onTick()
 
