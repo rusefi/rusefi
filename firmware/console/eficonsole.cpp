@@ -37,7 +37,7 @@ static void myerror() {
 }
 
 static void sayHello() {
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2022. All rights reserved.");
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2023. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
