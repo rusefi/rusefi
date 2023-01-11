@@ -35,6 +35,10 @@ jobs:
       run: |
         git remote add best-wiki-git https://github.com/rusefi/rusefi.wiki.git
         git fetch best-wiki-git
+        if [ $(git diff best-wiki-git/master | wc -l) -eq 0 ]; then
+        echo "skip=true" >> $GITHUB_ENV
+        exit 0
+        fi
         git show --name-only  best-wiki-git/master
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
@@ -51,6 +55,7 @@ jobs:
 
     - name: Push changes to rusefi_documentation technical wiki
       uses: ad-m/github-push-action@master
+      if: ${{ env.skip != 'true' }}
       with:
         repository: rusefi/rusefi_documentation
         github_token: ${{ secrets.ACCESS_TOKEN }}
