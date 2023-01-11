@@ -177,10 +177,7 @@ canRxAdd(1, ACC_GRA, onAccGra)
 function onMotor1(bus, id, dlc, data)
 
 	rpm = getSensor("RPM") or 0
-	clt = getSensor("CLT") or 0
-	iat = getSensor("IAT") or 0
 	tps = getSensor("TPS1") or 0
-	vbat = getSensor("BatteryVoltage") or 0
 
 	fakeTorque = interpolate(0, 6, 100, 60, tps)
 
@@ -204,6 +201,20 @@ function onMotor1(bus, id, dlc, data)
 
  txCan(TCU_BUS, MOTOR_1, 0, motor1Data)
 end
+
+function onMotor3(bus, id, dlc, data)
+	iat = getSensor("IAT") or 0
+	tps = getSensor("TPS1") or 0
+
+ desired_wheel_torque = fakeTorque
+ canMotor3[2] = (iat + 48) / 0.75
+ canMotor3[3] = tps / 0.4
+ canMotor3[5] = 0x20
+ setBitRange(canMotor3, 24, 12, math.floor(desired_wheel_torque / 0.39))
+ canMotor3[8] = tps / 0.4
+ txCan(TCU_BUS, MOTOR_3, 0, canMotor3)
+end
+
 
 motorBreCounter = 0
 function onMotorBre(bus, id, dlc, data)
@@ -296,9 +307,6 @@ function onTick()
 	counter16 = (counter16 + 1) % 16
 
 	rpm = getSensor("RPM") or 0
-	clt = getSensor("CLT") or 0
-	iat = getSensor("IAT") or 0
-	tps = getSensor("TPS1") or 0
 	vbat = getSensor("BatteryVoltage") or 0
 
  if rpm == 0 then
@@ -306,6 +314,7 @@ function onTick()
  end
 
 onMotor1(0, 0, 0, nil)
+onMotor3(0, 0, 0, nil)
 
 onMotorBre(0, 0, 0, nil)
 onMotor2(0, 0, 0, nil)
