@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 11 02:05:10 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 11 07:07:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1199,7 +1199,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2023.01.11.all.snap_20080";
+	public static final String TS_SIGNATURE = "rusEFI 2023.01.11.all.snap_57128";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1292;
@@ -2492,7 +2492,7 @@ public class Fields {
 	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 3916, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4044, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4076, FieldType.INT8).setScale(20.0).setBaseOffset(0);
 	public static final Field IACPIDMULTLOADBINS = Field.create("IACPIDMULTLOADBINS", 4140, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IACPIDMULTRPMBINS = Field.create("IACPIDMULTRPMBINS", 4148, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field SPARKDWELLRPMBINS = Field.create("SPARKDWELLRPMBINS", 4156, FieldType.INT16).setScale(1.0).setBaseOffset(0);
