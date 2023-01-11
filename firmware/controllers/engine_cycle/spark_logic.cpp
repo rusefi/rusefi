@@ -53,7 +53,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 
 	output->signalFallSparkId = event->sparkId;
 
-	if (!output->currentLogicValue) {
+	if (!output->currentLogicValue && !event->wasSparkLimited) {
 		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
@@ -340,6 +340,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
 	event->sparkId = engine->engineState.sparkCounter++;
+	event->wasSparkLimited = limitedSpark;
 
 	efitick_t chargeTime = 0;
 
