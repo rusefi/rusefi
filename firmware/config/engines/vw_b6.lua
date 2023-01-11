@@ -65,7 +65,7 @@ function onTcu2(bus, id, dlc, data)
 --	print("onTcu2")
 end
 
-canRxAdd(AIRBAG)
+canRxAdd(AIRBAG, onAirBag)
 canRxAdd(TCU_1, onTcu1)
 canRxAdd(TCU_2, onTcu2)
 -- canRxAdd(BRAKE_2)
@@ -87,7 +87,6 @@ function setBitRange(data, totalBitIndex, bitWidth, value)
 	data[1 + byteIndex] = data[1 + byteIndex] | shiftedValue
 end
 
-
 function setTwoBytes(data, offset, value)
 	data[offset + 1] = value % 255
 	data[offset + 2] = (value >> 8) % 255
@@ -98,16 +97,10 @@ shallSleep = Timer.new()
 -- we want to turn on with hardware switch while ignition key is off
 hadIgnitionEvent = false
 
-function onCanRx(bus, id, dlc, data)
-	if id == AIRBAG then
-		-- looks like we have ignition key do not sleep!
-		shallSleep : reset()
-		hadIgnitionEvent = true
-	else
-		print('got CAN id=' ..id ..' dlc=' ..dlc)
-
-
-	end
+function onAirBag(bus, id, dlc, data)
+	-- looks like we have ignition key do not sleep!
+	shallSleep : reset()
+	hadIgnitionEvent = true
 end
 
 function setTwoBytes(data, offset, value)
@@ -159,7 +152,7 @@ everySecondTimer = Timer.new()
 canMotorInfoCounter = 0
 
 motorBreCounter = 0
-accGraCounter = 0
+--accGraCounter = 0
 counter16 = 0
 motor2counter = 0
 
@@ -231,6 +224,7 @@ function onMotor2(bus, id, dlc, data)
  motor2counter = (motor2counter + 1) % 16
 
     minTorque = fakeTorque / 2
+    -- todo: add CLT
     motor2Data[7] = math.floor(minTorque / 0.39)
 
 --print ( "brake " .. getBitRange(data, 16, 2) .. " " .. rpm)
@@ -322,7 +316,7 @@ onMotor5(0, 0, 0, nil)
 onMotor6(0, 0, 0, nil)
 onMotor7(0, 0, 0, nil)
 
-	accGraCounter = (accGraCounter + 1) % 16
+--	accGraCounter = (accGraCounter + 1) % 16
 --	setBitRange(accGraData, 60, 4, accGraCounter)
 --	xorChecksum(accGraData, 1)
 --	txCan(1, ACC_GRA, 0, accGraData)
@@ -333,7 +327,7 @@ onMotor7(0, 0, 0, nil)
 
 	if hadIgnitionEvent and timeToTurnOff then
 		-- looks like ignition key was removed
-		mcu_standby()
+--		mcu_standby()
 	end
 
 	if everySecondTimer : getElapsedSeconds() > 1 then
