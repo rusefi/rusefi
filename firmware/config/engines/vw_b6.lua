@@ -65,11 +65,6 @@ function onTcu2(bus, id, dlc, data)
 --	print("onTcu2")
 end
 
-canRxAdd(AIRBAG, onAirBag)
-canRxAdd(TCU_1, onTcu1)
-canRxAdd(TCU_2, onTcu2)
--- canRxAdd(BRAKE_2)
-
 motor5FuelCounter = 0
 
 function setBitRange(data, totalBitIndex, bitWidth, value)
@@ -144,7 +139,7 @@ canMotor3    = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
 motor5Data   = { 0x1C, 0x08, 0xF3, 0x55, 0x19, 0x00, 0x00, 0xAD }
 motor6Data   = { 0x00, 0x00, 0x00, 0x7E, 0xFE, 0xFF, 0xFF, 0x00 }
 motor7Data   = { 0x1A, 0x66, 0x7E, 0x00, 0x00, 0x00, 0x00, 0x00 }
---accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
+accGraData   = { 0x00, 0x00, 0x08, 0x00, 0x1A, 0x00, 0x02, 0x01 }
 
 setTickRate(100)
 
@@ -165,7 +160,11 @@ function onAccGra(bus, id, dlc, data)
   print("onAccGra")
 end
 
-canRxAdd(1, ACC_GRA, onAccGra)
+canRxAdd(AIRBAG, onAirBag)
+canRxAdd(TCU_1, onTcu1)
+canRxAdd(TCU_2, onTcu2)
+-- canRxAdd(BRAKE_2)
+-- canRxAdd(1, ACC_GRA, onAccGra)
 
 function onMotor1(bus, id, dlc, data)
 
@@ -265,6 +264,16 @@ function onMotor6(bus, id, dlc, data)
  txCan(TCU_BUS, MOTOR_6, 0, motor6Data)
 end
 
+accGraCounter = 0
+function onAccGra(bus, id, dlc, data)
+ accGraCounter = (accGraCounter + 1) % 16
+ setBitRange(accGraData, 60, 4, accGraCounter)
+    xorChecksum(accGraData, 1)
+
+ txCan(TCU_BUS, id, 0, accGraData)
+-- txCan(TCU_BUS, id, 0, data)
+end
+
 canMotorInfoCounter = 0
 function onMotorInfo(bus, id, dlc, data)
  canMotorInfoTotalCounter = canMotorInfoTotalCounter + 1
@@ -315,12 +324,7 @@ onMotor2(0, 0, 0, nil)
 onMotor5(0, 0, 0, nil)
 onMotor6(0, 0, 0, nil)
 onMotor7(0, 0, 0, nil)
-
---	accGraCounter = (accGraCounter + 1) % 16
---	setBitRange(accGraData, 60, 4, accGraCounter)
---	xorChecksum(accGraData, 1)
---	txCan(1, ACC_GRA, 0, accGraData)
---	print("ACC_GRA " ..arrayToString(accGraData))
+onAccGra(0, 0, 0, nil)
 
 	local timeToTurnOff = shallSleep : getElapsedSeconds() > 2
 	local connectedToUsb = vbat < 4
