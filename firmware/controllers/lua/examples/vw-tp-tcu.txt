@@ -97,8 +97,6 @@ function requestErrorCodes()
             print("Requesting error codes " .. arrayToString(out))
 end
 
-gotHello2 = 0
-
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
@@ -122,8 +120,6 @@ function onCanTester(bus, id, dlc, data)
 		--txCan(1, cuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
 
 
--- Request Code Erase
---        txCan(1, cuId, 0, { reqFirst, 00, 0x03, 0x14, 0xFF, 0x00 })
 
 
 
@@ -152,14 +148,8 @@ function onCanTester(bus, id, dlc, data)
         if data[3] == 2 and data[4] == 0x50 then
         	print('Got Hello2 Response ' ..arrayToString(data))
 
-            if gotHello2 == 0 then
-                requestErrorCodes()
-            end
-
-            gotHello2 = gotHello2 + 1
-
+            requestErrorCodes()
         end
-
 	end
 
 
@@ -180,62 +170,28 @@ function onCanTester(bus, id, dlc, data)
 		    if len ~= 2 then
 		        print("HAVE CODES " .. len)
 		        withErrorCodes = 1
+
+--    out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
+--print("Request Code Erase")
+ --       txCan(1, cuId, 0, out)
+
+
 		    end
 
 		end
 
-
-		if groupId == 2 and payLoadIndex == 0 then
-			rpmL = data[7]
-			rpmH = data[8]
-			rpm = rpmH * rpmL / 5
-			print(rpmL .." " ..rpmH .." rpm " ..rpm)
-			rpmSensor : set(rpm)
-		end
-
-		if groupId == 2 and payLoadIndex == 1 then
-			elL = data[3]
-			elH = data[4]
-			el = 100 * elH / elL
-			print(elL .." " ..elH .." EL " ..el)
-		end
-
-		if groupId == 2 and payLoadIndex == 2 then
-			mapL = data[2]
-			mapH = data[3]
-			map = 1000.0 * mapH / mapL
-			print(mapL .." " ..mapH .." MAP " ..map)
-			mapSensor : set(map / 10)
-		end
-
-		if groupId == 4 and payLoadIndex == 1 then
-			cltL = data[6]
-			cltH = data[7]
-			clt = cltL * (cltH - 100) / 10
-			print(cltL .." " ..cltH .." CLT " ..clt)
-			cltSensor : set(clt)
-		end
-
-		if groupId == 4 and payLoadIndex == 2 then
-			iatL = data[2]
-			iatH = data[3]
-			iat = iatL * (iatH - 100) / 10
-			print(iatL .." " ..iatH .." IAT " ..iat)
-			iatSensor : set(iat)
-		end
-
 		payLoadIndex = payLoadIndex + 1
-
 
 		packetCounter = packetCounter + 1
 		if packetCounter > 15 then
 			packetCounter = 0
 		end
 
+		ackPacket = 0xB0 + packetCounter
+		print ("Sending payload ACK " ..ackPacket)
+    	txCan(1, cuId, 0, { ackPacket })
+
 		if top4 == 1 then
-			ackPacket = 0xB0 + packetCounter
-			print ("Sending payload ACK " ..ackPacket)
-			txCan(1, cuId, 0, { ackPacket })
 			payLoadIndex = 0
 
             if data[2] == 0 and data[3] == 2 and data[4] == 0x58 then

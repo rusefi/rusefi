@@ -183,6 +183,7 @@ function onCanTester(bus, id, dlc, data)
 		end
 
 		if top4 == 1 then
+            -- todo: should we ACK top4 == 2?
 			ackPacket = 0xB0 + packetCounter
 			print ("Sending payload ACK " ..ackPacket)
 			txCan(1, cuId, 0, { ackPacket })
