@@ -28,5 +28,4 @@
 		"hardware/": true,
 		"firmware/ChibiOS/demos": true,
 	},
-	"cmake.configureOnOpen": false,
 }
