@@ -23,6 +23,7 @@ jobs:
     - name: Install required software (ubuntu)
       if: ${{ matrix.os != 'macos-latest' }}
       run: |
+        sudo sed -i 's/azure\.//' /etc/apt/sources.list
         sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
 

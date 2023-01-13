@@ -293,6 +293,7 @@ jobs:
     - name: Install multilib, mingw, sshpass and mtools
       if: ${{ env.skip != 'true' }}
       run: |
+        sudo sed -i 's/azure\.//' /etc/apt/sources.list
         sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
         sudo apt-get install zip

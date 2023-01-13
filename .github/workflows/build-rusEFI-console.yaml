@@ -21,6 +21,7 @@ jobs:
 
       - name: Install Tools
         run: |
+          sudo sed -i 's/azure\.//' /etc/apt/sources.list
           sudo apt-get -o Acquire::Retries=3 update
           sudo apt-get install sshpass mtools
 
