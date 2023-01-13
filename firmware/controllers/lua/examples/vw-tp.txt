@@ -59,7 +59,7 @@ function onCanHello(bus, id, dlc, data)
 	txCan(1, cuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
 end
 
-local sendCounter = 2
+local sendCounter = 0
 local packetCounter = 1
 local payLoadIndex = 0
 
@@ -68,6 +68,15 @@ local groups = { 2, 4, 31 }
 local groupsSize = 3
 
 local groupIndex = 1
+
+function nextReq()
+    local result = 0x10 + sendCounter
+    sendCounter = sendCounter + 1
+	if sendCounter == 16 then
+		sendCounter = 0
+	end
+    return result
+end
 
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
@@ -83,24 +92,20 @@ function onCanTester(bus, id, dlc, data)
 			groupIndex = 1
 		end
 		groupId = groups[groupIndex]
-		print (groupIndex .." " ..groupId)
+		print ("KA " .. groupIndex .." " ..groupId)
 
 
-		reqFirst = 0x10 + sendCounter
-		print("Requesting next group " ..groupId .." with counter " ..sendCounter)
+		reqFirst = nextReq()
+		print("Requesting next group " ..groupId .." with counter " ..reqFirst)
 		txCan(1, cuId, 0, { reqFirst, 0x00, 0x02, 0x21, groupId })
 
-		sendCounter = sendCounter + 1
-		if sendCounter == 16 then
-			sendCounter = 0
-		end
 		return
 	end
 
 
 	if data[1] == 0xA1 then
-		print ("Happy 300 packet")
-		txCan(1, cuId, 0, { 0x10, 0x00, 0x02, 0x10, 0x89 })
+		print ("Happy 300 packet, follow-up...")
+		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x10, 0x89 })
 		return
 	end
 
@@ -115,7 +120,7 @@ function onCanTester(bus, id, dlc, data)
 		print ("Sending ACK B1 " ..ackPacket)
 		txCan(1, cuId, 0, { ackPacket })
 		-- request first group from array
-		txCan(1, cuId, 0, { 0x11, 0x00, 0x02, 0x21, groups[1] })
+		txCan(1, cuId, 0, { nextReq(), 0x00, 0x02, 0x21, groups[1] })
 		return
 	end
 
