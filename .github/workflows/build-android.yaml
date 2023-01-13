@@ -25,7 +25,6 @@ jobs:
         working-directory: ./firmware/
         run: ./gen_default_everything.sh
 
-
       - name: Test Compiler
         run: javac -version
 
