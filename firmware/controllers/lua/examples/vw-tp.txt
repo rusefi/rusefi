@@ -54,9 +54,10 @@ function onCanHello(bus, id, dlc, data)
 	-- here we handle 201 packets
 	print('Got Hello Response ' ..arrayToString(data))
 	cuId = data[6] * 256 + data[5]
-
 	print('From ECU ' ..cuId)
-	txCan(1, cuId, 0, { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF })
+
+    out = { 0xA0, 0x0F, 0x8A, 0xFF, 0x32, 0xFF }
+	txCan(1, cuId, 0, out)
 end
 
 local sendCounter = 0
