@@ -97,6 +97,12 @@ function requestErrorCodes()
             print("Requesting error codes " .. arrayToString(out))
 end
 
+function requestEraseCodes()
+    out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
+print("Request Code Erase")
+        txCan(1, cuId, 0, out)
+end
+
 function onCanTester(bus, id, dlc, data)
 	-- here we handle 300 packets
 
@@ -112,8 +118,11 @@ function onCanTester(bus, id, dlc, data)
 			groupIndex = 1
 		end
 		groupId = groups[groupIndex]
-		print ("KA " .. groupIndex .." " ..groupId)
+		print ("KA codes " .. withErrorCodes)
 
+        if withErrorCodes > 0 then
+            requestEraseCodes()
+        end
 
 		-- reqFirst = nextReq
 		--print("Requesting next group " ..groupId .." with counter " ..sendCounter)
@@ -170,11 +179,6 @@ function onCanTester(bus, id, dlc, data)
 		    if len ~= 2 then
 		        print("HAVE CODES " .. len)
 		        withErrorCodes = 1
-
---    out = { nextReq(), 00, 0x03, 0x14, 0xFF, 0x00 }
---print("Request Code Erase")
- --       txCan(1, cuId, 0, out)
-
 
 		    end
 
