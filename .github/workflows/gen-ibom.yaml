@@ -17,7 +17,7 @@ jobs:
     - name: Install prerequisite software
       run: |
         sudo add-apt-repository ppa:kicad/kicad-5.1-releases
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install kicad sshpass
 
     - name: Set SSH variables

@@ -23,7 +23,7 @@ jobs:
     - name: Install required software (ubuntu)
       if: ${{ matrix.os != 'macos-latest' }}
       run: |
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
 
     - name: Install required software (macos)

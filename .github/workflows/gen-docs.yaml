@@ -15,7 +15,7 @@ jobs:
 
     - name: Install prerequisite software
       run: |
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install doxygen graphviz sshpass
 
     - name: Set FTP variables

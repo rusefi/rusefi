@@ -22,7 +22,7 @@ jobs:
 
     - name: Install multilib
       run: |
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
     - name: Generate Configs, Enums & Live Documentation

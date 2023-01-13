@@ -18,7 +18,7 @@ jobs:
     - name: Install sshpass, kicad, and tk bindings
       run: |
         sudo add-apt-repository --yes ppa:kicad/kicad-6.0-releases
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install sshpass kicad python3-pip python3-tk scour librsvg2-bin
         pip install python-dateutil pygubu
 

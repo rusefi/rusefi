@@ -293,7 +293,7 @@ jobs:
     - name: Install multilib, mingw, sshpass and mtools
       if: ${{ env.skip != 'true' }}
       run: |
-        sudo apt-get update
+        sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
         sudo apt-get install zip
         sudo apt-get install dosfstools
@@ -441,7 +441,7 @@ jobs:
 
     - name: Install multilib, mingw, and sshpass
       run: |
-        sudo apt-get update
+        sudo apt-get -o Acquire:Retries=3 update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 
     - name: Generate Enum Strings
