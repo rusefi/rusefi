@@ -22,7 +22,6 @@ public class TriggerWheelInfo {
     private final boolean isCrankBased;
     private final boolean hasSecondChannel;
     private final boolean hardcodedOperationMode;
-    private final boolean isSynchronizationNeeded;
     private final TriggerGaps gaps;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<TriggerSignal> signals,
@@ -30,7 +29,7 @@ public class TriggerWheelInfo {
                             boolean isSecondWheelCam,
                             boolean hasSecondChannel,
                             boolean hardcodedOperationMode,
-                            boolean isSynchronizationNeeded, TriggerGaps gaps) {
+                            TriggerGaps gaps) {
         this.id = id;
         this.isSecondWheelCam = isSecondWheelCam;
         this.tdcPosition = tdcPosition;
@@ -39,7 +38,6 @@ public class TriggerWheelInfo {
         this.isCrankBased = isCrankBased;
         this.hasSecondChannel = hasSecondChannel;
         this.hardcodedOperationMode = hardcodedOperationMode;
-        this.isSynchronizationNeeded = isSynchronizationNeeded;
         this.gaps = gaps;
     }
 
@@ -60,7 +58,6 @@ public class TriggerWheelInfo {
         boolean isSecondWheelCam = false;
         boolean hasSecondChannel = false;
         boolean hardcodedOperationMode = false;
-        boolean isSynchronizationNeeded = false;
         TriggerWheelInfo.TriggerGaps gaps = null;
         while (true) {
             line = reader.readLine();
@@ -102,7 +99,7 @@ public class TriggerWheelInfo {
                     hardcodedOperationMode = Boolean.parseBoolean(value);
                     break;
                 case TRIGGER_WITH_SYNC:
-                    isSynchronizationNeeded = Integer.parseInt(value) > 0;
+                    //isSynchronizationNeeded = Integer.parseInt(value) > 0;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected key/value: " + line);
@@ -117,7 +114,6 @@ public class TriggerWheelInfo {
                 isSecondWheelCam,
                 hasSecondChannel,
                 hardcodedOperationMode,
-                isSynchronizationNeeded,
                 gaps
         );
     }

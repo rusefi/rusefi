@@ -639,6 +639,64 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 	}
 }
 
+bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
+	// Check that the expected next phase (from the last tooth) is close to the actual current phase:
+	// basically, check that the tooth width is correct
+	auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
+	auto lastToothPhase = m_lastToothPhaseFromSyncPoint;
+
+	if (expectedNextPhase && estimatedCurrentPhase) {
+		float angleError = expectedNextPhase.Value - estimatedCurrentPhase.Value;
+
+		// Wrap around correctly at the end of the cycle
+		float cycle = getEngineState()->engineCycle;
+		if (angleError < -cycle / 2) {
+			angleError += cycle;
+		}
+
+		triggerToothAngleError = angleError;
+
+		// Only perform checks if engine is spinning quickly
+		// All kinds of garbage happens while cranking
+		if (Sensor::getOrZero(SensorType::Rpm) > 1000) {
+			// Now compute how close we are to the last tooth decoded
+			float angleSinceLastTooth = estimatedCurrentPhase.Value - lastToothPhase;
+			if (angleSinceLastTooth < 0.5f) {
+				// This tooth came impossibly early, ignore it
+				// This rejects things like doubled edges, for example:
+				//             |-| |----------------
+				//             | | |
+				// ____________| |_|
+				//             1   2
+				//     #1 will be decoded
+				//     #2 will be ignored
+				// We're not sure which edge was the "real" one, but they were close enough
+				// together that it doesn't really matter.
+				warning(CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%d", angleSinceLastTooth, triggerState.currentCycle.current_index);
+
+				return false;
+			}
+
+			// Absolute error from last tooth
+			float absError = absF(angleError);
+			float isRpmEnough = Sensor::getOrZero(SensorType::Rpm) > 1000;
+			// TODO: configurable threshold
+			if (isRpmEnough && absError > 10 && absError < 180) {
+				// This tooth came at a very unexpected time, ignore it
+				warning(CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
+
+				// TODO: this causes issues with some real engine logs, should it?
+				// return false;
+			}
+		}
+	} else {
+		triggerToothAngleError = 0;
+	}
+
+	// We aren't ready to reject unexpected teeth, so accept this tooth
+	return true;
+}
+
 /**
  * This method is NOT invoked for VR falls.
  */
@@ -659,6 +717,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		if (!isUsefulSignal(signal, triggerShape)) {
 			return;
 		}
+	}
+
+	if (!isToothExpectedNow(timestamp)) {
+		triggerIgnoredToothCount++;
+		return;
 	}
 
 	isSpinningJustForWatchdog = true;
@@ -696,20 +759,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Adjust so currentPhase is in engine-space angle, not trigger-space angle
 		currentEngineDecodedPhase = wrapAngleMethod(currentPhaseFromSyncPoint - tdcPosition(), "currentEnginePhase", CUSTOM_ERR_6555);
-
-		// Check that the expected next phase (from the last tooth) is close to the actual current phase:
-		// basically, check that the tooth width is correct
-		auto estimatedCurrentPhase = getCurrentEnginePhase(timestamp);
-		if (estimatedCurrentPhase) {
-			float angleError = expectedNextPhase - estimatedCurrentPhase.Value;
-
-			float cycle = getEngineState()->engineCycle;
-			while (angleError < -cycle / 2) {
-				angleError += cycle;
-			}
-
-			triggerToothAngleError = angleError;
-		}
 
 		// Record precise time and phase of the engine. This is used for VVT decode, and to check that the
 		// trigger pattern selected matches reality (ie, we check the next tooth is where we think it should be)
@@ -752,19 +801,20 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			wrapAngle(nextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
 		} while (nextPhase == currentEngineDecodedPhase);
 
-		expectedNextPhase = nextPhase + tdcPosition();
-		wrapAngle(expectedNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+		float expectNextPhase = nextPhase + tdcPosition();
+		wrapAngle(expectNextPhase, "nextEnginePhase", CUSTOM_ERR_6555);
+		expectedNextPhase = expectNextPhase;
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-		int cdmKnockValue = getCurrentCdmValue(getTriggerCentral()->triggerState.getCrankSynchronizationCounter());
-		engine->knockLogic(cdmKnockValue);
-	}
+		if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
+			int cdmKnockValue = getCurrentCdmValue(getTriggerCentral()->triggerState.getCrankSynchronizationCounter());
+			engine->knockLogic(cdmKnockValue);
+		}
 #endif /* EFI_CDM_INTEGRATION */
 
-	if (engine->rpmCalculator.getCachedRpm() > 0 && triggerIndexForListeners == 0) {
-		engine->tpsAccelEnrichment.onEngineCycleTps();
-	}
+		if (engine->rpmCalculator.getCachedRpm() > 0 && triggerIndexForListeners == 0) {
+			engine->tpsAccelEnrichment.onEngineCycleTps();
+		}
 
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
@@ -774,6 +824,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0, triggerShape.useOnlyRisingEdges);
+
+		expectedNextPhase = unexpected;
 	}
 }
 

@@ -35,7 +35,7 @@ This is your injector flow at the fuel pressure used in the vehicle. cc/min, cub
 Does the vehicle have a turbo or supercharger?
 
 ### useFordRedundantTps
-On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 ### isVerboseAuxPid1
 
@@ -94,8 +94,8 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 ### launchControlEnabled
 
 
-### anotherUnusedHere444
-
+### doNotFilterTriggerEdgeNoise
+"Detect double trigger edges"
 
 ### antiLagEnabled
 
@@ -121,8 +121,8 @@ Print incoming and outgoing first bus CAN messages in rusEFI console
 ### artificialTestMisfire
 Experimental setting that will cause a misfire\nDO NOT ENABLE.
 
-### issue_294_31
-
+### useFordRedundantPps
+On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
@@ -1554,4 +1554,10 @@ null
 
 ### ALSMaxDriverThrottleIntent
 
+
+### tpsSecondaryMaximum
+For Ford TPS, use 53%. For Toyota ETCS-i, use 65%
+
+### ppsSecondaryMaximum
+For Toyota ETCS-i, use xxx%
 

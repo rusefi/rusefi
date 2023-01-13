@@ -45,6 +45,9 @@ public:
 	// For single sparks, this should be zero.
 	uint8_t sparksRemaining = 0;
 
+	// Track whether coil charge was intentionally skipped (spark limiter)
+	bool wasSparkLimited = false;
+
 	/**
 	 * Desired timing advance
 	 */

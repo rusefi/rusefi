@@ -15,5 +15,7 @@ uint32_t vvtCamCounter
 
 	float triggerToothAngleError;;"deg", 1, 0, -30, 30, 2
 
+	uint8_t triggerIgnoredToothCount
+
 end_struct
 

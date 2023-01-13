@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Thu Dec 22 00:28:50 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue Jan 10 21:34:44 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -21,6 +21,8 @@ public class TriggerCentral {
 	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1092);
 	public static final Field CURRENTENGINEDECODEDPHASE = Field.create("CURRENTENGINEDECODEDPHASE", 40, FieldType.FLOAT).setBaseOffset(1092);
 	public static final Field TRIGGERTOOTHANGLEERROR = Field.create("TRIGGERTOOTHANGLEERROR", 44, FieldType.FLOAT).setBaseOffset(1092);
+	public static final Field TRIGGERIGNOREDTOOTHCOUNT = Field.create("TRIGGERIGNOREDTOOTHCOUNT", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1092);
+	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1092);
 	public static final Field[] VALUES = {
 	HWEVENTCOUNTERS1,
 	HWEVENTCOUNTERS2,
@@ -36,5 +38,7 @@ public class TriggerCentral {
 	ALIGNMENTFILL_AT_38,
 	CURRENTENGINEDECODEDPHASE,
 	TRIGGERTOOTHANGLEERROR,
+	TRIGGERIGNOREDTOOTHCOUNT,
+	ALIGNMENTFILL_AT_49,
 	};
 }
