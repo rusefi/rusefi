@@ -8,7 +8,7 @@ pins:
 
   - pin: A2
     class: outputs   
-    color: ma/ro 
+    color: brown/red 
     function: Fuel pump relay output / main 12V ignition on ??
     type: [gp_low, gp_pp]
 
@@ -16,39 +16,41 @@ pins:
     class: outputs
     function: Injection Relay "Output (low)" ??
     type: ls
-    color: ro/gi?
+    # note: color yellow needs to be confirmed!
+    color: red/yellow
 
+# gp_pp	General purpose Push-Pull	General purpose push-pull (low and high side) output,
+# 600mA	Bipolar IDLE stepper (IACV)
   - pin: A4
     class: outputs
-    function: IACV
-    type: ??
-    ts_name: IACV
-    color: gi
+    function: IACV (IDLE stepper coil A + or - ??)
+    type: gp_pp
+    color: yellow
 
   - pin: A5
     class: outputs
-    function: IACV
-    type: ??
+    function: IACV (IDLE stepper coil A + or - ??)
+    type: gp_pp
     ts_name: IACV
-    color: ar/white
+    color: orange/white
 
   - pin: A6
     class: outputs
-    function: IACV
-    type: ??
+    function: IACV (IDLE stepper coil B + or - ??)
+    type: gp_pp
     ts_name: IACV
-    color: ma/rosa
+    color: brown/rosa
 
   - pin: A7
     class: outputs
-    function: IACV
-    type: ??
+    function: IACV (IDLE stepper coil B + or - ??)
+    type: gp_pp
     ts_name: IACV
     color: rosa/white
 
   - pin: A8
     class: outputs
-    color: gi/black
+    color: yellow/black
     function: Ignition Coil 1
     type: ign
 
@@ -93,11 +95,11 @@ pins:
   - pin: B7
     class: analog_inputs
     function: Throttle position sensor (TPS) Sensor Input
-    color: gi/bl
+    color: yellow/blue
 
   - pin: B8
     class: outputs
-    color: gi/black
+    color: yellow/black
     function: Ignition Coil 2
     type: ign
 
@@ -108,9 +110,9 @@ pins:
     color: gray
 
   - pin: C2
-    class: [event_inputs, switch_inputs]
-    function: ??
-    type: ??
+    class: analog_inputs
+    function: Unsure, could potentially be oil pressure ??
+    type: av
     color: gray/red
 
   # - pin: C3
@@ -151,16 +153,16 @@ pins:
     type: ign
 
   - pin: D2
-    class: switch_inputs
-    function: relay fuel pump ??
-    type: ??
-    color: bl/green
+    class: outputs
+    function: fuel pump relay??
+    type: gp_low
+    color: blue/green
 
   - pin: D3
     class: outputs
     function: Injection Relay "Output (low)" ??
     type: ls
-    color: violet/ma
+    color: violet/brown
 
   - pin: D4
     class: analog_inputs
@@ -175,7 +177,7 @@ pins:
     class: outputs
     function: ??
     type: ign
-    color: ma/violet
+    color: brown/violet
 
   - pin: D7
     # not used (enable ECU programming?)
@@ -209,7 +211,7 @@ pins:
   - pin: E7
     class: outputs
     function: engine check alarm light??
-    color: gi/green
+    color: yellow/green
 
   - pin: E8
     function: Injector 3
