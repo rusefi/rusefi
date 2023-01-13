@@ -1,0 +1,451 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+# copyright: Michael Holzer
+
+pins:
+  - pin: A1
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: A2
+    class: outputs   
+    color: brown/red 
+    function: Fuel pump relay output / main 12V ignition on ??
+    type: [gp_low, gp_pp]
+
+  - pin: A3
+    class: outputs
+    function: Injection Relay "Output (low)" ??
+    type: ls
+    # note: color yellow needs to be confirmed!
+    color: red/yellow
+
+# gp_pp	General purpose Push-Pull	General purpose push-pull (low and high side) output,
+# 600mA	Bipolar IDLE stepper (IACV)
+  - pin: A4
+    class: outputs
+    function: IACV (IDLE stepper coil A + or - ??)
+    type: gp_pp
+    color: yellow
+
+  - pin: A5
+    class: outputs
+    function: IACV (IDLE stepper coil A + or - ??)
+    type: gp_pp
+    ts_name: IACV
+    color: orange/white
+
+  - pin: A6
+    class: outputs
+    function: IACV (IDLE stepper coil B + or - ??)
+    type: gp_pp
+    ts_name: IACV
+    color: brown/rosa
+
+  - pin: A7
+    class: outputs
+    function: IACV (IDLE stepper coil B + or - ??)
+    type: gp_pp
+    ts_name: IACV
+    color: rosa/white
+
+  - pin: A8
+    class: outputs
+    color: yellow/black
+    function: Ignition Coil 1
+    type: ign
+
+  - pin: B1
+    function: Injector 1
+    class: outputs
+    type: inj
+    # note color: English manual is unclear on second color! 
+    # "VE" appears to be original italian term "verde" for english "green"
+    color: gray/green
+
+  # - pin: On-board MAP
+  #   class: analog_inputs
+  #   function: note: add MAP Sensor Input required?
+  #   color: orange
+
+  - pin: B2
+    class: analog_inputs
+    color: violet/black
+    # note: duplicate usage of B2 for IAT and switch map!
+    function: Intake Air Temp (IAT) sensor
+    type: at
+
+  - pin: B3
+    class: analog_inputs
+    function: Throttle position sensor (TPS) Sensor Input
+    color: violet/black
+
+  - pin: B4
+    class: analog_inputs
+    function: Engine Temp Sensor Input
+    color: black
+
+  - pin: B5
+    class: analog_inputs
+    function: Throttle position sensor (TPS) Sensor Input
+    color: azure
+
+  - pin: B6
+    # not used
+
+  - pin: B7
+    class: analog_inputs
+    function: Throttle position sensor (TPS) Sensor Input
+    color: yellow/blue
+
+  - pin: B8
+    class: outputs
+    color: yellow/black
+    function: Ignition Coil 2
+    type: ign
+
+  - pin: C1
+    function: Injector 2
+    class: outputs
+    type: inj
+    color: gray
+
+  - pin: C2
+    class: analog_inputs
+    function: Unsure, could potentially be oil pressure ??
+    type: av
+    color: gray/red
+
+  # - pin: C3
+  #   class: [event_inputs, switch_inputs]
+  #   function: Crank Sensor +
+  #   type: vr
+  #   color: gray
+
+  - pin: C3C4
+    class: event_inputs
+    function: Crank Sensor - Phonic Wheel (VR) NOTE!! is + and - side assignment required??
+    type: vr
+    color: white/black
+
+  - pin: C5
+    class: analog_inputs
+    color: green
+    function: Intake Air Temp (IAT) sensor
+    type: at
+
+  - pin: C6
+    class: analog_inputs
+    function: Engine Temp Sensor Input
+    color: bi/violet
+
+  - pin: C7
+    # not used
+
+  - pin: C8
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: D1
+    class: outputs
+    color: blue/black
+    function: Ignition Coil 3
+    type: ign
+
+  - pin: D2
+    class: outputs
+    function: fuel pump relay??
+    type: gp_low
+    color: blue/green
+
+  - pin: D3
+    class: outputs
+    function: Injection Relay "Output (low)" ??
+    type: ls
+    color: violet/brown
+
+  - pin: D4
+    class: analog_inputs
+    function: Neutral Gear Sensor
+    color: bi/violet
+
+  - pin: D5
+    # not used
+
+
+  - pin: D6
+    class: outputs
+    function: ??
+    type: ign
+    color: brown/violet
+
+  - pin: D7
+    # not used (enable ECU programming?)
+
+  - pin: D8
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: E1
+    # not used (OBD2?)
+
+  - pin: E2
+    # not used
+
+  - pin: E3
+    # not used (enable ECU programming?)
+
+  - pin: E4
+    # not used
+
+  - pin: E5
+    # not used
+
+  - pin: E6
+    # not used
+
+  - pin: E5E6
+    # not used
+
+  - pin: E7
+    class: outputs
+    function: engine check alarm light??
+    color: yellow/green
+
+  - pin: E8
+    function: Injector 3
+    class: outputs
+    type: inj
+    color: blue/gray
+
+  - pin: F1
+    function: Power Ground
+    type: gnd
+    color: black
+
+  - pin: F2
+    # not used (OBD2?)
+
+  - pin: F3
+    # not used (OBD2?)
+
+  - pin: F4
+    # not used (OBD2?)
+
+  - pin: F5
+    # not used
+
+  - pin: F6
+    class: analog_inputs
+    function: side stand Sensor Input
+    color: white
+
+  - pin: F7
+    class: analog_inputs
+    function: +12V engine ECU power source, run/start ??
+    color: red/black
+
+  - pin: F8
+    function: Solenoid (starter relay) ??
+    color: green
+
+info:
+  title: Benelli_Walbro
+  name: Benelli_Walbro
+  board_url: https://rusefi.com/s/Benelli_Walbro
+  image:
+    file: Benelli_Walbro.jpg
+  pins:
+    - pin: A1
+      x: 580
+      y: 150
+
+    - pin: A2
+      x: 512
+      y: 150
+
+    - pin: A3
+      x: 466
+      y: 150
+
+    - pin: A4
+      x: 409
+      y: 150
+
+    - pin: A5
+      x: 362
+      y: 150
+
+    - pin: A6
+      x: 313
+      y: 150
+
+    - pin: A7
+      x: 258
+      y: 150
+
+    - pin: A8
+      x: 197
+      y: 150
+
+    - pin: B1
+      x: 580
+      y: 226
+
+    - pin: B2
+      x: 512
+      y: 226
+
+    - pin: B3
+      x: 466
+      y: 226
+
+    - pin: B4
+      x: 409
+      y: 226
+
+    - pin: B5
+      x: 362
+      y: 226
+
+    - pin: B6
+      x: 313
+      y: 226
+
+    - pin: B7
+      x: 258
+      y: 226
+
+    - pin: B8
+      x: 197
+      y: 226
+
+    - pin: C1
+      x: 580
+      y: 305
+
+    - pin: C2
+      x: 512
+      y: 305
+
+    - pin: C3
+      x: 466
+      y: 305
+
+    - pin: C4
+      x: 409
+      y: 305
+
+    - pin: C5
+      x: 362
+      y: 305
+
+    - pin: C6
+      x: 313
+      y: 305
+
+    - pin: C7
+      x: 258
+      y: 305
+
+    - pin: C8
+      x: 197
+      y: 305
+
+    - pin: D1
+      x: 1384
+      y: 150
+
+    - pin: D2
+      x: 1320
+      y: 150
+
+    - pin: D3
+      x: 1264
+      y: 150
+
+    - pin: D4
+      x: 1209
+      y: 150
+
+    - pin: D5
+      x: 1160
+      y: 150
+
+    - pin: D6
+      x: 1114
+      y: 150
+
+    - pin: D7
+      x: 1062
+      y: 150
+
+    - pin: D8
+      x: 998
+      y: 150
+
+    - pin: E1
+      x: 1384
+      y: 226
+
+    - pin: E2
+      x: 1320
+      y: 226
+
+    - pin: E3
+      x: 1264
+      y: 226
+
+    - pin: E4
+      x: 1209
+      y: 226
+
+    - pin: E5
+      x: 1160
+      y: 226
+
+    - pin: E6
+      x: 1114
+      y: 226
+
+    - pin: E7
+      x: 1062
+      y: 226
+
+    - pin: E8
+      x: 998
+      y: 226
+
+    - pin: F1
+      x: 1384
+      y: 305
+
+    - pin: F2
+      x: 1320
+      y: 305
+
+    - pin: F3
+      x: 1264
+      y: 305
+
+    - pin: F4
+      x: 1209
+      y: 305
+
+    - pin: F5
+      x: 1160
+      y: 305
+
+    - pin: F6
+      x: 1114
+      y: 305
+
+    - pin: F7
+      x: 1061
+      y: 305
+
+    - pin: F8
+      x: 998
+      y: 305
