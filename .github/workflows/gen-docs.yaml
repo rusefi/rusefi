@@ -15,7 +15,7 @@ jobs:
 
     - name: Install prerequisite software
       run: |
-        sudo sed -i 's/azure\.//' /etc/apt/sources.list
+        sudo gem install apt-spy2 && sudo time apt-spy2 fix --commit
         sudo apt-get -o Acquire::Retries=3 update
         sudo apt-get install doxygen graphviz sshpass
 
