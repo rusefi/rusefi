@@ -127,15 +127,19 @@ float getRunningFuel(float baseFuel) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
+    float correction = baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
 #if EFI_ANTILAG_SYSTEM
-	runningFuel *= (1 + engine->antilagController.fuelALSCorrection / 100);
+	correction *= (1 + engine->antilagController.fuelALSCorrection / 100);
 #endif /* EFI_ANTILAG_SYSTEM */
 
 #if EFI_LAUNCH_CONTROL
-	runningFuel *= engine->launchController.getFuelCoefficient();
+	correction *= engine->launchController.getFuelCoefficient();
 #endif
+
+    engine->fuelComputer.totalFuelCorrection = correction;
+
+	float runningFuel = baseFuel * correction;
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 

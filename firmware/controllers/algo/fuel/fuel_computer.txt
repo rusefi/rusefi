@@ -1,5 +1,5 @@
 struct_no_prefix fuel_computer_s
-
+float totalFuelCorrection
 	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 	uint16_t autoscale targetAFR;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
