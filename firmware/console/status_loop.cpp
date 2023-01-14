@@ -579,7 +579,7 @@ static void updateFuelResults() {
 	engine->outputChannels.chargeAirMass = engine->fuelComputer.sdAirMassInOneCylinder;
 
 	engine->outputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
-	engine->outputChannels.fuelRunning = engine->engineState.running.fuel;
+	engine->outputChannels.fuelRunning = engine->fuelComputer.running.fuel;
 
 	engine->outputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	engine->outputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();

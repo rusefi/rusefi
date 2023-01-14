@@ -532,8 +532,8 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 0,  eth->executeActions()) << "exec#3";
 
 
-	ASSERT_EQ( 1,  engine->engineState.running.intakeTemperatureCoefficient) << "iatC";
-	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
+	ASSERT_EQ( 1,  engine->fuelComputer.running.intakeTemperatureCoefficient) << "iatC";
+	ASSERT_EQ( 1,  engine->fuelComputer.running.coolantTemperatureCoefficient) << "cltC";
 	ASSERT_EQ( 0,  engine->module<InjectorModel>()->getDeadtime()) << "lag";
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";

@@ -122,7 +122,7 @@ void EngineState::periodicFastCallback() {
 		crankingTimer.reset(nowNt);
 	}
 
-	running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
+	engine->fuelComputer.running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
 
 	recalculateAuxValveTiming();
 
@@ -131,9 +131,9 @@ void EngineState::periodicFastCallback() {
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection();
+	engine->fuelComputer.running.intakeTemperatureCoefficient = getIatFuelCorrection();
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	running.coolantTemperatureCoefficient = getCltFuelCorrection();
+	engine->fuelComputer.running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
 	engine->module<DfcoController>()->update();
 
@@ -141,10 +141,10 @@ void EngineState::periodicFastCallback() {
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	if (engineConfiguration->postCrankingFactor > 1.0f) {
 		// use interpolation for correction taper
-		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
-			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
+		engine->fuelComputer.running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
+			engineConfiguration->postCrankingDurationSec, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs);
 	} else {
-		running.postCrankingFuelCorrection = 1.0f;
+		engine->fuelComputer.running.postCrankingFuelCorrection = 1.0f;
 	}
 
 	cltTimingCorrection = getCltTimingCorrection();
