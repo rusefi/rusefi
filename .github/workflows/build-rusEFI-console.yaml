@@ -44,8 +44,8 @@ jobs:
 
       - name: Test console
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
-        working-directory: ./java_console
-        run: ant test
+        working-directory: ./java_tools
+        run: ./gradlew test
 
       - name: Build console
         working-directory: ./java_console
