@@ -6,6 +6,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
+/**
+ * Unused and replaced by http://rusefi.online?
+ * REMOVE ONE DAY PRETTY SOON
+ */
 public class MdGenerator {
     public static final String PREFIX = "rusEFI-project";
     static String FOLDER;
