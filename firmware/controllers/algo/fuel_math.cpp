@@ -113,13 +113,13 @@ float getCrankingFuel3(
 float getRunningFuel(float baseFuel) {
 	ScopePerf perf(PE::GetRunningFuel);
 
-	engine->engineState.running.baseFuel = baseFuel;
+	engine->fuelComputer.running.baseFuel = baseFuel;
 
-	float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
+	float iatCorrection = engine->fuelComputer.running.intakeTemperatureCoefficient;
 
-	float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
+	float cltCorrection = engine->fuelComputer.running.coolantTemperatureCoefficient;
 
-	float postCrankingFuelCorrection = engine->engineState.running.postCrankingFuelCorrection;
+	float postCrankingFuelCorrection = engine->fuelComputer.running.postCrankingFuelCorrection;
 
 	float baroCorrection = engine->engineState.baroCorrection;
 
@@ -143,7 +143,7 @@ float getRunningFuel(float baseFuel) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
-	engine->engineState.running.fuel = runningFuel * 1000;
+	engine->fuelComputer.running.fuel = runningFuel * 1000;
 
 	return runningFuel;
 }
