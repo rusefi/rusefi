@@ -62,19 +62,52 @@ pins:
 
   - pin: 10a
     id: B9
-    function: ECO Out
+    function: ECO Out / CLT Gauge out
     class: outputs
-    ts_name: 10 - ECO Out
+    ts_name: 10 - ECO/CLT Out
     type: ls
+
+  - pin: 13a
+    id: [ B0, EFI_ADC_8 ]
+    function: Ignition switch in (15)
+    class: [ switch_inputs, analog_inputs ]
+    ts_name: 13 - Ignition switch in (15)
+
+  - pin: 15a
+    id: [ B10, B10 ]
+    function: Crank Sensor+
+    class: [event_inputs, switch_inputs]
+    ts_name: 15 - Crank Sensor+
 
   - pin: 16a
     id: EFI_ADC_1
     class: analog_inputs
     function: TPS (22K+41.2K divider, 100K pull-down)
-    ts_name: 16 TPS
+    ts_name: 16 - TPS
 
   - pin: 17a
-    function: GNDA
+    function: GNDA (MAP, IAT)
+
+  - pin: 18a
+    id: EFI_ADC_7
+    class: analog_inputs
+    function: AFR 1 (470K pull-up to +5)
+    ts_name: 18 - AFR 1
+
+  - pin: 19a
+    id: EFI_ADC_2
+    class: analog_inputs
+    function: Knock
+    ts_name: 19 - Knock
+
+  - pin: 20a
+    function: GNDA (Knock, AFR)
+
+  - pin: 21a
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: AC Press (22K pull-down)
+    ts_name: 21 - AC Press
 
 # 25-43 segment
   - pin: 25a
@@ -93,23 +126,23 @@ pins:
 
   - pin: 28a
     id: C7
-    function: AFR Heater 2
+    function: Idle valve close
     class: outputs
-    ts_name: 28 - AFR Heater 2
+    ts_name: 28 - Idle valve close
     type: ls
 
   - pin: 29a
     id: C6
-    function: Recirculation Valve
+    function: Idle valve open
     class: outputs
-    ts_name: 29 - EGR
+    ts_name: 29 - Idle valve open
     type: ls
 
   - pin: 30a
     id: E9
-    function: Unk Out 2
+    function: na Fan relay 2 / Unk Out 2
     class: outputs
-    ts_name: na 20 - Unk Out 2
+    ts_name: na 20 - Fan relay 2 / Unk Out 2
     type: ls
 
   - pin: 31a
@@ -119,26 +152,53 @@ pins:
     ts_name: 31 - CEL
     type: ls
 
+  - pin: 32a
+    function: +5V supply out (MAP, TPS)
+    type: 5v
+#    id: EFI_ADC_10
+#    class: analog_inputs
+#    function: 5V sense
+#    ts_name: 32 - 5V sense
+
+  - pin: 33a
+    function: na +5 supply out
+    type: 5v
+
+  - pin: 34a
+    function: Crank Sensor-
+
   - pin: 35a
-    function: GNDA (CLT, AFR 2)
+    function: na GNDA
 
   - pin: 36a
-    function: GNDA (MAP, AFR 1)
+    function: GNDA (TPS, CLT, AFR 1)
+
+  - pin: 37a
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: na MAF
+    ts_name: na 37 - MAF
 
   - pin: 39a
     id: EFI_ADC_3
     class: analog_inputs
-    function: CLT (22K+22K divider, 1.5K pull-up to 3.3V)
-    ts_name: 39 CLT
+    function: CLT (1.5K pull-up to 3.3V)
+    ts_name: 39 - CLT
 
   - pin: 40a
     id: EFI_ADC_14
     class: analog_inputs
-    function: IAT (22K+22K divider, 1.5K pull-up to 3.3V)
-    ts_name: 40 IAT
+    function: IAT (1.5K pull-up to 3.3V)
+    ts_name: 40 - IAT
 
   - pin: 43a
     function: Prog Mode
+
+  - pin: 44a
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: +12 sense (MR) (68K+6.8K divider)
+    ts_name: 44 - +12 sense (MR)
 
 # 44-62 segment
   - pin: 46a
@@ -157,39 +217,48 @@ pins:
 
   - pin: 48a
     id: E5
-    function: AFR Heater 1
+    function: AFR 1 Heater
     class: outputs
-    ts_name: 48 - AFR Heater 1
+    ts_name: 48 - AFR 1 Heater
     type: ls
 
   - pin: 49a
     id: E6
-    function: Injector 6
+    function: Injector 6 / AFR2 Heater
     class: outputs
-    ts_name: na 49 - INJ_6
+    ts_name: na 49 - INJ_6 / AFR 2 Heater
     type: ls
 
   - pin: 50a
     id: E12
-    function: AUX Starter Relay
+    function: Starter Disable Relay
     class: outputs
-    ts_name: 50 - AUX Starter Relay
+    ts_name: 50 - Starter Disable Relay
     type: ls
 
   - pin: 51a
-    function: GNDA (Camshaft)
+    function: GNDA
+
+  - pin: 52a
+    function: GNDA (Shield)
 
   - pin: 53a
-    function: GNDA
+    function: GNDA (AFR 1/2, Knock)
 
   - pin: 54a
     function: GNDA (MAF)
+
+  - pin: 55a
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: n.a. AFR 2 (470K pull-up to +5)
+    ts_name: n.a. 55 - AFR 2
 
   - pin: 56a
     id: EFI_ADC_0
     class: analog_inputs
     function: MAP (22K+41.2K divider, 100K pull-down)
-    ts_name: 56 MAP
+    ts_name: 56 - MAP
 
   - pin: 59a
     id: [B3]
@@ -197,28 +266,33 @@ pins:
     class: [event_inputs]
     ts_name: 59 - Speed in
 
+  - pin: 61a
+    function: GND (Outputs)
+
   - pin: 62a
     function: CAN bus high
     type: can
 
 # 63-81 segment
   - pin: 63a
-    id: EFI_ADC_9
-    class: analog_inputs
-    function: +12v (MR) (68K+6.8K divider)
-    ts_name: 63 VBat
-    type: vign
+    function: +12V in (MR)
+# See 44a
+#    id: EFI_ADC_9
+#    class: analog_inputs
+#    function: +12v (MR) (68K+6.8K divider)
+#    ts_name: 63 VBat
+#    type: vign
 
   - pin: 68a
     id: D6
-    function: Fan Relay 1
+    function: na Fan Relay 1
     class: outputs
     ts_name: na 58 - Fan Relay 1
     type: ls
 
   - pin: 69a
     id: E10
-    function: AC Relay
+    function: na AC Relay
     class: outputs
     ts_name: na 69 - AC Relay
     type: ls
@@ -235,7 +309,7 @@ pins:
 
   - pin: 72a
     id: [C12]
-    function: DIN1 (4.7K Pull-up) (TBD)
+    function: DIN1 (4.7K pull-up to 3.3V) (TBD)
     class: [switch_inputs]
     ts_name: 72 - DIN1
 
@@ -259,9 +333,9 @@ pins:
 
   - pin: 77a
     id: [D4]
-    function: DIN5 (4.7K Pull-down) (TBD)
+    function: Starter request (4.7K Pull-down)
     class: [switch_inputs]
-    ts_name: 77 - DIN5
+    ts_name: 77 - Starter request
 
   - pin: 79a
     id: [B11]
