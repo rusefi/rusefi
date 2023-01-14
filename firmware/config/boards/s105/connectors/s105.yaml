@@ -182,13 +182,13 @@ pins:
   - pin: 39a
     id: EFI_ADC_3
     class: analog_inputs
-    function: CLT (1.5K pull-up to 3.3V)
+    function: CLT (1.5K pull-up to 3.3V, 22K pull-down)
     ts_name: 39 - CLT
 
   - pin: 40a
     id: EFI_ADC_14
     class: analog_inputs
-    function: IAT (1.5K pull-up to 3.3V)
+    function: IAT (1.5K pull-up to 3.3V, 22K pull-down)
     ts_name: 40 - IAT
 
   - pin: 43a
