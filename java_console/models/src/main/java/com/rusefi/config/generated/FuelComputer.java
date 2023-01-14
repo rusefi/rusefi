@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Jan 07 03:08:26 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Jan 14 10:41:18 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -401,14 +401,16 @@ public class FuelComputer {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 0, FieldType.INT16).setScale(0.01).setBaseOffset(800);
-	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 2, FieldType.INT16).setScale(1.0E-4).setBaseOffset(800);
-	public static final Field TARGETAFR = Field.create("TARGETAFR", 4, FieldType.INT16).setScale(0.001).setBaseOffset(800);
-	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 6, FieldType.INT16).setScale(0.001).setBaseOffset(800);
-	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 8, FieldType.FLOAT).setBaseOffset(800);
-	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 12, FieldType.FLOAT).setBaseOffset(800);
-	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 16, FieldType.BIT, 0).setBaseOffset(800);
+	public static final Field TOTALFUELCORRECTION = Field.create("TOTALFUELCORRECTION", 0, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field AFRTABLEYAXIS = Field.create("AFRTABLEYAXIS", 4, FieldType.INT16).setScale(0.01).setBaseOffset(800);
+	public static final Field TARGETLAMBDA = Field.create("TARGETLAMBDA", 6, FieldType.INT16).setScale(1.0E-4).setBaseOffset(800);
+	public static final Field TARGETAFR = Field.create("TARGETAFR", 8, FieldType.INT16).setScale(0.001).setBaseOffset(800);
+	public static final Field STOICHIOMETRICRATIO = Field.create("STOICHIOMETRICRATIO", 10, FieldType.INT16).setScale(0.001).setBaseOffset(800);
+	public static final Field SDTCHARGE_COFF = Field.create("SDTCHARGE_COFF", 12, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 16, FieldType.FLOAT).setBaseOffset(800);
+	public static final Field SDISTCHARGEAIRMODEL = Field.create("SDISTCHARGEAIRMODEL", 20, FieldType.BIT, 0).setBaseOffset(800);
 	public static final Field[] VALUES = {
+	TOTALFUELCORRECTION,
 	AFRTABLEYAXIS,
 	TARGETLAMBDA,
 	TARGETAFR,
