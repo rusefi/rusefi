@@ -94,13 +94,18 @@ float getAnalogInputDividerCoefficient(adc_channel_e hwChannel)
 		case EFI_ADC_6:
 			return (22.0 + 41.2) / 41.2;
 
-		/* IAT, CLT, AFR 1, AFR 2 (na), knock (TBD) */
+		/* IAT, CLT */
 		case EFI_ADC_3:
 		case EFI_ADC_14:
+			/* no divider, 1.5K pull-up to 3.3V, 22K pull-down */
+			/* TODO: handle both pull-up and pull-down */
+			return 1.0;
+
+		/* AFR 1, AFR 2 (na), knock (TBD) */
 		case EFI_ADC_7:
 		case EFI_ADC_5:
 		case EFI_ADC_2:
-			/* no divider, 1.5K pull-up to 3.3V */
+			/* no divider */
 			return 1.0;
 
 		/* +12 sense, Ignition switch */
