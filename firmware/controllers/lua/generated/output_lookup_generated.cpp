@@ -477,6 +477,18 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.schedulingUsedCount;
 		case -1779658835:
 			return engine->fuelComputer.totalFuelCorrection;
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
 		case 995190836:
 			return engine->fuelComputer.afrTableYAxis;
 		case -734904659:
@@ -537,18 +549,6 @@ float getOutputValueByName(const char *name) {
 			return engine->engineState.crankingFuel.durationCoefficient;
 		case -180401224:
 			return engine->engineState.crankingFuel.fuel;
-		case -1288205717:
-			return engine->engineState.running.postCrankingFuelCorrection;
-		case 197173469:
-			return engine->engineState.running.intakeTemperatureCoefficient;
-		case 1822238385:
-			return engine->engineState.running.coolantTemperatureCoefficient;
-		case 526786951:
-			return engine->engineState.running.timeSinceCrankingInSecs;
-		case -42886021:
-			return engine->engineState.running.baseFuel;
-		case -794283008:
-			return engine->engineState.running.fuel;
 		case -903101570:
 			return engine->engineState.sparkDwell;
 		case -1573373756:
