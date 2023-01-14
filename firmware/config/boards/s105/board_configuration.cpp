@@ -86,13 +86,45 @@ void setBoardConfigOverrides() {
 
 float getAnalogInputDividerCoefficient(adc_channel_e hwChannel)
 {
-	/* MAP or TPS */
-	if ((hwChannel == EFI_ADC_0) ||
-		(hwChannel == EFI_ADC_1)) {
-		// 22K (high) + 41.2K (low) on TPS and MAP
-		return (22.0 + 41.2) / 22.0;
-	}
+	switch (hwChannel) {
+		/* MAP, TPS, MAF (na), AC press (na) */
+		case EFI_ADC_0:
+		case EFI_ADC_1:
+		case EFI_ADC_11:
+		case EFI_ADC_6:
+			return (22.0 + 41.2) / 41.2;
 
-	// 22K (high) + 22K (low) on IAT and CLT
-	return (22.0 + 22.0) / 22.0;
+		/* IAT, CLT */
+		case EFI_ADC_3:
+		case EFI_ADC_14:
+			/* no divider, 1.5K pull-up to 3.3V, 22K pull-down */
+			/* TODO: handle both pull-up and pull-down */
+			return 1.0;
+
+		/* AFR 1, AFR 2 (na), knock (TBD) */
+		case EFI_ADC_7:
+		case EFI_ADC_5:
+		case EFI_ADC_2:
+			/* no divider */
+			return 1.0;
+
+		/* +12 sense, Ignition switch */
+		case EFI_ADC_9:
+		case EFI_ADC_8:
+			return (68.0 + 6.8) / 6.8;
+
+		/* 5V feedback */
+		case EFI_ADC_10:
+			return (10.0 + 10.0) / 10.0;
+
+		/* Ignition feedback */
+		case EFI_ADC_12:
+		case EFI_ADC_13:
+			/* TBD */
+			return 1.0;
+
+		default:
+			return engineConfiguration->analogInputDividerCoefficient;
+	}
+	return engineConfiguration->analogInputDividerCoefficient;
 }
