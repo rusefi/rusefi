@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sat Jan 14 12:55:04 EST 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sun Jan 15 11:31:05 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -401,12 +401,12 @@ public class TimingState {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 0, FieldType.FLOAT).setBaseOffset(48);
-	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 4, FieldType.FLOAT).setBaseOffset(48);
-	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 8, FieldType.INT16).setScale(0.01).setBaseOffset(48);
-	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 10, FieldType.INT16).setScale(0.01).setBaseOffset(48);
-	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(48);
-	public static final Field ALIGNMENTFILL_AT_14 = Field.create("ALIGNMENTFILL_AT_14", 14, FieldType.INT8).setScale(1.0).setBaseOffset(48);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 0, FieldType.FLOAT).setBaseOffset(796);
+	public static final Field DWELLANGLE = Field.create("DWELLANGLE", 4, FieldType.FLOAT).setBaseOffset(796);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 8, FieldType.INT16).setScale(0.01).setBaseOffset(796);
+	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 10, FieldType.INT16).setScale(0.01).setBaseOffset(796);
+	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(796);
+	public static final Field ALIGNMENTFILL_AT_14 = Field.create("ALIGNMENTFILL_AT_14", 14, FieldType.INT8).setScale(1.0).setBaseOffset(796);
 	public static final Field[] VALUES = {
 	SPARKDWELL,
 	DWELLANGLE,

@@ -3,44 +3,6 @@
 float getOutputValueByName(const char *name) {
 	int hash = djb2lowerCase(name);
 	switch(hash) {
-		case -1779658835:
-			return engine->fuelComputer.totalFuelCorrection;
-		case -1288205717:
-			return engine->fuelComputer.running.postCrankingFuelCorrection;
-		case 197173469:
-			return engine->fuelComputer.running.intakeTemperatureCoefficient;
-		case 1822238385:
-			return engine->fuelComputer.running.coolantTemperatureCoefficient;
-		case 526786951:
-			return engine->fuelComputer.running.timeSinceCrankingInSecs;
-		case -42886021:
-			return engine->fuelComputer.running.baseFuel;
-		case -794283008:
-			return engine->fuelComputer.running.fuel;
-		case 995190836:
-			return engine->fuelComputer.afrTableYAxis;
-		case -734904659:
-			return engine->fuelComputer.targetLambda;
-		case 2122891301:
-			return engine->fuelComputer.targetAFR;
-		case 341978922:
-			return engine->fuelComputer.stoichiometricRatio;
-		case 1417236183:
-			return engine->fuelComputer.sdTcharge_coff;
-		case 1650433343:
-			return engine->fuelComputer.sdAirMassInOneCylinder;
-		case 816610019:
-			return engine->fuelComputer.sdIsTChargeAirModel;
-		case -903101570:
-			return engine->timingState.sparkDwell;
-		case -1573373756:
-			return engine->timingState.dwellAngle;
-		case 256951528:
-			return engine->timingState.cltTimingCorrection;
-		case -1886479485:
-			return engine->timingState.timingIatCorrection;
-		case -319326974:
-			return engine->timingState.timingPidCorrection;
 		case -230533156:
 			return engine->outputChannels.sd_present;
 		case 708639006:
@@ -511,6 +473,44 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.mafMeasured2;
 		case 967311941:
 			return engine->outputChannels.schedulingUsedCount;
+		case -1779658835:
+			return engine->fuelComputer.totalFuelCorrection;
+		case -1288205717:
+			return engine->fuelComputer.running.postCrankingFuelCorrection;
+		case 197173469:
+			return engine->fuelComputer.running.intakeTemperatureCoefficient;
+		case 1822238385:
+			return engine->fuelComputer.running.coolantTemperatureCoefficient;
+		case 526786951:
+			return engine->fuelComputer.running.timeSinceCrankingInSecs;
+		case -42886021:
+			return engine->fuelComputer.running.baseFuel;
+		case -794283008:
+			return engine->fuelComputer.running.fuel;
+		case 995190836:
+			return engine->fuelComputer.afrTableYAxis;
+		case -734904659:
+			return engine->fuelComputer.targetLambda;
+		case 2122891301:
+			return engine->fuelComputer.targetAFR;
+		case 341978922:
+			return engine->fuelComputer.stoichiometricRatio;
+		case 1417236183:
+			return engine->fuelComputer.sdTcharge_coff;
+		case 1650433343:
+			return engine->fuelComputer.sdAirMassInOneCylinder;
+		case 816610019:
+			return engine->fuelComputer.sdIsTChargeAirModel;
+		case -903101570:
+			return engine->timingState.sparkDwell;
+		case -1573373756:
+			return engine->timingState.dwellAngle;
+		case 256951528:
+			return engine->timingState.cltTimingCorrection;
+		case -1886479485:
+			return engine->timingState.timingIatCorrection;
+		case -319326974:
+			return engine->timingState.timingPidCorrection;
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
 		case -1390672637:
