@@ -129,8 +129,6 @@ float getOutputValueByName(const char *name) {
 			return engine->outputChannels.tpsAccelFuel;
 		case -802608648:
 			return engine->outputChannels.ignitionAdvance;
-		case -378144421:
-			return engine->outputChannels.sparkDwellValue;
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
 		case -606474478:
