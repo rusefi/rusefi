@@ -308,4 +308,8 @@ static constexpr LogField fields[] = {
 	{engine->triggerCentral.currentEngineDecodedPhase, "Engine Phase", "deg", 0},
 	{engine->triggerCentral.triggerToothAngleError, "triggerToothAngleError", "deg", 2},
 	{engine->triggerCentral.triggerIgnoredToothCount, "triggerIgnoredToothCount", "", 0},
+	{engine->ignitionState.baseDwell, "baseDwell", "", 0},
+	{engine->ignitionState.dwellVoltageCorrection, "dwellVoltageCorrection", "", 0},
+	{engine->ignitionState.luaTimingAdd, "luaTimingAdd", "", 0},
+	{engine->ignitionState.luaTimingMult, "luaTimingMult", "", 0},
 };

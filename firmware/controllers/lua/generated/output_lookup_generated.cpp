@@ -601,6 +601,14 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerToothAngleError;
 		case 989545496:
 			return engine->triggerCentral.triggerIgnoredToothCount;
+		case -1777838088:
+			return engine->ignitionState.baseDwell;
+		case -80612537:
+			return engine->ignitionState.dwellVoltageCorrection;
+		case -309610760:
+			return engine->ignitionState.luaTimingAdd;
+		case -1626770351:
+			return engine->ignitionState.luaTimingMult;
 	}
 	return EFI_ERROR_CODE;
 }
