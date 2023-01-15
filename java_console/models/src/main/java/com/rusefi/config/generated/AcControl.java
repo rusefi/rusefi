@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Jan 15 04:27:57 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/ac_control.txt Sun Jan 15 13:37:00 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -401,17 +401,17 @@ public class AcControl {
 	public static final int VM_VVT_INACTIVE = 0;
 	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int WWAE_TABLE_SIZE = 8;
-	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 0).setBaseOffset(908);
-	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 1).setBaseOffset(908);
-	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 2).setBaseOffset(908);
-	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 3).setBaseOffset(908);
-	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 4).setBaseOffset(908);
-	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 5).setBaseOffset(908);
-	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6).setBaseOffset(908);
-	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7).setBaseOffset(908);
-	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 0, FieldType.BIT, 8).setBaseOffset(908);
-	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0).setBaseOffset(908);
-	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0).setBaseOffset(908);
+	public static final Field ACBUTTONSTATE = Field.create("ACBUTTONSTATE", 0, FieldType.BIT, 0).setBaseOffset(924);
+	public static final Field M_ACENABLED = Field.create("M_ACENABLED", 0, FieldType.BIT, 1).setBaseOffset(924);
+	public static final Field ENGINETOOSLOW = Field.create("ENGINETOOSLOW", 0, FieldType.BIT, 2).setBaseOffset(924);
+	public static final Field ENGINETOOFAST = Field.create("ENGINETOOFAST", 0, FieldType.BIT, 3).setBaseOffset(924);
+	public static final Field NOCLT = Field.create("NOCLT", 0, FieldType.BIT, 4).setBaseOffset(924);
+	public static final Field ENGINETOOHOT = Field.create("ENGINETOOHOT", 0, FieldType.BIT, 5).setBaseOffset(924);
+	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 0, FieldType.BIT, 6).setBaseOffset(924);
+	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 0, FieldType.BIT, 7).setBaseOffset(924);
+	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 0, FieldType.BIT, 8).setBaseOffset(924);
+	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 4, FieldType.INT).setScale(1.0).setBaseOffset(924);
+	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0).setBaseOffset(924);
 	public static final Field[] VALUES = {
 	ACBUTTONSTATE,
 	M_ACENABLED,
