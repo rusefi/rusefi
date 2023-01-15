@@ -38,12 +38,14 @@ public enum StateDictionary {
         register(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control");
         register(live_data_e.LDS_launch_control_state, LaunchControl.VALUES, "launch_control");
         register(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump");
+        register(live_data_e.LDS_timing_state, TimingState.VALUES, "advance_map");
         register(live_data_e.LDS_ignition_state, IgnitionState.VALUES, "advance_map");
         register(live_data_e.LDS_electronic_throttle, ElectronicThrottle.VALUES, "electronic_throttle");
         register(live_data_e.LDS_knock_controller, KnockController.VALUES, "knock_controller");
         register(live_data_e.LDS_wideband_state, WidebandController.VALUES, "AemXSeriesLambda");
         register(live_data_e.LDS_trigger_state_primary, TriggerStatePrimary.VALUES, "trigger_decoder");
         register(live_data_e.LDS_fuel_computer, FuelComputer.VALUES, "fuel_computer");
+        register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
