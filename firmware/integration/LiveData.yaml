@@ -13,6 +13,13 @@
 # todo: what is sequence of events in terms of 'live_data_e' code generation?
 #
 Usages:
+#  output_channels always goes first at least because it has protocol version at well-known offset
+  - name: output_channels
+    java: TsOutputs.java
+    folder: console/binary
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->outputChannels"
+
   - name: fuel_computer
     java: FuelComputer.java
     folder: controllers/algo/fuel
@@ -24,12 +31,6 @@ Usages:
     folder: controllers/algo
     prepend: integration/rusefi_config.txt
     constexpr: "engine->timingState"
-
-  - name: output_channels
-    java: TsOutputs.java
-    folder: console/binary
-    prepend: integration/rusefi_config.txt
-    constexpr: "engine->outputChannels"
 
   - name: knock_controller
     java: KnockController.java
