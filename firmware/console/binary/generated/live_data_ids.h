@@ -2,9 +2,9 @@
 #pragma once
 
 typedef enum {
+LDS_output_channels,
 LDS_fuel_computer,
 LDS_timing_state,
-LDS_output_channels,
 LDS_knock_controller,
 LDS_high_pressure_fuel_pump,
 LDS_injector_model,
@@ -26,9 +26,9 @@ LDS_ignition_state,
 LDS_electronic_throttle,
 LDS_wideband_state,
 } live_data_e;
-#define FUEL_COMPUTER_BASE_ADDRESS 0
-#define TIMING_STATE_BASE_ADDRESS 48
-#define OUTPUT_CHANNELS_BASE_ADDRESS 64
+#define OUTPUT_CHANNELS_BASE_ADDRESS 0
+#define FUEL_COMPUTER_BASE_ADDRESS 748
+#define TIMING_STATE_BASE_ADDRESS 796
 #define KNOCK_CONTROLLER_BASE_ADDRESS 812
 #define HIGH_PRESSURE_FUEL_PUMP_BASE_ADDRESS 828
 #define INJECTOR_MODEL_BASE_ADDRESS 852
