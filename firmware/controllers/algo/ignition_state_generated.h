@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Jan 15 13:36:59 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -10,19 +10,53 @@ struct ignition_state_s {
 	 */
 	float baseDwell = (float)0;
 	/**
+	 * @@GAUGE_COIL_DWELL_TIME@@
 	 * offset 4
+	 */
+	floatms_t sparkDwell = (floatms_t)0;
+	/**
+	 * ignition dwell duration
+	 * as crankshaft angle
+	 * NAN if engine is stopped
+	 * See also sparkDwell
+	 * offset 8
+	 */
+	angle_t dwellAngle = (angle_t)0;
+	/**
+	deg
+	 * offset 12
+	 */
+	scaled_channel<int16_t, 100, 1> cltTimingCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 14
+	 */
+	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
+	/**
+	deg
+	 * offset 16
+	 */
+	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 18
+	 */
+	uint8_t alignmentFill_at_18[2];
+	/**
+	 * offset 20
 	 */
 	float dwellVoltageCorrection = (float)0;
 	/**
-	 * offset 8
+	 * offset 24
 	 */
 	float luaTimingAdd = (float)0;
 	/**
-	 * offset 12
+	 * offset 28
 	 */
 	float luaTimingMult = (float)0;
 };
-static_assert(sizeof(ignition_state_s) == 16);
+static_assert(sizeof(ignition_state_s) == 32);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Jan 15 13:36:59 UTC 2023

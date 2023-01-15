@@ -501,16 +501,24 @@ float getOutputValueByName(const char *name) {
 			return engine->fuelComputer.sdAirMassInOneCylinder;
 		case 816610019:
 			return engine->fuelComputer.sdIsTChargeAirModel;
+		case -1777838088:
+			return engine->ignitionState.baseDwell;
 		case -903101570:
-			return engine->timingState.sparkDwell;
+			return engine->ignitionState.sparkDwell;
 		case -1573373756:
-			return engine->timingState.dwellAngle;
+			return engine->ignitionState.dwellAngle;
 		case 256951528:
-			return engine->timingState.cltTimingCorrection;
+			return engine->ignitionState.cltTimingCorrection;
 		case -1886479485:
-			return engine->timingState.timingIatCorrection;
+			return engine->ignitionState.timingIatCorrection;
 		case -319326974:
-			return engine->timingState.timingPidCorrection;
+			return engine->ignitionState.timingPidCorrection;
+		case -80612537:
+			return engine->ignitionState.dwellVoltageCorrection;
+		case -309610760:
+			return engine->ignitionState.luaTimingAdd;
+		case -1626770351:
+			return engine->ignitionState.luaTimingMult;
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
 		case -1390672637:
@@ -601,14 +609,6 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerToothAngleError;
 		case 989545496:
 			return engine->triggerCentral.triggerIgnoredToothCount;
-		case -1777838088:
-			return engine->ignitionState.baseDwell;
-		case -80612537:
-			return engine->ignitionState.dwellVoltageCorrection;
-		case -309610760:
-			return engine->ignitionState.luaTimingAdd;
-		case -1626770351:
-			return engine->ignitionState.luaTimingMult;
 	}
 	return EFI_ERROR_CODE;
 }
