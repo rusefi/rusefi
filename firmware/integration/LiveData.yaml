@@ -13,6 +13,18 @@
 # todo: what is sequence of events in terms of 'live_data_e' code generation?
 #
 Usages:
+  - name: fuel_computer
+    java: FuelComputer.java
+    folder: controllers/algo/fuel
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->fuelComputer"
+
+  - name: timing_state
+    java: TimingState.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->timingState"
+
   - name: output_channels
     java: TsOutputs.java
     folder: console/binary
@@ -32,12 +44,6 @@ Usages:
   - name: injector_model
     java: InjectorModel.java
     folder: controllers/algo/fuel
-
-  - name: fuel_computer
-    java: FuelComputer.java
-    folder: controllers/algo/fuel
-    prepend: integration/rusefi_config.txt
-    constexpr: "engine->fuelComputer"
 
   - name: launch_control_state
     java: LaunchControl.java

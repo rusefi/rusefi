@@ -1,6 +1,6 @@
 struct_no_prefix timing_state_s
 	! spark-related
-	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
+	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@
 	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
 	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
