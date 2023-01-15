@@ -1,14 +1,20 @@
 package com.rusefi.output;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.ReaderState;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * TODO: We have to move either forward or backwards with newparse #4441
  * [OutputChannels]
  */
 public class OutputsSectionConsumer implements ConfigurationConsumer {
+    private static final Logging log = getLogging(OutputsSectionConsumer.class);
+
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
     private int sensorTsPosition;
@@ -28,7 +34,7 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        System.out.println("handleEndStruct");
+        log.info("handleEndStruct");
 
         sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition);
 
