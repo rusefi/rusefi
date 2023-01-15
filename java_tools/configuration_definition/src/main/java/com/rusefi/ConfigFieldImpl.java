@@ -340,7 +340,7 @@ public class ConfigFieldImpl implements ConfigField {
             return null;
         }
         if (tsInfo == null)
-            throw new IllegalArgumentException("tsInfo expected with autoscale");
+            throw new IllegalArgumentException("tsInfo expected with autoscale: " + this);
         String[] tokens = getTokens();
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
