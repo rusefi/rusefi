@@ -10,7 +10,6 @@
 #include "global_shared.h"
 #include "engine_module.h"
 #include "engine_state.h"
-#include "timing_state_generated.h"
 #include "rpm_calculator.h"
 #include "event_registry.h"
 #include "table_helper.h"
@@ -271,7 +270,7 @@ public:
 	void resetEngineSnifferIfInTestMode();
 
 	EngineState engineState;
-	timing_state_s timingState;
+
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
 	 */
