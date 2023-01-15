@@ -1333,7 +1333,7 @@ gaugeCategory = VVT
 gaugeCategory = Ignition
 	sparkCutReasonGauge = sparkCutReason,"Spark Cut Code", "code", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 	ignadvGauge = ignitionAdvance,		"Ignition timing",	"degrees",	-100,	100,	-999,	-999,	999,	999,	1, 1
-	dwellGauge		= sparkDwellValue,			"Dwell",		"mSec",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
+	dwellGauge		= sparkDwell,			"Dwell",		"mSec",		0,	10,	0.5,	1.0,	6.0,	8.0,	1, 1
 	coilDutyCycleGauge = coilDutyCycle,		@@GAUGE_NAME_DWELL_DUTY@@,		"%",		0,	110,	0,	0,		90,	100,	1, 1
 	ignitionLoadGauge = ignitionLoad, @@GAUGE_NAME_IGNITION_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
