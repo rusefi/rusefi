@@ -127,6 +127,8 @@ Usages:
   - name: ignition_state
     java: IgnitionState.java
     folder: controllers/algo
+    prepend: integration/rusefi_config.txt
+    constexpr: "engine->ignitionState"
 
   - name: electronic_throttle
     java: ElectronicThrottle.java
