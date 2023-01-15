@@ -1,7 +1,6 @@
 package com.rusefi.ldmp;
 
 import com.rusefi.config.generated.FuelComputer;
-import com.rusefi.config.generated.TimingState;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.enums.live_data_e;
 import org.junit.Test;
@@ -20,7 +19,6 @@ public class StateDictionaryTest {
         int outputsSize = StateDictionary.getSize(TsOutputs.VALUES);
         assertEquals(outputsSize
                 + StateDictionary.getSize(FuelComputer.VALUES)
-                        + StateDictionary.getSize(TimingState.VALUES)
                 , StateDictionary.INSTANCE.getOffset(live_data_e.LDS_knock_controller));
     }
 }
