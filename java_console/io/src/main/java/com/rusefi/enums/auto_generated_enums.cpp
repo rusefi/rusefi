@@ -1,6 +1,6 @@
 #include "global.h"
 #include "live_data_ids.h"
-// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sat Dec 17 01:28:44 UTC 2022
+// was generated automatically by rusEFI tool  from live_data_ids.h // by enum2string.jar tool on Sun Jan 15 04:27:57 UTC 2023
 // see also gen_config_and_enums.bat
 
 
@@ -39,6 +39,8 @@ case LDS_main_relay:
   return "LDS_main_relay";
 case LDS_output_channels:
   return "LDS_output_channels";
+case LDS_timing_state:
+  return "LDS_timing_state";
 case LDS_tps_accel_state:
   return "LDS_tps_accel_state";
 case LDS_trigger_central:

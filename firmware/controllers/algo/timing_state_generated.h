@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sat Jan 14 12:55:04 EST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sun Jan 15 04:27:57 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,8 +6,7 @@
 // start of timing_state_s
 struct timing_state_s {
 	/**
-	 * ignition dwell duration in ms
-	 * See also dwellAngle
+	 * @@GAUGE_COIL_DWELL_TIME@@
 	 * offset 0
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
@@ -44,4 +43,4 @@ struct timing_state_s {
 static_assert(sizeof(timing_state_s) == 16);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sat Jan 14 12:55:04 EST 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/timing_state.txt Sun Jan 15 04:27:57 UTC 2023
