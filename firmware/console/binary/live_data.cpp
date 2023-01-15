@@ -95,6 +95,11 @@ const engine_state_s* getLiveData(size_t) {
 }
 
 template<>
+const timing_state_s* getLiveData(size_t) {
+	return &engine->timingState;
+}
+
+template<>
 const tps_accel_state_s* getLiveData(size_t) {
 	return &engine->tpsAccelEnrichment;
 }

@@ -127,8 +127,8 @@ void EngineState::periodicFastCallback() {
 	recalculateAuxValveTiming();
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	sparkDwell = engine->ignitionState.getSparkDwell(rpm);
-	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
+	engine->timingState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);
+	engine->timingState.dwellAngle = cisnan(rpm) ? NAN :  engine->timingState.sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	engine->fuelComputer.running.intakeTemperatureCoefficient = getIatFuelCorrection();
@@ -147,7 +147,7 @@ void EngineState::periodicFastCallback() {
 		engine->fuelComputer.running.postCrankingFuelCorrection = 1.0f;
 	}
 
-	cltTimingCorrection = getCltTimingCorrection();
+	engine->timingState.cltTimingCorrection = getCltTimingCorrection();
 
 	baroCorrection = getBaroCorrection();
 
