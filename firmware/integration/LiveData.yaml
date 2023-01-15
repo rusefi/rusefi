@@ -26,11 +26,11 @@ Usages:
     prepend: integration/rusefi_config.txt
     constexpr: "engine->fuelComputer"
 
-  - name: timing_state
-    java: TimingState.java
+  - name: ignition_state
+    java: IgnitionState.java
     folder: controllers/algo
     prepend: integration/rusefi_config.txt
-    constexpr: "engine->timingState"
+    constexpr: "engine->ignitionState"
 
   - name: knock_controller
     java: KnockController.java
@@ -123,12 +123,6 @@ Usages:
     java: IdleState.java
     folder: controllers/actuators
     output_name: idle
-
-  - name: ignition_state
-    java: IgnitionState.java
-    folder: controllers/algo
-    prepend: integration/rusefi_config.txt
-    constexpr: "engine->ignitionState"
 
   - name: electronic_throttle
     java: ElectronicThrottle.java

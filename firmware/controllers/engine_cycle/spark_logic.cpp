@@ -221,8 +221,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
-	angle_t dwellAngleDuration = engine->timingState.dwellAngle;
-	floatms_t sparkDwell = engine->timingState.sparkDwell;
+	angle_t dwellAngleDuration = engine->ignitionState.dwellAngle;
+	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
 	if (cisnan(dwellAngleDuration) || cisnan(sparkDwell)) {
 		// we are here if engine has just stopped
 		return;
@@ -321,7 +321,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	angle_t sparkAngle = event->sparkAngle;
-	const floatms_t dwellMs = engine->timingState.sparkDwell;
+	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
@@ -406,8 +406,8 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
-	angle_t dwellAngle = engine->timingState.dwellAngle;
-	floatms_t sparkDwell = engine->timingState.sparkDwell;
+	angle_t dwellAngle = engine->ignitionState.dwellAngle;
+	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
 	if (cisnan(engine->engineState.timingAdvance[0]) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
@@ -440,11 +440,11 @@ static void prepareIgnitionSchedule() {
 		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->specs.cylindersCount / 1.1;
 	}
 
-	if (engine->timingState.dwellAngle == 0) {
+	if (engine->ignitionState.dwellAngle == 0) {
 		warning(CUSTOM_ZERO_DWELL, "dwell is zero?");
 	}
-	if (engine->timingState.dwellAngle > maxAllowedDwellAngle) {
-		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->timingState.dwellAngle);
+	if (engine->ignitionState.dwellAngle > maxAllowedDwellAngle) {
+		warning(CUSTOM_DWELL_TOO_LONG, "dwell angle too long: %.2f", engine->ignitionState.dwellAngle);
 	}
 
 	// todo: add some check for dwell overflow? like 4 times 6 ms while engine cycle is less then that
@@ -536,7 +536,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  * @see getInjectorDutyCycle
  */
 percent_t getCoilDutyCycle(int rpm) {
-	floatms_t totalPerCycle = engine->timingState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
+	floatms_t totalPerCycle = engine->ignitionState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
