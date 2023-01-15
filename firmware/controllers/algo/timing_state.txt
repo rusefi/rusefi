@@ -1,3 +1,0 @@
-struct_no_prefix timing_state_s
-
-end_struct
