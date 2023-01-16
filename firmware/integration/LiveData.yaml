@@ -62,6 +62,7 @@ Usages:
     prepend: integration/rusefi_config.txt
     output_name: boost
     constexpr: "engine->boostController"
+    conditional_compilation: "EFI_BOOST_CONTROL"
 
   - name: ac_control
     java: AcControl.java

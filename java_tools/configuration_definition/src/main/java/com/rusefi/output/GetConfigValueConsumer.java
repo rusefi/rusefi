@@ -127,7 +127,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     public String getCompleteGetterBody() {
         StringBuilder switchBody = new StringBuilder();
 
-        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables);
+        StringBuilder getterBody = GetOutputValueConsumer.getGetters(switchBody, variables, null);
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
