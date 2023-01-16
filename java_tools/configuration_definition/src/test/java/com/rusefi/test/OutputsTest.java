@@ -142,6 +142,7 @@ public class OutputsTest {
         ReaderStateImpl state = new ReaderStateImpl();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
+        outputValueConsumer.conditional = "EFI_BOOST_CONTROL";
         state.readBufferedReader(test, (outputValueConsumer));
         assertEquals(
                 "#include \"pch.h\"\n" +
@@ -149,12 +150,18 @@ public class OutputsTest {
                         "float getOutputValueByName(const char *name) {\n" +
                         "\tint hash = djb2lowerCase(name);\n" +
                         "\tswitch(hash) {\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -1571463185:\n" +
                         "\t\t\treturn engine->outputChannels.issue_294_31;\n" +
+                        "#endif\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -298185774:\n" +
                         "\t\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
+                        "#endif\n" +
+                        "#if EFI_BOOST_CONTROL\n" +
                         "\t\tcase -709106787:\n" +
                         "\t\t\treturn engine->outputChannels.hwChannel;\n" +
+                        "#endif\n" +
                         "\t}\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
                         "}\n", outputValueConsumer.getContent());

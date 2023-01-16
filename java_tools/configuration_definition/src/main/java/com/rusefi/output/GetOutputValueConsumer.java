@@ -1,7 +1,6 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
-import com.rusefi.ConfigFieldImpl;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.core.Pair;
@@ -20,6 +19,7 @@ import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
 /**
  * here we generate C++ code needed for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getoutputname implementation
+ *
  * @see GetConfigValueConsumer
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
@@ -28,6 +28,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final String fileName;
 
     public String currentSectionPrefix = "engine->outputChannels";
+    public String conditional;
 
     public GetOutputValueConsumer(String fileName) {
         this.fileName = fileName;
@@ -69,7 +70,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     public String getContent() {
         StringBuilder switchBody = new StringBuilder();
 
-        StringBuilder getterBody = getGetters(switchBody, getterPairs);
+        StringBuilder getterBody = getGetters(switchBody, getterPairs, conditional);
 
         String fullSwitch = wrapSwitchStatement(switchBody);
 
@@ -89,17 +90,22 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     @NotNull
-    static StringBuilder getGetters(StringBuilder switchBody, List<? extends Pair<String, String>> getterPairs) {
+    static StringBuilder getGetters(StringBuilder switchBody, List<? extends Pair<String, String>> getterPairs, String conditional) {
         HashMap<Integer, AtomicInteger> hashConflicts = getHashConflicts(getterPairs);
 
         StringBuilder getterBody = new StringBuilder();
         for (Pair<String, String> pair : getterPairs) {
             String returnLine = "\t\treturn " + pair.second + ";\n";
 
+            String before = conditional == null ? "" : "#if " + conditional + "\n";
+            String after = conditional == null ? "" : "#endif\n";
+
             int hash = HashUtil.hash(pair.first);
             if (hashConflicts.get(hash).get() == 1) {
+                switchBody.append(before);
                 switchBody.append("\t\tcase " + hash + ":\n");
                 switchBody.append("\t" + returnLine);
+                switchBody.append(after);
             } else {
                 getterBody.append(getCompareName(pair.first));
                 getterBody.append(returnLine);
