@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Jan 14 21:07:33 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 13:46:12 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -42,6 +42,7 @@ static_assert(sizeof(running_fuel_s) == 24);
 // start of fuel_computer_s
 struct fuel_computer_s {
 	/**
+	mult
 	 * offset 0
 	 */
 	float totalFuelCorrection = (float)0;
@@ -181,4 +182,4 @@ struct fuel_computer_s {
 static_assert(sizeof(fuel_computer_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sat Jan 14 21:07:33 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 13:46:12 UTC 2023
