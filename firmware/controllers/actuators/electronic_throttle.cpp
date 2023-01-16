@@ -1064,9 +1064,6 @@ void doInitElectronicThrottle() {
 		if (hasPedal) {
 			firmwareError(OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
 		}
-
-		// Don't start the thread if no throttles are in use.
-		return;
 	}
 
 #if 0 && ! EFI_UNIT_TEST
