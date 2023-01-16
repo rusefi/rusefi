@@ -111,11 +111,6 @@ public interface ConfigField {
         }
 
         @Override
-        public String[] getTokens() {
-            return new String[0];
-        }
-
-        @Override
         public String getUnits() {
             return null;
         }
@@ -197,8 +192,6 @@ public interface ConfigField {
     double autoscaleSpecNumber();
 
     Pair<Integer, Integer> autoscaleSpecPair();
-
-    String[] getTokens();
 
     String getUnits();
 
