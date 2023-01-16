@@ -519,6 +519,32 @@ float getOutputValueByName(const char *name) {
 			return engine->ignitionState.luaTimingAdd;
 		case -1626770351:
 			return engine->ignitionState.luaTimingMult;
+		case -575666209:
+			return engine->boostController.isTpsInvalid;
+		case 1846215200:
+			return engine->boostController.m_shouldResetPid;
+		case 1826317915:
+			return engine->boostController.isBelowClosedLoopThreshold;
+		case -1642402810:
+			return engine->boostController.isNotClosedLoop;
+		case 2111912944:
+			return engine->boostController.isZeroRpm;
+		case -2011570052:
+			return engine->boostController.hasInitBoost;
+		case 119157463:
+			return engine->boostController.luaTargetAdd;
+		case 1239062717:
+			return engine->boostController.boostOutput;
+		case -362320880:
+			return engine->boostController.luaTargetMult;
+		case -1481117304:
+			return engine->boostController.openLoopPart;
+		case 1944984220:
+			return engine->boostController.luaOpenLoopAdd;
+		case -707712709:
+			return engine->boostController.boostControllerClosedLoopPart;
+		case -1712045196:
+			return engine->boostController.boostControlTarget;
 		case 1649801578:
 			return engine->engineState.lua.fuelAdd;
 		case -1390672637:
