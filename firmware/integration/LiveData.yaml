@@ -61,6 +61,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config.txt
     output_name: boost
+    constexpr: "engine->boostController"
 
   - name: ac_control
     java: AcControl.java
