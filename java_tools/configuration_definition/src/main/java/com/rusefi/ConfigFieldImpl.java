@@ -376,8 +376,7 @@ public class ConfigFieldImpl implements ConfigField {
         return new Pair<>(mul, div);
     }
 
-    @Override
-    public String[] getTokens() {
+    private String[] getTokens() {
         if (tsInfo == null)
             return new String[0];
         return tsInfo.split(",");
