@@ -9,9 +9,8 @@ float baseDwell
 
 float dwellVoltageCorrection
 
-    float luaTimingAdd;;"deg",{1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
-    float luaTimingMult;;"deg",{1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingAdd;;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingMult;;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 
-! ignition_state
 end_struct
 
