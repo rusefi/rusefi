@@ -369,7 +369,7 @@ unusedAtTheEnd134("unusedAtTheEnd 134", SensorCategory.SENSOR_INPUTS, FieldType.
 unusedAtTheEnd135("unusedAtTheEnd 135", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 744, 1.0, 0.0, 0.0, ""),
 unusedAtTheEnd136("unusedAtTheEnd 136", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 745, 1.0, 0.0, 0.0, ""),
 alignmentFill_at_746("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 746, 1.0, -20.0, 100.0, "units"),
-totalFuelCorrection("totalFuelCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 748, 1.0, -1.0, -1.0, ""),
+totalFuelCorrection("totalFuelCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 748, 1.0, 0.0, 3.0, "mult"),
 running("running", SensorCategory.SENSOR_INPUTS, FieldType.INT, 752, 1.0, -1.0, -1.0, ""),
 afrTableYAxis("afrTableYAxis", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 776, 0.01, 0.0, 0.0, "%"),
 targetLambda("fuel: target lambda", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 778, 1.0E-4, 0.0, 0.0, ""),
