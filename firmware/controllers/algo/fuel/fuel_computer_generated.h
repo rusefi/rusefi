@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 13:46:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 20:22:12 UTC 2023
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -20,6 +20,7 @@ struct running_fuel_s {
 	 */
 	float coolantTemperatureCoefficient = (float)0;
 	/**
+	secs
 	 * offset 12
 	 */
 	float timeSinceCrankingInSecs = (float)0;
@@ -182,4 +183,4 @@ struct fuel_computer_s {
 static_assert(sizeof(fuel_computer_s) == 48);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 13:46:12 UTC 2023
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Jan 16 20:22:12 UTC 2023
