@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Jan 16 13:46:12 UTC 2023
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/boost_control.txt Mon Jan 16 20:36:57 UTC 2023
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -408,6 +408,7 @@ public class BoostControl {
 	public static final Field ISBELOWCLOSEDLOOPTHRESHOLD = Field.create("ISBELOWCLOSEDLOOPTHRESHOLD", 0, FieldType.BIT, 2).setBaseOffset(900);
 	public static final Field ISNOTCLOSEDLOOP = Field.create("ISNOTCLOSEDLOOP", 0, FieldType.BIT, 3).setBaseOffset(900);
 	public static final Field ISZERORPM = Field.create("ISZERORPM", 0, FieldType.BIT, 4).setBaseOffset(900);
+	public static final Field HASINITBOOST = Field.create("HASINITBOOST", 0, FieldType.BIT, 5).setBaseOffset(900);
 	public static final Field LUATARGETADD = Field.create("LUATARGETADD", 4, FieldType.FLOAT).setBaseOffset(900);
 	public static final Field LUATARGETMULT = Field.create("LUATARGETMULT", 8, FieldType.FLOAT).setBaseOffset(900);
 	public static final Field OPENLOOPPART = Field.create("OPENLOOPPART", 12, FieldType.FLOAT).setBaseOffset(900);
@@ -421,6 +422,7 @@ public class BoostControl {
 	ISBELOWCLOSEDLOOPTHRESHOLD,
 	ISNOTCLOSEDLOOP,
 	ISZERORPM,
+	HASINITBOOST,
 	LUATARGETADD,
 	LUATARGETMULT,
 	OPENLOOPPART,
