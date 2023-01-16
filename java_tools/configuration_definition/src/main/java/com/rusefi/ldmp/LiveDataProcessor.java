@@ -25,6 +25,10 @@ public class LiveDataProcessor {
 
     private final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
+    private final static String tsOutputsDestination = "console/binary/";
+
+    private final GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
+
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +
             "\n" +
@@ -73,6 +77,11 @@ public class LiveDataProcessor {
         try (FileWriter fw = new FileWriter("console/binary/generated/fancy_menu.ini")) {
             fw.write(liveDataProcessor.fancyNewMenu.toString());
         }
+        liveDataProcessor.end();
+    }
+
+    private void end() throws IOException {
+        gaugeConsumer.endFile();
     }
 
     interface EntryHandler {
@@ -81,7 +90,6 @@ public class LiveDataProcessor {
 
     private int handleYaml(Map<String, Object> data) throws IOException {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
-        String tsOutputsDestination = "console/binary/";
 
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini");
 
@@ -90,8 +98,6 @@ public class LiveDataProcessor {
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp");
-
-        GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
 
         EntryHandler handler = new EntryHandler() {
             @Override
