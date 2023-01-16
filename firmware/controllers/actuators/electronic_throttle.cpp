@@ -778,8 +778,8 @@ static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 #if !EFI_UNIT_TEST
 
-struct EtbThread final : public PeriodicController<512> {
-	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
+struct DcThread final : public PeriodicController<512> {
+	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
@@ -789,7 +789,7 @@ struct EtbThread final : public PeriodicController<512> {
 	}
 };
 
-static EtbThread etbThread CCM_OPTIONAL;
+static DcThread dcThread CCM_OPTIONAL;
 
 #endif // EFI_UNIT_TEST
 
@@ -1085,7 +1085,7 @@ void doInitElectronicThrottle() {
 #if !EFI_UNIT_TEST
 	static bool started = false;
 	if (started == false) {
-		etbThread.start();
+		dcThread.start();
 		started = true;
 	}
 #endif
