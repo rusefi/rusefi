@@ -153,6 +153,8 @@ void BoostController::setOutput(expected<float> output) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
+	// inject wastegate position into DC controllers, pretty weird workflow to be honest
+	// todo: should it be DC controller pulling?
 	setEtbWastegatePosition(percent);
 }
 
