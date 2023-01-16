@@ -2,7 +2,7 @@
 
 struct_no_prefix ignition_state_s
     float baseDwell;;"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
-	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
+	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@;"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
 
 	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell;"deg", 1,0, 0,120, 1,@@GAUGE_CATEGORY_TIMING@@
 
