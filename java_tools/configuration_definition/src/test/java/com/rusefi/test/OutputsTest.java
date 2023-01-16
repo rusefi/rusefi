@@ -164,14 +164,15 @@ public class OutputsTest {
     public void sensorStruct() {
         String test = "struct total\n" +
                 "    struct pid_status_s\n" +
-                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4, Alternator\n" +
-                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4, Alternator\n" +
+                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4, @@GAUGE_CATEGORY@@\n" +
+                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4, @@GAUGE_CATEGORY@@\n" +
                 "    end_struct\n" +
                 "\tpid_status_s alternatorStatus\n" +
                 "\tpid_status_s idleStatus\n" +
                 "end_struct\n";
 
         ReaderStateImpl state = new ReaderStateImpl();
+        state.getVariableRegistry().register("GAUGE_CATEGORY", "Alternator");
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null);
         state.readBufferedReader(test, dataLogConsumer, gaugeConsumer);

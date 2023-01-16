@@ -2,15 +2,15 @@ struct_no_prefix ignition_state_s
 float baseDwell
 	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@
 	angle_t dwellAngle;ignition dwell duration\nas crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
-	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2, Timing
-	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
-	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale cltTimingCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale timingIatCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale timingPidCorrection;;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 
 
 float dwellVoltageCorrection
 
-    float luaTimingAdd;
-    float luaTimingMult;
+    float luaTimingAdd;;"deg",{1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
+    float luaTimingMult;;"deg",{1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 
 ! ignition_state
 end_struct
