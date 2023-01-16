@@ -26,14 +26,16 @@ public class GaugeConsumer implements ConfigurationConsumer {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
                     (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
-            String content = iterator.getContent();
         }
+    }
 
-//        if (fileName != null) {
-//            FileWriter fw = new FileWriter(fileName);
-//            fw.write(charArrayWriter.toString());
-//            fw.close();
-//        }
+    @Override
+    public void endFile() throws IOException {
+        if (fileName != null) {
+            FileWriter fw = new FileWriter(fileName);
+            fw.write(getContent());
+            fw.close();
+        }
     }
 
     private String handle(ConfigField configField, String prefix) {

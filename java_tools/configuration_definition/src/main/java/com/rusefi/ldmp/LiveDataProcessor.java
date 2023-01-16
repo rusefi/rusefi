@@ -3,6 +3,7 @@ package com.rusefi.ldmp;
 import com.devexperts.logging.Logging;
 import com.rusefi.EnumToString;
 import com.rusefi.InvokeReader;
+import com.rusefi.ReaderState;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
@@ -90,6 +91,8 @@ public class LiveDataProcessor {
 
         GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp");
 
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini");
+
         EntryHandler handler = new EntryHandler() {
             @Override
             public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr) throws IOException {
@@ -125,6 +128,13 @@ public class LiveDataProcessor {
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
                     state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
+
+                    state.addDestination(new ConfigurationConsumer() {
+                        @Override
+                        public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+                            gaugeConsumer.handleEndStruct(readerState, structure);
+                        }
+                    });
                 }
 
                 state.doJob();
