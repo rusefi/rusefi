@@ -1813,6 +1813,7 @@ end_struct
 #define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 
 #define GAUGE_CATEGORY_TIMING "Timing"
+#define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
 
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
 #define GAUGE_NAME_VVT_B1E "VVT: bank 1 exhaust"
